@@ -18,4 +18,9 @@ open class Response<T> {
     @SerializedName("data")
     @Expose
     var data: T? = null
+
+    fun success() : Boolean = "success" == result
+
+//    TODO: Why wrong?
+//    val success : Boolean = "success" == result
 }
