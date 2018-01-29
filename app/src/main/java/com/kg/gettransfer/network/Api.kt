@@ -1,6 +1,7 @@
-package com.kg.gettransfer.data
+package com.kg.gettransfer.network
 
 
+import com.kg.gettransfer.data.TransportType
 import io.reactivex.Observable
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
