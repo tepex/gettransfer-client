@@ -22,8 +22,15 @@ open class TransportType : RealmObject() {
     @Expose
     var title: String = ""
 
-//    var pax_max: Int
-//    var luggage_max: Int,
-//    var title_en: String,
-//    var image: String
+    @SerializedName("pax_max")
+    @Expose
+    var paxMax: Int = 0
+
+    @SerializedName("luggage_max")
+    @Expose
+    var luggageMax: Int = 0
+
+    @SerializedName("image")
+    @Expose
+    var imageUrl: String = ""
 }
