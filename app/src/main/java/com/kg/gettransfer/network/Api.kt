@@ -1,13 +1,11 @@
 package com.kg.gettransfer.network
 
 
-import com.kg.gettransfer.data.TransportType
 import io.reactivex.Observable
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.*
 
 
 /**
@@ -17,12 +15,20 @@ import retrofit2.http.Query
 
 interface Api {
     @GET("transport_types")
-    fun getTransportTypes(): Observable<Response<List<TransportType>>>
+    fun getTransportTypes(): Observable<TransportTypesResponse>
 
-    @GET("/api/transfers")
-    fun getTransfers(@Query("api_key") apiKey: String, @Query("transfer[from][name]") from: String): Observable<Response<List<String>>>
+    @GET("access_token")
+    fun getAccessToken(@Query("api_key") apiToken: String): Observable<Response<AccessToken>>
+
+    @POST("/api/transfers")
+    fun getTransfers(
+            @Header("X-ACCESS-TOKEN") token: String,
+            @Body transfer: TransferPOJO
+    ): Observable<TransferResponse>
 
     companion object {
+        val API_KEY = "23be10dcf06f280a4c0f8dca95434803"
+
         fun create(): Api {
             val retrofit = Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

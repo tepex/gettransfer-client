@@ -45,19 +45,19 @@ class TransportTypes {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ r ->
-                    Log.d(TAG, "Responded getTransportTypes()")
+                    Log.d(TAG, "getTransportTypes() responded")
                     if (r.success()) {
-                        Log.d(TAG, "Success getTransportTypes(), n = " + r.data?.size.toString())
+                        Log.d(TAG, "getTransportTypes() success, n = " + r.data?.size.toString())
 
                         realm.executeTransaction { realm ->
                             realm.copyToRealmOrUpdate(r.data)
                             Log.d(TAG, "Saved to realm")
                         }
                     } else {
-                        Log.d(TAG, "Failed getTransportTypes() result = ${r.result}")
+                        Log.d(TAG, "getTransportTypes() failed, result = ${r.result}")
                     }
                 }, { error ->
-                    Log.d(TAG, "Failed getTransportTypes() ${error.message}")
+                    Log.d(TAG, "getTransportTypes() failed, ${error.message}")
                 })
     }
 }

@@ -3,6 +3,7 @@ package com.kg.gettransfer.network
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.kg.gettransfer.data.TransportType
 
 
 /**
@@ -19,8 +20,15 @@ open class Response<T> {
     @Expose
     var data: T? = null
 
-    fun success() : Boolean = "success" == result
+    fun success(): Boolean = "success" == result
 
 //    TODO: Why wrong?
 //    val success : Boolean = "success" == result
 }
+
+
+typealias TransportTypesResponse = Response<List<TransportType>>
+
+
+typealias TransferResponse = Response<Transfer>
+
