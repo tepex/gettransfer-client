@@ -7,7 +7,7 @@ package com.kg.gettransfer.data
 
 
 @Deprecated("Find another way")
-data class DataStateModel (
+data class DataStateModel(
         private val inProgress: Boolean = false,
         private val errorMessage: String? = null,
         private val dataModel: Any? = null

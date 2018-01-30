@@ -6,51 +6,51 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
+import com.kg.gettransfer.modules.DB
+import com.kg.gettransfer.modules.Transfers
 import com.kg.gettransfer.modules.TransportTypes
-import com.kg.gettransfer.network.*
+import com.kg.gettransfer.network.Api
+import com.kg.gettransfer.network.Transfer
 import com.kg.gettransfer.views.TransportTypesAdapter
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
-import io.realm.RealmConfiguration
+
+
+/**
+ * Created by denisvakulenko on 25/01/2018.
+ */
 
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
 
-    private val api by lazy {
-        Api.create()
-    }
-    private var disposable: Disposable? = null
+//    private val api by lazy {
+//        Api.api
+//    }
+//    private var disposable: Disposable? = null
     private var realm: Realm? = null
 
     private val transportTypes: TransportTypes = TransportTypes()
+    private val transfers: Transfers = Transfers()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Realm.init(applicationContext)
-        val config: RealmConfiguration = RealmConfiguration.Builder()
-                .name("db")
-                .schemaVersion(1)
-                .deleteRealmIfMigrationNeeded()
-                .build()
-        Realm.setDefaultConfiguration(config)
-        realm = Realm.getDefaultInstance()
+        realm = DB.create(applicationContext)
 
         initListTransportTypes()
     }
+
 
     private fun initListTransportTypes() {
         val types = transportTypes.get()
 
         val recyclerView = findViewById<RecyclerView>(R.id.rvTypes)
 
-        val mAdapter = TransportTypesAdapter(this, types, false, false)
+        val mAdapter = TransportTypesAdapter(types, true)
 
         val mLayoutManager = LinearLayoutManager(applicationContext)
         mLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
@@ -59,50 +59,8 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = mAdapter
     }
 
-    fun fabClick(v: View) {
-        Log.d(TAG, "getAccessToken()")
-        api.getAccessToken(Api.API_KEY)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ r ->
-                    Log.d(TAG, "Responded getAccessToken()")
-                    if (r.success()) {
-                        Log.d(TAG, "Success getAccessToken(), accessToken = " + r.data!!.token)
-                        getTransfers(r.data!!.token)
-                    } else {
-                        Log.d(TAG, "Failed getAccessToken() result = ${r.result}")
-                    }
-                }, { error ->
-                    Log.d(TAG, "Failed getAccessToken() ${error.message}")
-                })
-    }
 
-    fun getTransfers(token: String) {
-        Log.d(TAG, "getTransfers()")
-        api.getTransfers(
-                token,
-                TransferPOJO(
-                        19,
-                        33,
-                        Location("Moscow", 1, 1).toMap(),
-                        Location("Petersburg", 2, 2).toMap(),
-                        "2020/12/25",
-                        "15:00",
-                        "1",
-                        1,
-                        "Ivan",
-                        PassengerProfile("ivan@key-g.com", "+79998887766").toMap())
-        ).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ r ->
-                    Log.d(TAG, "Responded getTransfers()")
-                    if (r.success()) {
-                        Log.d(TAG, "Success getTransfers(), id = " + r.data?.id)
-                    } else {
-                        Log.d(TAG, "Failed getTransfers() result = ${r.result}")
-                    }
-                }, { error ->
-                    Log.d(TAG, "Failed getTransfers() ${error.message}")
-                })
+    fun fabClick(v: View) {
+        transfers.postTransfer()
     }
 }

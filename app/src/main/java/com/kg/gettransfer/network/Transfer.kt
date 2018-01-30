@@ -15,3 +15,6 @@ open class Transfer {
     @Expose
     var id: Int = 0
 }
+
+
+typealias TransferResponse = Response<Transfer>

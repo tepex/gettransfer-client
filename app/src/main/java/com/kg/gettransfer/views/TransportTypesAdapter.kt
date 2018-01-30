@@ -1,15 +1,12 @@
 package com.kg.gettransfer.views
 
 
-import android.content.Context
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
-
 import com.kg.gettransfer.R
-import android.widget.FrameLayout
 import com.kg.gettransfer.data.TransportType
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
@@ -21,10 +18,8 @@ import io.realm.RealmResults
 
 
 class TransportTypesAdapter(
-        context: Context,
         realmResults: RealmResults<TransportType>,
-        automaticUpdate: Boolean,
-        animateResults: Boolean) : RealmRecyclerViewAdapter<TransportType, TransportTypesAdapter.ViewHolder>(realmResults, true) {
+        autoUpdate: Boolean) : RealmRecyclerViewAdapter<TransportType, TransportTypesAdapter.ViewHolder>(realmResults, autoUpdate) {
 
     inner class ViewHolder(container: ConstraintLayout) : RecyclerView.ViewHolder(container) {
         val title: TextView = container.findViewById(R.id.name)

@@ -13,5 +13,5 @@ import com.google.gson.annotations.SerializedName
 open class AccessToken {
     @SerializedName("token")
     @Expose
-    var token: String = ""
+    var accessToken: String = ""
 }

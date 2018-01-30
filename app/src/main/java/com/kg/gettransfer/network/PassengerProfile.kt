@@ -11,7 +11,7 @@ class PassengerProfile(
         val phone: String) {
 
     fun toMap(): Map<String, Map<String, String>> {
-        return mapOf("account" to mapOf("email" to email, "point" to phone))
+        return mapOf("account" to mapOf("email" to email, "phone" to phone))
     }
 }
 

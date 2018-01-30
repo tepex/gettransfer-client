@@ -30,5 +30,3 @@ open class Response<T> {
 typealias TransportTypesResponse = Response<List<TransportType>>
 
 
-typealias TransferResponse = Response<Transfer>
-
