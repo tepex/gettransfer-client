@@ -11,6 +11,8 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
+import java.util.concurrent.Executor
+import java.util.concurrent.LinkedBlockingQueue
 
 
 /**
@@ -57,8 +59,8 @@ interface Api {
                     synchronized(api) { // TODO: Why not working?
                         if (accessToken == null) {
                             updateAccessToken()
-                            null
                         }
+                        null
                     }
                 }
 
@@ -95,11 +97,12 @@ interface Api {
                         .build()
 
 
-        private fun updateAccessToken() {
+        private fun updateAccessToken() { // Blocks the thread on which it was called
             Log.d(TAG, "getAccessToken()")
+            val tasks = LinkedBlockingQueue<Runnable>()
             api.getAccessToken("YES", Api.API_KEY)
                     .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .observeOn(Schedulers.from( { runnable -> tasks.add(runnable) }))
                     .subscribe({ r ->
                         if (r.success()) {
                             Log.d(TAG, "getAccessToken() success, accessToken = ${r.data!!.accessToken}")
@@ -110,6 +113,7 @@ interface Api {
                     }, { error ->
                         Log.d(TAG, "getAccessToken() failed, ${error.message}")
                     })
+            tasks.take().run()
         }
     }
 }
