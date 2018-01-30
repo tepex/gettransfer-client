@@ -3,7 +3,6 @@ package com.kg.gettransfer.network
 
 import android.util.Log
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -11,7 +10,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
-import java.util.concurrent.Executor
 import java.util.concurrent.LinkedBlockingQueue
 
 
@@ -52,15 +50,16 @@ interface Api {
         private const val TAG = "Api"
         private const val API_KEY = "23be10dcf06f280a4c0f8dca95434803"
         private const val X_ACCESS_TOKEN = "X-ACCESS-TOKEN"
+        private const val BASE_URL = "https://demo.gettransfer.com/api/"
 
         private val interceptor: Interceptor = Interceptor { chain ->
             if (chain.request().header("authorization") == null) {
                 if (accessToken == null) {
-                    synchronized(api) { // TODO: Why not working?
-                        if (accessToken == null) {
+                    synchronized(api) {
+                        if (accessToken == null) { //
                             updateAccessToken()
                         }
-                        null
+                        if (accessToken == null) return@Interceptor null
                     }
                 }
 
@@ -83,7 +82,7 @@ interface Api {
             val retrofit = Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
-                    .baseUrl("https://demo.gettransfer.com/api/")
+                    .baseUrl(BASE_URL)
                     .client(getHttpClient())
                     .build()
 
@@ -97,22 +96,25 @@ interface Api {
                         .build()
 
 
-        private fun updateAccessToken() { // Blocks the thread on which it was called
+        private fun updateAccessToken() { // Blocks current thread
             Log.d(TAG, "getAccessToken()")
+
             val tasks = LinkedBlockingQueue<Runnable>()
+
             api.getAccessToken("YES", Api.API_KEY)
                     .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.from( { runnable -> tasks.add(runnable) }))
+                    .observeOn(Schedulers.from({ runnable -> tasks.add(runnable) }))
                     .subscribe({ r ->
                         if (r.success()) {
-                            Log.d(TAG, "getAccessToken() success, accessToken = ${r.data!!.accessToken}")
+                            Log.d(TAG, "getAccessToken() responded success, accessToken = ${r.data!!.accessToken}")
                             accessToken = r.data?.accessToken
                         } else {
-                            Log.d(TAG, "getAccessToken() failed, result = ${r.result}")
+                            Log.d(TAG, "getAccessToken() responded fail, result = ${r.result}")
                         }
                     }, { error ->
-                        Log.d(TAG, "getAccessToken() failed, ${error.message}")
+                        Log.d(TAG, "getAccessToken() fail, ${error.message}")
                     })
+
             tasks.take().run()
         }
     }

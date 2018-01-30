@@ -38,9 +38,9 @@ class Transfers {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ r ->
                     if (r.success()) {
-                        Log.d(TAG, "postTransfer() success, id = ${r.data?.id}")
+                        Log.d(TAG, "postTransfer() responded success, id = ${r.data?.id}")
                     } else {
-                        Log.d(TAG, "postTransfer() fail, result = ${r.result}")
+                        Log.d(TAG, "postTransfer() responded fail, result = ${r.result}")
                     }
                 }, { error ->
                     Log.d(TAG, "postTransfer() fail, ${error.message}")

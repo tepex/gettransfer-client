@@ -40,23 +40,23 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         realm = DB.create(applicationContext)
+        val api = Api.api
 
         initListTransportTypes()
     }
 
 
     private fun initListTransportTypes() {
-        val types = transportTypes.get()
-
         val recyclerView = findViewById<RecyclerView>(R.id.rvTypes)
 
-        val mAdapter = TransportTypesAdapter(types, true)
+        val types = transportTypes.get()
+        val adapter = TransportTypesAdapter(types, true)
 
-        val mLayoutManager = LinearLayoutManager(applicationContext)
-        mLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
-        recyclerView.layoutManager = mLayoutManager
+        val layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
+
+        recyclerView.layoutManager = layoutManager
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.adapter = mAdapter
+        recyclerView.adapter = adapter
     }
 
 
