@@ -11,9 +11,7 @@ import com.kg.gettransfer.modules.DB
 import com.kg.gettransfer.modules.Transfers
 import com.kg.gettransfer.modules.TransportTypes
 import com.kg.gettransfer.network.Api
-import com.kg.gettransfer.network.Transfer
 import com.kg.gettransfer.views.TransportTypesAdapter
-import io.reactivex.disposables.Disposable
 import io.realm.Realm
 
 

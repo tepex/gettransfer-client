@@ -30,7 +30,7 @@ class TransferPOJO(@Expose
                    val timeTo: String,
                    @Expose
                    @SerializedName("transport_types")
-                   val transportTypes: String,
+                   val transportTypes: IntArray,
                    @Expose
                    @SerializedName("pax")
                    val pax: Int,
