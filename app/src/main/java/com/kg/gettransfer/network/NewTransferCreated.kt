@@ -10,11 +10,8 @@ import com.google.gson.annotations.SerializedName
  */
 
 
-open class Transfer {
+open class NewTransferCreated {
     @SerializedName("id")
     @Expose
     var id: Int = 0
 }
-
-
-typealias TransferResponse = Response<Transfer>

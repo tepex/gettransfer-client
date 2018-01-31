@@ -2,6 +2,7 @@ package com.kg.gettransfer.modules
 
 
 import android.util.Log
+import com.kg.gettransfer.data.Transfer
 import com.kg.gettransfer.network.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -18,7 +19,7 @@ class Transfers {
 
     private val transferHardcode: TransferFieldPOJO by lazy {
         TransferFieldPOJO(
-                TransferPOJO(
+                Transfer(
                         19,
                         33,
                         Location("Moscow", 1.0, 1.0).toMap(),
@@ -28,7 +29,8 @@ class Transfers {
                         intArrayOf(1),
                         1,
                         "Ivan",
-                        PassengerProfile("ivan@key-g.com", "+79998887766").toMap()))
+                        PassengerProfile("d.vakulenko.123@key-g.com", "+79998887766").toMap(),
+                        -1))
     }
 
 
@@ -40,6 +42,7 @@ class Transfers {
                 .subscribe({ r ->
                     if (r.success()) {
                         Log.d(TAG, "postTransfer() responded success, id = ${r.data?.id}")
+                        updateTransfers()
                     } else {
                         Log.d(TAG, "postTransfer() responded fail, result = ${r.result}")
                     }
@@ -56,7 +59,7 @@ class Transfers {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ r ->
                     if (r.success()) {
-                        Log.d(TAG, "getTransfers() responded success, id = ${r.data?}")
+                        Log.d(TAG, "getTransfers() responded success, N = ${r.data?.transfers?.size}")
                     } else {
                         Log.d(TAG, "getTransfers() responded fail, result = ${r.result}")
                     }
