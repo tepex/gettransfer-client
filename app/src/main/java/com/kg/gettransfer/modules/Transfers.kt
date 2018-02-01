@@ -3,7 +3,10 @@ package com.kg.gettransfer.modules
 
 import android.util.Log
 import com.kg.gettransfer.data.Transfer
-import com.kg.gettransfer.network.*
+import com.kg.gettransfer.network.Api
+import com.kg.gettransfer.network.Location
+import com.kg.gettransfer.network.PassengerProfile
+import com.kg.gettransfer.network.TransferFieldPOJO
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -17,26 +20,25 @@ class Transfers {
     private val TAG = "Transfers"
 
 
-    private val transferHardcode: TransferFieldPOJO by lazy {
-        TransferFieldPOJO(
-                Transfer(
-                        19,
-                        33,
-                        Location("Moscow", 1.0, 1.0).toMap(),
-                        Location("Petersburg", 2.0, 2.0).toMap(),
-                        "2020/12/25",
-                        "15:00",
-                        intArrayOf(1),
-                        1,
-                        "Ivan",
-                        PassengerProfile("d.vakulenko.123@key-g.com", "+79998887766").toMap(),
-                        -1))
+    private val transferHardcode: Transfer by lazy {
+        Transfer(
+                19,
+                33,
+                Location("Moscow", 1.0, 1.0).toMap(),
+                Location("Petersburg", 2.0, 2.0).toMap(),
+                "2020/12/25",
+                "15:00",
+                intArrayOf(1),
+                1,
+                "Ivan",
+                PassengerProfile("d.vakulenko.123@key-g.com", "+79998887766").toMap(),
+                -1)
     }
 
 
-    fun postTransfer(transfer: TransferFieldPOJO = transferHardcode) {
+    fun postTransfer(transfer: Transfer = transferHardcode) {
         Log.d(TAG, "postTransfer()")
-        Api.api.postTransfer(transfer)
+        Api.api.postTransfer(TransferFieldPOJO(transfer))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ r ->

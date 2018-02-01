@@ -4,9 +4,6 @@ package com.kg.gettransfer.data
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.kg.gettransfer.network.PassengerProfile
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.RealmClass
 
 
 /**
@@ -15,7 +12,8 @@ import io.realm.annotations.RealmClass
 
 
 //@RealmClass
-class Transfer {//} : RealmObject {
+class Transfer {
+    //} : RealmObject {
     @Expose
     @SerializedName("distance")
     var distance: Int
@@ -51,7 +49,7 @@ class Transfer {//} : RealmObject {
 //    @PrimaryKey
     var id: Int
 
-    constructor(distance: Int, time: Int, from: Map<String, String>, to: Map<String, String>, dateTo: String, timeTo: String, transportTypes: IntArray, pax: Int, nameSign: String, passengerProfile: Map<String, Map<String, String>>, id: Int) {
+    constructor(distance: Int, time: Int, from: Map<String, String>, to: Map<String, String>, dateTo: String, timeTo: String, transportTypes: IntArray, pax: Int, nameSign: String, passengerProfile: Map<String, Map<String, String>>, id: Int = -1) {
         this.distance = distance
         this.time = time
         this.from = from
@@ -62,6 +60,20 @@ class Transfer {//} : RealmObject {
         this.pax = pax
         this.nameSign = nameSign
         this.passengerProfile = passengerProfile
+        this.id = id
+    }
+
+    constructor(distance: Int, time: Int, from: Location, to: Location, dateTo: String, timeTo: String, transportTypes: IntArray, pax: Int, nameSign: String, passengerProfile: PassengerProfile, id: Int = -1) {
+        this.distance = distance
+        this.time = time
+        this.from = from.toMap()
+        this.to = to.toMap()
+        this.dateTo = dateTo
+        this.timeTo = timeTo
+        this.transportTypes = transportTypes
+        this.pax = pax
+        this.nameSign = nameSign
+        this.passengerProfile = passengerProfile.toMap()
         this.id = id
     }
 

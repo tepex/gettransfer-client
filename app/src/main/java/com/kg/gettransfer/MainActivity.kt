@@ -11,10 +11,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import com.kg.gettransfer.data.Location
+import com.kg.gettransfer.data.Transfer
 import com.kg.gettransfer.modules.DB
 import com.kg.gettransfer.modules.Transfers
 import com.kg.gettransfer.modules.TransportTypes
 import com.kg.gettransfer.network.Api
+import com.kg.gettransfer.network.PassengerProfile
 import com.kg.gettransfer.views.TransportTypesAdapter
 import io.realm.Realm
 
@@ -27,7 +30,7 @@ import io.realm.Realm
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
 
-//    private val api by lazy {
+    //    private val api by lazy {
 //        Api.api
 //    }
 //    private var disposable: Disposable? = null
@@ -35,6 +38,13 @@ class MainActivity : AppCompatActivity() {
 
     private val transportTypes: TransportTypes = TransportTypes()
     private val transfers: Transfers = Transfers()
+
+    val etFrom by lazy { findViewById<EditText>(R.id.etFrom) }
+    val etTo by lazy { findViewById<EditText>(R.id.etTo) }
+
+    val etDate by lazy { findViewById<EditText>(R.id.etDate) }
+    val etTime by lazy { findViewById<EditText>(R.id.etTime) }
+    val etPassengers by lazy { findViewById<EditText>(R.id.etPassengers) }
 
     val etEmail by lazy { findViewById<EditText>(R.id.etEmail) }
     val etPhone by lazy { findViewById<EditText>(R.id.etPhone) }
@@ -52,7 +62,12 @@ class MainActivity : AppCompatActivity() {
 
 //        transfers.updateTransfers()
 
-        etEmail.addTextChangedListener(object : TextWatcher {
+        installEditTextWatcher()
+    }
+
+
+    private fun installEditTextWatcher() {
+        val textWatcher: TextWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 fab.visibility = if (validateFields()) View.VISIBLE else View.GONE
             }
@@ -62,13 +77,23 @@ class MainActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
-        })
+        }
+
+        etFrom.addTextChangedListener(textWatcher)
+        etTo.addTextChangedListener(textWatcher)
+
+        etDate.addTextChangedListener(textWatcher)
+        etTime.addTextChangedListener(textWatcher)
+        etPassengers.addTextChangedListener(textWatcher)
+
+        etEmail.addTextChangedListener(textWatcher)
+        etPhone.addTextChangedListener(textWatcher)
     }
 
 
     // TODO:
     private fun validateFields(): Boolean =
-            etEmail.text.isNotEmpty() && etEmail.text.isNotEmpty()
+            etEmail.text.isNotEmpty() && etPhone.text.isNotEmpty()
 
 
     private fun initListTransportTypes() {
@@ -85,7 +110,32 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    private fun fieldsToTransfer(): Transfer = Transfer(
+            0,
+            0,
+            Location(etFrom.text.toString(), 0.0, 0.0),
+            Location(etTo.text.toString(), 0.0, 0.0),
+            etDate.text.toString(),
+            etTime.text.toString(),
+            intArrayOf(0),
+            etPassengers.text.toString().toIntOrNull() ?: 0, // TODO: Assert here later
+            "Sign",
+            PassengerProfile(etEmail.text.toString(), etPhone.text.toString())
+    )
+
+
     fun fabClick(v: View) {
         transfers.postTransfer()
+//        transfers.postTransfer(fieldsToTransfer())
+    }
+
+    fun passengersInc(v: View) {
+        val n = etPassengers.text.toString().toIntOrNull() ?: 0
+        etPassengers.setText((n + 1).toString())
+    }
+
+    fun passengersDec(v: View) {
+        val n = etPassengers.text.toString().toIntOrNull() ?: 0
+        etPassengers.setText((Math.max(1, n - 1)).toString())
     }
 }
