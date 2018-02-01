@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import com.kg.gettransfer.R
-import com.kg.gettransfer.data.TransportType
+import com.kg.gettransfer.models.TransportType
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
 

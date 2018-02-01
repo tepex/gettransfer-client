@@ -3,8 +3,8 @@ package com.kg.gettransfer.network
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.kg.gettransfer.data.Transfer
-import com.kg.gettransfer.data.TransportType
+import com.kg.gettransfer.models.Transfer
+import com.kg.gettransfer.models.TransportType
 
 
 /**
@@ -21,10 +21,14 @@ open class Response<T> {
     @Expose
     var data: T? = null
 
-    fun success(): Boolean = "success" == result
+    val success: Boolean
+        get() = "success" == result
+}
 
-//    TODO: Why wrong?
-//    val success : Boolean = "success" == result
+
+class BooleanResponse : Response<String>() {
+    val ok: Boolean
+        get() = "ok" == data
 }
 
 
@@ -44,3 +48,11 @@ class TransfersFieldPOJO(@Expose
 
 
 typealias TransfersResponse = Response<TransfersFieldPOJO>
+
+
+class LoginPOJO(@Expose
+                @SerializedName("email")
+                val email: String,
+                @Expose
+                @SerializedName("password")
+                val password: String)

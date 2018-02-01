@@ -37,6 +37,12 @@ interface Api {
     ): Observable<TransfersResponse>
 
 
+    @POST("/api/login")
+    fun login(
+            @Body() pojo: LoginPOJO
+    ): Observable<BooleanResponse>
+
+
     @Headers("Content-Type: application/json")
     @POST("/api/transfers")
     fun postTransfer(

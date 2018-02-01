@@ -2,7 +2,7 @@ package com.kg.gettransfer.modules
 
 
 import android.util.Log
-import com.kg.gettransfer.data.TransportType
+import com.kg.gettransfer.models.TransportType
 import com.kg.gettransfer.network.Api
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -46,7 +46,7 @@ class TransportTypes {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ r ->
                     Log.d(TAG, "getTransportTypes() responded")
-                    if (r.success()) {
+                    if (r.success) {
                         Log.d(TAG, "getTransportTypes() success, n = " + r.data?.size.toString())
 
                         realm.executeTransaction { realm ->

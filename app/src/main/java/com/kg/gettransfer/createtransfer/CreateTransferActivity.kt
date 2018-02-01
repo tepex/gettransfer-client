@@ -1,6 +1,7 @@
-package com.kg.gettransfer
+package com.kg.gettransfer.createtransfer
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
@@ -11,8 +12,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
-import com.kg.gettransfer.data.Location
-import com.kg.gettransfer.data.Transfer
+import com.kg.gettransfer.R
+import com.kg.gettransfer.login.LoginActivity
+import com.kg.gettransfer.models.Location
+import com.kg.gettransfer.models.Transfer
 import com.kg.gettransfer.modules.DB
 import com.kg.gettransfer.modules.Transfers
 import com.kg.gettransfer.modules.TransportTypes
@@ -27,8 +30,8 @@ import io.realm.Realm
  */
 
 
-class MainActivity : AppCompatActivity() {
-    private val TAG = "MainActivity"
+class CreateTransferActivity : AppCompatActivity() {
+    private val TAG = "CreateTransferActivity"
 
     //    private val api by lazy {
 //        Api.api
@@ -93,7 +96,8 @@ class MainActivity : AppCompatActivity() {
 
     // TODO:
     private fun validateFields(): Boolean =
-            etEmail.text.isNotEmpty() && etPhone.text.isNotEmpty()
+            android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.text).matches() &&
+                    android.util.Patterns.PHONE.matcher(etPhone.text).matches()
 
 
     private fun initListTransportTypes() {
@@ -110,7 +114,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun fieldsToTransfer(): Transfer = Transfer(
+    private fun transferFromFields(): Transfer = Transfer(
             0,
             0,
             Location(etFrom.text.toString(), 0.0, 0.0),
@@ -125,9 +129,10 @@ class MainActivity : AppCompatActivity() {
 
 
     fun fabClick(v: View) {
-        transfers.postTransfer()
-//        transfers.postTransfer(fieldsToTransfer())
+        transfers.createTransfer()
+//        transfers.createTransfer(transferFromFields())
     }
+
 
     fun passengersInc(v: View) {
         val n = etPassengers.text.toString().toIntOrNull() ?: 0
@@ -137,5 +142,11 @@ class MainActivity : AppCompatActivity() {
     fun passengersDec(v: View) {
         val n = etPassengers.text.toString().toIntOrNull() ?: 0
         etPassengers.setText((Math.max(1, n - 1)).toString())
+    }
+
+
+    fun login(v: View) {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
     }
 }

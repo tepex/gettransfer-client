@@ -2,7 +2,7 @@ package com.kg.gettransfer.modules
 
 
 import android.util.Log
-import com.kg.gettransfer.data.Transfer
+import com.kg.gettransfer.models.Transfer
 import com.kg.gettransfer.network.Api
 import com.kg.gettransfer.network.Location
 import com.kg.gettransfer.network.PassengerProfile
@@ -36,20 +36,20 @@ class Transfers {
     }
 
 
-    fun postTransfer(transfer: Transfer = transferHardcode) {
-        Log.d(TAG, "postTransfer()")
+    fun createTransfer(transfer: Transfer = transferHardcode) {
+        Log.d(TAG, "createTransfer()")
         Api.api.postTransfer(TransferFieldPOJO(transfer))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ r ->
-                    if (r.success()) {
-                        Log.d(TAG, "postTransfer() responded success, id = ${r.data?.id}")
+                    if (r.success) {
+                        Log.d(TAG, "createTransfer() responded success, id = ${r.data?.id}")
                         updateTransfers()
                     } else {
-                        Log.d(TAG, "postTransfer() responded fail, result = ${r.result}")
+                        Log.d(TAG, "createTransfer() responded fail, result = ${r.result}")
                     }
                 }, { error ->
-                    Log.d(TAG, "postTransfer() fail, ${error.message}")
+                    Log.d(TAG, "createTransfer() fail, ${error.message}")
                 })
     }
 
@@ -60,7 +60,7 @@ class Transfers {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ r ->
-                    if (r.success()) {
+                    if (r.success) {
                         Log.d(TAG, "getTransfers() responded success, N = ${r.data?.transfers?.size}")
                     } else {
                         Log.d(TAG, "getTransfers() responded fail, result = ${r.result}")

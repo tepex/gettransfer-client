@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Get Transfer</string>
     <string name="login">Login</string>
+    <string name="email">Email</string>
 </resources>
