@@ -12,11 +12,19 @@ import io.realm.annotations.RealmClass
 
 
 @RealmClass
-open class Session : RealmObject() {
+open class Session() : RealmObject() {
     @PrimaryKey
-    var email : String? = null
+    var accessToken: String? = null
 
-    var phone : String? = null
+    var email: String? = null
 
-    var accessToken : String? = null
+    var phone: String? = null
+
+
+    val authorized: Boolean get() = email != null
+
+
+    constructor(accessToken: String?) : this() {
+        this.accessToken = accessToken
+    }
 }

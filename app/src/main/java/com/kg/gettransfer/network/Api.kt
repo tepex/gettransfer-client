@@ -2,6 +2,7 @@ package com.kg.gettransfer.network
 
 
 import android.util.Log
+import com.kg.gettransfer.modules.Sessions
 import io.reactivex.Observable
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -59,21 +60,15 @@ interface Api {
         private const val TAG = "Api"
         private const val X_ACCESS_TOKEN = "X-ACCESS-TOKEN"
 
-        private const val API_KEY = "23be10dcf06f280a4c0f8dca95434803"
-//        private const val API_KEY = "ololo"
+        public const val API_KEY = "23be10dcf06f280a4c0f8dca95434803"
+        //        private const val API_KEY = "ololo"
         private const val BASE_URL = "https://demo.gettransfer.com/api/"
 //        private const val BASE_URL = "https://test.gettransfer.com/api/"
 
         private val interceptor: Interceptor = Interceptor { chain ->
             if (chain.request().header("authorization") == null) {
-                if (accessToken == null) {
-                    synchronized(api) {
-                        if (accessToken == null) {
-                            updateAccessToken()
-                        }
-                        if (accessToken == null) return@Interceptor null
-                    }
-                }
+                accessToken = Sessions.session?.accessToken
+                if (accessToken == null) return@Interceptor null
 
                 val original = chain.request()
                 val requestBuilder = original.newBuilder()
