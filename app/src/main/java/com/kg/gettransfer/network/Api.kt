@@ -32,19 +32,21 @@ interface Api {
     ): Call<Response<AccessToken>>
 
 
-    @GET("/api/transfers")
+    @GET("transfers")
     fun getTransfers(
     ): Observable<TransfersResponse>
 
 
-    @POST("/api/login")
+    @FormUrlEncoded
+    @POST("login")
     fun login(
-            @Body() pojo: LoginPOJO
+            @Field("email") email: String,
+            @Field("password") password: String
     ): Observable<BooleanResponse>
 
 
     @Headers("Content-Type: application/json")
-    @POST("/api/transfers")
+    @POST("transfers")
     fun postTransfer(
             @Body transfer: TransferFieldPOJO
     ): Observable<NewTransferCreatedResponse>
@@ -57,10 +59,10 @@ interface Api {
         private const val TAG = "Api"
         private const val X_ACCESS_TOKEN = "X-ACCESS-TOKEN"
 
-        //private const val API_KEY = "23be10dcf06f280a4c0f8dca95434803"
-        private const val API_KEY = "ololo"
-        //private const val BASE_URL = "https://demo.gettransfer.com/api/"
-        private const val BASE_URL = "https://test.gettransfer.com/api/"
+        private const val API_KEY = "23be10dcf06f280a4c0f8dca95434803"
+//        private const val API_KEY = "ololo"
+        private const val BASE_URL = "https://demo.gettransfer.com/api/"
+//        private const val BASE_URL = "https://test.gettransfer.com/api/"
 
         private val interceptor: Interceptor = Interceptor { chain ->
             if (chain.request().header("authorization") == null) {

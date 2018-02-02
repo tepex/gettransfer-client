@@ -15,6 +15,10 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.kg.gettransfer.R
+import android.app.Activity
+import android.content.Intent
+
+
 
 
 /**
@@ -49,6 +53,14 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
     }
 
 
+    override fun loginSuccess() {
+        val returnIntent = Intent()
+//        returnIntent.putExtra("result", "ok")
+        setResult(Activity.RESULT_OK, returnIntent)
+        finish()
+    }
+
+
     override fun showError(message: String?) {
         tvError.visibility = if (message == null) GONE else VISIBLE
         tvError.text = message
@@ -80,7 +92,8 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
 
 
     fun back(v: View) {
-//        onBackPressed()
+        val returnIntent = Intent()
+        setResult(Activity.RESULT_CANCELED, returnIntent)
         finish()
     }
 

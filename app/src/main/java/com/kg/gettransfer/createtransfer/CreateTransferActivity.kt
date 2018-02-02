@@ -1,6 +1,7 @@
 package com.kg.gettransfer.createtransfer
 
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -145,8 +146,18 @@ class CreateTransferActivity : AppCompatActivity() {
     }
 
 
+    val LOGIN_REQUEST = 1
     fun login(v: View) {
         val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
+        startActivityForResult(intent, LOGIN_REQUEST)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        // Check which request we're responding to
+        if (requestCode == LOGIN_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                transfers.updateTransfers()
+            }
+        }
     }
 }

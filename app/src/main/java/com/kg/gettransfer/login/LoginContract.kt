@@ -13,7 +13,9 @@ import com.kg.gettransfer.BaseView
 interface LoginContract {
 
     interface View : BaseView<Presenter> {
+        fun loginSuccess()
         fun showError(message: String?)
+
         fun busyChanged(busy: Boolean)
     }
 

@@ -1,7 +1,6 @@
 package com.kg.gettransfer.modules
 
 import com.kg.gettransfer.network.Api
-import com.kg.gettransfer.network.LoginPOJO
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -19,12 +18,14 @@ class Sessions {
 
     companion object {
         fun login(email: String, pass: String, c: LoginCallback) {
-            Api.api.login(LoginPOJO(email, pass))
+            Api.api.login(email, pass)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
-                        if (it.ok) c.onLogin()
-                        else c.onFail(it.data ?: "UNKNOWN ERROR")
+                        if (it.ok) {
+                            // TODO: Drop DB
+                            c.onLogin()
+                        } else c.onFail(it.data ?: "UNKNOWN ERROR")
                     }, {
                         c.onFail(it.message ?: "UNKNOWN ERROR")
                     })

@@ -27,11 +27,12 @@ class LoginPresenter : LoginContract.Presenter {
         _busy = true
         view.showError(null)
         login(
-                "d.vakulenko@gmail.com",
-                "keygkeyg",
+                email,
+                pass,
                 object : LoginCallback {
                     override fun onLogin() {
                         _busy = false
+                        view.loginSuccess()
                     }
 
                     override fun onFail(errorMessage: String) {

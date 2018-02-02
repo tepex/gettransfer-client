@@ -49,10 +49,3 @@ class TransfersFieldPOJO(@Expose
 
 typealias TransfersResponse = Response<TransfersFieldPOJO>
 
-
-class LoginPOJO(@Expose
-                @SerializedName("email")
-                val email: String,
-                @Expose
-                @SerializedName("password")
-                val password: String)
