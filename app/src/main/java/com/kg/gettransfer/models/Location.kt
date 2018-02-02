@@ -1,7 +1,10 @@
 package com.kg.gettransfer.models
 
+
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import io.realm.RealmObject
+import io.realm.annotations.RealmClass
 
 
 /**
@@ -9,13 +12,14 @@ import com.google.gson.annotations.SerializedName
  */
 
 
-class Location(
+@RealmClass
+open class Location(
         @Expose
         @SerializedName("name")
-        val name: String,
+        var name: String = "",
         @Expose
         @SerializedName("point")
-        val point: String) {
+        var point: String = "") : RealmObject() {
 
     constructor(name: String, la: Double, lo: Double) : this(name, "(" + la.toString() + "," + lo.toString() + ")")
 

@@ -2,11 +2,9 @@ package com.kg.gettransfer.modules
 
 
 import android.util.Log
-import com.kg.gettransfer.models.Transfer
-import com.kg.gettransfer.network.Api
-import com.kg.gettransfer.network.Location
-import com.kg.gettransfer.network.PassengerProfile
-import com.kg.gettransfer.network.TransferFieldPOJO
+import com.kg.gettransfer.models.Location
+import com.kg.gettransfer.models.PassengerProfile
+import com.kg.gettransfer.network.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -20,23 +18,22 @@ class Transfers {
     private val TAG = "Transfers"
 
 
-    private val transferHardcode: Transfer by lazy {
-        Transfer(
+    private val transferHardcode: TransferPOJO by lazy {
+        TransferPOJO(
                 19,
                 33,
-                Location("Moscow", 1.0, 1.0).toMap(),
-                Location("Petersburg", 2.0, 2.0).toMap(),
+                Location("Moscow", 1.0, 1.0),
+                Location("Petersburg", 2.0, 2.0),
                 "2020/12/25",
                 "15:00",
                 intArrayOf(1),
                 1,
                 "Denis",
-                PassengerProfile("d.vakulenko@key-g.com", "+79998887766").toMap(),
-                -1)
+                PassengerProfile("d.vakulenko@key-g.com", "+79998887766"))
     }
 
 
-    fun createTransfer(transfer: Transfer = transferHardcode) {
+    fun createTransfer(transfer: TransferPOJO = transferHardcode) {
         Log.d(TAG, "createTransfer()")
         Api.api.postTransfer(TransferFieldPOJO(transfer))
                 .subscribeOn(Schedulers.io())

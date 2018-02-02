@@ -19,8 +19,6 @@ import android.app.Activity
 import android.content.Intent
 
 
-
-
 /**
  * Created by denisvakulenko on 01/02/2018.
  */
@@ -40,6 +38,9 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
     private val fab by lazy { findViewById<FloatingActionButton>(R.id.fab) }
 
 
+    // --
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -53,9 +54,11 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
     }
 
 
+    // --
+
+
     override fun loginSuccess() {
         val returnIntent = Intent()
-//        returnIntent.putExtra("result", "ok")
         setResult(Activity.RESULT_OK, returnIntent)
         finish()
     }
@@ -77,6 +80,9 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
     }
 
 
+    // --
+
+
     fun updateFabVisibility() {
         fab.visibility = if (!presenter.busy && validateFields()) VISIBLE else INVISIBLE
     }
@@ -96,6 +102,9 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
         setResult(Activity.RESULT_CANCELED, returnIntent)
         finish()
     }
+
+
+    // --
 
 
     private fun installTextWatcher() {

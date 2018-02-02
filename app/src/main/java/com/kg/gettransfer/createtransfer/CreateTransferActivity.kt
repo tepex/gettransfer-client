@@ -16,12 +16,12 @@ import android.widget.EditText
 import com.kg.gettransfer.R
 import com.kg.gettransfer.login.LoginActivity
 import com.kg.gettransfer.models.Location
-import com.kg.gettransfer.models.Transfer
 import com.kg.gettransfer.modules.DB
 import com.kg.gettransfer.modules.Transfers
 import com.kg.gettransfer.modules.TransportTypes
 import com.kg.gettransfer.network.Api
-import com.kg.gettransfer.network.PassengerProfile
+import com.kg.gettransfer.models.PassengerProfile
+import com.kg.gettransfer.network.TransferPOJO
 import com.kg.gettransfer.views.TransportTypesAdapter
 import io.realm.Realm
 
@@ -115,7 +115,7 @@ class CreateTransferActivity : AppCompatActivity() {
     }
 
 
-    private fun transferFromFields(): Transfer = Transfer(
+    private fun transferFromFields(): TransferPOJO = TransferPOJO(
             0,
             0,
             Location(etFrom.text.toString(), 0.0, 0.0),

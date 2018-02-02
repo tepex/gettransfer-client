@@ -1,12 +1,14 @@
 package com.kg.gettransfer.models
 
 
+import android.support.annotation.IntegerRes
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.kg.gettransfer.network.PassengerProfile
+import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
+import io.realm.annotations.Required
 
 
 /**
@@ -15,7 +17,7 @@ import io.realm.annotations.RealmClass
 
 
 @RealmClass
-class Transfer() : RealmObject() {
+open class Transfer : RealmObject() {
     @Expose
     @SerializedName("distance")
     var distance: Int = 0
@@ -25,10 +27,10 @@ class Transfer() : RealmObject() {
     var time: Int = 0
     @Expose
     @SerializedName("from")
-    var from: Map<String, String> = mapOf()
+    var from: Location? = Location("", 0.0, 0.0)
     @Expose
     @SerializedName("to")
-    var to: Map<String, String> = mapOf()
+    var to: Location? = Location("", 0.0, 0.0)
 
     @Expose
     @SerializedName("date_to")
@@ -36,10 +38,12 @@ class Transfer() : RealmObject() {
     @Expose
     @SerializedName("time_to")
     var timeTo: String = ""
-    @Expose
 
-    @SerializedName("transport_types")
-    var transportTypes: IntArray = intArrayOf()
+    // TODO: Блин, что-то я не осилил как поддержать лист интов
+//    @Expose
+//    @SerializedName("transport_types")
+//    @Required
+//    var transportTypes: RealmList<Integer?>? = RealmList()
     @Expose
     @SerializedName("pax")
     var pax: Int = 1
@@ -49,39 +53,10 @@ class Transfer() : RealmObject() {
 
     @Expose
     @SerializedName("passenger_profile")
-    var passengerProfile: Map<String, Map<String, String>> = mapOf()
+    var passengerProfile: PassengerProfile? = PassengerProfile("", "")
 
     @Expose
     @SerializedName("id")
     @PrimaryKey
     var id: Int = -1
-
-
-    constructor(distance: Int, time: Int, from: Map<String, String>, to: Map<String, String>, dateTo: String, timeTo: String, transportTypes: IntArray, pax: Int, nameSign: String, passengerProfile: Map<String, Map<String, String>>, id: Int = -1) : this() {
-        this.distance = distance
-        this.time = time
-        this.from = from
-        this.to = to
-        this.dateTo = dateTo
-        this.timeTo = timeTo
-        this.transportTypes = transportTypes
-        this.pax = pax
-        this.nameSign = nameSign
-        this.passengerProfile = passengerProfile
-        this.id = id
-    }
-
-    constructor(distance: Int, time: Int, from: Location, to: Location, dateTo: String, timeTo: String, transportTypes: IntArray, pax: Int, nameSign: String, passengerProfile: PassengerProfile, id: Int = -1) : this() {
-        this.distance = distance
-        this.time = time
-        this.from = from.toMap()
-        this.to = to.toMap()
-        this.dateTo = dateTo
-        this.timeTo = timeTo
-        this.transportTypes = transportTypes
-        this.pax = pax
-        this.nameSign = nameSign
-        this.passengerProfile = passengerProfile.toMap()
-        this.id = id
-    }
 }

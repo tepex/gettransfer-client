@@ -40,7 +40,7 @@ typealias TransportTypesResponse = Response<List<TransportType>>
 
 class TransferFieldPOJO(@Expose
                         @SerializedName("transfer")
-                        val transfer: Transfer)
+                        val transfer: TransferPOJO)
 
 class TransfersFieldPOJO(@Expose
                          @SerializedName("transfers")

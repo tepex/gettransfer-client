@@ -34,8 +34,8 @@ class TransfersAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         val item = getItem(position)
-        holder?.from?.text = item?.from?.get("name")
-        holder?.to?.text = item?.to?.get("name")
+        holder?.from?.text = item?.from?.name
+        holder?.to?.text = item?.to?.name
         holder?.date?.text = item?.dateTo
     }
 }
