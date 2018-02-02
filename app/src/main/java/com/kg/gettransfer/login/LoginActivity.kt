@@ -1,9 +1,18 @@
 package com.kg.gettransfer.login
 
+
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
+import android.text.Editable
+import android.text.TextWatcher
+import android.text.method.LinkMovementMethod
+import android.util.Patterns.EMAIL_ADDRESS
 import android.view.View
+import android.view.View.*
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import com.kg.gettransfer.R
 
@@ -17,10 +26,14 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
     override val presenter: LoginContract.Presenter = LoginPresenter()
 
 
+    private val pb by lazy { findViewById<ProgressBar>(R.id.progressBar) }
+
     private val etEmail by lazy { findViewById<EditText>(R.id.etEmail) }
     private val etPass by lazy { findViewById<EditText>(R.id.etPass) }
 
     private val tvError by lazy { findViewById<TextView>(R.id.tvError) }
+
+    private val fab by lazy { findViewById<FloatingActionButton>(R.id.fab) }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,17 +41,76 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
         setContentView(R.layout.activity_login)
 
         presenter.view = this // TODO: DI later
+
+        installTextWatcher()
+
+        val tvRestorePass = findViewById<TextView>(R.id.tvRestorePass)
+        tvRestorePass.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    override fun showError(message: String) {
+
+    override fun showError(message: String?) {
+        tvError.visibility = if (message == null) GONE else VISIBLE
         tvError.text = message
     }
 
-    override fun updateLoadingIndicator(visible: Boolean) {
 
+    override fun busyChanged(busy: Boolean) {
+        etEmail.isEnabled = !busy
+        etPass.isEnabled = !busy
+
+        pb.visibility = if (busy) VISIBLE else INVISIBLE
+
+        updateFabVisibility()
     }
+
+
+    fun updateFabVisibility() {
+        fab.visibility = if (!presenter.busy && validateFields()) VISIBLE else INVISIBLE
+    }
+
 
     fun login(v: View) {
+        login()
+    }
+
+    fun login() {
         presenter.login(etEmail.text.toString(), etPass.text.toString())
     }
+
+
+    fun back(v: View) {
+//        onBackPressed()
+        finish()
+    }
+
+
+    private fun installTextWatcher() {
+        val textWatcher: TextWatcher = object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                updateFabVisibility()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        }
+
+        etEmail.addTextChangedListener(textWatcher)
+        etPass.addTextChangedListener(textWatcher)
+
+        etPass.setOnEditorActionListener { _, id, _ ->
+            if (id == EditorInfo.IME_ACTION_DONE) {
+                login()
+                return@setOnEditorActionListener true
+            }
+            false
+        }
+    }
+
+
+    private fun validateFields(): Boolean =
+            EMAIL_ADDRESS.matcher(etEmail.text).matches() && etPass.text.length >= 8
 }

@@ -13,11 +13,12 @@ import com.kg.gettransfer.BaseView
 interface LoginContract {
 
     interface View : BaseView<Presenter> {
-        fun showError(message: String)
-        fun updateLoadingIndicator(visible: Boolean)
+        fun showError(message: String?)
+        fun busyChanged(busy: Boolean)
     }
 
     interface Presenter : BasePresenter<View> {
+        val busy: Boolean
         fun login(email: String, pass: String)
     }
 

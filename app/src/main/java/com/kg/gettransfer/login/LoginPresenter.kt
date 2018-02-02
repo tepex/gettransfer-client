@@ -12,20 +12,30 @@ import com.kg.gettransfer.modules.Sessions.LoginCallback
 class LoginPresenter : LoginContract.Presenter {
     override lateinit var view: LoginContract.View
 
-    override fun start() {
+    var _busy: Boolean = false
+        set(v) {
+            view.busyChanged(v)
+        }
+    override val busy: Boolean = _busy
 
+    override fun start() {
+        _busy = false
+        view.showError(null)
     }
 
     override fun login(email: String, pass: String) {
+        _busy = true
+        view.showError(null)
         login(
                 "d.vakulenko@gmail.com",
                 "keygkeyg",
                 object : LoginCallback {
                     override fun onLogin() {
-                        view.updateLoadingIndicator(false)
+                        _busy = false
                     }
+
                     override fun onFail(errorMessage: String) {
-                        view.updateLoadingIndicator(false)
+                        _busy = false
                         view.showError(errorMessage)
                     }
                 }

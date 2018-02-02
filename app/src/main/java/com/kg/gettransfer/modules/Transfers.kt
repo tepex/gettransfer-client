@@ -30,8 +30,8 @@ class Transfers {
                 "15:00",
                 intArrayOf(1),
                 1,
-                "Ivan",
-                PassengerProfile("d.vakulenko.123@key-g.com", "+79998887766").toMap(),
+                "Denis",
+                PassengerProfile("d.vakulenko@key-g.com", "+79998887766").toMap(),
                 -1)
     }
 
