@@ -21,6 +21,7 @@ interface Sessions {
     companion object {
         private const val TAG = "Sessions"
 
+
         private var _session: Session? = null
 
 
@@ -43,15 +44,17 @@ interface Sessions {
         val authorized: Boolean get() = _session?.authorized ?: false
 
 
-        private fun newSession(): Session? { // Blocks current thread
+        // Blocks current thread
+        private fun newSession(): Session? {
             Log.d(TAG, "getAccessToken()")
 
             val response = Api.api.getAccessToken("YES", Api.API_KEY).execute()
             if (response.isSuccessful) {
-                val data = response.body()?.data
-                Log.d(TAG, "getAccessToken() responded success, accessToken = ${data?.accessToken}")
-                return Session(data?.accessToken)
+                val newAccessToken = response.body()?.data?.accessToken
+                Log.d(TAG, "getAccessToken() responded success, new accessToken = $newAccessToken")
+                if (newAccessToken != null) return Session(newAccessToken)
             }
+
             return null
         }
 
@@ -62,11 +65,12 @@ interface Sessions {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         if (it.ok) {
-                            // TODO: Drop DB
+                            // TODO: Drop DB here
+                            session?.email = email
                             c.onLogin()
-                        } else c.onFail(it.data ?: "UNKNOWN ERROR")
+                        } else c.onFail(it.data ?: "Unknown login error")
                     }, {
-                        c.onFail(it.message ?: "UNKNOWN ERROR")
+                        c.onFail(it.message ?: "No network connection")
                     })
         }
     }
