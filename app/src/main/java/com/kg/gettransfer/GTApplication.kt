@@ -1,6 +1,7 @@
 package com.kg.gettransfer
 
 import android.app.Application
+import com.kg.gettransfer.modules.CurrentUserModule
 
 
 /**
@@ -9,5 +10,8 @@ import android.app.Application
 
 
 class GTApplication : Application() {
-
+    init {
+        RxBus
+        CurrentUserModule
+    }
 }

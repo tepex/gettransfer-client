@@ -19,9 +19,9 @@ import com.kg.gettransfer.models.Location
 import com.kg.gettransfer.modules.DBModule
 import com.kg.gettransfer.modules.TransfersModule
 import com.kg.gettransfer.modules.TransportTypesModule
-import com.kg.gettransfer.network.Api
-import com.kg.gettransfer.models.PassengerProfile
-import com.kg.gettransfer.network.NewTransfer
+import com.kg.gettransfer.modules.network.Api
+import com.kg.gettransfer.modules.network.PassengerProfile
+import com.kg.gettransfer.modules.network.NewTransfer
 import com.kg.gettransfer.views.TransportTypesAdapter
 import io.realm.Realm
 

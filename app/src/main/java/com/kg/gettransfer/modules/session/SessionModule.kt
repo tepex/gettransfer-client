@@ -3,7 +3,7 @@ package com.kg.gettransfer.modules.session
 
 import android.util.Log
 import com.kg.gettransfer.RxBus
-import com.kg.gettransfer.network.Api
+import com.kg.gettransfer.modules.network.Api
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 

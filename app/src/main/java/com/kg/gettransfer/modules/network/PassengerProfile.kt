@@ -1,7 +1,4 @@
-package com.kg.gettransfer.models
-
-import io.realm.RealmObject
-import io.realm.annotations.RealmClass
+package com.kg.gettransfer.modules.network
 
 
 /**
@@ -9,10 +6,9 @@ import io.realm.annotations.RealmClass
  */
 
 
-@RealmClass
-open class PassengerProfile(
+class PassengerProfile(
         var email: String = "",
-        var phone: String = "") : RealmObject() {
+        var phone: String = "") {
 
     fun toMap(): Map<String, Map<String, String>> {
         return mapOf("account" to mapOf("email" to email, "phone" to phone))

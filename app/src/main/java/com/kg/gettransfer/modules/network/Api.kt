@@ -1,4 +1,4 @@
-package com.kg.gettransfer.network
+package com.kg.gettransfer.modules.network
 
 
 import com.kg.gettransfer.modules.session.SessionModule
