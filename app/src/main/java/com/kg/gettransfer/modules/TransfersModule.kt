@@ -2,11 +2,18 @@ package com.kg.gettransfer.modules
 
 
 import android.util.Log
+import com.kg.gettransfer.RxBus
 import com.kg.gettransfer.models.Location
 import com.kg.gettransfer.models.PassengerProfile
-import com.kg.gettransfer.network.*
+import com.kg.gettransfer.models.Transfer
+import com.kg.gettransfer.modules.session.SessionEvent
+import com.kg.gettransfer.modules.session.SessionState
+import com.kg.gettransfer.network.Api
+import com.kg.gettransfer.network.NewTransfer
+import com.kg.gettransfer.network.NewTransferField
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import io.realm.Realm
 
 
 /**
@@ -14,12 +21,12 @@ import io.reactivex.schedulers.Schedulers
  */
 
 
-class Transfers {
-    private val TAG = "Transfers"
+object TransfersModule {
+    private val TAG = "TransfersModule"
 
 
-    private val transferHardcode: TransferPOJO by lazy {
-        TransferPOJO(
+    private val transferHardcode: NewTransfer by lazy {
+        NewTransfer(
                 19,
                 33,
                 Location("Moscow", 1.0, 1.0),
@@ -33,9 +40,27 @@ class Transfers {
     }
 
 
-    fun createTransfer(transfer: TransferPOJO = transferHardcode) {
+    private val realm: Realm by lazy {
+        Realm.getDefaultInstance()
+    }
+
+
+    init {
+        RxBus.listen(SessionEvent::class.java).subscribe({
+            if (it.state == SessionState.LOGGED_IN) {
+                val transfers = realm.where(Transfer::class.java).findAll()
+                realm.executeTransaction {
+                    transfers.deleteAllFromRealm()
+                    Log.d(TAG, "realm.where(Transfer).deleteAll()")
+                }
+            }
+        })
+    }
+
+
+    fun createTransfer(transfer: NewTransfer = transferHardcode) {
         Log.d(TAG, "createTransfer()")
-        Api.api.postTransfer(TransferFieldPOJO(transfer))
+        Api.api.postTransfer(NewTransferField(transfer))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ r ->
@@ -51,6 +76,9 @@ class Transfers {
     }
 
 
+    fun getTransfers() = realm.where(Transfer::class.java).findAll()
+
+
     fun updateTransfers() {
         Log.d(TAG, "getTransfers()")
         Api.api.getTransfers()
@@ -59,6 +87,11 @@ class Transfers {
                 .subscribe({ r ->
                     if (r.success) {
                         Log.d(TAG, "getTransfers() responded success, N = ${r.data?.transfers?.size}")
+
+                        realm.executeTransaction { realm ->
+                            realm.copyToRealmOrUpdate(r.data?.transfers)
+                            Log.d(TAG, "getTransfers() saved to realm")
+                        }
                     } else {
                         Log.d(TAG, "getTransfers() responded fail, result = ${r.result}")
                     }

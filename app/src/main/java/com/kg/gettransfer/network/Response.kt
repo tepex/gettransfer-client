@@ -21,31 +21,66 @@ open class Response<T> {
     @Expose
     var data: T? = null
 
-    val success: Boolean
-        get() = "success" == result
+    @SerializedName("error")
+    @Expose
+    var error: Error? = null
+
+    val success: Boolean get() = "success" == result
 }
+
+
+class Error {
+    @SerializedName("type")
+    @Expose
+    var type: String = ""
+
+    @SerializedName("message")
+    @Expose
+    var message: String = ""
+}
+
+
+// --
 
 
 class BooleanResponse : Response<String>() {
-    val ok: Boolean
-        get() = "ok" == data
+    val ok: Boolean get() = "ok" == data
 }
 
 
+// --
+
+
+class NewTransferCreated {
+    @SerializedName("id")
+    @Expose
+    var id: Int = 0
+}
+
 typealias NewTransferCreatedResponse = Response<NewTransferCreated>
+
+
+// --
 
 
 typealias TransportTypesResponse = Response<List<TransportType>>
 
 
-class TransferFieldPOJO(@Expose
-                        @SerializedName("transfer")
-                        val transfer: TransferPOJO)
-
-class TransfersFieldPOJO(@Expose
-                         @SerializedName("transfers")
-                         val transfers: List<Transfer>)
+// --
 
 
-typealias TransfersResponse = Response<TransfersFieldPOJO>
+class TransfersField(@Expose
+                     @SerializedName("transfers")
+                     val transfers: List<Transfer>)
 
+typealias TransfersResponse = Response<TransfersField>
+
+
+// --
+
+
+class AccessToken {
+    @SerializedName("token")
+    @Expose
+    var accessToken: String = ""
+}

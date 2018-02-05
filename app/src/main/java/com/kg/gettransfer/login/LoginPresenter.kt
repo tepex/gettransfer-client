@@ -1,7 +1,8 @@
 package com.kg.gettransfer.login
 
-import com.kg.gettransfer.modules.Sessions.Companion.login
-import com.kg.gettransfer.modules.Sessions.LoginCallback
+
+import com.kg.gettransfer.modules.session.LoginCallback
+import com.kg.gettransfer.modules.session.SessionModule
 
 
 /**
@@ -12,21 +13,28 @@ import com.kg.gettransfer.modules.Sessions.LoginCallback
 class LoginPresenter : LoginContract.Presenter {
     override lateinit var view: LoginContract.View
 
+
     var _busy: Boolean = false
         set(v) {
-            view.busyChanged(v)
+            if (field != v) {
+                field = v
+                view.busyChanged(v)
+            }
         }
-    override val busy: Boolean = _busy
+
+    override val busy: Boolean get() = _busy
+
 
     override fun start() {
         _busy = false
         view.showError(null)
     }
 
+
     override fun login(email: String, pass: String) {
         _busy = true
         view.showError(null)
-        login(
+        SessionModule.login(
                 email,
                 pass,
                 object : LoginCallback {

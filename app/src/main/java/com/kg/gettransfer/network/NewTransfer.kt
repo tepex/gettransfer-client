@@ -12,7 +12,7 @@ import com.kg.gettransfer.models.PassengerProfile
  */
 
 
-class TransferPOJO {
+class NewTransfer {
     @Expose
     @SerializedName("distance")
     var distance:Int =0

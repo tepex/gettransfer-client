@@ -16,12 +16,12 @@ import android.widget.EditText
 import com.kg.gettransfer.R
 import com.kg.gettransfer.login.LoginActivity
 import com.kg.gettransfer.models.Location
-import com.kg.gettransfer.modules.DB
-import com.kg.gettransfer.modules.Transfers
-import com.kg.gettransfer.modules.TransportTypes
+import com.kg.gettransfer.modules.DBModule
+import com.kg.gettransfer.modules.TransfersModule
+import com.kg.gettransfer.modules.TransportTypesModule
 import com.kg.gettransfer.network.Api
 import com.kg.gettransfer.models.PassengerProfile
-import com.kg.gettransfer.network.TransferPOJO
+import com.kg.gettransfer.network.NewTransfer
 import com.kg.gettransfer.views.TransportTypesAdapter
 import io.realm.Realm
 
@@ -40,8 +40,8 @@ class CreateTransferActivity : AppCompatActivity() {
 //    private var disposable: Disposable? = null
     private var realm: Realm? = null
 
-    private val transportTypes: TransportTypes = TransportTypes()
-    private val transfers: Transfers = Transfers()
+    private val transportTypesModule: TransportTypesModule = TransportTypesModule
+    private val transfersModule: TransfersModule = TransfersModule
 
     val etFrom by lazy { findViewById<EditText>(R.id.etFrom) }
     val etTo by lazy { findViewById<EditText>(R.id.etTo) }
@@ -59,12 +59,12 @@ class CreateTransferActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_createtransfer)
 
-        realm = DB.create(applicationContext)
+        realm = DBModule.create(applicationContext)
         val api = Api.api
 
         initListTransportTypes()
 
-//        transfers.updateTransfers()
+//        transfersModule.updateTransfers()
 
         installEditTextWatcher()
     }
@@ -104,7 +104,7 @@ class CreateTransferActivity : AppCompatActivity() {
     private fun initListTransportTypes() {
         val recyclerView = findViewById<RecyclerView>(R.id.rvTypes)
 
-        val types = transportTypes.get()
+        val types = transportTypesModule.get()
         val adapter = TransportTypesAdapter(types, true)
 
         val layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
@@ -115,7 +115,7 @@ class CreateTransferActivity : AppCompatActivity() {
     }
 
 
-    private fun transferFromFields(): TransferPOJO = TransferPOJO(
+    private fun transferFromFields(): NewTransfer = NewTransfer(
             0,
             0,
             Location(etFrom.text.toString(), 0.0, 0.0),
@@ -130,8 +130,8 @@ class CreateTransferActivity : AppCompatActivity() {
 
 
     fun fabClick(v: View) {
-        transfers.createTransfer()
-//        transfers.createTransfer(transferFromFields())
+        transfersModule.createTransfer()
+//        transfersModule.createTransfer(transferFromFields())
     }
 
 
@@ -156,7 +156,7 @@ class CreateTransferActivity : AppCompatActivity() {
         // Check which request we're responding to
         if (requestCode == LOGIN_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
-                transfers.updateTransfers()
+                transfersModule.updateTransfers()
             }
         }
     }

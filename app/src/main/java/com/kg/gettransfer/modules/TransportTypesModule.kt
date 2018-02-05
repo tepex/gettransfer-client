@@ -15,8 +15,8 @@ import io.realm.RealmResults
  */
 
 
-class TransportTypes {
-    private val TAG = "TransportTypes"
+object TransportTypesModule {
+    private val TAG = "TransportTypesModule"
 
 
     private val api by lazy {

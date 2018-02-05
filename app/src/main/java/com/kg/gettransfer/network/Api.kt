@@ -1,7 +1,7 @@
 package com.kg.gettransfer.network
 
 
-import com.kg.gettransfer.modules.Sessions
+import com.kg.gettransfer.modules.session.SessionModule
 import io.reactivex.Observable
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -52,7 +52,7 @@ interface Api {
     @POST("transfers")
     @Headers("Content-Type: application/json")
     fun postTransfer(
-            @Body transfer: TransferFieldPOJO
+            @Body transfer: NewTransferField
     ): Observable<NewTransferCreatedResponse>
 
 
@@ -71,7 +71,7 @@ interface Api {
 
         private val interceptor: Interceptor = Interceptor { chain ->
             if (chain.request().header("authorization") == null) {
-                val accessToken = Sessions.session?.accessToken ?: return@Interceptor null
+                val accessToken = SessionModule.getAccessToken() ?: return@Interceptor null
 
                 val original = chain.request()
                 val requestBuilder = original.newBuilder()
