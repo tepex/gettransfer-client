@@ -2,6 +2,7 @@ package com.kg.gettransfer.modules
 
 
 import android.util.Log
+import com.jakewharton.rxrelay2.BehaviorRelay
 import com.kg.gettransfer.RxBus
 import com.kg.gettransfer.models.Location
 import com.kg.gettransfer.models.Transfer
@@ -42,6 +43,9 @@ object TransfersModule {
     }
 
 
+    val loadingTransfers = BehaviorRelay.createDefault<Boolean>(false)
+
+
     init {
         RxBus.listen(CurrentUserModule.UserChanged::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -76,23 +80,28 @@ object TransfersModule {
 
 
     fun updateTransfers() {
-        Log.d(TAG, "getTransfers()")
+        Log.d(TAG, "updateTransfers()")
+        if (loadingTransfers.value) return
+        Log.d(TAG, "getTransfers() call")
         Api.api.getTransfers()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ r ->
-                    if (r.success) {
-                        Log.d(TAG, "getTransfers() responded success, N = ${r.data?.transfers?.size}")
+                .doOnSubscribe { loadingTransfers.accept(true) }
+                .subscribe({
+                    loadingTransfers.accept(false)
+                    if (it.success) {
+                        Log.d(TAG, "getTransfers() responded success, N = ${it.data?.transfers?.size}")
 
                         realm.executeTransaction { realm ->
-                            realm.copyToRealmOrUpdate(r.data?.transfers)
+                            realm.copyToRealmOrUpdate(it.data?.transfers)
                             Log.d(TAG, "getTransfers() saved to realm")
                         }
                     } else {
-                        Log.d(TAG, "getTransfers() responded fail, result = ${r.result}")
+                        Log.d(TAG, "getTransfers() responded fail, result = ${it.result}")
                     }
-                }, { error ->
-                    Log.d(TAG, "getTransfers() fail, ${error.message}")
+                }, {
+                    loadingTransfers.accept(false)
+                    Log.d(TAG, "getTransfers() fail, ${it.message}")
                 })
     }
 }

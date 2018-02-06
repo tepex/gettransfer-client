@@ -17,16 +17,15 @@ class TransfersListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cabinet)
 
-        val rvTransfers = findViewById<RecyclerView>(R.id.transfersList)
-
+        TransfersModule.updateTransfers()
         val transfers = TransfersModule.getTransfers()
 
         val adapter = TransfersAdapter(transfers, false)
 
         val layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
 
-        rvTransfers.layoutManager = layoutManager
-
+        val rvTransfers = findViewById<RecyclerView>(R.id.transfersList)
         rvTransfers.adapter = adapter
+        rvTransfers.layoutManager = layoutManager
     }
 }

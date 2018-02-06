@@ -207,11 +207,11 @@
 
             <Button
                 android:id="@+id/button"
-                android:layout_width="48dp"
+                android:layout_width="56dp"
                 android:layout_height="48dp"
-                android:layout_marginStart="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:onClick="passengersDec"
+                android:paddingStart="8dp"
                 android:text="-"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintBottom_toBottomOf="@+id/etPassengers"
@@ -222,11 +222,11 @@
 
             <Button
                 android:id="@+id/button2"
-                android:layout_width="48dp"
+                android:layout_width="66dp"
                 android:layout_height="48dp"
-                android:layout_marginEnd="16dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:onClick="passengersInc"
+                android:paddingRight="16dp"
                 android:text="+"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintBottom_toBottomOf="@+id/button"
@@ -257,7 +257,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:onClick="openCabinet"
+            android:onClick="showTransfers"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btnCreate"
             app:layout_constraintHorizontal_bias="0.5"

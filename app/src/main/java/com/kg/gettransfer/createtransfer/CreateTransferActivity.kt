@@ -160,13 +160,17 @@ class CreateTransferActivity : AppCompatActivity() {
         // Check which request we're responding to
         if (requestCode == LOGIN_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
-                transfersModule.updateTransfers()
+                showProfile(null)
             }
         }
     }
 
-    fun openCabinet(v: View) {
+    fun showTransfers(v: View) {
         val intent = Intent(this, TransfersListActivity::class.java)
         startActivityForResult(intent, 2)
+    }
+
+    fun showProfile(v: View?) {
+
     }
 }
