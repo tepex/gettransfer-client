@@ -14,6 +14,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import com.kg.gettransfer.R
+import com.kg.gettransfer.cabinet.TransfersListActivity
 import com.kg.gettransfer.login.LoginActivity
 import com.kg.gettransfer.models.Location
 import com.kg.gettransfer.modules.DBModule
@@ -24,6 +25,7 @@ import com.kg.gettransfer.modules.network.PassengerProfile
 import com.kg.gettransfer.modules.network.NewTransfer
 import com.kg.gettransfer.views.TransportTypesAdapter
 import io.realm.Realm
+import java.util.logging.Logger
 
 
 /**
@@ -38,6 +40,8 @@ class CreateTransferActivity : AppCompatActivity() {
 //        Api.api
 //    }
 //    private var disposable: Disposable? = null
+    val logger = Logger.getLogger("createTransferActivity")
+
     private var realm: Realm? = null
 
     private val transportTypesModule: TransportTypesModule = TransportTypesModule
@@ -159,5 +163,10 @@ class CreateTransferActivity : AppCompatActivity() {
                 transfersModule.updateTransfers()
             }
         }
+    }
+
+    fun openCabinet(v: View) {
+        val intent = Intent(this, TransfersListActivity::class.java)
+        startActivityForResult(intent, 2)
     }
 }

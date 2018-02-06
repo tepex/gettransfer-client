@@ -37,7 +37,6 @@ object TransfersModule {
                 PassengerProfile("d.vakulenko@key-g.com", "+79998887766"))
     }
 
-
     private val realm: Realm by lazy {
         Realm.getDefaultInstance()
     }
@@ -72,7 +71,6 @@ object TransfersModule {
                     Log.d(TAG, "createTransfer() fail, ${error.message}")
                 })
     }
-
 
     fun getTransfers() = realm.where(Transfer::class.java).findAll()
 
