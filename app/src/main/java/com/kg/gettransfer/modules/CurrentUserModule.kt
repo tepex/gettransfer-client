@@ -36,16 +36,16 @@ object CurrentUserModule {
 
 
     init {
-        RxBus.listen(SessionEvent::class.java).subscribe({
-            if (it.state == SessionState.LOGGED_IN) {
+        SessionModule.state.subscribe{
+            if (it == SessionState.LOGGED_IN) {
                 val newEmail = SessionModule.sessionModel?.email
                 if (newEmail != email) {
                     email = newEmail
                     RxBus.publish(UserLoggedIn())
                 }
-            } else if (it.state == SessionState.LOGGED_OUT) {
+            } else if (it == SessionState.LOGGED_OUT) {
                 RxBus.publish(UserLoggedOut())
             }
-        })
+        }
     }
 }

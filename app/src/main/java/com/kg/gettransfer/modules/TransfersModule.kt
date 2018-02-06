@@ -4,11 +4,11 @@ package com.kg.gettransfer.modules
 import android.util.Log
 import com.kg.gettransfer.RxBus
 import com.kg.gettransfer.models.Location
-import com.kg.gettransfer.modules.network.PassengerProfile
 import com.kg.gettransfer.models.Transfer
 import com.kg.gettransfer.modules.network.Api
 import com.kg.gettransfer.modules.network.NewTransfer
 import com.kg.gettransfer.modules.network.NewTransferField
+import com.kg.gettransfer.modules.network.PassengerProfile
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
@@ -44,13 +44,15 @@ object TransfersModule {
 
 
     init {
-        RxBus.listen(CurrentUserModule.UserChanged::class.java).subscribe({
-            val transfers = realm.where(Transfer::class.java).findAll()
-            realm.executeTransaction {
-                transfers.deleteAllFromRealm()
-                Log.d(TAG, "realm.where(Transfer).deleteAll()")
-            }
-        })
+        RxBus.listen(CurrentUserModule.UserChanged::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    val transfers = realm.where(Transfer::class.java).findAll()
+                    realm.executeTransaction {
+                        transfers.deleteAllFromRealm()
+                        Log.d(TAG, "realm.where(Transfer).deleteAll()")
+                    }
+                }
     }
 
 

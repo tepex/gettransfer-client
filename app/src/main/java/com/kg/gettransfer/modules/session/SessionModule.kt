@@ -14,12 +14,6 @@ import io.reactivex.schedulers.Schedulers
  */
 
 
-interface LoginCallback {
-    fun onLogin()
-    fun onFail(errorMessage: String)
-}
-
-
 enum class SessionState {
     LOGGED_OUT,
     LOGGED_IN
@@ -47,6 +41,7 @@ object SessionModule {
         }
 
     val isLoggedIn: Boolean get() = sessionModel?.isLoggedIn ?: false
+
 
     val state = BehaviorRelay.createDefault<SessionState>(SessionState.LOGGED_OUT)
     val loggingIn = BehaviorRelay.createDefault<Boolean>(false)
