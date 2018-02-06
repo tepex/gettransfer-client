@@ -22,9 +22,9 @@ class TransportTypesAdapter(
         autoUpdate: Boolean) : RealmRecyclerViewAdapter<TransportType, TransportTypesAdapter.ViewHolder>(realmResults, autoUpdate) {
 
     inner class ViewHolder(container: ConstraintLayout) : RecyclerView.ViewHolder(container) {
-        val title: TextView = container.findViewById(R.id.tvTo)
-        val pax: TextView = container.findViewById(R.id.pax)
-        val luggage: TextView = container.findViewById(R.id.tvDate)
+        val title: TextView = container.findViewById(R.id.tvName)
+        val pax: TextView = container.findViewById(R.id.tvPax)
+        val luggage: TextView = container.findViewById(R.id.tvLuggage)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {

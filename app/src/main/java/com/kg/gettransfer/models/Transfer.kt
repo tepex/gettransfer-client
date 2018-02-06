@@ -16,18 +16,18 @@ import io.realm.annotations.RealmClass
 @RealmClass
 open class Transfer : RealmObject() {
     @Expose
-    @SerializedName("distance")
-    var distance: Int = 0
-    @Expose
-    @SerializedName("time")
-    var time: Int = 0
-
-    @Expose
     @SerializedName("from")
     var from: Location? = null
     @Expose
     @SerializedName("to")
     var to: Location? = null
+
+    @Expose
+    @SerializedName("distance")
+    var distance: Int = 0
+    @Expose
+    @SerializedName("time")
+    var time: Int = 0
 
     @Expose
     @SerializedName("date_to")

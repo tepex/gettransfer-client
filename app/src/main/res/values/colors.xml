@@ -5,4 +5,6 @@
     <color name="colorAccent">#3b1554</color>
 
     <color name="bg">#f5f5f5</color>
+
+    <color name="bar">#e4e4e4</color>
 </resources>

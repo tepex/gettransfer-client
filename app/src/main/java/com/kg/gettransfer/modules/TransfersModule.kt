@@ -85,7 +85,7 @@ object TransfersModule {
                         Log.d(TAG, "getTransfers() responded success, N = ${r.data?.transfers?.size}")
 
                         realm.executeTransaction { realm ->
-                            realm.copyToRealm(r.data?.transfers)
+                            realm.copyToRealmOrUpdate(r.data?.transfers)
                             Log.d(TAG, "getTransfers() saved to realm")
                         }
                     } else {

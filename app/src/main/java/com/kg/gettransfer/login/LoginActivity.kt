@@ -1,6 +1,8 @@
 package com.kg.gettransfer.login
 
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
@@ -15,8 +17,6 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.kg.gettransfer.R
-import android.app.Activity
-import android.content.Intent
 
 
 /**
@@ -51,6 +51,8 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
 
         val tvRestorePass = findViewById<TextView>(R.id.tvRestorePass)
         tvRestorePass.movementMethod = LinkMovementMethod.getInstance()
+
+        presenter.start()
     }
 
 

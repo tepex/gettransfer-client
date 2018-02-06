@@ -23,8 +23,8 @@ class TransfersAdapter(
 
     inner class ViewHolder(container: ConstraintLayout) : RecyclerView.ViewHolder(container) {
         val from: TextView = container.findViewById(R.id.tvFrom)
-        val to: TextView = container.findViewById(R.id.tvTo)
-        val date: TextView = container.findViewById(R.id.tvDate)
+        val to: TextView = container.findViewById(R.id.tvName)
+        val date: TextView = container.findViewById(R.id.tvLuggage)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {

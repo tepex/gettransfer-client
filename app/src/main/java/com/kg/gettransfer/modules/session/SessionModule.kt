@@ -2,7 +2,8 @@ package com.kg.gettransfer.modules.session
 
 
 import android.util.Log
-import com.kg.gettransfer.RxBus
+import com.jakewharton.rxrelay2.BehaviorRelay
+import com.jakewharton.rxrelay2.PublishRelay
 import com.kg.gettransfer.modules.network.Api
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -32,35 +33,29 @@ object SessionModule {
     private const val TAG = "SessionModule"
 
 
-    private var sessionModel: SessionModel? = null
+    var sessionModel: SessionModel? = null
+        private set
+        get() { // Blocks current thread
+            if (field == null) {
+                synchronized(this) {
+                    if (field == null) {
+                        newSession()
+                    }
+                }
+            }
+            return field
+        }
 
     val isLoggedIn: Boolean get() = sessionModel?.isLoggedIn ?: false
 
-    var state: SessionState = SessionState.LOGGED_OUT
-        set(v) {
-            if (field != v) {
-                field = v
-                RxBus.publish(SessionEvent(v))
-            }
-        }
-
-
-    // Blocks current thread
-    fun getSession(): SessionModel? {
-        if (sessionModel == null) {
-            synchronized(this) {
-                if (sessionModel == null) {
-                    newSession()
-                }
-            }
-        }
-        return sessionModel
-    }
+    val state = BehaviorRelay.createDefault<SessionState>(SessionState.LOGGED_OUT)
+    val loggingIn = BehaviorRelay.createDefault<Boolean>(false)
+    val errorsBus = PublishRelay.create<String?>()
 
 
     // Blocks current thread
     fun getAccessToken(): String? {
-        return getSession()?.accessToken
+        return sessionModel?.accessToken
     }
 
 
@@ -73,7 +68,7 @@ object SessionModule {
             Log.d(TAG, "getAccessToken() responded success, new accessToken = $newAccessToken")
             if (newAccessToken != null) {
                 sessionModel = SessionModel(newAccessToken)
-                state = SessionState.LOGGED_OUT
+                state.accept(SessionState.LOGGED_OUT)
             }
         }
     }
@@ -82,18 +77,23 @@ object SessionModule {
     // --
 
 
-    fun login(email: String, pass: String, c: LoginCallback) {
+    fun login(email: String, pass: String) {
+        if (loggingIn.value) return
         Api.api.login(email, pass)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe({ loggingIn.accept(true) })
                 .subscribe({
+                    loggingIn.accept(false)
                     if (it.ok) {
                         sessionModel?.email = email
-                        c.onLogin()
-                        state = SessionState.LOGGED_IN
-                    } else c.onFail(it.data ?: "Unknown login error")
+                        state.accept(SessionState.LOGGED_IN)
+                    } else {
+                        errorsBus.accept(it.error?.message)
+                    }
                 }, {
-                    c.onFail(it.message ?: "No network connection")
+                    loggingIn.accept(false)
+                    errorsBus.accept(it.localizedMessage)
                 })
     }
 }

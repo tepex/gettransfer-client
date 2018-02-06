@@ -26,6 +26,7 @@ object CurrentUserModule {
 
 
     var email: String? = null
+        private set
 
     var phone: String? = null
     var sign: String? = null
@@ -37,7 +38,7 @@ object CurrentUserModule {
     init {
         RxBus.listen(SessionEvent::class.java).subscribe({
             if (it.state == SessionState.LOGGED_IN) {
-                val newEmail = SessionModule.getSession()?.email
+                val newEmail = SessionModule.sessionModel?.email
                 if (newEmail != email) {
                     email = newEmail
                     RxBus.publish(UserLoggedIn())

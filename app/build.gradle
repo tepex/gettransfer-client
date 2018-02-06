@@ -28,20 +28,27 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
     compile 'com.android.support:appcompat-v7:27.0.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:recyclerview-v7:27.0.2'
 
+    // Retrofit network
     compile "com.squareup.retrofit2:retrofit:2.3.0"
     compile "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
     compile "com.squareup.retrofit2:converter-gson:2.3.0"
 
+    // Rx
     compile "io.reactivex.rxjava2:rxandroid:2.0.1"
+    compile 'io.reactivex.rxjava2:rxkotlin:2.2.0'
+    compile 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
 
-//    compile 'com.github.thorbenprimke:realm-recycler-view:0.9.5'
-
+    // Realm db
     compile 'io.realm:android-adapters:2.1.1'
+
+
 
 //    compile 'com.google.dagger:dagger-android:2.11'
 //    compile 'com.google.dagger:dagger-android-support:2.11' // if you use the support libraries
