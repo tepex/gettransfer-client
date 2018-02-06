@@ -19,7 +19,8 @@ import io.realm.RealmResults
 
 class TransportTypesAdapter(
         realmResults: RealmResults<TransportType>,
-        autoUpdate: Boolean) : RealmRecyclerViewAdapter<TransportType, TransportTypesAdapter.ViewHolder>(realmResults, autoUpdate) {
+        autoUpdate: Boolean)
+    : RealmRecyclerViewAdapter<TransportType, TransportTypesAdapter.ViewHolder>(realmResults, autoUpdate) {
 
     inner class ViewHolder(container: ConstraintLayout) : RecyclerView.ViewHolder(container) {
         val title: TextView = container.findViewById(R.id.tvName)

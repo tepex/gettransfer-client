@@ -19,8 +19,8 @@ import io.realm.RealmResults
 
 class TransfersAdapter(
         realmResults: RealmResults<Transfer>,
-        autoUpdate: Boolean
-) : RealmRecyclerViewAdapter<Transfer, TransfersAdapter.ViewHolder>(realmResults, autoUpdate) {
+        autoUpdate: Boolean)
+    : RealmRecyclerViewAdapter<Transfer, TransfersAdapter.ViewHolder>(realmResults, autoUpdate) {
 
     inner class ViewHolder(container: ConstraintLayout) : RecyclerView.ViewHolder(container) {
         val from: TextView = container.findViewById(R.id.tvFrom)

@@ -83,7 +83,6 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:text="For some time"
-            android:onClick="openCabinet"
             app:layout_constraintBaseline_toBaselineOf="@+id/textView2"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -258,6 +257,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:onClick="openCabinet"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btnCreate"
             app:layout_constraintHorizontal_bias="0.5"
