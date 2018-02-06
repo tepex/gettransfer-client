@@ -1,13 +1,14 @@
 package com.kg.gettransfer.modules
 
 
-import android.util.Log
 import com.kg.gettransfer.models.TransportType
-import com.kg.gettransfer.modules.network.Api
+import com.kg.gettransfer.modules.network.HttpApi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmResults
+import org.koin.standalone.KoinComponent
+import java.util.logging.Logger
 
 
 /**
@@ -15,16 +16,9 @@ import io.realm.RealmResults
  */
 
 
-object TransportTypesModule {
-    private val TAG = "TransportTypesModule"
+class TransportTypesProvider(val realm: Realm, val api: HttpApi) : KoinComponent {
+    private val log = Logger.getLogger("TransportTypesProvider")
 
-
-    private val api by lazy {
-        Api.api
-    }
-    private val realm: Realm by lazy {
-        Realm.getDefaultInstance()
-    }
     var loading = false
 
 
@@ -45,19 +39,19 @@ object TransportTypesModule {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ r ->
-                    Log.d(TAG, "getTransportTypes() responded")
+                    log.info("getTransportTypes() responded")
                     if (r.success) {
-                        Log.d(TAG, "getTransportTypes() success, n = " + r.data?.size.toString())
+                        log.info("getTransportTypes() success, n = " + r.data?.size.toString())
 
                         realm.executeTransaction { realm ->
                             realm.copyToRealmOrUpdate(r.data)
-                            Log.d(TAG, "Saved to realm")
+                            log.info("Saved to realm")
                         }
                     } else {
-                        Log.d(TAG, "getTransportTypes() failed, result = ${r.result}")
+                        log.info("getTransportTypes() failed, result = ${r.result}")
                     }
                 }, { error ->
-                    Log.d(TAG, "getTransportTypes() failed, ${error.message}")
+                    log.info("getTransportTypes() failed, ${error.message}")
                 })
     }
 }

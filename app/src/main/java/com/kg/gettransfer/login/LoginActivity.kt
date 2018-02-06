@@ -17,6 +17,7 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.kg.gettransfer.R
+import org.koin.android.ext.android.inject
 
 
 /**
@@ -25,8 +26,7 @@ import com.kg.gettransfer.R
 
 
 class LoginActivity : AppCompatActivity(), LoginContract.View {
-    override val presenter: LoginContract.Presenter = LoginPresenter()
-
+    override val presenter: LoginContract.Presenter by inject()
 
     private val pb by lazy { findViewById<ProgressBar>(R.id.progressBar) }
 
@@ -45,13 +45,12 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        presenter.view = this // TODO: DI later
-
         installTextWatcher()
 
         val tvRestorePass = findViewById<TextView>(R.id.tvRestorePass)
         tvRestorePass.movementMethod = LinkMovementMethod.getInstance()
 
+        presenter.view = this
         presenter.start()
     }
 

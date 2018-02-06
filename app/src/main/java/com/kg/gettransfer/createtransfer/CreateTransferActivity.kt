@@ -13,18 +13,18 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import com.google.android.gms.location.places.Places
 import com.kg.gettransfer.R
 import com.kg.gettransfer.cabinet.TransfersListActivity
 import com.kg.gettransfer.login.LoginActivity
 import com.kg.gettransfer.models.Location
-import com.kg.gettransfer.modules.DBModule
-import com.kg.gettransfer.modules.TransfersModule
-import com.kg.gettransfer.modules.TransportTypesModule
-import com.kg.gettransfer.modules.network.Api
-import com.kg.gettransfer.modules.network.PassengerProfile
-import com.kg.gettransfer.modules.network.NewTransfer
+import com.kg.gettransfer.modules.Transfers
+import com.kg.gettransfer.modules.TransportTypesProvider
+import com.kg.gettransfer.modules.network.json.NewTransfer
+import com.kg.gettransfer.modules.network.json.PassengerProfile
 import com.kg.gettransfer.views.TransportTypesAdapter
-import io.realm.Realm
+import org.koin.android.ext.android.inject
+import org.koin.standalone.KoinComponent
 import java.util.logging.Logger
 
 
@@ -33,19 +33,11 @@ import java.util.logging.Logger
  */
 
 
-class CreateTransferActivity : AppCompatActivity() {
-    private val TAG = "CreateTransferActivity"
+class CreateTransferActivity : AppCompatActivity(), KoinComponent {
+    private val log = Logger.getLogger("CreateTransferActivity")
+    private val transportTypesProvider: TransportTypesProvider by inject()
+    private val transfersProvider: Transfers by inject()
 
-    //    private val api by lazy {
-//        Api.api
-//    }
-//    private var disposable: Disposable? = null
-    val logger = Logger.getLogger("createTransferActivity")
-
-    private var realm: Realm? = null
-
-    private val transportTypesModule: TransportTypesModule = TransportTypesModule
-    private val transfersModule: TransfersModule = TransfersModule
 
     val etFrom by lazy { findViewById<EditText>(R.id.etFrom) }
     val etTo by lazy { findViewById<EditText>(R.id.etTo) }
@@ -63,14 +55,16 @@ class CreateTransferActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_createtransfer)
 
-        realm = DBModule.create(applicationContext)
-        val api = Api.api
-
         initListTransportTypes()
 
-//        transfersModule.updateTransfers()
+//        transfersProvider.updateTransfers()
 
         installEditTextWatcher()
+
+        val mGeoDataClient = Places.getGeoDataClient(this, null)
+//        val mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null)
+        val results = mGeoDataClient.getAutocompletePredictions("", null, null)
+//        Observable.fromCallable(results)
     }
 
 
@@ -108,7 +102,7 @@ class CreateTransferActivity : AppCompatActivity() {
     private fun initListTransportTypes() {
         val recyclerView = findViewById<RecyclerView>(R.id.rvTypes)
 
-        val types = transportTypesModule.get()
+        val types = transportTypesProvider.get()
         val adapter = TransportTypesAdapter(types, true)
 
         val layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
@@ -134,8 +128,8 @@ class CreateTransferActivity : AppCompatActivity() {
 
 
     fun fabClick(v: View) {
-        transfersModule.createTransfer()
-//        transfersModule.createTransfer(transferFromFields())
+        transfersProvider.createTransfer()
+//        transfersProvider.createTransfer(transferFromFields())
     }
 
 
