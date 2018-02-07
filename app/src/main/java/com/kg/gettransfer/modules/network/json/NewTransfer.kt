@@ -1,4 +1,4 @@
-package com.kg.gettransfer.modules.network;
+package com.kg.gettransfer.modules.network.json;
 
 
 import com.google.gson.annotations.Expose;
@@ -13,41 +13,41 @@ import com.kg.gettransfer.models.Location
 
 class NewTransfer {
     @Expose
-    @SerializedName("distance")
-    var distance:Int =0
-    @Expose
-    @SerializedName("time")
-
-    var time:Int =0
-    @Expose
     @SerializedName("from")
-    var from:Map<String, String> = mapOf()
+    var from: Map<String, String> = mapOf()
 
     @Expose
     @SerializedName("to")
-    var to:Map<String, String> = mapOf()
+    var to: Map<String, String> = mapOf()
+
+    @Expose
+    @SerializedName("distance")
+    var distance: Int = 0
+    @Expose
+    @SerializedName("time")
+    var time: Int = 0
 
     @Expose
     @SerializedName("date_to")
-    var dateTo:String =""
+    var dateTo: String = ""
     @Expose
     @SerializedName("time_to")
-    var timeTo:String =""
+    var timeTo: String = ""
 
     @Expose
     @SerializedName("transport_types")
-    var transportTypes:IntArray = intArrayOf()
+    var transportTypes: IntArray = intArrayOf()
 
     @Expose
     @SerializedName("pax")
-    var pax:Int =1
+    var pax: Int = 1
     @Expose
     @SerializedName("name_sign")
-    var nameSign:String =""
+    var nameSign: String = ""
 
     @Expose
     @SerializedName("passenger_profile")
-    var passengerProfile:Map<String, Map<String, String>> = mapOf()
+    var passengerProfile: Map<String, Map<String, String>> = mapOf()
 
 
     constructor(distance: Int, time: Int, from: Location, to: Location, dateTo: String, timeTo: String, transportTypes: IntArray, pax: Int, nameSign: String, passengerProfile: PassengerProfile) {

@@ -1,4 +1,4 @@
-package com.kg.gettransfer.modules.network
+package com.kg.gettransfer.modules.network.json
 
 
 import com.google.gson.annotations.Expose

@@ -3,16 +3,16 @@ package com.kg.gettransfer.modules
 
 import android.util.Log
 import com.jakewharton.rxrelay2.BehaviorRelay
-import com.kg.gettransfer.RxBus
 import com.kg.gettransfer.models.Location
 import com.kg.gettransfer.models.Transfer
-import com.kg.gettransfer.modules.network.Api
-import com.kg.gettransfer.modules.network.NewTransfer
-import com.kg.gettransfer.modules.network.NewTransferField
-import com.kg.gettransfer.modules.network.PassengerProfile
+import com.kg.gettransfer.modules.network.HttpApi
+import com.kg.gettransfer.modules.network.json.NewTransfer
+import com.kg.gettransfer.modules.network.json.NewTransferField
+import com.kg.gettransfer.modules.network.json.PassengerProfile
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
+import org.koin.standalone.KoinComponent
 
 
 /**
@@ -20,8 +20,8 @@ import io.realm.Realm
  */
 
 
-object TransfersModule {
-    private val TAG = "TransfersModule"
+class Transfers(val realm: Realm, val api: HttpApi, val currentUser: CurrentUser) : KoinComponent {
+    private val TAG = "Transfers"
 
 
     private val transferHardcode: NewTransfer by lazy {
@@ -38,16 +38,11 @@ object TransfersModule {
                 PassengerProfile("d.vakulenko@key-g.com", "+79998887766"))
     }
 
-    private val realm: Realm by lazy {
-        Realm.getDefaultInstance()
-    }
-
-
-    val loadingTransfers = BehaviorRelay.createDefault<Boolean>(false)
+    val busy = BehaviorRelay.createDefault<Boolean>(false)
 
 
     init {
-        RxBus.listen(CurrentUserModule.UserChanged::class.java)
+        currentUser.state
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     val transfers = realm.where(Transfer::class.java).findAll()
@@ -61,7 +56,7 @@ object TransfersModule {
 
     fun createTransfer(transfer: NewTransfer = transferHardcode) {
         Log.d(TAG, "createTransfer()")
-        Api.api.postTransfer(NewTransferField(transfer))
+        api.postTransfer(NewTransferField(transfer))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ r ->
@@ -76,19 +71,20 @@ object TransfersModule {
                 })
     }
 
+
     fun getTransfers() = realm.where(Transfer::class.java).findAll()
 
 
     fun updateTransfers() {
         Log.d(TAG, "updateTransfers()")
-        if (loadingTransfers.value) return
+        if (busy.value) return
         Log.d(TAG, "getTransfers() call")
-        Api.api.getTransfers()
+        api.getTransfers()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { loadingTransfers.accept(true) }
+                .doOnSubscribe { busy.accept(true) }
                 .subscribe({
-                    loadingTransfers.accept(false)
+                    busy.accept(false)
                     if (it.success) {
                         Log.d(TAG, "getTransfers() responded success, N = ${it.data?.transfers?.size}")
 
@@ -100,7 +96,7 @@ object TransfersModule {
                         Log.d(TAG, "getTransfers() responded fail, result = ${it.result}")
                     }
                 }, {
-                    loadingTransfers.accept(false)
+                    busy.accept(false)
                     Log.d(TAG, "getTransfers() fail, ${it.message}")
                 })
     }

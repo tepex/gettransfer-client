@@ -2,10 +2,9 @@ package com.kg.gettransfer.modules
 
 
 import android.content.Context
-import android.util.Log
-import com.kg.gettransfer.RxBus
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import org.koin.standalone.KoinComponent
 
 
 /**
@@ -13,18 +12,18 @@ import io.realm.RealmConfiguration
  */
 
 
-object DBModule {
-    fun create(applicationContext: Context): Realm {
+class DBProvider(applicationContext: Context) : KoinComponent {
+    init {
         Realm.init(applicationContext)
-
         val config: RealmConfiguration = RealmConfiguration.Builder()
                 .name("db")
                 .schemaVersion(1)
                 .deleteRealmIfMigrationNeeded()
                 .build()
-
         Realm.setDefaultConfiguration(config)
+    }
 
+    fun create(): Realm {
         return Realm.getDefaultInstance()
     }
 }

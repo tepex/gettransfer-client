@@ -1,4 +1,4 @@
-package com.kg.gettransfer.modules.network
+package com.kg.gettransfer.modules.network.json
 
 
 import com.google.gson.annotations.Expose
@@ -11,5 +11,5 @@ import com.google.gson.annotations.SerializedName
 
 
 class NewTransferField(@Expose
-                        @SerializedName("transfer")
-                        val transfer: NewTransfer)
+                       @SerializedName("transfer")
+                       val transfer: NewTransfer)

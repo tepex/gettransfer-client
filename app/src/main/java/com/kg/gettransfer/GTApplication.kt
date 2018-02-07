@@ -1,7 +1,10 @@
 package com.kg.gettransfer
 
 import android.app.Application
-import com.kg.gettransfer.modules.CurrentUserModule
+import android.content.pm.ApplicationInfo
+import org.koin.Koin
+import org.koin.android.ext.android.startKoin
+import org.koin.android.logger.AndroidLogger
 
 
 /**
@@ -10,8 +13,16 @@ import com.kg.gettransfer.modules.CurrentUserModule
 
 
 class GTApplication : Application() {
-    init {
-        RxBus
-        CurrentUserModule
+    override fun onCreate() {
+        super.onCreate()
+
+        // Display some logs
+        val isDebug = (0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE)
+        if (isDebug) {
+            Koin.logger = AndroidLogger()
+        }
+
+        // Start Koin
+        startKoin(this, todoAppModules)
     }
 }

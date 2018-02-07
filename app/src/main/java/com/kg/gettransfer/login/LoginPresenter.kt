@@ -1,8 +1,8 @@
 package com.kg.gettransfer.login
 
 
-import com.kg.gettransfer.modules.session.SessionModule
-import com.kg.gettransfer.modules.session.SessionState
+import com.kg.gettransfer.modules.CurrentUser
+import org.koin.standalone.KoinComponent
 
 
 /**
@@ -10,24 +10,25 @@ import com.kg.gettransfer.modules.session.SessionState
  */
 
 
-class LoginPresenter : LoginContract.Presenter {
+class LoginPresenter(private val currentUser: CurrentUser) : LoginContract.Presenter, KoinComponent {
     override lateinit var view: LoginContract.View
 
 
-    override val busy: Boolean get() = SessionModule.loggingIn.value
+    override val busy: Boolean get() = currentUser.busy.value
 
 
     override fun start() {
         view.showError(null)
 
-        SessionModule.state.subscribe { if (it == SessionState.LOGGED_IN) view.loginSuccess() }
-        SessionModule.loggingIn.subscribe { view.busyChanged(it) }
-        SessionModule.errorsBus.subscribe { view.showError(it) }
+        currentUser.state.subscribe { if (it == CurrentUser.SessionState.LOGGED_IN) view.loginSuccess() }
+        currentUser.busy.subscribe { view.busyChanged(it) }
+        currentUser.errorsBus.subscribe { view.showError(it) }
     }
 
 
     override fun login(email: String, pass: String) {
         view.showError(null)
-        SessionModule.login(email, pass)
+
+        currentUser.login(email, pass)
     }
 }
