@@ -14,7 +14,7 @@ import org.koin.standalone.KoinComponent
  */
 
 
-class CurrentUser(val session: Session, val api: HttpApi) : KoinComponent {
+class CurrentAccount(val session: Session, val api: HttpApi) : KoinComponent {
     var email: String? = null
         private set
 

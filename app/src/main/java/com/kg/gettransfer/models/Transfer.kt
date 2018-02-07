@@ -16,6 +16,11 @@ import io.realm.annotations.RealmClass
 @RealmClass
 open class Transfer : RealmObject() {
     @Expose
+    @SerializedName("id")
+    @PrimaryKey
+    var id: Int = -1
+
+    @Expose
     @SerializedName("from")
     var from: Location? = null
     @Expose
@@ -48,9 +53,4 @@ open class Transfer : RealmObject() {
     @Expose
     @SerializedName("name_sign")
     var nameSign: String = ""
-
-    @Expose
-    @SerializedName("id")
-    @PrimaryKey
-    var id: Int = -1
 }
