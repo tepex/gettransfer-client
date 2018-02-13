@@ -1,5 +1,6 @@
 package com.kg.gettransfer.data
 
+import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.models.Location
 
 
@@ -11,16 +12,21 @@ class LocationDetailed(
         val title: String,
         val subtitle: String?,
         val placeID: String?,
-        val la: Double?,
-        val lo: Double?) {
+        val latLng: LatLng?) {
 
-    constructor(title: String) : this(title, null, null, null, null)
 
-    constructor(title: String, subtitle: String, placeID: String)
-            : this(title, subtitle, placeID, null, null)
+    constructor(title: String) : this(title, null, null, null)
 
-    public val valid: Boolean
-        get() = title.isNotEmpty() //&& la != null && lo != null
+    constructor(title: String, subtitle: String, placeID: String?)
+            : this(title, subtitle, placeID, null)
 
-    public fun toLocation(): Location = Location(title, la!!, lo!!)
+
+    val valid: Boolean
+        get() = title.isNotEmpty() && latLng != null
+
+
+    fun toLocation(): Location = Location(title, latLng!!.latitude, latLng.longitude)
+
+
+    fun equalsRaw(b: LocationDetailed?): Boolean = title == b?.title
 }

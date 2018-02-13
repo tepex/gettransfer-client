@@ -1,4 +1,4 @@
-package com.kg.gettransfer.modules
+package com.kg.gettransfer.modules.googleapi
 
 
 import android.content.Context
@@ -22,13 +22,14 @@ class GeoAutocompleteAsync(val context: Context) : KoinComponent {
 
     var response: PublishRelay<AutocompletePredictionBufferResponse> = PublishRelay.create()
 
-    private val BOUNDS_MOUNTAIN_VIEW = LatLngBounds(
-            LatLng(37.398160, -122.180831), LatLng(37.430610, -121.972090))
+    private val LAT_LNG_BOUNDS_WORLD = LatLngBounds(
+            LatLng(-90.0, -180.0),
+            LatLng(90.0, 180.0))
 
     fun get(str: String) {
         val mGeoDataClient = Places.getGeoDataClient(context, null)
 
-        val results = mGeoDataClient.getAutocompletePredictions(str, BOUNDS_MOUNTAIN_VIEW, null)
+        val results = mGeoDataClient.getAutocompletePredictions(str, LAT_LNG_BOUNDS_WORLD, null)
         results.addOnCompleteListener {
             if (it.isSuccessful) response.accept(it.result)
 

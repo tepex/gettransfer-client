@@ -5,10 +5,10 @@ import android.util.Log
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.kg.gettransfer.models.Location
 import com.kg.gettransfer.models.Transfer
-import com.kg.gettransfer.modules.network.HttpApi
-import com.kg.gettransfer.modules.network.json.NewTransfer
-import com.kg.gettransfer.modules.network.json.NewTransferField
-import com.kg.gettransfer.modules.network.json.PassengerProfile
+import com.kg.gettransfer.modules.http.HttpApi
+import com.kg.gettransfer.modules.http.json.NewTransfer
+import com.kg.gettransfer.modules.http.json.NewTransferField
+import com.kg.gettransfer.modules.http.json.PassengerProfile
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

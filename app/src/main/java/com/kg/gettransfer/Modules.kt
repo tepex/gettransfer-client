@@ -1,24 +1,29 @@
 package com.kg.gettransfer
 
 
+import android.location.Geocoder
 import com.kg.gettransfer.cabinet.TransfersListActivity
 import com.kg.gettransfer.createtransfer.CreateTransferActivity
 import com.kg.gettransfer.login.LoginActivity
 import com.kg.gettransfer.login.LoginContract
 import com.kg.gettransfer.login.LoginPresenter
 import com.kg.gettransfer.modules.*
-import com.kg.gettransfer.modules.network.HttpApi
-import com.kg.gettransfer.modules.network.HttpApiFactory
-import com.kg.gettransfer.modules.network.ProvideAccessTokenInterceptor
-import com.kg.gettransfer.views.GeoAutocompleteProvider
+import com.kg.gettransfer.modules.googleapi.GeoAutocompleteProvider
+import com.kg.gettransfer.modules.googleapi.GeoUtils
+import com.kg.gettransfer.modules.googleapi.GoogleApiClientFactory
+import com.kg.gettransfer.modules.http.HttpApi
+import com.kg.gettransfer.modules.http.HttpApiFactory
+import com.kg.gettransfer.modules.http.ProvideAccessTokenInterceptor
 import org.koin.dsl.module.applicationContext
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
 
 /**
  * Koin main module
  */
+
 
 val AppModule = applicationContext {
     // Http
@@ -40,6 +45,10 @@ val AppModule = applicationContext {
     provide { GoogleApiClientFactory.create(get()) }
     provide { GeoAutocompleteProvider() }
 
+    factory { GeoUtils(get(), get()) }
+
+    provide { Geocoder(get(), Locale.getDefault()) }
+
 
     // Data
 
@@ -49,8 +58,6 @@ val AppModule = applicationContext {
     provide { Transfers(get(), get(), get()) }
 
     provide { TransportTypesProvider(get(), get()) }
-
-    factory { GeoAutocompleteAsync(get()) }
 
 
     // UI
@@ -65,7 +72,7 @@ val AppModule = applicationContext {
 
 
 /**
- * Module response
+ * Module list
  */
 
 val todoAppModules = listOf(AppModule)

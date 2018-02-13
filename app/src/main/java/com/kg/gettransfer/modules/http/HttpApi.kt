@@ -1,7 +1,7 @@
-package com.kg.gettransfer.modules.network
+package com.kg.gettransfer.modules.http
 
 
-import com.kg.gettransfer.modules.network.json.*
+import com.kg.gettransfer.modules.http.json.*
 import io.reactivex.Observable
 import retrofit2.http.*
 

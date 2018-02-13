@@ -7,8 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
@@ -18,18 +16,26 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.TextView
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.MapsInitializer
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.kg.gettransfer.R
 import com.kg.gettransfer.cabinet.TransfersListActivity
+import com.kg.gettransfer.data.LocationDetailed
 import com.kg.gettransfer.fragments.ChooseLocationFragment
 import com.kg.gettransfer.fragments.TransferDetailsFragment
 import com.kg.gettransfer.login.LoginActivity
+import com.kg.gettransfer.models.Location
 import com.kg.gettransfer.modules.Transfers
-import com.kg.gettransfer.modules.network.json.NewTransfer
+import com.kg.gettransfer.modules.http.json.NewTransfer
+import com.kg.gettransfer.views.BitmapDescriptorFactory
 import com.kg.gettransfer.views.LocationView
 import io.reactivex.functions.Consumer
+import kotlinx.android.synthetic.main.activity_createtransfer.*
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
 import java.util.logging.Logger
@@ -48,12 +54,6 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
     private val frChooseLocation: ChooseLocationFragment by lazy { ChooseLocationFragment() }
     private val frTransferDetails: TransferDetailsFragment by lazy { TransferDetailsFragment() }
 
-    val lvFrom by lazy { findViewById<LocationView>(R.id.lvFrom) }
-    val lvTo by lazy { findViewById<LocationView>(R.id.lvTo) }
-
-    val fabConfirmStep by lazy { findViewById<FloatingActionButton>(R.id.fabConfirmStep) }
-
-    private val mapView: MapView by lazy { findViewById<MapView>(R.id.map) }
     private var map: GoogleMap? = null
 
 
@@ -72,10 +72,10 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
         setUpMapIfNeeded()
 
         fragmentManager.addOnBackStackChangedListener {
-            if (fragmentManager.backStackEntryCount == 0) {
-                findViewById<ConstraintLayout>(R.id.clNavbar).visibility = VISIBLE
-                fabConfirmStep.visibility = VISIBLE
-            }
+            updateFab()
+            clNavbar.visibility =
+                    if (fragmentManager.backStackEntryCount == 0) VISIBLE
+                    else GONE
         }
     }
 
@@ -108,12 +108,21 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
     }
 
     private fun setUpMap() {
-//        double lat = Double . parseDouble (0));
-//        double lon = Double . parseDouble (0));
-//        LatLng coords = new LatLng(lon, lat);
-//
-//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(coords, 10));
-//        map.addMarker(new MarkerOptions ().position(coords));
+        markerFrom = map?.addMarker(
+                MarkerOptions()
+                        .visible(false)
+                        .position(LatLng(0.0, 0.0))
+                        .anchor(0.5f, 0.5f)
+                        .icon(BitmapDescriptorFactory
+                                .fromVector(this, R.drawable.ic_adjust_black_24dp)))
+
+        markerTo = map?.addMarker(
+                MarkerOptions()
+                        .visible(false)
+                        .position(LatLng(0.0, 0.0))
+                        .anchor(0.5f, 0.95f)
+                        .icon(BitmapDescriptorFactory
+                                .fromVector(this, R.drawable.ic_place_black_24dp)))
     }
 
 
@@ -123,17 +132,29 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
     }
 
 
+    private fun updateFab() {
+        fabConfirmStep.visibility =
+                if (validateFields() && fragmentManager.backStackEntryCount == 0) VISIBLE
+                else GONE
+    }
+
+
+    private var markerFrom: Marker? = null
+    private var markerTo: Marker? = null
+
     private fun installEditTextWatcher() {
         val textWatcher: TextWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                fabConfirmStep.visibility = if (validateFields()) VISIBLE else GONE
+                updateFab()
+
+                val llFrom = lvFrom.location?.latLng
+                val llTo = lvTo.location?.latLng
+                updateMarkers(llFrom, llTo)
+                animateMap(llFrom, llTo)
             }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence?, st: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, st: Int, before: Int, count: Int) = Unit
         }
 
         lvFrom.addTextChangedListener(textWatcher)
@@ -141,25 +162,61 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
     }
 
 
+    private fun updateMarkers(llFrom: LatLng?, llTo: LatLng?) {
+        if (llFrom != null) {
+            markerFrom?.position = llFrom
+            markerFrom?.isVisible = true
+        } else {
+            markerFrom?.isVisible = false
+        }
+
+        if (llTo != null) {
+            markerTo?.position = llTo
+            markerTo?.isVisible = true
+        } else {
+            markerTo?.isVisible = false
+        }
+    }
+
+
+    private fun animateMap(llFrom: LatLng?, llTo: LatLng?) {
+        if (llFrom != null && llTo != null) {
+            val padding = (64 * applicationContext.resources.displayMetrics.density).toInt()
+            map?.animateCamera(
+                    CameraUpdateFactory.newLatLngBounds(
+                            getLatLngBounds(llFrom, llTo),
+                            padding),
+                    600,
+                    null)
+        } else if (llFrom != null) {
+            map?.animateCamera(CameraUpdateFactory.newLatLng(llFrom), 600, null)
+        } else if (llTo != null) {
+            map?.animateCamera(CameraUpdateFactory.newLatLng(llTo), 600, null)
+        }
+    }
+
+
+    private fun getLatLngBounds(a: LatLng, b: LatLng): LatLngBounds {
+        return LatLngBounds(
+                LatLng(
+                        Math.min(a.latitude, b.latitude),
+                        Math.min(a.longitude, b.longitude)),
+                LatLng(
+                        Math.max(a.latitude, b.latitude),
+                        Math.max(a.longitude, b.longitude)))
+    }
+
+
     private fun validateFields(): Boolean =
             lvFrom.location?.valid == true && lvTo.location?.valid == true
 
 
-    private fun transferFromFields(): NewTransfer {
-        val newTransfer = NewTransfer(lvFrom.location?.toLocation()!!, lvTo.location?.toLocation()!!)
-
-        frTransferDetails.populateNewTransfer(newTransfer)
-
-        return newTransfer
-    }
+    private fun transferFromFields(): NewTransfer =
+            NewTransfer(lvFrom.location?.toLocation()!!, lvTo.location?.toLocation()!!)
 
 
     fun fabClick(v: View) {
         showTransferDetails()
-
-        fabConfirmStep.visibility = GONE
-        findViewById<ConstraintLayout>(R.id.clNavbar).visibility = GONE
-
 //        transfers.createTransfer()
 //                .subscribe({ showTransfers(null) })
 //
@@ -183,10 +240,12 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
         }
     }
 
+
     fun showTransfers(v: View?) {
         val intent = Intent(this, TransfersListActivity::class.java)
         startActivityForResult(intent, 2)
     }
+
 
     fun showProfile(v: View?) {
 
@@ -206,6 +265,8 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
 //            hideLocationChooser()
 //        }
 
+        frTransferDetails.transfer = transferFromFields()
+
         if (frTransferDetails.isAdded) {
             ft.show(frTransferDetails)
         } else {
@@ -218,9 +279,9 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
     }
 
 
-    var ftidLocationChooser: Int = -1
+    private var ftidLocationChooser: Int = -1
 
-    fun showLocationChooser(lv: LocationView) {
+    private fun showLocationChooser(lv: LocationView) {
         val ft = fragmentManager.beginTransaction()
 
         frChooseLocation.location = lv.location
@@ -241,7 +302,16 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
         ftidLocationChooser = ft.commit()
     }
 
-    fun hideLocationChooser() {
+    private fun hideLocationChooser() {
         fragmentManager.popBackStack(ftidLocationChooser, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    }
+
+
+    // --
+
+
+    fun btnPromo(v: View) {
+        lvFrom.location = LocationDetailed("DME")
+        lvTo.location = LocationDetailed("Moscow")
     }
 }

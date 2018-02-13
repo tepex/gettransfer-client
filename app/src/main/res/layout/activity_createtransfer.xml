@@ -102,6 +102,7 @@
             android:onClick="locationViewClick"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
+            android:paddingTop="2dp"
             android:textColor="?attr/editTextColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tvFrom"
@@ -110,7 +111,7 @@
         <View
             android:id="@+id/textView3"
             android:layout_width="0dp"
-            android:layout_height="1.333dp"
+            android:layout_height="1dp"
             android:layout_marginStart="16dp"
             android:background="#cccccc"
             app:layout_constraintEnd_toEndOf="parent"
@@ -141,6 +142,7 @@
             android:onClick="locationViewClick"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
+            android:paddingTop="2dp"
             android:textColor="?attr/editTextColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tvTo"
@@ -151,13 +153,26 @@
 
 
     <com.google.android.gms.maps.MapView
-        android:id="@+id/map"
+        android:id="@+id/mapView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:paddingBottom="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/clHeader" />
+
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:layout_marginStart="16dp"
+        android:onClick="btnPromo"
+        android:text="DME - Moskva"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"

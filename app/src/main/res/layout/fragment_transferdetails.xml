@@ -16,9 +16,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+
+            <!--Pick up-->
+
 
             <TextView
                 android:id="@+id/textView7"
@@ -33,6 +38,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
 
             <TextView
                 android:id="@+id/textView"
@@ -73,8 +79,8 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
                 app:layout_constraintBaseline_toBaselineOf="@+id/etDate"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/etDate" />
+
 
             <TextView
                 android:id="@+id/textView6"
@@ -95,6 +101,7 @@
                 android:hint="Number"
                 android:inputType="number"
                 android:paddingLeft="8dp"
+                android:selectAllOnFocus="true"
                 android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView6"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -127,20 +134,25 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/btnPassengersDec" />
 
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvTypes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:clipToPadding="false"
+                android:paddingBottom="8dp"
                 android:paddingEnd="16dp"
                 android:paddingStart="16dp"
+                android:paddingTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
-            <!---->
+
+            <!--Personal comfort-->
+
 
             <TextView
                 android:id="@+id/textView18"
@@ -157,13 +169,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rvTypes" />
 
+
             <TextView
                 android:id="@+id/textView210"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
-                android:text="Sign"
+                android:text="Name sign"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
@@ -184,6 +197,61 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView210" />
 
+
+            <TextView
+                android:id="@+id/textView39"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:text="Offer your price"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView210" />
+
+            <EditText
+                android:id="@+id/etPrice"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:ems="10"
+                android:hint="$500"
+                android:inputType="text"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView39"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView39" />
+
+
+            <TextView
+                android:id="@+id/textView49"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:text="Flight or train"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView39" />
+
+            <EditText
+                android:id="@+id/etFlightTrainNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:ems="10"
+                android:hint="Flight or train number"
+                android:inputType="text"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView49"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView49" />
+
+
             <TextView
                 android:id="@+id/textView29"
                 android:layout_width="wrap_content"
@@ -192,7 +260,7 @@
                 android:layout_marginTop="24dp"
                 android:text="Comments"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView210" />
+                app:layout_constraintTop_toBottomOf="@+id/textView49" />
 
             <EditText
                 android:id="@+id/etComments"
@@ -201,8 +269,8 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:ems="10"
-                android:hint="Flight or train number, child seats, requirements"
-                android:inputType="phone"
+                android:hint="Children, snowboards, ski bags, surfboards"
+                android:inputType="text"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
@@ -210,7 +278,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView29" />
 
-            <!---->
+
+            <!--Contact with-->
+
 
             <TextView
                 android:id="@+id/textView8"
@@ -226,6 +296,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView29" />
+
 
             <TextView
                 android:id="@+id/textView10"
@@ -254,6 +325,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView10" />
 
+
             <TextView
                 android:id="@+id/textView9"
                 android:layout_width="wrap_content"
@@ -280,10 +352,12 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView9" />
 
+
             <!---->
 
+
             <TextView
-                android:id="@+id/textView898"
+                android:id="@+id/tvError"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -292,7 +366,7 @@
                 android:paddingBottom="40dp"
                 android:paddingLeft="16dp"
                 android:paddingTop="40dp"
-                android:text="Fill *** to get offers"
+                android:text=" "
                 android:textColor="@android:color/holo_red_dark"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

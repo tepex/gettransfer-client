@@ -3,7 +3,7 @@ package com.kg.gettransfer.modules
 
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
-import com.kg.gettransfer.modules.network.HttpApi
+import com.kg.gettransfer.modules.http.HttpApi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.standalone.KoinComponent
@@ -73,3 +73,5 @@ class CurrentAccount(val session: Session, val api: HttpApi) : KoinComponent {
                 })
     }
 }
+
+

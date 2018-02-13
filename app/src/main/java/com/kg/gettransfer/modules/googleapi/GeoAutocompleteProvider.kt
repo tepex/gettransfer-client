@@ -1,4 +1,4 @@
-package com.kg.gettransfer.views
+package com.kg.gettransfer.modules.googleapi
 
 
 import android.util.Log
@@ -29,7 +29,11 @@ class GeoAutocompleteProvider : KoinComponent {
     private var currentPendingResult: PendingResult<AutocompletePredictionBuffer>? = null
 
     // Blocks thread
-    fun getPredictions(constraint: CharSequence?, bounds: LatLngBounds, autocompleteFilter: AutocompleteFilter?): ArrayList<LocationDetailed>? {
+    fun getPredictions(
+            constraint: CharSequence?,
+            bounds: LatLngBounds,
+            autocompleteFilter: AutocompleteFilter?)
+            : ArrayList<LocationDetailed>? {
         if (constraint == null || constraint.isEmpty()) return null
 
         if (!googleApiClient.isConnected) {
@@ -70,7 +74,10 @@ class GeoAutocompleteProvider : KoinComponent {
             val iterator = autocompletePredictions.iterator()
             while (iterator.hasNext()) {
                 val prediction = iterator.next()
-                resultList.add(LocationDetailed(prediction.getPrimaryText(null).toString(), prediction.getSecondaryText(null).toString(), prediction.placeId.toString()))
+                resultList.add(LocationDetailed(
+                        prediction.getPrimaryText(null).toString(),
+                        prediction.getSecondaryText(null).toString(),
+                        prediction.placeId))
             }
 
             autocompletePredictions.release()

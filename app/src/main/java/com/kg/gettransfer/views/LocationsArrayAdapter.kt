@@ -10,6 +10,7 @@ import com.google.android.gms.location.places.AutocompleteFilter
 import com.google.android.gms.maps.model.LatLngBounds
 import com.kg.gettransfer.R
 import com.kg.gettransfer.data.LocationDetailed
+import com.kg.gettransfer.modules.googleapi.GeoAutocompleteProvider
 import io.reactivex.functions.Consumer
 import org.koin.standalone.KoinComponent
 import java.util.*
