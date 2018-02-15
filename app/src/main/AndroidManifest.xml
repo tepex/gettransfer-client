@@ -3,6 +3,12 @@
     package="com.kg.gettransfer">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
     <application
         android:name=".GTApplication"
         android:allowBackup="true"
@@ -11,6 +17,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAZXhfW8DCix33iyFU3An8ovidJjwpHFFg" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
         <activity
             android:name=".createtransfer.CreateTransferActivity"
             android:screenOrientation="portrait">
@@ -19,14 +33,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".login.LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateUnchanged|adjustResize" />
+
         <activity
             android:name=".cabinet.TransfersListActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateUnchanged|adjustResize" />
+
     </application>
 
 </manifest>

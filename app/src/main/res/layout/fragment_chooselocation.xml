@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+
+    <!--<View-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="80dp"-->
+    <!--android:background="@color/bg"-->
+    <!--android:elevation="8dp"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--app:layout_constraintTop_toTopOf="parent">-->
+
+    <!--</View>-->
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/clHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp">
+
+        <ImageButton
+            android:id="@+id/ibBack"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_arrow_back_gray_24dp" />
+
+        <EditText
+            android:id="@+id/etLocation"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:drawablePadding="8dp"
+            android:ems="10"
+            android:hint="Place name"
+            android:inputType="text"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
+            app:layout_constraintBottom_toBottomOf="@+id/ibBack"
+            app:layout_constraintEnd_toStartOf="@+id/ibOk"
+            app:layout_constraintStart_toEndOf="@+id/ibBack"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/ibOk"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_check_blue_24dp" />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+    <ListView
+        android:id="@+id/rvLocations"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/clHeader" />
+
+
+    <TextView
+        android:id="@+id/tvEmpty"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:padding="0dp"
+        android:text="No Results"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/clHeader" />
+
+
+</android.support.constraint.ConstraintLayout>

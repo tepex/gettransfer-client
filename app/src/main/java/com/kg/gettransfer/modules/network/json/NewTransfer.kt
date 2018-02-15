@@ -62,4 +62,10 @@ class NewTransfer {
         this.nameSign = nameSign
         this.passengerProfile = passengerProfile.toMap()
     }
+
+
+    constructor(from: Location, to: Location) {
+        this.from = from.toMap()
+        this.to = to.toMap()
+    }
 }

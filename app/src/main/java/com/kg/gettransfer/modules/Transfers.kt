@@ -9,9 +9,11 @@ import com.kg.gettransfer.modules.network.HttpApi
 import com.kg.gettransfer.modules.network.json.NewTransfer
 import com.kg.gettransfer.modules.network.json.NewTransferField
 import com.kg.gettransfer.modules.network.json.PassengerProfile
+import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
+import io.realm.RealmResults
 import org.koin.standalone.KoinComponent
 
 
@@ -20,7 +22,7 @@ import org.koin.standalone.KoinComponent
  */
 
 
-class Transfers(val realm: Realm, val api: HttpApi, val currentUser: CurrentUser) : KoinComponent {
+class Transfers(val realm: Realm, val api: HttpApi, val currentAccount: CurrentAccount) : KoinComponent {
     private val TAG = "Transfers"
 
 
@@ -28,7 +30,7 @@ class Transfers(val realm: Realm, val api: HttpApi, val currentUser: CurrentUser
         NewTransfer(
                 19,
                 33,
-                Location("Moscow", 1.0, 1.0),
+                Location("Novosibirsk", 1.0, 1.0),
                 Location("Petersburg", 2.0, 2.0),
                 "2020/12/25",
                 "15:00",
@@ -42,7 +44,7 @@ class Transfers(val realm: Realm, val api: HttpApi, val currentUser: CurrentUser
 
 
     init {
-        currentUser.state
+        currentAccount.state
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     val transfers = realm.where(Transfer::class.java).findAll()
@@ -54,25 +56,32 @@ class Transfers(val realm: Realm, val api: HttpApi, val currentUser: CurrentUser
     }
 
 
-    fun createTransfer(transfer: NewTransfer = transferHardcode) {
-        Log.d(TAG, "createTransfer()")
-        api.postTransfer(NewTransferField(transfer))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ r ->
-                    if (r.success) {
-                        Log.d(TAG, "createTransfer() responded success, id = ${r.data?.id}")
-                        updateTransfers()
-                    } else {
-                        Log.d(TAG, "createTransfer() responded fail, result = ${r.result}")
-                    }
-                }, { error ->
-                    Log.d(TAG, "createTransfer() fail, ${error.message}")
-                })
-    }
+    fun createTransfer(transfer: NewTransfer = transferHardcode): Observable<Transfer> =
+            Observable.create<Transfer> {
+                Log.d(TAG, "createTransfer()")
+                api.postTransfer(NewTransferField(transfer))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ r ->
+                            if (r.success) {
+                                Log.d(TAG, "createTransfer() responded success, id = ${r.data?.id}")
+                                updateTransfers()
+                                val t = Transfer()
+                                t.id = r.data?.id ?: -1
+                                it.onNext(t)
+                            } else {
+                                Log.d(TAG, "createTransfer() responded fail, result = ${r.result}")
+                                it.onError(Exception(r.error?.message))
+                            }
+                        }, { error ->
+                            Log.d(TAG, "createTransfer() fail, ${error.message}")
+                            it.onError(error)
+                        })
+            }
 
 
-    fun getTransfers() = realm.where(Transfer::class.java).findAll()
+    fun getTransfers(): RealmResults<Transfer> =
+            realm.where(Transfer::class.java).findAll()
 
 
     fun updateTransfers() {

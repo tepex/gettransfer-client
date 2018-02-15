@@ -61,7 +61,7 @@
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toEndOf="@+id/tvPax"
         app:layout_constraintTop_toTopOf="@+id/imageView"
-        app:srcCompat="@drawable/ic_work_black_24dp" />
+        app:srcCompat="@drawable/ic_work_black_13dp" />
 
     <TextView
         android:id="@+id/tvLuggage"
