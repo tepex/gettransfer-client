@@ -1,12 +1,16 @@
 package com.kg.gettransfer.cabinet
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import android.view.View
 import com.kg.gettransfer.R
+import com.kg.gettransfer.createtransfer.CreateTransferActivity
 import com.kg.gettransfer.modules.Transfers
+import com.kg.gettransfer.views.EmptyRecyclerView
 import com.kg.gettransfer.views.TransfersAdapter
+import kotlinx.android.synthetic.main.activity_cabinet.*
 import org.koin.android.ext.android.inject
 
 /**
@@ -27,8 +31,14 @@ class TransfersListActivity : AppCompatActivity() {
 
         val layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
 
-        val rvTransfers = findViewById<RecyclerView>(R.id.transfersList)
+        val rvTransfers = findViewById<EmptyRecyclerView>(R.id.transfersList)
         rvTransfers.adapter = adapter
         rvTransfers.layoutManager = layoutManager
+        rvTransfers.emptyView = emptyTransfersLayout
+    }
+
+    fun createTransfer(v: View?) {
+        val intent = Intent(this, CreateTransferActivity::class.java)
+        startActivityForResult(intent, 2)
     }
 }
