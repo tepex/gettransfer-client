@@ -1,7 +1,7 @@
 package com.kg.gettransfer.modules
 
 
-import com.kg.gettransfer.models.TransportType
+import com.kg.gettransfer.realm.TransportType
 import com.kg.gettransfer.modules.http.HttpApi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

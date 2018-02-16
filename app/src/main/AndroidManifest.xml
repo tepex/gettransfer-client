@@ -38,9 +38,14 @@
             android:windowSoftInputMode="stateUnchanged|adjustResize" />
 
         <activity
-            android:name=".cabinet.TransfersListActivity"
+            android:name=".transfers.TransfersActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateUnchanged|adjustResize" />
+
+        <activity
+            android:name=".transfer.TransferActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateUnchanged" />
 
     </application>
 

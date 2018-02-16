@@ -1,4 +1,4 @@
-package com.kg.gettransfer.models
+package com.kg.gettransfer.realm
 
 
 import com.google.gson.annotations.Expose
@@ -28,6 +28,9 @@ open class Transfer : RealmObject() {
     var to: Location? = null
 
     @Expose
+    @SerializedName("duration")
+    var duration: Int = 0
+    @Expose
     @SerializedName("distance")
     var distance: Int = 0
     @Expose
@@ -35,11 +38,15 @@ open class Transfer : RealmObject() {
     var time: Int = 0
 
     @Expose
+    @SerializedName("status")
+    var status: String? = null
+
+    @Expose
     @SerializedName("date_to")
     var dateTo: String = ""
     @Expose
-    @SerializedName("time_to")
-    var timeTo: String = ""
+    @SerializedName("time_return")
+    var dateReturn: String = ""
 
     // TODO: Блин, что-то я не осилил как поддержать лист интов
 //    @Expose

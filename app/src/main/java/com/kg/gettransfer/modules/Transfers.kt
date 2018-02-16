@@ -3,8 +3,8 @@ package com.kg.gettransfer.modules
 
 import android.util.Log
 import com.jakewharton.rxrelay2.BehaviorRelay
-import com.kg.gettransfer.models.Location
-import com.kg.gettransfer.models.Transfer
+import com.kg.gettransfer.realm.Location
+import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.modules.http.HttpApi
 import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.modules.http.json.NewTransferField
@@ -87,8 +87,12 @@ class Transfers(val realm: Realm, val api: HttpApi, val currentAccount: CurrentA
             }
 
 
-    fun getTransfers(): RealmResults<Transfer> =
+    fun getAll(): RealmResults<Transfer> =
             realm.where(Transfer::class.java).findAllAsync()
+
+
+    fun get(id : Int): RealmResults<Transfer> =
+            realm.where(Transfer::class.java).equalTo("id", id).findAll()
 
 
     fun updateTransfers() {

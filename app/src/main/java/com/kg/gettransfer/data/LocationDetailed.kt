@@ -1,7 +1,7 @@
 package com.kg.gettransfer.data
 
 import com.google.android.gms.maps.model.LatLng
-import com.kg.gettransfer.models.Location
+import com.kg.gettransfer.realm.Location
 
 
 /**

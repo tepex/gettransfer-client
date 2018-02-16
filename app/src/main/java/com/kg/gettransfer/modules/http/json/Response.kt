@@ -3,8 +3,8 @@ package com.kg.gettransfer.modules.http.json
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.kg.gettransfer.models.Transfer
-import com.kg.gettransfer.models.TransportType
+import com.kg.gettransfer.realm.Transfer
+import com.kg.gettransfer.realm.TransportType
 
 
 /**

@@ -24,7 +24,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.kg.gettransfer.R
-import com.kg.gettransfer.cabinet.TransfersListActivity
+import com.kg.gettransfer.transfers.TransfersActivity
 import com.kg.gettransfer.data.LocationDetailed
 import com.kg.gettransfer.fragments.ChooseLocationFragment
 import com.kg.gettransfer.fragments.TransferDetailsFragment
@@ -249,7 +249,7 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
 
 
     fun showTransfers(v: View?) {
-        val intent = Intent(this, TransfersListActivity::class.java)
+        val intent = Intent(this, TransfersActivity::class.java)
         startActivityForResult(intent, 2)
     }
 

@@ -1,4 +1,4 @@
-package com.kg.gettransfer.cabinet
+package com.kg.gettransfer.transfers
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +10,7 @@ import com.kg.gettransfer.createtransfer.CreateTransferActivity
 import com.kg.gettransfer.login.LoginActivity
 import com.kg.gettransfer.modules.CurrentAccount
 import com.kg.gettransfer.modules.Transfers
+import com.kg.gettransfer.transfer.TransferActivity
 import com.kg.gettransfer.views.TransfersAdapter
 import kotlinx.android.synthetic.main.activity_transferslist.*
 import org.koin.android.ext.android.inject
@@ -18,8 +19,8 @@ import org.koin.android.ext.android.inject
  * Created by ivanpchelintsev on 04/02/2018.
  */
 
-class TransfersListActivity : AppCompatActivity() {
-    private val transfersProvider: Transfers by inject()
+class TransfersActivity : AppCompatActivity() {
+    private val transfers: Transfers by inject()
     private val currentAccount: CurrentAccount by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +43,7 @@ class TransfersListActivity : AppCompatActivity() {
     private fun showTransfers() {
         swipeRefreshLayout.visibility = View.VISIBLE
         clLoggedOut.visibility = View.GONE
-        transfersProvider.updateTransfers()
+        transfers.updateTransfers()
     }
 
     private fun showLoggedOut() {
@@ -51,7 +52,7 @@ class TransfersListActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        val transfers = transfersProvider.getTransfers()
+        val transfers = transfers.getAll()
 
         val adapter = TransfersAdapter(transfers, true)
 
@@ -62,8 +63,8 @@ class TransfersListActivity : AppCompatActivity() {
         rvTransfers.layoutManager = layoutManager
         rvTransfers.emptyView = clEmptyTransfers
 
-        swipeRefreshLayout.setOnRefreshListener { transfersProvider.updateTransfers() }
-        transfersProvider.busy.subscribe { swipeRefreshLayout.isRefreshing = it }
+        swipeRefreshLayout.setOnRefreshListener { this.transfers.updateTransfers() }
+        this.transfers.busy.subscribe { swipeRefreshLayout.isRefreshing = it }
     }
 
     fun createTransfer(v: View?) {

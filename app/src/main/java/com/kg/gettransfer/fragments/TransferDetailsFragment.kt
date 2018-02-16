@@ -15,7 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.kg.gettransfer.R
-import com.kg.gettransfer.cabinet.TransfersListActivity
+import com.kg.gettransfer.transfers.TransfersActivity
 import com.kg.gettransfer.modules.Transfers
 import com.kg.gettransfer.modules.TransportTypesProvider
 import com.kg.gettransfer.modules.http.json.NewTransfer
@@ -99,7 +99,7 @@ class TransferDetailsFragment : Fragment() {
                 .createTransfer(transfer)
                 .subscribe(
                         {
-                            val intent = Intent(activity, TransfersListActivity::class.java)
+                            val intent = Intent(activity, TransfersActivity::class.java)
                             startActivityForResult(intent, 2)
                         },
                         {

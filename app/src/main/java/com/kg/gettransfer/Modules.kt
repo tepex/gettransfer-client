@@ -4,7 +4,7 @@ package com.kg.gettransfer
 import android.content.SharedPreferences
 import android.location.Geocoder
 import android.preference.PreferenceManager
-import com.kg.gettransfer.cabinet.TransfersListActivity
+import com.kg.gettransfer.transfers.TransfersActivity
 import com.kg.gettransfer.createtransfer.CreateTransferActivity
 import com.kg.gettransfer.login.LoginActivity
 import com.kg.gettransfer.login.LoginContract
@@ -74,7 +74,7 @@ val AppModule = applicationContext {
     factory { LoginActivity() }
     factory { LoginPresenter(get()) as LoginContract.Presenter }
 
-    factory { TransfersListActivity() }
+    factory { TransfersActivity() }
 }
 
 

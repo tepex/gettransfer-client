@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackgroundBorderless"
     android:minWidth="120dp">
+
 
     <TextView
         android:id="@+id/tvName"
@@ -41,5 +43,6 @@
         android:text="16/06/2018"
         app:layout_constraintBaseline_toBaselineOf="@+id/tvFrom"
         app:layout_constraintEnd_toEndOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>
