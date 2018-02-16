@@ -19,11 +19,11 @@ import java.util.logging.Logger
 class TransportTypesProvider(val realm: Realm, val api: HttpApi) : KoinComponent {
     private val log = Logger.getLogger("TransportTypesProvider")
 
-    var loading = false
+    private var loading = false
 
 
     fun get(): RealmResults<TransportType> {
-        val types = realm.where(TransportType::class.java).findAll()
+        val types = realm.where(TransportType::class.java).findAllAsync()
 
         if (types.size == 0) {
             load()
@@ -44,7 +44,12 @@ class TransportTypesProvider(val realm: Realm, val api: HttpApi) : KoinComponent
                         log.info("getTransportTypes() success, n = " + r.data?.size.toString())
 
                         realm.executeTransaction { realm ->
+                            realm.where(TransportType::class.java)
+                                    .findAll()
+                                    .deleteAllFromRealm()
+
                             realm.copyToRealmOrUpdate(r.data)
+
                             log.info("Saved to realm")
                         }
                     } else {

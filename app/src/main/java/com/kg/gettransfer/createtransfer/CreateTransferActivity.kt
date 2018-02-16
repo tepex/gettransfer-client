@@ -29,8 +29,7 @@ import com.kg.gettransfer.data.LocationDetailed
 import com.kg.gettransfer.fragments.ChooseLocationFragment
 import com.kg.gettransfer.fragments.TransferDetailsFragment
 import com.kg.gettransfer.login.LoginActivity
-import com.kg.gettransfer.models.Location
-import com.kg.gettransfer.modules.Transfers
+import com.kg.gettransfer.modules.CurrentAccount
 import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.views.BitmapDescriptorFactory
 import com.kg.gettransfer.views.LocationView
@@ -49,7 +48,8 @@ import java.util.logging.Logger
 class CreateTransferActivity : AppCompatActivity(), KoinComponent {
     private val log = Logger.getLogger("CreateTransferActivity")
 
-    private val transfers: Transfers by inject()
+    private val currentAccount: CurrentAccount by inject()
+//    private val transfers: Transfers by inject()
 
     private val frChooseLocation: ChooseLocationFragment by lazy { ChooseLocationFragment() }
     private val frTransferDetails: TransferDetailsFragment by lazy { TransferDetailsFragment() }
@@ -82,8 +82,15 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
 
     override fun onResume() {
         super.onResume()
+
         mapView.onResume()
         setUpMapIfNeeded()
+
+        if (currentAccount.isLoggedIn) {
+            btnUser.setImageResource(R.drawable.ic_person_gray_24dp)
+        } else {
+            btnUser.setImageResource(R.drawable.ic_person_outline_gray_24dp)
+        }
     }
 
 

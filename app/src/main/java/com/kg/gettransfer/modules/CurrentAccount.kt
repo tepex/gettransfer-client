@@ -25,12 +25,8 @@ class CurrentAccount(val session: Session, val api: HttpApi) : KoinComponent {
     // --
 
 
-    enum class SessionState {
-        LOGGED_OUT,
-        LOGGED_IN
-    }
-
-    val state = BehaviorRelay.createDefault<SessionState>(SessionState.LOGGED_OUT)
+    val isLoggedIn : Boolean get() = email != null
+    val loggedIn = PublishRelay.create<Boolean>()
     val busy = BehaviorRelay.createDefault<Boolean>(false)
     val errorsBus = PublishRelay.create<String?>()
 
@@ -39,16 +35,19 @@ class CurrentAccount(val session: Session, val api: HttpApi) : KoinComponent {
 
 
     init {
+        email = session.email
+        if (email != null) loggedIn.accept(true)
+
         session.state.subscribe {
             if (it.isLoggedIn) {
                 val newEmail = session.email
                 if (newEmail != email) {
                     email = newEmail
-                    state.accept(SessionState.LOGGED_IN)
+                    loggedIn.accept(true)
                 }
             } else {
                 email = null
-                state.accept(SessionState.LOGGED_OUT)
+                loggedIn.accept(false)
             }
         }
     }
@@ -63,7 +62,7 @@ class CurrentAccount(val session: Session, val api: HttpApi) : KoinComponent {
                 .subscribe({
                     busy.accept(false)
                     if (it.ok) {
-                        session.loggedin(email)
+                        session.loggedIn(email)
                     } else {
                         errorsBus.accept(it.error?.message)
                     }
@@ -71,6 +70,11 @@ class CurrentAccount(val session: Session, val api: HttpApi) : KoinComponent {
                     busy.accept(false)
                     errorsBus.accept(it.localizedMessage)
                 })
+    }
+
+
+    fun logOut() {
+        session.logOut()
     }
 }
 

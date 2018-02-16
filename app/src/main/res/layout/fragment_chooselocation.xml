@@ -3,18 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff">
+    android:background="@color/bg">
 
-    <!--<View-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="80dp"-->
-    <!--android:background="@color/bg"-->
-    <!--android:elevation="8dp"-->
-    <!--app:layout_constraintEnd_toEndOf="parent"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintTop_toTopOf="parent">-->
-
-    <!--</View>-->
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/clHeader"

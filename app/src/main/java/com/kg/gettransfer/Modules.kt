@@ -1,7 +1,9 @@
 package com.kg.gettransfer
 
 
+import android.content.SharedPreferences
 import android.location.Geocoder
+import android.preference.PreferenceManager
 import com.kg.gettransfer.cabinet.TransfersListActivity
 import com.kg.gettransfer.createtransfer.CreateTransferActivity
 import com.kg.gettransfer.login.LoginActivity
@@ -26,6 +28,11 @@ import java.util.*
 
 
 val AppModule = applicationContext {
+    // Util
+
+    provide { PreferenceManager.getDefaultSharedPreferences(get()) as SharedPreferences }
+
+
     // Http
 
     provide { RxJava2CallAdapterFactory.create() }
@@ -35,7 +42,7 @@ val AppModule = applicationContext {
     provide { HttpApiFactory.buildHttpClient(get()) as okhttp3.OkHttpClient }
     provide { HttpApiFactory.create(get(), get(), get()) as HttpApi }
 
-    provide { Session() }
+    provide { Session(get()) }
 
     provide { CurrentAccount(get(), get()) }
 

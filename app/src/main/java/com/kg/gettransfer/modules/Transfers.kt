@@ -44,15 +44,22 @@ class Transfers(val realm: Realm, val api: HttpApi, val currentAccount: CurrentA
 
 
     init {
-        currentAccount.state
+        currentAccount.loggedIn
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    val transfers = realm.where(Transfer::class.java).findAll()
-                    realm.executeTransaction {
-                        transfers.deleteAllFromRealm()
-                        Log.d(TAG, "realm.where(Transfer).deleteAll()")
-                    }
+                    if (it) deleteTransfers()
                 }
+
+        if (currentAccount.email == null) deleteTransfers()
+    }
+
+
+    private fun deleteTransfers() {
+        val transfers = realm.where(Transfer::class.java).findAll()
+        realm.executeTransaction {
+            transfers.deleteAllFromRealm()
+            Log.d(TAG, "realm.where(Transfer).deleteAll()")
+        }
     }
 
 
@@ -81,7 +88,7 @@ class Transfers(val realm: Realm, val api: HttpApi, val currentAccount: CurrentA
 
 
     fun getTransfers(): RealmResults<Transfer> =
-            realm.where(Transfer::class.java).findAll()
+            realm.where(Transfer::class.java).findAllAsync()
 
 
     fun updateTransfers() {

@@ -20,7 +20,9 @@ class LoginPresenter(private val currentAccount: CurrentAccount) : LoginContract
     override fun start() {
         view.showError(null)
 
-        currentAccount.state.subscribe { if (it == CurrentAccount.SessionState.LOGGED_IN) view.loginSuccess() }
+        currentAccount.logOut()
+
+        currentAccount.loggedIn.subscribe { if (it) view.loginSuccess() }
         currentAccount.busy.subscribe { view.busyChanged(it) }
         currentAccount.errorsBus.subscribe { view.showError(it) }
     }

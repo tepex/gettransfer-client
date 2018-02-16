@@ -1,6 +1,7 @@
 package com.kg.gettransfer.modules
 
 
+import android.content.SharedPreferences
 import com.jakewharton.rxrelay2.PublishRelay
 import org.koin.standalone.KoinComponent
 
@@ -10,7 +11,7 @@ import org.koin.standalone.KoinComponent
  */
 
 
-class Session : KoinComponent {
+class Session(val sp: SharedPreferences) : KoinComponent {
     @Volatile
     var accessToken: String? = null
 
@@ -22,14 +23,40 @@ class Session : KoinComponent {
 
     val state: PublishRelay<Session> = PublishRelay.create()
 
+
+    init {
+        accessToken = sp.getString("Session.accessToken", null)
+        email = sp.getString("Session.email", null)
+    }
+
+
+    private fun save() {
+        sp.edit()
+                .putString("Session.accessToken", accessToken)
+                .putString("Session.email", email)
+                .apply()
+    }
+
+
     fun reset(newAccessToken: String) {
         accessToken = newAccessToken
         email = null
+        save()
         state.accept(this)
     }
 
-    fun loggedin(email: String) {
+
+    fun loggedIn(email: String) {
         this.email = email
+        save()
+        state.accept(this)
+    }
+
+
+    fun logOut() {
+        accessToken = null
+        email = null
+        save()
         state.accept(this)
     }
 }
