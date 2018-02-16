@@ -1,4 +1,4 @@
-package com.kg.gettransfer.modules.network.json;
+package com.kg.gettransfer.modules.http.json;
 
 
 import com.google.gson.annotations.Expose;
@@ -27,6 +27,8 @@ class NewTransfer {
     @SerializedName("time")
     var time: Int = 0
 
+    // --
+
     @Expose
     @SerializedName("date_to")
     var dateTo: String = ""
@@ -41,13 +43,33 @@ class NewTransfer {
     @Expose
     @SerializedName("pax")
     var pax: Int = 1
+
+    // --
+
     @Expose
     @SerializedName("name_sign")
     var nameSign: String = ""
+    @Expose
+    @SerializedName("passenger_offered_price")
+    var offeredPrice: Int? = null
+    @Expose
+    @SerializedName("flight_number")
+    var flightNumber: String = ""
+    @Expose
+    @SerializedName("child_seats")
+    var childSeats: Int? = null
+    @Expose
+    @SerializedName("comment")
+    var comment: String = ""
+
+    // --
 
     @Expose
     @SerializedName("passenger_profile")
     var passengerProfile: Map<String, Map<String, String>> = mapOf()
+
+
+    // --
 
 
     constructor(distance: Int, time: Int, from: Location, to: Location, dateTo: String, timeTo: String, transportTypes: IntArray, pax: Int, nameSign: String, passengerProfile: PassengerProfile) {
@@ -62,7 +84,6 @@ class NewTransfer {
         this.nameSign = nameSign
         this.passengerProfile = passengerProfile.toMap()
     }
-
 
     constructor(from: Location, to: Location) {
         this.from = from.toMap()

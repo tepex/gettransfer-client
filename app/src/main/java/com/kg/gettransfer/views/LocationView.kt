@@ -5,6 +5,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.TextView
 import com.kg.gettransfer.data.LocationDetailed
+import com.kg.gettransfer.modules.googleapi.GeoUtils
+import io.reactivex.disposables.Disposable
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.inject
 
 
 /**
@@ -12,17 +16,39 @@ import com.kg.gettransfer.data.LocationDetailed
  */
 
 
-class LocationView : TextView {
+class LocationView : TextView, KoinComponent {
+    private val geoUtils: GeoUtils by inject()
+
+
     constructor(context: Context, attrs: AttributeSet)
             : super(context, attrs)
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int)
             : super(context, attrs, defStyleAttr)
 
+
+    private val disposable: Disposable
+
+
+    init {
+        disposable = geoUtils.subscribe {
+            if (it.placeID == location?.placeID && it.title == location?.title) {
+                location = it
+            }
+        }
+    }
+
+
     var location: LocationDetailed? = null
-        set(value) {
-            field = value
-            text = value?.title ?: ""
+        set(newLocation) {
+            if (newLocation?.equalsRaw(field) == true && newLocation.latLng == null) return
+
+            field = newLocation
+            text = newLocation?.title ?: ""
             onTextChanged(text, 0, 0, 0)
+
+            if (newLocation?.valid == false) {
+                geoUtils.validate(newLocation)
+            }
         }
 }

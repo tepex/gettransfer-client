@@ -7,16 +7,14 @@
     <com.kg.gettransfer.views.EmptyRecyclerView
         android:id="@+id/transfersList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </com.kg.gettransfer.views.EmptyRecyclerView>
+        android:layout_height="match_parent" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/emptyTransfersLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/tvEmptyTransfersMessage"

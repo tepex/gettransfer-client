@@ -1,4 +1,4 @@
-package com.kg.gettransfer.modules
+package com.kg.gettransfer.modules.googleapi
 
 import android.content.Context
 import android.os.Bundle

@@ -8,9 +8,8 @@ import android.view.View
 import com.kg.gettransfer.R
 import com.kg.gettransfer.createtransfer.CreateTransferActivity
 import com.kg.gettransfer.modules.Transfers
-import com.kg.gettransfer.views.EmptyRecyclerView
 import com.kg.gettransfer.views.TransfersAdapter
-import kotlinx.android.synthetic.main.activity_cabinet.*
+import kotlinx.android.synthetic.main.activity_transferslist.*
 import org.koin.android.ext.android.inject
 
 /**
@@ -22,16 +21,16 @@ class TransfersListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_cabinet)
+        setContentView(R.layout.activity_transferslist)
 
         transfersProvider.updateTransfers()
         val transfers = transfersProvider.getTransfers()
 
-        val adapter = TransfersAdapter(transfers, false)
+        val adapter = TransfersAdapter(transfers, true)
 
         val layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
 
-        val rvTransfers = findViewById<EmptyRecyclerView>(R.id.transfersList)
+        val rvTransfers = transfersList
         rvTransfers.adapter = adapter
         rvTransfers.layoutManager = layoutManager
         rvTransfers.emptyView = emptyTransfersLayout

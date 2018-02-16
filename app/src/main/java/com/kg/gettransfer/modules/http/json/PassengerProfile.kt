@@ -1,4 +1,4 @@
-package com.kg.gettransfer.modules.network.json
+package com.kg.gettransfer.modules.http.json
 
 
 /**

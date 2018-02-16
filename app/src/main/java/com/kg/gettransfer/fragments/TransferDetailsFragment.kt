@@ -2,8 +2,8 @@ package com.kg.gettransfer.fragments
 
 
 import android.app.Fragment
+import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -13,15 +13,18 @@ import android.text.format.DateUtils.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
+import android.widget.Toast
 import com.kg.gettransfer.R
+import com.kg.gettransfer.cabinet.TransfersListActivity
+import com.kg.gettransfer.modules.Transfers
 import com.kg.gettransfer.modules.TransportTypesProvider
-import com.kg.gettransfer.modules.network.json.NewTransfer
-import com.kg.gettransfer.modules.network.json.PassengerProfile
+import com.kg.gettransfer.modules.http.json.NewTransfer
+import com.kg.gettransfer.modules.http.json.PassengerProfile
 import com.kg.gettransfer.views.TransportTypesAdapter
 import com.kg.gettransfer.views.setupChooseDate
 import com.kg.gettransfer.views.setupChooseTime
+import kotlinx.android.synthetic.main.fragment_transferdetails.*
+import kotlinx.android.synthetic.main.fragment_transferdetails.view.*
 import org.koin.android.ext.android.inject
 
 
@@ -32,92 +35,157 @@ import org.koin.android.ext.android.inject
 
 class TransferDetailsFragment : Fragment() {
     private val transportTypesProvider: TransportTypesProvider by inject()
+    private val transfers: Transfers by inject()
 
-    val etDate by lazy { view.findViewById<EditText>(R.id.etDate) }
-    val etTime by lazy { view.findViewById<EditText>(R.id.etTime) }
-    val etPassengers by lazy { view.findViewById<EditText>(R.id.etPassengers) }
+    private var savedView: View? = null
 
-    val etEmail by lazy { view.findViewById<EditText>(R.id.etEmail) }
-    val etPhone by lazy { view.findViewById<EditText>(R.id.etPhone) }
+    private val pax: Int? get() = etPassengers.text.toString().toIntOrNull()
 
-    val fab by lazy { view.findViewById<FloatingActionButton>(R.id.fabConfirmStep) }
+    private val adapter: TransportTypesAdapter
 
-    var savedview: View? = null
+    init {
+        val types = transportTypesProvider.get()
+        adapter = TransportTypesAdapter(types, true)
+    }
+
+    var transfer: NewTransfer? = null
 
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        if (savedview == null) savedview =
-                inflater.inflate(R.layout.fragment_transferdetails, container, false)
-        return savedview!!
+        if (savedView == null) {
+            val nView = inflater.inflate(
+                    R.layout.fragment_transferdetails,
+                    container,
+                    false)!!
+
+            nView.btnPassengersDec.setOnClickListener { passengersDec() }
+            nView.btnPassengersInc.setOnClickListener { passengersInc() }
+
+            nView.etDate.setupChooseDate()
+            nView.etTime.setupChooseTime()
+
+            initListTransportTypes(nView.rvTypes)
+
+
+            savedView = nView
+        }
+        return savedView!!
     }
 
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onViewCreated(v: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(v, savedInstanceState)
 
-        etDate.setupChooseDate()
-        etTime.setupChooseTime()
-
-        this.view.findViewById<Button>(R.id.btnPassengersDec).setOnClickListener { passengersDec() }
-        this.view.findViewById<Button>(R.id.btnPassengersInc).setOnClickListener { passengersInc() }
-
-        initListTransportTypes()
         installEditTextWatcher()
 
         etDate.setText(formatDateTime(
                 activity,
-                System.currentTimeMillis(),
-                FORMAT_SHOW_DATE or FORMAT_ABBREV_MONTH).toString())
+                System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7,
+                FORMAT_SHOW_DATE or FORMAT_ABBREV_MONTH or FORMAT_SHOW_YEAR).toString())
 
         etTime.setText("9:00")
+
+        fabConfirmStep.setOnClickListener {
+            createTransfer(transfer!!)
+        }
     }
 
-    val textWatcher: TextWatcher = object : TextWatcher {
+
+    private fun createTransfer(transfer: NewTransfer) {
+        populateNewTransfer(transfer)
+        transfers
+                .createTransfer(transfer)
+                .subscribe(
+                        {
+                            val intent = Intent(activity, TransfersListActivity::class.java)
+                            startActivityForResult(intent, 2)
+                        },
+                        {
+                            Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+                        })
+    }
+
+
+    private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
-            fab.visibility = if (validateFields()) View.VISIBLE else View.GONE
+            fieldsUpdated()
         }
 
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-        }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
     }
+
 
     private fun installEditTextWatcher() {
         etDate.addTextChangedListener(textWatcher)
         etTime.addTextChangedListener(textWatcher)
         etPassengers.addTextChangedListener(textWatcher)
 
+        etSign.addTextChangedListener(textWatcher)
+
         etEmail.addTextChangedListener(textWatcher)
         etPhone.addTextChangedListener(textWatcher)
     }
 
 
-    private fun validateFields(): Boolean =
-            android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.text).matches() &&
-                    android.util.Patterns.PHONE.matcher(etPhone.text).matches()
-
-
-    fun passengersInc() {
-        val n = etPassengers.text.toString().toIntOrNull() ?: 0
-        etPassengers.setText((n + 1).toString())
-    }
-
-    fun passengersDec() {
-        val n = etPassengers.text.toString().toIntOrNull() ?: 0
-        etPassengers.setText((Math.max(1, n - 1)).toString())
+    private fun fieldsUpdated() {
+        fabConfirmStep.visibility = if (fieldsValidate()) View.VISIBLE else View.GONE
     }
 
 
-    private fun initListTransportTypes() {
-        val recyclerView = view.findViewById<RecyclerView>(R.id.rvTypes)
+    private fun fieldsValidate(): Boolean {
+        var message = ""
 
-        val types = transportTypesProvider.get()
-        val adapter = TransportTypesAdapter(types, true)
+        if (etDate.text.isEmpty()) {
+            message += ", date"
+        }
+        if (etTime.text.isEmpty()) {
+            message += ", date"
+        }
+        if ((pax ?: 0) < 1) {
+            message += ", passengers"
+        }
 
+        if (etSign.text.isEmpty()) {
+            message += ", name sign"
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.text).matches()) {
+            message += ", email"
+        }
+        if (!android.util.Patterns.PHONE.matcher(etPhone.text).matches()) {
+            message += ", phone"
+        }
+
+        if (message.isNotEmpty()) {
+            message = "Fill" + message.substring(1) + " to get offers."
+            tvError.text = message
+            return false
+        } else {
+            tvError.text = " "
+            return true
+        }
+    }
+
+
+    private fun passengersInc() {
+        etPassengers.setText(((pax ?: 0) + 1).toString())
+        etPassengers.requestFocus()
+        etPassengers.selectAll()
+
+
+    }
+
+    private fun passengersDec() {
+        etPassengers.setText((Math.max(1, (pax ?: 0) - 1)).toString())
+        etPassengers.requestFocus()
+        etPassengers.selectAll()
+    }
+
+
+    private fun initListTransportTypes(recyclerView: RecyclerView) {
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
 
         recyclerView.layoutManager = layoutManager
@@ -126,12 +194,17 @@ class TransferDetailsFragment : Fragment() {
     }
 
 
-    public fun populateNewTransfer(t: NewTransfer) {
+    private fun populateNewTransfer(t: NewTransfer) {
         t.dateTo = etDate.text.toString()
         t.timeTo = etTime.text.toString()
-        t.transportTypes = intArrayOf(0)
-        t.pax = etPassengers.text.toString().toIntOrNull() ?: 0 // TODO: Assert here later
+        t.pax = pax!!
+        t.transportTypes = adapter.getSelectedIds().toIntArray()
+
         t.nameSign = "Sign"
+        t.offeredPrice = etPrice.text.toString().toIntOrNull()
+        t.flightNumber = etFlightTrainNumber.text.toString()
+        t.comment = etComments.text.toString()
+
         t.passengerProfile = PassengerProfile(etEmail.text.toString(), etPhone.text.toString()).toMap()
     }
 }

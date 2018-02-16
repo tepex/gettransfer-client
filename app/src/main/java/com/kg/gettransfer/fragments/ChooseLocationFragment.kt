@@ -47,7 +47,6 @@ class ChooseLocationFragment : Fragment() {
                 activity,
                 Consumer { l ->
                     location = l
-                    etLocation?.setText(l?.title ?: "")
                 },
                 BOUNDS_MOUNTAIN_VIEW,
                 AutocompleteFilter
@@ -113,8 +112,7 @@ class ChooseLocationFragment : Fragment() {
             rvLocations?.emptyView = view.findViewById(R.id.tvEmpty)
             rvLocations?.onItemClickListener =
                     AdapterView.OnItemClickListener { _, _, position, _ ->
-                        val description: String = adapter.getItem(position)?.title ?: ""
-                        consumer.accept(LocationDetailed(description))
+                        consumer.accept(adapter.getItem(position))
                     }
 
             view.findViewById<ImageButton>(R.id.ibBack)
@@ -145,6 +143,7 @@ class ChooseLocationFragment : Fragment() {
         adapter.clear()
         updateText(location)
         etLocation?.requestFocus()
+        etLocation?.selectAll()
         imm.showSoftInput(etLocation, 0)
     }
 }

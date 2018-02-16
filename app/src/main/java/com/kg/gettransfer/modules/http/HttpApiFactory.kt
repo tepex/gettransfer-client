@@ -1,4 +1,4 @@
-package com.kg.gettransfer.modules.network
+package com.kg.gettransfer.modules.http
 
 import okhttp3.OkHttpClient
 import org.koin.standalone.KoinComponent
