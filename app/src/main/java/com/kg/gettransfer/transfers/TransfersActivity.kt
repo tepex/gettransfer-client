@@ -56,7 +56,7 @@ class TransfersActivity : AppCompatActivity() {
 
         val adapter = TransfersAdapter(transfers, true)
 
-        val layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(applicationContext)
 
         val rvTransfers = rvTransfers
         rvTransfers.adapter = adapter

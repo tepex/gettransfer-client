@@ -1,5 +1,7 @@
 package com.kg.gettransfer.realm
 
+import android.content.Context
+import android.text.format.DateUtils
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,5 +22,18 @@ object Utils {
             e.printStackTrace()
         }
         return null
+    }
+
+    fun dateToString(c: Context, date: Date?): String {
+        if (date == null) return "-"
+        return DateUtils.formatDateTime(
+                c,
+                date.time,
+                DateUtils.FORMAT_SHOW_TIME).toString() +
+                "   " +
+                DateUtils.formatDateTime(
+                        c,
+                        date.time,
+                        DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_ABBREV_MONTH or DateUtils.FORMAT_SHOW_YEAR).toString()
     }
 }

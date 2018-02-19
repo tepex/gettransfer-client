@@ -4,7 +4,8 @@ package com.kg.gettransfer
 import android.content.SharedPreferences
 import android.location.Geocoder
 import android.preference.PreferenceManager
-import com.kg.gettransfer.transfers.TransfersActivity
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.kg.gettransfer.createtransfer.CreateTransferActivity
 import com.kg.gettransfer.login.LoginActivity
 import com.kg.gettransfer.login.LoginContract
@@ -16,6 +17,7 @@ import com.kg.gettransfer.modules.googleapi.GoogleApiClientFactory
 import com.kg.gettransfer.modules.http.HttpApi
 import com.kg.gettransfer.modules.http.HttpApiFactory
 import com.kg.gettransfer.modules.http.ProvideAccessTokenInterceptor
+import com.kg.gettransfer.transfers.TransfersActivity
 import org.koin.dsl.module.applicationContext
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -36,7 +38,8 @@ val AppModule = applicationContext {
     // Http
 
     provide { RxJava2CallAdapterFactory.create() }
-    provide { GsonConverterFactory.create() }
+    provide { GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss Z").create() as Gson }
+    provide { GsonConverterFactory.create(get()) as GsonConverterFactory }
 
     provide { ProvideAccessTokenInterceptor(get(), get(), get()) }
     provide { HttpApiFactory.buildHttpClient(get()) as okhttp3.OkHttpClient }

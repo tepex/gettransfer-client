@@ -5,9 +5,11 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import io.realm.RealmList
 import io.realm.RealmObject
+import io.realm.annotations.Ignore
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 import io.realm.annotations.Required
+import java.util.*
 
 
 /**
@@ -45,10 +47,11 @@ open class Transfer : RealmObject() {
 
     @Expose
     @SerializedName("date_to")
-    var dateTo: String = ""
+    var dateTo: Date? = null
+
     @Expose
-    @SerializedName("time_return")
-    var dateReturn: String = ""
+    @SerializedName("date_return")
+    var dateReturn: Date? = null
 
     // --
 

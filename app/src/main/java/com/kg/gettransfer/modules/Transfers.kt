@@ -22,7 +22,7 @@ import org.koin.standalone.KoinComponent
  */
 
 
-class Transfers(val realm: Realm, val api: HttpApi, val currentAccount: CurrentAccount) : KoinComponent {
+class Transfers(private val realm: Realm, private val api: HttpApi, currentAccount: CurrentAccount) : KoinComponent {
     private val TAG = "Transfers"
 
 
@@ -55,8 +55,8 @@ class Transfers(val realm: Realm, val api: HttpApi, val currentAccount: CurrentA
 
 
     private fun deleteTransfers() {
-        val transfers = realm.where(Transfer::class.java).findAll()
         realm.executeTransaction {
+            val transfers = realm.where(Transfer::class.java).findAllAsync()
             transfers.deleteAllFromRealm()
             Log.d(TAG, "realm.where(Transfer).deleteAll()")
         }
@@ -88,11 +88,11 @@ class Transfers(val realm: Realm, val api: HttpApi, val currentAccount: CurrentA
 
 
     fun getAll(): RealmResults<Transfer> =
-            realm.where(Transfer::class.java).sort().findAllAsync()
+            realm.where(Transfer::class.java).findAllSortedAsync("dateTo") //sort("dateTo").findAllAsync()
 
 
     fun get(id: Int): RealmResults<Transfer> =
-            realm.where(Transfer::class.java).equalTo("id", id).findAll()
+            realm.where(Transfer::class.java).equalTo("id", id).findAllAsync()
 
 
     fun updateTransfers() {
@@ -102,14 +102,14 @@ class Transfers(val realm: Realm, val api: HttpApi, val currentAccount: CurrentA
         api.getTransfers()
                 .subscribeOn(Schedulers.io())
 //                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.newThread())
                 .doOnSubscribe { busy.accept(true) }
                 .subscribe({
                     busy.accept(false)
                     if (it.success) {
                         Log.d(TAG, "getTransfers() responded success, N = ${it.data?.transfers?.size}")
 
-                        val realm = Realm.getDefaultInstance()
-                        realm.executeTransaction { realm ->
+                        Realm.getDefaultInstance().executeTransaction { realm ->
                             realm.copyToRealmOrUpdate(it.data?.transfers)
                             Log.d(TAG, "getTransfers() saved to realm")
                         }

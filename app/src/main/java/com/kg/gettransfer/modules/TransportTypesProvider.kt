@@ -3,7 +3,6 @@ package com.kg.gettransfer.modules
 
 import com.kg.gettransfer.modules.http.HttpApi
 import com.kg.gettransfer.realm.TransportType
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmResults
@@ -25,8 +24,10 @@ class TransportTypesProvider(val realm: Realm, val api: HttpApi) : KoinComponent
     fun get(): RealmResults<TransportType> {
         val types = realm.where(TransportType::class.java).findAllAsync()
 
-        if (types.size == 0) {
-            load()
+        types.addChangeListener { t, changeSet ->
+            if (types.size == 0) {
+                load()
+            }
         }
 
         return types
@@ -51,7 +52,8 @@ class TransportTypesProvider(val realm: Realm, val api: HttpApi) : KoinComponent
         loading = true
         api.getTransportTypes()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                //.observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.newThread())
                 .subscribe({ r ->
                     log.info("getTransportTypes() responded")
                     if (r.success) {

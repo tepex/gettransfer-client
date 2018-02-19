@@ -29,7 +29,6 @@ class TransportTypesAdapter(
         for (i: Int in 0..30) selected.add(false)
     }
 
-
     inner class ViewHolder(container: ConstraintLayout) : RecyclerView.ViewHolder(container) {
         val image: ImageView = container.findViewById(R.id.ivImage)
 
