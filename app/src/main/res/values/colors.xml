@@ -2,11 +2,17 @@
 <resources>
     <color name="colorPrimary">#ffcc4c</color>
     <color name="colorPrimaryDark">#333333</color>
-    <color name="colorAccent">#6a1b9a</color>
+    <color name="colorAccent">#7b1fa2</color>
 
     <color name="bg">#ffffff</color>
+
+    <color name="date">#e93578</color>
 
     <color name="bar">#f4f3f2</color>
 
     <color name="yellow">#ffcc4c</color>
+    <color name="colorTextBlack">#111111</color>
+    <color name="colorTextGray">#9e9e9e</color>
+    <color name="colorTextLocation">#3f51b5</color>
+
 </resources>

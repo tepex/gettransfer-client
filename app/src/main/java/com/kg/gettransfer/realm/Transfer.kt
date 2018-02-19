@@ -3,9 +3,11 @@ package com.kg.gettransfer.realm
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
+import io.realm.annotations.Required
 
 
 /**
@@ -48,16 +50,38 @@ open class Transfer : RealmObject() {
     @SerializedName("time_return")
     var dateReturn: String = ""
 
-    // TODO: Блин, что-то я не осилил как поддержать лист интов
-//    @Expose
-//    @SerializedName("transport_types")
-//    @Required
-//    var transportTypes: RealmList<Integer?>? = RealmList()
+    // --
 
     @Expose
     @SerializedName("pax")
     var pax: Int = 1
+
     @Expose
     @SerializedName("name_sign")
     var nameSign: String = ""
+
+    @Expose
+    @SerializedName("transport_types")
+    @Required
+    var transportTypes: RealmList<java.lang.Integer?>? = null
+
+    @Expose
+    @SerializedName("child_seats")
+    var childSeats: String = ""
+
+    @Expose
+    @SerializedName("comments")
+    var comments: String? = null
+
+    // --
+
+    @Expose
+    @SerializedName("flight_number")
+    var flightNumber: String? = null
+
+    // --
+
+    @Expose
+    @SerializedName("offers_updated_at")
+    var offersUpdatedAt: String? = null
 }

@@ -3,13 +3,13 @@ package com.kg.gettransfer.modules
 
 import android.util.Log
 import com.jakewharton.rxrelay2.BehaviorRelay
-import com.kg.gettransfer.realm.Location
-import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.modules.http.HttpApi
 import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.modules.http.json.NewTransferField
 import com.kg.gettransfer.modules.http.json.PassengerProfile
-import io.reactivex.*
+import com.kg.gettransfer.realm.Location
+import com.kg.gettransfer.realm.Transfer
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
@@ -88,10 +88,10 @@ class Transfers(val realm: Realm, val api: HttpApi, val currentAccount: CurrentA
 
 
     fun getAll(): RealmResults<Transfer> =
-            realm.where(Transfer::class.java).findAllAsync()
+            realm.where(Transfer::class.java).sort().findAllAsync()
 
 
-    fun get(id : Int): RealmResults<Transfer> =
+    fun get(id: Int): RealmResults<Transfer> =
             realm.where(Transfer::class.java).equalTo("id", id).findAll()
 
 
@@ -101,13 +101,14 @@ class Transfers(val realm: Realm, val api: HttpApi, val currentAccount: CurrentA
         Log.d(TAG, "getTransfers() call")
         api.getTransfers()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+//                .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { busy.accept(true) }
                 .subscribe({
                     busy.accept(false)
                     if (it.success) {
                         Log.d(TAG, "getTransfers() responded success, N = ${it.data?.transfers?.size}")
 
+                        val realm = Realm.getDefaultInstance()
                         realm.executeTransaction { realm ->
                             realm.copyToRealmOrUpdate(it.data?.transfers)
                             Log.d(TAG, "getTransfers() saved to realm")

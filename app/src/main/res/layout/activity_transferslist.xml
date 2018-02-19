@@ -6,18 +6,20 @@
 
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/tvTitle"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
         android:background="@color/bg"
         android:elevation="4dp"
         android:gravity="center_vertical"
+        android:paddingBottom="16dp"
         android:paddingLeft="32dp"
-        android:paddingTop="4dp"
+        android:paddingTop="16dp"
         android:text="Transfers"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/colorAccent"
-        app:layout_constraintStart_toEndOf="@+id/btnBack"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/colorTextGray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -25,7 +27,7 @@
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="80dp">
+        android:layout_marginTop="60dp">
 
         <com.kg.gettransfer.views.EmptyRecyclerView
             android:id="@+id/rvTransfers"
@@ -82,7 +84,7 @@
         android:id="@+id/clLoggedOut"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="60dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">

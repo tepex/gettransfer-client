@@ -10,8 +10,8 @@ import com.kg.gettransfer.createtransfer.CreateTransferActivity
 import com.kg.gettransfer.login.LoginActivity
 import com.kg.gettransfer.modules.CurrentAccount
 import com.kg.gettransfer.modules.Transfers
-import com.kg.gettransfer.transfer.TransferActivity
 import com.kg.gettransfer.views.TransfersAdapter
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_transferslist.*
 import org.koin.android.ext.android.inject
 
@@ -64,7 +64,9 @@ class TransfersActivity : AppCompatActivity() {
         rvTransfers.emptyView = clEmptyTransfers
 
         swipeRefreshLayout.setOnRefreshListener { this.transfers.updateTransfers() }
-        this.transfers.busy.subscribe { swipeRefreshLayout.isRefreshing = it }
+        this.transfers.busy
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { swipeRefreshLayout.isRefreshing = it }
     }
 
     fun createTransfer(v: View?) {

@@ -1,8 +1,8 @@
 package com.kg.gettransfer.modules
 
 
-import com.kg.gettransfer.realm.TransportType
 import com.kg.gettransfer.modules.http.HttpApi
+import com.kg.gettransfer.realm.TransportType
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
@@ -30,6 +30,20 @@ class TransportTypesProvider(val realm: Realm, val api: HttpApi) : KoinComponent
         }
 
         return types
+    }
+
+
+    fun getNames(ids: List<Integer?>?): String {
+        if (ids == null) return "-"
+
+        var s = ""
+        val types = realm.where(TransportType::class.java).findAll()
+
+        types.asSequence()
+                .filter { ids.contains(it.id as Integer) }
+                .forEach { s += ", " + it.title }
+
+        return if (s.isEmpty()) "-" else s.substring(2)
     }
 
 
