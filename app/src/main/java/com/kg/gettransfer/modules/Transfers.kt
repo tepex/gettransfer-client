@@ -94,7 +94,40 @@ class Transfers(private val realm: Realm, private val api: HttpApi, currentAccou
                         Log.d(TAG, "getTransfers() responded success, N = ${it.data?.transfers?.size}")
 
                         Realm.getDefaultInstance().executeTransaction { realm ->
-                            realm.copyToRealmOrUpdate(it.data?.transfers)
+                            realm.copyToRealmOrUpdate(it.data?.transfers!!)
+                            Log.d(TAG, "getTransfers() saved to realm")
+                        }
+                    } else {
+                        Log.d(TAG, "getTransfers() responded fail, result = ${it.result}")
+                    }
+                }, {
+                    busy.accept(false)
+                    Log.d(TAG, "getTransfers() fail, ${it.message}")
+                })
+    }
+
+    fun updateOffers(id: Int) {
+//        Log.d(TAG, "updateTransfers()")
+//        if (busy.value) return
+//        Log.d(TAG, "getTransfers() call")
+        api.getOffers(id)
+                .subscribeOn(Schedulers.io())
+//                .doOnSubscribe { busy.accept(true) }
+                .observeOn(Schedulers.newThread())
+                .subscribe({
+                    busy.accept(false)
+                    if (it.success) {
+                        Log.d(TAG, "getTransfers() responded success, N = ${it.data?.size}")
+
+                        Realm.getDefaultInstance().executeTransaction { realm ->
+//                            realm.copyToRealmOrUpdate(it.data!!)
+                            val transfer = realm.where(Transfer::class.java).equalTo("id", id).findFirst()
+                                    ?: return@executeTransaction
+
+                            transfer.offers = it.data
+
+                            realm.copyToRealmOrUpdate(transfer)
+
                             Log.d(TAG, "getTransfers() saved to realm")
                         }
                     } else {

@@ -87,4 +87,8 @@ open class Transfer : RealmObject() {
     @Expose
     @SerializedName("offers_updated_at")
     var offersUpdatedAt: String? = null
+
+    // --
+
+    var offers: RealmList<Offer>? = null
 }
