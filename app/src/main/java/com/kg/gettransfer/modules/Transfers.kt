@@ -25,22 +25,7 @@ import org.koin.standalone.KoinComponent
 class Transfers(private val realm: Realm, private val api: HttpApi, currentAccount: CurrentAccount) : KoinComponent {
     private val TAG = "Transfers"
 
-
-    private val transferHardcode: NewTransfer by lazy {
-        NewTransfer(
-                19,
-                33,
-                Location("Novosibirsk", 1.0, 1.0),
-                Location("Petersburg", 2.0, 2.0),
-                "2020/12/25",
-                "15:00",
-                intArrayOf(1),
-                1,
-                "Denis",
-                PassengerProfile("d.vakulenko@key-g.com", "+79998887766"))
-    }
-
-    val busy = BehaviorRelay.createDefault<Boolean>(false)
+    val busy = BehaviorRelay.createDefault<Boolean>(false)!!
 
 
     init {
@@ -63,7 +48,7 @@ class Transfers(private val realm: Realm, private val api: HttpApi, currentAccou
     }
 
 
-    fun createTransfer(transfer: NewTransfer = transferHardcode): Observable<Transfer> =
+    fun createTransfer(transfer: NewTransfer): Observable<Transfer> =
             Observable.create<Transfer> {
                 Log.d(TAG, "createTransfer()")
                 api.postTransfer(NewTransferField(transfer))
@@ -87,11 +72,11 @@ class Transfers(private val realm: Realm, private val api: HttpApi, currentAccou
             }
 
 
-    fun getAll(): RealmResults<Transfer> =
-            realm.where(Transfer::class.java).findAllSortedAsync("dateTo") //sort("dateTo").findAllAsync()
+    fun getAllAsync(): RealmResults<Transfer> =
+            realm.where(Transfer::class.java).sort("dateTo").findAllAsync()
 
 
-    fun get(id: Int): RealmResults<Transfer> =
+    fun getAsync(id: Int): RealmResults<Transfer> =
             realm.where(Transfer::class.java).equalTo("id", id).findAllAsync()
 
 
@@ -101,9 +86,8 @@ class Transfers(private val realm: Realm, private val api: HttpApi, currentAccou
         Log.d(TAG, "getTransfers() call")
         api.getTransfers()
                 .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-                .observeOn(Schedulers.newThread())
                 .doOnSubscribe { busy.accept(true) }
+                .observeOn(Schedulers.newThread())
                 .subscribe({
                     busy.accept(false)
                     if (it.success) {

@@ -32,9 +32,9 @@ class TransportTypesAdapter(
     inner class ViewHolder(container: ConstraintLayout) : RecyclerView.ViewHolder(container) {
         val image: ImageView = container.findViewById(R.id.ivImage)
 
-        val title: TextView = container.findViewById(R.id.tvName)
+        val title: TextView = container.findViewById(R.id.tvTo)
         val pax: TextView = container.findViewById(R.id.tvPax)
-        val luggage: TextView = container.findViewById(R.id.tvLuggage)
+        val luggage: TextView = container.findViewById(R.id.tvDateTime)
 
         var selected: Boolean = false
             set(value) {

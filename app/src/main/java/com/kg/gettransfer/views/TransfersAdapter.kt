@@ -5,6 +5,7 @@ import android.content.Intent
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,16 +29,17 @@ class TransfersAdapter(
     : RealmRecyclerViewAdapter<Transfer, TransfersAdapter.ViewHolder>(realmResults, autoUpdate) {
 
     private val icl: View.OnClickListener = View.OnClickListener {
+        Log.i("TransfersAdapter", "Starting activity")
         val context = it.context
         val intent = Intent(context, TransferActivity::class.java)
-        intent.putExtra("id", it.getTag(R.id.key_position) as Int)
+        intent.putExtra("id", it.getTag(R.id.key_id) as Int)
         startActivity(context, intent, null)
     }
 
     inner class ViewHolder(container: ConstraintLayout) : RecyclerView.ViewHolder(container) {
         val from: TextView = container.findViewById(R.id.tvFrom)
-        val to: TextView = container.findViewById(R.id.tvName)
-        val date: TextView = container.findViewById(R.id.tvLuggage)
+        val to: TextView = container.findViewById(R.id.tvTo)
+        val date: TextView = container.findViewById(R.id.tvDateTime)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
@@ -58,6 +60,6 @@ class TransfersAdapter(
         holder.from.text = item.from?.name
         holder.to.text = item.to?.name
         holder.date.text = Utils.dateToString(context, item.dateTo)
-        holder.itemView.setTag(R.id.key_position, item.id)
+        holder.itemView.setTag(R.id.key_id, item.id)
     }
 }

@@ -18,6 +18,7 @@ import java.util.logging.Logger
 class TransportTypesProvider(val realm: Realm, val api: HttpApi) : KoinComponent {
     private val log = Logger.getLogger("TransportTypesProvider")
 
+    @Volatile
     private var loading = false
 
 
@@ -59,7 +60,7 @@ class TransportTypesProvider(val realm: Realm, val api: HttpApi) : KoinComponent
                     if (r.success) {
                         log.info("getTransportTypes() success, n = " + r.data?.size.toString())
 
-                        realm.executeTransaction { realm ->
+                        Realm.getDefaultInstance().executeTransaction { realm ->
                             realm.where(TransportType::class.java)
                                     .findAll()
                                     .deleteAllFromRealm()

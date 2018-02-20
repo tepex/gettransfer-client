@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.kg.gettransfer.createtransfer.CreateTransferActivity">
+    tools:context=".createtransfer.CreateTransferActivity">
 
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,7 +24,7 @@
         android:id="@+id/clHeaderLogo"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:background="@color/yellow"
+        android:background="@color/colorYellow"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -72,7 +72,7 @@
         android:id="@+id/clHeader"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/bg"
+        android:background="@color/colorBGField"
         android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -85,6 +85,7 @@
             android:layout_marginStart="16dp"
             android:labelFor="@+id/lvFrom"
             android:text="From"
+            android:textColor="@color/colorTextGray"
             app:layout_constraintBaseline_toBaselineOf="@+id/lvFrom"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -125,6 +126,7 @@
             android:layout_marginStart="16dp"
             android:labelFor="@+id/lvTo"
             android:text="To"
+            android:textColor="@color/colorTextGray"
             app:layout_constraintBaseline_toBaselineOf="@+id/lvTo"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -209,7 +211,7 @@
         android:id="@+id/clNavbar"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:background="@color/bar"
+        android:background="@color/colorBar"
         android:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

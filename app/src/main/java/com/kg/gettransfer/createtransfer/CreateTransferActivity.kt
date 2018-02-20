@@ -267,11 +267,6 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
     fun showTransferDetails() {
         val ft = fragmentManager.beginTransaction()
 
-//        frTransferDetails.consumer = Consumer {
-//            if (it != null) lv.location = it
-//            hideLocationChooser()
-//        }
-
         frTransferDetails.transfer = transferFromFields()
 
         if (frTransferDetails.isAdded) {

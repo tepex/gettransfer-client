@@ -7,7 +7,7 @@
     android:minWidth="120dp">
 
     <TextView
-        android:id="@+id/tvName"
+        android:id="@+id/tvTo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -19,7 +19,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivImage" />
-
 
     <ImageView
         android:id="@+id/imageView"
@@ -33,7 +32,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvName"
+        app:layout_constraintTop_toBottomOf="@+id/tvTo"
         app:srcCompat="@drawable/ic_person_gray_16dp" />
 
     <TextView
@@ -56,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintEnd_toStartOf="@+id/tvLuggage"
+        app:layout_constraintEnd_toStartOf="@+id/tvDateTime"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toEndOf="@+id/tvPax"
@@ -64,7 +63,7 @@
         app:srcCompat="@drawable/ic_work_black_13dp" />
 
     <TextView
-        android:id="@+id/tvLuggage"
+        android:id="@+id/tvDateTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="1dp"

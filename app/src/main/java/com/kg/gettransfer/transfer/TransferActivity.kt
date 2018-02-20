@@ -3,10 +3,10 @@ package com.kg.gettransfer.transfer
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import com.kg.gettransfer.R
 import com.kg.gettransfer.modules.Transfers
-import com.kg.gettransfer.modules.TransportTypesProvider
 import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.realm.Utils
 import kotlinx.android.synthetic.main.activity_transfer.*
@@ -30,13 +30,20 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.i("TransferActivity", "onCreate()")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transfer)
 
         val id = intent.getIntExtra("id", -1)
 
-        transfers.get(id).addChangeListener { t, _ ->
-            if (t.size > 0) transfer = t[0]
+        transfers.getAsync(id).addChangeListener { t ->
+            Log.i("TransferActivity", "getAsync() changed")
+            if (t.size > 0 && t.isLoaded) {
+                val r = t[0]
+                if (r?.isLoaded == true) {
+                    transfer = r
+                }
+            }
         }
     }
 
@@ -47,10 +54,12 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         tvDate.text = Utils.dateToString(this, transfer.dateTo)
 
         tvPassengers.text = transfer.pax.toString()
-        tvTypes.text = "-"//transportTypes.getNames(transfer.transportTypes)
+        tvTypes.text = "-" //transportTypes.getNames(transfer.transportTypes)
         tvSign.text = transfer.nameSign
         tvChildSeats.text = transfer.childSeats
         tvComments.text = transfer.comments ?: "-"
+
+        Log.i("TransferActivity", "UI updated")
     }
 
     fun back(v: View) {

@@ -15,11 +15,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.kg.gettransfer.R
-import com.kg.gettransfer.transfers.TransfersActivity
 import com.kg.gettransfer.modules.Transfers
 import com.kg.gettransfer.modules.TransportTypesProvider
 import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.modules.http.json.PassengerProfile
+import com.kg.gettransfer.transfers.TransfersActivity
 import com.kg.gettransfer.views.TransportTypesAdapter
 import com.kg.gettransfer.views.setupChooseDate
 import com.kg.gettransfer.views.setupChooseTime
@@ -41,12 +41,7 @@ class TransferDetailsFragment : Fragment() {
 
     private val pax: Int? get() = etPassengers.text.toString().toIntOrNull()
 
-    private val adapter: TransportTypesAdapter
-
-    init {
-        val types = transportTypesProvider.get()
-        adapter = TransportTypesAdapter(types, true)
-    }
+    private val adapter = TransportTypesAdapter(transportTypesProvider.get(), true)
 
     var transfer: NewTransfer? = null
 
@@ -55,41 +50,33 @@ class TransferDetailsFragment : Fragment() {
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         if (savedView == null) {
-            val nView = inflater.inflate(
+            val v = inflater.inflate(
                     R.layout.fragment_transferdetails,
                     container,
                     false)!!
 
-            nView.btnPassengersDec.setOnClickListener { passengersDec() }
-            nView.btnPassengersInc.setOnClickListener { passengersInc() }
+            v.btnPassengersDec.setOnClickListener { passengersDec() }
+            v.btnPassengersInc.setOnClickListener { passengersInc() }
 
-            nView.etDate.setupChooseDate()
-            nView.etTime.setupChooseTime()
+            v.etDate.setupChooseDate()
+            v.etTime.setupChooseTime()
 
-            initListTransportTypes(nView.rvTypes)
+            v.fabConfirmStep.setOnClickListener { createTransfer(transfer!!) }
 
+            v.etDate.setText(formatDateTime(
+                    activity,
+                    System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7,
+                    FORMAT_SHOW_DATE or FORMAT_ABBREV_MONTH or FORMAT_SHOW_YEAR).toString())
 
-            savedView = nView
+            v.etTime.setText("9:00")
+
+            installEditTextWatcher(v)
+
+            initListTransportTypes(v.rvTypes)
+
+            savedView = v
         }
         return savedView!!
-    }
-
-
-    override fun onViewCreated(v: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(v, savedInstanceState)
-
-        installEditTextWatcher()
-
-        etDate.setText(formatDateTime(
-                activity,
-                System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7,
-                FORMAT_SHOW_DATE or FORMAT_ABBREV_MONTH or FORMAT_SHOW_YEAR).toString())
-
-        etTime.setText("9:00")
-
-        fabConfirmStep.setOnClickListener {
-            createTransfer(transfer!!)
-        }
     }
 
 
@@ -118,15 +105,15 @@ class TransferDetailsFragment : Fragment() {
     }
 
 
-    private fun installEditTextWatcher() {
-        etDate.addTextChangedListener(textWatcher)
-        etTime.addTextChangedListener(textWatcher)
-        etPassengers.addTextChangedListener(textWatcher)
+    private fun installEditTextWatcher(v: View) {
+        v.etDate.addTextChangedListener(textWatcher)
+        v.etTime.addTextChangedListener(textWatcher)
+        v.etPassengers.addTextChangedListener(textWatcher)
 
-        etSign.addTextChangedListener(textWatcher)
+        v.etSign.addTextChangedListener(textWatcher)
 
-        etEmail.addTextChangedListener(textWatcher)
-        etPhone.addTextChangedListener(textWatcher)
+        v.etEmail.addTextChangedListener(textWatcher)
+        v.etPhone.addTextChangedListener(textWatcher)
     }
 
 
@@ -174,8 +161,6 @@ class TransferDetailsFragment : Fragment() {
         etPassengers.setText(((pax ?: 0) + 1).toString())
         etPassengers.requestFocus()
         etPassengers.selectAll()
-
-
     }
 
     private fun passengersDec() {
@@ -186,7 +171,10 @@ class TransferDetailsFragment : Fragment() {
 
 
     private fun initListTransportTypes(recyclerView: RecyclerView) {
-        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        val layoutManager = LinearLayoutManager(
+                activity,
+                LinearLayoutManager.HORIZONTAL,
+                false)
 
         recyclerView.layoutManager = layoutManager
         recyclerView.itemAnimator = DefaultItemAnimator()
@@ -200,7 +188,7 @@ class TransferDetailsFragment : Fragment() {
         t.pax = pax!!
         t.transportTypes = adapter.getSelectedIds().toIntArray()
 
-        t.nameSign = "Sign"
+        t.nameSign = etSign.text.toString()
         t.offeredPrice = etPrice.text.toString().toIntOrNull()
         t.flightNumber = etFlightTrainNumber.text.toString()
         t.comment = etComments.text.toString()

@@ -1,48 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:minWidth="120dp">
-
+    android:paddingBottom="12dp"
+    android:paddingEnd="0dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="0dp"
+    android:paddingStart="16dp"
+    android:paddingTop="12dp">
 
     <TextView
-        android:id="@+id/tvName"
+        android:id="@+id/tvDateTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        android:text="Saint Petersburg"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvFrom" />
-
+        android:layout_marginEnd="16dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/colorTextGray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvFrom"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Moscow"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        app:layout_constraintEnd_toStartOf="@+id/tvLuggage"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/colorTextBlack"
+        app:layout_constraintEnd_toStartOf="@+id/tvDateTime"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvLuggage"
-        android:layout_width="wrap_content"
+        android:id="@+id/tvTo"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="16/06/2018"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tvFrom"
-        app:layout_constraintEnd_toEndOf="parent" />
-
+        android:layout_marginTop="4dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/colorTextBlack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvFrom" />
 
 </android.support.constraint.ConstraintLayout>

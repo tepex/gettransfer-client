@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#eeeeee">
+    android:background="#eeeeee"
+    tools:context=".transfer.TransferActivity">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -44,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
             android:text="18:00   24 Aug 2018"
-            android:textColor="@color/date"
+            android:textColor="@color/colorTextDate"
             app:layout_constraintBaseline_toBaselineOf="@+id/textView11"
             app:layout_constraintEnd_toEndOf="parent" />
 
