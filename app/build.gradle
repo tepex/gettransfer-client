@@ -8,6 +8,14 @@ apply plugin: 'realm-android'
 
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'key0'
+            keyPassword 'keygkeyg'
+            storeFile file('/Applications/Android Studio.app/Contents/bin/keystore')
+            storePassword 'keygkeyg'
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.kg.gettransfer"
@@ -20,7 +28,14 @@ android {
     }
     buildTypes {
         release {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
             minifyEnabled false
+            useProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -28,45 +43,34 @@ android {
 
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-
     compile 'com.android.support:appcompat-v7:27.0.2'
-
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:recyclerview-v7:27.0.2'
-
     compile 'com.google.android.gms:play-services-location:11.8.0'
     compile 'com.google.android.gms:play-services-places:11.8.0'
     compile 'com.google.android.gms:play-services-drive:11.8.0'
-
-//    com.google.android.gms:play-services-maps:11.8.0
-
+    //    com.google.android.gms:play-services-maps:11.8.0
     // Retrofit network
-    compile "com.squareup.retrofit2:retrofit:2.3.0"
-    compile "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
-    compile "com.squareup.retrofit2:converter-gson:2.3.0"
-
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     // Rx
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxkotlin:2.2.0'
     compile 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
-
     // Realm db
     compile 'io.realm:android-adapters:2.1.1'
-
     // Koin
     compile 'org.koin:koin-android:0.8.2'
     // or Koin for Android Architecture (if needed)
     // compile 'org.koin:koin-android-architecture:0.8.2'
-
-//    compile 'com.google.dagger:dagger-android:2.11'
-//    compile 'com.google.dagger:dagger-android-support:2.11' // if you use the support libraries
-//    annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
-//    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
-
-//  Test
+    //    compile 'com.google.dagger:dagger-android:2.11'
+    //    compile 'com.google.dagger:dagger-android-support:2.11' // if you use the support libraries
+    //    annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
+    //    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+    //  Test
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'

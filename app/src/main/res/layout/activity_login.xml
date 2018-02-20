@@ -26,8 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
         android:text="Log in"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/colorAccent"
+        android:textSize="22sp"
         app:layout_constraintStart_toEndOf="@+id/btnBack"
         app:layout_constraintTop_toTopOf="parent" />
 
