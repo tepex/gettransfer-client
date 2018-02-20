@@ -3,6 +3,7 @@ package com.kg.gettransfer.modules.http.json
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.realm.TransportType
 
@@ -74,6 +75,16 @@ class TransfersField(@Expose
                      val transfers: List<Transfer>)
 
 typealias TransfersResponse = Response<TransfersField>
+
+
+// --
+
+
+class OffersField(@Expose
+                  @SerializedName("offers")
+                  val offers: List<Offer>)
+
+typealias OffersResponse = Response<OffersField>
 
 
 // --

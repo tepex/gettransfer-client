@@ -8,6 +8,7 @@ import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.modules.http.json.NewTransferField
 import com.kg.gettransfer.modules.http.json.PassengerProfile
 import com.kg.gettransfer.realm.Location
+import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -15,6 +16,7 @@ import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmResults
 import org.koin.standalone.KoinComponent
+import java.util.*
 
 
 /**
@@ -40,11 +42,13 @@ class Transfers(private val realm: Realm, private val api: HttpApi, currentAccou
 
 
     private fun deleteTransfers() {
+        val realm = Realm.getDefaultInstance()
         realm.executeTransaction {
             val transfers = realm.where(Transfer::class.java).findAllAsync()
             transfers.deleteAllFromRealm()
             Log.d(TAG, "realm.where(Transfer).deleteAll()")
         }
+        realm.close()
     }
 
 
@@ -93,10 +97,12 @@ class Transfers(private val realm: Realm, private val api: HttpApi, currentAccou
                     if (it.success) {
                         Log.d(TAG, "getTransfers() responded success, N = ${it.data?.transfers?.size}")
 
-                        Realm.getDefaultInstance().executeTransaction { realm ->
+                        val realm = Realm.getDefaultInstance()
+                        realm.executeTransaction { realm ->
                             realm.copyToRealmOrUpdate(it.data?.transfers!!)
                             Log.d(TAG, "getTransfers() saved to realm")
                         }
+                        realm.close()
                     } else {
                         Log.d(TAG, "getTransfers() responded fail, result = ${it.result}")
                     }
@@ -106,36 +112,52 @@ class Transfers(private val realm: Realm, private val api: HttpApi, currentAccou
                 })
     }
 
+
+    fun getOffers(t: Transfer): RealmResults<Offer>? =
+//            realm.where(Offer::class.java).findAllAsync()
+            t.offers.where().findAllAsync()
+
+
     fun updateOffers(id: Int) {
-//        Log.d(TAG, "updateTransfers()")
-//        if (busy.value) return
-//        Log.d(TAG, "getTransfers() call")
         api.getOffers(id)
                 .subscribeOn(Schedulers.io())
 //                .doOnSubscribe { busy.accept(true) }
                 .observeOn(Schedulers.newThread())
-                .subscribe({
+                .subscribe({ response ->
                     busy.accept(false)
-                    if (it.success) {
-                        Log.d(TAG, "getTransfers() responded success, N = ${it.data?.size}")
+                    if (response.success) {
+                        Log.d(TAG, "getOffers() responded success, N = ${response.data?.offers?.size}")
 
-                        Realm.getDefaultInstance().executeTransaction { realm ->
-//                            realm.copyToRealmOrUpdate(it.data!!)
-                            val transfer = realm.where(Transfer::class.java).equalTo("id", id).findFirst()
+                        val offers = response.data?.offers ?: return@subscribe
+
+                        val realm = Realm.getDefaultInstance()
+                        realm.executeTransaction {
+                            realm.copyToRealmOrUpdate(offers)
+
+                            val transfer = realm
+                                    .where(Transfer::class.java)
+                                    .equalTo("id", id)
+                                    .findFirst()
                                     ?: return@executeTransaction
 
-                            transfer.offers = it.data
+                            transfer.load()
 
-                            realm.copyToRealmOrUpdate(transfer)
+                            transfer.offers.clear()
+                            transfer.offers.addAll(offers)
 
-                            Log.d(TAG, "getTransfers() saved to realm")
+                            transfer.offersUpdatedAt = Date()
+
+                            realm.insertOrUpdate(transfer)
+
+                            Log.d(TAG, "getOffers() saved to realm")
                         }
+                        realm.close()
                     } else {
-                        Log.d(TAG, "getTransfers() responded fail, result = ${it.result}")
+                        Log.d(TAG, "getOffers() responded fail, result = ${response.result}")
                     }
                 }, {
                     busy.accept(false)
-                    Log.d(TAG, "getTransfers() fail, ${it.message}")
+                    Log.d(TAG, "getOffers() fail, ${it.message}")
                 })
     }
 }

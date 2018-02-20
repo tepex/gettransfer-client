@@ -85,10 +85,14 @@ open class Transfer : RealmObject() {
     // --
 
     @Expose
+    @SerializedName("offers_count")
+    var offersCount: Int = 0
+
+    @Expose
     @SerializedName("offers_updated_at")
-    var offersUpdatedAt: String? = null
+    var offersUpdatedAt: Date? = null
 
     // --
 
-    var offers: RealmList<Offer>? = null
+    var offers: RealmList<Offer> = RealmList()
 }

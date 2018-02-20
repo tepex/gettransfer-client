@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:paddingBottom="12dp"
-    android:paddingEnd="0dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="0dp"
-    android:paddingStart="16dp"
-    android:paddingTop="12dp">
+    android:paddingBottom="16dp"
+    android:paddingEnd="16dp"
+    android:paddingLeft="32dp"
+    android:paddingRight="16dp"
+    android:paddingStart="32dp"
+    android:paddingTop="16dp">
 
     <TextView
-        android:id="@+id/tvDateTime"
+        android:id="@+id/tvPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -23,39 +23,55 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvFrom"
+        android:id="@+id/tvCarrier"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/colorTextBlack"
-        app:layout_constraintEnd_toStartOf="@+id/tvDateTime"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/tvPrice"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvTo"
+        android:id="@+id/tvVehicle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="4dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/colorTextBlack"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvBook"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvFrom" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCarrier" />
+
 
     <TextView
-        android:id="@+id/tvState"
+        android:id="@+id/tvFacilities"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="4dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/colorTextGray"
+        app:layout_constraintEnd_toStartOf="@+id/tvBook"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvVehicle" />
+
+    <Button
+        android:id="@+id/tvBook"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="4dp"
-        android:background="@color/colorYellow"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="12dp"
+        android:minHeight="16dp"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:text="BOOK"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/colorTextBlack"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDateTime" />
+        app:layout_constraintTop_toBottomOf="@+id/tvPrice" />
 
 </android.support.constraint.ConstraintLayout>

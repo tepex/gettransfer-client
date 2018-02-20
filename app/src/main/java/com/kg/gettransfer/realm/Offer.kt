@@ -22,7 +22,8 @@ open class Offer : RealmObject() {
 
     @Expose
     @SerializedName("price")
-    var price: String? = null
+    var price: Price? = null
+
     @Expose
     @SerializedName("status")
     var status: String? = null

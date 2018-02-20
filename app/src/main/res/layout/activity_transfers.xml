@@ -2,7 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorBG">
 
 
     <TextView
@@ -33,7 +34,6 @@
             android:id="@+id/rvTransfers"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorBG"
             android:clipToPadding="false"
             android:paddingBottom="16dp"
             android:paddingTop="16dp" />
@@ -83,9 +83,9 @@
         android:id="@+id/clLoggedOut"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="60dp"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="60dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">

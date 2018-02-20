@@ -1,6 +1,7 @@
 package com.kg.gettransfer.views
 
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat.startActivity
@@ -40,6 +41,7 @@ class TransfersAdapter(
         val from: TextView = container.findViewById(R.id.tvFrom)
         val to: TextView = container.findViewById(R.id.tvTo)
         val date: TextView = container.findViewById(R.id.tvDateTime)
+        val state: TextView = container.findViewById(R.id.tvState)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
@@ -50,6 +52,7 @@ class TransfersAdapter(
         return ViewHolder(v as ConstraintLayout)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         if (holder == null) return
 
@@ -60,6 +63,8 @@ class TransfersAdapter(
         holder.from.text = item.from?.name
         holder.to.text = item.to?.name
         holder.date.text = Utils.dateToString(context, item.dateTo)
+        holder.state.visibility = if (item.offersCount > 0) View.VISIBLE else View.GONE
+        holder.state.text = item.status + " (" + item.offersCount + ")"
         holder.itemView.setTag(R.id.key_id, item.id)
     }
 }

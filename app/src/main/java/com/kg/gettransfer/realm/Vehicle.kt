@@ -21,7 +21,7 @@ open class Vehicle : RealmObject() {
 //    var id: Int = -1
 
     @Expose
-    @SerializedName("title")
+    @SerializedName("name")
     var name: String? = null
 
     @Expose

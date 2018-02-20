@@ -50,5 +50,5 @@ interface HttpApi {
 
 
     @GET("transfers/{id}/offers")
-    fun getOffers(@Path("id") id: Int) : Observable<Response<RealmList<Offer>>>
+    fun getOffers(@Path("id") id: Int) : Observable<OffersResponse>
 }
