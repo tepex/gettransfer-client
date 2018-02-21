@@ -13,6 +13,7 @@ import com.kg.gettransfer.modules.CurrentAccount
 import com.kg.gettransfer.modules.Transfers
 import com.kg.gettransfer.views.TransfersAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_transfers.*
 import org.koin.android.ext.android.inject
 
@@ -26,12 +27,21 @@ class TransfersActivity : AppCompatActivity() {
     private val currentAccount: CurrentAccount by inject()
     private val transfers: Transfers by inject()
 
+    private val disposables = CompositeDisposable()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transfers)
 
         initRecyclerView()
+
+        disposables.add(
+                currentAccount.loggedIn
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { updateUI() })
+
+        updateUI()
     }
 
     private fun initRecyclerView() {
@@ -41,15 +51,14 @@ class TransfersActivity : AppCompatActivity() {
         rvTransfers.emptyView = clEmptyTransfers
 
         swipeRefreshLayout.setOnRefreshListener { transfers.updateTransfers() }
-        transfers.busy
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { swipeRefreshLayout.isRefreshing = it }
+        disposables.add(
+                transfers.busy
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { swipeRefreshLayout.isRefreshing = it })
     }
 
 
-    override fun onResume() {
-        super.onResume()
-
+    private fun updateUI() {
         if (currentAccount.isLoggedIn) {
             showTransfers()
         } else {
@@ -78,5 +87,11 @@ class TransfersActivity : AppCompatActivity() {
     fun logIn(v: View?) {
         val intent = Intent(this, LoginActivity::class.java)
         startActivityForResult(intent, 2)
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.clear()
     }
 }

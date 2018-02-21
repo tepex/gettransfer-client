@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#eeeeee"
+        android:clipToPadding="false"
         android:paddingBottom="32dp">
 
         <ImageButton
@@ -276,15 +277,15 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv323333" >
+            app:layout_constraintTop_toBottomOf="@+id/tv323333">
 
             <com.kg.gettransfer.views.EmptyRecyclerView
                 android:id="@+id/rvOffers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:clipToPadding="false"
-                android:maxHeight="300dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:maxHeight="300dp" />
 
             <TextView
                 android:id="@+id/tvNoOffers"
@@ -299,16 +300,16 @@
         </FrameLayout>
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/btnCare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:text="Care service"
-            app:layout_constraintBaseline_toBaselineOf="@+id/button4"
-            app:layout_constraintEnd_toStartOf="@+id/button4" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/btnCancel"
+            app:layout_constraintEnd_toStartOf="@+id/btnCancel" />
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/btnCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"

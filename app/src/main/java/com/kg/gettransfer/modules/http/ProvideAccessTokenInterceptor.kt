@@ -14,6 +14,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 import java.util.logging.Logger
+import retrofit2.adapter.rxjava2.Result.response
+import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
+
+
 
 /**
  * Created by denisvakulenko on 07/02/2018.
@@ -61,7 +66,13 @@ class ProvideAccessTokenInterceptor(val session: Session, rx2call: RxJava2CallAd
         requestBuilder.method(original.method(), original.body())
         val request = requestBuilder.build()
 
-        return chain.proceed(request)
+        val response = chain.proceed(request)
+
+        if (response.code() == 403) {
+            session.logOut()
+        }
+
+        return response
     }
 
     // Blocks current thread
