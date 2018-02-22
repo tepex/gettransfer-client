@@ -45,10 +45,12 @@ class LocationView : TextView, KoinComponent {
 
             field = newLocation
             text = newLocation?.title ?: ""
-            onTextChanged(text, 0, 0, 0)
+            onLocationChanged?.run()
 
             if (newLocation?.valid == false) {
                 geoUtils.validate(newLocation)
             }
         }
+
+    var onLocationChanged: Runnable? = null
 }

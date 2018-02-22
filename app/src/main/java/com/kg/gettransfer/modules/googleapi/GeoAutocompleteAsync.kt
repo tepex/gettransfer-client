@@ -22,7 +22,7 @@ class GeoAutocompleteAsync(val context: Context) : KoinComponent {
 
     var response: PublishRelay<AutocompletePredictionBufferResponse> = PublishRelay.create()
 
-    private val LAT_LNG_BOUNDS_WORLD = LatLngBounds(
+     val LAT_LNG_BOUNDS_WORLD = LatLngBounds(
             LatLng(-90.0, -180.0),
             LatLng(90.0, 180.0))
 

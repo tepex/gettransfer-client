@@ -23,6 +23,7 @@ import com.kg.gettransfer.transfers.TransfersActivity
 import com.kg.gettransfer.views.TransportTypesAdapter
 import com.kg.gettransfer.views.setupChooseDate
 import com.kg.gettransfer.views.setupChooseTime
+import kotlinx.android.synthetic.main.activity_transfers.*
 import kotlinx.android.synthetic.main.fragment_transferdetails.*
 import kotlinx.android.synthetic.main.fragment_transferdetails.view.*
 import org.koin.android.ext.android.inject
@@ -84,6 +85,7 @@ class TransferDetailsFragment : Fragment() {
         populateNewTransfer(transfer)
         transfers
                 .createTransfer(transfer)
+                .doOnSubscribe { fabConfirmStep.visibility = View.GONE }
                 .subscribe(
                         {
                             val intent = Intent(activity, TransfersActivity::class.java)

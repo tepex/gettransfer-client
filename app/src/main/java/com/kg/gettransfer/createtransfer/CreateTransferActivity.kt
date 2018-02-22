@@ -8,8 +8,6 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
 import android.view.View.GONE
@@ -24,13 +22,13 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.kg.gettransfer.R
-import com.kg.gettransfer.transfers.TransfersActivity
 import com.kg.gettransfer.data.LocationDetailed
 import com.kg.gettransfer.fragments.ChooseLocationFragment
 import com.kg.gettransfer.fragments.TransferDetailsFragment
 import com.kg.gettransfer.login.LoginActivity
 import com.kg.gettransfer.modules.CurrentAccount
 import com.kg.gettransfer.modules.http.json.NewTransfer
+import com.kg.gettransfer.transfers.TransfersActivity
 import com.kg.gettransfer.views.BitmapDescriptorFactory
 import com.kg.gettransfer.views.LocationView
 import io.reactivex.functions.Consumer
@@ -114,14 +112,15 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
         }
     }
 
+
     private fun setUpMap() {
         markerFrom = map?.addMarker(
                 MarkerOptions()
                         .visible(false)
                         .position(LatLng(0.0, 0.0))
-                        .anchor(0.5f, 0.5f)
+                        .anchor(0.5f, 0.95f)
                         .icon(BitmapDescriptorFactory
-                                .fromVector(this, R.drawable.ic_adjust_black_24dp)))
+                                .fromVector(this, R.drawable.ic_place_black_24dp)))
 
         markerTo = map?.addMarker(
                 MarkerOptions()
@@ -149,23 +148,18 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
     private var markerFrom: Marker? = null
     private var markerTo: Marker? = null
 
+    private val pathChanged = Runnable {
+        updateFab()
+
+        val llFrom = lvFrom.location?.latLng
+        val llTo = lvTo.location?.latLng
+        updateMarkers(llFrom, llTo)
+        animateMap(llFrom, llTo)
+    }
+
     private fun installEditTextWatcher() {
-        val textWatcher: TextWatcher = object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                updateFab()
-
-                val llFrom = lvFrom.location?.latLng
-                val llTo = lvTo.location?.latLng
-                updateMarkers(llFrom, llTo)
-                animateMap(llFrom, llTo)
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, st: Int, count: Int, after: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, st: Int, before: Int, count: Int) = Unit
-        }
-
-        lvFrom.addTextChangedListener(textWatcher)
-        lvTo.addTextChangedListener(textWatcher)
+        lvFrom.onLocationChanged = pathChanged
+        lvTo.onLocationChanged = pathChanged
     }
 
 
@@ -254,7 +248,7 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
     }
 
 
-    fun showProfile(v: View?) {
+    private fun showProfile(v: View?) {
 
     }
 
@@ -264,7 +258,7 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
     }
 
 
-    fun showTransferDetails() {
+    private fun showTransferDetails() {
         val ft = fragmentManager.beginTransaction()
 
         frTransferDetails.transfer = transferFromFields()
@@ -313,7 +307,8 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
 
 
     fun btnPromo(v: View) {
-        lvFrom.location = LocationDetailed("DME")
-        lvTo.location = LocationDetailed("Moscow")
+        btnPromo.visibility = View.GONE
+        lvFrom.location = LocationDetailed("Russia, Domodedovo")
+        lvTo.location = LocationDetailed("Moscow, Tverskaya 8")
     }
 }

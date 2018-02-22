@@ -54,6 +54,8 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         val rv = rvOffers
         rv.layoutManager = LinearLayoutManager(applicationContext)
         rv.emptyView = tvNoOffers
+
+        wv.loadUrl("https://gettransfer.com/en")
     }
 
     private fun updateUI(transfer: Transfer) {
@@ -68,8 +70,25 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         tvChildSeats.text = transfer.childSeats
         tvComments.text = transfer.comments ?: "-"
 
-        val offers = transfers.getOffers(transfer)!!
-        rvOffers.adapter = OffersAdapter(offers, true)
+        if (transfer.status == "new" && !transfer.bookNow) {
+            clActive.visibility = View.VISIBLE
+            clArchive.visibility = View.GONE
+
+            val offers = transfers.getOffers(transfer)!!
+            rvOffers.adapter = OffersAdapter(offers, true)
+
+            offers.addChangeListener { offers ->
+                val hasOffers = offers.size > 0
+                tvChooseCarrier.visibility = if (hasOffers) View.VISIBLE else View.GONE
+                tvConnecting.visibility = if (!hasOffers) View.VISIBLE else View.GONE
+            }
+        }
+        else {
+            clActive.visibility = View.GONE
+            clArchive.visibility = View.VISIBLE
+        }
+
+        transferStatusView.update(transfer)
 
         Log.i("TransferActivity", "UI updated")
     }

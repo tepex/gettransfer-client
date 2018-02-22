@@ -151,6 +151,7 @@
         android:focusable="false"
         android:onClick="login"
         android:visibility="invisible"
+        app:backgroundTint="@color/colorYellow"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_trending_flat_white_24dp" />

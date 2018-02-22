@@ -41,13 +41,14 @@ class GeoUtils(
             throw Exception("Google API client is not connected")
         }
 
-        Log.i(TAG, "Executing query for: " + location.title)
+        Log.i(TAG, "Validate GEO: " + location.title)
 
         if (location.placeID != null) {
             val pendingResult = Places.GeoDataApi.getPlaceById(googleApiClient, location.placeID)
 
             pendingResult.setResultCallback { places ->
                 if (places.status.isSuccess) {
+                    Log.i(TAG, "Validated: " + places[0].toString())
                     response.accept(
                             LocationDetailed(
                                     location.title,
@@ -58,18 +59,20 @@ class GeoUtils(
                 }
             }
         } else if (location.title.isNotEmpty()) {
-            val addresses: List<Address>
+            val places: List<Address>
 
             try {
-                addresses = geocoder.getFromLocationName(location.title, 1)
-
-                if (addresses.isNotEmpty()) {
+                places = geocoder.getFromLocationName(location.title, 1) //, -90.0, -180.0, 90.0, 180.0)
+                if (places.isNotEmpty()) {
+                    Log.i(TAG, "Validated: " + places[0].toString())
                     response.accept(
                             LocationDetailed(
                                     location.title,
                                     location.subtitle,
                                     location.placeID,
-                                    LatLng(addresses[0].latitude, addresses[0].longitude)))
+                                    LatLng(places[0].latitude, places[0].longitude)))
+                } else {
+                    Log.i(TAG, "Validation failed")
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
