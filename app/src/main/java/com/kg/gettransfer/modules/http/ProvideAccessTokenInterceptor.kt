@@ -14,10 +14,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 import java.util.logging.Logger
-import retrofit2.adapter.rxjava2.Result.response
-import android.content.Intent
-import android.support.v4.content.ContextCompat.startActivity
-
 
 
 /**
@@ -29,8 +25,8 @@ class ProvideAccessTokenInterceptor(val session: Session, rx2call: RxJava2CallAd
 
     private val X_ACCESS_TOKEN = "X-ACCESS-TOKEN"
 
-    //val API_KEY = "23be10dcf06f280a4c0f8dca95434803"
-    val API_KEY = "ololo"
+    val API_KEY = "23be10dcf06f280a4c0f8dca95434803"
+    //val API_KEY = "ololo"
 
 
     interface HttpAccessApi {

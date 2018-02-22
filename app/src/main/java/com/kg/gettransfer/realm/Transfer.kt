@@ -5,7 +5,6 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import io.realm.RealmList
 import io.realm.RealmObject
-import io.realm.annotations.Ignore
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 import io.realm.annotations.Required
@@ -44,6 +43,10 @@ open class Transfer : RealmObject() {
     @Expose
     @SerializedName("status")
     var status: String? = null
+
+    @Expose
+    @SerializedName("book_now")
+    var bookNow: Boolean = false
 
     @Expose
     @SerializedName("date_to")
@@ -95,4 +98,14 @@ open class Transfer : RealmObject() {
     // --
 
     var offers: RealmList<Offer> = RealmList()
+
+    val strStatus: String
+        get() = when {
+            status == "new" && !bookNow || status == "draft" && bookNow ->
+                "Active"
+            status == "new" && bookNow || status == "performed" && !bookNow ->
+                "Confirmed"
+            else ->
+                "Archive"
+        }
 }

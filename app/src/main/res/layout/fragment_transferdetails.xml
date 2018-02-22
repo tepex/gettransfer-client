@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f8f8f8">
+    android:background="@color/colorBG">
 
 
     <ScrollView
@@ -27,7 +27,7 @@
                 android:id="@+id/textView7"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="#eeeeee"
+                android:background="@color/colorBGSecondary"
                 android:paddingBottom="8dp"
                 android:paddingLeft="16dp"
                 android:paddingTop="24dp"
@@ -156,7 +156,7 @@
                 android:id="@+id/textView18"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="#eeeeee"
+                android:background="@color/colorBGSecondary"
                 android:paddingBottom="8dp"
                 android:paddingLeft="16dp"
                 android:paddingTop="24dp"
@@ -285,7 +285,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:background="#eeeeee"
+                android:background="@color/colorBGSecondary"
                 android:paddingBottom="8dp"
                 android:paddingLeft="16dp"
                 android:paddingTop="24dp"
@@ -359,8 +359,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:background="#eeeeee"
-                android:gravity="left"
+                android:background="@color/colorBGSecondary"
+                android:gravity="start"
                 android:paddingBottom="40dp"
                 android:paddingLeft="16dp"
                 android:paddingTop="40dp"

@@ -47,7 +47,7 @@ class OffersAdapter(
                 .from(parent?.context)
                 .inflate(R.layout.item_offer, parent, false)
         v.setOnClickListener(icl)
-        v.tvBook.background.colorFilter = LightingColorFilter(0xffffffff.toInt(), 0xffffcc4c.toInt())
+        v.tvBook.background.colorFilter = LightingColorFilter(0xffffcc4c.toInt(), 0x0.toInt())
         return ViewHolder(v as ConstraintLayout)
     }
 
@@ -58,7 +58,8 @@ class OffersAdapter(
         val item = getItem(position) ?: return
 
         holder.carrier.text = item.carrier?.title ?: "Carrier #" + item.carrier?.id
-        holder.vehicle.text = (item.vehicle?.name ?: "Unknown vehicle") + (" (" + "Economy ×3 ×3" + ")")
+        holder.vehicle.text = (item.vehicle?.name
+                ?: "Unknown vehicle") + (" (" + "Economy ×3 ×3" + ")")
         holder.facilities.text = "WiFi   Water   Music"
         holder.price.text = item.price?.toString() ?: "No price"
         holder.itemView.setTag(R.id.key_id, item.id)

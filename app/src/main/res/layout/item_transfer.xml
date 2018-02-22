@@ -50,11 +50,12 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="4dp"
-        android:background="@color/colorYellow"
+        android:background="@color/colorTextLocation"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/colorTextBlack"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvDateTime" />
 

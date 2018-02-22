@@ -6,7 +6,8 @@
 
     <color name="colorYellow">#ffcc4c</color>
 
-    <color name="colorBG">#eeeeee</color>
+    <color name="colorBGSecondary">#eeeeee</color>
+    <color name="colorBG">#fafafa</color>
     <color name="colorBGField">#fafafa</color>
 
     <color name="colorBar">#e9e8e6</color>

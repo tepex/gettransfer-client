@@ -63,8 +63,26 @@ class TransfersAdapter(
         holder.from.text = item.from?.name
         holder.to.text = item.to?.name
         holder.date.text = Utils.dateToString(context, item.dateTo)
-        holder.state.visibility = if (item.offersCount > 0) View.VISIBLE else View.GONE
-        holder.state.text = item.status + " (" + item.offersCount + ")"
+
+        when {
+            item.strStatus == "Active" -> {
+                holder.state.setTextColor(0xff000000.toInt())
+                holder.state.setBackgroundResource(R.drawable.bg_rounded_2_cian)
+                val offers = item.offersCount
+                holder.state.text = if (offers > 0) offers.toString() else "..."
+            }
+            item.strStatus == "Confirmed" -> {
+                holder.state.setTextColor(0xffffffff.toInt())
+                holder.state.setBackgroundResource(R.drawable.bg_rounded_2_blue)
+                holder.state.text = item.strStatus
+            }
+            else -> {
+                holder.state.setTextColor(0xaa000000.toInt())
+                holder.state.setBackgroundResource(R.drawable.bg_rounded_2_lightgray)
+                holder.state.text = item.strStatus
+            }
+        }
+
         holder.itemView.setTag(R.id.key_id, item.id)
     }
 }

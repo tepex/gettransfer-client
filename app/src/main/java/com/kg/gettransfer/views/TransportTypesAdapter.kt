@@ -38,7 +38,10 @@ class TransportTypesAdapter(
 
         var selected: Boolean = false
             set(value) {
-                itemView.setBackgroundColor(if (value) 0xffffcc4c.toInt() else 0)
+                if (value)
+                    itemView.setBackgroundResource(R.drawable.bg_rounded_2_cian)
+                else
+                    itemView.setBackgroundColor(0)
             }
     }
 
