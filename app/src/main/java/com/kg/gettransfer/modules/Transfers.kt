@@ -22,7 +22,12 @@ import java.util.logging.Logger
  */
 
 
-class Transfers(private val realm: Realm, private val api: HttpApi, currentAccount: CurrentAccount) : KoinComponent {
+class Transfers(
+        private val realm: Realm,
+        private val api: HttpApi,
+        currentAccount: CurrentAccount)
+    : KoinComponent {
+
     private val log = Logger.getLogger("Transfers")
 
     val busy = BehaviorRelay.createDefault<Boolean>(false)!!
@@ -87,10 +92,6 @@ class Transfers(private val realm: Realm, private val api: HttpApi, currentAccou
             realm.where(Transfer::class.java).equalTo("isActive", active).sort("dateTo").findAllAsync()
 
 
-    fun getAsync(id: Int): RealmResults<Transfer> =
-            realm.where(Transfer::class.java).equalTo("id", id).findAllAsync()
-
-
     fun updateTransfers() {
         log.info("updateTransfers()")
         if (busy.value) return
@@ -131,59 +132,7 @@ class Transfers(private val realm: Realm, private val api: HttpApi, currentAccou
     }
 
 
-    fun getOffers(t: Transfer): RealmResults<Offer>? =
-            t.offers.where().findAllAsync()
-
-
-    fun updateOffers(id: Int) {
-        api.getOffers(id)
-                .subscribeOn(Schedulers.io())
-//                .doOnSubscribe { busy.accept(true) }
-                .observeOn(Schedulers.newThread())
-                .subscribe({ response ->
-                    busy.accept(false)
-                    if (response.success) {
-                        log.info("getOffers() responded success, N = ${response.data?.offers?.size}")
-
-                        val offers = response.data?.offers ?: return@subscribe
-
-                        val realm = Realm.getDefaultInstance()
-                        realm.executeTransaction {
-                            val offers = realm.copyToRealmOrUpdate(offers)
-
-                            val transfer = realm
-                                    .where(Transfer::class.java)
-                                    .equalTo("id", id)
-                                    .findFirst()
-                                    ?: return@executeTransaction
-
-                            transfer.load()
-
-                            transfer.offers.clear()
-                            transfer.offers.addAll(offers)
-
-                            transfer.offersUpdatedAt = Date()
-
-                            realm.insertOrUpdate(transfer)
-
-                            log.info("getOffers() saved to realm")
-                        }
-                        realm.close()
-                    } else {
-                        log.info("getOffers() responded fail, result = ${response.result}")
-                    }
-                }, {
-                    busy.accept(false)
-                    log.info("getOffers() fail, ${it.message}")
-                })
-    }
-
-
     fun close() {
         realm.close()
     }
-
-
-    fun cancelTransfer(id: Int) = api.postCancelTransfer(id)
-    fun restoreTransfer(id: Int) = api.postRestoreTransfer(id)
 }

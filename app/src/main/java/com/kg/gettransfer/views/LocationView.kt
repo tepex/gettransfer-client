@@ -39,7 +39,9 @@ class LocationView : TextView, KoinComponent {
 
     var location: LocationDetailed? = null
         set(newLocation) {
-            if (newLocation?.equalsRaw(field) == true && newLocation.latLng == null) return
+            if (newLocation?.equalsRaw(field) == true
+                    && newLocation.latLng == null
+                    && newLocation.placeID == null) return
 
             field = newLocation
             text = newLocation?.title ?: ""

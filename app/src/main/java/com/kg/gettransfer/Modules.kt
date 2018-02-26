@@ -70,6 +70,11 @@ val AppModule = applicationContext {
     provide { TransportTypesProvider(get(), get()) }
 
 
+    // Models
+
+    factory { TransferModel(get(), get()) }
+
+
     // UI
 
     factory { CreateTransferActivity() }

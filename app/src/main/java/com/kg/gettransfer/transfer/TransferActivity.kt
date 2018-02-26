@@ -6,16 +6,14 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import com.kg.gettransfer.R
-import com.kg.gettransfer.modules.Transfers
+import com.kg.gettransfer.modules.TransferModel
 import com.kg.gettransfer.modules.TransportTypesProvider
+import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.realm.Utils
 import com.kg.gettransfer.views.OffersAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import io.realm.Realm
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.activity_transfer.*
 import org.koin.android.ext.android.inject
@@ -28,39 +26,39 @@ import org.koin.standalone.KoinComponent
 
 
 class TransferActivity : AppCompatActivity(), KoinComponent {
-    private val transfers: Transfers by inject()
     private val transportTypes: TransportTypesProvider by inject()
+    private val transferModel: TransferModel by inject()
 
-    private var id: Int = -1
-
-    private val transferRealmResults by lazy { transfers.getAsync(id) }
-
-    private var transfer: Transfer? = null
-        set(newTransfer) {
-            field = newTransfer
-            if (newTransfer != null) updateUI(newTransfer)
-        }
-
-    private val transferChangeListener: (RealmResults<Transfer>) -> Unit = { t ->
-        Log.i("TransferActivity", "getAsync() changed")
-        if (t.size > 0 && t.isLoaded) {
-            val r = t[0]
-            if (r?.isLoaded == true) {
-                transfer = r
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i("TransferActivity", "onCreate()")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transfer)
 
-        id = intent.getIntExtra("id", -1)
+        val id = intent.getIntExtra("id", -1)
+        transferModel.id = id
 
-        transferRealmResults.addChangeListener(transferChangeListener)
+        transferModel.updateOffers()
 
-        transfers.updateOffers(id)
+        transferModel.transfer
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe { updateUI(it) }
+
+        transferModel.errors
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    tvTitle.text = "DRFDS"
+                    //Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                }, {
+                    //Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                })
+
+        transferModel.busy
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    progressBar.visibility = if (it) View.VISIBLE else View.INVISIBLE
+                    transferStatusView.visibility = if (!it) View.VISIBLE else View.INVISIBLE
+                }
 
         val rv = rvOffers
         rv.layoutManager = LinearLayoutManager(applicationContext)
@@ -68,6 +66,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
         wv.loadUrl("https://gettransfer.com/en")
     }
+
 
     private fun updateUI(transfer: Transfer) {
         tvTitle.text = "Transfer #" + transfer.id
@@ -87,14 +86,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             clActive.visibility = View.VISIBLE
             clArchive.visibility = View.GONE
 
-            val offers = transfers.getOffers(transfer)!!
-            rvOffers.adapter = OffersAdapter(offers, true)
-
-            offers.addChangeListener { offers ->
-                val hasOffers = offers.size > 0
-                tvChooseCarrier.visibility = if (hasOffers) View.VISIBLE else View.GONE
-                tvConnecting.visibility = if (!hasOffers) View.VISIBLE else View.GONE
-            }
+            setOffersAsync(transferModel.getOffers())
         } else {
             clActive.visibility = View.GONE
             clArchive.visibility = View.VISIBLE
@@ -102,69 +94,43 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
         transferStatusView.update(transfer)
 
+        scrollView.post { scrollView.fullScroll(View.FOCUS_UP) }
+
         Log.i("TransferActivity", "UI updated")
     }
+
+
+    var offers: RealmResults<Offer>? = null
+    private fun setOffersAsync(offers: RealmResults<Offer>) {
+        this.offers?.removeAllChangeListeners()
+
+        rvOffers.adapter = OffersAdapter(offers, true)
+
+        offers.addChangeListener { offers ->
+            val hasOffers = offers.size > 0
+            tvChooseCarrier.visibility = if (hasOffers) View.VISIBLE else View.GONE
+            tvConnecting.visibility = if (!hasOffers) View.VISIBLE else View.GONE
+        }
+
+        this.offers = offers
+    }
+
 
     fun back(v: View) {
         finish()
     }
 
     fun cancel(v: View) {
-        transfers.cancelTransfer(id)
-                .subscribeOn(Schedulers.io())
-                .doOnSubscribe { btnCancel.isEnabled = false }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    btnCancel.isEnabled = true
-                    if (response.success) {
-//                        transfer = response.data
-
-                        val realm = Realm.getDefaultInstance()
-                        realm.beginTransaction()
-                        transfer?.status = "canceled"
-                        transfer?.updateIsActive()
-                        realm.commitTransaction()
-                        realm.close()
-
-                        updateUI(transfer ?: return@subscribe)
-
-                        scrollView.post { scrollView.fullScroll(View.FOCUS_UP) }
-                    }
-                }, {
-                    btnCancel.isEnabled = true
-                    Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
-                })
+        transferModel.cancelTransfer()
     }
 
     fun restore(v: View) {
-        transfers.restoreTransfer(id)
-                .subscribeOn(Schedulers.io())
-                .doOnSubscribe { btnRestore.isEnabled = false }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    btnRestore.isEnabled = true
-                    if (response.success) {
-//                        transfer = response.data
-
-                        val realm = Realm.getDefaultInstance()
-                        realm.beginTransaction()
-                        transfer?.status = "new"
-                        transfer?.updateIsActive()
-                        realm.commitTransaction()
-                        realm.close()
-
-                        updateUI(transfer ?: return@subscribe)
-
-                        scrollView.post { scrollView.fullScroll(View.FOCUS_UP) }
-                    }
-                }, {
-                    btnRestore.isEnabled = true
-                    Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
-                })
+        transferModel.restoreTransfer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        transferRealmResults.removeAllChangeListeners()
+        offers?.removeAllChangeListeners()
+        transferModel.close()
     }
 }
