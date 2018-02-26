@@ -182,4 +182,8 @@ class Transfers(private val realm: Realm, private val api: HttpApi, currentAccou
     fun close() {
         realm.close()
     }
+
+
+    fun cancelTransfer(id: Int) = api.postCancelTransfer(id)
+    fun restoreTransfer(id: Int) = api.postRestoreTransfer(id)
 }

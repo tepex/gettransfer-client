@@ -43,9 +43,15 @@ interface HttpApi {
             @Body transfer: NewTransferField)
             : retrofit2.Call<NewTransferCreatedResponse>
 
+
     @GET("transfers/{id}")
     fun getTransfer(@Path("id") id: String): Observable<Response<Transfer>>
 
+    @POST("transfers/{id}/cancel")
+    fun postCancelTransfer(@Path("id") id: Int): Observable<Response<Transfer>>
+
+    @POST("transfers/{id}/restore")
+    fun postRestoreTransfer(@Path("id") id: Int): Observable<Response<Transfer>>
 
     @GET("transfers/{id}/offers")
     fun getOffers(@Path("id") id: Int): Observable<OffersResponse>
