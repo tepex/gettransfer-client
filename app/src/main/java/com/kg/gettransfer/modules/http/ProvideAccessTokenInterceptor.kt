@@ -1,5 +1,6 @@
 package com.kg.gettransfer.modules.http
 
+
 import android.accounts.NetworkErrorException
 import com.kg.gettransfer.modules.Session
 import com.kg.gettransfer.modules.http.json.AccessToken
@@ -19,6 +20,7 @@ import java.util.logging.Logger
 /**
  * Created by denisvakulenko on 07/02/2018.
  */
+
 
 class ProvideAccessTokenInterceptor(val session: Session, rx2call: RxJava2CallAdapterFactory, gsonConverterFactory: GsonConverterFactory) : Interceptor, KoinComponent {
     private val log = Logger.getLogger("ProvideAccessTokenInterceptor")

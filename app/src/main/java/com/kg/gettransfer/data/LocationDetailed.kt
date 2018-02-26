@@ -1,5 +1,6 @@
 package com.kg.gettransfer.data
 
+
 import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.realm.Location
 
@@ -7,6 +8,7 @@ import com.kg.gettransfer.realm.Location
 /**
  * Created by denisvakulenko on 09/02/2018.
  */
+
 
 class LocationDetailed(
         val title: String,
@@ -25,7 +27,9 @@ class LocationDetailed(
         get() = title.isNotEmpty() && latLng != null
 
 
-    fun toLocation(): Location = Location(title, latLng!!.latitude, latLng.longitude)
+    fun toLocation(): Location? =
+            if (latLng == null) null
+            else Location(title, latLng.latitude, latLng.longitude)
 
 
     fun equalsRaw(b: LocationDetailed?): Boolean = title == b?.title

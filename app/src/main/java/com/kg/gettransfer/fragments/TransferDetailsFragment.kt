@@ -12,8 +12,8 @@ import android.text.TextWatcher
 import android.text.format.DateUtils.*
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.*
 import android.view.ViewGroup
-import android.widget.Toast
 import com.kg.gettransfer.R
 import com.kg.gettransfer.modules.Transfers
 import com.kg.gettransfer.modules.TransportTypesProvider
@@ -23,7 +23,9 @@ import com.kg.gettransfer.transfers.TransfersActivity
 import com.kg.gettransfer.views.TransportTypesAdapter
 import com.kg.gettransfer.views.setupChooseDate
 import com.kg.gettransfer.views.setupChooseTime
-import kotlinx.android.synthetic.main.activity_transfers.*
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_transferdetails.*
 import kotlinx.android.synthetic.main.fragment_transferdetails.view.*
 import org.koin.android.ext.android.inject
@@ -44,7 +46,9 @@ class TransferDetailsFragment : Fragment() {
 
     private val adapter = TransportTypesAdapter(transportTypesProvider.get(), true)
 
-    var transfer: NewTransfer? = null
+    private val disposables = CompositeDisposable()
+
+    lateinit var transfer: NewTransfer
 
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -62,7 +66,7 @@ class TransferDetailsFragment : Fragment() {
             v.etDate.setupChooseDate()
             v.etTime.setupChooseTime()
 
-            v.fabConfirmStep.setOnClickListener { createTransfer(transfer!!) }
+            v.fabConfirmStep.setOnClickListener { createTransfer(transfer) }
 
             v.etDate.setText(formatDateTime(
                     activity,
@@ -77,23 +81,53 @@ class TransferDetailsFragment : Fragment() {
 
             savedView = v
         }
+
+        savedView!!.post {
+            savedView!!.scrollView.fullScroll(FOCUS_UP)
+            savedView!!.scrollView.scrollTo(0, 0)
+        }
+
         return savedView!!
     }
 
 
     private fun createTransfer(transfer: NewTransfer) {
         populateNewTransfer(transfer)
-        transfers
-                .createTransfer(transfer)
-                .doOnSubscribe { fabConfirmStep.visibility = View.GONE }
-                .subscribe(
-                        {
-                            val intent = Intent(activity, TransfersActivity::class.java)
-                            startActivityForResult(intent, 2)
-                        },
-                        {
-                            Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
-                        })
+        disposables.add(
+                transfers.createTransfer(transfer)
+                        .subscribeOn(Schedulers.io())
+                        .doOnSubscribe {
+                            setBusy(true)
+                        }
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    setBusy(false)
+                                    reset()
+                                    val intent = Intent(activity, TransfersActivity::class.java)
+                                    startActivityForResult(intent, 2)
+                                },
+                                {
+                                    setBusy(false)
+                                    tvError.text = "Error creating request\n" + it.message
+                                    fabConfirmStep.visibility = VISIBLE
+                                    scrollView.post {
+                                        scrollView.fullScroll(View.FOCUS_DOWN)
+                                    }
+                                }))
+    }
+
+
+    private fun setBusy(b: Boolean) {
+        if (b) {
+            fabConfirmStep.visibility = INVISIBLE
+            progressBar.visibility = VISIBLE
+            fabProgress.visibility = VISIBLE
+            tvError.text = ""
+        } else {
+            progressBar.visibility = INVISIBLE
+            fabProgress.visibility = INVISIBLE
+        }
     }
 
 
@@ -120,7 +154,7 @@ class TransferDetailsFragment : Fragment() {
 
 
     private fun fieldsUpdated() {
-        fabConfirmStep.visibility = if (fieldsValidate()) View.VISIBLE else View.GONE
+        fabConfirmStep.visibility = if (fieldsValidate()) VISIBLE else GONE
     }
 
 
@@ -187,7 +221,7 @@ class TransferDetailsFragment : Fragment() {
     private fun populateNewTransfer(t: NewTransfer) {
         t.dateTo = etDate.text.toString()
         t.timeTo = etTime.text.toString()
-        t.pax = pax!!
+        t.pax = pax ?: 0
         t.transportTypes = adapter.getSelectedIds().toIntArray()
 
         t.nameSign = etSign.text.toString()
@@ -196,5 +230,13 @@ class TransferDetailsFragment : Fragment() {
         t.comment = etComments.text.toString()
 
         t.passengerProfile = PassengerProfile(etEmail.text.toString(), etPhone.text.toString()).toMap()
+    }
+
+
+    private fun reset() {
+        etPassengers.setText("")
+        etPrice.setText("")
+        etFlightTrainNumber.setText("")
+        etFlightTrainNumber.setText("")
     }
 }

@@ -2,6 +2,7 @@ package com.kg.gettransfer.transfers
 
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -29,6 +30,9 @@ class TransfersActivity : AppCompatActivity() {
 
     private val disposables = CompositeDisposable()
 
+    private val adapterActive by lazy { transfers.getAllAsync(true) }
+    private val adapterArchive by lazy { transfers.getAllAsync(false) }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,12 +45,38 @@ class TransfersActivity : AppCompatActivity() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe { updateUI() })
 
+        tvActive.setOnClickListener {
+            updateTabs(true)
+            rvTransfers.adapter = TransfersAdapter(adapterActive, true)
+        }
+
+        tvArchive.setOnClickListener {
+            updateTabs(false)
+            rvTransfers.adapter = TransfersAdapter(adapterArchive, true)
+        }
+
         updateUI()
     }
 
+
+    private fun updateTabs(active: Boolean) {
+        if (active) {
+            tvActive.typeface = Typeface.DEFAULT_BOLD
+            tvArchive.typeface = Typeface.DEFAULT
+            tvActive.setTextColor(resources.getColor(R.color.colorTextLocation))
+            tvArchive.setTextColor(resources.getColor(R.color.colorTextGray))
+        } else {
+            tvActive.typeface = Typeface.DEFAULT
+            tvArchive.typeface = Typeface.DEFAULT_BOLD
+            tvActive.setTextColor(resources.getColor(R.color.colorTextGray))
+            tvArchive.setTextColor(resources.getColor(R.color.colorTextLocation))
+        }
+    }
+
+
     private fun initRecyclerView() {
         val rvTransfers = rvTransfers
-        rvTransfers.adapter = TransfersAdapter(transfers.getAllAsync(), true)
+        rvTransfers.adapter = TransfersAdapter(adapterActive, true)
         rvTransfers.layoutManager = LinearLayoutManager(applicationContext)
         rvTransfers.emptyView = clEmptyTransfers
 

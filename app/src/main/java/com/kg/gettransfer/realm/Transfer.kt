@@ -44,6 +44,12 @@ open class Transfer : RealmObject() {
     @SerializedName("status")
     var status: String? = null
 
+    var isActive: Boolean = false
+
+    fun updateIsActive() {
+        isActive = status == "new" || status == "draft" || status == "resolved"
+    }
+
     @Expose
     @SerializedName("book_now")
     var bookNow: Boolean = false

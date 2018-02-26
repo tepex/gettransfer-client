@@ -6,6 +6,7 @@ import android.app.FragmentManager
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
@@ -212,8 +213,12 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
             lvFrom.location?.valid == true && lvTo.location?.valid == true
 
 
-    private fun transferFromFields(): NewTransfer =
-            NewTransfer(lvFrom.location?.toLocation()!!, lvTo.location?.toLocation()!!)
+    private fun transferFromFields(): NewTransfer? {
+        val lFrom = lvFrom.location?.toLocation() ?: return null
+        val lTo = lvTo.location?.toLocation() ?: return null
+
+        return NewTransfer(lFrom, lTo)
+    }
 
 
     fun fabClick(v: View) {
@@ -259,9 +264,18 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
 
 
     private fun showTransferDetails() {
+        val transfer = transferFromFields() ?: return
+
         val ft = fragmentManager.beginTransaction()
 
-        frTransferDetails.transfer = transferFromFields()
+        frTransferDetails.transfer = transfer
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            val slide = android.transition.Slide()
+            slide.duration = 150
+
+            frTransferDetails.enterTransition = slide
+        }
 
         if (frTransferDetails.isAdded) {
             ft.show(frTransferDetails)
@@ -312,3 +326,4 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
         lvTo.location = LocationDetailed("Moscow, Tverskaya 8")
     }
 }
+

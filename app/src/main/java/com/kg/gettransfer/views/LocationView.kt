@@ -19,15 +19,13 @@ import org.koin.standalone.inject
 class LocationView : TextView, KoinComponent {
     private val geoUtils: GeoUtils by inject()
 
-
-    constructor(context: Context, attrs: AttributeSet)
-            : super(context, attrs)
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int)
-            : super(context, attrs, defStyleAttr)
-
-
     private val disposable: Disposable
+
+    var onLocationChanged: Runnable? = null
+
+
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
 
     init {
@@ -51,6 +49,4 @@ class LocationView : TextView, KoinComponent {
                 geoUtils.validate(newLocation)
             }
         }
-
-    var onLocationChanged: Runnable? = null
 }

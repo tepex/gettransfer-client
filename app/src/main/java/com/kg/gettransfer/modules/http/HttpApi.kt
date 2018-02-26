@@ -2,10 +2,8 @@ package com.kg.gettransfer.modules.http
 
 
 import com.kg.gettransfer.modules.http.json.*
-import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
 import io.reactivex.Observable
-import io.realm.RealmList
 import retrofit2.http.*
 
 
@@ -43,12 +41,12 @@ interface HttpApi {
     @Headers("Content-Type: application/json")
     fun postTransfer(
             @Body transfer: NewTransferField)
-            : Observable<NewTransferCreatedResponse>
+            : retrofit2.Call<NewTransferCreatedResponse>
 
     @GET("transfers/{id}")
-    fun getTransfer(@Path("id") id: String) : Observable<Response<Transfer>>
+    fun getTransfer(@Path("id") id: String): Observable<Response<Transfer>>
 
 
     @GET("transfers/{id}/offers")
-    fun getOffers(@Path("id") id: Int) : Observable<OffersResponse>
+    fun getOffers(@Path("id") id: Int): Observable<OffersResponse>
 }

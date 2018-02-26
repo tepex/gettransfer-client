@@ -51,31 +51,40 @@ class Transfers(private val realm: Realm, private val api: HttpApi, currentAccou
 
 
     fun createTransfer(transfer: NewTransfer): Observable<Transfer> =
-            Observable.create<Transfer> {
+            Observable.create<Transfer> { observable ->
                 log.info("createTransfer()")
-                api.postTransfer(NewTransferField(transfer))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ r ->
-                            if (r.success) {
-                                log.info("createTransfer() responded success, id = ${r.data?.id}")
-                                updateTransfers()
-                                val t = Transfer()
-                                t.id = r.data?.id ?: -1
-                                it.onNext(t)
-                            } else {
-                                log.info("createTransfer() responded fail, result = ${r.result}")
-                                it.onError(Exception(r.error?.message))
-                            }
-                        }, { error ->
-                            log.info("createTransfer() fail, ${error.message}")
-                            it.onError(error)
-                        })
+                val response = api.postTransfer(NewTransferField(transfer)).execute()
+                if (response.isSuccessful) {
+                    val body = response.body()!!
+                    if (body.success) {
+                        log.info("createTransfer() responded success, id = ${body.data?.id}")
+                        //updateTransfers()
+                        val t = Transfer()
+                        t.id = body.data?.id ?: -1
+                        observable.onNext(t)
+                    } else {
+                        if (body.error?.type == "UNPROCESSABLE") {
+                            log.info("createTransfer() responded UNPROCESSABLE")
+                            observable.onError(Exception("The request is incomplete or unprocessable."))
+                        } else {
+                            log.info("createTransfer() responded fail, result = ${body.result}")
+                            observable.onError(Exception(body.error?.message))
+                        }
+                    }
+                    observable.onComplete()
+                } else {
+                    log.info("createTransfer() fail, ${response.message()}")
+                    observable.onError(Exception(response.message()))
+                }
             }
 
 
     fun getAllAsync(): RealmResults<Transfer> =
             realm.where(Transfer::class.java).sort("dateTo").findAllAsync()
+
+
+    fun getAllAsync(active: Boolean): RealmResults<Transfer> =
+            realm.where(Transfer::class.java).equalTo("isActive", active).sort("dateTo").findAllAsync()
 
 
     fun getAsync(id: Int): RealmResults<Transfer> =
@@ -99,6 +108,7 @@ class Transfers(private val realm: Realm, private val api: HttpApi, currentAccou
                         val realm = Realm.getDefaultInstance()
                         realm.executeTransaction {
                             val transfers = realm.copyToRealmOrUpdate(transfers)
+                            transfers.forEach { it.updateIsActive() }
                             val ids = transfers
                                     .map { it.id }
                                     .toIntArray().toTypedArray()
