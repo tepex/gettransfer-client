@@ -47,7 +47,7 @@ class OffersAdapter(
                 .from(parent?.context)
                 .inflate(R.layout.item_offer, parent, false)
         v.setOnClickListener(icl)
-        v.tvBook.background.colorFilter = LightingColorFilter(0xffffcc4c.toInt(), 0x0.toInt())
+        v.tvBook.background.colorFilter = LightingColorFilter(0xffffcc4c.toInt(), 0x0)
         return ViewHolder(v as ConstraintLayout)
     }
 

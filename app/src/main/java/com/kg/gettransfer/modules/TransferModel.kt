@@ -7,6 +7,8 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.kg.gettransfer.modules.http.HttpApi
 import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
+import com.kg.gettransfer.realm.getTransfer
+import com.kg.gettransfer.realm.getTransferAsync
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmResults
@@ -32,7 +34,7 @@ class TransferModel(
 
             transferRealmResults?.removeAllChangeListeners()
 
-            val transferRealmResults = getTransferFromRealmAsync(value)
+            val transferRealmResults = realm.getTransferAsync(value)
             transferRealmResults.addChangeListener(transferChangeListener)
 
             this.transferRealmResults = transferRealmResults
@@ -54,11 +56,16 @@ class TransferModel(
 
     private val transferChangeListener: (RealmResults<Transfer>) -> Unit = { result ->
         Log.i("TransferActivity", "getTransferFromRealmAsync() changed")
-        if (result.size > 0 && result.isLoaded) {
-            val resTransfer = result[0]
-            if (resTransfer?.isLoaded == true) {
-                transfer.accept(resTransfer)
+        if (result.size > 0) {
+            if (result.isLoaded) {
+                val resTransfer = result[0]
+                if (resTransfer?.isLoaded == true) {
+                    transfer.accept(resTransfer)
+                }
             }
+        } else {
+            err("Lost transfer with id: " + id)
+            busy.accept(false)
         }
     }
 
@@ -69,21 +76,13 @@ class TransferModel(
             transfer.value.offers.where().findAllAsync()
 
 
-    private fun getTransferFromRealmAsync(id: Int): RealmResults<Transfer> =
-            realm.where(Transfer::class.java).equalTo("id", id).findAllAsync()
-
-    private fun getTransferFromRealm(id: Int): Transfer? =
-            realm.where(Transfer::class.java).equalTo("id", id).findFirst()
-
-
     fun updateOffers() {
-        if (busy.value) return
+        if (busy.value || transfer.value == null) return
         api.getOffers(id)
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe { busy.accept(true) }
                 .observeOn(Schedulers.newThread())
                 .subscribe({ response ->
-                    busy.accept(false)
                     if (response.success) {
                         log.info("getOffers() responded success, N = ${response.data?.offers?.size}")
 
@@ -93,7 +92,7 @@ class TransferModel(
                         realm.executeTransaction {
                             val offers = realm.copyToRealmOrUpdate(offers)
 
-                            val transfer = getTransferFromRealm(id)
+                            val transfer = realm.getTransfer(id)
 
                             if (transfer == null) {
                                 err("Lost transfer with id: " + id)
@@ -114,30 +113,30 @@ class TransferModel(
                         log.info("getOffers() responded fail, result = ${response.result}")
                         err(response.error?.message)
                     }
-                }, {
                     busy.accept(false)
-                    error(it)
+                }, {
+                    err(it)
+                    busy.accept(false)
                 })
     }
 
 
     fun cancelTransfer() {
-        if (busy.value) return
+        if (busy.value || transfer.value == null) return
         api.postCancelTransfer(id)
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe { busy.accept(true) }
                 .observeOn(Schedulers.newThread())
                 .subscribe({ response ->
-                    busy.accept(false)
                     if (response.success) {
 //                        transfer = response.data
 
                         val realm = Realm.getDefaultInstance()
                         realm.executeTransaction {
-                            val transfer = getTransferFromRealm(id)
+                            val transfer = realm.getTransfer(id)
 
                             if (transfer == null) {
-                                errors.accept(Exception("Lost transfer with id: " + id))
+                                err(Exception("Lost transfer with id: " + id))
                                 return@executeTransaction
                             }
 
@@ -146,29 +145,29 @@ class TransferModel(
                         }
                         realm.close()
                     } else {
-                        errors.accept(Exception(response.error?.message))
+                        err(response.error?.message)
                     }
-                }, {
                     busy.accept(false)
+                }, {
                     err(it)
+                    busy.accept(false)
                 })
     }
 
 
     fun restoreTransfer() {
-        if (busy.value) return
+        if (busy.value || transfer.value == null) return
         api.postRestoreTransfer(id)
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe { busy.accept(true) }
                 .observeOn(Schedulers.newThread())
                 .subscribe({ response ->
-                    busy.accept(false)
                     if (response.success) {
 //                        transfer = response.data
 
                         val realm = Realm.getDefaultInstance()
                         realm.executeTransaction {
-                            val transfer = getTransferFromRealm(id)
+                            val transfer = realm.getTransfer(id)
 
                             if (transfer == null) {
                                 err("Lost transfer with id: " + id)
@@ -182,9 +181,10 @@ class TransferModel(
                     } else {
                         err(response.error?.message)
                     }
-                }, {
                     busy.accept(false)
+                }, {
                     err(it)
+                    busy.accept(false)
                 })
     }
 

@@ -1,11 +1,14 @@
 package com.kg.gettransfer.transfer
 
 
+import android.graphics.LightingColorFilter
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
+import android.view.View.*
+import android.widget.Toast
 import com.kg.gettransfer.R
 import com.kg.gettransfer.modules.TransferModel
 import com.kg.gettransfer.modules.TransportTypesProvider
@@ -41,24 +44,33 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         transferModel.updateOffers()
 
         transferModel.transfer
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { updateUI(it) }
 
         transferModel.errors
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    tvTitle.text = "DRFDS"
-                    //Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
                 }, {
-                    //Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
                 })
 
         transferModel.busy
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    progressBar.visibility = if (it) View.VISIBLE else View.INVISIBLE
-                    transferStatusView.visibility = if (!it) View.VISIBLE else View.INVISIBLE
+                    progressBar.visibility = if (it) VISIBLE else INVISIBLE
+
+                    if (!it && transferStatusView.visibility == INVISIBLE) {
+                        transferStatusView.alpha = 0.0f
+                        transferStatusView.animate()
+                                .alpha(1.0f)
+                                .setStartDelay(200)
+                                .setDuration(200)
+                    }
+                    transferStatusView.visibility = if (!it) VISIBLE else INVISIBLE
                 }
+
+        btnRestore.background.colorFilter = LightingColorFilter(0xffffcc4c.toInt(), 0x0)
 
         val rv = rvOffers
         rv.layoutManager = LinearLayoutManager(applicationContext)
@@ -83,24 +95,46 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         tvComments.text = transfer.comments ?: "-"
 
         if (transfer.status == "new" && !transfer.bookNow) {
-            clActive.visibility = View.VISIBLE
-            clArchive.visibility = View.GONE
+            clActive.visibility = VISIBLE
+            clArchive.visibility = GONE
+
+            val carriers = transfer.relevantCarrierProfilesCount ?: 0
+            tvConnecting.text =
+                    if (carriers > 1) "Connecting to $carriers carriers..."
+                    else "Connecting to carriers..."
 
             setOffersAsync(transferModel.getOffers())
         } else {
-            clActive.visibility = View.GONE
-            clArchive.visibility = View.VISIBLE
+            clActive.visibility = GONE
+            clArchive.visibility = VISIBLE
+            when {
+                transfer.status == "outdated" -> {
+                    tvArchiveHeader.text = "Transfer date passed"
+                    tvRestoreHint.text = ""
+                    btnRestore.visibility = INVISIBLE
+                }
+                transfer.status == "rejected" -> {
+                    tvArchiveHeader.text = "Manager rejected request"
+                    tvRestoreHint.text = "Restore?"
+                    btnRestore.visibility = VISIBLE
+                }
+                else -> {
+                    tvArchiveHeader.text = "You cancelled request"
+                    tvRestoreHint.text = "Restore?"
+                    btnRestore.visibility = VISIBLE
+                }
+            }
         }
 
         transferStatusView.update(transfer)
 
-        scrollView.post { scrollView.fullScroll(View.FOCUS_UP) }
+        scrollView.post { scrollView.fullScroll(FOCUS_UP) }
 
         Log.i("TransferActivity", "UI updated")
     }
 
 
-    var offers: RealmResults<Offer>? = null
+    private var offers: RealmResults<Offer>? = null
     private fun setOffersAsync(offers: RealmResults<Offer>) {
         this.offers?.removeAllChangeListeners()
 
@@ -108,8 +142,15 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
         offers.addChangeListener { offers ->
             val hasOffers = offers.size > 0
-            tvChooseCarrier.visibility = if (hasOffers) View.VISIBLE else View.GONE
-            tvConnecting.visibility = if (!hasOffers) View.VISIBLE else View.GONE
+            tvChooseCarrier.visibility = if (hasOffers) VISIBLE else GONE
+            tvConnecting.visibility = if (!hasOffers) VISIBLE else GONE
+            if (!hasOffers) {
+                tvConnecting.alpha = 0.0f
+                tvConnecting.animate()
+                        .alpha(1.0f)
+                        .setStartDelay(800)
+                        .setDuration(200)
+            }
         }
 
         this.offers = offers
@@ -121,10 +162,12 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     }
 
     fun cancel(v: View) {
+        scrollView.fullScroll(FOCUS_UP)
         transferModel.cancelTransfer()
     }
 
     fun restore(v: View) {
+        scrollView.fullScroll(FOCUS_UP) //TODO: Remove when header implemented
         transferModel.restoreTransfer()
     }
 

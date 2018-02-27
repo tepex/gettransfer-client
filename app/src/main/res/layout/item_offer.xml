@@ -68,7 +68,7 @@
         android:minHeight="16dp"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
-        android:text="BOOK"
+        android:text="@string/book"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/colorTextBlack"
         app:layout_constraintEnd_toEndOf="parent"

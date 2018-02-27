@@ -103,6 +103,12 @@ open class Transfer : RealmObject() {
 
     // --
 
+    @Expose
+    @SerializedName("relevant_carrier_profiles_count")
+    var relevantCarrierProfilesCount: Int? = null
+
+    // --
+
     var offers: RealmList<Offer> = RealmList()
 
     val strStatus: String
@@ -111,6 +117,12 @@ open class Transfer : RealmObject() {
                 "Active"
             status == "new" && bookNow || status == "performed" && !bookNow ->
                 "Confirmed"
+            status == "outdated" ->
+                "Expired"
+            status == "canceled" ->
+                "Canceled"
+            status == "rejected" ->
+                "Rejected"
             else ->
                 "Archive"
         }

@@ -8,4 +8,5 @@
     <string name="log_in_to_see_transfers_and_offers">Log in to see transfers and offers</string>
     <string name="create_new_transfer">Create new transfer</string>
     <string name="no_transfers">You have not уet requested any transfers</string>
+    <string name="book">BOOK</string>
 </resources>

@@ -4,9 +4,10 @@
     <string name="login">Логин</string>
     <string name="email">Email</string>
     <string name="password">Пароль</string>
-    <string name="restore_password"><a href="https://gettransfer.com/en/forgot_password">Restore password</a></string>
-    <string name="no_net_info">No internet</string>
-    <string name="log_in_to_see_transfers_and_offers">Log in to see transfers and offers</string>
-    <string name="create_new_transfer">Create new transfer</string>
-    <string name="no_transfers">You have not уet requested any transfers</string>
+    <string name="restore_password"><a href="https://gettransfer.com/en/forgot_password">Восстановить пароль</a></string>
+    <string name="no_net_info">Не соединения с сетью</string>
+    <string name="log_in_to_see_transfers_and_offers">Войдите в кабинет, чтобы просмотреть заявки</string>
+    <string name="create_new_transfer">Создать трансфер</string>
+    <string name="no_transfers">Нет заявок</string>
+    <string name="book">Бронь</string>
 </resources>
