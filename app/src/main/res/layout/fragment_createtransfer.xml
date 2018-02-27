@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".createtransfer.CreateTransferActivity">
+    tools:context=".createtransfer.CreateTransferFragment">
 
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -101,7 +101,6 @@
             android:gravity="center_vertical"
             android:hint="Starting point"
             android:inputType="textPersonName"
-            android:onClick="locationViewClick"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingTop="2dp"
@@ -131,6 +130,7 @@
             app:layout_constraintBaseline_toBaselineOf="@+id/lvTo"
             app:layout_constraintStart_toStartOf="parent" />
 
+
         <com.kg.gettransfer.views.LocationView
             android:id="@+id/lvTo"
             android:layout_width="0dp"
@@ -142,7 +142,6 @@
             android:gravity="center_vertical"
             android:hint="Destination"
             android:inputType="textPersonName"
-            android:onClick="locationViewClick"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingTop="2dp"
@@ -159,7 +158,6 @@
         android:id="@+id/mapView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingBottom="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -170,9 +168,8 @@
         android:id="@+id/btnPromo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginStart="16dp"
-        android:onClick="btnPromo"
         android:text="DME - Moskow"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -198,66 +195,11 @@
         android:layout_marginEnd="16dp"
         android:clickable="true"
         android:focusable="false"
-        android:onClick="fabClick"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/clNavbar"
-        app:layout_constraintEnd_toEndOf="parent"
         app:backgroundTint="@color/colorYellow"
-        app:srcCompat="@drawable/ic_trending_flat_white_24dp" />
-
-
-    <!---->
-
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/clNavbar"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:background="@color/colorBar"
-        android:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageButton
-            android:id="@+id/btnList"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:onClick="showTransfers"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnCreate"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_menu_gray_24dp" />
-
-        <ImageButton
-            android:id="@+id/btnCreate"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnUser"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/btnList"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_add_box_gray_24dp" />
-
-        <ImageButton
-            android:id="@+id/btnUser"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:onClick="login"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/btnCreate"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_person_gray_24dp" />
-
-    </android.support.constraint.ConstraintLayout>
+        app:srcCompat="@drawable/ic_trending_flat_white_24dp" />
 
 
 </android.support.constraint.ConstraintLayout>

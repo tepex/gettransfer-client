@@ -1,21 +1,27 @@
 package com.kg.gettransfer.transfers
 
 
+import android.app.Fragment
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.view.ViewGroup
 import com.kg.gettransfer.R
-import com.kg.gettransfer.createtransfer.CreateTransferActivity
 import com.kg.gettransfer.login.LoginActivity
 import com.kg.gettransfer.modules.CurrentAccount
 import com.kg.gettransfer.modules.Transfers
+import com.kg.gettransfer.views.EmptyRecyclerView
 import com.kg.gettransfer.views.TransfersAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.activity_transfers.*
+import kotlinx.android.synthetic.main.fragment_transfers.*
+import kotlinx.android.synthetic.main.fragment_transfers.view.*
 import org.koin.android.ext.android.inject
 
 
@@ -24,7 +30,7 @@ import org.koin.android.ext.android.inject
  */
 
 
-class TransfersActivity : AppCompatActivity() {
+class TransfersFragment : Fragment() {
     private val currentAccount: CurrentAccount by inject()
     private val transfers: Transfers by inject()
 
@@ -34,27 +40,40 @@ class TransfersActivity : AppCompatActivity() {
     private val adapterArchive by lazy { transfers.getAllAsync(false) }
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_transfers)
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//    }
 
-        initRecyclerView()
 
-        disposables.add(
-                currentAccount.loggedIn
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { updateUI() })
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val view = inflater?.inflate(R.layout.fragment_transfers, container, false)!!
 
-        tvActive.setOnClickListener {
-            updateTabs(true)
-            rvTransfers.adapter = TransfersAdapter(adapterActive, true)
+        with(view) {
+            initRecyclerView(view.rvTransfers, view.swipeRefreshLayout)
+
+            disposables.add(
+                    currentAccount.loggedIn
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe { updateUI() })
+
+            tvActive.setOnClickListener {
+                updateTabs(true)
+                rvTransfers.adapter = TransfersAdapter(adapterActive, true)
+            }
+
+            tvArchive.setOnClickListener {
+                updateTabs(false)
+                rvTransfers.adapter = TransfersAdapter(adapterArchive, true)
+            }
+
+            btnLogIn.setOnClickListener { logIn() }
         }
 
-        tvArchive.setOnClickListener {
-            updateTabs(false)
-            rvTransfers.adapter = TransfersAdapter(adapterArchive, true)
-        }
+        return view
+    }
 
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         updateUI()
     }
 
@@ -74,13 +93,14 @@ class TransfersActivity : AppCompatActivity() {
     }
 
 
-    private fun initRecyclerView() {
-        val rvTransfers = rvTransfers
+    private fun initRecyclerView(rvTransfers: EmptyRecyclerView,
+                                 swipeRefreshLayout: SwipeRefreshLayout) {
         rvTransfers.adapter = TransfersAdapter(adapterActive, true)
-        rvTransfers.layoutManager = LinearLayoutManager(applicationContext)
+        rvTransfers.layoutManager = LinearLayoutManager(activity)
         rvTransfers.emptyView = clEmptyTransfers
 
         swipeRefreshLayout.setOnRefreshListener { transfers.updateTransfers() }
+
         disposables.add(
                 transfers.busy
                         .observeOn(AndroidSchedulers.mainThread())
@@ -96,26 +116,32 @@ class TransfersActivity : AppCompatActivity() {
         }
     }
 
+
     private fun showTransfers() {
-        swipeRefreshLayout.visibility = View.VISIBLE
-        clLoggedOut.visibility = View.GONE
+        swipeRefreshLayout.visibility = VISIBLE
+        clLoggedOut.visibility = GONE
+        tvActive.visibility = VISIBLE
+        tvArchive.visibility = VISIBLE
         transfers.updateTransfers()
     }
 
+
     private fun showLoggedOut() {
-        swipeRefreshLayout.visibility = View.GONE
-        clLoggedOut.visibility = View.VISIBLE
+        swipeRefreshLayout.visibility = GONE
+        clLoggedOut.visibility = VISIBLE
+        tvActive.visibility = GONE
+        tvArchive.visibility = GONE
     }
 
 
-    fun createTransfer(v: View?) {
-        val intent = Intent(this, CreateTransferActivity::class.java)
-        startActivity(intent)
-    }
+//    fun createTransfer(v: View?) {
+//        val intent = Intent(activity, CreateTransferFragment::class.java)
+//        startActivity(intent)
+//    }
 
 
-    fun logIn(v: View?) {
-        val intent = Intent(this, LoginActivity::class.java)
+    private fun logIn() {
+        val intent = Intent(activity, LoginActivity::class.java)
         startActivityForResult(intent, 2)
     }
 

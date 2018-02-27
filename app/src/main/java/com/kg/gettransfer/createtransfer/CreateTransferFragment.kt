@@ -1,18 +1,18 @@
 package com.kg.gettransfer.createtransfer
 
 
-import android.app.Activity
+import android.app.Fragment
 import android.app.FragmentManager
 import android.content.Context
-import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.ViewGroup
 import android.widget.TextView
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -26,14 +26,13 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.data.LocationDetailed
 import com.kg.gettransfer.fragments.ChooseLocationFragment
 import com.kg.gettransfer.fragments.TransferDetailsFragment
-import com.kg.gettransfer.login.LoginActivity
 import com.kg.gettransfer.modules.CurrentAccount
 import com.kg.gettransfer.modules.http.json.NewTransfer
-import com.kg.gettransfer.transfers.TransfersActivity
 import com.kg.gettransfer.views.BitmapDescriptorFactory
 import com.kg.gettransfer.views.LocationView
 import io.reactivex.functions.Consumer
-import kotlinx.android.synthetic.main.activity_createtransfer.*
+import kotlinx.android.synthetic.main.fragment_createtransfer.*
+import kotlinx.android.synthetic.main.fragment_createtransfer.view.*
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
 import java.util.logging.Logger
@@ -44,8 +43,8 @@ import java.util.logging.Logger
  */
 
 
-class CreateTransferActivity : AppCompatActivity(), KoinComponent {
-    private val log = Logger.getLogger("CreateTransferActivity")
+class CreateTransferFragment : Fragment(), KoinComponent {
+    private val log = Logger.getLogger("CreateTransferFragment")
 
     private val currentAccount: CurrentAccount by inject()
 //    private val transfers: Transfers by inject()
@@ -56,14 +55,30 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
     private var map: GoogleMap? = null
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_createtransfer)
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val view = inflater?.inflate(R.layout.fragment_createtransfer,
+                container,
+                false)!!
 
-        installEditTextWatcher()
+        installEditTextWatcher(view)
+
+        with(view) {
+            lvFrom.setOnClickListener { locationViewClick(view.lvFrom) }
+            lvTo.setOnClickListener { locationViewClick(view.lvTo) }
+
+            btnPromo.setOnClickListener { btnPromo() }
+
+            fabConfirmStep.setOnClickListener { showTransferDetails() }
+        }
+
+        return view
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         try {
-            MapsInitializer.initialize(this)
+            MapsInitializer.initialize(activity)
         } catch (e: GooglePlayServicesNotAvailableException) {
         }
 
@@ -72,33 +87,23 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
 
         fragmentManager.addOnBackStackChangedListener {
             updateFab()
-            clNavbar.visibility =
-                    if (fragmentManager.backStackEntryCount == 0) VISIBLE
-                    else GONE
         }
     }
-
 
     override fun onResume() {
         super.onResume()
 
         mapView.onResume()
         setUpMapIfNeeded()
-
-        if (currentAccount.isLoggedIn) {
-            btnUser.setImageResource(R.drawable.ic_person_gray_24dp)
-        } else {
-            btnUser.setImageResource(R.drawable.ic_person_outline_gray_24dp)
-        }
     }
 
 
     private fun setUpMapIfNeeded() {
         if (map == null) {
-            val connMgr = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val connMgr = activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkInfo = connMgr.activeNetworkInfo
             if (networkInfo == null || !networkInfo.isConnected) {
-                val tvNoInternet = TextView(this)
+                val tvNoInternet = TextView(activity)
                 tvNoInternet.gravity = Gravity.CENTER_HORIZONTAL
                 tvNoInternet.text = getString(R.string.no_net_info)
                 mapView.addView(tvNoInternet)
@@ -121,7 +126,7 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
                         .position(LatLng(0.0, 0.0))
                         .anchor(0.5f, 0.95f)
                         .icon(BitmapDescriptorFactory
-                                .fromVector(this, R.drawable.ic_place_black_24dp)))
+                                .fromVector(activity, R.drawable.ic_place_black_24dp)))
 
         markerTo = map?.addMarker(
                 MarkerOptions()
@@ -129,7 +134,7 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
                         .position(LatLng(0.0, 0.0))
                         .anchor(0.5f, 0.95f)
                         .icon(BitmapDescriptorFactory
-                                .fromVector(this, R.drawable.ic_place_black_24dp)))
+                                .fromVector(activity, R.drawable.ic_place_black_24dp)))
     }
 
 
@@ -158,9 +163,9 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
         animateMap(llFrom, llTo)
     }
 
-    private fun installEditTextWatcher() {
-        lvFrom.onLocationChanged = pathChanged
-        lvTo.onLocationChanged = pathChanged
+    private fun installEditTextWatcher(v: View) {
+        v.lvFrom.onLocationChanged = pathChanged
+        v.lvTo.onLocationChanged = pathChanged
     }
 
 
@@ -183,7 +188,7 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
 
     private fun animateMap(llFrom: LatLng?, llTo: LatLng?) {
         if (llFrom != null && llTo != null) {
-            val padding = (64 * applicationContext.resources.displayMetrics.density).toInt()
+            val padding = (64 * activity.resources.displayMetrics.density).toInt()
             map?.animateCamera(
                     CameraUpdateFactory.newLatLngBounds(
                             getLatLngBounds(llFrom, llTo),
@@ -227,34 +232,6 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
 //                .subscribe({ showTransfers(null) })
 //
 //        transfers.createTransfer(transferFromFields())
-    }
-
-
-    private val LOGIN_REQUEST = 1
-    fun login(v: View) {
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivityForResult(intent, LOGIN_REQUEST)
-    }
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        // Check which request we're responding to
-        if (requestCode == LOGIN_REQUEST) {
-            if (resultCode == Activity.RESULT_OK) {
-                showProfile(null)
-            }
-        }
-    }
-
-
-    fun showTransfers(v: View?) {
-        val intent = Intent(this, TransfersActivity::class.java)
-        startActivityForResult(intent, 2)
-    }
-
-
-    private fun showProfile(v: View?) {
-
     }
 
 
@@ -320,7 +297,7 @@ class CreateTransferActivity : AppCompatActivity(), KoinComponent {
     // --
 
 
-    fun btnPromo(v: View) {
+    private fun btnPromo() {
         btnPromo.visibility = View.GONE
         lvFrom.location = LocationDetailed("Russia, Domodedovo")
         lvTo.location = LocationDetailed("Moscow, Tverskaya 8")

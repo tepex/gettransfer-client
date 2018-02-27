@@ -19,7 +19,7 @@ import com.kg.gettransfer.modules.Transfers
 import com.kg.gettransfer.modules.TransportTypesProvider
 import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.modules.http.json.PassengerProfile
-import com.kg.gettransfer.transfers.TransfersActivity
+import com.kg.gettransfer.transfers.TransfersFragment
 import com.kg.gettransfer.views.TransportTypesAdapter
 import com.kg.gettransfer.views.setupChooseDate
 import com.kg.gettransfer.views.setupChooseTime
@@ -104,7 +104,7 @@ class TransferDetailsFragment : Fragment() {
                                 {
                                     setBusy(false)
                                     reset()
-                                    val intent = Intent(activity, TransfersActivity::class.java)
+                                    val intent = Intent(activity, TransfersFragment::class.java)
                                     startActivityForResult(intent, 2)
                                 },
                                 {

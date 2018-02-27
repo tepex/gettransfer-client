@@ -6,7 +6,7 @@ import android.location.Geocoder
 import android.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.kg.gettransfer.createtransfer.CreateTransferActivity
+import com.kg.gettransfer.createtransfer.CreateTransferFragment
 import com.kg.gettransfer.login.LoginActivity
 import com.kg.gettransfer.login.LoginContract
 import com.kg.gettransfer.login.LoginPresenter
@@ -17,7 +17,7 @@ import com.kg.gettransfer.modules.googleapi.GoogleApiClientFactory
 import com.kg.gettransfer.modules.http.HttpApi
 import com.kg.gettransfer.modules.http.HttpApiFactory
 import com.kg.gettransfer.modules.http.ProvideAccessTokenInterceptor
-import com.kg.gettransfer.transfers.TransfersActivity
+import com.kg.gettransfer.transfers.TransfersFragment
 import org.koin.dsl.module.applicationContext
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -77,12 +77,12 @@ val AppModule = applicationContext {
 
     // UI
 
-    factory { CreateTransferActivity() }
+    factory { CreateTransferFragment() }
 
     factory { LoginActivity() }
     factory { LoginPresenter(get()) as LoginContract.Presenter }
 
-    factory { TransfersActivity() }
+    factory { TransfersFragment() }
 }
 
 
