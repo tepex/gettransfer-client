@@ -39,37 +39,36 @@ class TransfersFragment : Fragment() {
     private val adapterActive by lazy { transfers.getAllAsync(true) }
     private val adapterArchive by lazy { transfers.getAllAsync(false) }
 
-
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//    }
+    private var savedview: View? = null
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view = inflater?.inflate(R.layout.fragment_transfers, container, false)!!
+        if (savedview == null) {
+            val view = inflater?.inflate(R.layout.fragment_transfers, container, false)!!
+            with(view) {
+                initRecyclerView(view.rvTransfers, view.swipeRefreshLayout)
 
-        with(view) {
-            initRecyclerView(view.rvTransfers, view.swipeRefreshLayout)
+                disposables.add(
+                        currentAccount.loggedIn
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe { updateUI() })
 
-            disposables.add(
-                    currentAccount.loggedIn
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe { updateUI() })
+                tvActive.setOnClickListener {
+                    updateTabs(true)
+                    rvTransfers.adapter = TransfersAdapter(adapterActive, true)
+                }
 
-            tvActive.setOnClickListener {
-                updateTabs(true)
-                rvTransfers.adapter = TransfersAdapter(adapterActive, true)
+                tvArchive.setOnClickListener {
+                    updateTabs(false)
+                    rvTransfers.adapter = TransfersAdapter(adapterArchive, true)
+                }
+
+                btnLogIn.setOnClickListener { logIn() }
             }
 
-            tvArchive.setOnClickListener {
-                updateTabs(false)
-                rvTransfers.adapter = TransfersAdapter(adapterArchive, true)
-            }
-
-            btnLogIn.setOnClickListener { logIn() }
+            savedview = view
         }
-
-        return view
+        return savedview!!
     }
 
 

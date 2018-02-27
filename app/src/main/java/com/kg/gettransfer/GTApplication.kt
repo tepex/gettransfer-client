@@ -1,14 +1,13 @@
 package com.kg.gettransfer
 
+
 import android.app.Application
 import android.content.pm.ApplicationInfo
 import com.kg.gettransfer.modules.Transfers
 import org.koin.Koin
-import org.koin.KoinContext
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.android.startKoin
 import org.koin.android.logger.AndroidLogger
-import org.koin.standalone.KoinComponent
 
 
 /**

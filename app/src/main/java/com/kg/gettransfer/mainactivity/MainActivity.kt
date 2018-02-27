@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         fragmentManager.addOnBackStackChangedListener {
             clNavbar.visibility =
-                    if (fragmentManager.backStackEntryCount < 2) View.VISIBLE
+                    if (fragmentManager.backStackEntryCount < 1) View.VISIBLE
                     else View.GONE
         }
 
@@ -74,22 +74,35 @@ class MainActivity : AppCompatActivity() {
 
 
     fun showCreateTransfer(v: View?) {
+        btnList.alpha = 0.25f
+        btnCreate.alpha = 1f
+        btnUser.alpha = 0.25f
+
         val ft = fragmentManager.beginTransaction()
         ft.replace(R.id.flFragment, frCreateTransfer)
         ft.disallowAddToBackStack()
         ft.commit()
     }
 
-
     fun showTransfers(v: View?) {
+        btnList.alpha = 1f
+        btnCreate.alpha = 0.25f
+        btnUser.alpha = 0.25f
+
         val ft = fragmentManager.beginTransaction()
         ft.replace(R.id.flFragment, frTransfers)
         ft.disallowAddToBackStack()
         ft.commit()
     }
 
-
     private fun showProfile(v: View?) {
+        btnList.alpha = 0.25f
+        btnCreate.alpha = 0.25f
+        btnUser.alpha = 1f
 
+        val ft = fragmentManager.beginTransaction()
+        ft.replace(R.id.flFragment, frTransfers)
+        ft.disallowAddToBackStack()
+        ft.commit()
     }
 }

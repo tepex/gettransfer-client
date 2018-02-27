@@ -54,35 +54,41 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
     private var map: GoogleMap? = null
 
+    private var savedView: View? = null
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view = inflater?.inflate(R.layout.fragment_createtransfer,
-                container,
-                false)!!
+        if (savedView == null) {
+            val view = inflater?.inflate(R.layout.fragment_createtransfer,
+                    container,
+                    false)!!
 
-        installEditTextWatcher(view)
+            installEditTextWatcher(view)
 
-        with(view) {
-            lvFrom.setOnClickListener { locationViewClick(view.lvFrom) }
-            lvTo.setOnClickListener { locationViewClick(view.lvTo) }
+            with(view) {
+                lvFrom.setOnClickListener { locationViewClick(view.lvFrom) }
+                lvTo.setOnClickListener { locationViewClick(view.lvTo) }
 
-            btnPromo.setOnClickListener { btnPromo() }
+                btnPromo.setOnClickListener { btnPromo() }
 
-            fabConfirmStep.setOnClickListener { showTransferDetails() }
+                fabConfirmStep.setOnClickListener { showTransferDetails() }
+
+                try {
+                    MapsInitializer.initialize(activity)
+                } catch (e: GooglePlayServicesNotAvailableException) {
+                }
+
+                mapView.onCreate(savedInstanceState)
+            }
+
+            savedView = view
         }
-
-        return view
+        return savedView!!
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        try {
-            MapsInitializer.initialize(activity)
-        } catch (e: GooglePlayServicesNotAvailableException) {
-        }
-
-        mapView.onCreate(savedInstanceState)
         setUpMapIfNeeded()
 
         fragmentManager.addOnBackStackChangedListener {

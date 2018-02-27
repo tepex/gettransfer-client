@@ -102,7 +102,7 @@ class TransferModel(
                             transfer.offers.clear()
                             transfer.offers.addAll(offers)
 
-                            transfer.offersUpdatedAt = Date()
+                            //transfer.offersUpdatedAt = Date()
 
                             realm.insertOrUpdate(transfer)
 
