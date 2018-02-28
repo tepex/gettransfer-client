@@ -44,7 +44,7 @@ class TransfersAdapter(
         val state: TransferStatusView = container.findViewById(R.id.tvState)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater
                 .from(parent?.context)
                 .inflate(R.layout.item_transfer, parent, false)
@@ -53,9 +53,7 @@ class TransfersAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        if (holder == null) return
-
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position) ?: return
 
         val context = holder.itemView.context

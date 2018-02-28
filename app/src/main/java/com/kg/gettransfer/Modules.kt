@@ -17,7 +17,7 @@ import com.kg.gettransfer.modules.googleapi.GoogleApiClientFactory
 import com.kg.gettransfer.modules.http.HttpApi
 import com.kg.gettransfer.modules.http.HttpApiFactory
 import com.kg.gettransfer.modules.http.ProvideAccessTokenInterceptor
-import com.kg.gettransfer.transfers.TransfersFragment
+import com.kg.gettransfer.fragments.TransfersFragment
 import org.koin.dsl.module.applicationContext
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory

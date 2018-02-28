@@ -19,7 +19,6 @@ import com.kg.gettransfer.modules.Transfers
 import com.kg.gettransfer.modules.TransportTypesProvider
 import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.modules.http.json.PassengerProfile
-import com.kg.gettransfer.transfers.TransfersFragment
 import com.kg.gettransfer.views.TransportTypesAdapter
 import com.kg.gettransfer.views.setupChooseDate
 import com.kg.gettransfer.views.setupChooseTime
@@ -109,7 +108,7 @@ class TransferDetailsFragment : Fragment() {
                                 },
                                 {
                                     setBusy(false)
-                                    tvError.text = "Error creating request\n" + it.message
+                                    tvError.text = "Error creating request.\n" + it.message
                                     fabConfirmStep.visibility = VISIBLE
                                     scrollView.post {
                                         scrollView.fullScroll(View.FOCUS_DOWN)

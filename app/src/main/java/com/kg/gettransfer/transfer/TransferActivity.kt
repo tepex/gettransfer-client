@@ -17,6 +17,7 @@ import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.realm.Utils
 import com.kg.gettransfer.views.OffersAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.activity_transfer.*
 import org.koin.android.ext.android.inject
@@ -32,6 +33,8 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     private val transportTypes: TransportTypesProvider by inject()
     private val transferModel: TransferModel by inject()
 
+    private val disposables = CompositeDisposable()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i("TransferActivity", "onCreate()")
@@ -41,23 +44,16 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         val id = intent.getIntExtra("id", -1)
         transferModel.id = id
 
-        transferModel.updateOffers()
-
-        transferModel.transfer
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { updateUI(it) }
-
-        transferModel.errors
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
-                }, {
+        disposables.add(
+                transferModel.transfer
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { updateUI(it) })
+        disposables.add(
+                transferModel.addOnError {
                     Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
                 })
-
-        transferModel.busy
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+        disposables.add(
+                transferModel.addOnBusyChanged {
                     progressBar.visibility = if (it) VISIBLE else INVISIBLE
 
                     if (!it && transferStatusView.visibility == INVISIBLE) {
@@ -68,12 +64,16 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
                                 .setDuration(200)
                     }
                     transferStatusView.visibility = if (!it) VISIBLE else INVISIBLE
-                }
+                })
 
         btnRestore.background.colorFilter = LightingColorFilter(0xffffcc4c.toInt(), 0x0)
 
         val rv = rvOffers
-        rv.layoutManager = LinearLayoutManager(applicationContext)
+        rv.layoutManager = object : LinearLayoutManager(applicationContext) {
+            override fun canScrollVertically(): Boolean {
+                return false
+            }
+        }
         rv.emptyView = tvNoOffers
 
         wv.loadUrl("https://gettransfer.com/en")
@@ -103,10 +103,13 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
                     if (carriers > 1) "Connecting to $carriers carriers..."
                     else "Connecting to carriers..."
 
-            setOffersAsync(transferModel.getOffers())
+            if (this.offers == null) transferModel.updateOffers()
+
+            setOffersAsync(transferModel.getOffersAsyncRealmResult())
         } else {
             clActive.visibility = GONE
             clArchive.visibility = VISIBLE
+
             when {
                 transfer.status == "outdated" -> {
                     tvArchiveHeader.text = "Transfer date passed"
@@ -127,8 +130,6 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         }
 
         transferStatusView.update(transfer)
-
-        scrollView.post { scrollView.fullScroll(FOCUS_UP) }
 
         Log.i("TransferActivity", "UI updated")
     }
@@ -175,5 +176,6 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         super.onDestroy()
         offers?.removeAllChangeListeners()
         transferModel.close()
+        disposables.clear()
     }
 }

@@ -1,9 +1,7 @@
 package com.kg.gettransfer.modules
 
 
-import android.util.Log
 import com.jakewharton.rxrelay2.BehaviorRelay
-import com.jakewharton.rxrelay2.PublishRelay
 import com.kg.gettransfer.modules.http.HttpApi
 import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
@@ -13,7 +11,6 @@ import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmResults
 import org.koin.standalone.KoinComponent
-import java.util.*
 import java.util.logging.Logger
 
 
@@ -24,9 +21,11 @@ import java.util.logging.Logger
 
 class TransferModel(
         private val realm: Realm,
-        private val api: HttpApi) : KoinComponent {
+        private val api: HttpApi)
+    : AsyncModel(), KoinComponent {
 
     private val log = Logger.getLogger("TransferModel")
+
 
     var id: Int = -1
         set(value) {
@@ -41,21 +40,10 @@ class TransferModel(
         }
 
     val transfer: BehaviorRelay<Transfer> = BehaviorRelay.create()
-    val busy = BehaviorRelay.createDefault<Boolean>(false)!!
-    val errors = PublishRelay.create<Throwable>()!!
-
-
-    private fun err(e: Throwable) {
-        errors.accept(e)
-    }
-
-    private fun err(msg: String?) {
-        errors.accept(Exception(msg))
-    }
 
 
     private val transferChangeListener: (RealmResults<Transfer>) -> Unit = { result ->
-        Log.i("TransferActivity", "getTransferFromRealmAsync() changed")
+        log.info("getTransferFromRealmAsync() changed")
         if (result.size > 0) {
             if (result.isLoaded) {
                 val resTransfer = result[0]
@@ -65,26 +53,26 @@ class TransferModel(
             }
         } else {
             err("Lost transfer with id: " + id)
-            busy.accept(false)
+            setBusy(false)
         }
     }
 
     private var transferRealmResults: RealmResults<Transfer>? = null
 
 
-    fun getOffers(): RealmResults<Offer> =
+    fun getOffersAsyncRealmResult(): RealmResults<Offer> =
             transfer.value.offers.where().findAllAsync()
 
 
     fun updateOffers() {
-        if (busy.value || transfer.value == null) return
+        if (isBusy || transfer.value == null) return
         api.getOffers(id)
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe { busy.accept(true) }
+                .doOnSubscribe { setBusy(true) }
                 .observeOn(Schedulers.newThread())
                 .subscribe({ response ->
                     if (response.success) {
-                        log.info("getOffers() responded success, N = ${response.data?.offers?.size}")
+                        log.info("getOffersAsyncRealmResult() responded success, N = ${response.data?.offers?.size}")
 
                         val offers = response.data?.offers ?: return@subscribe
 
@@ -106,26 +94,26 @@ class TransferModel(
 
                             realm.insertOrUpdate(transfer)
 
-                            log.info("getOffers() saved to realm")
+                            log.info("getOffersAsyncRealmResult() saved to realm")
                         }
                         realm.close()
                     } else {
-                        log.info("getOffers() responded fail, result = ${response.result}")
+                        log.info("getOffersAsyncRealmResult() responded fail, result = ${response.result}")
                         err(response.error?.message)
                     }
-                    busy.accept(false)
+                    setBusy(false)
                 }, {
                     err(it)
-                    busy.accept(false)
+                    setBusy(false)
                 })
     }
 
 
     fun cancelTransfer() {
-        if (busy.value || transfer.value == null) return
+        if (isBusy || transfer.value == null) return
         api.postCancelTransfer(id)
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe { busy.accept(true) }
+                .doOnSubscribe { setBusy(true) }
                 .observeOn(Schedulers.newThread())
                 .subscribe({ response ->
                     if (response.success) {
@@ -147,19 +135,19 @@ class TransferModel(
                     } else {
                         err(response.error?.message)
                     }
-                    busy.accept(false)
+                    setBusy(false)
                 }, {
                     err(it)
-                    busy.accept(false)
+                    setBusy(false)
                 })
     }
 
 
     fun restoreTransfer() {
-        if (busy.value || transfer.value == null) return
+        if (isBusy || transfer.value == null) return
         api.postRestoreTransfer(id)
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe { busy.accept(true) }
+                .doOnSubscribe { setBusy(true) }
                 .observeOn(Schedulers.newThread())
                 .subscribe({ response ->
                     if (response.success) {
@@ -181,10 +169,10 @@ class TransferModel(
                     } else {
                         err(response.error?.message)
                     }
-                    busy.accept(false)
+                    setBusy(false)
                 }, {
                     err(it)
-                    busy.accept(false)
+                    setBusy(false)
                 })
     }
 

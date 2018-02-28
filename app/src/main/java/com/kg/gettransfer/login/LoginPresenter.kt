@@ -2,6 +2,7 @@ package com.kg.gettransfer.login
 
 
 import com.kg.gettransfer.modules.CurrentAccount
+import io.reactivex.disposables.CompositeDisposable
 import org.koin.standalone.KoinComponent
 
 
@@ -13,6 +14,7 @@ import org.koin.standalone.KoinComponent
 class LoginPresenter(private val currentAccount: CurrentAccount) : LoginContract.Presenter, KoinComponent {
     override lateinit var view: LoginContract.View
 
+    private val disposables = CompositeDisposable()
 
     override val busy: Boolean get() = currentAccount.busy.value
 
@@ -22,9 +24,12 @@ class LoginPresenter(private val currentAccount: CurrentAccount) : LoginContract
 
         currentAccount.logOut()
 
-        currentAccount.loggedIn.subscribe { if (it) view.loginSuccess() }
-        currentAccount.busy.subscribe { view.busyChanged(it) }
-        currentAccount.errorsBus.subscribe { view.showError(it) }
+        disposables.add(
+                currentAccount.loggedIn.subscribe { if (it) view.loginSuccess() })
+        disposables.add(
+                currentAccount.busy.subscribe { view.busyChanged(it) })
+        disposables.add(
+                currentAccount.errorsBus.subscribe { view.showError(it) })
     }
 
 
@@ -32,5 +37,10 @@ class LoginPresenter(private val currentAccount: CurrentAccount) : LoginContract
         view.showError(null)
 
         currentAccount.login(email, pass)
+    }
+
+
+    override fun stop() {
+        disposables.clear()
     }
 }

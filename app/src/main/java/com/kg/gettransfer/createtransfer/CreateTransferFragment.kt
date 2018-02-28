@@ -26,14 +26,12 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.data.LocationDetailed
 import com.kg.gettransfer.fragments.ChooseLocationFragment
 import com.kg.gettransfer.fragments.TransferDetailsFragment
-import com.kg.gettransfer.modules.CurrentAccount
 import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.views.BitmapDescriptorFactory
 import com.kg.gettransfer.views.LocationView
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_createtransfer.*
 import kotlinx.android.synthetic.main.fragment_createtransfer.view.*
-import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
 import java.util.logging.Logger
 
@@ -46,15 +44,14 @@ import java.util.logging.Logger
 class CreateTransferFragment : Fragment(), KoinComponent {
     private val log = Logger.getLogger("CreateTransferFragment")
 
-    private val currentAccount: CurrentAccount by inject()
-//    private val transfers: Transfers by inject()
-
     private val frChooseLocation: ChooseLocationFragment by lazy { ChooseLocationFragment() }
     private val frTransferDetails: TransferDetailsFragment by lazy { TransferDetailsFragment() }
 
     private var map: GoogleMap? = null
 
     private var savedView: View? = null
+
+    private val backStackListener: () -> Unit = { updateFab() }
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -86,15 +83,15 @@ class CreateTransferFragment : Fragment(), KoinComponent {
         return savedView!!
     }
 
+
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setUpMapIfNeeded()
 
-        fragmentManager.addOnBackStackChangedListener {
-            updateFab()
-        }
+        fragmentManager.addOnBackStackChangedListener(backStackListener)
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -144,7 +141,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     }
 
 
-    public override fun onSaveInstanceState(outState: Bundle) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         mapView.onSaveInstanceState(outState)
     }
@@ -232,16 +229,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     }
 
 
-    fun fabClick(v: View) {
-        showTransferDetails()
-//        transfers.createTransfer()
-//                .subscribe({ showTransfers(null) })
-//
-//        transfers.createTransfer(transferFromFields())
-    }
-
-
-    fun locationViewClick(v: View) {
+    private fun locationViewClick(v: View) {
         showLocationChooser(v as LocationView)
     }
 
@@ -295,18 +283,22 @@ class CreateTransferFragment : Fragment(), KoinComponent {
         ftidLocationChooser = ft.commit()
     }
 
+
     private fun hideLocationChooser() {
         fragmentManager.popBackStack(ftidLocationChooser, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
-
-
-    // --
 
 
     private fun btnPromo() {
         btnPromo.visibility = View.GONE
         lvFrom.location = LocationDetailed("Russia, Domodedovo")
         lvTo.location = LocationDetailed("Moscow, Tverskaya 8")
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        fragmentManager.removeOnBackStackChangedListener(backStackListener)
     }
 }
 

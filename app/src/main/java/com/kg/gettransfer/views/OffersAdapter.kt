@@ -42,7 +42,7 @@ class OffersAdapter(
         val facilities: TextView = container.findViewById(R.id.tvFacilities)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater
                 .from(parent?.context)
                 .inflate(R.layout.item_offer, parent, false)
@@ -52,9 +52,7 @@ class OffersAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        if (holder == null) return
-
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position) ?: return
 
         holder.carrier.text = item.carrier?.title ?: "Carrier #" + item.carrier?.id

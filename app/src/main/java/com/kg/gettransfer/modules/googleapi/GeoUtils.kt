@@ -1,7 +1,6 @@
 package com.kg.gettransfer.modules.googleapi
 
 
-import android.location.Address
 import android.location.Geocoder
 import android.util.Log
 import com.google.android.gms.common.api.GoogleApiClient
@@ -9,7 +8,10 @@ import com.google.android.gms.location.places.Places
 import com.google.android.gms.maps.model.LatLng
 import com.jakewharton.rxrelay2.PublishRelay
 import com.kg.gettransfer.data.LocationDetailed
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import org.koin.standalone.KoinComponent
 import java.io.IOException
 
@@ -30,7 +32,9 @@ class GeoUtils(
 
 
     fun subscribe(c: (LocationDetailed) -> Unit): Disposable {
-        return response.subscribe(c, {})
+        return response
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(c, {})
     }
 
 
@@ -59,21 +63,19 @@ class GeoUtils(
                 }
             }
         } else if (location.title.isNotEmpty()) {
-            val places: List<Address>
-
             try {
-                places = geocoder.getFromLocationName(location.title, 1) //, -90.0, -180.0, 90.0, 180.0)
-                if (places.isNotEmpty()) {
-                    Log.i(TAG, "Validated: " + places[0].toString())
-                    response.accept(
-                            LocationDetailed(
-                                    location.title,
-                                    location.subtitle,
-                                    location.placeID,
-                                    LatLng(places[0].latitude, places[0].longitude)))
-                } else {
-                    Log.i(TAG, "Validation failed")
-                }
+                Single.fromCallable {
+                    val places = geocoder.getFromLocationName(location.title, 1) //, -90.0, -180.0, 90.0, 180.0)
+                    if (places.isNotEmpty()) {
+                        Log.i(TAG, "Validated: " + places[0].featureName)
+                        return@fromCallable LocationDetailed(
+                                location.title,
+                                location.subtitle,
+                                location.placeID,
+                                LatLng(places[0].latitude, places[0].longitude))
+                    }
+                    throw Exception()
+                }.subscribeOn(Schedulers.newThread()).subscribe({ response.accept(it) }, {})
             } catch (e: IOException) {
                 e.printStackTrace()
             }

@@ -45,16 +45,14 @@ class TransportTypesAdapter(
             }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater
                 .from(parent?.context)
                 .inflate(R.layout.item_transport_type, parent, false)
         return ViewHolder(v as ConstraintLayout)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        if (holder == null) return
-
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.title.text = item?.title
         holder.pax.text = item?.paxMax.toString()

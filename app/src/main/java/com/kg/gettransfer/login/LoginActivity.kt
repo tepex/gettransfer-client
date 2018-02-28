@@ -136,4 +136,10 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
 
     private fun validateFields(): Boolean =
             EMAIL_ADDRESS.matcher(etEmail.text).matches() && etPass.text.length >= 8
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.stop()
+    }
 }

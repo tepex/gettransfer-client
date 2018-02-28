@@ -1,11 +1,9 @@
 package com.kg.gettransfer.modules
 
 
-import com.jakewharton.rxrelay2.BehaviorRelay
 import com.kg.gettransfer.modules.http.HttpApi
 import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.modules.http.json.NewTransferField
-import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -13,7 +11,6 @@ import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmResults
 import org.koin.standalone.KoinComponent
-import java.util.*
 import java.util.logging.Logger
 
 
@@ -26,11 +23,9 @@ class Transfers(
         private val realm: Realm,
         private val api: HttpApi,
         currentAccount: CurrentAccount)
-    : KoinComponent {
+    : AsyncModel(), KoinComponent {
 
     private val log = Logger.getLogger("Transfers")
-
-    val busy = BehaviorRelay.createDefault<Boolean>(false)!!
 
 
     init {
@@ -67,16 +62,16 @@ class Transfers(
                         val t = Transfer()
                         t.id = body.data?.id ?: -1
                         observable.onNext(t)
+                        observable.onComplete()
                     } else {
                         if (body.error?.type == "UNPROCESSABLE") {
-                            log.info("createTransfer() responded UNPROCESSABLE")
+                            log.info("createTransfer() responded unprocessable")
                             observable.onError(Exception("The request is incomplete or unprocessable."))
                         } else {
                             log.info("createTransfer() responded fail, result = ${body.result}")
                             observable.onError(Exception(body.error?.message))
                         }
                     }
-                    observable.onComplete()
                 } else {
                     log.info("createTransfer() fail, ${response.message()}")
                     observable.onError(Exception(response.message()))
@@ -94,14 +89,13 @@ class Transfers(
 
     fun updateTransfers() {
         log.info("updateTransfers()")
-        if (busy.value) return
+        if (isBusy) return
         log.info("getTransfers() call")
         api.getTransfers()
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe { busy.accept(true) }
+                .doOnSubscribe { setBusy(true) }
                 .observeOn(Schedulers.newThread())
                 .subscribe({ response ->
-                    busy.accept(false)
                     if (response.success) {
                         log.info("getTransfers() responded success, N = ${response.data?.transfers?.size}")
                         val transfers = response.data?.transfers ?: return@subscribe
@@ -124,10 +118,13 @@ class Transfers(
                         realm.close()
                     } else {
                         log.info("getTransfers() responded fail, result = ${response.result}")
+                        err(response.error?.message)
                     }
+                    setBusy(false)
                 }, {
-                    busy.accept(false)
                     log.info("getTransfers() fail, ${it.message}")
+                    err(it)
+                    setBusy(false)
                 })
     }
 

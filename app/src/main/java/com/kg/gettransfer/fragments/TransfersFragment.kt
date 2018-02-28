@@ -1,4 +1,4 @@
-package com.kg.gettransfer.transfers
+package com.kg.gettransfer.fragments
 
 
 import android.app.Fragment
@@ -12,8 +12,10 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Toast
 import com.kg.gettransfer.R
 import com.kg.gettransfer.login.LoginActivity
+import com.kg.gettransfer.mainactivity.MainActivity
 import com.kg.gettransfer.modules.CurrentAccount
 import com.kg.gettransfer.modules.Transfers
 import com.kg.gettransfer.views.EmptyRecyclerView
@@ -23,6 +25,7 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_transfers.*
 import kotlinx.android.synthetic.main.fragment_transfers.view.*
 import org.koin.android.ext.android.inject
+import org.koin.standalone.KoinComponent
 
 
 /**
@@ -30,14 +33,18 @@ import org.koin.android.ext.android.inject
  */
 
 
-class TransfersFragment : Fragment() {
+class TransfersFragment : Fragment(), KoinComponent {
     private val currentAccount: CurrentAccount by inject()
     private val transfers: Transfers by inject()
 
     private val disposables = CompositeDisposable()
 
-    private val adapterActive by lazy { transfers.getAllAsync(true) }
-    private val adapterArchive by lazy { transfers.getAllAsync(false) }
+    private val adapterActive by lazy {
+        TransfersAdapter(transfers.getAllAsync(true), true)
+    }
+    private val adapterArchive by lazy {
+        TransfersAdapter(transfers.getAllAsync(false), true)
+    }
 
     private var savedview: View? = null
 
@@ -48,22 +55,18 @@ class TransfersFragment : Fragment() {
             with(view) {
                 initRecyclerView(view.rvTransfers, view.swipeRefreshLayout)
 
-                disposables.add(
-                        currentAccount.loggedIn
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe { updateUI() })
-
                 tvActive.setOnClickListener {
                     updateTabs(true)
-                    rvTransfers.adapter = TransfersAdapter(adapterActive, true)
+                    rvTransfers.adapter = adapterActive
                 }
 
                 tvArchive.setOnClickListener {
                     updateTabs(false)
-                    rvTransfers.adapter = TransfersAdapter(adapterArchive, true)
+                    rvTransfers.adapter = adapterArchive
                 }
 
                 btnLogIn.setOnClickListener { logIn() }
+                btnCreate.setOnClickListener { createTransfer() }
             }
 
             savedview = view
@@ -73,6 +76,19 @@ class TransfersFragment : Fragment() {
 
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        disposables.add(
+                currentAccount.loggedIn
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { updateUI() })
+        disposables.add(
+                transfers.addOnBusyChanged {
+                    swipeRefreshLayout.isRefreshing = it
+                })
+        disposables.add(
+                transfers.addOnError {
+                    Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+                })
+
         updateUI()
     }
 
@@ -94,16 +110,11 @@ class TransfersFragment : Fragment() {
 
     private fun initRecyclerView(rvTransfers: EmptyRecyclerView,
                                  swipeRefreshLayout: SwipeRefreshLayout) {
-        rvTransfers.adapter = TransfersAdapter(adapterActive, true)
+        rvTransfers.adapter = adapterActive
         rvTransfers.layoutManager = LinearLayoutManager(activity)
         rvTransfers.emptyView = clEmptyTransfers
 
         swipeRefreshLayout.setOnRefreshListener { transfers.updateTransfers() }
-
-        disposables.add(
-                transfers.busy
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { swipeRefreshLayout.isRefreshing = it })
     }
 
 
@@ -133,10 +144,9 @@ class TransfersFragment : Fragment() {
     }
 
 
-//    fun createTransfer(v: View?) {
-//        val intent = Intent(activity, CreateTransferFragment::class.java)
-//        startActivity(intent)
-//    }
+    private fun createTransfer() {
+        (activity as MainActivity).showCreateTransfer(null)
+    }
 
 
     private fun logIn() {
@@ -145,8 +155,9 @@ class TransfersFragment : Fragment() {
     }
 
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         disposables.clear()
     }
 }
+

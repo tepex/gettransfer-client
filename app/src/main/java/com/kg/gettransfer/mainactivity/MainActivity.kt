@@ -10,7 +10,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.createtransfer.CreateTransferFragment
 import com.kg.gettransfer.login.LoginActivity
 import com.kg.gettransfer.modules.CurrentAccount
-import com.kg.gettransfer.transfers.TransfersFragment
+import com.kg.gettransfer.fragments.TransfersFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
@@ -67,16 +67,16 @@ class MainActivity : AppCompatActivity() {
         // Check which request we're responding to
         if (requestCode == LOGIN_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
-                showProfile(null)
+                showCreateTransfer(null)
             }
         }
     }
 
 
     fun showCreateTransfer(v: View?) {
-        btnList.alpha = 0.25f
+        btnList.alpha = 0.2f
         btnCreate.alpha = 1f
-        btnUser.alpha = 0.25f
+        btnUser.alpha = 0.2f
 
         val ft = fragmentManager.beginTransaction()
         ft.replace(R.id.flFragment, frCreateTransfer)
@@ -86,8 +86,8 @@ class MainActivity : AppCompatActivity() {
 
     fun showTransfers(v: View?) {
         btnList.alpha = 1f
-        btnCreate.alpha = 0.25f
-        btnUser.alpha = 0.25f
+        btnCreate.alpha = 0.2f
+        btnUser.alpha = 0.2f
 
         val ft = fragmentManager.beginTransaction()
         ft.replace(R.id.flFragment, frTransfers)
@@ -96,8 +96,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showProfile(v: View?) {
-        btnList.alpha = 0.25f
-        btnCreate.alpha = 0.25f
+        btnList.alpha = 0.2f
+        btnCreate.alpha = 0.2f
         btnUser.alpha = 1f
 
         val ft = fragmentManager.beginTransaction()
