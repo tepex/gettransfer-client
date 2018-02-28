@@ -70,6 +70,7 @@ class TransferModel(
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe { setBusy(true) }
                 .observeOn(Schedulers.newThread())
+                .doFinally { setBusy(false) }
                 .subscribe({ response ->
                     if (response.success) {
                         log.info("getOffersAsyncRealmResult() responded success, N = ${response.data?.offers?.size}")
@@ -78,17 +79,16 @@ class TransferModel(
 
                         val realm = Realm.getDefaultInstance()
                         realm.executeTransaction {
-                            val offers = realm.copyToRealmOrUpdate(offers)
+                            val offersRealm = realm.copyToRealmOrUpdate(offers)
 
                             val transfer = realm.getTransfer(id)
-
                             if (transfer == null) {
                                 err("Lost transfer with id: " + id)
                                 return@executeTransaction
                             }
 
                             transfer.offers.clear()
-                            transfer.offers.addAll(offers)
+                            transfer.offers.addAll(offersRealm)
 
                             //transfer.offersUpdatedAt = Date()
 
@@ -99,13 +99,12 @@ class TransferModel(
                         realm.close()
                     } else {
                         log.info("getOffersAsyncRealmResult() responded fail, result = ${response.result}")
-                        err(response.error?.message)
+                        err(response)
                     }
-                    setBusy(false)
                 }, {
                     err(it)
-                    setBusy(false)
                 })
+
     }
 
 
@@ -115,6 +114,7 @@ class TransferModel(
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe { setBusy(true) }
                 .observeOn(Schedulers.newThread())
+                .doFinally { setBusy(false) }
                 .subscribe({ response ->
                     if (response.success) {
 //                        transfer = response.data
@@ -133,7 +133,7 @@ class TransferModel(
                         }
                         realm.close()
                     } else {
-                        err(response.error?.message)
+                        err(response)
                     }
                     setBusy(false)
                 }, {
@@ -149,6 +149,7 @@ class TransferModel(
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe { setBusy(true) }
                 .observeOn(Schedulers.newThread())
+                .doFinally { setBusy(false) }
                 .subscribe({ response ->
                     if (response.success) {
 //                        transfer = response.data
@@ -167,12 +168,10 @@ class TransferModel(
                         }
                         realm.close()
                     } else {
-                        err(response.error?.message)
+                        err(response)
                     }
-                    setBusy(false)
                 }, {
                     err(it)
-                    setBusy(false)
                 })
     }
 

@@ -57,7 +57,7 @@ class OffersAdapter(
 
         holder.carrier.text = item.carrier?.title ?: "Carrier #" + item.carrier?.id
         holder.vehicle.text = (item.vehicle?.name
-                ?: "Unknown vehicle") + (" (" + "Economy ×3 ×3" + ")")
+                ?: "Unknown vehicle") + ("\n (" + "Economy ×3 ×3" + ")")
         holder.facilities.text = "WiFi   Water   Music"
         holder.price.text = item.price?.toString() ?: "No price"
         holder.itemView.setTag(R.id.key_id, item.id)

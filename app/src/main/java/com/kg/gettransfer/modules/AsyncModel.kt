@@ -3,6 +3,7 @@ package com.kg.gettransfer.modules
 
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
+import com.kg.gettransfer.modules.http.json.Response
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
@@ -38,5 +39,9 @@ open class AsyncModel {
 
     protected fun err(msg: String?) {
         errors.accept(Exception(msg))
+    }
+
+    protected fun <T : Any> err(response: Response<T>) {
+        errors.accept(Exception(response.error?.message))
     }
 }
