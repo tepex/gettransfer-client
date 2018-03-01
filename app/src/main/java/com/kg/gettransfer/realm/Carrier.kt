@@ -3,6 +3,7 @@ package com.kg.gettransfer.realm
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
@@ -31,4 +32,25 @@ open class Carrier : RealmObject() {
     @Expose
     @SerializedName("completed_transfers")
     var completedTransfers: Int = 0
+
+    @Expose
+    @SerializedName("languages")
+    var languages: RealmList<Language> = RealmList()
+
+    @Expose
+    @SerializedName("ratings")
+    var rating: Rating? = null
+
+
+    @Expose
+    @SerializedName("email")
+    var email: String? = null
+
+    @Expose
+    @SerializedName("phone")
+    var phone: String? = null
+
+    @Expose
+    @SerializedName("alternate_phone")
+    var alternatePhone: String? = null
 }
