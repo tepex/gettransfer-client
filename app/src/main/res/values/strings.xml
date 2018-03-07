@@ -9,4 +9,6 @@
     <string name="create_new_transfer">Create new transfer</string>
     <string name="no_transfers">You have not уet requested any transfers</string>
     <string name="book">BOOK</string>
+
+    <string name="geoapikey" translatable="false">AIzaSyAZXhfW8DCix33iyFU3An8ovidJjwpHFFg</string>
 </resources>

@@ -85,7 +85,15 @@ class NewTransfer {
         this.passengerProfile = passengerProfile.toMap()
     }
 
+    @Deprecated
     constructor(from: Location, to: Location) {
+        this.from = from.toMap()
+        this.to = to.toMap()
+    }
+
+    constructor(distance: Int, time: Int, from: Location, to: Location) {
+        this.distance = distance
+        this.time = time
         this.from = from.toMap()
         this.to = to.toMap()
     }

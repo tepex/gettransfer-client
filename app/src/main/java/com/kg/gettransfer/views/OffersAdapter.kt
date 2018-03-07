@@ -44,7 +44,7 @@ class OffersAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater
-                .from(parent?.context)
+                .from(parent.context)
                 .inflate(R.layout.item_offer, parent, false)
         v.setOnClickListener(icl)
         v.tvBook.background.colorFilter = LightingColorFilter(0xffffcc4c.toInt(), 0x0)

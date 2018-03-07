@@ -11,8 +11,8 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 
 object HttpApiFactory : KoinComponent {
-    //val BASE_URL = "https://demo.gettransfer.com/api/"
-    val BASE_URL = "https://test.gettransfer.com/api/"
+    val BASE_URL = "https://demo.gettransfer.com/api/"
+    //val BASE_URL = "https://test.gettransfer.com/api/"
 
     fun create(httpClient: OkHttpClient, rx2call: RxJava2CallAdapterFactory, gsonConverterFactory: GsonConverterFactory): HttpApi {
         val retrofit = Retrofit.Builder()

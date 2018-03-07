@@ -46,7 +46,7 @@ class TransfersAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater
-                .from(parent?.context)
+                .from(parent.context)
                 .inflate(R.layout.item_transfer, parent, false)
         v.setOnClickListener(icl)
         return ViewHolder(v as ConstraintLayout)

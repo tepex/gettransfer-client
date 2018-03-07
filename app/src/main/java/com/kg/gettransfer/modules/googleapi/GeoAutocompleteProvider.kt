@@ -41,7 +41,7 @@ class GeoAutocompleteProvider : KoinComponent {
             throw Exception("Google API client is not connected")
         }
 
-        Log.i(TAG, "Executing autocomplete query for: " + constraint!!)
+        Log.i(TAG, "Executing autocomplete query for: $constraint")
 
         if (currentPendingResult != null && currentPendingResult?.isCanceled == false) {
             currentPendingResult?.cancel()

@@ -5,6 +5,7 @@ import android.accounts.NetworkErrorException
 import com.kg.gettransfer.modules.Session
 import com.kg.gettransfer.modules.http.json.AccessToken
 import com.kg.gettransfer.modules.http.json.Response
+import okhttp3.Authenticator
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.koin.standalone.KoinComponent
@@ -27,8 +28,8 @@ class ProvideAccessTokenInterceptor(val session: Session, rx2call: RxJava2CallAd
 
     private val X_ACCESS_TOKEN = "X-ACCESS-TOKEN"
 
-    //val API_KEY = "23be10dcf06f280a4c0f8dca95434803"
-    val API_KEY = "ololo"
+    val API_KEY = "23be10dcf06f280a4c0f8dca95434803"
+    //val API_KEY = "ololo"
 
 
     interface HttpAccessApi {

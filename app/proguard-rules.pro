@@ -20,7 +20,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+
 -dontwarn sun.misc.**
+
 
 -keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
    long producerIndex;
@@ -35,6 +37,10 @@
     rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
 
+#-keep class com.google.android.gms.maps.** { *; }
+#-keep interface com.google.android.gms.maps.** { *; }
+
+
 -dontnote rx.internal.util.PlatformDependent
 
 -dontwarn com.github.davidmoten.rx2.flowable.Serialized*
@@ -44,3 +50,7 @@
 -dontwarn okio.DeflaterSink
 -dontwarn okio.Okio
 -dontwarn retrofit2.Platform$Java8
+
+-dontwarn com.google.appengine.api.urlfetch.*
+-dontwarn org.joda.convert.*
+-dontwarn org.slf4j.impl.*

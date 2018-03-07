@@ -18,10 +18,12 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
+import com.google.maps.DirectionsApi
+import com.google.maps.GeoApiContext
+import com.google.maps.android.PolyUtil
+import com.google.maps.model.DirectionsResult
+import com.google.maps.model.TravelMode
 import com.kg.gettransfer.R
 import com.kg.gettransfer.data.LocationDetailed
 import com.kg.gettransfer.fragments.ChooseLocationFragment
@@ -32,7 +34,9 @@ import com.kg.gettransfer.views.LocationView
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_createtransfer.*
 import kotlinx.android.synthetic.main.fragment_createtransfer.view.*
+import org.joda.time.DateTime
 import org.koin.standalone.KoinComponent
+import java.util.concurrent.TimeUnit
 import java.util.logging.Logger
 
 
@@ -52,6 +56,9 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     private var savedView: View? = null
 
     private val backStackListener: () -> Unit = { updateFab() }
+
+    private var duration = 0L
+    private var distance = 0L
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -158,17 +165,51 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     private var markerTo: Marker? = null
 
     private val pathChanged = Runnable {
-        updateFab()
-
         val llFrom = lvFrom.location?.latLng
         val llTo = lvTo.location?.latLng
+
         updateMarkers(llFrom, llTo)
         animateMap(llFrom, llTo)
+
+        updateRoute(llFrom, llTo)
+
+        updateFab()
     }
 
     private fun installEditTextWatcher(v: View) {
         v.lvFrom.onLocationChanged = pathChanged
         v.lvTo.onLocationChanged = pathChanged
+    }
+
+
+    private fun updateRoute(llFrom: LatLng?, llTo: LatLng?) {
+        duration = 0L
+        distance = 0L
+
+        if (llFrom != null && llTo != null) {
+            val now = DateTime()
+            val result = DirectionsApi.newRequest(getGeoContext())
+                    .mode(TravelMode.DRIVING)
+                    .origin(com.google.maps.model.LatLng(llFrom.latitude, llFrom.longitude))
+                    .destination(com.google.maps.model.LatLng(llTo.latitude, llTo.longitude))
+                    .departureTime(now)
+
+            result.setCallback(object : com.google.maps.PendingResult.Callback<DirectionsResult> {
+                override fun onResult(result: DirectionsResult) {
+                    val decodedPath: List<LatLng> = PolyUtil.decode(result.routes[0].overviewPolyline.encodedPath)
+                    map?.addPolyline(PolylineOptions().addAll(decodedPath))
+
+                    result.routes[0].legs.forEach {
+                        duration += it.duration.inSeconds
+                        distance += it.distance.inMeters
+                    }
+                }
+
+                override fun onFailure(e: Throwable) {
+                    log.info("fail")
+                }
+            })
+        }
     }
 
 
@@ -218,14 +259,16 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
 
     private fun validateFields(): Boolean =
-            lvFrom.location?.valid == true && lvTo.location?.valid == true
+            lvFrom.location?.valid == true &&
+                    lvTo.location?.valid == true &&
+                    duration > 0 && distance > 0
 
 
     private fun transferFromFields(): NewTransfer? {
         val lFrom = lvFrom.location?.toLocation() ?: return null
         val lTo = lvTo.location?.toLocation() ?: return null
 
-        return NewTransfer(lFrom, lTo)
+        return NewTransfer((distance/1000L).toInt(), duration.toInt(), lFrom, lTo)
     }
 
 
@@ -299,6 +342,16 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     override fun onDestroyView() {
         super.onDestroyView()
         fragmentManager.removeOnBackStackChangedListener(backStackListener)
+    }
+
+
+    private fun getGeoContext(): GeoApiContext {
+        val geoApiContext = GeoApiContext()
+        return geoApiContext.setQueryRateLimit(3)
+                .setApiKey(getString(R.string.geoapikey))
+                .setConnectTimeout(3, TimeUnit.SECONDS)
+                .setReadTimeout(3, TimeUnit.SECONDS)
+                .setWriteTimeout(3, TimeUnit.SECONDS)
     }
 }
 

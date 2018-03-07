@@ -4,13 +4,14 @@ package com.kg.gettransfer.mainactivity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.kg.gettransfer.R
 import com.kg.gettransfer.createtransfer.CreateTransferFragment
+import com.kg.gettransfer.fragments.TransfersFragment
 import com.kg.gettransfer.login.LoginActivity
 import com.kg.gettransfer.modules.CurrentAccount
-import com.kg.gettransfer.fragments.TransfersFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
@@ -22,7 +23,6 @@ import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
     private val currentAccount: CurrentAccount by inject()
-//    private val transfers: Transfers by inject()
 
     private val frCreateTransfer by lazy { CreateTransferFragment() }
     private val frTransfers by lazy { TransfersFragment() }
@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
 
         fragmentManager.addOnBackStackChangedListener {

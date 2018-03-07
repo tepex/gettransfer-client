@@ -47,7 +47,7 @@ class TransportTypesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater
-                .from(parent?.context)
+                .from(parent.context)
                 .inflate(R.layout.item_transport_type, parent, false)
         return ViewHolder(v as ConstraintLayout)
     }

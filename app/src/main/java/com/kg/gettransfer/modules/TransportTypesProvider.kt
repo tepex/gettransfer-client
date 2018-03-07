@@ -25,7 +25,7 @@ class TransportTypesProvider(val realm: Realm, val api: HttpApi) : KoinComponent
     fun get(): RealmResults<TransportType> {
         val types = realm.where(TransportType::class.java).findAllAsync()
 
-        types.addChangeListener { t, changeSet ->
+        types.addChangeListener { _, _ ->
             if (types.size == 0) {
                 load()
             }
