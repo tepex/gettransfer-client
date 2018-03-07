@@ -163,6 +163,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
     private var markerFrom: Marker? = null
     private var markerTo: Marker? = null
+    private var polyline: Polyline? = null
 
     private val pathChanged = Runnable {
         val llFrom = lvFrom.location?.latLng
@@ -186,6 +187,9 @@ class CreateTransferFragment : Fragment(), KoinComponent {
         duration = 0L
         distance = 0L
 
+        polyline?.remove()
+        polyline = null
+
         if (llFrom != null && llTo != null) {
             val now = DateTime()
             val result = DirectionsApi.newRequest(getGeoContext())
@@ -196,12 +200,18 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
             result.setCallback(object : com.google.maps.PendingResult.Callback<DirectionsResult> {
                 override fun onResult(result: DirectionsResult) {
-                    val decodedPath: List<LatLng> = PolyUtil.decode(result.routes[0].overviewPolyline.encodedPath)
-                    map?.addPolyline(PolylineOptions().addAll(decodedPath))
+                    mapView.post {
+                        polyline?.remove()
 
-                    result.routes[0].legs.forEach {
-                        duration += it.duration.inSeconds
-                        distance += it.distance.inMeters
+                        val decodedPath: List<LatLng> = PolyUtil.decode(result.routes[0].overviewPolyline.encodedPath)
+                        polyline = map?.addPolyline(PolylineOptions().addAll(decodedPath))
+
+                        result.routes[0].legs.forEach {
+                            duration += it.duration.inSeconds
+                            distance += it.distance.inMeters
+                        }
+
+                        updateFab()
                     }
                 }
 
@@ -268,7 +278,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
         val lFrom = lvFrom.location?.toLocation() ?: return null
         val lTo = lvTo.location?.toLocation() ?: return null
 
-        return NewTransfer((distance/1000L).toInt(), duration.toInt(), lFrom, lTo)
+        return NewTransfer((distance / 1000L).toInt(), duration.toInt(), lFrom, lTo)
     }
 
 

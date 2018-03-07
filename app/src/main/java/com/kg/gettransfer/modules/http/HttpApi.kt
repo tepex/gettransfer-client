@@ -55,4 +55,7 @@ interface HttpApi {
 
     @GET("transfers/{id}/offers")
     fun getOffers(@Path("id") id: Int): Observable<OffersResponse>
+
+    @GET("transport_types_prices")
+    fun getOffers(): Observable<OffersResponse>
 }
