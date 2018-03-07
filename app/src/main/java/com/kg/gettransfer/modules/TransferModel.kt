@@ -71,39 +71,39 @@ class TransferModel(
                 .doOnSubscribe { setBusy(true) }
                 .observeOn(Schedulers.newThread())
                 .doFinally { setBusy(false) }
-                .subscribe({ response ->
-                    if (response.success) {
-                        log.info("getOffersAsyncRealmResult() responded success, N = ${response.data?.offers?.size}")
+                .subscribe(
+                        { response ->
+                            if (response.success) {
+                                log.info("getOffersAsyncRealmResult() responded success, N = ${response.data?.offers?.size}")
 
-                        val offers = response.data?.offers ?: return@subscribe
+                                val offers = response.data?.offers ?: return@subscribe
 
-                        val realm = Realm.getDefaultInstance()
-                        realm.executeTransaction {
-                            val offersRealm = realm.copyToRealmOrUpdate(offers)
+                                val realm = Realm.getDefaultInstance()
+                                realm.executeTransaction {
+                                    val offersRealm = realm.copyToRealmOrUpdate(offers)
 
-                            val transfer = realm.getTransfer(id)
-                            if (transfer == null) {
-                                err("Lost transfer with id: " + id)
-                                return@executeTransaction
+                                    val transfer = realm.getTransfer(id)
+                                    if (transfer == null) {
+                                        err("Lost transfer with id: " + id)
+                                        return@executeTransaction
+                                    }
+
+                                    transfer.offers.clear()
+                                    transfer.offers.addAll(offersRealm)
+
+                                    //transfer.offersUpdatedAt = Date()
+
+                                    realm.insertOrUpdate(transfer)
+
+                                    log.info("getOffersAsyncRealmResult() saved to realm")
+                                }
+                                realm.close()
+                            } else {
+                                log.info("getOffersAsyncRealmResult() responded fail, result = ${response.result}")
+                                err(response)
                             }
-
-                            transfer.offers.clear()
-                            transfer.offers.addAll(offersRealm)
-
-                            //transfer.offersUpdatedAt = Date()
-
-                            realm.insertOrUpdate(transfer)
-
-                            log.info("getOffersAsyncRealmResult() saved to realm")
-                        }
-                        realm.close()
-                    } else {
-                        log.info("getOffersAsyncRealmResult() responded fail, result = ${response.result}")
-                        err(response)
-                    }
-                }, {
-                    err(it)
-                })
+                        },
+                        { err(it) })
 
     }
 
@@ -115,31 +115,29 @@ class TransferModel(
                 .doOnSubscribe { setBusy(true) }
                 .observeOn(Schedulers.newThread())
                 .doFinally { setBusy(false) }
-                .subscribe({ response ->
-                    if (response.success) {
+                .subscribe(
+                        { response ->
+                            if (response.success) {
 //                        transfer = response.data
 
-                        val realm = Realm.getDefaultInstance()
-                        realm.executeTransaction {
-                            val transfer = realm.getTransfer(id)
+                                val realm = Realm.getDefaultInstance()
+                                realm.executeTransaction {
+                                    val transfer = realm.getTransfer(id)
 
-                            if (transfer == null) {
-                                err(Exception("Lost transfer with id: " + id))
-                                return@executeTransaction
+                                    if (transfer == null) {
+                                        err(Exception("Lost transfer with id: " + id))
+                                        return@executeTransaction
+                                    }
+
+                                    transfer.status = "canceled"
+                                    transfer.updateIsActive()
+                                }
+                                realm.close()
+                            } else {
+                                err(response)
                             }
-
-                            transfer.status = "canceled"
-                            transfer.updateIsActive()
-                        }
-                        realm.close()
-                    } else {
-                        err(response)
-                    }
-                    setBusy(false)
-                }, {
-                    err(it)
-                    setBusy(false)
-                })
+                        },
+                        { err(it) })
     }
 
 
@@ -150,29 +148,29 @@ class TransferModel(
                 .doOnSubscribe { setBusy(true) }
                 .observeOn(Schedulers.newThread())
                 .doFinally { setBusy(false) }
-                .subscribe({ response ->
-                    if (response.success) {
+                .subscribe(
+                        { response ->
+                            if (response.success) {
 //                        transfer = response.data
 
-                        val realm = Realm.getDefaultInstance()
-                        realm.executeTransaction {
-                            val transfer = realm.getTransfer(id)
+                                val realm = Realm.getDefaultInstance()
+                                realm.executeTransaction {
+                                    val transfer = realm.getTransfer(id)
 
-                            if (transfer == null) {
-                                err("Lost transfer with id: " + id)
-                                return@executeTransaction
+                                    if (transfer == null) {
+                                        err("Lost transfer with id: " + id)
+                                        return@executeTransaction
+                                    }
+
+                                    transfer.status = "new"
+                                    transfer.updateIsActive()
+                                }
+                                realm.close()
+                            } else {
+                                err(response)
                             }
-
-                            transfer.status = "new"
-                            transfer.updateIsActive()
-                        }
-                        realm.close()
-                    } else {
-                        err(response)
-                    }
-                }, {
-                    err(it)
-                })
+                        },
+                        { err(it) })
     }
 
 

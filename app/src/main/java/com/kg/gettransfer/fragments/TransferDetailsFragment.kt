@@ -15,6 +15,7 @@ import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import com.kg.gettransfer.R
+import com.kg.gettransfer.modules.PricesPreviewModel
 import com.kg.gettransfer.modules.Transfers
 import com.kg.gettransfer.modules.TransportTypesProvider
 import com.kg.gettransfer.modules.http.json.NewTransfer
@@ -28,6 +29,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_transferdetails.*
 import kotlinx.android.synthetic.main.fragment_transferdetails.view.*
 import org.koin.android.ext.android.inject
+import java.util.*
 
 
 /**
@@ -38,6 +40,8 @@ import org.koin.android.ext.android.inject
 class TransferDetailsFragment : Fragment() {
     private val transportTypesProvider: TransportTypesProvider by inject()
     private val transfers: Transfers by inject()
+    private val pricePreview: PricesPreviewModel by inject()
+
 
     private var savedView: View? = null
 
@@ -86,6 +90,13 @@ class TransferDetailsFragment : Fragment() {
             savedView!!.scrollView.scrollTo(0, 0)
         }
 
+        pricePreview.get(
+                transfer.from["point"]!!,
+                transfer.to["point"]!!,
+                transfer.distance,
+                false,
+                Date())
+
         return savedView!!
     }
 
@@ -95,9 +106,7 @@ class TransferDetailsFragment : Fragment() {
         disposables.add(
                 transfers.createTransfer(transfer)
                         .subscribeOn(Schedulers.io())
-                        .doOnSubscribe {
-                            setBusy(true)
-                        }
+                        .doOnSubscribe { setBusy(true) }
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 {

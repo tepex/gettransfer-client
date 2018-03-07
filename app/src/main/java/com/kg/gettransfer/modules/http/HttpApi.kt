@@ -5,6 +5,7 @@ import com.kg.gettransfer.modules.http.json.*
 import com.kg.gettransfer.realm.Transfer
 import io.reactivex.Observable
 import retrofit2.http.*
+import java.util.*
 
 
 /**
@@ -57,5 +58,11 @@ interface HttpApi {
     fun getOffers(@Path("id") id: Int): Observable<OffersResponse>
 
     @GET("transport_types_prices")
-    fun getOffers(): Observable<OffersResponse>
+    fun getPrice(
+            @Query("points[]") points: Array<String>,
+            @Query("hourly") hourly: Boolean,
+            @Query("metric_value") distance: Int,
+            @Query("return_way") back: Boolean,
+            @Query("date_to") date: Date)
+            : Observable<Response<Map<Int, PricesPreview>>>
 }

@@ -73,6 +73,7 @@ val AppModule = applicationContext {
     // Models
 
     factory { TransferModel(get(), get()) }
+    factory { PricesPreviewModel(get(), get()) }
 
 
     // UI

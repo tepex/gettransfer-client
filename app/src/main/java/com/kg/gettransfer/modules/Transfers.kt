@@ -29,7 +29,7 @@ class Transfers(
 
 
     init {
-        currentAccount.loggedIn
+        currentAccount.loggedIn //TODO: Another way
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     if (it) deleteTransfers()
@@ -64,7 +64,7 @@ class Transfers(
                         observable.onNext(t)
                         observable.onComplete()
                     } else {
-                        if (body.error?.type == "UNPROCESSABLE") {
+                        if (body.error?.type == "unprocessable") {
                             log.info("createTransfer() responded unprocessable")
                             observable.onError(Exception("The request is incomplete or unprocessable."))
                         } else {
