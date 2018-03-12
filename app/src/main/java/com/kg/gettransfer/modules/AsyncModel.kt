@@ -24,11 +24,11 @@ open class AsyncModel {
     public val isBusy: Boolean get() = busy.value
 
 
-    public fun addOnBusyChanged(f: ((Boolean) -> Unit)): Disposable =
-            busy.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
+    public fun addOnBusyChanged(f: ((Boolean) -> Unit)) =
+            disposables.add(busy.observeOn(AndroidSchedulers.mainThread()).subscribe(f))
 
-    public fun addOnError(f: ((Throwable) -> Unit)): Disposable =
-            errors.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
+    public fun addOnError(f: ((Throwable) -> Unit)) =
+            disposables.add(errors.observeOn(AndroidSchedulers.mainThread()).subscribe(f))
 
 
     protected fun setBusy(busy: Boolean) {

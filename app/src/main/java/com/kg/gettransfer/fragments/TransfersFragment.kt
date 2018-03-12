@@ -80,14 +80,14 @@ class TransfersFragment : Fragment(), KoinComponent {
                 currentAccount.loggedIn
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe { updateUI() })
-        disposables.add(
-                transfers.addOnBusyChanged {
-                    swipeRefreshLayout.isRefreshing = it
-                })
-        disposables.add(
-                transfers.addOnError {
-                    Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
-                })
+
+        transfers.addOnBusyChanged {
+            swipeRefreshLayout.isRefreshing = it
+        }
+
+        transfers.addOnError {
+            Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+        }
 
         updateUI()
     }

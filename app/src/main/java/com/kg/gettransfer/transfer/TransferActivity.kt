@@ -48,23 +48,23 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
                 transferModel.transfer
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe { updateUI(it) })
-        disposables.add(
-                transferModel.addOnError {
-                    Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
-                })
-        disposables.add(
-                transferModel.addOnBusyChanged {
-                    progressBar.visibility = if (it) VISIBLE else INVISIBLE
 
-                    if (!it && transferStatusView.visibility == INVISIBLE) {
-                        transferStatusView.alpha = 0.0f
-                        transferStatusView.animate()
-                                .alpha(1.0f)
-                                .setStartDelay(200)
-                                .setDuration(200)
-                    }
-                    transferStatusView.visibility = if (!it) VISIBLE else INVISIBLE
-                })
+        transferModel.addOnError {
+            Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+        }
+
+        transferModel.addOnBusyChanged {
+            progressBar.visibility = if (it) VISIBLE else INVISIBLE
+
+            if (!it && transferStatusView.visibility == INVISIBLE) {
+                transferStatusView.alpha = 0.0f
+                transferStatusView.animate()
+                        .alpha(1.0f)
+                        .setStartDelay(200)
+                        .setDuration(200)
+            }
+            transferStatusView.visibility = if (!it) VISIBLE else INVISIBLE
+        }
 
         btnRestore.background.colorFilter = LightingColorFilter(0xffffcc4c.toInt(), 0x0)
 
@@ -139,7 +139,14 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     private fun setOffersAsync(offers: RealmResults<Offer>) {
         this.offers?.removeAllChangeListeners()
 
-        rvOffers.adapter = OffersAdapter(offers, true)
+        val offersAdapter = OffersAdapter(offers, true)
+        offersAdapter.icl = View.OnClickListener {
+            disposables.add(
+                    transferModel.payment(it.getTag(R.id.key_id) as Int)
+                            .subscribe { wv.loadUrl(it.data?.url) })
+        }
+
+        rvOffers.adapter = offersAdapter
 
         offers.addChangeListener { offers ->
             val hasOffers = offers.size > 0

@@ -27,7 +27,7 @@ class OffersAdapter(
         autoUpdate: Boolean)
     : RealmRecyclerViewAdapter<Offer, OffersAdapter.ViewHolder>(realmResults, autoUpdate) {
 
-    private val icl: View.OnClickListener = View.OnClickListener {
+    var icl: View.OnClickListener = View.OnClickListener {
         Log.i("OffersAdapter", "Item clicked")
 //        val context = it.context
 //        val intent = Intent(context, TransferActivity::class.java)

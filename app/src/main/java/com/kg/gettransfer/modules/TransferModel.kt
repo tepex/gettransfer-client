@@ -3,10 +3,12 @@ package com.kg.gettransfer.modules
 
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.kg.gettransfer.modules.http.HttpApi
+import com.kg.gettransfer.modules.http.json.Payment
 import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.realm.getTransfer
 import com.kg.gettransfer.realm.getTransferAsync
+import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmResults
@@ -195,6 +197,15 @@ class TransferModel(
                             }
                         },
                         { err(it) })
+    }
+
+
+    fun payment(offerID: Int): Observable<com.kg.gettransfer.modules.http.json.Response<Payment>> {
+        return api.payment(id, offerID, "platron", 30)
+                .subscribeOn(Schedulers.io())
+//              .doOnSubscribe { setBusy(true) }
+                .observeOn(Schedulers.newThread())
+//              .doFinally { setBusy(false) }
     }
 
 

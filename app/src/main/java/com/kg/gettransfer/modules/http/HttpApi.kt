@@ -72,4 +72,17 @@ interface HttpApi {
 
     @GET("promo_codes")
     fun checkPromo(@Query("value") code: String): Observable<Response<String>>
+
+
+    // --
+
+
+    @FormUrlEncoded
+    @POST("payments")
+    fun payment(
+            @Field("transfer_id") transfer: Int,
+            @Field("offer_id") offer: Int,
+            @Field("gateway_id") gate: String,
+            @Field("percentage") password: Int)
+            : Observable<Response<Payment>>
 }
