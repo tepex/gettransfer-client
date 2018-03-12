@@ -15,8 +15,7 @@ import java.util.*
 
 interface HttpApi {
     @GET("transport_types")
-    fun getTransportTypes()
-            : Observable<TransportTypesResponse>
+    fun getTransportTypes(): Observable<TransportTypesResponse>
 
 
     // --
@@ -34,19 +33,15 @@ interface HttpApi {
 
 
     @GET("transfers")
-    fun getTransfers()
-            : Observable<TransfersResponse>
-
-
-    @POST("transfers")
-    @Headers("Content-Type: application/json")
-    fun postTransfer(
-            @Body transfer: NewTransferField)
-            : retrofit2.Call<NewTransferCreatedResponse>
+    fun getTransfers(): Observable<TransfersResponse>
 
 
     @GET("transfers/{id}")
-    fun getTransfer(@Path("id") id: String): Observable<Response<Transfer>>
+    fun getTransfer(@Path("id") id: Int): Observable<Response<Transfer>>
+
+    @POST("transfers")
+    @Headers("Content-Type: application/json")
+    fun postTransfer(@Body transfer: NewTransferField): retrofit2.Call<NewTransferCreatedResponse>
 
     @POST("transfers/{id}/cancel")
     fun postCancelTransfer(@Path("id") id: Int): Observable<Response<Transfer>>
@@ -54,8 +49,10 @@ interface HttpApi {
     @POST("transfers/{id}/restore")
     fun postRestoreTransfer(@Path("id") id: Int): Observable<Response<Transfer>>
 
+
     @GET("transfers/{id}/offers")
     fun getOffers(@Path("id") id: Int): Observable<OffersResponse>
+
 
     @GET("transport_types_prices")
     fun getPrice(

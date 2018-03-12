@@ -104,11 +104,35 @@ class TransferModel(
                             }
                         },
                         { err(it) })
-
     }
 
 
-    fun cancelTransfer() {
+    fun update() {
+        if (isBusy || transfer.value == null) return
+        api.getTransfer(id)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe { setBusy(true) }
+                .observeOn(Schedulers.newThread())
+                .doFinally { setBusy(false) }
+                .subscribe(
+                        { response ->
+                            if (response.success) {
+                                val transfer = response.data
+                                if (transfer != null) {
+                                    transfer.updateIsActive()
+                                    val realm = Realm.getDefaultInstance()
+                                    realm.executeTransaction {
+                                        realm.copyToRealmOrUpdate(transfer)
+                                    }
+                                    realm.close()
+                                } else err("Null transfer")
+                            } else err(response)
+                        },
+                        { err(it) })
+    }
+
+
+    fun cancel() {
         if (isBusy || transfer.value == null) return
         api.postCancelTransfer(id)
                 .subscribeOn(Schedulers.io())
@@ -141,7 +165,7 @@ class TransferModel(
     }
 
 
-    fun restoreTransfer() {
+    fun restore() {
         if (isBusy || transfer.value == null) return
         api.postRestoreTransfer(id)
                 .subscribeOn(Schedulers.io())

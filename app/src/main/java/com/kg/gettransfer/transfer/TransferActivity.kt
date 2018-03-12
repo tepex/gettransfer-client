@@ -164,12 +164,12 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
     fun cancel(v: View) {
         scrollView.fullScroll(FOCUS_UP)
-        transferModel.cancelTransfer()
+        transferModel.cancel()
     }
 
     fun restore(v: View) {
         scrollView.fullScroll(FOCUS_UP) //TODO: Remove when header implemented
-        transferModel.restoreTransfer()
+        transferModel.restore()
     }
 
     override fun onDestroy() {
