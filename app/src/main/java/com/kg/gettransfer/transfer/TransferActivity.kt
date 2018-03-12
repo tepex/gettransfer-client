@@ -1,6 +1,7 @@
 package com.kg.gettransfer.transfer
 
 
+import android.annotation.SuppressLint
 import android.graphics.LightingColorFilter
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -18,6 +19,7 @@ import com.kg.gettransfer.realm.Utils
 import com.kg.gettransfer.views.OffersAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.activity_transfer.*
 import org.koin.android.ext.android.inject
@@ -36,18 +38,19 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     private val disposables = CompositeDisposable()
 
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.i("TransferActivity", "onCreate()")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transfer)
+
+        wv.settings.javaScriptEnabled = true
+
 
         val id = intent.getIntExtra("id", -1)
         transferModel.id = id
 
-        disposables.add(
-                transferModel.transfer
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { updateUI(it) })
+
+        transferModel.addOnTransferUpdated { updateUI(it) }
 
         transferModel.addOnError {
             Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
@@ -66,17 +69,16 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             transferStatusView.visibility = if (!it) VISIBLE else INVISIBLE
         }
 
+
         btnRestore.background.colorFilter = LightingColorFilter(0xffffcc4c.toInt(), 0x0)
 
-        val rv = rvOffers
-        rv.layoutManager = object : LinearLayoutManager(applicationContext) {
+
+        rvOffers.layoutManager = object : LinearLayoutManager(applicationContext) {
             override fun canScrollVertically(): Boolean {
                 return false
             }
         }
-        rv.emptyView = tvNoOffers
-
-        wv.loadUrl("https://gettransfer.com/en")
+        rvOffers.emptyView = tvNoOffers
     }
 
 
@@ -106,6 +108,9 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             if (this.offers == null) transferModel.updateOffers()
 
             setOffersAsync(transferModel.getOffersAsyncRealmResult())
+        } else if (transfer.status == "resolved") {
+            clActive.visibility = GONE
+            clArchive.visibility = GONE
         } else {
             clActive.visibility = GONE
             clArchive.visibility = VISIBLE
@@ -141,9 +146,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
         val offersAdapter = OffersAdapter(offers, true)
         offersAdapter.icl = View.OnClickListener {
-            disposables.add(
-                    transferModel.payment(it.getTag(R.id.key_id) as Int)
-                            .subscribe { wv.loadUrl(it.data?.url) })
+            pay(it.getTag(R.id.key_id) as Int)
         }
 
         rvOffers.adapter = offersAdapter
@@ -162,6 +165,22 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         }
 
         this.offers = offers
+    }
+
+
+    private fun pay(offerID: Int) {
+        disposables.add(
+                transferModel.payment(offerID)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    wv.visibility = VISIBLE
+                                    wv.loadUrl(it.data?.url)
+                                },
+                                {
+                                    Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                                }))
     }
 
 

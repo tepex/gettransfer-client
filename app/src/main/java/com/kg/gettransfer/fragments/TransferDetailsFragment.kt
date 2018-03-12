@@ -104,8 +104,8 @@ class TransferDetailsFragment : Fragment() {
         }
 
         pricePreview.get(
-                transfer.from["point"]!!,
-                transfer.to["point"]!!,
+                transfer.from!!.point,
+                transfer.to!!.point,
                 transfer.distance,
                 false,
                 Date())
@@ -258,8 +258,7 @@ class TransferDetailsFragment : Fragment() {
                 tvPromoValidation.visibility = View.VISIBLE
                 tvPromoValidation.text = it.data
                 tvPromoValidation.setTextColor(Color.BLUE)
-            }
-            else {
+            } else {
                 tvPromoValidation.visibility = View.GONE
             }
         }

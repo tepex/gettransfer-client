@@ -14,11 +14,11 @@ import com.kg.gettransfer.realm.Location
 class NewTransfer {
     @Expose
     @SerializedName("from")
-    var from: Map<String, String> = mapOf()
+    var from: Location? = null
 
     @Expose
     @SerializedName("to")
-    var to: Map<String, String> = mapOf()
+    var to: Location? = null
 
     @Expose
     @SerializedName("distance")
@@ -75,8 +75,8 @@ class NewTransfer {
     constructor(distance: Int, time: Int, from: Location, to: Location, dateTo: String, timeTo: String, transportTypes: IntArray, pax: Int, nameSign: String, passengerProfile: PassengerProfile) {
         this.distance = distance
         this.time = time
-        this.from = from.toMap()
-        this.to = to.toMap()
+        this.from = from
+        this.to = to
         this.dateTo = dateTo
         this.timeTo = timeTo
         this.transportTypes = transportTypes
@@ -88,7 +88,7 @@ class NewTransfer {
     constructor(distance: Int, time: Int, from: Location, to: Location) {
         this.distance = distance
         this.time = time
-        this.from = from.toMap()
-        this.to = to.toMap()
+        this.from = from
+        this.to = to
     }
 }

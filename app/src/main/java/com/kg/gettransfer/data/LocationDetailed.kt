@@ -29,7 +29,7 @@ class LocationDetailed(
 
     fun toLocation(): Location? =
             if (latLng == null) null
-            else Location(title, latLng.latitude, latLng.longitude)
+            else Location(title, latLng)
 
 
     fun equalsRaw(b: LocationDetailed?): Boolean = title == b?.title

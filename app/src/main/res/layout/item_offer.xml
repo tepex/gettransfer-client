@@ -42,7 +42,7 @@
         android:layout_marginTop="4dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/colorTextBlack"
-        app:layout_constraintEnd_toStartOf="@+id/tvBook"
+        app:layout_constraintEnd_toStartOf="@+id/btnBook"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvCarrier" />
 
@@ -55,12 +55,12 @@
         android:layout_marginTop="4dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/colorTextGray"
-        app:layout_constraintEnd_toStartOf="@+id/tvBook"
+        app:layout_constraintEnd_toStartOf="@+id/btnBook"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvVehicle" />
 
     <Button
-        android:id="@+id/tvBook"
+        android:id="@+id/btnBook"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"

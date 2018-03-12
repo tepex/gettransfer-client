@@ -217,6 +217,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
                 override fun onFailure(e: Throwable) {
                     log.info("Route fail: " + e.message)
+                    e.printStackTrace()
                 }
             })
         }

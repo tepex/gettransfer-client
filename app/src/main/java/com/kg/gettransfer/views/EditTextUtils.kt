@@ -1,5 +1,6 @@
 package com.kg.gettransfer.views
 
+
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MotionEvent
@@ -7,9 +8,11 @@ import android.view.View
 import android.widget.EditText
 import com.kg.gettransfer.R
 
+
 /**
  * Created by denisvakulenko on 09/02/2018.
  */
+
 
 fun EditText.setupClearButtonWithAction() {
     addTextChangedListener(object : TextWatcher {
@@ -33,10 +36,12 @@ fun EditText.setupClearButtonWithAction() {
     })
 }
 
+
 fun EditText.setupChooseDate() {
     val clearIcon = R.drawable.ic_calendar_black_24dp
     setCompoundDrawablesWithIntrinsicBounds(0, 0, clearIcon, 0)
 }
+
 
 fun EditText.setupChooseTime() {
     val clearIcon = R.drawable.ic_access_time_black_24dp

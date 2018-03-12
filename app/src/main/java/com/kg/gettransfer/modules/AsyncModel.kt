@@ -4,9 +4,10 @@ package com.kg.gettransfer.modules
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
 import com.kg.gettransfer.modules.http.json.Response
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 
 /**
@@ -46,5 +47,24 @@ open class AsyncModel {
 
     protected fun <T : Any> err(response: Response<T>) {
         errors.accept(Exception(response.error?.message))
+    }
+
+
+    protected fun <K : Any, T : Response<K>> Observable<T>.fastSubscribe(f: ((data: K?) -> Unit)) {
+        disposables.add(
+                this
+                        .subscribeOn(Schedulers.io()).doOnSubscribe { setBusy(true) }
+                        .observeOn(Schedulers.newThread()).doFinally { setBusy(false) }
+                        .subscribe(
+                                { response ->
+                                    if (response.success) {
+                                        f(response.data)
+                                    } else {
+                                        err(response)
+                                    }
+                                },
+                                { e ->
+                                    err(e)
+                                }))
     }
 }
