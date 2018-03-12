@@ -14,6 +14,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.koin.standalone.KoinComponent
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -50,7 +51,7 @@ class GeoUtils(
         if (location.placeID != null) {
             val pendingResult = Places.GeoDataApi.getPlaceById(googleApiClient, location.placeID)
 
-            pendingResult.setResultCallback { places ->
+            pendingResult.setResultCallback({ places ->
                 if (places.status.isSuccess) {
                     Log.i(TAG, "Validated: " + places[0].toString())
                     response.accept(
@@ -61,7 +62,7 @@ class GeoUtils(
                                     places[0].latLng))
                     places.release()
                 }
-            }
+            }, 3, TimeUnit.SECONDS)
         } else if (location.title.isNotEmpty()) {
             try {
                 Single.fromCallable {

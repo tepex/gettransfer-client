@@ -18,6 +18,9 @@ open class Response<T> {
     @Expose
     var result: String = ""
 
+    val success: Boolean get() = "success" == result
+
+
     @SerializedName("data")
     @Expose
     var data: T? = null
@@ -26,7 +29,10 @@ open class Response<T> {
     @Expose
     var error: Error? = null
 
-    val success: Boolean get() = "success" == result
+
+    override fun toString(): String {
+        return if (success) "Success: " + data.toString() else "Error: " + error.toString()
+    }
 }
 
 

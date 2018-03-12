@@ -5,6 +5,7 @@ import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
 import com.kg.gettransfer.modules.http.json.Response
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 
@@ -14,6 +15,8 @@ import io.reactivex.disposables.Disposable
 
 
 open class AsyncModel {
+    protected val disposables = CompositeDisposable()
+
     private val busy = BehaviorRelay.createDefault<Boolean>(false)!!
     private val errors = PublishRelay.create<Throwable>()!!
 

@@ -57,7 +57,7 @@ class GeoAutocompleteProvider : KoinComponent {
 
         this.currentPendingResult = pendingResult
 
-        val autocompletePredictions = pendingResult.await(5, TimeUnit.SECONDS)
+        val autocompletePredictions = pendingResult.await(3, TimeUnit.SECONDS)
 
         val status = autocompletePredictions.status
         if (!status.isSuccess) {

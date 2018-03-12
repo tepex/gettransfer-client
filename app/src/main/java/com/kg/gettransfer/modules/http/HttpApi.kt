@@ -54,6 +54,9 @@ interface HttpApi {
     fun getOffers(@Path("id") id: Int): Observable<OffersResponse>
 
 
+    // --
+
+
     @GET("transport_types_prices")
     fun getPrice(
             @Query("points[]") points: Array<String>,
@@ -62,4 +65,11 @@ interface HttpApi {
             @Query("return_way") back: Boolean,
             @Query("date_to") date: Date)
             : Observable<Response<Map<Int, PricesPreview>>>
+
+
+    // --
+
+
+    @GET("promo_codes")
+    fun checkPromo(@Query("value") code: String): Observable<Response<String>>
 }

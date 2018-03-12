@@ -3,6 +3,7 @@ package com.kg.gettransfer.fragments
 
 import android.app.Fragment
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
@@ -14,8 +15,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
 import com.kg.gettransfer.R
 import com.kg.gettransfer.modules.PricesPreviewModel
+import com.kg.gettransfer.modules.PromoCodeModel
 import com.kg.gettransfer.modules.Transfers
 import com.kg.gettransfer.modules.TransportTypesProvider
 import com.kg.gettransfer.modules.http.json.NewTransfer
@@ -41,6 +45,7 @@ class TransferDetailsFragment : Fragment() {
     private val transportTypesProvider: TransportTypesProvider by inject()
     private val transfers: Transfers by inject()
     private val pricePreview: PricesPreviewModel by inject()
+    private val promoCodeModel: PromoCodeModel by inject()
 
 
     private var savedView: View? = null
@@ -82,6 +87,8 @@ class TransferDetailsFragment : Fragment() {
 
             initListTransportTypes(v.rvTypes)
 
+            initPromoCodeUI(v.etPromoCode, v.tvPromoValidation)
+
             savedView = v
         }
 
@@ -96,6 +103,8 @@ class TransferDetailsFragment : Fragment() {
                 transfer.distance,
                 false,
                 Date())
+
+        pricePreview.addOnPricesUpdated { }
 
         return savedView!!
     }
@@ -223,6 +232,38 @@ class TransferDetailsFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.adapter = adapter
+    }
+
+
+    private fun initPromoCodeUI(etPromoCode: EditText, tvPromoValidation: TextView) {
+        val promoEditTextWatcher: TextWatcher = object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                promoCodeModel.code = s.toString() //"ROUNDTRIP"
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+        }
+
+        etPromoCode.addTextChangedListener(promoEditTextWatcher)
+
+        promoCodeModel.addOnInfoUpdated {
+            if (it.data != null) {
+                tvPromoValidation.visibility = View.VISIBLE
+                tvPromoValidation.text = it.data
+                tvPromoValidation.setTextColor(Color.BLUE)
+            }
+        }
+
+        promoCodeModel.addOnError {
+            tvPromoValidation.visibility = View.VISIBLE
+            tvPromoValidation.text = it.message
+            tvPromoValidation.setTextColor(Color.RED)
+        }
+
+        promoCodeModel.addOnBusyChanged {
+            if (it) tvPromoValidation.visibility = View.GONE
+        }
     }
 
 
