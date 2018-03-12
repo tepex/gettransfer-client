@@ -3,7 +3,7 @@ package com.kg.gettransfer
 
 import android.app.Application
 import android.content.pm.ApplicationInfo
-import com.kg.gettransfer.modules.Transfers
+import com.kg.gettransfer.modules.TransfersModel
 import org.koin.Koin
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.android.startKoin
@@ -28,6 +28,6 @@ class GTApplication : Application() {
         // Start Koin
         startKoin(this, todoAppModules)
 
-        val t = inject<Transfers>().value
+        val t = inject<TransfersModel>().value
     }
 }

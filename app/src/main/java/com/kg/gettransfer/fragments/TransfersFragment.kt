@@ -17,7 +17,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.login.LoginActivity
 import com.kg.gettransfer.mainactivity.MainActivity
 import com.kg.gettransfer.modules.CurrentAccount
-import com.kg.gettransfer.modules.Transfers
+import com.kg.gettransfer.modules.TransfersModel
 import com.kg.gettransfer.views.EmptyRecyclerView
 import com.kg.gettransfer.views.TransfersAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -35,23 +35,31 @@ import org.koin.standalone.KoinComponent
 
 class TransfersFragment : Fragment(), KoinComponent {
     private val currentAccount: CurrentAccount by inject()
-    private val transfers: Transfers by inject()
+    private val transfersModel: TransfersModel by inject()
 
     private val disposables = CompositeDisposable()
 
     private val adapterActive by lazy {
-        TransfersAdapter(transfers.getAllAsync(true), true)
+        TransfersAdapter(transfersModel.getAllAsync(true), true)
     }
     private val adapterArchive by lazy {
-        TransfersAdapter(transfers.getAllAsync(false), true)
+        TransfersAdapter(transfersModel.getAllAsync(false), true)
     }
 
     private var savedview: View? = null
 
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+            inflater: LayoutInflater?,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?)
+            : View {
         if (savedview == null) {
-            val view = inflater?.inflate(R.layout.fragment_transfers, container, false)!!
+            val view = inflater?.inflate(
+                    R.layout.fragment_transfers,
+                    container,
+                    false)!!
+
             with(view) {
                 initRecyclerView(view.rvTransfers, view.swipeRefreshLayout)
 
@@ -81,13 +89,13 @@ class TransfersFragment : Fragment(), KoinComponent {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe { updateUI() })
 
-        transfers.addOnBusyChanged {
+        disposables.add(transfersModel.addOnBusyChanged {
             swipeRefreshLayout.isRefreshing = it
-        }
+        })
 
-        transfers.addOnError {
+        disposables.add(transfersModel.addOnError {
             Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
-        }
+        })
 
         updateUI()
     }
@@ -114,7 +122,7 @@ class TransfersFragment : Fragment(), KoinComponent {
         rvTransfers.layoutManager = LinearLayoutManager(activity)
         rvTransfers.emptyView = clEmptyTransfers
 
-        swipeRefreshLayout.setOnRefreshListener { transfers.updateTransfers() }
+        swipeRefreshLayout.setOnRefreshListener { transfersModel.updateTransfers() }
     }
 
 
@@ -132,7 +140,7 @@ class TransfersFragment : Fragment(), KoinComponent {
         clLoggedOut.visibility = GONE
         tvActive.visibility = VISIBLE
         tvArchive.visibility = VISIBLE
-        transfers.updateTransfers()
+        transfersModel.updateTransfers()
     }
 
 

@@ -7,7 +7,6 @@ import com.kg.gettransfer.modules.http.json.NewTransferField
 import com.kg.gettransfer.realm.Transfer
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmResults
 import org.koin.standalone.KoinComponent
@@ -19,13 +18,14 @@ import java.util.logging.Logger
  */
 
 
-class Transfers(
+// Singleton
+class TransfersModel(
         private val realm: Realm,
         private val api: HttpApi,
         currentAccount: CurrentAccount)
     : AsyncModel(), KoinComponent {
 
-    private val log = Logger.getLogger("Transfers")
+    private val log = Logger.getLogger("TransfersModel")
 
 
     init {
@@ -91,45 +91,32 @@ class Transfers(
         log.info("updateTransfers()")
         if (isBusy) return
         log.info("getTransfers() call")
-        api.getTransfers()
-                .subscribeOn(Schedulers.io())
-                .doOnSubscribe { setBusy(true) }
-                .observeOn(Schedulers.newThread())
-                .subscribe({ response ->
-                    if (response.success) {
-                        log.info("getTransfers() responded success, N = ${response.data?.transfers?.size}")
-                        val transfers = response.data?.transfers ?: return@subscribe
+        api.getTransfers().fastSubscribe { data ->
+            log.info("getTransfers() responded success, N = ${data?.transfers?.size}")
+            val transfers = data?.transfers ?: return@fastSubscribe
 
-                        val realm = Realm.getDefaultInstance()
-                        realm.executeTransaction {
-                            val transfers = realm.copyToRealmOrUpdate(transfers)
-                            transfers.forEach { it.updateIsActive() }
-                            val ids = transfers
-                                    .map { it.id }
-                                    .toIntArray().toTypedArray()
-                            val transfersToDelete = realm
-                                    .where(Transfer::class.java)
-                                    .not()
-                                    .`in`("id", ids)
-                                    .findAll()
-                            transfersToDelete.deleteAllFromRealm()
-                            log.info("getTransfers() saved to realm")
-                        }
-                        realm.close()
-                    } else {
-                        log.info("getTransfers() responded fail, result = ${response.result}")
-                        err(response.error?.message)
-                    }
-                    setBusy(false)
-                }, {
-                    log.info("getTransfers() fail, ${it.message}")
-                    err(it)
-                    setBusy(false)
-                })
+            val realm = Realm.getDefaultInstance()
+            realm.executeTransaction {
+                val transfers = realm.copyToRealmOrUpdate(transfers)
+                transfers.forEach { it.updateIsActive() }
+                val ids = transfers
+                        .map { it.id }
+                        .toIntArray().toTypedArray()
+                val transfersToDelete = realm
+                        .where(Transfer::class.java)
+                        .not()
+                        .`in`("id", ids)
+                        .findAll()
+                transfersToDelete.deleteAllFromRealm()
+                log.info("getTransfers() saved to realm")
+            }
+            realm.close()
+        }
     }
 
 
-    fun close() {
-        realm.close()
-    }
+//    fun close() {
+//        disposables.clear()
+//        realm.close()
+//    }
 }

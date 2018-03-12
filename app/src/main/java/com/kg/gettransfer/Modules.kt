@@ -65,7 +65,7 @@ val AppModule = applicationContext {
     provide { DBProvider(get()) }
     factory { get<DBProvider>().create() }
 
-    provide { Transfers(get(), get(), get()) }
+    provide { TransfersModel(get(), get(), get()) }
 
     provide { TransportTypesProvider(get(), get()) }
 

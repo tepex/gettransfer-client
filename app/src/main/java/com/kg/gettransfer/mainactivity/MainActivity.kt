@@ -4,7 +4,6 @@ package com.kg.gettransfer.mainactivity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.kg.gettransfer.R
@@ -26,6 +25,8 @@ class MainActivity : AppCompatActivity() {
 
     private val frCreateTransfer by lazy { CreateTransferFragment() }
     private val frTransfers by lazy { TransfersFragment() }
+
+    private var tab = 1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,18 +75,10 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun showCreateTransfer(v: View?) {
-        btnList.alpha = 0.2f
-        btnCreate.alpha = 1f
-        btnUser.alpha = 0.2f
-
-        val ft = fragmentManager.beginTransaction()
-        ft.replace(R.id.flFragment, frCreateTransfer)
-        ft.disallowAddToBackStack()
-        ft.commit()
-    }
-
     fun showTransfers(v: View?) {
+        if (tab == 0) return
+        tab = 0
+
         btnList.alpha = 1f
         btnCreate.alpha = 0.2f
         btnUser.alpha = 0.2f
@@ -96,7 +89,24 @@ class MainActivity : AppCompatActivity() {
         ft.commit()
     }
 
+    fun showCreateTransfer(v: View?) {
+        if (tab == 1) return
+        tab = 1
+
+        btnList.alpha = 0.2f
+        btnCreate.alpha = 1f
+        btnUser.alpha = 0.2f
+
+        val ft = fragmentManager.beginTransaction()
+        ft.replace(R.id.flFragment, frCreateTransfer)
+        ft.disallowAddToBackStack()
+        ft.commit()
+    }
+
     private fun showProfile(v: View?) {
+        if (tab == 2) return
+        tab = 2
+
         btnList.alpha = 0.2f
         btnCreate.alpha = 0.2f
         btnUser.alpha = 1f

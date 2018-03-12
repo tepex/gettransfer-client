@@ -20,7 +20,7 @@ import android.widget.TextView
 import com.kg.gettransfer.R
 import com.kg.gettransfer.modules.PricesPreviewModel
 import com.kg.gettransfer.modules.PromoCodeModel
-import com.kg.gettransfer.modules.Transfers
+import com.kg.gettransfer.modules.TransfersModel
 import com.kg.gettransfer.modules.TransportTypesProvider
 import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.modules.http.json.PassengerProfile
@@ -43,7 +43,7 @@ import java.util.*
 
 class TransferDetailsFragment : Fragment() {
     private val transportTypesProvider: TransportTypesProvider by inject()
-    private val transfers: Transfers by inject()
+    private val transfersModel: TransfersModel by inject()
     private val pricePreview: PricesPreviewModel by inject()
     private val promoCodeModel: PromoCodeModel by inject()
 
@@ -119,7 +119,7 @@ class TransferDetailsFragment : Fragment() {
     private fun createTransfer(transfer: NewTransfer) {
         populateNewTransfer(transfer)
         disposables.add(
-                transfers.createTransfer(transfer)
+                transfersModel.createTransfer(transfer)
                         .subscribeOn(Schedulers.io())
                         .doOnSubscribe { setBusy(true) }
                         .observeOn(AndroidSchedulers.mainThread())
@@ -257,7 +257,8 @@ class TransferDetailsFragment : Fragment() {
             if (it.data != null) {
                 tvPromoValidation.visibility = View.VISIBLE
                 tvPromoValidation.text = it.data
-                tvPromoValidation.setTextColor(Color.BLUE)
+                tvPromoValidation.setTextColor(resources.getColor(R.color.colorTextLocation))
+
             } else {
                 tvPromoValidation.visibility = View.GONE
             }
@@ -266,7 +267,7 @@ class TransferDetailsFragment : Fragment() {
         promoCodeModel.addOnError {
             tvPromoValidation.visibility = View.VISIBLE
             tvPromoValidation.text = it.message
-            tvPromoValidation.setTextColor(Color.RED)
+            tvPromoValidation.setTextColor(resources.getColor(R.color.colorTextError))
         }
 
         promoCodeModel.addOnBusyChanged {

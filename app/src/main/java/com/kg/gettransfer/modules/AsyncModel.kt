@@ -7,6 +7,7 @@ import com.kg.gettransfer.modules.http.json.Response
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 
@@ -25,11 +26,17 @@ open class AsyncModel {
     public val isBusy: Boolean get() = busy.value
 
 
-    public fun addOnBusyChanged(f: ((Boolean) -> Unit)) =
-            disposables.add(busy.observeOn(AndroidSchedulers.mainThread()).subscribe(f))
+    public fun addOnBusyChanged(f: ((Boolean) -> Unit)): Disposable {
+        val d = busy.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
+        disposables.add(d)
+        return d
+    }
 
-    public fun addOnError(f: ((Throwable) -> Unit)) =
-            disposables.add(errors.observeOn(AndroidSchedulers.mainThread()).subscribe(f))
+    public fun addOnError(f: ((Throwable) -> Unit)): Disposable {
+        val d = errors.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
+        disposables.add(d)
+        return d
+    }
 
 
     protected fun setBusy(busy: Boolean) {
@@ -50,21 +57,23 @@ open class AsyncModel {
     }
 
 
-    protected fun <K : Any, T : Response<K>> Observable<T>.fastSubscribe(f: ((data: K?) -> Unit)) {
-        disposables.add(
-                this
-                        .subscribeOn(Schedulers.io()).doOnSubscribe { setBusy(true) }
-                        .observeOn(Schedulers.newThread()).doFinally { setBusy(false) }
-                        .subscribe(
-                                { response ->
-                                    if (response.success) {
-                                        f(response.data)
-                                    } else {
-                                        err(response)
-                                    }
-                                },
-                                { e ->
-                                    err(e)
-                                }))
+    protected fun <K : Any, T : Response<K>>
+            Observable<T>.fastSubscribe(f: ((data: K?) -> Unit)): Disposable {
+        val d = this
+                .subscribeOn(Schedulers.io()).doOnSubscribe { setBusy(true) }
+                .observeOn(Schedulers.newThread()).doFinally { setBusy(false) }
+                .subscribe(
+                        { response ->
+                            if (response.success) {
+                                f(response.data)
+                            } else {
+                                err(response)
+                            }
+                        },
+                        { e ->
+                            err(e)
+                        })
+        disposables.add(d)
+        return d
     }
 }
