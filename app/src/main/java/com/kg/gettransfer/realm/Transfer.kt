@@ -55,12 +55,18 @@ open class Transfer : RealmObject() {
     var bookNow: Boolean = false
 
     @Expose
-    @SerializedName("date_to")
+    @SerializedName("date_to_local")
     var dateTo: Date? = null
 
     @Expose
-    @SerializedName("date_return")
+    @SerializedName("date_return_local")
     var dateReturn: Date? = null
+
+    // --
+
+    @Expose
+    @SerializedName("date_refund")
+    var date_refund: Date? = null
 
     // --
 
@@ -106,6 +112,12 @@ open class Transfer : RealmObject() {
     @Expose
     @SerializedName("relevant_carrier_profiles_count")
     var relevantCarrierProfilesCount: Int? = null
+
+    // --
+
+    @Expose
+    @SerializedName("malina_card")
+    var malinaCard: String? = null
 
     // --
 

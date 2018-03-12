@@ -370,45 +370,56 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
-
-            <TextView
-                android:id="@+id/textView92"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:text="Promo code"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView832" />
-
-            <EditText
-                android:id="@+id/etPromoCode"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/clPromoCode"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="8dp"
-                android:ems="10"
-                android:hint="CODE"
-                android:inputType="textEmailAddress"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:text=""
-                android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
-                app:layout_constraintBaseline_toBaselineOf="@+id/textView92"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView92" />
-
-            <TextView
-                android:id="@+id/tvPromoValidation"
+                android:paddingBottom="0dp"
                 android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:text=""
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView92" />
+                app:layout_constraintTop_toBottomOf="@+id/textView832">
 
+                <TextView
+                    android:id="@+id/tvPromoCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:text="Promo code"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/etPromoCode"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="8dp"
+                    android:ems="10"
+                    android:hint="CODE"
+                    android:inputType="textEmailAddress"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text=""
+                    android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/tvPromoCode"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tvPromoCode" />
+
+                <TextView
+                    android:id="@+id/tvPromoValidation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:paddingBottom="16dp"
+                    android:text=""
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPromoCode" />
+
+            </android.support.constraint.ConstraintLayout>
 
             <!--Error-->
 
@@ -417,7 +428,6 @@
                 android:id="@+id/tvError"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:background="@color/colorBGSecondary"
                 android:gravity="start"
                 android:paddingBottom="40dp"
@@ -428,7 +438,16 @@
                 android:textColor="@android:color/holo_red_dark"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvPromoValidation" />
+                app:layout_constraintTop_toBottomOf="@+id/clPromoCode" />
+
+            <Button
+                android:id="@+id/btnHavePromoCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="Yes"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView832"
+                app:layout_constraintEnd_toEndOf="@+id/textView832" />
 
 
         </android.support.constraint.ConstraintLayout>

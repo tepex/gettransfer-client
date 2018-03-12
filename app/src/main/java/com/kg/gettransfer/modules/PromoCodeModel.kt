@@ -33,7 +33,7 @@ class PromoCodeModel(private val api: HttpApi)
 
     fun update() {
         val code = code
-        if (code == null) {
+        if (code == null || code.isEmpty()) {
             info.accept(Response())
         } else {
             info.accept(Response())

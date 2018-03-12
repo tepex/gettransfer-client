@@ -76,6 +76,12 @@ class TransferDetailsFragment : Fragment() {
 
             v.fabConfirmStep.setOnClickListener { createTransfer(transfer) }
 
+            v.btnHavePromoCode.setOnClickListener {
+                btnHavePromoCode.visibility = GONE
+                clPromoCode.visibility = VISIBLE
+                etPromoCode.requestFocus()
+            }
+
             v.etDate.setText(formatDateTime(
                     activity,
                     System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7,
@@ -253,6 +259,9 @@ class TransferDetailsFragment : Fragment() {
                 tvPromoValidation.text = it.data
                 tvPromoValidation.setTextColor(Color.BLUE)
             }
+            else {
+                tvPromoValidation.visibility = View.GONE
+            }
         }
 
         promoCodeModel.addOnError {
@@ -287,5 +296,9 @@ class TransferDetailsFragment : Fragment() {
         etPrice.setText("")
         etFlightTrainNumber.setText("")
         etFlightTrainNumber.setText("")
+
+        clPromoCode.visibility = GONE
+        tvPromoValidation.visibility = GONE
+        btnHavePromoCode.visibility = VISIBLE
     }
 }

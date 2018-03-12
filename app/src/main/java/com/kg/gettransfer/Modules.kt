@@ -38,7 +38,7 @@ val AppModule = applicationContext {
     // Http
 
     provide { RxJava2CallAdapterFactory.create() }
-    provide { GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZ").create() as Gson }
+    provide { GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create() as Gson }
     provide { GsonConverterFactory.create(get()) as GsonConverterFactory }
 
     provide { ProvideAccessTokenInterceptor(get(), get(), get()) }
