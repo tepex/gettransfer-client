@@ -34,7 +34,7 @@ android {
             useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
-            //debuggable true
+            // debuggable true
         }
         debug {
             minifyEnabled false
@@ -48,29 +48,44 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
     compile 'com.android.support:multidex:1.0.3'
+
     compile 'com.android.support:appcompat-v7:27.1.0'
+
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:recyclerview-v7:27.1.0'
+
+    // Maps
     compile 'com.google.android.gms:play-services-location:11.8.0'
     compile 'com.google.android.gms:play-services-places:11.8.0'
-    compile 'com.google.maps:google-maps-services:0.1.20'
-    compile 'com.google.maps.android:android-maps-utils:0.5'
     compile 'com.google.android.gms:play-services-drive:11.8.0'
-    //    com.google.android.gms:play-services-maps:11.8.0
+
+    compile 'com.google.maps.android:android-maps-utils:0.5'
+
+    compile 'com.google.maps:google-maps-services:0.2.6'
+    compile 'org.slf4j:slf4j-nop:1.7.25'
+
+    //com.google.android.gms:play-services-maps:11.8.0
+
     // Retrofit network
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+
     // Rx
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxkotlin:2.2.0'
     compile 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
+
     // Realm db
     compile 'io.realm:android-adapters:2.1.1'
+
     // Koin
-    compile 'org.koin:koin-android:0.8.2'
+    compile 'org.koin:koin-android:0.9.1'
+
     // or Koin for Android Architecture (if needed)
     // compile 'org.koin:koin-android-architecture:0.8.2'
     //    compile 'com.google.dagger:dagger-android:2.11'

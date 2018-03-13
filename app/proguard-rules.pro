@@ -37,7 +37,14 @@
     rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
 
-#-keep class com.google.android.gms.maps.** { *; }
+-keep class com.google.maps.DirectionsApi
+-keep class com.google.maps.GeoApiContext
+
+-keep class com.google.maps.** { *; }
+
+-keep class com.google.android.ims { *; }
+-keep class com.google.android.ims.** { *; }
+
 #-keep interface com.google.android.gms.maps.** { *; }
 
 

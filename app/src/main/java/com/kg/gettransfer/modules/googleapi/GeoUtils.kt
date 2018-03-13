@@ -6,6 +6,7 @@ import android.util.Log
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.places.Places
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.PlacesApi
 import com.jakewharton.rxrelay2.PublishRelay
 import com.kg.gettransfer.data.LocationDetailed
 import io.reactivex.Single
@@ -49,6 +50,8 @@ class GeoUtils(
         Log.i(TAG, "Validate GEO: " + location.title)
 
         if (location.placeID != null) {
+//            PlacesApi.placeDetails()
+
             val pendingResult = Places.GeoDataApi.getPlaceById(googleApiClient, location.placeID)
 
             pendingResult.setResultCallback({ places ->

@@ -1,11 +1,13 @@
 package com.kg.gettransfer
 
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.location.Geocoder
 import android.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.maps.GeoApiContext
 import com.kg.gettransfer.createtransfer.CreateTransferFragment
 import com.kg.gettransfer.fragments.TransfersFragment
 import com.kg.gettransfer.login.LoginActivity
@@ -22,6 +24,7 @@ import org.koin.dsl.module.applicationContext
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -32,42 +35,62 @@ import java.util.*
 val AppModule = applicationContext {
     // Util
 
-    provide { PreferenceManager.getDefaultSharedPreferences(get()) as SharedPreferences }
+    bean { PreferenceManager.getDefaultSharedPreferences(get()) as SharedPreferences }
 
 
     // Http
 
-    provide { RxJava2CallAdapterFactory.create() }
-    provide { GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create() as Gson }
-    provide { GsonConverterFactory.create(get()) as GsonConverterFactory }
+    bean { RxJava2CallAdapterFactory.create() }
+    bean {
+        val format = "yyyy-MM-dd'T'HH:mm:ssZ"
+        val gson = GsonBuilder()
+                .setDateFormat(format)
+                .create()
+        val dateTypeAdapter = gson.getAdapter(Date::class.java)
+        GsonBuilder()
+                .setDateFormat(format)
+                .registerTypeAdapter(Date::class.java, dateTypeAdapter.nullSafe())
+                .create() as Gson
+    }
+    bean { GsonConverterFactory.create(get()) as GsonConverterFactory }
 
-    provide { ProvideAccessTokenInterceptor(get(), get(), get()) }
-    provide { HttpApiFactory.buildHttpClient(get()) as okhttp3.OkHttpClient }
-    provide { HttpApiFactory.create(get(), get(), get()) as HttpApi }
+    bean { ProvideAccessTokenInterceptor(get(), get(), get()) }
+    bean { HttpApiFactory.buildHttpClient(get()) as okhttp3.OkHttpClient }
+    bean { HttpApiFactory.create(get(), get(), get()) as HttpApi }
 
-    provide { Session(get()) }
+    bean { Session(get()) }
 
-    provide { CurrentAccount(get(), get()) }
+    bean { CurrentAccount(get(), get()) }
 
 
     // Google api
 
-    provide { GoogleApiClientFactory.create(get()) }
-    provide { GeoAutocompleteProvider() }
+    bean { GoogleApiClientFactory.create(get()) }
+    bean { GeoAutocompleteProvider() }
+
+    bean {
+        GeoApiContext.Builder()
+                .queryRateLimit(10)
+                .apiKey(get<Context>().getString(R.string.geoapikey))
+                .connectTimeout(3, TimeUnit.SECONDS)
+                .readTimeout(3, TimeUnit.SECONDS)
+                .writeTimeout(3, TimeUnit.SECONDS)
+                .build() as GeoApiContext
+    }
 
     factory { GeoUtils(get(), get()) }
 
-    provide { Geocoder(get(), Locale.getDefault()) }
+    bean { Geocoder(get(), Locale.getDefault()) }
 
 
     // Data
 
-    provide { DBProvider(get()) }
+    bean { DBProvider(get()) }
     factory { get<DBProvider>().create() }
 
-    provide { TransfersModel(get(), get(), get()) }
+    bean { TransfersModel(get(), get(), get()) }
 
-    provide { TransportTypesProvider(get(), get()) }
+    bean { TransportTypesProvider(get(), get()) }
 
 
     // Models

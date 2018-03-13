@@ -7,6 +7,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -36,7 +37,9 @@ import kotlinx.android.synthetic.main.fragment_createtransfer.*
 import kotlinx.android.synthetic.main.fragment_createtransfer.view.*
 import org.joda.time.DateTime
 import org.koin.standalone.KoinComponent
+import org.koin.standalone.inject
 import java.util.concurrent.TimeUnit
+import java.util.logging.Level
 import java.util.logging.Logger
 
 
@@ -50,6 +53,8 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
     private val frChooseLocation: ChooseLocationFragment by lazy { ChooseLocationFragment() }
     private val frTransferDetails: TransferDetailsFragment by lazy { TransferDetailsFragment() }
+
+    val geoApiContext: GeoApiContext by inject()
 
     private var map: GoogleMap? = null
 
@@ -191,12 +196,9 @@ class CreateTransferFragment : Fragment(), KoinComponent {
         polyline = null
 
         if (llFrom != null && llTo != null) {
-            val now = DateTime()
-            val result = DirectionsApi.newRequest(getGeoContext())
-                    .mode(TravelMode.DRIVING)
-                    .origin(com.google.maps.model.LatLng(llFrom.latitude, llFrom.longitude))
-                    .destination(com.google.maps.model.LatLng(llTo.latitude, llTo.longitude))
-                    .departureTime(now)
+            val result = DirectionsApi.getDirections(geoApiContext,
+                    com.google.maps.model.LatLng(llFrom.latitude, llFrom.longitude).toString(),
+                    com.google.maps.model.LatLng(llTo.latitude, llTo.longitude).toString())
 
             result.setCallback(object : com.google.maps.PendingResult.Callback<DirectionsResult> {
                 override fun onResult(result: DirectionsResult) {
@@ -216,7 +218,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                 }
 
                 override fun onFailure(e: Throwable) {
-                    log.info("Route fail: " + e.message)
+                    log.info("Routing fail: " + e.message)
                     e.printStackTrace()
                 }
             })
@@ -353,16 +355,6 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     override fun onDestroyView() {
         super.onDestroyView()
         fragmentManager.removeOnBackStackChangedListener(backStackListener)
-    }
-
-
-    private fun getGeoContext(): GeoApiContext {
-        val geoApiContext = GeoApiContext()
-        return geoApiContext.setQueryRateLimit(3)
-                .setApiKey(getString(R.string.geoapikey))
-                .setConnectTimeout(3, TimeUnit.SECONDS)
-                .setReadTimeout(3, TimeUnit.SECONDS)
-                .setWriteTimeout(3, TimeUnit.SECONDS)
     }
 }
 
