@@ -1,8 +1,8 @@
 package com.kg.gettransfer
 
 
-import android.app.Application
 import android.content.pm.ApplicationInfo
+import android.support.multidex.MultiDexApplication
 import com.kg.gettransfer.modules.TransfersModel
 import org.koin.Koin
 import org.koin.android.ext.android.inject
@@ -15,7 +15,7 @@ import org.koin.android.logger.AndroidLogger
  */
 
 
-class GTApplication : Application() {
+class GTApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
 

@@ -25,19 +25,22 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
     buildTypes {
         release {
             shrinkResources true
             minifyEnabled true
+            useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
-//            multiDexEnabled true
+            //debuggable true
         }
         debug {
             minifyEnabled false
             useProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 }
@@ -46,6 +49,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile 'com.android.support:multidex:1.0.3'
     compile 'com.android.support:appcompat-v7:27.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:recyclerview-v7:27.1.0'
@@ -54,7 +58,7 @@ dependencies {
     compile 'com.google.maps:google-maps-services:0.1.20'
     compile 'com.google.maps.android:android-maps-utils:0.5'
     compile 'com.google.android.gms:play-services-drive:11.8.0'
-//    com.google.android.gms:play-services-maps:11.8.0
+    //    com.google.android.gms:play-services-maps:11.8.0
     // Retrofit network
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
@@ -73,11 +77,10 @@ dependencies {
     //    compile 'com.google.dagger:dagger-android-support:2.11' // if you use the support libraries
     //    annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
     //    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
-
     //  Test
-//    testImplementation 'junit:junit:4.12'
-//    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-//    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-
+    //    testImplementation 'junit:junit:4.12'
+    //    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    //    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.android.support:design:27.1.0'
 }
+
