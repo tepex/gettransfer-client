@@ -205,10 +205,16 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                     mapView.post {
                         polyline?.remove()
 
-                        val decodedPath: List<LatLng> = PolyUtil.decode(result.routes[0].overviewPolyline.encodedPath)
+                        if (result.routes.isEmpty()) return@post
+
+                        val route = result.routes[0]
+
+                        val decodedPath = PolyUtil.decode(route.overviewPolyline.encodedPath)
                         polyline = map?.addPolyline(PolylineOptions().addAll(decodedPath))
 
-                        result.routes[0].legs.forEach {
+                        duration = 0L
+                        distance = 0L
+                        route.legs.forEach {
                             duration += it.duration.inSeconds
                             distance += it.distance.inMeters
                         }
