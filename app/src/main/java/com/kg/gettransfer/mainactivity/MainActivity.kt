@@ -3,6 +3,7 @@ package com.kg.gettransfer.mainactivity
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -76,44 +77,41 @@ class MainActivity : AppCompatActivity() {
 
 
     fun showTransfers(v: View?) {
-        if (tab == 0) return
-        tab = 0
-
-        btnList.alpha = 1f
-        btnCreate.alpha = 0.2f
-        btnUser.alpha = 0.2f
-
-        val ft = fragmentManager.beginTransaction()
-        ft.replace(R.id.flFragment, frTransfers)
-        ft.disallowAddToBackStack()
-        ft.commit()
+        updateTab(0)
     }
 
     fun showCreateTransfer(v: View?) {
-        if (tab == 1) return
-        tab = 1
-
-        btnList.alpha = 0.2f
-        btnCreate.alpha = 1f
-        btnUser.alpha = 0.2f
-
-        val ft = fragmentManager.beginTransaction()
-        ft.replace(R.id.flFragment, frCreateTransfer)
-        ft.disallowAddToBackStack()
-        ft.commit()
+        updateTab(1)
     }
 
-    private fun showProfile(v: View?) {
-        if (tab == 2) return
-        tab = 2
+    fun showProfile(v: View?) {
+        updateTab(2)
+    }
 
-        btnList.alpha = 0.2f
-        btnCreate.alpha = 0.2f
-        btnUser.alpha = 1f
+
+    private fun updateTab(i: Int) {
+        if (tab == i) return
+        tab = i
+
+        btnList.alpha = if (i == 0) 1f else 0.2f
+        btnCreate.alpha = if (i == 1) 1f else 0.2f
+        btnUser.alpha = if (i == 2) 1f else 0.2f
 
         val ft = fragmentManager.beginTransaction()
-        ft.replace(R.id.flFragment, frTransfers)
+        ft.replace(
+                R.id.flFragment,
+                when (i) {
+                    0 -> frTransfers
+                    1 -> frCreateTransfer
+                    else -> null
+                })
         ft.disallowAddToBackStack()
-        ft.commit()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            ft.commitNow()
+        } else {
+            ft.commit()
+            fragmentManager.executePendingTransactions()
+        }
     }
 }
