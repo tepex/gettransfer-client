@@ -15,17 +15,20 @@ class NewTransfer {
     @Expose
     @SerializedName("from")
     var from: Location? = null
-
     @Expose
     @SerializedName("to")
     var to: Location? = null
 
     @Expose
     @SerializedName("distance")
-    var distance: Int = 0
+    var routeDistance: Int = 0
     @Expose
     @SerializedName("time")
     var routeDuration: Int = 0 // in minutes
+
+    @Expose
+    @SerializedName("duration")
+    var hireDuration: Int = 0 // in hours
 
     // --
 
@@ -73,22 +76,15 @@ class NewTransfer {
     // --
 
 
-    constructor(distance: Int, routeDuration: Int, from: Location, to: Location, dateTo: String, timeTo: String, transportTypes: IntArray, pax: Int, nameSign: String, passengerProfile: PassengerProfile) {
-        this.distance = distance
-        this.routeDuration = routeDuration
+    constructor(from: Location, to: Location, routeDistance: Int, routeDuration: Int) {
         this.from = from
         this.to = to
-        this.dateTo = Trip(dateTo, timeTo)
-        this.transportTypes = transportTypes
-        this.pax = pax
-        this.nameSign = nameSign
-        this.passengerProfile = passengerProfile.toMap()
+        this.routeDistance = routeDistance
+        this.routeDuration = routeDuration
     }
 
-    constructor(distance: Int, routeDuration: Int, from: Location, to: Location) {
-        this.distance = distance
-        this.routeDuration = routeDuration
+    constructor(from: Location, hireDuration: Int) {
         this.from = from
-        this.to = to
+        this.hireDuration = hireDuration
     }
 }

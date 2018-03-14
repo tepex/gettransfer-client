@@ -18,6 +18,4 @@ class Trip(
         @Expose
         @SerializedName("time")
         var time: String
-) {
-
-}
+)

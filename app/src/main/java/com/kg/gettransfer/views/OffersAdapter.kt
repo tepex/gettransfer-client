@@ -4,6 +4,7 @@ package com.kg.gettransfer.views
 import android.annotation.SuppressLint
 import android.graphics.LightingColorFilter
 import android.support.constraint.ConstraintLayout
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -28,11 +29,7 @@ class OffersAdapter(
     : RealmRecyclerViewAdapter<Offer, OffersAdapter.ViewHolder>(realmResults, autoUpdate) {
 
     var icl: View.OnClickListener = View.OnClickListener {
-        Log.i("OffersAdapter", "Item clicked")
-//        val context = it.context
-//        val intent = Intent(context, TransferActivity::class.java)
-//        intent.putExtra("id", it.getTag(R.id.key_id) as Int)
-//        startActivity(context, intent, null)
+        Log.i("OffersAdapter", "Item clicked unspecified")
     }
 
     inner class ViewHolder(container: ConstraintLayout) : RecyclerView.ViewHolder(container) {
@@ -50,7 +47,8 @@ class OffersAdapter(
         v.setOnClickListener(icl)
         v.btnBook.setOnClickListener(icl)
 
-        v.btnBook.background.colorFilter = LightingColorFilter(0xffffcc4c.toInt(), 0x0)
+        v.btnBook.background.colorFilter = LightingColorFilter(
+                ContextCompat.getColor(parent.context, R.color.colorYellow), 0)
 
         return ViewHolder(v as ConstraintLayout)
     }

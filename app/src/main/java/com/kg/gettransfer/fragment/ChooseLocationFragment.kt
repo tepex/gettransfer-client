@@ -1,4 +1,4 @@
-package com.kg.gettransfer.fragments
+package com.kg.gettransfer.fragment
 
 
 import android.app.Fragment

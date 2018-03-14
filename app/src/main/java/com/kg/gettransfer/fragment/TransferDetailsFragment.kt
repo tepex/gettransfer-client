@@ -1,4 +1,4 @@
-package com.kg.gettransfer.fragments
+package com.kg.gettransfer.fragment
 
 
 import android.app.Fragment
@@ -100,7 +100,7 @@ class TransferDetailsFragment : Fragment() {
         pricePreview.get(
                 transfer.from!!.point,
                 transfer.to!!.point,
-                transfer.distance,
+                transfer.routeDistance,
                 false,
                 Date())
 

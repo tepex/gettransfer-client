@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.kg.gettransfer.R
-import com.kg.gettransfer.createtransfer.CreateTransferFragment
-import com.kg.gettransfer.fragments.AccountFragment
-import com.kg.gettransfer.fragments.TransfersFragment
+import com.kg.gettransfer.fragment.CreateTransferFragment
+import com.kg.gettransfer.fragment.AccountFragment
+import com.kg.gettransfer.fragment.TransfersFragment
 import com.kg.gettransfer.modules.CurrentAccount
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject

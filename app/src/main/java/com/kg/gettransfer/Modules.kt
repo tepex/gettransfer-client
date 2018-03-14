@@ -8,11 +8,11 @@ import android.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.maps.GeoApiContext
-import com.kg.gettransfer.createtransfer.CreateTransferFragment
-import com.kg.gettransfer.fragments.TransfersFragment
-import com.kg.gettransfer.login.LoginActivity
-import com.kg.gettransfer.login.LoginContract
-import com.kg.gettransfer.login.LoginPresenter
+import com.kg.gettransfer.fragment.CreateTransferFragment
+import com.kg.gettransfer.fragment.TransfersFragment
+import com.kg.gettransfer.activity.login.LoginActivity
+import com.kg.gettransfer.activity.login.LoginContract
+import com.kg.gettransfer.activity.login.LoginPresenter
 import com.kg.gettransfer.modules.*
 import com.kg.gettransfer.modules.googleapi.GeoAutocompleteProvider
 import com.kg.gettransfer.modules.googleapi.GeoUtils

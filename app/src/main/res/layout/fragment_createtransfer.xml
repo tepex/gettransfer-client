@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".createtransfer.CreateTransferFragment">
+    tools:context=".fragment.CreateTransferFragment">
 
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -38,13 +38,14 @@
             android:text="Transfer"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorTextBlack"
-            app:layout_constraintBaseline_toBaselineOf="@+id/textView5"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tvFromAToB"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/tvFromAToB"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:background="?attr/selectableItemBackground"
             android:gravity="bottom"
             android:paddingBottom="12dp"
             android:paddingLeft="16dp"
@@ -53,20 +54,20 @@
             android:textColor="@color/colorTextBlack"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/textView4"
+            app:layout_constraintEnd_toStartOf="@+id/tvForAWhile"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/tvForAWhile"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:alpha="0.5"
+            android:background="?attr/selectableItemBackground"
             android:gravity="bottom"
             android:paddingBottom="12dp"
             android:paddingLeft="16dp"
             android:paddingRight="32dp"
             android:text="For a while"
-            android:textColor="@color/colorTextBlack"
+            android:textColor="@color/colorTextGray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -135,14 +136,12 @@
             app:layout_constraintBaseline_toBaselineOf="@+id/lvTo"
             app:layout_constraintStart_toStartOf="parent" />
 
-
         <com.kg.gettransfer.views.LocationView
             android:id="@+id/lvTo"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
             android:background="@android:color/transparent"
-            android:contentDescription="Destination"
             android:ems="10"
             android:gravity="center_vertical"
             android:hint="Destination"
@@ -155,6 +154,44 @@
             app:layout_constraintStart_toEndOf="@+id/tvTo"
             app:layout_constraintTop_toBottomOf="@+id/line1" />
 
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/clDuration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBG"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line1">
+
+            <TextView
+                android:id="@+id/tvDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:labelFor="@+id/lvTo"
+                android:text="Duration"
+                android:textColor="@color/colorTextGray"
+                app:layout_constraintBaseline_toBaselineOf="@+id/fieldDuration"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/fieldDuration"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:background="@android:color/transparent"
+                android:ems="10"
+                android:gravity="center_vertical"
+                android:hint="Time you'll need a car"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="2dp"
+                android:textColor="?attr/editTextColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tvDuration" />
+
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
 

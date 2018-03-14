@@ -1,4 +1,4 @@
-package com.kg.gettransfer.fragments
+package com.kg.gettransfer.fragment
 
 
 import android.app.Fragment
@@ -12,7 +12,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import com.kg.gettransfer.R
-import com.kg.gettransfer.login.LoginActivity
+import com.kg.gettransfer.activity.login.LoginActivity
 import com.kg.gettransfer.modules.CurrentAccount
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

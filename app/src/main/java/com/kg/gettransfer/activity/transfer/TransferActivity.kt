@@ -1,9 +1,10 @@
-package com.kg.gettransfer.transfer
+package com.kg.gettransfer.activity.transfer
 
 
 import android.annotation.SuppressLint
 import android.graphics.LightingColorFilter
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -70,8 +71,8 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         }
 
 
-        btnRestore.background.colorFilter = LightingColorFilter(0xffffcc4c.toInt(), 0x0)
-
+        btnRestore.background.colorFilter = LightingColorFilter(
+                ContextCompat.getColor(application, R.color.colorYellow), 0)
 
         rvOffers.layoutManager = object : LinearLayoutManager(applicationContext) {
             override fun canScrollVertically(): Boolean {

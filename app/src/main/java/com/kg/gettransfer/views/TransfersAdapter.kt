@@ -14,7 +14,7 @@ import android.widget.TextView
 import com.kg.gettransfer.R
 import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.realm.Utils
-import com.kg.gettransfer.transfer.TransferActivity
+import com.kg.gettransfer.activity.transfer.TransferActivity
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
 

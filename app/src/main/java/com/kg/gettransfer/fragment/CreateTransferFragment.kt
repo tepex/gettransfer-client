@@ -1,18 +1,18 @@
-package com.kg.gettransfer.createtransfer
+package com.kg.gettransfer.fragment
 
 
 import android.app.Fragment
 import android.app.FragmentManager
 import android.content.Context
+import android.graphics.Typeface
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
+import android.support.v7.app.AlertDialog
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.view.View.*
 import android.view.ViewGroup
 import android.widget.TextView
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
@@ -26,8 +26,6 @@ import com.google.maps.android.PolyUtil
 import com.google.maps.model.DirectionsResult
 import com.kg.gettransfer.R
 import com.kg.gettransfer.data.LocationDetailed
-import com.kg.gettransfer.fragments.ChooseLocationFragment
-import com.kg.gettransfer.fragments.TransferDetailsFragment
 import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.views.BitmapDescriptorFactory
 import com.kg.gettransfer.views.LocationView
@@ -58,8 +56,12 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
     private val backStackListener: () -> Unit = { updateFab() }
 
-    private var duration = 0L
-    private var distance = 0L
+    private var modeAB = true
+
+    private var routeDistance = 0L
+    private var routeDuration = 0L
+
+    private var hireDuration = 0
 
 
     override fun onCreateView(
@@ -80,6 +82,8 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                 lvFrom.setOnClickListener { locationViewClick(v.lvFrom) }
                 lvTo.setOnClickListener { locationViewClick(v.lvTo) }
 
+                fieldDuration.setOnClickListener { chooseDuration() }
+
                 btnPromo.setOnClickListener { btnPromo() }
 
                 fabConfirmStep.setOnClickListener { showTransferDetails() }
@@ -90,12 +94,53 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                 }
 
                 mapView.onCreate(savedInstanceState)
+
+                tvFromAToB.setOnClickListener {
+                    updateTabs(true)
+
+                }
+
+                tvForAWhile.setOnClickListener {
+                    updateTabs(false)
+
+                }
             }
 
             savedView = v
         }
 
         return v
+    }
+
+
+    private fun chooseDuration() {
+        val hours = intArrayOf(
+                2, 3, 4, 5, 6, 8, 10, 24, 48, 24 * 3, 24 * 4, 24 * 5, 24 * 10, 24 * 15)
+
+        val labels = arrayOf(
+                "2 hours", "3 hours", "4 hours", "5 hours", "6 hours", "8 hours", "10 hours",
+                "1 day", "2 days", "3 days", "4 days", "5 days", "10 days", "15 days")
+
+        val builder = AlertDialog.Builder(activity)
+
+        val alert = builder
+                .setTitle("Duration")
+                .setItems(
+                        labels,
+                        { d, i ->
+                            fieldDuration.text = labels[i]
+                            hireDuration = hours[i]
+                            updateFab()
+                        })
+                .setCancelable(true)
+                .setNegativeButton(
+                        "CANCEL",
+                        { d, _ ->
+                            d.dismiss()
+                        })
+                .create()
+
+        alert.show()
     }
 
 
@@ -168,19 +213,31 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     }
 
 
+    private fun updateTabs(modeAB: Boolean) {
+        this.modeAB = modeAB
+        if (modeAB) {
+            tvFromAToB.typeface = Typeface.DEFAULT_BOLD
+            tvForAWhile.typeface = Typeface.DEFAULT
+            tvFromAToB.setTextColor(resources.getColor(R.color.colorTextBlack))
+            tvForAWhile.setTextColor(resources.getColor(R.color.colorTextGray))
+            clDuration.visibility = INVISIBLE
+        } else {
+            tvFromAToB.typeface = Typeface.DEFAULT
+            tvForAWhile.typeface = Typeface.DEFAULT_BOLD
+            tvFromAToB.setTextColor(resources.getColor(R.color.colorTextGray))
+            tvForAWhile.setTextColor(resources.getColor(R.color.colorTextBlack))
+            clDuration.visibility = VISIBLE
+        }
+        pathChanged.run()
+    }
+
+
     private fun updateFab() {
-//        log.info("fragmentManager.backStackEntryCount: " + fragmentManager.backStackEntryCount)
-//
-//        log.info(fabConfirmStep.toString())
-//        log.info(savedView?.fabConfirmStep.toString())
+        val show = validateFields() && fragmentManager.backStackEntryCount == 0
 
-        view.findViewById<FloatingActionButton>(R.id.fabConfirmStep).visibility =
-                if (validateFields() && fragmentManager.backStackEntryCount == 0) VISIBLE
-                else GONE
+        fabConfirmStep.visibility = if (show) VISIBLE else GONE
 
-        log.info("fabConfirmStep.visibility" + fabConfirmStep)
-        log.info("fabConfirmStep.visibility" + savedView?.fabConfirmStep)
-        log.info("fabConfirmStep.visibility" + view.findViewById<FloatingActionButton>(R.id.fabConfirmStep))
+        if (show) btnPromo.visibility = INVISIBLE
     }
 
 
@@ -190,7 +247,9 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
     private val pathChanged = Runnable {
         val llFrom = lvFrom.location?.latLng
-        val llTo = lvTo.location?.latLng
+        val llTo =
+                if (clDuration.visibility == VISIBLE) null
+                else lvTo.location?.latLng
 
         updateMarkers(llFrom, llTo)
         animateMap(llFrom, llTo)
@@ -207,8 +266,8 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
 
     private fun updateRoute(llFrom: LatLng?, llTo: LatLng?) {
-        duration = 0L
-        distance = 0L
+        routeDuration = 0L
+        routeDistance = 0L
 
         polyline?.remove()
         polyline = null
@@ -230,11 +289,11 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                         val decodedPath = PolyUtil.decode(route.overviewPolyline.encodedPath)
                         polyline = map?.addPolyline(PolylineOptions().addAll(decodedPath))
 
-                        duration = 0L
-                        distance = 0L
+                        routeDistance = 0L
+                        routeDuration = 0L
                         route.legs.forEach {
-                            duration += it.duration.inSeconds
-                            distance += it.distance.inMeters
+                            routeDistance += it.distance.inMeters
+                            routeDuration += it.duration.inSeconds
                         }
 
                         updateFab()
@@ -277,9 +336,9 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                     600,
                     null)
         } else if (llFrom != null) {
-            map?.animateCamera(CameraUpdateFactory.newLatLng(llFrom), 600, null)
+            map?.animateCamera(CameraUpdateFactory.newLatLngZoom(llFrom, 12f), 600, null)
         } else if (llTo != null) {
-            map?.animateCamera(CameraUpdateFactory.newLatLng(llTo), 600, null)
+            map?.animateCamera(CameraUpdateFactory.newLatLngZoom(llTo, 12f), 600, null)
         }
     }
 
@@ -297,15 +356,29 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
     private fun validateFields(): Boolean =
             lvFrom.location?.valid == true &&
-                    lvTo.location?.valid == true &&
-                    duration > 0 && distance > 0
+                    if (modeAB)
+                        lvTo.location?.valid == true &&
+                                routeDuration > 0 &&
+                                routeDistance > 0
+                    else
+                        hireDuration > 0
 
 
     private fun transferFromFields(): NewTransfer? {
         val lFrom = lvFrom.location?.toLocation() ?: return null
-        val lTo = lvTo.location?.toLocation() ?: return null
 
-        return NewTransfer((distance / 1000L).toInt(), duration.toInt() / 60, lFrom, lTo)
+        if (modeAB) {
+            val lTo = lvTo.location?.toLocation() ?: return null
+            return NewTransfer(
+                    lFrom,
+                    lTo,
+                    (routeDistance / 1000L).toInt(),
+                    routeDuration.toInt() / 60)
+        } else {
+            return NewTransfer(
+                    lFrom,
+                    hireDuration)
+        }
     }
 
 

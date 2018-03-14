@@ -1,4 +1,4 @@
-package com.kg.gettransfer.login
+package com.kg.gettransfer.activity.login
 
 
 import com.kg.gettransfer.BasePresenter
