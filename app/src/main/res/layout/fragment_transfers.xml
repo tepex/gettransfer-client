@@ -9,56 +9,51 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/clHeader"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
         android:background="@color/colorBGSecondary"
         android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
-            android:id="@+id/tvTitle"
+            android:id="@+id/tvEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:gravity="center_vertical"
-            android:paddingBottom="14dp"
-            android:paddingTop="18dp"
+            android:gravity="bottom"
             android:text="Transfers"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorTextBlack"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/tvActive"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/tvActive"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:background="?attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:paddingBottom="14dp"
+            android:gravity="bottom"
+            android:paddingBottom="12dp"
             android:paddingLeft="32dp"
             android:paddingRight="16dp"
-            android:paddingTop="18dp"
             android:text="Active"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorTextLocation"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tvArchive"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvArchive"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:background="?attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:paddingBottom="14dp"
+            android:gravity="bottom"
+            android:paddingBottom="12dp"
             android:paddingLeft="16dp"
             android:paddingRight="32dp"
-            android:paddingTop="18dp"
             android:text="Archive"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorTextGray"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -136,7 +131,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tvLoggedOutMessage"
+                android:id="@+id/tvLoggedIn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -160,7 +155,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvLoggedOutMessage" />
+                app:layout_constraintTop_toBottomOf="@+id/tvLoggedIn" />
 
         </android.support.constraint.ConstraintLayout>
 

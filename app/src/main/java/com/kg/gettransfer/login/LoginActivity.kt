@@ -35,6 +35,8 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
 
     private val tvError by lazy { findViewById<TextView>(R.id.tvError) }
 
+    private val tvRestorePass by lazy { findViewById<TextView>(R.id.tvRestorePass) }
+
     private val fab by lazy { findViewById<FloatingActionButton>(R.id.fab) }
 
 
@@ -74,6 +76,8 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
     override fun busyChanged(busy: Boolean) {
         etEmail.isEnabled = !busy
         etPass.isEnabled = !busy
+
+        tvRestorePass.visibility = if (!busy) VISIBLE else INVISIBLE
 
         pb.visibility = if (busy) VISIBLE else INVISIBLE
 

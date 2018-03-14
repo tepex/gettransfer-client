@@ -83,7 +83,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
 
     private fun updateUI(transfer: Transfer) {
-        tvTitle.text = "Transfer #" + transfer.id
+        tvEmail.text = "Transfer #" + transfer.id
 
         tvFrom.text = transfer.from?.name
         tvTo.text = transfer.to?.name

@@ -62,7 +62,11 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     private var distance = 0L
 
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+            inflater: LayoutInflater?,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?)
+            : View {
         var v = savedView
 
         if (v == null) {
@@ -301,7 +305,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
         val lFrom = lvFrom.location?.toLocation() ?: return null
         val lTo = lvTo.location?.toLocation() ?: return null
 
-        return NewTransfer((distance / 1000L).toInt(), duration.toInt()/60, lFrom, lTo)
+        return NewTransfer((distance / 1000L).toInt(), duration.toInt() / 60, lFrom, lTo)
     }
 
 
