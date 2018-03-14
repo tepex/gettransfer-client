@@ -2,8 +2,6 @@ package com.kg.gettransfer.fragments
 
 
 import android.app.Fragment
-import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
@@ -18,12 +16,11 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import com.kg.gettransfer.R
-import com.kg.gettransfer.modules.PricesPreviewModel
-import com.kg.gettransfer.modules.PromoCodeModel
-import com.kg.gettransfer.modules.TransfersModel
-import com.kg.gettransfer.modules.TransportTypesProvider
+import com.kg.gettransfer.mainactivity.MainActivity
+import com.kg.gettransfer.modules.*
 import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.modules.http.json.PassengerProfile
+import com.kg.gettransfer.modules.http.json.Trip
 import com.kg.gettransfer.views.TransportTypesAdapter
 import com.kg.gettransfer.views.setupChooseDate
 import com.kg.gettransfer.views.setupChooseTime
@@ -46,6 +43,7 @@ class TransferDetailsFragment : Fragment() {
     private val transfersModel: TransfersModel by inject()
     private val pricePreview: PricesPreviewModel by inject()
     private val promoCodeModel: PromoCodeModel by inject()
+    private val currentAccount: CurrentAccount by inject()
 
 
     private var savedView: View? = null
@@ -62,8 +60,10 @@ class TransferDetailsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        if (savedView == null) {
-            val v = inflater.inflate(
+        var v = savedView
+
+        if (v == null) {
+            v = inflater.inflate(
                     R.layout.fragment_transferdetails,
                     container,
                     false)!!
@@ -74,7 +74,7 @@ class TransferDetailsFragment : Fragment() {
             v.etDate.setupChooseDate()
             v.etTime.setupChooseTime()
 
-            v.fabConfirmStep.setOnClickListener { createTransfer(transfer) }
+            v.fabCreate.setOnClickListener { createTransfer(transfer) }
 
             v.btnHavePromoCode.setOnClickListener {
                 btnHavePromoCode.visibility = GONE
@@ -86,7 +86,6 @@ class TransferDetailsFragment : Fragment() {
                     activity,
                     System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7,
                     FORMAT_SHOW_DATE or FORMAT_ABBREV_MONTH or FORMAT_SHOW_YEAR).toString())
-
             v.etTime.setText("9:00")
 
             installEditTextWatcher(v)
@@ -98,11 +97,6 @@ class TransferDetailsFragment : Fragment() {
             savedView = v
         }
 
-        savedView!!.post {
-            savedView!!.scrollView.fullScroll(FOCUS_UP)
-            savedView!!.scrollView.scrollTo(0, 0)
-        }
-
         pricePreview.get(
                 transfer.from!!.point,
                 transfer.to!!.point,
@@ -112,7 +106,24 @@ class TransferDetailsFragment : Fragment() {
 
         pricePreview.addOnPricesUpdated { }
 
-        return savedView!!
+        return v
+    }
+
+
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//    }
+
+
+    override fun onResume() {
+        super.onResume()
+
+        etEmail.setText(currentAccount.email)
+
+        view.post {
+            scrollView.fullScroll(FOCUS_UP)
+            scrollView.scrollTo(0, 0)
+        }
     }
 
 
@@ -127,13 +138,17 @@ class TransferDetailsFragment : Fragment() {
                                 {
                                     setBusy(false)
                                     reset()
-                                    val intent = Intent(activity, TransfersFragment::class.java)
-                                    startActivityForResult(intent, 2)
+
+                                    val act = activity as MainActivity // TODO: Callbacks here
+
+                                    fragmentManager.popBackStackImmediate()
+
+                                    act.showTransfers(null)
                                 },
                                 {
                                     setBusy(false)
                                     tvError.text = "Error creating request.\n" + it.message
-                                    fabConfirmStep.visibility = VISIBLE
+                                    fabCreate.visibility = VISIBLE
                                     scrollView.post {
                                         scrollView.fullScroll(View.FOCUS_DOWN)
                                     }
@@ -143,7 +158,7 @@ class TransferDetailsFragment : Fragment() {
 
     private fun setBusy(b: Boolean) {
         if (b) {
-            fabConfirmStep.visibility = INVISIBLE
+            fabCreate.visibility = INVISIBLE
             progressBar.visibility = VISIBLE
             fabProgress.visibility = VISIBLE
             tvError.text = ""
@@ -177,7 +192,7 @@ class TransferDetailsFragment : Fragment() {
 
 
     private fun fieldsUpdated() {
-        fabConfirmStep.visibility = if (fieldsValidate()) VISIBLE else GONE
+        fabCreate.visibility = if (fieldsValidate()) VISIBLE else GONE
     }
 
 
@@ -277,10 +292,9 @@ class TransferDetailsFragment : Fragment() {
 
 
     private fun populateNewTransfer(t: NewTransfer) {
-        t.dateTo = etDate.text.toString()
-        t.timeTo = etTime.text.toString()
+        t.dateTo = Trip(etDate.text.toString(), etTime.text.toString())
         t.pax = pax ?: 0
-        t.transportTypes = adapter.getSelectedIds().toIntArray()
+        t.transportTypes = intArrayOf(1) // adapter.getSelectedIds().toIntArray()
 
         t.nameSign = etSign.text.toString()
         t.offeredPrice = etPrice.text.toString().toIntOrNull()

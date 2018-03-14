@@ -96,6 +96,9 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         tvChildSeats.text = transfer.childSeats
         tvComments.text = transfer.comments ?: "-"
 
+        tvRouteInfo.text =
+                "${transfer.distance} km, expected travel time: ${transfer.routeDuration} min "
+
         if (transfer.status == "new" && !transfer.bookNow) {
             clActive.visibility = VISIBLE
             clArchive.visibility = GONE

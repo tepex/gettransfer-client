@@ -33,12 +33,14 @@ open class Transfer : RealmObject() {
     @Expose
     @SerializedName("duration")
     var duration: Int = 0
+
     @Expose
     @SerializedName("distance")
     var distance: Int = 0
+
     @Expose
     @SerializedName("time")
-    var time: Int = 0
+    var routeDuration: Int = 0
 
     @Expose
     @SerializedName("status")
@@ -76,7 +78,7 @@ open class Transfer : RealmObject() {
 
     @Expose
     @SerializedName("name_sign")
-    var nameSign: String = ""
+    var nameSign: String? = null
 
     @Expose
     @SerializedName("transport_types")
@@ -85,7 +87,7 @@ open class Transfer : RealmObject() {
 
     @Expose
     @SerializedName("child_seats")
-    var childSeats: String = ""
+    var childSeats: String? = null
 
     @Expose
     @SerializedName("comments")

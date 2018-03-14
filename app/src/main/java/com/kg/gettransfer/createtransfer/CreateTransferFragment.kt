@@ -7,7 +7,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.support.design.widget.FloatingActionButton
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +24,6 @@ import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
 import com.google.maps.android.PolyUtil
 import com.google.maps.model.DirectionsResult
-import com.google.maps.model.TravelMode
 import com.kg.gettransfer.R
 import com.kg.gettransfer.data.LocationDetailed
 import com.kg.gettransfer.fragments.ChooseLocationFragment
@@ -35,11 +34,8 @@ import com.kg.gettransfer.views.LocationView
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_createtransfer.*
 import kotlinx.android.synthetic.main.fragment_createtransfer.view.*
-import org.joda.time.DateTime
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import java.util.concurrent.TimeUnit
-import java.util.logging.Level
 import java.util.logging.Logger
 
 
@@ -67,16 +63,18 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        if (savedView == null) {
-            val view = inflater?.inflate(R.layout.fragment_createtransfer,
+        var v = savedView
+
+        if (v == null) {
+            v = inflater?.inflate(R.layout.fragment_createtransfer,
                     container,
                     false)!!
 
-            installEditTextWatcher(view)
+            installEditTextWatcher(v)
 
-            with(view) {
-                lvFrom.setOnClickListener { locationViewClick(view.lvFrom) }
-                lvTo.setOnClickListener { locationViewClick(view.lvTo) }
+            with(v) {
+                lvFrom.setOnClickListener { locationViewClick(v.lvFrom) }
+                lvTo.setOnClickListener { locationViewClick(v.lvTo) }
 
                 btnPromo.setOnClickListener { btnPromo() }
 
@@ -90,9 +88,10 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                 mapView.onCreate(savedInstanceState)
             }
 
-            savedView = view
+            savedView = v
         }
-        return savedView!!
+
+        return v
     }
 
 
@@ -100,8 +99,6 @@ class CreateTransferFragment : Fragment(), KoinComponent {
         super.onViewCreated(view, savedInstanceState)
 
         setUpMapIfNeeded()
-
-        fragmentManager.addOnBackStackChangedListener(backStackListener)
     }
 
 
@@ -110,6 +107,14 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
         mapView.onResume()
         setUpMapIfNeeded()
+
+        fragmentManager.addOnBackStackChangedListener(backStackListener)
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        fragmentManager.removeOnBackStackChangedListener(backStackListener)
     }
 
 
@@ -160,9 +165,18 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
 
     private fun updateFab() {
-        fabConfirmStep.visibility =
+//        log.info("fragmentManager.backStackEntryCount: " + fragmentManager.backStackEntryCount)
+//
+//        log.info(fabConfirmStep.toString())
+//        log.info(savedView?.fabConfirmStep.toString())
+
+        view.findViewById<FloatingActionButton>(R.id.fabConfirmStep).visibility =
                 if (validateFields() && fragmentManager.backStackEntryCount == 0) VISIBLE
                 else GONE
+
+        log.info("fabConfirmStep.visibility" + fabConfirmStep)
+        log.info("fabConfirmStep.visibility" + savedView?.fabConfirmStep)
+        log.info("fabConfirmStep.visibility" + view.findViewById<FloatingActionButton>(R.id.fabConfirmStep))
     }
 
 
@@ -287,7 +301,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
         val lFrom = lvFrom.location?.toLocation() ?: return null
         val lTo = lvTo.location?.toLocation() ?: return null
 
-        return NewTransfer((distance / 1000L).toInt(), duration.toInt(), lFrom, lTo)
+        return NewTransfer((distance / 1000L).toInt(), duration.toInt()/60, lFrom, lTo)
     }
 
 
@@ -355,12 +369,6 @@ class CreateTransferFragment : Fragment(), KoinComponent {
         btnPromo.visibility = View.GONE
         lvFrom.location = LocationDetailed("Russia, Domodedovo")
         lvTo.location = LocationDetailed("Moscow, Tverskaya 8")
-    }
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        fragmentManager.removeOnBackStackChangedListener(backStackListener)
     }
 }
 
