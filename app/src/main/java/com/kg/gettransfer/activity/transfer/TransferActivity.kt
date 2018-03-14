@@ -108,7 +108,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         tvTypes.text = transportTypes.getNames(transfer.transportTypes)
         tvSign.text = transfer.nameSign
         tvChildSeats.text = transfer.childSeats
-        tvComments.text = transfer.comments ?: "-"
+        tvComments.text = transfer.comment ?: "-"
 
         if (transfer.status == "new" && !transfer.bookNow) {
             clActive.visibility = VISIBLE

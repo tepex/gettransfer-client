@@ -70,8 +70,8 @@ class TransferDetailsFragment : Fragment() {
             v.btnPassengersDec.setOnClickListener { passengersDec() }
             v.btnPassengersInc.setOnClickListener { passengersInc() }
 
-            v.etDate.setupChooseDate()
-            v.etTime.setupChooseTime()
+            v.etDate.setupChooseDate(activity)
+            v.etTime.setupChooseTime(activity)
 
             v.fabCreate.setOnClickListener { createTransfer(transfer) }
 

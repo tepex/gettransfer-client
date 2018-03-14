@@ -93,8 +93,8 @@ open class Transfer : RealmObject() {
     var childSeats: String? = null
 
     @Expose
-    @SerializedName("comments")
-    var comments: String? = null
+    @SerializedName("comment")
+    var comment: String? = null
 
     // --
 
