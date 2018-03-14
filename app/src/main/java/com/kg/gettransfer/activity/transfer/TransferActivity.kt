@@ -87,7 +87,20 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         tvEmail.text = "Transfer #" + transfer.id
 
         tvFrom.text = transfer.from?.name
-        tvTo.text = transfer.to?.name
+
+        if (transfer.to == null) {
+            tvlTo.text = "Duration"
+            tvTo.text = transfer.hireDurationString
+
+            tvRouteInfo.visibility = GONE
+        } else {
+            tvlTo.text = "To"
+            tvTo.text = transfer.to?.name
+
+            tvRouteInfo.visibility = VISIBLE
+            tvRouteInfo.text =
+                    "${transfer.routeDistance} km, expected travel time: ${transfer.routeDuration} min "
+        }
 
         tvDate.text = Utils.dateToString(this, transfer.dateTo)
 
@@ -96,9 +109,6 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         tvSign.text = transfer.nameSign
         tvChildSeats.text = transfer.childSeats
         tvComments.text = transfer.comments ?: "-"
-
-        tvRouteInfo.text =
-                "${transfer.distance} km, expected travel time: ${transfer.routeDuration} min "
 
         if (transfer.status == "new" && !transfer.bookNow) {
             clActive.visibility = VISIBLE

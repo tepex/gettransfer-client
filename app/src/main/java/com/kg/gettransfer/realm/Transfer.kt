@@ -3,6 +3,7 @@ package com.kg.gettransfer.realm
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.kg.gettransfer.realm.Utils.hoursToString
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
@@ -32,11 +33,13 @@ open class Transfer : RealmObject() {
 
     @Expose
     @SerializedName("duration")
-    var duration: Int = 0
+    var hireDuration: Int = 0
+
+    val hireDurationString: String get() = hoursToString(hireDuration)
 
     @Expose
     @SerializedName("distance")
-    var distance: Int = 0
+    var routeDistance: Int = 0
 
     @Expose
     @SerializedName("time")

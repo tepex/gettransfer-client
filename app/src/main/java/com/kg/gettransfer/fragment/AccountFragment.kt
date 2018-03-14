@@ -4,6 +4,7 @@ package com.kg.gettransfer.fragment
 import android.app.Fragment
 import android.content.Intent
 import android.graphics.LightingColorFilter
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
@@ -51,7 +52,12 @@ class AccountFragment : Fragment(), KoinComponent {
             with(v) {
                 btnLogIn.setOnClickListener { logIn() }
                 btnLogOut.setOnClickListener { currentAccount.logOut() }
-//              btnRegister.setOnClickListener { createTransfer() }
+                btnRegister.setOnClickListener {
+                    val browserIntent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("https://gettransfer.com/en/passenger/new"))
+                    startActivity(browserIntent)
+                }
                 btnLogIn.background.colorFilter =
                         LightingColorFilter(
                                 ContextCompat.getColor(activity, R.color.colorYellow), 0)

@@ -12,9 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.kg.gettransfer.R
+import com.kg.gettransfer.activity.transfer.TransferActivity
 import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.realm.Utils
-import com.kg.gettransfer.activity.transfer.TransferActivity
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
 
@@ -54,15 +54,21 @@ class TransfersAdapter(
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = getItem(position) ?: return
+        val transfer = getItem(position) ?: return
 
         val context = holder.itemView.context
 
-        holder.from.text = item.from?.name
-        holder.to.text = item.to?.name
-        holder.date.text = Utils.dateToString(context, item.dateTo)
-        holder.state.update(item, true)
+        holder.from.text = transfer.from?.name
 
-        holder.itemView.setTag(R.id.key_id, item.id)
+        if (transfer.to == null) {
+            holder.to.text = transfer.hireDurationString
+        } else {
+            holder.to.text = transfer.to?.name
+        }
+
+        holder.date.text = Utils.dateToString(context, transfer.dateTo)
+        holder.state.update(transfer, true)
+
+        holder.itemView.setTag(R.id.key_id, transfer.id)
     }
 }

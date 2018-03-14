@@ -3,6 +3,7 @@ package com.kg.gettransfer.modules
 
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.kg.gettransfer.modules.http.HttpApi
+import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.modules.http.json.PricesPreview
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -31,15 +32,44 @@ class PricesPreviewModel(
             prices.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
 
 
-    fun get(llFrom: String, llTo: String, distance: Int, back: Boolean, date: Date) {
+    fun get(transfer: NewTransfer) {
+        if (transfer.to != null) {
+            get(transfer.from!!.point,
+                    transfer.to!!.point,
+                    transfer.dateTo?.date ?: Date().toString(),
+                    transfer.routeDistance,
+                    transfer.dateReturn != null)
+        } else {
+            get(transfer.from!!.point,
+                    transfer.dateTo?.date ?: Date().toString(),
+                    transfer.hireDuration * 60 * 60)
+        }
+    }
+
+
+    fun get(llFrom: String, llTo: String, date: String, distance: Int, back: Boolean) {
         if (isBusy) return
         disposables.add(
-                api.getPrice(
-                        arrayOf(llFrom, llTo),
-                        false,
-                        distance,
-                        back,
-                        date)
+                api.getPrice(arrayOf(llFrom, llTo), date, distance, back)
+                        .subscribeOn(Schedulers.io())
+                        .doOnSubscribe { setBusy(true) }
+                        .observeOn(Schedulers.newThread())
+                        .doFinally { setBusy(false) }
+                        .subscribe(
+                                { response ->
+                                    //response.data.map {  }
+                                    prices.accept(response.data)
+                                },
+                                {
+                                    log.info(it.toString())
+                                    err(it)
+                                }))
+    }
+
+    fun get(llFrom: String, date: String, hireDuration: Int) {
+        if (isBusy) return
+        disposables.add(
+                api.getPrice(arrayOf(llFrom), date, hireDuration)
                         .subscribeOn(Schedulers.io())
                         .doOnSubscribe { setBusy(true) }
                         .observeOn(Schedulers.newThread())

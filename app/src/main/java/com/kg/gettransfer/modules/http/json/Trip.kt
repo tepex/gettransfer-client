@@ -18,4 +18,11 @@ class Trip(
         @Expose
         @SerializedName("time")
         var time: String
-)
+) {
+
+    override fun toString(): String {
+        return date + "T" + time
+    }
+
+}
+

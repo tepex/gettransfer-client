@@ -30,7 +30,6 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_transferdetails.*
 import kotlinx.android.synthetic.main.fragment_transferdetails.view.*
 import org.koin.android.ext.android.inject
-import java.util.*
 
 
 /**
@@ -97,26 +96,15 @@ class TransferDetailsFragment : Fragment() {
             savedView = v
         }
 
-        pricePreview.get(
-                transfer.from!!.point,
-                transfer.to!!.point,
-                transfer.routeDistance,
-                false,
-                Date())
-
+        pricePreview.get(transfer)
         pricePreview.addOnPricesUpdated { }
 
         return v
     }
 
 
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//    }
-
-
-    override fun onResume() {
-        super.onResume()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         etEmail.setText(currentAccount.email)
 
@@ -125,6 +113,11 @@ class TransferDetailsFragment : Fragment() {
             scrollView.scrollTo(0, 0)
         }
     }
+
+
+//    override fun onResume() {
+//        super.onResume()
+//    }
 
 
     private fun createTransfer(transfer: NewTransfer) {

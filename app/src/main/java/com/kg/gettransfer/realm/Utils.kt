@@ -5,8 +5,6 @@ import android.content.Context
 import android.text.format.DateUtils
 import io.realm.Realm
 import io.realm.RealmResults
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -38,5 +36,13 @@ object Utils {
                                 or DateUtils.FORMAT_ABBREV_MONTH
                                 or DateUtils.FORMAT_SHOW_YEAR)
                         .toString()
+    }
+
+    fun hoursToString(h: Int): String {
+        return when {
+            h >= 48 -> "${h / 24} days"
+            h >= 24 -> "One day"
+            else -> "$h hours"
+        }
     }
 }
