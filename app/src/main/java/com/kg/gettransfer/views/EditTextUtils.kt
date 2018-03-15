@@ -93,7 +93,7 @@ class DateField : EditText {
     }
 
     init {
-        val icon = R.drawable.ic_calendar_black_24dp
+        val icon = R.drawable.ic_calendar_gray_24dp
         setCompoundDrawablesWithIntrinsicBounds(0, 0, icon, 0)
 
         clearListenersFixFocus()
@@ -175,5 +175,29 @@ class TimeField : EditText {
                     android.text.format.DateFormat.is24HourFormat(context))
                     .show()
         }
+    }
+}
+
+
+class PriceField : EditText {
+    constructor(c: Context) : super(c)
+    constructor(c: Context, attrs: AttributeSet) : super(c, attrs)
+    constructor(c: Context, attrs: AttributeSet, defStyle: Int) : super(c, attrs, defStyle)
+
+    init {
+        val icon = R.drawable.ic_price_gray_24dp
+        setCompoundDrawablesWithIntrinsicBounds(0, 0, icon, 0)
+    }
+}
+
+
+class FlightField : EditText {
+    constructor(c: Context) : super(c)
+    constructor(c: Context, attrs: AttributeSet) : super(c, attrs)
+    constructor(c: Context, attrs: AttributeSet, defStyle: Int) : super(c, attrs, defStyle)
+
+    init {
+        val icon = R.drawable.ic_flight_gray_24dp
+        setCompoundDrawablesWithIntrinsicBounds(0, 0, icon, 0)
     }
 }
