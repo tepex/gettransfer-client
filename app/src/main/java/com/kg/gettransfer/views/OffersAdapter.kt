@@ -61,8 +61,14 @@ class OffersAdapter(
         holder.vehicle.text =
                 (item.vehicle?.name ?: "Unknown vehicle") +
                 ("\n" + "Economy ×3 ×3")
+
+        var facilities = if (item.wifi == true) "WiFi" else null
+        if (item.refreshments == true)
+            if (facilities == null) facilities = "Refreshments"
+            else facilities += "    " + "Refreshments"
+
+        holder.facilities.text = facilities
         
-        holder.facilities.text = "WiFi   Refreshments"
         holder.price.text = item.price?.toString() ?: "No price"
 
         holder.itemView.setTag(R.id.key_id, item.id)

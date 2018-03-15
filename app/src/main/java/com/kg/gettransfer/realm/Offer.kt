@@ -35,4 +35,12 @@ open class Offer : RealmObject() {
     @Expose
     @SerializedName("vehicle")
     var vehicle: Vehicle? = null
+
+    @Expose
+    @SerializedName("wifi")
+    var wifi: Boolean? = null
+
+    @Expose
+    @SerializedName("refreshments")
+    var refreshments: Boolean? = null
 }
