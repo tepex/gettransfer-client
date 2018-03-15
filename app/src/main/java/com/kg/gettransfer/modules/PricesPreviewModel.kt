@@ -48,13 +48,13 @@ class PricesPreviewModel(
 
 
     fun get(llFrom: String, llTo: String, date: String, distance: Int, back: Boolean) {
-        if (isBusy) return
+        if (busy) return
         disposables.add(
                 api.getPrice(arrayOf(llFrom, llTo), date, distance, back)
                         .subscribeOn(Schedulers.io())
-                        .doOnSubscribe { setBusy(true) }
+                        .doOnSubscribe { busy = true }
                         .observeOn(Schedulers.newThread())
-                        .doFinally { setBusy(false) }
+                        .doFinally { busy = false }
                         .subscribe(
                                 { response ->
                                     //response.data.map {  }
@@ -67,13 +67,13 @@ class PricesPreviewModel(
     }
 
     fun get(llFrom: String, date: String, hireDuration: Int) {
-        if (isBusy) return
+        if (busy) return
         disposables.add(
                 api.getPrice(arrayOf(llFrom), date, hireDuration)
                         .subscribeOn(Schedulers.io())
-                        .doOnSubscribe { setBusy(true) }
+                        .doOnSubscribe { busy = true }
                         .observeOn(Schedulers.newThread())
-                        .doFinally { setBusy(false) }
+                        .doFinally { busy = false }
                         .subscribe(
                                 { response ->
                                     //response.data.map {  }

@@ -3,6 +3,8 @@ package com.kg.gettransfer.fragment
 
 import android.app.Fragment
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -131,7 +133,7 @@ class TransferDetailsFragment : Fragment() {
                                     tvError.text = "Error creating request.\n" + it.message
                                     fabCreate.visibility = VISIBLE
                                     scrollView.post {
-                                        scrollView.fullScroll(View.FOCUS_DOWN)
+                                        scrollView.fullScroll(FOCUS_DOWN)
                                     }
                                 }))
     }
@@ -184,7 +186,7 @@ class TransferDetailsFragment : Fragment() {
             message += ", date"
         }
         if (etTime.text.isEmpty()) {
-            message += ", date"
+            message += ", time"
         }
         if ((pax ?: 0) < 1) {
             message += ", passengers"
@@ -202,7 +204,7 @@ class TransferDetailsFragment : Fragment() {
         }
 
         if (message.isNotEmpty()) {
-            message = "Fill" + message.substring(1) + " to get offers."
+            message = "Please fill" + message.substring(1) + " to get offers."
             tvError.text = message
             return false
         } else {
@@ -239,8 +241,19 @@ class TransferDetailsFragment : Fragment() {
 
     private fun initPromoCodeUI(etPromoCode: EditText, tvPromoValidation: TextView) {
         val promoEditTextWatcher: TextWatcher = object : TextWatcher {
+            private val DELAY: Long = 500
+
+            val handler = Handler(Looper.getMainLooper()) // UI thread
+            var workRunnable: Runnable? = null
+
             override fun afterTextChanged(s: Editable?) {
-                promoCodeModel.code = s.toString()
+                handler.removeCallbacks(workRunnable)
+                if (s.isNullOrEmpty()) {
+                    promoCodeModel.code = s.toString()
+                } else {
+                    workRunnable = Runnable { promoCodeModel.code = s.toString() }
+                    handler.postDelayed(workRunnable, DELAY)
+                }
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
@@ -251,23 +264,25 @@ class TransferDetailsFragment : Fragment() {
 
         promoCodeModel.addOnInfoUpdated {
             if (it.data != null) {
-                tvPromoValidation.visibility = View.VISIBLE
-                tvPromoValidation.text = it.data
-                tvPromoValidation.setTextColor(resources.getColor(R.color.colorTextLocation))
-
+                tvPromoInfo.visibility = VISIBLE
+                tvPromoInfo.text = it.data
             } else {
-                tvPromoValidation.visibility = View.GONE
+                tvPromoInfo.visibility = GONE
             }
+            tvPromoValidation.visibility = GONE
         }
 
         promoCodeModel.addOnError {
-            tvPromoValidation.visibility = View.VISIBLE
+            tvPromoInfo.visibility = GONE
+            tvPromoValidation.visibility = VISIBLE
             tvPromoValidation.text = it.message
-            tvPromoValidation.setTextColor(resources.getColor(R.color.colorTextError))
         }
 
         promoCodeModel.addOnBusyChanged {
-            if (it) tvPromoValidation.visibility = View.GONE
+            if (it) {
+                tvPromoInfo.visibility = GONE
+            }
+            pbPromoValidation.visibility = if (it) VISIBLE else INVISIBLE
         }
     }
 

@@ -68,7 +68,7 @@ class OffersAdapter(
             else facilities += "    " + "Refreshments"
 
         holder.facilities.text = facilities
-        
+
         holder.price.text = item.price?.toString() ?: "No price"
 
         holder.itemView.setTag(R.id.key_id, item.id)

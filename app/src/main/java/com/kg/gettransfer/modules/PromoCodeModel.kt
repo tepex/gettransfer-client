@@ -8,7 +8,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.koin.standalone.KoinComponent
-import java.util.logging.Logger
 
 
 /**
@@ -16,44 +15,46 @@ import java.util.logging.Logger
  */
 
 
-class PromoCodeModel(private val api: HttpApi)
-    : AsyncModel(), KoinComponent {
-
-    private val log = Logger.getLogger("PromoCodeModel")
-
+class PromoCodeModel(private val api: HttpApi) : AsyncModel(), KoinComponent {
     var code: String? = null
         set(value) {
             field = value
             update()
         }
-    private val info: BehaviorRelay<Response<String>> = BehaviorRelay.create()
+
+    private val brInfo: BehaviorRelay<Response<String>> = BehaviorRelay.create()
+
+    var info: Response<String>?
+        get() = brInfo.value
+        private set(value) {
+            brInfo.accept(value)
+        }
 
     fun addOnInfoUpdated(f: ((Response<String>) -> Unit)): Disposable =
-            info.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
+            brInfo.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
 
     fun update() {
         val code = code
         if (code == null || code.isEmpty()) {
-            info.accept(Response())
+            busy = false
+            info = Response()
         } else {
-            info.accept(Response())
             disposables.add(
                     api.checkPromo(code)
                             .subscribeOn(Schedulers.io())
-                            .doOnSubscribe { setBusy(true) }
+                            .doOnSubscribe { busy = true }
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
                                     { response ->
-                                        log.info(response.toString())
                                         if (this.code == code) {
-                                            setBusy(false)
-                                            info.accept(response)
+                                            busy = false
+                                            info = response
                                         }
                                     },
                                     {
-                                        log.info(it.toString())
                                         if (this.code == code) {
-                                            setBusy(false)
+                                            busy = false
+                                            info = Response()
                                             err(it)
                                         }
                                     }))

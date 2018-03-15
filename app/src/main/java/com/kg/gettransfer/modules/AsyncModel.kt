@@ -19,49 +19,48 @@ import io.reactivex.schedulers.Schedulers
 open class AsyncModel {
     protected val disposables = CompositeDisposable()
 
-    private val busy = BehaviorRelay.createDefault<Boolean>(false)!!
-    private val errors = PublishRelay.create<Throwable>()!!
+    private val brBusy = BehaviorRelay.createDefault<Boolean>(false)!!
+    private val prErrors = PublishRelay.create<Throwable>()!!
 
 
-    public val isBusy: Boolean get() = busy.value
+    public var busy: Boolean
+        get() = brBusy.value
+        protected set(value) {
+            brBusy.accept(value)
+        }
 
 
     public fun addOnBusyChanged(f: ((Boolean) -> Unit)): Disposable {
-        val d = busy.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
+        val d = brBusy.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
         disposables.add(d)
         return d
     }
 
     public fun addOnError(f: ((Throwable) -> Unit)): Disposable {
-        val d = errors.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
+        val d = prErrors.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
         disposables.add(d)
         return d
     }
 
 
-    protected fun setBusy(busy: Boolean) {
-        this.busy.accept(busy)
-    }
-
-
     protected fun err(e: Throwable) {
-        errors.accept(e)
+        prErrors.accept(e)
     }
 
     protected fun err(msg: String?) {
-        errors.accept(Exception(msg))
+        prErrors.accept(Exception(msg))
     }
 
     protected fun <T : Any> err(response: Response<T>) {
-        errors.accept(Exception(response.error?.message))
+        prErrors.accept(Exception(response.error?.message))
     }
 
 
     protected fun <K : Any, T : Response<K>>
             Observable<T>.fastSubscribe(f: ((data: K?) -> Unit)): Disposable {
         val d = this
-                .subscribeOn(Schedulers.io()).doOnSubscribe { setBusy(true) }
-                .observeOn(Schedulers.newThread()).doFinally { setBusy(false) }
+                .subscribeOn(Schedulers.io()).doOnSubscribe { busy = true }
+                .observeOn(Schedulers.newThread()).doFinally { busy = false }
                 .subscribe(
                         { response ->
                             if (response.success) {

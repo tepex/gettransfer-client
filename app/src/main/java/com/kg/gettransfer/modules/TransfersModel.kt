@@ -89,7 +89,7 @@ class TransfersModel(
 
     fun updateTransfers() {
         log.info("updateTransfers()")
-        if (isBusy) return
+        if (busy) return
         log.info("getTransfers() call")
         api.getTransfers().fastSubscribe { data ->
             log.info("getTransfers() responded success, N = ${data?.transfers?.size}")

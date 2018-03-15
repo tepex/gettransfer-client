@@ -22,13 +22,13 @@ import java.util.logging.Logger
  */
 
 
+// Not singleton
 class TransferModel(
         private val realm: Realm,
         private val api: HttpApi)
     : AsyncModel(), KoinComponent {
 
     private val log = Logger.getLogger("TransferModel")
-
 
     var id: Int = -1
         set(value) {
@@ -46,7 +46,11 @@ class TransferModel(
             disposables.add(
                     brTransfer.observeOn(AndroidSchedulers.mainThread()).subscribe(f))
 
-    val transfer: Transfer? get() = brTransfer.value
+    var transfer: Transfer?
+        get() = brTransfer.value
+        private set(value) {
+            brTransfer.accept(value)
+        }
 
 
     private val brTransfer: BehaviorRelay<Transfer> = BehaviorRelay.create()
@@ -57,12 +61,12 @@ class TransferModel(
             if (result.isLoaded) {
                 val resTransfer = result[0]
                 if (resTransfer?.isLoaded == true) {
-                    brTransfer.accept(resTransfer)
+                    transfer = resTransfer
                 }
             }
         } else {
-            err("Lost brTransfer with id: " + id)
-            setBusy(false)
+            err("No transfer with id: $id")
+            busy = false
         }
     }
 
@@ -74,7 +78,7 @@ class TransferModel(
 
 
     fun updateOffers() {
-        if (isBusy || transfer == null) return
+        if (busy || transfer == null) return
         api.getOffers(id).fastSubscribe { data ->
             log.info("getOffers() Success, offers N = ${data?.offers?.size}")
 
@@ -105,7 +109,7 @@ class TransferModel(
 
 
     fun update() {
-        if (isBusy || transfer == null) return
+        if (busy || transfer == null) return
         api.getTransfer(id).fastSubscribe { newTransfer ->
             if (newTransfer != null) {
                 newTransfer.updateIsActive()
@@ -123,7 +127,7 @@ class TransferModel(
 
 
     fun cancel() {
-        if (isBusy || transfer == null) return
+        if (busy || transfer == null) return
         api.postCancelTransfer(id).fastSubscribe {
             val realm = Realm.getDefaultInstance()
             realm.executeTransaction {
@@ -143,7 +147,7 @@ class TransferModel(
 
 
     fun restore() {
-        if (isBusy || transfer == null) return
+        if (busy || transfer == null) return
         api.postRestoreTransfer(id).fastSubscribe {
             val realm = Realm.getDefaultInstance()
             realm.executeTransaction {
