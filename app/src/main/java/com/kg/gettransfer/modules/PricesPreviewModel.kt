@@ -37,12 +37,12 @@ class PricesPreviewModel(
             get(transfer.from!!.point,
                     transfer.to!!.point,
                     transfer.dateTo?.date ?: Date().toString(),
-                    transfer.routeDistance,
+                    transfer.routeDistance ?: 0,
                     transfer.dateReturn != null)
         } else {
             get(transfer.from!!.point,
                     transfer.dateTo?.date ?: Date().toString(),
-                    transfer.hireDuration * 60 * 60)
+                    (transfer.hireDuration ?: 0) * 60 * 60)
         }
     }
 

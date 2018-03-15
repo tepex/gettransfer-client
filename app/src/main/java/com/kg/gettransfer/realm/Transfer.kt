@@ -33,17 +33,21 @@ open class Transfer : RealmObject() {
 
     @Expose
     @SerializedName("duration")
-    var hireDuration: Int = 0
+    var hireDuration: Int? = null
 
-    val hireDurationString: String get() = hoursToString(hireDuration)
+    val hireDurationString: String?
+        get() {
+            val d = hireDuration
+            return if (d != null) hoursToString(d) else null
+        }
 
     @Expose
     @SerializedName("distance")
-    var routeDistance: Int = 0
+    var routeDistance: Int? = null
 
     @Expose
     @SerializedName("time")
-    var routeDuration: Int = 0
+    var routeDuration: Int? = null
 
     @Expose
     @SerializedName("status")

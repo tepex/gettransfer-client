@@ -1,6 +1,7 @@
 package com.kg.gettransfer.views
 
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
@@ -81,6 +82,7 @@ class DateField : EditText {
     constructor(c: Context, attrs: AttributeSet) : super(c, attrs)
     constructor(c: Context, attrs: AttributeSet, defStyle: Int) : super(c, attrs, defStyle)
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event?.actionMasked == MotionEvent.ACTION_UP) {
             requestFocus()
@@ -131,6 +133,7 @@ class TimeField : EditText {
     constructor(c: Context, attrs: AttributeSet) : super(c, attrs)
     constructor(c: Context, attrs: AttributeSet, defStyle: Int) : super(c, attrs, defStyle)
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event?.actionMasked == MotionEvent.ACTION_UP) {
             requestFocus()

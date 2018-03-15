@@ -21,14 +21,14 @@ class NewTransfer {
 
     @Expose
     @SerializedName("distance")
-    var routeDistance: Int = 0
+    var routeDistance: Int? = null
     @Expose
     @SerializedName("time")
-    var routeDuration: Int = 0 // in minutes
+    var routeDuration: Int? = null // in minutes
 
     @Expose
     @SerializedName("duration")
-    var hireDuration: Int = 0 // in hours
+    var hireDuration: Int? = null // in hours
 
     // --
 

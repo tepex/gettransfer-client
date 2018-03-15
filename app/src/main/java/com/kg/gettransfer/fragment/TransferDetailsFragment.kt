@@ -240,7 +240,7 @@ class TransferDetailsFragment : Fragment() {
     private fun initPromoCodeUI(etPromoCode: EditText, tvPromoValidation: TextView) {
         val promoEditTextWatcher: TextWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                promoCodeModel.code = s.toString() //"ROUNDTRIP"
+                promoCodeModel.code = s.toString()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
@@ -290,10 +290,12 @@ class TransferDetailsFragment : Fragment() {
         etDate.editableText.clear()
         etTime.editableText.clear()
 
-        etPassengers.setText("")
-        etPrice.setText("")
-        etFlightTrainNumber.setText("")
-        etFlightTrainNumber.setText("")
+        etPassengers.editableText.clear()
+
+        etSign.editableText.clear()
+        etPrice.editableText.clear()
+        etFlightTrainNumber.editableText.clear()
+        etComments.editableText.clear()
 
         clPromoCode.visibility = GONE
         tvPromoValidation.visibility = GONE
