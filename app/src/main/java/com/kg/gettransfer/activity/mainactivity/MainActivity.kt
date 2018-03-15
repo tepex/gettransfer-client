@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.kg.gettransfer.R
-import com.kg.gettransfer.fragment.CreateTransferFragment
 import com.kg.gettransfer.fragment.AccountFragment
+import com.kg.gettransfer.fragment.CreateTransferFragment
 import com.kg.gettransfer.fragment.TransfersFragment
 import com.kg.gettransfer.modules.CurrentAccount
 import kotlinx.android.synthetic.main.activity_main.*
@@ -75,9 +75,9 @@ class MainActivity : AppCompatActivity() {
         if (tab == i) return
         tab = i
 
-        btnList.alpha = if (i == 0) 1f else 0.2f
-        btnCreate.alpha = if (i == 1) 1f else 0.2f
-        btnUser.alpha = if (i == 2) 1f else 0.2f
+        btnList.alpha = if (i == 0) 1f else 0.33f
+        btnCreate.alpha = if (i == 1) 1f else 0.33f
+        btnUser.alpha = if (i == 2) 1f else 0.33f
 
         val ft = fragmentManager.beginTransaction()
         ft.replace(

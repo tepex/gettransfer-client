@@ -10,8 +10,7 @@
         android:id="@+id/flFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:elevation="16dp"
-        app:layout_constraintBottom_toTopOf="@id/clNavbar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -21,17 +20,24 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/clNavbar"
         android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:background="@color/colorBar"
+        android:layout_height="88dp"
+        android:background="@drawable/bg_bar_gradient"
         android:elevation="8dp"
+        android:clipToPadding="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:background="@drawable/bg_bar_gradient"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
         <ImageButton
             android:id="@+id/btnList"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="48dp"
             android:alpha="0.2"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="List"
@@ -40,13 +46,12 @@
             app:layout_constraintEnd_toStartOf="@+id/btnCreate"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_menu_gray_24dp" />
 
         <ImageButton
             android:id="@+id/btnCreate"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="New"
             android:onClick="showCreateTransfer"
@@ -54,13 +59,12 @@
             app:layout_constraintEnd_toStartOf="@+id/btnUser"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/btnList"
-            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_add_box_gray_24dp" />
 
         <ImageButton
             android:id="@+id/btnUser"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="48dp"
             android:alpha="0.2"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Profile"
@@ -69,7 +73,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/btnCreate"
-            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_person_gray_24dp" />
 
     </android.support.constraint.ConstraintLayout>
