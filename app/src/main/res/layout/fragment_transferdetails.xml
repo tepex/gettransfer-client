@@ -49,37 +49,41 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
-            <TextView
+            <com.kg.gettransfer.views.DateField
                 android:id="@+id/etDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:background="?attr/editTextBackground"
+                android:editable="false"
                 android:ems="10"
                 android:hint="Date"
-                android:inputType="date"
+                android:inputType="none"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
                 android:textColor="?attr/editTextColor"
+                android:textCursorDrawable="@null"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView"
                 app:layout_constraintEnd_toStartOf="@+id/etTime"
                 app:layout_constraintStart_toEndOf="@+id/textView" />
 
-            <TextView
+            <com.kg.gettransfer.views.TimeField
                 android:id="@+id/etTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:background="?attr/editTextBackground"
+                android:editable="false"
                 android:ems="10"
                 android:hint="Time"
-                android:inputType="time"
+                android:inputType="none"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
                 android:textColor="?attr/editTextColor"
+                android:textCursorDrawable="@null"
                 app:layout_constraintBaseline_toBaselineOf="@+id/etDate"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/etDate" />

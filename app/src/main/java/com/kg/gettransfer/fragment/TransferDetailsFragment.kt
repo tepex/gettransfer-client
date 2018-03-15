@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
-import android.text.format.DateUtils.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
@@ -22,8 +21,6 @@ import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.modules.http.json.PassengerProfile
 import com.kg.gettransfer.modules.http.json.Trip
 import com.kg.gettransfer.views.TransportTypesAdapter
-import com.kg.gettransfer.views.setupChooseDate
-import com.kg.gettransfer.views.setupChooseTime
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -70,9 +67,6 @@ class TransferDetailsFragment : Fragment() {
             v.btnPassengersDec.setOnClickListener { passengersDec() }
             v.btnPassengersInc.setOnClickListener { passengersInc() }
 
-            v.etDate.setupChooseDate(activity)
-            v.etTime.setupChooseTime(activity)
-
             v.fabCreate.setOnClickListener { createTransfer(transfer) }
 
             v.btnHavePromoCode.setOnClickListener {
@@ -80,12 +74,6 @@ class TransferDetailsFragment : Fragment() {
                 clPromoCode.visibility = VISIBLE
                 etPromoCode.requestFocus()
             }
-
-            v.etDate.setText(formatDateTime(
-                    activity,
-                    System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7,
-                    FORMAT_SHOW_DATE or FORMAT_ABBREV_MONTH or FORMAT_SHOW_YEAR).toString())
-            v.etTime.setText("9:00")
 
             installEditTextWatcher(v)
 
@@ -299,6 +287,9 @@ class TransferDetailsFragment : Fragment() {
 
 
     private fun reset() {
+        etDate.editableText.clear()
+        etTime.editableText.clear()
+
         etPassengers.setText("")
         etPrice.setText("")
         etFlightTrainNumber.setText("")

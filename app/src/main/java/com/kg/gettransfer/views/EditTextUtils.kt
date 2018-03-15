@@ -3,13 +3,15 @@ package com.kg.gettransfer.views
 
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Context
+import android.content.ContextWrapper
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.MotionEvent
-import android.view.View
+import android.util.AttributeSet
+import android.view.*
 import android.widget.EditText
-import android.widget.TextView
 import com.kg.gettransfer.R
+import java.text.DateFormat
 import java.util.*
 
 
@@ -41,46 +43,134 @@ fun EditText.setupClearButtonWithAction() {
 }
 
 
-fun TextView.setupChooseDate(activity: Activity) {
-    val clearIcon = R.drawable.ic_calendar_black_24dp
-    setCompoundDrawablesWithIntrinsicBounds(0, 0, clearIcon, 0)
+private fun EditText.clearListenersFixFocus() {
+    setOnTouchListener(null)
 
-    this.setOnTouchListener(null)
-    this.setOnLongClickListener(null)
-    this.setOnClickListener {
-        this@setupChooseDate.requestFocus()
+    setOnLongClickListener(null)
 
-        val dateAndTime = Calendar.getInstance()
-        DatePickerDialog(
-                activity,
-                { v, y, m, d ->
-                    this@setupChooseDate.setText("$d.${m + 1}.$y")
-                },
-                dateAndTime.get(Calendar.YEAR),
-                dateAndTime.get(Calendar.MONTH),
-                dateAndTime.get(Calendar.DAY_OF_MONTH))
-                .show()
+    setOnGenericMotionListener(null)
+
+    isLongClickable = false
+
+    customSelectionActionModeCallback = object : ActionMode.Callback {
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean = false
+        override fun onDestroyActionMode(mode: ActionMode) = Unit
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean = false
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean = false
     }
+
+    setTextIsSelectable(false)
+
+    isFocusableInTouchMode = true
 }
 
 
-fun TextView.setupChooseTime(activity: Activity) {
-    val clearIcon = R.drawable.ic_access_time_black_24dp
-    setCompoundDrawablesWithIntrinsicBounds(0, 0, clearIcon, 0)
+private fun getActivity(context: Context): Activity? {
+    var context: Context? = context
+    while (context is ContextWrapper) {
+        if (context is Activity) {
+            return context
+        }
+        context = context.baseContext
+    }
+    return null
+}
 
-    this.setOnTouchListener(null)
-    this.setOnLongClickListener(null)
-    this.setOnClickListener {
-        this@setupChooseTime.requestFocus()
+class DateField : EditText {
+    constructor(c: Context) : super(c)
+    constructor(c: Context, attrs: AttributeSet) : super(c, attrs)
+    constructor(c: Context, attrs: AttributeSet, defStyle: Int) : super(c, attrs, defStyle)
 
-        val dateAndTime = Calendar.getInstance()
-        android.app.TimePickerDialog(
-                activity,
-                { v, h, m ->
-                    this@setupChooseTime.text = if (m > 9) "$h:$m" else "$h:0$m"
-                },
-                dateAndTime.get(Calendar.HOUR),
-                dateAndTime.get(Calendar.MONTH), true)
-                .show()
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.actionMasked == MotionEvent.ACTION_UP) {
+            requestFocus()
+            performClick()
+        }
+
+        return true
+    }
+
+    init {
+        val icon = R.drawable.ic_calendar_black_24dp
+        setCompoundDrawablesWithIntrinsicBounds(0, 0, icon, 0)
+
+        clearListenersFixFocus()
+
+        setOnClickListener {
+            requestFocus()
+
+            val c = Calendar.getInstance()
+            try {
+                c.time = DateFormat
+                        .getDateInstance()
+                        .parse(text.toString())
+            } catch (e: Exception) {
+            }
+
+            DatePickerDialog(
+                    getActivity(context),
+                    { _, y, m, d ->
+                        val c = Calendar.getInstance()
+                        c.set(Calendar.YEAR, y)
+                        c.set(Calendar.MONTH, m)
+                        c.set(Calendar.DAY_OF_MONTH, d)
+                        setText(DateFormat
+                                .getDateInstance()
+                                .format(c.time))
+                    },
+                    c.get(Calendar.YEAR),
+                    c.get(Calendar.MONTH),
+                    c.get(Calendar.DAY_OF_MONTH))
+                    .show()
+        }
+    }
+}
+
+class TimeField : EditText {
+    constructor(c: Context) : super(c)
+    constructor(c: Context, attrs: AttributeSet) : super(c, attrs)
+    constructor(c: Context, attrs: AttributeSet, defStyle: Int) : super(c, attrs, defStyle)
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.actionMasked == MotionEvent.ACTION_UP) {
+            requestFocus()
+            performClick()
+        }
+
+        return true
+    }
+
+    init {
+        val icon = R.drawable.ic_access_time_black_24dp
+        setCompoundDrawablesWithIntrinsicBounds(0, 0, icon, 0)
+
+        clearListenersFixFocus()
+
+        setOnClickListener {
+            requestFocus()
+
+            val c = Calendar.getInstance()
+
+            try {
+                c.time = DateFormat
+                        .getTimeInstance(DateFormat.SHORT)
+                        .parse(text.toString())
+            } catch (e: Exception) {
+            }
+            android.app.TimePickerDialog(
+                    getActivity(context),
+                    { _, h, m ->
+                        val c = Calendar.getInstance()
+                        c.set(Calendar.HOUR_OF_DAY, h)
+                        c.set(Calendar.MINUTE, m)
+                        setText(DateFormat
+                                .getTimeInstance(DateFormat.SHORT)
+                                .format(c.time))
+                    },
+                    c.get(Calendar.HOUR_OF_DAY),
+                    c.get(Calendar.MINUTE),
+                    android.text.format.DateFormat.is24HourFormat(context))
+                    .show()
+        }
     }
 }
