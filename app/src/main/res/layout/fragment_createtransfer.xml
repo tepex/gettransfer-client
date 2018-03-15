@@ -119,11 +119,25 @@
             android:id="@+id/line1"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_marginStart="16dp"
             android:background="#cccccc"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ibSwap"
+            app:layout_constraintTop_toBottomOf="@id/lvFrom"
+            app:layout_goneMarginLeft="16dp"
+            app:layout_goneMarginStart="16dp" />
+
+        <ImageButton
+            android:id="@+id/ibSwap"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="4dp"
+            android:src="@drawable/ic_swap_vert_gray_20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lvFrom" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvTo"

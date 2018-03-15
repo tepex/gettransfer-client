@@ -97,12 +97,16 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
                 tvFromAToB.setOnClickListener {
                     updateTabs(true)
-
                 }
 
                 tvForAWhile.setOnClickListener {
                     updateTabs(false)
+                }
 
+                ibSwap.setOnClickListener {
+                    val location = lvFrom.location
+                    lvFrom.location = lvTo.location
+                    lvTo.location = location
                 }
             }
 
@@ -221,12 +225,14 @@ class CreateTransferFragment : Fragment(), KoinComponent {
             tvFromAToB.setTextColor(resources.getColor(R.color.colorTextBlack))
             tvForAWhile.setTextColor(resources.getColor(R.color.colorTextGray))
             clDuration.visibility = INVISIBLE
+            ibSwap.visibility = VISIBLE
         } else {
             tvFromAToB.typeface = Typeface.DEFAULT
             tvForAWhile.typeface = Typeface.DEFAULT_BOLD
             tvFromAToB.setTextColor(resources.getColor(R.color.colorTextGray))
             tvForAWhile.setTextColor(resources.getColor(R.color.colorTextBlack))
             clDuration.visibility = VISIBLE
+            ibSwap.visibility = GONE
         }
         pathChanged.run()
     }
@@ -271,6 +277,8 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
         polyline?.remove()
         polyline = null
+
+        if (llFrom == llTo) return
 
         if (llFrom != null && llTo != null) {
             val result = DirectionsApi.getDirections(geoApiContext,
