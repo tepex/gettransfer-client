@@ -18,9 +18,7 @@ import io.realm.RealmResults
  */
 
 
-class TransportTypesAdapter(
-        realmResults: RealmResults<TransportType>,
-        autoUpdate: Boolean)
+class TransportTypesAdapter(realmResults: RealmResults<TransportType>, autoUpdate: Boolean)
     : RealmRecyclerViewAdapter<TransportType, TransportTypesAdapter.ViewHolder>(realmResults, autoUpdate) {
 
     private var selected: ArrayList<Boolean> = ArrayList(30)

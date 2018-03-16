@@ -20,7 +20,7 @@ import java.util.logging.Logger
 
 class PricesPreviewModel(
         private val api: HttpApi,
-        private val transportTypes: TransportTypesProvider)
+        private val transportTypes: TransportTypes)
     : AsyncModel(), KoinComponent {
 
     private val log = Logger.getLogger("PricesPreview")

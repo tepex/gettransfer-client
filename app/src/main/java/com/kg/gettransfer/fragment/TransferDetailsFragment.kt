@@ -5,9 +5,6 @@ import android.app.Fragment
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -18,11 +15,13 @@ import android.widget.EditText
 import android.widget.TextView
 import com.kg.gettransfer.R
 import com.kg.gettransfer.mainactivity.MainActivity
-import com.kg.gettransfer.modules.*
+import com.kg.gettransfer.modules.CurrentAccount
+import com.kg.gettransfer.modules.PricesPreviewModel
+import com.kg.gettransfer.modules.PromoCodeModel
+import com.kg.gettransfer.modules.TransfersModel
 import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.modules.http.json.PassengerProfile
 import com.kg.gettransfer.modules.http.json.Trip
-import com.kg.gettransfer.views.TransportTypesAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -37,7 +36,6 @@ import org.koin.android.ext.android.inject
 
 
 class TransferDetailsFragment : Fragment() {
-    private val transportTypesProvider: TransportTypesProvider by inject()
     private val transfersModel: TransfersModel by inject()
     private val pricePreview: PricesPreviewModel by inject()
     private val promoCodeModel: PromoCodeModel by inject()
@@ -47,8 +45,6 @@ class TransferDetailsFragment : Fragment() {
     private var savedView: View? = null
 
     private val pax: Int? get() = etPassengers.text.toString().toIntOrNull()
-
-    private val adapter = TransportTypesAdapter(transportTypesProvider.get(), true)
 
     private val disposables = CompositeDisposable()
 
@@ -79,7 +75,7 @@ class TransferDetailsFragment : Fragment() {
 
             installEditTextWatcher(v)
 
-            initListTransportTypes(v.rvTypes)
+//            initListTransportTypes(v.rvTypes)
 
             initPromoCodeUI(v.etPromoCode, v.tvPromoValidation)
 
@@ -224,18 +220,6 @@ class TransferDetailsFragment : Fragment() {
         etPassengers.setText((Math.max(1, (pax ?: 0) - 1)).toString())
         etPassengers.requestFocus()
         etPassengers.selectAll()
-    }
-
-
-    private fun initListTransportTypes(recyclerView: RecyclerView) {
-        val layoutManager = LinearLayoutManager(
-                activity,
-                LinearLayoutManager.HORIZONTAL,
-                false)
-
-        recyclerView.layoutManager = layoutManager
-        recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.adapter = adapter
     }
 
 

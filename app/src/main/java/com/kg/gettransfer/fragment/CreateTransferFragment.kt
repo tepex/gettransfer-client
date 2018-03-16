@@ -131,7 +131,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                 .setTitle("Duration")
                 .setItems(
                         labels,
-                        { d, i ->
+                        { _, i ->
                             fieldDuration.text = labels[i]
                             hireDuration = hours[i]
                             updateFab()

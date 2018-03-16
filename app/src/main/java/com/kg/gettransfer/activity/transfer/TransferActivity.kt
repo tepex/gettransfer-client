@@ -13,7 +13,7 @@ import android.view.View.*
 import android.widget.Toast
 import com.kg.gettransfer.R
 import com.kg.gettransfer.modules.TransferModel
-import com.kg.gettransfer.modules.TransportTypesProvider
+import com.kg.gettransfer.modules.TransportTypes
 import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.realm.Utils
@@ -33,7 +33,7 @@ import org.koin.standalone.KoinComponent
 
 
 class TransferActivity : AppCompatActivity(), KoinComponent {
-    private val transportTypes: TransportTypesProvider by inject()
+    private val transportTypes: TransportTypes by inject()
     private val transferModel: TransferModel by inject()
 
     private val disposables = CompositeDisposable()

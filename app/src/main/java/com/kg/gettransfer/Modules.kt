@@ -90,7 +90,7 @@ val AppModule = applicationContext {
 
     bean { TransfersModel(get(), get(), get()) }
 
-    bean { TransportTypesProvider(get(), get()) }
+    bean { TransportTypes(get(), get()) }
 
 
     // Models
