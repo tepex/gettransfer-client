@@ -16,7 +16,7 @@ import java.util.logging.Logger
 class TransportTypes(val realm: Realm, val api: HttpApi) : KoinComponent {
     private val log = Logger.getLogger("TransportTypes")
 
-    val types: List<TransportType>
+    private val types: List<TransportType>
 
     init {
         val ids = arrayOf(

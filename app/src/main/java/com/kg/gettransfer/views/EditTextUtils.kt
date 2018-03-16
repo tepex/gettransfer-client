@@ -9,7 +9,6 @@ import android.app.DialogFragment
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,6 +16,7 @@ import android.util.AttributeSet
 import android.view.*
 import android.widget.EditText
 import com.kg.gettransfer.R
+import com.kg.gettransfer.modules.PricesPreviewModel
 import com.kg.gettransfer.modules.TransportTypes
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -187,7 +187,9 @@ class TimeField : EditText {
 }
 
 
-class TypeField : EditText {
+class TypeField : EditText, KoinComponent {
+    val prices: PricesPreviewModel by inject()
+
     constructor(c: Context) : super(c)
     constructor(c: Context, attrs: AttributeSet) : super(c, attrs)
     constructor(c: Context, attrs: AttributeSet, defStyle: Int) : super(c, attrs, defStyle)
@@ -210,23 +212,24 @@ class TypeField : EditText {
 
     @SuppressLint("ValidFragment")
     class TypeDialog(val tf: TypeField) : DialogFragment(), KoinComponent {
-        val tt: TransportTypes by inject()
+        val types: TransportTypes by inject()
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            val adapter = TransportTypesArrayAdapter(activity, types.get(), tf.checked, tf.prices)
+
             val d = AlertDialog.Builder(activity)
                     .setTitle("Transport")
-                    .setAdapter(TransportTypesArrayAdapter(activity, tt.get()), { d, i -> })
+                    .setAdapter(adapter, { d, i -> })
                     .setPositiveButton("Ok", { d, _ -> d.dismiss() })
                     .create()
 
             d.setOnShowListener {
                 (d as AlertDialog).listView
-                        .setOnItemClickListener { parent, view, i, id ->
+                        .setOnItemClickListener { _, view, i, id ->
                             tf.checked[i] = !tf.checked[i]
                             updateText()
-                            val viewHolder = view.getTag() as TransportTypesArrayAdapter.ViewHolder
-                            viewHolder.image.setBackgroundColor(
-                                    ContextCompat.getColor(activity, R.color.colorBGSecondary))
+                            val viewHolder = view.tag as TransportTypesArrayAdapter.ViewHolder
+                            viewHolder.setSelected(tf.checked[i])
                         }
             }
 
@@ -235,8 +238,7 @@ class TypeField : EditText {
 
         fun updateText() {
             var text = ""
-            tt.get().forEachIndexed { i, s -> if (tf.checked[i]) text += ", ${s.title}" }
-
+            types.get().forEachIndexed { i, s -> if (tf.checked[i]) text += ", ${s.title}" }
             tf.setText(if (text.isNotEmpty()) text.substring(2) else "")
         }
     }

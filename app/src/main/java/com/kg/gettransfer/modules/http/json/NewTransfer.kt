@@ -72,6 +72,12 @@ class NewTransfer {
     @SerializedName("passenger_profile")
     var passengerProfile: Map<String, Map<String, String>> = mapOf()
 
+    // --
+
+    @Expose
+    @SerializedName("promo_code")
+    var promoCode: String = ""
+
 
     // --
 

@@ -37,7 +37,7 @@
             android:paddingLeft="32dp"
             android:paddingRight="16dp"
             android:text="Active"
-            android:textColor="@color/colorTextLocation"
+            android:textColor="@color/colorTextAccent"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tvArchive"

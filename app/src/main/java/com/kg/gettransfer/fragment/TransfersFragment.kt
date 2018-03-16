@@ -104,13 +104,13 @@ class TransfersFragment : Fragment(), KoinComponent {
         if (active) {
             tvActive.typeface = Typeface.DEFAULT_BOLD
             tvArchive.typeface = Typeface.DEFAULT
-            tvActive.setTextColor(resources.getColor(R.color.colorTextLocation))
+            tvActive.setTextColor(resources.getColor(R.color.colorTextAccent))
             tvArchive.setTextColor(resources.getColor(R.color.colorTextGray))
         } else {
             tvActive.typeface = Typeface.DEFAULT
             tvArchive.typeface = Typeface.DEFAULT_BOLD
             tvActive.setTextColor(resources.getColor(R.color.colorTextGray))
-            tvArchive.setTextColor(resources.getColor(R.color.colorTextLocation))
+            tvArchive.setTextColor(resources.getColor(R.color.colorTextAccent))
         }
     }
 

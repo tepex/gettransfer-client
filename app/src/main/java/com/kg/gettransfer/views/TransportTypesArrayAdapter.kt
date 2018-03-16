@@ -3,6 +3,7 @@ package com.kg.gettransfer.views
 
 import android.content.Context
 import android.support.constraint.ConstraintLayout
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.kg.gettransfer.R
+import com.kg.gettransfer.modules.PricesPreviewModel
 import com.kg.gettransfer.realm.TransportType
 
 
@@ -19,7 +21,11 @@ import com.kg.gettransfer.realm.TransportType
  */
 
 
-class TransportTypesArrayAdapter(c: Context, values: List<TransportType>)
+class TransportTypesArrayAdapter(
+        c: Context,
+        values: List<TransportType>,
+        var checked: BooleanArray,
+        var pricesModel: PricesPreviewModel)
     : ArrayAdapter<TransportType>(c, R.layout.item_transport_type, values) {
 
     inner class ViewHolder(container: ConstraintLayout) : RecyclerView.ViewHolder(container) {
@@ -30,6 +36,20 @@ class TransportTypesArrayAdapter(c: Context, values: List<TransportType>)
         val luggage: TextView = container.findViewById(R.id.tvDateTime)
 
         val price: TextView = container.findViewById(R.id.tvPrice)
+
+        fun setSelected(b: Boolean) {
+            if (b) {
+                image.setBackgroundResource(R.drawable.bg_circle_lightgray)
+                image.setImageResource(R.drawable.ic_local_taxi_blue_24dp)
+                title.setTextColor(
+                        ContextCompat.getColor(context, R.color.colorAccent))
+            } else {
+                image.setBackgroundResource(0)
+                image.setImageResource(R.drawable.ic_local_taxi_black_24dp)
+                title.setTextColor(
+                        ContextCompat.getColor(context, R.color.colorTextAccentDisabled))
+            }
+        }
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -40,9 +60,7 @@ class TransportTypesArrayAdapter(c: Context, values: List<TransportType>)
         val holder: ViewHolder?
 
         if (convertView == null) {
-            convertView = inflater.inflate(
-                    R.layout.item_transport_type, null)
-
+            convertView = inflater.inflate(R.layout.item_transport_type, null)
             holder = ViewHolder(convertView as ConstraintLayout)
             convertView.setTag(holder)
         } else {
@@ -56,7 +74,10 @@ class TransportTypesArrayAdapter(c: Context, values: List<TransportType>)
         holder.pax.text = getItem(position).paxMax.toString()
         holder.luggage.text = getItem(position).luggageMax.toString()
 
-        holder.price.text = "$100" //getItem(position).price.toString()
+        val min = Math.rint((pricesModel.prices?.get(getItem(position)?.id)?.min ?: 0.0) * 100)
+        holder.price.text = "from $" + (min / 100.0).toString()
+
+        holder.setSelected(checked[position])
 
         return convertView
     }

@@ -25,11 +25,13 @@ class PricesPreviewModel(
 
     private val log = Logger.getLogger("PricesPreview")
 
-    private val prices: BehaviorRelay<Map<Int, PricesPreview>> = BehaviorRelay.create()
+    private val brPrices: BehaviorRelay<Map<Int, PricesPreview>> = BehaviorRelay.create()
 
 
     fun addOnPricesUpdated(f: ((Map<Int, PricesPreview>) -> Unit)): Disposable =
-            prices.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
+            brPrices.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
+
+    val prices: Map<Int, PricesPreview>? get() = brPrices.value
 
 
     fun get(transfer: NewTransfer) {
@@ -58,7 +60,7 @@ class PricesPreviewModel(
                         .subscribe(
                                 { response ->
                                     //response.data.map {  }
-                                    prices.accept(response.data)
+                                    brPrices.accept(response.data)
                                 },
                                 {
                                     log.info(it.toString())
@@ -77,7 +79,7 @@ class PricesPreviewModel(
                         .subscribe(
                                 { response ->
                                     //response.data.map {  }
-                                    prices.accept(response.data)
+                                    brPrices.accept(response.data)
                                 },
                                 {
                                     log.info(it.toString())

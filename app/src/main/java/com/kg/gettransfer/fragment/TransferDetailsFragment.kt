@@ -73,17 +73,14 @@ class TransferDetailsFragment : Fragment() {
                 etPromoCode.requestFocus()
             }
 
-            installEditTextWatcher(v)
+            v.tfTransport.prices.get(transfer)
 
-//            initListTransportTypes(v.rvTypes)
+            installEditTextWatcher(v)
 
             initPromoCodeUI(v.etPromoCode, v.tvPromoValidation)
 
             savedView = v
         }
-
-        pricePreview.get(transfer)
-        pricePreview.addOnPricesUpdated { }
 
         return v
     }
@@ -98,12 +95,9 @@ class TransferDetailsFragment : Fragment() {
             scrollView.fullScroll(FOCUS_UP)
             scrollView.scrollTo(0, 0)
         }
+
+        if (savedView != null) savedView?.tfTransport?.prices?.get(transfer)
     }
-
-
-//    override fun onResume() {
-//        super.onResume()
-//    }
 
 
     private fun createTransfer(transfer: NewTransfer) {
@@ -282,6 +276,8 @@ class TransferDetailsFragment : Fragment() {
         t.comment = etComments.text.toString()
 
         t.passengerProfile = PassengerProfile(etEmail.text.toString(), etPhone.text.toString()).toMap()
+
+        t.promoCode = etPromoCode.text.toString()
     }
 
 
