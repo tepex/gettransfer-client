@@ -22,16 +22,11 @@ class ProfileModel(
 
     private val brProfile: BehaviorRelay<ProfileInfo> = BehaviorRelay.createDefault(ProfileInfo())
 
+    var d: Disposable? = null
+
 
     init {
         currentAccount.addOnAccountChanged { reset() }
-    }
-
-
-    fun addOnProfileUpdated(f: ((ProfileInfo) -> Unit)): Disposable {
-        val d = brProfile.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
-        disposables.add(d)
-        return d
     }
 
     val profile: ProfileInfo
@@ -42,12 +37,17 @@ class ProfileModel(
         }
 
 
+    fun addOnProfileUpdated(f: ((ProfileInfo) -> Unit)): Disposable {
+        val d = brProfile.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
+        disposables.add(d)
+        return d
+    }
+
+
     fun update() {
-        if (busy) return
-
+        d?.dispose()
         val email = currentAccount.email
-
-        api.getProfile().fastSubscribe {
+        d = api.getProfile().fastSubscribe {
             if (email == currentAccount.email) brProfile.accept(it)
         }
     }

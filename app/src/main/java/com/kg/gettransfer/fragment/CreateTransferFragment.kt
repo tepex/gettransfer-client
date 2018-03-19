@@ -32,6 +32,7 @@ import com.kg.gettransfer.views.LocationView
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_createtransfer.*
 import kotlinx.android.synthetic.main.fragment_createtransfer.view.*
+import kotlinx.android.synthetic.main.view_location.view.*
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import java.util.logging.Logger
@@ -427,7 +428,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
         val ft = fragmentManager.beginTransaction()
 
         frChooseLocation.location = lv.location
-        frChooseLocation.setHint(lv.hint)
+        frChooseLocation.setHint(lv.tvName.hint)
         frChooseLocation.consumer = Consumer {
             if (it != null) lv.location = it
             hideLocationChooser()

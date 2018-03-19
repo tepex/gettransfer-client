@@ -1,6 +1,7 @@
 package com.kg.gettransfer.modules
 
 
+import android.view.View
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
 import com.kg.gettransfer.modules.http.json.Response
@@ -9,6 +10,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_account.*
 
 
 /**
@@ -32,6 +34,14 @@ open class AsyncModel {
 
     public fun addOnBusyChanged(f: ((Boolean) -> Unit)): Disposable {
         val d = brBusy.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
+        disposables.add(d)
+        return d
+    }
+
+    public fun addOnBusyProgressBar(pb: View): Disposable {
+        val d = brBusy.observeOn(AndroidSchedulers.mainThread()).subscribe{
+            pb.visibility = if (it) View.VISIBLE else View.GONE
+        }
         disposables.add(d)
         return d
     }

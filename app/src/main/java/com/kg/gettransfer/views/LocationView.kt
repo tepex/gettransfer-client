@@ -2,11 +2,11 @@ package com.kg.gettransfer.views
 
 
 import android.content.Context
+import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
-import android.widget.TextView
-import com.kg.gettransfer.data.LocationDetailed
-import com.kg.gettransfer.modules.googleapi.GeoUtils
-import io.reactivex.disposables.Disposable
+import com.kg.gettransfer.R
+import com.kg.gettransfer.modules.LocationModel
+import kotlinx.android.synthetic.main.view_location.view.*
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
@@ -16,39 +16,28 @@ import org.koin.standalone.inject
  */
 
 
-class LocationView : TextView, KoinComponent {
-    private val geoUtils: GeoUtils by inject()
-
-    private val disposable: Disposable
+class LocationView : ConstraintLayout, KoinComponent {
+    private val locationModel: LocationModel by inject()
 
     var onLocationChanged: Runnable? = null
 
+    var location
+        get() = locationModel.location
+        set(value) {
+            locationModel.location = value
+        }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-
     init {
-        disposable = geoUtils.subscribe {
-            if (it.placeID == location?.placeID && it.title == location?.title) {
-                location = it
-            }
-        }
-    }
+        inflate(context, R.layout.view_location, this)
 
-
-    var location: LocationDetailed? = null
-        set(newLocation) {
-            if (newLocation?.equalsRaw(field) == true
-                    && newLocation.latLng == null
-                    && newLocation.placeID == null) return
-
-            field = newLocation
-            text = newLocation?.title ?: ""
+        locationModel.onLocationChanged = Runnable {
+            tvName.text = locationModel.location?.title ?: ""
             onLocationChanged?.run()
-
-            if (newLocation?.valid == false) {
-                geoUtils.validate(newLocation)
-            }
         }
+
+        locationModel.addOnBusyProgressBar(progressBar)
+    }
 }
