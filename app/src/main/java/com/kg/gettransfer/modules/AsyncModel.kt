@@ -75,4 +75,9 @@ open class AsyncModel {
         disposables.add(d)
         return d
     }
+
+
+    fun stop() {
+        disposables.clear()
+    }
 }

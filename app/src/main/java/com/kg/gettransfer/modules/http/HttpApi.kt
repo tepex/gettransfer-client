@@ -5,7 +5,6 @@ import com.kg.gettransfer.modules.http.json.*
 import com.kg.gettransfer.realm.Transfer
 import io.reactivex.Observable
 import retrofit2.http.*
-import java.util.*
 
 
 /**
@@ -27,6 +26,11 @@ interface HttpApi {
             @Field("email") email: String,
             @Field("password") password: String)
             : Observable<BooleanResponse>
+
+    @GET("profiles")
+    fun getProfile(
+            @Query("current_profile") profile: String = "passenger")
+            : Observable<Response<ProfileInfo>>
 
 
     //  --

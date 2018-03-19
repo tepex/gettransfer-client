@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import com.kg.gettransfer.R
 import com.kg.gettransfer.activity.login.LoginActivity
 import com.kg.gettransfer.modules.CurrentAccount
+import com.kg.gettransfer.modules.ProfileModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_account.*
@@ -30,6 +31,7 @@ import org.koin.standalone.KoinComponent
 
 class AccountFragment : Fragment(), KoinComponent {
     private val currentAccount: CurrentAccount by inject()
+    private val profileModel: ProfileModel by inject()
 
     private val disposables = CompositeDisposable()
 
@@ -76,6 +78,17 @@ class AccountFragment : Fragment(), KoinComponent {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe { updateUI() })
 
+        disposables.add(
+                profileModel.addOnProfileUpdated {
+                    updateUI()
+                })
+
+        disposables.add(
+                profileModel.addOnBusyChanged {
+                    progressBar.visibility = if (it) VISIBLE else GONE
+                }
+        )
+
         updateUI()
     }
 
@@ -94,6 +107,15 @@ class AccountFragment : Fragment(), KoinComponent {
         clAccount.visibility = VISIBLE
 
         tvEmail.text = currentAccount.email
+
+        val profile = profileModel.profile
+        if (profile.valid) {
+            clProfileInfo.visibility = VISIBLE
+            tvName.text = profile.fullName
+            cbEmailNotifications.isChecked = profile.emailNotifications ?: false
+        } else {
+            clProfileInfo.visibility = GONE
+        }
     }
 
 

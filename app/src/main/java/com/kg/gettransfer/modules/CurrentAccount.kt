@@ -14,18 +14,20 @@ import org.koin.standalone.KoinComponent
  */
 
 
-class CurrentAccount(val session: Session, val api: HttpApi) : KoinComponent {
+class CurrentAccount(
+        private val session: Session,
+        private val api: HttpApi)
+    : KoinComponent {
+
     var email: String? = null
         private set
-
-    var phone: String? = null
-    var sign: String? = null
 
 
     // --
 
 
-    val isLoggedIn : Boolean get() = email != null
+    val isLoggedIn: Boolean get() = email != null
+
     val loggedIn = PublishRelay.create<Boolean>()
     val busy = BehaviorRelay.createDefault<Boolean>(false)
     val errorsBus = PublishRelay.create<String?>()

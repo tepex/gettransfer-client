@@ -8,11 +8,11 @@ import android.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.maps.GeoApiContext
-import com.kg.gettransfer.fragment.CreateTransferFragment
-import com.kg.gettransfer.fragment.TransfersFragment
 import com.kg.gettransfer.activity.login.LoginActivity
 import com.kg.gettransfer.activity.login.LoginContract
 import com.kg.gettransfer.activity.login.LoginPresenter
+import com.kg.gettransfer.fragment.CreateTransferFragment
+import com.kg.gettransfer.fragment.TransfersFragment
 import com.kg.gettransfer.modules.*
 import com.kg.gettransfer.modules.googleapi.GeoAutocompleteProvider
 import com.kg.gettransfer.modules.googleapi.GeoUtils
@@ -61,6 +61,7 @@ val AppModule = applicationContext {
     bean { Session(get()) }
 
     bean { CurrentAccount(get(), get()) }
+    bean { ProfileModel(get(), get()) }
 
 
     // Google api
@@ -115,9 +116,6 @@ val AppModule = applicationContext {
  * Module list
  */
 
-val todoAppModules = listOf(AppModule)
+val appModules = listOf(AppModule)
 
-object Properties {
-    const val CURRENCY = "CURRENCY"
-}
 

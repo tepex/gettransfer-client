@@ -26,7 +26,7 @@ class GTApplication : MultiDexApplication() {
         }
 
         // Start Koin
-        startKoin(this, todoAppModules)
+        startKoin(this, appModules)
 
         val t = inject<TransfersModel>().value
     }
