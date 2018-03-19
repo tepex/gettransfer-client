@@ -68,7 +68,7 @@ interface HttpApi {
             @Query("metric_value") distance: Int,
             @Query("return_way") back: Boolean,
             @Query("hourly") hourly: Boolean = false)
-            : Observable<Response<Map<Int, PricesPreview>>>
+            : Observable<Response<Map<Int, PriceRange>>>
 
     @GET("transport_types_prices")
     fun getPrice(
@@ -76,7 +76,7 @@ interface HttpApi {
             @Query("date_to") date: String,
             @Query("metric_value") timeInSeconds: Int,
             @Query("hourly") hourly: Boolean = true)
-            : Observable<Response<Map<Int, PricesPreview>>>
+            : Observable<Response<Map<Int, PriceRange>>>
 
 
     // --

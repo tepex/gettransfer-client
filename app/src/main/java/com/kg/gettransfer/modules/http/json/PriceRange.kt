@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName
  */
 
 
-class PricesPreview {
+class PriceRange {
     @Expose
     @SerializedName("min")
     var min: Double = 0.0

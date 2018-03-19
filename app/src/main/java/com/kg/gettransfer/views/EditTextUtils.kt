@@ -75,7 +75,7 @@ private fun EditText.clearListenersFixFocus() {
 }
 
 
-private fun getActivity(context: Context): Activity? {
+fun getActivity(context: Context): Activity? {
     var context: Context? = context
     while (context is ContextWrapper) {
         if (context is Activity) {
@@ -85,6 +85,7 @@ private fun getActivity(context: Context): Activity? {
     }
     return null
 }
+
 
 class DateField : EditText {
     constructor(c: Context) : super(c)
@@ -137,6 +138,7 @@ class DateField : EditText {
     }
 }
 
+
 class TimeField : EditText {
     constructor(c: Context) : super(c)
     constructor(c: Context, attrs: AttributeSet) : super(c, attrs)
@@ -183,89 +185,6 @@ class TimeField : EditText {
                     c.get(Calendar.MINUTE),
                     android.text.format.DateFormat.is24HourFormat(context))
                     .show()
-        }
-    }
-}
-
-
-class TypeField : EditText, KoinComponent {
-    private val prices: PricesPreviewModel by inject()
-    private val types: TransportTypes by inject()
-
-    constructor(c: Context) : super(c)
-    constructor(c: Context, attrs: AttributeSet) : super(c, attrs)
-    constructor(c: Context, attrs: AttributeSet, defStyle: Int) : super(c, attrs, defStyle)
-
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (event?.actionMasked == MotionEvent.ACTION_UP) {
-            requestFocus()
-            performClick()
-        }
-
-        return true
-    }
-
-    fun updatePrices(transfer: NewTransfer) = prices.get(transfer)
-    fun clear() = checked.fill(false)
-
-    val checked = BooleanArray(types.get().size, { _ -> false })
-
-    val typesIDs: IntArray
-        get() = checked
-                .mapIndexed { index, b ->
-                    if (b) index
-                    else null
-                }
-                .filterNotNull()
-                .toTypedArray()
-                .toIntArray()
-
-
-    @SuppressLint("ValidFragment")
-    class TypeDialog(private val tf: TypeField) : DialogFragment(), KoinComponent {
-        val types: TransportTypes by inject()
-
-        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val adapter = TransportTypesArrayAdapter(activity, types.get(), tf.checked, tf.prices)
-
-            val d = AlertDialog.Builder(activity)
-                    .setTitle("Transport")
-                    .setAdapter(adapter, { d, i -> })
-                    .setPositiveButton("Ok", { d, _ -> d.dismiss() })
-                    .create()
-
-            d.setOnShowListener {
-                (d as AlertDialog).listView
-                        .setOnItemClickListener { _, view, i, id ->
-                            tf.checked[i] = !tf.checked[i]
-                            updateText()
-                            val viewHolder = view.tag as TransportTypesArrayAdapter.ViewHolder
-                            viewHolder.setSelected(tf.checked[i])
-                        }
-            }
-
-            return d
-        }
-
-        private fun updateText() {
-            var text = ""
-            types.get().forEachIndexed { i, s -> if (tf.checked[i]) text += ", ${s.title}" }
-            tf.setText(if (text.isNotEmpty()) text.substring(2) else "")
-        }
-    }
-
-
-    init {
-        val icon = R.drawable.ic_airport_shuttle_gray_20dp
-        setCompoundDrawablesWithIntrinsicBounds(0, 0, icon, 0)
-
-        clearListenersFixFocus()
-
-        setOnClickListener {
-            val fragmentManager = getActivity(context)?.fragmentManager
-            val dialog = TypeDialog(this)
-            dialog.show(fragmentManager, "Type selection")
         }
     }
 }

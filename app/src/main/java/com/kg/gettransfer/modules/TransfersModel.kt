@@ -101,8 +101,7 @@ class TransfersModel(
                         .toIntArray().toTypedArray()
                 val transfersToDelete = realm
                         .where(Transfer::class.java)
-                        .not()
-                        .`in`("id", ids)
+                        .not().`in`("id", ids)
                         .findAll()
                 transfersToDelete.deleteAllFromRealm()
                 log.info("getTransfers() saved to realm")

@@ -75,7 +75,7 @@ open class Transfer : RealmObject() {
 
     @Expose
     @SerializedName("date_refund")
-    var date_refund: Date? = null
+    var dateRefund: Date? = null
 
     // --
 
@@ -88,7 +88,7 @@ open class Transfer : RealmObject() {
     var nameSign: String? = null
 
     @Expose
-    @SerializedName("transport_types")
+    @SerializedName("transport_type_ids")
     @Required
     var transportTypes: RealmList<java.lang.Integer?>? = null
 

@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.kg.gettransfer.R
-import com.kg.gettransfer.modules.PricesPreviewModel
+import com.kg.gettransfer.modules.http.json.PriceRange
 import com.kg.gettransfer.realm.TransportType
 
 
@@ -24,8 +24,8 @@ import com.kg.gettransfer.realm.TransportType
 class TransportTypesArrayAdapter(
         c: Context,
         values: List<TransportType>,
-        var checked: BooleanArray,
-        var pricesModel: PricesPreviewModel)
+        private val checked: BooleanArray,
+        private val prices: Map<TransportType, PriceRange>?)
     : ArrayAdapter<TransportType>(c, R.layout.item_transport_type, values) {
 
     inner class ViewHolder(container: ConstraintLayout) : RecyclerView.ViewHolder(container) {
@@ -74,8 +74,10 @@ class TransportTypesArrayAdapter(
         holder.pax.text = getItem(position).paxMax.toString()
         holder.luggage.text = getItem(position).luggageMax.toString()
 
-        val min = Math.rint((pricesModel.prices?.get(getItem(position)?.id)?.min ?: 0.0) * 100)
-        holder.price.text = "from $" + (min / 100.0).toString()
+        val priceFrom = prices?.get(getItem(position))?.min
+        holder.price.text =
+                if (priceFrom == null) "-"
+                else "from $" + (Math.rint(priceFrom * 100) / 100.0).toString()
 
         holder.setSelected(checked[position])
 

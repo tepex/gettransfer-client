@@ -180,6 +180,10 @@ class TransferDetailsFragment : Fragment() {
             message += ", passengers"
         }
 
+        if (tfTransport.typesIDs.isEmpty()) {
+            message += ", transport"
+        }
+
         if (etSign.text.isEmpty()) {
             message += ", name sign"
         }
@@ -192,7 +196,7 @@ class TransferDetailsFragment : Fragment() {
         }
 
         if (message.isNotEmpty()) {
-            message = "Please fill" + message.substring(1) + " to get offers."
+            message = "Please fill" + message.substring(1) + " to getRequest offers."
             tvError.text = message
             return false
         } else {

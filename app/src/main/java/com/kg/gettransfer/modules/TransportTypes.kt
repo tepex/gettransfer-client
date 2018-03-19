@@ -5,7 +5,6 @@ import com.kg.gettransfer.modules.http.HttpApi
 import com.kg.gettransfer.realm.TransportType
 import io.realm.Realm
 import org.koin.standalone.KoinComponent
-import java.util.logging.Logger
 
 
 /**
@@ -14,8 +13,6 @@ import java.util.logging.Logger
 
 
 class TransportTypes(val realm: Realm, val api: HttpApi) : KoinComponent {
-    private val log = Logger.getLogger("TransportTypes")
-
     private val types: List<TransportType>
 
     init {
@@ -55,13 +52,11 @@ class TransportTypes(val realm: Realm, val api: HttpApi) : KoinComponent {
     fun getNames(ids: List<Integer?>?): String {
         if (ids == null) return "-"
 
-        var s = ""
-        val types = realm.where(TransportType::class.java).findAll()
-
-        types.asSequence()
+        val s = types.asSequence()
                 .filter { ids.contains(it.id as Integer) }
-                .forEach { s += ", " + it.title }
+                .map { it.title }
+                .joinToString(separator = ", ")
 
-        return if (s.isEmpty()) "-" else s.substring(2)
+        return if (s.isEmpty()) "-" else s
     }
 }
