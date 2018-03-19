@@ -74,7 +74,7 @@ class AccountFragment : Fragment(), KoinComponent {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         disposables.add(
-                currentAccount.loggedIn
+                currentAccount.brEmail
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe { updateUI() })
 
@@ -94,7 +94,7 @@ class AccountFragment : Fragment(), KoinComponent {
 
 
     private fun updateUI() {
-        if (currentAccount.isLoggedIn) {
+        if (currentAccount.loggedIn) {
             showAccount()
         } else {
             showHello()

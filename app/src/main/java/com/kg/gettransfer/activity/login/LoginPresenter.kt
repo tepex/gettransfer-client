@@ -16,7 +16,7 @@ class LoginPresenter(private val currentAccount: CurrentAccount) : LoginContract
 
     private val disposables = CompositeDisposable()
 
-    override val busy: Boolean get() = currentAccount.busy.value
+    override val busy: Boolean get() = currentAccount.busy
 
 
     override fun start() {
@@ -24,12 +24,12 @@ class LoginPresenter(private val currentAccount: CurrentAccount) : LoginContract
 
         currentAccount.logOut()
 
-        disposables.add(
-                currentAccount.loggedIn.subscribe { if (it) view.loginSuccess() })
-        disposables.add(
-                currentAccount.busy.subscribe { view.busyChanged(it) })
-        disposables.add(
-                currentAccount.errorsBus.subscribe { view.showError(it) })
+        disposables.addAll(
+                currentAccount.addOnAccountChanged {
+                    if (currentAccount.loggedIn) view.loginSuccess()
+                },
+                currentAccount.addOnBusyChanged { view.busyChanged(it) },
+                currentAccount.addOnError { view.showError(it.message) })
     }
 
 

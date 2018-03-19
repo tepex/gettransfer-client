@@ -7,7 +7,6 @@ import com.kg.gettransfer.modules.http.json.ProfileInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import org.koin.standalone.KoinComponent
-import java.util.logging.Logger
 
 
 /**
@@ -21,15 +20,11 @@ class ProfileModel(
         private val currentAccount: CurrentAccount)
     : AsyncModel(), KoinComponent {
 
-    private val log = Logger.getLogger("ProfileModel")
-
     private val brProfile: BehaviorRelay<ProfileInfo> = BehaviorRelay.createDefault(ProfileInfo())
 
 
     init {
-        currentAccount.loggedIn
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe { reset() }
+        currentAccount.addOnAccountChanged { reset() }
     }
 
 
@@ -49,7 +44,9 @@ class ProfileModel(
 
     fun update() {
         if (busy) return
+
         val email = currentAccount.email
+
         api.getProfile().fastSubscribe {
             if (email == currentAccount.email) brProfile.accept(it)
         }

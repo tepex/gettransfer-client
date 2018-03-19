@@ -11,12 +11,12 @@ import org.koin.standalone.KoinComponent
  */
 
 
-class Session(val sp: SharedPreferences) : KoinComponent {
+class Session(private val sp: SharedPreferences) : KoinComponent {
     @Volatile
     var accessToken: String? = null
 
     @Volatile
-    var email: String? = null
+    var email: String = ""
 
     val hasToken: Boolean get() = accessToken != null
     val isLoggedIn: Boolean get() = email != null
@@ -26,7 +26,7 @@ class Session(val sp: SharedPreferences) : KoinComponent {
 
     init {
         accessToken = sp.getString("Session.accessToken", null)
-        email = sp.getString("Session.email", null)
+        email = sp.getString("Session.email", "")
     }
 
 
@@ -40,7 +40,7 @@ class Session(val sp: SharedPreferences) : KoinComponent {
 
     fun reset(newAccessToken: String) {
         accessToken = newAccessToken
-        email = null
+        email = ""
         save()
         state.accept(this)
     }
@@ -55,7 +55,7 @@ class Session(val sp: SharedPreferences) : KoinComponent {
 
     fun logOut() {
         accessToken = null
-        email = null
+        email = ""
         save()
         state.accept(this)
     }

@@ -84,7 +84,7 @@ class TransfersFragment : Fragment(), KoinComponent {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         disposables.add(
-                currentAccount.loggedIn
+                currentAccount.brEmail
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe { updateUI() })
 
@@ -126,7 +126,7 @@ class TransfersFragment : Fragment(), KoinComponent {
 
 
     private fun updateUI() {
-        if (currentAccount.isLoggedIn) {
+        if (currentAccount.loggedIn) {
             showTransfers()
         } else {
             showLoggedOut()

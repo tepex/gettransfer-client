@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (currentAccount.isLoggedIn) {
+        if (currentAccount.loggedIn) {
             btnUser.setImageResource(R.drawable.ic_person_gray_24dp)
         } else {
             btnUser.setImageResource(R.drawable.ic_person_outline_gray_24dp)

@@ -29,13 +29,13 @@ class TransfersModel(
 
 
     init {
-        currentAccount.loggedIn //TODO: Another way
+        currentAccount.brEmail //TODO: Another way
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    if (it) deleteTransfers()
+                    if (!currentAccount.loggedIn) deleteTransfers()
                 }
 
-        if (currentAccount.email == null) deleteTransfers()
+        if (!currentAccount.loggedIn) deleteTransfers()
     }
 
 
