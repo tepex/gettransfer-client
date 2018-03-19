@@ -77,7 +77,7 @@ open class AsyncModel {
     }
 
 
-    fun stop() {
+    open fun stop() {
         disposables.clear()
     }
 }

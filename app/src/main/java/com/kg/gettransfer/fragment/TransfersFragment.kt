@@ -19,7 +19,6 @@ import com.kg.gettransfer.modules.CurrentAccount
 import com.kg.gettransfer.modules.TransfersModel
 import com.kg.gettransfer.views.EmptyRecyclerView
 import com.kg.gettransfer.views.TransfersAdapter
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_transfers.*
 import kotlinx.android.synthetic.main.fragment_transfers.view.*
@@ -83,10 +82,7 @@ class TransfersFragment : Fragment(), KoinComponent {
 
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        disposables.add(
-                currentAccount.brEmail
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { updateUI() })
+        disposables.add(currentAccount.addOnAccountChanged { updateUI() })
 
         disposables.add(transfersModel.addOnBusyChanged {
             swipeRefreshLayout.isRefreshing = it

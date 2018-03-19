@@ -16,7 +16,6 @@ import android.widget.TextView
 import com.kg.gettransfer.R
 import com.kg.gettransfer.mainactivity.MainActivity
 import com.kg.gettransfer.modules.CurrentAccount
-import com.kg.gettransfer.modules.PricesPreviewModel
 import com.kg.gettransfer.modules.PromoCodeModel
 import com.kg.gettransfer.modules.TransfersModel
 import com.kg.gettransfer.modules.http.json.NewTransfer
@@ -37,7 +36,6 @@ import org.koin.android.ext.android.inject
 
 class TransferDetailsFragment : Fragment() {
     private val transfersModel: TransfersModel by inject()
-    private val pricePreview: PricesPreviewModel by inject()
     private val promoCodeModel: PromoCodeModel by inject()
     private val currentAccount: CurrentAccount by inject()
 
@@ -73,7 +71,7 @@ class TransferDetailsFragment : Fragment() {
                 etPromoCode.requestFocus()
             }
 
-            v.tfTransport.prices.get(transfer)
+            v.tfTransport.updatePrices(transfer)
 
             installEditTextWatcher(v)
 
@@ -96,7 +94,7 @@ class TransferDetailsFragment : Fragment() {
             scrollView.scrollTo(0, 0)
         }
 
-        if (savedView != null) savedView?.tfTransport?.prices?.get(transfer)
+        if (savedView != null) savedView?.tfTransport?.updatePrices(transfer)
     }
 
 
@@ -268,7 +266,7 @@ class TransferDetailsFragment : Fragment() {
     private fun populateNewTransfer(t: NewTransfer) {
         t.dateTo = Trip(etDate.text.toString(), etTime.text.toString())
         t.pax = pax ?: 0
-        t.transportTypes = intArrayOf(1) // adapter.getSelectedIds().toIntArray()
+        t.transportTypes = tfTransport.typesIDs
 
         t.nameSign = etSign.text.toString()
         t.offeredPrice = etPrice.text.toString().toIntOrNull()
@@ -286,6 +284,8 @@ class TransferDetailsFragment : Fragment() {
         etTime.editableText.clear()
 
         etPassengers.editableText.clear()
+
+        tfTransport.clear()
 
         etSign.editableText.clear()
         etPrice.editableText.clear()

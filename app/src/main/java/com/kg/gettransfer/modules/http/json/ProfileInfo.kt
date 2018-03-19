@@ -20,3 +20,4 @@ class ProfileInfo(
 
     val valid: Boolean get() = emailNotifications != null
 }
+

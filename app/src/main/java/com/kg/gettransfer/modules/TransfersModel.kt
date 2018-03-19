@@ -6,7 +6,6 @@ import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.modules.http.json.NewTransferField
 import com.kg.gettransfer.realm.Transfer
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.realm.Realm
 import io.realm.RealmResults
 import org.koin.standalone.KoinComponent
@@ -29,11 +28,10 @@ class TransfersModel(
 
 
     init {
-        currentAccount.brEmail //TODO: Another way
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    if (!currentAccount.loggedIn) deleteTransfers()
-                }
+        currentAccount.addOnAccountChanged {
+            //TODO: Another way
+            if (!currentAccount.loggedIn) deleteTransfers()
+        }
 
         if (!currentAccount.loggedIn) deleteTransfers()
     }
@@ -58,7 +56,6 @@ class TransfersModel(
                     val body = response.body()!!
                     if (body.success) {
                         log.info("createTransfer() responded success, id = ${body.data?.id}")
-                        //updateTransfers()
                         val t = Transfer()
                         t.id = body.data?.id ?: -1
                         observable.onNext(t)
@@ -115,8 +112,8 @@ class TransfersModel(
     }
 
 
-//    fun close() {
-//        disposables.clear()
-//        realm.close()
-//    }
+    override fun stop() {
+        super.stop()
+        realm.close()
+    }
 }

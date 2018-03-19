@@ -18,6 +18,7 @@ import android.widget.EditText
 import com.kg.gettransfer.R
 import com.kg.gettransfer.modules.PricesPreviewModel
 import com.kg.gettransfer.modules.TransportTypes
+import com.kg.gettransfer.modules.http.json.NewTransfer
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import java.text.DateFormat
@@ -188,7 +189,8 @@ class TimeField : EditText {
 
 
 class TypeField : EditText, KoinComponent {
-    val prices: PricesPreviewModel by inject()
+    private val prices: PricesPreviewModel by inject()
+    private val types: TransportTypes by inject()
 
     constructor(c: Context) : super(c)
     constructor(c: Context, attrs: AttributeSet) : super(c, attrs)
@@ -204,14 +206,24 @@ class TypeField : EditText, KoinComponent {
         return true
     }
 
-    val checked = booleanArrayOf(
-            true, false, false,
-            false, false, false,
-            false, false)
+    fun updatePrices(transfer: NewTransfer) = prices.get(transfer)
+    fun clear() = checked.fill(false)
+
+    val checked = BooleanArray(types.get().size, { _ -> false })
+
+    val typesIDs: IntArray
+        get() = checked
+                .mapIndexed { index, b ->
+                    if (b) index
+                    else null
+                }
+                .filterNotNull()
+                .toTypedArray()
+                .toIntArray()
 
 
     @SuppressLint("ValidFragment")
-    class TypeDialog(val tf: TypeField) : DialogFragment(), KoinComponent {
+    class TypeDialog(private val tf: TypeField) : DialogFragment(), KoinComponent {
         val types: TransportTypes by inject()
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -236,7 +248,7 @@ class TypeField : EditText, KoinComponent {
             return d
         }
 
-        fun updateText() {
+        private fun updateText() {
             var text = ""
             types.get().forEachIndexed { i, s -> if (tf.checked[i]) text += ", ${s.title}" }
             tf.setText(if (text.isNotEmpty()) text.substring(2) else "")
