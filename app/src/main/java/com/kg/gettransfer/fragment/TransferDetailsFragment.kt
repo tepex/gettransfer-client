@@ -159,6 +159,8 @@ class TransferDetailsFragment : Fragment() {
 
         v.etEmail.addTextChangedListener(textWatcher)
         v.etPhone.addTextChangedListener(textWatcher)
+
+        v.tfTransport.addTextChangedListener(textWatcher)
     }
 
 
@@ -196,7 +198,7 @@ class TransferDetailsFragment : Fragment() {
         }
 
         if (message.isNotEmpty()) {
-            message = "Please fill" + message.substring(1) + " to getRequest offers."
+            message = "Please fill" + message.substring(1) + " to get offers."
             tvError.text = message
             return false
         } else {

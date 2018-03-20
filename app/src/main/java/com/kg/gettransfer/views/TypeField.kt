@@ -22,7 +22,7 @@ import org.koin.standalone.inject
 
 /**
  * Created by denisvakulenko on 19/03/2018.
- */
+*/
 
 
 class TypeField : EditText, KoinComponent {

@@ -7,6 +7,7 @@ import com.google.android.gms.location.places.Places
 import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.data.LocationDetailed
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.standalone.KoinComponent
 import java.io.IOException
@@ -27,16 +28,14 @@ class LocationModel(
 
     var location: LocationDetailed? = null
         set(newLocation) {
-            if (newLocation?.equalsRaw(field) == true
-                    && newLocation.latLng == null
-                    && newLocation.placeID == null) return
+            if (newLocation?.equalsRaw(field) == true &&
+                    newLocation.latLng == null &&
+                    newLocation.placeID == null) return
 
             field = newLocation
             onLocationChanged?.run()
 
-            if (newLocation?.valid == false) {
-                validate(newLocation)
-            }
+            if (newLocation?.valid == false) validate(newLocation)
         }
 
     private fun validate(location: LocationDetailed): LocationDetailed {
@@ -68,28 +67,33 @@ class LocationModel(
         } else if (location.title.isNotEmpty()) {
             busy = true
             try {
-                Single.fromCallable {
-                    val places = geocoder.getFromLocationName(location.title, 1) //, -90.0, -180.0, 90.0, 180.0)
-                    if (places.isNotEmpty()) {
-                        return@fromCallable LocationDetailed(
-                                location.title,
-                                location.subtitle,
-                                location.placeID,
-                                LatLng(places[0].latitude, places[0].longitude))
-                    }
-                    throw Exception("No such place")
-                }.subscribeOn(Schedulers.newThread())
+                disposables.add(Single
+                        .fromCallable {
+                            val places = geocoder.getFromLocationName(location.title, 1) //, -90.0, -180.0, 90.0, 180.0)
+                            if (places.isNotEmpty()) {
+                                return@fromCallable LocationDetailed(
+                                        location.title,
+                                        location.subtitle,
+                                        location.placeID,
+                                        LatLng(places[0].latitude, places[0].longitude))
+                            }
+                            throw Exception("No such place")
+                        }
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
-                            if (it.placeID == this.location?.placeID && it.title == this.location?.title) {
+                            if (it.placeID == this.location?.placeID &&
+                                    it.title == this.location?.title) {
                                 this.location = it
                                 busy = false
                             }
                         }, {
-                            if (location.placeID == this.location?.placeID && location.title == this.location?.title) {
+                            if (location.placeID == this.location?.placeID &&
+                                    location.title == this.location?.title) {
                                 err(it)
                                 busy = false
                             }
-                        })
+                        }))
             } catch (e: IOException) {
                 e.printStackTrace()
                 busy = false

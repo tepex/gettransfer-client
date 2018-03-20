@@ -29,24 +29,26 @@ object Utils {
                 date.time,
                 DateUtils.FORMAT_SHOW_TIME).toString() +
                 "   " +
-                DateUtils.formatDateTime(
-                        c,
-                        date.time,
-                        DateUtils.FORMAT_SHOW_DATE
-                                or DateUtils.FORMAT_ABBREV_MONTH
-                                or DateUtils.FORMAT_SHOW_YEAR)
-                        .toString()
+                java.text.DateFormat.getDateInstance().format(date)
+//                DateUtils.formatDateTime(
+//                        c,
+//                        date.time,
+//                        DateUtils.FORMAT_SHOW_DATE
+//                                or DateUtils.FORMAT_ABBREV_MONTH
+//                                or DateUtils.FORMAT_SHOW_YEAR)
+//                        .toString()
     }
 
     fun dateToShortString(c: Context, date: Date?): String {
         if (date == null) return "-"
-        return DateUtils.formatDateTime(
-                c,
-                date.time,
-                DateUtils.FORMAT_SHOW_DATE
-                        or DateUtils.FORMAT_ABBREV_MONTH
-                        or DateUtils.FORMAT_SHOW_YEAR)
-                .toString()
+        return java.text.DateFormat.getDateInstance().format(date)
+//        DateUtils.formatDateTime(
+//                c,
+//                date.time,
+//                DateUtils.FORMAT_SHOW_DATE
+//                        or DateUtils.FORMAT_ABBREV_MONTH
+//                        or DateUtils.FORMAT_SHOW_YEAR)
+//                .toString()
     }
 
     fun hoursToString(h: Int): String {

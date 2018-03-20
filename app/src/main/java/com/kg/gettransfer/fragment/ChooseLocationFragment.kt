@@ -99,7 +99,7 @@ class ChooseLocationFragment : Fragment() {
             etLocation?.setupClearButtonWithAction()
             etLocation?.addTextChangedListener(textWatcher)
             etLocation?.setOnKeyListener(View.OnKeyListener { _, k, e ->
-                if (e.getAction() == KeyEvent.ACTION_DOWN) {
+                if (e.action == KeyEvent.ACTION_DOWN) {
                     if (k == KeyEvent.KEYCODE_DPAD_CENTER || k == KeyEvent.KEYCODE_ENTER) {
                         consumer.accept(LocationDetailed(etLocation?.text.toString()))
                         return@OnKeyListener true

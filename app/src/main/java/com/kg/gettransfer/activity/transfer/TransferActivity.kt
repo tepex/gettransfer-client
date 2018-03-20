@@ -92,10 +92,14 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             tvlTo.text = "Duration"
             tvTo.text = transfer.hireDurationString
 
+            ivTo.setImageResource(R.drawable.ic_timer_blue_16dp)
+
             tvRouteInfo.visibility = GONE
         } else {
             tvlTo.text = "To"
             tvTo.text = transfer.to?.name
+
+            ivTo.setImageResource(R.drawable.ic_arrow_blue_16dp)
 
             tvRouteInfo.visibility = VISIBLE
             tvRouteInfo.text =

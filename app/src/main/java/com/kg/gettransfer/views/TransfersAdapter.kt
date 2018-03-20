@@ -66,7 +66,7 @@ class TransfersAdapter(
             holder.to.text = transfer.to?.name
         }
 
-        holder.date.text = Utils.dateToString(context, transfer.dateTo)
+        holder.date.text = Utils.dateToShortString(context, transfer.dateTo)
         holder.state.update(transfer, true)
 
         holder.itemView.setTag(R.id.key_id, transfer.id)

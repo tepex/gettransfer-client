@@ -53,7 +53,7 @@ fun EditText.setupClearButtonWithAction() {
 }
 
 
-private fun EditText.clearListenersFixFocus() {
+fun EditText.clearListenersFixFocus() {
     setOnTouchListener(null)
 
     setOnLongClickListener(null)

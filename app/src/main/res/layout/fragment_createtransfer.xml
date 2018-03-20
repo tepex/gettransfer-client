@@ -90,7 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="48dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="13dp"
             android:labelFor="@+id/lvFrom"
             android:text="From"
             android:textColor="@color/colorTextGray"
@@ -125,25 +125,12 @@
             app:layout_goneMarginLeft="16dp"
             app:layout_goneMarginStart="16dp" />
 
-        <ImageButton
-            android:id="@+id/ibSwap"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="4dp"
-            app:srcCompat="@drawable/ic_swap_vert_gray_20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <TextView
             android:id="@+id/tvTo"
             android:layout_width="45dp"
             android:layout_height="18dp"
             android:layout_marginStart="48dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="13dp"
             android:labelFor="@+id/lvTo"
             android:text="To"
             android:textColor="@color/colorTextGray"
@@ -166,10 +153,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/line1" />
 
+        <ImageButton
+            android:id="@+id/ibSwap"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="4dp"
+            app:srcCompat="@drawable/ic_swap_vert_gray_20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <android.support.constraint.ConstraintLayout
             android:id="@+id/clDuration"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="64dp"
             android:background="@color/colorBG"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
@@ -180,28 +180,30 @@
                 android:id="@+id/tvDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="13dp"
                 android:labelFor="@+id/lvTo"
                 android:text="Duration"
                 android:textColor="@color/colorTextGray"
-                app:layout_constraintBaseline_toBaselineOf="@+id/fieldDuration"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/fieldDuration"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="8dp"
+                android:layout_height="0dp"
                 android:background="@android:color/transparent"
                 android:ems="10"
                 android:gravity="center_vertical"
                 android:hint="Time you'll need a car"
-                android:paddingLeft="8dp"
+                android:paddingLeft="48dp"
                 android:paddingRight="8dp"
-                android:paddingTop="2dp"
-                android:textColor="?attr/editTextColor"
+                android:paddingTop="24dp"
+                android:textColor="?attr/colorAccent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tvDuration" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </android.support.constraint.ConstraintLayout>
 
@@ -255,7 +257,7 @@
         app:backgroundTint="@color/colorYellow"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_trending_flat_white_24dp" />
+        app:srcCompat="@drawable/ic_trending_flat_black_24dp" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -8,6 +8,7 @@ import android.graphics.Typeface
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -109,6 +110,11 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                     lvFrom.location = lvTo.location
                     lvTo.location = location
                 }
+
+                lvTo.tvName.setTextColor(ContextCompat.getColor(context, R.color.colorAccent))
+
+                lvFrom.tvName.hint = "Pick up address"
+                lvTo.tvName.hint = "Destination address"
             }
 
             savedView = v
@@ -208,7 +214,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                         .position(LatLng(0.0, 0.0))
                         .anchor(0.5f, 0.95f)
                         .icon(BitmapDescriptorFactory
-                                .fromVector(activity, R.drawable.ic_place_black_24dp)))
+                                .fromVector(activity, R.drawable.ic_place_blue_24dp)))
     }
 
 
@@ -345,8 +351,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                                 padding),
                         600,
                         null)
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 map?.animateCamera(
                         CameraUpdateFactory.newLatLngBounds(
                                 getLatLngBounds(llFrom, llTo),

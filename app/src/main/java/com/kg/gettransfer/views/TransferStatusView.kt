@@ -28,7 +28,9 @@ class TransferStatusView : TextView {
                 setTextColor(0xff000000.toInt())
                 setBackgroundResource(R.drawable.bg_rounded_2_yellow)
                 val offers = item.offersCount
-                if (short) text = if (offers > 0) offers.toString() else "..."
+                if (short) text =
+                        if (offers > 0) offers.toString() + if (offers > 1) " offers" else " offer"
+                        else "Connecting ..."
             }
             item.strStatus == "Confirmed" -> {
                 setTextColor(0xffffffff.toInt())
