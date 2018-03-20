@@ -4,7 +4,9 @@ package com.kg.gettransfer.views
 import android.content.Context
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
+import android.view.View
 import com.kg.gettransfer.R
+import com.kg.gettransfer.data.LocationDetailed
 import com.kg.gettransfer.modules.LocationModel
 import kotlinx.android.synthetic.main.view_location.view.*
 import org.koin.standalone.KoinComponent
@@ -34,10 +36,16 @@ class LocationView : ConstraintLayout, KoinComponent {
         inflate(context, R.layout.view_location, this)
 
         locationModel.onLocationChanged = Runnable {
-            tvName.text = locationModel.location?.title ?: ""
+            val text = locationModel.location?.title
+            tvName.text = text ?: ""
+            ibClear.visibility =
+                    if (text?.isNotEmpty() == true) View.VISIBLE
+                    else View.GONE
             onLocationChanged?.run()
         }
 
         locationModel.addOnBusyProgressBar(progressBar)
+
+        ibClear.setOnClickListener { locationModel.location = LocationDetailed("") }
     }
 }

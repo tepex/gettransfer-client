@@ -99,7 +99,7 @@ val AppModule = applicationContext {
     factory { TransferModel(get(), get()) }
     factory { PricesPreviewModel(get(), get()) }
     factory { PromoCodeModel(get()) }
-    factory { LocationModel(get()) }
+    factory { LocationModel(get(), get()) }
 
 
     // UI
