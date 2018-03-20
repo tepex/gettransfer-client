@@ -42,7 +42,7 @@ class NewTransfer {
 
     @Expose
     @SerializedName("transport_types")
-    var transportTypes: IntArray = intArrayOf()
+    var transportTypes: Array<String>? = null
 
     @Expose
     @SerializedName("pax")

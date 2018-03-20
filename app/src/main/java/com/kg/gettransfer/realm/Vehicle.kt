@@ -30,5 +30,5 @@ open class Vehicle : RealmObject() {
 
     @Expose
     @SerializedName("transport_type_id")
-    var transportTypeID: Int = -1
+    var transportTypeID: String? = null
 }

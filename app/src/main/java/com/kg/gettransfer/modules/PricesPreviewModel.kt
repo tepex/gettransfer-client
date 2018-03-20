@@ -50,7 +50,7 @@ class PricesPreviewModel(
                             (transfer.hireDuration ?: 0) * 60 * 60)
 
         disposables.add(request.fastSubscribe {
-            brPrices.accept(it?.mapKeys { transportTypes.get()[it.key] })
+            brPrices.accept(it?.mapKeys { transportTypes.typesMap[it.key]!! })
         })
     }
 

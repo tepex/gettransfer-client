@@ -13,13 +13,13 @@ import org.koin.standalone.KoinComponent
 
 
 class TransportTypes(val realm: Realm, val api: HttpApi) : KoinComponent {
-    private val types: List<TransportType>
+    val typesMap: Map<String, TransportType>
 
     init {
         val ids = arrayOf(
-                1, 2, 3,
-                4, 5, 6,
-                7, 8)
+                "economy", "business", "premium",
+                "van", "minibus", "bus",
+                "limousine", "helicopter")
 
         val names = arrayOf(
                 "Economy", "Business", "Premium",
@@ -36,25 +36,28 @@ class TransportTypes(val realm: Realm, val api: HttpApi) : KoinComponent {
                 6, 16, 50,
                 10, 2)
 
-        types = ids.mapIndexed { i, id ->
+        typesMap = ids
+                .mapIndexed { i, id ->
             val t = TransportType()
             t.id = id
             t.title = names[i]
             t.paxMax = pax[i]
             t.luggageMax = lug[i]
             t
-        }.toList()
+        }
+                .associateBy({ it.id }, { it })
+                .toMap()
     }
 
-    fun get(): List<TransportType> = types
+    val typesList: List< TransportType> = typesMap.values.toList()
 
 
-    fun getNames(ids: List<Integer?>?): String {
+    fun getNames(ids: List<String?>?): String {
         if (ids == null) return "-"
 
-        val s = types.asSequence()
-                .filter { ids.contains(it.id as Integer) }
-                .map { it.title }
+        val s = typesMap.asSequence()
+                .filter { ids.contains(it.key) }
+                .map { it.value.title }
                 .joinToString(separator = ", ")
 
         return if (s.isEmpty()) "-" else s

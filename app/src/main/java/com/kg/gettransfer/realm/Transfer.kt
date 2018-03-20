@@ -90,7 +90,7 @@ open class Transfer : RealmObject() {
     @Expose
     @SerializedName("transport_type_ids")
     @Required
-    var transportTypes: RealmList<java.lang.Integer?>? = null
+    var transportTypes: RealmList<String?>? = null
 
     @Expose
     @SerializedName("child_seats")

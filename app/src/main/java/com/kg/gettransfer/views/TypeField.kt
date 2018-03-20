@@ -29,16 +29,17 @@ class TypeField : EditText, KoinComponent {
     private val pricesModel: PricesPreviewModel by inject()
     private val types: TransportTypes by inject()
 
-    val checked = BooleanArray(types.get().size, { _ -> false })
 
-    val typesIDs: IntArray
+    val checked = BooleanArray(types.typesMap.size, { _ -> false })
+
+    val typesIDs: Array<String>
         get() = checked
                 .mapIndexed { index, b ->
-                    if (b) index
+                    if (b) types.typesList[index].id
                     else null
                 }
                 .filterNotNull()
-                .toIntArray()
+                .toTypedArray()
 
 
     constructor(c: Context) : super(c)
@@ -85,7 +86,7 @@ class TypeDialog(
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val adapter = TransportTypesArrayAdapter(
-                activity, types.get(), tf.checked, prices)
+                activity, types.typesList, tf.checked, prices)
 
         val d = AlertDialog.Builder(activity)
                 .setTitle("Transport")
@@ -108,7 +109,7 @@ class TypeDialog(
 
     private fun updateText() {
         var text = ""
-        types.get().forEachIndexed { i, s -> if (tf.checked[i]) text += ", ${s.title}" }
+        types.typesList.forEachIndexed { i, s -> if (tf.checked[i]) text += ", ${s.title}" }
         tf.setText(if (text.isNotEmpty()) text.substring(2) else "")
     }
 }

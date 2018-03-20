@@ -18,7 +18,7 @@ open class TransportType : RealmObject() {
     @PrimaryKey
     @SerializedName("id")
     @Expose
-    var id: Int = 0
+    var id: String = ""
 
     @SerializedName("title_ru")
     @Expose

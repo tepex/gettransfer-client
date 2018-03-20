@@ -18,6 +18,7 @@ import io.realm.RealmResults
  */
 
 
+@Deprecated("")
 class TransportTypesAdapter(realmResults: RealmResults<TransportType>, autoUpdate: Boolean)
     : RealmRecyclerViewAdapter<TransportType, TransportTypesAdapter.ViewHolder>(realmResults, autoUpdate) {
 
@@ -62,12 +63,12 @@ class TransportTypesAdapter(realmResults: RealmResults<TransportType>, autoUpdat
         }
     }
 
-    fun getSelectedIds(): ArrayList<Int> {
-        val a = ArrayList<Int>()
-        (0..30)
-                .filter { selected[it] }
-                .mapNotNull { getItem(it) }
-                .forEach { a.add(it.id) }
-        return a
-    }
+//    fun getSelectedIds(): ArrayList<Int> {
+//        val a = ArrayList<Int>()
+//        (0..30)
+//                .filter { selected[it] }
+//                .mapNotNull { getItem(it) }
+//                .forEach { a.add(it.id) }
+//        return a
+//    }
 }

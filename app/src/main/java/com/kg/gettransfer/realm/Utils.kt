@@ -38,6 +38,17 @@ object Utils {
                         .toString()
     }
 
+    fun dateToShortString(c: Context, date: Date?): String {
+        if (date == null) return "-"
+        return DateUtils.formatDateTime(
+                c,
+                date.time,
+                DateUtils.FORMAT_SHOW_DATE
+                        or DateUtils.FORMAT_ABBREV_MONTH
+                        or DateUtils.FORMAT_SHOW_YEAR)
+                .toString()
+    }
+
     fun hoursToString(h: Int): String {
         return when {
             h >= 48 -> "${h / 24} days"

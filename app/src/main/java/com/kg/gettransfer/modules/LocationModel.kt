@@ -77,7 +77,7 @@ class LocationModel(
                                 location.placeID,
                                 LatLng(places[0].latitude, places[0].longitude))
                     }
-                    throw Exception()
+                    throw Exception("No such place")
                 }.subscribeOn(Schedulers.newThread())
                         .subscribe({
                             if (it.placeID == this.location?.placeID && it.title == this.location?.title) {

@@ -12,10 +12,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.kg.gettransfer.R
+import com.kg.gettransfer.modules.TransportTypes
 import com.kg.gettransfer.realm.Offer
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.item_offer.view.*
+import org.koin.android.ext.android.inject
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.inject
 
 
 /**
@@ -26,7 +30,10 @@ import kotlinx.android.synthetic.main.item_offer.view.*
 class OffersAdapter(
         realmResults: RealmResults<Offer>,
         autoUpdate: Boolean)
-    : RealmRecyclerViewAdapter<Offer, OffersAdapter.ViewHolder>(realmResults, autoUpdate) {
+    : RealmRecyclerViewAdapter<Offer, OffersAdapter.ViewHolder>(realmResults, autoUpdate),
+        KoinComponent {
+
+    private val transportTypes: TransportTypes by inject()
 
     var icl: View.OnClickListener = View.OnClickListener {
         Log.i("OffersAdapter", "Item clicked unspecified")
@@ -60,7 +67,7 @@ class OffersAdapter(
         holder.carrier.text = item.carrier?.title ?: "Carrier #" + item.carrier?.id
         holder.vehicle.text =
                 (item.vehicle?.name ?: "Unknown vehicle") +
-                ("\n" + "Economy ×3 ×3")
+                "\n" + transportTypes.typesMap[item.vehicle?.transportTypeID]?.title
 
         var facilities = if (item.wifi == true) "WiFi" else null
         if (item.refreshments == true)

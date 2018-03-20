@@ -337,13 +337,23 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
     private fun animateMap(llFrom: LatLng?, llTo: LatLng?) {
         if (llFrom != null && llTo != null) {
-            val padding = (64 * activity.resources.displayMetrics.density).toInt()
-            map?.animateCamera(
-                    CameraUpdateFactory.newLatLngBounds(
-                            getLatLngBounds(llFrom, llTo),
-                            padding),
-                    600,
-                    null)
+            try {
+                val padding = (64 * activity.resources.displayMetrics.density).toInt()
+                map?.animateCamera(
+                        CameraUpdateFactory.newLatLngBounds(
+                                getLatLngBounds(llFrom, llTo),
+                                padding),
+                        600,
+                        null)
+            }
+            catch (e: Exception) {
+                map?.animateCamera(
+                        CameraUpdateFactory.newLatLngBounds(
+                                getLatLngBounds(llFrom, llTo),
+                                0),
+                        600,
+                        null)
+            }
         } else if (llFrom != null) {
             map?.animateCamera(CameraUpdateFactory.newLatLngZoom(llFrom, 12f), 600, null)
         } else if (llTo != null) {
