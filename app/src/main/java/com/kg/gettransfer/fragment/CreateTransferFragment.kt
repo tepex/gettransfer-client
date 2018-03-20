@@ -425,6 +425,8 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     private var ftidLocationChooser: Int = -1
 
     private fun showLocationChooser(lv: LocationView) {
+        if (frChooseLocation.isAdded) return
+
         val ft = fragmentManager.beginTransaction()
 
         frChooseLocation.location = lv.location
