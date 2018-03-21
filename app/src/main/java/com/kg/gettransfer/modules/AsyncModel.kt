@@ -38,9 +38,9 @@ open class AsyncModel {
         return d
     }
 
-    public fun addOnBusyProgressBar(pb: View): Disposable {
+    public fun addOnBusyProgressBar(pb: View, nonBusyVisibility: Int = View.GONE): Disposable {
         val d = brBusy.observeOn(AndroidSchedulers.mainThread()).subscribe{
-            pb.visibility = if (it) View.VISIBLE else View.GONE
+            pb.visibility = if (it) View.VISIBLE else nonBusyVisibility
         }
         disposables.add(d)
         return d

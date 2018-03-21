@@ -19,14 +19,14 @@ import org.koin.standalone.inject
 
 
 class LocationView : ConstraintLayout, KoinComponent {
-    private val locationModel: LocationModel by inject()
+    private val model: LocationModel by inject()
 
     var onLocationChanged: Runnable? = null
 
     var location
-        get() = locationModel.location
+        get() = model.location
         set(value) {
-            locationModel.location = value
+            model.location = value
         }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -35,29 +35,24 @@ class LocationView : ConstraintLayout, KoinComponent {
     init {
         inflate(context, R.layout.view_location, this)
 
-        locationModel.onLocationChanged = Runnable {
-            val text = location.title
+        model.onLocationChanged = Runnable {
+            tvName.text = location.title
 
-            tvName.text = text
+            ibClear.visibility = if (location.isEmpty()) GONE else VISIBLE
 
-            ibClear.visibility = if (text.isNotEmpty() == true) VISIBLE else GONE
-
-            if (location.validation == false) imgInvalidAddress.visibility = GONE
-            if (location.valid == true || text.isEmpty()) {
-                imgInvalidAddress.visibility = GONE
-            }
+            if (location.isValid() || location.isEmpty()) imgInvalidAddress.visibility = GONE
 
             onLocationChanged?.run()
         }
 
-        locationModel.addOnBusyProgressBar(progressBar)
-        locationModel.addOnBusyChanged { if (it) imgInvalidAddress.visibility = GONE }
-        locationModel.addOnError {
+        model.addOnBusyProgressBar(progressBar)
+        model.addOnBusyChanged { if (it) imgInvalidAddress.visibility = GONE }
+        model.addOnError {
             if (location.title.isEmpty()) return@addOnError
             imgInvalidAddress.visibility = VISIBLE
             Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
         }
 
-        ibClear.setOnClickListener { locationModel.location = LocationDetailed("") }
+        ibClear.setOnClickListener { model.location = LocationDetailed("") }
     }
 }

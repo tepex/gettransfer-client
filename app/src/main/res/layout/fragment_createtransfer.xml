@@ -101,10 +101,10 @@
             android:id="@+id/vSwapBG"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:layout_marginEnd="64dp"
             android:background="@drawable/bg_circle_bg_32dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/flSwapBG"
+            app:layout_constraintStart_toStartOf="@+id/flSwapBG"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -166,8 +166,8 @@
 
         <FrameLayout
             android:id="@+id/flSwapBG"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginEnd="64dp"
             android:background="@drawable/bg_circle_transparent_32dp"
             app:layout_constraintBottom_toBottomOf="parent"

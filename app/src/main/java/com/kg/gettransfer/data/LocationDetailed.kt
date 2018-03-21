@@ -15,7 +15,8 @@ class LocationDetailed(
         val subtitle: String?,
         val placeID: String?,
         val latLng: LatLng?,
-        var validation: Boolean? = null) {
+        var validationSuccess: Boolean? = null) {
+
 
     constructor(title: String) : this(title, null, null, null)
 
@@ -23,14 +24,11 @@ class LocationDetailed(
             : this(title, subtitle, placeID, null)
 
 
-    val valid: Boolean
-        get() = title.isNotEmpty() && latLng != null
+    fun isValid(): Boolean = title.isNotEmpty() && latLng != null
 
+    fun isEmpty(): Boolean = title.isEmpty() && placeID == null && latLng == null
 
     fun toLocation(): Location? =
             if (latLng == null) null
             else Location(title, latLng)
-
-
-    fun equalsRaw(b: LocationDetailed?): Boolean = title == b?.title
 }

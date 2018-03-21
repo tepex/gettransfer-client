@@ -10,7 +10,6 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.standalone.KoinComponent
-import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 
@@ -28,83 +27,72 @@ class LocationModel(
 
     var location: LocationDetailed = LocationDetailed("")
         set(newLocation) {
-            if (newLocation.equalsRaw(field) &&
+            if (newLocation.title == field.title &&
                     newLocation.latLng == null &&
                     newLocation.placeID == null) return
 
             field = newLocation
             onLocationChanged?.run()
 
-            if (!newLocation.valid) validate(newLocation)
+            if (!newLocation.isValid()) validate()
             else busy = false
         }
 
-    private fun validate(location: LocationDetailed): LocationDetailed {
-        if (!googleApiClient.isConnected) {
-            throw Exception("Google API client is not connected")
-        }
+    private fun validate(): LocationDetailed {
+        val location = location
 
         if (location.placeID != null) {
+            if (!googleApiClient.isConnected) throw Exception("Google API client is not connected")
+
             busy = true
 
-            val pendingResult = Places.GeoDataApi.getPlaceById(googleApiClient, location.placeID)
-
-            pendingResult.setResultCallback({ places ->
-                if (location.placeID == this.location.placeID &&
-                        location.title == this.location.title) {
-                    if (places.status.isSuccess) {
-                        this.location = LocationDetailed(
-                                location.title,
-                                location.subtitle,
-                                location.placeID,
-                                places[0].latLng,
-                                true)
-                        places.release()
-                    } else {
-                        location.validation = false
-                        this.location = location
-                        err(places.status.statusMessage)
-                    }
-                    busy = false
-                }
-            }, 3, TimeUnit.SECONDS)
-        } else if (location.title.isNotEmpty()) {
-            busy = true
-            try {
-                disposables.add(Single
-                        .fromCallable {
-                            val places = geocoder.getFromLocationName(location.title, 1) //, -90.0, -180.0, 90.0, 180.0)
-                            if (places.isNotEmpty()) {
-                                return@fromCallable LocationDetailed(
+            Places.GeoDataApi
+                    .getPlaceById(googleApiClient, location.placeID)
+                    .setResultCallback({ places ->
+                        if (location == this.location) {
+                            if (places.status.isSuccess) {
+                                this.location = LocationDetailed(
                                         location.title,
                                         location.subtitle,
                                         location.placeID,
-                                        LatLng(places[0].latitude, places[0].longitude),
+                                        places[0].latLng,
                                         true)
-                            }
-                            throw Exception("Unknown location name")
-                        }
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            if (it.placeID == this.location.placeID &&
-                                    it.title == this.location.title) {
-                                this.location = it
-                                busy = false
-                            }
-                        }, {
-                            if (location.placeID == this.location.placeID &&
-                                    location.title == this.location.title) {
-                                location.validation = false
+                            } else {
+                                location.validationSuccess = false
                                 this.location = location
-                                err(it)
-                                busy = false
+                                err(places.status.statusMessage)
                             }
-                        }))
-            } catch (e: IOException) {
-                e.printStackTrace()
-                busy = false
-            }
+                            places.release()
+                            busy = false
+                        }
+                    }, 3, TimeUnit.SECONDS)
+        } else if (location.title.isNotEmpty()) {
+            disposables.add(Single
+                    .fromCallable {
+                        val places = geocoder.getFromLocationName(location.title, 1) //, -90.0, -180.0, 90.0, 180.0)
+                        if (places.isNotEmpty()) {
+                            return@fromCallable LocationDetailed(
+                                    location.title,
+                                    location.subtitle,
+                                    location.placeID,
+                                    LatLng(places[0].latitude, places[0].longitude),
+                                    true)
+                        }
+                        throw Exception("Unknown address")
+                    }
+                    .subscribeOn(Schedulers.io()).doOnSubscribe { busy = true }
+                    .observeOn(AndroidSchedulers.mainThread()).doFinally { busy = false }
+                    .subscribe({
+                        if (location == this.location) {
+                            this.location = it
+                        }
+                    }, {
+                        if (location == this.location) {
+                            location.validationSuccess = false
+                            this.location = location
+                            err(it)
+                        }
+                    }))
         }
 
         return location

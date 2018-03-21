@@ -50,7 +50,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     private val frChooseLocation: ChooseLocationFragment by lazy { ChooseLocationFragment() }
     private val frTransferDetails: TransferDetailsFragment by lazy { TransferDetailsFragment() }
 
-    val geoApiContext: GeoApiContext by inject()
+    private val geoApiContext: GeoApiContext by inject()
 
     private var map: GoogleMap? = null
 
@@ -265,10 +265,10 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     private var polyline: Polyline? = null
 
     private val pathChanged = Runnable {
-        val llFrom = lvFrom.location?.latLng
+        val llFrom = lvFrom.location.latLng
         val llTo =
                 if (clDuration.visibility == VISIBLE) null
-                else lvTo.location?.latLng
+                else lvTo.location.latLng
 
         updateMarkers(llFrom, llTo)
         animateMap(llFrom, llTo)
@@ -385,9 +385,9 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
 
     private fun validateFields(): Boolean =
-            lvFrom.location?.valid == true &&
+            lvFrom.location.isValid() &&
                     if (modeAB)
-                        lvTo.location?.valid == true &&
+                        lvTo.location.isValid() &&
                                 routeDuration > 0 &&
                                 routeDistance > 0
                     else
@@ -395,10 +395,10 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
 
     private fun transferFromFields(): NewTransfer? {
-        val lFrom = lvFrom.location?.toLocation() ?: return null
+        val lFrom = lvFrom.location.toLocation() ?: return null
 
         if (modeAB) {
-            val lTo = lvTo.location?.toLocation() ?: return null
+            val lTo = lvTo.location.toLocation() ?: return null
             return NewTransfer(
                     lFrom,
                     lTo,

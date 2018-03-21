@@ -75,12 +75,7 @@ class AccountFragment : Fragment(), KoinComponent {
         disposables.add(currentAccount.addOnAccountChanged { updateUI() })
 
         disposables.add(profileModel.addOnProfileUpdated { updateUI() })
-
-        disposables.add(
-                profileModel.addOnBusyChanged {
-                    progressBar.visibility = if (it) VISIBLE else GONE
-                }
-        )
+        disposables.add(profileModel.addOnBusyProgressBar(progressBar))
 
         updateUI()
     }

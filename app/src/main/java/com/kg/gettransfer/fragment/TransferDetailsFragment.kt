@@ -253,18 +253,14 @@ class TransferDetailsFragment : Fragment() {
             }
             tvPromoValidation.visibility = GONE
         }
-
         promoCodeModel.addOnError {
             tvPromoInfo.visibility = GONE
             tvPromoValidation.visibility = VISIBLE
             tvPromoValidation.text = it.message
         }
-
+        promoCodeModel.addOnBusyProgressBar(pbPromoValidation, INVISIBLE)
         promoCodeModel.addOnBusyChanged {
-            if (it) {
-                tvPromoInfo.visibility = GONE
-            }
-            pbPromoValidation.visibility = if (it) VISIBLE else INVISIBLE
+            if (it) tvPromoInfo.visibility = GONE
         }
     }
 
