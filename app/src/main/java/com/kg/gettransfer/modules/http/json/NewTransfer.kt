@@ -1,8 +1,8 @@
-package com.kg.gettransfer.modules.http.json;
+package com.kg.gettransfer.modules.http.json
 
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 import com.kg.gettransfer.realm.Location
 
 

@@ -3,6 +3,7 @@ package com.kg.gettransfer.activity.transfer
 
 import android.annotation.SuppressLint
 import android.graphics.LightingColorFilter
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -57,9 +58,8 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
         }
 
+        transferModel.addOnBusyProgressBar(progressBar, INVISIBLE)
         transferModel.addOnBusyChanged {
-            progressBar.visibility = if (it) VISIBLE else INVISIBLE
-
             if (!it && transferStatusView.visibility == INVISIBLE) {
                 transferStatusView.alpha = 0.0f
                 transferStatusView.animate()
@@ -80,11 +80,24 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             }
         }
         rvOffers.emptyView = tvNoOffers
+
+
+//        val density = applicationContext.resources.displayMetrics.density
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            scrollView.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+//                line4.alpha = scrollY / density / 8
+//            }
+//        } else {
+//            scrollView.viewTreeObserver.addOnScrollChangedListener({
+//                line4.alpha = scrollView.scrollY / density / 8
+//            })
+//        }
     }
 
 
     private fun updateUI(transfer: Transfer) {
-        tvEmail.text = "Transfer #" + transfer.id
+        tvHeader.text = "Transfer #" + transfer.id
+        tvPaymentHeader.text = "Book transfer #" + transfer.id
 
         tvFrom.text = transfer.from?.name
 
@@ -193,7 +206,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 {
-                                    wv.visibility = VISIBLE
+                                    clPayment.visibility = VISIBLE
                                     wv.loadUrl(it.data?.url)
                                 },
                                 {
@@ -206,6 +219,10 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         finish()
     }
 
+    fun hidePayment(v: View?) {
+        clPayment.visibility = INVISIBLE
+    }
+
     fun cancel(v: View) {
         scrollView.fullScroll(FOCUS_UP)
         transferModel.cancel()
@@ -214,6 +231,11 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     fun restore(v: View) {
         scrollView.fullScroll(FOCUS_UP) //TODO: Remove when header implemented
         transferModel.restore()
+    }
+
+    override fun onBackPressed() {
+        if (clPayment.visibility == VISIBLE) hidePayment(null)
+        else super.onBackPressed()
     }
 
     override fun onDestroy() {

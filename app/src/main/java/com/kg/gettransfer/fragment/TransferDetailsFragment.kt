@@ -12,6 +12,7 @@ import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import com.kg.gettransfer.R
 import com.kg.gettransfer.mainactivity.MainActivity
@@ -75,7 +76,7 @@ class TransferDetailsFragment : Fragment() {
 
             installEditTextWatcher(v)
 
-            initPromoCodeUI(v.etPromoCode, v.tvPromoValidation)
+            initPromoCodeUI(v.etPromoCode, v.tvPromoInfo, v.tvPromoValidation, v.pbPromoValidation)
 
             savedView = v
         }
@@ -221,7 +222,12 @@ class TransferDetailsFragment : Fragment() {
     }
 
 
-    private fun initPromoCodeUI(etPromoCode: EditText, tvPromoValidation: TextView) {
+    private fun initPromoCodeUI(
+            etPromoCode: EditText,
+            tvPromoInfo: TextView,
+            tvPromoValidation: TextView,
+            pbPromoValidation: ProgressBar) {
+
         val promoEditTextWatcher: TextWatcher = object : TextWatcher {
             private val DELAY: Long = 500
 
