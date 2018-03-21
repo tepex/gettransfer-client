@@ -35,6 +35,10 @@ class ChooseLocationFragment : Fragment() {
         activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     }
 
+    private val LAT_LNG_BOUNDS_WORLD = LatLngBounds(
+            LatLng(-90.0, -180.0),
+            LatLng(90.0, 180.0))
+
     private val BOUNDS_MOUNTAIN_VIEW = LatLngBounds(
             LatLng(37.398160, -122.180831),
             LatLng(37.430610, -121.972090))
@@ -48,7 +52,7 @@ class ChooseLocationFragment : Fragment() {
                 Consumer { l ->
                     location = l
                 },
-                BOUNDS_MOUNTAIN_VIEW,
+                LAT_LNG_BOUNDS_WORLD,
                 AutocompleteFilter
                         .Builder()
                         .setTypeFilter(AutocompleteFilter.TYPE_FILTER_NONE)

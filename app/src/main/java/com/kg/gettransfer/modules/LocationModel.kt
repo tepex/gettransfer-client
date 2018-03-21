@@ -26,16 +26,17 @@ class LocationModel(
 
     var onLocationChanged: Runnable? = null
 
-    var location: LocationDetailed? = null
+    var location: LocationDetailed = LocationDetailed("")
         set(newLocation) {
-            if (newLocation?.equalsRaw(field) == true &&
+            if (newLocation.equalsRaw(field) &&
                     newLocation.latLng == null &&
                     newLocation.placeID == null) return
 
             field = newLocation
             onLocationChanged?.run()
 
-            if (newLocation?.valid == false) validate(newLocation)
+            if (!newLocation.valid) validate(newLocation)
+            else busy = false
         }
 
     private fun validate(location: LocationDetailed): LocationDetailed {
@@ -49,16 +50,19 @@ class LocationModel(
             val pendingResult = Places.GeoDataApi.getPlaceById(googleApiClient, location.placeID)
 
             pendingResult.setResultCallback({ places ->
-                if (location.placeID == this.location?.placeID &&
-                        location.title == this.location?.title) {
+                if (location.placeID == this.location.placeID &&
+                        location.title == this.location.title) {
                     if (places.status.isSuccess) {
                         this.location = LocationDetailed(
                                 location.title,
                                 location.subtitle,
                                 location.placeID,
-                                places[0].latLng)
+                                places[0].latLng,
+                                true)
                         places.release()
                     } else {
+                        location.validation = false
+                        this.location = location
                         err(places.status.statusMessage)
                     }
                     busy = false
@@ -75,21 +79,24 @@ class LocationModel(
                                         location.title,
                                         location.subtitle,
                                         location.placeID,
-                                        LatLng(places[0].latitude, places[0].longitude))
+                                        LatLng(places[0].latitude, places[0].longitude),
+                                        true)
                             }
-                            throw Exception("No such place")
+                            throw Exception("Unknown location name")
                         }
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
-                            if (it.placeID == this.location?.placeID &&
-                                    it.title == this.location?.title) {
+                            if (it.placeID == this.location.placeID &&
+                                    it.title == this.location.title) {
                                 this.location = it
                                 busy = false
                             }
                         }, {
-                            if (location.placeID == this.location?.placeID &&
-                                    location.title == this.location?.title) {
+                            if (location.placeID == this.location.placeID &&
+                                    location.title == this.location.title) {
+                                location.validation = false
+                                this.location = location
                                 err(it)
                                 busy = false
                             }

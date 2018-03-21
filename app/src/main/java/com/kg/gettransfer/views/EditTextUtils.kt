@@ -4,23 +4,14 @@ package com.kg.gettransfer.views
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
-import android.app.Dialog
-import android.app.DialogFragment
 import android.content.Context
 import android.content.ContextWrapper
-import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.*
 import android.widget.EditText
 import com.kg.gettransfer.R
-import com.kg.gettransfer.modules.PricesPreviewModel
-import com.kg.gettransfer.modules.TransportTypes
-import com.kg.gettransfer.modules.http.json.NewTransfer
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
 import java.text.DateFormat
 import java.util.*
 
@@ -33,7 +24,7 @@ import java.util.*
 fun EditText.setupClearButtonWithAction() {
     addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(editable: Editable?) {
-            val clearIcon = if (editable?.isNotEmpty() == true) R.drawable.ic_clear_gray_24dp else 0
+            val clearIcon = if (editable?.isNotEmpty() == true) R.drawable.ic_clear_gray_20dp else 0
             setCompoundDrawablesWithIntrinsicBounds(0, 0, clearIcon, 0)
         }
 

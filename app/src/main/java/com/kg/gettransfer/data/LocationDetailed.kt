@@ -14,8 +14,8 @@ class LocationDetailed(
         val title: String,
         val subtitle: String?,
         val placeID: String?,
-        val latLng: LatLng?) {
-
+        val latLng: LatLng?,
+        var validation: Boolean? = null) {
 
     constructor(title: String) : this(title, null, null, null)
 

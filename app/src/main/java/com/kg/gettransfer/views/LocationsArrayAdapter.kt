@@ -94,7 +94,11 @@ class LocationsArrayAdapter(context: Context,
             val results = FilterResults()
 
             if (constraint != null) {
-                val resultList = geoAutocompleteProvider.getPredictions(constraint, bounds, placeFilter)
+                val resultList = geoAutocompleteProvider
+                        .getPredictions(
+                                if (constraint.isBlank()) "Airport" else constraint,
+                                bounds,
+                                placeFilter)
 
                 if (resultList != null) {
                     results.values = resultList

@@ -105,7 +105,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                     updateTabs(false)
                 }
 
-                ibSwap.setOnClickListener {
+                ivSwap.setOnClickListener {
                     val location = lvFrom.location
                     lvFrom.location = lvTo.location
                     lvTo.location = location
@@ -232,14 +232,20 @@ class CreateTransferFragment : Fragment(), KoinComponent {
             tvFromAToB.setTextColor(resources.getColor(R.color.colorTextBlack))
             tvForAWhile.setTextColor(resources.getColor(R.color.colorTextGray))
             clDuration.visibility = INVISIBLE
-            ibSwap.visibility = VISIBLE
+
+            vSwapBG.visibility = VISIBLE
+            flSwapBG.visibility = VISIBLE
+            ivSwap.visibility = VISIBLE
         } else {
             tvFromAToB.typeface = Typeface.DEFAULT
             tvForAWhile.typeface = Typeface.DEFAULT_BOLD
             tvFromAToB.setTextColor(resources.getColor(R.color.colorTextGray))
             tvForAWhile.setTextColor(resources.getColor(R.color.colorTextBlack))
             clDuration.visibility = VISIBLE
-            ibSwap.visibility = GONE
+
+            vSwapBG.visibility = GONE
+            flSwapBG.visibility = GONE
+            ivSwap.visibility = GONE
         }
         pathChanged.run()
     }

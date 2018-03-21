@@ -9,14 +9,15 @@
         android:id="@+id/tvName"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="96dp"
         android:gravity="center_vertical"
-        android:hint="Adress"
+        android:hint="Address"
         android:maxLines="1"
         android:singleLine="true"
         android:textColor="@color/colorTextBlack"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/progressBar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,11 +26,23 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="16dp"
         android:layout_height="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imgInvalidAddress"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imgInvalidAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ibClear"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_goneMarginEnd="16dp"
-        app:layout_goneMarginRight="16dp" />
+        app:layout_goneMarginRight="16dp"
+        app:srcCompat="@drawable/ic_cancel_red_20dp" />
 
     <ImageButton
         android:id="@+id/ibClear"
@@ -41,6 +54,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_clear_gray_24dp" />
+        app:srcCompat="@drawable/ic_clear_gray_20dp" />
 
 </android.support.constraint.ConstraintLayout>

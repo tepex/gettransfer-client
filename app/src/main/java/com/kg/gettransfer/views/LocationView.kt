@@ -2,10 +2,9 @@ package com.kg.gettransfer.views
 
 
 import android.content.Context
-import android.graphics.Color
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
-import android.view.View
+import android.widget.Toast
 import com.kg.gettransfer.R
 import com.kg.gettransfer.data.LocationDetailed
 import com.kg.gettransfer.modules.LocationModel
@@ -37,15 +36,27 @@ class LocationView : ConstraintLayout, KoinComponent {
         inflate(context, R.layout.view_location, this)
 
         locationModel.onLocationChanged = Runnable {
-            val text = locationModel.location?.title
-            tvName.text = text ?: ""
-            ibClear.visibility =
-                    if (text?.isNotEmpty() == true) View.VISIBLE
-                    else View.GONE
+            val text = location.title
+
+            tvName.text = text
+
+            ibClear.visibility = if (text.isNotEmpty() == true) VISIBLE else GONE
+
+            if (location.validation == false) imgInvalidAddress.visibility = GONE
+            if (location.valid == true || text.isEmpty()) {
+                imgInvalidAddress.visibility = GONE
+            }
+
             onLocationChanged?.run()
         }
 
         locationModel.addOnBusyProgressBar(progressBar)
+        locationModel.addOnBusyChanged { if (it) imgInvalidAddress.visibility = GONE }
+        locationModel.addOnError {
+            if (location.title.isEmpty()) return@addOnError
+            imgInvalidAddress.visibility = VISIBLE
+            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+        }
 
         ibClear.setOnClickListener { locationModel.location = LocationDetailed("") }
     }
