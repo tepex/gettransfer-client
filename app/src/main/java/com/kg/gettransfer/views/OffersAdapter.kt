@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import com.kg.gettransfer.R
@@ -17,7 +19,6 @@ import com.kg.gettransfer.realm.Offer
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.item_offer.view.*
-import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
@@ -75,6 +76,7 @@ class OffersAdapter(
             else facilities += "    " + "Refreshments"
 
         holder.facilities.text = facilities
+        holder.facilities.visibility = if (facilities == null) GONE else VISIBLE
 
         holder.price.text = item.price?.toString() ?: "No price"
 

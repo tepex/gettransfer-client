@@ -153,6 +153,10 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
         transferStatusView.update(transfer)
 
+        tvNoOffers.text =
+                if (transfer.offersCount == 0) "Offers will be there shortly, often faster than in 1 day"
+                else "Number of offers: " + transfer.offersCount
+
         Log.i("TransferActivity", "UI updated")
     }
 
@@ -212,6 +216,11 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     fun cancel(v: View) {
         scrollView.fullScroll(FOCUS_UP)
         transferModel.cancel()
+    }
+
+    fun showAllDetails(v: View) {
+        tvShowAllDetails.visibility = GONE
+        clDetails.visibility = VISIBLE
     }
 
     fun restore(v: View) {

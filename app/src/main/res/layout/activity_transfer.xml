@@ -202,118 +202,144 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvRouteInfo" />
 
-
                 <TextView
-                    android:id="@+id/tvlSign"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvShowAllDetails"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="24dp"
-                    android:text="Name sign"
+                    android:onClick="showAllDetails"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="32dp"
+                    android:paddingRight="32dp"
+                    android:paddingTop="8dp"
+                    android:text="All details ..."
+                    android:textAlignment="textEnd"
                     android:textColor="@color/colorTextGray"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/line1" />
 
-                <TextView
-                    android:id="@+id/tvSign"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="Aurora"
-                    android:textColor="@color/colorTextBlack"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/tvlSign"
-                    app:layout_constraintStart_toEndOf="@+id/tvlSign" />
-
-                <TextView
-                    android:id="@+id/tvlPassengers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Passengers"
-                    android:textColor="@color/colorTextGray"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvlSign" />
-
-                <TextView
-                    android:id="@+id/tvPassengers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="3"
-                    android:textColor="@color/colorTextBlack"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/tvlPassengers"
-                    app:layout_constraintStart_toEndOf="@+id/tvlPassengers" />
-
-                <TextView
-                    android:id="@+id/tvlTransportTypes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Transport types"
-                    android:textColor="@color/colorTextGray"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvlPassengers" />
-
-                <TextView
-                    android:id="@+id/tvTypes"
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/clDetails"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginStart="8dp"
-                    android:gravity="left"
-                    android:text="3"
-                    android:textColor="@color/colorTextBlack"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/tvlTransportTypes"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/tvlTransportTypes" />
-
-                <TextView
-                    android:id="@+id/tvlChildSeats"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Child seats"
-                    android:textColor="@color/colorTextGray"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvlTransportTypes" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvShowAllDetails">
 
-                <TextView
-                    android:id="@+id/tvChildSeats"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="12 kg x 1, 32 kg x 1"
-                    android:textColor="@color/colorTextBlack"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/tvlChildSeats"
-                    app:layout_constraintStart_toEndOf="@+id/tvlChildSeats" />
+                    <TextView
+                        android:id="@+id/tvlSign"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="24dp"
+                        android:text="Name sign"
+                        android:textColor="@color/colorTextGray"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvSign"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Aurora"
+                        android:textColor="@color/colorTextBlack"
+                        app:layout_constraintBaseline_toBaselineOf="@+id/tvlSign"
+                        app:layout_constraintStart_toEndOf="@+id/tvlSign" />
+
+                    <TextView
+                        android:id="@+id/tvlPassengers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Passengers"
+                        android:textColor="@color/colorTextGray"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvlSign" />
+
+                    <TextView
+                        android:id="@+id/tvPassengers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="3"
+                        android:textColor="@color/colorTextBlack"
+                        app:layout_constraintBaseline_toBaselineOf="@+id/tvlPassengers"
+                        app:layout_constraintStart_toEndOf="@+id/tvlPassengers" />
+
+                    <TextView
+                        android:id="@+id/tvlTransportTypes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Transport types"
+                        android:textColor="@color/colorTextGray"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvlPassengers" />
+
+                    <TextView
+                        android:id="@+id/tvTypes"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginStart="8dp"
+                        android:gravity="left"
+                        android:text="3"
+                        android:textColor="@color/colorTextBlack"
+                        app:layout_constraintBaseline_toBaselineOf="@+id/tvlTransportTypes"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/tvlTransportTypes" />
+
+                    <TextView
+                        android:id="@+id/tvlChildSeats"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Child seats"
+                        android:textColor="@color/colorTextGray"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvlTransportTypes" />
+
+                    <TextView
+                        android:id="@+id/tvChildSeats"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="12 kg x 1, 32 kg x 1"
+                        android:textColor="@color/colorTextBlack"
+                        app:layout_constraintBaseline_toBaselineOf="@+id/tvlChildSeats"
+                        app:layout_constraintStart_toEndOf="@+id/tvlChildSeats" />
 
 
-                <TextView
-                    android:id="@+id/tvlComments"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Comments"
-                    android:textColor="@color/colorTextGray"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvlChildSeats" />
+                    <TextView
+                        android:id="@+id/tvlComments"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Comments"
+                        android:textColor="@color/colorTextGray"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvlChildSeats" />
 
-                <TextView
-                    android:id="@+id/tvComments"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginStart="8dp"
-                    android:text="No comments"
-                    android:textColor="@color/colorTextBlack"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/tvlComments"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/tvlComments" />
+                    <TextView
+                        android:id="@+id/tvComments"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginStart="8dp"
+                        android:text="No comments"
+                        android:textColor="@color/colorTextBlack"
+                        app:layout_constraintBaseline_toBaselineOf="@+id/tvlComments"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/tvlComments" />
 
+                </android.support.constraint.ConstraintLayout>
 
                 <View
                     android:id="@+id/line2"
@@ -322,10 +348,11 @@
                     android:layout_marginEnd="32dp"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="24dp"
+                    app:layout_goneMarginTop="0dp"
                     android:background="#cccccc"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvlComments" />
+                    app:layout_constraintTop_toBottomOf="@+id/clDetails" />
 
 
                 <android.support.constraint.ConstraintLayout
@@ -443,7 +470,7 @@
                             android:id="@+id/rvOffers"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
+                            android:layout_marginTop="8dp"
                             android:clipToPadding="false"
                             android:maxHeight="300dp" />
 
