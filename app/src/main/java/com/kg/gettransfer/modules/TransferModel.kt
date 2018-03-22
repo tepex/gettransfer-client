@@ -4,7 +4,6 @@ package com.kg.gettransfer.modules
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.kg.gettransfer.modules.http.HttpApi
 import com.kg.gettransfer.modules.http.json.Payment
-import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.realm.getTransfer
 import com.kg.gettransfer.realm.getTransferAsync
@@ -14,6 +13,7 @@ import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmResults
 import org.koin.standalone.KoinComponent
+import java.util.*
 import java.util.logging.Logger
 
 
@@ -52,16 +52,21 @@ class TransferModel(
             brTransfer.accept(value)
         }
 
-
     private val brTransfer: BehaviorRelay<Transfer> = BehaviorRelay.create()
+
+    private var managedTransfer: Transfer? = null
 
     private val transferChangeListener: (RealmResults<Transfer>) -> Unit = { result ->
         log.info("getTransferFromRealmAsync() changed")
         if (result.size > 0) {
             if (result.isLoaded) {
-                val resTransfer = result[0]
-                if (resTransfer?.isLoaded == true) {
-                    transfer = resTransfer
+                managedTransfer?.removeAllChangeListeners()
+                val managedTransfer = result[0]
+                if (managedTransfer?.isLoaded == true && managedTransfer.isValid) {
+//                    managedTransfer.addChangeListener<Transfer> { t ->
+//                        transfer = if (t.isValid) realm.copyFromRealm(t) else Transfer()
+//                    }
+                    transfer = realm.copyFromRealm(managedTransfer)
                 }
             }
         } else {
@@ -73,95 +78,60 @@ class TransferModel(
     private var transferRealmResults: RealmResults<Transfer>? = null
 
 
-    fun getOffersAsyncRealmResult(): RealmResults<Offer> =
-            transfer!!.offers.where().findAllAsync()
-
-
-    fun updateOffers() {
-        if (busy || transfer == null) return
-        api.getOffers(id).fastSubscribe { data ->
-            log.info("getOffers() Success, offers N = ${data?.offers?.size}")
-
-            val offers = data?.offers ?: return@fastSubscribe
-
-            val realm = Realm.getDefaultInstance()
-            realm.executeTransaction {
-                val offersRealm = realm.copyToRealmOrUpdate(offers)
-
-                val transfer = realm.getTransfer(id)
-                if (transfer == null) {
-                    err("No transfer with id: " + id)
-                    return@executeTransaction
-                }
-
-                transfer.offers.clear()
-                transfer.offers.addAll(offersRealm)
-
-                //transfer.offersUpdatedAt = Date()
-
-                realm.insertOrUpdate(transfer)
-
-                log.info("getOffers() Offers saved to realm")
-            }
-            realm.close()
-        }
+    fun updateIfOld() {
+        if (transfer?.justUpdated == false) update()
     }
 
 
     fun update() {
-        if (busy || transfer == null) return
-        api.getTransfer(id).fastSubscribe { newTransfer ->
-            if (newTransfer != null) {
-                newTransfer.updateIsActive()
-
-                val realm = Realm.getDefaultInstance()
-                realm.executeTransaction {
-                    realm.copyToRealmOrUpdate(newTransfer)
-                }
-                realm.close()
-            } else {
-                err("Received transfer is null")
-            }
+        if (busy || id < 0) return
+        api.getTransfer(id).fastSubscribe {
+            save(it?.transfer)
         }
     }
 
 
     fun cancel() {
-        if (busy || transfer == null) return
+        if (busy || id < 0) return
         api.postCancelTransfer(id).fastSubscribe {
-            val realm = Realm.getDefaultInstance()
-            realm.executeTransaction {
-                val transfer = realm.getTransfer(id)
-
-                if (transfer == null) {
-                    err(Exception("No transfer with id: " + id))
-                    return@executeTransaction
-                }
-
-                transfer.status = "canceled"
-                transfer.updateIsActive()
-            }
-            realm.close()
+            save(it?.transfer)
         }
     }
 
 
     fun restore() {
-        if (busy || transfer == null) return
+        if (busy || id < 0) return
         api.postRestoreTransfer(id).fastSubscribe {
+            save(it?.transfer)
+        }
+    }
+
+
+    // Non UI thread
+    private fun save(newTransfer: Transfer?) {
+        if (newTransfer != null && newTransfer.idValid) {
+            val id = newTransfer.id
+
             val realm = Realm.getDefaultInstance()
-            realm.executeTransaction {
-                val transfer = realm.getTransfer(id)
 
-                if (transfer == null) {
-                    err("No transfer with id: " + id)
-                    return@executeTransaction
-                }
+            newTransfer.update()
 
-                transfer.status = "new"
-                transfer.updateIsActive()
+            val oldTransfer = realm.getTransfer(id)
+            if (oldTransfer != null) {
+                newTransfer.offersUpdatedDate = oldTransfer.offersChangedDate
+                newTransfer.offers = oldTransfer.offers
             }
+
+            val offersChangedDate = newTransfer.offersChangedDate
+            val offersOutdated = newTransfer.offersOutdated
+
+            realm.executeTransaction {
+                realm.copyToRealmOrUpdate(newTransfer)
+            }
+
             realm.close()
+        } else {
+            err("Received transfer is null")
         }
     }
 
@@ -169,7 +139,7 @@ class TransferModel(
     fun payment(offerID: Int): Observable<com.kg.gettransfer.modules.http.json.Response<Payment>> {
         return api.payment(id, offerID, "platron", 30)
                 .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
     }
 
 

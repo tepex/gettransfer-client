@@ -1,10 +1,9 @@
 package com.kg.gettransfer.realm
 
 
-import android.content.Context
-import android.text.format.DateUtils
 import io.realm.Realm
 import io.realm.RealmResults
+import java.text.DateFormat.*
 import java.util.*
 
 
@@ -22,14 +21,16 @@ fun Realm.getTransfer(id: Int): Transfer? =
 
 
 object Utils {
-    fun dateToString(c: Context, date: Date?): String {
+    fun dateToString(date: Date?): String {
         if (date == null) return "-"
-        return DateUtils.formatDateTime(
-                c,
-                date.time,
-                DateUtils.FORMAT_SHOW_TIME).toString() +
+        return getTimeInstance(SHORT).format(date) +
                 "   " +
-                java.text.DateFormat.getDateInstance().format(date)
+                getDateInstance().format(date)
+//        return DateUtils.formatDateTime(
+//                c,
+//                date.time,
+//                DateUtils.FORMAT_SHOW_TIME).toString() +
+//                "   " +
 //                DateUtils.formatDateTime(
 //                        c,
 //                        date.time,
@@ -39,16 +40,9 @@ object Utils {
 //                        .toString()
     }
 
-    fun dateToShortString(c: Context, date: Date?): String {
+    fun dateToShortString(date: Date?): String {
         if (date == null) return "-"
-        return java.text.DateFormat.getDateInstance().format(date)
-//        DateUtils.formatDateTime(
-//                c,
-//                date.time,
-//                DateUtils.FORMAT_SHOW_DATE
-//                        or DateUtils.FORMAT_ABBREV_MONTH
-//                        or DateUtils.FORMAT_SHOW_YEAR)
-//                .toString()
+        return getDateInstance().format(date)
     }
 
     fun hoursToString(h: Int): String {

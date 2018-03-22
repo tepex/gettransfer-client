@@ -80,6 +80,10 @@ class TransfersField(@Expose
                      @SerializedName("transfers")
                      val transfers: List<Transfer>)
 
+class TransferField(@Expose
+                     @SerializedName("transfer")
+                     val transfer: Transfer)
+
 typealias TransfersResponse = Response<TransfersField>
 
 

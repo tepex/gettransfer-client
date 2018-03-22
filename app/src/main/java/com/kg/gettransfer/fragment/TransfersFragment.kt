@@ -24,6 +24,8 @@ import kotlinx.android.synthetic.main.fragment_transfers.*
 import kotlinx.android.synthetic.main.fragment_transfers.view.*
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
+import android.support.v7.widget.RecyclerView
+import android.util.Log
 
 
 /**
@@ -113,8 +115,19 @@ class TransfersFragment : Fragment(), KoinComponent {
 
     private fun initRecyclerView(rvTransfers: EmptyRecyclerView,
                                  swipeRefreshLayout: SwipeRefreshLayout) {
+
+        class WrapContentLinearLayoutManager : LinearLayoutManager(activity) {
+            override fun onLayoutChildren(recycler: RecyclerView.Recycler?, state: RecyclerView.State) {
+                try {
+                    super.onLayoutChildren(recycler, state)
+                } catch (e: IndexOutOfBoundsException) {
+                    Log.e("TransfersFragment", "IndexOutOfBoundsException in RecyclerView happens")
+                }
+            }
+        }
+
         rvTransfers.adapter = adapterActive
-        rvTransfers.layoutManager = LinearLayoutManager(activity)
+        rvTransfers.layoutManager = WrapContentLinearLayoutManager()
         rvTransfers.emptyView = clEmptyTransfers
 
         swipeRefreshLayout.setOnRefreshListener { transfersModel.updateTransfers() }

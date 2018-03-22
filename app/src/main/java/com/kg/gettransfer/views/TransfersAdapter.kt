@@ -1,7 +1,6 @@
 package com.kg.gettransfer.views
 
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat.startActivity
@@ -29,11 +28,14 @@ class TransfersAdapter(
         autoUpdate: Boolean)
     : RealmRecyclerViewAdapter<Transfer, TransfersAdapter.ViewHolder>(realmResults, autoUpdate) {
 
-    private val icl: View.OnClickListener = View.OnClickListener {
-        Log.i("TransfersAdapter", "Starting activity")
+    private val onItemClickListener: View.OnClickListener = View.OnClickListener {
+        Log.i("TransfersAdapter", "Starting transfer activity")
+
         val context = it.context
+
         val intent = Intent(context, TransferActivity::class.java)
         intent.putExtra("id", it.getTag(R.id.key_id) as Int)
+
         startActivity(context, intent, null)
     }
 
@@ -48,25 +50,20 @@ class TransfersAdapter(
         val v = LayoutInflater
                 .from(parent.context)
                 .inflate(R.layout.item_transfer, parent, false)
-        v.setOnClickListener(icl)
+        v.setOnClickListener(onItemClickListener)
         return ViewHolder(v as ConstraintLayout)
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val transfer = getItem(position) ?: return
 
-        val context = holder.itemView.context
-
         holder.from.text = transfer.from?.name
 
-        if (transfer.to == null) {
-            holder.to.text = transfer.hireDurationString
-        } else {
-            holder.to.text = transfer.to?.name
-        }
+        if (transfer.to == null) holder.to.text = transfer.hireDurationString
+        else holder.to.text = transfer.to?.name
 
-        holder.date.text = Utils.dateToShortString(context, transfer.dateTo)
+        holder.date.text = Utils.dateToShortString(transfer.dateTo)
+
         holder.state.update(transfer, true)
 
         holder.itemView.setTag(R.id.key_id, transfer.id)

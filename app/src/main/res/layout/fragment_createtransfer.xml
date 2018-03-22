@@ -229,7 +229,6 @@
                 android:paddingRight="8dp"
                 android:paddingTop="24dp"
                 android:textColor="?attr/colorAccent"
-                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

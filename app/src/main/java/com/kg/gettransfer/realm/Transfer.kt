@@ -24,6 +24,19 @@ open class Transfer : RealmObject() {
     @PrimaryKey
     var id: Int = -1
 
+    val idValid: Boolean get() = id >= 0
+
+    var updated: Date? = null
+
+    val justUpdated: Boolean get() = (updated?.time ?: 0) + 1000L * 10L > Date().time
+
+    var isActive: Boolean = false
+
+    fun update() {
+        isActive = status == "new" || status == "draft" || status == "resolved"
+        updated = Date()
+    }
+
     @Expose
     @SerializedName("from")
     var from: Location? = null
@@ -52,12 +65,6 @@ open class Transfer : RealmObject() {
     @Expose
     @SerializedName("status")
     var status: String? = null
-
-    var isActive: Boolean = false
-
-    fun updateIsActive() {
-        isActive = status == "new" || status == "draft" || status == "resolved"
-    }
 
     @Expose
     @SerializedName("book_now")
@@ -114,7 +121,15 @@ open class Transfer : RealmObject() {
 
     @Expose
     @SerializedName("offers_updated_at")
-    var offersUpdatedAt: Date? = null
+    var offersChangedDate: Date? = null
+
+    var offersUpdatedDate: Date? = null
+
+    val offersOutdated: Boolean
+        get() {
+            val offersUpdatedDate = offersUpdatedDate ?: return true
+            return offersUpdatedDate.before(offersChangedDate ?: Date(0))
+        }
 
     // --
 

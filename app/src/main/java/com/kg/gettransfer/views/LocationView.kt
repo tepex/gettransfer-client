@@ -45,7 +45,7 @@ class LocationView : ConstraintLayout, KoinComponent {
             onLocationChanged?.run()
         }
 
-        model.addOnBusyProgressBar(progressBar)
+        model.addOnBusyProgressBar(progressBar, GONE)
         model.addOnBusyChanged { if (it) imgInvalidAddress.visibility = GONE }
         model.addOnError {
             if (location.title.isEmpty()) return@addOnError

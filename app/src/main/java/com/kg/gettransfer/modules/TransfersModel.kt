@@ -95,7 +95,7 @@ class TransfersModel(
             val realm = Realm.getDefaultInstance()
             realm.executeTransaction {
                 val transfers = realm.copyToRealmOrUpdate(transfers)
-                transfers.forEach { it.updateIsActive() }
+                transfers.forEach { it.update() }
                 val ids = transfers
                         .map { it.id }
                         .toIntArray().toTypedArray()

@@ -27,7 +27,6 @@ class PricesPreviewModel(
 
     private val brPrices: BehaviorRelay<Map<TransportType, PriceRange>> = BehaviorRelay.create()
 
-
     fun addOnPricesUpdated(f: ((Map<TransportType, PriceRange>) -> Unit)): Disposable =
             brPrices.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
 

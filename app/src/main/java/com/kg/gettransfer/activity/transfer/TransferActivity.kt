@@ -3,7 +3,6 @@ package com.kg.gettransfer.activity.transfer
 
 import android.annotation.SuppressLint
 import android.graphics.LightingColorFilter
-import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -13,15 +12,16 @@ import android.view.View
 import android.view.View.*
 import android.widget.Toast
 import com.kg.gettransfer.R
+import com.kg.gettransfer.modules.OffersModel
 import com.kg.gettransfer.modules.TransferModel
 import com.kg.gettransfer.modules.TransportTypes
 import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.realm.Utils
 import com.kg.gettransfer.views.OffersAdapter
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.kg.gettransfer.views.fadeIn
+import com.kg.gettransfer.views.hide
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.activity_transfer.*
 import org.koin.android.ext.android.inject
@@ -35,7 +35,9 @@ import org.koin.standalone.KoinComponent
 
 class TransferActivity : AppCompatActivity(), KoinComponent {
     private val transportTypes: TransportTypes by inject()
+
     private val transferModel: TransferModel by inject()
+    private val offersModel: OffersModel by inject()
 
     private val disposables = CompositeDisposable()
 
@@ -45,31 +47,25 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transfer)
 
+        val id = intent.getIntExtra("id", -1)
+
         wv.settings.javaScriptEnabled = true
 
-
-        val id = intent.getIntExtra("id", -1)
-        transferModel.id = id
-
+        offersModel.addOnBusyProgressBar(progressBarOffers)
+        offersModel.addOnBusyChanged { updateOffersState() }
+        offersModel.addOnOffersUpdated { setOffersAsync(it) }
+        offersModel.transferID = id
 
         transferModel.addOnTransferUpdated { updateUI(it) }
-
         transferModel.addOnError {
             Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
         }
-
-        transferModel.addOnBusyProgressBar(progressBar, INVISIBLE)
+        transferModel.addOnBusyProgressBar(progressBar)
         transferModel.addOnBusyChanged {
-            if (!it && transferStatusView.visibility == INVISIBLE) {
-                transferStatusView.alpha = 0.0f
-                transferStatusView.animate()
-                        .alpha(1.0f)
-                        .setStartDelay(200)
-                        .setDuration(200)
-            }
-            transferStatusView.visibility = if (!it) VISIBLE else INVISIBLE
+            if (it) transferStatusView.hide()
+            else transferStatusView.fadeIn()
         }
-
+        transferModel.id = id
 
         btnRestore.background.colorFilter = LightingColorFilter(
                 ContextCompat.getColor(application, R.color.colorYellow), 0)
@@ -81,17 +77,11 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         }
         rvOffers.emptyView = tvNoOffers
 
-
-//        val density = applicationContext.resources.displayMetrics.density
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            scrollView.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-//                line4.alpha = scrollY / density / 8
-//            }
-//        } else {
-//            scrollView.viewTreeObserver.addOnScrollChangedListener({
-//                line4.alpha = scrollView.scrollY / density / 8
-//            })
-//        }
+        swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = false
+            transferModel.update()
+            offersModel.update() // remove when offers_updated_at fixed
+        }
     }
 
 
@@ -119,7 +109,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
                     "${transfer.routeDistance} km, expected travel time: ${transfer.routeDuration} min "
         }
 
-        tvDate.text = Utils.dateToString(this, transfer.dateTo)
+        tvDate.text = Utils.dateToString(transfer.dateTo)
 
         tvPassengers.text = transfer.pax.toString()
         tvTypes.text = transportTypes.getNames(transfer.transportTypes)
@@ -135,10 +125,6 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             tvConnecting.text =
                     if (carriers > 1) "Connecting to $carriers carriers..."
                     else "Connecting to carriers..."
-
-            if (this.offers == null) transferModel.updateOffers()
-
-            setOffersAsync(transferModel.getOffersAsyncRealmResult())
         } else if (transfer.status == "resolved") {
             clActive.visibility = GONE
             clArchive.visibility = GONE
@@ -182,28 +168,28 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
         rvOffers.adapter = offersAdapter
 
-        offers.addChangeListener { offers ->
-            val hasOffers = offers.size > 0
-            tvChooseCarrier.visibility = if (hasOffers) VISIBLE else GONE
-            tvConnecting.visibility = if (!hasOffers) VISIBLE else GONE
-            if (!hasOffers) {
-                tvConnecting.alpha = 0.0f
-                tvConnecting.animate()
-                        .alpha(1.0f)
-                        .setStartDelay(800)
-                        .setDuration(200)
-            }
-        }
+        offers.addChangeListener { _ -> updateOffersState() }
+        updateOffersState()
 
         this.offers = offers
+    }
+
+
+    private fun updateOffersState() {
+        if (offersModel.busy) {
+            tvConnecting.hide()
+            tvChooseCarrier.hide()
+        } else {
+            val hasOffers = offers?.size ?: 0 > 0
+            if (!hasOffers) tvConnecting.fadeIn() else tvConnecting.hide()
+            if (hasOffers) tvChooseCarrier.fadeIn() else tvChooseCarrier.hide()
+        }
     }
 
 
     private fun pay(offerID: Int) {
         disposables.add(
                 transferModel.payment(offerID)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 {
                                     clPayment.visibility = VISIBLE
@@ -236,6 +222,11 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     override fun onBackPressed() {
         if (clPayment.visibility == VISIBLE) hidePayment(null)
         else super.onBackPressed()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        transferModel.updateIfOld()
     }
 
     override fun onDestroy() {

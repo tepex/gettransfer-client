@@ -41,7 +41,6 @@ class TransferDetailsFragment : Fragment() {
     private val promoCodeModel: PromoCodeModel by inject()
     private val currentAccount: CurrentAccount by inject()
 
-
     private var savedView: View? = null
 
     private val pax: Int? get() = etPassengers.text.toString().toIntOrNull()
@@ -279,7 +278,7 @@ class TransferDetailsFragment : Fragment() {
             tvPromoValidation.visibility = VISIBLE
             tvPromoValidation.text = it.message
         }
-        promoCodeModel.addOnBusyProgressBar(pbPromoValidation, INVISIBLE)
+        promoCodeModel.addOnBusyProgressBar(pbPromoValidation)
         promoCodeModel.addOnBusyChanged {
             if (it) tvPromoInfo.visibility = GONE
         }

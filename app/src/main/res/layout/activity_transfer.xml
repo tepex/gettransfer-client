@@ -11,7 +11,8 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/clHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorBG">
 
         <ImageButton
             android:id="@+id/btnBack2"
@@ -42,6 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:layout_marginEnd="24dp"
+            android:layout_marginRight="24dp"
             android:layout_marginTop="16dp"
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
@@ -72,8 +74,8 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <ScrollView
-        android:id="@+id/scrollView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -81,398 +83,416 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/clHeader">
 
-        <android.support.constraint.ConstraintLayout
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/tvDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="32dp"
-                android:text="18:00   24 Aug 2018"
-                android:textColor="@color/colorTextDate"
-                app:layout_constraintBaseline_toBaselineOf="@+id/tvlPickUp"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <TextView
-                android:id="@+id/tvlPickUp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="24dp"
-                android:text="Pick up at"
-                android:textColor="@color/colorTextGray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                app:layout_constraintBottom_toBottomOf="@+id/tvlFrom"
-                app:layout_constraintStart_toEndOf="@+id/tvlFrom"
-                app:layout_constraintTop_toTopOf="@+id/tvlFrom"
-                app:srcCompat="@drawable/ic_arrow_black_16dp" />
-
-            <TextView
-                android:id="@+id/tvlFrom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="24dp"
-                android:text="From"
-                android:textColor="@color/colorTextGray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvlPickUp" />
-
-            <TextView
-                android:id="@+id/tvFrom"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:layout_marginStart="32dp"
-                android:text="Moscow, Domodedovo Airport"
-                android:textColor="@color/colorTextBlack"
-                android:textSize="22sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvlFrom" />
-
-            <ImageView
-                android:id="@+id/ivTo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                app:layout_constraintBottom_toBottomOf="@+id/tvlTo"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tvlTo"
-                app:srcCompat="@drawable/ic_arrow_blue_16dp" />
-
-            <TextView
-                android:id="@+id/tvlTo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="16dp"
-                android:text="To"
-                android:textColor="@color/colorTextGray"
-                app:layout_constraintStart_toEndOf="@+id/ivTo"
-                app:layout_constraintTop_toBottomOf="@+id/tvFrom" />
-
-            <TextView
-                android:id="@+id/tvTo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:text="Moscow, Tverskaya, 42a"
-                android:textColor="@color/colorTextAccent"
-                android:textSize="22sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvlTo" />
-
-            <TextView
-                android:id="@+id/tvRouteInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="32dp"
-                android:layout_marginTop="16dp"
-                android:text="19 km, expected travel time: 23 min "
-                android:textColor="@color/colorTextGray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTo" />
-
-            <View
-                android:id="@+id/line1"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="24dp"
-                android:background="#cccccc"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvRouteInfo" />
-
-
-            <TextView
-                android:id="@+id/tvlSign"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="24dp"
-                android:text="Name sign"
-                android:textColor="@color/colorTextGray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/line1" />
-
-            <TextView
-                android:id="@+id/tvSign"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Aurora"
-                android:textColor="@color/colorTextBlack"
-                app:layout_constraintBaseline_toBaselineOf="@+id/tvlSign"
-                app:layout_constraintStart_toEndOf="@+id/tvlSign" />
-
-            <TextView
-                android:id="@+id/tvlPassengers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
-                android:text="Passengers"
-                android:textColor="@color/colorTextGray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvlSign" />
-
-            <TextView
-                android:id="@+id/tvPassengers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="3"
-                android:textColor="@color/colorTextBlack"
-                app:layout_constraintBaseline_toBaselineOf="@+id/tvlPassengers"
-                app:layout_constraintStart_toEndOf="@+id/tvlPassengers" />
-
-            <TextView
-                android:id="@+id/tvlTransportTypes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
-                android:text="Transport types"
-                android:textColor="@color/colorTextGray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvlPassengers" />
-
-            <TextView
-                android:id="@+id/tvTypes"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="32dp"
-                android:layout_marginStart="8dp"
-                android:gravity="left"
-                android:text="3"
-                android:textColor="@color/colorTextBlack"
-                app:layout_constraintBaseline_toBaselineOf="@+id/tvlTransportTypes"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tvlTransportTypes" />
-
-            <TextView
-                android:id="@+id/tvlChildSeats"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
-                android:text="Child seats"
-                android:textColor="@color/colorTextGray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvlTransportTypes" />
-
-            <TextView
-                android:id="@+id/tvChildSeats"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="12 kg x 1, 32 kg x 1"
-                android:textColor="@color/colorTextBlack"
-                app:layout_constraintBaseline_toBaselineOf="@+id/tvlChildSeats"
-                app:layout_constraintStart_toEndOf="@+id/tvlChildSeats" />
-
-
-            <TextView
-                android:id="@+id/tvlComments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
-                android:text="Comments"
-                android:textColor="@color/colorTextGray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvlChildSeats" />
-
-            <TextView
-                android:id="@+id/tvComments"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="32dp"
-                android:layout_marginStart="8dp"
-                android:text="No comments"
-                android:textColor="@color/colorTextBlack"
-                app:layout_constraintBaseline_toBaselineOf="@+id/tvlComments"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tvlComments" />
-
-
-            <View
-                android:id="@+id/line2"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="24dp"
-                android:background="#cccccc"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvlComments" />
-
+            android:layout_height="match_parent">
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/clArchive"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:paddingBottom="64dp"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@+id/line2">
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/tvArchiveHeader"
+                    android:id="@+id/tvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:text="18:00   24 Aug 2018"
+                    android:textColor="@color/colorTextDate"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/tvlPickUp"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvlPickUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="24dp"
-                    android:text="Transfer was cancelled"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/colorTextBlack"
+                    android:text="Pick up at"
+                    android:textColor="@color/colorTextGray"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/tvRestoreHint"
+                <ImageView
+                    android:id="@+id/imageView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
-                    android:text="Restore?"
-                    android:textColor="@color/colorTextGray"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/tvArchiveHeader"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    android:layout_marginStart="6dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvlFrom"
+                    app:layout_constraintStart_toEndOf="@+id/tvlFrom"
+                    app:layout_constraintTop_toTopOf="@+id/tvlFrom"
+                    app:srcCompat="@drawable/ic_arrow_black_16dp" />
 
-                <Button
-                    android:id="@+id/btnRestore"
+                <TextView
+                    android:id="@+id/tvlFrom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="28dp"
+                    android:layout_marginStart="32dp"
                     android:layout_marginTop="24dp"
-                    android:minHeight="16dp"
-                    android:onClick="restore"
-                    android:paddingLeft="24dp"
-                    android:paddingRight="24dp"
-                    android:text="Restore request"
-                    android:textAllCaps="false"
-                    android:textSize="14sp"
+                    android:text="From"
+                    android:textColor="@color/colorTextGray"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvlPickUp" />
+
+                <TextView
+                    android:id="@+id/tvFrom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginStart="32dp"
+                    android:text="Moscow, Domodedovo Airport"
+                    android:textColor="@color/colorTextBlack"
+                    android:textSize="22sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvArchiveHeader" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvlFrom" />
 
-            </android.support.constraint.ConstraintLayout>
-
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/clActive"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:paddingBottom="32dp"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@+id/line2">
+                <ImageView
+                    android:id="@+id/ivTo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvlTo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvlTo"
+                    app:srcCompat="@drawable/ic_arrow_blue_16dp" />
 
                 <TextView
-                    android:id="@+id/tvlOffers"
+                    android:id="@+id/tvlTo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="16dp"
+                    android:text="To"
+                    android:textColor="@color/colorTextGray"
+                    app:layout_constraintStart_toEndOf="@+id/ivTo"
+                    app:layout_constraintTop_toBottomOf="@+id/tvFrom" />
+
+                <TextView
+                    android:id="@+id/tvTo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:text="Moscow, Tverskaya, 42a"
+                    android:textColor="@color/colorTextAccent"
+                    android:textSize="22sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvlTo" />
+
+                <TextView
+                    android:id="@+id/tvRouteInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginTop="16dp"
+                    android:text="19 km, expected travel time: 23 min "
+                    android:textColor="@color/colorTextGray"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTo" />
+
+                <View
+                    android:id="@+id/line1"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="24dp"
+                    android:background="#cccccc"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvRouteInfo" />
+
+
+                <TextView
+                    android:id="@+id/tvlSign"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="24dp"
-                    android:text="Offers"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/colorTextBlack"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tvChooseCarrier"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
-                    android:text="Choose your carrier"
+                    android:text="Name sign"
                     android:textColor="@color/colorTextGray"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/tvlOffers"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/line1" />
 
                 <TextView
-                    android:id="@+id/tvConnecting"
+                    android:id="@+id/tvSign"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
-                    android:background="@drawable/bg_rounded_2_yellow"
-                    android:text="Connecting to carriers..."
+                    android:layout_marginStart="8dp"
+                    android:text="Aurora"
                     android:textColor="@color/colorTextBlack"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/tvlOffers"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintBaseline_toBaselineOf="@+id/tvlSign"
+                    app:layout_constraintStart_toEndOf="@+id/tvlSign" />
 
-                <FrameLayout
-                    android:id="@+id/flOffers"
+                <TextView
+                    android:id="@+id/tvlPassengers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Passengers"
+                    android:textColor="@color/colorTextGray"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvlSign" />
+
+                <TextView
+                    android:id="@+id/tvPassengers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="3"
+                    android:textColor="@color/colorTextBlack"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/tvlPassengers"
+                    app:layout_constraintStart_toEndOf="@+id/tvlPassengers" />
+
+                <TextView
+                    android:id="@+id/tvlTransportTypes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Transport types"
+                    android:textColor="@color/colorTextGray"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvlPassengers" />
+
+                <TextView
+                    android:id="@+id/tvTypes"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="8dp"
+                    android:gravity="left"
+                    android:text="3"
+                    android:textColor="@color/colorTextBlack"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/tvlTransportTypes"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tvlTransportTypes" />
+
+                <TextView
+                    android:id="@+id/tvlChildSeats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Child seats"
+                    android:textColor="@color/colorTextGray"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvlTransportTypes" />
+
+                <TextView
+                    android:id="@+id/tvChildSeats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="12 kg x 1, 32 kg x 1"
+                    android:textColor="@color/colorTextBlack"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/tvlChildSeats"
+                    app:layout_constraintStart_toEndOf="@+id/tvlChildSeats" />
+
+
+                <TextView
+                    android:id="@+id/tvlComments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Comments"
+                    android:textColor="@color/colorTextGray"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvlChildSeats" />
+
+                <TextView
+                    android:id="@+id/tvComments"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="8dp"
+                    android:text="No comments"
+                    android:textColor="@color/colorTextBlack"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/tvlComments"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tvlComments" />
+
+
+                <View
+                    android:id="@+id/line2"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="24dp"
+                    android:background="#cccccc"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvlComments" />
+
+
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/clArchive"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvlOffers">
-
-                    <com.kg.gettransfer.views.EmptyRecyclerView
-                        android:id="@+id/rvOffers"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:clipToPadding="false"
-                        android:maxHeight="300dp" />
+                    android:clipToPadding="false"
+                    android:paddingBottom="64dp"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@+id/line2">
 
                     <TextView
-                        android:id="@+id/tvNoOffers"
+                        android:id="@+id/tvArchiveHeader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="24dp"
+                        android:text="Transfer was cancelled"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/colorTextBlack"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvRestoreHint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="32dp"
+                        android:text="Restore?"
+                        android:textColor="@color/colorTextGray"
+                        app:layout_constraintBaseline_toBaselineOf="@+id/tvArchiveHeader"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <Button
+                        android:id="@+id/btnRestore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="28dp"
+                        android:layout_marginTop="24dp"
+                        android:minHeight="16dp"
+                        android:onClick="restore"
+                        android:paddingLeft="24dp"
+                        android:paddingRight="24dp"
+                        android:text="Restore request"
+                        android:textAllCaps="false"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvArchiveHeader" />
+
+                </android.support.constraint.ConstraintLayout>
+
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/clActive"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingBottom="32dp"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@+id/line2">
+
+                    <TextView
+                        android:id="@+id/tvlOffers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="24dp"
+                        android:text="Offers"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/colorTextBlack"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvChooseCarrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="32dp"
+                        android:text="Choose your carrier"
+                        android:textColor="@color/colorTextGray"
+                        app:layout_constraintBaseline_toBaselineOf="@+id/tvlOffers"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvConnecting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="32dp"
+                        android:background="@drawable/bg_rounded_2_yellow"
+                        android:text="Connecting to carriers..."
+                        android:textColor="@color/colorTextBlack"
+                        app:layout_constraintBaseline_toBaselineOf="@+id/tvlOffers"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBarOffers"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginTop="24dp"
+                        android:indeterminateTint="@color/colorTextBlack"
+                        android:visibility="invisible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <FrameLayout
+                        android:id="@+id/flOffers"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="120dp"
-                        android:layout_marginStart="32dp"
-                        android:layout_marginTop="16dp"
-                        android:text="Offers will be there shortly, often faster than in 1 day"
-                        android:textColor="@color/colorTextGray" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvlOffers">
 
-                </FrameLayout>
+                        <com.kg.gettransfer.views.EmptyRecyclerView
+                            android:id="@+id/rvOffers"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:clipToPadding="false"
+                            android:maxHeight="300dp" />
 
-                <Button
-                    android:id="@+id/btnCare"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:minHeight="16dp"
-                    android:paddingLeft="24dp"
-                    android:paddingRight="24dp"
-                    android:text="Care service"
-                    android:textAllCaps="false"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/btnCancel"
-                    app:layout_constraintEnd_toStartOf="@+id/btnCancel" />
+                        <TextView
+                            android:id="@+id/tvNoOffers"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="120dp"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginTop="16dp"
+                            android:text="Offers will be there shortly, often faster than in 1 day"
+                            android:textColor="@color/colorTextGray" />
 
-                <Button
-                    android:id="@+id/btnCancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginTop="64dp"
-                    android:minHeight="16dp"
-                    android:onClick="cancel"
-                    android:paddingLeft="24dp"
-                    android:paddingRight="24dp"
-                    android:text="Cancel request"
-                    android:textAllCaps="false"
-                    android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/flOffers" />
+                    </FrameLayout>
+
+                    <Button
+                        android:id="@+id/btnCare"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:minHeight="16dp"
+                        android:paddingLeft="24dp"
+                        android:paddingRight="24dp"
+                        android:text="Care service"
+                        android:textAllCaps="false"
+                        app:layout_constraintBaseline_toBaselineOf="@+id/btnCancel"
+                        app:layout_constraintEnd_toStartOf="@+id/btnCancel" />
+
+                    <Button
+                        android:id="@+id/btnCancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginTop="64dp"
+                        android:minHeight="16dp"
+                        android:onClick="cancel"
+                        android:paddingLeft="24dp"
+                        android:paddingRight="24dp"
+                        android:text="Cancel request"
+                        android:textAllCaps="false"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/flOffers" />
+
+                </android.support.constraint.ConstraintLayout>
 
             </android.support.constraint.ConstraintLayout>
-
-        </android.support.constraint.ConstraintLayout>
-    </ScrollView>
+        </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/clPayment"
@@ -510,9 +530,9 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:background="#cccccc"
+            app:layout_constraintBottom_toBottomOf="@id/btnPaymentBack"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/btnPaymentBack" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <WebView
             android:id="@+id/wv"

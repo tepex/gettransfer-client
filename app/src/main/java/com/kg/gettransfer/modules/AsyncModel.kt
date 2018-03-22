@@ -38,7 +38,7 @@ open class AsyncModel {
         return d
     }
 
-    public fun addOnBusyProgressBar(pb: View, nonBusyVisibility: Int = View.GONE): Disposable {
+    public fun addOnBusyProgressBar(pb: View, nonBusyVisibility: Int = View.INVISIBLE): Disposable {
         val d = brBusy.observeOn(AndroidSchedulers.mainThread()).subscribe{
             pb.visibility = if (it) View.VISIBLE else nonBusyVisibility
         }
@@ -68,9 +68,17 @@ open class AsyncModel {
 
     protected fun <K : Any, T : Response<K>>
             Observable<T>.fastSubscribe(f: ((data: K?) -> Unit)): Disposable {
+        return fastSubscribe(f, false)
+    }
+
+    protected fun <K : Any, T : Response<K>>
+            Observable<T>.fastSubscribe(f: ((data: K?) -> Unit),
+                                        uiThread: Boolean = false): Disposable {
         val d = this
-                .subscribeOn(Schedulers.io()).doOnSubscribe { busy = true }
-                .observeOn(Schedulers.newThread()).doFinally { busy = false }
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe { busy = true }
+                .observeOn(if (uiThread) AndroidSchedulers.mainThread() else Schedulers.newThread())
+                .doFinally { busy = false }
                 .subscribe(
                         { response ->
                             if (response.success) {
