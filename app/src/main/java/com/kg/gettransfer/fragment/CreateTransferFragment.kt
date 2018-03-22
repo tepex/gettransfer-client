@@ -56,7 +56,9 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
     private var savedView: View? = null
 
-    private val backStackListener: () -> Unit = { updateFab() }
+    private val backStackListener: () -> Unit = {
+        updateFab()
+    }
 
     private var modeAB = true
 
@@ -422,7 +424,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
         val ft = fragmentManager.beginTransaction()
 
-        frTransferDetails.transfer = transfer
+        frTransferDetails.setTransfer(transfer)
 
         if (Build.VERSION.SDK_INT >= 21) {
             val slide = android.transition.Slide()

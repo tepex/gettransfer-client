@@ -31,7 +31,7 @@ android {
         release {
             shrinkResources true
             minifyEnabled true
-            useProguard true
+            useProguard false //true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
             // debuggable true

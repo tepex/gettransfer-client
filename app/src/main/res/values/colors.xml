@@ -4,13 +4,15 @@
     <color name="colorPrimaryDark">#333333</color>
     <color name="colorAccent">#1464f6</color>
 
-    <color name="colorYellow">#ffcc4c</color>
+    <color name="colorYellow">#ffd84c</color>
 
     <color name="colorBGSecondary">#eeeeee</color>
-    <color name="colorBG">#fafafa</color>
-    <color name="colorBGField">#fafafa</color>
+    <color name="colorBG">#fcfcfc</color>
+    <color name="colorBGField">#fcfcfc</color>
 
     <color name="colorBar">#e9e8e6</color>
+
+    <color name="colorSeparator">#44000000</color>
 
     <!--<color name="colorIconGray">#9e9e9e</color>-->
 

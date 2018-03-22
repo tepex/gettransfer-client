@@ -22,6 +22,7 @@ import com.kg.gettransfer.modules.TransfersModel
 import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.modules.http.json.PassengerProfile
 import com.kg.gettransfer.modules.http.json.Trip
+import com.kg.gettransfer.realm.Utils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -47,8 +48,16 @@ class TransferDetailsFragment : Fragment() {
 
     private val disposables = CompositeDisposable()
 
-    lateinit var transfer: NewTransfer
+    private lateinit var transfer: NewTransfer
 
+    fun setTransfer(t: NewTransfer) {
+        transfer = t
+        val v = savedView ?: return
+        v.tvFromDetails.text = transfer.from?.name
+        v.tvToDetails.text =
+                transfer.to?.name ?: Utils.hoursToString(transfer.hireDuration ?: 0)
+
+    }
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -77,6 +86,12 @@ class TransferDetailsFragment : Fragment() {
             installEditTextWatcher(v)
 
             initPromoCodeUI(v.etPromoCode, v.tvPromoInfo, v.tvPromoValidation, v.pbPromoValidation)
+
+            v.btnBack.setOnClickListener { fragmentManager.popBackStackImmediate() }
+
+            v.tvFromDetails.text = transfer.from?.name
+            v.tvToDetails.text =
+                    transfer.to?.name ?: Utils.hoursToString(transfer.hireDuration ?: 0)
 
             savedView = v
         }
