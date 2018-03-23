@@ -115,12 +115,7 @@ class TransferModel(
             val realm = Realm.getDefaultInstance()
 
             newTransfer.update()
-
-            val oldTransfer = realm.getTransfer(id)
-            if (oldTransfer != null) {
-                newTransfer.offersUpdatedDate = oldTransfer.offersChangedDate
-                newTransfer.offers = oldTransfer.offers
-            }
+            newTransfer.populateFromOldTransfer(realm.getTransfer(id))
 
             val offersChangedDate = newTransfer.offersChangedDate
             val offersOutdated = newTransfer.offersOutdated

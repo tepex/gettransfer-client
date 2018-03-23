@@ -131,6 +131,12 @@ open class Transfer : RealmObject() {
             return offersUpdatedDate.before(offersChangedDate ?: Date(0))
         }
 
+    fun populateFromOldTransfer(oldTransfer: Transfer?) {
+        oldTransfer ?: return
+        offersUpdatedDate = oldTransfer.offersChangedDate
+        offers = oldTransfer.offers
+    }
+
     // --
 
     @Expose

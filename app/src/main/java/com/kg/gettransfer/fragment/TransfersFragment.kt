@@ -6,7 +6,10 @@ import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
@@ -17,6 +20,7 @@ import com.kg.gettransfer.activity.login.LoginActivity
 import com.kg.gettransfer.mainactivity.MainActivity
 import com.kg.gettransfer.modules.CurrentAccount
 import com.kg.gettransfer.modules.TransfersModel
+import com.kg.gettransfer.views.DividerItemDecoration
 import com.kg.gettransfer.views.EmptyRecyclerView
 import com.kg.gettransfer.views.TransfersAdapter
 import io.reactivex.disposables.CompositeDisposable
@@ -24,8 +28,6 @@ import kotlinx.android.synthetic.main.fragment_transfers.*
 import kotlinx.android.synthetic.main.fragment_transfers.view.*
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
-import android.support.v7.widget.RecyclerView
-import android.util.Log
 
 
 /**
@@ -126,6 +128,10 @@ class TransfersFragment : Fragment(), KoinComponent {
             }
         }
 
+        val dividerItemDecoration = DividerItemDecoration(
+                activity, VERTICAL, (resources.displayMetrics.density * 16).toInt(), 0)
+
+        rvTransfers.addItemDecoration(dividerItemDecoration)
         rvTransfers.adapter = adapterActive
         rvTransfers.layoutManager = WrapContentLinearLayoutManager()
         rvTransfers.emptyView = clEmptyTransfers

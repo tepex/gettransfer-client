@@ -6,6 +6,7 @@ import android.graphics.LightingColorFilter
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
@@ -18,6 +19,7 @@ import com.kg.gettransfer.modules.TransportTypes
 import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.realm.Utils
+import com.kg.gettransfer.views.DividerItemDecoration
 import com.kg.gettransfer.views.OffersAdapter
 import com.kg.gettransfer.views.fadeIn
 import com.kg.gettransfer.views.hide
@@ -70,6 +72,11 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         btnRestore.background.colorFilter = LightingColorFilter(
                 ContextCompat.getColor(application, R.color.colorYellow), 0)
 
+        val offset = (resources.displayMetrics.density * 32).toInt()
+        val dividerItemDecoration = DividerItemDecoration(
+                this, VERTICAL, offset, offset)
+
+        rvOffers.addItemDecoration(dividerItemDecoration)
         rvOffers.layoutManager = object : LinearLayoutManager(applicationContext) {
             override fun canScrollVertically(): Boolean {
                 return false

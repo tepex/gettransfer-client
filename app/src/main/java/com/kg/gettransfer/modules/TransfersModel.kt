@@ -85,25 +85,34 @@ class TransfersModel(
 
 
     fun updateTransfers() {
-        log.info("updateTransfers()")
+        log.info("updateTransfers() busy=$busy")
         if (busy) return
-        log.info("getTransfers() call")
         api.getTransfers().fastSubscribe { data ->
             log.info("getTransfers() responded success, N = ${data?.transfers?.size}")
             val transfers = data?.transfers ?: return@fastSubscribe
 
             val realm = Realm.getDefaultInstance()
             realm.executeTransaction {
-                val transfers = realm.copyToRealmOrUpdate(transfers)
-                transfers.forEach { it.update() }
-                val ids = transfers
+                val newIds = transfers
                         .map { it.id }
                         .toIntArray().toTypedArray()
-                val transfersToDelete = realm
-                        .where(Transfer::class.java)
-                        .not().`in`("id", ids)
+
+                val oldTransfers = realm.where(Transfer::class.java)
+                        .`in`("id", newIds)
+                        .findAll().associateBy { it.id }
+
+                transfers.forEach {
+                    it.update()
+                    it.populateFromOldTransfer(oldTransfers[it.id])
+                }
+
+                realm.copyToRealmOrUpdate(transfers)
+
+                realm.where(Transfer::class.java)
+                        .not().`in`("id", newIds)
                         .findAll()
-                transfersToDelete.deleteAllFromRealm()
+                        .deleteAllFromRealm()
+
                 log.info("getTransfers() saved to realm")
             }
             realm.close()
