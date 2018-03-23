@@ -128,7 +128,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="16dp"
                     android:text="From"
                     android:textColor="@color/colorTextGray"
                     app:layout_constraintStart_toStartOf="parent"
@@ -170,53 +170,36 @@
 
                 <TextView
                     android:id="@+id/tvTo"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
                     android:layout_marginStart="32dp"
                     android:text="Moscow, Tverskaya, 42a"
                     android:textColor="@color/colorTextAccent"
                     android:textSize="22sp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvlTo" />
-
-                <TextView
-                    android:id="@+id/tvRouteInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginTop="16dp"
-                    android:text="19 km, expected travel time: 23 min "
-                    android:textColor="@color/colorTextGray"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTo" />
-
-                <View
-                    android:id="@+id/line1"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="24dp"
-                    android:background="@color/colorSeparator"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvRouteInfo" />
 
                 <TextView
                     android:id="@+id/tvShowAllDetails"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:alpha="0.7"
+                    android:drawablePadding="8dp"
+                    android:drawableRight="@drawable/ic_expand_more_lightgray_24dp"
                     android:onClick="showAllDetails"
-                    android:paddingBottom="8dp"
+                    android:paddingBottom="16dp"
                     android:paddingLeft="32dp"
                     android:paddingRight="32dp"
-                    android:paddingTop="8dp"
-                    android:text="Expand details ..."
+                    android:paddingTop="16dp"
+                    android:text="DETAILS"
                     android:textAlignment="textEnd"
                     android:textColor="@color/colorTextGray"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/line1" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvTo" />
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/clDetails"
@@ -229,6 +212,29 @@
                     app:layout_constraintTop_toBottomOf="@+id/tvShowAllDetails">
 
                     <TextView
+                        android:id="@+id/tvRouteInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginTop="16dp"
+                        android:text="19 km, expected travel time: 23 min "
+                        android:textColor="@color/colorTextGray"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:id="@+id/line1"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="24dp"
+                        android:background="@color/colorSeparator"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvRouteInfo" />
+
+                    <TextView
                         android:id="@+id/tvlSign"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -237,7 +243,7 @@
                         android:text="Name sign"
                         android:textColor="@color/colorTextGray"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@id/line1" />
 
                     <TextView
                         android:id="@+id/tvSign"
@@ -345,15 +351,12 @@
                     android:id="@+id/line2"
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginStart="32dp"
                     android:layout_marginTop="24dp"
                     android:background="@color/colorSeparator"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/clDetails"
                     app:layout_goneMarginTop="0dp" />
-
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/clArchive"

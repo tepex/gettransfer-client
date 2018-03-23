@@ -113,6 +113,31 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                     lvTo.location = location
                 }
 
+                btnDurationDec.setOnClickListener {
+                    var j = 0
+                    if (hireDuration > 2) {
+                        hours.forEachIndexed { i, h ->
+                            if (h < hireDuration) {
+                                j = i
+                            } else return@forEachIndexed
+                        }
+                    }
+                    hireDuration = hours[j]
+                    fieldDuration.text = labels[j]
+                }
+
+                btnDurationInc.setOnClickListener {
+                    if (hireDuration < 24 * 15) {
+                        hours.forEachIndexed { i, h ->
+                            if (h > hireDuration) {
+                                hireDuration = h
+                                fieldDuration.text = labels[i]
+                                return@setOnClickListener
+                            }
+                        }
+                    }
+                }
+
                 lvTo.tvName.setTextColor(ContextCompat.getColor(context, R.color.colorAccent))
 
                 lvFrom.tvName.hint = "Pick up address"
@@ -126,14 +151,14 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     }
 
 
+    val hours = intArrayOf(
+            2, 3, 4, 5, 6, 8, 10, 24, 48, 24 * 3, 24 * 4, 24 * 5, 24 * 10, 24 * 15)
+
+    val labels = arrayOf(
+            "2 hours", "3 hours", "4 hours", "5 hours", "6 hours", "8 hours", "10 hours",
+            "1 day", "2 days", "3 days", "4 days", "5 days", "10 days", "15 days")
+
     private fun chooseDuration() {
-        val hours = intArrayOf(
-                2, 3, 4, 5, 6, 8, 10, 24, 48, 24 * 3, 24 * 4, 24 * 5, 24 * 10, 24 * 15)
-
-        val labels = arrayOf(
-                "2 hours", "3 hours", "4 hours", "5 hours", "6 hours", "8 hours", "10 hours",
-                "1 day", "2 days", "3 days", "4 days", "5 days", "10 days", "15 days")
-
         val builder = AlertDialog.Builder(activity)
 
         val alert = builder

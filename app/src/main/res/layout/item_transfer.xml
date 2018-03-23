@@ -4,12 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:paddingBottom="12dp"
+    android:paddingBottom="16dp"
     android:paddingEnd="0dp"
     android:paddingLeft="16dp"
     android:paddingRight="0dp"
     android:paddingStart="16dp"
-    android:paddingTop="12dp">
+    android:paddingTop="16dp">
 
     <TextView
         android:id="@+id/tvDateTime"
@@ -26,6 +26,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:singleLine="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/colorTextBlack"
         app:layout_constraintEnd_toStartOf="@+id/tvDateTime"
@@ -36,10 +37,12 @@
         android:id="@+id/tvTo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="4dp"
+        android:singleLine="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/colorAccent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvState"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvFrom" />
 
@@ -48,11 +51,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="4dp"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDateTime" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvTo"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

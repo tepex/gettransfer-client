@@ -41,7 +41,7 @@ class NewTransfer {
     var dateReturn: Trip? = null
 
     @Expose
-    @SerializedName("transport_types")
+    @SerializedName("transport_type_ids")
     var transportTypes: Array<String>? = null
 
     @Expose
