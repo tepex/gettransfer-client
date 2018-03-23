@@ -87,7 +87,6 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         swipeRefreshLayout.setOnRefreshListener {
             swipeRefreshLayout.isRefreshing = false
             transferModel.update()
-            offersModel.update() // remove when offers_updated_at fixed
         }
     }
 

@@ -25,6 +25,8 @@ class OffersModel(
         private val api: HttpApi)
     : AsyncModel(), KoinComponent {
 
+    private lateinit var transfer: Transfer
+
     var transferID: Int = -1
         set(id) {
             if (id < 0) throw Exception("Invalid id")
@@ -32,7 +34,18 @@ class OffersModel(
                 throw Exception("Non UI thread")
             }
 
-            val transfer = realm.getTransfer(id) ?: throw Exception("No transfer with id: $id")
+            try {
+                transfer.removeAllChangeListeners()
+            } catch (e: Exception) {
+            }
+
+            transfer = realm.getTransfer(id) ?: throw Exception("No transfer with id: $id")
+
+            transfer.addChangeListener<Transfer> { transfer, _ ->
+                if (transfer.isValid) {
+                    if (transfer.offersOutdated) update()
+                }
+            }
 
             field = id
 
