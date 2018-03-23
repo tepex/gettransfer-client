@@ -45,7 +45,7 @@
             android:id="@+id/line"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:background="#cccccc"
+            android:background="@color/colorSeparator"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

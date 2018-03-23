@@ -133,7 +133,7 @@ open class Transfer : RealmObject() {
 
     fun populateFromOldTransfer(oldTransfer: Transfer?) {
         oldTransfer ?: return
-        offersUpdatedDate = oldTransfer.offersChangedDate
+        offersUpdatedDate = oldTransfer.offersUpdatedDate
         offers = oldTransfer.offers
     }
 

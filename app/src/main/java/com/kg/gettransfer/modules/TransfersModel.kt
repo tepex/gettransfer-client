@@ -99,7 +99,8 @@ class TransfersModel(
 
                 val oldTransfers = realm.where(Transfer::class.java)
                         .`in`("id", newIds)
-                        .findAll().associateBy { it.id }
+                        .findAll()
+                        .associateBy { it.id }
 
                 transfers.forEach {
                     it.update()

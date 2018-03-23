@@ -18,15 +18,17 @@
 package com.kg.gettransfer.views;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import com.kg.gettransfer.R;
 
 
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
@@ -34,7 +36,6 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     public static final int VERTICAL = LinearLayout.VERTICAL;
 
     private static final String TAG = "DividerItem";
-    private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
 
     private Drawable mDivider;
 
@@ -46,14 +47,13 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     private final Rect mBounds = new Rect();
 
     public DividerItemDecoration(Context context, int orientation, int leftOffset, int rightOffset) {
-        final TypedArray a = context.obtainStyledAttributes(ATTRS);
-        mDivider = a.getDrawable(0);
+        mDivider = ContextCompat.getDrawable(context, R.drawable.sh_divider_1dp);
         if (mDivider == null) {
             Log.w(TAG, "@android:attr/listDivider was not set in the theme used for this "
                     + "DividerItemDecoration. Please set that attribute all call setDrawable()");
         }
         this.leftOffset = leftOffset;
-        a.recycle();
+        this.rightOffset = rightOffset;
         setOrientation(orientation);
     }
 

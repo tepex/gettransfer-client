@@ -12,6 +12,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.RatingBar
 import android.widget.TextView
 import com.kg.gettransfer.R
 import com.kg.gettransfer.modules.TransportTypes
@@ -45,6 +46,8 @@ class OffersAdapter(
         val price: TextView = container.findViewById(R.id.tvPrice)
         val vehicle: TextView = container.findViewById(R.id.tvVehicle)
         val facilities: TextView = container.findViewById(R.id.tvFacilities)
+        val ratingBar: RatingBar = container.findViewById(R.id.ratingBar)
+        val transfers: TextView = container.findViewById(R.id.tvTransfers)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -79,6 +82,10 @@ class OffersAdapter(
         holder.facilities.visibility = if (facilities == null) GONE else VISIBLE
 
         holder.price.text = item.price?.toString() ?: "No price"
+
+        holder.ratingBar.rating = (item.carrier?.rating?.average?.toFloat() ?: 0f) / 5f
+
+        holder.transfers.text = (item.carrier?.completedTransfers ?: 0).toString()
 
         holder.itemView.setTag(R.id.key_id, item.id)
         holder.itemView.btnBook.setTag(R.id.key_id, item.id)
