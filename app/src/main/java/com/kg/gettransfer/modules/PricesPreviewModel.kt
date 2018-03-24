@@ -23,14 +23,13 @@ class PricesPreviewModel(
         private val transportTypes: TransportTypes)
     : AsyncModel(), KoinComponent {
 
-    private val log = Logger.getLogger("PriceRange")
-
     private val brPrices: BehaviorRelay<Map<TransportType, PriceRange>> = BehaviorRelay.create()
 
     fun addOnPricesUpdated(f: ((Map<TransportType, PriceRange>) -> Unit)): Disposable =
             brPrices.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
 
-    val prices: Map<TransportType, PriceRange>? get() = brPrices.value
+    val prices: Map<TransportType, PriceRange>?
+        get() = brPrices.value
 
 
     fun get(transfer: NewTransfer) {
@@ -41,20 +40,20 @@ class PricesPreviewModel(
                     getRequest(transfer.from!!.point,
                             transfer.to!!.point,
                             transfer.dateTo?.date ?: Date().toString(),
-                            transfer.routeDistance ?: 0,
-                            transfer.dateReturn != null)
+                            transfer.dateReturn != null,
+                            transfer.routeDistance ?: 0)
                 else
                     getRequest(transfer.from!!.point,
                             transfer.dateTo?.date ?: Date().toString(),
                             (transfer.hireDuration ?: 0) * 60 * 60)
 
         disposables.add(request.fastSubscribe {
-            brPrices.accept(it?.mapKeys { transportTypes.typesMap[it.key]!! })
+            brPrices.accept(it.mapKeys { transportTypes.typesMap[it.key]!! })
         })
     }
 
-    private fun getRequest(llFrom: String, llTo: String, date: String, distance: Int, back: Boolean) =
-            api.getPrice(arrayOf(llFrom, llTo), date, distance, back)
+    private fun getRequest(llFrom: String, llTo: String, date: String, back: Boolean, distance: Int) =
+            api.getPrice(arrayOf(llFrom, llTo), date, back, distance)
 
     private fun getRequest(llFrom: String, date: String, hireDuration: Int) =
             api.getPrice(arrayOf(llFrom), date, hireDuration)

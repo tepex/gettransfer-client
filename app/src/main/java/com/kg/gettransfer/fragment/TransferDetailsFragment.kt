@@ -265,9 +265,9 @@ class TransferDetailsFragment : Fragment() {
         etPromoCode.addTextChangedListener(promoEditTextWatcher)
 
         promoCodeModel.addOnInfoUpdated {
-            if (it.data != null) {
+            if (it.isNotEmpty()) {
                 tvPromoInfo.visibility = VISIBLE
-                tvPromoInfo.text = it.data
+                tvPromoInfo.text = it
             } else {
                 tvPromoInfo.visibility = GONE
             }

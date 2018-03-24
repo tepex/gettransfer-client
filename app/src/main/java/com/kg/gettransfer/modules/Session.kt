@@ -19,7 +19,7 @@ class Session(private val sp: SharedPreferences) : KoinComponent {
     var email: String = ""
 
     val hasToken: Boolean get() = accessToken != null
-    val isLoggedIn: Boolean get() = email != null
+    val isLoggedIn: Boolean get() = email.isNotEmpty()
 
     val state: PublishRelay<Session> = PublishRelay.create()
 

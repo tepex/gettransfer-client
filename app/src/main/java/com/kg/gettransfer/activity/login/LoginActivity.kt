@@ -17,7 +17,6 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.kg.gettransfer.R
-import org.koin.android.ext.android.inject
 
 
 /**
@@ -26,7 +25,7 @@ import org.koin.android.ext.android.inject
 
 
 class LoginActivity : AppCompatActivity(), LoginContract.View {
-    override val presenter: LoginContract.Presenter by inject()
+    override lateinit var presenter: LoginContract.Presenter
 
     private val pb by lazy { findViewById<ProgressBar>(R.id.progressBar) }
 
@@ -49,11 +48,9 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
 
         installTextWatcher()
 
-        val tvRestorePass = findViewById<TextView>(R.id.tvRestorePass)
         tvRestorePass.movementMethod = LinkMovementMethod.getInstance()
 
-        presenter.view = this
-        presenter.start()
+        presenter = LoginPresenter(this)
     }
 
 
@@ -89,15 +86,11 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
 
 
     fun updateFabVisibility() {
-        fab.visibility = if (!presenter.busy && validateFields()) VISIBLE else INVISIBLE
+        fab.visibility = if (!presenter.busy && fieldsValid()) VISIBLE else INVISIBLE
     }
 
 
-    fun login(v: View) {
-        login()
-    }
-
-    fun login() {
+    fun login(v: View? = null) {
         presenter.login(etEmail.text.toString(), etPass.text.toString())
     }
 
@@ -138,7 +131,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
     }
 
 
-    private fun validateFields(): Boolean =
+    private fun fieldsValid(): Boolean =
             EMAIL_ADDRESS.matcher(etEmail.text).matches() && etPass.text.length >= 8
 
 

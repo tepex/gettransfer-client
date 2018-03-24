@@ -4,7 +4,7 @@ package com.kg.gettransfer.modules.http
 import android.accounts.NetworkErrorException
 import com.kg.gettransfer.modules.Session
 import com.kg.gettransfer.modules.http.json.AccessToken
-import com.kg.gettransfer.modules.http.json.Response
+import com.kg.gettransfer.modules.http.json.BaseResponse
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.koin.standalone.KoinComponent
@@ -32,7 +32,7 @@ class ProvideAccessTokenInterceptor(val session: Session, rx2call: RxJava2CallAd
         @GET("access_token")
         fun getAccessToken(
                 @Query("api_key") apiKey: String)
-                : Call<Response<AccessToken>>
+                : Call<BaseResponse<AccessToken>>
     }
 
     private val httpAccessApi: HttpAccessApi

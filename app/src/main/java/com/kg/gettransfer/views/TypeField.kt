@@ -90,7 +90,7 @@ class TypeDialog(
 
         val d = AlertDialog.Builder(activity)
                 .setTitle("Transport")
-                .setAdapter(adapter, null) // { _, _ -> })
+                .setAdapter(adapter, null)
                 .setPositiveButton("Ok", { d, _ -> d.dismiss() })
                 .create()
 

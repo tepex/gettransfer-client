@@ -13,7 +13,6 @@ import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmResults
 import org.koin.standalone.KoinComponent
-import java.util.*
 import java.util.logging.Logger
 
 
@@ -131,7 +130,7 @@ class TransferModel(
     }
 
 
-    fun payment(offerID: Int): Observable<com.kg.gettransfer.modules.http.json.Response<Payment>> {
+    fun payment(offerID: Int): Observable<com.kg.gettransfer.modules.http.json.BaseResponse<Payment>> {
         return api.payment(id, offerID, "platron", 30)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

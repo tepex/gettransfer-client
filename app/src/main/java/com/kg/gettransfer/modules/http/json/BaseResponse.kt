@@ -13,7 +13,7 @@ import com.kg.gettransfer.realm.TransportType
  */
 
 
-open class Response<T> {
+open class BaseResponse<T> {
     @SerializedName("result")
     @Expose
     var result: String = ""
@@ -36,21 +36,25 @@ open class Response<T> {
 }
 
 
-class Error {
-    @SerializedName("type")
-    @Expose
-    var type: String = ""
+class Error(
+        @SerializedName("type")
+        @Expose
+        var type: String = "",
 
-    @SerializedName("message")
-    @Expose
-    var message: String = ""
-}
+        @SerializedName("message")
+        @Expose
+        var message: String? = null,
+
+        @SerializedName("details")
+        @Expose
+        var details: String? = null
+)
 
 
 // --
 
 
-class BooleanResponse : Response<String>() {
+class BooleanResponse : BaseResponse<String>() {
     val ok: Boolean get() = "ok" == data
 }
 
@@ -64,13 +68,13 @@ class NewTransferCreated {
     var id: Int = 0
 }
 
-typealias NewTransferCreatedResponse = Response<NewTransferCreated>
+typealias NewTransferCreatedResponse = BaseResponse<NewTransferCreated>
 
 
 // --
 
 
-typealias TransportTypesResponse = Response<List<TransportType>>
+typealias TransportTypesResponse = BaseResponse<List<TransportType>>
 
 
 // --
@@ -81,10 +85,10 @@ class TransfersField(@Expose
                      val transfers: List<Transfer>)
 
 class TransferField(@Expose
-                     @SerializedName("transfer")
-                     val transfer: Transfer)
+                    @SerializedName("transfer")
+                    val transfer: Transfer)
 
-typealias TransfersResponse = Response<TransfersField>
+typealias TransfersResponse = BaseResponse<TransfersField>
 
 
 // --
@@ -94,7 +98,7 @@ class OffersField(@Expose
                   @SerializedName("offers")
                   val offers: List<Offer>)
 
-typealias OffersResponse = Response<OffersField>
+typealias OffersResponse = BaseResponse<OffersField>
 
 
 // --

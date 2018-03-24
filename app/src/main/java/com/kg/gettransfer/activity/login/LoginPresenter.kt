@@ -4,6 +4,7 @@ package com.kg.gettransfer.activity.login
 import com.kg.gettransfer.modules.CurrentAccount
 import io.reactivex.disposables.CompositeDisposable
 import org.koin.standalone.KoinComponent
+import org.koin.standalone.inject
 
 
 /**
@@ -11,15 +12,16 @@ import org.koin.standalone.KoinComponent
  */
 
 
-class LoginPresenter(private val currentAccount: CurrentAccount) : LoginContract.Presenter, KoinComponent {
-    override lateinit var view: LoginContract.View
+class LoginPresenter(override val view: LoginContract.View) : LoginContract.Presenter, KoinComponent {
+    private val currentAccount: CurrentAccount by inject()
 
     private val disposables = CompositeDisposable()
+
 
     override val busy: Boolean get() = currentAccount.busy
 
 
-    override fun start() {
+    init {
         view.showError(null)
 
         currentAccount.logOut()

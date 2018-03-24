@@ -47,9 +47,10 @@ class CurrentAccount(
     }
 
 
-    fun login(email: String, pass: String) {
-        if (busy) return
+    fun login(email: String, pass: String): Boolean {
+        if (busy) return false
         api.login(email, pass).fastSubscribe { session.loggedIn(email) }
+        return true
     }
 
 
