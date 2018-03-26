@@ -118,7 +118,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvFrom"
+            android:id="@+id/tvlFrom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -128,6 +128,16 @@
             android:textColor="@color/colorTextGray"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ivFrom2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvlFrom"
+            app:layout_constraintStart_toEndOf="@+id/tvlFrom"
+            app:layout_constraintTop_toTopOf="@+id/tvlFrom"
+            app:srcCompat="@drawable/ic_arrow_black_16dp" />
 
         <com.kg.gettransfer.views.LocationView
             android:id="@+id/lvFrom"
@@ -147,16 +157,26 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvTo"
+            android:id="@+id/tvlTo"
             android:layout_width="45dp"
             android:layout_height="18dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="6dp"
             android:layout_marginTop="13dp"
             android:labelFor="@+id/lvTo"
             android:text="To"
             android:textColor="@color/colorTextGray"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ivTo2"
             app:layout_constraintTop_toBottomOf="@+id/lvFrom" />
+
+        <ImageView
+            android:id="@+id/ivTo2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvlTo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvlTo"
+            app:srcCompat="@drawable/ic_arrow_blue_16dp" />
 
         <com.kg.gettransfer.views.LocationView
             android:id="@+id/lvTo"
@@ -205,16 +225,25 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/line1">
 
-            <TextView
-                android:id="@+id/tvDuration"
+            <ImageView
+                android:id="@+id/ivDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="13dp"
-                android:labelFor="@+id/lvTo"
-                android:text="Duration"
-                android:textColor="@color/colorTextGray"
+                app:layout_constraintBottom_toBottomOf="@+id/tvlDuration"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvlDuration"
+                app:srcCompat="@drawable/ic_timer_blue_16dp" />
+
+            <TextView
+                android:id="@+id/tvlDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="13dp"
+                android:text="@string/duration"
+                android:textColor="@color/colorTextGray"
+                app:layout_constraintStart_toEndOf="@id/ivDuration"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView

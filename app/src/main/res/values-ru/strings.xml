@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Get Transfer</string>
+
     <string name="login">Логин</string>
     <string name="email">Email</string>
     <string name="password">Пароль</string>
@@ -10,4 +11,9 @@
     <string name="create_new_transfer">Создать трансфер</string>
     <string name="no_transfers">Нет заявок</string>
     <string name="book">Бронь</string>
+
+    <string name="profile">Profile</string>
+    <string name="newTransfer">New</string>
+    <string name="list">List</string>
+    <string name="duration">Duration</string>
 </resources>

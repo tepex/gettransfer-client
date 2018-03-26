@@ -128,6 +128,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                     }
                     hireDuration = hours[j]
                     fieldDuration.text = labels[j]
+                    updateFab()
                 }
 
                 btnDurationInc.setOnClickListener {
@@ -136,6 +137,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                             if (h > hireDuration) {
                                 hireDuration = h
                                 fieldDuration.text = labels[i]
+                                updateFab()
                                 return@setOnClickListener
                             }
                         }
@@ -407,12 +409,8 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
     private fun getLatLngBounds(a: LatLng, b: LatLng): LatLngBounds {
         return LatLngBounds(
-                LatLng(
-                        Math.min(a.latitude, b.latitude),
-                        Math.min(a.longitude, b.longitude)),
-                LatLng(
-                        Math.max(a.latitude, b.latitude),
-                        Math.max(a.longitude, b.longitude)))
+                LatLng(Math.min(a.latitude, b.latitude), Math.min(a.longitude, b.longitude)),
+                LatLng(Math.max(a.latitude, b.latitude), Math.max(a.longitude, b.longitude)))
     }
 
 

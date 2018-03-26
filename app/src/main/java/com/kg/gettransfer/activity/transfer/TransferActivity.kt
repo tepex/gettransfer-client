@@ -247,7 +247,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     override fun onDestroy() {
         super.onDestroy()
         offers?.removeAllChangeListeners()
-        transferModel.close()
+        transferModel.stop()
         disposables.clear()
     }
 }

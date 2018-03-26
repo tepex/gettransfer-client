@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         if (currentAccount.loggedIn) {
-            btnUser.setImageResource(R.drawable.ic_person_gray_24dp)
+            btnUser.setImageResource(R.drawable.ic_person_black_24dp)
         } else {
             btnUser.setImageResource(R.drawable.ic_person_outline_gray_24dp)
         }
@@ -75,9 +75,19 @@ class MainActivity : AppCompatActivity() {
         if (tab == i) return
         tab = i
 
-        btnList.alpha = if (i == 0) 1f else 0.33f
-        btnCreate.alpha = if (i == 1) 1f else 0.33f
-        btnUser.alpha = if (i == 2) 1f else 0.33f
+        btnList.alpha = if (i == 0) 1f else 0.2f
+        btnCreate.alpha = if (i == 1) 1f else 0.16f
+        btnUser.alpha = if (i == 2) 1f else 0.16f
+
+        btnList.setImageResource(
+                if (i == 0) R.drawable.ic_view_headline_blue_24dp
+                else R.drawable.ic_view_headline_black_24dp)
+        btnCreate.setImageResource(
+                if (i == 1) R.drawable.ic_add_box_blue_24dp
+                else R.drawable.ic_add_box_black_24dp)
+        btnUser.setImageResource(
+                if (i == 2) R.drawable.ic_person_blue_24dp
+                else R.drawable.ic_person_black_24dp)
 
         val ft = fragmentManager.beginTransaction()
         ft.replace(

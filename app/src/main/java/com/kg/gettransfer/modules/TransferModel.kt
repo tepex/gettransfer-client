@@ -3,17 +3,19 @@ package com.kg.gettransfer.modules
 
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.kg.gettransfer.modules.http.HttpApi
+import com.kg.gettransfer.modules.http.json.BaseResponse
 import com.kg.gettransfer.modules.http.json.Payment
+import com.kg.gettransfer.modules.http.json.TransferField
 import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.realm.getTransfer
 import com.kg.gettransfer.realm.getTransferAsync
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmResults
 import org.koin.standalone.KoinComponent
-import java.util.logging.Logger
 
 
 /**
@@ -27,8 +29,6 @@ class TransferModel(
         private val api: HttpApi)
     : AsyncModel(), KoinComponent {
 
-    private val log = Logger.getLogger("TransferModel")
-
     var id: Int = -1
         set(value) {
             field = value
@@ -41,9 +41,13 @@ class TransferModel(
             this.transferRealmResults = transferRealmResults
         }
 
-    fun addOnTransferUpdated(f: ((Transfer) -> Unit)) =
-            disposables.add(
-                    brTransfer.observeOn(AndroidSchedulers.mainThread()).subscribe(f))
+    fun addOnTransferUpdated(f: (Transfer) -> Unit): Disposable {
+        val d = brTransfer
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(f)
+        disposables.add(d)
+        return d
+    }
 
     var transfer: Transfer?
         get() = brTransfer.value
@@ -53,18 +57,11 @@ class TransferModel(
 
     private val brTransfer: BehaviorRelay<Transfer> = BehaviorRelay.create()
 
-    private var managedTransfer: Transfer? = null
-
     private val transferChangeListener: (RealmResults<Transfer>) -> Unit = { result ->
-        log.info("getTransferFromRealmAsync() changed")
         if (result.size > 0) {
             if (result.isLoaded) {
-                managedTransfer?.removeAllChangeListeners()
                 val managedTransfer = result[0]
                 if (managedTransfer?.isLoaded == true && managedTransfer.isValid) {
-//                    managedTransfer.addChangeListener<Transfer> { t ->
-//                        transfer = if (t.isValid) realm.copyFromRealm(t) else Transfer()
-//                    }
                     transfer = realm.copyFromRealm(managedTransfer)
                 }
             }
@@ -82,26 +79,17 @@ class TransferModel(
     }
 
 
-    fun update() {
+    fun update() = invoke(api::getTransfer)
+
+    fun cancel() = invoke(api::postCancelTransfer)
+
+    fun restore() = invoke(api::postRestoreTransfer)
+
+
+    fun invoke(function: (id: Int) -> Observable<BaseResponse<TransferField>>) {
         if (busy || id < 0) return
-        api.getTransfer(id).fastSubscribe {
-            save(it?.transfer)
-        }
-    }
-
-
-    fun cancel() {
-        if (busy || id < 0) return
-        api.postCancelTransfer(id).fastSubscribe {
-            save(it?.transfer)
-        }
-    }
-
-
-    fun restore() {
-        if (busy || id < 0) return
-        api.postRestoreTransfer(id).fastSubscribe {
-            save(it?.transfer)
+        function(id).fastSubscribe {
+            save(it.transfer)
         }
     }
 
@@ -115,9 +103,6 @@ class TransferModel(
 
             newTransfer.update()
             newTransfer.populateFromOldTransfer(realm.getTransfer(id))
-
-            val offersChangedDate = newTransfer.offersChangedDate
-            val offersOutdated = newTransfer.offersOutdated
 
             realm.executeTransaction {
                 realm.copyToRealmOrUpdate(newTransfer)
@@ -137,9 +122,10 @@ class TransferModel(
     }
 
 
-    fun close() {
+    override fun stop() {
         transferRealmResults?.removeAllChangeListeners()
         disposables.clear()
         realm.close()
+        super.stop()
     }
 }

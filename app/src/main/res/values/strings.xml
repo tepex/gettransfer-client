@@ -1,5 +1,8 @@
 <resources>
+    <string name="geoapikey" translatable="false">AIzaSyAZXhfW8DCix33iyFU3An8ovidJjwpHFFg</string>
+
     <string name="app_name">Get Transfer</string>
+
     <string name="login">Login</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -10,5 +13,8 @@
     <string name="no_transfers">You have not уet requested any transfers</string>
     <string name="book">BOOK</string>
 
-    <string name="geoapikey" translatable="false">AIzaSyAZXhfW8DCix33iyFU3An8ovidJjwpHFFg</string>
+    <string name="profile">Profile</string>
+    <string name="newTransfer">New</string>
+    <string name="list">List</string>
+    <string name="duration">Duration</string>
 </resources>
