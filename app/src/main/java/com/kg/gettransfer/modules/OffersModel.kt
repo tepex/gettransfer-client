@@ -8,6 +8,7 @@ import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.realm.getTransfer
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.realm.Realm
 import io.realm.RealmResults
 import org.koin.standalone.KoinComponent
@@ -25,23 +26,15 @@ class OffersModel(
         private val api: HttpApi)
     : AsyncModel(), KoinComponent {
 
-    private lateinit var transfer: Transfer
-
     var transferID: Int = -1
         set(id) {
             if (id < 0) throw Exception("Invalid id")
-            if (Thread.currentThread() != Looper.getMainLooper().thread) {
-                throw Exception("Non UI thread")
-            }
+            if (Thread.currentThread() != Looper.getMainLooper().thread) throw Exception("Non UI thread")
 
-            try {
-                transfer.removeAllChangeListeners()
-            } catch (e: Exception) {
-            }
+            if (::managedTransfer.isInitialized) managedTransfer.removeAllChangeListeners()
 
-            transfer = realm.getTransfer(id) ?: throw Exception("No transfer with id: $id")
-
-            transfer.addChangeListener<Transfer> { transfer, _ ->
+            managedTransfer = realm.getTransfer(id) ?: throw Exception("No transfer with id: $id")
+            managedTransfer.addChangeListener<Transfer> { transfer, _ ->
                 if (transfer.isValid) {
                     if (transfer.offersOutdated) update()
                 }
@@ -49,10 +42,23 @@ class OffersModel(
 
             field = id
 
-            offers = getOffersAsyncRealmResult(transfer)
+            offers = getOffersAsyncRealmResult(managedTransfer)
 
-            if (transfer.offersOutdated) update()
+            if (managedTransfer.offersOutdated) update()
         }
+
+    fun addOnOffersUpdated(f: (RealmResults<Offer>) -> Unit): Disposable {
+        val d = brOffers
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(f)
+        disposables.add(d)
+        return d
+    }
+
+    private lateinit var managedTransfer: Transfer
+
+    private fun getOffersAsyncRealmResult(managedTransfer: Transfer): RealmResults<Offer> =
+            managedTransfer.offers.where().findAllAsync()
 
     var offers: RealmResults<Offer>
         get() = brOffers.value
@@ -60,20 +66,13 @@ class OffersModel(
             brOffers.accept(value)
         }
 
-    fun addOnOffersUpdated(f: ((RealmResults<Offer>) -> Unit)) =
-            disposables.add(
-                    brOffers.observeOn(AndroidSchedulers.mainThread()).subscribe(f))
-
-    private fun getOffersAsyncRealmResult(managedTransfer: Transfer): RealmResults<Offer> =
-            managedTransfer.offers.where().findAllAsync()
-
     private val brOffers: BehaviorRelay<RealmResults<Offer>> = BehaviorRelay.create()
 
     fun update() {
         if (busy || transferID < 0) return
         val id = transferID
-        api.getOffers(id).fastSubscribe { data ->
-            val offers = data?.offers ?: return@fastSubscribe
+        api.getOffers(id).fastSubscribe {
+            val offers = it.offers
 
             val realm = Realm.getDefaultInstance()
             realm.executeTransaction {
@@ -90,7 +89,7 @@ class OffersModel(
 
                 transfer.offersUpdatedDate = Date()
 
-                realm.insertOrUpdate(transfer)
+                realm.copyToRealmOrUpdate(transfer)
             }
             realm.close()
         }

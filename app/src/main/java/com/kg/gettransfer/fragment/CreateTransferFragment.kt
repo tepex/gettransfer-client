@@ -67,6 +67,10 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
     private var hireDuration = 0
 
+    private var markerFrom: Marker? = null
+    private var markerTo: Marker? = null
+    private var polyline: Polyline? = null
+
 
     override fun onCreateView(
             inflater: LayoutInflater?,
@@ -217,17 +221,17 @@ class CreateTransferFragment : Fragment(), KoinComponent {
             }
 
             mapView.getMapAsync {
-                map = it
-                if (map != null) {
-                    setUpMap()
+                if (it != null) {
+                    map = it
+                    setUpMap(it)
                 }
             }
         }
     }
 
 
-    private fun setUpMap() {
-        markerFrom = map?.addMarker(
+    private fun setUpMap(map: GoogleMap) {
+        markerFrom = map.addMarker(
                 MarkerOptions()
                         .visible(false)
                         .position(LatLng(0.0, 0.0))
@@ -235,13 +239,18 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                         .icon(BitmapDescriptorFactory
                                 .fromVector(activity, R.drawable.ic_place_black_24dp)))
 
-        markerTo = map?.addMarker(
+        markerTo = map.addMarker(
                 MarkerOptions()
                         .visible(false)
                         .position(LatLng(0.0, 0.0))
                         .anchor(0.5f, 0.95f)
                         .icon(BitmapDescriptorFactory
                                 .fromVector(activity, R.drawable.ic_place_blue_24dp)))
+
+        map.uiSettings.isRotateGesturesEnabled = false
+        map.uiSettings.isCompassEnabled = false
+        map.uiSettings.isMapToolbarEnabled = false
+        map.uiSettings.isTiltGesturesEnabled = false
     }
 
 
@@ -286,10 +295,6 @@ class CreateTransferFragment : Fragment(), KoinComponent {
         if (show) btnPromo.visibility = INVISIBLE
     }
 
-
-    private var markerFrom: Marker? = null
-    private var markerTo: Marker? = null
-    private var polyline: Polyline? = null
 
     private val pathChanged = Runnable {
         val llFrom = lvFrom.location.latLng
