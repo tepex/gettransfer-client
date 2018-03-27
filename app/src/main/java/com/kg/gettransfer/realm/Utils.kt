@@ -1,6 +1,8 @@
 package com.kg.gettransfer.realm
 
 
+import android.content.Context
+import android.text.format.DateUtils
 import io.realm.Realm
 import io.realm.RealmResults
 import java.text.DateFormat.*
@@ -40,8 +42,13 @@ object Utils {
 //                        .toString()
     }
 
-    fun dateToShortString(date: Date?): String {
+    fun dateToShortString(c: Context, date: Date?): String {
         if (date == null) return "-"
+        if (date.year == Date().year) return DateUtils.formatDateTime(
+                c,
+                date.time,
+                DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_ABBREV_MONTH)
+                .toString()
         return getDateInstance().format(date)
     }
 

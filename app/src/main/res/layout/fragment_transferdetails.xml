@@ -22,25 +22,40 @@
 
         <TextView
             android:id="@+id/tvFromDetails"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:layout_marginTop="12dp"
             android:singleLine="true"
-            android:text="TextView"
             android:textColor="@color/colorTextBlack"
             android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btnBack"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tvToDetails"
+        <ImageView
+            android:id="@+id/ivTo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/tvToDetails"
+            app:layout_constraintStart_toEndOf="@+id/btnBack"
+            app:layout_constraintTop_toTopOf="@+id/tvToDetails"
+            app:srcCompat="@drawable/ic_arrow_blue_16dp" />
+
+        <TextView
+            android:id="@+id/tvToDetails"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="4dp"
             android:singleLine="true"
-            android:text="TextView"
             android:textColor="@color/colorTextAccent"
             android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@+id/btnBack"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ivTo"
             app:layout_constraintTop_toBottomOf="@+id/tvFromDetails" />
 
         <View

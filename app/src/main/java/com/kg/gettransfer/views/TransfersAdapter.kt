@@ -1,6 +1,7 @@
 package com.kg.gettransfer.views
 
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat.startActivity
@@ -9,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import com.kg.gettransfer.R
 import com.kg.gettransfer.activity.transfer.TransferActivity
@@ -41,8 +43,10 @@ class TransfersAdapter(
 
     inner class ViewHolder(container: ConstraintLayout) : RecyclerView.ViewHolder(container) {
         val from: TextView = container.findViewById(R.id.tvFrom)
+        val ivTo: ImageView = container.findViewById(R.id.ivTo)
         val to: TextView = container.findViewById(R.id.tvTo)
         val date: TextView = container.findViewById(R.id.tvDateTime)
+        val id: TextView = container.findViewById(R.id.tvID)
         val state: TransferStatusView = container.findViewById(R.id.tvState)
     }
 
@@ -54,15 +58,22 @@ class TransfersAdapter(
         return ViewHolder(v as ConstraintLayout)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val transfer = getItem(position) ?: return
 
         holder.from.text = transfer.from?.name
 
+        holder.ivTo.setImageResource(
+                if (transfer.to != null) R.drawable.ic_arrow_blue_16dp
+                else R.drawable.ic_timer_blue_16dp)
+
         if (transfer.to == null) holder.to.text = transfer.hireDurationString
         else holder.to.text = transfer.to?.name
 
-        holder.date.text = Utils.dateToShortString(transfer.dateTo)
+        holder.date.text = Utils.dateToShortString(holder.itemView.context, transfer.dateTo)
+
+        holder.id.text = "#${transfer.id}"
 
         holder.state.update(transfer, true)
 

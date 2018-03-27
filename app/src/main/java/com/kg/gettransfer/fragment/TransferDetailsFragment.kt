@@ -89,6 +89,9 @@ class TransferDetailsFragment : Fragment() {
             v.btnBack.setOnClickListener { fragmentManager.popBackStackImmediate() }
 
             v.tvFromDetails.text = transfer.from?.name
+            v.ivTo.setImageResource(
+                    if (transfer.hireDuration?:0 <= 0) R.drawable.ic_arrow_blue_16dp
+                    else R.drawable.ic_timer_blue_16dp)
             v.tvToDetails.text =
                     transfer.to?.name ?: Utils.hoursToString(transfer.hireDuration ?: 0)
 
