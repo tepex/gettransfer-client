@@ -44,7 +44,15 @@ class OffersModel(
 
             offers = getOffersAsyncRealmResult(managedTransfer)
 
-            if (managedTransfer.offersOutdated) update()
+            val size1 = managedTransfer.offers.size
+            val size2 = offers.size
+
+            val size3 = realm.copyFromRealm(managedTransfer.offers)
+            val size4 = realm.copyFromRealm(offers)
+
+            if (managedTransfer.offersOutdated) {
+                update()
+            }
         }
 
     fun addOnOffersUpdated(f: (RealmResults<Offer>) -> Unit): Disposable {
@@ -88,8 +96,6 @@ class OffersModel(
                 transfer.offers.addAll(offersRealm)
 
                 transfer.offersUpdatedDate = Date()
-
-                realm.copyToRealmOrUpdate(transfer)
             }
             realm.close()
         }

@@ -161,7 +161,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
         tvNoOffers.text =
                 if (transfer.offersCount == 0) "Offers will be there shortly, often faster than in 1 day"
-                else "Number of offers: " + transfer.offersCount
+                else "Number of offers: " + transfer.offersCount + "\nSwipe to refresh"
 
         Log.i("TransferActivity", "UI updated")
     }
@@ -190,7 +190,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             tvConnecting.hide()
             tvChooseCarrier.hide()
         } else {
-            val hasOffers = offers?.size ?: 0 > 0
+            val hasOffers = transferModel.transfer?.offers?.size ?: 0 > 0
             if (!hasOffers) tvConnecting.fadeIn() else tvConnecting.hide()
             if (hasOffers) tvChooseCarrier.fadeIn() else tvChooseCarrier.hide()
         }
@@ -247,7 +247,10 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     override fun onDestroy() {
         super.onDestroy()
         offers?.removeAllChangeListeners()
+
         transferModel.stop()
+        offersModel.stop()
+
         disposables.clear()
     }
 }

@@ -312,6 +312,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
         updateFab()
     }
 
+
     private fun installEditTextWatcher(v: View) {
         v.lvFrom.onLocationChanged = pathChanged
         v.lvTo.onLocationChanged = pathChanged

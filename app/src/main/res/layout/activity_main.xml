@@ -38,46 +38,47 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <ImageButton
-                android:id="@+id/btnList"
+                android:id="@+id/btnTransfersFragment"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
-                android:alpha="0.2"
+                android:alpha="0.4"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/list"
                 android:onClick="showTransfers"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btnCreate"
+                app:layout_constraintEnd_toStartOf="@id/btnCreateTransferFragment"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/ic_view_headline_black_24dp" />
 
             <ImageButton
-                android:id="@+id/btnCreate"
+                android:id="@+id/btnCreateTransferFragment"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/newTransfer"
                 android:onClick="showCreateTransfer"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btnUser"
+                app:layout_constraintEnd_toStartOf="@id/btnAccountFragment"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/btnList"
+                app:layout_constraintStart_toEndOf="@id/btnTransfersFragment"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_add_box_black_24dp" />
+                app:srcCompat="@drawable/ic_add_box_blue_24dp" />
 
             <ImageButton
-                android:id="@+id/btnUser"
+                android:id="@+id/btnAccountFragment"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
-                android:alpha="0.2"
+                android:alpha="0.35"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/profile"
                 android:onClick="showAccount"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/btnCreate"
+                app:layout_constraintStart_toEndOf="@id/btnCreateTransferFragment"
                 app:srcCompat="@drawable/ic_person_black_24dp" />
+
         </android.support.constraint.ConstraintLayout>
 
         <View
@@ -85,9 +86,9 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:background="@color/colorSeparator"
+            app:layout_constraintBottom_toTopOf="@id/clButtons"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/clButtons" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

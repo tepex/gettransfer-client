@@ -129,6 +129,7 @@ open class Transfer : RealmObject() {
         get() {
             val offersUpdatedDate = offersUpdatedDate ?: return true
             return offersUpdatedDate.before(offersChangedDate ?: Date(0))
+                    || offers.size != offersCount
         }
 
     fun populateFromOldTransfer(oldTransfer: Transfer?) {
