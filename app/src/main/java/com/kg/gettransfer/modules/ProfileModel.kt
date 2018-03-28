@@ -46,9 +46,9 @@ class ProfileModel(
 
     fun update() {
         d?.dispose()
-        val email = currentAccount.email
+        val email = currentAccount.accountInfo
         d = api.getProfile().fastSubscribe {
-            if (email == currentAccount.email) brProfile.accept(it)
+            if (email == currentAccount.accountInfo) brProfile.accept(it)
         }
     }
 

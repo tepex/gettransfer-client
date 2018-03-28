@@ -31,8 +31,6 @@ class TransfersAdapter(
     : RealmRecyclerViewAdapter<Transfer, TransfersAdapter.ViewHolder>(realmResults, autoUpdate) {
 
     private val onItemClickListener: View.OnClickListener = View.OnClickListener {
-        Log.i("TransfersAdapter", "Starting transfer activity")
-
         val context = it.context
 
         val intent = Intent(context, TransferActivity::class.java)

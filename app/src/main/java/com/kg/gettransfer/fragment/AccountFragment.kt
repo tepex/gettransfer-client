@@ -94,7 +94,11 @@ class AccountFragment : Fragment(), KoinComponent {
         clLoggedOut.visibility = GONE
         clAccount.visibility = VISIBLE
 
-        tvEmail.text = currentAccount.email
+        tvEmail.text = currentAccount.accountInfo.email
+
+        tvPhone.text = currentAccount.accountInfo.phone
+        tvCurrency.text = currentAccount.accountInfo.currencyUnit
+        tvDistanceUnit.text = currentAccount.accountInfo.distanceUnit
 
         val profile = profileModel.profile
         if (profile.valid) {

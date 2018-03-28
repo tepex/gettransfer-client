@@ -88,8 +88,8 @@ class TransfersModel(
         log.info("updateTransfers() busy=$busy")
         if (busy) return
         api.getTransfers().fastSubscribe { data ->
-            log.info("getTransfers() responded success, N = ${data?.transfers?.size}")
-            val transfers = data?.transfers ?: return@fastSubscribe
+            log.info("getTransfers() responded success, N = ${data.transfers.size}")
+            val transfers = data.transfers
 
             val realm = Realm.getDefaultInstance()
             realm.executeTransaction {

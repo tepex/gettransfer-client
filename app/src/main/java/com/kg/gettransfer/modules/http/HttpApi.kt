@@ -2,6 +2,7 @@ package com.kg.gettransfer.modules.http
 
 
 import com.kg.gettransfer.modules.http.json.*
+import com.kg.gettransfer.realm.AccountInfo
 import io.reactivex.Observable
 import retrofit2.Response
 import retrofit2.http.*
@@ -25,7 +26,15 @@ interface HttpApi {
     fun login(
             @Field("email") email: String,
             @Field("password") password: String)
-            : Observable<BooleanResponse>
+            : Observable<BaseResponse<AccountField>>
+
+    @GET("account")
+    fun getAccount(): Observable<BaseResponse<AccountField>>
+
+    @PUT("account")
+    @Headers("Content-Type: application/json")
+    fun putAccount(@Body accountInfo: AccountInfo): Observable<BaseResponse<AccountField>>
+
 
     @GET("profiles")
     fun getProfile(

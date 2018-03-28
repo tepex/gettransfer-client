@@ -15,11 +15,6 @@ import io.realm.annotations.RealmClass
 
 @RealmClass
 open class Vehicle : RealmObject() {
-//    @Expose
-//    @SerializedName("id")
-//    @PrimaryKey
-//    var id: Int = -1
-
     @Expose
     @SerializedName("name")
     var name: String? = null

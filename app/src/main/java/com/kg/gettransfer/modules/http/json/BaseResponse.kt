@@ -3,6 +3,7 @@ package com.kg.gettransfer.modules.http.json
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.kg.gettransfer.realm.AccountInfo
 import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.realm.TransportType
@@ -109,3 +110,11 @@ class AccessToken {
     @Expose
     var accessToken: String = ""
 }
+
+
+// --
+
+
+class AccountField(@Expose
+                  @SerializedName("account")
+                  val account: AccountInfo)

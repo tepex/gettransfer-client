@@ -3,9 +3,12 @@ package com.kg.gettransfer.modules
 
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.kg.gettransfer.modules.http.HttpApi
+import com.kg.gettransfer.realm.AccountInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.realm.Realm
 import org.koin.standalone.KoinComponent
+import java.util.*
 
 
 /**
@@ -19,18 +22,35 @@ class CurrentAccount(
         private val api: HttpApi)
     : AsyncModel(), KoinComponent {
 
-    private val brEmail = BehaviorRelay.createDefault<String>(session.email)!!
+    private val brAccountInfo =
+            BehaviorRelay.createDefault<AccountInfo>(getAccount(session.email))!!
 
-    var email: String
-        get() = brEmail.value
-        private set(v) = brEmail.accept(v)
+    var accountInfo: AccountInfo
+        get() = brAccountInfo.value
+        private set(v) = brAccountInfo.accept(v)
 
-    val loggedIn: Boolean get() = email.isNotEmpty()
+    val loggedIn: Boolean get() = accountInfo.email?.isNotEmpty() == true
 
-    fun addOnAccountChanged(f: ((String) -> Unit)): Disposable {
-        val d = brEmail.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
+    fun addOnAccountChanged(f: (AccountInfo) -> Unit): Disposable {
+        val d = brAccountInfo.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
         disposables.add(d)
         return d
+    }
+
+    fun getAccount(email: String): AccountInfo {
+        val realm = Realm.getDefaultInstance()
+
+        val newAccountInfo = realm
+                .where(AccountInfo::class.java)
+                .equalTo("email", email)
+                .findFirst()
+
+        val a = if (newAccountInfo == null) AccountInfo(email)
+        else realm.copyFromRealm(newAccountInfo)
+
+        realm.close()
+
+        return a
     }
 
 
@@ -40,8 +60,8 @@ class CurrentAccount(
     init {
         session.state.subscribe {
             val newEmail = session.email
-            if (newEmail != email) {
-                email = newEmail
+            if (newEmail != accountInfo.email) {
+                accountInfo = getAccount(newEmail)
             }
         }
     }
@@ -49,7 +69,19 @@ class CurrentAccount(
 
     fun login(email: String, pass: String): Boolean {
         if (busy) return false
-        api.login(email, pass).fastSubscribe { session.loggedIn(email) }
+        api.login(email, pass).fastSubscribe {
+            val newAccountInfo = it.account
+            newAccountInfo.dateUpdated = Date()
+
+            val realm = Realm.getDefaultInstance()
+            realm.beginTransaction()
+            realm.copyToRealmOrUpdate(newAccountInfo)
+            realm.commitTransaction()
+
+            if (newAccountInfo.email == email) session.loggedIn(email)
+
+            realm.close()
+        }
         return true
     }
 
