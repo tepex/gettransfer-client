@@ -14,8 +14,8 @@ import retrofit2.http.*
 
 
 interface HttpApi {
-    @GET("transport_types")
-    fun getTransportTypes(): Observable<TransportTypesResponse>
+    @GET("configs")
+    fun getConfig(): Observable<BaseResponse<Config>>
 
 
     // --

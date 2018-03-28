@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:background="@color/colorBG"
             android:clipToPadding="false"
-            android:paddingBottom="72dp"
+            android:paddingBottom="96dp"
             android:paddingTop="24dp">
 
             <ProgressBar
@@ -74,7 +74,6 @@
                 app:layout_constraintBottom_toBottomOf="@id/tvEmail"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tvEmail" />
-
 
             <TextView
                 android:id="@+id/tvlEmail"
@@ -92,6 +91,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
+                android:layout_marginTop="2dp"
                 android:text="gt@gmail.com"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/colorTextBlack"
@@ -115,6 +115,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
+                android:layout_marginTop="2dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/colorTextBlack"
                 app:layout_constraintStart_toStartOf="parent"
@@ -132,13 +133,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvPhone" />
 
-            <TextView
+            <com.kg.gettransfer.views.CurrencyField
                 android:id="@+id/tvCurrency"
-                android:layout_width="wrap_content"
+                android:layout_width="64dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="2dp"
+                android:editable="false"
+                android:gravity="left"
+                android:paddingTop="0dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/colorTextBlack"
+                android:textCursorDrawable="@null"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvlCurrency" />
 
@@ -154,13 +160,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvCurrency" />
 
-            <TextView
+            <com.kg.gettransfer.views.DistanceUnitField
                 android:id="@+id/tvDistanceUnit"
-                android:layout_width="wrap_content"
+                android:layout_width="64dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="2dp"
+                android:editable="false"
+                android:gravity="left"
+                android:paddingTop="0dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/colorTextBlack"
+                android:textCursorDrawable="@null"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvlDistanceUnit" />
 
@@ -190,6 +201,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
+                    android:layout_marginTop="2dp"
                     android:text="John Brown"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/colorTextBlack"

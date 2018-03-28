@@ -14,6 +14,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import com.kg.gettransfer.R
 import com.kg.gettransfer.activity.login.LoginActivity
+import com.kg.gettransfer.modules.ConfigModel
 import com.kg.gettransfer.modules.CurrentAccount
 import com.kg.gettransfer.modules.ProfileModel
 import io.reactivex.disposables.CompositeDisposable
@@ -29,6 +30,7 @@ import org.koin.standalone.KoinComponent
 
 
 class AccountFragment : Fragment(), KoinComponent {
+    private val configModel: ConfigModel by inject()
     private val currentAccount: CurrentAccount by inject()
     private val profileModel: ProfileModel by inject()
 
@@ -67,6 +69,8 @@ class AccountFragment : Fragment(), KoinComponent {
             savedView = v
         }
 
+        configModel
+
         return v
     }
 
@@ -95,10 +99,7 @@ class AccountFragment : Fragment(), KoinComponent {
         clAccount.visibility = VISIBLE
 
         tvEmail.text = currentAccount.accountInfo.email
-
         tvPhone.text = currentAccount.accountInfo.phone
-        tvCurrency.text = currentAccount.accountInfo.currencyUnit
-        tvDistanceUnit.text = currentAccount.accountInfo.distanceUnit
 
         val profile = profileModel.profile
         if (profile.valid) {

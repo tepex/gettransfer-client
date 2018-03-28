@@ -93,11 +93,11 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (currentAccount.loggedIn) {
-            btnAccount.setImageResource(R.drawable.ic_person_black_24dp)
-        } else {
-            btnAccount.setImageResource(R.drawable.ic_person_outline_gray_24dp)
-        }
+//        if (currentAccount.loggedIn) {
+//            btnAccount.setImageResource(R.drawable.ic_person_black_24dp)
+//        } else {
+//            btnAccount.setImageResource(R.drawable.ic_person_outline_gray_24dp)
+//        }
     }
 
 

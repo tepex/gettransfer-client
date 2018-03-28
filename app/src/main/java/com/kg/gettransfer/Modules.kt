@@ -93,6 +93,8 @@ val AppModule = applicationContext {
 
     bean { TransportTypes(get(), get()) }
 
+    bean { ConfigModel(get()) }
+
 
     // Models
 

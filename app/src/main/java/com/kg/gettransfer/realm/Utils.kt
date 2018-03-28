@@ -4,6 +4,7 @@ package com.kg.gettransfer.realm
 import android.content.Context
 import android.text.format.DateUtils
 import io.realm.Realm
+import io.realm.RealmObject
 import io.realm.RealmResults
 import java.text.DateFormat.*
 import java.util.*
@@ -20,6 +21,15 @@ fun Realm.getTransferAsync(id: Int): RealmResults<Transfer> =
 
 fun Realm.getTransfer(id: Int): Transfer? =
         where(Transfer::class.java).equalTo("id", id).findFirst()
+
+
+fun RealmObject.copyToRealmOrUpdate() {
+    val realm = Realm.getDefaultInstance()
+    realm.executeTransaction {
+        it.copyToRealmOrUpdate(this)
+    }
+    realm.close()
+}
 
 
 object Utils {

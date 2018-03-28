@@ -17,6 +17,7 @@ import android.widget.TextView
 import com.kg.gettransfer.R
 import com.kg.gettransfer.mainactivity.MainActivity
 import com.kg.gettransfer.modules.CurrentAccount
+import com.kg.gettransfer.modules.ProfileModel
 import com.kg.gettransfer.modules.PromoCodeModel
 import com.kg.gettransfer.modules.TransfersModel
 import com.kg.gettransfer.modules.http.json.NewTransfer
@@ -40,6 +41,7 @@ class TransferDetailsFragment : Fragment() {
     private val transfersModel: TransfersModel by inject()
     private val promoCodeModel: PromoCodeModel by inject()
     private val currentAccount: CurrentAccount by inject()
+    private val profileModel: ProfileModel by inject()
 
     private var savedView: View? = null
 
@@ -80,20 +82,24 @@ class TransferDetailsFragment : Fragment() {
                 etPromoCode.requestFocus()
             }
 
-            v.tfTransport.updatePrices(transfer)
+            if (!::transfer.isInitialized) {
+                fragmentManager.popBackStackImmediate()
+            } else {
+                v.tfTransport.updatePrices(transfer)
 
-            installEditTextWatcher(v)
+                installEditTextWatcher(v)
 
-            initPromoCodeUI(v.etPromoCode, v.tvPromoInfo, v.tvPromoValidation, v.pbPromoValidation)
+                initPromoCodeUI(v.etPromoCode, v.tvPromoInfo, v.tvPromoValidation, v.pbPromoValidation)
 
-            v.btnBack.setOnClickListener { fragmentManager.popBackStackImmediate() }
+                v.btnBack.setOnClickListener { fragmentManager.popBackStackImmediate() }
 
-            v.tvFromDetails.text = transfer.from?.name
-            v.ivToDetails.setImageResource(
-                    if (transfer.hireDuration ?: 0 <= 0) R.drawable.ic_arrow_blue_16dp
-                    else R.drawable.ic_timer_blue_16dp)
-            v.tvToDetails.text =
-                    transfer.to?.name ?: Utils.hoursToString(transfer.hireDuration ?: 0)
+                v.tvFromDetails.text = transfer.from?.name
+                v.ivToDetails.setImageResource(
+                        if (transfer.hireDuration ?: 0 <= 0) R.drawable.ic_arrow_blue_16dp
+                        else R.drawable.ic_timer_blue_16dp)
+                v.tvToDetails.text =
+                        transfer.to?.name ?: Utils.hoursToString(transfer.hireDuration ?: 0)
+            }
 
             savedView = v
         }
@@ -104,6 +110,8 @@ class TransferDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        etSign.setText(profileModel.profile.fullName)
 
         etEmail.setText(currentAccount.accountInfo.email)
         etPhone.setText(currentAccount.accountInfo.phone)

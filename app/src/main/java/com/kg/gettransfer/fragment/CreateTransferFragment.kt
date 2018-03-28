@@ -385,7 +385,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     private fun animateMap(llFrom: LatLng?, llTo: LatLng?) {
         if (llFrom != null && llTo != null) {
             try {
-                val padding = (64 * activity.resources.displayMetrics.density).toInt()
+                val padding = (96 * activity.resources.displayMetrics.density).toInt()
                 map?.animateCamera(
                         CameraUpdateFactory.newLatLngBounds(
                                 getLatLngBounds(llFrom, llTo),
