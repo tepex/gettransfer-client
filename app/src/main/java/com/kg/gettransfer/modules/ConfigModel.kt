@@ -1,11 +1,13 @@
 package com.kg.gettransfer.modules
 
 
+import android.util.Log
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.kg.gettransfer.modules.http.HttpApi
-import com.kg.gettransfer.modules.http.json.Config
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.kg.gettransfer.realm.Config
+import com.kg.gettransfer.realm.copyToRealmOrUpdate
 import io.reactivex.disposables.Disposable
+import io.realm.Realm
 import org.koin.standalone.KoinComponent
 
 
@@ -14,18 +16,24 @@ import org.koin.standalone.KoinComponent
  */
 
 
-class ConfigModel(
-        private val api: HttpApi)
+class ConfigModel(private val api: HttpApi)
     : AsyncModel(), KoinComponent {
-
-    init {
-        update()
-    }
 
     private val brConfig: BehaviorRelay<Config> = BehaviorRelay.create()
 
-    fun addOnConfigUpdated(f: (Config) -> Unit): Disposable =
-            brConfig.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
+    init {
+        val realm = Realm.getDefaultInstance()
+        val configAsync = realm.where(Config::class.java).findFirstAsync()
+        configAsync.addChangeListener<Config> { config ->
+            configAsync.removeAllChangeListeners()
+            if (config.isValid) brConfig.accept(realm.copyFromRealm(config))
+            else update()
+        }
+
+        addOnError { Log.e("ConfigModel", it.toString()) }
+    }
+
+    fun addOnConfigUpdated(f: (Config) -> Unit): Disposable = brConfig.subscribeUIThread(f)
 
     val config: Config?
         get() = brConfig.value
@@ -36,10 +44,9 @@ class ConfigModel(
 
     fun update() {
         if (busy) return
-        disposables.add(
-                api.getConfig().fastSubscribe {
-                    //it.copyToRealmOrUpdate()
-                    brConfig.accept(it)
-                })
+        api.getConfig().fastSubscribe {
+            it.copyToRealmOrUpdate()
+            brConfig.accept(it)
+        }
     }
 }

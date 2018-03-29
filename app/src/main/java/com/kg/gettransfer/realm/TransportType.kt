@@ -14,25 +14,20 @@ import io.realm.annotations.RealmClass
 
 
 @RealmClass
-open class TransportType : RealmObject() {
-    @PrimaryKey
-    @SerializedName("id")
-    @Expose
-    var id: String = ""
+open class TransportType(
+        @PrimaryKey
+        @SerializedName("id")
+        @Expose
+        var id: String = "",
 
-    @SerializedName("title_ru")
-    @Expose
-    var title: String = ""
+        var title: String = "",
 
-    @SerializedName("pax_max")
-    @Expose
-    var paxMax: Int = 0
+        @SerializedName("pax_max")
+        @Expose
+        var paxMax: Int = 0,
 
-    @SerializedName("luggage_max")
-    @Expose
-    var luggageMax: Int = 0
+        @SerializedName("luggage_max")
+        @Expose
+        var luggageMax: Int = 0)
 
-    @SerializedName("image")
-    @Expose
-    var imageUrl: String = ""
-}
+    : RealmObject()

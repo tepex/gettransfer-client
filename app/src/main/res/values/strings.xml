@@ -17,4 +17,13 @@
     <string name="newTransfer">New</string>
     <string name="list">List</string>
     <string name="duration">Duration</string>
+
+    <string name="economy">Economy</string>
+    <string name="business">Business</string>
+    <string name="premium">Premium</string>
+    <string name="van">Van</string>
+    <string name="minibus">Minibus</string>
+    <string name="bus">Bus</string>
+    <string name="limousine">Limousine</string>
+    <string name="helicopter">Helicopter</string>
 </resources>

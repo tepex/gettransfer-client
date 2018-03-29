@@ -35,29 +35,17 @@ open class AsyncModel {
 
 
     fun addOnBusyChanged(f: ((Boolean) -> Unit)): Disposable {
-        val d = brBusy
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(f)
-        disposables.add(d)
-        return d
+        return brBusy.subscribeUIThread(f)
     }
 
     fun addOnBusyProgressBar(pb: View, nonBusyVisibility: Int = View.INVISIBLE): Disposable {
-        val d = brBusy
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    pb.visibility = if (it) View.VISIBLE else nonBusyVisibility
-                }
-        disposables.add(d)
-        return d
+        return brBusy.subscribeUIThread {
+            pb.visibility = if (it) View.VISIBLE else nonBusyVisibility
+        }
     }
 
     fun addOnError(f: (Throwable) -> Unit): Disposable {
-        val d = prErrors
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(f)
-        disposables.add(d)
-        return d
+        return prErrors.subscribeUIThread(f)
     }
 
 
@@ -74,6 +62,22 @@ open class AsyncModel {
     }
 
 
+    protected fun <T : Any>
+            Observable<T>.subscribeUIThread(f: (data: T) -> Unit): Disposable {
+        return subscribe(f, true)
+    }
+
+    protected fun <T : Any>
+            Observable<T>.subscribe(f: (data: T) -> Unit,
+                                    uiThread: Boolean): Disposable {
+        val d = this
+                .observeOn(if (uiThread) AndroidSchedulers.mainThread() else Schedulers.newThread())
+                .subscribe(f, { e -> err(e) })
+        disposables.add(d)
+        return d
+    }
+
+
     protected fun <K : Any, T : BaseResponse<K>>
             Observable<T>.fastSubscribe(f: (data: K) -> Unit): Disposable {
         return fastSubscribe(f, false)
@@ -81,7 +85,7 @@ open class AsyncModel {
 
     protected fun <K : Any, T : BaseResponse<K>>
             Observable<T>.fastSubscribe(f: (data: K) -> Unit,
-                                        uiThread: Boolean = false): Disposable {
+                                        uiThread: Boolean): Disposable {
         val d = this
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe { busy = true }
@@ -101,6 +105,7 @@ open class AsyncModel {
         return d
     }
 
+
     protected fun <K : Any, T : BaseResponse<K>>
             Observable<Response<T>>.fastSubscribe(f: (data: K) -> Unit,
                                                   fError: (data: Error) -> Unit): Disposable {
@@ -108,8 +113,9 @@ open class AsyncModel {
     }
 
     protected fun <K : Any, T : BaseResponse<K>>
-            Observable<Response<T>>.fastSubscribe(f: (data: K) -> Unit, fError: (data: Error) -> Unit,
-                                                  uiThread: Boolean = false): Disposable {
+            Observable<Response<T>>.fastSubscribe(f: (data: K) -> Unit,
+                                                  fError: (data: Error) -> Unit,
+                                                  uiThread: Boolean): Disposable {
         val d = this
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe { busy = true }
