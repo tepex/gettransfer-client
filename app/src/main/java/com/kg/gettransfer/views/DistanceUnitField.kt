@@ -13,7 +13,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.kg.gettransfer.modules.ConfigModel
 import com.kg.gettransfer.modules.CurrentAccount
-import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.CompositeDisposable
 import io.realm.RealmList
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -32,7 +32,7 @@ class DistanceUnitField : EditText, KoinComponent {
     constructor(c: Context, attrs: AttributeSet) : super(c, attrs)
     constructor(c: Context, attrs: AttributeSet, defStyle: Int) : super(c, attrs, defStyle)
 
-    val d: Disposable
+    protected val disposables = CompositeDisposable()
 
     init {
         clearListenersFixFocus()
@@ -45,21 +45,26 @@ class DistanceUnitField : EditText, KoinComponent {
             if (units == null) {
                 Toast.makeText(
                         context,
-                        "Try again, when Internet available",
+                        "Try again, when internet available",
                         Toast.LENGTH_SHORT).show()
+                configModel.updateIfNull()
                 return@setOnClickListener
             }
 
             val fragmentManager = getActivity(context)?.fragmentManager
-            val dialog = DistanceUnitDialog(this, units)
+            val dialog = DistanceUnitDialog(
+                    { currentAccount.putAccount(distanceUnit = it) },
+                    units)
             dialog.show(fragmentManager, "Distance unit")
         }
 
         setText(currentAccount.accountInfo.distanceUnit)
 
-        d = currentAccount.addOnAccountChanged {
-            setText(currentAccount.accountInfo.distanceUnit)
-        }
+        disposables.addAll(
+                currentAccount.addOnAccountChanged {
+                    setText(currentAccount.accountInfo.distanceUnit)
+                },
+                currentAccount.toastOnError(context))
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -75,18 +80,13 @@ class DistanceUnitField : EditText, KoinComponent {
 
 
 @SuppressLint("ValidFragment")
-class DistanceUnitDialog(private val cf: DistanceUnitField, private val units: RealmList<String?>)
+class DistanceUnitDialog(private val f: (String?) -> Unit, private val units: RealmList<String?>)
     : DialogFragment(), KoinComponent {
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val d = AlertDialog.Builder(activity)
+        return AlertDialog.Builder(activity)
                 .setTitle("Distance unit")
-                .setItems(units.toTypedArray(), { d, i ->
-                    cf.setText(units[i])
-                })
+                .setItems(units.toTypedArray(), { _, i -> f(units[i]) })
                 .setPositiveButton("Ok", { d, _ -> d.dismiss() })
                 .create()
-
-        return d
     }
 }

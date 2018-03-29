@@ -3,7 +3,9 @@ package com.kg.gettransfer.modules
 
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.kg.gettransfer.modules.http.HttpApi
+import com.kg.gettransfer.modules.http.json.AccountField
 import com.kg.gettransfer.realm.AccountInfo
+import com.kg.gettransfer.realm.saveAndGetUnmanaged
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.realm.Realm
@@ -74,13 +76,27 @@ class CurrentAccount(
             newAccountInfo.dateUpdated = Date()
 
             val realm = Realm.getDefaultInstance()
-            realm.beginTransaction()
-            realm.copyToRealmOrUpdate(newAccountInfo)
-            realm.commitTransaction()
+            realm.executeTransaction {
+                it.copyToRealmOrUpdate(newAccountInfo)
+            }
 
             if (newAccountInfo.email == email) session.loggedIn(email)
 
             realm.close()
+        }
+        return true
+    }
+
+
+    fun putAccount(currency: String? = null, distanceUnit: String? = null): Boolean {
+        if (busy) return false
+        if (currency != null) accountInfo.currency = currency
+        if (distanceUnit != null) accountInfo.distanceUnit = distanceUnit
+        api.putAccount(AccountField(accountInfo)).fastSubscribe {
+            val newAccountInfo = it.account
+            newAccountInfo.dateUpdated = Date()
+
+            accountInfo = newAccountInfo.saveAndGetUnmanaged()
         }
         return true
     }

@@ -23,12 +23,15 @@ fun Realm.getTransfer(id: Int): Transfer? =
         where(Transfer::class.java).equalTo("id", id).findFirst()
 
 
-fun RealmObject.copyToRealmOrUpdate() {
+fun <T : RealmObject> T.saveAndGetUnmanaged(): T {
+    var o = this
     val realm = Realm.getDefaultInstance()
     realm.executeTransaction {
-        it.copyToRealmOrUpdate(this)
+        o = it.copyToRealmOrUpdate(this)
     }
+    val copy = realm.copyFromRealm(o)
     realm.close()
+    return copy
 }
 
 

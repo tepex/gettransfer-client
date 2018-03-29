@@ -116,5 +116,9 @@ class AccessToken {
 
 
 class AccountField(@Expose
-                  @SerializedName("account")
-                  val account: AccountInfo)
+                   @SerializedName("account")
+                   val account: AccountInfo,
+
+                   @Expose
+                   @SerializedName("_method")
+                   val method: String = "PUT")

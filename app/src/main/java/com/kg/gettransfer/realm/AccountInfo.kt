@@ -31,12 +31,13 @@ open class AccountInfo(
 
         @Expose
         @SerializedName("currency")
-        var currencyUnit: String? = null,
+        var currency: String? = null,
 
         @Expose
         @SerializedName("distance_unit")
         var distanceUnit: String? = null,
 
+        @Expose(serialize = false, deserialize = false)
         var dateUpdated: Date? = null)
 
     : RealmObject()

@@ -50,6 +50,7 @@ val AppModule = applicationContext {
         GsonBuilder()
                 .setDateFormat(format)
                 .registerTypeAdapter(Date::class.java, dateTypeAdapter.nullSafe())
+                .excludeFieldsWithoutExposeAnnotation()
                 .create() as Gson
     }
     bean { GsonConverterFactory.create(get()) as GsonConverterFactory }

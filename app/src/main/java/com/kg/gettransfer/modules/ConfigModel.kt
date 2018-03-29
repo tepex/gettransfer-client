@@ -5,7 +5,7 @@ import android.util.Log
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.kg.gettransfer.modules.http.HttpApi
 import com.kg.gettransfer.realm.Config
-import com.kg.gettransfer.realm.copyToRealmOrUpdate
+import com.kg.gettransfer.realm.saveAndGetUnmanaged
 import io.reactivex.disposables.Disposable
 import io.realm.Realm
 import org.koin.standalone.KoinComponent
@@ -45,8 +45,7 @@ class ConfigModel(private val api: HttpApi)
     fun update() {
         if (busy) return
         api.getConfig().fastSubscribe {
-            it.copyToRealmOrUpdate()
-            brConfig.accept(it)
+            brConfig.accept(it.saveAndGetUnmanaged())
         }
     }
 }

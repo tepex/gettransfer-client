@@ -45,20 +45,23 @@ class CurrencyField : EditText, KoinComponent {
             if (currencies == null) {
                 Toast.makeText(
                         context,
-                        "Try again, when Internet available",
+                        "Try again, when internet available",
                         Toast.LENGTH_SHORT).show()
+                configModel.updateIfNull()
                 return@setOnClickListener
             }
 
             val fragmentManager = getActivity(context)?.fragmentManager
-            val dialog = CurrencyDialog(this, currencies)
+            val dialog = CurrencyDialog(
+                    { currentAccount.putAccount(currency = it) },
+                    currencies)
             dialog.show(fragmentManager, "Currency")
         }
 
-        setText(currentAccount.accountInfo.currencyUnit)
+        setText(currentAccount.accountInfo.currency)
 
         d = currentAccount.addOnAccountChanged {
-            setText(currentAccount.accountInfo.currencyUnit)
+            setText(currentAccount.accountInfo.currency)
         }
     }
 
@@ -75,18 +78,13 @@ class CurrencyField : EditText, KoinComponent {
 
 
 @SuppressLint("ValidFragment")
-class CurrencyDialog(private val cf: CurrencyField, private val currencies: RealmList<String?>)
+class CurrencyDialog(private val f: (String?) -> Unit, private val currencies: RealmList<String?>)
     : DialogFragment(), KoinComponent {
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val d = AlertDialog.Builder(activity)
+        return AlertDialog.Builder(activity)
                 .setTitle("Currency")
-                .setItems(currencies.toTypedArray(), { d, i ->
-                    cf.setText(currencies[i])
-                })
+                .setItems(currencies.toTypedArray(), { _, i -> f(currencies[i]) })
                 .setPositiveButton("Ok", { d, _ -> d.dismiss() })
                 .create()
-
-        return d
     }
 }

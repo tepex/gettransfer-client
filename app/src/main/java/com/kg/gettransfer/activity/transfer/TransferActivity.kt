@@ -59,9 +59,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         offersModel.transferID = id
 
         transferModel.addOnTransferUpdated { updateUI(it) }
-        transferModel.addOnError {
-            Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
-        }
+        transferModel.toastOnError(this)
         transferModel.addOnBusyProgressBar(progressBar)
         transferModel.addOnBusyChanged {
             if (it) transferStatusView.hide()

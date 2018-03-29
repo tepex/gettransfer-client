@@ -1,7 +1,9 @@
 package com.kg.gettransfer.modules
 
 
+import android.content.Context
 import android.view.View
+import android.widget.Toast
 import com.google.gson.Gson
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
@@ -46,6 +48,12 @@ open class AsyncModel {
 
     fun addOnError(f: (Throwable) -> Unit): Disposable {
         return prErrors.subscribeUIThread(f)
+    }
+
+    fun toastOnError(context: Context): Disposable {
+        return prErrors.subscribeUIThread {
+            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+        }
     }
 
 
