@@ -6,7 +6,11 @@ import android.content.Intent
 import android.graphics.LightingColorFilter
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.v4.content.ContextCompat
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -65,26 +69,26 @@ class AccountFragment : Fragment(), KoinComponent {
                         LightingColorFilter(
                                 ContextCompat.getColor(activity, R.color.colorYellow), 0)
 
-//                val phoneEditTextWatcher: TextWatcher = object : TextWatcher {
-//                    private val DELAY: Long = 500
-//
-//                    val handler = Handler(Looper.getMainLooper()) // UI thread
-//                    var workRunnable: Runnable? = null
-//
-//                    override fun afterTextChanged(s: Editable?) {
-//                        handler.removeCallbacks(workRunnable)
-//                        if (s.isNullOrEmpty()) {
-//                        } else if (s.toString() != currentAccount.accountInfo.phone) {
-//                            workRunnable = Runnable { currentAccount.putAccount(phone = s.toString()) }
-//                            handler.postDelayed(workRunnable, DELAY)
-//                        }
-//                    }
-//
-//                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-//                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
-//                }
-//
-//                etPhone.addTextChangedListener(phoneEditTextWatcher)
+                val phoneEditTextWatcher: TextWatcher = object : TextWatcher {
+                    private val DELAY: Long = 500
+
+                    val handler = Handler(Looper.getMainLooper()) // UI thread
+                    var workRunnable: Runnable? = null
+
+                    override fun afterTextChanged(s: Editable?) {
+                        handler.removeCallbacks(workRunnable)
+                        if (s.isNullOrEmpty()) {
+                        } else if (s.toString() != currentAccount.accountInfo.phone) {
+                            workRunnable = Runnable { currentAccount.putAccount(phone = s.toString()) }
+                            handler.postDelayed(workRunnable, DELAY)
+                        }
+                    }
+
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+                }
+
+                etPhone.addTextChangedListener(phoneEditTextWatcher)
             }
 
             savedView = v
@@ -121,7 +125,9 @@ class AccountFragment : Fragment(), KoinComponent {
         clAccount.visibility = VISIBLE
 
         tvEmail.text = currentAccount.accountInfo.email
-        etPhone.setText(currentAccount.accountInfo.phone)
+        if (etPhone.text.toString() != currentAccount.accountInfo.phone) {
+            etPhone.setText(currentAccount.accountInfo.phone)
+        }
 
         val profile = profileModel.profile
         if (profile.valid) {
