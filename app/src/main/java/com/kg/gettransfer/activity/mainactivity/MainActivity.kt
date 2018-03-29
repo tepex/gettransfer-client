@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private val TAG: String = "Screen"
 
     private var tab = 1
+    private var prevTab = 1
 
     private var frTransfers: TransfersFragment? = null
         get() {
@@ -110,6 +111,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun selectTab(i: Int) {
         if (tab == i) return
+        prevTab = tab
         tab = i
 
         updateButtons(i)
@@ -154,5 +156,13 @@ class MainActivity : AppCompatActivity() {
             btnCreateTransfer.elevation = if (i == 1) 4f else 0f
             btnAccount.elevation = if (i == 2) 4f else 0f
         }
+    }
+
+
+    override fun onBackPressed() {
+        if (tab != 1 || prevTab != 1) {
+            selectTab(prevTab)
+            prevTab = 1
+        } else super.onBackPressed()
     }
 }
