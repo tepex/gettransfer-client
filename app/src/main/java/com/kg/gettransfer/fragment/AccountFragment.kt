@@ -64,6 +64,27 @@ class AccountFragment : Fragment(), KoinComponent {
                 btnLogIn.background.colorFilter =
                         LightingColorFilter(
                                 ContextCompat.getColor(activity, R.color.colorYellow), 0)
+
+//                val phoneEditTextWatcher: TextWatcher = object : TextWatcher {
+//                    private val DELAY: Long = 500
+//
+//                    val handler = Handler(Looper.getMainLooper()) // UI thread
+//                    var workRunnable: Runnable? = null
+//
+//                    override fun afterTextChanged(s: Editable?) {
+//                        handler.removeCallbacks(workRunnable)
+//                        if (s.isNullOrEmpty()) {
+//                        } else if (s.toString() != currentAccount.accountInfo.phone) {
+//                            workRunnable = Runnable { currentAccount.putAccount(phone = s.toString()) }
+//                            handler.postDelayed(workRunnable, DELAY)
+//                        }
+//                    }
+//
+//                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+//                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+//                }
+//
+//                etPhone.addTextChangedListener(phoneEditTextWatcher)
             }
 
             savedView = v
@@ -77,9 +98,10 @@ class AccountFragment : Fragment(), KoinComponent {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         disposables.add(currentAccount.addOnAccountChanged { updateUI() })
+        disposables.add(currentAccount.addOnBusyProgressBar(progressBarAccount))
 
         disposables.add(profileModel.addOnProfileUpdated { updateUI() })
-        disposables.add(profileModel.addOnBusyProgressBar(progressBar))
+        disposables.add(profileModel.addOnBusyProgressBar(progressBarProfile))
 
         updateUI()
     }
@@ -99,7 +121,7 @@ class AccountFragment : Fragment(), KoinComponent {
         clAccount.visibility = VISIBLE
 
         tvEmail.text = currentAccount.accountInfo.email
-        tvPhone.text = currentAccount.accountInfo.phone
+        etPhone.setText(currentAccount.accountInfo.phone)
 
         val profile = profileModel.profile
         if (profile.valid) {

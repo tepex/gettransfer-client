@@ -88,16 +88,23 @@ class CurrentAccount(
     }
 
 
-    fun putAccount(currency: String? = null, distanceUnit: String? = null): Boolean {
+    fun putAccount(
+            currency: String? = null,
+            distanceUnit: String? = null,
+            phone: String? = null): Boolean {
         if (busy) return false
+
         if (currency != null) accountInfo.currency = currency
         if (distanceUnit != null) accountInfo.distanceUnit = distanceUnit
+        if (phone != null) accountInfo.phone = phone
+
         api.putAccount(AccountField(accountInfo)).fastSubscribe {
             val newAccountInfo = it.account
             newAccountInfo.dateUpdated = Date()
 
             accountInfo = newAccountInfo.saveAndGetUnmanaged()
         }
+
         return true
     }
 
