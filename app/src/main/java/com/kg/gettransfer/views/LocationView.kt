@@ -54,5 +54,7 @@ class LocationView : ConstraintLayout, KoinComponent {
         }
 
         ibClear.setOnClickListener { model.location = LocationDetailed("") }
+
+        imgInvalidAddress.setOnClickListener { model.validate() }
     }
 }

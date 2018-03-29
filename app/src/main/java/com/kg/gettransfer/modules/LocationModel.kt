@@ -38,7 +38,7 @@ class LocationModel(
             else busy = false
         }
 
-    private fun validate(): LocationDetailed {
+    fun validate(): LocationDetailed {
         val location = location
 
         if (location.placeID != null) {
