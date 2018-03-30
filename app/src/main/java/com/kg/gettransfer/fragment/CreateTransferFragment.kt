@@ -16,12 +16,14 @@ import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.*
 import com.google.maps.DirectionsApi
+import com.google.maps.DirectionsApiRequest
 import com.google.maps.GeoApiContext
 import com.google.maps.android.PolyUtil
 import com.google.maps.model.DirectionsResult
@@ -70,6 +72,8 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     private var markerFrom: Marker? = null
     private var markerTo: Marker? = null
     private var polyline: Polyline? = null
+
+    private var directionsApiRequest: DirectionsApiRequest? = null
 
 
     override fun onCreateView(
@@ -329,16 +333,22 @@ class CreateTransferFragment : Fragment(), KoinComponent {
         if (llFrom == llTo) return
 
         if (llFrom != null && llTo != null) {
-            val result = DirectionsApi.getDirections(geoApiContext,
+            directionsApiRequest?.cancel()
+
+            directionsApiRequest = DirectionsApi.getDirections(
+                    geoApiContext,
                     com.google.maps.model.LatLng(llFrom.latitude, llFrom.longitude).toString(),
                     com.google.maps.model.LatLng(llTo.latitude, llTo.longitude).toString())
 
-            result.setCallback(object : com.google.maps.PendingResult.Callback<DirectionsResult> {
+            directionsApiRequest?.setCallback(object : com.google.maps.PendingResult.Callback<DirectionsResult> {
                 override fun onResult(result: DirectionsResult) {
                     mapView.post {
                         polyline?.remove()
 
-                        if (result.routes.isEmpty()) return@post
+                        if (result.routes.isEmpty()) {
+                            Toast.makeText(activity, "Routing failed", Toast.LENGTH_SHORT).show()
+                            return@post
+                        }
 
                         val route = result.routes[0]
 
@@ -358,6 +368,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
                 override fun onFailure(e: Throwable) {
                     log.info("Routing fail: " + e.message)
+                    Toast.makeText(activity, "Routing failed", Toast.LENGTH_SHORT).show()
                     e.printStackTrace()
                 }
             })

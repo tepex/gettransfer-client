@@ -53,11 +53,7 @@ class TransferDetailsFragment : Fragment() {
 
     fun setTransfer(t: NewTransfer) {
         transfer = t
-        val v = savedView ?: return
-        v.tvFromDetails.text = transfer.from?.name
-        v.tvToDetails.text =
-                transfer.to?.name ?: Utils.hoursToString(transfer.hireDuration ?: 0)
-
+        updateUIFromTransfer()
     }
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -70,6 +66,7 @@ class TransferDetailsFragment : Fragment() {
                     R.layout.fragment_transferdetails,
                     container,
                     false)!!
+            savedView = v
 
             v.btnPassengersDec.setOnClickListener { passengersDec() }
             v.btnPassengersInc.setOnClickListener { passengersInc() }
@@ -93,18 +90,22 @@ class TransferDetailsFragment : Fragment() {
 
                 v.btnBack.setOnClickListener { fragmentManager.popBackStackImmediate() }
 
-                v.tvFromDetails.text = transfer.from?.name
-                v.ivToDetails.setImageResource(
-                        if (transfer.hireDuration ?: 0 <= 0) R.drawable.ic_arrow_blue_16dp
-                        else R.drawable.ic_timer_blue_16dp)
-                v.tvToDetails.text =
-                        transfer.to?.name ?: Utils.hoursToString(transfer.hireDuration ?: 0)
+                updateUIFromTransfer()
             }
-
-            savedView = v
         }
 
         return v
+    }
+
+
+    fun updateUIFromTransfer() {
+        val v = savedView ?: return
+        v.tvFromDetails.text = transfer.from?.name
+        v.ivToDetails.setImageResource(
+                if (transfer.hireDuration ?: 0 <= 0) R.drawable.ic_arrow_blue_16dp
+                else R.drawable.ic_timer_blue_16dp)
+        v.tvToDetails.text =
+                transfer.to?.name ?: Utils.hoursToString(transfer.hireDuration ?: 0)
     }
 
 

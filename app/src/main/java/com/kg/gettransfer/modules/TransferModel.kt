@@ -115,8 +115,8 @@ class TransferModel(
     }
 
 
-    fun payment(offerID: Int): Observable<com.kg.gettransfer.modules.http.json.BaseResponse<Payment>> {
-        return api.payment(id, offerID, "platron", 30)
+    fun payment(offerID: Int, full: Boolean): Observable<com.kg.gettransfer.modules.http.json.BaseResponse<Payment>> {
+        return api.payment(id, offerID, "platron", if (full) 100 else 30)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }

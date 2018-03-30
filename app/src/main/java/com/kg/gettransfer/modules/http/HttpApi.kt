@@ -104,6 +104,6 @@ interface HttpApi {
             @Field("transfer_id") transfer: Int,
             @Field("offer_id") offer: Int,
             @Field("gateway_id") gate: String,
-            @Field("percentage") password: Int)
+            @Field("percentage") percentage: Int)
             : Observable<BaseResponse<Payment>>
 }

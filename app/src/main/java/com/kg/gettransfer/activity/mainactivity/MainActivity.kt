@@ -160,7 +160,7 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onBackPressed() {
-        if (tab != 1 || prevTab != 1) {
+        if (fragmentManager.backStackEntryCount == 0 && (tab != 1 || prevTab != 1)) {
             selectTab(prevTab)
             prevTab = 1
         } else super.onBackPressed()

@@ -86,6 +86,10 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             swipeRefreshLayout.isRefreshing = false
             transferModel.update()
         }
+
+        btnPay.setOnClickListener {
+            pay(offerID)
+        }
     }
 
 
@@ -171,7 +175,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
         val offersAdapter = OffersAdapter(offers, true)
         offersAdapter.icl = View.OnClickListener {
-            pay(it.getTag(R.id.key_id) as Int)
+            showOffer(it.getTag(R.id.key_id) as Int)
         }
 
         rvOffers.adapter = offersAdapter
@@ -195,16 +199,34 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     }
 
 
+    var offerID: Int = 0
+
+    private fun showOffer(offerID: Int) {
+        this.offerID = offerID
+        clPayment.visibility = VISIBLE
+        wv.visibility = INVISIBLE
+        btnPay.visibility = VISIBLE
+    }
+
+
     private fun pay(offerID: Int) {
+        wv.stopLoading()
+        wv.loadUrl("about:blank")
+        progressBarPayment.visibility = VISIBLE
         disposables.add(
-                transferModel.payment(offerID)
+                transferModel.payment(offerID, rb100.isChecked)
                         .subscribe(
                                 {
-                                    clPayment.visibility = VISIBLE
                                     wv.loadUrl(it.data?.url)
+                                    wv.postDelayed({
+                                        wv.visibility = VISIBLE
+                                        progressBarPayment.visibility = INVISIBLE
+                                        btnPay.visibility = INVISIBLE
+                                    }, 666)
                                 },
                                 {
                                     Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                                    progressBarPayment.visibility = INVISIBLE
                                 }))
     }
 
