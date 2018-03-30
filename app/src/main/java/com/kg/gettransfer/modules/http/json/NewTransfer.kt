@@ -57,6 +57,9 @@ class NewTransfer {
     @SerializedName("passenger_offered_price")
     var offeredPrice: Int? = null
     @Expose
+    @SerializedName("currency")
+    var currency: String? = null
+    @Expose
     @SerializedName("flight_number")
     var flightNumber: String = ""
     @Expose

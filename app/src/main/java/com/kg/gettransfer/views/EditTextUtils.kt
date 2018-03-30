@@ -11,6 +11,7 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.*
 import android.widget.EditText
+import android.widget.TextView
 import com.kg.gettransfer.R
 import java.text.DateFormat
 import java.util.*
@@ -66,6 +67,28 @@ fun EditText.clearListenersFixFocus() {
 }
 
 
+fun TextView.clearListenersFixFocus() {
+    setOnTouchListener(null)
+
+    setOnLongClickListener(null)
+
+    setOnGenericMotionListener(null)
+
+    isLongClickable = false
+
+    customSelectionActionModeCallback = object : ActionMode.Callback {
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean = false
+        override fun onDestroyActionMode(mode: ActionMode) = Unit
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean = false
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean = false
+    }
+
+    setTextIsSelectable(false)
+
+    isFocusableInTouchMode = true
+}
+
+
 fun getActivity(context: Context): Activity? {
     var context: Context? = context
     while (context is ContextWrapper) {
@@ -78,7 +101,7 @@ fun getActivity(context: Context): Activity? {
 }
 
 
-class DateField : EditText {
+class DateField : TextView {
     constructor(c: Context) : super(c)
     constructor(c: Context, attrs: AttributeSet) : super(c, attrs)
     constructor(c: Context, attrs: AttributeSet, defStyle: Int) : super(c, attrs, defStyle)
@@ -130,7 +153,7 @@ class DateField : EditText {
 }
 
 
-class TimeField : EditText {
+class TimeField : TextView {
     constructor(c: Context) : super(c)
     constructor(c: Context, attrs: AttributeSet) : super(c, attrs)
     constructor(c: Context, attrs: AttributeSet, defStyle: Int) : super(c, attrs, defStyle)

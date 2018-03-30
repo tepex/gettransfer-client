@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/clHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorBG">
+        android:layout_height="72dp"
+        android:background="@color/colorBG"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <ImageButton
             android:id="@+id/btnBack"
             android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_height="0dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_arrow_back_gray_24dp" />
@@ -26,21 +30,21 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="18dp"
             android:singleLine="true"
             android:textColor="@color/colorTextBlack"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btnBack"
+            app:layout_constraintStart_toEndOf="@id/btnBack"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/ivToDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/tvToDetails"
-            app:layout_constraintStart_toEndOf="@+id/btnBack"
-            app:layout_constraintTop_toTopOf="@+id/tvToDetails"
+            app:layout_constraintBottom_toBottomOf="@id/tvToDetails"
+            app:layout_constraintStart_toEndOf="@id/btnBack"
+            app:layout_constraintTop_toTopOf="@id/tvToDetails"
             app:srcCompat="@drawable/ic_arrow_blue_16dp" />
 
         <TextView
@@ -55,8 +59,8 @@
             android:textColor="@color/colorTextAccent"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/ivToDetails"
-            app:layout_constraintTop_toBottomOf="@+id/tvFromDetails" />
+            app:layout_constraintStart_toEndOf="@id/ivToDetails"
+            app:layout_constraintTop_toBottomOf="@id/tvFromDetails" />
 
         <View
             android:id="@+id/line"
@@ -90,13 +94,11 @@
             <TextView
                 android:id="@+id/textView7"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:background="@color/colorBGSecondary"
-                android:paddingBottom="8dp"
+                android:paddingBottom="15dp"
                 android:paddingLeft="16dp"
-                android:paddingTop="24dp"
-                android:text="Pick up"
-                android:textStyle="bold"
+                android:textColor="@color/colorTextGray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -104,268 +106,135 @@
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="wrap_content"
+                android:layout_width="96dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:text="When"
+                android:text="Pick up on"
                 android:textColor="@color/colorTextGray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView7" />
+                app:layout_constraintBaseline_toBaselineOf="@id/etDate"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <com.kg.gettransfer.views.DateField
                 android:id="@+id/etDate"
+                style="@style/etField"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="?attr/editTextBackground"
-                android:editable="false"
-                android:ems="10"
                 android:hint="Date"
                 android:inputType="none"
-                android:paddingLeft="8dp"
-                android:paddingRight="16dp"
-                android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
-                android:textColor="?attr/editTextColor"
-                android:textCursorDrawable="@null"
-                app:layout_constraintBaseline_toBaselineOf="@+id/textView"
-                app:layout_constraintEnd_toStartOf="@+id/etTime"
-                app:layout_constraintStart_toEndOf="@+id/textView" />
+                android:minWidth="0dp"
+                android:textColor="@color/colorTextBlack"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/etTime"
+                app:layout_constraintStart_toEndOf="@id/textView"
+                app:layout_constraintTop_toBottomOf="@id/textView7" />
 
             <com.kg.gettransfer.views.TimeField
                 android:id="@+id/etTime"
+                style="@style/etField"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:layout_marginStart="8dp"
-                android:background="?attr/editTextBackground"
-                android:editable="false"
-                android:ems="10"
+                android:layout_marginRight="16dp"
                 android:hint="Time"
                 android:inputType="none"
-                android:paddingLeft="8dp"
-                android:paddingRight="16dp"
-                android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
-                android:textColor="?attr/editTextColor"
-                android:textCursorDrawable="@null"
-                app:layout_constraintBaseline_toBaselineOf="@+id/etDate"
+                android:textColor="@color/colorTextBlack"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@id/etDate"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/etDate" />
+                app:layout_constraintStart_toEndOf="@id/etDate" />
 
+            <View
+                android:id="@+id/line10"
+                style="@style/line"
+                app:layout_constraintTop_toBottomOf="@id/etDate" />
 
             <TextView
                 android:id="@+id/textView6"
-                android:layout_width="wrap_content"
+                android:layout_width="96dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
                 android:text="Passengers"
                 android:textColor="@color/colorTextGray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintBaseline_toBaselineOf="@id/etPassengers"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/etPassengers"
+                style="@style/etField"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
                 android:hint="Adults and children"
                 android:inputType="number"
-                android:paddingLeft="8dp"
                 android:selectAllOnFocus="true"
-                android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
-                app:layout_constraintBaseline_toBaselineOf="@+id/textView6"
+                android:textColor="@color/colorTextBlack"
+                android:textSize="14sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView6" />
+                app:layout_constraintStart_toEndOf="@id/textView6"
+                app:layout_constraintTop_toBottomOf="@id/etDate" />
 
             <Button
                 android:id="@+id/btnPassengersDec"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="56dp"
+                android:layout_height="0dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:paddingStart="8dp"
+                android:paddingTop="4dp"
                 android:text="−"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#9e9e9e"
-                app:layout_constraintBottom_toBottomOf="@+id/etPassengers"
-                app:layout_constraintEnd_toStartOf="@+id/btnPassengersInc"
-                app:layout_constraintTop_toTopOf="@+id/etPassengers" />
+                android:textColor="@color/colorTextGray"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/etPassengers"
+                app:layout_constraintEnd_toStartOf="@id/btnPassengersInc"
+                app:layout_constraintTop_toTopOf="@id/etPassengers" />
 
             <Button
                 android:id="@+id/btnPassengersInc"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="16dp"
+                android:layout_width="56dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:paddingRight="8dp"
+                android:paddingTop="4dp"
                 android:text="+"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#9e9e9e"
-                app:layout_constraintBottom_toBottomOf="@+id/btnPassengersDec"
+                android:textColor="@color/colorTextGray"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/btnPassengersDec"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/btnPassengersDec" />
+                app:layout_constraintTop_toTopOf="@id/btnPassengersDec" />
 
+            <View
+                android:id="@+id/line11"
+                style="@style/line"
+                app:layout_constraintTop_toBottomOf="@id/etPassengers" />
 
             <TextView
                 android:id="@+id/textView63"
-                android:layout_width="wrap_content"
+                android:layout_width="96dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
                 android:text="Transport"
                 android:textColor="@color/colorTextGray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                app:layout_constraintBaseline_toBaselineOf="@id/tfTransport"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <com.kg.gettransfer.views.TypeField
                 android:id="@+id/tfTransport"
+                style="@style/etField"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:layout_marginStart="8dp"
                 android:clipToPadding="false"
                 android:editable="false"
                 android:hint="Class, type"
-                android:paddingEnd="16dp"
-                android:paddingStart="8dp"
-                android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
                 android:textCursorDrawable="@null"
-                app:layout_constraintBaseline_toBaselineOf="@+id/textView63"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView63" />
-
-
-            <!--Personal comfort-->
-
-
-            <TextView
-                android:id="@+id/textView18"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@color/colorBGSecondary"
-                android:paddingBottom="8dp"
-                android:paddingLeft="16dp"
-                android:paddingTop="24dp"
-                android:text="Personal comfort"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tfTransport" />
-
-
-            <TextView
-                android:id="@+id/textView210"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:text="Name sign"
-                android:textColor="@color/colorTextGray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView18" />
-
-            <EditText
-                android:id="@+id/etSign"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="8dp"
-                android:ems="10"
-                android:hint="Mr John Brown"
-                android:inputType="textEmailAddress"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
-                app:layout_constraintBaseline_toBaselineOf="@+id/textView210"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView210" />
-
-
-            <TextView
-                android:id="@+id/textView39"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:text="Offer your price"
-                android:textColor="@color/colorTextGray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView210" />
-
-            <com.kg.gettransfer.views.PriceField
-                android:id="@+id/etPrice"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="8dp"
-                android:ems="10"
-                android:hint="$500"
-                android:inputType="text"
-                android:paddingLeft="8dp"
-                android:paddingRight="16dp"
-                android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
-                app:layout_constraintBaseline_toBaselineOf="@+id/textView39"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView39" />
-
-
-            <TextView
-                android:id="@+id/textView49"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:text="Flight or train"
-                android:textColor="@color/colorTextGray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView39" />
-
-            <com.kg.gettransfer.views.FlightField
-                android:id="@+id/etFlightTrainNumber"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="8dp"
-                android:ems="10"
-                android:hint="Flight or train number"
-                android:inputType="text"
-                android:paddingLeft="8dp"
-                android:paddingRight="16dp"
-                android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
-                app:layout_constraintBaseline_toBaselineOf="@+id/textView49"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView49" />
-
-
-            <TextView
-                android:id="@+id/textView29"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:text="Comments"
-                android:textColor="@color/colorTextGray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView49" />
-
-            <EditText
-                android:id="@+id/etComments"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="8dp"
-                android:ems="10"
-                android:hint="Children, snowboards, ski bags, surfboards"
-                android:inputType="text"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
-                app:layout_constraintBaseline_toBaselineOf="@+id/textView29"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView29" />
+                app:layout_constraintStart_toEndOf="@id/textView63"
+                app:layout_constraintTop_toBottomOf="@id/btnPassengersDec" />
 
 
             <!--Contact with-->
@@ -375,92 +244,223 @@
                 android:id="@+id/textView8"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:background="@color/colorBGSecondary"
-                android:paddingBottom="8dp"
+                android:paddingBottom="12dp"
                 android:paddingLeft="16dp"
-                android:paddingTop="24dp"
+                android:paddingTop="32dp"
                 android:text="Contact with"
-                android:textStyle="bold"
+                android:textColor="@color/colorTextGray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etComments" />
+                app:layout_constraintTop_toBottomOf="@id/tfTransport" />
 
+            <TextView
+                android:id="@+id/textView210"
+                android:layout_width="96dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Name"
+                android:textColor="@color/colorTextGray"
+                app:layout_constraintBaseline_toBaselineOf="@id/etSign"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/etSign"
+                style="@style/etField"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="To meet you with a name sign"
+                android:inputType="textEmailAddress"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/textView210"
+                app:layout_constraintTop_toBottomOf="@id/textView8" />
+
+            <View
+                android:id="@+id/line12"
+                style="@style/line"
+                app:layout_constraintTop_toBottomOf="@id/etSign" />
 
             <TextView
                 android:id="@+id/textView10"
-                android:layout_width="wrap_content"
+                android:layout_width="96dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
                 android:text="Email"
                 android:textColor="@color/colorTextGray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView8" />
+                app:layout_constraintBaseline_toBaselineOf="@id/etEmail"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/etEmail"
+                style="@style/etField"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="8dp"
                 android:ems="10"
                 android:hint="email@box.com"
                 android:inputType="textEmailAddress"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:text="d.vakulenko@key-g.com"
-                android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
-                app:layout_constraintBaseline_toBaselineOf="@+id/textView10"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView10" />
+                app:layout_constraintStart_toEndOf="@id/textView10"
+                app:layout_constraintTop_toBottomOf="@id/etSign" />
 
+
+            <View
+                android:id="@+id/line15"
+                style="@style/line"
+                app:layout_constraintTop_toBottomOf="@id/etEmail" />
 
             <TextView
                 android:id="@+id/textView9"
-                android:layout_width="wrap_content"
+                android:layout_width="96dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
                 android:text="Phone"
                 android:textColor="@color/colorTextGray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView10" />
+                app:layout_constraintBaseline_toBaselineOf="@id/etPhone"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/etPhone"
+                style="@style/etField"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="8dp"
-                android:ems="10"
                 android:hint="+7 905 333 22 22"
                 android:inputType="phone"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
-                app:layout_constraintBaseline_toBaselineOf="@+id/textView9"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView9" />
+                app:layout_constraintStart_toEndOf="@id/textView9"
+                app:layout_constraintTop_toBottomOf="@id/line15" />
+
+
+            <!--Optional fields-->
+
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/colorBGSecondary"
+                android:paddingBottom="12dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="32dp"
+                android:text="Optional fields"
+                android:textColor="@color/colorTextGray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etPhone" />
+
+            <TextView
+                android:id="@+id/textView39"
+                android:layout_width="96dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Your price"
+                android:textColor="@color/colorTextGray"
+                app:layout_constraintBaseline_toBaselineOf="@id/etPrice"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.kg.gettransfer.views.PriceField
+                android:id="@+id/etPrice"
+                style="@style/etField"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:paddingRight="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/textView39"
+                app:layout_constraintTop_toBottomOf="@id/textView18" />
+
+            <com.kg.gettransfer.views.CurrencyField
+                android:id="@+id/cfCurrency"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:background="@android:color/transparent"
+                android:editable="false"
+                android:focusable="false"
+                android:gravity="end|center_vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="64dp"
+                android:paddingTop="3dp"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/etPrice"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/etPrice" />
+
+
+            <View
+                android:id="@+id/line13"
+                style="@style/line"
+                app:layout_constraintTop_toBottomOf="@id/etPrice" />
+
+            <TextView
+                android:id="@+id/textView49"
+                android:layout_width="96dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Flight or train"
+                android:textColor="@color/colorTextGray"
+                app:layout_constraintBaseline_toBaselineOf="@id/etFlightTrainNumber"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.kg.gettransfer.views.FlightField
+                android:id="@+id/etFlightTrainNumber"
+                style="@style/etField"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="number"
+                android:inputType="text"
+                android:paddingRight="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/textView49"
+                app:layout_constraintTop_toBottomOf="@id/etPrice" />
+
+
+            <View
+                android:id="@+id/line14"
+                style="@style/line"
+                app:layout_constraintTop_toBottomOf="@id/etFlightTrainNumber" />
+
+            <TextView
+                android:id="@+id/textView29"
+                android:layout_width="96dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Comments"
+                android:textColor="@color/colorTextGray"
+                app:layout_constraintBaseline_toBaselineOf="@id/etComments"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/etComments"
+                style="@style/etField"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Children, snowboards, ski bags, surfboards"
+                android:inputType="text"
+                android:paddingRight="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/textView29"
+                app:layout_constraintTop_toBottomOf="@id/etFlightTrainNumber" />
 
 
             <!--Promo-->
 
 
             <TextView
-                android:id="@+id/textView832"
+                android:id="@+id/tvlHavePromoCode"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:background="@color/colorBGSecondary"
-                android:paddingBottom="8dp"
+                android:paddingBottom="12dp"
                 android:paddingLeft="16dp"
                 android:paddingTop="24dp"
                 android:text="Have a promo code?"
-                android:textStyle="bold"
+                android:textColor="@color/colorTextGray"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etPhone" />
+                app:layout_constraintTop_toBottomOf="@id/etComments"
+                app:layout_goneMarginTop="32dp" />
 
             <Button
                 android:id="@+id/btnHavePromoCode"
@@ -468,10 +468,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:minHeight="16dp"
-                android:text="Yes"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:text="Use promo"
                 android:textAllCaps="false"
-                app:layout_constraintBaseline_toBaselineOf="@+id/textView832"
-                app:layout_constraintEnd_toEndOf="@+id/textView832" />
+                app:layout_constraintBaseline_toBaselineOf="@id/tvlHavePromoCode"
+                app:layout_constraintEnd_toEndOf="@id/tvlHavePromoCode" />
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/clPromoCode"
@@ -479,35 +481,30 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView832">
+                app:layout_constraintTop_toBottomOf="@id/tvlHavePromoCode">
 
                 <TextView
                     android:id="@+id/tvPromoCode"
-                    android:layout_width="wrap_content"
+                    android:layout_width="96dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
                     android:text="Promo code"
                     android:textColor="@color/colorTextGray"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintBaseline_toBaselineOf="@id/etPromoCode"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <EditText
                     android:id="@+id/etPromoCode"
+                    style="@style/etField"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:hint="CODE"
                     android:inputType="textEmailAddress"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:text=""
-                    android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/tvPromoCode"
-                    app:layout_constraintEnd_toStartOf="@+id/tvPromoInfo"
-                    app:layout_constraintStart_toEndOf="@+id/tvPromoCode"
+                    app:layout_constraintEnd_toStartOf="@id/tvPromoInfo"
+                    app:layout_constraintStart_toEndOf="@id/tvPromoCode"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_goneMarginEnd="16dp" />
 
                 <TextView
@@ -518,7 +515,7 @@
                     android:background="@drawable/bg_rounded_2_blue"
                     android:textColor="@color/colorBG"
                     android:visibility="gone"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/etPromoCode"
+                    app:layout_constraintBaseline_toBaselineOf="@id/etPromoCode"
                     app:layout_constraintEnd_toEndOf="parent" />
 
                 <ProgressBar
@@ -528,22 +525,20 @@
                     android:layout_height="18dp"
                     android:layout_marginEnd="32dp"
                     android:visibility="invisible"
-                    app:layout_constraintBottom_toBottomOf="@+id/etPromoCode"
+                    app:layout_constraintBottom_toBottomOf="@id/etPromoCode"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/etPromoCode" />
+                    app:layout_constraintTop_toTopOf="@id/etPromoCode" />
 
                 <TextView
                     android:id="@+id/tvPromoValidation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
                     android:paddingBottom="16dp"
-                    android:text=""
                     android:textColor="@color/colorTextError"
                     android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvPromoCode" />
+                    app:layout_constraintTop_toBottomOf="@id/etPromoCode" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -556,7 +551,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorBGSecondary"
                 android:gravity="start"
-                android:paddingBottom="40dp"
+                android:paddingBottom="64dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="80dp"
                 android:paddingTop="40dp"
@@ -564,58 +559,52 @@
                 android:textColor="@color/colorTextError"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/clPromoCode" />
+                app:layout_constraintTop_toBottomOf="@id/clPromoCode" />
 
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabCreate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:layout_marginEnd="16dp"
+                android:clickable="true"
+                android:focusable="false"
+                android:visibility="invisible"
+                app:backgroundTint="@color/colorYellow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/ic_check_black_24dp" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:layout_marginEnd="16dp"
+                android:clickable="true"
+                android:focusable="false"
+                android:visibility="invisible"
+                app:backgroundTint="@color/colorYellow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:elevation="16dp"
+                android:indeterminateTint="@color/colorTextBlack"
+                android:padding="6dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@id/fabProgress"
+                app:layout_constraintLeft_toLeftOf="@id/fabProgress"
+                app:layout_constraintRight_toRightOf="@id/fabProgress"
+                app:layout_constraintTop_toTopOf="@id/fabProgress" />
 
         </android.support.constraint.ConstraintLayout>
 
     </ScrollView>
-
-
-    <!---->
-
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabCreate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:layout_marginEnd="16dp"
-        android:clickable="true"
-        android:focusable="false"
-        android:visibility="invisible"
-        app:backgroundTint="@color/colorYellow"
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_check_black_24dp" />
-
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabProgress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:layout_marginEnd="16dp"
-        android:clickable="true"
-        android:focusable="false"
-        android:visibility="invisible"
-        app:backgroundTint="@color/colorYellow"
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:elevation="16dp"
-        android:indeterminateTint="@color/colorTextBlack"
-        android:padding="6dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@id/fabProgress"
-        app:layout_constraintLeft_toLeftOf="@id/fabProgress"
-        app:layout_constraintRight_toRightOf="@id/fabProgress"
-        app:layout_constraintTop_toTopOf="@id/fabProgress" />
-
 
 </android.support.constraint.ConstraintLayout>

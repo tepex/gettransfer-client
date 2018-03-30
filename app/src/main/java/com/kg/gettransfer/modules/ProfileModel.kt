@@ -37,11 +37,7 @@ class ProfileModel(
         }
 
 
-    fun addOnProfileUpdated(f: ((ProfileInfo) -> Unit)): Disposable {
-        val d = brProfile.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
-        disposables.add(d)
-        return d
-    }
+    fun addOnProfileUpdated(f: (ProfileInfo) -> Unit): Disposable = brProfile.subscribeUIThread(f)
 
 
     fun update() {

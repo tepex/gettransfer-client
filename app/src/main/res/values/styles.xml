@@ -8,4 +8,33 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="etField">
+        <item name="android:background">@android:color/transparent</item>
+
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingTop">16dp</item>
+
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="line">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/colorBGSecondary</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+        <item name="layout_constraintStart_toStartOf">parent</item>
+    </style>
+
+    <!--<style name="etField" parent="Base.V7.Widget.AppCompat.EditText">-->
+    <!--<item name="android:background">@android:color/transparent</item>-->
+
+    <!--<item name="android:paddingBottom">15dp</item>-->
+    <!--<item name="android:paddingLeft">8dp</item>-->
+    <!--<item name="android:paddingRight">8dp</item>-->
+    <!--<item name="android:paddingTop">18dp</item>-->
+
+    <!--<item name="android:textSize">14sp</item>-->
+    <!--</style>-->
 </resources>

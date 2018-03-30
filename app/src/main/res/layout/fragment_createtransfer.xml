@@ -23,8 +23,8 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/clHeaderLogo"
         android:layout_width="0dp"
-        android:layout_height="52dp"
-        android:background="@color/colorYellow"
+        android:layout_height="96dp"
+        android:background="@color/colorBGSecondary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -45,12 +45,13 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
             android:gravity="bottom"
-            android:text="Transfer"
+            android:text="Schedule transfer"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorTextBlack"
-            app:layout_constraintBaseline_toBaselineOf="@+id/tvFromAToB"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvFromAToB"
@@ -259,6 +260,7 @@
                 android:paddingRight="8dp"
                 android:paddingTop="24dp"
                 android:textColor="?attr/colorAccent"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

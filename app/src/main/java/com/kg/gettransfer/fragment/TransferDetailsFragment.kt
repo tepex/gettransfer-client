@@ -26,6 +26,7 @@ import com.kg.gettransfer.modules.http.json.Trip
 import com.kg.gettransfer.realm.Utils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_transferdetails.*
 import kotlinx.android.synthetic.main.fragment_transferdetails.view.*
@@ -75,6 +76,7 @@ class TransferDetailsFragment : Fragment() {
 
             v.btnHavePromoCode.setOnClickListener {
                 btnHavePromoCode.visibility = GONE
+                tvlHavePromoCode.maxHeight = (resources.displayMetrics.density * 16).toInt()
                 clPromoCode.visibility = VISIBLE
                 etPromoCode.requestFocus()
             }
@@ -98,7 +100,7 @@ class TransferDetailsFragment : Fragment() {
     }
 
 
-    fun updateUIFromTransfer() {
+    private fun updateUIFromTransfer() {
         val v = savedView ?: return
         v.tvFromDetails.text = transfer.from?.name
         v.ivToDetails.setImageResource(
@@ -113,6 +115,14 @@ class TransferDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         etSign.setText(profileModel.profile.fullName)
+
+        if (!profileModel.profile.valid) {
+            var d: Disposable? = null
+            d = profileModel.addOnProfileUpdated {
+                etSign.setText(it.fullName)
+                d?.dispose()
+            }
+        }
 
         etEmail.setText(currentAccount.accountInfo.email)
         etPhone.setText(currentAccount.accountInfo.phone)
@@ -305,6 +315,7 @@ class TransferDetailsFragment : Fragment() {
 
         t.nameSign = etSign.text.toString()
         t.offeredPrice = etPrice.text.toString().toIntOrNull()
+        t.currency = cfCurrency.text.toString()
         t.flightNumber = etFlightTrainNumber.text.toString()
         t.comment = etComments.text.toString()
 
