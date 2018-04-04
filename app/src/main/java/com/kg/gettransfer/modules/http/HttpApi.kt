@@ -13,6 +13,9 @@ import retrofit2.http.*
  */
 
 
+typealias ObservableResponse<T> = Observable<Response<BaseResponse<T>>>
+
+
 interface HttpApi {
     @GET("configs")
     fun getConfig(): Observable<BaseResponse<Config>>
@@ -64,7 +67,7 @@ interface HttpApi {
 
 
     @GET("transfers/{id}/offers")
-    fun getOffers(@Path("id") id: Int): Observable<OffersResponse>
+    fun getOffers(@Path("id") id: Int): ObservableResponse<OffersField>
 
 
     // --
@@ -92,7 +95,7 @@ interface HttpApi {
 
 
     @GET("promo_codes")
-    fun checkPromo(@Query("value") code: String): Observable<Response<BaseResponse<String>>>
+    fun checkPromo(@Query("value") code: String): ObservableResponse<String>
 
 
     // --

@@ -33,7 +33,7 @@ open class Price : RealmObject() {
 
     @Expose
     @SerializedName("amount")
-    var amount: Int = -1
+    var amount: Double = -1.0
 
     override fun toString(): String = base.toString()
 }

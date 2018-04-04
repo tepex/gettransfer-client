@@ -79,7 +79,7 @@ class OffersModel(
     fun update() {
         if (busy || transferID < 0) return
         val id = transferID
-        api.getOffers(id).fastSubscribe {
+        api.getOffers(id).fastSubscribe({
             val offers = it.offers
 
             val realm = Realm.getDefaultInstance()
@@ -98,6 +98,8 @@ class OffersModel(
                 transfer.offersUpdatedDate = Date()
             }
             realm.close()
-        }
+        }, {
+            err(it.message)
+        })
     }
 }

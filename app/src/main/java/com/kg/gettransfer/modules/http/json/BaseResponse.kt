@@ -99,8 +99,6 @@ class OffersField(@Expose
                   @SerializedName("offers")
                   val offers: List<Offer>)
 
-typealias OffersResponse = BaseResponse<OffersField>
-
 
 // --
 

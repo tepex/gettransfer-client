@@ -56,6 +56,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         offersModel.addOnBusyProgressBar(progressBarOffers)
         offersModel.addOnBusyChanged { updateOffersState() }
         offersModel.addOnOffersUpdated { setOffersAsync(it) }
+        offersModel.toastOnError(this)
         offersModel.transferID = id
 
         transferModel.addOnTransferUpdated { updateUI(it) }
