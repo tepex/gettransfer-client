@@ -11,6 +11,7 @@ import com.google.gson.annotations.SerializedName
 
 
 class ProfileInfo(
+        var updated: Long = System.currentTimeMillis(),
         @Expose
         @SerializedName("full_name")
         var fullName: String? = null,
@@ -21,3 +22,8 @@ class ProfileInfo(
     val valid: Boolean get() = emailNotifications != null
 }
 
+class Profiles(
+        @Expose
+        @SerializedName("current_profile")
+        var currentProfile: ProfileInfo? = null
+)

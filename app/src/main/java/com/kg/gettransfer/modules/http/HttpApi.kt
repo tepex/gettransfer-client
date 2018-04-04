@@ -42,7 +42,7 @@ interface HttpApi {
     @GET("profiles")
     fun getProfile(
             @Query("current_profile") profile: String = "passenger")
-            : Observable<BaseResponse<ProfileInfo>>
+            : Observable<BaseResponse<Profiles>>
 
 
     //  --
