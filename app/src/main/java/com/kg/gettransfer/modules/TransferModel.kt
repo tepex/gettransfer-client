@@ -5,6 +5,7 @@ import com.jakewharton.rxrelay2.BehaviorRelay
 import com.kg.gettransfer.modules.http.HttpApi
 import com.kg.gettransfer.modules.http.json.BaseResponse
 import com.kg.gettransfer.modules.http.json.Payment
+import com.kg.gettransfer.modules.http.json.PingResponse
 import com.kg.gettransfer.modules.http.json.TransferField
 import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.realm.getTransfer
@@ -117,6 +118,12 @@ class TransferModel(
 
     fun payment(offerID: Int, full: Boolean): Observable<com.kg.gettransfer.modules.http.json.BaseResponse<Payment>> {
         return api.payment(id, offerID, "platron", if (full) 100 else 30)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun pingPayment(payment: Int): Observable<BaseResponse<PingResponse>> {
+        return api.ping(payment, null, null)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }

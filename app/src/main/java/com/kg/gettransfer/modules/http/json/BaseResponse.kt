@@ -7,6 +7,7 @@ import com.kg.gettransfer.realm.AccountInfo
 import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.realm.TransportType
+import java.util.*
 
 
 /**
@@ -120,3 +121,25 @@ class AccountField(@Expose
                    @Expose
                    @SerializedName("_method")
                    val method: String = "PUT")
+
+// --
+
+class PingResponse(@Expose
+                   @SerializedName("payment_status")
+                   val paymentStatus: String? = null,
+
+                   @Expose
+                   @SerializedName("badges")
+                   val badges: Int? = null,
+
+                   @Expose
+                   @SerializedName("messages")
+                   val messages: Array<String>? = null,
+
+                   @Expose
+                   @SerializedName("messages_read")
+                   val messagesRead: Boolean? = null,
+
+                   @Expose
+                   @SerializedName("last_seen")
+                   val lastSeen: Date? = null)

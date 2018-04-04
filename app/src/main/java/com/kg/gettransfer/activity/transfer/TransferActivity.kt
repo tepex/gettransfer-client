@@ -237,6 +237,11 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     }
 
     fun hidePayment(v: View?) {
+        transferModel.pingPayment(1)
+                .subscribe(
+                        {
+                            Toast.makeText(this, it.data?.paymentStatus, Toast.LENGTH_SHORT).show()
+                        })
         clPayment.visibility = INVISIBLE
     }
 
