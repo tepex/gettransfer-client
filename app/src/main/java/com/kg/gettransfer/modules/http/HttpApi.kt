@@ -109,4 +109,11 @@ interface HttpApi {
             @Field("gateway_id") gate: String,
             @Field("percentage") percentage: Int)
             : Observable<BaseResponse<Payment>>
+
+    @GET("ping")
+    fun ping(
+            @Query("payment_id") payment: Int?,
+            @Query("transfer_id") transfer: Int?,
+            @Query("transfer_ids[]") transfers: Array<Int>?)
+            : Observable<BaseResponse<PingResponse>>
 }
