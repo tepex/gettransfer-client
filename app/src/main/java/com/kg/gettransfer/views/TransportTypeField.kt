@@ -25,7 +25,7 @@ import org.koin.standalone.inject
 */
 
 
-class TypeField : EditText, KoinComponent {
+class TransportTypeField : EditText, KoinComponent {
     private val pricesModel: PricesPreviewModel by inject()
     private val types: TransportTypes by inject()
 
@@ -47,14 +47,11 @@ class TypeField : EditText, KoinComponent {
     constructor(c: Context, attrs: AttributeSet, defStyle: Int) : super(c, attrs, defStyle)
 
     init {
-        val icon = R.drawable.ic_airport_shuttle_gray_20dp
-        setCompoundDrawablesWithIntrinsicBounds(0, 0, icon, 0)
-
         clearListenersFixFocus()
 
         setOnClickListener {
             val fragmentManager = getActivity(context)?.fragmentManager
-            val dialog = TypeDialog(this, pricesModel.prices)
+            val dialog = TransportTypeDialog(this, pricesModel.prices)
             dialog.show(fragmentManager, "Type selection")
         }
     }
@@ -77,8 +74,8 @@ class TypeField : EditText, KoinComponent {
 
 
 @SuppressLint("ValidFragment")
-class TypeDialog(
-        private val tf: TypeField,
+class TransportTypeDialog(
+        private val tf: TransportTypeField,
         private val prices: Map<TransportType, PriceRange>?)
     : DialogFragment(), KoinComponent {
 

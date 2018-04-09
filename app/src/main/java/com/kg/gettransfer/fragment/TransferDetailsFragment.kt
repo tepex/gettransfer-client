@@ -203,6 +203,7 @@ class TransferDetailsFragment : Fragment() {
 
 
     private fun fieldsUpdated() {
+        btnPassengersDec.visibility = if (pax ?: 0 > 0) VISIBLE else INVISIBLE
         fabCreate.visibility = if (fieldsValidate()) VISIBLE else GONE
     }
 

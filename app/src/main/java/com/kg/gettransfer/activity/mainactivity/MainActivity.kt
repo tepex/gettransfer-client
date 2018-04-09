@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        super.onCreate(null)
 
         setContentView(R.layout.activity_main)
 
@@ -64,30 +64,30 @@ class MainActivity : AppCompatActivity() {
                     else View.GONE
         }
 
-        if (savedInstanceState != null) {
-            val findFragmentByTag = fragmentManager.findFragmentByTag(TAG)
-            when (findFragmentByTag) {
-                is TransfersFragment -> {
-                    frTransfers = findFragmentByTag
-                    tab = 0
-                }
-                is CreateTransferFragment -> {
-                    frCreateTransfer = findFragmentByTag
-                    tab = 1
-                }
-                is AccountFragment -> {
-                    frAccount = findFragmentByTag
-                    tab = 2
-                }
-            }
-            updateButtons(tab)
-        } else {
-            val ft = fragmentManager.beginTransaction()
-            ft.add(R.id.flFragment, frCreateTransfer, TAG)
-            ft.disallowAddToBackStack()
-            ft.commit()
-            tab = 1
-        }
+//        if (savedInstanceState != null) {
+//            val findFragmentByTag = fragmentManager.findFragmentByTag(TAG)
+//            when (findFragmentByTag) {
+//                is TransfersFragment -> {
+//                    frTransfers = findFragmentByTag
+//                    tab = 0
+//                }
+//                is CreateTransferFragment -> {
+//                    frCreateTransfer = findFragmentByTag
+//                    tab = 1
+//                }
+//                is AccountFragment -> {
+//                    frAccount = findFragmentByTag
+//                    tab = 2
+//                }
+//            }
+//            updateButtons(tab)
+//        } else {
+        val ft = fragmentManager.beginTransaction()
+        ft.add(R.id.flFragment, frCreateTransfer, TAG)
+        ft.disallowAddToBackStack()
+        ft.commit()
+        tab = 1
+//        }
     }
 
 

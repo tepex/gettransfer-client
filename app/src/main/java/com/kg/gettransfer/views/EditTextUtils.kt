@@ -117,9 +117,6 @@ class DateField : TextView {
     }
 
     init {
-        val icon = R.drawable.ic_calendar_gray_24dp
-        setCompoundDrawablesWithIntrinsicBounds(0, 0, icon, 0)
-
         clearListenersFixFocus()
 
         setOnClickListener {
@@ -140,9 +137,9 @@ class DateField : TextView {
                         c.set(Calendar.YEAR, y)
                         c.set(Calendar.MONTH, m)
                         c.set(Calendar.DAY_OF_MONTH, d)
-                        setText(DateFormat
+                        text = DateFormat
                                 .getDateInstance()
-                                .format(c.time))
+                                .format(c.time)
                     },
                     c.get(Calendar.YEAR),
                     c.get(Calendar.MONTH),
@@ -169,9 +166,6 @@ class TimeField : TextView {
     }
 
     init {
-        val icon = R.drawable.ic_access_time_black_24dp
-        setCompoundDrawablesWithIntrinsicBounds(0, 0, icon, 0)
-
         clearListenersFixFocus()
 
         setOnClickListener {
@@ -191,38 +185,14 @@ class TimeField : TextView {
                         val c = Calendar.getInstance()
                         c.set(Calendar.HOUR_OF_DAY, h)
                         c.set(Calendar.MINUTE, m)
-                        setText(DateFormat
+                        text = DateFormat
                                 .getTimeInstance(DateFormat.SHORT)
-                                .format(c.time))
+                                .format(c.time)
                     },
                     c.get(Calendar.HOUR_OF_DAY),
                     c.get(Calendar.MINUTE),
                     android.text.format.DateFormat.is24HourFormat(context))
                     .show()
         }
-    }
-}
-
-
-class PriceField : EditText {
-    constructor(c: Context) : super(c)
-    constructor(c: Context, attrs: AttributeSet) : super(c, attrs)
-    constructor(c: Context, attrs: AttributeSet, defStyle: Int) : super(c, attrs, defStyle)
-
-    init {
-        val icon = R.drawable.ic_price_gray_24dp
-        setCompoundDrawablesWithIntrinsicBounds(0, 0, icon, 0)
-    }
-}
-
-
-class FlightField : EditText {
-    constructor(c: Context) : super(c)
-    constructor(c: Context, attrs: AttributeSet) : super(c, attrs)
-    constructor(c: Context, attrs: AttributeSet, defStyle: Int) : super(c, attrs, defStyle)
-
-    init {
-        val icon = R.drawable.ic_flight_gray_24dp
-        setCompoundDrawablesWithIntrinsicBounds(0, 0, icon, 0)
     }
 }

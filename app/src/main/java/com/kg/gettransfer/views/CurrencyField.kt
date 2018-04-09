@@ -9,10 +9,11 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.kg.gettransfer.modules.ConfigModel
 import com.kg.gettransfer.modules.CurrentAccount
+import com.kg.gettransfer.realm.Currency
 import io.reactivex.disposables.Disposable
 import io.realm.RealmList
 import org.koin.standalone.KoinComponent
@@ -24,7 +25,7 @@ import org.koin.standalone.inject
  */
 
 
-class CurrencyField : EditText, KoinComponent {
+class CurrencyField : TextView, KoinComponent {
     private val currentAccount: CurrentAccount by inject()
     private val configModel: ConfigModel by inject()
 
@@ -35,8 +36,6 @@ class CurrencyField : EditText, KoinComponent {
     val d: Disposable
 
     init {
-        clearListenersFixFocus()
-
         configModel.updateIfNull()
 
         setOnClickListener {
@@ -78,12 +77,12 @@ class CurrencyField : EditText, KoinComponent {
 
 
 @SuppressLint("ValidFragment")
-class CurrencyDialog(private val f: (String?) -> Unit, private val currencies: RealmList<String?>)
+class CurrencyDialog(private val f: (String?) -> Unit, private val currencies: RealmList<Currency?>)
     : DialogFragment(), KoinComponent {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AlertDialog.Builder(activity)
                 .setTitle("Currency")
-                .setItems(currencies.toTypedArray(), { _, i -> f(currencies[i]) })
+                .setItems(currencies.map { it?.isoCode }.toTypedArray(), { _, i -> f(currencies[i]?.isoCode) })
                 .setPositiveButton("Ok", { d, _ -> d.dismiss() })
                 .create()
     }

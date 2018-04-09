@@ -32,8 +32,7 @@ open class Config(
 
         @Expose
         @SerializedName("supported_currencies")
-        @Required
-        var supportedCurrencies: RealmList<String?>? = null,
+        var supportedCurrencies: RealmList<Currency?>? = null,
 
         @Expose
         @SerializedName("supported_distance_units")

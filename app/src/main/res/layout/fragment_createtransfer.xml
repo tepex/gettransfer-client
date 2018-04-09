@@ -49,7 +49,7 @@
             android:gravity="bottom"
             android:text="Schedule transfer"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorTextBlack"
+            android:textColor="@color/colorTextGray"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

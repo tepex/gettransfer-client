@@ -122,11 +122,21 @@
                 android:hint="Date"
                 android:inputType="none"
                 android:minWidth="0dp"
+                android:paddingLeft="24dp"
                 android:textColor="@color/colorTextBlack"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/etTime"
                 app:layout_constraintStart_toEndOf="@id/textView"
                 app:layout_constraintTop_toBottomOf="@id/textView7" />
+
+            <ImageView
+                android:id="@+id/ivDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/textView"
+                app:layout_constraintStart_toStartOf="@+id/etDate"
+                app:layout_constraintTop_toTopOf="@+id/textView"
+                app:srcCompat="@drawable/ic_calendar_gray_20dp" />
 
             <com.kg.gettransfer.views.TimeField
                 android:id="@+id/etTime"
@@ -137,11 +147,21 @@
                 android:layout_marginRight="16dp"
                 android:hint="Time"
                 android:inputType="none"
+                android:paddingLeft="24dp"
                 android:textColor="@color/colorTextBlack"
                 android:textStyle="bold"
                 app:layout_constraintBaseline_toBaselineOf="@id/etDate"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/etDate" />
+
+            <ImageView
+                android:id="@+id/ivTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/textView"
+                app:layout_constraintStart_toStartOf="@+id/etTime"
+                app:layout_constraintTop_toTopOf="@+id/textView"
+                app:srcCompat="@drawable/ic_access_time_gray_20dp" />
 
             <View
                 android:id="@+id/line10"
@@ -158,6 +178,15 @@
                 app:layout_constraintBaseline_toBaselineOf="@id/etPassengers"
                 app:layout_constraintStart_toStartOf="parent" />
 
+            <ImageView
+                android:id="@+id/ivPassengers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/textView6"
+                app:layout_constraintStart_toStartOf="@+id/etPassengers"
+                app:layout_constraintTop_toTopOf="@+id/textView6"
+                app:srcCompat="@drawable/ic_group_gray_20dp" />
+
             <EditText
                 android:id="@+id/etPassengers"
                 style="@style/etField"
@@ -167,6 +196,7 @@
                 android:layout_marginRight="16dp"
                 android:hint="Adults and children"
                 android:inputType="number"
+                android:paddingLeft="24dp"
                 android:selectAllOnFocus="true"
                 android:textColor="@color/colorTextBlack"
                 android:textSize="14sp"
@@ -220,7 +250,16 @@
                 app:layout_constraintBaseline_toBaselineOf="@id/tfTransport"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <com.kg.gettransfer.views.TypeField
+            <ImageView
+                android:id="@+id/ivTransportType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/textView63"
+                app:layout_constraintStart_toStartOf="@+id/tfTransport"
+                app:layout_constraintTop_toTopOf="@+id/textView63"
+                app:srcCompat="@drawable/ic_airport_shuttle_gray_20dp" />
+
+            <com.kg.gettransfer.views.TransportTypeField
                 android:id="@+id/tfTransport"
                 style="@style/etField"
                 android:layout_width="0dp"
@@ -229,6 +268,7 @@
                 android:clipToPadding="false"
                 android:editable="false"
                 android:hint="Class, type"
+                android:paddingLeft="24dp"
                 android:textCursorDrawable="@null"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -358,13 +398,14 @@
                 app:layout_constraintBaseline_toBaselineOf="@id/etPrice"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <com.kg.gettransfer.views.PriceField
+            <EditText
                 android:id="@+id/etPrice"
                 style="@style/etField"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:paddingRight="24dp"
+                android:textColor="@color/colorTextBlack"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/textView39"
                 app:layout_constraintTop_toBottomOf="@id/textView18" />
@@ -378,8 +419,9 @@
                 android:focusable="false"
                 android:gravity="end|center_vertical"
                 android:paddingLeft="16dp"
-                android:paddingRight="64dp"
+                android:paddingRight="32dp"
                 android:paddingTop="3dp"
+                android:textColor="@color/colorTextBlack"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="@id/etPrice"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -401,7 +443,7 @@
                 app:layout_constraintBaseline_toBaselineOf="@id/etFlightTrainNumber"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <com.kg.gettransfer.views.FlightField
+            <EditText
                 android:id="@+id/etFlightTrainNumber"
                 style="@style/etField"
                 android:layout_width="0dp"

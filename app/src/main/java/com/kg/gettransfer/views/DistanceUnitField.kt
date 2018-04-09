@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.kg.gettransfer.modules.ConfigModel
 import com.kg.gettransfer.modules.CurrentAccount
@@ -24,7 +25,7 @@ import org.koin.standalone.inject
  */
 
 
-class DistanceUnitField : EditText, KoinComponent {
+class DistanceUnitField : TextView, KoinComponent {
     private val currentAccount: CurrentAccount by inject()
     private val configModel: ConfigModel by inject()
 
