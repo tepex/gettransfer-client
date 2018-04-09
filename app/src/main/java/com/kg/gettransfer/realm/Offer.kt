@@ -43,4 +43,12 @@ open class Offer : RealmObject() {
     @Expose
     @SerializedName("refreshments")
     var refreshments: Boolean? = null
+
+    fun facilities(): String? {
+        var facilities = if (wifi == true) "WiFi" else null
+        if (refreshments == true)
+            if (facilities == null) facilities = "Refreshments"
+            else facilities += "    " + "Refreshments"
+        return facilities
+    }
 }

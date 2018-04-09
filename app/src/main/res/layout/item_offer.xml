@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
@@ -18,6 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/colorTextDate"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,6 +28,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/colorTextBlack"
         android:textStyle="bold"
@@ -48,12 +49,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvCarrier" />
 
-
     <TextView
         android:id="@+id/tvFacilities"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginTop="4dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/colorTextGray"
@@ -77,21 +78,21 @@
         android:id="@+id/imageView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="2dp"
         android:alpha="0.5"
         app:layout_constraintBottom_toBottomOf="@id/ratingBar"
-        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@id/ratingBar"
         app:layout_constraintTop_toTopOf="@id/ratingBar"
         app:srcCompat="@drawable/ic_airport_shuttle_gray_16dp" />
 
     <TextView
         android:id="@+id/tvTransfers"
-        android:layout_width="24dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
         android:layout_marginStart="4dp"
-        android:text="12"
         android:textColor="@color/colorTextAccent"
         app:layout_constraintBottom_toBottomOf="@id/ratingBar"
         app:layout_constraintStart_toEndOf="@id/imageView3"
@@ -102,6 +103,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
         android:minHeight="16dp"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"

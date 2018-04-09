@@ -26,6 +26,7 @@ import com.kg.gettransfer.views.hide
 import io.reactivex.disposables.CompositeDisposable
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.activity_transfer.*
+import kotlinx.android.synthetic.main.activity_transfer.view.*
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
 
@@ -204,9 +205,30 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
     private fun showOffer(offerID: Int) {
         this.offerID = offerID
+
         clPayment.visibility = VISIBLE
         wv.visibility = INVISIBLE
         btnPay.visibility = VISIBLE
+
+        val offer = offers?.find { it.id == offerID } ?: return
+        with(clPayment) {
+            tvCarrier.text = offer.carrier?.title()
+
+            tvVehicle.text = offer.vehicle?.name + "    " + offer.vehicle?.year
+
+            val facilities = offer.facilities()
+            tvWifiRefresh.text = facilities
+            tvWifiRefresh.visibility = if (facilities == null) GONE else VISIBLE
+
+            rbDriver.rating = (offer.carrier?.rating?.drive?.toFloat() ?: 0f) / 5f
+            rbVehicle.rating = (offer.carrier?.rating?.vehicle?.toFloat() ?: 0f) / 5f
+            rbFair.rating = (offer.carrier?.rating?.fair?.toFloat() ?: 0f) / 5f
+
+            tvTransfers.text = (offer.carrier?.completedTransfers ?: 0).toString()
+
+            tvPrice.text = offer.price?.base?.toStringMultiline()
+            tvPriceOff.text = offer.price?.withoutDiscount?.toStringMultiline()
+        }
     }
 
 
@@ -252,6 +274,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
     fun showAllDetails(v: View) {
         tvShowAllDetails.visibility = GONE
+        ivShowAllDetails.visibility = GONE
         clDetails.visibility = VISIBLE
     }
 

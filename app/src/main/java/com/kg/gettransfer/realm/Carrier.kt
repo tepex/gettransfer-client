@@ -53,4 +53,6 @@ open class Carrier : RealmObject() {
     @Expose
     @SerializedName("alternate_phone")
     var alternatePhone: String? = null
+
+    fun title() = title ?: "Carrier #$id"
 }

@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.AppCompatImageButton
 import android.view.View
 import com.kg.gettransfer.R
@@ -21,6 +22,10 @@ import org.koin.android.ext.android.inject
 
 
 class MainActivity : AppCompatActivity() {
+    init {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+    }
+
     private val currentAccount: CurrentAccount by inject()
 
     private val TAG: String = "Screen"

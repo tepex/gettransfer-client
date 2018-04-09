@@ -68,7 +68,7 @@ class OffersAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position) ?: return
 
-        holder.carrier.text = item.carrier?.title ?: "Carrier #" + item.carrier?.id
+        holder.carrier.text = item.carrier?.title()
         holder.vehicle.text =
                 (item.vehicle?.name ?: "Unknown vehicle") +
                 "\n" + transportTypes.typesMap[item.vehicle?.transportTypeID]?.title

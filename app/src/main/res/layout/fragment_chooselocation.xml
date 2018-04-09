@@ -33,7 +33,7 @@
             android:inputType="text"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:textAppearance="@android:style/TextAppearance.Material.Small.Inverse"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/ibBack"
             app:layout_constraintEnd_toStartOf="@+id/ibOk"
             app:layout_constraintStart_toEndOf="@+id/ibBack"

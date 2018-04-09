@@ -4,7 +4,6 @@ package com.kg.gettransfer.realm
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 
 
@@ -26,5 +25,9 @@ open class PriceConverted : RealmObject() {
     override fun toString(): String =
             if (preferredCurrency == null) defaultCurrency ?: ""
             else "($defaultCurrency) $preferredCurrency"
+
+    fun toStringMultiline(): String =
+            if (preferredCurrency == null) defaultCurrency ?: ""
+            else "$defaultCurrency\n$preferredCurrency"
 }
 
