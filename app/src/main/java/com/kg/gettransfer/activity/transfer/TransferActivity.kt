@@ -92,6 +92,10 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         swipeRefreshLayout.setOnRefreshListener {
             swipeRefreshLayout.isRefreshing = false
             transferModel.update()
+
+            if (transferModel.transfer?.offersOutdated != false) {
+                offersModel.update()
+            }
         }
 
         btnPay.setOnClickListener {
@@ -185,7 +189,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     private fun setOffersAsync(offers: RealmResults<Offer>) {
         this.offers?.removeAllChangeListeners()
 
-        val offersAdapter = OffersAdapter(offers, true)
+        val offersAdapter = OffersAdapter(offers)
         offersAdapter.icl = View.OnClickListener {
             showOffer(it.getTag(R.id.key_id) as Int)
         }
@@ -211,7 +215,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     }
 
 
-    var offerID: Int = 0
+    private var offerID: Int = 0
 
     private fun showOffer(offerID: Int) {
         this.offerID = offerID

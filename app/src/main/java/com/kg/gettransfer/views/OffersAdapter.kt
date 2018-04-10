@@ -30,9 +30,8 @@ import org.koin.standalone.inject
 
 
 class OffersAdapter(
-        realmResults: RealmResults<Offer>,
-        autoUpdate: Boolean)
-    : RealmRecyclerViewAdapter<Offer, OffersAdapter.ViewHolder>(realmResults, autoUpdate),
+        realmResults: RealmResults<Offer>)
+    : RealmRecyclerViewAdapter<Offer, OffersAdapter.ViewHolder>(realmResults, true),
         KoinComponent {
 
     private val transportTypes: TransportTypes by inject()

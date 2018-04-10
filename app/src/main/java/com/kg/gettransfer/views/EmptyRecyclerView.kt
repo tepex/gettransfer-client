@@ -31,6 +31,18 @@ class EmptyRecyclerView : RecyclerView {
         override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
             updateEmptyView()
         }
+
+        override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+            updateEmptyView()
+        }
+
+        override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+            updateEmptyView()
+        }
+
+        override fun onItemRangeChanged(positionStart: Int, itemCount: Int, payload: Any?) {
+            updateEmptyView()
+        }
     }
 
     constructor(c: Context) : super(c)
@@ -46,7 +58,10 @@ class EmptyRecyclerView : RecyclerView {
 
     override fun setAdapter(newAdapter: RecyclerView.Adapter<*>?) {
         adapter?.unregisterAdapterDataObserver(observer)
-        super.setAdapter(newAdapter)
+
         newAdapter?.registerAdapterDataObserver(observer)
+        super.setAdapter(newAdapter)
+
+        updateEmptyView()
     }
 }
