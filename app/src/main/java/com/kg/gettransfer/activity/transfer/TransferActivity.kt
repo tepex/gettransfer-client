@@ -3,6 +3,7 @@ package com.kg.gettransfer.activity.transfer
 
 import android.annotation.SuppressLint
 import android.graphics.LightingColorFilter
+import android.graphics.Paint
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -11,6 +12,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
 import android.view.View.*
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import android.view.animation.AnimationSet
+import android.view.animation.TranslateAnimation
 import android.widget.Toast
 import com.kg.gettransfer.R
 import com.kg.gettransfer.modules.OffersModel
@@ -92,31 +97,36 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         btnPay.setOnClickListener {
             pay(offerID)
         }
+
+        tvPriceOff.paintFlags = tvPriceOff.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+        tvPriceOffOrigin.paintFlags = tvPriceOff.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
     }
 
 
     private fun updateUI(transfer: Transfer) {
-        tvHeader.text = "Transfer #" + transfer.id
-        tvPaymentHeader.text = "Book transfer #" + transfer.id
+        tvHeader.text = getString(R.string.transfer_header) + transfer.id
+        tvPaymentHeader.text = getString(R.string.book_header) + transfer.id
 
         tvFrom.text = transfer.from?.name
 
         if (transfer.to == null) {
-            tvlTo.text = "Duration"
+            tvlTo.text = getString(R.string.duration)
             tvTo.text = transfer.hireDurationString
 
-            ivTo.setImageResource(R.drawable.ic_timer_blue_16dp)
+            ivTo.visibility = GONE
+            ivMarkerTo.setImageResource(R.drawable.ic_timer_blue_22dp_padding)
 
             tvRouteInfo.visibility = GONE
         } else {
-            tvlTo.text = "To"
+            tvlTo.text = getString(R.string.to)
             tvTo.text = transfer.to?.name
 
-            ivTo.setImageResource(R.drawable.ic_arrow_blue_16dp)
+            ivTo.visibility = VISIBLE
+            ivMarkerTo.setImageResource(R.drawable.ic_place_blue_24dp)
 
             tvRouteInfo.visibility = VISIBLE
             tvRouteInfo.text =
-                    "${transfer.routeDistance} km, expected travel time: ${transfer.routeDuration} min "
+                    "distance: ${transfer.routeDistance} km\nexpected travel time: ${transfer.routeDuration} min "
         }
 
         tvDate.text = Utils.dateToString(transfer.dateTo)
@@ -214,21 +224,60 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         with(clPayment) {
             tvCarrier.text = offer.carrier?.title()
 
-            tvVehicle.text = offer.vehicle?.name + "    " + offer.vehicle?.year
+            val vehicle = offer.vehicle
+            if (vehicle != null) {
+                val title =
+                        if (vehicle.year > 0) vehicle.name + "    " + vehicle.year
+                        else vehicle.name
+                tvVehicle.text = title
+            }
 
             val facilities = offer.facilities()
             tvWifiRefresh.text = facilities
             tvWifiRefresh.visibility = if (facilities == null) GONE else VISIBLE
 
-            rbDriver.rating = (offer.carrier?.rating?.drive?.toFloat() ?: 0f) / 5f
-            rbVehicle.rating = (offer.carrier?.rating?.vehicle?.toFloat() ?: 0f) / 5f
-            rbFair.rating = (offer.carrier?.rating?.fair?.toFloat() ?: 0f) / 5f
+            val rating = offer.carrier?.rating
+            if (rating != null) {
+                rbDriver.rating = rating.drive.toFloat() / 5f
+                rbVehicle.rating = rating.vehicle.toFloat() / 5f
+                rbFair.rating = rating.fair.toFloat() / 5f
+            }
 
             tvTransfers.text = (offer.carrier?.completedTransfers ?: 0).toString()
 
-            tvPrice.text = offer.price?.base?.toStringMultiline()
-            tvPriceOff.text = offer.price?.withoutDiscount?.toStringMultiline()
+            val base = offer.price?.base
+            if (base?.preferredCurrency != null) {
+                tvPrice.text = offer.price?.base?.preferredCurrency
+                tvPriceOff.text = offer.price?.withoutDiscount?.preferredCurrency
+
+                tvPriceOrigin.text = offer.price?.base?.defaultCurrency
+                tvPriceOffOrigin.text = offer.price?.withoutDiscount?.defaultCurrency
+
+                tvPriceOrigin.visibility = VISIBLE
+                tvPriceOffOrigin.visibility = VISIBLE
+            } else {
+                tvPrice.text = offer.price?.base?.defaultCurrency
+                tvPriceOff.text = offer.price?.withoutDiscount?.defaultCurrency
+
+                tvPriceOrigin.visibility = GONE
+                tvPriceOffOrigin.visibility = GONE
+            }
         }
+
+        val alphaAnimation = AlphaAnimation(0.0f, 1.0f)
+        alphaAnimation.duration = 120
+        alphaAnimation.startOffset = 15
+        alphaAnimation.fillAfter = true
+
+        val translateAnimation = TranslateAnimation(16f * resources.displayMetrics.density, 0f, 0f, 0f)
+        translateAnimation.duration = 120
+        translateAnimation.startOffset = 15
+
+        val set = AnimationSet(true)
+        set.addAnimation(alphaAnimation)
+        set.addAnimation(translateAnimation)
+
+        clPayment.startAnimation(set)
     }
 
 
@@ -259,12 +308,31 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     }
 
     fun hidePayment(v: View?) {
-        transferModel.pingPayment(1)
-                .subscribe(
-                        {
-                            Toast.makeText(this, it.data?.paymentStatus, Toast.LENGTH_SHORT).show()
-                        })
-        clPayment.visibility = INVISIBLE
+//        transferModel.pingPayment(1)
+//                .subscribe(
+//                        {
+//                            Toast.makeText(this, it.data?.paymentStatus, Toast.LENGTH_SHORT).show()
+//                        })
+
+        val alphaAnimation = AlphaAnimation(1f, 0f)
+        alphaAnimation.duration = 90
+        alphaAnimation.fillAfter = true
+
+        val translateAnimation = TranslateAnimation(0f, 12f * resources.displayMetrics.density, 0f, 0f)
+        translateAnimation.duration = 90
+
+        val set = AnimationSet(true)
+        set.addAnimation(alphaAnimation)
+        set.addAnimation(translateAnimation)
+        set.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) = Unit
+            override fun onAnimationRepeat(animation: Animation?) = Unit
+            override fun onAnimationEnd(animation: Animation?) {
+                clPayment.visibility = INVISIBLE
+            }
+        })
+
+        clPayment.startAnimation(set)
     }
 
     fun cancel(v: View) {

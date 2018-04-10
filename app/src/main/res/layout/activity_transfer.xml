@@ -106,7 +106,8 @@
                     android:id="@+id/tvlPickUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginLeft="64dp"
+                    android:layout_marginStart="64dp"
                     android:layout_marginTop="24dp"
                     android:text="Pick up at"
                     android:textColor="@color/colorTextGray"
@@ -127,7 +128,8 @@
                     android:id="@+id/tvlFrom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginLeft="64dp"
+                    android:layout_marginStart="64dp"
                     android:layout_marginTop="16dp"
                     android:text="From"
                     android:textColor="@color/colorTextGray"
@@ -139,10 +141,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginLeft="64dp"
+                    android:layout_marginStart="64dp"
                     android:text="Moscow, Domodedovo Airport"
                     android:textColor="@color/colorTextBlack"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvlFrom" />
@@ -151,7 +154,8 @@
                     android:id="@+id/ivTo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginLeft="64dp"
+                    android:layout_marginStart="64dp"
                     app:layout_constraintBottom_toBottomOf="@id/tvlTo"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tvlTo"
@@ -166,17 +170,19 @@
                     android:text="To"
                     android:textColor="@color/colorTextGray"
                     app:layout_constraintStart_toEndOf="@id/ivTo"
-                    app:layout_constraintTop_toBottomOf="@id/tvFrom" />
+                    app:layout_constraintTop_toBottomOf="@id/tvFrom"
+                    app:layout_goneMarginLeft="64dp" />
 
                 <TextView
                     android:id="@+id/tvTo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginLeft="64dp"
+                    android:layout_marginStart="64dp"
                     android:text="Moscow, Tverskaya, 42a"
                     android:textColor="@color/colorTextAccent"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvlTo" />
@@ -226,7 +232,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="32dp"
                         android:layout_marginTop="16dp"
-                        android:text="19 km, expected travel time: 23 min "
+                        android:gravity="end"
                         android:textColor="@color/colorTextGray"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -256,13 +262,16 @@
 
                     <TextView
                         android:id="@+id/tvSign"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="32dp"
                         android:layout_marginLeft="144dp"
+                        android:layout_marginRight="32dp"
                         android:layout_marginStart="144dp"
                         android:text="Aurora"
                         android:textColor="@color/colorTextBlack"
                         app:layout_constraintBaseline_toBaselineOf="@id/tvlSign"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
 
                     <TextView
@@ -282,10 +291,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="144dp"
                         android:layout_marginStart="144dp"
+                        android:layout_marginTop="8dp"
                         android:text="3"
                         android:textColor="@color/colorTextBlack"
-                        app:layout_constraintBaseline_toBaselineOf="@id/tvlPassengers"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvSign" />
 
                     <TextView
                         android:id="@+id/tvlTransportTypes"
@@ -306,7 +316,7 @@
                         android:layout_marginLeft="144dp"
                         android:layout_marginStart="144dp"
                         android:gravity="left"
-                        android:text="3"
+                        android:text="Van"
                         android:textColor="@color/colorTextBlack"
                         app:layout_constraintBaseline_toBaselineOf="@id/tvlTransportTypes"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -317,11 +327,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
-                        android:layout_marginTop="8dp"
                         android:text="Child seats"
                         android:textColor="@color/colorTextGray"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvlTransportTypes" />
+                        app:layout_constraintBaseline_toBaselineOf="@+id/tvChildSeats"
+                        app:layout_constraintStart_toStartOf="parent" />
 
                     <TextView
                         android:id="@+id/tvChildSeats"
@@ -329,10 +338,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="144dp"
                         android:layout_marginStart="144dp"
+                        android:layout_marginTop="8dp"
                         android:text="12 kg x 1, 32 kg x 1"
                         android:textColor="@color/colorTextBlack"
-                        app:layout_constraintBaseline_toBaselineOf="@id/tvlChildSeats"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTypes" />
 
 
                     <TextView
@@ -538,6 +548,41 @@
 
                 </android.support.constraint.ConstraintLayout>
 
+                <ImageView
+                    android:id="@+id/ivMarkerFrom"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="14dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvlFrom"
+                    app:srcCompat="@drawable/ic_place_black_24dp" />
+
+                <ImageView
+                    android:id="@+id/ivMarkersLine"
+                    android:layout_width="5dp"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layerType="software"
+                    app:layout_constraintBottom_toTopOf="@+id/ivMarkerTo"
+                    app:layout_constraintEnd_toEndOf="@+id/ivMarkerFrom"
+                    app:layout_constraintStart_toStartOf="@+id/ivMarkerFrom"
+                    app:layout_constraintTop_toBottomOf="@+id/ivMarkerFrom"
+                    app:srcCompat="@drawable/sh_dotted_h_line" />
+
+                <ImageView
+                    android:id="@+id/ivMarkerTo"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="14dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvlTo"
+                    app:srcCompat="@drawable/ic_place_blue_24dp" />
+
             </android.support.constraint.ConstraintLayout>
         </ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
@@ -546,7 +591,7 @@
         android:id="@+id/clPayment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBGSecondary"
+        android:background="@color/colorBG"
         android:visibility="gone"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp">
@@ -609,7 +654,6 @@
             android:layout_marginTop="16dp"
             android:text="Vehicle"
             android:textColor="@color/colorTextBlack"
-            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvCarrier" />
 
@@ -620,6 +664,7 @@
             android:layout_marginLeft="32dp"
             android:layout_marginStart="32dp"
             android:text="WifiRefresh"
+            android:textColor="@color/colorTextGray"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvVehicle" />
 
@@ -631,6 +676,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:text="Vehicle"
+            android:textColor="@color/colorTextGray"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvWifiRefresh" />
 
@@ -655,8 +701,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="Driver"
+            android:textColor="@color/colorTextGray"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvlVehicle" />
 
@@ -681,8 +728,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="Fair"
+            android:textColor="@color/colorTextGray"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvlDriver" />
 
@@ -709,6 +757,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:text="Successful transfers"
+            android:textColor="@color/colorTextGray"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvlFair" />
 
@@ -739,6 +788,10 @@
             android:id="@+id/line6"
             android:layout_width="0dp"
             android:layout_height="1dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
             android:background="@color/colorSeparator"
             app:layout_constraintEnd_toEndOf="parent"
@@ -751,10 +804,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
             android:text="Price"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/line6" />
+            android:textColor="@color/colorTextGray"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tvPrice"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/tvPriceOff"
@@ -762,9 +816,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="32dp"
-            app:layout_constraintEnd_toStartOf="@+id/tvPrice"
-            app:layout_constraintTop_toBottomOf="@+id/line6" />
+            android:text="   "
+            app:layout_constraintBaseline_toBaselineOf="@id/tvPrice"
+            app:layout_constraintEnd_toStartOf="@+id/tvPrice" />
 
         <TextView
             android:id="@+id/tvPrice"
@@ -779,16 +833,39 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/line6" />
 
+        <TextView
+            android:id="@+id/tvPriceOffOrigin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:text="   "
+            app:layout_constraintBaseline_toBaselineOf="@id/tvPriceOrigin"
+            app:layout_constraintEnd_toStartOf="@+id/tvPrice"
+            tools:layout_editor_absoluteY="418dp" />
+
+        <TextView
+            android:id="@+id/tvPriceOrigin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginTop="4dp"
+            android:text="Price"
+            android:textColor="@color/colorTextDate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPrice" />
+
         <RadioGroup
             android:id="@+id/radioGroup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="96dp"
+            android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/line6">
+            app:layout_constraintTop_toBottomOf="@+id/tvPriceOrigin">
 
             <RadioButton
                 android:id="@+id/rb30"

@@ -16,6 +16,9 @@
     <string name="profile">Profile</string>
     <string name="newTransfer">New</string>
     <string name="list">List</string>
+
+
+    <string name="to">To</string>
     <string name="duration">Duration</string>
 
     <string name="economy">Economy</string>
@@ -26,4 +29,7 @@
     <string name="bus">Bus</string>
     <string name="limousine">Limousine</string>
     <string name="helicopter">Helicopter</string>
+
+    <string name="transfer_header">Transfer #</string>
+    <string name="book_header">Book transfer #</string>
 </resources>

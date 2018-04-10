@@ -12,10 +12,12 @@
     <string name="no_transfers">Нет заявок</string>
     <string name="book">Бронь</string>
 
-    <string name="profile">Profile</string>
+    <string name="profile">Профиль</string>
     <string name="newTransfer">New</string>
     <string name="list">List</string>
-    <string name="duration">Duration</string>
+
+    <string name="o">Куда</string>
+    <string name="duration">Продолжительность аренды</string>
 
     <string name="economy">Эконом</string>
     <string name="business">Бизнес</string>
@@ -25,4 +27,7 @@
     <string name="bus">Автобус</string>
     <string name="limousine">Лимузин</string>
     <string name="helicopter">Вертолёт</string>
+
+    <string name="transfer_header">Трансфер №</string>
+    <string name="book_header">Забронировать №</string>
 </resources>
