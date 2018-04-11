@@ -123,13 +123,13 @@ open class Transfer : RealmObject() {
     @SerializedName("offers_updated_at")
     var offersChangedDate: Date? = null
 
-    var offersUpdatedDate: Date? = null
+    var offersTriedToUpdateDate: Long = 0
+    var offersUpdatedDate: Long = 0
 
-    val offersOutdated: Boolean
+    val needAndCanUpdateOffers: Boolean
         get() {
-            val offersUpdatedDate = offersUpdatedDate ?: return true
-            return offersUpdatedDate.before(offersChangedDate ?: Date(0))
-                    || offers.size != offersCount
+            if (offersTriedToUpdateDate > System.currentTimeMillis() - 1000) return false
+            return offersUpdatedDate < offersChangedDate?.time ?: 1 || offers.size != offersCount
         }
 
     fun populateFromOldTransfer(oldTransfer: Transfer?) {

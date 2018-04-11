@@ -2,6 +2,7 @@ package com.kg.gettransfer.modules
 
 
 import android.os.Looper
+import android.util.Log
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.kg.gettransfer.modules.http.HttpApi
 import com.kg.gettransfer.realm.Offer
@@ -12,7 +13,6 @@ import io.reactivex.disposables.Disposable
 import io.realm.Realm
 import io.realm.RealmResults
 import org.koin.standalone.KoinComponent
-import java.util.*
 
 
 /**
@@ -36,7 +36,7 @@ class OffersModel(
             managedTransfer = realm.getTransfer(id) ?: throw Exception("No transfer with id: $id")
             managedTransfer.addChangeListener<Transfer> { transfer, _ ->
                 if (transfer.isValid) {
-                    if (transfer.offersOutdated) update()
+                    if (transfer.needAndCanUpdateOffers) update()
                 }
             }
 
@@ -44,13 +44,7 @@ class OffersModel(
 
             offers = getOffersAsyncRealmResult(managedTransfer)
 
-            val size1 = managedTransfer.offers.size
-            val size2 = offers.size
-
-            val size3 = realm.copyFromRealm(managedTransfer.offers)
-            val size4 = realm.copyFromRealm(offers)
-
-            if (managedTransfer.offersOutdated) {
+            if (managedTransfer.needAndCanUpdateOffers) {
                 update()
             }
         }
@@ -95,10 +89,26 @@ class OffersModel(
                 transfer.offers.clear()
                 transfer.offers.addAll(offersRealm)
 
-                transfer.offersUpdatedDate = Date()
+                if (transfer.offersCount != offers.count()) {
+                    Log.e("OffersModel", "transfer.offersCount != offers.count()")
+                    transfer.offersCount = offers.count()
+                }
+
+                transfer.offersUpdatedDate = System.currentTimeMillis()
+                transfer.offersTriedToUpdateDate = System.currentTimeMillis()
             }
             realm.close()
         }, {
+            val realm = Realm.getDefaultInstance()
+            realm.executeTransaction {
+                val transfer = realm.getTransfer(id)
+                if (transfer == null) {
+                    err("No transfer with id: $id")
+                    return@executeTransaction
+                }
+                transfer.offersTriedToUpdateDate = System.currentTimeMillis()
+            }
+            realm.close()
             err(it.message)
         })
     }

@@ -93,7 +93,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             swipeRefreshLayout.isRefreshing = false
             transferModel.update()
 
-            if (transferModel.transfer?.offersOutdated != false) {
+            if (transferModel.transfer?.needAndCanUpdateOffers != false) {
                 offersModel.update()
             }
         }
@@ -271,12 +271,9 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         val alphaAnimation = AlphaAnimation(0.0f, 1.0f)
         alphaAnimation.duration = 120
         alphaAnimation.startOffset = 15
-        alphaAnimation.fillAfter = true
-
         val translateAnimation = TranslateAnimation(16f * resources.displayMetrics.density, 0f, 0f, 0f)
         translateAnimation.duration = 120
         translateAnimation.startOffset = 15
-
         val set = AnimationSet(true)
         set.addAnimation(alphaAnimation)
         set.addAnimation(translateAnimation)
@@ -320,11 +317,8 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
         val alphaAnimation = AlphaAnimation(1f, 0f)
         alphaAnimation.duration = 90
-        alphaAnimation.fillAfter = true
-
         val translateAnimation = TranslateAnimation(0f, 12f * resources.displayMetrics.density, 0f, 0f)
         translateAnimation.duration = 90
-
         val set = AnimationSet(true)
         set.addAnimation(alphaAnimation)
         set.addAnimation(translateAnimation)
