@@ -92,6 +92,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorBG"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/clHeaderLogo">
@@ -100,7 +102,8 @@
             android:id="@+id/line1"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginLeft="64dp"
+            android:layout_marginStart="64dp"
             android:background="@color/colorSeparator"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -122,8 +125,9 @@
             android:id="@+id/tvlFrom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="13dp"
+            android:layout_marginLeft="64dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="14dp"
             android:labelFor="@+id/lvFrom"
             android:text="From"
             android:textColor="@color/colorTextGray"
@@ -151,7 +155,7 @@
             android:gravity="center_vertical"
             android:hint="Starting point"
             android:inputType="textPersonName"
-            android:paddingLeft="16dp"
+            android:paddingLeft="64dp"
             android:paddingTop="24dp"
             android:textColor="?attr/editTextColor"
             app:layout_constraintEnd_toEndOf="parent"
@@ -162,7 +166,8 @@
             android:id="@+id/ivTo2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginLeft="64dp"
+            android:layout_marginStart="64dp"
             app:layout_constraintBottom_toBottomOf="@+id/tvlTo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvlTo"
@@ -174,7 +179,7 @@
             android:layout_height="18dp"
             android:layout_marginLeft="4dp"
             android:layout_marginStart="4dp"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="14dp"
             android:labelFor="@+id/lvTo"
             android:text="To"
             android:textColor="@color/colorTextGray"
@@ -190,7 +195,7 @@
             android:gravity="center_vertical"
             android:hint="Destination"
             android:inputType="textPersonName"
-            android:paddingLeft="16dp"
+            android:paddingLeft="64dp"
             android:paddingTop="24dp"
             android:textColor="?attr/editTextColor"
             app:layout_constraintEnd_toEndOf="parent"
@@ -295,6 +300,41 @@
                 app:layout_constraintTop_toTopOf="@+id/fieldDuration" />
 
         </android.support.constraint.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/ivMarkerFrom"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvlFrom"
+            app:srcCompat="@drawable/ic_place_black_24dp" />
+
+        <ImageView
+            android:id="@+id/ivMarkersLine"
+            android:layout_width="5dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layerType="software"
+            app:layout_constraintBottom_toTopOf="@+id/ivMarkerTo"
+            app:layout_constraintEnd_toEndOf="@+id/ivMarkerFrom"
+            app:layout_constraintStart_toStartOf="@+id/ivMarkerFrom"
+            app:layout_constraintTop_toBottomOf="@+id/ivMarkerFrom"
+            app:srcCompat="@drawable/sh_dotted_h_line" />
+
+        <ImageView
+            android:id="@+id/ivMarkerTo"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvlTo"
+            app:srcCompat="@drawable/ic_place_blue_24dp" />
 
     </android.support.constraint.ConstraintLayout>
 
