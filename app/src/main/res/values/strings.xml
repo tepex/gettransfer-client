@@ -90,4 +90,35 @@
     <string name="status_archive">Archive</string>
 
     <string name="status_long_connecting">Connecting …</string>
+    <string name="phone">Phone</string>
+    <string name="currency">Currency</string>
+    <string name="distance_unit">Distance unit</string>
+    <string name="name">Name</string>
+    <string name="receive_email_notifications">Receive email notifications</string>
+    <string name="register">Register</string>
+    <string name="log_out">Log out</string>
+
+    <string name="vehicle">Vehicle</string>
+    <string name="driver">Driver</string>
+    <string name="fair">Fair</string>
+    <string name="successful_transfers">Successful transfers</string>
+    <string name="price">Price</string>
+    <string name="pay_30_now_70_to_the_driver">Pay 30% now, 70% to the driver</string>
+    <string name="pay_100_now">Pay 100% now</string>
+    <string name="pay">Pay</string>
+
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="adults_and_children">Adults and children</string>
+    <string name="class_type">Class, type</string>
+    <string name="contact_with">Contact with</string>
+    <string name="to_meet_you_with_a_name_sign">To meet you with a name sign</string>
+    <string name="optional_fields">Optional fields</string>
+    <string name="your_price">Your price</string>
+    <string name="flight_or_train">Flight or train</string>
+    <string name="number">number</string>
+    <string name="children_snowboards_ski_bags_surfboards">Children, snowboards, ski bags, surfboards</string>
+    <string name="have_a_promo_code">Have a promo code?</string>
+    <string name="use_promo">Use promo</string>
+    <string name="promo_code">Promo code</string>
 </resources>

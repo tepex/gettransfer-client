@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Get Transfer</string>
 
-    <string name="login">Логин</string>
+    <string name="login">Войти</string>
     <string name="email">Email</string>
     <string name="password">Пароль</string>
     <string name="restore_password"><a href="https://gettransfer.com/en/forgot_password">Восстановить пароль</a></string>
@@ -88,4 +88,37 @@
     <string name="status_archive">В архиве</string>
 
     <string name="status_long_connecting">Соединяем …</string>
+
+    <string name="phone">Телефон</string>
+    <string name="currency">Валюта</string>
+    <string name="distance_unit">Единица расстояния</string>
+    <string name="name">Имя</string>
+    <string name="receive_email_notifications">Получать уведомления на почту</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="log_out">Выйти</string>
+
+    <string name="vehicle">Машина</string>
+    <string name="driver">Водитель</string>
+    <string name="fair">Пунктуальность</string>
+    <string name="successful_transfers">Завершенные трансферы</string>
+    <string name="price">Стоимость</string>
+    <string name="pay_30_now_70_to_the_driver">Заплатить 30% сейчас, 70% водителю</string>
+    <string name="pay_100_now">Заплатить 100% сейчас</string>
+    <string name="pay">Оплатить</string>
+
+    <string name="date">Дата</string>
+    <string name="time">Время</string>
+    <string name="adults_and_children">Взрослые и дети</string>
+    <string name="class_type">Класс,тип</string>
+    <string name="contact_with">Контактная информация</string>
+    <string name="to_meet_you_with_a_name_sign">Чтобы встретить вас с табличкой</string>
+    <string name="optional_fields">Необязательные поля</string>
+    <string name="your_price">Ваша цена</string>
+    <string name="flight_or_train">Рейс</string>
+    <string name="number">Номер рейса или поезда</string>
+    <string name="children_snowboards_ski_bags_surfboards">Дети, сноуборды, лыжи, большие сумки</string>
+    <string name="have_a_promo_code">Есть промо код?</string>
+    <string name="use_promo">Ввести</string>
+    <string name="promo_code">Промо код</string>
+
 </resources>

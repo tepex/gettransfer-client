@@ -592,8 +592,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorBG"
-        android:visibility="gone"
         android:clickable="true"
+        android:visibility="gone"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp">
 
@@ -676,7 +676,7 @@
             android:layout_marginLeft="32dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
-            android:text="Vehicle"
+            android:text="@string/vehicle"
             android:textColor="@color/colorTextGray"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvWifiRefresh" />
@@ -686,8 +686,8 @@
             style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="96dp"
-            android:layout_marginStart="96dp"
+            android:layout_marginLeft="144dp"
+            android:layout_marginStart="144dp"
             android:layout_marginTop="2dp"
             android:numStars="5"
             android:rating="0"
@@ -703,7 +703,7 @@
             android:layout_marginLeft="32dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="4dp"
-            android:text="Driver"
+            android:text="@string/driver"
             android:textColor="@color/colorTextGray"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvlVehicle" />
@@ -713,8 +713,8 @@
             style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="96dp"
-            android:layout_marginStart="96dp"
+            android:layout_marginLeft="144dp"
+            android:layout_marginStart="144dp"
             android:layout_marginTop="2dp"
             android:numStars="5"
             android:rating="0"
@@ -730,7 +730,7 @@
             android:layout_marginLeft="32dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="4dp"
-            android:text="Fair"
+            android:text="@string/fair"
             android:textColor="@color/colorTextGray"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvlDriver" />
@@ -740,8 +740,8 @@
             style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="96dp"
-            android:layout_marginStart="96dp"
+            android:layout_marginLeft="144dp"
+            android:layout_marginStart="144dp"
             android:layout_marginTop="2dp"
             android:numStars="5"
             android:rating="0"
@@ -757,7 +757,7 @@
             android:layout_marginLeft="32dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
-            android:text="Successful transfers"
+            android:text="@string/successful_transfers"
             android:textColor="@color/colorTextGray"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvlFair" />
@@ -805,7 +805,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
             android:layout_marginStart="32dp"
-            android:text="Price"
+            android:text="@string/price"
             android:textColor="@color/colorTextGray"
             android:textSize="18sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/tvPrice"
@@ -873,14 +873,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Pay 30% now, 70% to the driver" />
+                android:text="@string/pay_30_now_70_to_the_driver" />
 
             <RadioButton
                 android:id="@+id/rb100"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Pay 100% now" />
+                android:text="@string/pay_100_now" />
         </RadioGroup>
 
         <Button
@@ -890,7 +890,7 @@
             android:layout_marginEnd="32dp"
             android:layout_marginRight="32dp"
             android:layout_marginTop="16dp"
-            android:text="Pay"
+            android:text="@string/pay"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/radioGroup" />
 

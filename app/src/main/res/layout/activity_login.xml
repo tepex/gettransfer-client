@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
-        android:text="Log in"
+        android:text="@string/login"
         android:textColor="@color/colorTextGray"
         android:textSize="22sp"
         app:layout_constraintStart_toEndOf="@+id/btnBack"
