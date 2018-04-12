@@ -109,10 +109,18 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
                 tvFromAToB.setOnClickListener {
                     updateTabs(true)
+                    ivMore.visibility = VISIBLE
+                    tvTitle.visibility = VISIBLE
+                    tvFromAToB.visibility = INVISIBLE
+                    tvForAWhile.visibility = INVISIBLE
                 }
 
                 tvForAWhile.setOnClickListener {
                     updateTabs(false)
+                    ivMore.visibility = VISIBLE
+                    tvTitle.visibility = VISIBLE
+                    tvFromAToB.visibility = INVISIBLE
+                    tvForAWhile.visibility = INVISIBLE
                 }
 
                 ivSwap.setOnClickListener {
@@ -150,8 +158,15 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
                 lvTo.tvName.setTextColor(ContextCompat.getColor(context, R.color.colorAccent))
 
-                lvFrom.tvName.hint = "Pick up address"
-                lvTo.tvName.hint = "Destination address"
+                lvFrom.tvName.hint = context.getString(R.string.pick_up_address)
+                lvTo.tvName.hint = context.getString(R.string.destination_address)
+
+                ivMore.setOnClickListener {
+                    ivMore.visibility = INVISIBLE
+                    tvTitle.visibility = INVISIBLE
+                    tvFromAToB.visibility = VISIBLE
+                    tvForAWhile.visibility = VISIBLE
+                }
             }
 
             savedView = v
@@ -161,18 +176,27 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     }
 
 
-    val hours = intArrayOf(
+    private val hours = intArrayOf(
             2, 3, 4, 5, 6, 8, 10, 24, 48, 24 * 3, 24 * 4, 24 * 5, 24 * 10, 24 * 15)
 
-    val labels = arrayOf(
-            "2 hours", "3 hours", "4 hours", "5 hours", "6 hours", "8 hours", "10 hours",
-            "1 day", "2 days", "3 days", "4 days", "5 days", "10 days", "15 days")
+    private val strHours234 by lazy { activity.getString(R.string.hours234) }
+    private val strHours by lazy { activity.getString(R.string.hours) }
+    private val strDay by lazy { activity.getString(R.string.day) }
+    private val strDays234 by lazy { activity.getString(R.string.days234) }
+    private val strDays by lazy { activity.getString(R.string.days) }
+    private val labels by lazy {
+        arrayOf(
+                "2 $strHours234", "3 $strHours234", "4 $strHours234", "5 $strHours",
+                "6 $strHours", "8 $strHours", "10 $strHours",
+                "1 $strDay", "2 $strDays234", "3 $strDays234", "4 $strDays234",
+                "5 $strDays", "10 $strDays", "15 $strDays")
+    }
 
     private fun chooseDuration() {
         val builder = AlertDialog.Builder(activity)
 
         val alert = builder
-                .setTitle("Duration")
+                .setTitle(activity.getString(R.string.duration))
                 .setItems(
                         labels,
                         { _, i ->
@@ -346,7 +370,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                         polyline?.remove()
 
                         if (result.routes.isEmpty()) {
-                            Toast.makeText(activity, "Routing failed", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity, getString(R.string.routing_failed), Toast.LENGTH_SHORT).show()
                             return@post
                         }
 
@@ -368,7 +392,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
                 override fun onFailure(e: Throwable) {
                     log.info("Routing fail: " + e.message)
-                    Toast.makeText(activity, "Routing failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, getString(R.string.routing_failed), Toast.LENGTH_SHORT).show()
                     e.printStackTrace()
                 }
             })

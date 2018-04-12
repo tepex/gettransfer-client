@@ -1,8 +1,10 @@
 package com.kg.gettransfer.realm
 
 
+import android.content.Context
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.kg.gettransfer.R
 import com.kg.gettransfer.realm.Utils.hoursToString
 import io.realm.RealmList
 import io.realm.RealmObject
@@ -154,19 +156,21 @@ open class Transfer : RealmObject() {
 
     var offers: RealmList<Offer> = RealmList()
 
-    val strStatus: String
-        get() = when {
+    fun isActiveNew() = status == "new" && !bookNow || status == "draft" && bookNow
+    fun isActiveConfirmed() = status == "new" && bookNow || status == "performed" && !bookNow
+
+    fun strStatus(c: Context) = when {
             status == "new" && !bookNow || status == "draft" && bookNow ->
-                "Active"
+                c.getString(R.string.status_active)
             status == "new" && bookNow || status == "performed" && !bookNow ->
-                "Confirmed"
+                c.getString(R.string.status_confirmed)
             status == "outdated" ->
-                "Expired"
+                c.getString(R.string.status_expired)
             status == "canceled" ->
-                "Canceled"
+                c.getString(R.string.status_canceled)
             status == "rejected" ->
-                "Rejected"
+                c.getString(R.string.status_rejected)
             else ->
-                "Archive"
+                c.getString(R.string.status_archive)
         }
 }

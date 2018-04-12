@@ -65,18 +65,16 @@ class OffersAdapter(
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val c = holder.itemView.context
+
         val item = getItem(position) ?: return
 
-        holder.carrier.text = item.carrier?.title()
+        holder.carrier.text = item.carrier?.title(c)
         holder.vehicle.text =
                 (item.vehicle?.name ?: "Unknown vehicle") +
                 "\n" + transportTypes.typesMap[item.vehicle?.transportTypeID]?.title
 
-        var facilities = if (item.wifi == true) "WiFi" else null
-        if (item.refreshments == true)
-            if (facilities == null) facilities = "Refreshments"
-            else facilities += "    " + "Refreshments"
-
+        val facilities = item.facilities(c)
         holder.facilities.text = facilities
         holder.facilities.visibility = if (facilities == null) GONE else VISIBLE
 

@@ -13,11 +13,20 @@
     <string name="book">Бронь</string>
 
     <string name="profile">Профиль</string>
-    <string name="newTransfer">New</string>
-    <string name="list">List</string>
+    <string name="newTransfer">Новый трансфер</string>
+    <string name="list">Список</string>
 
-    <string name="o">Куда</string>
-    <string name="duration">Продолжительность аренды</string>
+    <string name="offers">Предложения</string>
+
+    <string name="carrier_number">Перевозчик №</string>
+
+    <string name="from">Откуда</string>
+    <string name="to">Куда</string>
+    <string name="duration">Время аренды</string>
+
+    <string name="time_you_ll_need_a_car">Как долго нужен водитель?</string>
+    <string name="pick_up_address">Где вас встретить?</string>
+    <string name="destination_address">Куда привезти?</string>
 
     <string name="economy">Эконом</string>
     <string name="business">Бизнес</string>
@@ -30,4 +39,53 @@
 
     <string name="transfer_header">Трансфер №</string>
     <string name="book_header">Забронировать №</string>
+
+    <string name="schedule_transfer">Запланировать трансфер</string>
+    <string name="for_a_while">На время</string>
+    <string name="from_a_to_b">Из А в Б</string>
+
+    <string name="transfers">Трансферы</string>
+    <string name="active">Активные</string>
+    <string name="archive">Архив</string>
+
+    <string name="hours234">часа</string>
+    <string name="hours">часов</string>
+
+    <string name="day">день</string>
+    <string name="days234">дня</string>
+    <string name="days">дней</string>
+
+    <string name="n_offer">предложение</string>
+    <string name="n_offers234">предложения</string>
+    <string name="n_offers">предложений</string>
+
+    <string name="routing_failed">Не удалось проложить маршрут</string>
+    <string name="connecting_to_carriers">Соединяем с перевозчиками…</string>
+    <string name="transfer_date_passed">Дата трансфера прошла</string>
+    <string name="manager_rejected_request">Менеджер отменил трансфер</string>
+    <string name="you_cancelled_request">Вы отменили трасфер</string>
+    <string name="restore_question">Восстановить?</string>
+    <string name="cancel_request">Отменить</string>
+    <string name="care_service">Поддержка</string>
+    <string name="offers_will_be_shortly">Предложения скоро будут, обычно не дольше одного дня.</string>
+    <string name="choose_your_carrier">Выберите перевозчика</string>
+    <string name="restore_request">Восстановить трансфер</string>
+
+    <string name="comments">Комментарии</string>
+    <string name="child_seats">Детские кресла</string>
+    <string name="transport_types">Транспорт</string>
+    <string name="passengers">Пассажиры</string>
+    <string name="name_sign">Ваше имя</string>
+    <string name="details">ДЕТАЛИ</string>
+    <string name="pick_up_at">Дата</string>
+    <string name="refreshments">Напитки</string>
+
+    <string name="status_active">Активен</string>
+    <string name="status_confirmed">Подтверждён</string>
+    <string name="status_expired">Устарел</string>
+    <string name="status_canceled">Отменён</string>
+    <string name="status_rejected">Отклонён</string>
+    <string name="status_archive">В архиве</string>
+
+    <string name="status_long_connecting">Соединяем …</string>
 </resources>

@@ -109,7 +109,7 @@
                     android:layout_marginLeft="64dp"
                     android:layout_marginStart="64dp"
                     android:layout_marginTop="24dp"
-                    android:text="Pick up at"
+                    android:text="@string/pick_up_at"
                     android:textColor="@color/colorTextGray"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -131,7 +131,7 @@
                     android:layout_marginLeft="64dp"
                     android:layout_marginStart="64dp"
                     android:layout_marginTop="16dp"
-                    android:text="From"
+                    android:text="@string/from"
                     android:textColor="@color/colorTextGray"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvlPickUp" />
@@ -167,7 +167,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
                     android:layout_marginTop="16dp"
-                    android:text="To"
+                    android:text="@string/to"
                     android:textColor="@color/colorTextGray"
                     app:layout_constraintStart_toEndOf="@id/ivTo"
                     app:layout_constraintTop_toBottomOf="@id/tvFrom"
@@ -198,7 +198,7 @@
                     android:paddingLeft="32dp"
                     android:paddingRight="48dp"
                     android:paddingTop="16dp"
-                    android:text="DETAILS"
+                    android:text="@string/details"
                     android:textAlignment="textEnd"
                     android:textColor="@color/colorTextGray"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -255,7 +255,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
                         android:layout_marginTop="24dp"
-                        android:text="Name sign"
+                        android:text="@string/name_sign"
                         android:textColor="@color/colorTextGray"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line1" />
@@ -280,7 +280,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
                         android:layout_marginTop="8dp"
-                        android:text="Passengers"
+                        android:text="@string/passengers"
                         android:textColor="@color/colorTextGray"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvlSign" />
@@ -303,7 +303,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
                         android:layout_marginTop="8dp"
-                        android:text="Transport types"
+                        android:text="@string/transport_types"
                         android:textColor="@color/colorTextGray"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvlPassengers" />
@@ -327,7 +327,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
-                        android:text="Child seats"
+                        android:text="@string/child_seats"
                         android:textColor="@color/colorTextGray"
                         app:layout_constraintBaseline_toBaselineOf="@+id/tvChildSeats"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -351,7 +351,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
                         android:layout_marginTop="8dp"
-                        android:text="Comments"
+                        android:text="@string/comments"
                         android:textColor="@color/colorTextGray"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvlChildSeats" />
@@ -399,7 +399,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
                         android:layout_marginTop="24dp"
-                        android:text="Transfer was cancelled"
+                        android:text="@string/you_cancelled_request"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="@color/colorTextBlack"
                         app:layout_constraintStart_toStartOf="parent"
@@ -410,7 +410,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="32dp"
-                        android:text="Restore?"
+                        android:text="@string/restore_question"
                         android:textColor="@color/colorTextGray"
                         app:layout_constraintBaseline_toBaselineOf="@id/tvArchiveHeader"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -425,7 +425,7 @@
                         android:onClick="restore"
                         android:paddingLeft="24dp"
                         android:paddingRight="24dp"
-                        android:text="Restore request"
+                        android:text="@string/restore_request"
                         android:textAllCaps="false"
                         android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -450,7 +450,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
                         android:layout_marginTop="24dp"
-                        android:text="Offers"
+                        android:text="@string/offers"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="@color/colorTextGray"
                         app:layout_constraintStart_toStartOf="parent"
@@ -461,7 +461,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="32dp"
-                        android:text="Choose your carrier"
+                        android:text="@string/choose_your_carrier"
                         android:textColor="@color/colorTextGray"
                         app:layout_constraintBaseline_toBaselineOf="@id/tvlOffers"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -472,7 +472,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="32dp"
                         android:background="@drawable/bg_rounded_2_yellow"
-                        android:text="Connecting to carriers..."
+                        android:text="@string/connecting_to_carriers"
                         android:textColor="@color/colorTextBlack"
                         app:layout_constraintBaseline_toBaselineOf="@id/tvlOffers"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -512,7 +512,7 @@
                             android:layout_marginEnd="120dp"
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
-                            android:text="Offers will be there shortly, often faster than in 1 day"
+                            android:text="@string/offers_will_be_shortly"
                             android:textColor="@color/colorTextGray" />
 
                     </FrameLayout>
@@ -525,7 +525,7 @@
                         android:minHeight="16dp"
                         android:paddingLeft="24dp"
                         android:paddingRight="24dp"
-                        android:text="Care service"
+                        android:text="@string/care_service"
                         android:textAllCaps="false"
                         app:layout_constraintBaseline_toBaselineOf="@id/btnCancel"
                         app:layout_constraintEnd_toStartOf="@id/btnCancel" />
@@ -540,7 +540,7 @@
                         android:onClick="cancel"
                         android:paddingLeft="24dp"
                         android:paddingRight="24dp"
-                        android:text="Cancel request"
+                        android:text="@string/cancel_request"
                         android:textAllCaps="false"
                         android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -593,6 +593,7 @@
         android:layout_height="match_parent"
         android:background="@color/colorBG"
         android:visibility="gone"
+        android:clickable="true"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp">
 

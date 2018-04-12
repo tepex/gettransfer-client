@@ -1,8 +1,10 @@
 package com.kg.gettransfer.realm
 
 
+import android.content.Context
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.kg.gettransfer.R
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
@@ -44,11 +46,11 @@ open class Offer : RealmObject() {
     @SerializedName("refreshments")
     var refreshments: Boolean? = null
 
-    fun facilities(): String? {
+    fun facilities(c: Context): String? {
         var facilities = if (wifi == true) "WiFi" else null
         if (refreshments == true)
-            if (facilities == null) facilities = "Refreshments"
-            else facilities += "    " + "Refreshments"
+            if (facilities == null) facilities = c.getString(R.string.refreshments)
+            else facilities += "    " + c.getString(R.string.refreshments)
         return facilities
     }
 }

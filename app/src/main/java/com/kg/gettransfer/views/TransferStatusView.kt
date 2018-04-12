@@ -22,25 +22,28 @@ class TransferStatusView : TextView {
     }
 
     fun update(item: Transfer, short: Boolean = false) {
-        text = item.strStatus
+        text = item.strStatus(context)
         when {
-            item.strStatus == "Active" -> {
+            item.isActiveNew() -> {
                 setTextColor(0xff000000.toInt())
                 setBackgroundResource(R.drawable.bg_rounded_2_yellow)
                 val offers = item.offersCount
                 if (short) text =
-                        if (offers > 0) offers.toString() + if (offers > 1) " offers" else " offer"
-                        else "Connecting ..."
+                        if (offers > 0)
+                            offers.toString() +
+                                    if (offers > 1) " " + context.getString(R.string.n_offers)
+                                    else " " + context.getString(R.string.n_offer)
+                        else context.getString(R.string.status_long_connecting)
             }
-            item.strStatus == "Confirmed" -> {
+            item.isActiveConfirmed() -> {
                 setTextColor(0xffffffff.toInt())
                 setBackgroundResource(R.drawable.bg_rounded_2_blue)
-                text = item.strStatus
+                text = item.strStatus(context)
             }
             else -> {
                 setTextColor(0xaa000000.toInt())
                 setBackgroundResource(R.drawable.bg_rounded_2_lightgray)
-                text = item.strStatus
+                text = item.strStatus(context)
             }
         }
     }

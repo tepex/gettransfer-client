@@ -12,10 +12,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
 import android.view.View.*
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.AnimationSet
-import android.view.animation.TranslateAnimation
+import android.view.animation.*
 import android.widget.Toast
 import com.kg.gettransfer.R
 import com.kg.gettransfer.modules.OffersModel
@@ -148,7 +145,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             val carriers = transfer.relevantCarrierProfilesCount ?: 0
             tvConnecting.text =
                     if (carriers > 1) "Connecting to $carriers carriers..."
-                    else "Connecting to carriers..."
+                    else getString(R.string.connecting_to_carriers)
         } else if (transfer.status == "resolved") {
             clActive.visibility = GONE
             clArchive.visibility = GONE
@@ -158,18 +155,18 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
             when {
                 transfer.status == "outdated" -> {
-                    tvArchiveHeader.text = "Transfer date passed"
-                    tvRestoreHint.text = ""
+                    tvArchiveHeader.text = getString(R.string.transfer_date_passed)
+                    tvRestoreHint.text = null
                     btnRestore.visibility = INVISIBLE
                 }
                 transfer.status == "rejected" -> {
-                    tvArchiveHeader.text = "Manager rejected request"
-                    tvRestoreHint.text = "Restore?"
+                    tvArchiveHeader.text = getString(R.string.manager_rejected_request)
+                    tvRestoreHint.text = getString(R.string.restore_question)
                     btnRestore.visibility = VISIBLE
                 }
                 else -> {
-                    tvArchiveHeader.text = "You cancelled request"
-                    tvRestoreHint.text = "Restore?"
+                    tvArchiveHeader.text = getString(R.string.you_cancelled_request)
+                    tvRestoreHint.text = getString(R.string.restore_question)
                     btnRestore.visibility = VISIBLE
                 }
             }
@@ -178,7 +175,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         transferStatusView.update(transfer)
 
         tvNoOffers.text =
-                if (transfer.offersCount == 0) "Offers will be there shortly, often faster than in 1 day"
+                if (transfer.offersCount == 0) getString(R.string.offers_will_be_shortly)
                 else "Number of offers: " + transfer.offersCount + "\nSwipe to refresh"
 
         Log.i("TransferActivity", "UI updated")
@@ -220,13 +217,12 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     private fun showOffer(offerID: Int) {
         this.offerID = offerID
 
-        clPayment.visibility = VISIBLE
         wv.visibility = INVISIBLE
         btnPay.visibility = VISIBLE
 
         val offer = offers?.find { it.id == offerID } ?: return
         with(clPayment) {
-            tvCarrier.text = offer.carrier?.title()
+            tvCarrier.text = offer.carrier?.title(this@TransferActivity)
 
             val vehicle = offer.vehicle
             if (vehicle != null) {
@@ -236,7 +232,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
                 tvVehicle.text = title
             }
 
-            val facilities = offer.facilities()
+            val facilities = offer.facilities(this@TransferActivity)
             tvWifiRefresh.text = facilities
             tvWifiRefresh.visibility = if (facilities == null) GONE else VISIBLE
 
@@ -268,16 +264,18 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             }
         }
 
+        clPayment.visibility = VISIBLE
         val alphaAnimation = AlphaAnimation(0.0f, 1.0f)
         alphaAnimation.duration = 120
         alphaAnimation.startOffset = 15
+        alphaAnimation.fillAfter = true
         val translateAnimation = TranslateAnimation(16f * resources.displayMetrics.density, 0f, 0f, 0f)
         translateAnimation.duration = 120
         translateAnimation.startOffset = 15
+        translateAnimation.interpolator = DecelerateInterpolator(2f)
         val set = AnimationSet(true)
         set.addAnimation(alphaAnimation)
         set.addAnimation(translateAnimation)
-
         clPayment.startAnimation(set)
     }
 
@@ -319,6 +317,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         alphaAnimation.duration = 90
         val translateAnimation = TranslateAnimation(0f, 12f * resources.displayMetrics.density, 0f, 0f)
         translateAnimation.duration = 90
+        translateAnimation.interpolator = AccelerateInterpolator()
         val set = AnimationSet(true)
         set.addAnimation(alphaAnimation)
         set.addAnimation(translateAnimation)
