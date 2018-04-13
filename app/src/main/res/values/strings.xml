@@ -53,7 +53,7 @@
     <string name="n_days">day|days</string>
     <string name="n_offers">offer|offers</string>
 
-    <string name="connecting_to">Connecting to </string>
+    <string name="connecting_to">Connecting to</string>
     <string name="n_carriers">carrier|carriers</string>
 
     <string name="routing_failed">Routing failed</string>

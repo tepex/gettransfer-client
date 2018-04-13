@@ -146,7 +146,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             val carriers = transfer.relevantCarrierProfilesCount ?: 0
             tvConnecting.text =
                     if (carriers > 1) {
-                        getString(R.string.connecting_to) + carriers +
+                        getString(R.string.connecting_to) + " " + carriers +
                                 " " + getPlString(R.string.n_carriers).forN(carriers)
                     } else getString(R.string.connecting_to_carriers)
         } else if (transfer.status == "resolved") {

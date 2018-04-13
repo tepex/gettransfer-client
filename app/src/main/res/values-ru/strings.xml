@@ -52,7 +52,7 @@
     <string name="n_days">день|дня|дней</string>
     <string name="n_offers">предложение|предложения|предложений</string>
 
-    <string name="connecting_to">Соединяем с </string>
+    <string name="connecting_to">Соединяем с\n/n</string>
     <string name="n_carriers">перевозчиком|перевозчиками|перевозчиками</string>
 
     <string name="routing_failed">Не удалось проложить маршрут</string>
