@@ -21,6 +21,7 @@ import com.kg.gettransfer.modules.TransportTypes
 import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
 import com.kg.gettransfer.realm.Utils
+import com.kg.gettransfer.realm.getPlString
 import com.kg.gettransfer.views.DividerItemDecoration
 import com.kg.gettransfer.views.OffersAdapter
 import com.kg.gettransfer.views.fadeIn
@@ -144,8 +145,10 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
             val carriers = transfer.relevantCarrierProfilesCount ?: 0
             tvConnecting.text =
-                    if (carriers > 1) "Connecting to $carriers carriers..."
-                    else getString(R.string.connecting_to_carriers)
+                    if (carriers > 1) {
+                        getString(R.string.connecting_to) + carriers +
+                                " " + getPlString(R.string.n_carriers).forN(carriers)
+                    } else getString(R.string.connecting_to_carriers)
         } else if (transfer.status == "resolved") {
             clActive.visibility = GONE
             clArchive.visibility = GONE

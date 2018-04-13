@@ -73,3 +73,48 @@ object Utils {
         }
     }
 }
+
+
+public interface PlString {
+    fun forN(n: Int): String
+}
+
+public class PlStringSimple(
+        private val s1: String,
+        private val sN: String)
+    : PlString {
+
+    override fun forN(n: Int): String {
+        if (n == 1) return s1
+        return sN
+    }
+}
+
+public class PlStringRus : PlString {
+    private val s1: String
+    private val s24: String
+    private val s059: String
+
+    constructor(split: List<String>) {
+        s1 = split[0]
+        s24 = split[1]
+        s059 = split[2]
+    }
+
+    override fun forN(n: Int): String {
+        if (n % 100 in 10..20) return s059
+        if (n % 10 in 2..3) return s24
+        if (n % 10 == 1) return s1
+        return s059
+    }
+}
+
+public fun Context.getPlString(id: Int): PlString {
+    val s = this.getString(id)
+    val split = s.split("|")
+    if (split.size == 3) {
+        return PlStringRus(split)
+    } else {
+        return PlStringSimple(split[0], split[1])
+    }
+}

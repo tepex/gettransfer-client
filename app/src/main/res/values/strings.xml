@@ -49,16 +49,12 @@
     <string name="active">Active</string>
     <string name="archive">Archive</string>
 
-    <string name="hours234">hours</string>
-    <string name="hours">hours</string>
+    <string name="n_hours">hour|hours</string>
+    <string name="n_days">day|days</string>
+    <string name="n_offers">offer|offers</string>
 
-    <string name="day">day</string>
-    <string name="days234">days</string>
-    <string name="days">days</string>
-
-    <string name="n_offer">offer</string>
-    <string name="n_offers234">offers</string>
-    <string name="n_offers">offers</string>
+    <string name="connecting_to">Connecting to </string>
+    <string name="n_carriers">carrier|carriers</string>
 
     <string name="routing_failed">Routing failed</string>
 
@@ -75,7 +71,7 @@
 
     <string name="comments">Comments</string>
     <string name="child_seats">Child seats</string>
-    <string name="transport_types">Transport types</string>
+    <string name="transport_types">Transport</string>
     <string name="passengers">Passengers</string>
     <string name="name_sign">Name sign</string>
     <string name="details">DETAILS</string>

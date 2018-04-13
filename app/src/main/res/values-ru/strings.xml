@@ -48,16 +48,12 @@
     <string name="active">Активные</string>
     <string name="archive">Архив</string>
 
-    <string name="hours234">часа</string>
-    <string name="hours">часов</string>
+    <string name="n_hours">час|часа|часов</string>
+    <string name="n_days">день|дня|дней</string>
+    <string name="n_offers">предложение|предложения|предложений</string>
 
-    <string name="day">день</string>
-    <string name="days234">дня</string>
-    <string name="days">дней</string>
-
-    <string name="n_offer">предложение</string>
-    <string name="n_offers234">предложения</string>
-    <string name="n_offers">предложений</string>
+    <string name="connecting_to">Соединяем с </string>
+    <string name="n_carriers">перевозчиком|перевозчиками|перевозчиками</string>
 
     <string name="routing_failed">Не удалось проложить маршрут</string>
     <string name="connecting_to_carriers">Соединяем с перевозчиками…</string>

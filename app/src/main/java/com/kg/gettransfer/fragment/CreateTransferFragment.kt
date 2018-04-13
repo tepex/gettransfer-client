@@ -30,6 +30,7 @@ import com.google.maps.model.DirectionsResult
 import com.kg.gettransfer.R
 import com.kg.gettransfer.data.LocationDetailed
 import com.kg.gettransfer.modules.http.json.NewTransfer
+import com.kg.gettransfer.realm.getPlString
 import com.kg.gettransfer.views.BitmapDescriptorFactory
 import com.kg.gettransfer.views.LocationView
 import io.reactivex.functions.Consumer
@@ -179,17 +180,24 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     private val hours = intArrayOf(
             2, 3, 4, 5, 6, 8, 10, 24, 48, 24 * 3, 24 * 4, 24 * 5, 24 * 10, 24 * 15)
 
-    private val strHours234 by lazy { activity.getString(R.string.hours234) }
-    private val strHours by lazy { activity.getString(R.string.hours) }
-    private val strDay by lazy { activity.getString(R.string.day) }
-    private val strDays234 by lazy { activity.getString(R.string.days234) }
-    private val strDays by lazy { activity.getString(R.string.days) }
+    private val plHours by lazy { activity.getPlString(R.string.n_hours) }
+    private val plDays by lazy { activity.getPlString(R.string.n_days) }
     private val labels by lazy {
         arrayOf(
-                "2 $strHours234", "3 $strHours234", "4 $strHours234", "5 $strHours",
-                "6 $strHours", "8 $strHours", "10 $strHours",
-                "1 $strDay", "2 $strDays234", "3 $strDays234", "4 $strDays234",
-                "5 $strDays", "10 $strDays", "15 $strDays")
+                "2 ${plHours.forN(2)}",
+                "3 ${plHours.forN(3)}",
+                "4 ${plHours.forN(4)}",
+                "5 ${plHours.forN(5)}",
+                "6 ${plHours.forN(6)}",
+                "8 ${plHours.forN(8)}",
+                "10 ${plHours.forN(10)}",
+                "1 ${plDays.forN(1)}",
+                "2 ${plDays.forN(2)}",
+                "3 ${plDays.forN(3)}",
+                "4 ${plDays.forN(4)}",
+                "5 ${plDays.forN(5)}",
+                "10 ${plDays.forN(10)}",
+                "15 ${plDays.forN(15)}")
     }
 
     private fun chooseDuration() {

@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.widget.TextView
 import com.kg.gettransfer.R
 import com.kg.gettransfer.realm.Transfer
+import com.kg.gettransfer.realm.getPlString
 
 /**
  * Created by denisvakulenko on 22/02/2018.
@@ -30,9 +31,7 @@ class TransferStatusView : TextView {
                 val offers = item.offersCount
                 if (short) text =
                         if (offers > 0)
-                            offers.toString() +
-                                    if (offers > 1) " " + context.getString(R.string.n_offers)
-                                    else " " + context.getString(R.string.n_offer)
+                            offers.toString() + " " + context.getPlString(R.string.n_offers).forN(offers)
                         else context.getString(R.string.status_long_connecting)
             }
             item.isActiveConfirmed() -> {
