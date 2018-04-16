@@ -107,7 +107,7 @@ class TransferDetailsFragment : Fragment() {
                 if (transfer.hireDuration ?: 0 <= 0) R.drawable.ic_arrow_blue_16dp
                 else R.drawable.ic_timer_blue_16dp)
         v.tvToDetails.text =
-                transfer.to?.name ?: Utils.hoursToString(transfer.hireDuration ?: 0)
+                transfer.to?.name ?: Utils.hoursToString(activity,transfer.hireDuration ?: 0)
     }
 
 
@@ -156,7 +156,8 @@ class TransferDetailsFragment : Fragment() {
                                 },
                                 {
                                     setBusy(false)
-                                    tvError.text = "Error creating request.\n" + it.message
+                                    tvError.text = getString(R.string.error_creating_request) +
+                                            "\n" + it.message
                                     fabCreate.visibility = VISIBLE
                                     scrollView.post {
                                         scrollView.fullScroll(FOCUS_DOWN)
@@ -212,32 +213,34 @@ class TransferDetailsFragment : Fragment() {
         var message = ""
 
         if (etDate.text.isEmpty()) {
-            message += ", date"
+            message += ", " + getString(R.string.date)
         }
         if (etTime.text.isEmpty()) {
-            message += ", time"
+            message += ", " + getString(R.string.time)
         }
         if ((pax ?: 0) < 1) {
-            message += ", passengers"
+            message += ", " + getString(R.string.passengers)
         }
 
         if (tfTransport.typesIDs.isEmpty()) {
-            message += ", transport"
+            message += ", " + getString(R.string.transport_types)
         }
 
         if (etSign.text.isEmpty()) {
-            message += ", name sign"
+            message += ", " + getString(R.string.name_sign)
         }
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.text).matches()) {
-            message += ", email"
+            message += ", " + getString(R.string.email)
         }
         if (!android.util.Patterns.PHONE.matcher(etPhone.text).matches()) {
-            message += ", phone"
+            message += ", " + getString(R.string.phone)
         }
 
         if (message.isNotEmpty()) {
-            message = "Please fill" + message.substring(1) + " to get offers."
+            message = String.format(
+                    getString(R.string.please_fill_to_get_offers),
+                    message.substring(2).toLowerCase())
             tvError.text = message
             return false
         } else {

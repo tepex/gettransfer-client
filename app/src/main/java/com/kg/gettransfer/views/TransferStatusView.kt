@@ -31,7 +31,7 @@ class TransferStatusView : TextView {
                 val offers = item.offersCount
                 if (short) text =
                         if (offers > 0)
-                            offers.toString() + " " + context.getPlString(R.string.n_offers).forN(offers)
+                            offers.toString() + " " + context.getPlString(R.string.pl_offers).forN(offers)
                         else context.getString(R.string.status_long_connecting)
             }
             item.isActiveConfirmed() -> {

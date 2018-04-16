@@ -6,7 +6,6 @@ import android.content.Intent
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,6 +57,8 @@ class TransfersAdapter(
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val context = holder.itemView.context
+
         val transfer = getItem(position) ?: return
 
         holder.from.text = transfer.from?.name
@@ -66,10 +67,10 @@ class TransfersAdapter(
                 if (transfer.to != null) R.drawable.ic_arrow_blue_16dp
                 else R.drawable.ic_timer_blue_16dp)
 
-        if (transfer.to == null) holder.to.text = transfer.hireDurationString
+        if (transfer.to == null) holder.to.text = transfer.hireDurationString(context)
         else holder.to.text = transfer.to?.name
 
-        holder.date.text = Utils.dateToShortString(holder.itemView.context, transfer.dateTo)
+        holder.date.text = Utils.dateToShortString(context, transfer.dateTo)
 
         holder.id.text = "#${transfer.id}"
 

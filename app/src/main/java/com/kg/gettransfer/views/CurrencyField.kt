@@ -11,6 +11,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.TextView
 import android.widget.Toast
+import com.kg.gettransfer.R
 import com.kg.gettransfer.modules.ConfigModel
 import com.kg.gettransfer.modules.CurrentAccount
 import com.kg.gettransfer.realm.Currency
@@ -44,7 +45,7 @@ class CurrencyField : TextView, KoinComponent {
             if (currencies == null) {
                 Toast.makeText(
                         context,
-                        "Try again, when internet available",
+                        context.getString(R.string.list_unavailable),
                         Toast.LENGTH_SHORT).show()
                 configModel.updateIfNull()
                 return@setOnClickListener
@@ -57,10 +58,10 @@ class CurrencyField : TextView, KoinComponent {
             dialog.show(fragmentManager, "Currency")
         }
 
-        setText(currentAccount.accountInfo.currency)
+        text = currentAccount.accountInfo.currency
 
         d = currentAccount.addOnAccountChanged {
-            setText(currentAccount.accountInfo.currency)
+            text = currentAccount.accountInfo.currency
         }
     }
 
@@ -81,7 +82,7 @@ class CurrencyDialog(private val f: (String?) -> Unit, private val currencies: R
     : DialogFragment(), KoinComponent {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AlertDialog.Builder(activity)
-                .setTitle("Currency")
+                .setTitle(activity.getString(R.string.currency))
                 .setItems(currencies.map { it?.isoCode }.toTypedArray(), { _, i -> f(currencies[i]?.isoCode) })
                 .setPositiveButton("Ok", { d, _ -> d.dismiss() })
                 .create()

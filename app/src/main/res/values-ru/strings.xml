@@ -50,12 +50,12 @@
     <string name="active">Активные</string>
     <string name="archive">Архив</string>
 
-    <string name="n_hours">час|часа|часов</string>
-    <string name="n_days">день|дня|дней</string>
-    <string name="n_offers">предложение|предложения|предложений</string>
+    <string name="pl_hours">час|часа|часов</string>
+    <string name="pl_days">день|дня|дней</string>
+    <string name="pl_offers">предложение|предложения|предложений</string>
 
     <string name="connecting_to">Соединяем с</string>
-    <string name="n_carriers">перевозчиком|перевозчиками|перевозчиками</string>
+    <string name="pl_carriers">перевозчиком|перевозчиками|перевозчиками</string>
 
     <string name="routing_failed">Не удалось проложить маршрут</string>
 
@@ -119,4 +119,11 @@
     <string name="have_a_promo_code">Есть промо код?</string>
     <string name="use_promo">Ввести</string>
     <string name="promo_code">Промо код</string>
+    <string name="list_unavailable">Список недоступен</string>
+    <string name="error_creating_request">Ошибка создания трансфера.</string>
+
+    <string name="please_fill_to_get_offers">Пожалуйста, введите поля: %1$s, чтобы получить предложения.</string>
+
+    <string name="km">км</string>
+    <string name="mi">миль</string>
 </resources>

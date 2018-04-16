@@ -3,6 +3,7 @@ package com.kg.gettransfer.realm
 
 import android.content.Context
 import android.text.format.DateUtils
+import com.kg.gettransfer.R
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.RealmResults
@@ -65,11 +66,10 @@ object Utils {
         return getDateInstance().format(date)
     }
 
-    fun hoursToString(h: Int): String {
+    fun hoursToString(c: Context, h: Int): String {
         return when {
-            h >= 48 -> "${h / 24} days"
-            h >= 24 -> "One day"
-            else -> "$h hours"
+            h >= 24 -> "${h / 24} " + c.getPlString(R.string.pl_days).forN(h / 24)
+            else -> "$h " + c.getPlString(R.string.pl_hours).forN(h)
         }
     }
 }

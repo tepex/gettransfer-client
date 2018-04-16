@@ -50,12 +50,12 @@
     <string name="active">Active</string>
     <string name="archive">Archive</string>
 
-    <string name="n_hours">hour|hours</string>
-    <string name="n_days">day|days</string>
-    <string name="n_offers">offer|offers</string>
+    <string name="pl_hours">hour|hours</string>
+    <string name="pl_days">day|days</string>
+    <string name="pl_offers">offer|offers</string>
 
     <string name="connecting_to">Connecting to</string>
-    <string name="n_carriers">carrier|carriers</string>
+    <string name="pl_carriers">carrier|carriers</string>
 
     <string name="routing_failed">Routing failed</string>
 
@@ -119,4 +119,11 @@
     <string name="have_a_promo_code">Have a promo code?</string>
     <string name="use_promo">Use promo</string>
     <string name="promo_code">Promo code</string>
+    <string name="list_unavailable">List unavailable</string>
+    <string name="error_creating_request">Error creating request.</string>
+
+    <string name="please_fill_to_get_offers">Please fill %1$s to get offers."</string>
+
+    <string name="km">km</string>
+    <string name="mi">mi</string>
 </resources>

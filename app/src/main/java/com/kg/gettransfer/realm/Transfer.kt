@@ -50,11 +50,10 @@ open class Transfer : RealmObject() {
     @SerializedName("duration")
     var hireDuration: Int? = null
 
-    val hireDurationString: String?
-        get() {
-            val d = hireDuration
-            return if (d != null) hoursToString(d) else null
-        }
+    fun hireDurationString(c: Context): String? {
+        val d = hireDuration
+        return if (d != null) hoursToString(c, d) else null
+    }
 
     @Expose
     @SerializedName("distance")
@@ -160,17 +159,17 @@ open class Transfer : RealmObject() {
     fun isActiveConfirmed() = status == "new" && bookNow || status == "performed" && !bookNow
 
     fun strStatus(c: Context) = when {
-            status == "new" && !bookNow || status == "draft" && bookNow ->
-                c.getString(R.string.status_active)
-            status == "new" && bookNow || status == "performed" && !bookNow ->
-                c.getString(R.string.status_confirmed)
-            status == "outdated" ->
-                c.getString(R.string.status_expired)
-            status == "canceled" ->
-                c.getString(R.string.status_canceled)
-            status == "rejected" ->
-                c.getString(R.string.status_rejected)
-            else ->
-                c.getString(R.string.status_archive)
-        }
+        status == "new" && !bookNow || status == "draft" && bookNow ->
+            c.getString(R.string.status_active)
+        status == "new" && bookNow || status == "performed" && !bookNow ->
+            c.getString(R.string.status_confirmed)
+        status == "outdated" ->
+            c.getString(R.string.status_expired)
+        status == "canceled" ->
+            c.getString(R.string.status_canceled)
+        status == "rejected" ->
+            c.getString(R.string.status_rejected)
+        else ->
+            c.getString(R.string.status_archive)
+    }
 }

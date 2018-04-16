@@ -16,6 +16,7 @@ import org.koin.standalone.KoinComponent
  */
 
 
+// Singleton
 class ConfigModel(private val api: HttpApi)
     : AsyncModel(), KoinComponent {
 

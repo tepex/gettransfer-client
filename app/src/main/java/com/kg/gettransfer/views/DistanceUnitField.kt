@@ -9,9 +9,9 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.kg.gettransfer.R
 import com.kg.gettransfer.modules.ConfigModel
 import com.kg.gettransfer.modules.CurrentAccount
 import io.reactivex.disposables.CompositeDisposable
@@ -46,7 +46,7 @@ class DistanceUnitField : TextView, KoinComponent {
             if (units == null) {
                 Toast.makeText(
                         context,
-                        "Try again, when internet available",
+                        context.getString(R.string.list_unavailable),
                         Toast.LENGTH_SHORT).show()
                 configModel.updateIfNull()
                 return@setOnClickListener
@@ -59,11 +59,11 @@ class DistanceUnitField : TextView, KoinComponent {
             dialog.show(fragmentManager, "Distance unit")
         }
 
-        setText(currentAccount.accountInfo.distanceUnit)
+        text = currentAccount.accountInfo.distanceUnit
 
         disposables.addAll(
                 currentAccount.addOnAccountChanged {
-                    setText(currentAccount.accountInfo.distanceUnit)
+                    text = currentAccount.accountInfo.distanceUnit
                 },
                 currentAccount.toastOnError(context))
     }
@@ -85,7 +85,7 @@ class DistanceUnitDialog(private val f: (String?) -> Unit, private val units: Re
     : DialogFragment(), KoinComponent {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AlertDialog.Builder(activity)
-                .setTitle("Distance unit")
+                .setTitle(activity.getString(R.string.distance_unit))
                 .setItems(units.toTypedArray(), { _, i -> f(units[i]) })
                 .setPositiveButton("Ok", { d, _ -> d.dismiss() })
                 .create()

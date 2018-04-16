@@ -113,7 +113,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
         if (transfer.to == null) {
             tvlTo.text = getString(R.string.duration)
-            tvTo.text = transfer.hireDurationString
+            tvTo.text = transfer.hireDurationString(this)
 
             ivTo.visibility = GONE
             ivMarkerTo.setImageResource(R.drawable.ic_timer_blue_22dp_padding)
@@ -149,7 +149,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             tvConnecting.text =
                     if (carriers > 1) {
                         getString(R.string.connecting_to) + " " + carriers +
-                                " " + getPlString(R.string.n_carriers).forN(carriers)
+                                " " + getPlString(R.string.pl_carriers).forN(carriers)
                     } else getString(R.string.connecting_to_carriers)
         } else if (transfer.status == "resolved") {
             clActive.visibility = GONE
@@ -182,7 +182,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         val offersCount = transfer.offersCount
         tvNoOffers.text =
                 if (offersCount == 0) getString(R.string.offers_will_be_shortly)
-                else offersCount.toString() + getPlString(R.string.n_offers).forN(offersCount) +
+                else offersCount.toString() + getPlString(R.string.pl_offers).forN(offersCount) +
                         "\n" + getString(R.string.swipe_to_refresh)
 
         Log.i("TransferActivity", "UI updated")

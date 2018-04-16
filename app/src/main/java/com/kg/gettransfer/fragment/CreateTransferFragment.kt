@@ -180,8 +180,8 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     private val hours = intArrayOf(
             2, 3, 4, 5, 6, 8, 10, 24, 48, 24 * 3, 24 * 4, 24 * 5, 24 * 10, 24 * 15)
 
-    private val plHours by lazy { activity.getPlString(R.string.n_hours) }
-    private val plDays by lazy { activity.getPlString(R.string.n_days) }
+    private val plHours by lazy { activity.getPlString(R.string.pl_hours) }
+    private val plDays by lazy { activity.getPlString(R.string.pl_days) }
     private val labels by lazy {
         arrayOf(
                 "2 ${plHours.forN(2)}",

@@ -22,12 +22,10 @@ open class Config(
 
         @Expose
         @SerializedName("available_locales")
-        @Required
-        var availableLocales: RealmList<String?>? = null,
+        var availableLocales: RealmList<Locale?>? = null,
 
         @Expose
         @SerializedName("preferred_locale")
-        @Required
         var preferredLocale: String? = null,
 
         @Expose
@@ -36,7 +34,6 @@ open class Config(
 
         @Expose
         @SerializedName("supported_distance_units")
-        @Required
         var supportedDistanceUnits: RealmList<String?>? = null)
 
     : RealmObject()
