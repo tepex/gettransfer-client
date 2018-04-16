@@ -6,6 +6,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.kg.gettransfer.R
 import com.kg.gettransfer.realm.Utils.hoursToString
+import com.kg.gettransfer.realm.Utils.kmToString
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
@@ -59,9 +60,13 @@ open class Transfer : RealmObject() {
     @SerializedName("distance")
     var routeDistance: Int? = null
 
+    fun getRouteDistanceConverted(c: Context, unit: Int = R.string.km): String {
+        return kmToString(c, (routeDistance ?: 0).toDouble(), unit)
+    }
+
     @Expose
     @SerializedName("time")
-    var routeDuration: Int? = null
+    var routeDuration: Int? = null // minutes
 
     @Expose
     @SerializedName("status")

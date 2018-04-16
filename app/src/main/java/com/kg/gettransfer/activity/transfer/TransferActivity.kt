@@ -15,6 +15,7 @@ import android.view.View.*
 import android.view.animation.*
 import android.widget.Toast
 import com.kg.gettransfer.R
+import com.kg.gettransfer.modules.CurrentAccount
 import com.kg.gettransfer.modules.OffersModel
 import com.kg.gettransfer.modules.TransferModel
 import com.kg.gettransfer.modules.TransportTypes
@@ -41,6 +42,8 @@ import org.koin.standalone.KoinComponent
 
 class TransferActivity : AppCompatActivity(), KoinComponent {
     private val transportTypes: TransportTypes by inject()
+
+    private val currentAccount: CurrentAccount by inject()
 
     private val transferModel: TransferModel by inject()
     private val offersModel: OffersModel by inject()
@@ -129,8 +132,8 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             tvRouteInfo.visibility = VISIBLE
             tvRouteInfo.text = String.format(
                     getString(R.string.distance_time),
-                    transfer.routeDistance,
-                    transfer.routeDuration)
+                    transfer.getRouteDistanceConverted(this, currentAccount.accountInfo.getDistanceUnitId()),
+                    transfer.routeDuration.toString() + " " + getString(R.string.min))
         }
 
         tvDate.text = Utils.dateToString(transfer.dateTo)

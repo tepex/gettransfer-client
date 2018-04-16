@@ -72,6 +72,14 @@ object Utils {
             else -> "$h " + c.getPlString(R.string.pl_hours).forN(h)
         }
     }
+
+    fun kmToString(c: Context, km: Double, unit: Int = R.string.km): String {
+        if (unit == R.string.mi) {
+            val miles = (km * 1.609344).toInt()
+            return miles.toString() + " " + c.getPlString(R.string.pl_mi).forN(miles)
+        }
+        return km.toInt().toString() + " " + c.getString(R.string.km)
+    }
 }
 
 
@@ -83,6 +91,8 @@ public class PlStringSimple(
         private val s1: String,
         private val sN: String)
     : PlString {
+
+    constructor(s: String) : this(s, s)
 
     override fun forN(n: Int): String {
         if (n == 1) return s1
@@ -103,7 +113,7 @@ public class PlStringRus : PlString {
 
     override fun forN(n: Int): String {
         if (n % 100 in 10..20) return s059
-        if (n % 10 in 2..3) return s24
+        if (n % 10 in 2..4) return s24
         if (n % 10 == 1) return s1
         return s059
     }
@@ -115,6 +125,6 @@ public fun Context.getPlString(id: Int): PlString {
     if (split.size == 3) {
         return PlStringRus(split)
     } else {
-        return PlStringSimple(split[0], split[1])
+        return if (split.size == 1) PlStringSimple(split[0]) else PlStringSimple(split[0], split[1])
     }
 }

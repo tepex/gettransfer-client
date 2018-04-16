@@ -3,6 +3,7 @@ package com.kg.gettransfer.realm
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.kg.gettransfer.R
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
@@ -40,4 +41,7 @@ open class AccountInfo(
         @Expose(serialize = false, deserialize = false)
         var dateUpdated: Date? = null)
 
-    : RealmObject()
+    : RealmObject() {
+
+    fun getDistanceUnitId(): Int = if (distanceUnit == "km") R.string.km else R.string.mi
+}
