@@ -24,9 +24,11 @@
     <string name="to">Куда</string>
     <string name="duration">Время аренды</string>
 
-    <string name="time_you_ll_need_a_car">Как долго нужен водитель?</string>
     <string name="pick_up_address">Где вас встретить?</string>
     <string name="destination_address">Куда привезти?</string>
+    <string name="time_you_ll_need_a_car">Как долго нужен водитель?</string>
+
+    <string name="swipe_to_refresh">Swipe to refresh</string>
 
     <string name="economy">Эконом</string>
     <string name="business">Бизнес</string>
@@ -52,10 +54,11 @@
     <string name="n_days">день|дня|дней</string>
     <string name="n_offers">предложение|предложения|предложений</string>
 
-    <string name="connecting_to">Соединяем с\n/n</string>
+    <string name="connecting_to">Соединяем с</string>
     <string name="n_carriers">перевозчиком|перевозчиками|перевозчиками</string>
 
     <string name="routing_failed">Не удалось проложить маршрут</string>
+
     <string name="connecting_to_carriers">Соединяем с перевозчиками…</string>
     <string name="transfer_date_passed">Дата трансфера прошла</string>
     <string name="manager_rejected_request">Менеджер отменил трансфер</string>
@@ -75,6 +78,7 @@
     <string name="details">ДЕТАЛИ</string>
     <string name="pick_up_at">Дата</string>
     <string name="refreshments">Напитки</string>
+    <string name="distance_time">расстояние: %1$d km\nвремя в пути: %2$d</string>
 
     <string name="status_active">Активен</string>
     <string name="status_confirmed">Подтверждён</string>
@@ -84,7 +88,6 @@
     <string name="status_archive">В архиве</string>
 
     <string name="status_long_connecting">Соединяем …</string>
-
     <string name="phone">Телефон</string>
     <string name="currency">Валюта</string>
     <string name="distance_unit">Единица расстояния</string>
@@ -116,5 +119,4 @@
     <string name="have_a_promo_code">Есть промо код?</string>
     <string name="use_promo">Ввести</string>
     <string name="promo_code">Промо код</string>
-
 </resources>

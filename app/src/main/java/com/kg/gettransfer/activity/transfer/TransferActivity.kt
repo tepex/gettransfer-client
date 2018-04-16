@@ -127,8 +127,10 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             ivMarkerTo.setImageResource(R.drawable.ic_place_blue_24dp)
 
             tvRouteInfo.visibility = VISIBLE
-            tvRouteInfo.text =
-                    "distance: ${transfer.routeDistance} km\nexpected travel time: ${transfer.routeDuration} min "
+            tvRouteInfo.text = String.format(
+                    getString(R.string.distance_time),
+                    transfer.routeDistance,
+                    transfer.routeDuration)
         }
 
         tvDate.text = Utils.dateToString(transfer.dateTo)
@@ -177,9 +179,11 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
         transferStatusView.update(transfer)
 
+        val offersCount = transfer.offersCount
         tvNoOffers.text =
-                if (transfer.offersCount == 0) getString(R.string.offers_will_be_shortly)
-                else "Number of offers: " + transfer.offersCount + "\nSwipe to refresh"
+                if (offersCount == 0) getString(R.string.offers_will_be_shortly)
+                else offersCount.toString() + getPlString(R.string.n_offers).forN(offersCount) +
+                        "\n" + getString(R.string.swipe_to_refresh)
 
         Log.i("TransferActivity", "UI updated")
     }

@@ -1,6 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="geoapikey" translatable="false">AIzaSyAZXhfW8DCix33iyFU3An8ovidJjwpHFFg</string>
-
     <string name="app_name">Get Transfer</string>
 
     <string name="login">Login</string>
@@ -28,6 +27,8 @@
     <string name="pick_up_address">Pick up address</string>
     <string name="destination_address">Destination address</string>
     <string name="time_you_ll_need_a_car">Time you\'ll need a car</string>
+
+    <string name="swipe_to_refresh">Swipe to refresh</string>
 
     <string name="economy">Economy</string>
     <string name="business">Business</string>
@@ -77,6 +78,7 @@
     <string name="details">DETAILS</string>
     <string name="pick_up_at">Pick up at</string>
     <string name="refreshments">Refreshments</string>
+    <string name="distance_time">distance: %1$d km\nexpected travel time: %2$d</string>
 
     <string name="status_active">Active</string>
     <string name="status_confirmed">Confirmed</string>
@@ -112,7 +114,7 @@
     <string name="optional_fields">Optional fields</string>
     <string name="your_price">Your price</string>
     <string name="flight_or_train">Flight or train</string>
-    <string name="number">number</string>
+    <string name="number">Number</string>
     <string name="children_snowboards_ski_bags_surfboards">Children, snowboards, ski bags, surfboards</string>
     <string name="have_a_promo_code">Have a promo code?</string>
     <string name="use_promo">Use promo</string>

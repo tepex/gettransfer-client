@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private val currentAccount: CurrentAccount by inject()
 
-    private val TAG: String = "Screen"
+    private val TAG: String = "CurrentFragment"
 
     private var tab = 1
     private var prevTab = 1
