@@ -71,7 +71,7 @@ class OffersModel(
     private val brOffers: BehaviorRelay<RealmResults<Offer>> = BehaviorRelay.create()
 
     fun update() {
-        if (busy || transferID < 0) return
+        if (transferID < 0) return
         val id = transferID
         api.getOffers(id).fastSubscribe({
             val offers = it.offers

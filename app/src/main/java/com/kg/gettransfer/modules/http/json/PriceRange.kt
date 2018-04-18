@@ -13,8 +13,11 @@ import com.google.gson.annotations.SerializedName
 class PriceRange {
     @Expose
     @SerializedName("min")
-    var min: Double = 0.0
+    var min: String? = null
     @Expose
     @SerializedName("max")
-    var max: Double = 0.0
+    var max: String? = null
+    @Expose
+    @SerializedName("book_now")
+    var bookNow: String? = null
 }

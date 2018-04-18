@@ -77,7 +77,7 @@ class TransportTypesArrayAdapter(
         val priceFrom = prices?.get(getItem(position))?.min
         holder.price.text =
                 if (priceFrom == null) "-"
-                else "from $" + (Math.rint(priceFrom * 100) / 100.0).toString()
+                else context.getString(R.string.from_price) + " " + priceFrom
 
         holder.setSelected(checked[position])
 

@@ -11,7 +11,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.EditText
 import com.kg.gettransfer.R
-import com.kg.gettransfer.modules.PricesPreviewModel
+import com.kg.gettransfer.modules.RouteInfoModel
 import com.kg.gettransfer.modules.TransportTypes
 import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.modules.http.json.PriceRange
@@ -22,11 +22,11 @@ import org.koin.standalone.inject
 
 /**
  * Created by denisvakulenko on 19/03/2018.
-*/
+ */
 
 
 class TransportTypeField : EditText, KoinComponent {
-    private val pricesModel: PricesPreviewModel by inject()
+    private val pricesModel: RouteInfoModel by inject()
     private val types: TransportTypes by inject()
 
 
@@ -51,9 +51,11 @@ class TransportTypeField : EditText, KoinComponent {
 
         setOnClickListener {
             val fragmentManager = getActivity(context)?.fragmentManager
-            val dialog = TransportTypeDialog(this, pricesModel.prices)
+            val dialog = TransportTypeDialog(this, pricesModel.info?.prices)
             dialog.show(fragmentManager, "Type selection")
         }
+
+        pricesModel.toastOnError(context, context.getString(R.string.unable_to_load_prices))
     }
 
 
@@ -86,7 +88,7 @@ class TransportTypeDialog(
                 activity, types.typesList, tf.checked, prices)
 
         val d = AlertDialog.Builder(activity)
-                .setTitle("Transport")
+                .setTitle(getString(R.string.transport))
                 .setAdapter(adapter, null)
                 .setPositiveButton("Ok", { d, _ -> d.dismiss() })
                 .create()

@@ -72,10 +72,11 @@
 
     <string name="comments">Comments</string>
     <string name="child_seats">Child seats</string>
-    <string name="transport_types">Transport</string>
+    <string name="transport">Transport</string>
     <string name="passengers">Passengers</string>
     <string name="name_sign">Name sign</string>
     <string name="details">DETAILS</string>
+    <string name="when">When</string>
     <string name="pick_up_at">Pick up at</string>
     <string name="refreshments">Refreshments</string>
     <string name="distance_time">distance: %1$s\nexpected travel time: %2$s</string>
@@ -129,4 +130,9 @@
     <string name="pl_mi">mi</string>
 
     <string name="min">min</string>
+
+    <string name="from_price">from</string>
+    <string name="unable_to_load_prices">Unable to load prices</string>
+    <string name="unable_to_update_offers">Unable to update offers</string>
+    <string name="unable_to_update">Unable to update</string>
 </resources>

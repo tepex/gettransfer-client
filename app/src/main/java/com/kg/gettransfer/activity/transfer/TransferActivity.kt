@@ -60,14 +60,14 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
         wv.settings.javaScriptEnabled = true
 
+        offersModel.addOnOffersUpdated { setOffersAsync(it) }
+        offersModel.toastOnError(this, getString(R.string.unable_to_update_offers))
         offersModel.addOnBusyProgressBar(progressBarOffers)
         offersModel.addOnBusyChanged { updateOffersState() }
-        offersModel.addOnOffersUpdated { setOffersAsync(it) }
-        offersModel.toastOnError(this)
         offersModel.transferID = id
 
         transferModel.addOnTransferUpdated { updateUI(it) }
-        transferModel.toastOnError(this)
+        transferModel.toastOnError(this, getString(R.string.unable_to_update))
         transferModel.addOnBusyProgressBar(progressBar)
         transferModel.addOnBusyChanged {
             if (it) transferStatusView.hide()
@@ -148,12 +148,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             clActive.visibility = VISIBLE
             clArchive.visibility = GONE
 
-            val carriers = transfer.relevantCarrierProfilesCount ?: 0
-            tvConnecting.text =
-                    if (carriers > 1) {
-                        getString(R.string.connecting_to) + " " + carriers +
-                                " " + getPlString(R.string.pl_carriers).forN(carriers)
-                    } else getString(R.string.connecting_to_carriers)
+            tvConnecting.text = getConnectingToCarriersString(transfer.relevantCarrierProfilesCount)
         } else if (transfer.status == "resolved") {
             clActive.visibility = GONE
             clArchive.visibility = GONE
@@ -192,6 +187,15 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     }
 
 
+    private fun getConnectingToCarriersString(relevantCarrierProfilesCount: Int?): String {
+        val carriers = relevantCarrierProfilesCount ?: 0
+        return if (carriers > 1) {
+            getString(R.string.connecting_to) + " " + carriers +
+                    " " + getPlString(R.string.pl_carriers).forN(carriers)
+        } else getString(R.string.connecting_to_carriers)
+    }
+
+
     private var offers: RealmResults<Offer>? = null
     private fun setOffersAsync(offers: RealmResults<Offer>) {
         this.offers?.removeAllChangeListeners()
@@ -212,11 +216,17 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
     private fun updateOffersState() {
         if (offersModel.busy) {
-            tvConnecting.hide()
+            tvConnecting.text = ""
+
+            tvConnecting.hide(true)
             tvChooseCarrier.hide()
         } else {
             val hasOffers = transferModel.transfer?.offers?.size ?: 0 > 0
-            if (!hasOffers) tvConnecting.fadeIn() else tvConnecting.hide()
+            if (!hasOffers) {
+                tvConnecting.text = getConnectingToCarriersString(
+                        transferModel.transfer?.relevantCarrierProfilesCount)
+                tvConnecting.fadeIn()
+            } else tvConnecting.hide(true)
             if (hasOffers) tvChooseCarrier.fadeIn() else tvChooseCarrier.hide()
         }
     }
@@ -231,7 +241,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         btnPay.visibility = VISIBLE
 
         val offer = offers?.find { it.id == offerID } ?: return
-        with(clPayment) {
+        with(clOffer) {
             tvCarrier.text = offer.carrier?.title(this@TransferActivity)
 
             val vehicle = offer.vehicle
@@ -274,7 +284,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             }
         }
 
-        clPayment.visibility = VISIBLE
+        clOffer.visibility = VISIBLE
         val alphaAnimation = AlphaAnimation(0.0f, 1.0f)
         alphaAnimation.duration = 120
         alphaAnimation.startOffset = 15
@@ -286,7 +296,9 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         val set = AnimationSet(true)
         set.addAnimation(alphaAnimation)
         set.addAnimation(translateAnimation)
-        clPayment.startAnimation(set)
+        clOffer.startAnimation(set)
+
+
     }
 
 
@@ -335,11 +347,11 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             override fun onAnimationStart(animation: Animation?) = Unit
             override fun onAnimationRepeat(animation: Animation?) = Unit
             override fun onAnimationEnd(animation: Animation?) {
-                clPayment.visibility = INVISIBLE
+                clOffer.visibility = INVISIBLE
             }
         })
 
-        clPayment.startAnimation(set)
+        clOffer.startAnimation(set)
     }
 
     fun cancel(v: View) {
@@ -359,7 +371,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     }
 
     override fun onBackPressed() {
-        if (clPayment.visibility == VISIBLE) hidePayment(null)
+        if (clOffer.visibility == VISIBLE) hidePayment(null)
         else super.onBackPressed()
     }
 

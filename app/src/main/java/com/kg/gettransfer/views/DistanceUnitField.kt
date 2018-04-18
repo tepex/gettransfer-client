@@ -64,8 +64,7 @@ class DistanceUnitField : TextView, KoinComponent {
         disposables.addAll(
                 currentAccount.addOnAccountChanged {
                     text = currentAccount.accountInfo.distanceUnit
-                },
-                currentAccount.toastOnError(context))
+                })
     }
 
     @SuppressLint("ClickableViewAccessibility")

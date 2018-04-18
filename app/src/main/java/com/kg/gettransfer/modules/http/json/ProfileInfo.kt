@@ -11,6 +11,7 @@ import com.google.gson.annotations.SerializedName
 
 
 class ProfileInfo(
+        var email: String? = null,
         var updated: Long = System.currentTimeMillis(),
         @Expose
         @SerializedName("full_name")

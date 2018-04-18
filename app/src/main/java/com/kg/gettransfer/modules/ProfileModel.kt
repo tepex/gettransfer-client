@@ -20,13 +20,15 @@ class ProfileModel(
     : AsyncModel(), KoinComponent {
 
     private val brProfile: BehaviorRelay<ProfileInfo> =
-            BehaviorRelay.createDefault(ProfileInfo(0))
+            BehaviorRelay.createDefault(ProfileInfo(null, 0))
 
     var d: Disposable? = null
 
 
     init {
-        currentAccount.addOnAccountChanged { reset() }
+        currentAccount.addOnAccountChanged {
+            if (profile.email != currentAccount.accountInfo.email) reset()
+        }
     }
 
     val profile: ProfileInfo
@@ -44,14 +46,18 @@ class ProfileModel(
 
     fun update() {
         d?.dispose()
-        val email = currentAccount.accountInfo
+        val email = currentAccount.accountInfo.email
         d = api.getProfile().fastSubscribe {
-            if (email == currentAccount.accountInfo) brProfile.accept(it.currentProfile)
+            if (email == currentAccount.accountInfo.email) {
+                val profile = it.currentProfile ?: return@fastSubscribe
+                profile.email = email
+                brProfile.accept(profile)
+            }
         }
     }
 
 
     private fun reset() {
-        brProfile.accept(ProfileInfo(0))
+        brProfile.accept(ProfileInfo(null, 0))
     }
 }

@@ -4,13 +4,11 @@ package com.kg.gettransfer.modules
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.kg.gettransfer.modules.http.HttpApi
 import com.kg.gettransfer.modules.http.json.NewTransfer
-import com.kg.gettransfer.modules.http.json.PriceRange
-import com.kg.gettransfer.realm.TransportType
+import com.kg.gettransfer.modules.http.json.RouteInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import org.koin.standalone.KoinComponent
 import java.util.*
-import java.util.logging.Logger
 
 
 /**
@@ -18,42 +16,47 @@ import java.util.logging.Logger
  */
 
 
-class PricesPreviewModel(
+class RouteInfoModel(
         private val api: HttpApi,
         private val transportTypes: TransportTypes)
     : AsyncModel(), KoinComponent {
 
-    private val brPrices: BehaviorRelay<Map<TransportType, PriceRange>> = BehaviorRelay.create()
+    private val brPrices: BehaviorRelay<RouteInfo> = BehaviorRelay.create()
 
-    fun addOnPricesUpdated(f: ((Map<TransportType, PriceRange>) -> Unit)): Disposable =
+    fun addOnUpdated(f: (RouteInfo) -> Unit): Disposable =
             brPrices.observeOn(AndroidSchedulers.mainThread()).subscribe(f)
 
-    val prices: Map<TransportType, PriceRange>?
+    val info: RouteInfo?
         get() = brPrices.value
 
 
     fun get(transfer: NewTransfer) {
-        if (busy) return
-
         val request =
                 if (transfer.to != null)
                     getRequest(transfer.from!!.point,
                             transfer.to!!.point,
                             transfer.dateTo?.date ?: Date().toString(),
-                            transfer.dateReturn != null,
-                            transfer.routeDistance ?: 0)
+                            transfer.dateReturn != null)
                 else
                     getRequest(transfer.from!!.point,
                             transfer.dateTo?.date ?: Date().toString(),
                             (transfer.hireDuration ?: 0) * 60 * 60)
 
         disposables.add(request.fastSubscribe {
-            brPrices.accept(it.mapKeys { transportTypes.typesMap[it.key]!! })
+            val pricesRaw = it.prices ?: return@fastSubscribe
+            val prices = pricesRaw.mapKeys { transportTypes.typesMap[it.key]!! }
+
+            val info = RouteInfo()
+            info.distance = it.distance
+            info.duration = it.duration
+            info.prices = prices
+
+            brPrices.accept(info)
         })
     }
 
-    private fun getRequest(llFrom: String, llTo: String, date: String, back: Boolean, distance: Int) =
-            api.getPrice(arrayOf(llFrom, llTo), date, back, distance)
+    private fun getRequest(llFrom: String, llTo: String, date: String, back: Boolean) =
+            api.getRouteInfo(arrayOf(llFrom, llTo), date, back)
 
     private fun getRequest(llFrom: String, date: String, hireDuration: Int) =
             api.getPrice(arrayOf(llFrom), date, hireDuration)

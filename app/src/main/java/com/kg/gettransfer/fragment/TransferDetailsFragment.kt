@@ -106,8 +106,10 @@ class TransferDetailsFragment : Fragment() {
         v.ivToDetails.setImageResource(
                 if (transfer.hireDuration ?: 0 <= 0) R.drawable.ic_arrow_blue_16dp
                 else R.drawable.ic_timer_blue_16dp)
+
+        val activity = activity ?: return
         v.tvToDetails.text =
-                transfer.to?.name ?: Utils.hoursToString(activity,transfer.hireDuration ?: 0)
+                transfer.to?.name ?: Utils.hoursToString(activity, transfer.hireDuration ?: 0)
     }
 
 
@@ -223,7 +225,7 @@ class TransferDetailsFragment : Fragment() {
         }
 
         if (tfTransport.typesIDs.isEmpty()) {
-            message += ", " + getString(R.string.transport_types)
+            message += ", " + getString(R.string.transport)
         }
 
         if (etSign.text.isEmpty()) {

@@ -69,9 +69,8 @@ class CurrentAccount(
     }
 
 
-    fun login(email: String, pass: String): Boolean {
-        if (busy) return false
-        api.login(email, pass).fastSubscribe {
+    fun login(email: String, pass: String): Disposable? {
+        return api.login(email, pass).fastSubscribe {
             val newAccountInfo = it.account
             newAccountInfo.dateUpdated = Date()
 
@@ -84,7 +83,6 @@ class CurrentAccount(
 
             realm.close()
         }
-        return true
     }
 
 
@@ -92,20 +90,32 @@ class CurrentAccount(
             currency: String? = null,
             distanceUnit: String? = null,
             phone: String? = null): Boolean {
-        if (busy) return false
 
-        if (currency != null) accountInfo.currency = currency
-        if (distanceUnit != null) accountInfo.distanceUnit = distanceUnit
-        if (phone != null) accountInfo.phone = phone
+        val accountInfoCopy = accountInfo
+        if (currency != null) accountInfoCopy.currency = currency
+        if (distanceUnit != null) accountInfoCopy.distanceUnit = distanceUnit
+        if (phone != null) accountInfoCopy.phone = phone
+        accountInfo = accountInfoCopy.saveAndGetUnmanaged()
 
-        api.putAccount(AccountField(accountInfo)).fastSubscribe {
-            val newAccountInfo = it.account
-            newAccountInfo.dateUpdated = Date()
-
-            accountInfo = newAccountInfo.saveAndGetUnmanaged()
+        if (putAccount() == null) {
+            var d: Disposable? = null
+            d = addOnBusyChanged {
+                if (putAccount() != null) {
+                    d?.dispose()
+                }
+            }
         }
 
         return true
+    }
+
+
+    private fun putAccount(): Disposable? {
+        return api.putAccount(AccountField(accountInfo)).fastSubscribe {
+            val newAccountInfo = it.account
+            newAccountInfo.dateUpdated = Date()
+            accountInfo = newAccountInfo.saveAndGetUnmanaged()
+        }
     }
 
 

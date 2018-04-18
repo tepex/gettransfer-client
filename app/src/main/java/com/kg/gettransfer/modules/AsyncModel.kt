@@ -2,6 +2,7 @@ package com.kg.gettransfer.modules
 
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.google.gson.Gson
@@ -23,6 +24,10 @@ import retrofit2.Response
 
 
 open class AsyncModel {
+    fun CompositeDisposable.add(d: Disposable?) {
+        if (d != null) add(d)
+    }
+
     protected val disposables = CompositeDisposable()
 
     private val brBusy = BehaviorRelay.createDefault<Boolean>(false)!!
@@ -50,9 +55,18 @@ open class AsyncModel {
         return prErrors.subscribeUIThread(f)
     }
 
+    @Deprecated("Only for debug")
     fun toastOnError(context: Context): Disposable {
         return prErrors.subscribeUIThread {
+            Log.e(this.javaClass.name, it.toString())
             Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun toastOnError(context: Context, msg: String): Disposable {
+        return prErrors.subscribeUIThread {
+            Log.e(this.javaClass.name, it.toString())
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -87,18 +101,21 @@ open class AsyncModel {
 
 
     protected fun <K : Any, T : BaseResponse<K>>
-            Observable<T>.fastSubscribe(f: (data: K) -> Unit): Disposable {
+            Observable<T>.fastSubscribe(f: (data: K) -> Unit): Disposable? {
         return fastSubscribe(f, false)
     }
 
     protected fun <K : Any, T : BaseResponse<K>>
             Observable<T>.fastSubscribe(f: (data: K) -> Unit,
-                                        uiThread: Boolean): Disposable {
+                                        uiThread: Boolean): Disposable? {
+        synchronized(busy) {
+            if (!busy) busy = true
+            else return null
+        }
         val d = this
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe { busy = true }
                 .observeOn(if (uiThread) AndroidSchedulers.mainThread() else Schedulers.newThread())
-                .doFinally { busy = false }
+                .doFinally { synchronized(busy) { busy = false } }
                 .subscribe(
                         { response ->
                             if (response.success) {
@@ -116,19 +133,22 @@ open class AsyncModel {
 
     protected fun <K : Any, T : BaseResponse<K>>
             Observable<Response<T>>.fastSubscribe(f: (data: K) -> Unit,
-                                                  fError: (data: Error) -> Unit): Disposable {
+                                                  fError: (data: Error) -> Unit): Disposable? {
         return fastSubscribe(f, fError, false)
     }
 
     protected fun <K : Any, T : BaseResponse<K>>
             Observable<Response<T>>.fastSubscribe(f: (data: K) -> Unit,
                                                   fError: (data: Error) -> Unit,
-                                                  uiThread: Boolean): Disposable {
+                                                  uiThread: Boolean): Disposable? {
+        synchronized(busy) {
+            if (!busy) busy = true
+            else return null
+        }
         val d = this
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe { busy = true }
                 .observeOn(if (uiThread) AndroidSchedulers.mainThread() else Schedulers.newThread())
-                .doFinally { busy = false }
+                .doFinally { synchronized(busy) { busy = false } }
                 .subscribe(
                         { response ->
                             if (response.isSuccessful) {

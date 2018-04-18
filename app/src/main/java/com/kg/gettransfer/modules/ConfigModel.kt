@@ -44,7 +44,6 @@ class ConfigModel(private val api: HttpApi)
     }
 
     fun update() {
-        if (busy) return
         api.getConfig().fastSubscribe {
             brConfig.accept(it.saveAndGetUnmanaged())
         }

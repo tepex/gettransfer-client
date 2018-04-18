@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorBG"
+    android:clickable="true">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/clHeader"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="72dp"
-        android:background="@color/colorBG"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/btnBack"
@@ -109,7 +110,7 @@
                 android:layout_width="96dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="@string/pick_up_at"
+                android:text="@string/when"
                 android:textColor="@color/colorTextGray"
                 app:layout_constraintBaseline_toBaselineOf="@id/etDate"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -144,7 +145,6 @@
                 style="@style/etField"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
                 android:hint="@string/time"
                 android:inputType="none"
                 android:paddingLeft="24dp"
@@ -246,7 +246,7 @@
                 android:layout_width="96dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="@string/transport_types"
+                android:text="@string/transport"
                 android:textColor="@color/colorTextGray"
                 app:layout_constraintBaseline_toBaselineOf="@id/tfTransport"
                 app:layout_constraintStart_toStartOf="parent" />
