@@ -138,6 +138,12 @@ class TransferDetailsFragment : Fragment() {
     }
 
 
+    override fun onResume() {
+        super.onResume()
+        updateUIFromTransfer()
+    }
+
+
     private fun createTransfer(transfer: NewTransfer) {
         populateNewTransfer(transfer)
         disposables.add(
@@ -344,12 +350,12 @@ class TransferDetailsFragment : Fragment() {
         tfTransport.clear()
 
         etSign.editableText.clear()
-        etPhone.editableText.clear()
-        etEmail.editableText.clear()
 
         etPrice.editableText.clear()
         etFlightTrainNumber.editableText.clear()
         etComments.editableText.clear()
+
+        etPromoCode.editableText.clear()
 
         clPromoCode.visibility = GONE
         tvPromoValidation.visibility = GONE

@@ -23,7 +23,7 @@ import org.koin.android.ext.android.inject
  */
 
 
-val REQUEST_PERMISSION_ACCESS_FINE_LOCATION = 909
+const val REQUEST_PERMISSION_ACCESS_FINE_LOCATION = 909
 
 class MainActivity : AppCompatActivity() {
     init {

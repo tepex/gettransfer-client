@@ -113,7 +113,16 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
                 fieldDuration.setOnClickListener { chooseDuration() }
 
-                btnPromo.setOnClickListener { btnPromo() }
+                btnPromo.setOnClickListener {
+                    hsvPromo.visibility = View.GONE
+                    lvTo.location = LocationDetailed("Domodedovo Airport, Moscow, Russia")
+                }
+                btnPromo2.setOnClickListener {
+                    hsvPromo.visibility = View.GONE
+                    lvTo.location = LocationDetailed("Sheremetevo Airport, Moscow, Russia")
+                }
+
+                fabRecenter.setOnClickListener { recenter() }
 
                 fabConfirmStep.setOnClickListener { showTransferDetails() }
 
@@ -195,6 +204,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                                                 14f),
                                         500,
                                         null)
+                            if (hasMarkers()) fabRecenter.visibility = VISIBLE
                         }
                     } else {
                         requestPermissions(
@@ -330,6 +340,10 @@ class CreateTransferFragment : Fragment(), KoinComponent {
             map.isMyLocationEnabled = true
         }
 
+        mapView.onUserChangedCamera = Runnable {
+            fabRecenter.visibility = VISIBLE
+        }
+
         view.postDelayed(
                 { setFromMyCurrentLocation(true) },
                 1000)
@@ -397,6 +411,11 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     }
 
 
+    private fun hasMarkers() = lvFrom.location.latLng != null ||
+            clDuration.visibility == VISIBLE &&
+            lvTo.location.latLng != null
+
+
     private val pathChanged = Runnable {
         val llFrom = lvFrom.location.latLng
         val llTo =
@@ -409,6 +428,16 @@ class CreateTransferFragment : Fragment(), KoinComponent {
         updateRoute(llFrom, llTo)
 
         updateFab()
+    }
+
+
+    private fun recenter() {
+        val llFrom = lvFrom.location.latLng
+        val llTo =
+                if (clDuration.visibility == VISIBLE) null
+                else lvTo.location.latLng
+
+        animateMap(llFrom, llTo)
     }
 
 
@@ -493,17 +522,19 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
 
     private fun animateMap(llFrom: LatLng?, llTo: LatLng?) {
+        val map = map ?: return
+
         if (llFrom != null && llTo != null) {
             try {
                 val padding = (96 * activity.resources.displayMetrics.density).toInt()
-                map?.animateCamera(
+                map.animateCamera(
                         CameraUpdateFactory.newLatLngBounds(
                                 getLatLngBounds(llFrom, llTo),
                                 padding),
                         600,
                         null)
             } catch (e: Exception) {
-                map?.animateCamera(
+                map.animateCamera(
                         CameraUpdateFactory.newLatLngBounds(
                                 getLatLngBounds(llFrom, llTo),
                                 0),
@@ -511,10 +542,14 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                         null)
             }
         } else if (llFrom != null) {
-            map?.animateCamera(CameraUpdateFactory.newLatLngZoom(llFrom, 14f), 500, null)
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(llFrom, 14f), 500, null)
         } else if (llTo != null) {
-            map?.animateCamera(CameraUpdateFactory.newLatLngZoom(llTo, 14f), 500, null)
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(llTo, 14f), 500, null)
         }
+
+        fabRecenter.visibility = INVISIBLE
+
+        mapView.userChangedCamera = false
     }
 
 
@@ -612,13 +647,6 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
     private fun hideLocationChooser() {
         fragmentManager.popBackStack(ftidLocationChooser, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-    }
-
-
-    private fun btnPromo() {
-        btnPromo.visibility = View.GONE
-        lvFrom.location = LocationDetailed("Russia, Domodedovo")
-        lvTo.location = LocationDetailed("Moscow, Tverskaya 8")
     }
 }
 

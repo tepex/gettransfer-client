@@ -6,12 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".fragment.CreateTransferFragment">
 
-    <com.google.android.gms.maps.MapView
+    <com.kg.gettransfer.views.MapViewExt
         android:id="@+id/mapView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorBG"
-        android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -359,16 +358,47 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/clHeader" />
 
-    <Button
-        android:id="@+id/btnPromo"
-        android:layout_width="wrap_content"
+    <HorizontalScrollView
+        android:id="@+id/hsvPromo"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
-        android:layout_marginStart="16dp"
-        android:text="Domodedovo - Moscow"
-        android:textAllCaps="false"
+        android:visibility="gone"
+        android:layout_marginRight="240dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <Button
+                android:id="@+id/btnPromo2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="64dp"
+                android:gravity="left"
+                android:text="to SVO\nfrom 650₽"
+                android:textAllCaps="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/btnPromo" />
+
+            <Button
+                android:id="@+id/btnPromo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="64dp"
+                android:layout_marginStart="16dp"
+                android:gravity="left"
+                android:text="to DME\nfrom 800₽"
+                android:textAllCaps="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabMyLocation"
@@ -386,6 +416,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/line7"
         app:srcCompat="@drawable/ic_my_location_gray_24dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabRecenter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:clickable="true"
+        android:focusable="false"
+        android:padding="0dp"
+        android:scaleType="center"
+        android:visibility="invisible"
+        app:backgroundTint="@color/colorBGSecondary"
+        app:fabSize="mini"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fabMyLocation"
+        app:srcCompat="@mipmap/ic_route_96_2" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabConfirmStep"
@@ -416,10 +464,12 @@
 
     </FrameLayout>
 
+
     <FrameLayout
         android:id="@+id/flFragmentTransferDetails"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:elevation="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

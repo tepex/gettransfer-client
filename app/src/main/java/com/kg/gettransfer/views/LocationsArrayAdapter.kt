@@ -94,15 +94,23 @@ class LocationsArrayAdapter(context: Context,
             val results = FilterResults()
 
             if (constraint != null) {
-                val resultList = geoAutocompleteProvider
-                        .getPredictions(
-                                if (constraint.isBlank()) "Airport" else constraint,
-                                bounds,
-                                placeFilter)
+                try {
+                    val resultList = geoAutocompleteProvider
+                            .getPredictions(
+                                    if (constraint.isBlank()) "Airport" else constraint,
+                                    bounds,
+                                    placeFilter)
 
-                if (resultList != null) {
-                    results.values = resultList
-                    results.count = resultList.size
+                    if (resultList != null) {
+                        results.values = resultList
+                        results.count = resultList.size
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(
+                            context,
+                            context.getString(R.string.no_net_info),
+                            Toast.LENGTH_SHORT)
+                            .show()
                 }
             }
 
