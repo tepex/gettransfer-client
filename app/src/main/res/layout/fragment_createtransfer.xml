@@ -382,7 +382,7 @@
         app:backgroundTint="@color/colorYellow"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_arrow_black_24dp" />
+        app:srcCompat="@drawable/ic_arrow_black_28dp" />
 
 
     <FrameLayout

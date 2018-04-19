@@ -650,7 +650,7 @@
                 android:paddingBottom="64dp">
 
                 <TextView
-                    android:id="@+id/tvCarrier"
+                    android:id="@+id/tvVehicle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
@@ -658,24 +658,24 @@
                     android:layout_marginRight="32dp"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="32dp"
-                    android:text="Carrier"
-                    android:textColor="@color/colorTextBlack"
+                    android:text="Vehicle"
+                    android:textColor="@color/colorTextBlackBold"
                     android:textSize="18sp"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/tvVehicle"
+                    android:id="@+id/tvVehicleType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="32dp"
                     android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Vehicle"
-                    android:textColor="@color/colorTextBlack"
+                    android:text="Type"
+                    android:textColor="@color/colorTextGray"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvCarrier" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvVehicle" />
 
                 <TextView
                     android:id="@+id/tvWifiRefresh"
@@ -683,10 +683,22 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="32dp"
                     android:layout_marginStart="32dp"
-                    android:text="WifiRefresh"
-                    android:textColor="@color/colorTextGray"
+                    android:text="Wifi Refreshments"
+                    android:textColor="@color/colorTextBlack"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvVehicle" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvVehicleType" />
+
+                <TextView
+                    android:id="@+id/tvCarrier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="16dp"
+                    android:text="Carrier"
+                    android:textColor="@color/colorTextBlack"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvWifiRefresh" />
 
                 <TextView
                     android:id="@+id/tvlVehicle"
@@ -698,21 +710,19 @@
                     android:text="@string/vehicle"
                     android:textColor="@color/colorTextGray"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvWifiRefresh" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvCarrier" />
 
                 <RatingBar
                     android:id="@+id/rbVehicle"
                     style="@style/Widget.AppCompat.RatingBar.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="144dp"
-                    android:layout_marginStart="144dp"
                     android:layout_marginTop="2dp"
                     android:numStars="5"
                     android:rating="0"
                     android:stepSize="0.5"
                     app:layout_constraintBottom_toBottomOf="@+id/tvlVehicle"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/imageView3"
                     app:layout_constraintTop_toTopOf="@+id/tvlVehicle" />
 
                 <TextView
@@ -732,14 +742,12 @@
                     style="@style/Widget.AppCompat.RatingBar.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="144dp"
-                    android:layout_marginStart="144dp"
                     android:layout_marginTop="2dp"
                     android:numStars="5"
                     android:rating="0"
                     android:stepSize="0.5"
                     app:layout_constraintBottom_toBottomOf="@+id/tvlDriver"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/imageView3"
                     app:layout_constraintTop_toTopOf="@+id/tvlDriver" />
 
                 <TextView
@@ -759,14 +767,12 @@
                     style="@style/Widget.AppCompat.RatingBar.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="144dp"
-                    android:layout_marginStart="144dp"
                     android:layout_marginTop="2dp"
                     android:numStars="5"
                     android:rating="0"
                     android:stepSize="0.5"
                     app:layout_constraintBottom_toBottomOf="@+id/tvlFair"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/imageView3"
                     app:layout_constraintTop_toTopOf="@+id/tvlFair" />
 
                 <TextView
@@ -788,7 +794,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="2dp"
-                    android:alpha="0.5"
+                    android:alpha="0.75"
                     app:layout_constraintBottom_toBottomOf="@id/tvlTransfers"
                     app:layout_constraintStart_toEndOf="@id/tvlTransfers"
                     app:layout_constraintTop_toTopOf="@id/tvlTransfers"
@@ -825,7 +831,7 @@
                     android:layout_marginLeft="32dp"
                     android:layout_marginStart="32dp"
                     android:text="@string/price"
-                    android:textColor="@color/colorTextGray"
+                    android:textColor="@color/colorTextBlack"
                     android:textSize="18sp"
                     app:layout_constraintBaseline_toBaselineOf="@+id/tvPrice"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -837,6 +843,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
                     android:text="   "
+                    android:textColor="@color/colorTextGray"
                     app:layout_constraintBaseline_toBaselineOf="@id/tvPrice"
                     app:layout_constraintEnd_toStartOf="@+id/tvPrice" />
 
@@ -848,8 +855,9 @@
                     android:layout_marginRight="32dp"
                     android:layout_marginTop="32dp"
                     android:text="Price"
-                    android:textColor="@color/colorTextDate"
+                    android:textColor="@color/colorTextPrice"
                     android:textSize="18sp"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/line6" />
 
@@ -860,9 +868,9 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
                     android:text="   "
+                    android:textColor="@color/colorTextGray"
                     app:layout_constraintBaseline_toBaselineOf="@id/tvPriceOrigin"
-                    app:layout_constraintEnd_toStartOf="@+id/tvPrice"
-                    tools:layout_editor_absoluteY="418dp" />
+                    app:layout_constraintEnd_toStartOf="@+id/tvPrice" />
 
                 <TextView
                     android:id="@+id/tvPriceOrigin"
@@ -870,9 +878,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
                     android:layout_marginRight="32dp"
-                    android:layout_marginTop="4dp"
                     android:text="Price"
-                    android:textColor="@color/colorTextDate"
+                    android:textColor="@color/colorTextGray"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvPrice" />
 
@@ -892,15 +899,55 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:paddingRight="32dp"
                         android:text="@string/pay_30_now_70_to_the_driver" />
+
+                    <TextView
+                        android:id="@+id/tv30"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingBottom="16dp"
+                        android:paddingLeft="32dp"
+                        android:paddingRight="32dp"
+                        android:text="TextView"
+                        android:textColor="@color/colorTextGray" />
 
                     <RadioButton
                         android:id="@+id/rb100"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:checked="true"
+                        android:paddingRight="32dp"
                         android:text="@string/pay_100_now" />
+
+                    <TextView
+                        android:id="@+id/tv100"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingBottom="16dp"
+                        android:paddingLeft="32dp"
+                        android:paddingRight="32dp"
+                        android:text="TextView"
+                        android:textColor="@color/colorTextGray" />
                 </RadioGroup>
+
+                <TextView
+                    android:id="@+id/tvInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginRight="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/payment_processing_fee_etc"
+                    android:textColor="@color/colorTextGray"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
                 <Button
                     android:id="@+id/btnPay"
@@ -911,7 +958,7 @@
                     android:layout_marginTop="16dp"
                     android:text="@string/pay"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/radioGroup" />
+                    app:layout_constraintTop_toBottomOf="@id/tvInfo" />
 
                 <ProgressBar
                     android:id="@+id/progressBarPayment"

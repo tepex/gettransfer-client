@@ -3,6 +3,7 @@ package com.kg.gettransfer.modules.http
 
 import com.kg.gettransfer.modules.http.json.*
 import com.kg.gettransfer.realm.Config
+import com.kg.gettransfer.realm.TransportType
 import io.reactivex.Observable
 import retrofit2.Response
 import retrofit2.http.*
@@ -53,17 +54,17 @@ interface HttpApi {
 
 
     @GET("transfers/{id}")
-    fun getTransfer(@Path("id") id: Int): Observable<BaseResponse<TransferField>>
+    fun getTransfer(@Path("id") id: Int): ObservableResponse<TransferField>
 
     @POST("transfers")
     @Headers("Content-Type: application/json")
     fun postTransfer(@Body transfer: NewTransferField): retrofit2.Call<NewTransferCreatedResponse>
 
     @POST("transfers/{id}/cancel")
-    fun postCancelTransfer(@Path("id") id: Int): Observable<BaseResponse<TransferField>>
+    fun postCancelTransfer(@Path("id") id: Int): ObservableResponse<TransferField>
 
     @POST("transfers/{id}/restore")
-    fun postRestoreTransfer(@Path("id") id: Int): Observable<BaseResponse<TransferField>>
+    fun postRestoreTransfer(@Path("id") id: Int): ObservableResponse<TransferField>
 
 
     @GET("transfers/{id}/offers")
@@ -82,12 +83,12 @@ interface HttpApi {
             : Observable<BaseResponse<RouteInfoRaw>>
 
     @GET("transport_types_prices")
-    fun getPrice(
+    fun getPrices(
             @Query("points[]") points: Array<String>,
             @Query("date_to") date: String,
             @Query("metric_value") timeInSeconds: Int,
             @Query("hourly") hourly: Boolean = true)
-            : Observable<BaseResponse<RouteInfoRaw>>
+            : Observable<BaseResponse<Map<String, PriceRange>>>
 
 
     // --

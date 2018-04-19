@@ -3,6 +3,7 @@ package com.kg.gettransfer.modules
 
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.kg.gettransfer.modules.http.HttpApi
+import com.kg.gettransfer.modules.http.ObservableResponse
 import com.kg.gettransfer.modules.http.json.BaseResponse
 import com.kg.gettransfer.modules.http.json.Payment
 import com.kg.gettransfer.modules.http.json.PingResponse
@@ -87,11 +88,14 @@ class TransferModel(
     fun restore() = invoke(api::postRestoreTransfer)
 
 
-    fun invoke(function: (id: Int) -> Observable<BaseResponse<TransferField>>) {
+    fun invoke(
+            function: (id: Int) -> ObservableResponse<TransferField>) {
         if (busy || id < 0) return
-        function(id).fastSubscribe {
+        function(id).fastSubscribe({
             save(it.transfer)
-        }
+        }, {
+            err(it.message)
+        })
     }
 
 

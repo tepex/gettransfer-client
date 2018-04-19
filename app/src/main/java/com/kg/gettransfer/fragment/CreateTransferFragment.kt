@@ -1,14 +1,19 @@
 package com.kg.gettransfer.fragment
 
 
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.Fragment
 import android.app.FragmentManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Typeface
+import android.location.Location
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.ContextCompat.checkSelfPermission
 import android.support.v7.app.AlertDialog
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -18,6 +23,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
@@ -29,6 +36,7 @@ import com.google.maps.android.PolyUtil
 import com.google.maps.model.DirectionsResult
 import com.kg.gettransfer.R
 import com.kg.gettransfer.data.LocationDetailed
+import com.kg.gettransfer.mainactivity.REQUEST_PERMISSION_ACCESS_FINE_LOCATION
 import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.realm.getPlString
 import com.kg.gettransfer.views.BitmapDescriptorFactory
@@ -53,6 +61,8 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     private val frChooseLocation: ChooseLocationFragment by lazy { ChooseLocationFragment() }
     private val frTransferDetails: TransferDetailsFragment by lazy { TransferDetailsFragment() }
 
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     private val geoApiContext: GeoApiContext by inject()
 
     private var map: GoogleMap? = null
@@ -75,6 +85,12 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     private var polyline: Polyline? = null
 
     private var directionsApiRequest: DirectionsApiRequest? = null
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
+    }
 
 
     override fun onCreateView(
@@ -261,14 +277,14 @@ class CreateTransferFragment : Fragment(), KoinComponent {
             mapView.getMapAsync {
                 if (it != null) {
                     map = it
-                    setUpMap(it)
+                    configureMap(it)
                 }
             }
         }
     }
 
 
-    private fun setUpMap(map: GoogleMap) {
+    private fun configureMap(map: GoogleMap) {
         markerFrom = map.addMarker(
                 MarkerOptions()
                         .visible(false)
@@ -289,6 +305,28 @@ class CreateTransferFragment : Fragment(), KoinComponent {
         map.uiSettings.isCompassEnabled = false
         map.uiSettings.isMapToolbarEnabled = false
         map.uiSettings.isTiltGesturesEnabled = false
+
+        setFromMyCurrentLocation(true)
+    }
+
+
+    public fun setFromMyCurrentLocation(askPermissionIfNotPermitted: Boolean) {
+        if (checkSelfPermission(activity, ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                if (location != null)
+                    lvFrom.location = LocationDetailed(
+                            LatLng(
+                                    location.latitude,
+                                    location.longitude),
+                            true)
+            }
+        } else if (askPermissionIfNotPermitted) {
+            ActivityCompat.requestPermissions(
+                    activity,
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_PERMISSION_ACCESS_FINE_LOCATION)
+        }
     }
 
 
@@ -399,9 +437,13 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                 }
 
                 override fun onFailure(e: Throwable) {
-                    log.info("Routing fail: " + e.message)
-                    Toast.makeText(activity, getString(R.string.routing_failed), Toast.LENGTH_SHORT).show()
-                    e.printStackTrace()
+                    try {
+                        log.info("Routing failed: " + e.message)
+                        e.printStackTrace()
+                        Toast.makeText(activity, getString(R.string.routing_failed), Toast.LENGTH_SHORT).show()
+                    } catch (e: Exception) {
+
+                    }
                 }
             })
         }

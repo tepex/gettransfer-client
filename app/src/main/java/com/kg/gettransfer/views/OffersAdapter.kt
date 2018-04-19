@@ -43,7 +43,9 @@ class OffersAdapter(
     inner class ViewHolder(container: ConstraintLayout) : RecyclerView.ViewHolder(container) {
         val carrier: TextView = container.findViewById(R.id.tvCarrier)
         val price: TextView = container.findViewById(R.id.tvPrice)
+        val priceSmall: TextView = container.findViewById(R.id.tvPriceSmall)
         val vehicle: TextView = container.findViewById(R.id.tvVehicle)
+        val vehicleType: TextView = container.findViewById(R.id.tvVehicleType)
         val facilities: TextView = container.findViewById(R.id.tvFacilities)
         val ratingBar: RatingBar = container.findViewById(R.id.ratingBar)
         val transfers: TextView = container.findViewById(R.id.tvTransfers)
@@ -69,16 +71,23 @@ class OffersAdapter(
 
         val item = getItem(position) ?: return
 
+        holder.vehicle.text = (item.vehicle?.name ?: "Unknown vehicle")
+        holder.vehicleType.text = transportTypes.typesMap[item.vehicle?.transportTypeID]?.title
+
         holder.carrier.text = item.carrier?.title(c)
-        holder.vehicle.text =
-                (item.vehicle?.name ?: "Unknown vehicle") +
-                "\n" + transportTypes.typesMap[item.vehicle?.transportTypeID]?.title
 
         val facilities = item.facilities(c)
         holder.facilities.text = facilities
         holder.facilities.visibility = if (facilities == null) GONE else VISIBLE
 
-        holder.price.text = item.price?.toString() ?: "No price"
+        val defaultCurrency = item.price?.base?.defaultCurrency
+        val preferredCurrency = item.price?.base?.preferredCurrency
+        if (preferredCurrency != null) {
+            holder.price.text = preferredCurrency
+            holder.priceSmall.text = defaultCurrency ?: "No price"
+        } else {
+            holder.price.text = defaultCurrency ?: "No price"
+        }
 
         holder.ratingBar.rating = (item.carrier?.rating?.average?.toFloat() ?: 0f) / 5f
 

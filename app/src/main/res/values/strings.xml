@@ -10,7 +10,7 @@
     <string name="log_in_to_see_transfers_and_offers">Log in to see transfers and offers</string>
     <string name="create_new_transfer">Create new transfer</string>
     <string name="no_transfers">You have not уet requested any transfers</string>
-    <string name="book">BOOK</string>
+    <string name="book">Book</string>
 
     <string name="profile">Profile</string>
     <string name="newTransfer">New</string>
@@ -102,8 +102,10 @@
     <string name="fair">Fair</string>
     <string name="successful_transfers">Successful transfers</string>
     <string name="price">Price</string>
-    <string name="pay_30_now_70_to_the_driver">Pay 30% now, 70% to the driver</string>
+    <string name="pay_30_now_70_to_the_driver">Pay 30% now, 70% later to the driver</string>
     <string name="pay_100_now">Pay 100% now</string>
+    <string name="pay_n_now_n_to_the_driver">%1$s now, %2$s later</string>
+    <string name="pay_n_now">%1$s now</string>
     <string name="pay">Pay</string>
 
     <string name="date">Date</string>
@@ -121,9 +123,10 @@
     <string name="use_promo">Use promo</string>
     <string name="promo_code">Promo code</string>
     <string name="list_unavailable">List unavailable</string>
-    <string name="error_creating_request">Error creating request.</string>
+    <string name="error_creating_request">Error creating request</string>
 
     <string name="please_fill_to_get_offers">Please fill %1$s to get offers."</string>
+    <string name="dont_worry">"You'll be able to cancel your request anytime."</string>
 
     <string name="km">km</string>
     <string name="mi">mi</string>
@@ -134,5 +137,8 @@
     <string name="from_price">from</string>
     <string name="unable_to_load_prices">Unable to load prices</string>
     <string name="unable_to_update_offers">Unable to update offers</string>
-    <string name="unable_to_update">Unable to update</string>
+    <string name="unable_to_update_transfer">Unable to update transfer</string>
+
+    <string name="payment_processing_fee_etc">"Payment processing fee is 3%\nRefund is available 3 days before trip"</string>
+    <string name="unable_to_update_transfers">Unable to update transfers</string>
 </resources>

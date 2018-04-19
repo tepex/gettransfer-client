@@ -160,6 +160,7 @@ class TransferDetailsFragment : Fragment() {
                                     setBusy(false)
                                     tvError.text = getString(R.string.error_creating_request) +
                                             "\n" + it.message
+                                    tvError.setTextColor(resources.getColor(R.color.colorTextError))
                                     fabCreate.visibility = VISIBLE
                                     scrollView.post {
                                         scrollView.fullScroll(FOCUS_DOWN)
@@ -173,7 +174,8 @@ class TransferDetailsFragment : Fragment() {
             fabCreate.visibility = INVISIBLE
             progressBar.visibility = VISIBLE
             fabProgress.visibility = VISIBLE
-            tvError.text = ""
+            tvError.text = activity.getString(R.string.dont_worry)
+            tvError.setTextColor(resources.getColor(R.color.colorTextGray))
         } else {
             progressBar.visibility = INVISIBLE
             fabProgress.visibility = INVISIBLE
@@ -244,9 +246,11 @@ class TransferDetailsFragment : Fragment() {
                     getString(R.string.please_fill_to_get_offers),
                     message.substring(2).toLowerCase())
             tvError.text = message
+            tvError.setTextColor(resources.getColor(R.color.colorTextError))
             return false
         } else {
-            tvError.text = " "
+            tvError.text = activity.getString(R.string.dont_worry)
+            tvError.setTextColor(resources.getColor(R.color.colorTextGray))
             return true
         }
     }
@@ -340,6 +344,9 @@ class TransferDetailsFragment : Fragment() {
         tfTransport.clear()
 
         etSign.editableText.clear()
+        etPhone.editableText.clear()
+        etEmail.editableText.clear()
+
         etPrice.editableText.clear()
         etFlightTrainNumber.editableText.clear()
         etComments.editableText.clear()

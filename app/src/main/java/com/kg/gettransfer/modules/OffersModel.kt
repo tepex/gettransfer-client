@@ -44,9 +44,7 @@ class OffersModel(
 
             offers = getOffersAsyncRealmResult(managedTransfer)
 
-            if (managedTransfer.needAndCanUpdateOffers) {
-                update()
-            }
+            if (managedTransfer.needAndCanUpdateOffers) update()
         }
 
     fun addOnOffersUpdated(f: (RealmResults<Offer>) -> Unit): Disposable {

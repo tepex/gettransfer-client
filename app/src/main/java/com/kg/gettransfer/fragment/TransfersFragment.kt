@@ -92,9 +92,8 @@ class TransfersFragment : Fragment(), KoinComponent {
             swipeRefreshLayout.isRefreshing = it
         })
 
-        disposables.add(transfersModel.addOnError {
-            Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
-        })
+        disposables.add(transfersModel.toastOnError(
+                activity, getString(R.string.unable_to_update_transfers)))
 
         updateUI()
     }

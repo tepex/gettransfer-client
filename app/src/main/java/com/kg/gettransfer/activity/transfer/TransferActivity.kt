@@ -67,7 +67,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         offersModel.transferID = id
 
         transferModel.addOnTransferUpdated { updateUI(it) }
-        transferModel.toastOnError(this, getString(R.string.unable_to_update))
+        transferModel.toastOnError(this, getString(R.string.unable_to_update_transfer))
         transferModel.addOnBusyProgressBar(progressBar)
         transferModel.addOnBusyChanged {
             if (it) transferStatusView.hide()
@@ -93,10 +93,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         swipeRefreshLayout.setOnRefreshListener {
             swipeRefreshLayout.isRefreshing = false
             transferModel.update()
-
-            if (transferModel.transfer?.needAndCanUpdateOffers != false) {
-                offersModel.update()
-            }
+            if (transferModel.transfer?.isActive == true) offersModel.update()
         }
 
         btnPay.setOnClickListener {
@@ -252,6 +249,8 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
                 tvVehicle.text = title
             }
 
+            tvVehicleType.text = transportTypes.typesMap[offer.vehicle?.transportTypeID]?.title
+
             val facilities = offer.facilities(this@TransferActivity)
             tvWifiRefresh.text = facilities
             tvWifiRefresh.visibility = if (facilities == null) GONE else VISIBLE
@@ -275,13 +274,26 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
                 tvPriceOrigin.visibility = VISIBLE
                 tvPriceOffOrigin.visibility = VISIBLE
+
+                tv100.text = String.format(
+                        getString(R.string.pay_n_now),
+                        offer.price?.base?.defaultCurrency)
             } else {
                 tvPrice.text = offer.price?.base?.defaultCurrency
                 tvPriceOff.text = offer.price?.withoutDiscount?.defaultCurrency
 
                 tvPriceOrigin.visibility = GONE
                 tvPriceOffOrigin.visibility = GONE
+
+                tv100.text = String.format(
+                        getString(R.string.pay_n_now),
+                        offer.price?.base?.defaultCurrency)
             }
+
+            tv30.text = String.format(
+                    getString(R.string.pay_n_now_n_to_the_driver),
+                    offer.price?.p30,
+                    offer.price?.p70)
         }
 
         clOffer.visibility = VISIBLE
@@ -297,8 +309,6 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         set.addAnimation(alphaAnimation)
         set.addAnimation(translateAnimation)
         clOffer.startAnimation(set)
-
-
     }
 
 

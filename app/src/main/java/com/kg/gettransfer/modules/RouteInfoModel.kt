@@ -31,33 +31,42 @@ class RouteInfoModel(
 
 
     fun get(transfer: NewTransfer) {
-        val request =
-                if (transfer.to != null)
-                    getRequest(transfer.from!!.point,
-                            transfer.to!!.point,
-                            transfer.dateTo?.date ?: Date().toString(),
-                            transfer.dateReturn != null)
-                else
-                    getRequest(transfer.from!!.point,
-                            transfer.dateTo?.date ?: Date().toString(),
-                            (transfer.hireDuration ?: 0) * 60 * 60)
+        if (transfer.to != null) {
+            val r = getRequest(transfer.from!!.point,
+                    transfer.to!!.point,
+                    transfer.dateTo?.date ?: Date().toString(),
+                    transfer.dateReturn != null)
+            disposables.add(r.fastSubscribe {
+                val pricesRaw = it.prices ?: return@fastSubscribe
+                val prices = pricesRaw.mapKeys { transportTypes.typesMap[it.key]!! }
 
-        disposables.add(request.fastSubscribe {
-            val pricesRaw = it.prices ?: return@fastSubscribe
-            val prices = pricesRaw.mapKeys { transportTypes.typesMap[it.key]!! }
+                val info = RouteInfo()
+                info.distance = it.distance
+                info.duration = it.duration
+                info.prices = prices
 
-            val info = RouteInfo()
-            info.distance = it.distance
-            info.duration = it.duration
-            info.prices = prices
+                brPrices.accept(info)
+            })
+        } else {
+            val r = getRequest(transfer.from!!.point,
+                    transfer.dateTo?.date ?: Date().toString(),
+                    (transfer.hireDuration ?: 0) * 60 * 60)
+            disposables.add(r.fastSubscribe {
+                val prices = it.mapKeys { transportTypes.typesMap[it.key]!! }
 
-            brPrices.accept(info)
-        })
+                val info = RouteInfo()
+                info.prices = prices
+
+                brPrices.accept(info)
+            })
+        }
+
+
     }
 
     private fun getRequest(llFrom: String, llTo: String, date: String, back: Boolean) =
             api.getRouteInfo(arrayOf(llFrom, llTo), date, back)
 
     private fun getRequest(llFrom: String, date: String, hireDuration: Int) =
-            api.getPrice(arrayOf(llFrom), date, hireDuration)
+            api.getPrices(arrayOf(llFrom), date, hireDuration)
 }

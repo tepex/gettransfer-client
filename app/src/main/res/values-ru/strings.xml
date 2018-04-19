@@ -102,8 +102,10 @@
     <string name="fair">Пунктуальность</string>
     <string name="successful_transfers">Завершенные трансферы</string>
     <string name="price">Стоимость</string>
-    <string name="pay_30_now_70_to_the_driver">Заплатить 30% сейчас, 70% водителю</string>
+    <string name="pay_30_now_70_to_the_driver">Заплатить 30% сейчас, 70% водителю в конце поездки</string>
     <string name="pay_100_now">Заплатить 100% сейчас</string>
+    <string name="pay_n_now_n_to_the_driver">%1$s сейчас, %2$s водителю</string>
+    <string name="pay_n_now">%1$s сейчас</string>
     <string name="pay">Оплатить</string>
 
     <string name="date">Дата</string>
@@ -121,9 +123,10 @@
     <string name="use_promo">Ввести</string>
     <string name="promo_code">Промо код</string>
     <string name="list_unavailable">Список недоступен</string>
-    <string name="error_creating_request">Ошибка создания трансфера.</string>
+    <string name="error_creating_request">Ошибка создания трансфера</string>
 
     <string name="please_fill_to_get_offers">Пожалуйста, введите поля: %1$s, чтобы получить предложения.</string>
+    <string name="dont_worry">"Вы сможете отменить запрос предложений в любой момент."</string>
 
     <string name="km">км</string>
     <string name="mi">миль</string>
@@ -133,7 +136,10 @@
 
     <string name="from_price">от</string>
 
-    <string name="unable_to_load_prices">Неудалось загрузить цены</string>
-    <string name="unable_to_update_offers">Неудалось обновить предложения</string>
-    <string name="unable_to_update">Неудалось обновить</string>
+    <string name="unable_to_load_prices">Не удалось загрузить цены</string>
+    <string name="unable_to_update_offers">Не удалось обновить предложения</string>
+    <string name="unable_to_update_transfer">Не удалось обновить трансфер</string>
+
+    <string name="payment_processing_fee_etc">Комиссия 3%</string>
+    <string name="unable_to_update_transfers">Unable to update transfers</string>
 </resources>

@@ -59,14 +59,20 @@ open class AsyncModel {
     fun toastOnError(context: Context): Disposable {
         return prErrors.subscribeUIThread {
             Log.e(this.javaClass.name, it.toString())
-            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+            try {
+                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+            }
         }
     }
 
     fun toastOnError(context: Context, msg: String): Disposable {
         return prErrors.subscribeUIThread {
             Log.e(this.javaClass.name, it.toString())
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+            try {
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+            }
         }
     }
 

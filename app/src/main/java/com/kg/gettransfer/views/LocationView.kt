@@ -23,7 +23,7 @@ class LocationView : ConstraintLayout, KoinComponent {
 
     var onLocationChanged: Runnable? = null
 
-    var location
+    var location: LocationDetailed
         get() = model.location
         set(value) {
             model.location = value

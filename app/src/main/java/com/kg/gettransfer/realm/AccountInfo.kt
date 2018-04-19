@@ -32,11 +32,11 @@ open class AccountInfo(
 
         @Expose
         @SerializedName("currency")
-        var currency: String? = null,
+        var currency: String = "USD",
 
         @Expose
         @SerializedName("distance_unit")
-        var distanceUnit: String? = null,
+        var distanceUnit: String = "km",
 
         @Expose(serialize = false, deserialize = false)
         var dateUpdated: Date? = null)

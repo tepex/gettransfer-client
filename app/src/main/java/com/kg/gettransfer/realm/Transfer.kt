@@ -134,6 +134,7 @@ open class Transfer : RealmObject() {
 
     val needAndCanUpdateOffers: Boolean
         get() {
+            if (!isActive) return false
             if (offersTriedToUpdateDate > System.currentTimeMillis() - 1000) return false
             return offersUpdatedDate < offersChangedDate?.time ?: 1 || offers.size != offersCount
         }

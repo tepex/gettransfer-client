@@ -61,7 +61,10 @@ class TransportTypeField : EditText, KoinComponent {
 
     fun updatePrices(transfer: NewTransfer) = pricesModel.get(transfer)
 
-    fun clear() = checked.fill(false)
+    fun clear() {
+        checked.fill(false)
+        editableText.clear()
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {

@@ -1,6 +1,7 @@
 package com.kg.gettransfer.mainactivity
 
 
+import android.Manifest
 import android.os.Build
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
@@ -14,12 +15,15 @@ import com.kg.gettransfer.fragment.CreateTransferFragment
 import com.kg.gettransfer.fragment.TransfersFragment
 import com.kg.gettransfer.modules.CurrentAccount
 import org.koin.android.ext.android.inject
+import android.content.pm.PackageManager
 
 
 /**
  * Created by denisvakulenko on 06/02/2018.
  */
 
+
+val REQUEST_PERMISSION_ACCESS_FINE_LOCATION = 909
 
 class MainActivity : AppCompatActivity() {
     init {
@@ -69,41 +73,11 @@ class MainActivity : AppCompatActivity() {
                     else View.GONE
         }
 
-//        if (savedInstanceState != null) {
-//            val findFragmentByTag = fragmentManager.findFragmentByTag(TAG)
-//            when (findFragmentByTag) {
-//                is TransfersFragment -> {
-//                    frTransfers = findFragmentByTag
-//                    tab = 0
-//                }
-//                is CreateTransferFragment -> {
-//                    frCreateTransfer = findFragmentByTag
-//                    tab = 1
-//                }
-//                is AccountFragment -> {
-//                    frAccount = findFragmentByTag
-//                    tab = 2
-//                }
-//            }
-//            updateButtons(tab)
-//        } else {
         val ft = fragmentManager.beginTransaction()
         ft.add(R.id.flFragment, frCreateTransfer, TAG)
         ft.disallowAddToBackStack()
         ft.commit()
         tab = 1
-//        }
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-
-//        if (currentAccount.loggedIn) {
-//            btnAccount.setImageResource(R.drawable.ic_person_black_24dp)
-//        } else {
-//            btnAccount.setImageResource(R.drawable.ic_person_outline_gray_24dp)
-//        }
     }
 
 
@@ -142,10 +116,6 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun updateButtons(i: Int) {
-        btnTransfers.alpha = if (i == 0) 1f else 0.40f
-        btnCreateTransfer.alpha = if (i == 1) 1f else 0.35f
-        btnAccount.alpha = if (i == 2) 1f else 0.35f
-
         btnTransfers.setImageResource(
                 if (i == 0) R.drawable.ic_view_headline_blue_24dp
                 else R.drawable.ic_view_headline_black_24dp)
@@ -155,12 +125,6 @@ class MainActivity : AppCompatActivity() {
         btnAccount.setImageResource(
                 if (i == 2) R.drawable.ic_person_blue_24dp
                 else R.drawable.ic_person_black_24dp)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            btnTransfers.elevation = if (i == 0) 4f else 0f
-            btnCreateTransfer.elevation = if (i == 1) 4f else 0f
-            btnAccount.elevation = if (i == 2) 4f else 0f
-        }
     }
 
 
@@ -169,5 +133,15 @@ class MainActivity : AppCompatActivity() {
             selectTab(prevTab)
             prevTab = 1
         } else super.onBackPressed()
+    }
+
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode == REQUEST_PERMISSION_ACCESS_FINE_LOCATION) {
+            if (permissions[0] == Manifest.permission.WRITE_EXTERNAL_STORAGE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                frCreateTransfer?.setFromMyCurrentLocation(false)
+            }
+        }
     }
 }

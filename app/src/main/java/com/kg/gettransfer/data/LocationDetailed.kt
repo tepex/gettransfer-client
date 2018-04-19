@@ -15,7 +15,8 @@ class LocationDetailed(
         val subtitle: String?,
         val placeID: String?,
         val latLng: LatLng?,
-        var validationSuccess: Boolean? = null) {
+        var validationSuccess: Boolean? = null,
+        var myLocation: Boolean = false) {
 
 
     constructor(title: String) : this(title, null, null, null)
@@ -23,6 +24,8 @@ class LocationDetailed(
     constructor(title: String, subtitle: String, placeID: String?)
             : this(title, subtitle, placeID, null)
 
+    constructor(latLng: LatLng, myLocation: Boolean)
+            : this("", null, null, latLng, null, myLocation)
 
     fun isValid(): Boolean = title.isNotEmpty() && latLng != null
 
