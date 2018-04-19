@@ -1,7 +1,8 @@
 package com.kg.gettransfer.mainactivity
 
 
-import android.Manifest
+import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
@@ -15,7 +16,6 @@ import com.kg.gettransfer.fragment.CreateTransferFragment
 import com.kg.gettransfer.fragment.TransfersFragment
 import com.kg.gettransfer.modules.CurrentAccount
 import org.koin.android.ext.android.inject
-import android.content.pm.PackageManager
 
 
 /**
@@ -136,10 +136,9 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (requestCode == REQUEST_PERMISSION_ACCESS_FINE_LOCATION) {
-            if (permissions[0] == Manifest.permission.WRITE_EXTERNAL_STORAGE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (permissions[0] == ACCESS_FINE_LOCATION && grantResults[0] == PERMISSION_GRANTED) {
                 frCreateTransfer?.setFromMyCurrentLocation(false)
             }
         }

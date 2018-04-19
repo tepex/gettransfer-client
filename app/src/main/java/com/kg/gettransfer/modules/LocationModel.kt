@@ -93,6 +93,34 @@ class LocationModel(
                             err(it)
                         }
                     }))
+        } else if (location.latLng != null) {
+            disposables.add(Single
+                    .fromCallable {
+                        val places = geocoder.getFromLocation(location.latLng.latitude, location.latLng.longitude, 1) //, -90.0, -180.0, 90.0, 180.0)
+                        if (places.isNotEmpty()) {
+                            return@fromCallable LocationDetailed(
+                                    places[0].getAddressLine(0),
+                                    location.subtitle,
+                                    location.placeID,
+                                    LatLng(places[0].latitude, places[0].longitude),
+                                    true,
+                                    location.myLocation)
+                        }
+                        throw Exception("Unknown address")
+                    }
+                    .subscribeOn(Schedulers.io()).doOnSubscribe { busy = true }
+                    .observeOn(AndroidSchedulers.mainThread()).doFinally { busy = false }
+                    .subscribe({
+                        if (location == this.location) {
+                            this.location = it
+                        }
+                    }, {
+                        if (location == this.location) {
+                            location.validationSuccess = false
+                            this.location = location
+                            err(it)
+                        }
+                    }))
         }
 
         return location

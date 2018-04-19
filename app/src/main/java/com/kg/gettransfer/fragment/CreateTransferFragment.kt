@@ -5,13 +5,13 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.Fragment
 import android.app.FragmentManager
 import android.content.Context
-import android.content.pm.PackageManager
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Typeface
 import android.location.Location
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.ContextCompat.checkSelfPermission
 import android.support.v7.app.AlertDialog
@@ -184,6 +184,25 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                     tvFromAToB.visibility = VISIBLE
                     tvForAWhile.visibility = VISIBLE
                 }
+
+                fabMyLocation.setOnClickListener {
+                    if (checkSelfPermission(activity, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
+                        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                            if (location != null)
+                                map?.animateCamera(
+                                        CameraUpdateFactory.newLatLngZoom(
+                                                LatLng(location.latitude, location.longitude),
+                                                14f),
+                                        500,
+                                        null)
+                        }
+                    } else {
+                        requestPermissions(
+                                activity,
+                                arrayOf(ACCESS_FINE_LOCATION),
+                                REQUEST_PERMISSION_ACCESS_FINE_LOCATION)
+                    }
+                }
             }
 
             savedView = v
@@ -275,7 +294,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
             }
 
             mapView.getMapAsync {
-                if (it != null) {
+                if (it != null && map == null) {
                     map = it
                     configureMap(it)
                 }
@@ -305,14 +324,20 @@ class CreateTransferFragment : Fragment(), KoinComponent {
         map.uiSettings.isCompassEnabled = false
         map.uiSettings.isMapToolbarEnabled = false
         map.uiSettings.isTiltGesturesEnabled = false
+        map.uiSettings.isMyLocationButtonEnabled = false
 
-        setFromMyCurrentLocation(true)
+        if (checkSelfPermission(activity, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
+            map.isMyLocationEnabled = true
+        }
+
+        view.postDelayed(
+                { setFromMyCurrentLocation(true) },
+                1000)
     }
 
 
-    public fun setFromMyCurrentLocation(askPermissionIfNotPermitted: Boolean) {
-        if (checkSelfPermission(activity, ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+    fun setFromMyCurrentLocation(askPermissionIfNotPermitted: Boolean) {
+        if (checkSelfPermission(activity, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 if (location != null)
                     lvFrom.location = LocationDetailed(
@@ -322,9 +347,9 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                             true)
             }
         } else if (askPermissionIfNotPermitted) {
-            ActivityCompat.requestPermissions(
+            requestPermissions(
                     activity,
-                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                    arrayOf(ACCESS_FINE_LOCATION),
                     REQUEST_PERMISSION_ACCESS_FINE_LOCATION)
         }
     }
@@ -486,9 +511,9 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                         null)
             }
         } else if (llFrom != null) {
-            map?.animateCamera(CameraUpdateFactory.newLatLngZoom(llFrom, 12f), 600, null)
+            map?.animateCamera(CameraUpdateFactory.newLatLngZoom(llFrom, 14f), 500, null)
         } else if (llTo != null) {
-            map?.animateCamera(CameraUpdateFactory.newLatLngZoom(llTo, 12f), 600, null)
+            map?.animateCamera(CameraUpdateFactory.newLatLngZoom(llTo, 14f), 500, null)
         }
     }
 
