@@ -36,7 +36,10 @@ class LocationView : ConstraintLayout, KoinComponent {
         inflate(context, R.layout.view_location, this)
 
         model.onLocationChanged = Runnable {
-            tvName.text = location.title
+            var title = location.title
+            if (title.isEmpty() && location.latLng != null) title = location.latLng.toString()
+
+            tvName.text = title
 
             ibClear.visibility = if (location.isEmpty()) GONE else VISIBLE
 
@@ -48,7 +51,7 @@ class LocationView : ConstraintLayout, KoinComponent {
         model.addOnBusyProgressBar(progressBar, GONE)
         model.addOnBusyChanged { if (it) imgInvalidAddress.visibility = GONE }
         model.addOnError {
-            if (location.title.isEmpty()) return@addOnError
+            if (location.isEmpty()) return@addOnError
             imgInvalidAddress.visibility = VISIBLE
             Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
         }

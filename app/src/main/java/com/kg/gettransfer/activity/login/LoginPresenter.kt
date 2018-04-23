@@ -43,6 +43,9 @@ class LoginPresenter(override val view: LoginContract.View) : LoginContract.Pres
 
 
     override fun stop() {
+        if (currentAccount.busy) {
+            currentAccount.logOut()
+        }
         disposables.clear()
     }
 }

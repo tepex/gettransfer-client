@@ -120,6 +120,7 @@ open class AsyncModel {
         }
         val d = this
                 .subscribeOn(Schedulers.io())
+                .unsubscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(if (uiThread) AndroidSchedulers.mainThread() else Schedulers.newThread())
                 .doFinally { synchronized(busy) { busy = false } }
                 .subscribe(
@@ -153,6 +154,7 @@ open class AsyncModel {
         }
         val d = this
                 .subscribeOn(Schedulers.io())
+                .unsubscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(if (uiThread) AndroidSchedulers.mainThread() else Schedulers.newThread())
                 .doFinally { synchronized(busy) { busy = false } }
                 .subscribe(

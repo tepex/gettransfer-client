@@ -69,8 +69,9 @@ class CurrentAccount(
     }
 
 
+    var loggingInDisposable: Disposable? = null
     fun login(email: String, pass: String): Disposable? {
-        return api.login(email, pass).fastSubscribe {
+        loggingInDisposable = api.login(email, pass).fastSubscribe {
             val newAccountInfo = it.account
             newAccountInfo.dateUpdated = Date()
 
@@ -83,6 +84,7 @@ class CurrentAccount(
 
             realm.close()
         }
+        return loggingInDisposable
     }
 
 
@@ -120,6 +122,10 @@ class CurrentAccount(
 
 
     fun logOut() {
+        if (loggingInDisposable?.isDisposed == false) {
+            loggingInDisposable?.dispose()
+            busy = false
+        }
         session.logOut()
     }
 }

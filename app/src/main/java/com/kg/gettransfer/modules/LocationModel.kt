@@ -27,11 +27,13 @@ class LocationModel(
 
     var location: LocationDetailed = LocationDetailed("")
         set(newLocation) {
-            if (newLocation.title == field.title &&
-                    newLocation.latLng == null &&
-                    newLocation.placeID == null) return
+            if (field == newLocation) {
+                field = newLocation
+                return
+            }
 
             field = newLocation
+
             onLocationChanged?.run()
 
             if (!newLocation.isValid()) validate()
@@ -41,86 +43,90 @@ class LocationModel(
     fun validate(): LocationDetailed {
         val location = location
 
-        if (location.placeID != null) {
-            if (!googleApiClient.isConnected) throw Exception("Google API client is not connected")
+        when {
+            location.placeID != null -> {
+                if (!googleApiClient.isConnected) throw Exception("Google API client is not connected")
 
-            busy = true
+                busy = true
 
-            Places.GeoDataApi
-                    .getPlaceById(googleApiClient, location.placeID)
-                    .setResultCallback({ places ->
-                        if (location == this.location) {
-                            if (places.status.isSuccess) {
-                                this.location = LocationDetailed(
+                Places.GeoDataApi
+                        .getPlaceById(googleApiClient, location.placeID)
+                        .setResultCallback({ places ->
+                            if (location == this.location) {
+                                if (places.status.isSuccess) {
+                                    this.location = LocationDetailed(
+                                            location.title,
+                                            location.subtitle,
+                                            location.placeID,
+                                            places[0].latLng,
+                                            true)
+                                } else {
+                                    location.validationSuccess = false
+                                    this.location = location
+                                    err(places.status.statusMessage)
+                                }
+                                places.release()
+                                busy = false
+                            }
+                        }, 3, TimeUnit.SECONDS)
+            }
+
+            location.title.isNotEmpty() ->
+                disposables.add(Single
+                        .fromCallable {
+                            val places = geocoder.getFromLocationName(location.title, 1) //, -90.0, -180.0, 90.0, 180.0)
+                            if (places.isNotEmpty()) {
+                                return@fromCallable LocationDetailed(
                                         location.title,
                                         location.subtitle,
                                         location.placeID,
-                                        places[0].latLng,
+                                        LatLng(places[0].latitude, places[0].longitude),
                                         true)
-                            } else {
+                            }
+                            throw Exception("Unknown address")
+                        }
+                        .subscribeOn(Schedulers.io()).doOnSubscribe { busy = true }
+                        .observeOn(AndroidSchedulers.mainThread()).doFinally { busy = false }
+                        .subscribe({
+                            if (location == this.location) {
+                                this.location = it
+                            }
+                        }, {
+                            if (location == this.location) {
                                 location.validationSuccess = false
                                 this.location = location
-                                err(places.status.statusMessage)
+                                err(it)
                             }
-                            places.release()
-                            busy = false
+                        }))
+
+            location.latLng != null ->
+                disposables.add(Single
+                        .fromCallable {
+                            val places = geocoder.getFromLocation(location.latLng.latitude, location.latLng.longitude, 1) //, -90.0, -180.0, 90.0, 180.0)
+                            if (places.isNotEmpty()) {
+                                return@fromCallable LocationDetailed(
+                                        places[0].getAddressLine(0),
+                                        location.subtitle,
+                                        location.placeID,
+                                        LatLng(places[0].latitude, places[0].longitude),
+                                        true,
+                                        location.myLocation)
+                            }
+                            throw Exception("Unknown address")
                         }
-                    }, 3, TimeUnit.SECONDS)
-        } else if (location.title.isNotEmpty()) {
-            disposables.add(Single
-                    .fromCallable {
-                        val places = geocoder.getFromLocationName(location.title, 1) //, -90.0, -180.0, 90.0, 180.0)
-                        if (places.isNotEmpty()) {
-                            return@fromCallable LocationDetailed(
-                                    location.title,
-                                    location.subtitle,
-                                    location.placeID,
-                                    LatLng(places[0].latitude, places[0].longitude),
-                                    true)
-                        }
-                        throw Exception("Unknown address")
-                    }
-                    .subscribeOn(Schedulers.io()).doOnSubscribe { busy = true }
-                    .observeOn(AndroidSchedulers.mainThread()).doFinally { busy = false }
-                    .subscribe({
-                        if (location == this.location) {
-                            this.location = it
-                        }
-                    }, {
-                        if (location == this.location) {
-                            location.validationSuccess = false
-                            this.location = location
-                            err(it)
-                        }
-                    }))
-        } else if (location.latLng != null) {
-            disposables.add(Single
-                    .fromCallable {
-                        val places = geocoder.getFromLocation(location.latLng.latitude, location.latLng.longitude, 1) //, -90.0, -180.0, 90.0, 180.0)
-                        if (places.isNotEmpty()) {
-                            return@fromCallable LocationDetailed(
-                                    places[0].getAddressLine(0),
-                                    location.subtitle,
-                                    location.placeID,
-                                    LatLng(places[0].latitude, places[0].longitude),
-                                    true,
-                                    location.myLocation)
-                        }
-                        throw Exception("Unknown address")
-                    }
-                    .subscribeOn(Schedulers.io()).doOnSubscribe { busy = true }
-                    .observeOn(AndroidSchedulers.mainThread()).doFinally { busy = false }
-                    .subscribe({
-                        if (location == this.location) {
-                            this.location = it
-                        }
-                    }, {
-                        if (location == this.location) {
-                            location.validationSuccess = false
-                            this.location = location
-                            err(it)
-                        }
-                    }))
+                        .subscribeOn(Schedulers.io()).doOnSubscribe { busy = true }
+                        .observeOn(AndroidSchedulers.mainThread()).doFinally { busy = false }
+                        .subscribe({
+                            if (location == this.location) {
+                                this.location = it
+                            }
+                        }, {
+                            if (location == this.location) {
+                                location.validationSuccess = false
+                                this.location = location
+                                err(it)
+                            }
+                        }))
         }
 
         return location
