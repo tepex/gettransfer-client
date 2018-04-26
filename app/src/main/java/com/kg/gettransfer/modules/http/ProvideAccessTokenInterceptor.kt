@@ -61,13 +61,18 @@ class ProvideAccessTokenInterceptor(val session: Session, rx2call: RxJava2CallAd
         requestBuilder.method(original.method(), original.body())
         val request = requestBuilder.build()
 
-        val response = chain.proceed(request)
+        try {
+            val response = chain.proceed(request)
 
-        if (response.code() == 403) {
-            session.logOut()
+            if (response.code() == 403) {
+                session.logOut()
+            }
+
+            return response
+        } catch (e: Exception) {
         }
 
-        return response
+        return null
     }
 
     // Blocks current thread

@@ -31,7 +31,7 @@
         <android.support.constraint.ConstraintLayout
             android:id="@+id/clButtons"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="56dp"
             android:background="#CCEEEEEE"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,23 +40,26 @@
             <ImageButton
                 android:id="@+id/btnTransfersFragment"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="0dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/list"
                 android:onClick="showTransfers"
+                android:paddingBottom="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btnCreateTransferFragment"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_view_headline_black_24dp" />
 
             <ImageButton
                 android:id="@+id/btnCreateTransferFragment"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="0dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/newTransfer"
                 android:onClick="showCreateTransfer"
+                android:paddingBottom="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btnAccountFragment"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -67,15 +70,54 @@
             <ImageButton
                 android:id="@+id/btnAccountFragment"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="0dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/profile"
                 android:onClick="showAccount"
+                android:paddingBottom="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@id/btnCreateTransferFragment"
-                app:srcCompat="@drawable/ic_person_black_24dp" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_person_gray_24dp" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:text="Transfers"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnCreateTransferFragment"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:text="New"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnAccountFragment"
+                app:layout_constraintStart_toStartOf="@+id/btnCreateTransferFragment" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:text="Profile"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/btnAccountFragment"
+                app:layout_constraintStart_toStartOf="@+id/btnAccountFragment" />
 
         </android.support.constraint.ConstraintLayout>
 

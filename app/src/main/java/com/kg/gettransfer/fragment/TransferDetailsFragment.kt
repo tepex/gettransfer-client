@@ -130,8 +130,8 @@ class TransferDetailsFragment : Fragment() {
         etPhone.setText(currentAccount.accountInfo.phone)
 
         view.post {
-            scrollView.fullScroll(FOCUS_UP)
-            scrollView.scrollTo(0, 0)
+            svTransfer.fullScroll(FOCUS_UP)
+            svTransfer.scrollTo(0, 0)
         }
 
         if (savedView != null) savedView?.tfTransport?.updatePrices(transfer)
@@ -168,8 +168,8 @@ class TransferDetailsFragment : Fragment() {
                                             "\n" + it.message
                                     tvError.setTextColor(resources.getColor(R.color.colorTextError))
                                     fabCreate.visibility = VISIBLE
-                                    scrollView.post {
-                                        scrollView.fullScroll(FOCUS_DOWN)
+                                    svTransfer.post {
+                                        svTransfer.fullScroll(FOCUS_DOWN)
                                     }
                                 }))
     }

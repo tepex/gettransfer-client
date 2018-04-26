@@ -21,7 +21,6 @@ import com.kg.gettransfer.modules.TransferModel
 import com.kg.gettransfer.modules.TransportTypes
 import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
-import com.kg.gettransfer.realm.Utils
 import com.kg.gettransfer.realm.getPlString
 import com.kg.gettransfer.views.DividerItemDecoration
 import com.kg.gettransfer.views.OffersAdapter
@@ -33,6 +32,8 @@ import kotlinx.android.synthetic.main.activity_transfer.*
 import kotlinx.android.synthetic.main.activity_transfer.view.*
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
+import java.text.DateFormat
+import java.util.*
 
 
 /**
@@ -78,7 +79,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         btnRestore.background.colorFilter = LightingColorFilter(
                 ContextCompat.getColor(application, R.color.colorYellow), 0)
 
-        val offset = (resources.displayMetrics.density * 32).toInt()
+        val offset = (resources.displayMetrics.density * 0).toInt()
         val dividerItemDecoration = DividerItemDecoration(
                 this, VERTICAL, offset, offset)
 
@@ -88,10 +89,10 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
                 return false
             }
         }
-        rvOffers.emptyView = tvNoOffers
+        rvOffers.emptyView = clNoOffers
 
-        swipeRefreshLayout.setOnRefreshListener {
-            swipeRefreshLayout.isRefreshing = false
+        srlTransfer.setOnRefreshListener {
+            srlTransfer.isRefreshing = false
             transferModel.update()
             if (transferModel.transfer?.isActive == true) offersModel.update()
         }
@@ -129,17 +130,27 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
             tvRouteInfo.visibility = VISIBLE
             tvRouteInfo.text = String.format(
                     getString(R.string.distance_time),
-                    transfer.getRouteDistanceConverted(this, currentAccount.accountInfo.getDistanceUnitId()),
+                    transfer.getRouteDistanceConverted(
+                            this, currentAccount.accountInfo.getDistanceUnitId()),
                     transfer.routeDuration.toString() + " " + getString(R.string.min))
         }
 
-        tvDate.text = Utils.dateToString(transfer.dateTo)
+        tvTime.text = DateFormat
+                .getTimeInstance(DateFormat.SHORT, Locale.getDefault())
+                .format(transfer.dateTo)
+        tvDate.text = DateFormat.getDateInstance().format(transfer.dateTo)
 
         tvPassengers.text = transfer.pax.toString()
         tvTypes.text = transportTypes.getNames(transfer.transportTypes)
         tvSign.text = transfer.nameSign
         tvChildSeats.text = transfer.childSeats
-        tvComments.text = transfer.comment ?: "-"
+
+        if (transfer.comment == null) {
+            grComments.visibility = GONE
+        } else {
+            grComments.visibility = VISIBLE
+            tvComments.text = transfer.comment ?: "-"
+        }
 
         if (transfer.status == "new" && !transfer.bookNow) {
             clActive.visibility = VISIBLE
@@ -177,7 +188,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         val offersCount = transfer.offersCount
         tvNoOffers.text =
                 if (offersCount == 0) getString(R.string.offers_will_be_shortly)
-                else offersCount.toString() + getPlString(R.string.pl_offers).forN(offersCount) +
+                else offersCount.toString() + " " + getPlString(R.string.pl_offers).forN(offersCount) +
                         "\n" + getString(R.string.swipe_to_refresh)
 
         Log.i("TransferActivity", "UI updated")
@@ -301,7 +312,9 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         alphaAnimation.duration = 120
         alphaAnimation.startOffset = 15
         alphaAnimation.fillAfter = true
-        val translateAnimation = TranslateAnimation(16f * resources.displayMetrics.density, 0f, 0f, 0f)
+        val translateAnimation = TranslateAnimation(
+                16f * resources.displayMetrics.density, 0f,
+                0f, 0f)
         translateAnimation.duration = 120
         translateAnimation.startOffset = 15
         translateAnimation.interpolator = DecelerateInterpolator(2f)
@@ -309,6 +322,8 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         set.addAnimation(alphaAnimation)
         set.addAnimation(translateAnimation)
         clOffer.startAnimation(set)
+
+        svOffer.scrollTo(0, 0)
     }
 
 
@@ -347,7 +362,9 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
         val alphaAnimation = AlphaAnimation(1f, 0f)
         alphaAnimation.duration = 90
-        val translateAnimation = TranslateAnimation(0f, 12f * resources.displayMetrics.density, 0f, 0f)
+        val translateAnimation = TranslateAnimation(
+                0f, 12f * resources.displayMetrics.density,
+                0f, 0f)
         translateAnimation.duration = 90
         translateAnimation.interpolator = AccelerateInterpolator()
         val set = AnimationSet(true)
@@ -365,7 +382,7 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     }
 
     fun cancel(v: View) {
-        scrollView.fullScroll(FOCUS_UP)
+        svTransfer.fullScroll(FOCUS_UP)
         transferModel.cancel()
     }
 
@@ -376,7 +393,6 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     }
 
     fun restore(v: View) {
-        scrollView.fullScroll(FOCUS_UP) //TODO: Remove when header implemented
         transferModel.restore()
     }
 

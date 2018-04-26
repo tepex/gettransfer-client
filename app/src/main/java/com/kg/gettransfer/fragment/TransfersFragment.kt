@@ -14,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
-import android.widget.Toast
 import com.kg.gettransfer.R
 import com.kg.gettransfer.activity.login.LoginActivity
 import com.kg.gettransfer.mainactivity.MainActivity
@@ -63,7 +62,7 @@ class TransfersFragment : Fragment(), KoinComponent {
                     false)!!
 
             with(view) {
-                initRecyclerView(view.rvTransfers, view.swipeRefreshLayout)
+                initRecyclerView(view.rvTransfers, view.srlTransfer)
 
                 tvActive.setOnClickListener {
                     updateTabs(true)
@@ -89,7 +88,7 @@ class TransfersFragment : Fragment(), KoinComponent {
         disposables.add(currentAccount.addOnAccountChanged { updateUI() })
 
         disposables.add(transfersModel.addOnBusyChanged {
-            swipeRefreshLayout.isRefreshing = it
+            srlTransfer.isRefreshing = it
         })
 
         disposables.add(transfersModel.toastOnError(
@@ -128,7 +127,9 @@ class TransfersFragment : Fragment(), KoinComponent {
         }
 
         val dividerItemDecoration = DividerItemDecoration(
-                activity, VERTICAL, (resources.displayMetrics.density * 16).toInt(), 0)
+                activity, VERTICAL,
+                0, //(resources.displayMetrics.density * 16).toInt(),
+                0)
 
         rvTransfers.addItemDecoration(dividerItemDecoration)
         rvTransfers.adapter = adapterActive
@@ -149,7 +150,7 @@ class TransfersFragment : Fragment(), KoinComponent {
 
 
     private fun showTransfers() {
-        swipeRefreshLayout.visibility = VISIBLE
+        srlTransfer.visibility = VISIBLE
         clLoggedOut.visibility = GONE
         tvActive.visibility = VISIBLE
         tvArchive.visibility = VISIBLE
@@ -158,7 +159,7 @@ class TransfersFragment : Fragment(), KoinComponent {
 
 
     private fun showLoggedOut() {
-        swipeRefreshLayout.visibility = GONE
+        srlTransfer.visibility = GONE
         clLoggedOut.visibility = VISIBLE
         tvActive.visibility = INVISIBLE
         tvArchive.visibility = INVISIBLE

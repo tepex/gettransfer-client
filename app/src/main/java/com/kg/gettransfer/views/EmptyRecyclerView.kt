@@ -3,6 +3,7 @@ package com.kg.gettransfer.views
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SimpleItemAnimator
 import android.util.AttributeSet
 import android.view.View
 
@@ -48,6 +49,13 @@ class EmptyRecyclerView : RecyclerView {
     constructor(c: Context) : super(c)
     constructor(c: Context, attrs: AttributeSet) : super(c, attrs)
     constructor(c: Context, attrs: AttributeSet, defStyle: Int) : super(c, attrs, defStyle)
+
+    init {
+        val animator = itemAnimator
+        if (animator is SimpleItemAnimator) {
+            animator.supportsChangeAnimations = false
+        }
+    }
 
     private fun updateEmptyView() {
         if (emptyView == null) return

@@ -14,8 +14,8 @@
 
         <ImageButton
             android:id="@+id/ibBack"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,11 +26,11 @@
             android:id="@+id/etLocation"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@android:color/transparent"
             android:drawablePadding="8dp"
             android:ems="10"
             android:hint="Place name"
             android:inputType="text"
-            android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/ibBack"
@@ -40,8 +40,8 @@
 
         <ImageButton
             android:id="@+id/ibOk"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             app:layout_constraintEnd_toEndOf="parent"

@@ -41,12 +41,14 @@
         <com.kg.gettransfer.views.TransferStatusView
             android:id="@+id/transferStatusView"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
+            android:layout_height="24dp"
             android:layout_marginEnd="24dp"
             android:layout_marginRight="24dp"
-            android:layout_marginTop="16dp"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp"
+            android:layout_marginTop="20dp"
+            android:paddingBottom="12dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingTop="12dp"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -67,7 +69,7 @@
             android:id="@+id/line4"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:background="@color/colorSeparator"
+            android:background="@color/colorSeparatorLightSolid"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -75,16 +77,17 @@
     </android.support.constraint.ConstraintLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+        android:id="@+id/srlTransfer"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@color/colorBGSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/clHeader">
 
         <ScrollView
-            android:id="@+id/scrollView"
+            android:id="@+id/svTransfer"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -92,27 +95,73 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/tvDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
-                    android:text="18:00   24 Aug 2018"
-                    android:textColor="@color/colorTextDate"
-                    app:layout_constraintBaseline_toBaselineOf="@id/tvlPickUp"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                <View
+                    android:id="@+id/bgInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@color/colorBG"
+                    app:layout_constraintBottom_toBottomOf="@id/line2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_goneMarginTop="0dp" />
 
                 <TextView
                     android:id="@+id/tvlPickUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="64dp"
-                    android:layout_marginStart="64dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="32dp"
                     android:text="@string/pick_up_at"
                     android:textColor="@color/colorTextGray"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/ivTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="4dp"
+                    android:alpha="0.7"
+                    app:layout_constraintBottom_toBottomOf="@id/tvlPickUp"
+                    app:layout_constraintEnd_toStartOf="@id/tvTime"
+                    app:layout_constraintTop_toTopOf="@id/tvlPickUp"
+                    app:srcCompat="@drawable/ic_access_time_gray_20dp" />
+
+                <TextView
+                    android:id="@+id/tvTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:text="18:00"
+                    android:textColor="@color/colorTextDate"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tvlPickUp"
+                    app:layout_constraintEnd_toStartOf="@id/ivCalendar" />
+
+                <ImageView
+                    android:id="@+id/ivCalendar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="4dp"
+                    android:alpha="0.7"
+                    app:layout_constraintBottom_toBottomOf="@id/tvlPickUp"
+                    app:layout_constraintEnd_toStartOf="@id/tvDate"
+                    app:layout_constraintTop_toTopOf="@id/tvlPickUp"
+                    app:srcCompat="@drawable/ic_calendar_gray_20dp" />
+
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:text="24 Aug 2018"
+                    android:textColor="@color/colorTextDate"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tvlPickUp"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
                 <ImageView
                     android:id="@+id/imageView4"
@@ -128,12 +177,10 @@
                     android:id="@+id/tvlFrom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="64dp"
-                    android:layout_marginStart="64dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="24dp"
                     android:text="@string/from"
                     android:textColor="@color/colorTextGray"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tvFrom"
                     app:layout_constraintTop_toBottomOf="@id/tvlPickUp" />
 
                 <TextView
@@ -141,8 +188,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
-                    android:layout_marginLeft="64dp"
-                    android:layout_marginStart="64dp"
+                    android:layout_marginLeft="72dp"
+                    android:layout_marginStart="72dp"
                     android:text="Moscow, Domodedovo Airport"
                     android:textColor="@color/colorTextBlack"
                     android:textSize="18sp"
@@ -154,8 +201,8 @@
                     android:id="@+id/ivTo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="64dp"
-                    android:layout_marginStart="64dp"
+                    android:layout_marginLeft="72dp"
+                    android:layout_marginStart="72dp"
                     app:layout_constraintBottom_toBottomOf="@id/tvlTo"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tvlTo"
@@ -178,8 +225,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
-                    android:layout_marginLeft="64dp"
-                    android:layout_marginStart="64dp"
+                    android:layout_marginLeft="72dp"
+                    android:layout_marginStart="72dp"
                     android:text="Moscow, Tverskaya, 42a"
                     android:textColor="@color/colorTextAccent"
                     android:textSize="18sp"
@@ -228,13 +275,15 @@
 
                     <TextView
                         android:id="@+id/tvRouteInfo"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="32dp"
-                        android:layout_marginTop="16dp"
-                        android:gravity="end"
+                        android:layout_marginLeft="32dp"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="24dp"
                         android:textColor="@color/colorTextGray"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <View
@@ -369,6 +418,12 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
 
+                    <android.support.constraint.Group
+                        android:id="@+id/grComments"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:constraint_referenced_ids="tvlComments, tvComments" />
+
                 </android.support.constraint.ConstraintLayout>
 
                 <View
@@ -377,6 +432,7 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="24dp"
                     android:background="@color/colorSeparator"
+                    android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/clDetails"
@@ -423,8 +479,10 @@
                         android:layout_marginTop="24dp"
                         android:minHeight="16dp"
                         android:onClick="restore"
+                        android:paddingBottom="10dp"
                         android:paddingLeft="24dp"
                         android:paddingRight="24dp"
+                        android:paddingTop="10dp"
                         android:text="@string/restore_request"
                         android:textAllCaps="false"
                         android:textSize="14sp"
@@ -439,7 +497,7 @@
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
                     android:paddingBottom="32dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/line2">
@@ -470,18 +528,6 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/tvlOffers" />
 
-                    <TextView
-                        android:id="@+id/tvConnecting"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="32dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_rounded_2_yellow"
-                        android:text="@string/connecting_to_carriers"
-                        android:textColor="@color/colorTextBlack"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tvlOffers" />
-
                     <ProgressBar
                         android:id="@+id/progressBarOffers"
                         style="?android:attr/progressBarStyle"
@@ -494,61 +540,124 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <View
+                        android:id="@+id/line18"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:background="@color/colorSeparator"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toTopOf="@id/flOffers"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_goneMarginTop="0dp" />
+
                     <FrameLayout
                         android:id="@+id/flOffers"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@color/colorBG"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tvConnecting">
+                        app:layout_constraintTop_toBottomOf="@id/tvlOffers">
 
                         <com.kg.gettransfer.views.EmptyRecyclerView
                             android:id="@+id/rvOffers"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:clipToPadding="false"
-                            android:maxHeight="300dp" />
+                            android:clipToPadding="false" />
 
-                        <TextView
-                            android:id="@+id/tvNoOffers"
+                        <android.support.constraint.ConstraintLayout
+                            android:id="@+id/clNoOffers"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="120dp"
-                            android:layout_marginStart="32dp"
-                            android:layout_marginTop="16dp"
-                            android:text="@string/offers_will_be_shortly"
-                            android:textColor="@color/colorTextGray" />
+                            android:paddingBottom="24dp"
+                            android:paddingTop="24dp">
+
+                            <TextView
+                                android:id="@+id/tvConnecting"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="32dp"
+                                android:layout_marginLeft="32dp"
+                                android:layout_marginStart="32dp"
+                                android:background="@drawable/bg_rounded_2_yellow"
+                                android:text="@string/connecting_to_carriers"
+                                android:textColor="@color/colorTextBlack"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/tvNoOffers"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="160dp"
+                                android:layout_marginLeft="32dp"
+                                android:layout_marginRight="160dp"
+                                android:layout_marginStart="32dp"
+                                android:layout_marginTop="16dp"
+                                android:text="@string/offers_will_be_shortly"
+                                android:textColor="@color/colorTextGray"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/tvConnecting" />
+
+                        </android.support.constraint.ConstraintLayout>
 
                     </FrameLayout>
 
+                    <View
+                        android:id="@+id/line17"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:background="@color/colorSeparator"
+                        android:visibility="invisible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/flOffers"
+                        app:layout_goneMarginTop="0dp" />
+
                     <Button
                         android:id="@+id/btnCare"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
+                        android:layout_marginLeft="32dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginStart="32dp"
                         android:minHeight="16dp"
+                        android:paddingBottom="10dp"
                         android:paddingLeft="24dp"
                         android:paddingRight="24dp"
+                        android:paddingTop="10dp"
                         android:text="@string/care_service"
                         android:textAllCaps="false"
                         app:layout_constraintBaseline_toBaselineOf="@id/btnCancel"
-                        app:layout_constraintEnd_toStartOf="@id/btnCancel" />
+                        app:layout_constraintEnd_toStartOf="@+id/btnCancel"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent" />
 
                     <Button
                         android:id="@+id/btnCancel"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="32dp"
-                        android:layout_marginTop="64dp"
+                        android:layout_marginTop="48dp"
                         android:minHeight="16dp"
                         android:onClick="cancel"
+                        android:paddingBottom="10dp"
                         android:paddingLeft="24dp"
                         android:paddingRight="24dp"
+                        android:paddingTop="10dp"
                         android:text="@string/cancel_request"
                         android:textAllCaps="false"
                         android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/btnCare"
                         app:layout_constraintTop_toBottomOf="@id/flOffers" />
 
                 </android.support.constraint.ConstraintLayout>
@@ -557,8 +666,8 @@
                     android:id="@+id/ivMarkerFrom"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="28dp"
+                    android:layout_marginStart="28dp"
                     android:layout_marginTop="14dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tvlFrom"
@@ -581,8 +690,8 @@
                     android:id="@+id/ivMarkerTo"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="28dp"
+                    android:layout_marginStart="28dp"
                     android:layout_marginTop="14dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tvlTo"
@@ -630,7 +739,7 @@
             android:id="@+id/line5"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:background="@color/colorSeparator"
+            android:background="@color/colorSeparatorLightSolid"
             app:layout_constraintBottom_toBottomOf="@id/btnPaymentBack"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

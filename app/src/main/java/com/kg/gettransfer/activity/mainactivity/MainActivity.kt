@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
                 else R.drawable.ic_add_box_black_24dp)
         btnAccount.setImageResource(
                 if (i == 2) R.drawable.ic_person_blue_24dp
-                else R.drawable.ic_person_black_24dp)
+                else R.drawable.ic_person_gray_24dp)
     }
 
 

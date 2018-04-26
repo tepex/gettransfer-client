@@ -351,6 +351,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
 
     fun setFromMyCurrentLocation(askPermissionIfNotPermitted: Boolean) {
+        val activity = activity ?: return
         if (checkSelfPermission(activity, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 if (location != null)

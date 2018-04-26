@@ -76,7 +76,7 @@
     </android.support.constraint.ConstraintLayout>
 
     <ScrollView
-        android:id="@+id/scrollView"
+        android:id="@+id/svTransfer"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorBG"

@@ -23,13 +23,13 @@ class TransferStatusView : TextView {
     }
 
     fun update(item: Transfer, short: Boolean = false) {
-        text = item.strStatus(context)
+        //text = item.strStatus(context)
         when {
             item.isActiveNew() -> {
                 setTextColor(0xff000000.toInt())
                 setBackgroundResource(R.drawable.bg_rounded_2_yellow)
                 val offers = item.offersCount
-                if (short) text =
+                text =
                         if (offers > 0)
                             offers.toString() + " " + context.getPlString(R.string.pl_offers).forN(offers)
                         else context.getString(R.string.status_long_connecting)
