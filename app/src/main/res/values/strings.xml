@@ -18,6 +18,8 @@
 
     <string name="offers">Offers</string>
 
+    <string name="number_symbol">#</string>
+
     <string name="carrier_number">Carrier #</string>
 
     <string name="from">From</string>
@@ -141,4 +143,6 @@
 
     <string name="payment_processing_fee_etc">"Payment processing fee is 3%\nRefund is available 3 days before trip"</string>
     <string name="unable_to_update_transfers">Unable to update transfers</string>
+
+    <string name="new_transfer_short">New</string>
 </resources>

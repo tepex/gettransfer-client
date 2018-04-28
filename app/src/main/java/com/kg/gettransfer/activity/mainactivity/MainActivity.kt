@@ -6,6 +6,7 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
+import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.AppCompatImageButton
@@ -67,13 +68,13 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
-        fragmentManager.addOnBackStackChangedListener {
+        supportFragmentManager.addOnBackStackChangedListener {
             clNavbar.visibility =
                     if (fragmentManager.backStackEntryCount < 1) View.VISIBLE
                     else View.GONE
         }
 
-        val ft = fragmentManager.beginTransaction()
+        val ft = supportFragmentManager.beginTransaction()
         ft.add(R.id.flFragment, frCreateTransfer, TAG)
         ft.disallowAddToBackStack()
         ft.commit()
@@ -95,7 +96,7 @@ class MainActivity : AppCompatActivity() {
 
         updateButtons(i)
 
-        val ft = fragmentManager.beginTransaction()
+        val ft = supportFragmentManager.beginTransaction()
         ft.replace(
                 R.id.flFragment,
                 when (i) {

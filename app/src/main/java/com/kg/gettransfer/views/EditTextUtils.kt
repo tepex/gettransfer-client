@@ -8,12 +8,12 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.format.DateFormat
 import android.util.AttributeSet
 import android.view.*
 import android.widget.EditText
 import android.widget.TextView
 import com.kg.gettransfer.R
-import java.text.DateFormat
 import java.util.*
 
 
@@ -125,7 +125,7 @@ class DateField : TextView {
             val c = Calendar.getInstance()
             try {
                 c.time = DateFormat
-                        .getDateInstance()
+                        .getMediumDateFormat(context)
                         .parse(text.toString())
             } catch (e: Exception) {
             }
@@ -138,7 +138,7 @@ class DateField : TextView {
                         c.set(Calendar.MONTH, m)
                         c.set(Calendar.DAY_OF_MONTH, d)
                         text = DateFormat
-                                .getDateInstance()
+                                .getMediumDateFormat(context)
                                 .format(c.time)
                     },
                     c.get(Calendar.YEAR),
@@ -175,7 +175,7 @@ class TimeField : TextView {
 
             try {
                 c.time = DateFormat
-                        .getTimeInstance(DateFormat.SHORT)
+                        .getTimeFormat(context)
                         .parse(text.toString())
             } catch (e: Exception) {
             }
@@ -186,7 +186,7 @@ class TimeField : TextView {
                         c.set(Calendar.HOUR_OF_DAY, h)
                         c.set(Calendar.MINUTE, m)
                         text = DateFormat
-                                .getTimeInstance(DateFormat.SHORT)
+                                .getTimeFormat(context)
                                 .format(c.time)
                     },
                     c.get(Calendar.HOUR_OF_DAY),

@@ -1,10 +1,10 @@
 package com.kg.gettransfer.fragment
 
 
-import android.app.Fragment
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -82,7 +82,7 @@ class TransferDetailsFragment : Fragment() {
             }
 
             if (!::transfer.isInitialized) {
-                fragmentManager.popBackStackImmediate()
+                fragmentManager?.popBackStackImmediate()
             } else {
                 v.tfTransport.updatePrices(transfer)
 
@@ -90,7 +90,7 @@ class TransferDetailsFragment : Fragment() {
 
                 initPromoCodeUI(v.etPromoCode, v.tvPromoInfo, v.tvPromoValidation, v.pbPromoValidation)
 
-                v.btnBack.setOnClickListener { fragmentManager.popBackStackImmediate() }
+                v.btnBack.setOnClickListener { fragmentManager?.popBackStackImmediate() }
 
                 updateUIFromTransfer()
             }
@@ -158,7 +158,7 @@ class TransferDetailsFragment : Fragment() {
 
                                     val act = activity as MainActivity // TODO: Callbacks here
 
-                                    fragmentManager.popBackStackImmediate()
+                                    fragmentManager?.popBackStackImmediate()
 
                                     act.showTransfers(null)
                                 },
@@ -180,7 +180,7 @@ class TransferDetailsFragment : Fragment() {
             fabCreate.visibility = INVISIBLE
             progressBar.visibility = VISIBLE
             fabProgress.visibility = VISIBLE
-            tvError.text = activity.getString(R.string.dont_worry)
+            tvError.text = activity?.getString(R.string.dont_worry)
             tvError.setTextColor(resources.getColor(R.color.colorTextGray))
         } else {
             progressBar.visibility = INVISIBLE
@@ -255,7 +255,7 @@ class TransferDetailsFragment : Fragment() {
             tvError.setTextColor(resources.getColor(R.color.colorTextError))
             return false
         } else {
-            tvError.text = activity.getString(R.string.dont_worry)
+            tvError.text = activity?.getString(R.string.dont_worry)
             tvError.setTextColor(resources.getColor(R.color.colorTextGray))
             return true
         }

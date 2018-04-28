@@ -1,13 +1,13 @@
 package com.kg.gettransfer.fragment
 
 
-import android.app.Fragment
 import android.content.Intent
 import android.graphics.LightingColorFilter
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.text.Editable
 import android.text.TextWatcher
@@ -44,14 +44,14 @@ class AccountFragment : Fragment(), KoinComponent {
 
 
     override fun onCreateView(
-            inflater: LayoutInflater?,
+            inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?)
-            : View {
+            : View? {
         var v = savedView
 
         if (v == null) {
-            v = inflater?.inflate(
+            v = inflater.inflate(
                     R.layout.fragment_account,
                     container,
                     false)!!
@@ -67,7 +67,7 @@ class AccountFragment : Fragment(), KoinComponent {
                 }
                 btnLogIn.background.colorFilter =
                         LightingColorFilter(
-                                ContextCompat.getColor(activity, R.color.colorYellow), 0)
+                                ContextCompat.getColor(context, R.color.colorYellow), 0)
 
                 val phoneEditTextWatcher: TextWatcher = object : TextWatcher {
                     private val DELAY: Long = 500
@@ -100,7 +100,9 @@ class AccountFragment : Fragment(), KoinComponent {
     }
 
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onResume() {
+        super.onResume()
+
         disposables.add(currentAccount.addOnAccountChanged { updateUI() })
         disposables.add(currentAccount.addOnBusyProgressBar(progressBarAccount))
 

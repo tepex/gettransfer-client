@@ -1,9 +1,9 @@
 package com.kg.gettransfer.fragment
 
 
-import android.app.Fragment
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
@@ -32,7 +32,7 @@ import io.reactivex.functions.Consumer
 
 class ChooseLocationFragment : Fragment() {
     private val imm: InputMethodManager by lazy {
-        activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     }
 
     private val LAT_LNG_BOUNDS_WORLD = LatLngBounds(
@@ -47,6 +47,7 @@ class ChooseLocationFragment : Fragment() {
     private var rvLocations: ListView? = null
 
     private val adapter by lazy {
+        val activity = activity ?: throw Throwable("activity is null")
         LocationsArrayAdapter(
                 activity,
                 Consumer { l ->
@@ -139,7 +140,7 @@ class ChooseLocationFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
+        imm.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
     override fun onResume() {

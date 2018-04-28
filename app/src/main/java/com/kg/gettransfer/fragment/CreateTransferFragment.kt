@@ -2,8 +2,6 @@ package com.kg.gettransfer.fragment
 
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.app.Fragment
-import android.app.FragmentManager
 import android.content.Context
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Typeface
@@ -12,6 +10,8 @@ import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat.requestPermissions
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.ContextCompat.checkSelfPermission
 import android.support.v7.app.AlertDialog
@@ -89,19 +89,20 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val activity = activity ?: return
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
     }
 
 
     override fun onCreateView(
-            inflater: LayoutInflater?,
+            inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?)
-            : View {
+            : View? {
         var v = savedView
 
         if (v == null) {
-            v = inflater?.inflate(R.layout.fragment_createtransfer,
+            v = inflater.inflate(R.layout.fragment_createtransfer,
                     container,
                     false)!!
 
@@ -195,7 +196,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                 }
 
                 fabMyLocation.setOnClickListener {
-                    if (checkSelfPermission(activity, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
+                    if (checkSelfPermission(context, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
                         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                             if (location != null)
                                 map?.animateCamera(
@@ -207,7 +208,8 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                             if (hasMarkers()) fabRecenter.visibility = VISIBLE
                         }
                     } else {
-                        requestPermissions(
+                        val activity = activity
+                        if (activity != null) requestPermissions(
                                 activity,
                                 arrayOf(ACCESS_FINE_LOCATION),
                                 REQUEST_PERMISSION_ACCESS_FINE_LOCATION)
@@ -225,8 +227,12 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     private val hours = intArrayOf(
             2, 3, 4, 5, 6, 8, 10, 24, 48, 24 * 3, 24 * 4, 24 * 5, 24 * 10, 24 * 15)
 
-    private val plHours by lazy { activity.getPlString(R.string.pl_hours) }
-    private val plDays by lazy { activity.getPlString(R.string.pl_days) }
+    private val plHours by lazy {
+        context?.getPlString(R.string.pl_hours) ?: throw(Throwable("Context is null"))
+    }
+    private val plDays by lazy {
+        context?.getPlString(R.string.pl_days) ?: throw(Throwable("Context is null"))
+    }
     private val labels by lazy {
         arrayOf(
                 "2 ${plHours.forN(2)}",
@@ -246,10 +252,12 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     }
 
     private fun chooseDuration() {
-        val builder = AlertDialog.Builder(activity)
+        val context = context ?: return
+
+        val builder = AlertDialog.Builder(context)
 
         val alert = builder
-                .setTitle(activity.getString(R.string.duration))
+                .setTitle(activity?.getString(R.string.duration))
                 .setItems(
                         labels,
                         { _, i ->
@@ -269,31 +277,28 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     }
 
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setUpMapIfNeeded()
-    }
-
-
     override fun onResume() {
         super.onResume()
 
         mapView.onResume()
         setUpMapIfNeeded()
 
-        fragmentManager.addOnBackStackChangedListener(backStackListener)
+        fragmentManager?.addOnBackStackChangedListener(backStackListener)
+
+        setUpMapIfNeeded()
     }
 
 
     override fun onPause() {
         super.onPause()
-        fragmentManager.removeOnBackStackChangedListener(backStackListener)
+        fragmentManager?.removeOnBackStackChangedListener(backStackListener)
     }
 
 
     private fun setUpMapIfNeeded() {
         if (map == null) {
+            val activity = activity ?: return
+
             val connMgr = activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkInfo = connMgr.activeNetworkInfo
             if (networkInfo == null || !networkInfo.isConnected) {
@@ -314,13 +319,15 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
 
     private fun configureMap(map: GoogleMap) {
+        val context = context ?: return
+
         markerFrom = map.addMarker(
                 MarkerOptions()
                         .visible(false)
                         .position(LatLng(0.0, 0.0))
                         .anchor(0.5f, 0.95f)
                         .icon(BitmapDescriptorFactory
-                                .fromVector(activity, R.drawable.ic_place_black_24dp)))
+                                .fromVector(context, R.drawable.ic_place_black_24dp)))
 
         markerTo = map.addMarker(
                 MarkerOptions()
@@ -328,7 +335,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
                         .position(LatLng(0.0, 0.0))
                         .anchor(0.5f, 0.95f)
                         .icon(BitmapDescriptorFactory
-                                .fromVector(activity, R.drawable.ic_place_blue_24dp)))
+                                .fromVector(context, R.drawable.ic_place_blue_24dp)))
 
         map.uiSettings.isRotateGesturesEnabled = false
         map.uiSettings.isCompassEnabled = false
@@ -336,7 +343,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
         map.uiSettings.isTiltGesturesEnabled = false
         map.uiSettings.isMyLocationButtonEnabled = false
 
-        if (checkSelfPermission(activity, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
+        if (checkSelfPermission(context, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
             map.isMyLocationEnabled = true
         }
 
@@ -344,7 +351,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
             fabRecenter.visibility = VISIBLE
         }
 
-        view.postDelayed(
+        mapView.postDelayed(
                 { setFromMyCurrentLocation(true) },
                 1000)
     }
@@ -352,6 +359,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
     fun setFromMyCurrentLocation(askPermissionIfNotPermitted: Boolean) {
         val activity = activity ?: return
+
         if (checkSelfPermission(activity, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 if (location != null)
@@ -399,12 +407,12 @@ class CreateTransferFragment : Fragment(), KoinComponent {
             flSwapBG.visibility = GONE
             ivSwap.visibility = GONE
         }
-        pathChanged.run()
+        onLocationChanged.run()
     }
 
 
     private fun updateFab() {
-        val show = validateFields() && fragmentManager.backStackEntryCount == 0
+        val show = validateFields() && fragmentManager?.backStackEntryCount == 0
 
         fabConfirmStep.visibility = if (show) VISIBLE else GONE
 
@@ -417,7 +425,9 @@ class CreateTransferFragment : Fragment(), KoinComponent {
             lvTo.location.latLng != null
 
 
-    private val pathChanged = Runnable {
+    private val onLocationChanged = Runnable {
+        if (activity == null) return@Runnable
+
         val llFrom = lvFrom.location.latLng
         val llTo =
                 if (clDuration.visibility == VISIBLE) null
@@ -443,8 +453,8 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
 
     private fun installEditTextWatcher(v: View) {
-        v.lvFrom.onLocationChanged = pathChanged
-        v.lvTo.onLocationChanged = pathChanged
+        v.lvFrom.onLocationChanged = onLocationChanged
+        v.lvTo.onLocationChanged = onLocationChanged
     }
 
 
@@ -527,6 +537,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
         if (llFrom != null && llTo != null) {
             try {
+                val activity = activity ?: return
                 val padding = (96 * activity.resources.displayMetrics.density).toInt()
                 map.animateCamera(
                         CameraUpdateFactory.newLatLngBounds(
@@ -561,14 +572,17 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     }
 
 
-    private fun validateFields(): Boolean =
-            lvFrom.location.isValid() &&
-                    if (modeAB)
-                        lvTo.location.isValid() &&
-                                routeDuration > 0 &&
-                                routeDistance > 0
-                    else
-                        hireDuration > 0
+    private fun validateFields(): Boolean {
+        btnDurationDec.visibility = if (hireDuration > 2) VISIBLE else INVISIBLE
+
+        return lvFrom.location.isValid() &&
+                if (modeAB)
+                    lvTo.location.isValid() &&
+                            routeDuration > 0 &&
+                            routeDistance > 0
+                else
+                    hireDuration > 0
+    }
 
 
     private fun transferFromFields(): NewTransfer? {
@@ -595,6 +609,8 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
 
     private fun showTransferDetails() {
+        val fragmentManager = fragmentManager ?: return
+
         val transfer = transferFromFields() ?: return
 
         val ft = fragmentManager.beginTransaction()
@@ -623,6 +639,8 @@ class CreateTransferFragment : Fragment(), KoinComponent {
     private var ftidLocationChooser: Int = -1
 
     private fun showLocationChooser(lv: LocationView) {
+        val fragmentManager = fragmentManager ?: return
+
         if (frChooseLocation.isAdded) return
 
         val ft = fragmentManager.beginTransaction()
@@ -647,7 +665,7 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
 
     private fun hideLocationChooser() {
-        fragmentManager.popBackStack(ftidLocationChooser, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        fragmentManager?.popBackStack(ftidLocationChooser, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 }
 

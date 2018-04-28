@@ -1,10 +1,10 @@
 package com.kg.gettransfer.fragment
 
 
-import android.app.Fragment
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
@@ -51,12 +51,12 @@ class TransfersFragment : Fragment(), KoinComponent {
 
 
     override fun onCreateView(
-            inflater: LayoutInflater?,
+            inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?)
-            : View {
+            : View? {
         if (savedview == null) {
-            val view = inflater?.inflate(
+            val view = inflater.inflate(
                     R.layout.fragment_transfers,
                     container,
                     false)!!
@@ -84,7 +84,11 @@ class TransfersFragment : Fragment(), KoinComponent {
     }
 
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onResume() {
+        super.onResume()
+
+        val activity = activity ?: return
+
         disposables.add(currentAccount.addOnAccountChanged { updateUI() })
 
         disposables.add(transfersModel.addOnBusyChanged {

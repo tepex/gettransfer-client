@@ -72,7 +72,7 @@ class TransfersAdapter(
 
         holder.date.text = Utils.dateToShortString(context, transfer.dateTo)
 
-        holder.id.text = "#${transfer.id}"
+        holder.id.text = context.getString(R.string.number_symbol) + transfer.id
 
         holder.state.update(transfer, true)
 

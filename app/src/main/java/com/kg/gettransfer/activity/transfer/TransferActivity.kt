@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
 import android.view.View.*
@@ -32,8 +33,6 @@ import kotlinx.android.synthetic.main.activity_transfer.*
 import kotlinx.android.synthetic.main.activity_transfer.view.*
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
-import java.text.DateFormat
-import java.util.*
 
 
 /**
@@ -103,6 +102,9 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
 
         tvPriceOff.paintFlags = tvPriceOff.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         tvPriceOffOrigin.paintFlags = tvPriceOff.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+
+        btnPay.background.colorFilter = LightingColorFilter(
+                ContextCompat.getColor(this, R.color.colorYellow), 0)
     }
 
 
@@ -136,14 +138,22 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         }
 
         tvTime.text = DateFormat
-                .getTimeInstance(DateFormat.SHORT, Locale.getDefault())
+                .getTimeFormat(this)
                 .format(transfer.dateTo)
-        tvDate.text = DateFormat.getDateInstance().format(transfer.dateTo)
+        tvDate.text = DateFormat
+                .getMediumDateFormat(this)
+                .format(transfer.dateTo)
 
         tvPassengers.text = transfer.pax.toString()
         tvTypes.text = transportTypes.getNames(transfer.transportTypes)
         tvSign.text = transfer.nameSign
-        tvChildSeats.text = transfer.childSeats
+
+        if ((transfer.childSeats ?: "0").toInt() <= 0) {
+            grChildSeats.visibility = GONE
+        } else {
+            grChildSeats.visibility = VISIBLE
+            tvChildSeats.text = transfer.childSeats
+        }
 
         if (transfer.comment == null) {
             grComments.visibility = GONE

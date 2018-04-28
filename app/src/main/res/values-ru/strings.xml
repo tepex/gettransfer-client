@@ -7,7 +7,7 @@
     <string name="password">Пароль</string>
     <string name="restore_password"><a href="https://gettransfer.com/en/forgot_password">Восстановить пароль</a></string>
     <string name="no_net_info">Не соединения с сетью</string>
-    <string name="log_in_to_see_transfers_and_offers">Войдите в кабинет, чтобы просмотреть заявки</string>
+    <string name="log_in_to_see_transfers_and_offers">Войдите в кабинет, чтобы посмотреть заявки</string>
     <string name="create_new_transfer">Создать трансфер</string>
     <string name="no_transfers">Нет заявок</string>
     <string name="book">Бронь</string>
@@ -17,6 +17,8 @@
     <string name="list">Список</string>
 
     <string name="offers">Предложения</string>
+
+    <string name="number_symbol">№</string>
 
     <string name="carrier_number">Перевозчик №</string>
 
@@ -142,4 +144,6 @@
 
     <string name="payment_processing_fee_etc">Комиссия 3%</string>
     <string name="unable_to_update_transfers">Unable to update transfers</string>
+
+    <string name="new_transfer_short">Новый</string>
 </resources>
