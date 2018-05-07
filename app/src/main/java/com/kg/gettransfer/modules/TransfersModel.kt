@@ -77,11 +77,11 @@ class TransfersModel(
 
 
     fun getAllAsync(): RealmResults<Transfer> =
-            realm.where(Transfer::class.java).sort("dateTo").findAllAsync()
+            realm.where(Transfer::class.java).sort("dateTo.date").findAllAsync()
 
 
     fun getAllAsync(active: Boolean): RealmResults<Transfer> =
-            realm.where(Transfer::class.java).equalTo("isActive", active).sort("dateTo").findAllAsync()
+            realm.where(Transfer::class.java).equalTo("isActive", active).sort("dateTo.date").findAllAsync()
 
 
     fun updateTransfers() {

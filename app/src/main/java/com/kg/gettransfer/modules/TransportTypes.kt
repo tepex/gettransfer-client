@@ -4,7 +4,7 @@ package com.kg.gettransfer.modules
 import android.content.Context
 import com.kg.gettransfer.R
 import com.kg.gettransfer.modules.http.HttpApi
-import com.kg.gettransfer.realm.TransportType
+import com.kg.gettransfer.realm.secondary.TransportType
 import io.realm.Realm
 import org.koin.standalone.KoinComponent
 

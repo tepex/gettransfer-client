@@ -1,4 +1,4 @@
-package com.kg.gettransfer.realm
+package com.kg.gettransfer.realm.secondary
 
 
 import com.google.android.gms.maps.model.LatLng
@@ -15,7 +15,6 @@ import io.realm.annotations.RealmClass
 
 @RealmClass
 open class Location(
-
         @Expose
         @SerializedName("name")
         var name: String = "",
@@ -25,7 +24,6 @@ open class Location(
         var point: String = "")
 
     : RealmObject() {
-
 
     constructor(name: String, ll: LatLng) : this(name, "(${ll.latitude},${ll.longitude})")
 }

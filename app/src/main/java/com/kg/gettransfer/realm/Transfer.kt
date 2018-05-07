@@ -7,6 +7,8 @@ import com.google.gson.annotations.SerializedName
 import com.kg.gettransfer.R
 import com.kg.gettransfer.realm.Utils.hoursToString
 import com.kg.gettransfer.realm.Utils.kmToString
+import com.kg.gettransfer.realm.secondary.Location
+import com.kg.gettransfer.realm.secondary.ZonedDate
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
@@ -78,11 +80,11 @@ open class Transfer : RealmObject() {
 
     @Expose
     @SerializedName("date_to_local")
-    var dateTo: Date? = null
+    var dateTo: ZonedDate? = null
 
     @Expose
     @SerializedName("date_return_local")
-    var dateReturn: Date? = null
+    var dateReturn: ZonedDate? = null
 
     // --
 

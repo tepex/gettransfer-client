@@ -13,7 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.kg.gettransfer.R
 import com.kg.gettransfer.modules.http.json.PriceRange
-import com.kg.gettransfer.realm.TransportType
+import com.kg.gettransfer.realm.secondary.TransportType
 
 
 /**

@@ -1,4 +1,4 @@
-package com.kg.gettransfer.realm
+package com.kg.gettransfer.realm.secondary
 
 
 import com.google.gson.annotations.Expose
@@ -13,14 +13,16 @@ import io.realm.annotations.RealmClass
 
 
 @RealmClass
-open class PriceConverted : RealmObject() {
-    @Expose
-    @SerializedName("default")
-    var defaultCurrency: String? = null
+open class PriceConverted(
+        @Expose
+        @SerializedName("default")
+        var defaultCurrency: String? = null,
 
-    @Expose
-    @SerializedName("preferred")
-    var preferredCurrency: String? = null
+        @Expose
+        @SerializedName("preferred")
+        var preferredCurrency: String? = null)
+
+    : RealmObject() {
 
     override fun toString(): String =
             if (preferredCurrency == null) defaultCurrency ?: ""

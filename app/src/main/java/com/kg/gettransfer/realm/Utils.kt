@@ -4,6 +4,7 @@ package com.kg.gettransfer.realm
 import android.content.Context
 import android.text.format.DateUtils
 import com.kg.gettransfer.R
+import com.kg.gettransfer.realm.secondary.ZonedDate
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.RealmResults
@@ -56,8 +57,11 @@ object Utils {
 //                        .toString()
     }
 
-    fun dateToShortString(c: Context, date: Date?): String {
+    fun dateToShortString(c: Context, date: ZonedDate?): String {
         if (date == null) return "-"
+
+        val date = date.date
+        //TODO J!NJKNKJFNAD
         if (date.year == Date().year) return DateUtils.formatDateTime(
                 c,
                 date.time,

@@ -1,4 +1,4 @@
-package com.kg.gettransfer.realm
+package com.kg.gettransfer.realm.secondary
 
 
 import com.google.gson.annotations.Expose
@@ -15,19 +15,19 @@ import io.realm.annotations.RealmClass
 
 @RealmClass
 open class TransportType(
+        @Expose
         @PrimaryKey
         @SerializedName("id")
-        @Expose
         var id: String = "",
 
         var title: String = "",
 
-        @SerializedName("pax_max")
         @Expose
+        @SerializedName("pax_max")
         var paxMax: Int = 0,
 
-        @SerializedName("luggage_max")
         @Expose
+        @SerializedName("luggage_max")
         var luggageMax: Int = 0)
 
     : RealmObject()

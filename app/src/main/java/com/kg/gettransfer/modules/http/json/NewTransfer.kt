@@ -3,7 +3,7 @@ package com.kg.gettransfer.modules.http.json
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.kg.gettransfer.realm.Location
+import com.kg.gettransfer.realm.secondary.Location
 
 
 /**

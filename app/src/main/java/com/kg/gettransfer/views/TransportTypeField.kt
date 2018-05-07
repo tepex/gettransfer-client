@@ -15,7 +15,7 @@ import com.kg.gettransfer.modules.RouteInfoModel
 import com.kg.gettransfer.modules.TransportTypes
 import com.kg.gettransfer.modules.http.json.NewTransfer
 import com.kg.gettransfer.modules.http.json.PriceRange
-import com.kg.gettransfer.realm.TransportType
+import com.kg.gettransfer.realm.secondary.TransportType
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 

@@ -1,4 +1,4 @@
-package com.kg.gettransfer.realm
+package com.kg.gettransfer.realm.secondary
 
 
 import com.google.gson.annotations.Expose
@@ -8,18 +8,18 @@ import io.realm.annotations.RealmClass
 
 
 /**
- * Created by denisvakulenko on 07/03/2018.
+ * Created by denisvakulenko on 02/03/2018.
  */
 
 
 @RealmClass
-open class Locale(
+open class Language(
         @Expose
         @SerializedName("code")
-        var code: String = "",
+        var code: String? = null,
 
         @Expose
         @SerializedName("title")
-        var title: String = "")
+        var title: String? = null)
 
     : RealmObject()

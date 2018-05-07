@@ -14,7 +14,7 @@ import android.widget.Toast
 import com.kg.gettransfer.R
 import com.kg.gettransfer.modules.ConfigModel
 import com.kg.gettransfer.modules.CurrentAccount
-import com.kg.gettransfer.realm.Currency
+import com.kg.gettransfer.realm.secondary.Currency
 import io.reactivex.disposables.Disposable
 import io.realm.RealmList
 import org.koin.standalone.KoinComponent

@@ -3,7 +3,6 @@ package com.kg.gettransfer.modules.http
 
 import com.kg.gettransfer.modules.http.json.*
 import com.kg.gettransfer.realm.Config
-import com.kg.gettransfer.realm.TransportType
 import io.reactivex.Observable
 import retrofit2.Response
 import retrofit2.http.*

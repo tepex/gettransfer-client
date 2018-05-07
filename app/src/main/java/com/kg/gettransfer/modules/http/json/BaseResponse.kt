@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 import com.kg.gettransfer.realm.AccountInfo
 import com.kg.gettransfer.realm.Offer
 import com.kg.gettransfer.realm.Transfer
-import com.kg.gettransfer.realm.TransportType
+import com.kg.gettransfer.realm.secondary.TransportType
 import java.util.*
 
 

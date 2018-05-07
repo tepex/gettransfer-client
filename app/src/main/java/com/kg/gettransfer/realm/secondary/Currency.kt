@@ -1,4 +1,4 @@
-package com.kg.gettransfer.realm
+package com.kg.gettransfer.realm.secondary
 
 
 import com.google.gson.annotations.Expose

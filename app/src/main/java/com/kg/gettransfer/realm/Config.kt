@@ -3,11 +3,12 @@ package com.kg.gettransfer.realm
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.kg.gettransfer.realm.secondary.Currency
+import com.kg.gettransfer.realm.secondary.Locale
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
-import io.realm.annotations.Required
 
 
 /**

@@ -137,14 +137,13 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
                     transfer.routeDuration.toString() + " " + getString(R.string.min))
         }
 
-        val timezoneOffset = transfer.dateTo?.timezoneOffset
+        val tf = DateFormat.getTimeFormat(this)
+        tf.timeZone = transfer.dateTo?.getTimeZone()
+        tvTime.text = tf.format(transfer.dateTo?.date)
 
-        tvTime.text = DateFormat
-                .getTimeFormat(this)
-                .format(transfer.dateTo)
-        tvDate.text = DateFormat
-                .getMediumDateFormat(this)
-                .format(transfer.dateTo)
+        val df = DateFormat.getMediumDateFormat(this)
+        df.timeZone = transfer.dateTo?.getTimeZone()
+        tvDate.text = df.format(transfer.dateTo?.date)
 
         tvPassengers.text = transfer.pax.toString()
         tvTypes.text = transportTypes.getNames(transfer.transportTypes)
