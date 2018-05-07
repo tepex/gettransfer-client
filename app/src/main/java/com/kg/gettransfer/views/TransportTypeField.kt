@@ -3,10 +3,10 @@ package com.kg.gettransfer.views
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.app.DialogFragment
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.EditText
@@ -50,9 +50,9 @@ class TransportTypeField : EditText, KoinComponent {
         clearListenersFixFocus()
 
         setOnClickListener {
-            val fragmentManager = getActivity(context)?.fragmentManager
+            val supportFragmentManager = (getActivity(context) as AppCompatActivity).supportFragmentManager
             val dialog = TransportTypeDialog(this, pricesModel.info?.prices)
-            dialog.show(fragmentManager, "Type selection")
+            dialog.show(supportFragmentManager, "Type selection")
         }
 
         pricesModel.toastOnError(context, context.getString(R.string.unable_to_load_prices))
@@ -82,15 +82,17 @@ class TransportTypeField : EditText, KoinComponent {
 class TransportTypeDialog(
         private val tf: TransportTypeField,
         private val prices: Map<TransportType, PriceRange>?)
-    : DialogFragment(), KoinComponent {
+    : android.support.v4.app.DialogFragment(), KoinComponent {
 
     private val types: TransportTypes by inject()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val adapter = TransportTypesArrayAdapter(
-                activity, types.typesList, tf.checked, prices)
+        val context = context ?: throw Exception("Context is null")
 
-        val d = AlertDialog.Builder(activity)
+        val adapter = TransportTypesArrayAdapter(
+                context, types.typesList, tf.checked, prices)
+
+        val d = AlertDialog.Builder(context)
                 .setTitle(getString(R.string.transport))
                 .setAdapter(adapter, null)
                 .setPositiveButton("Ok", { d, _ -> d.dismiss() })

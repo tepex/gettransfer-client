@@ -3,10 +3,10 @@ package com.kg.gettransfer.views
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.app.DialogFragment
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.TextView
@@ -52,7 +52,7 @@ class DistanceUnitField : TextView, KoinComponent {
                 return@setOnClickListener
             }
 
-            val fragmentManager = getActivity(context)?.fragmentManager
+            val fragmentManager = (getActivity(context) as AppCompatActivity).supportFragmentManager
             val dialog = DistanceUnitDialog(
                     { currentAccount.putAccount(distanceUnit = it) },
                     units)
@@ -81,10 +81,11 @@ class DistanceUnitField : TextView, KoinComponent {
 
 @SuppressLint("ValidFragment")
 class DistanceUnitDialog(private val f: (String?) -> Unit, private val units: RealmList<String?>)
-    : DialogFragment(), KoinComponent {
+    : android.support.v4.app.DialogFragment(), KoinComponent {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return AlertDialog.Builder(activity)
-                .setTitle(activity.getString(R.string.distance_unit))
+        val context = context!!
+        return AlertDialog.Builder(context)
+                .setTitle(context.getString(R.string.distance_unit))
                 .setItems(units.toTypedArray(), { _, i -> f(units[i]) })
                 .setPositiveButton("Ok", { d, _ -> d.dismiss() })
                 .create()

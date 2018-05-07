@@ -6,7 +6,6 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
-import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.AppCompatImageButton
@@ -70,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
         supportFragmentManager.addOnBackStackChangedListener {
             clNavbar.visibility =
-                    if (fragmentManager.backStackEntryCount < 1) View.VISIBLE
+                    if (supportFragmentManager.backStackEntryCount < 1) View.VISIBLE
                     else View.GONE
         }
 
@@ -111,7 +110,7 @@ class MainActivity : AppCompatActivity() {
             ft.commitNow()
         } else {
             ft.commit()
-            fragmentManager.executePendingTransactions()
+            supportFragmentManager.executePendingTransactions()
         }
     }
 
@@ -130,7 +129,7 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onBackPressed() {
-        if (fragmentManager.backStackEntryCount == 0 && (tab != 1 || prevTab != 1)) {
+        if (supportFragmentManager.backStackEntryCount == 0 && (tab != 1 || prevTab != 1)) {
             selectTab(prevTab)
             prevTab = 1
         } else super.onBackPressed()

@@ -5,8 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.location.Geocoder
 import android.preference.PreferenceManager
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import com.google.gson.*
 import com.google.maps.GeoApiContext
 import com.kg.gettransfer.activity.login.LoginActivity
 import com.kg.gettransfer.activity.login.LoginContract
@@ -23,6 +22,10 @@ import com.kg.gettransfer.modules.http.ProvideAccessTokenInterceptor
 import org.koin.dsl.module.applicationContext
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.reflect.Type
+import java.text.SimpleDateFormat
+import java.time.OffsetDateTime
+import java.time.ZonedDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -43,13 +46,28 @@ val AppModule = applicationContext {
     bean { RxJava2CallAdapterFactory.create() }
     bean {
         val format = "yyyy-MM-dd'T'HH:mm:ssZ"
-        val gson = GsonBuilder()
-                .setDateFormat(format)
-                .create()
-        val dateTypeAdapter = gson.getAdapter(Date::class.java)
+
+        val dateTypeAdapter = object : JsonDeserializer<Date> {
+            val df = SimpleDateFormat(format)
+
+            init {
+                df.timeZone = TimeZone.getTimeZone("UTC")
+            }
+
+            override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Date {
+                return try {
+                    val d = df.parse(json?.asString)
+                    d
+                } catch (e: java.text.ParseException) {
+                    e.printStackTrace()
+                    Date(0)
+                }
+            }
+        }
+
         GsonBuilder()
                 .setDateFormat(format)
-                .registerTypeAdapter(Date::class.java, dateTypeAdapter.nullSafe())
+                .registerTypeAdapter(Date::class.java, dateTypeAdapter)
                 .excludeFieldsWithoutExposeAnnotation()
                 .create() as Gson
     }

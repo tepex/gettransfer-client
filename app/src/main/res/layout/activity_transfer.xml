@@ -28,14 +28,17 @@
 
         <TextView
             android:id="@+id/tvHeader"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="64dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:gravity="center_vertical"
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
             android:text="Transfer #0021"
             android:textColor="@color/colorTextGray"
             android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/transferStatusView"
             app:layout_constraintStart_toEndOf="@id/btnBack2"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -110,13 +113,16 @@
 
                 <TextView
                     android:id="@+id/tvlPickUp"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginLeft="32dp"
+                    android:layout_marginRight="8dp"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="32dp"
                     android:text="@string/pick_up_at"
                     android:textColor="@color/colorTextGray"
+                    app:layout_constraintEnd_toStartOf="@+id/ivTime"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -124,12 +130,12 @@
                     android:id="@+id/ivTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="4dp"
+                    android:layout_marginEnd="3dp"
+                    android:layout_marginRight="3dp"
                     android:alpha="0.7"
-                    app:layout_constraintBottom_toBottomOf="@id/tvlPickUp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvTime"
                     app:layout_constraintEnd_toStartOf="@id/tvTime"
-                    app:layout_constraintTop_toTopOf="@id/tvlPickUp"
+                    app:layout_constraintTop_toTopOf="@+id/tvTime"
                     app:srcCompat="@drawable/ic_access_time_gray_20dp" />
 
                 <TextView
@@ -147,12 +153,12 @@
                     android:id="@+id/ivCalendar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="4dp"
                     android:layout_marginRight="4dp"
                     android:alpha="0.7"
-                    app:layout_constraintBottom_toBottomOf="@id/tvlPickUp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvDate"
                     app:layout_constraintEnd_toStartOf="@id/tvDate"
-                    app:layout_constraintTop_toTopOf="@id/tvlPickUp"
+                    app:layout_constraintTop_toTopOf="@+id/tvDate"
                     app:srcCompat="@drawable/ic_calendar_gray_20dp" />
 
                 <TextView
@@ -568,7 +574,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvlOffers">
+                        app:layout_constraintTop_toBottomOf="@+id/tvChooseCarrier">
 
                         <com.kg.gettransfer.views.EmptyRecyclerView
                             android:id="@+id/rvOffers"
@@ -637,8 +643,8 @@
                         android:layout_marginStart="32dp"
                         android:minHeight="16dp"
                         android:paddingBottom="10dp"
-                        android:paddingLeft="24dp"
-                        android:paddingRight="24dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:paddingTop="10dp"
                         android:text="@string/care_service"
                         android:textAllCaps="false"
@@ -657,8 +663,8 @@
                         android:minHeight="16dp"
                         android:onClick="cancel"
                         android:paddingBottom="10dp"
-                        android:paddingLeft="24dp"
-                        android:paddingRight="24dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:paddingTop="10dp"
                         android:text="@string/cancel_request"
                         android:textAllCaps="false"

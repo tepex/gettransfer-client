@@ -137,6 +137,8 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
                     transfer.routeDuration.toString() + " " + getString(R.string.min))
         }
 
+        val timezoneOffset = transfer.dateTo?.timezoneOffset
+
         tvTime.text = DateFormat
                 .getTimeFormat(this)
                 .format(transfer.dateTo)
