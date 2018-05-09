@@ -17,11 +17,11 @@ import android.view.ViewGroup
 import com.kg.gettransfer.R
 import com.kg.gettransfer.activity.login.LoginActivity
 import com.kg.gettransfer.mainactivity.MainActivity
-import com.kg.gettransfer.modules.CurrentAccount
-import com.kg.gettransfer.modules.TransfersModel
-import com.kg.gettransfer.views.DividerItemDecoration
-import com.kg.gettransfer.views.EmptyRecyclerView
-import com.kg.gettransfer.views.TransfersAdapter
+import com.kg.gettransfer.module.CurrentAccount
+import com.kg.gettransfer.module.TransfersModel
+import com.kg.gettransfer.view.base.DividerItemDecoration
+import com.kg.gettransfer.view.base.EmptyRecyclerView
+import com.kg.gettransfer.adapter.TransfersAdapter
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_transfers.*
 import kotlinx.android.synthetic.main.fragment_transfers.view.*

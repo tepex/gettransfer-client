@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".fragment.CreateTransferFragment">
 
-    <com.kg.gettransfer.views.MapViewExt
+    <com.kg.gettransfer.view.base.MapViewExt
         android:id="@+id/mapView"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -152,7 +152,7 @@
             app:layout_constraintTop_toTopOf="@+id/tvlFrom"
             app:srcCompat="@drawable/ic_arrow_black_16dp" />
 
-        <com.kg.gettransfer.views.LocationView
+        <com.kg.gettransfer.view.LocationView
             android:id="@+id/lvFrom"
             android:layout_width="0dp"
             android:layout_height="72dp"
@@ -191,7 +191,7 @@
             app:layout_constraintStart_toEndOf="@+id/ivTo2"
             app:layout_constraintTop_toTopOf="@id/lvTo" />
 
-        <com.kg.gettransfer.views.LocationView
+        <com.kg.gettransfer.view.LocationView
             android:id="@+id/lvTo"
             android:layout_width="0dp"
             android:layout_height="72dp"

@@ -116,7 +116,7 @@
                 app:layout_constraintBaseline_toBaselineOf="@id/etDate"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <com.kg.gettransfer.views.DateField
+            <com.kg.gettransfer.view.base.DateField
                 android:id="@+id/etDate"
                 style="@style/etField"
                 android:layout_width="0dp"
@@ -141,7 +141,7 @@
                 app:layout_constraintTop_toTopOf="@+id/textView"
                 app:srcCompat="@drawable/ic_calendar_gray_20dp" />
 
-            <com.kg.gettransfer.views.TimeField
+            <com.kg.gettransfer.view.base.TimeField
                 android:id="@+id/etTime"
                 style="@style/etField"
                 android:layout_width="0dp"
@@ -261,7 +261,7 @@
                 app:layout_constraintTop_toTopOf="@+id/textView63"
                 app:srcCompat="@drawable/ic_airport_shuttle_gray_20dp" />
 
-            <com.kg.gettransfer.views.TransportTypeField
+            <com.kg.gettransfer.view.TransportTypeField
                 android:id="@+id/tfTransport"
                 style="@style/etField"
                 android:layout_width="0dp"
@@ -412,7 +412,7 @@
                 app:layout_constraintStart_toEndOf="@id/textView39"
                 app:layout_constraintTop_toBottomOf="@id/textView18" />
 
-            <com.kg.gettransfer.views.CurrencyField
+            <com.kg.gettransfer.view.CurrencyField
                 android:id="@+id/cfCurrency"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"

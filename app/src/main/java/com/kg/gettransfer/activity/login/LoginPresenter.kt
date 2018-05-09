@@ -1,7 +1,7 @@
 package com.kg.gettransfer.activity.login
 
 
-import com.kg.gettransfer.modules.CurrentAccount
+import com.kg.gettransfer.module.CurrentAccount
 import io.reactivex.disposables.CompositeDisposable
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject

@@ -14,7 +14,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.fragment.AccountFragment
 import com.kg.gettransfer.fragment.CreateTransferFragment
 import com.kg.gettransfer.fragment.TransfersFragment
-import com.kg.gettransfer.modules.CurrentAccount
+import com.kg.gettransfer.module.CurrentAccount
 import org.koin.android.ext.android.inject
 
 

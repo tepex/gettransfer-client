@@ -20,8 +20,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.kg.gettransfer.R
 import com.kg.gettransfer.data.LocationDetailed
-import com.kg.gettransfer.views.LocationsArrayAdapter
-import com.kg.gettransfer.views.setupClearButtonWithAction
+import com.kg.gettransfer.adapter.LocationsArrayAdapter
+import com.kg.gettransfer.view.base.setupClearButtonWithAction
 import io.reactivex.functions.Consumer
 
 

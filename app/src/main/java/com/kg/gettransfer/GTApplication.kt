@@ -3,7 +3,7 @@ package com.kg.gettransfer
 
 import android.content.pm.ApplicationInfo
 import android.support.multidex.MultiDexApplication
-import com.kg.gettransfer.modules.TransfersModel
+import com.kg.gettransfer.module.TransfersModel
 import org.koin.Koin
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.android.startKoin

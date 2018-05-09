@@ -18,9 +18,9 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import com.kg.gettransfer.R
 import com.kg.gettransfer.activity.login.LoginActivity
-import com.kg.gettransfer.modules.ConfigModel
-import com.kg.gettransfer.modules.CurrentAccount
-import com.kg.gettransfer.modules.ProfileModel
+import com.kg.gettransfer.module.ConfigModel
+import com.kg.gettransfer.module.CurrentAccount
+import com.kg.gettransfer.module.ProfileModel
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_account.*
 import kotlinx.android.synthetic.main.fragment_account.view.*

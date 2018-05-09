@@ -84,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.kg.gettransfer.views.EmptyRecyclerView
+            <com.kg.gettransfer.view.base.EmptyRecyclerView
                 android:id="@+id/rvTransfers"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

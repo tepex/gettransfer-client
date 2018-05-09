@@ -80,13 +80,14 @@ dependencies {
     implementation 'io.realm:android-adapters:3.0.0'
     // Koin
     implementation 'org.koin:koin-android:0.9.1'
-    //Koin for Android Architecture (if needed)
+    // Koin for Android Architecture (if needed)
     //    implementation 'org.koin:koin-android-architecture:0.8.2'
     //    implementation 'com.google.dagger:dagger-android:2.11'
     //    implementation 'com.google.dagger:dagger-android-support:2.11' // if you use the support libraries
+    // Dagger
     //    annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
     //    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
-    //Test
+    // Test
     //    testImplementation 'junit:junit:4.12'
     //    androidTestImplementation 'com.android.support.test:runner:1.0.1'
     //    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'

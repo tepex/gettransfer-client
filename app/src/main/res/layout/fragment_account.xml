@@ -154,7 +154,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/etPhone" />
 
-            <com.kg.gettransfer.views.CurrencyField
+            <com.kg.gettransfer.view.CurrencyField
                 android:id="@+id/tvCurrency"
                 android:layout_width="96dp"
                 android:layout_height="wrap_content"
@@ -184,7 +184,7 @@
                 app:layout_constraintStart_toEndOf="@id/tvlCurrency"
                 app:layout_constraintTop_toBottomOf="@id/etPhone" />
 
-            <com.kg.gettransfer.views.DistanceUnitField
+            <com.kg.gettransfer.view.DistanceUnitField
                 android:id="@+id/tvDistanceUnit"
                 android:layout_width="96dp"
                 android:layout_height="wrap_content"

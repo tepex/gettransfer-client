@@ -42,7 +42,7 @@
             app:layout_constraintStart_toEndOf="@id/btnBack2"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.kg.gettransfer.views.TransferStatusView
+        <com.kg.gettransfer.view.TransferStatusView
             android:id="@+id/transferStatusView"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
@@ -576,7 +576,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tvChooseCarrier">
 
-                        <com.kg.gettransfer.views.EmptyRecyclerView
+                        <com.kg.gettransfer.view.base.EmptyRecyclerView
                             android:id="@+id/rvOffers"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

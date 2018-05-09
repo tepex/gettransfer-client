@@ -37,10 +37,10 @@ import com.google.maps.model.DirectionsResult
 import com.kg.gettransfer.R
 import com.kg.gettransfer.data.LocationDetailed
 import com.kg.gettransfer.mainactivity.REQUEST_PERMISSION_ACCESS_FINE_LOCATION
-import com.kg.gettransfer.modules.http.json.NewTransfer
+import com.kg.gettransfer.module.http.json.NewTransfer
 import com.kg.gettransfer.realm.getPlString
-import com.kg.gettransfer.views.BitmapDescriptorFactory
-import com.kg.gettransfer.views.LocationView
+import com.kg.gettransfer.view.base.BitmapDescriptorFactory
+import com.kg.gettransfer.view.LocationView
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_createtransfer.*
 import kotlinx.android.synthetic.main.fragment_createtransfer.view.*
