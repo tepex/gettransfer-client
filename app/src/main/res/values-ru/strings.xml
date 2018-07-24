@@ -103,8 +103,8 @@
     <string name="fair">Пунктуальность</string>
     <string name="successful_transfers">Завершенные трансферы</string>
     <string name="price">Стоимость</string>
-    <string name="pay_30_now_70_to_the_driver">Заплатить 30% сейчас, 70% водителю в конце поездки</string>
-    <string name="pay_100_now">Заплатить 100% сейчас</string>
+    <string name="pay_30_now_70_to_the_driver">Заплатить 30%% сейчас, 70%% водителю в конце поездки</string>
+    <string name="pay_100_now">Заплатить 100%% сейчас</string>
     <string name="pay_n_now_n_to_the_driver">%1$s сейчас, %2$s водителю</string>
     <string name="pay_n_now">%1$s сейчас</string>
     <string name="pay">Оплатить</string>

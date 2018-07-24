@@ -65,3 +65,5 @@ fabric.properties
 .externalNativeBuild
 
 /app/release
+/tmp
+

@@ -1,6 +1,5 @@
 package com.kg.gettransfer.mainactivity
 
-
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build

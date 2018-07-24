@@ -104,8 +104,8 @@
     <string name="fair">Fair</string>
     <string name="successful_transfers">Successful transfers</string>
     <string name="price">Price</string>
-    <string name="pay_30_now_70_to_the_driver">Pay 30% now, 70% later to the driver</string>
-    <string name="pay_100_now">Pay 100% now</string>
+    <string name="pay_30_now_70_to_the_driver">Pay 30%% now, 70%% later to the driver</string>
+    <string name="pay_100_now">Pay 100%% now</string>
     <string name="pay_n_now_n_to_the_driver">%1$s now, %2$s later</string>
     <string name="pay_n_now">%1$s now</string>
     <string name="pay">Pay</string>

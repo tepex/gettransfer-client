@@ -1,16 +1,30 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.2.41'
+    ext {
+    	kotlin_version = '1.2.51'
+    	gradle_version = '3.3.0-alpha03'
+    	realm_version  =  '5.4.0' 
+    }
+    
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath "com.android.tools.build:gradle:$gradle_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "io.realm:realm-gradle-plugin:5.0.1"
+        classpath "io.realm:realm-gradle-plugin:$realm_version"
     }
+}
+
+plugins {
+	/* Годный плагин для Gradle. Проверяет наличие последних версий зависимостей.
+	https://github.com/ben-manes/gradle-versions-plugin
+	$./gradlew dependencyUpdates
+	*/
+	id 'com.github.ben-manes.versions' version '0.20.0'
+	id 'com.gladed.androidgitversion'  version '0.4.4'
 }
 
 allprojects {

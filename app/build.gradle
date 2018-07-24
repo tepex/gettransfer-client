@@ -6,6 +6,11 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: 'realm-android'
 
+ext {
+	support_version           = "28.0.0-alpha3"
+	constraint_layout_version = "2.0.0-alpha1"
+	gms_version               = "15.0.1"
+}
 
 android {
     signingConfigs {
@@ -25,7 +30,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.kg.gettransfer"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -38,34 +43,50 @@ android {
             shrinkResources false
             minifyEnabled false
             useProguard false
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
             // debuggable true
         }
         debug {
             minifyEnabled false
-            useProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
+            debuggable true
+            shrinkResources false
         }
+    }
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
+allprojects {
+	gradle.projectsEvaluated { 
+		tasks.withType(JavaCompile) { 
+			options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" 
+		}
+		tasks.withType(Test) {
+			testLogging.events = ["failed", "passed", "skipped"]
+			testLogging.showStandardStreams = true
+		}
+	}
+}
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support:multidex:1.0.3'
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "com.android.support:multidex:1.0.3"
+    implementation "com.android.support:appcompat-v7:$support_version"
+    implementation "com.android.support:design:$support_version"
+    implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
+    implementation "com.android.support:recyclerview-v7:$support_version"
     // Maps
-    implementation 'com.google.android.gms:play-services-location:15.0.1'
-    implementation 'com.google.android.gms:play-services-places:15.0.1'
-    implementation 'com.google.android.gms:play-services-drive:15.0.1'
+    implementation "com.google.android.gms:play-services-location:$gms_version"
+    implementation "com.google.android.gms:play-services-places:$gms_version"
+    implementation "com.google.android.gms:play-services-drive:$gms_version"
+    
     implementation 'com.google.maps.android:android-maps-utils:0.5'
-    implementation 'com.google.maps:google-maps-services:0.2.6'
+    implementation 'com.google.maps:google-maps-services:0.2.9'
     implementation 'org.slf4j:slf4j-nop:1.7.25'
     //com.google.android.gms:play-services-maps:11.8.0
     // Retrofit network
@@ -79,7 +100,10 @@ dependencies {
     // Realm db
     implementation 'io.realm:android-adapters:3.0.0'
     // Koin
-    implementation 'org.koin:koin-android:0.9.1'
+    implementation 'org.koin:koin-android:1.0.0-beta-3'
+    
+    compileOnly "javax.annotation:jsr250-api:1.0"
+    
     // Koin for Android Architecture (if needed)
     //    implementation 'org.koin:koin-android-architecture:0.8.2'
     //    implementation 'com.google.dagger:dagger-android:2.11'
