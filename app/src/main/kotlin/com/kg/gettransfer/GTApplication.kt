@@ -1,6 +1,7 @@
 package com.kg.gettransfer
 
 import android.app.Application
+import android.support.multidex.MultiDexApplication
 import android.content.pm.ApplicationInfo
 import android.support.annotation.CallSuper
 
@@ -11,7 +12,7 @@ import org.koin.android.ext.android.inject
 import org.koin.android.ext.android.startKoin
 import org.koin.android.logger.AndroidLogger
 
-class GTApplication: Application()
+class GTApplication: MultiDexApplication()
 {
 	@CallSuper
 	override fun onCreate() 
