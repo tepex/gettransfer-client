@@ -1,75 +1,78 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-
 apply plugin: 'realm-android'
 
 ext {
+	multidex_version          = "1.0.3"
 	support_version           = "28.0.0-alpha3"
 	constraint_layout_version = "2.0.0-alpha1"
 	gms_version               = "15.0.1"
+	retrofit_version          = "2.4.0"
+	koin_version              = "1.0.0-beta-3"
 }
 
 android {
-    compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
-    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
-    
-    defaultConfig {
-        applicationId "com.kg.gettransfer"
-        minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION
-        targetSdkVersion project.ANDROID_BUILD_SDK_VERSION
-        versionCode androidGitVersion.code()
-        versionName androidGitVersion.name()
-        testInstrumentationRunner project.ANDROID_TEST_INSTRUMENTATION_RUNNER
-        vectorDrawables.useSupportLibrary = true
-        multiDexEnabled true
-    }
-    
-    signingConfigs {
-        config {
-            keyAlias 'key0'
-            keyPassword 'keygkeyg'
-            storeFile file('/Users/denisvakulenko/Desktop/gt/keystore')
-            storePassword 'keygkeyg'
-        }
-    }
-    android {
-        lintOptions {
-            //abortOnError false
-        }
-    }
-    
-    buildTypes {
-        release {
-            shrinkResources false
-            minifyEnabled false
-            useProguard false
-            debuggable false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
-            // debuggable true
-        }
-        debug {
-            minifyEnabled false
-            debuggable true
-            shrinkResources false
-        }
-    }
-    
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+	compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
+	buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+	
+	defaultConfig {
+		applicationId "com.kg.gettransfer"
+		minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION
+		targetSdkVersion project.ANDROID_BUILD_SDK_VERSION
+		versionCode androidGitVersion.code()
+		versionName androidGitVersion.name()
+		testInstrumentationRunner project.ANDROID_TEST_INSTRUMENTATION_RUNNER
+		vectorDrawables.useSupportLibrary = true
+		multiDexEnabled true
+	}
+	/*
+	signingConfigs {
+		config {
+			keyAlias 'key0'
+			keyPassword 'keygkeyg'
+			storeFile file('/Users/denisvakulenko/Desktop/gt/keystore')
+			storePassword 'keygkeyg'
+		}
+	}
+	*/
+	
+	android {
+		lintOptions {
+			abortOnError false
+		}
+	}
+	
+	buildTypes {
+		release {
+			shrinkResources true
+			minifyEnabled true
+			useProguard true
+			debuggable false
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+			//signingConfig signingConfigs.config
+		}
+		debug {
+			minifyEnabled false
+			debuggable true
+			shrinkResources false
+		}
+	}
+	
+	sourceSets {
+		main.java.srcDirs += 'src/main/kotlin'
+	}
+	
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
+	}
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "com.android.support:multidex:1.0.3"
+	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+	implementation "com.android.support:multidex:$multidex_version"
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "com.android.support:design:$support_version"
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
@@ -79,14 +82,15 @@ dependencies {
     implementation "com.google.android.gms:play-services-places:$gms_version"
     implementation "com.google.android.gms:play-services-drive:$gms_version"
     
+    /*
     implementation 'com.google.maps.android:android-maps-utils:0.5'
     implementation 'com.google.maps:google-maps-services:0.2.9'
-    implementation 'org.slf4j:slf4j-nop:1.7.25'
+    */
     //com.google.android.gms:play-services-maps:11.8.0
     // Retrofit network
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     // Rx
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
@@ -94,9 +98,15 @@ dependencies {
     // Realm db
     implementation 'io.realm:android-adapters:3.0.0'
     // Koin
-    implementation 'org.koin:koin-android:1.0.0-beta-3'
+    implementation "org.koin:koin-android:$koin_version"
+    // Logger
+    implementation libs.timber
     
-    compileOnly "javax.annotation:jsr250-api:1.0"
+	compileOnly libs.jsr250
+
+	testImplementation libs.junit
+	testImplementation libs.hamcrest
+	testImplementation libs.mockito
     
     // Koin for Android Architecture (if needed)
     //    implementation 'org.koin:koin-android-architecture:0.8.2'
@@ -110,4 +120,3 @@ dependencies {
     //    androidTestImplementation 'com.android.support.test:runner:1.0.1'
     //    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
-

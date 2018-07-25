@@ -12,15 +12,17 @@ import org.koin.android.ext.android.inject
 import org.koin.android.ext.android.startKoin
 import org.koin.android.logger.AndroidLogger
 
-class GTApplication: MultiDexApplication()
-{
+import timber.log.Timber
+
+class GTApplication: MultiDexApplication() {
 	@CallSuper
-	override fun onCreate() 
-	{
+	override fun onCreate() {
 		super.onCreate()
 		// Display some logs
-		val isDebug = (0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE)
-		if(isDebug) Koin.logger = AndroidLogger()
+		if(BuildConfig.DEBUG) {
+			Timber.plant(Timber.DebugTree())
+			Koin.logger = AndroidLogger()
+		}
 		// Start Koin
 		startKoin(this, appModules)
 		val t = inject < TransfersModel > ().value

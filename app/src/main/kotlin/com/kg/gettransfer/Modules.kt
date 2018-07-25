@@ -1,63 +1,82 @@
 package com.kg.gettransfer
 
-
 import android.content.Context
 import android.content.SharedPreferences
+
 import android.location.Geocoder
 import android.preference.PreferenceManager
+
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
-import com.google.maps.GeoApiContext
+
+//import com.google.maps.GeoApiContext
+
 import com.kg.gettransfer.activity.login.LoginActivity
 import com.kg.gettransfer.activity.login.LoginContract
 import com.kg.gettransfer.activity.login.LoginPresenter
+
 import com.kg.gettransfer.fragment.CreateTransferFragment
 import com.kg.gettransfer.fragment.TransfersFragment
-import com.kg.gettransfer.module.*
+
+import com.kg.gettransfer.module.DBProvider
+import com.kg.gettransfer.module.ConfigModel
+import com.kg.gettransfer.module.CurrentAccount
+import com.kg.gettransfer.module.LocationModel
+import com.kg.gettransfer.module.OffersModel
+import com.kg.gettransfer.module.ProfileModel
+import com.kg.gettransfer.module.PromoCodeModel
+import com.kg.gettransfer.module.RouteInfoModel
+import com.kg.gettransfer.module.Session
+import com.kg.gettransfer.module.TransferModel
+import com.kg.gettransfer.module.TransfersModel
+import com.kg.gettransfer.module.TransportTypes
+
 import com.kg.gettransfer.module.googleapi.GeoAutocompleteProvider
 import com.kg.gettransfer.module.googleapi.GeoUtils
 import com.kg.gettransfer.module.googleapi.GoogleApiClientFactory
+
 import com.kg.gettransfer.module.http.HttpApi
 import com.kg.gettransfer.module.http.HttpApiFactory
 import com.kg.gettransfer.module.http.ProvideAccessTokenInterceptor
+
 import com.kg.gettransfer.realm.secondary.ZonedDate
+
 import org.koin.dsl.module.applicationContext
+
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+
 import java.text.SimpleDateFormat
-import java.util.*
+
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
+import timber.log.Timber
 
 /**
  * Koin main module
  */
-
-
 val AppModule = applicationContext {
-    // Util
-
-    bean { PreferenceManager.getDefaultSharedPreferences(get()) as SharedPreferences }
-
-
-    // Http
-
-    bean { RxJava2CallAdapterFactory.create() }
-    bean {
-        val format = "yyyy-MM-dd'T'HH:mm:ssZ"
-        val df = SimpleDateFormat(format)
-        df.timeZone = TimeZone.getTimeZone("UTC")
-
-        val dateTypeAdapter = JsonDeserializer<Date> { json, typeOfT, context ->
-            try {
-                val d = df.parse(json?.asString)
-                d
-            } catch (e: java.text.ParseException) {
-                e.printStackTrace()
-                Date(0)
-            }
-        }
+	// Util
+	bean { PreferenceManager.getDefaultSharedPreferences(get()) as SharedPreferences }
+	// Http
+	bean { RxJava2CallAdapterFactory.create() }
+	bean {
+		val format = "yyyy-MM-dd'T'HH:mm:ssZ"
+		val df = SimpleDateFormat(format)
+		df.timeZone = TimeZone.getTimeZone("UTC")
+		
+		val dateTypeAdapter = JsonDeserializer<Date> { json, typeOfT, context ->
+			try {
+				df.parse(json?.asString)
+			} catch(e: java.text.ParseException) {
+				Timber.e(e, "Date deserialize error: $json")
+				null
+			}
+		}
 
         val zonedDateTypeAdapter = JsonDeserializer<ZonedDate> { json, typeOfT, context ->
             try {
@@ -66,7 +85,7 @@ val AppModule = applicationContext {
                 val tz = "GMT" + s.substring(s.length - 5)
                 ZonedDate(date, tz)
             } catch (e: java.text.ParseException) {
-                e.printStackTrace()
+                Timber.e(e, "Date deserialize error: $json")
                 null
             }
         }
@@ -95,6 +114,7 @@ val AppModule = applicationContext {
     bean { GoogleApiClientFactory.create(get()) }
     bean { GeoAutocompleteProvider() }
 
+    /*
     bean {
         GeoApiContext.Builder()
                 .queryRateLimit(10)
@@ -106,6 +126,7 @@ val AppModule = applicationContext {
     }
 
     factory { GeoUtils(get(), get()) }
+    */
 
     bean { Geocoder(get(), Locale.getDefault()) }
 
@@ -141,11 +162,7 @@ val AppModule = applicationContext {
     factory { TransfersFragment() }
 }
 
-
 /**
  * Module list
  */
-
 val appModules = listOf(AppModule)
-
-

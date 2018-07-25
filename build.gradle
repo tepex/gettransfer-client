@@ -1,21 +1,33 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
-    ext {
-    	kotlin_version = '1.2.51'
-    	gradle_version = '3.3.0-alpha03'
-    	realm_version  =  '5.4.0' 
-    }
+	repositories {
+		google()
+		jcenter()
+	}
+
+	ext {
+		kotlin_version        = '1.2.51'
+		gradle_version        = '3.3.0-alpha03'
+		realm_version         =  '5.4.0'
+		jsr250_version        = '1.0'
+		timber_version        = '4.7.1'
+		junit_version         = '4.12'
+		hamcrest_version      = '2.0.0.0'
+		mockito_version       = '2.19.1'
+		
+		libs = [
+			timber     : ("com.jakewharton.timber:timber:${timber_version}"),
+			jsr250     : ("javax.annotation:jsr250-api:${jsr250_version}"),
+			junit      : ("junit:junit:${junit_version}"),
+			hamcrest   : ("org.hamcrest:java-hamcrest:${hamcrest_version}"),
+			mockito    : ("org.mockito:mockito-core:${mockito_version}")
+		]
+	}
     
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath "com.android.tools.build:gradle:$gradle_version"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "io.realm:realm-gradle-plugin:$realm_version"
-    }
+	dependencies {
+		classpath "com.android.tools.build:gradle:$gradle_version"
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+		classpath "io.realm:realm-gradle-plugin:$realm_version"
+	}
 }
 
 plugins {
@@ -28,14 +40,14 @@ plugins {
 }
 
 allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven { url "https://jitpack.io" }
-    }
-	gradle.projectsEvaluated { 
-		tasks.withType(JavaCompile) { 
-			options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" 
+	repositories {
+		google()
+		jcenter()
+		maven { url "https://jitpack.io" }
+	}
+	gradle.projectsEvaluated {
+		tasks.withType(JavaCompile) {
+			options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 		}
 		tasks.withType(Test) {
 			testLogging.events = ["failed", "passed", "skipped"]
@@ -45,7 +57,7 @@ allprojects {
 }
 
 task clean(type: Delete) {
-    delete rootProject.buildDir
+	delete rootProject.buildDir
 }
 
 task incrementVersionCode {
