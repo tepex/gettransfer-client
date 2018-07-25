@@ -24,7 +24,7 @@ import org.koin.android.ext.android.inject
 
 const val REQUEST_PERMISSION_ACCESS_FINE_LOCATION = 909
 
-class MainActivity : AppCompatActivity() {
+class MainActivity: AppCompatActivity() {
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }

@@ -1,19 +1,21 @@
 package com.kg.gettransfer.fragment
 
-
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
+
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.activity.login.LoginActivity
 import com.kg.gettransfer.mainactivity.MainActivity
@@ -22,19 +24,20 @@ import com.kg.gettransfer.module.TransfersModel
 import com.kg.gettransfer.view.base.DividerItemDecoration
 import com.kg.gettransfer.view.base.EmptyRecyclerView
 import com.kg.gettransfer.adapter.TransfersAdapter
+
 import io.reactivex.disposables.CompositeDisposable
+
 import kotlinx.android.synthetic.main.fragment_transfers.*
 import kotlinx.android.synthetic.main.fragment_transfers.view.*
+
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
-
 
 /**
  * Created by ivanpchelintsev on 04/02/2018.
  */
-
-
-class TransfersFragment : Fragment(), KoinComponent {
+class TransfersFragment : Fragment(), KoinComponent 
+{
     private val currentAccount: CurrentAccount by inject()
     private val transfersModel: TransfersModel by inject()
 
@@ -48,7 +51,6 @@ class TransfersFragment : Fragment(), KoinComponent {
     }
 
     private var savedview: View? = null
-
 
     override fun onCreateView(
             inflater: LayoutInflater,

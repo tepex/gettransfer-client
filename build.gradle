@@ -33,9 +33,30 @@ allprojects {
         jcenter()
         maven { url "https://jitpack.io" }
     }
+	gradle.projectsEvaluated { 
+		tasks.withType(JavaCompile) { 
+			options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" 
+		}
+		tasks.withType(Test) {
+			testLogging.events = ["failed", "passed", "skipped"]
+			testLogging.showStandardStreams = true
+		}
+	}
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+task incrementVersionCode {
+	doLast {
+		def versionName = androidGitVersion.name()
+		def splitted = versionName.split("\\-")[0].split("\\.")
+		++splitted[2]
+		def newTag = splitted.join(".")
+		println 'new version: '+newTag
+		def p1 = "git tag ${newTag}".execute()
+		p1.waitFor()
+		println p1.text.trim()
+	}
+}

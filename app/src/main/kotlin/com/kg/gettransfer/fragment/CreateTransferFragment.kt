@@ -1,27 +1,34 @@
 package com.kg.gettransfer.fragment
 
-
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+
 import android.content.Context
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+
 import android.graphics.Typeface
 import android.location.Location
 import android.net.ConnectivityManager
+
 import android.os.Build
 import android.os.Bundle
+
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.ContextCompat.checkSelfPermission
+
 import android.support.v7.app.AlertDialog
+
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
+
 import android.widget.TextView
 import android.widget.Toast
+
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -29,33 +36,37 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.*
+
 import com.google.maps.DirectionsApi
 import com.google.maps.DirectionsApiRequest
 import com.google.maps.GeoApiContext
 import com.google.maps.android.PolyUtil
 import com.google.maps.model.DirectionsResult
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.data.LocationDetailed
 import com.kg.gettransfer.mainactivity.REQUEST_PERMISSION_ACCESS_FINE_LOCATION
 import com.kg.gettransfer.module.http.json.NewTransfer
 import com.kg.gettransfer.realm.getPlString
 import com.kg.gettransfer.view.base.BitmapDescriptorFactory
 import com.kg.gettransfer.view.LocationView
+
 import io.reactivex.functions.Consumer
+
 import kotlinx.android.synthetic.main.fragment_createtransfer.*
 import kotlinx.android.synthetic.main.fragment_createtransfer.view.*
 import kotlinx.android.synthetic.main.view_location.view.*
+
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import java.util.logging.Logger
 
+import java.util.logging.Logger
 
 /**
  * Created by denisvakulenko on 25/01/2018.
  */
-
-
-class CreateTransferFragment : Fragment(), KoinComponent {
+class CreateTransferFragment: Fragment(), KoinComponent {
     private val log = Logger.getLogger("CreateTransferFragment")
 
     private val frChooseLocation: ChooseLocationFragment by lazy { ChooseLocationFragment() }
@@ -86,19 +97,14 @@ class CreateTransferFragment : Fragment(), KoinComponent {
 
     private var directionsApiRequest: DirectionsApiRequest? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val activity = activity ?: return
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
     }
 
-
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?)
-            : View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    {
         var v = savedView
 
         if (v == null) {
