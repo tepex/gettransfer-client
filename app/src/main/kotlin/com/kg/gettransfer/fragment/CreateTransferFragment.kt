@@ -395,8 +395,8 @@ class CreateTransferFragment: Fragment(), KoinComponent {
         if (modeAB) {
             tvFromAToB.typeface = Typeface.DEFAULT_BOLD
             tvForAWhile.typeface = Typeface.DEFAULT
-            tvFromAToB.setTextColor(resources.getColor(R.color.colorTextBlack))
-            tvForAWhile.setTextColor(resources.getColor(R.color.colorTextGray))
+            tvFromAToB.setTextColor(resources.getColor(R.color.colorTextBlack, null))
+            tvForAWhile.setTextColor(resources.getColor(R.color.colorTextGray, null))
             clDuration.visibility = INVISIBLE
 
             vSwapBG.visibility = VISIBLE
@@ -405,8 +405,8 @@ class CreateTransferFragment: Fragment(), KoinComponent {
         } else {
             tvFromAToB.typeface = Typeface.DEFAULT
             tvForAWhile.typeface = Typeface.DEFAULT_BOLD
-            tvFromAToB.setTextColor(resources.getColor(R.color.colorTextGray))
-            tvForAWhile.setTextColor(resources.getColor(R.color.colorTextBlack))
+            tvFromAToB.setTextColor(resources.getColor(R.color.colorTextGray, null))
+            tvForAWhile.setTextColor(resources.getColor(R.color.colorTextBlack, null))
             clDuration.visibility = VISIBLE
 
             vSwapBG.visibility = GONE

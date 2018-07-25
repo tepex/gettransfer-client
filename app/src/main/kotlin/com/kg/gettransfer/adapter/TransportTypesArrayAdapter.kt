@@ -56,16 +56,15 @@ class TransportTypesArrayAdapter(
         val inflater = parent.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-        var convertView = convertView
         val holder: ViewHolder?
+        var view = convertView
 
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.item_transport_type, null)
+        if(view == null) {
+            view = inflater.inflate(R.layout.item_transport_type, null)
             holder = ViewHolder(convertView as ConstraintLayout)
-            convertView.setTag(holder)
-        } else {
-            holder = convertView.tag as ViewHolder
+            view.setTag(holder)
         }
+        else holder = view.tag as ViewHolder
 
         //val drawable = context.resources.getDrawable(R.drawable.list_icon)
 
@@ -76,11 +75,11 @@ class TransportTypesArrayAdapter(
 
         val priceFrom = prices?.get(getItem(position))?.min
         holder.price.text =
-                if (priceFrom == null) "-"
-                else context.getString(R.string.from_price) + " " + priceFrom
+                if(priceFrom == null) "-"
+                else "${context.getString(R.string.from_price)} ${priceFrom}"
 
         holder.setSelected(checked[position])
 
-        return convertView
+        return view!!
     }
 }

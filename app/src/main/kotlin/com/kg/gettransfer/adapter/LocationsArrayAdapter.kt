@@ -117,6 +117,7 @@ class LocationsArrayAdapter(context: Context,
             return results
         }
 
+        /* @TODO переписать это говно! */
         override fun publishResults(constraint: CharSequence, results: FilterResults?) {
             values = if (results != null && results.count > 0 && results.values is ArrayList<*>) {
                 results.values as ArrayList<LocationDetailed>
