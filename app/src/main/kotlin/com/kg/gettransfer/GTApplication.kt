@@ -19,12 +19,8 @@ class GTApplication: MultiDexApplication() {
 	override fun onCreate() {
 		super.onCreate()
 		// Display some logs
-		if(BuildConfig.DEBUG) {
-			Timber.plant(Timber.DebugTree())
-			Koin.logger = AndroidLogger()
-		}
+		if(BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
 		// Start Koin
 		startKoin(this, appModules)
-		val t = inject < TransfersModel > ().value
 	}
 }

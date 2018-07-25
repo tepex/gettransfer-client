@@ -42,7 +42,7 @@ import com.kg.gettransfer.module.http.ProvideAccessTokenInterceptor
 
 import com.kg.gettransfer.realm.secondary.ZonedDate
 
-import org.koin.dsl.module.applicationContext
+import org.koin.dsl.module.module
 
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -59,12 +59,12 @@ import timber.log.Timber
 /**
  * Koin main module
  */
-val AppModule = applicationContext {
+val AppModule = module {
 	// Util
-	bean { PreferenceManager.getDefaultSharedPreferences(get()) as SharedPreferences }
+	single { PreferenceManager.getDefaultSharedPreferences(get()) as SharedPreferences }
 	// Http
-	bean { RxJava2CallAdapterFactory.create() }
-	bean {
+	single { RxJava2CallAdapterFactory.create() }
+	single {
 		val format = "yyyy-MM-dd'T'HH:mm:ssZ"
 		val df = SimpleDateFormat(format)
 		df.timeZone = TimeZone.getTimeZone("UTC")
@@ -97,24 +97,24 @@ val AppModule = applicationContext {
                 .excludeFieldsWithoutExposeAnnotation()
                 .create() as Gson
     }
-    bean { GsonConverterFactory.create(get()) as GsonConverterFactory }
+    single { GsonConverterFactory.create(get()) as GsonConverterFactory }
 
-    bean { ProvideAccessTokenInterceptor(get(), get(), get()) }
-    bean { HttpApiFactory.buildHttpClient(get()) as okhttp3.OkHttpClient }
-    bean { HttpApiFactory.create(get(), get(), get()) as HttpApi }
+    single { ProvideAccessTokenInterceptor(get(), get(), get()) }
+    single { HttpApiFactory.buildHttpClient(get()) as okhttp3.OkHttpClient }
+    single { HttpApiFactory.create(get(), get(), get()) as HttpApi }
 
-    bean { Session(get()) }
+    single { Session(get()) }
 
-    bean { CurrentAccount(get(), get()) }
-    bean { ProfileModel(get(), get()) }
+    single { CurrentAccount(get(), get()) }
+    single { ProfileModel(get(), get()) }
 
 
     // Google api
 
-    bean { GoogleApiClientFactory.create(get()) }
-    bean { GeoAutocompleteProvider() }
+    single { GoogleApiClientFactory.create(get()) }
+    single { GeoAutocompleteProvider() }
 
-    bean {
+    single {
         GeoApiContext.Builder()
                 .queryRateLimit(10)
                 .apiKey(get<Context>().getString(R.string.geoapikey))
@@ -126,17 +126,17 @@ val AppModule = applicationContext {
 
     factory { GeoUtils(get(), get()) }
 
-    bean { Geocoder(get(), Locale.getDefault()) }
+    single { Geocoder(get(), Locale.getDefault()) }
 
     // Data
-    bean { DBProvider(get()) }
+    single { DBProvider(get()) }
     factory { get<DBProvider>().create() }
 
-    bean { TransfersModel(get(), get(), get()) }
+    single { TransfersModel(get(), get(), get()) }
 
-    bean { TransportTypes(get(), get(), get()) }
+    single { TransportTypes(get(), get(), get()) }
 
-    bean { ConfigModel(get()) }
+    single { ConfigModel(get()) }
 
 
     // Models
