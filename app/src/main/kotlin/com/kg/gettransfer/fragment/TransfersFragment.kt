@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 
+import android.support.annotation.CallSuper
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
@@ -33,11 +34,7 @@ import kotlinx.android.synthetic.main.fragment_transfers.view.*
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
 
-/**
- * Created by ivanpchelintsev on 04/02/2018.
- */
-class TransfersFragment : Fragment(), KoinComponent 
-{
+class TransfersFragment: Fragment(), KoinComponent {
     private val currentAccount: CurrentAccount by inject()
     private val transfersModel: TransfersModel by inject()
 
@@ -118,41 +115,32 @@ class TransfersFragment : Fragment(), KoinComponent
         }
     }
 
-
-    private fun initRecyclerView(rvTransfers: EmptyRecyclerView,
-                                 swipeRefreshLayout: SwipeRefreshLayout) {
-
-        class WrapContentLinearLayoutManager : LinearLayoutManager(activity) {
-            override fun onLayoutChildren(recycler: RecyclerView.Recycler?, state: RecyclerView.State) {
-                try {
-                    super.onLayoutChildren(recycler, state)
-                } catch (e: IndexOutOfBoundsException) {
-                    Log.e("TransfersFragment", "IndexOutOfBoundsException in RecyclerView happens")
-                }
-            }
-        }
-
-        val dividerItemDecoration = DividerItemDecoration(
-                activity, VERTICAL,
-                0, //(resources.displayMetrics.density * 16).toInt(),
-                0)
-
-        rvTransfers.addItemDecoration(dividerItemDecoration)
-        rvTransfers.adapter = adapterActive
-        rvTransfers.layoutManager = WrapContentLinearLayoutManager()
-        rvTransfers.emptyView = clEmptyTransfers
-
-        swipeRefreshLayout.setOnRefreshListener { transfersModel.updateTransfers() }
-    }
-
-
-    private fun updateUI() {
-        if (currentAccount.loggedIn) {
-            showTransfers()
-        } else {
-            showLoggedOut()
-        }
-    }
+	private fun initRecyclerView(rvTransfers: EmptyRecyclerView, swipeRefreshLayout: SwipeRefreshLayout) {
+		class WrapContentLinearLayoutManager: LinearLayoutManager(activity) {
+			@CallSuper
+			override fun onLayoutChildren(recycler: RecyclerView.Recycler?, state: RecyclerView.State) {
+				try {
+					super.onLayoutChildren(recycler, state)
+				} catch(e: IndexOutOfBoundsException) {
+					Log.e("TransfersFragment", "IndexOutOfBoundsException in RecyclerView happens")
+				}
+			}
+		}
+		
+		//val dividerItemDecoration = DividerItemDecoration(activity, VERTICAL, 0, (resources.displayMetrics.density * 16).toInt(), 0)
+		val dividerItemDecoration = DividerItemDecoration(context!!, VERTICAL, 0, 0)
+		
+		rvTransfers.addItemDecoration(dividerItemDecoration)
+		rvTransfers.adapter = adapterActive
+		rvTransfers.layoutManager = WrapContentLinearLayoutManager()
+		rvTransfers.emptyView = clEmptyTransfers
+		swipeRefreshLayout.setOnRefreshListener { transfersModel.updateTransfers() }
+	}
+	
+	private fun updateUI() {
+		if(currentAccount.loggedIn) showTransfers()
+		else showLoggedOut()
+	}
 
 
     private fun showTransfers() {

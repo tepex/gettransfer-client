@@ -30,7 +30,7 @@ import android.widget.LinearLayout
 
 import com.kg.gettransfer.R
 
-class DividerItemDecoration(context: Context, orientation: Int, leftOffset: Int, rightOffset: Int) : RecyclerView.ItemDecoration() {
+class DividerItemDecoration(context: Context, orientation: Int, leftOffset: Int, rightOffset: Int): RecyclerView.ItemDecoration() {
 	private var mDivider: Drawable? = null
 	private var mOrientation: Int = 0
 
