@@ -166,7 +166,7 @@ class TransferDetailsFragment : Fragment() {
                                     setBusy(false)
                                     tvError.text = getString(R.string.error_creating_request) +
                                             "\n" + it.message
-                                    tvError.setTextColor(resources.getColor(R.color.colorTextError))
+                                    tvError.setTextColor(resources.getColor(R.color.colorTextError, null))
                                     fabCreate.visibility = VISIBLE
                                     svTransfer.post {
                                         svTransfer.fullScroll(FOCUS_DOWN)
@@ -181,7 +181,7 @@ class TransferDetailsFragment : Fragment() {
             progressBar.visibility = VISIBLE
             fabProgress.visibility = VISIBLE
             tvError.text = activity?.getString(R.string.dont_worry)
-            tvError.setTextColor(resources.getColor(R.color.colorTextGray))
+            tvError.setTextColor(resources.getColor(R.color.colorTextGray, null))
         } else {
             progressBar.visibility = INVISIBLE
             fabProgress.visibility = INVISIBLE
@@ -252,11 +252,11 @@ class TransferDetailsFragment : Fragment() {
                     getString(R.string.please_fill_to_get_offers),
                     message.substring(2).toLowerCase())
             tvError.text = message
-            tvError.setTextColor(resources.getColor(R.color.colorTextError))
+            tvError.setTextColor(resources.getColor(R.color.colorTextError, null))
             return false
         } else {
             tvError.text = activity?.getString(R.string.dont_worry)
-            tvError.setTextColor(resources.getColor(R.color.colorTextGray))
+            tvError.setTextColor(resources.getColor(R.color.colorTextGray, null))
             return true
         }
     }
