@@ -57,12 +57,13 @@ object Utils {
 //                        .toString()
     }
 
-    fun dateToShortString(c: Context, date: ZonedDate?): String {
-        if (date == null) return "-"
+    fun dateToShortString(c: Context, zd: ZonedDate?): String {
+        if(zd == null) return "-"
 
-        val date = date.date
+        val date = zd.date
         //TODO J!NJKNKJFNAD
-        if (date.year == Date().year) return DateUtils.formatDateTime(
+        // Пробито очередное дно!
+        if(date.year == Date().year) return DateUtils.formatDateTime(
                 c,
                 date.time,
                 DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_ABBREV_MONTH)

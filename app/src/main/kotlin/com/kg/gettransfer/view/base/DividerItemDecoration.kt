@@ -66,9 +66,8 @@ class DividerItemDecoration(context: Context, orientation: Int, leftOffset: Int,
      * @param drawable Drawable that should be used as a divider.
      */
 
-	fun setDrawable(drawable: Drawable) {
-		if(drawable == null) throw IllegalArgumentException("Drawable cannot be null.")
-		mDivider = drawable
+	fun setDrawable(drawable: Drawable?) {
+		mDivider = drawable ?: throw IllegalArgumentException("Drawable cannot be null.")
 	}
 	
 	override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
