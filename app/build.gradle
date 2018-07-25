@@ -82,10 +82,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-places:$gms_version"
     implementation "com.google.android.gms:play-services-drive:$gms_version"
     
-    /*
     implementation 'com.google.maps.android:android-maps-utils:0.5'
     implementation 'com.google.maps:google-maps-services:0.2.9'
-    */
     //com.google.android.gms:play-services-maps:11.8.0
     // Retrofit network
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
@@ -98,6 +96,7 @@ dependencies {
     // Realm db
     implementation 'io.realm:android-adapters:3.0.0'
     // Koin
+    // Достался по наследству от предыдущего бедолаги. В будущем перейти на Dagger
     implementation "org.koin:koin-android:$koin_version"
     // Logger
     implementation libs.timber

@@ -10,7 +10,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
 
-//import com.google.maps.GeoApiContext
+import com.google.maps.GeoApiContext
 
 import com.kg.gettransfer.activity.login.LoginActivity
 import com.kg.gettransfer.activity.login.LoginContract
@@ -114,7 +114,6 @@ val AppModule = applicationContext {
     bean { GoogleApiClientFactory.create(get()) }
     bean { GeoAutocompleteProvider() }
 
-    /*
     bean {
         GeoApiContext.Builder()
                 .queryRateLimit(10)
@@ -126,13 +125,10 @@ val AppModule = applicationContext {
     }
 
     factory { GeoUtils(get(), get()) }
-    */
 
     bean { Geocoder(get(), Locale.getDefault()) }
 
-
     // Data
-
     bean { DBProvider(get()) }
     factory { get<DBProvider>().create() }
 
