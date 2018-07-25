@@ -88,20 +88,17 @@ fun TextView.clearListenersFixFocus() {
     isFocusableInTouchMode = true
 }
 
-
-fun getActivity(context: Context): Activity? {
-    var context: Context? = context
-    while (context is ContextWrapper) {
-        if (context is Activity) {
-            return context
-        }
+/* @TODO: УБИВАТЬ ЗА ТАКОЕ!!! */
+fun getActivity(c: Context): Activity? {
+    var context: Context? = c
+    while(context is ContextWrapper) {
+        if(context is Activity) return context
         context = context.baseContext
     }
     return null
 }
 
-
-class DateField : TextView {
+class DateField: TextView {
     constructor(c: Context) : super(c)
     constructor(c: Context, attrs: AttributeSet) : super(c, attrs)
     constructor(c: Context, attrs: AttributeSet, defStyle: Int) : super(c, attrs, defStyle)
@@ -133,13 +130,13 @@ class DateField : TextView {
             DatePickerDialog(
                     getActivity(context),
                     { _, y, m, d ->
-                        val c = Calendar.getInstance()
-                        c.set(Calendar.YEAR, y)
-                        c.set(Calendar.MONTH, m)
-                        c.set(Calendar.DAY_OF_MONTH, d)
+                        val cal = Calendar.getInstance()
+                        cal.set(Calendar.YEAR, y)
+                        cal.set(Calendar.MONTH, m)
+                        cal.set(Calendar.DAY_OF_MONTH, d)
                         text = DateFormat
                                 .getMediumDateFormat(context)
-                                .format(c.time)
+                                .format(cal.time)
                     },
                     c.get(Calendar.YEAR),
                     c.get(Calendar.MONTH),
@@ -182,12 +179,10 @@ class TimeField : TextView {
             android.app.TimePickerDialog(
                     getActivity(context),
                     { _, h, m ->
-                        val c = Calendar.getInstance()
-                        c.set(Calendar.HOUR_OF_DAY, h)
-                        c.set(Calendar.MINUTE, m)
-                        text = DateFormat
-                                .getTimeFormat(context)
-                                .format(c.time)
+                        val cal = Calendar.getInstance()
+                        cal.set(Calendar.HOUR_OF_DAY, h)
+                        cal.set(Calendar.MINUTE, m)
+                        text = DateFormat.getTimeFormat(context).format(cal.time)
                     },
                     c.get(Calendar.HOUR_OF_DAY),
                     c.get(Calendar.MINUTE),
