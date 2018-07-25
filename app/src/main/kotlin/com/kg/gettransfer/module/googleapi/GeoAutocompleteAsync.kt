@@ -17,7 +17,7 @@ import org.koin.standalone.KoinComponent
 
 
 @Deprecated("Unused")
-class GeoAutocompleteAsync(val context: Context) : KoinComponent {
+class GeoAutocompleteAsync(val context: Context): KoinComponent {
     //val mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null)
 
     var response: PublishRelay<AutocompletePredictionBufferResponse> = PublishRelay.create()
@@ -27,7 +27,7 @@ class GeoAutocompleteAsync(val context: Context) : KoinComponent {
             LatLng(90.0, 180.0))
 
     fun get(str: String) {
-        val mGeoDataClient = Places.getGeoDataClient(context, null)
+        val mGeoDataClient = Places.getGeoDataClient(context)
 
         val results = mGeoDataClient.getAutocompletePredictions(str, LAT_LNG_BOUNDS_WORLD, null)
         results.addOnCompleteListener {
