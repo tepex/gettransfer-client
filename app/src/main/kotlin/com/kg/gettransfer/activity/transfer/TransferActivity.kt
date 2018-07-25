@@ -360,11 +360,11 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
     }
 
 
-    fun back(v: View) {
+    fun back() {
         finish()
     }
 
-    fun hidePayment(v: View?) {
+    fun hidePayment() {
 //        transferModel.pingPayment(1)
 //                .subscribe(
 //                        {
@@ -392,23 +392,23 @@ class TransferActivity : AppCompatActivity(), KoinComponent {
         clOffer.startAnimation(set)
     }
 
-    fun cancel(v: View) {
+    fun cancel() {
         svTransfer.fullScroll(FOCUS_UP)
         transferModel.cancel()
     }
 
-    fun showAllDetails(v: View) {
+    fun showAllDetails() {
         tvShowAllDetails.visibility = GONE
         ivShowAllDetails.visibility = GONE
         clDetails.visibility = VISIBLE
     }
 
-    fun restore(v: View) {
+    fun restore() {
         transferModel.restore()
     }
 
     override fun onBackPressed() {
-        if (clOffer.visibility == VISIBLE) hidePayment(null)
+        if (clOffer.visibility == VISIBLE) hidePayment()
         else super.onBackPressed()
     }
 
