@@ -160,7 +160,7 @@ class TransferDetailsFragment : Fragment() {
 
                                     fragmentManager?.popBackStackImmediate()
 
-                                    act.showTransfers(null)
+                                    act.showTransfers()
                                 },
                                 {
                                     setBusy(false)

@@ -75,9 +75,9 @@ class MainActivity: AppCompatActivity() {
 		tab = 1
 	}
 	
-	fun showTransfers(v: View?) = selectTab(0)
-	fun showCreateTransfer(v: View?) = selectTab(1)
-	fun showAccount(v: View?) = selectTab(2)
+	fun showTransfers() = selectTab(0)
+	fun showCreateTransfer() = selectTab(1)
+	fun showAccount() = selectTab(2)
 	
 	private fun selectTab(i: Int) {
 		if(tab == i) return

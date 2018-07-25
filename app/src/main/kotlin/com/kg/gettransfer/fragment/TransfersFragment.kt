@@ -161,7 +161,7 @@ class TransfersFragment: Fragment(), KoinComponent {
 
 
     private fun createTransfer() {
-        (activity as MainActivity).showCreateTransfer(null)
+        (activity as MainActivity).showCreateTransfer()
     }
 
 
