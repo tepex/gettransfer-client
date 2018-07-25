@@ -90,12 +90,12 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
     }
 
 
-    fun login(v: View? = null) {
+    fun login() {
         presenter.login(etEmail.text.toString(), etPass.text.toString())
     }
 
 
-    fun back(v: View) {
+    fun back() {
         val returnIntent = Intent()
         setResult(Activity.RESULT_CANCELED, returnIntent)
         finish()

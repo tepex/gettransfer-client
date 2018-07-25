@@ -69,7 +69,7 @@ val AppModule = module {
 		val df = SimpleDateFormat(format)
 		df.timeZone = TimeZone.getTimeZone("UTC")
 		
-		val dateTypeAdapter = JsonDeserializer<Date> { json, typeOfT, context ->
+		val dateTypeAdapter = JsonDeserializer<Date> { json, _, _ ->
 			try {
 				df.parse(json?.asString)
 			} catch(e: java.text.ParseException) {
@@ -78,7 +78,7 @@ val AppModule = module {
 			}
 		}
 
-        val zonedDateTypeAdapter = JsonDeserializer<ZonedDate> { json, typeOfT, context ->
+        val zonedDateTypeAdapter = JsonDeserializer<ZonedDate> { json, _, _ ->
             try {
                 val s = json?.asString ?: return@JsonDeserializer null
                 val date = df.parse(s)
@@ -101,7 +101,7 @@ val AppModule = module {
 
     single { ProvideAccessTokenInterceptor(get(), get(), get()) }
     single { HttpApiFactory.buildHttpClient(get()) as okhttp3.OkHttpClient }
-    single { HttpApiFactory.create(get(), get(), get()) as HttpApi }
+    single { HttpApiFactory.create(get(), get(), get()) }
 
     single { Session(get()) }
 
