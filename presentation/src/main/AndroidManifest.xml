@@ -25,24 +25,24 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".mainactivity.MainActivity"
+            android:name=".presentation.ui.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+<!--
         <activity
-            android:name=".activity.login.LoginActivity"
+            android:name=".presentation.ui.LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateUnchanged|adjustResize" />
 
         <activity
-            android:name="com.kg.gettransfer.activity.transfer.TransferActivity"
+            android:name="presentation.ui.TransferActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateUnchanged" />
-
+-->
     </application>
 
 </manifest>

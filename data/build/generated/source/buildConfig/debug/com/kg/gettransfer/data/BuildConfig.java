@@ -9,5 +9,5 @@ public final class BuildConfig {
   public static final String BUILD_TYPE = "debug";
   public static final String FLAVOR = "";
   public static final int VERSION_CODE = 2001002;
-  public static final String VERSION_NAME = "2.1.2-10-95bd422-cl-arch-layers-dirty";
+  public static final String VERSION_NAME = "2.1.2-11-b426c88-cl-arch-layers-dirty";
 }

@@ -10,6 +10,7 @@ ext {
 	gms_version               = "15.0.1"
 	retrofit_version          = "2.4.0"
 	koin_version              = "1.0.0-beta-3"
+	moxy_version              = "1.5.5"
 }
 
 android {
@@ -85,8 +86,14 @@ dependencies {
     
     implementation 'com.google.maps.android:android-maps-utils:0.5'
     implementation 'com.google.maps:google-maps-services:0.2.9'
+    // Moxy
+	implementation "com.arello-mobile:moxy:${moxy_version}"
+	implementation "com.arello-mobile:moxy-app-compat:${moxy_version}"
+	kapt "com.arello-mobile:moxy-compiler:${moxy_version}"
+    
     //com.google.android.gms:play-services-maps:11.8.0
     // Retrofit network
+    /*
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
@@ -94,6 +101,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
     implementation 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
+    */
     // Koin
     // Достался по наследству от предыдущего бедолаги. В будущем перейти на Dagger
     implementation "org.koin:koin-android:$koin_version"
