@@ -15,6 +15,7 @@ buildscript {
 		mockito_version       = '2.20.0'
 		
 		libs = [
+			kotlin     : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
 			timber     : ("com.jakewharton.timber:timber:${timber_version}"),
 			jsr250     : ("javax.annotation:jsr250-api:${jsr250_version}"),
 			junit      : ("junit:junit:${junit_version}"),

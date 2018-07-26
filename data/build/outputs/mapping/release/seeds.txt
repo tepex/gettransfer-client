@@ -1,0 +1,11 @@
+com.getkeepsafe.relinker.R
+com.kg.gettransfer.data.R
+com.kg.gettransfer.data.R$string
+com.kg.gettransfer.data.R$string: int app_name
+io.realm.DefaultRealmModule
+io.realm.DefaultRealmModuleMediator
+io.realm.R
+io.realm.kotlin.R
+io.realm.kotlin.R$string
+io.realm.kotlin.R$string: int app_name
+timber.log.R

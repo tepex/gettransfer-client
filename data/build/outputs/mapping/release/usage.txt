@@ -1,0 +1,238 @@
+com.kg.gettransfer.data.BuildConfig
+com.kg.gettransfer.data.PlString
+com.kg.gettransfer.data.PlStringRus
+com.kg.gettransfer.data.PlStringSimple
+com.kg.gettransfer.data.UtilsKt
+com.kg.gettransfer.data.UtilsKt$saveAndGetUnmanaged$1
+com.kg.gettransfer.data.model.AccountInfo:
+    16:16:public final java.lang.String getEmail()
+    16:16:public final void setEmail(java.lang.String)
+    20:20:public final java.lang.String getPhone()
+    20:20:public final void setPhone(java.lang.String)
+    24:24:public final java.lang.String getLocale()
+    24:24:public final void setLocale(java.lang.String)
+    28:28:public final java.lang.String getCurrency()
+    28:28:public final void setCurrency(java.lang.String)
+    32:32:public final java.lang.String getDistanceUnit()
+    32:32:public final void setDistanceUnit(java.lang.String)
+    35:35:public final java.util.Date getDateUpdated()
+    35:35:public final void setDateUpdated(java.util.Date)
+com.kg.gettransfer.data.model.Carrier:
+    22:22:public final int getId()
+    22:22:public final void setId(int)
+    26:26:public final java.lang.String getTitle()
+    26:26:public final void setTitle(java.lang.String)
+    30:30:public final java.lang.Boolean getApproved()
+    30:30:public final void setApproved(java.lang.Boolean)
+    34:34:public final int getCompletedTransfers()
+    34:34:public final void setCompletedTransfers(int)
+    38:38:public final io.realm.RealmList getLanguages()
+    38:38:public final void setLanguages(io.realm.RealmList)
+    42:42:public final com.kg.gettransfer.data.model.secondary.Rating getRating()
+    42:42:public final void setRating(com.kg.gettransfer.data.model.secondary.Rating)
+    46:46:public final java.lang.String getEmail()
+    46:46:public final void setEmail(java.lang.String)
+    50:50:public final java.lang.String getPhone()
+    50:50:public final void setPhone(java.lang.String)
+    54:54:public final java.lang.String getAlternatePhone()
+    54:54:public final void setAlternatePhone(java.lang.String)
+com.kg.gettransfer.data.model.Config:
+    18:18:public final int getId()
+    18:18:public final void setId(int)
+    22:22:public final io.realm.RealmList getAvailableLocales()
+    22:22:public final void setAvailableLocales(io.realm.RealmList)
+    26:26:public final java.lang.String getPreferredLocale()
+    26:26:public final void setPreferredLocale(java.lang.String)
+    30:30:public final io.realm.RealmList getSupportedCurrencies()
+    30:30:public final void setSupportedCurrencies(io.realm.RealmList)
+    34:34:public final io.realm.RealmList getSupportedDistanceUnits()
+    34:34:public final void setSupportedDistanceUnits(io.realm.RealmList)
+com.kg.gettransfer.data.model.Offer:
+    20:20:public final int getId()
+    20:20:public final void setId(int)
+    24:24:public final com.kg.gettransfer.data.model.secondary.Price getPrice()
+    24:24:public final void setPrice(com.kg.gettransfer.data.model.secondary.Price)
+    28:28:public final java.lang.String getStatus()
+    28:28:public final void setStatus(java.lang.String)
+    32:32:public final com.kg.gettransfer.data.model.Carrier getCarrier()
+    32:32:public final void setCarrier(com.kg.gettransfer.data.model.Carrier)
+    36:36:public final com.kg.gettransfer.data.model.Vehicle getVehicle()
+    36:36:public final void setVehicle(com.kg.gettransfer.data.model.Vehicle)
+    40:40:public final java.lang.Boolean getWifi()
+    40:40:public final void setWifi(java.lang.Boolean)
+    44:44:public final java.lang.Boolean getRefreshments()
+    44:44:public final void setRefreshments(java.lang.Boolean)
+com.kg.gettransfer.data.model.Transfer:
+    28:28:public final int getId()
+    28:28:public final void setId(int)
+    30:30:public final boolean getIdValid()
+    31:31:public final java.util.Date getUpdated()
+    31:31:public final void setUpdated(java.util.Date)
+    32:32:public final boolean getJustUpdated()
+    33:33:public final boolean isActive()
+    33:33:public final void setActive(boolean)
+    36:38:public final void update()
+    42:42:public final com.kg.gettransfer.data.model.secondary.Location getFrom()
+    42:42:public final void setFrom(com.kg.gettransfer.data.model.secondary.Location)
+    46:46:public final com.kg.gettransfer.data.model.secondary.Location getTo()
+    46:46:public final void setTo(com.kg.gettransfer.data.model.secondary.Location)
+    50:50:public final java.lang.Integer getHireDuration()
+    50:50:public final void setHireDuration(java.lang.Integer)
+    61:61:public final java.lang.Integer getRouteDistance()
+    61:61:public final void setRouteDistance(java.lang.Integer)
+    71:71:public final java.lang.Integer getRouteDuration()
+    71:71:public final void setRouteDuration(java.lang.Integer)
+    75:75:public final java.lang.String getStatus()
+    75:75:public final void setStatus(java.lang.String)
+    79:79:public final boolean getBookNow()
+    79:79:public final void setBookNow(boolean)
+    83:83:public final com.kg.gettransfer.data.model.secondary.ZonedDate getDateTo()
+    83:83:public final void setDateTo(com.kg.gettransfer.data.model.secondary.ZonedDate)
+    87:87:public final com.kg.gettransfer.data.model.secondary.ZonedDate getDateReturn()
+    87:87:public final void setDateReturn(com.kg.gettransfer.data.model.secondary.ZonedDate)
+    91:91:public final java.util.Date getDateRefund()
+    91:91:public final void setDateRefund(java.util.Date)
+    95:95:public final int getPax()
+    95:95:public final void setPax(int)
+    99:99:public final java.lang.String getNameSign()
+    99:99:public final void setNameSign(java.lang.String)
+    104:104:public final io.realm.RealmList getTransportTypes()
+    104:104:public final void setTransportTypes(io.realm.RealmList)
+    108:108:public final java.lang.String getChildSeats()
+    108:108:public final void setChildSeats(java.lang.String)
+    112:112:public final java.lang.String getComment()
+    112:112:public final void setComment(java.lang.String)
+    116:116:public final java.lang.String getFlightNumber()
+    116:116:public final void setFlightNumber(java.lang.String)
+    120:120:public final int getOffersCount()
+    120:120:public final void setOffersCount(int)
+    124:124:public final java.util.Date getOffersChangedDate()
+    124:124:public final void setOffersChangedDate(java.util.Date)
+    126:126:public final long getOffersTriedToUpdateDate()
+    126:126:public final void setOffersTriedToUpdateDate(long)
+    127:127:public final long getOffersUpdatedDate()
+    127:127:public final void setOffersUpdatedDate(long)
+    131:133:public final boolean getNeedAndCanUpdateOffers()
+    137:140:public final void populateFromOldTransfer(com.kg.gettransfer.data.model.Transfer)
+    144:144:public final java.lang.Integer getRelevantCarrierProfilesCount()
+    144:144:public final void setRelevantCarrierProfilesCount(java.lang.Integer)
+    148:148:public final java.lang.String getMalinaCard()
+    148:148:public final void setMalinaCard(java.lang.String)
+    150:150:public final io.realm.RealmList getOffers()
+    150:150:public final void setOffers(io.realm.RealmList)
+    151:151:public final boolean isActiveNew()
+    152:152:public final boolean isActiveConfirmed()
+com.kg.gettransfer.data.model.Vehicle:
+    13:13:public final java.lang.String getName()
+    13:13:public final void setName(java.lang.String)
+    17:17:public final int getYear()
+    17:17:public final void setYear(int)
+    21:21:public final java.lang.String getTransportTypeID()
+    21:21:public final void setTransportTypeID(java.lang.String)
+com.kg.gettransfer.data.model.secondary.Currency:
+    13:13:public final java.lang.String getIsoCode()
+    13:13:public final void setIsoCode(java.lang.String)
+    17:17:public final java.lang.String getSymbol()
+    17:17:public final void setSymbol(java.lang.String)
+com.kg.gettransfer.data.model.secondary.Language:
+    13:13:public final java.lang.String getCode()
+    13:13:public final void setCode(java.lang.String)
+    17:17:public final java.lang.String getTitle()
+    17:17:public final void setTitle(java.lang.String)
+com.kg.gettransfer.data.model.secondary.Locale:
+    13:13:public final java.lang.String getCode()
+    13:13:public final void setCode(java.lang.String)
+    17:17:public final java.lang.String getTitle()
+    17:17:public final void setTitle(java.lang.String)
+com.kg.gettransfer.data.model.secondary.Location:
+    13:13:public final java.lang.String getName()
+    13:13:public final void setName(java.lang.String)
+    17:17:public final java.lang.String getPoint()
+    17:17:public final void setPoint(java.lang.String)
+    19:19:public Location(java.lang.String,double,double)
+com.kg.gettransfer.data.model.secondary.Price:
+    13:13:public final com.kg.gettransfer.data.model.secondary.PriceConverted getBase()
+    13:13:public final void setBase(com.kg.gettransfer.data.model.secondary.PriceConverted)
+    17:17:public final java.lang.String getP30()
+    17:17:public final void setP30(java.lang.String)
+    21:21:public final java.lang.String getP70()
+    21:21:public final void setP70(java.lang.String)
+    25:25:public final com.kg.gettransfer.data.model.secondary.PriceConverted getWithoutDiscount()
+    25:25:public final void setWithoutDiscount(com.kg.gettransfer.data.model.secondary.PriceConverted)
+    29:29:public final double getAmount()
+    29:29:public final void setAmount(double)
+com.kg.gettransfer.data.model.secondary.PriceConverted:
+    24:25:public final java.lang.String toStringMultiline()
+    13:13:public final java.lang.String getDefaultCurrency()
+    13:13:public final void setDefaultCurrency(java.lang.String)
+    17:17:public final java.lang.String getPreferredCurrency()
+    17:17:public final void setPreferredCurrency(java.lang.String)
+com.kg.gettransfer.data.model.secondary.Rating:
+    13:13:public final int getAverage()
+    13:13:public final void setAverage(int)
+    17:17:public final int getVehicle()
+    17:17:public final void setVehicle(int)
+    21:21:public final int getDrive()
+    21:21:public final void setDrive(int)
+    25:25:public final int getFair()
+    25:25:public final void setFair(int)
+com.kg.gettransfer.data.model.secondary.TransportType:
+    15:15:public final java.lang.String getId()
+    15:15:public final void setId(java.lang.String)
+    17:17:public final java.lang.String getTitle()
+    17:17:public final void setTitle(java.lang.String)
+    21:21:public final int getPaxMax()
+    21:21:public final void setPaxMax(int)
+    25:25:public final int getLuggageMax()
+    25:25:public final void setLuggageMax(int)
+com.kg.gettransfer.data.model.secondary.ZonedDate:
+    20:20:public final java.util.TimeZone getTimeZone()
+    13:13:public final java.util.Date getDate()
+    13:13:public final void setDate(java.util.Date)
+    13:13:public final java.lang.String getZoneString()
+    13:13:public final void setZoneString(java.lang.String)
+io.realm.com_kg_gettransfer_data_model_AccountInfoRealmProxy:
+    289:289:public static java.lang.String getSimpleClassName()
+io.realm.com_kg_gettransfer_data_model_AccountInfoRealmProxy$ClassNameHelper
+io.realm.com_kg_gettransfer_data_model_CarrierRealmProxy:
+    430:430:public static java.lang.String getSimpleClassName()
+io.realm.com_kg_gettransfer_data_model_CarrierRealmProxy$ClassNameHelper
+io.realm.com_kg_gettransfer_data_model_ConfigRealmProxy:
+    330:330:public static java.lang.String getSimpleClassName()
+io.realm.com_kg_gettransfer_data_model_ConfigRealmProxy$ClassNameHelper
+io.realm.com_kg_gettransfer_data_model_OfferRealmProxy:
+    363:363:public static java.lang.String getSimpleClassName()
+io.realm.com_kg_gettransfer_data_model_OfferRealmProxy$ClassNameHelper
+io.realm.com_kg_gettransfer_data_model_TransferRealmProxy:
+    1029:1029:public static java.lang.String getSimpleClassName()
+io.realm.com_kg_gettransfer_data_model_TransferRealmProxy$ClassNameHelper
+io.realm.com_kg_gettransfer_data_model_VehicleRealmProxy:
+    192:192:public static java.lang.String getSimpleClassName()
+io.realm.com_kg_gettransfer_data_model_VehicleRealmProxy$ClassNameHelper
+io.realm.com_kg_gettransfer_data_model_secondary_CurrencyRealmProxy:
+    162:162:public static java.lang.String getSimpleClassName()
+io.realm.com_kg_gettransfer_data_model_secondary_CurrencyRealmProxy$ClassNameHelper
+io.realm.com_kg_gettransfer_data_model_secondary_LanguageRealmProxy:
+    166:166:public static java.lang.String getSimpleClassName()
+io.realm.com_kg_gettransfer_data_model_secondary_LanguageRealmProxy$ClassNameHelper
+io.realm.com_kg_gettransfer_data_model_secondary_LocaleRealmProxy:
+    162:162:public static java.lang.String getSimpleClassName()
+io.realm.com_kg_gettransfer_data_model_secondary_LocaleRealmProxy$ClassNameHelper
+io.realm.com_kg_gettransfer_data_model_secondary_LocationRealmProxy:
+    162:162:public static java.lang.String getSimpleClassName()
+io.realm.com_kg_gettransfer_data_model_secondary_LocationRealmProxy$ClassNameHelper
+io.realm.com_kg_gettransfer_data_model_secondary_PriceConvertedRealmProxy:
+    166:166:public static java.lang.String getSimpleClassName()
+io.realm.com_kg_gettransfer_data_model_secondary_PriceConvertedRealmProxy$ClassNameHelper
+io.realm.com_kg_gettransfer_data_model_secondary_PriceRealmProxy:
+    282:282:public static java.lang.String getSimpleClassName()
+io.realm.com_kg_gettransfer_data_model_secondary_PriceRealmProxy$ClassNameHelper
+io.realm.com_kg_gettransfer_data_model_secondary_RatingRealmProxy:
+    202:202:public static java.lang.String getSimpleClassName()
+io.realm.com_kg_gettransfer_data_model_secondary_RatingRealmProxy$ClassNameHelper
+io.realm.com_kg_gettransfer_data_model_secondary_TransportTypeRealmProxy:
+    204:204:public static java.lang.String getSimpleClassName()
+io.realm.com_kg_gettransfer_data_model_secondary_TransportTypeRealmProxy$ClassNameHelper
+io.realm.com_kg_gettransfer_data_model_secondary_ZonedDateRealmProxy:
+    164:164:public static java.lang.String getSimpleClassName()
+io.realm.com_kg_gettransfer_data_model_secondary_ZonedDateRealmProxy$ClassNameHelper

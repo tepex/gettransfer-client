@@ -1,0 +1,2 @@
+com.kg.gettransfer.data
+string app_name

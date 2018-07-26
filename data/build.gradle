@@ -1,0 +1,89 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
+
+ext {
+	gson_version = '2.8.5'
+}
+
+android {
+    compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
+    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+    
+    defaultConfig {
+        minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION
+        targetSdkVersion project.ANDROID_BUILD_SDK_VERSION
+        versionCode androidGitVersion.code()
+        versionName androidGitVersion.name()
+        testInstrumentationRunner project.ANDROID_TEST_INSTRUMENTATION_RUNNER
+    }
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
+        release {
+            debuggable true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    
+    lintOptions {
+        abortOnError true
+    }
+    
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+}
+
+// This is added automatically if Kotlin is registered in the project, but Kotlin extension functions
+// for Realm can be excluded if needed.
+realm {
+	kotlinExtensionsEnabled = true
+}
+
+
+// enable @ParametersAreNonnullByDefault annotation. See https://blog.jetbrains.com/kotlin/2017/09/kotlin-1-1-50-is-out/
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+	kotlinOptions {
+		freeCompilerArgs = ["-Xjsr305=strict"]
+	}
+}
+
+dependencies {
+	implementation project(":domain")
+	implementation "com.google.code.gson:gson:$gson_version"
+    // Realm db. To presentation layer
+//    implementation 'io.realm:android-adapters:3.0.0'
+
+	implementation libs.kotlin
+    implementation libs.timber
+    
+    compileOnly libs.jsr250
+	
+	testImplementation libs.junit
+	testImplementation libs.hamcrest
+	testImplementation libs.mockito
+}
