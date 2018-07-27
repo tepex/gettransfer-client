@@ -26,8 +26,3 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" />
 </android.support.design.widget.CoordinatorLayout>
-<!--
-android:background="@android:color/transparent"
-android:orientation="vertical"
-android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
--->

@@ -8,10 +8,4 @@
     android:minHeight="?attr/actionBarSize"
 	android:fitsSystemWindows="true"
     app:navigationIcon="?attr/homeAsUpIndicator"
-	 
 	tools:ignore="Overdraw" />
-<!--
-app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-app:popupTheme="@style/AppTheme.PopupOverlay"
-android:background="@android:color/transparent"
--->

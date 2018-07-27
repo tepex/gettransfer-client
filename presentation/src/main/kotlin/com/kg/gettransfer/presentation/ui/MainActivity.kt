@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 
 import android.view.View
+import android.widget.RelativeLayout
 
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -99,13 +100,13 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		mapView.onCreate(mapViewBundle)
 		mapView.getMapAsync({ gmap -> 
 			this.gmap = gmap
-			this.gmap!!.setMyLocationEnabled(true)
 			this.gmap!!.setOnMyLocationButtonClickListener(OnMyLocationButtonClickListener {
 				onClickMyLocation()
 				true
 			})
 //			this.gmap!!.setOnCameraMoveListener(this)
 			presenter.updateCurrentLocation()
+			initMyLocationButton()
 		})
 	}
 	
@@ -179,5 +180,22 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	/* MainView */
 	override fun onClickMyLocation() {
 		presenter.updateCurrentLocation()
+	}
+	
+	/**
+	 * Грязный хак — меняем положение нативной кнопки 'MyLocation'
+	 * https://stackoverflow.com/questions/36785542/how-to-change-the-position-of-my-location-button-in-google-maps-using-android-st
+	 */
+	private fun initMyLocationButton() {
+		gmap!!.setMyLocationEnabled(true)
+		val btn = ((mapView.findViewById(1) as View).parent as View).findViewById(2) as View
+		val rlp = btn.getLayoutParams() as RelativeLayout.LayoutParams 
+		// position on right bottom
+		rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+		rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+		
+		rlp.setMargins(0, 0, 
+			resources.getDimension(R.dimen.location_button_margin_end).toInt(),
+			resources.getDimension(R.dimen.location_button_margin_bottom).toInt())
 	}
 }
