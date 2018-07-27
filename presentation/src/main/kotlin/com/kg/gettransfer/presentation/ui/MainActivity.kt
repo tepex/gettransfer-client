@@ -10,12 +10,17 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 
 import android.support.design.widget.AppBarLayout
+import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
 
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
+
 import android.support.v7.widget.Toolbar
 
 import android.view.View
@@ -38,6 +43,8 @@ import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
 
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
 import timber.log.Timber
 
@@ -45,6 +52,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	@InjectPresenter
 	lateinit var presenter: MainPresenter
 	
+	private lateinit var drawer: DrawerLayout
 	private var permissionsGranted = true
 	private var isFirst = true
 	private var gmap: GoogleMap? = null
@@ -73,14 +81,25 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		
 		setContentView(R.layout.activity_main)
 		
-		val tb: Toolbar = this.toolbar as Toolbar
+		val tb = this.toolbar as Toolbar
 		tb.setTitle(R.string.app_name)
 		
 		setSupportActionBar(tb)
+		/*
 		getSupportActionBar()?.setDisplayShowTitleEnabled(true)
 		getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 		getSupportActionBar()?.setHomeButtonEnabled(true);
-		
+		*/
+		drawer = drawerLayout as DrawerLayout
+		val toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+		drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        var navigationView = navView as NavigationView
+        navigationView.setNavigationItemSelectedListener({ item ->
+        	Timber.d("nav view item ${item.title}")
+        	true
+        })
+
 		val abl: AppBarLayout = this.appbar as AppBarLayout
 		abl.bringToFront()
 		
@@ -93,7 +112,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		
 		Timber.d("Permissions granted: ${permissionsGranted}")
 		if(permissionsGranted) startGoogleMap(mapViewBundle)
-		else Snackbar.make(rootView, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
+		else Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
 	}
 	
 	private fun startGoogleMap(mapViewBundle: Bundle?) {
@@ -120,7 +139,13 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		}
 		if(permissionsGranted) mapView.onSaveInstanceState(mapViewBundle)
 	}
-	
+
+	@CallSuper
+	override fun onBackPressed() {
+		if(drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START)
+		else super.onBackPressed();
+	}
+
 	@CallSuper
 	override fun onStart() {
 		super.onStart()
