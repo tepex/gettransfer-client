@@ -9,12 +9,14 @@ import android.os.Bundle
 
 import android.support.annotation.CallSuper
 
+import android.support.design.widget.AppBarLayout
 import android.support.design.widget.Snackbar
 
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 
 import android.support.v7.app.AppCompatDelegate
+import android.support.v7.widget.Toolbar
 
 import android.view.View
 
@@ -69,6 +71,17 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		}
 		
 		setContentView(R.layout.activity_main)
+		
+		val tb: Toolbar = this.toolbar as Toolbar
+		tb.setTitle(R.string.app_name)
+		
+		setSupportActionBar(tb)
+		getSupportActionBar()?.setDisplayShowTitleEnabled(true)
+		getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
+		getSupportActionBar()?.setHomeButtonEnabled(true);
+		
+		val abl: AppBarLayout = this.appbar as AppBarLayout
+		abl.bringToFront()
 		
 		var mapViewBundle: Bundle? = null
 		if(savedInstanceState != null)
