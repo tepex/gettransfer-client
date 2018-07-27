@@ -29,6 +29,7 @@ import com.kg.gettransfer.di.http.ProvideAccessTokenInterceptor
 
 import com.kg.gettransfer.realm.secondary.ZonedDate
 */
+
 import org.koin.dsl.module.module
 /*
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -41,6 +42,9 @@ import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 */
+import ru.terrakok.cicerone.Cicerone
+import ru.terrakok.cicerone.NavigatorHolder
+import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
@@ -148,7 +152,13 @@ val AppModule = module {
     */
 }
 
+val CiceroneModule = module {
+	single { Cicerone.create() as Cicerone<Router> }
+	single { get<Cicerone<Router>>().router }
+	single { get<Cicerone<Router>>().navigatorHolder }
+}
+
 /**
  * Module list
  */
-val appModules = listOf(AppModule)
+val appModules = listOf(AppModule, CiceroneModule)

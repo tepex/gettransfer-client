@@ -46,17 +46,28 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
+import org.koin.android.ext.android.inject
+import org.koin.standalone.KoinComponent
+
+import ru.terrakok.cicerone.Navigator
+import ru.terrakok.cicerone.NavigatorHolder
+import ru.terrakok.cicerone.Router
+import ru.terrakok.cicerone.android.SupportFragmentNavigator
+
 import timber.log.Timber
 
 class MainActivity: MvpAppCompatActivity(), MainView {
 	@InjectPresenter
-	lateinit var presenter: MainPresenter
+	internal lateinit var presenter: MainPresenter
 	
 	private lateinit var drawer: DrawerLayout
 	private var permissionsGranted = true
 	private var isFirst = true
 	private var gmap: GoogleMap? = null
 	private var centerMarker: Marker? = null
+	
+	private val navigatorHolder: NavigatorHolder by inject()
+	private val router: Router by inject();
 
 	companion object
 	{
@@ -93,12 +104,12 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		drawer = drawerLayout as DrawerLayout
 		val toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 		drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        var navigationView = navView as NavigationView
-        navigationView.setNavigationItemSelectedListener({ item ->
-        	Timber.d("nav view item ${item.title}")
-        	true
-        })
+		toggle.syncState();
+		var navigationView = navView as NavigationView
+		navigationView.setNavigationItemSelectedListener({ item ->
+			Timber.d("nav view item ${item.title}")
+			true
+		})
 
 		val abl: AppBarLayout = this.appbar as AppBarLayout
 		abl.bringToFront()

@@ -11,6 +11,7 @@ ext {
 	retrofit_version          = "2.4.0"
 	koin_version              = "1.0.0-beta-3"
 	moxy_version              = "1.5.5"
+	cicerone_version          = "3.0.0"
 }
 
 android {
@@ -90,6 +91,8 @@ dependencies {
 	implementation "com.arello-mobile:moxy:${moxy_version}"
 	implementation "com.arello-mobile:moxy-app-compat:${moxy_version}"
 	kapt "com.arello-mobile:moxy-compiler:${moxy_version}"
+	// Cicerone
+	implementation "ru.terrakok.cicerone:cicerone:${cicerone_version}"
     
     //com.google.android.gms:play-services-maps:11.8.0
     // Retrofit network
