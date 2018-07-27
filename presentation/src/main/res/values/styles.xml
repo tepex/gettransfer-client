@@ -1,5 +1,4 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -11,9 +10,17 @@
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
 		<item name="android:windowDisablePreview">true</item>
+		<item name="android:actionOverflowButtonStyle">@style/ShareButtonOverflow</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- Style to replace actionbar overflow icon. set item 'android:actionOverflowButtonStyle' in AppTheme -->
+    <style name="ShareButtonOverflow" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
+    	<item name="android:src">@android:drawable/ic_menu_share</item>
+    	<item name="android:background">?android:attr/actionBarItemBackground</item>
+    	<item name="android:contentDescription">"Lala"</item>
+    </style>
 
     <style name="etField">
         <item name="android:background">@android:color/transparent</item>

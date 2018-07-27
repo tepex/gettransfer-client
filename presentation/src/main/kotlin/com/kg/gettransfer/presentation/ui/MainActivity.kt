@@ -23,6 +23,8 @@ import android.support.v7.app.AppCompatDelegate
 
 import android.support.v7.widget.Toolbar
 
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.RelativeLayout
 
@@ -120,6 +122,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			isFirst = false
 			mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY)
 		}
+		else drawer.openDrawer(GravityCompat.START);
 		
 		Timber.d("Permissions granted: ${permissionsGranted}")
 		if(permissionsGranted) startGoogleMap(mapViewBundle)
@@ -155,6 +158,17 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	override fun onBackPressed() {
 		if(drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START)
 		else super.onBackPressed();
+	}
+	
+	override fun onCreateOptionsMenu(menu: Menu): Boolean {
+		menuInflater.inflate(R.menu.share_menu, menu)
+		return true
+	}
+	
+	//@CallSuper
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		Timber.d("Options item seelcted")
+		return true
 	}
 
 	@CallSuper
