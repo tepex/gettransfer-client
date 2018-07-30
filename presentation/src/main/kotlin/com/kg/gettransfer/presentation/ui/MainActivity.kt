@@ -83,7 +83,12 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private val router: Router by inject();
 
 	private val navigator = object: SupportFragmentNavigator(supportFragmentManager, R.id.container) {
-        override protected fun createFragment(screenKey: String, data: Any): Fragment {
+		override protected fun createFragment(screenKey: String, data: Any): Fragment {
+			when(screenKey) {
+				Screens.ABOUT -> return AboutFragment.getNewInstance(data)
+				else throw RuntimeException("Unknown screen key!")
+			}
+
         	/*
         	when(screenKey) {
         		Screens.SIGN_IN_SCREEN -> return SignInFragment.getNewInstance(data)
@@ -100,7 +105,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
                 else -> throw RuntimeException("Unknown screen key!")
 			}
 			*/
-			throw RuntimeException("Unknown screen key!")
 		}
 
 		override protected fun showSystemMessage(message: String) {
@@ -220,6 +224,11 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	@CallSuper
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		when(item.itemId) {
+			R.id.action_share
+		}
+		
+		
 		if(item.itemId == R.id.action_share) {
 			Snackbar.make(drawerLayout, "Share clicked", Snackbar.LENGTH_SHORT).show()
 			return true
