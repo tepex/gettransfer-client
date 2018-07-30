@@ -165,10 +165,13 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		return true
 	}
 	
-	//@CallSuper
+	@CallSuper
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		Timber.d("Options item seelcted")
-		return true
+		if(item.itemId == R.id.action_share) {
+			Snackbar.make(drawerLayout, "Share clicked", Snackbar.LENGTH_SHORT).show()
+			return true
+		}
+		return super.onOptionsItemSelected(item)
 	}
 
 	@CallSuper
