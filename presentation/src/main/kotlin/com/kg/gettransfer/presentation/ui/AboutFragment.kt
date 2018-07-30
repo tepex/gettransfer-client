@@ -24,7 +24,7 @@ class AboutFragment: Fragment(), AboutView {
 	var versionName: String = ""
 	
 	companion object {
-		fun getNewInstance(data: Any): AboutFragment {
+		fun getNewInstance(data: Any?): AboutFragment {
 			return AboutFragment()
 		}
 	}

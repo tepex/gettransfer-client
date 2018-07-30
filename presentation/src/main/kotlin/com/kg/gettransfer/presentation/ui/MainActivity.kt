@@ -27,6 +27,8 @@ import android.support.v7.app.AppCompatDelegate
 
 import android.support.v7.widget.Toolbar
 
+import android.util.SparseArray
+
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -69,6 +71,11 @@ const val COMPASS_BUTTON_INDEX = 5
 const val PERMISSION_REQUEST = 2211
 const val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
 
+const val ACTIVE_RIDES_SCREEN    = "active_rides"
+const val ARCHIVED_RIDES_SCREEN  = "archived_rides"
+const val SETTINGS_SCREEN        = "settings"
+const val ABOUT_SCREEN           = "about"
+
 class MainActivity: MvpAppCompatActivity(), MainView {
 	@InjectPresenter
 	internal lateinit var presenter: MainPresenter
@@ -83,28 +90,11 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private val router: Router by inject();
 
 	private val navigator = object: SupportFragmentNavigator(supportFragmentManager, R.id.container) {
-		override protected fun createFragment(screenKey: String, data: Any): Fragment {
+		override protected fun createFragment(screenKey: String, data: Any?): Fragment {
 			when(screenKey) {
-				Screens.ABOUT -> return AboutFragment.getNewInstance(data)
-				else throw RuntimeException("Unknown screen key!")
+				ABOUT_SCREEN -> return AboutFragment.getNewInstance(data)
+				else -> throw RuntimeException("Unknown screen key!")
 			}
-
-        	/*
-        	when(screenKey) {
-        		Screens.SIGN_IN_SCREEN -> return SignInFragment.getNewInstance(data)
-                Screens.SIGN_UP_SCREEN -> return SignUpFragment.getNewInstance(data)
-                Screens.MAP_SCREEN -> return MapFragment.getNewInstance(data as Bundle)
-                Screens.DEVICES_SCREEN -> return DevicesFragment.getNewInstance(data as Bundle)
-                Screens.USERS_SCREEN -> return UsersFragment.getNewInstance(data as Bundle)
-                Screens.SERVER_SCREEN -> return ServerFragment.getNewInstance(data as Bundle)
-                Screens.USER_SCREEN -> return UserFragment.getNewInstance(data as Bundle)
-                Screens.DEVICE_SCREEN -> return DeviceFragment.getNewInstance(data as Bundle)
-                Screens.PERMISSIONS_SCREEN -> return PermissionsFragment.getNewInstance(data as Bundle)
-                Screens.REPORT_SCREEN -> return ReportFragment.getNewInstance(data as Bundle)
-                Screens.ABOUT_SCREEN -> return AboutFragment.getNewInstance(data)
-                else -> throw RuntimeException("Unknown screen key!")
-			}
-			*/
 		}
 
 		override protected fun showSystemMessage(message: String) {
@@ -153,6 +143,11 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		var navigationView = navView as NavigationView
 		navigationView.setNavigationItemSelectedListener({ item ->
 			Timber.d("nav view item ${item.title}")
+			when(item.itemId) {
+				R.id.nav_about -> router.navigateTo(ABOUT_SCREEN)
+				else -> Timber.d("No route for ${item.title}")
+			}
+			drawer.closeDrawer(GravityCompat.START)
 			true
 		})
 
@@ -173,7 +168,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		navigatorHolder.setNavigator(navigator)
 		
 		Timber.d("Permissions granted: ${permissionsGranted}")
-		Timber.d("Screen main: "+Screens.MAIN)
 		if(permissionsGranted) startGoogleMap(mapViewBundle)
 		else Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
 	}
@@ -225,13 +219,10 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	@CallSuper
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		when(item.itemId) {
-			R.id.action_share
-		}
-		
-		
-		if(item.itemId == R.id.action_share) {
-			Snackbar.make(drawerLayout, "Share clicked", Snackbar.LENGTH_SHORT).show()
-			return true
+			R.id.action_share -> {
+				Snackbar.make(drawerLayout, "Share clicked", Snackbar.LENGTH_SHORT).show()
+				return true
+			}
 		}
 		return super.onOptionsItemSelected(item)
 	}
@@ -263,6 +254,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	@CallSuper
 	override fun onDestroy() {
 		if(permissionsGranted) mapView.onDestroy()
+		navigatorHolder.removeNavigator();
 		super.onDestroy()
 	}
 	
