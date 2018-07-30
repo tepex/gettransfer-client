@@ -20,6 +20,7 @@
 			android:layout_height="wrap_content"
 			android:minHeight="?attr/actionBarSize"
 			android:fitsSystemWindows="true"
+			app:popupTheme="@style/AppTheme.PopupOverlay"
 			tools:ignore="Overdraw">
 			<!-- 
 			<Button
