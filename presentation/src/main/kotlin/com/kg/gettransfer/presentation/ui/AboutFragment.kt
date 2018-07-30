@@ -24,6 +24,7 @@ class AboutFragment: Fragment(), AboutView {
 	var versionName: String = ""
 	
 	companion object {
+		@Suppress("UNUSED_PARAMETER")
 		fun getNewInstance(data: Any?): AboutFragment {
 			return AboutFragment()
 		}

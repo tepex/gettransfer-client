@@ -48,6 +48,7 @@ class StartFragment: MvpAppCompatFragment(), StartView {
 	private var centerMarker: Marker? = null
 	
 	companion object {
+		@Suppress("UNUSED_PARAMETER")
 		fun getNewInstance(data: Any?): StartFragment {
 			return StartFragment()
 		}

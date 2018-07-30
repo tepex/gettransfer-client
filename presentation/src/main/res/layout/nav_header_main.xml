@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_header"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
-    android:background="#ffff00"
+    android:layout_height="@dimen/nav_header_height"
+    android:background="@color/colorPrimary"
     android:gravity="bottom"
     android:orientation="vertical">
 

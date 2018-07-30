@@ -114,8 +114,8 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 //		tb.setTitle(R.string.app_name)
 		
 		setSupportActionBar(tb)
+		getSupportActionBar()?.setDisplayShowTitleEnabled(false)
 		/*
-		getSupportActionBar()?.setDisplayShowTitleEnabled(true)
 		getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 		getSupportActionBar()?.setHomeButtonEnabled(true);
 		*/
@@ -137,9 +137,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		val abl: AppBarLayout = this.appbar as AppBarLayout
 		abl.bringToFront()
 		
-		/* Transparent status bar */
-		window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-		
 		if(savedInstanceState == null) drawer.openDrawer(GravityCompat.START)
 		
 		navigatorHolder.setNavigator(navigator)
@@ -155,10 +152,11 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		else super.onBackPressed();
 	}
 	
+	/*
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
 		menuInflater.inflate(R.menu.share_menu, menu)
 		
-		/* Красим иконку "shared" в Toolbar в черный цвет */
+		// Красим иконку "shared" в Toolbar в черный цвет 
 		for(i in 0 until menu.size()) {
 			val drawable = menu.getItem(i).icon
 			if(drawable != null) {
@@ -179,6 +177,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		}
 		return super.onOptionsItemSelected(item)
 	}
+	*/
 
 	@CallSuper
 	override fun onDestroy() {

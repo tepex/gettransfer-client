@@ -8,6 +8,9 @@
 	<string name="nav_archived_rides">Archived rides</string>
 	<string name="nav_settings">Settings</string>
 	<string name="nav_about">About</string>
+	<!-- Search form -->
+	<string name="search_from_hint">From</string>
+	<string name="search_to_hint">To</string>
 	<!--
 	<string name=""></string>
 	-->
