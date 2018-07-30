@@ -10,7 +10,6 @@
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
 		<item name="android:windowDisablePreview">true</item>
-		<item name="android:actionOverflowButtonStyle">@style/ShareButtonOverflow</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

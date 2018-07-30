@@ -20,15 +20,7 @@
 			android:layout_height="wrap_content"
 			android:minHeight="?attr/actionBarSize"
 			android:fitsSystemWindows="true"
-			tools:ignore="Overdraw">
-			<!-- 
-			<Button
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_gravity="end"
-				android:background="@android:drawable/ic_menu_share" />
-			 -->
-		</android.support.v7.widget.Toolbar>
+			tools:ignore="Overdraw" />
 	</android.support.design.widget.AppBarLayout>
 
 	<include layout="@layout/content_main" />

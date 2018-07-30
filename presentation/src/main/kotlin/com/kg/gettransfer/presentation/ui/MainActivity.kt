@@ -4,6 +4,9 @@ import android.Manifest
 
 import android.content.pm.PackageManager
 
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
+
 import android.os.Build
 import android.os.Bundle
 
@@ -57,6 +60,9 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportFragmentNavigator
 
 import timber.log.Timber
+
+const val MY_LOCATION_BUTTON_INDEX = 2
+const val COMPASS_BUTTON_INDEX = 5
 
 class MainActivity: MvpAppCompatActivity(), MainView {
 	@InjectPresenter
@@ -139,7 +145,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			})
 //			this.gmap!!.setOnCameraMoveListener(this)
 			presenter.updateCurrentLocation()
-			initMyLocationButton()
+			customizeGoogleMaps()
 		})
 	}
 	
@@ -162,6 +168,14 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
 		menuInflater.inflate(R.menu.share_menu, menu)
+		
+		for(i in 0 until menu.size()) {
+			val drawable = menu.getItem(i).icon
+			if(drawable != null) {
+				drawable!!.mutate()
+				drawable!!.setColorFilter(resources.getColor(android.R.color.black), PorterDuff.Mode.SRC_ATOP)
+			}
+		}
 		return true
 	}
 	
@@ -239,16 +253,26 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	 * Грязный хак — меняем положение нативной кнопки 'MyLocation'
 	 * https://stackoverflow.com/questions/36785542/how-to-change-the-position-of-my-location-button-in-google-maps-using-android-st
 	 */
-	private fun initMyLocationButton() {
+	private fun customizeGoogleMaps() {
 		gmap!!.setMyLocationEnabled(true)
-		val btn = ((mapView.findViewById(1) as View).parent as View).findViewById(2) as View
-		val rlp = btn.getLayoutParams() as RelativeLayout.LayoutParams 
+		val parent = (mapView.findViewById(1) as View).parent as View
+		val myLocationBtn = parent.findViewById(MY_LOCATION_BUTTON_INDEX) as View
+		val rlp = myLocationBtn.getLayoutParams() as RelativeLayout.LayoutParams 
 		// position on right bottom
-		rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
-		rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+		rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0)
+		rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
 		
 		rlp.setMargins(0, 0, 
 			resources.getDimension(R.dimen.location_button_margin_end).toInt(),
 			resources.getDimension(R.dimen.location_button_margin_bottom).toInt())
+		
+		val compassBtn = parent.findViewById(COMPASS_BUTTON_INDEX) as View
+		val rlp1 = compassBtn.getLayoutParams() as RelativeLayout.LayoutParams 
+		// position on right bottom
+		rlp1.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0)
+		rlp1.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
+		
+		rlp1.setMargins(resources.getDimension(R.dimen.compass_button_margin_start).toInt(), 0, 
+			0, resources.getDimension(R.dimen.compass_button_margin_bottom).toInt())
 	}
 }
