@@ -17,6 +17,7 @@ import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -79,13 +80,43 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private val navigatorHolder: NavigatorHolder by inject()
 	private val router: Router by inject();
 
+	private val navigator = object: SupportFragmentNavigator(supportFragmentManager, R.id.container) {
+        override protected fun createFragment(screenKey: String, data: Any): Fragment {
+        	/*
+        	when(screenKey) {
+        		Screens.SIGN_IN_SCREEN -> return SignInFragment.getNewInstance(data)
+                Screens.SIGN_UP_SCREEN -> return SignUpFragment.getNewInstance(data)
+                Screens.MAP_SCREEN -> return MapFragment.getNewInstance(data as Bundle)
+                Screens.DEVICES_SCREEN -> return DevicesFragment.getNewInstance(data as Bundle)
+                Screens.USERS_SCREEN -> return UsersFragment.getNewInstance(data as Bundle)
+                Screens.SERVER_SCREEN -> return ServerFragment.getNewInstance(data as Bundle)
+                Screens.USER_SCREEN -> return UserFragment.getNewInstance(data as Bundle)
+                Screens.DEVICE_SCREEN -> return DeviceFragment.getNewInstance(data as Bundle)
+                Screens.PERMISSIONS_SCREEN -> return PermissionsFragment.getNewInstance(data as Bundle)
+                Screens.REPORT_SCREEN -> return ReportFragment.getNewInstance(data as Bundle)
+                Screens.ABOUT_SCREEN -> return AboutFragment.getNewInstance(data)
+                else -> throw RuntimeException("Unknown screen key!")
+			}
+			*/
+			throw RuntimeException("Unknown screen key!")
+		}
+
+		override protected fun showSystemMessage(message: String) {
+			Snackbar.make(drawerLayout, message, Snackbar.LENGTH_SHORT).show()
+		}
+
+		override protected fun exit() {
+			finish()
+		}
+	}
+
 	companion object
 	{
 		private val PERMISSION_REQUEST = 2211
 		private val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
 		private val PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
 	}
-	
+
 	init {
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 	}
@@ -103,7 +134,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		setContentView(R.layout.activity_main)
 		
 		val tb = this.toolbar as Toolbar
-		tb.setTitle(R.string.app_name)
+//		tb.setTitle(R.string.app_name)
 		
 		setSupportActionBar(tb)
 		/*
@@ -135,7 +166,10 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		}
 		else drawer.openDrawer(GravityCompat.START);
 		
+		navigatorHolder.setNavigator(navigator)
+		
 		Timber.d("Permissions granted: ${permissionsGranted}")
+		Timber.d("Screen main: "+Screens.MAIN)
 		if(permissionsGranted) startGoogleMap(mapViewBundle)
 		else Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
 	}
@@ -177,8 +211,8 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		for(i in 0 until menu.size()) {
 			val drawable = menu.getItem(i).icon
 			if(drawable != null) {
-				drawable!!.mutate()
-				drawable!!.setColorFilter(resources.getColor(android.R.color.black), PorterDuff.Mode.SRC_ATOP)
+				drawable.mutate()
+				drawable.setColorFilter(resources.getColor(android.R.color.black, null), PorterDuff.Mode.SRC_ATOP)
 			}
 		}
 		return true
