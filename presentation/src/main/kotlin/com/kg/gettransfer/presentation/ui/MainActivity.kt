@@ -66,6 +66,8 @@ import timber.log.Timber
 
 const val MY_LOCATION_BUTTON_INDEX = 2
 const val COMPASS_BUTTON_INDEX = 5
+const val PERMISSION_REQUEST = 2211
+const val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
 
 class MainActivity: MvpAppCompatActivity(), MainView {
 	@InjectPresenter
@@ -112,8 +114,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 
 	companion object
 	{
-		private val PERMISSION_REQUEST = 2211
-		private val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
 		private val PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
 	}
 
