@@ -29,6 +29,8 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
+
 import android.widget.RelativeLayout
 
 import com.arellomobile.mvp.MvpAppCompatActivity
@@ -121,6 +123,9 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 
 		val abl: AppBarLayout = this.appbar as AppBarLayout
 		abl.bringToFront()
+		
+		/* Transparent status bar */
+		window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 		
 		var mapViewBundle: Bundle? = null
 		if(savedInstanceState != null)
