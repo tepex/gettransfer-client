@@ -27,26 +27,13 @@ import android.support.v7.app.AppCompatDelegate
 
 import android.support.v7.widget.Toolbar
 
-import android.util.SparseArray
-
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 
-import android.widget.RelativeLayout
-
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
-
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener
-import com.google.android.gms.maps.MapView
-
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.MainPresenter
@@ -66,10 +53,7 @@ import ru.terrakok.cicerone.android.SupportFragmentNavigator
 
 import timber.log.Timber
 
-const val MY_LOCATION_BUTTON_INDEX = 2
-const val COMPASS_BUTTON_INDEX = 5
 const val PERMISSION_REQUEST = 2211
-const val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
 
 const val START_SCREEN           = "start_screen"
 const val ACTIVE_RIDES_SCREEN    = "active_rides"
@@ -82,10 +66,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	internal lateinit var presenter: MainPresenter
 	
 	private lateinit var drawer: DrawerLayout
-	private var permissionsGranted = true
-	private var isFirst = true
-	private var gmap: GoogleMap? = null
-	private var centerMarker: Marker? = null
+	var permissionsGranted = true
 	
 	private val navigatorHolder: NavigatorHolder by inject()
 	private val router: Router by inject();
@@ -159,48 +140,14 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		/* Transparent status bar */
 		window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 		
-		var mapViewBundle: Bundle? = null
-		if(savedInstanceState != null)
-		{
-			isFirst = false
-			mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY)
-		}
-		else drawer.openDrawer(GravityCompat.START);
+		if(savedInstanceState == null) drawer.openDrawer(GravityCompat.START)
 		
 		navigatorHolder.setNavigator(navigator)
 		
 		Timber.d("Permissions granted: ${permissionsGranted}")
-//		if(permissionsGranted) startGoogleMap(mapViewBundle)
 		if(permissionsGranted) router.newRootScreen(START_SCREEN)
 		else Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
 	}
-	
-/*
-	private fun startGoogleMap(mapViewBundle: Bundle?) {
-		mapView.onCreate(mapViewBundle)
-		mapView.getMapAsync({ gmap -> 
-			this.gmap = gmap
-			this.gmap!!.setOnMyLocationButtonClickListener(OnMyLocationButtonClickListener {
-				onClickMyLocation()
-				true
-			})
-//			this.gmap!!.setOnCameraMoveListener(this)
-			presenter.updateCurrentLocation()
-			customizeGoogleMaps()
-		})
-	}
-	
-	@CallSuper
-	override fun onSaveInstanceState(outState: Bundle) {
-		super.onSaveInstanceState(outState)
-		var mapViewBundle = outState.getBundle(MAP_VIEW_BUNDLE_KEY)
-		if(mapViewBundle == null) {
-			mapViewBundle = Bundle()
-			outState.putBundle(MAP_VIEW_BUNDLE_KEY, mapViewBundle)
-		}
-		if(permissionsGranted) mapView.onSaveInstanceState(mapViewBundle)
-	}
-	*/
 
 	@CallSuper
 	override fun onBackPressed() {
@@ -211,6 +158,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
 		menuInflater.inflate(R.menu.share_menu, menu)
 		
+		/* Красим иконку "shared" в Toolbar в черный цвет */
 		for(i in 0 until menu.size()) {
 			val drawable = menu.getItem(i).icon
 			if(drawable != null) {
@@ -232,46 +180,11 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		return super.onOptionsItemSelected(item)
 	}
 
-	/*
-	@CallSuper
-	override fun onStart() {
-		super.onStart()
-		if(permissionsGranted) mapView.onStart()
-	}
-	
-	@CallSuper
-	override fun onResume() {
-		super.onResume()
-		if(permissionsGranted) mapView.onResume()
-	}
-	
-	@CallSuper
-	override fun onPause() {
-		if(permissionsGranted) mapView.onPause()
-		super.onPause()
-	}
-	
-	@CallSuper
-	override fun onStop() {
-		if(permissionsGranted) mapView.onStop()
-		super.onStop()
-	}
-	*/
-		
 	@CallSuper
 	override fun onDestroy() {
-//		if(permissionsGranted) mapView.onDestroy()
 		navigatorHolder.removeNavigator();
 		super.onDestroy()
 	}
-	
-	/*
-	@CallSuper
-	override fun onLowMemory() {
-		if(permissionsGranted) mapView.onLowMemory()
-		super.onLowMemory()
-	}
-	*/
 	
 	/**
 	 * @return true — не требуется разрешение пользователя
@@ -297,34 +210,4 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	override fun onClickMyLocation() {
 		presenter.updateCurrentLocation()
 	}
-	
-	/**
-	 * Грязный хак — меняем положение нативной кнопки 'MyLocation'
-	 * https://stackoverflow.com/questions/36785542/how-to-change-the-position-of-my-location-button-in-google-maps-using-android-st
-	 */
-	 
-	 /*
-	private fun customizeGoogleMaps() {
-		gmap!!.setMyLocationEnabled(true)
-		val parent = (mapView.findViewById(1) as View).parent as View
-		val myLocationBtn = parent.findViewById(MY_LOCATION_BUTTON_INDEX) as View
-		val rlp = myLocationBtn.getLayoutParams() as RelativeLayout.LayoutParams 
-		// position on right bottom
-		rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0)
-		rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
-		
-		rlp.setMargins(0, 0, 
-			resources.getDimension(R.dimen.location_button_margin_end).toInt(),
-			resources.getDimension(R.dimen.location_button_margin_bottom).toInt())
-		
-		val compassBtn = parent.findViewById(COMPASS_BUTTON_INDEX) as View
-		val rlp1 = compassBtn.getLayoutParams() as RelativeLayout.LayoutParams 
-		// position on right bottom
-		rlp1.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0)
-		rlp1.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
-		
-		rlp1.setMargins(resources.getDimension(R.dimen.compass_button_margin_start).toInt(), 0, 
-			0, resources.getDimension(R.dimen.compass_button_margin_bottom).toInt())
-	}
-	*/
 }
