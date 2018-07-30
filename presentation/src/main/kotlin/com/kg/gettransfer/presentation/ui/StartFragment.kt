@@ -67,8 +67,8 @@ class StartFragment: MvpAppCompatFragment(), StartView {
 			isFirst = false
 			mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY)
 		}
-		mapView.onCreate(mapViewBundle)
-		mapView.getMapAsync({ gmap -> 
+		mapView?.onCreate(mapViewBundle)
+		mapView?.getMapAsync({ gmap -> 
 			this.gmap = gmap
 			/*
 			this.gmap!!.setOnMyLocationButtonClickListener(OnMyLocationButtonClickListener {
@@ -91,42 +91,42 @@ class StartFragment: MvpAppCompatFragment(), StartView {
 			mapViewBundle = Bundle()
 			outState.putBundle(MAP_VIEW_BUNDLE_KEY, mapViewBundle)
 		}
-		if((activity as MainActivity).permissionsGranted) mapView.onSaveInstanceState(mapViewBundle)
+		if((activity as MainActivity).permissionsGranted) mapView?.onSaveInstanceState(mapViewBundle)
 	}
 
 	@CallSuper
 	override fun onStart() {
 		super.onStart()
-		if((activity as MainActivity).permissionsGranted) mapView.onStart()
+		if((activity as MainActivity).permissionsGranted) mapView?.onStart()
 	}
 	
 	@CallSuper
 	override fun onResume() {
 		super.onResume()
-		if((activity as MainActivity).permissionsGranted) mapView.onResume()
+		if((activity as MainActivity).permissionsGranted) mapView?.onResume()
 	}
 	
 	@CallSuper
 	override fun onPause() {
-		if((activity as MainActivity).permissionsGranted) mapView.onPause()
+		if((activity as MainActivity).permissionsGranted) mapView?.onPause()
 		super.onPause()
 	}
 	
 	@CallSuper
 	override fun onStop() {
-		if((activity as MainActivity).permissionsGranted) mapView.onStop()
+		if((activity as MainActivity).permissionsGranted) mapView?.onStop()
 		super.onStop()
 	}
 	
 	@CallSuper
 	override fun onDestroy() {
-		if((activity as MainActivity).permissionsGranted) mapView.onDestroy()
+		if((activity as MainActivity).permissionsGranted) mapView?.onDestroy()
 		super.onDestroy()
 	}
 
 	@CallSuper
 	override fun onLowMemory() {
-		if((activity as MainActivity).permissionsGranted) mapView.onLowMemory()
+		if((activity as MainActivity).permissionsGranted) mapView?.onLowMemory()
 		super.onLowMemory()
 	}
 
@@ -137,7 +137,7 @@ class StartFragment: MvpAppCompatFragment(), StartView {
 	 
 	private fun customizeGoogleMaps() {
 		gmap!!.setMyLocationEnabled(true)
-		val parent = (mapView.findViewById(1) as View).parent as View
+		val parent = (mapView?.findViewById(1) as View).parent as View
 		val myLocationBtn = parent.findViewById(MY_LOCATION_BUTTON_INDEX) as View
 		val rlp = myLocationBtn.getLayoutParams() as RelativeLayout.LayoutParams 
 		// position on right bottom
