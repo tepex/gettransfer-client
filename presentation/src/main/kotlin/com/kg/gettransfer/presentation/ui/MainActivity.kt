@@ -71,6 +71,7 @@ const val COMPASS_BUTTON_INDEX = 5
 const val PERMISSION_REQUEST = 2211
 const val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
 
+const val START_SCREEN           = "start_screen"
 const val ACTIVE_RIDES_SCREEN    = "active_rides"
 const val ARCHIVED_RIDES_SCREEN  = "archived_rides"
 const val SETTINGS_SCREEN        = "settings"
@@ -92,6 +93,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private val navigator = object: SupportFragmentNavigator(supportFragmentManager, R.id.container) {
 		override protected fun createFragment(screenKey: String, data: Any?): Fragment {
 			when(screenKey) {
+				START_SCREEN -> return StartFragment.getNewInstance(data)
 				ABOUT_SCREEN -> return AboutFragment.getNewInstance(data)
 				else -> throw RuntimeException("Unknown screen key!")
 			}
@@ -168,10 +170,12 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		navigatorHolder.setNavigator(navigator)
 		
 		Timber.d("Permissions granted: ${permissionsGranted}")
-		if(permissionsGranted) startGoogleMap(mapViewBundle)
+//		if(permissionsGranted) startGoogleMap(mapViewBundle)
+		if(permissionsGranted) router.newRootScreen(START_SCREEN)
 		else Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
 	}
 	
+/*
 	private fun startGoogleMap(mapViewBundle: Bundle?) {
 		mapView.onCreate(mapViewBundle)
 		mapView.getMapAsync({ gmap -> 
@@ -196,6 +200,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		}
 		if(permissionsGranted) mapView.onSaveInstanceState(mapViewBundle)
 	}
+	*/
 
 	@CallSuper
 	override fun onBackPressed() {
@@ -227,6 +232,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		return super.onOptionsItemSelected(item)
 	}
 
+	/*
 	@CallSuper
 	override fun onStart() {
 		super.onStart()
@@ -250,19 +256,22 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		if(permissionsGranted) mapView.onStop()
 		super.onStop()
 	}
+	*/
 		
 	@CallSuper
 	override fun onDestroy() {
-		if(permissionsGranted) mapView.onDestroy()
+//		if(permissionsGranted) mapView.onDestroy()
 		navigatorHolder.removeNavigator();
 		super.onDestroy()
 	}
 	
+	/*
 	@CallSuper
 	override fun onLowMemory() {
 		if(permissionsGranted) mapView.onLowMemory()
 		super.onLowMemory()
 	}
+	*/
 	
 	/**
 	 * @return true — не требуется разрешение пользователя
@@ -293,6 +302,8 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	 * Грязный хак — меняем положение нативной кнопки 'MyLocation'
 	 * https://stackoverflow.com/questions/36785542/how-to-change-the-position-of-my-location-button-in-google-maps-using-android-st
 	 */
+	 
+	 /*
 	private fun customizeGoogleMaps() {
 		gmap!!.setMyLocationEnabled(true)
 		val parent = (mapView.findViewById(1) as View).parent as View
@@ -315,4 +326,5 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		rlp1.setMargins(resources.getDimension(R.dimen.compass_button_margin_start).toInt(), 0, 
 			0, resources.getDimension(R.dimen.compass_button_margin_bottom).toInt())
 	}
+	*/
 }
