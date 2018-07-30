@@ -4,6 +4,9 @@ import android.Manifest
 
 import android.content.pm.PackageManager
 
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
+
 import android.os.Build
 import android.os.Bundle
 
@@ -165,6 +168,14 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
 		menuInflater.inflate(R.menu.share_menu, menu)
+		
+		for(i in 0 until menu.size()) {
+			val drawable = menu.getItem(i).icon
+			if(drawable != null) {
+				drawable!!.mutate()
+				drawable!!.setColorFilter(resources.getColor(android.R.color.black), PorterDuff.Mode.SRC_ATOP)
+			}
+		}
 		return true
 	}
 	
