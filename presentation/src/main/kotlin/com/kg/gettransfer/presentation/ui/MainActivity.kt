@@ -111,14 +111,10 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		setContentView(R.layout.activity_main)
 		
 		val tb = this.toolbar as Toolbar
-//		tb.setTitle(R.string.app_name)
 		
 		setSupportActionBar(tb)
 		getSupportActionBar()?.setDisplayShowTitleEnabled(false)
-		/*
-		getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
-		getSupportActionBar()?.setHomeButtonEnabled(true);
-		*/
+		
 		drawer = drawerLayout as DrawerLayout
 		val toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 		drawer.addDrawerListener(toggle);

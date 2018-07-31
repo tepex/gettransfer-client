@@ -14,7 +14,32 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-
+	<style name="nav_item">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_marginTop">@dimen/nav_item_margin_top</item>
+		<item name="android:layout_marginStart">@dimen/nav_item_margin_start</item>
+		<item name="android:layout_marginBottom">@dimen/nav_item_margin_bottom</item>
+		<item name="android:orientation">vertical</item>
+	</style>
+	<style name="nav_item_title">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">@dimen/nav_item_title_size</item>
+		<item name="android:textColor">@color/nav_item_title</item>
+		<!--
+		<item name="android:fontFamily">@font/nunito_black</item>
+		-->
+	</style>
+	<style name="nav_item_subtitle">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">@dimen/nav_item_subtitle_size</item>
+		<item name="android:textColor">@color/nav_item_subtitle</item>
+		<!--
+		<item name="android:fontFamily">@font/nunito_black</item>
+		-->
+	</style>
 
 
 
