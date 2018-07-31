@@ -25,6 +25,7 @@
 		android:layout_marginTop="@dimen/nav_header_share_top"
 		android:contentDescription="Share"
 		android:tint="@android:color/black"
+		android:focusable="false"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
 		app:srcCompat="@android:drawable/ic_menu_share" />

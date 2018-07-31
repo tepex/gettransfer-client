@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	tools:context=".presentation.ui.SearchAddress"
+	android:paddingTop="@dimen/search_form_vertical_padding"
+	android:paddingBottom="@dimen/search_form_vertical_padding">
+
+	<ImageView android:id="@+id/array"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/search_form_array_margin"
+		android:background="@drawable/ic_search_addr"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+
+	<EditText android:id="@+id/address"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/search_form_clear_margin"
+		android:layout_marginStart="@dimen/search_form_array_margin"
+		android:background="@null"
+		android:singleLine="true"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintEnd_toStartOf="@+id/clearBtn"
+		app:layout_constraintStart_toEndOf="@id/array"
+		app:layout_constraintTop_toTopOf="parent" />
+
+	<ImageButton android:id="@+id/clearBtn"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/search_form_clear_margin"
+		android:background="@android:drawable/presence_offline"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+</android.support.constraint.ConstraintLayout>

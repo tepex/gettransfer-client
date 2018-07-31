@@ -33,6 +33,7 @@ import android.view.View
 import android.view.WindowManager
 
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 
 import com.arellomobile.mvp.MvpAppCompatActivity
@@ -45,6 +46,7 @@ import com.kg.gettransfer.presentation.view.MainView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
@@ -127,8 +129,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		val toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 		drawer.addDrawerListener(toggle);
 		toggle.syncState();
-		var navigationView = navView as NavigationView
-		navigationView.setNavigationItemSelectedListener({ item ->
+		(navView as NavigationView).setNavigationItemSelectedListener({ item ->
 			Timber.d("nav view item ${item.title}")
 			when(item.itemId) {
 				R.id.nav_about -> router.navigateTo(ABOUT_SCREEN)
@@ -145,19 +146,24 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		
 		navigatorHolder.setNavigator(navigator)
 	
-		initNavigationFooter();
+		initNavigation()
 		
 		Timber.d("Permissions granted: ${permissionsGranted}")
 		if(permissionsGranted) router.newRootScreen(START_SCREEN)
 		else Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
 	}
 
-	private fun initNavigationFooter() {
+	private fun initNavigation() {
 		val versionName = packageManager.getPackageInfo(packageName, 0).versionName
 		(navFooterVersion as TextView).text = 
 			String.format(getString(R.string.nav_footer_version), versionName)
 		navFooterStamp.setOnClickListener(readMoreListener)
 		navFooterReadMore.setOnClickListener(readMoreListener)
+		
+		val shareBtn: ImageView = (navView as NavigationView).getHeaderView(0).findViewById(R.id.nav_header_share) as ImageView
+		shareBtn.setOnClickListener {
+			Timber.d("Share action")
+		}
 	}
 
 	@CallSuper

@@ -19,11 +19,11 @@
 		android:layout_marginEnd="@dimen/search_form_margin_X"
 		android:orientation="vertical"
 		android:background="@android:color/white" >
-		<EditText android:id="@+id/fromEt"
+		
+		<com.kg.gettransfer.presentation.ui.SearchAddress 
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content" 
-			android:background="@null"
-			android:hint="@string/search_from_hint" />
+			android:layout_height="wrap_content" />
+		
 		<EditText android:id="@+id/toEt"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
