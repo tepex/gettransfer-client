@@ -22,4 +22,10 @@
 	<dimen name="nav_item_margin_start">30dp</dimen>
 	<dimen name="nav_item_title_size">16sp</dimen>
 	<dimen name="nav_item_subtitle_size">14sp</dimen>
+
+	<dimen name="nav_footer_version_size">10sp</dimen>
+	<dimen name="nav_footer_version_start">50dp</dimen>
+	<dimen name="nav_footer_version_bottom">26dp</dimen>
+	<dimen name="nav_footer_read_more_bottom">32dp</dimen>
+	<dimen name="nav_footer_stamp_bottom">16dp</dimen>
 </resources>
