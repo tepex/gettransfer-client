@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<dimen name="nav_header_height">148dp</dimen>
+	
     <dimen name="bottom_navigation_icon_size">22dp</dimen>
 	<dimen name="address_gap">4dp</dimen>
 	<dimen name="compass_button_margin_start">30dp</dimen>
@@ -11,6 +11,12 @@
 	<dimen name="search_form_margin_X">16dp</dimen>
 
 	<!-- Navigation view menu -->
+	<dimen name="nav_header_height">148dp</dimen>
+	<dimen name="nav_header_logo_start">16dp</dimen>
+	<dimen name="nav_header_logo_top">48dp</dimen>
+	<dimen name="nav_header_share_top">48dp</dimen>
+	<dimen name="nav_header_share_end">16dp</dimen>
+
 	<dimen name="nav_item_margin_top">12dp</dimen>
 	<dimen name="nav_item_margin_bottom">16dp</dimen>
 	<dimen name="nav_item_margin_start">30dp</dimen>
