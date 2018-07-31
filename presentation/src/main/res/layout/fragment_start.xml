@@ -22,7 +22,8 @@
 		
 		<com.kg.gettransfer.presentation.ui.SearchAddress 
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content" />
+			android:layout_height="wrap_content" 
+			app:hint="From" />
 		
 		<EditText android:id="@+id/toEt"
 			android:layout_width="match_parent"

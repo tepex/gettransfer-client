@@ -6,29 +6,30 @@ import android.support.constraint.ConstraintLayout
 
 import android.util.AttributeSet
 
-import android.widget.ImageView
+import android.view.LayoutInflater
+
 import android.widget.EditText
 
 import com.kg.gettransfer.R
 
-import kotlinx.android.synthetic.main.search_address.*
-
 import timber.log.Timber
 
-class SearchAddress: ConstraintLayout {
-	constructor(context: Context): super(context) {
-		initLayout()
-	}
+class SearchAddress @JvmOverloads constructor(
+	context: Context,
+	attrs: AttributeSet? = null,
+	defStyleAttr: Int = 0): ConstraintLayout(context, attrs, defStyleAttr) {
 	
-	constructor(context: Context, attrs: AttributeSet): super(context, attrs) {
-		initLayout()
-	}
+	private val address: EditText
 	
-	constructor(context: Context, attrs: AttributeSet, defStyle: Int): super(context, attrs, defStyle) {
-		initLayout()
+	init {
+		val root = LayoutInflater.from(context).inflate(R.layout.search_address, this, true)
+		address = root.findViewById(R.id.address) as EditText
+		if(attrs != null) {
+			val ta = context.obtainStyledAttributes(attrs, R.styleable.SearchAddress)
+			val hint = ta.getString(R.styleable.SearchAddress_hint)
+			Timber.d("hint: $hint")
+			address.setHint(hint)
+			ta.recycle()
+		}
 	}
-	
-	private fun initLayout() {
-		inflate(context, R.layout.search_address, this)
-    }
 }
