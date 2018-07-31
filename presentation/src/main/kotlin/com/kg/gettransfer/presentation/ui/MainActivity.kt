@@ -32,6 +32,9 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 
+import android.widget.Button
+import android.widget.TextView
+
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 
@@ -70,6 +73,11 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	private val navigatorHolder: NavigatorHolder by inject()
 	private val router: Router by inject();
+	
+	private val readMoreListener: View.OnClickListener = View.OnClickListener {
+		Timber.d("read more clicked")
+	}
+
 
 	private val navigator = object: SupportFragmentNavigator(supportFragmentManager, R.id.container) {
 		override protected fun createFragment(screenKey: String, data: Any?): Fragment {
@@ -111,14 +119,10 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		setContentView(R.layout.activity_main)
 		
 		val tb = this.toolbar as Toolbar
-//		tb.setTitle(R.string.app_name)
 		
 		setSupportActionBar(tb)
 		getSupportActionBar()?.setDisplayShowTitleEnabled(false)
-		/*
-		getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
-		getSupportActionBar()?.setHomeButtonEnabled(true);
-		*/
+		
 		drawer = drawerLayout as DrawerLayout
 		val toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 		drawer.addDrawerListener(toggle);
@@ -140,10 +144,20 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		if(savedInstanceState == null) drawer.openDrawer(GravityCompat.START)
 		
 		navigatorHolder.setNavigator(navigator)
+	
+		initNavigationFooter();
 		
 		Timber.d("Permissions granted: ${permissionsGranted}")
 		if(permissionsGranted) router.newRootScreen(START_SCREEN)
 		else Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
+	}
+
+	private fun initNavigationFooter() {
+		val versionName = packageManager.getPackageInfo(packageName, 0).versionName
+		(navFooterVersion as TextView).text = 
+			String.format(getString(R.string.nav_footer_version), versionName)
+		navFooterStamp.setOnClickListener(readMoreListener)
+		navFooterReadMore.setOnClickListener(readMoreListener)
 	}
 
 	@CallSuper
@@ -152,33 +166,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		else super.onBackPressed();
 	}
 	
-	/*
-	override fun onCreateOptionsMenu(menu: Menu): Boolean {
-		menuInflater.inflate(R.menu.share_menu, menu)
-		
-		// Красим иконку "shared" в Toolbar в черный цвет 
-		for(i in 0 until menu.size()) {
-			val drawable = menu.getItem(i).icon
-			if(drawable != null) {
-				drawable.mutate()
-				drawable.setColorFilter(resources.getColor(android.R.color.black, null), PorterDuff.Mode.SRC_ATOP)
-			}
-		}
-		return true
-	}
-	
-	@CallSuper
-	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		when(item.itemId) {
-			R.id.action_share -> {
-				Snackbar.make(drawerLayout, "Share clicked", Snackbar.LENGTH_SHORT).show()
-				return true
-			}
-		}
-		return super.onOptionsItemSelected(item)
-	}
-	*/
-
 	@CallSuper
 	override fun onDestroy() {
 		navigatorHolder.removeNavigator();

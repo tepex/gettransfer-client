@@ -13,12 +13,49 @@
 	<include layout="@layout/app_bar_main"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent" />
-		
-	<android.support.design.widget.NavigationView android:id="@+id/navView"
+
+	<android.support.design.widget.NavigationView
+		android:id="@+id/navView"
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
-		android:layout_gravity="start"
+		android:layout_gravity="start|top"
 		android:fitsSystemWindows="true"
+		android:gravity="start"
 		app:headerLayout="@layout/nav_header_main"
-		app:menu="@menu/activity_main_drawer" />
+		app:menu="@menu/activity_main_drawer">
+		<android.support.constraint.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom">
+
+			<Button
+				android:id="@+id/navFooterStamp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/nav_footer_stamp_bottom"
+				android:background="@drawable/ic_stamp"
+				android:gravity="center_horizontal"
+				app:layout_constraintBottom_toTopOf="@+id/navFooterReadMore"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent" />
+			<TextView
+				android:id="@+id/navFooterReadMore"
+				style="@style/nav_item_title"
+				android:layout_marginBottom="@dimen/nav_footer_read_more_bottom"
+				android:gravity="center_horizontal"
+				android:text="@string/nav_footer_read_more"
+				android:focusable="false"
+				app:layout_constraintBottom_toTopOf="@+id/navFooterVersion"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent" />
+			<TextView android:id="@+id/navFooterVersion"
+				style="@style/nav_footer_version"
+				android:layout_marginStart="@dimen/nav_footer_version_start"
+				android:layout_marginBottom="@dimen/nav_footer_version_bottom"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintBottom_toBottomOf="parent"
+				android:text="version" />		
+
+		</android.support.constraint.ConstraintLayout>
+	</android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

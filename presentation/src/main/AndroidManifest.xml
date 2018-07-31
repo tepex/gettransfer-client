@@ -26,6 +26,7 @@
 
         <activity
             android:name=".presentation.ui.MainActivity"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
