@@ -16,6 +16,7 @@ import android.widget.RelativeLayout
 
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -42,7 +43,7 @@ const val COMPASS_BUTTON_INDEX = 5
 
 const val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
 
-class StartFragment: MvpAppCompatFragment(), StartView {
+class StartFragment: MvpAppCompatFragment(), StartView, BackButtonListener {
 	private var isFirst = true
 	private var gmap: GoogleMap? = null
 	private var centerMarker: Marker? = null
@@ -62,6 +63,9 @@ class StartFragment: MvpAppCompatFragment(), StartView {
 			return StartFragment()
 		}
 	}
+	
+	@ProvidePresenter
+	fun createStartPresenter(): StartPresenter = StartPresenter((activity as MainActivity).router)
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 		                      savedInstanceState: Bundle?): View? {
@@ -140,6 +144,11 @@ class StartFragment: MvpAppCompatFragment(), StartView {
 	override fun onLowMemory() {
 		if((activity as MainActivity).permissionsGranted) mapView?.onLowMemory()
 		super.onLowMemory()
+	}
+	
+	override fun onBackPressed(): Boolean {
+		presenter.onBackCommandClick()
+		return true
 	}
 
 	/**

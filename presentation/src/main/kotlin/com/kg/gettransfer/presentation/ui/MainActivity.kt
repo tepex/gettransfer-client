@@ -38,6 +38,7 @@ import android.widget.TextView
 
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.MainPresenter
@@ -55,6 +56,8 @@ import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportFragmentNavigator
+import ru.terrakok.cicerone.commands.Command
+import ru.terrakok.cicerone.commands.Replace
 
 import timber.log.Timber
 
@@ -75,7 +78,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	var permissionsGranted = false
 	
 	private val navigatorHolder: NavigatorHolder by inject()
-	private val router: Router by inject();
+	internal val router: Router by inject();
 	
 	private val readMoreListener: View.OnClickListener = View.OnClickListener {
 		Timber.d("read more clicked")
@@ -109,6 +112,9 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 	}
 	
+	@ProvidePresenter
+	fun createMainPresenter(): MainPresenter = MainPresenter(router)
+	
 	@CallSuper
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -140,12 +146,14 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		val abl: AppBarLayout = this.appbar as AppBarLayout
 		abl.bringToFront()
 		
-		navigatorHolder.setNavigator(navigator)
+		//navigatorHolder.setNavigator(navigator)
 	
 		initNavigation()
 		
 		Timber.d("Permissions granted: ${permissionsGranted}")
-		if(permissionsGranted) router.newRootScreen(START_SCREEN)
+		if(permissionsGranted) {
+			if(savedInstanceState == null) navigator.applyCommands(arrayOf<Command>(Replace(START_SCREEN, null)))
+		}
 		else Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
 	}
 
@@ -161,11 +169,29 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			Timber.d("Share action")
 		}
 	}
+	
+	@CallSuper
+	override fun onResumeFragments() {
+		super.onResumeFragments()
+		navigatorHolder.setNavigator(navigator)
+	}
+	
+	@CallSuper
+	override fun onPause() {
+		navigatorHolder.removeNavigator()
+		super.onPause()
+	}
 
 	@CallSuper
 	override fun onBackPressed() {
 		if(drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START)
-		else super.onBackPressed();
+		else {
+			val fragment = supportFragmentManager.findFragmentById(R.id.container)
+			if(fragment != null && 
+			   fragment is BackButtonListener && 
+		       (fragment as BackButtonListener).onBackPressed()) return
+		    else super.onBackPressed() 
+		}
 	}
 	
 	@CallSuper
@@ -196,5 +222,10 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 
 	internal fun startSearchScreen() {
 		router.navigateTo(START_SEARCH_SCREEN)
+	}
+	
+	/* MainView */
+	override fun qqq() {
+		Timber.d("MainActivity.qqq")
 	}
 }

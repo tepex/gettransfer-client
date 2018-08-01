@@ -9,10 +9,12 @@ import com.arellomobile.mvp.MvpPresenter
 
 import com.kg.gettransfer.presentation.view.StartView
 
+import ru.terrakok.cicerone.Router
+
 import timber.log.Timber
 
 @InjectViewState
-class StartPresenter: MvpPresenter<StartView>() {
+class StartPresenter(val router: Router): MvpPresenter<StartView>() {
 //	lateinit var locationInteractor: LocationInteractor
 	
 	override fun onFirstViewAttach()
@@ -54,5 +56,9 @@ class StartPresenter: MvpPresenter<StartView>() {
 			.subscribe({latLng -> onCurrentLocationChanged(latLng)}, {ex -> Timber.e(ex)})
 		unsubscribeOnDestroy(disposable)
 		*/
+	}
+	
+	fun onBackCommandClick() {
+		router.exit()
 	}
 }

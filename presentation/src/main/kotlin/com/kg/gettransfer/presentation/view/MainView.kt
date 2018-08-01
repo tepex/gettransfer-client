@@ -11,4 +11,5 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 @StateStrategyType(OneExecutionStateStrategy::class)
 //interface MainView: MvpView, OnCameraMoveListener
 interface MainView: MvpView {
+	fun qqq()
 }

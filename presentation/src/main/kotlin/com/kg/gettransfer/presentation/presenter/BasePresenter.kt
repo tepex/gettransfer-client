@@ -12,11 +12,8 @@ import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
-@InjectViewState
-class MainPresenter(router: Router): BasePresenter<MainView>(router) {
-	override fun onFirstViewAttach()
-	{
-		Timber.d("MainPresenter.onFirstViewAttach()")
-		viewState.qqq()
+open class BasePresenter<V : MvpView>(val router: Router): MvpPresenter<V>() {
+	fun onBackCommandClick() {
+		router.exit()
 	}
 }
