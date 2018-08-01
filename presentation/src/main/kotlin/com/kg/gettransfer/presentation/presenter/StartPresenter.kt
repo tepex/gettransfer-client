@@ -5,16 +5,16 @@ import android.location.Location
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 
 import com.kg.gettransfer.presentation.view.StartView
+import com.kg.gettransfer.presentation.ui.MainActivity
 
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
 @InjectViewState
-class StartPresenter(val router: Router): MvpPresenter<StartView>() {
+class StartPresenter(router: Router): BasePresenter<StartView>(router) {
 //	lateinit var locationInteractor: LocationInteractor
 	
 	override fun onFirstViewAttach()
@@ -58,7 +58,7 @@ class StartPresenter(val router: Router): MvpPresenter<StartView>() {
 		*/
 	}
 	
-	fun onBackCommandClick() {
-		router.exit()
+	fun onSearchClicked() {
+		router.navigateTo(MainActivity.START_SEARCH_SCREEN)
 	}
 }

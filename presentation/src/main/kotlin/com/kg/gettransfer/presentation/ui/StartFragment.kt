@@ -53,7 +53,7 @@ class StartFragment: MvpAppCompatFragment(), StartView, BackButtonListener {
 	private val focusListener = View.OnFocusChangeListener {_, hasFocus ->
 		if(hasFocus) {
 			Timber.d("start transition")
-			(activity as MainActivity).startSearchScreen()
+			presenter.onSearchClicked()
 		}
 	}
 

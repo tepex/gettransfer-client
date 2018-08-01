@@ -18,6 +18,8 @@ import android.support.design.widget.Snackbar
 
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentTransaction
+
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -26,6 +28,10 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
 
 import android.support.v7.widget.Toolbar
+
+import android.transition.Fade
+import android.transition.TransitionInflater
+import android.transition.TransitionSet
 
 import android.view.Menu
 import android.view.MenuItem
@@ -56,19 +62,17 @@ import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportFragmentNavigator
+
 import ru.terrakok.cicerone.commands.Command
+import ru.terrakok.cicerone.commands.Forward
 import ru.terrakok.cicerone.commands.Replace
 
 import timber.log.Timber
 
 const val PERMISSION_REQUEST = 2211
 
-const val START_SCREEN           = "start_screen"
-const val START_SEARCH_SCREEN    = "start_search_screen"
-const val ACTIVE_RIDES_SCREEN    = "active_rides"
-const val ARCHIVED_RIDES_SCREEN  = "archived_rides"
-const val SETTINGS_SCREEN        = "settings"
-const val ABOUT_SCREEN           = "about"
+const val FADE_TIME: Long = 300
+const val MOVE_TIME: Long = 1000
 
 class MainActivity: MvpAppCompatActivity(), MainView {
 	@InjectPresenter
@@ -84,8 +88,8 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		Timber.d("read more clicked")
 	}
 
-	private val navigator = object: SupportFragmentNavigator(supportFragmentManager, R.id.container) {
-		override protected fun createFragment(screenKey: String, data: Any?): Fragment {
+	private val navigator: Navigator = object: SupportFragmentNavigator(supportFragmentManager, R.id.container) {
+		override fun createFragment(screenKey: String, data: Any?): Fragment {
 			when(screenKey) {
 				START_SCREEN -> return StartFragment.getNewInstance(data)
 				START_SEARCH_SCREEN -> return StartSearchFragment.getNewInstance(data)
@@ -94,18 +98,34 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			}
 		}
 
-		override protected fun showSystemMessage(message: String) {
+		override fun showSystemMessage(message: String) {
 			Snackbar.make(drawerLayout, message, Snackbar.LENGTH_SHORT).show()
 		}
 
-		override protected fun exit() {
+		override fun exit() {
 			finish()
 		}
+		
+		override fun setupFragmentTransaction(command: Command, currentFragment: Fragment, nextFragment: Fragment, fragmentTransaction: FragmentTransaction) {
+			if(command is Forward &&
+			   currentFragment is StartFragment &&
+		       nextFragment is StartSearchFragment)
+		    		setupSharedElement(currentFragment as StartFragment,
+		    			               nextFragment as StartSearchFragment,
+		    			               fragmentTransaction)
+        }
 	}
 
 	companion object
 	{
 		private val PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+		
+		public val START_SCREEN           = "start_screen"
+		public val START_SEARCH_SCREEN    = "start_search_screen"
+		public val ACTIVE_RIDES_SCREEN    = "active_rides"
+		public val ARCHIVED_RIDES_SCREEN  = "archived_rides"
+		public val SETTINGS_SCREEN        = "settings"
+		public val ABOUT_SCREEN           = "about" 
 	}
 
 	init {
@@ -220,8 +240,31 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		else finish()
 	}
 
-	internal fun startSearchScreen() {
-		router.navigateTo(START_SEARCH_SCREEN)
+	private fun setupSharedElement(currentFragment: StartFragment,
+		    			           nextFragment: StartSearchFragment,
+		    			           fragmentTransaction: FragmentTransaction) {
+		// hide previous
+		val exitFade = Fade()
+		exitFade.duration = FADE_TIME
+		currentFragment.setExitTransition(exitFade)
+		// shared
+		val trSet = TransitionSet()
+		trSet.addTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.move))
+		trSet.duration = MOVE_TIME
+		trSet.startDelay = FADE_TIME
+		nextFragment.sharedElementEnterTransition = trSet
+		// next fragment
+		val enterFade = Fade()
+        enterFade.startDelay = MOVE_TIME + FADE_TIME
+        enterFade.duration = FADE_TIME
+        nextFragment.enterTransition = enterFade
+
+        val search: View = currentFragment.search
+        fragmentTransaction.addSharedElement(search, search.transitionName)
+        /*
+        fragmentTransaction.replace(R.id.fragment_container, nextFragment);
+        fragmentTransaction.commitAllowingStateLoss();
+        */
 	}
 	
 	/* MainView */
