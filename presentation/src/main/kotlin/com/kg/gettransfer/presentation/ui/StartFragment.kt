@@ -50,7 +50,10 @@ class StartFragment: MvpAppCompatFragment(), StartView {
 	lateinit var presenter: StartPresenter
 	
 	private val focusListener = View.OnFocusChangeListener {_, hasFocus ->
-		if(hasFocus) Timber.d("start transition")
+		if(hasFocus) {
+			Timber.d("start transition")
+			(activity as MainActivity).startSearchScreen()
+		}
 	}
 
 	companion object {

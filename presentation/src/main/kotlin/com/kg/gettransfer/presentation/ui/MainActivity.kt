@@ -61,6 +61,7 @@ import timber.log.Timber
 const val PERMISSION_REQUEST = 2211
 
 const val START_SCREEN           = "start_screen"
+const val START_SEARCH_SCREEN    = "start_search_screen"
 const val ACTIVE_RIDES_SCREEN    = "active_rides"
 const val ARCHIVED_RIDES_SCREEN  = "archived_rides"
 const val SETTINGS_SCREEN        = "settings"
@@ -84,6 +85,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		override protected fun createFragment(screenKey: String, data: Any?): Fragment {
 			when(screenKey) {
 				START_SCREEN -> return StartFragment.getNewInstance(data)
+				START_SEARCH_SCREEN -> return StartSearchFragment.getNewInstance(data)
 				ABOUT_SCREEN -> return AboutFragment.getNewInstance(data)
 				else -> throw RuntimeException("Unknown screen key!")
 			}
@@ -190,5 +192,9 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			grantResults[0] == PackageManager.PERMISSION_GRANTED &&
 			grantResults[1] == PackageManager.PERMISSION_GRANTED) recreate()
 		else finish()
+	}
+
+	internal fun startSearchScreen() {
+		router.navigateTo(START_SEARCH_SCREEN)
 	}
 }
