@@ -71,7 +71,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	internal lateinit var presenter: MainPresenter
 	
 	private lateinit var drawer: DrawerLayout
-	var permissionsGranted = true
+	var permissionsGranted = false
 	
 	private val navigatorHolder: NavigatorHolder by inject()
 	private val router: Router by inject();
@@ -79,7 +79,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private val readMoreListener: View.OnClickListener = View.OnClickListener {
 		Timber.d("read more clicked")
 	}
-
 
 	private val navigator = object: SupportFragmentNavigator(supportFragmentManager, R.id.container) {
 		override protected fun createFragment(screenKey: String, data: Any?): Fragment {
@@ -113,10 +112,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		super.onCreate(savedInstanceState)
 		
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-		{
 			permissionsGranted = checkPermission()
-			presenter.setPermissionsGranted(permissionsGranted)
-		}
 		
 		setContentView(R.layout.activity_main)
 		
@@ -141,8 +137,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 
 		val abl: AppBarLayout = this.appbar as AppBarLayout
 		abl.bringToFront()
-		
-		if(savedInstanceState == null) drawer.openDrawer(GravityCompat.START)
 		
 		navigatorHolder.setNavigator(navigator)
 	
@@ -196,10 +190,5 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			grantResults[0] == PackageManager.PERMISSION_GRANTED &&
 			grantResults[1] == PackageManager.PERMISSION_GRANTED) recreate()
 		else finish()
-	}
-
-	/* MainView */
-	override fun onClickMyLocation() {
-		presenter.updateCurrentLocation()
 	}
 }

@@ -27,7 +27,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 import com.kg.gettransfer.R
-//import com.kg.gettransfer.presentation.presenter.StartPresenter
+import com.kg.gettransfer.presentation.presenter.StartPresenter
 import com.kg.gettransfer.presentation.view.StartView
 
 import org.koin.android.ext.android.inject
@@ -46,7 +46,13 @@ class StartFragment: MvpAppCompatFragment(), StartView {
 	private var isFirst = true
 	private var gmap: GoogleMap? = null
 	private var centerMarker: Marker? = null
+	@InjectPresenter
+	lateinit var presenter: StartPresenter
 	
+	private val focusListener = View.OnFocusChangeListener {_, hasFocus ->
+		if(hasFocus) Timber.d("start transition")
+	}
+
 	companion object {
 		@Suppress("UNUSED_PARAMETER")
 		fun getNewInstance(data: Any?): StartFragment {
@@ -80,8 +86,10 @@ class StartFragment: MvpAppCompatFragment(), StartView {
 			presenter.updateCurrentLocation()
 			*/
 			customizeGoogleMaps()
+			presenter.updateCurrentLocation()
 		})
-
+		searchFrom.address.setOnFocusChangeListener(focusListener)
+		searchTo.address.setOnFocusChangeListener(focusListener)
 	}
 	
 	@CallSuper
