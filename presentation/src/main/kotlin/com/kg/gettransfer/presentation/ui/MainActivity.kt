@@ -17,6 +17,8 @@ import android.support.design.widget.AppBarLayout
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 
+import android.support.transition.AutoTransition
+
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
@@ -29,11 +31,6 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
 
 import android.support.v7.widget.Toolbar
-
-import android.transition.ChangeBounds
-import android.transition.Fade
-import android.transition.TransitionInflater
-import android.transition.TransitionSet
 
 import android.view.Menu
 import android.view.MenuItem
@@ -78,6 +75,29 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	internal lateinit var presenter: MainPresenter
 	
 	private lateinit var drawer: DrawerLayout
+	private lateinit var toggle: ActionBarDrawerToggle
+	internal var toolbarTransparent = true
+		set(value) {
+			toggle.setDrawerIndicatorEnabled(value)
+			supportActionBar?.setDisplayHomeAsUpEnabled(!value)
+			supportActionBar?.setDisplayShowHomeEnabled(!value)
+			if(value) {
+				appbar.setBackgroundColor(android.R.color.transparent)
+				toolbar.setBackground(null)
+				drawer.addDrawerListener(toggle)
+				toggle.syncState()
+			}
+			else {
+				val toolbarBackground = resources.getColor(R.color.colorPrimary, null)
+				appbar.setBackgroundColor(toolbarBackground)
+				toolbar.setBackgroundColor(toolbarBackground)
+				drawer.removeDrawerListener(toggle)
+				(toolbar as Toolbar).setNavigationOnClickListener{_ ->
+					Timber.d("navigation on click listener. isTransparent: $toolbarTransparent")
+					onBackPressed()
+				}
+			}
+		}
 	var permissionsGranted = false
 	
 	private val navigatorHolder: NavigatorHolder by inject()
@@ -152,9 +172,8 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		getSupportActionBar()?.setDisplayShowTitleEnabled(false)
 		
 		drawer = drawerLayout as DrawerLayout
-		val toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-		drawer.addDrawerListener(toggle);
-		toggle.syncState();
+		toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+		
 		(navView as NavigationView).setNavigationItemSelectedListener({ item ->
 			Timber.d("nav view item ${item.title}")
 			when(item.itemId) {
@@ -165,8 +184,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			true
 		})
 
-		val abl: AppBarLayout = this.appbar as AppBarLayout
-		abl.bringToFront()
+		(appbar as AppBarLayout).bringToFront()
 		
 		//navigatorHolder.setNavigator(navigator)
 	
@@ -203,7 +221,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		navigatorHolder.removeNavigator()
 		super.onPause()
 	}
-
+	
 	@CallSuper
 	override fun onBackPressed() {
 		if(drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START)
@@ -242,57 +260,18 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		else finish()
 	}
 
-	internal fun setToolbarTransparent(transparent: Boolean) {
-		if(transparent) {
-			appbar.setBackgroundColor(android.R.color.transparent)
-			toolbar.setBackground(null)
-		}
-		else {
-			val toolbarBackground = resources.getColor(R.color.colorPrimary, null)
-			appbar.setBackgroundColor(toolbarBackground)
-			toolbar.setBackgroundColor(toolbarBackground)
-		}
-	}
-
 	private fun setupSharedElement(currentFragment: StartFragment?,
 		    			           nextFragment: StartSearchFragment?,
 		    			           fragmentTransaction: FragmentTransaction) {
 		if(currentFragment == null || nextFragment == null) return
-			
-		/*
-		// hide previous
-		val exitFade = Fade()
-//		exitFade.duration = FADE_TIME
-		currentFragment.setExitTransition(exitFade)
-		// shared
-		val trSet = TransitionSet()
-		trSet.addTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.move))
-		trSet.duration = MOVE_TIME
-//		trSet.startDelay = FADE_TIME
-		nextFragment.sharedElementEnterTransition = trSet
-		// next fragment
-		val enterFade = Fade()
-        enterFade.startDelay = MOVE_TIME + FADE_TIME
-        enterFade.duration = FADE_TIME
-        nextFragment.enterTransition = enterFade
-
-        val search = currentFragment.getSearchForm()
-        Timber.d("search.transitionName = ${search.transitionName}")
-        fragmentTransaction.addSharedElement(search, search.transitionName)
-        */
-        
-        /*
-        fragmentTransaction.replace(R.id.fragment_container, nextFragment);
-        fragmentTransaction.commitAllowingStateLoss();
-        */
-        
-        
-		val changeBounds = ChangeBounds()
+		//val changeBounds = ChangeBounds()
+		val changeBounds = AutoTransition()
 		currentFragment.setSharedElementEnterTransition(changeBounds)
 		currentFragment.setSharedElementReturnTransition(changeBounds)
 		nextFragment.setSharedElementEnterTransition(changeBounds)
 		nextFragment.setSharedElementReturnTransition(changeBounds)
 		changeBounds.duration = MOVE_TIME
+		changeBounds.ordering = AutoTransition.ORDERING_TOGETHER
         val search = currentFragment.getSearchForm()
         fragmentTransaction.addSharedElement(search, search.transitionName)
 	}

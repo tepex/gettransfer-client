@@ -121,7 +121,7 @@ class StartFragment: MvpAppCompatFragment(), StartView, BackButtonListener {
 	@CallSuper
 	override fun onStart() {
 		super.onStart()
-		(activity as MainActivity).setToolbarTransparent(true)
+		(activity as MainActivity).toolbarTransparent = true
 		if((activity as MainActivity).permissionsGranted) mapView?.onStart()
 	}
 	
