@@ -5,21 +5,18 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:fitsSystemWindows="true"
 	tools:context=".presentation.ui.MainActivity">
 	
 	<android.support.design.widget.AppBarLayout android:id="@+id/appbar"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:background="@android:color/transparent"
-		android:fitsSystemWindows="true"
 		app:elevation="0dp">
     
 		<android.support.v7.widget.Toolbar android:id="@+id/toolbar"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:minHeight="?attr/actionBarSize"
-			android:fitsSystemWindows="true"
+			android:background="@color/colorYellow"
 			tools:ignore="Overdraw" />
 	</android.support.design.widget.AppBarLayout>
 
@@ -36,3 +33,6 @@
 		android:visibility="gone" />
 
 </android.support.design.widget.CoordinatorLayout>
+<!--
+android:background="@android:color/transparent"
+-->

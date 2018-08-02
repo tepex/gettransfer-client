@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Context
 import android.content.pm.PackageManager
 
 import android.os.Bundle
@@ -100,7 +101,11 @@ class StartFragment: MvpAppCompatFragment(), StartView, BackButtonListener {
 		searchTo.address.setOnFocusChangeListener(focusListener)
 	}
 	
-	fun getSearchForm(): View = search
+	@CallSuper
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		Timber.d("onAttach: $context")
+	}
 	
 	@CallSuper
 	override fun onSaveInstanceState(outState: Bundle) {
@@ -116,6 +121,7 @@ class StartFragment: MvpAppCompatFragment(), StartView, BackButtonListener {
 	@CallSuper
 	override fun onStart() {
 		super.onStart()
+		(activity as MainActivity).setToolbarTransparent(true)
 		if((activity as MainActivity).permissionsGranted) mapView?.onStart()
 	}
 	
@@ -153,6 +159,8 @@ class StartFragment: MvpAppCompatFragment(), StartView, BackButtonListener {
 		presenter.onBackCommandClick()
 		return true
 	}
+	
+	fun getSearchForm(): View = search
 
 	/**
 	 * Грязный хак — меняем положение нативной кнопки 'MyLocation'

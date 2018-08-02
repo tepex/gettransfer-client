@@ -4,6 +4,7 @@ import android.Manifest
 
 import android.content.pm.PackageManager
 
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 
@@ -239,6 +240,18 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			grantResults[0] == PackageManager.PERMISSION_GRANTED &&
 			grantResults[1] == PackageManager.PERMISSION_GRANTED) recreate()
 		else finish()
+	}
+
+	internal fun setToolbarTransparent(transparent: Boolean) {
+		if(transparent) {
+			appbar.setBackgroundColor(android.R.color.transparent)
+			toolbar.setBackground(null)
+		}
+		else {
+			val toolbarBackground = resources.getColor(R.color.colorPrimary, null)
+			appbar.setBackgroundColor(toolbarBackground)
+			toolbar.setBackgroundColor(toolbarBackground)
+		}
 	}
 
 	private fun setupSharedElement(currentFragment: StartFragment?,

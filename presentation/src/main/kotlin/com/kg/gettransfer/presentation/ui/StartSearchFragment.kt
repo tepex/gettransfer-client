@@ -54,4 +54,10 @@ class StartSearchFragment: MvpAppCompatFragment(), StartSearchView, BackButtonLi
 		presenter.onBackCommandClick()
 		return true
 	}
+	
+	@CallSuper
+	override fun onStart() {
+		super.onStart()
+		(activity as MainActivity).setToolbarTransparent(false)
+	}
 }
