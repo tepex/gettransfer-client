@@ -53,7 +53,6 @@ import com.kg.gettransfer.presentation.view.MainView
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 import org.koin.android.ext.android.inject
@@ -71,7 +70,6 @@ import ru.terrakok.cicerone.commands.Replace
 import timber.log.Timber
 
 const val PERMISSION_REQUEST = 2211
-
 const val MOVE_TIME: Long = 300
 
 class MainActivity: MvpAppCompatActivity(), MainView {
