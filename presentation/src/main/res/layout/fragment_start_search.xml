@@ -6,27 +6,9 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	tools:context=".presentation.ui.StartSearchFragment">
-	
-	<LinearLayout
-		android:id="@+id/search"
-		android:transitionName="@string/searchTransitionName"
+
+	<include layout="@layout/search_form" 
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
- 		android:layout_gravity="center_horizontal|top"
-		android:orientation="vertical"
-		android:background="@android:color/white" >
-		
-		<com.kg.gettransfer.presentation.ui.SearchAddress
-			android:id="@+id/searchFrom"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content" 
-			app:hint="@string/search_from_hint" />
-		
-		<com.kg.gettransfer.presentation.ui.SearchAddress
-			android:id="@+id/searchTo"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content" 
-			app:hint="@string/search_to_hint" />
-	</LinearLayout>
+		android:layout_height="wrap_content" />
 
 </FrameLayout>

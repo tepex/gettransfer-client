@@ -35,10 +35,6 @@ class StartSearchFragment: MvpAppCompatFragment(), StartSearchView, BackButtonLi
 	@InjectPresenter
 	lateinit var presenter: StartSearchPresenter
 	
-	private val focusListener = View.OnFocusChangeListener {_, hasFocus ->
-		if(hasFocus) Timber.d("start transition")
-	}
-
 	companion object {
 		@Suppress("UNUSED_PARAMETER")
 		fun getNewInstance(data: Any?): StartSearchFragment {
@@ -54,11 +50,6 @@ class StartSearchFragment: MvpAppCompatFragment(), StartSearchView, BackButtonLi
 		return inflater.inflate(R.layout.fragment_start_search, container, false)
     }
     
-	@CallSuper
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-	}
-	
 	override fun onBackPressed(): Boolean {
 		presenter.onBackCommandClick()
 		return true

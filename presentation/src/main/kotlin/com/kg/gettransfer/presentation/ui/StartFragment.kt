@@ -35,6 +35,7 @@ import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
 
 import kotlinx.android.synthetic.main.fragment_start.*
+import kotlinx.android.synthetic.main.search_form.*
 
 import timber.log.Timber
 
