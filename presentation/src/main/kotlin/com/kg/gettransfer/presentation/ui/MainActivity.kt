@@ -29,6 +29,7 @@ import android.support.v7.app.AppCompatDelegate
 
 import android.support.v7.widget.Toolbar
 
+import android.transition.ChangeBounds
 import android.transition.Fade
 import android.transition.TransitionInflater
 import android.transition.TransitionSet
@@ -71,8 +72,7 @@ import timber.log.Timber
 
 const val PERMISSION_REQUEST = 2211
 
-const val FADE_TIME: Long = 300
-const val MOVE_TIME: Long = 1000
+const val MOVE_TIME: Long = 300
 
 class MainActivity: MvpAppCompatActivity(), MainView {
 	@InjectPresenter
@@ -247,15 +247,17 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		    			           nextFragment: StartSearchFragment?,
 		    			           fragmentTransaction: FragmentTransaction) {
 		if(currentFragment == null || nextFragment == null) return
+			
+		/*
 		// hide previous
 		val exitFade = Fade()
-		exitFade.duration = FADE_TIME
+//		exitFade.duration = FADE_TIME
 		currentFragment.setExitTransition(exitFade)
 		// shared
 		val trSet = TransitionSet()
 		trSet.addTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.move))
 		trSet.duration = MOVE_TIME
-		trSet.startDelay = FADE_TIME
+//		trSet.startDelay = FADE_TIME
 		nextFragment.sharedElementEnterTransition = trSet
 		// next fragment
 		val enterFade = Fade()
@@ -266,10 +268,22 @@ class MainActivity: MvpAppCompatActivity(), MainView {
         val search = currentFragment.getSearchForm()
         Timber.d("search.transitionName = ${search.transitionName}")
         fragmentTransaction.addSharedElement(search, search.transitionName)
+        */
+        
         /*
         fragmentTransaction.replace(R.id.fragment_container, nextFragment);
         fragmentTransaction.commitAllowingStateLoss();
         */
+        
+        
+		val changeBounds = ChangeBounds()
+		currentFragment.setSharedElementEnterTransition(changeBounds)
+		currentFragment.setSharedElementReturnTransition(changeBounds)
+		nextFragment.setSharedElementEnterTransition(changeBounds)
+		nextFragment.setSharedElementReturnTransition(changeBounds)
+		changeBounds.duration = MOVE_TIME
+        val search = currentFragment.getSearchForm()
+        fragmentTransaction.addSharedElement(search, search.transitionName)
 	}
 	
 	/* MainView */
