@@ -106,13 +106,16 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			finish()
 		}
 		
-		override fun setupFragmentTransaction(command: Command, currentFragment: Fragment, nextFragment: Fragment, fragmentTransaction: FragmentTransaction) {
+		@CallSuper
+		override fun applyCommand(command: Command) {
+			super.applyCommand(command)
+		}
+		
+		override fun setupFragmentTransactionAnimation(command: Command, currentFragment: Fragment?, nextFragment: Fragment?, fragmentTransaction: FragmentTransaction) {
 			if(command is Forward &&
 			   currentFragment is StartFragment &&
 		       nextFragment is StartSearchFragment)
-		    		setupSharedElement(currentFragment as StartFragment,
-		    			               nextFragment as StartSearchFragment,
-		    			               fragmentTransaction)
+		    		setupSharedElement(currentFragment, nextFragment, fragmentTransaction)
         }
 	}
 
@@ -240,9 +243,10 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		else finish()
 	}
 
-	private fun setupSharedElement(currentFragment: StartFragment,
-		    			           nextFragment: StartSearchFragment,
+	private fun setupSharedElement(currentFragment: StartFragment?,
+		    			           nextFragment: StartSearchFragment?,
 		    			           fragmentTransaction: FragmentTransaction) {
+		if(currentFragment == null || nextFragment == null) return
 		// hide previous
 		val exitFade = Fade()
 		exitFade.duration = FADE_TIME
@@ -259,7 +263,8 @@ class MainActivity: MvpAppCompatActivity(), MainView {
         enterFade.duration = FADE_TIME
         nextFragment.enterTransition = enterFade
 
-        val search: View = currentFragment.search
+        val search = currentFragment.getSearchForm()
+        Timber.d("search.transitionName = ${search.transitionName}")
         fragmentTransaction.addSharedElement(search, search.transitionName)
         /*
         fragmentTransaction.replace(R.id.fragment_container, nextFragment);

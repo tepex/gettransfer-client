@@ -99,6 +99,8 @@ class StartFragment: MvpAppCompatFragment(), StartView, BackButtonListener {
 		searchTo.address.setOnFocusChangeListener(focusListener)
 	}
 	
+	fun getSearchForm(): View = search
+	
 	@CallSuper
 	override fun onSaveInstanceState(outState: Bundle) {
 		super.onSaveInstanceState(outState)

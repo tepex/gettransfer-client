@@ -17,6 +17,7 @@
 	<!-- Search form -->
 	<string name="search_from_hint">From</string>
 	<string name="search_to_hint">To</string>
+	<string name="searchTransitionName">SEARCH_FORM</string>
 	<!--
 	<string name=""></string>
 	-->
