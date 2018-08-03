@@ -117,7 +117,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			finish()
 		}
 	}
-
+	
 	companion object
 	{
 		private val PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -148,7 +148,14 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		supportActionBar?.setDisplayShowHomeEnabled(false)
 		
 		drawer = drawerLayout as DrawerLayout
-		toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+		toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+		drawer.addDrawerListener(object: DrawerLayout.SimpleDrawerListener() {
+			@CallSuper
+			override fun onDrawerOpened(drawerView: View) {
+				super.onDrawerOpened(drawerView)
+				Timber.d("drawer opened")
+			}
+		})
 		
 		(navView as NavigationView).setNavigationItemSelectedListener({ item ->
 			Timber.d("nav view item ${item.title}")
