@@ -85,7 +85,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	private val focusListener = View.OnFocusChangeListener {_, hasFocus ->
 		if(hasFocus) {
-			presenter.onSearchClicked()
+			presenter.onSearchClick()
 		}
 	}
 
@@ -148,7 +148,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		(navView as NavigationView).setNavigationItemSelectedListener({ item ->
 			Timber.d("nav view item ${item.title}")
 			when(item.itemId) {
-				R.id.nav_about -> router.navigateTo(Screens.ABOUT_SCREEN)
+				R.id.nav_about -> presenter.onAboutClick()
 				else -> Timber.d("No route for ${item.title}")
 			}
 			drawer.closeDrawer(GravityCompat.START)
@@ -193,7 +193,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	@CallSuper
 	override fun onBackPressed() {
 		if(drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START)
-		else super.onBackPressed() 
+		else presenter.onBackCommandClick() 
 	}
 	
 	@CallSuper

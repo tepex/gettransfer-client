@@ -53,8 +53,14 @@ class MainPresenter: MvpPresenter<MainView>() {
 		*/
 	}
 	
-	fun onSearchClicked() {
+	fun onSearchClick() {
+		Timber.d("onSearchClick")
 		//router.navigateTo(MainActivity.START_SEARCH_SCREEN)
+	}
+	
+	fun onAboutClick() {
+		//router.navigateTo(Screens.ABOUT_SCREEN)
+		Timber.d("about click")
 	}
 
 	fun readMoreClick() {
