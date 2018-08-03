@@ -31,6 +31,7 @@ import android.view.MenuItem
 import android.view.View
 
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 
 import com.arellomobile.mvp.MvpAppCompatActivity
@@ -51,7 +52,7 @@ import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
 
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 import org.koin.android.ext.android.inject
@@ -66,13 +67,6 @@ import ru.terrakok.cicerone.commands.Forward
 import ru.terrakok.cicerone.commands.Replace
 
 import timber.log.Timber
-
-/*
-const val MY_LOCATION_BUTTON_INDEX = 2
-const val COMPASS_BUTTON_INDEX = 5
-
-const val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
-*/
 
 class MainActivity: MvpAppCompatActivity(), MainView {
 	@InjectPresenter
@@ -91,8 +85,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	private val focusListener = View.OnFocusChangeListener {_, hasFocus ->
 		if(hasFocus) {
-			Timber.d("start transition")
-			//presenter.onSearchClicked()
+			presenter.onSearchClicked()
 		}
 	}
 
@@ -101,11 +94,14 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	}
 
 	private val navigator: Navigator = object: SupportFragmentNavigator(supportFragmentManager, R.id.container) {
-		override fun createFragment(screenKey: String, data: Any?): Fragment {
+		override fun createFragment(screenKey: String, data: Any?): Fragment? {
+			/*
 			when(screenKey) {
 				Screens.START_SCREEN -> return StartFragment.getNewInstance(data)
 				else -> throw RuntimeException("Unknown screen key!")
 			}
+			*/
+			return null
 		}
 
 		override fun showSystemMessage(message: String) {
@@ -120,7 +116,10 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	companion object
 	{
 		private val PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+		const val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
 		const val PERMISSION_REQUEST = 2211
+		const val MY_LOCATION_BUTTON_INDEX = 2
+		const val COMPASS_BUTTON_INDEX = 5
 	}
 
 	init {
@@ -158,15 +157,11 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 
 		(appbar as AppBarLayout).bringToFront()
 		
-		//navigatorHolder.setNavigator(navigator)
-	
 		initNavigation()
 		
 		Timber.d("Permissions granted: ${permissionsGranted}")
-		if(permissionsGranted) {
-			if(savedInstanceState == null) navigator.applyCommands(arrayOf<Command>(Replace(Screens.START_SCREEN, null)))
-		}
-		else Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
+		if(!permissionsGranted) Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
+		else initGoogleMap(savedInstanceState)
 	}
 
 	@CallSuper
@@ -174,16 +169,24 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		super.onPostCreate(savedInstanceState)
 		toggle.syncState()
 	}
+	
+	@CallSuper
+	protected override fun onStart() {
+		super.onStart()
+		if(permissionsGranted) mapView?.onStart()
+	}
 
 	@CallSuper
 	protected override fun onResume() {
 		super.onResume()
 		navigatorHolder.setNavigator(navigator)
+		if(permissionsGranted) mapView?.onResume()
 	}
 	
 	@CallSuper
 	protected override fun onPause() {
 		navigatorHolder.removeNavigator()
+		if(permissionsGranted) mapView?.onPause()
 		super.onPause()
 	}
 	
@@ -194,11 +197,21 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	}
 	
 	@CallSuper
+	protected override fun onStop() {
+		if(permissionsGranted) mapView?.onStop()
+		super.onStop()
+	}
+	
+	@CallSuper
 	protected override fun onDestroy() {
-		
-		
-		
+		if(permissionsGranted) mapView?.onDestroy()
 		super.onDestroy()
+	}
+	
+	@CallSuper
+	override fun onLowMemory() {
+		if(permissionsGranted) mapView?.onLowMemory()
+		super.onLowMemory()
 	}
 	
 	/** @see {@link android.support.v7.app.ActionBarDrawerToggle} */
@@ -234,6 +247,9 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	}
 
 
+
+
+
 	private fun initNavigation() {
 		val versionName = packageManager.getPackageInfo(packageName, 0).versionName
 		(navFooterVersion as TextView).text = 
@@ -246,7 +262,55 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			Timber.d("Share action")
 		}
 	}
-
+	
+	private fun initGoogleMap(savedInstanceState: Bundle?) {
+		var mapViewBundle: Bundle? = null
+		if(savedInstanceState != null)
+			mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY)
+		mapView?.onCreate(mapViewBundle)
+		mapView?.getMapAsync({ gmap -> 
+			this.gmap = gmap
+			/*
+			this.gmap!!.setOnMyLocationButtonClickListener(OnMyLocationButtonClickListener {
+				onClickMyLocation()
+				true
+			})
+			this.gmap!!.setOnCameraMoveListener(this)
+			presenter.updateCurrentLocation()
+			*/
+			customizeGoogleMaps()
+			//presenter.updateCurrentLocation()
+		})
+		searchFrom.address.setOnFocusChangeListener(focusListener)
+		searchTo.address.setOnFocusChangeListener(focusListener)
+	}
+	
+	/**
+	 * Грязный хак — меняем положение нативной кнопки 'MyLocation'
+	 * https://stackoverflow.com/questions/36785542/how-to-change-the-position-of-my-location-button-in-google-maps-using-android-st
+	 */
+	private fun customizeGoogleMaps() {
+		gmap!!.setMyLocationEnabled(true)
+		val parent = (mapView?.findViewById(1) as View).parent as View
+		val myLocationBtn = parent.findViewById(MY_LOCATION_BUTTON_INDEX) as View
+		val rlp = myLocationBtn.getLayoutParams() as RelativeLayout.LayoutParams 
+		// position on right bottom
+		rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0)
+		rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
+		
+		rlp.setMargins(0, 0, 
+			resources.getDimension(R.dimen.location_button_margin_end).toInt(),
+			resources.getDimension(R.dimen.location_button_margin_bottom).toInt())
+		
+		val compassBtn = parent.findViewById(COMPASS_BUTTON_INDEX) as View
+		val rlp1 = compassBtn.getLayoutParams() as RelativeLayout.LayoutParams 
+		// position on right bottom
+		rlp1.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0)
+		rlp1.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
+		
+		rlp1.setMargins(resources.getDimension(R.dimen.compass_button_margin_start).toInt(), 0, 
+			0, resources.getDimension(R.dimen.compass_button_margin_bottom).toInt())
+	}
 
 	/* MainView */
 	override fun qqq() {
