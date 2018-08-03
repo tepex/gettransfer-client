@@ -36,6 +36,7 @@ import android.widget.TextView
 
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -82,6 +83,10 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	private var gmap: GoogleMap? = null
 	private var centerMarker: Marker? = null
+	
+	@ProvidePresenter
+	fun createMainPresenter(): MainPresenter = MainPresenter(router)
+
 	
 	private val focusListener = View.OnFocusChangeListener {_, hasFocus ->
 		if(hasFocus) {

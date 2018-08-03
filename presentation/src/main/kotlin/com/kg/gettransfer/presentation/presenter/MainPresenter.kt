@@ -12,7 +12,7 @@ import ru.terrakok.cicerone.Router
 import timber.log.Timber
 
 @InjectViewState
-class MainPresenter: MvpPresenter<MainView>() {
+class MainPresenter(val router: Router): MvpPresenter<MainView>() {
 	override fun onFirstViewAttach()
 	{
 		Timber.d("MainPresenter.onFirstViewAttach()")
@@ -68,6 +68,6 @@ class MainPresenter: MvpPresenter<MainView>() {
 	}
 	
 	fun onBackCommandClick() {
-		//router.exit()
+		router.exit()
 	}
 }
