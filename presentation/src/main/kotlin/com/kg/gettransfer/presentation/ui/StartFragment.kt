@@ -29,7 +29,6 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.presenter.StartPresenter
 import com.kg.gettransfer.presentation.view.StartView
 
 import org.koin.android.ext.android.inject
@@ -45,17 +44,15 @@ const val COMPASS_BUTTON_INDEX = 5
 
 const val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
 
-class StartFragment: MvpAppCompatFragment(), StartView, BackButtonListener {
+class StartFragment: MvpAppCompatFragment(), StartView {
 	private var isFirst = true
 	private var gmap: GoogleMap? = null
 	private var centerMarker: Marker? = null
-	@InjectPresenter
-	lateinit var presenter: StartPresenter
 	
 	private val focusListener = View.OnFocusChangeListener {_, hasFocus ->
 		if(hasFocus) {
 			Timber.d("start transition")
-			presenter.onSearchClicked()
+			//presenter.onSearchClicked()
 		}
 	}
 
@@ -66,9 +63,6 @@ class StartFragment: MvpAppCompatFragment(), StartView, BackButtonListener {
 		}
 	}
 	
-	@ProvidePresenter
-	fun createStartPresenter(): StartPresenter = StartPresenter((activity as MainActivity).router)
-
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 		                      savedInstanceState: Bundle?): View? {
 		return inflater.inflate(R.layout.fragment_start, container, false)
@@ -95,7 +89,7 @@ class StartFragment: MvpAppCompatFragment(), StartView, BackButtonListener {
 			presenter.updateCurrentLocation()
 			*/
 			customizeGoogleMaps()
-			presenter.updateCurrentLocation()
+			//presenter.updateCurrentLocation()
 		})
 		searchFrom.address.setOnFocusChangeListener(focusListener)
 		searchTo.address.setOnFocusChangeListener(focusListener)
@@ -121,7 +115,7 @@ class StartFragment: MvpAppCompatFragment(), StartView, BackButtonListener {
 	@CallSuper
 	override fun onStart() {
 		super.onStart()
-		(activity as MainActivity).toolbarTransparent = true
+		//(activity as MainActivity).toolbarTransparent = true
 		if((activity as MainActivity).permissionsGranted) mapView?.onStart()
 	}
 	
@@ -153,11 +147,6 @@ class StartFragment: MvpAppCompatFragment(), StartView, BackButtonListener {
 	override fun onLowMemory() {
 		if((activity as MainActivity).permissionsGranted) mapView?.onLowMemory()
 		super.onLowMemory()
-	}
-	
-	override fun onBackPressed(): Boolean {
-		presenter.onBackCommandClick()
-		return true
 	}
 	
 	fun getSearchForm(): View = search
