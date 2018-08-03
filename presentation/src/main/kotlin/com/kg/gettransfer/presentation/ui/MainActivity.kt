@@ -36,6 +36,15 @@ import android.widget.TextView
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener
+import com.google.android.gms.maps.MapView
+
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.MainPresenter
@@ -58,8 +67,12 @@ import ru.terrakok.cicerone.commands.Replace
 
 import timber.log.Timber
 
-const val PERMISSION_REQUEST = 2211
-const val MOVE_TIME: Long = 300
+/*
+const val MY_LOCATION_BUTTON_INDEX = 2
+const val COMPASS_BUTTON_INDEX = 5
+
+const val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
+*/
 
 class MainActivity: MvpAppCompatActivity(), MainView {
 	@InjectPresenter
@@ -71,9 +84,19 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	var permissionsGranted = false
 	
 	private val navigatorHolder: NavigatorHolder by inject()
-	internal val router: Router by inject();
+	internal val router: Router by inject()
 	
-	private val readMoreListener: View.OnClickListener = View.OnClickListener {
+	private var gmap: GoogleMap? = null
+	private var centerMarker: Marker? = null
+	
+	private val focusListener = View.OnFocusChangeListener {_, hasFocus ->
+		if(hasFocus) {
+			Timber.d("start transition")
+			//presenter.onSearchClicked()
+		}
+	}
+
+	private val readMoreListener = View.OnClickListener {
 		presenter.readMoreClick()
 	}
 
@@ -97,6 +120,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	companion object
 	{
 		private val PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+		const val PERMISSION_REQUEST = 2211
 	}
 
 	init {
