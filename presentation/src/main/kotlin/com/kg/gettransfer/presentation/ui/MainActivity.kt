@@ -2,11 +2,8 @@ package com.kg.gettransfer.presentation.ui
 
 import android.Manifest
 
+import android.content.res.Configuration
 import android.content.pm.PackageManager
-
-import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.drawable.Drawable
 
 import android.os.Build
 import android.os.Bundle
@@ -16,8 +13,6 @@ import android.support.annotation.CallSuper
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
-
-import android.support.transition.AutoTransition
 
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
@@ -32,18 +27,14 @@ import android.support.v7.app.AppCompatDelegate
 
 import android.support.v7.widget.Toolbar
 
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
 
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.Screens
@@ -55,7 +46,6 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 import org.koin.android.ext.android.inject
-import org.koin.standalone.KoinComponent
 
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
@@ -185,6 +175,18 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		
 		
 		super.onDestroy()
+	}
+	
+	/** @see {@link android.support.v7.app.ActionBarDrawerToggle} */
+	@CallSuper
+	override fun onConfigurationChanged(newConfig: Configuration) {
+	 	 super.onConfigurationChanged(newConfig)
+	 	 toggle.onConfigurationChanged(newConfig)
+	}
+	
+	/** @see {@link android.support.v7.app.ActionBarDrawerToggle} */
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		return toggle.onOptionsItemSelected(item)
 	}
 	
 	/**
