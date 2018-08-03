@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.Manifest
 
+import android.content.Context
 import android.content.res.Configuration
 import android.content.pm.PackageManager
 
@@ -29,6 +30,7 @@ import android.support.v7.widget.Toolbar
 
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -151,9 +153,16 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
 		drawer.addDrawerListener(object: DrawerLayout.SimpleDrawerListener() {
 			@CallSuper
-			override fun onDrawerOpened(drawerView: View) {
-				super.onDrawerOpened(drawerView)
-				Timber.d("drawer opened")
+			override fun onDrawerStateChanged(newState: Int) {
+				super.onDrawerStateChanged(newState)
+				if(newState == DrawerLayout.STATE_SETTLING) {
+					// Андроид, такой андроид :-) 
+					// https://stackoverflow.com/questions/1109022/close-hide-the-android-soft-keyboard
+					val view = currentFocus
+					if(view != null)
+						(getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+							.hideSoftInputFromWindow(view.windowToken, 0)
+				}
 			}
 		})
 		
