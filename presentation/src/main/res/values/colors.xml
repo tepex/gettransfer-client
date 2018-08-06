@@ -8,6 +8,7 @@
 	<color name="nav_item_title">@android:color/black</color>
 	<color name="nav_item_subtitle">#9b9b9b</color>
 
+	<color name="aboutToolbar">#d1f8f8f8</color>
 
 
 
