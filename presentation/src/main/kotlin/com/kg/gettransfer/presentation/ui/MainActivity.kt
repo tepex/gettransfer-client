@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.Manifest
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.content.pm.PackageManager
 
@@ -63,7 +64,7 @@ import org.koin.android.ext.android.inject
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
-import ru.terrakok.cicerone.android.SupportFragmentNavigator
+import ru.terrakok.cicerone.android.SupportAppNavigator
 
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.cicerone.commands.Forward
@@ -100,29 +101,26 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		presenter.readMoreClick()
 	}
 
-	private val navigator: Navigator = object: SupportFragmentNavigator(supportFragmentManager, R.id.container) {
-		override fun createFragment(screenKey: String, data: Any?): Fragment? {
-			/*
+	private val navigator: Navigator = object: SupportAppNavigator(this, NOT_USED) {
+		protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
 			when(screenKey) {
-				Screens.START_SCREEN -> return StartFragment.getNewInstance(data)
-				else -> throw RuntimeException("Unknown screen key!")
+				Screens.ABOUT_ACTIVITY -> return Intent(this@MainActivity, AboutActivity::class.java)
 			}
-			*/
+			return null
+		}
+
+		override fun createFragment(screenKey: String, data: Any?): Fragment? {
 			return null
 		}
 
 		override fun showSystemMessage(message: String) {
 			Snackbar.make(drawerLayout, message, Snackbar.LENGTH_SHORT).show()
 		}
-
-		override fun exit() {
-			finish()
-		}
 	}
 	
-	companion object
-	{
+	companion object {
 		private val PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+		private val NOT_USED = -1
 		const val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
 		const val PERMISSION_REQUEST = 2211
 		const val MY_LOCATION_BUTTON_INDEX = 2

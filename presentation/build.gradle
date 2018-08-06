@@ -12,6 +12,7 @@ ext {
 	koin_version              = "1.0.0-beta-3"
 	moxy_version              = "1.5.5"
 	cicerone_version          = "3.0.0"
+	circle_indicator_version  = "1.2.2"
 }
 
 android {
@@ -94,6 +95,8 @@ dependencies {
 	// Cicerone
 	implementation "ru.terrakok.cicerone:cicerone:${cicerone_version}"
     
+	// 
+	implementation "me.relex:circleindicator:${circle_indicator_version}@aar"
     //com.google.android.gms:play-services-maps:11.8.0
     // Retrofit network
     /*

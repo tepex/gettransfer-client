@@ -5,6 +5,7 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 
+import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.MainView
 
 import ru.terrakok.cicerone.Router
@@ -55,16 +56,17 @@ class MainPresenter(val router: Router): MvpPresenter<MainView>() {
 	
 	fun onSearchClick() {
 		Timber.d("onSearchClick")
-		//router.navigateTo(MainActivity.START_SEARCH_SCREEN)
+		//router.navigateTo(Screens.START_SEARCH_SCREEN)
 	}
 	
 	fun onAboutClick() {
-		//router.navigateTo(Screens.ABOUT_SCREEN)
 		Timber.d("about click")
+		router.navigateTo(Screens.ABOUT_ACTIVITY)
 	}
 
 	fun readMoreClick() {
 		Timber.d("read more click")
+		//router.navigateTo(Screens.READ_MORE_ACTIVITY)
 	}
 	
 	fun onBackCommandClick() {
