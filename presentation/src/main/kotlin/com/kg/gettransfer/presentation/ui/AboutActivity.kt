@@ -26,6 +26,9 @@ import com.kg.gettransfer.presentation.presenter.AboutPresenter
 import com.kg.gettransfer.presentation.view.AboutView
 
 import kotlinx.android.synthetic.main.activity_about.*
+import kotlinx.android.synthetic.main.about_item1.*
+import kotlinx.android.synthetic.main.about_item2.*
+import kotlinx.android.synthetic.main.about_item3.*
 
 import timber.log.Timber
 
@@ -51,7 +54,7 @@ class AboutActivity: MvpAppCompatActivity(), AboutView {
 		*/
 		
 		viewpager.setOffscreenPageLimit(2)
-		viewpager.setAdapter(AboutAdapter(this))
+		viewpager.setAdapter(AboutAdapter())
 	}
 	
 	/*
@@ -62,27 +65,11 @@ class AboutActivity: MvpAppCompatActivity(), AboutView {
 	}
 	*/
 	
-	class AboutAdapter(val activity: AboutActivity): PagerAdapter() {
-		override fun getCount(): Int = 3
+	inner class AboutAdapter: PagerAdapter() {
+		private val pages = arrayOf<View>(about_item1, about_item2, about_item3)
+		
+		override fun getCount(): Int = pages.size
 		override fun isViewFromObject(v: View, o: Any): Boolean = (v == o)
-		override fun instantiateItem(container: ViewGroup, position: Int): Any {
-			Timber.d("position : $position")
-			
-			val inflater = LayoutInflater.from(activity)
-			when(position) {
-				0 -> {
-					//return inflater.inflate(R.layout.about_item1, container, false).findViewById(R.id.about_item1)
-					return activity.findViewById(R.id.about_item1)
-				}
-				1 -> return activity.findViewById(R.id.about_item2)
-				2 -> return activity.findViewById(R.id.about_item3)
-			}
-			throw RuntimeException("View pager error index: $position")
-		}
-		/*
-		override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
-			container.removeView(obj as View)
-		}
-		*/
+		override fun instantiateItem(container: ViewGroup, pos: Int): Any = pages[pos]
 	}
 }
