@@ -5,6 +5,7 @@
 	android:id="@+id/toolbar"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-    android:minHeight="?attr/actionBarSize"
-    android:background="@color/colorPrimary"
+	android:background="@color/colorPrimary"
+	android:fitsSystemWindows="true"
+	android:minHeight="?attr/actionBarSize"
 	tools:ignore="Overdraw" />
