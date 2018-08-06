@@ -33,4 +33,8 @@
 	<dimen name="search_form_vertical_padding">8dp</dimen>
 	<dimen name="search_form_array_margin">12dp</dimen>
 	<dimen name="search_form_clear_margin">12dp</dimen>
+
+	<!-- About items -->
+	<dimen name="about_item_top">100dp</dimen>
+	<dimen name="about_item_bottom">50dp</dimen>
 </resources>

@@ -46,24 +46,23 @@ class AboutActivity: MvpAppCompatActivity(), AboutView {
 		
 		setContentView(R.layout.activity_about)
 		
-		/*
-		setSupportActionBar(toolbar_gray as Toolbar)
+		setSupportActionBar(toolbar as Toolbar)
 		supportActionBar?.setDisplayShowTitleEnabled(false)
-		supportActionBar?.setDisplayHomeAsUpEnabled(false)
-		supportActionBar?.setDisplayShowHomeEnabled(false)
-		*/
+		supportActionBar?.setDisplayHomeAsUpEnabled(true)
+		supportActionBar?.setDisplayShowHomeEnabled(true)
+		(toolbar as Toolbar).setNavigationOnClickListener { finish() }
 		
-		viewpager.setOffscreenPageLimit(2)
-		viewpager.setAdapter(AboutAdapter())
+		val adapter = AboutAdapter()
+		viewpager.setAdapter(adapter)
+		viewpager.setOffscreenPageLimit(adapter.count-1)
+		indicator.setViewPager(viewpager)
 	}
 	
-	/*
 	@CallSuper
 	override fun onBackPressed() {
 		if(viewpager.getCurrentItem() == 0) super.onBackPressed()
 		else viewpager.setCurrentItem(viewpager.currentItem - 1)
 	}
-	*/
 	
 	inner class AboutAdapter: PagerAdapter() {
 		private val pages = arrayOf<View>(about_item1, about_item2, about_item3)
@@ -71,5 +70,8 @@ class AboutActivity: MvpAppCompatActivity(), AboutView {
 		override fun getCount(): Int = pages.size
 		override fun isViewFromObject(v: View, o: Any): Boolean = (v == o)
 		override fun instantiateItem(container: ViewGroup, pos: Int): Any = pages[pos]
+		override fun destroyItem(container: ViewGroup, pos: Int, obj: Any) {
+			container.removeView(obj as View)
+		}
 	}
 }
