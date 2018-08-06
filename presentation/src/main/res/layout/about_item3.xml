@@ -6,19 +6,16 @@
 	android:id="@+id/about_item3"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:background="#ffaaaa"
 	android:orientation="vertical"
 	android:gravity="center_horizontal"
 	tools:context=".presentation.ui.AboutActivity">
 
 	<TextView android:id="@+id/title3"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="about item 3" />
-	
-	<TextView android:id="@+id/content3"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="content item 3"
-		tools:text="@tools:sample/lorem" />
+		style="@style/about_title"
+		android:text="@string/about_title_item3" />
+
+	<TextView
+		android:id="@+id/content3"
+		style="@style/about_content"
+		android:text="@string/about_content_item3" />
 </LinearLayout>

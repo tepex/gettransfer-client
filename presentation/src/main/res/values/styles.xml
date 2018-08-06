@@ -50,6 +50,38 @@
 		-->
 	</style>
 
+	<style name="about_title">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">@dimen/about_title_size</item>
+		<item name="android:textColor">@color/about_title</item>
+		<item name="android:textAllCaps">true</item>
+		<item name="android:textStyle">bold</item>
+		<!--
+		<item name="android:fontFamily">@font/nunito_black</item>
+		-->
+	</style>
+
+	<style name="about_content">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_marginTop">@dimen/about_content_top</item>
+		<item name="android:paddingStart">@dimen/about_content_padding</item>
+		<item name="android:paddingEnd">@dimen/about_content_padding</item>
+		<item name="android:textSize">@dimen/about_content_size</item>
+		<item name="android:textColor">@color/about_content</item>
+		<item name="android:textAlignment">center</item>
+		<!--
+		<item name="android:fontFamily">@font/nunito_black</item>
+		-->
+	</style>
+
+
+
+
+
+
+
 
 
     <style name="etField">

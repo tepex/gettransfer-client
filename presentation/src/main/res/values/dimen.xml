@@ -37,4 +37,8 @@
 	<!-- About items -->
 	<dimen name="about_item_top">100dp</dimen>
 	<dimen name="about_item_bottom">50dp</dimen>
+	<dimen name="about_content_top">25dp</dimen>
+	<dimen name="about_content_padding">60dp</dimen>
+	<dimen name="about_title_size">22sp</dimen>
+	<dimen name="about_content_size">18sp</dimen>
 </resources>

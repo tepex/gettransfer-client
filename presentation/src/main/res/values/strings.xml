@@ -18,6 +18,13 @@
 	<string name="search_from_hint">From</string>
 	<string name="search_to_hint">To</string>
 	<string name="searchTransitionName">SEARCH_FORM</string>
+	<!-- About -->
+	<string name="about_title_item1">ЛУЧШИЕ ЦЕНЫ</string>
+	<string name="about_content_item1">Выберите цену перевозки из множества предложений.</string>
+	<string name="about_title_item2">ЛУЧШИЕ УСЛОВИЯ</string>
+	<string name="about_content_item2">Широкий выбор классов и типов машин. Все включено. Время ожидания до 45 минут — бесплатно.</string>
+	<string name="about_title_item3">БЕЗОПАСНЫЕ ПЕРЕВОЗКИ</string>
+	<string name="about_content_item3">Вы всегда заранее знаете, кто вас везет. Все перевозчики аккредитованы и проверены.</string>
 	<!--
 	<string name=""></string>
 	-->
