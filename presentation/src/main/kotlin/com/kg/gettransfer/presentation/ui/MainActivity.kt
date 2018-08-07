@@ -104,14 +104,15 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private val navigator: Navigator = object: SupportAppNavigator(this, NOT_USED) {
 		protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
 			when(screenKey) {
-				Screens.ABOUT_ACTIVITY -> return Intent(this@MainActivity, AboutActivity::class.java)
+				Screens.ABOUT -> return Intent(this@MainActivity, AboutActivity::class.java)
+				Screens.FIND_ADDRESS -> return Intent(this@MainActivity, SearchActivity::class.java)
 			}
 			return null
 		}
 		
 		@CallSuper
 		override fun forward(command: Forward) {
-			if(command.screenKey == Screens.READ_MORE_DIALOG) {
+			if(command.screenKey == Screens.READ_MORE) {
 				drawer.closeDrawer(GravityCompat.START)
 				ReadMoreDialog.newInstance(this@MainActivity).show()
 			}

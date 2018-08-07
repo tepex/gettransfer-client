@@ -56,17 +56,17 @@ class MainPresenter(val router: Router): MvpPresenter<MainView>() {
 	
 	fun onSearchClick() {
 		Timber.d("onSearchClick")
-		//router.navigateTo(Screens.START_SEARCH_SCREEN)
+		router.navigateTo(Screens.FIND_ADDRESS)
 	}
 	
 	fun onAboutClick() {
 		Timber.d("about click")
-		router.navigateTo(Screens.ABOUT_ACTIVITY)
+		router.navigateTo(Screens.ABOUT)
 	}
 
 	fun readMoreClick() {
 		Timber.d("read more click")
-		router.navigateTo(Screens.READ_MORE_DIALOG)
+		router.navigateTo(Screens.READ_MORE)
 	}
 	
 	fun onBackCommandClick() {

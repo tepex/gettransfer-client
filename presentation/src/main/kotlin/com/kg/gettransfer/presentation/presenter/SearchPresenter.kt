@@ -5,12 +5,12 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 
-import com.kg.gettransfer.presentation.view.AboutView
+import com.kg.gettransfer.presentation.view.SearchView
 
 import timber.log.Timber
 
 @InjectViewState
-class AboutPresenter: MvpPresenter<AboutView>() {
+class SearchPresenter: MvpPresenter<SearchView>() {
 	fun onBackCommandClick() {
 		viewState.finish()
 	}

@@ -50,7 +50,7 @@ class AboutActivity: MvpAppCompatActivity(), AboutView {
 		supportActionBar?.setDisplayShowTitleEnabled(false)
 		supportActionBar?.setDisplayHomeAsUpEnabled(true)
 		supportActionBar?.setDisplayShowHomeEnabled(true)
-		(toolbar as Toolbar).setNavigationOnClickListener { finish() }
+		(toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 		
 		val adapter = AboutAdapter()
 		viewpager.setAdapter(adapter)
@@ -58,9 +58,8 @@ class AboutActivity: MvpAppCompatActivity(), AboutView {
 		indicator.setViewPager(viewpager)
 	}
 	
-	@CallSuper
 	override fun onBackPressed() {
-		if(viewpager.getCurrentItem() == 0) super.onBackPressed()
+		if(viewpager.getCurrentItem() == 0) presenter.onBackCommandClick()
 		else viewpager.setCurrentItem(viewpager.currentItem - 1)
 	}
 	

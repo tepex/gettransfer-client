@@ -33,6 +33,9 @@
         <activity
             android:name=".presentation.ui.AboutActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.ui.SearchActivity"
+            android:screenOrientation="portrait" />
 <!--
         <activity
             android:name=".presentation.ui.LoginActivity"
