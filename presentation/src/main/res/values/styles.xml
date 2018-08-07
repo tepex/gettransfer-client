@@ -13,7 +13,16 @@
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
+	
+	<style name="sf_font">
+		<item name="android:textColor">@android:color/black</item>
+		<item name="android:fontFamily">@font/sf_pro_text_regular</item>
+	</style>
+	<style name="sf_font_bold">
+		<item name="android:textColor">@android:color/black</item>
+		<item name="android:fontFamily">@font/sf_pro_text_bold</item>
+	</style>
+	
 	<style name="nav_item">
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
@@ -22,58 +31,39 @@
 		<item name="android:layout_marginBottom">@dimen/nav_item_margin_bottom</item>
 		<item name="android:orientation">vertical</item>
 	</style>
-	<style name="nav_item_title">
+	<style name="nav_item_title" parent="sf_font">
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:textSize">@dimen/nav_item_title_size</item>
-		<item name="android:textColor">@color/nav_item_title</item>
-		<!--
-		<item name="android:fontFamily">@font/nunito_black</item>
-		-->
 	</style>
-	<style name="nav_item_subtitle">
+	<style name="nav_item_subtitle" parent="sf_font">
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:textSize">@dimen/nav_item_subtitle_size</item>
 		<item name="android:textColor">@color/nav_item_subtitle</item>
-		<!--
-		<item name="android:fontFamily">@font/nunito_black</item>
-		-->
 	</style>
-	<style name="nav_footer_version">
+	<style name="nav_footer_version" parent="sf_font">
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:textSize">@dimen/nav_footer_version_size</item>
 		<item name="android:textColor">@color/nav_item_subtitle</item>
-		<!--
-		<item name="android:fontFamily">@font/nunito_black</item>
-		-->
 	</style>
 
-	<style name="about_title">
+	<style name="about_title" parent="sf_font_bold">
 		<item name="android:layout_width">wrap_content</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:textSize">@dimen/about_title_size</item>
-		<item name="android:textColor">@color/about_title</item>
 		<item name="android:textAllCaps">true</item>
-		<item name="android:textStyle">bold</item>
-		<!--
-		<item name="android:fontFamily">@font/nunito_black</item>
-		-->
 	</style>
 
-	<style name="about_content">
+	<style name="about_content" parent="sf_font">
 		<item name="android:layout_width">wrap_content</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:layout_marginTop">@dimen/about_content_top</item>
 		<item name="android:paddingStart">@dimen/about_content_padding</item>
 		<item name="android:paddingEnd">@dimen/about_content_padding</item>
 		<item name="android:textSize">@dimen/about_content_size</item>
-		<item name="android:textColor">@color/about_content</item>
 		<item name="android:textAlignment">center</item>
-		<!--
-		<item name="android:fontFamily">@font/nunito_black</item>
-		-->
 	</style>
 
 	<style name="ReadMoreDialog" parent="Theme.AppCompat.Light.Dialog">
@@ -81,16 +71,15 @@
 		<item name="windowFixedWidthMinor">95%</item>
 		<item name="android:windowTitleStyle">@style/read_more_title</item>
 		<item name="android:textColor">@android:color/black</item>
+		<item name="android:fontFamily">@font/sf_pro_text_regular</item>
 	</style>
-	<style name="read_more_title">
+	<style name="read_more_title" parent="sf_font_bold">
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
-		<item name="android:textColor">@android:color/black</item>
-		<item name="android:textStyle">bold</item>
 		<item name="android:textSize">@dimen/read_more_title_size</item>
 	</style>
 
-	<style name="read_more_item">
+	<style name="read_more_item" parent="sf_font">
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
 	</style>
