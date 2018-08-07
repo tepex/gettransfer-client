@@ -23,6 +23,10 @@ import android.support.v7.app.AppCompatDelegate
 
 import android.support.v7.widget.Toolbar
 
+import android.transition.Explode
+import android.transition.Fade
+import android.transition.Slide
+
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -63,6 +67,14 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		supportActionBar?.setDisplayHomeAsUpEnabled(true)
 		supportActionBar?.setDisplayShowHomeEnabled(true)
 		(toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
+		
+		val fade = Fade()
+		fade.setDuration(500)
+		getWindow().setEnterTransition(fade)
+		
+		val slide = Slide()
+		slide.setDuration(500)
+		getWindow().setReturnTransition(slide)
 	}
 
 	override fun onBackPressed() {

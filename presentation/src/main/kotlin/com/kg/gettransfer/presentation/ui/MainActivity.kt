@@ -17,6 +17,7 @@ import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 
@@ -28,6 +29,9 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
 
 import android.support.v7.widget.Toolbar
+
+import android.transition.Fade
+import android.transition.Slide
 
 import android.view.MenuItem
 import android.view.View
@@ -111,13 +115,21 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		}
 		
 		@CallSuper
-		override fun forward(command: Forward) {
+		protected override fun forward(command: Forward) {
 			if(command.screenKey == Screens.READ_MORE) {
 				drawer.closeDrawer(GravityCompat.START)
 				ReadMoreDialog.newInstance(this@MainActivity).show()
 			}
 			else super.forward(command)
 		}
+	
+		protected override fun createStartActivityOptions(command: Command, intent: Intent): Bundle? =
+			ActivityOptionsCompat
+				.makeSceneTransitionAnimation(
+					this@MainActivity, 
+				    search,
+				    getString(R.string.searchTransitionName))
+				.toBundle()
 
 		protected override fun showSystemMessage(message: String) {
 			Snackbar.make(drawerLayout, message, Snackbar.LENGTH_SHORT).show()
@@ -189,6 +201,10 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		Timber.d("Permissions granted: ${permissionsGranted}")
 		if(!permissionsGranted) Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
 		else initGoogleMap(savedInstanceState)
+		
+		val fade = Fade()
+		fade.setDuration(500)
+		getWindow().setExitTransition(fade)
 	}
 
 	@CallSuper
