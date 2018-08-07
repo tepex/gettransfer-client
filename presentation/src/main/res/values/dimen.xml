@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	
+    <dimen name="bottom_navigation_icon_size">22dp</dimen>
+	<dimen name="address_gap">4dp</dimen>
+	<dimen name="compass_button_margin_start">30dp</dimen>
+	<dimen name="compass_button_margin_bottom">20dp</dimen>
+	<dimen name="location_button_margin_end">30dp</dimen>
+	<dimen name="location_button_margin_bottom">20dp</dimen>
+	<dimen name="search_form_margin_top">126dp</dimen>
+	<dimen name="search_form_margin_X">16dp</dimen>
+
+	<!-- Navigation view menu -->
+	<dimen name="nav_header_height">148dp</dimen>
+	<dimen name="nav_header_logo_start">16dp</dimen>
+	<dimen name="nav_header_logo_top">48dp</dimen>
+	<dimen name="nav_header_share_top">48dp</dimen>
+	<dimen name="nav_header_share_end">16dp</dimen>
+
+	<dimen name="nav_item_margin_top">12dp</dimen>
+	<dimen name="nav_item_margin_bottom">16dp</dimen>
+	<dimen name="nav_item_margin_start">30dp</dimen>
+	<dimen name="nav_item_title_size">16sp</dimen>
+	<dimen name="nav_item_subtitle_size">14sp</dimen>
+
+	<dimen name="nav_footer_version_size">10sp</dimen>
+	<dimen name="nav_footer_version_start">50dp</dimen>
+	<dimen name="nav_footer_version_bottom">26dp</dimen>
+	<dimen name="nav_footer_read_more_bottom">32dp</dimen>
+	<dimen name="nav_footer_stamp_bottom">16dp</dimen>
+
+	<!-- Search form -->
+	<dimen name="search_form_vertical_padding">8dp</dimen>
+	<dimen name="search_form_array_margin">12dp</dimen>
+	<dimen name="search_form_clear_margin">12dp</dimen>
+
+	<!-- About items -->
+	<dimen name="about_item_top">100dp</dimen>
+	<dimen name="about_item_bottom">50dp</dimen>
+	<dimen name="about_content_top">25dp</dimen>
+	<dimen name="about_content_padding">60dp</dimen>
+	<dimen name="about_title_size">22sp</dimen>
+	<dimen name="about_content_size">18sp</dimen>
+	
+	<!-- Read more -->
+	<dimen name="read_more_content_margin">10dp</dimen>
+	<dimen name="read_more_close_margin">20dp</dimen>
+	<dimen name="read_more_padding_horizontal">16dp</dimen>
+	<dimen name="read_more_content3_padding">10dp</dimen>
+	<dimen name="read_more_title_size">16sp</dimen>
+</resources>

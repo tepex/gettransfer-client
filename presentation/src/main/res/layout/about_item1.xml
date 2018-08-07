@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/about_item1"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_marginTop="@dimen/about_item_top"
+	android:orientation="vertical"
+	android:gravity="center_horizontal"
+	tools:context=".presentation.ui.AboutActivity">
+
+	<TextView android:id="@+id/title1"
+		style="@style/about_title"
+		android:text="@string/about_title_item1" />
+	
+	<TextView android:id="@+id/content1"
+		style="@style/about_content"
+		android:text="@string/about_content_item1" />
+</LinearLayout>

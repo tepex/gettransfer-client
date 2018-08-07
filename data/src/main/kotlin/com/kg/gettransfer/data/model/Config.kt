@@ -1,0 +1,34 @@
+package com.kg.gettransfer.data.model
+
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
+
+import com.kg.gettransfer.data.model.secondary.Currency
+import com.kg.gettransfer.data.model.secondary.Locale
+
+import io.realm.RealmList
+import io.realm.RealmObject
+
+import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
+
+@RealmClass
+open class Config(
+        @PrimaryKey
+        var id: Int = 0,
+
+        @Expose
+        @SerializedName("available_locales")
+        var availableLocales: RealmList<Locale?>? = null,
+
+        @Expose
+        @SerializedName("preferred_locale")
+        var preferredLocale: String? = null,
+
+        @Expose
+        @SerializedName("supported_currencies")
+        var supportedCurrencies: RealmList<Currency?>? = null,
+
+        @Expose
+        @SerializedName("supported_distance_units")
+        var supportedDistanceUnits: RealmList<String?>? = null): RealmObject()

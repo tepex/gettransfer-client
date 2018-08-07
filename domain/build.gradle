@@ -1,0 +1,21 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+
+dependencies {
+	implementation libs.kotlin
+	testImplementation libs.junit
+	testImplementation libs.hamcrest
+	testImplementation libs.mockito
+}
+
+compileKotlin {
+	kotlinOptions {
+		jvmTarget = JavaVersion.VERSION_1_8
+	}
+}
+
+compileTestKotlin {
+	kotlinOptions {
+		jvmTarget = JavaVersion.VERSION_1_8
+	}
+}

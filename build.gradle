@@ -5,16 +5,17 @@ buildscript {
 	}
 
 	ext {
-		kotlin_version        = '1.2.51'
-		gradle_version        = '3.3.0-alpha03'
-		realm_version         =  '5.4.0'
+		kotlin_version        = '1.2.60'
+		gradle_version        = '3.3.0-alpha04'
+		realm_version         =  '5.4.1'
 		jsr250_version        = '1.0'
 		timber_version        = '4.7.1'
 		junit_version         = '4.12'
 		hamcrest_version      = '2.0.0.0'
-		mockito_version       = '2.20.0'
+		mockito_version       = '2.21.0'
 		
 		libs = [
+			kotlin     : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
 			timber     : ("com.jakewharton.timber:timber:${timber_version}"),
 			jsr250     : ("javax.annotation:jsr250-api:${jsr250_version}"),
 			junit      : ("junit:junit:${junit_version}"),
