@@ -108,14 +108,21 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			}
 			return null
 		}
-
-		override fun createFragment(screenKey: String, data: Any?): Fragment? {
-			return null
+		
+		@CallSuper
+		override fun forward(command: Forward) {
+			if(command.screenKey == Screens.READ_MORE_DIALOG) {
+				drawer.closeDrawer(GravityCompat.START)
+				ReadMoreDialog.newInstance(this@MainActivity).show()
+			}
+			else super.forward(command)
 		}
 
-		override fun showSystemMessage(message: String) {
+		protected override fun showSystemMessage(message: String) {
 			Snackbar.make(drawerLayout, message, Snackbar.LENGTH_SHORT).show()
 		}
+		
+		protected override fun createFragment(screenKey: String, data: Any?): Fragment? = null
 	}
 	
 	companion object {

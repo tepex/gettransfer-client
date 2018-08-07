@@ -76,7 +76,24 @@
 		-->
 	</style>
 
+	<style name="ReadMoreDialog" parent="Theme.AppCompat.Light.Dialog">
+		<item name="windowFixedWidthMajor">95%</item>
+		<item name="windowFixedWidthMinor">95%</item>
+		<item name="android:windowTitleStyle">@style/read_more_title</item>
+		<item name="android:textColor">@android:color/black</item>
+	</style>
+	<style name="read_more_title">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textColor">@android:color/black</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textSize">@dimen/read_more_title_size</item>
+	</style>
 
+	<style name="read_more_item">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
 
 
 

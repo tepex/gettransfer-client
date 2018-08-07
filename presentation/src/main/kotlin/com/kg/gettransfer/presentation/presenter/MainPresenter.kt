@@ -66,7 +66,7 @@ class MainPresenter(val router: Router): MvpPresenter<MainView>() {
 
 	fun readMoreClick() {
 		Timber.d("read more click")
-		//router.navigateTo(Screens.READ_MORE_ACTIVITY)
+		router.navigateTo(Screens.READ_MORE_DIALOG)
 	}
 	
 	fun onBackCommandClick() {

@@ -40,5 +40,5 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintBottom_toBottomOf="parent" 
 		app:ci_drawable="@drawable/ic_selected"
-        app:ci_drawable_unselected="@drawable/ic_unselected"/>
+        app:ci_drawable_unselected="@drawable/ic_unselected" />
 </android.support.constraint.ConstraintLayout>	

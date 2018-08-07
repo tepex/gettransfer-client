@@ -25,6 +25,16 @@
 	<string name="about_content_item2">Широкий выбор классов и типов машин. Все включено. Время ожидания до 45 минут — бесплатно.</string>
 	<string name="about_title_item3">БЕЗОПАСНЫЕ ПЕРЕВОЗКИ</string>
 	<string name="about_content_item3">Вы всегда заранее знаете, кто вас везет. Все перевозчики аккредитованы и проверены.</string>
+	<!-- Read more -->
+	<string name="read_more_title">We return the difference in price</string>
+	<string name="read_more_content1">You can claim a refund of the difference in price, if you find a similar offer on another site at a lower price.</string>
+	<string name="read_more_content2">Just remember to contact us after booking with us and at least 48 hours before your check-in date. You\'ll need to provide us with the link to the other offer and it must be online and available when we check.</string>
+	<string name="read_more_title1">We will refund you the difference provided that the other offer:</string>
+	<string name="read_more_item1">• identical to our transfer</string>
+	<string name="read_more_item2">• designated on the relevant dates</string>
+	<string name="read_more_item3">• does not participate in the action from the carrier and does not have a discount</string>
+	<string name="read_more_item4">• is provided by a legal entity</string>
+	<string name="read_more_close_button">Close</string>
 	<!--
 	<string name=""></string>
 	-->

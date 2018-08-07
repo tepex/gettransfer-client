@@ -41,4 +41,11 @@
 	<dimen name="about_content_padding">60dp</dimen>
 	<dimen name="about_title_size">22sp</dimen>
 	<dimen name="about_content_size">18sp</dimen>
+	
+	<!-- Read more -->
+	<dimen name="read_more_content_margin">10dp</dimen>
+	<dimen name="read_more_close_margin">20dp</dimen>
+	<dimen name="read_more_padding_horizontal">16dp</dimen>
+	<dimen name="read_more_content3_padding">10dp</dimen>
+	<dimen name="read_more_title_size">16sp</dimen>
 </resources>
