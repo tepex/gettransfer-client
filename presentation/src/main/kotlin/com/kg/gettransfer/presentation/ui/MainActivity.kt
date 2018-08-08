@@ -201,6 +201,9 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		
 		initNavigation()
 		
+		// test
+		fab.setOnClickListener { presenter.onFabClick() }
+		
 		Timber.d("Permissions granted: ${permissionsGranted}")
 		if(!permissionsGranted) Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
 		else initGoogleMap(savedInstanceState)
@@ -359,7 +362,8 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	}
 
 	/* MainView */
-	override fun qqq() {
-		Timber.d("MainActivity.qqq")
+	override fun qqq(s: String) {
+		Timber.d("MainActivity.qqq: $s")
+		Snackbar.make(drawerLayout, "qqq button: $s", Snackbar.LENGTH_SHORT).show()
 	}
 }

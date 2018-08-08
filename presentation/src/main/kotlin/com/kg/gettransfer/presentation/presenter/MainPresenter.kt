@@ -10,6 +10,9 @@ import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.MainView
 
+import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.android.UI
+
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
@@ -23,10 +26,31 @@ class MainPresenter(val router: Router, val locationInteractor: LocationInteract
 		Timber.d("MainPresenter.onFirstViewAttach()")
 		if(!granted) return
 		// Проверка досупности сервиса геолокации
+		/*
+		launch() {
+		}
+		
+		
 		val available = locationInteractor.checkLocationServicesAvailability()
 		Timber.d("location service available: $available")
+		*/
+		
+		
 
 		updateCurrentLocation()
+	}
+	
+	fun onFabClick() = launch(UI) {
+		val s = async(CommonPool) { myCoroutine() }.await()
+		Timber.d("async return: $s")
+		viewState.qqq(s)
+	}
+	
+	private suspend fun myCoroutine(): String {
+		Timber.d("start qqq")
+		delay(3000)
+		Timber.d("end qqq")
+		return "wqeweqw"
 	}
 	
 	private fun checkLocationServiceAvailability()

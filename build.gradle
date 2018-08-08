@@ -6,6 +6,7 @@ buildscript {
 
 	ext {
 		kotlin_version        = '1.2.60'
+		coroutines_version    = '0.24.0'
 		gradle_version        = '3.3.0-alpha05'
 //		realm_version         =  '5.4.1'
 		gms_version           = '15.0.1'
@@ -17,6 +18,7 @@ buildscript {
 		
 		libs = [
 			kotlin     : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
+			coroutines : ("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"),
 //    		psMaps     : ("com.google.android.gms:play-services-maps:${PLAY_SERVICES_VERSION}"),
     		psLocation : ("com.google.android.gms:play-services-location:$gms_version"),
 			timber     : ("com.jakewharton.timber:timber:$timber_version"),

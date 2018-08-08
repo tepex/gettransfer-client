@@ -75,6 +75,8 @@ dependencies {
 	implementation project(":domain")
 	implementation project(":data")
 	implementation libs.kotlin
+	implementation libs.coroutines
+	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 	implementation "com.android.support:multidex:$multidex_version"
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "com.android.support:design:$support_version"
