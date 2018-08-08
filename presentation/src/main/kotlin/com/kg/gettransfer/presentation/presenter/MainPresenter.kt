@@ -5,6 +5,8 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 
+import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 
 import com.kg.gettransfer.presentation.Screens
@@ -26,18 +28,13 @@ class MainPresenter(val router: Router, val locationInteractor: LocationInteract
 		Timber.d("MainPresenter.onFirstViewAttach()")
 		if(!granted) return
 		// Проверка досупности сервиса геолокации
-		/*
-		launch() {
+		launch(UI) {
+			val available = async(CommonPool) { 
+				locationInteractor.checkLocationServicesAvailability() }.await()
+			Timber.d("location service available: $available")
+			if(!available) viewState.setError(R.string.err_location_service_not_available)
+			else updateCurrentLocation()
 		}
-		
-		
-		val available = locationInteractor.checkLocationServicesAvailability()
-		Timber.d("location service available: $available")
-		*/
-		
-		
-
-		updateCurrentLocation()
 	}
 	
 	fun onFabClick() = launch(UI) {

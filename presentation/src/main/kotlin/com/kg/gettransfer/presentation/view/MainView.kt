@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.view
 
+import android.support.annotation.StringRes
+
 import com.arellomobile.mvp.MvpView
 
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
@@ -12,4 +14,5 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 //interface MainView: MvpView, OnCameraMoveListener
 interface MainView: MvpView {
 	fun qqq(s: String)
+	fun setError(@StringRes errId: Int)
 }

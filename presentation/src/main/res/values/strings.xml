@@ -39,6 +39,17 @@
 	<string name=""></string>
 	-->
 
+
+	<!-- Errors & messages -->
+	<string name="err_title">Ошибка</string>
+	<string name="err_location_service_not_available">Cервис геолокации недоступен!</string>
+
+
+
+
+
+
+
     <string name="login">Login</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
