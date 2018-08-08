@@ -22,53 +22,48 @@ import timber.log.Timber
 @InjectViewState
 class MainPresenter(val router: Router, val locationInteractor: LocationInteractor): MvpPresenter<MainView>() {
 	var granted = false
+	private val compositeDisposable = Job()
 	
 	override fun onFirstViewAttach()
 	{
-		Timber.d("MainPresenter.onFirstViewAttach()")
+		Timber.d("onFirstViewAttach()")
 		if(!granted) return
 		// Проверка досупности сервиса геолокации
-		launch(UI) {
-			val available = async(CommonPool) { 
+		launch(UI, parent = compositeDisposable) {
+			val available = async(CommonPool) {
 				locationInteractor.checkLocationServicesAvailability() }.await()
+			
 			Timber.d("location service available: $available")
 			if(!available) viewState.setError(R.string.err_location_service_not_available)
 			else updateCurrentLocation()
 		}
 	}
 	
+	@CallSuper
+	override fun onDestroy() {
+		super.onDestroy()
+		compositeDisposable.cancel()
+	}
+	
 	fun onFabClick() = launch(UI) {
 		val s = async(CommonPool) { myCoroutine() }.await()
-		Timber.d("async return: $s")
+		Timber.d("async return: $s, ${Thread.currentThread().name}")
 		viewState.qqq(s)
 	}
 	
-	private suspend fun myCoroutine(): String {
-		Timber.d("start qqq")
-		delay(3000)
+	private fun myCoroutine(): String {
+		Timber.d("start qqq: ${Thread.currentThread().name}")
+		//delay(3000)
+		try {
+			Thread.sleep(3000)
+		} catch(e: InterruptedException) {
+			Timber.d(e)
+		}
 		Timber.d("end qqq")
 		return "wqeweqw"
 	}
 	
-	private fun checkLocationServiceAvailability()
-	{
-		/*
-		val googleDisposable = locationInteractor.checkLocationServicesAvailability()
-			.filter({available -> !available})
-			.flatMap({_ -> locationInteractor.getLocationServicesStatus()
-				.toMaybe()
-				.subscribeOn(schedulersProvider.io())
-				.observeOn(schedulersProvider.ui())})
-//				.subscribe(status -> getViewState().showGoogleApiMessage(status), Timber::e);
-
-			.subscribeOn(schedulersProvider.io())
-			.observeOn(schedulersProvider.ui())
-			.subscribe({status -> Timber.i("Google API status: ${status}")}, {ex -> Timber.e(ex)})
-		unsubscribeOnDestroy(googleDisposable)
-		*/
-	}
-	
-	internal fun updateCurrentLocation()
+	fun updateCurrentLocation()
 	{
 		Timber.d("update current location")
 		/*
