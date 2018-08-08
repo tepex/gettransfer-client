@@ -5,8 +5,12 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 
+import com.kg.gettransfer.domain.interactor.LocationInteractor
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.MainView
+
+import org.koin.android.ext.android.inject
 
 import ru.terrakok.cicerone.Router
 
@@ -14,15 +18,25 @@ import timber.log.Timber
 
 @InjectViewState
 class MainPresenter(val router: Router): MvpPresenter<MainView>() {
+	var granted = false
+	
+	//private var locationInteractor: LocationInteractor by inject()
+	private var locationInteractor = LocationInteractor()
+	
 	override fun onFirstViewAttach()
 	{
 		Timber.d("MainPresenter.onFirstViewAttach()")
+		if(!granted) return
+		// Проверка досупности сервиса геолокации
+		val available = locationInteractor.checkLocationServicesAvailability()
+		Timber.d("location service available: $available")
+
 		updateCurrentLocation()
 	}
 	
-	/*
 	private fun checkLocationServiceAvailability()
 	{
+		/*
 		val googleDisposable = locationInteractor.checkLocationServicesAvailability()
 			.filter({available -> !available})
 			.flatMap({_ -> locationInteractor.getLocationServicesStatus()
@@ -35,8 +49,8 @@ class MainPresenter(val router: Router): MvpPresenter<MainView>() {
 			.observeOn(schedulersProvider.ui())
 			.subscribe({status -> Timber.i("Google API status: ${status}")}, {ex -> Timber.e(ex)})
 		unsubscribeOnDestroy(googleDisposable)
+		*/
 	}
-	*/
 	
 	internal fun updateCurrentLocation()
 	{

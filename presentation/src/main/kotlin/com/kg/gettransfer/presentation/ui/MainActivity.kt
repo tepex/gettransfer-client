@@ -157,6 +157,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
 			permissionsGranted = checkPermission()
+		presenter.granted = true
 		
 		setContentView(R.layout.activity_main)
 		
