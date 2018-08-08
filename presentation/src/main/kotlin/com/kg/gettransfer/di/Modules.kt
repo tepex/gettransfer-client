@@ -6,6 +6,14 @@ import android.content.SharedPreferences
 import android.location.Geocoder
 import android.preference.PreferenceManager
 
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+
+import com.kg.gettransfer.data.repository.LocationRepositoryImpl
+import com.kg.gettransfer.domain.interactor.LocationInteractor
+import com.kg.gettransfer.domain.repository.LocationRepository
+
 import org.koin.dsl.module.module
 
 import ru.terrakok.cicerone.Cicerone
@@ -20,6 +28,8 @@ import timber.log.Timber
 val AppModule = module {
 	// Util
 	single { PreferenceManager.getDefaultSharedPreferences(get()) as SharedPreferences }
+	single { LocationServices.getFusedLocationProviderClient(get<Context>()) }
+	single { GoogleApiAvailability.getInstance() }
 }
 
 val CiceroneModule = module {
@@ -28,4 +38,9 @@ val CiceroneModule = module {
 	single { get<Cicerone<Router>>().navigatorHolder }
 }
 
-val appModules = listOf(AppModule, CiceroneModule)
+val DomainModule = module {
+	single { LocationRepositoryImpl(get(), get(), get()) as LocationRepository}
+	single { LocationInteractor(get()) }
+}
+
+val appModules = listOf(AppModule, CiceroneModule, DomainModule)

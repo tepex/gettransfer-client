@@ -10,18 +10,13 @@ import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.MainView
 
-import org.koin.android.ext.android.inject
-
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
 @InjectViewState
-class MainPresenter(val router: Router): MvpPresenter<MainView>() {
+class MainPresenter(val router: Router, val locationInteractor: LocationInteractor): MvpPresenter<MainView>() {
 	var granted = false
-	
-	//private var locationInteractor: LocationInteractor by inject()
-	private var locationInteractor = LocationInteractor()
 	
 	override fun onFirstViewAttach()
 	{

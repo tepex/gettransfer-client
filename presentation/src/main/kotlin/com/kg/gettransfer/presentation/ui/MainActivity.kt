@@ -55,6 +55,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
@@ -86,13 +87,14 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	var permissionsGranted = false
 	
 	private val navigatorHolder: NavigatorHolder by inject()
-	internal val router: Router by inject()
+	private val router: Router by inject()
+	private val locationInteractor: LocationInteractor by inject()
 	
 	private var gmap: GoogleMap? = null
 	private var centerMarker: Marker? = null
 	
 	@ProvidePresenter
-	fun createMainPresenter(): MainPresenter = MainPresenter(router)
+	fun createMainPresenter(): MainPresenter = MainPresenter(router, locationInteractor)
 
 	
 	private val focusListener = View.OnFocusChangeListener {_, hasFocus ->

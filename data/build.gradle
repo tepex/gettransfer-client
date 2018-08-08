@@ -2,11 +2,13 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'realm-android'
+//apply plugin: 'realm-android'
 
+/*
 ext {
 	gson_version = '2.8.5'
 }
+*/
 
 android {
     compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
@@ -25,7 +27,6 @@ android {
             minifyEnabled false
         }
         release {
-            debuggable true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -60,10 +61,12 @@ android {
 
 // This is added automatically if Kotlin is registered in the project, but Kotlin extension functions
 // for Realm can be excluded if needed.
+/*
 realm {
 	kotlinExtensionsEnabled = true
 }
 
+*/
 
 // enable @ParametersAreNonnullByDefault annotation. See https://blog.jetbrains.com/kotlin/2017/09/kotlin-1-1-50-is-out/
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -73,16 +76,15 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 }
 
 dependencies {
+	implementation libs.kotlin
 	implementation project(":domain")
-	implementation "com.google.code.gson:gson:$gson_version"
+//	implementation "com.google.code.gson:gson:$gson_version"
     // Realm db. To presentation layer
 //    implementation 'io.realm:android-adapters:3.0.0'
 
-	implementation libs.kotlin
+    implementation libs.psLocation
     implementation libs.timber
     
-    compileOnly libs.jsr250
-	
 	testImplementation libs.junit
 	testImplementation libs.hamcrest
 	testImplementation libs.mockito
