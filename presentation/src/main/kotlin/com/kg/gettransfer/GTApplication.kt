@@ -16,7 +16,10 @@ class GTApplication: MultiDexApplication() {
 	override fun onCreate() {
 		super.onCreate()
 		// Display some logs
-		if(BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
+		if(BuildConfig.DEBUG) {
+			Timber.plant(Timber.DebugTree())
+			System.setProperty("kotlinx.coroutines.debug", "on")
+		}
 		// Start Koin
 		startKoin(this, appModules)
 	}

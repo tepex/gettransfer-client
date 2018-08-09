@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+import android.support.annotation.StringRes
 
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.NavigationView
@@ -26,6 +27,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDelegate
 
 import android.support.v7.widget.Toolbar
@@ -54,7 +56,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
+import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
+
+import com.kg.gettransfer.domain.interactor.AddressInteractor
+import com.kg.gettransfer.domain.interactor.LocationInteractor
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
@@ -62,6 +69,9 @@ import com.kg.gettransfer.presentation.view.MainView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.android.synthetic.main.nav_header_main.*
+
+import kotlin.coroutines.experimental.suspendCoroutine
+import kotlinx.coroutines.experimental.*
 
 import org.koin.android.ext.android.inject
 
@@ -86,19 +96,22 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	var permissionsGranted = false
 	
 	private val navigatorHolder: NavigatorHolder by inject()
-	internal val router: Router by inject()
+	private val router: Router by inject()
+	private val addressInteractor: AddressInteractor by inject()
+	private val locationInteractor: LocationInteractor by inject()
 	
-	private var gmap: GoogleMap? = null
+	var googleMap: GoogleMap? = null
+	
+	private var isFirst = true
 	private var centerMarker: Marker? = null
 	
 	@ProvidePresenter
-	fun createMainPresenter(): MainPresenter = MainPresenter(router)
-
+	fun createMainPresenter(): MainPresenter = MainPresenter(router, 
+		                                                     locationInteractor,
+		                                                     addressInteractor)
 	
 	private val focusListener = View.OnFocusChangeListener {_, hasFocus ->
-		if(hasFocus) {
-			presenter.onSearchClick()
-		}
+		if(hasFocus) { presenter.onSearchClick() }
 	}
 
 	private val readMoreListener = View.OnClickListener {
@@ -157,6 +170,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
 			permissionsGranted = checkPermission()
+		presenter.granted = true
 		
 		setContentView(R.layout.activity_main)
 		
@@ -198,9 +212,22 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		
 		initNavigation()
 		
+		// test
+		if(BuildConfig.DEBUG) {
+			fab.setVisibility(View.VISIBLE)
+			fab.setOnClickListener { presenter.onFabClick() }
+		}
+		else fab.setVisibility(View.GONE)
+		
+		val mapViewBundle = savedInstanceState?.getBundle(MAP_VIEW_BUNDLE_KEY)
+		isFirst = savedInstanceState == null
+		
 		Timber.d("Permissions granted: ${permissionsGranted}")
 		if(!permissionsGranted) Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
-		else initGoogleMap(savedInstanceState)
+		else {
+			
+			initGoogleMap(mapViewBundle)
+		}
 		
 		val fade = Fade()
 		fade.setDuration(500)
@@ -216,20 +243,20 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	@CallSuper
 	protected override fun onStart() {
 		super.onStart()
-		if(permissionsGranted) mapView?.onStart()
+		if(permissionsGranted) mapView.onStart()
 	}
 
 	@CallSuper
 	protected override fun onResume() {
 		super.onResume()
 		navigatorHolder.setNavigator(navigator)
-		if(permissionsGranted) mapView?.onResume()
+		if(permissionsGranted) mapView.onResume()
 	}
 	
 	@CallSuper
 	protected override fun onPause() {
 		navigatorHolder.removeNavigator()
-		if(permissionsGranted) mapView?.onPause()
+		if(permissionsGranted) mapView.onPause()
 		super.onPause()
 	}
 	
@@ -241,19 +268,19 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	@CallSuper
 	protected override fun onStop() {
-		if(permissionsGranted) mapView?.onStop()
+		if(permissionsGranted) mapView.onStop()
 		super.onStop()
 	}
 	
 	@CallSuper
 	protected override fun onDestroy() {
-		if(permissionsGranted) mapView?.onDestroy()
+		if(permissionsGranted) mapView.onDestroy()
 		super.onDestroy()
 	}
 	
 	@CallSuper
 	override fun onLowMemory() {
-		if(permissionsGranted) mapView?.onLowMemory()
+		if(permissionsGranted) mapView.onLowMemory()
 		super.onLowMemory()
 	}
 	
@@ -290,9 +317,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	}
 
 
-
-
-
 	private fun initNavigation() {
 		val versionName = packageManager.getPackageInfo(packageName, 0).versionName
 		(navFooterVersion as TextView).text = 
@@ -306,34 +330,35 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		}
 	}
 	
-	private fun initGoogleMap(savedInstanceState: Bundle?) {
-		var mapViewBundle: Bundle? = null
-		if(savedInstanceState != null)
-			mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY)
-		mapView?.onCreate(mapViewBundle)
-		mapView?.getMapAsync({ gmap -> 
-			this.gmap = gmap
+	private fun initGoogleMap(mapViewBundle: Bundle?) {
+		mapView.onCreate(mapViewBundle)
+		launch(presenter.ui, parent = presenter.compositeDisposable) {
+			googleMap = getGoogleMapAsync()
 			/*
-			this.gmap!!.setOnMyLocationButtonClickListener(OnMyLocationButtonClickListener {
+			googleMap!!.setOnMyLocationButtonClickListener(OnMyLocationButtonClickListener {
 				onClickMyLocation()
 				true
 			})
-			this.gmap!!.setOnCameraMoveListener(this)
+			googleMap!!.setOnCameraMoveListener(this)
 			presenter.updateCurrentLocation()
 			*/
 			customizeGoogleMaps()
 			//presenter.updateCurrentLocation()
-		})
-		searchFrom.address.setOnFocusChangeListener(focusListener)
-		searchTo.address.setOnFocusChangeListener(focusListener)
+			searchFrom.address.setOnFocusChangeListener(focusListener)
+			searchTo.address.setOnFocusChangeListener(focusListener)
+		}
 	}
+	
+	private suspend fun getGoogleMapAsync(): GoogleMap = suspendCoroutine { cont -> 
+		mapView.getMapAsync { cont.resume(it) } 
+	} 
 	
 	/**
 	 * Грязный хак — меняем положение нативной кнопки 'MyLocation'
 	 * https://stackoverflow.com/questions/36785542/how-to-change-the-position-of-my-location-button-in-google-maps-using-android-st
 	 */
-	private fun customizeGoogleMaps() {
-		gmap!!.setMyLocationEnabled(true)
+	private suspend fun customizeGoogleMaps() {
+		googleMap!!.setMyLocationEnabled(true)
 		val parent = (mapView?.findViewById(1) as View).parent as View
 		val myLocationBtn = parent.findViewById(MY_LOCATION_BUTTON_INDEX) as View
 		val rlp = myLocationBtn.getLayoutParams() as RelativeLayout.LayoutParams 
@@ -356,7 +381,57 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	}
 
 	/* MainView */
-	override fun qqq() {
-		Timber.d("MainActivity.qqq")
+	override fun qqq(s: String) {
+		Timber.d("MainActivity.qqq: $s")
+		Snackbar.make(drawerLayout, "qqq button: $s", Snackbar.LENGTH_SHORT).show()
 	}
+	
+	override fun blockInterface(block: Boolean) {
+	}
+	
+	override fun setMapPoint(current: LatLng) {
+		Timber.d("setMapPoint: $current")
+		if(googleMap == null) return
+		if(centerMarker == null)
+		{
+			/* Грязный хак!!! */
+			val cp = googleMap!!.cameraPosition
+			if(isFirst || cp.zoom <= 2.0)
+			{
+				val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
+				googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(current, zoom))
+			}
+			else googleMap?.moveCamera(CameraUpdateFactory.newLatLng(current))
+				centerMarker = googleMap?.addMarker(MarkerOptions().position(current))
+		}
+		else
+		{
+			googleMap?.moveCamera(CameraUpdateFactory.newLatLng(current))
+			centerMarker?.setPosition(current)
+		}
+	}
+	
+	override fun setAddressFrom(addressFrom: String) {
+		searchFrom.address.setText(addressFrom)
+	}
+	
+	override fun setAddressTo(addressTo: String) {
+		searchTo.address.setText(addressTo)
+	}
+	
+	override fun setError(@StringRes errId: Int, finish: Boolean) {
+		val builder: AlertDialog.Builder
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) builder = 
+			AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
+		else builder =  AlertDialog.Builder(this)
+			
+		builder.setTitle(R.string.err_title)
+    		.setMessage(errId)
+    		.setPositiveButton(android.R.string.ok, { dialog, _ ->
+    			dialog.dismiss()
+    			if(finish) finish()
+    		})
+    		.setIcon(android.R.drawable.ic_dialog_alert)
+    		.show()
+    }
 }
