@@ -7,7 +7,11 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.FusedLocationProviderClient
 
+import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.repository.LocationRepository
+
+import kotlin.coroutines.experimental.suspendCoroutine
+import kotlin.system.measureTimeMillis
 
 import timber.log.Timber
 
@@ -17,50 +21,21 @@ class LocationRepositoryImpl(val locationProviderClient: FusedLocationProviderCl
 
 	private var googleApiAvailable = true
 	
-	override fun checkPlayServicesAvailable(): Boolean {
+	override suspend fun checkPlayServicesAvailable(): Boolean {
 		val status = googleApiAvailability.isGooglePlayServicesAvailable(context)
 		googleApiAvailable = (status == ConnectionResult.SUCCESS)
-		Timber.d("checking GPS availability: $googleApiAvailable")
 		return googleApiAvailable
 	}
 	
 	fun getPlayServicesStatus(): Int = googleApiAvailability.isGooglePlayServicesAvailable(context)
 	
-	/*
-	
-	override fun getCurrentLocation(): Single<Point>
-	{
-		return getLastLocation().map(
-		{
-			location ->	Point(location.getLatitude(), location.getLongitude()) 
-		})
+	override suspend fun getCurrentLocation(): Point? {
+		val loc: Location? = suspendCoroutine { cont ->
+			locationProviderClient.lastLocation
+				.addOnSuccessListener { location: Location? -> cont.resume(location) }
+				.addOnFailureListener { cont.resumeWithException(it) }
+		}
+		return if(loc != null) Point(loc.latitude, loc.longitude)
+		else null
 	}
-
-	
-	
-	private fun getLastLocation(): Single<Location>
-	{
-		return Single.create(
-		{
-			emitter -> 
-				try
-				{
-					locationProviderClient.getLastLocation()
-						.addOnSuccessListener(
-						{
-							location ->
-								if(emitter.isDisposed()) return@addOnSuccessListener
-								
-								if(location != null) emitter.onSuccess(location)
-								else emitter.onError(UnknownLocationException("Last location is unknown"))
-						})
-						.addOnFailureListener({ ex -> emitter.onError(ex) })
-				}
-				catch(e:SecurityException)
-				{
-					emitter.onError(e)
-				}
-		})
-	}
-	*/
 }

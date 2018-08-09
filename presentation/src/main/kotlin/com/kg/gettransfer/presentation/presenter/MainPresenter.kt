@@ -5,13 +5,17 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 
+import com.google.android.gms.maps.model.LatLng
+
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.MainView
 
+import kotlin.coroutines.experimental.CoroutineContext
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.UI
 
@@ -24,14 +28,17 @@ class MainPresenter(val router: Router, val locationInteractor: LocationInteract
 	var granted = false
 	private val compositeDisposable = Job()
 	
+	private val ui: CoroutineContext = UI
+	private val bg: CoroutineContext = CommonPool
+	
 	override fun onFirstViewAttach()
 	{
 		Timber.d("onFirstViewAttach()")
 		if(!granted) return
 		// Проверка досупности сервиса геолокации
-		launch(UI, parent = compositeDisposable) {
-			val available = async(CommonPool) {
-				locationInteractor.checkLocationServicesAvailability() }.await()
+		launch(ui, parent = compositeDisposable) {
+			val available = withContext(bg) {
+				locationInteractor.checkLocationServicesAvailability() }
 			
 			Timber.d("location service available: $available")
 			if(!available) viewState.setError(R.string.err_location_service_not_available)
@@ -45,9 +52,10 @@ class MainPresenter(val router: Router, val locationInteractor: LocationInteract
 		compositeDisposable.cancel()
 	}
 	
-	fun onFabClick() = launch(UI) {
-		val s = async(CommonPool) { myCoroutine() }.await()
-		Timber.d("async return: $s, ${Thread.currentThread().name}")
+	fun onFabClick() = launch(ui, parent = compositeDisposable) {
+		Timber.d("Start coroutine. ${Thread.currentThread().name}")
+		val s = withContext(bg) { myCoroutine() }
+		Timber.d("end coroutine, ${Thread.currentThread().name}")
 		viewState.qqq(s)
 	}
 	
@@ -66,17 +74,20 @@ class MainPresenter(val router: Router, val locationInteractor: LocationInteract
 	fun updateCurrentLocation()
 	{
 		Timber.d("update current location")
-		/*
-		getViewState().blockInterface(true)
-		val disposable = locationInteractor.getCurrentLocation()
-			.doOnSubscribe({_ -> blockInterface(true)})
-			.doAfterTerminate({blockInterface(false)})
-			.map({point -> LatLng(point.latitude, point.longitude)})
-			.subscribeOn(schedulersProvider.io())
-			.observeOn(schedulersProvider.ui())
-			.subscribe({latLng -> onCurrentLocationChanged(latLng)}, {ex -> Timber.e(ex)})
-		unsubscribeOnDestroy(disposable)
-		*/
+		viewState.blockInterface(true)
+		launch(ui, parent = compositeDisposable) {
+			val latLng = withContext(bg) {
+				val point = locationInteractor.getCurrentLocation()
+				if(point != null) LatLng(point.latitude, point.longitude)
+				else null
+			}
+			viewState.blockInterface(false)
+			Timber.d("onCurrentLocationChanged: ${latLng}")
+			viewState.setMapPoint(latLng)
+			
+			
+			//requestAddress(latLng)
+		}
 	}
 	
 	fun onSearchClick() {

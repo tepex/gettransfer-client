@@ -56,6 +56,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
+import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.presentation.Screens
@@ -92,6 +93,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private val router: Router by inject()
 	private val locationInteractor: LocationInteractor by inject()
 	
+	private var isFirst = true
 	private var gmap: GoogleMap? = null
 	private var centerMarker: Marker? = null
 	
@@ -204,11 +206,18 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		initNavigation()
 		
 		// test
-		fab.setOnClickListener { presenter.onFabClick() }
+		if(BuildConfig.DEBUG) {
+			fab.setVisibility(View.VISIBLE)
+			fab.setOnClickListener { presenter.onFabClick() }
+		}
+		else fab.setVisibility(View.GONE)
+		
+		val mapViewBundle = savedInstanceState?.getBundle(MAP_VIEW_BUNDLE_KEY)
+		isFirst = savedInstanceState == null
 		
 		Timber.d("Permissions granted: ${permissionsGranted}")
 		if(!permissionsGranted) Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
-		else initGoogleMap(savedInstanceState)
+		else initGoogleMap(mapViewBundle)
 		
 		val fade = Fade()
 		fade.setDuration(500)
@@ -314,10 +323,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		}
 	}
 	
-	private fun initGoogleMap(savedInstanceState: Bundle?) {
-		var mapViewBundle: Bundle? = null
-		if(savedInstanceState != null)
-			mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY)
+	private fun initGoogleMap(mapViewBundle: Bundle?) {
 		mapView?.onCreate(mapViewBundle)
 		mapView?.getMapAsync({ gmap -> 
 			this.gmap = gmap
@@ -369,6 +375,32 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		Snackbar.make(drawerLayout, "qqq button: $s", Snackbar.LENGTH_SHORT).show()
 	}
 	
+	override fun blockInterface(block: Boolean) {
+	}
+	
+	override fun setMapPoint(current: LatLng?)
+	{
+		Timber.d("setMapPoint: $current")
+		if(gmap == null || current == null) return
+		if(centerMarker == null)
+		{
+			/* Грязный хак!!! */
+			val cp = gmap!!.cameraPosition
+			if(isFirst || cp.zoom <= 2.0)
+			{
+				val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
+				gmap?.moveCamera(CameraUpdateFactory.newLatLngZoom(current, zoom))
+			}
+			else gmap?.moveCamera(CameraUpdateFactory.newLatLng(current))
+				centerMarker = gmap?.addMarker(MarkerOptions().position(current))
+		}
+		else
+		{
+			gmap?.moveCamera(CameraUpdateFactory.newLatLng(current))
+			centerMarker?.setPosition(current)
+		}
+	}
+
 	override fun setError(@StringRes errId: Int) {
 		val builder: AlertDialog.Builder
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) builder = 
@@ -377,7 +409,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			
 		builder.setTitle(R.string.err_title)
     		.setMessage(errId)
-    		.setPositiveButton(android.R.string.ok, { dialog, which ->
+    		.setPositiveButton(android.R.string.ok, { dialog, _ ->
     			dialog.dismiss()
     			finish()
     		})
