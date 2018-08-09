@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.location.Location
+
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
@@ -26,10 +28,15 @@ import timber.log.Timber
 @InjectViewState
 class MainPresenter(val router: Router, val locationInteractor: LocationInteractor): MvpPresenter<MainView>() {
 	var granted = false
-	private val compositeDisposable = Job()
 	
-	private val ui: CoroutineContext = UI
-	private val bg: CoroutineContext = CommonPool
+	private var lastPoint = Point()
+	private var minDistance: Int = 0
+	private var cachedAddress = ""
+
+	val compositeDisposable = Job()
+	
+	val ui: CoroutineContext = UI
+	val bg: CoroutineContext = CommonPool
 	
 	override fun onFirstViewAttach()
 	{
@@ -41,7 +48,7 @@ class MainPresenter(val router: Router, val locationInteractor: LocationInteract
 				locationInteractor.checkLocationServicesAvailability() }
 			
 			Timber.d("location service available: $available")
-			if(!available) viewState.setError(R.string.err_location_service_not_available)
+			if(!available) viewState.setError(R.string.err_location_service_not_available, true)
 			else updateCurrentLocation()
 		}
 	}
@@ -83,11 +90,36 @@ class MainPresenter(val router: Router, val locationInteractor: LocationInteract
 			}
 			viewState.blockInterface(false)
 			Timber.d("onCurrentLocationChanged: ${latLng}")
-			viewState.setMapPoint(latLng)
-			
-			
-			//requestAddress(latLng)
+			if(latLng != null) {
+				viewState.setMapPoint(latLng)
+				requestAddress(latLng)
+			}
+			//else viewState.setError()
 		}
+	}
+	
+	private fun requestAddress(latLng: LatLng) {
+		/*
+		val point = Point(latLng.latitude, latLng.longitude)
+		// Не запрашивать адрес, если перемещение составило менее minDistance
+		val dx = getDistance(point)
+		if(dx < minDistance) return
+		lastPoint = point;
+		
+		val disposable = addressInteractor.getAddressByLocation(point)
+			.subscribeOn(schedulersProvider.io())
+			.observeOn(schedulersProvider.ui())
+			.subscribe({address -> onAddressAnswer(address)}, {ex -> Timber.e(ex)})
+		unsubscribeOnDestroy(disposable)
+		*/
+	}
+	
+	private fun getDistance(point: Point): Float
+	{
+		val distance = FloatArray(2)
+		Location.distanceBetween(lastPoint.latitude, lastPoint.longitude,
+			                     point.latitude, point.longitude, distance)
+		return distance.get(0)
 	}
 	
 	fun onSearchClick() {

@@ -17,6 +17,6 @@ interface MainView: MvpView {
 	fun qqq(s: String)
 	
 	fun blockInterface(block: Boolean)
-	fun setMapPoint(current: LatLng?)
-	fun setError(@StringRes errId: Int)
+	fun setMapPoint(current: LatLng)
+	fun setError(@StringRes errId: Int, finish: Boolean = false)
 }

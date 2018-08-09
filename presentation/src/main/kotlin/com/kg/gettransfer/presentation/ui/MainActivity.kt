@@ -67,6 +67,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
+import kotlin.coroutines.experimental.suspendCoroutine
+import kotlinx.coroutines.experimental.*
+
 import org.koin.android.ext.android.inject
 
 import ru.terrakok.cicerone.Navigator
@@ -93,8 +96,9 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private val router: Router by inject()
 	private val locationInteractor: LocationInteractor by inject()
 	
+	var googleMap: GoogleMap? = null
+	
 	private var isFirst = true
-	private var gmap: GoogleMap? = null
 	private var centerMarker: Marker? = null
 	
 	@ProvidePresenter
@@ -217,7 +221,10 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		
 		Timber.d("Permissions granted: ${permissionsGranted}")
 		if(!permissionsGranted) Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
-		else initGoogleMap(mapViewBundle)
+		else {
+			
+			initGoogleMap(mapViewBundle)
+		}
 		
 		val fade = Fade()
 		fade.setDuration(500)
@@ -233,20 +240,20 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	@CallSuper
 	protected override fun onStart() {
 		super.onStart()
-		if(permissionsGranted) mapView?.onStart()
+		if(permissionsGranted) mapView.onStart()
 	}
 
 	@CallSuper
 	protected override fun onResume() {
 		super.onResume()
 		navigatorHolder.setNavigator(navigator)
-		if(permissionsGranted) mapView?.onResume()
+		if(permissionsGranted) mapView.onResume()
 	}
 	
 	@CallSuper
 	protected override fun onPause() {
 		navigatorHolder.removeNavigator()
-		if(permissionsGranted) mapView?.onPause()
+		if(permissionsGranted) mapView.onPause()
 		super.onPause()
 	}
 	
@@ -258,19 +265,19 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	@CallSuper
 	protected override fun onStop() {
-		if(permissionsGranted) mapView?.onStop()
+		if(permissionsGranted) mapView.onStop()
 		super.onStop()
 	}
 	
 	@CallSuper
 	protected override fun onDestroy() {
-		if(permissionsGranted) mapView?.onDestroy()
+		if(permissionsGranted) mapView.onDestroy()
 		super.onDestroy()
 	}
 	
 	@CallSuper
 	override fun onLowMemory() {
-		if(permissionsGranted) mapView?.onLowMemory()
+		if(permissionsGranted) mapView.onLowMemory()
 		super.onLowMemory()
 	}
 	
@@ -307,9 +314,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	}
 
 
-
-
-
 	private fun initNavigation() {
 		val versionName = packageManager.getPackageInfo(packageName, 0).versionName
 		(navFooterVersion as TextView).text = 
@@ -324,30 +328,34 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	}
 	
 	private fun initGoogleMap(mapViewBundle: Bundle?) {
-		mapView?.onCreate(mapViewBundle)
-		mapView?.getMapAsync({ gmap -> 
-			this.gmap = gmap
+		mapView.onCreate(mapViewBundle)
+		launch(presenter.ui, parent = presenter.compositeDisposable) {
+			googleMap = getGoogleMapAsync()
 			/*
-			this.gmap!!.setOnMyLocationButtonClickListener(OnMyLocationButtonClickListener {
+			googleMap!!.setOnMyLocationButtonClickListener(OnMyLocationButtonClickListener {
 				onClickMyLocation()
 				true
 			})
-			this.gmap!!.setOnCameraMoveListener(this)
+			googleMap!!.setOnCameraMoveListener(this)
 			presenter.updateCurrentLocation()
 			*/
 			customizeGoogleMaps()
 			//presenter.updateCurrentLocation()
-		})
-		searchFrom.address.setOnFocusChangeListener(focusListener)
-		searchTo.address.setOnFocusChangeListener(focusListener)
+			searchFrom.address.setOnFocusChangeListener(focusListener)
+			searchTo.address.setOnFocusChangeListener(focusListener)
+		}
 	}
+	
+	private suspend fun getGoogleMapAsync(): GoogleMap = suspendCoroutine { cont -> 
+		mapView.getMapAsync { cont.resume(it) } 
+	} 
 	
 	/**
 	 * Грязный хак — меняем положение нативной кнопки 'MyLocation'
 	 * https://stackoverflow.com/questions/36785542/how-to-change-the-position-of-my-location-button-in-google-maps-using-android-st
 	 */
-	private fun customizeGoogleMaps() {
-		gmap!!.setMyLocationEnabled(true)
+	private suspend fun customizeGoogleMaps() {
+		googleMap!!.setMyLocationEnabled(true)
 		val parent = (mapView?.findViewById(1) as View).parent as View
 		val myLocationBtn = parent.findViewById(MY_LOCATION_BUTTON_INDEX) as View
 		val rlp = myLocationBtn.getLayoutParams() as RelativeLayout.LayoutParams 
@@ -378,30 +386,30 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	override fun blockInterface(block: Boolean) {
 	}
 	
-	override fun setMapPoint(current: LatLng?)
+	override fun setMapPoint(current: LatLng)
 	{
 		Timber.d("setMapPoint: $current")
-		if(gmap == null || current == null) return
+		if(googleMap == null) return
 		if(centerMarker == null)
 		{
 			/* Грязный хак!!! */
-			val cp = gmap!!.cameraPosition
+			val cp = googleMap!!.cameraPosition
 			if(isFirst || cp.zoom <= 2.0)
 			{
 				val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
-				gmap?.moveCamera(CameraUpdateFactory.newLatLngZoom(current, zoom))
+				googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(current, zoom))
 			}
-			else gmap?.moveCamera(CameraUpdateFactory.newLatLng(current))
-				centerMarker = gmap?.addMarker(MarkerOptions().position(current))
+			else googleMap?.moveCamera(CameraUpdateFactory.newLatLng(current))
+				centerMarker = googleMap?.addMarker(MarkerOptions().position(current))
 		}
 		else
 		{
-			gmap?.moveCamera(CameraUpdateFactory.newLatLng(current))
+			googleMap?.moveCamera(CameraUpdateFactory.newLatLng(current))
 			centerMarker?.setPosition(current)
 		}
 	}
 
-	override fun setError(@StringRes errId: Int) {
+	override fun setError(@StringRes errId: Int, finish: Boolean) {
 		val builder: AlertDialog.Builder
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) builder = 
 			AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
@@ -411,7 +419,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
     		.setMessage(errId)
     		.setPositiveButton(android.R.string.ok, { dialog, _ ->
     			dialog.dismiss()
-    			finish()
+    			if(finish) finish()
     		})
     		.setIcon(android.R.drawable.ic_dialog_alert)
     		.show()
