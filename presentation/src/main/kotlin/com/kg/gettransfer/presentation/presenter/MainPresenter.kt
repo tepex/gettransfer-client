@@ -113,12 +113,12 @@ class MainPresenter(private val router: Router,
 		lastPoint = point;
 		Timber.d("last point: $latLng")
 		launch(ui, parent = compositeDisposable) {
-			val address = withContext(bg) {
+			val addr = withContext(bg) {
 				addressInteractor.getAddressByLocation(point)
 			}
-			if(address != null && !cachedAddress.equals(address)) {
-				viewState.setAddressFrom(address)
-				cachedAddress = address
+			if(addr != null && !cachedAddress.equals(addr.address)) {
+				viewState.setAddressFrom(addr.address)
+				cachedAddress = addr.address
 				viewState.blockInterface(false)
 			}
 		}
