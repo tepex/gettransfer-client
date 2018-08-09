@@ -10,9 +10,16 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
+import com.kg.gettransfer.data.repository.AddressRepositoryImpl
 import com.kg.gettransfer.data.repository.LocationRepositoryImpl
+
+import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
+
+import com.kg.gettransfer.domain.repository.AddressRepository
 import com.kg.gettransfer.domain.repository.LocationRepository
+
+import java.util.Locale
 
 import org.koin.dsl.module.module
 
@@ -27,9 +34,11 @@ import timber.log.Timber
  */
 val AppModule = module {
 	// Util
+	single { Locale.getDefault() }
 	single { PreferenceManager.getDefaultSharedPreferences(get()) as SharedPreferences }
 	single { LocationServices.getFusedLocationProviderClient(get<Context>()) }
 	single { GoogleApiAvailability.getInstance() }
+	single { Geocoder(get(), get()) }
 }
 
 val CiceroneModule = module {
@@ -39,7 +48,9 @@ val CiceroneModule = module {
 }
 
 val DomainModule = module {
-	single { LocationRepositoryImpl(get(), get(), get()) as LocationRepository}
+	single { AddressRepositoryImpl(get()) as AddressRepository }
+	single { LocationRepositoryImpl(get(), get(), get()) as LocationRepository }
+	single { AddressInteractor(get()) }
 	single { LocationInteractor(get()) }
 }
 

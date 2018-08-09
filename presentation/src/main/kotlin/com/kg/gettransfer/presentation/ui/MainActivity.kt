@@ -58,7 +58,10 @@ import com.google.android.gms.maps.model.MarkerOptions
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
+
+import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
@@ -94,6 +97,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	private val navigatorHolder: NavigatorHolder by inject()
 	private val router: Router by inject()
+	private val addressInteractor: AddressInteractor by inject()
 	private val locationInteractor: LocationInteractor by inject()
 	
 	var googleMap: GoogleMap? = null
@@ -102,13 +106,12 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private var centerMarker: Marker? = null
 	
 	@ProvidePresenter
-	fun createMainPresenter(): MainPresenter = MainPresenter(router, locationInteractor)
-
+	fun createMainPresenter(): MainPresenter = MainPresenter(router, 
+		                                                     locationInteractor,
+		                                                     addressInteractor)
 	
 	private val focusListener = View.OnFocusChangeListener {_, hasFocus ->
-		if(hasFocus) {
-			presenter.onSearchClick()
-		}
+		if(hasFocus) { presenter.onSearchClick() }
 	}
 
 	private val readMoreListener = View.OnClickListener {
@@ -386,8 +389,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	override fun blockInterface(block: Boolean) {
 	}
 	
-	override fun setMapPoint(current: LatLng)
-	{
+	override fun setMapPoint(current: LatLng) {
 		Timber.d("setMapPoint: $current")
 		if(googleMap == null) return
 		if(centerMarker == null)
@@ -408,7 +410,15 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			centerMarker?.setPosition(current)
 		}
 	}
-
+	
+	override fun setAddressFrom(addressFrom: String) {
+		searchFrom.address.setText(addressFrom)
+	}
+	
+	override fun setAddressTo(addressTo: String) {
+		searchTo.address.setText(addressTo)
+	}
+	
 	override fun setError(@StringRes errId: Int, finish: Boolean) {
 		val builder: AlertDialog.Builder
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) builder = 

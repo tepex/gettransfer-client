@@ -18,5 +18,7 @@ interface MainView: MvpView {
 	
 	fun blockInterface(block: Boolean)
 	fun setMapPoint(current: LatLng)
+	fun setAddressFrom(addressFrom: String)
+	fun setAddressTo(addressTo: String)
 	fun setError(@StringRes errId: Int, finish: Boolean = false)
 }

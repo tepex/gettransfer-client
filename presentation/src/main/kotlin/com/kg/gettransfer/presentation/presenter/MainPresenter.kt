@@ -12,6 +12,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.Point
+
+import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 
 import com.kg.gettransfer.presentation.Screens
@@ -26,7 +28,10 @@ import ru.terrakok.cicerone.Router
 import timber.log.Timber
 
 @InjectViewState
-class MainPresenter(val router: Router, val locationInteractor: LocationInteractor): MvpPresenter<MainView>() {
+class MainPresenter(private val router: Router, 
+	                private val locationInteractor: LocationInteractor,
+	                private val addressInteractor: AddressInteractor): MvpPresenter<MainView>() {
+	                
 	var granted = false
 	
 	private var lastPoint = Point()
@@ -88,39 +93,46 @@ class MainPresenter(val router: Router, val locationInteractor: LocationInteract
 				if(point != null) LatLng(point.latitude, point.longitude)
 				else null
 			}
-			viewState.blockInterface(false)
 			Timber.d("onCurrentLocationChanged: ${latLng}")
 			if(latLng != null) {
 				viewState.setMapPoint(latLng)
 				requestAddress(latLng)
 			}
-			//else viewState.setError()
+			else {
+				viewState.blockInterface(false)
+				//viewState.setError()
+			}
 		}
 	}
 	
 	private fun requestAddress(latLng: LatLng) {
-		/*
 		val point = Point(latLng.latitude, latLng.longitude)
 		// Не запрашивать адрес, если перемещение составило менее minDistance
 		val dx = getDistance(point)
 		if(dx < minDistance) return
 		lastPoint = point;
-		
-		val disposable = addressInteractor.getAddressByLocation(point)
-			.subscribeOn(schedulersProvider.io())
-			.observeOn(schedulersProvider.ui())
-			.subscribe({address -> onAddressAnswer(address)}, {ex -> Timber.e(ex)})
-		unsubscribeOnDestroy(disposable)
-		*/
+		Timber.d("last point: $latLng")
+		launch(ui, parent = compositeDisposable) {
+			val address = withContext(bg) {
+				addressInteractor.getAddressByLocation(point)
+			}
+			if(address != null && !cachedAddress.equals(address)) {
+				viewState.setAddressFrom(address)
+				cachedAddress = address
+				viewState.blockInterface(false)
+			}
+		}
 	}
 	
-	private fun getDistance(point: Point): Float
-	{
+	private fun getDistance(point: Point): Float {
 		val distance = FloatArray(2)
 		Location.distanceBetween(lastPoint.latitude, lastPoint.longitude,
 			                     point.latitude, point.longitude, distance)
 		return distance.get(0)
 	}
+	
+	
+	
 	
 	fun onSearchClick() {
 		Timber.d("onSearchClick")
