@@ -14,6 +14,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.Utils
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 
@@ -40,6 +41,8 @@ class MainPresenter(private val cc: CoroutineContexts,
 
 	val compositeDisposable = Job()
 	
+	val utils = Utils(cc)
+	
 	override fun onFirstViewAttach()
 	{
 		Timber.d("onFirstViewAttach()")
@@ -61,9 +64,11 @@ class MainPresenter(private val cc: CoroutineContexts,
 		compositeDisposable.cancel()
 	}
 	
-	fun onFabClick() = launch(cc.ui, parent = compositeDisposable) {
+//	fun onFabClick() = launch(cc.ui, parent = compositeDisposable) {
+//val s = withContext(cc.bg) { myCoroutine() }
+	fun onFabClick() = utils.launchAsync(compositeDisposable) {
 		Timber.d("Start coroutine. ${Thread.currentThread().name}")
-		val s = withContext(cc.bg) { myCoroutine() }
+		val s = utils.asyncAwait { myCoroutine() }
 		Timber.d("end coroutine, ${Thread.currentThread().name}")
 		viewState.qqq(s)
 	}
@@ -72,7 +77,7 @@ class MainPresenter(private val cc: CoroutineContexts,
 		Timber.d("start qqq: ${Thread.currentThread().name}")
 		//delay(3000)
 		try {
-			Thread.sleep(3000)
+			Thread.sleep(2000)
 		} catch(e: InterruptedException) {
 			Timber.d(e)
 		}
