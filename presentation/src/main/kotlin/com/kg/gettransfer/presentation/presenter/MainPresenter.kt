@@ -48,20 +48,16 @@ class MainPresenter(private val cc: CoroutineContexts,
 		Timber.d("onFirstViewAttach()")
 		if(!granted) return
 		// Проверка досупности сервиса геолокации
-		launch(cc.ui, parent = compositeDisposable) {
-			val available = withContext(cc.bg) {
-				locationInteractor.checkLocationServicesAvailability() }
-			
-			Timber.d("location service available: $available")
-			if(!available) viewState.setError(R.string.err_location_service_not_available, true)
-			else updateCurrentLocation()
-		}
+		if(locationInteractor.checkLocationServicesAvailability())
+			updateCurrentLocation()
+		else viewState.setError(R.string.err_location_service_not_available, true)
 	}
 	
 	@CallSuper
 	override fun onDestroy() {
-		super.onDestroy()
+		locationInteractor.cancel()
 		compositeDisposable.cancel()
+		super.onDestroy()
 	}
 	
 //	fun onFabClick() = launch(cc.ui, parent = compositeDisposable) {
@@ -88,23 +84,15 @@ class MainPresenter(private val cc: CoroutineContexts,
 	fun updateCurrentLocation()
 	{
 		Timber.d("update current location")
+		
 		viewState.blockInterface(true)
-		launch(cc.ui, parent = compositeDisposable) {
-			val latLng = withContext(cc.bg) {
-				val point = locationInteractor.getCurrentLocation()
-				if(point != null) LatLng(point.latitude, point.longitude)
-				else null
-			}
-			Timber.d("onCurrentLocationChanged: ${latLng}")
-			if(latLng != null) {
-				viewState.setMapPoint(latLng)
-				requestAddress(latLng)
-			}
-			else {
-				viewState.blockInterface(false)
-				//viewState.setError()
-			}
+		val point = locationInteractor.getCurrentLocation()
+		if(point != null) {
+			val latLng = LatLng(point.latitude, point.longitude)
+			viewState.setMapPoint(latLng)
+			requestAddress(latLng)
 		}
+		viewState.blockInterface(false)
 	}
 	
 	private fun requestAddress(latLng: LatLng) {

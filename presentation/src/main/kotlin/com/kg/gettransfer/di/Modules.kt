@@ -55,7 +55,7 @@ val domainModule = module {
 	single { AddressRepositoryImpl(get()) as AddressRepository }
 	single { LocationRepositoryImpl(get(), get(), get()) as LocationRepository }
 	single { AddressInteractor(get()) }
-	single { LocationInteractor(get()) }
+	single { LocationInteractor(get(), get()) }
 }
 
 val androidModule = module {

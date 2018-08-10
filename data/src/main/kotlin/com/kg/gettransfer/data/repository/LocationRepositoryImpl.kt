@@ -8,6 +8,7 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.FusedLocationProviderClient
 
 import com.kg.gettransfer.domain.model.Point
+import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.repository.LocationRepository
 
 import kotlin.coroutines.experimental.suspendCoroutine
@@ -21,7 +22,7 @@ class LocationRepositoryImpl(val locationProviderClient: FusedLocationProviderCl
 
 	private var googleApiAvailable = true
 	
-	override suspend fun checkPlayServicesAvailable(): Boolean {
+	override fun checkPlayServicesAvailable(): Boolean {
 		val status = googleApiAvailability.isGooglePlayServicesAvailable(context)
 		googleApiAvailable = (status == ConnectionResult.SUCCESS)
 		return googleApiAvailable
@@ -29,7 +30,11 @@ class LocationRepositoryImpl(val locationProviderClient: FusedLocationProviderCl
 	
 	fun getPlayServicesStatus(): Int = googleApiAvailability.isGooglePlayServicesAvailable(context)
 	
-	override suspend fun getCurrentLocation(): Point? {
+	override suspend fun getCurrentLocation(): Result<Point> {
+		
+		
+		
+		
 		val loc: Location? = suspendCoroutine { cont ->
 			locationProviderClient.lastLocation
 				.addOnSuccessListener { location: Location? -> cont.resume(location) }
