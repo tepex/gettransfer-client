@@ -13,22 +13,22 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.Point
 
+import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.MainView
 
-import kotlin.coroutines.experimental.CoroutineContext
 import kotlinx.coroutines.experimental.*
-import kotlinx.coroutines.experimental.android.UI
 
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
 @InjectViewState
-class MainPresenter(private val router: Router, 
+class MainPresenter(private val cc: CoroutineContexts,
+	                private val router: Router,
 	                private val locationInteractor: LocationInteractor,
 	                private val addressInteractor: AddressInteractor): MvpPresenter<MainView>() {
 	                
@@ -40,16 +40,13 @@ class MainPresenter(private val router: Router,
 
 	val compositeDisposable = Job()
 	
-	val ui: CoroutineContext = UI
-	val bg: CoroutineContext = CommonPool
-	
 	override fun onFirstViewAttach()
 	{
 		Timber.d("onFirstViewAttach()")
 		if(!granted) return
 		// Проверка досупности сервиса геолокации
-		launch(ui, parent = compositeDisposable) {
-			val available = withContext(bg) {
+		launch(cc.ui, parent = compositeDisposable) {
+			val available = withContext(cc.bg) {
 				locationInteractor.checkLocationServicesAvailability() }
 			
 			Timber.d("location service available: $available")
@@ -64,9 +61,9 @@ class MainPresenter(private val router: Router,
 		compositeDisposable.cancel()
 	}
 	
-	fun onFabClick() = launch(ui, parent = compositeDisposable) {
+	fun onFabClick() = launch(cc.ui, parent = compositeDisposable) {
 		Timber.d("Start coroutine. ${Thread.currentThread().name}")
-		val s = withContext(bg) { myCoroutine() }
+		val s = withContext(cc.bg) { myCoroutine() }
 		Timber.d("end coroutine, ${Thread.currentThread().name}")
 		viewState.qqq(s)
 	}
@@ -87,8 +84,8 @@ class MainPresenter(private val router: Router,
 	{
 		Timber.d("update current location")
 		viewState.blockInterface(true)
-		launch(ui, parent = compositeDisposable) {
-			val latLng = withContext(bg) {
+		launch(cc.ui, parent = compositeDisposable) {
+			val latLng = withContext(cc.bg) {
 				val point = locationInteractor.getCurrentLocation()
 				if(point != null) LatLng(point.latitude, point.longitude)
 				else null
@@ -112,8 +109,8 @@ class MainPresenter(private val router: Router,
 		if(dx < minDistance) return
 		lastPoint = point;
 		Timber.d("last point: $latLng")
-		launch(ui, parent = compositeDisposable) {
-			val addr = withContext(bg) {
+		launch(cc.ui, parent = compositeDisposable) {
+			val addr = withContext(cc.bg) {
 				addressInteractor.getAddressByLocation(point)
 			}
 			if(addr != null && !cachedAddress.equals(addr.address)) {

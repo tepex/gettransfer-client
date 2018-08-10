@@ -18,7 +18,7 @@ buildscript {
 		
 		libs = [
 			kotlin     : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
-			coroutines : ("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"),
+			coroutines : ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"),
 //    		psMaps     : ("com.google.android.gms:play-services-maps:${PLAY_SERVICES_VERSION}"),
     		psLocation : ("com.google.android.gms:play-services-location:$gms_version"),
 			timber     : ("com.jakewharton.timber:timber:$timber_version"),

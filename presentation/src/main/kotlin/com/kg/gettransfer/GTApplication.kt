@@ -5,7 +5,7 @@ import android.content.pm.ApplicationInfo
 import android.support.annotation.CallSuper
 import android.support.multidex.MultiDexApplication
 
-import com.kg.gettransfer.di.appModules
+import com.kg.gettransfer.di.*
 
 import org.koin.android.ext.android.startKoin
 
@@ -21,6 +21,6 @@ class GTApplication: MultiDexApplication() {
 			System.setProperty("kotlinx.coroutines.debug", "on")
 		}
 		// Start Koin
-		startKoin(this, appModules)
+		startKoin(this, listOf(appModule, ciceroneModule, domainModule, androidModule))
 	}
 }

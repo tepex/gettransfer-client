@@ -3,6 +3,7 @@ apply plugin: 'kotlin'
 
 dependencies {
 	implementation libs.kotlin
+	implementation libs.coroutines
 	testImplementation libs.junit
 	testImplementation libs.hamcrest
 	testImplementation libs.mockito

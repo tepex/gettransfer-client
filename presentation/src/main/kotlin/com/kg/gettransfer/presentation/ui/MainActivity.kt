@@ -59,6 +59,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.domain.CoroutineContexts
+
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 
@@ -99,6 +101,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private val router: Router by inject()
 	private val addressInteractor: AddressInteractor by inject()
 	private val locationInteractor: LocationInteractor by inject()
+	private val coroutineContexts: CoroutineContexts by inject()
 	
 	var googleMap: GoogleMap? = null
 	
@@ -106,7 +109,8 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private var centerMarker: Marker? = null
 	
 	@ProvidePresenter
-	fun createMainPresenter(): MainPresenter = MainPresenter(router, 
+	fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
+		                                                     router,
 		                                                     locationInteractor,
 		                                                     addressInteractor)
 	
@@ -332,7 +336,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	private fun initGoogleMap(mapViewBundle: Bundle?) {
 		mapView.onCreate(mapViewBundle)
-		launch(presenter.ui, parent = presenter.compositeDisposable) {
+		launch(coroutineContexts.ui, parent = presenter.compositeDisposable) {
 			googleMap = getGoogleMapAsync()
 			/*
 			googleMap!!.setOnMyLocationButtonClickListener(OnMyLocationButtonClickListener {
