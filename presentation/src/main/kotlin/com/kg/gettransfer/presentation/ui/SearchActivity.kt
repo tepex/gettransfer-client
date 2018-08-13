@@ -64,11 +64,13 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	private val addressInteractor: AddressInteractor by inject()
 	private val coroutineContexts: CoroutineContexts by inject()
 	
+	private val FADE_DURATION  = 500L
+	private val SLIDE_DURATION = 500L
+	
 	@ProvidePresenter
 	fun createSearchPresenter(): SearchPresenter = SearchPresenter(coroutineContexts,
 		                                                     router,
 		                                                     addressInteractor)
-	
 	init {
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 	}
@@ -85,12 +87,14 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		supportActionBar?.setDisplayShowHomeEnabled(true)
 		(toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 		
+		searchTo.requestFocus()
+		
 		val fade = Fade()
-		fade.setDuration(500)
+		fade.setDuration(FADE_DURATION)
 		getWindow().setEnterTransition(fade)
 		
 		val slide = Slide()
-		slide.setDuration(500)
+		slide.setDuration(SLIDE_DURATION)
 		getWindow().setReturnTransition(slide)
 	}
 
