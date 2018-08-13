@@ -27,7 +27,6 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 
 import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDelegate
 
 import android.support.v7.widget.Toolbar
@@ -387,10 +386,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	}
 
 	/* MainView */
-	override fun qqq(s: String) {
-		Timber.d("MainActivity.qqq: $s")
-		Snackbar.make(drawerLayout, "qqq button: $s", Snackbar.LENGTH_SHORT).show()
-	}
 	
 	override fun blockInterface(block: Boolean) {
 	}
@@ -426,18 +421,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	}
 	
 	override fun setError(@StringRes errId: Int, finish: Boolean) {
-		val builder: AlertDialog.Builder
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) builder = 
-			AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
-		else builder =  AlertDialog.Builder(this)
-			
-		builder.setTitle(R.string.err_title)
-    		.setMessage(errId)
-    		.setPositiveButton(android.R.string.ok, { dialog, _ ->
-    			dialog.dismiss()
-    			if(finish) finish()
-    		})
-    		.setIcon(android.R.drawable.ic_dialog_alert)
-    		.show()
+		Utils.showError(this, errId, finish)
     }
 }

@@ -6,4 +6,5 @@ import com.kg.gettransfer.domain.model.Point
 interface AddressRepository
 {
 	fun getAddressByLocation(point: Point): GTAddress?
+	fun getCachedAddress(): GTAddress?
 }

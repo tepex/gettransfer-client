@@ -66,7 +66,6 @@ class MainPresenter(private val cc: CoroutineContexts,
 		Timber.d("Start coroutine. ${Thread.currentThread().name}")
 		val s = utils.asyncAwait { myCoroutine() }
 		Timber.d("end coroutine, ${Thread.currentThread().name}")
-		viewState.qqq(s)
 	}
 	
 	private fun myCoroutine(): String {

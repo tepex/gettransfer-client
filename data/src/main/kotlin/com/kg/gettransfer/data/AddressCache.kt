@@ -28,6 +28,8 @@ class AddressCache(private val minDistance: Int = 0) {
 		this.address = address
 	}
 	
+	fun getLastAddress(): GTAddress? = address
+	
 	/**
 	 * Проверка превышения минимального расстояния.
 	 */
@@ -35,7 +37,7 @@ class AddressCache(private val minDistance: Int = 0) {
 		if(this.point == null) return false
 		val lastPoint = this.point
 		val distance = FloatArray(2)
-		Location.distanceBetween(lastPoint!!.latitude, lastPoint!!.longitude,
+		Location.distanceBetween(lastPoint!!.latitude, lastPoint.longitude,
 			                     point.latitude, point.longitude, distance)
 		return distance.get(0) <= minDistance
 	}

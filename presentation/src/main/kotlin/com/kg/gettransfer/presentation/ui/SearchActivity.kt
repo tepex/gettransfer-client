@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+import android.support.annotation.StringRes
 
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.Snackbar
@@ -36,6 +37,11 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+
+import com.kg.gettransfer.domain.CoroutineContexts
+
+import com.kg.gettransfer.domain.interactor.AddressInteractor
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
@@ -46,11 +52,22 @@ import kotlinx.android.synthetic.main.toolbar.*
 
 import org.koin.android.ext.android.inject
 
+import ru.terrakok.cicerone.Router
+
 import timber.log.Timber
 
 class SearchActivity: MvpAppCompatActivity(), SearchView {
 	@InjectPresenter
 	internal lateinit var presenter: SearchPresenter
+	
+	private val router: Router by inject()
+	private val addressInteractor: AddressInteractor by inject()
+	private val coroutineContexts: CoroutineContexts by inject()
+	
+	@ProvidePresenter
+	fun createSearchPresenter(): SearchPresenter = SearchPresenter(coroutineContexts,
+		                                                     router,
+		                                                     addressInteractor)
 	
 	init {
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -79,5 +96,20 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 
 	override fun onBackPressed() {
 		presenter.onBackCommandClick() 
+	}
+	
+	/* SearchView */
+	override fun blockInterface(block: Boolean) {}
+	
+	override fun setAddressFrom(addressFrom: String) {
+		searchFrom.address.setText(addressFrom)
+	}
+	
+	override fun setAddressTo(addressTo: String) {
+		searchTo.address.setText(addressTo)
+	}
+	
+	override fun setError(@StringRes errId: Int, finish: Boolean) {
+		Utils.showError(this, errId, finish)
 	}
 }

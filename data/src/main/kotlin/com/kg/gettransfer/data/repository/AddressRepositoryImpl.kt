@@ -24,4 +24,6 @@ class AddressRepositoryImpl(private val geocoder: Geocoder): AddressRepository {
 		}
 		return address
 	}
+	
+	override fun getCachedAddress() = addressCache.getLastAddress()
 }

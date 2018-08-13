@@ -6,4 +6,5 @@ import com.kg.gettransfer.domain.repository.AddressRepository
 class AddressInteractor(private val repository: AddressRepository)
 {
 	fun getAddressByLocation(point: Point) = repository.getAddressByLocation(point)
+	fun getCachedAddress() = repository.getCachedAddress()
 }
