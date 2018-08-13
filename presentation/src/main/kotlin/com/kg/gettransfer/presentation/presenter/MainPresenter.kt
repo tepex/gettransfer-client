@@ -49,7 +49,9 @@ class MainPresenter(private val cc: CoroutineContexts,
 			Timber.d("onFirstViewAttach()")
 			if(granted) {
 				// Проверка досупности сервиса геолокации
-				val available = locationInteractor.checkLocationServicesAvailability()
+				val available = utils.asyncAwait {
+					locationInteractor.checkLocationServicesAvailability() 
+				}
 				if(available) updateCurrentLocation()
 				else viewState.setError(R.string.err_location_service_not_available, true)
 			}
@@ -98,17 +100,13 @@ class MainPresenter(private val cc: CoroutineContexts,
 		viewState.blockInterface(false)
 	}
 	
-	private fun requestAddress(latLng: LatLng) {
+	private fun requestAddress(latLng: LatLng) = utils.launchAsync(compositeDisposable) {
 		val point = Point(latLng.latitude, latLng.longitude)
 		// Не запрашивать адрес, если перемещение составило менее minDistance
-		val dx = getDistance(point)
-		if(dx < minDistance) return
-		lastPoint = point;
-		Timber.d("last point: $latLng")
-		launch(cc.ui, parent = compositeDisposable) {
-			val addr = withContext(cc.bg) {
-				addressInteractor.getAddressByLocation(point)
-			}
+		if(getDistance(point) > minDistance) {
+			lastPoint = point;
+			Timber.d("last point: $latLng")
+			val addr = utils.asyncAwait { addressInteractor.getAddressByLocation(point) }
 			if(addr != null && !cachedAddress.equals(addr.address)) {
 				viewState.setAddressFrom(addr.address)
 				cachedAddress = addr.address
