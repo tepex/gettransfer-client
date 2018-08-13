@@ -12,7 +12,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.Utils
+import com.kg.gettransfer.domain.AsyncUtils
 
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
@@ -42,7 +42,7 @@ class MainPresenter(private val cc: CoroutineContexts,
 
 	val compositeDisposable = Job()
 	
-	val utils = Utils(cc)
+	val utils = AsyncUtils(cc)
 	
 	override fun onFirstViewAttach() {
 		utils.launchAsync(compositeDisposable) {

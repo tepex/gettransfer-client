@@ -15,7 +15,7 @@ import kotlinx.coroutines.experimental.*
  * val result2 = async { ...do something asynchronous... }
  * processResults(result1.await(), result2.await())
  */
-class Utils(private val cc: CoroutineContexts) {
+class AsyncUtils(private val cc: CoroutineContexts) {
 	fun launchAsync(root: Job, block: suspend CoroutineScope.() -> Unit): Job {
 		return launch(cc.ui, parent = root) { block() }
 	}
