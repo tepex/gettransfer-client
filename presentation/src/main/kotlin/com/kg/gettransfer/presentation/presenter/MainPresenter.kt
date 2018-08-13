@@ -36,10 +36,6 @@ class MainPresenter(private val cc: CoroutineContexts,
 	                
 	var granted = false
 	
-	private var lastPoint = Point()
-	private var minDistance: Int = 0
-	private var cachedAddress = ""
-
 	val compositeDisposable = Job()
 	
 	val utils = AsyncUtils(cc)
@@ -89,41 +85,18 @@ class MainPresenter(private val cc: CoroutineContexts,
 		Timber.d("update current location")
 		viewState.blockInterface(true)
 		 
-		val result = locationInteractor.getCurrentLocation()
+		val result = utils.asyncAwait { locationInteractor.getCurrentLocation() }
 		if(result.point != null) {
 			val point: Point = result.point as Point
 			val latLng = LatLng(point.latitude, point.longitude)
 			viewState.setMapPoint(latLng)
-			requestAddress(latLng)
+			
+			val addr = utils.asyncAwait { addressInteractor.getAddressByLocation(point)	}
+			if(addr != null) viewState.setAddressFrom(addr.address)
 		}
 		else Timber.e(result.error)
 		viewState.blockInterface(false)
 	}
-	
-	private fun requestAddress(latLng: LatLng) = utils.launchAsync(compositeDisposable) {
-		val point = Point(latLng.latitude, latLng.longitude)
-		// Не запрашивать адрес, если перемещение составило менее minDistance
-		if(getDistance(point) > minDistance) {
-			lastPoint = point;
-			Timber.d("last point: $latLng")
-			val addr = utils.asyncAwait { addressInteractor.getAddressByLocation(point) }
-			if(addr != null && !cachedAddress.equals(addr.address)) {
-				viewState.setAddressFrom(addr.address)
-				cachedAddress = addr.address
-				viewState.blockInterface(false)
-			}
-		}
-	}
-	
-	private fun getDistance(point: Point): Float {
-		val distance = FloatArray(2)
-		Location.distanceBetween(lastPoint.latitude, lastPoint.longitude,
-			                     point.latitude, point.longitude, distance)
-		return distance.get(0)
-	}
-	
-	
-	
 	
 	fun onSearchClick() {
 		Timber.d("onSearchClick")
