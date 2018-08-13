@@ -24,6 +24,9 @@ import android.support.v7.app.AppCompatDelegate
 
 import android.support.v7.widget.Toolbar
 
+import android.text.Editable
+import android.text.TextWatcher
+
 import android.transition.Explode
 import android.transition.Fade
 import android.transition.Slide
@@ -67,6 +70,10 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	private val FADE_DURATION  = 500L
 	private val SLIDE_DURATION = 500L
 	
+	companion object {
+		const val EXTRA_ADDRESS_PREDICTION = "address_prediction"
+	}
+	
 	@ProvidePresenter
 	fun createSearchPresenter(): SearchPresenter = SearchPresenter(coroutineContexts,
 		                                                     router,
@@ -88,6 +95,17 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		(toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 		
 		searchTo.requestFocus()
+		searchTo.address.addTextChangedListener(object: TextWatcher {
+			override fun afterTextChanged(s: Editable?) {
+				Timber.d("after text changed: %s", s)
+			}
+			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+		})
+		
+		val prediction = intent?.getStringExtra(EXTRA_ADDRESS_PREDICTION)
+		searchTo.address.setText(prediction)
+		Timber.d("prediction: %s", prediction)
 		
 		val fade = Fade()
 		fade.setDuration(FADE_DURATION)
@@ -98,6 +116,12 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		getWindow().setReturnTransition(slide)
 	}
 
+	@CallSuper
+	protected override fun onDestroy() {
+		
+		super.onDestroy();
+	}
+	
 	override fun onBackPressed() {
 		presenter.onBackCommandClick() 
 	}

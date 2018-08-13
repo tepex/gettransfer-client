@@ -31,6 +31,9 @@ import android.support.v7.app.AppCompatDelegate
 
 import android.support.v7.widget.Toolbar
 
+import android.text.Editable
+import android.text.TextWatcher
+
 import android.transition.Fade
 import android.transition.Slide
 
@@ -108,15 +111,19 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private var isFirst = true
 	private var centerMarker: Marker? = null
 	
+	private val FADE_DURATION = 500L
+	private val ADDRESS_PREDICTION_SIZE = 3
+	
 	@ProvidePresenter
 	fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
 		                                                     router,
 		                                                     locationInteractor,
 		                                                     addressInteractor)
-	
+	/*
 	private val focusListener = View.OnFocusChangeListener {_, hasFocus ->
 		if(hasFocus) { presenter.onSearchClick() }
 	}
+	*/
 
 	private val readMoreListener = View.OnClickListener {
 		presenter.readMoreClick()
@@ -126,7 +133,11 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
 			when(screenKey) {
 				Screens.ABOUT -> return Intent(this@MainActivity, AboutActivity::class.java)
-				Screens.FIND_ADDRESS -> return Intent(this@MainActivity, SearchActivity::class.java)
+				Screens.FIND_ADDRESS -> {
+					val intent = Intent(this@MainActivity, SearchActivity::class.java)
+					intent.putExtra(SearchActivity.EXTRA_ADDRESS_PREDICTION, data as String)
+					return intent
+				}
 			}
 			return null
 		}
@@ -233,8 +244,19 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			initGoogleMap(mapViewBundle)
 		}
 		
+		// @TODO: https://proandroiddev.com/easy-edittext-content-validation-with-kotlin-316d835d25b3
+		searchTo.address.addTextChangedListener(object: TextWatcher {
+			override fun afterTextChanged(s: Editable?) {
+				val str = s?.toString() ?: ""
+				if(str.length >= ADDRESS_PREDICTION_SIZE) presenter.onSearchClick(str)
+				//Timber.d("--------- length: %d", s.length())
+			}
+			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+		})
+		
 		val fade = Fade()
-		fade.setDuration(500)
+		fade.setDuration(FADE_DURATION)
 		getWindow().setExitTransition(fade)
 	}
 
@@ -348,8 +370,8 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			*/
 			customizeGoogleMaps()
 			//presenter.updateCurrentLocation()
-			searchFrom.address.setOnFocusChangeListener(focusListener)
-			searchTo.address.setOnFocusChangeListener(focusListener)
+			//searchFrom.address.setOnFocusChangeListener(focusListener)
+			//searchTo.address.setOnFocusChangeListener(focusListener)
 		}
 	}
 	

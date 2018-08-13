@@ -97,9 +97,8 @@ class MainPresenter(private val cc: CoroutineContexts,
 		viewState.blockInterface(false)
 	}
 	
-	fun onSearchClick() {
-		Timber.d("onSearchClick")
-		router.navigateTo(Screens.FIND_ADDRESS)
+	fun onSearchClick(prediction: String) {
+		router.navigateTo(Screens.FIND_ADDRESS, prediction)
 	}
 	
 	fun onAboutClick() {

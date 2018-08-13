@@ -9,13 +9,20 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.repository.AddressRepository
 
+import timber.log.Timber
+
 class AddressRepositoryImpl(private val geocoder: Geocoder): AddressRepository {
 	private val addressCache = AddressCache()
 	
 	override fun getAddressByLocation(point: Point): GTAddress? {
 		var address = addressCache.getAddress(point)
 		if(address == null) {
-			val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
+			val list = try {
+				geocoder.getFromLocation(point.latitude, point.longitude, 1)
+			} catch(e: Exception) {
+				Timber.e(e)
+				return null
+			}
 			val addr = list?.firstOrNull()?.getAddressLine(0)
 			if(addr != null) {
 				address = GTAddress(addr)
