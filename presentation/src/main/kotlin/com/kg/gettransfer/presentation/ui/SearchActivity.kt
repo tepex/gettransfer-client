@@ -22,6 +22,7 @@ import android.support.v4.content.ContextCompat
 
 import android.support.v7.app.AppCompatDelegate
 
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 
 import android.text.Editable
@@ -106,6 +107,9 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		val prediction = intent?.getStringExtra(EXTRA_ADDRESS_PREDICTION)
 		searchTo.address.setText(prediction)
 		Timber.d("prediction: %s", prediction)
+		
+		addressList.layoutManager = LinearLayoutManager(this)
+		addressList.adapter = AddressAdapter(this)
 		
 		val fade = Fade()
 		fade.setDuration(FADE_DURATION)
