@@ -13,6 +13,7 @@ import com.google.android.gms.location.LocationServices
 import com.kg.gettransfer.data.repository.AddressRepositoryImpl
 import com.kg.gettransfer.data.repository.LocationRepositoryImpl
 
+import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 
@@ -20,6 +21,9 @@ import com.kg.gettransfer.domain.repository.AddressRepository
 import com.kg.gettransfer.domain.repository.LocationRepository
 
 import java.util.Locale
+
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
 
 import org.koin.dsl.module.module
 
@@ -32,7 +36,7 @@ import timber.log.Timber
 /**
  * Koin main module
  */
-val AppModule = module {
+val appModule = module {
 	// Util
 	single { Locale.getDefault() }
 	single { PreferenceManager.getDefaultSharedPreferences(get()) as SharedPreferences }
@@ -41,17 +45,24 @@ val AppModule = module {
 	single { Geocoder(get(), get()) }
 }
 
-val CiceroneModule = module {
+val ciceroneModule = module {
 	single { Cicerone.create() as Cicerone<Router> }
 	single { get<Cicerone<Router>>().router }
 	single { get<Cicerone<Router>>().navigatorHolder }
 }
 
-val DomainModule = module {
+val domainModule = module {
 	single { AddressRepositoryImpl(get()) as AddressRepository }
 	single { LocationRepositoryImpl(get(), get(), get()) as LocationRepository }
 	single { AddressInteractor(get()) }
 	single { LocationInteractor(get()) }
 }
 
-val appModules = listOf(AppModule, CiceroneModule, DomainModule)
+val androidModule = module {
+	single { CoroutineContexts(UI, CommonPool) }
+}
+
+/** @TODO: заменить на single thread */
+val testModule = module {
+	single { CoroutineContexts(CommonPool, CommonPool) }
+}

@@ -1,8 +1,9 @@
 package com.kg.gettransfer.domain.repository
 
 import com.kg.gettransfer.domain.model.Point
+import com.kg.gettransfer.domain.model.LocationResult
 
 interface LocationRepository {
-	suspend fun checkPlayServicesAvailable(): Boolean
-	suspend fun getCurrentLocation(): Point?
+	fun checkPlayServicesAvailable(): Boolean
+	suspend fun getCurrentLocation(): LocationResult
 }
