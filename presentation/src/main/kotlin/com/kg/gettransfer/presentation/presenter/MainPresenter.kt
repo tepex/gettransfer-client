@@ -11,12 +11,13 @@ import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.model.Point
-
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.Utils
+
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
+
+import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.MainView
@@ -43,19 +44,20 @@ class MainPresenter(private val cc: CoroutineContexts,
 	
 	val utils = Utils(cc)
 	
-	override fun onFirstViewAttach()
-	{
-		Timber.d("onFirstViewAttach()")
-		if(!granted) return
-		// Проверка досупности сервиса геолокации
-		if(locationInteractor.checkLocationServicesAvailability())
-			updateCurrentLocation()
-		else viewState.setError(R.string.err_location_service_not_available, true)
+	override fun onFirstViewAttach() {
+		utils.launchAsync(compositeDisposable) {
+			Timber.d("onFirstViewAttach()")
+			if(granted) {
+				// Проверка досупности сервиса геолокации
+				val available = locationInteractor.checkLocationServicesAvailability()
+				if(available) updateCurrentLocation()
+				else viewState.setError(R.string.err_location_service_not_available, true)
+			}
+		}
 	}
 	
 	@CallSuper
 	override fun onDestroy() {
-		locationInteractor.cancel()
 		compositeDisposable.cancel()
 		super.onDestroy()
 	}
@@ -81,17 +83,18 @@ class MainPresenter(private val cc: CoroutineContexts,
 		return "wqeweqw"
 	}
 	
-	fun updateCurrentLocation()
-	{
+	fun updateCurrentLocation() = utils.launchAsync(compositeDisposable) {
 		Timber.d("update current location")
-		
 		viewState.blockInterface(true)
-		val point = locationInteractor.getCurrentLocation()
-		if(point != null) {
+		 
+		val result = locationInteractor.getCurrentLocation()
+		if(result.point != null) {
+			val point: Point = result.point as Point
 			val latLng = LatLng(point.latitude, point.longitude)
 			viewState.setMapPoint(latLng)
 			requestAddress(latLng)
 		}
+		else Timber.e(result.error)
 		viewState.blockInterface(false)
 	}
 	
