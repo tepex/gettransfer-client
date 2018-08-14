@@ -109,7 +109,7 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		Timber.d("prediction: %s", prediction)
 		
 		addressList.layoutManager = LinearLayoutManager(this)
-		addressList.adapter = AddressAdapter(this)
+		addressList.adapter = AddressAdapter { s -> Timber.d("==== Item click %s", s) }
 		
 		val fade = Fade()
 		fade.setDuration(FADE_DURATION)

@@ -85,6 +85,12 @@
 		<item name="android:layout_height">wrap_content</item>
 	</style>
 
+	<!-- Search address -->
+	<style name="address_item" parent="sf_font">
+		<item name="android:textSize">@dimen/address_item_size</item>
+		<item name="android:paddingTop">@dimen/address_item_padding_top</item>
+		<item name="android:paddingStart">@dimen/address_item_padding_start</item>
+	</style>
 
 
 

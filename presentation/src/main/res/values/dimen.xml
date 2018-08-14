@@ -48,4 +48,9 @@
 	<dimen name="read_more_padding_horizontal">16dp</dimen>
 	<dimen name="read_more_content3_padding">10dp</dimen>
 	<dimen name="read_more_title_size">16sp</dimen>
+
+	<!-- Search address -->
+	<dimen name="address_item_size">16sp</dimen>
+	<dimen name="address_item_padding_top">8dp</dimen>
+	<dimen name="address_item_padding_start">12dp</dimen>
 </resources>
