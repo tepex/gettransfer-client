@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.graphics.Color
+
 import android.support.v7.widget.RecyclerView
 
 import android.view.LayoutInflater
@@ -14,10 +16,13 @@ import kotlinx.android.synthetic.main.address_list_item.view.*
 
 import timber.log.Timber
 
-class AddressAdapter(val listener: (String) -> Unit): RecyclerView.Adapter<AddressAdapter.ViewHolder>() {
+class AddressAdapter(val listener: ClickHandler): RecyclerView.Adapter<AddressAdapter.ViewHolder>() {
 	//val list = arrayOf("item 1", "item 2", "item 3")
 	val list = ArrayList<String>()
-	var selectedPos = RecyclerView.NO_POSITION
+	
+	companion object {
+		var selectedPos = RecyclerView.NO_POSITION
+	}
 	
 	init {
 		for(i in 1..40) list.add("item $i")
@@ -31,13 +36,29 @@ class AddressAdapter(val listener: (String) -> Unit): RecyclerView.Adapter<Addre
 		ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.address_list_item, parent, false))
 	
 	override fun onBindViewHolder(holder: ViewHolder, pos: Int) = holder.bind(list.get(pos), listener)
-
+	
+	/** static  */
 	class ViewHolder(override val containerView: View): 
 		RecyclerView.ViewHolder(containerView), LayoutContainer {
 			
-		fun bind(item: String, listener: (String) -> Unit) = with(containerView) {
+		fun bind(item: String, listener: ClickHandler) = with(containerView) {
 			addressItem.text = item
-			setOnClickListener { listener(item) }
+			setSelected(selectedPos == adapterPosition)
+			if(selectedPos == adapterPosition) setBackgroundColor(Color.YELLOW)
+			else setBackgroundColor(Color.WHITE)
+			//qqq()
+			setOnClickListener {
+				Timber.d("ViewHolder listener %d", adapterPosition)
+				selectedPos = adapterPosition
+				setSelected(selectedPos == adapterPosition)
+				if(selectedPos == adapterPosition) setBackgroundColor(Color.YELLOW)
+				else setBackgroundColor(Color.WHITE)
+				//this@AddressAdapternotifyDataSetChanged()
+				listener(item) 
+			}
 		}
 	}
 }
+
+// Just for test
+typealias ClickHandler = (String) -> Unit
