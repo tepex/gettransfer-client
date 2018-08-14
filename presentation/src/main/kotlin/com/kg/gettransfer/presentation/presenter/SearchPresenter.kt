@@ -25,6 +25,10 @@ class SearchPresenter(private val cc: CoroutineContexts,
 		val addr = addressInteractor.getCachedAddress()
 		if(addr != null) viewState.setAddressFrom(addr.address)
 	}
+
+	fun onDestinationAddressSelected(address: String) {
+		Timber.d("select address: %s", address);
+	}
 	
 	fun onBackCommandClick() = viewState.finish()
 }

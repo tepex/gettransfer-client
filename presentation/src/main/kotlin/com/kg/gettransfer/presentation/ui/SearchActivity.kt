@@ -109,7 +109,6 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		Timber.d("prediction: %s", prediction)
 		
 		addressList.layoutManager = LinearLayoutManager(this)
-		addressList.adapter = AddressAdapter { s -> Timber.d("==== Item click %s", s) }
 		
 		val fade = Fade()
 		fade.setDuration(FADE_DURATION)
@@ -139,6 +138,10 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	
 	override fun setAddressTo(addressTo: String) {
 		searchTo.address.setText(addressTo)
+	}
+	
+	override fun setAddressList(list: List<String>) {
+		addressList.adapter = AddressAdapter(presenter, list)
 	}
 	
 	override fun setError(@StringRes errId: Int, finish: Boolean) {

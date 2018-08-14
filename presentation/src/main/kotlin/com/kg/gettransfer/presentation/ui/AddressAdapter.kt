@@ -10,22 +10,18 @@ import android.view.ViewGroup
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.presentation.presenter.SearchPresenter
+
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.address_list_item.*
 import kotlinx.android.synthetic.main.address_list_item.view.*
 
 import timber.log.Timber
 
-class AddressAdapter(val listener: ClickHandler): RecyclerView.Adapter<AddressAdapter.ViewHolder>() {
-	//val list = arrayOf("item 1", "item 2", "item 3")
-	val list = ArrayList<String>()
-	
+class AddressAdapter(private val presenter: SearchPresenter,
+	                 private val list: List<String>): RecyclerView.Adapter<AddressAdapter.ViewHolder>() {
 	companion object {
 		var selectedPos = RecyclerView.NO_POSITION
-	}
-	
-	init {
-		for(i in 1..40) list.add("item $i")
 	}
 	
 	override fun getItemCount(): Int {
@@ -35,25 +31,19 @@ class AddressAdapter(val listener: ClickHandler): RecyclerView.Adapter<AddressAd
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = 
 		ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.address_list_item, parent, false))
 	
-	override fun onBindViewHolder(holder: ViewHolder, pos: Int) = holder.bind(list.get(pos), listener)
+	override fun onBindViewHolder(holder: ViewHolder, pos: Int) {
+		holder.bind(list.get(pos), { presenter.onDestinationAddressSelected(it) })
+	}
 	
-	/** static  */
 	class ViewHolder(override val containerView: View): 
 		RecyclerView.ViewHolder(containerView), LayoutContainer {
 			
 		fun bind(item: String, listener: ClickHandler) = with(containerView) {
 			addressItem.text = item
 			setSelected(selectedPos == adapterPosition)
-			if(selectedPos == adapterPosition) setBackgroundColor(Color.YELLOW)
-			else setBackgroundColor(Color.WHITE)
-			//qqq()
 			setOnClickListener {
-				Timber.d("ViewHolder listener %d", adapterPosition)
 				selectedPos = adapterPosition
 				setSelected(selectedPos == adapterPosition)
-				if(selectedPos == adapterPosition) setBackgroundColor(Color.YELLOW)
-				else setBackgroundColor(Color.WHITE)
-				//this@AddressAdapternotifyDataSetChanged()
 				listener(item) 
 			}
 		}
