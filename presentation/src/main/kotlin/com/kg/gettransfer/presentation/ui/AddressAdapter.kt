@@ -14,7 +14,6 @@ import com.kg.gettransfer.presentation.presenter.SearchPresenter
 
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.address_list_item.*
-import kotlinx.android.synthetic.main.address_list_item.view.*
 
 import timber.log.Timber
 

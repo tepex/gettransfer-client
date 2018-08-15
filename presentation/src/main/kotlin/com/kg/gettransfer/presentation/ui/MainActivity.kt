@@ -245,24 +245,22 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			initGoogleMap(mapViewBundle)
 		}
 		
-		// @TODO: https://proandroiddev.com/easy-edittext-content-validation-with-kotlin-316d835d25b3
-		searchTo.address.addTextChangedListener(object: TextWatcher {
-			override fun afterTextChanged(s: Editable?) {
-				val addressTo = s?.toString()?.trim() ?: ""
-				if(addressTo.length >= ADDRESS_PREDICTION_SIZE) {
-					presenter.onSearchClick(AddressPair(searchFrom.address.text.toString(), addressTo))
-				}
-				//Timber.d("--------- length: %d", s.length())
-			}
-			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-		})
+		/* https://antonioleiva.com/listeners-several-functions-kotlin/ */
+		
+		searchFrom.onTextChanged {
+			if(it.length >= ADDRESS_PREDICTION_SIZE) 
+				presenter.onSearchClick(AddressPair(it, searchTo.text))
+		}
+		searchTo.onTextChanged {
+			if(it.length >= ADDRESS_PREDICTION_SIZE) 
+				presenter.onSearchClick(AddressPair(searchFrom.text, it))
+		}
 		
 		val fade = Fade()
 		fade.setDuration(FADE_DURATION)
 		getWindow().setExitTransition(fade)
 	}
-
+	
 	@CallSuper
 	protected override fun onPostCreate(savedInstanceState: Bundle?) {
 		super.onPostCreate(savedInstanceState)
@@ -437,12 +435,12 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		}
 	}
 	
-	override fun setAddressFrom(addressFrom: String) {
-		searchFrom.address.setText(addressFrom)
+	override fun setAddressFrom(address: String) {
+		searchFrom.text = address
 	}
 	
-	override fun setAddressTo(addressTo: String) {
-		searchTo.address.setText(addressTo)
+	override fun setAddressTo(address: String) {
+		searchTo.text = address
 	}
 	
 	override fun setError(@StringRes errId: Int, finish: Boolean) {

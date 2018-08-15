@@ -5,8 +5,8 @@ import com.arellomobile.mvp.MvpView
 
 interface BaseView: MvpView {
 	fun blockInterface(block: Boolean)
-	fun setAddressFrom(addressFrom: String)
-	fun setAddressTo(addressTo: String)
+	fun setAddressFrom(address: String) 
+	fun setAddressTo(address: String)
 	fun setError(@StringRes errId: Int, finish: Boolean = false)
 	fun finish()
 }

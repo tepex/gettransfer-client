@@ -103,6 +103,7 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		searchTo.initWidget(addressList, addressPair?.to)
 		
 		searchTo.requestFocus()
+		/*
 		searchTo.address.addTextChangedListener(object: TextWatcher {
 			override fun afterTextChanged(s: Editable?) {
 				Timber.d("after text changed: %s", s)
@@ -110,6 +111,7 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 		})
+		*/
 		
 		val fade = Fade()
 		fade.setDuration(FADE_DURATION)
@@ -133,12 +135,12 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	/* SearchView */
 	override fun blockInterface(block: Boolean) {}
 	
-	override fun setAddressFrom(addressFrom: String) {
-		searchFrom.address.setText(addressFrom)
+	override fun setAddressFrom(address: String) {
+		searchFrom.text = address
 	}
 	
-	override fun setAddressTo(addressTo: String) {
-		searchTo.address.setText(addressTo)
+	override fun setAddressTo(address: String) {
+		searchTo.text = address
 	}
 	
 	override fun setAddressList(list: List<String>) {
