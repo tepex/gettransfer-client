@@ -36,9 +36,7 @@ class MainPresenter(private val cc: CoroutineContexts,
 	                private val addressInteractor: AddressInteractor): MvpPresenter<MainView>() {
 	                
 	var granted = false
-	
 	val compositeDisposable = Job()
-	
 	val utils = AsyncUtils(cc)
 	
 	override fun onFirstViewAttach() {

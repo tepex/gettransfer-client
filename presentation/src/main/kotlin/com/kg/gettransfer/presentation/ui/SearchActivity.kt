@@ -87,7 +87,16 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	@CallSuper
 	protected override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+		/* Анимация */
+		val fade = Fade()
+		fade.setDuration(FADE_DURATION)
+		getWindow().setEnterTransition(fade)
 		
+		val slide = Slide()
+		slide.setDuration(SLIDE_DURATION)
+		getWindow().setReturnTransition(slide)
+		
+		/* init UI */
 		setContentView(R.layout.activity_search)
 		
 		setSupportActionBar(toolbar as Toolbar)
@@ -98,28 +107,12 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		
 		addressList.layoutManager = LinearLayoutManager(this)
 		
-		val addressPair: AddressPair? = intent?.getParcelableExtra(EXTRA_ADDRESSES)
-		searchFrom.initWidget(addressList, addressPair?.from)
-		searchTo.initWidget(addressList, addressPair?.to)
-		
+		val addressPair: AddressPair = intent.getParcelableExtra(EXTRA_ADDRESSES)
+		searchFrom.initWidget(addressList, addressPair.from)
+		searchTo.initWidget(addressList, addressPair.to)
 		searchTo.requestFocus()
-		/*
-		searchTo.address.addTextChangedListener(object: TextWatcher {
-			override fun afterTextChanged(s: Editable?) {
-				Timber.d("after text changed: %s", s)
-			}
-			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-		})
-		*/
 		
-		val fade = Fade()
-		fade.setDuration(FADE_DURATION)
-		getWindow().setEnterTransition(fade)
-		
-		val slide = Slide()
-		slide.setDuration(SLIDE_DURATION)
-		getWindow().setReturnTransition(slide)
+		presenter.requestAddressListByPrediction(addressPair.to)
 	}
 
 	@CallSuper

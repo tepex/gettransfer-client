@@ -12,6 +12,8 @@ import com.kg.gettransfer.domain.interactor.AddressInteractor
 
 import com.kg.gettransfer.presentation.view.SearchView
 
+import kotlinx.coroutines.experimental.*
+
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
@@ -21,9 +23,25 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	                  private val router: Router,
 	                  private val addressInteractor: AddressInteractor): MvpPresenter<SearchView>() {
 	
+	val compositeDisposable = Job()
+	val utils = AsyncUtils(cc)
+	
 	override fun onFirstViewAttach() {
 		val addr = addressInteractor.getCachedAddress()
 		if(addr != null) viewState.setAddressFrom(addr.address)
+	}
+
+	fun requestAddressListByPrediction(prediction: String) = utils.launchAsync(compositeDisposable) {
+		utils.asyncAwait {
+			try {
+				Thread.sleep(2000)
+			} catch(e: InterruptedException) {
+				Timber.w(e)
+			}
+		}
+		val list = ArrayList<String>()
+		for(i in 1..40) list.add("$prediction Item ${i+1}")
+		viewState.setAddressList(list)
 	}
 
 	fun onDestinationAddressSelected(address: String) {

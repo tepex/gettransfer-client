@@ -35,10 +35,16 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
 	override val containerView: View
 	private lateinit var listView: RecyclerView
+	/** Ввод с помощью setText(). Флаг предотвращает срабатывание afterTextChanged */
+	var implicitInput = false
 	
 	var text: String
 		get() { return address.getText().toString() }
-		set(value) { address.setText(value) }
+		set(value) {
+			implicitInput = true
+			address.setText(value)
+			implicitInput = false
+		}
 	
 	init {
 		containerView = LayoutInflater.from(context).inflate(R.layout.search_address, this, true)
@@ -47,12 +53,12 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 			address.setHint(ta.getString(R.styleable.SearchAddress_hint))
 			ta.recycle()
 		}
-		clearBtn.setOnClickListener { address.setText("") }
+		clearBtn.setOnClickListener { text = "" }
 	}
 	
 	fun initWidget(listView: RecyclerView, addressPrediction: String?) {
 		this.listView = listView
-		address.setText(addressPrediction)
+		text = addressPrediction ?: ""
 	}
 	
 	/**
@@ -60,7 +66,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	 */
 	inline fun onTextChanged(crossinline listener: (String) -> Unit) {
 		address.addTextChangedListener(object: TextWatcher {
-			override fun afterTextChanged(s: Editable?) { listener(s?.toString()?.trim() ?: "") }
+			override fun afterTextChanged(s: Editable?) { if(!implicitInput) listener(s?.toString()?.trim() ?: "") }
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 		})

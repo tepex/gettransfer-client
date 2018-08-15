@@ -215,10 +215,9 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		})
 		
 		(navView as NavigationView).setNavigationItemSelectedListener({ item ->
-			Timber.d("nav view item ${item.title}")
 			when(item.itemId) {
 				R.id.nav_about -> presenter.onAboutClick()
-				else -> Timber.d("No route for ${item.title}")
+				else -> Timber.e("No route for ${item.title}")
 			}
 			drawer.closeDrawer(GravityCompat.START)
 			true
@@ -240,20 +239,19 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		
 		Timber.d("Permissions granted: ${permissionsGranted}")
 		if(!permissionsGranted) Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
-		else {
-			
-			initGoogleMap(mapViewBundle)
-		}
+		else initGoogleMap(mapViewBundle)
 		
 		/* https://antonioleiva.com/listeners-several-functions-kotlin/ */
-		
 		searchFrom.onTextChanged {
-			if(it.length >= ADDRESS_PREDICTION_SIZE) 
+			if(it.length >= ADDRESS_PREDICTION_SIZE)
 				presenter.onSearchClick(AddressPair(it, searchTo.text))
 		}
 		searchTo.onTextChanged {
-			if(it.length >= ADDRESS_PREDICTION_SIZE) 
+			if(it.length >= ADDRESS_PREDICTION_SIZE)
+			{
+				searchTo.text = "" 
 				presenter.onSearchClick(AddressPair(searchFrom.text, it))
+			}
 		}
 		
 		val fade = Fade()
