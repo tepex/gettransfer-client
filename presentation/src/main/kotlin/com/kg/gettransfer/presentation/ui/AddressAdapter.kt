@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.kg.gettransfer.R
-
+import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 
 import kotlinx.android.extensions.LayoutContainer
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.address_list_item.*
 import timber.log.Timber
 
 class AddressAdapter(private val presenter: SearchPresenter,
-	                 private val list: List<String>): RecyclerView.Adapter<AddressAdapter.ViewHolder>() {
+	                 private val list: List<GTAddress>): RecyclerView.Adapter<AddressAdapter.ViewHolder>() {
 	companion object {
 		var selectedPos = RecyclerView.NO_POSITION
 	}
@@ -37,8 +37,8 @@ class AddressAdapter(private val presenter: SearchPresenter,
 	class ViewHolder(override val containerView: View): 
 		RecyclerView.ViewHolder(containerView), LayoutContainer {
 			
-		fun bind(item: String, listener: ClickHandler) = with(containerView) {
-			addressItem.text = item
+		fun bind(item: GTAddress, listener: ClickHandler) = with(containerView) {
+			addressItem.text = item.address
 			setSelected(selectedPos == adapterPosition)
 			setOnClickListener {
 				selectedPos = adapterPosition
@@ -50,4 +50,4 @@ class AddressAdapter(private val presenter: SearchPresenter,
 }
 
 // Just for test
-typealias ClickHandler = (String) -> Unit
+typealias ClickHandler = (GTAddress) -> Unit

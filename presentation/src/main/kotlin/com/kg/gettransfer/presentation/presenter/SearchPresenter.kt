@@ -8,6 +8,8 @@ import com.arellomobile.mvp.MvpPresenter
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.AsyncUtils
 
+import com.kg.gettransfer.domain.model.GTAddress
+
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 
 import com.kg.gettransfer.presentation.view.SearchView
@@ -39,12 +41,12 @@ class SearchPresenter(private val cc: CoroutineContexts,
 				Timber.w(e)
 			}
 		}
-		val list = ArrayList<String>()
-		for(i in 1..40) list.add("$prediction Item ${i+1}")
+		val list = ArrayList<GTAddress>()
+		for(i in 1..40) list.add(GTAddress("$prediction Item ${i+1}"))
 		viewState.setAddressList(list)
 	}
 
-	fun onDestinationAddressSelected(address: String) {
+	fun onDestinationAddressSelected(address: GTAddress) {
 		Timber.d("select address: %s", address);
 	}
 	

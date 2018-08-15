@@ -8,4 +8,5 @@ data class GTAddress(var address: String) {
 	}
 	
 	override fun hashCode(): Int = address.hashCode()
+	override fun toString(): String = address
 }

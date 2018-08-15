@@ -44,6 +44,8 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.CoroutineContexts
 
+import com.kg.gettransfer.domain.model.GTAddress
+
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 
 import com.kg.gettransfer.presentation.Screens
@@ -136,7 +138,7 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		searchTo.text = address
 	}
 	
-	override fun setAddressList(list: List<String>) {
+	override fun setAddressList(list: List<GTAddress>) {
 		addressList.adapter = AddressAdapter(presenter, list)
 	}
 	
