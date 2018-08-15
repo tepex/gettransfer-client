@@ -33,4 +33,13 @@ class AddressRepositoryImpl(private val geocoder: Geocoder): AddressRepository {
 	}
 	
 	override fun getCachedAddress() = addressCache.getLastAddress()
+	
+	override fun getAutocompletePredictions(prediction: String): List<GTAddress> {
+		val list = ArrayList<GTAddress>()
+		for(i in 1..40) list.add(GTAddress("$prediction Item ${i+1}"))
+		return list
+	}
+
+	override fun releaseAutocompletePredictionsResources() {
+	}
 }

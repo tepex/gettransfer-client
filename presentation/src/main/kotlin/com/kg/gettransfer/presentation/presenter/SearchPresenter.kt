@@ -34,16 +34,10 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	}
 
 	fun requestAddressListByPrediction(prediction: String) = utils.launchAsync(compositeDisposable) {
-		utils.asyncAwait {
-			try {
-				Thread.sleep(2000)
-			} catch(e: InterruptedException) {
-				Timber.w(e)
-			}
-		}
-		val list = ArrayList<GTAddress>()
-		for(i in 1..40) list.add(GTAddress("$prediction Item ${i+1}"))
+		viewState.blockInterface(true)
+		val list = utils.asyncAwait { addressInteractor.getAutocompletePredictions(prediction) }
 		viewState.setAddressList(list)
+		viewState.blockInterface(false)
 	}
 
 	fun onDestinationAddressSelected(address: GTAddress) {
