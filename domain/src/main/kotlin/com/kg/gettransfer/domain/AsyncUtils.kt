@@ -14,17 +14,43 @@ import kotlinx.coroutines.experimental.*
  * val result1 = async { ...do something asynchronous... }
  * val result2 = async { ...do something asynchronous... }
  * processResults(result1.await(), result2.await())
+ *
+ * root Job используем как предка для наших задач чтобы они не плодить безпризорщину.
+ * В конце их всех удобно замочить одним ударом — прибив этого предка.
  */
 class AsyncUtils(private val cc: CoroutineContexts) {
-	fun launchAsync(root: Job, block: suspend CoroutineScope.() -> Unit): Job {
+	companion object {
+		suspend fun CoroutineScope.tryCatch(tryBlock: Task, catchBlock: TaskThrowable) {
+			try {
+				tryBlock()
+			} catch(e: Throwable) {
+				if(e !is CancellationException) catchBlock(e)
+				else throw e
+			}
+		}
+	}
+	
+	@Synchronized
+	fun launchAsync(root: Job, block: Task): Job {
 		return launch(cc.ui, parent = root) { block() }
 	}
 	
-	suspend fun <T> asyncAwait(bl: suspend CoroutineScope.() -> T): T {
+	@Synchronized
+	fun launchAsyncTryCatch(root: Job, tryBlock: Task, catchBlock: TaskThrowable) {
+		launchAsync(root) { tryCatch(tryBlock, catchBlock) }
+	}
+	
+	@Synchronized
+	suspend fun <T> asyncAwait(bl: TaskGeneric<T>): T {
 		return async(context = cc.bg, block = bl).await()
 	}
 	
-	suspend fun <T> async(block: suspend CoroutineScope.() -> T): Deferred<T> {
+	@Synchronized
+	suspend fun <T> async(block: TaskGeneric<T>): Deferred<T> {
 		return async(cc.bg) { block() }
 	}
 }
+
+typealias Task = suspend CoroutineScope.() -> Unit
+typealias TaskThrowable = suspend CoroutineScope.(Throwable) -> Unit
+typealias TaskGeneric<T> = suspend CoroutineScope.() -> T
