@@ -20,6 +20,7 @@ import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.Screens
+import com.kg.gettransfer.presentation.model.AddressPair
 import com.kg.gettransfer.presentation.view.MainView
 
 import kotlinx.coroutines.experimental.*
@@ -97,21 +98,11 @@ class MainPresenter(private val cc: CoroutineContexts,
 		viewState.blockInterface(false)
 	}
 	
-	fun onSearchClick(prediction: String) {
-		router.navigateTo(Screens.FIND_ADDRESS, prediction)
+	fun onSearchClick(addressPair: AddressPair) {
+		router.navigateTo(Screens.FIND_ADDRESS, addressPair)
 	}
 	
-	fun onAboutClick() {
-		Timber.d("about click")
-		router.navigateTo(Screens.ABOUT)
-	}
-
-	fun readMoreClick() {
-		Timber.d("read more click")
-		router.navigateTo(Screens.READ_MORE)
-	}
-	
-	fun onBackCommandClick() {
-		router.exit()
-	}
+	fun onAboutClick() { router.navigateTo(Screens.ABOUT) }
+	fun readMoreClick() { router.navigateTo(Screens.READ_MORE) }
+	fun onBackCommandClick() { router.exit() }
 }

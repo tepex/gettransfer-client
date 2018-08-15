@@ -68,6 +68,7 @@ import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 
 import com.kg.gettransfer.presentation.Screens
+import com.kg.gettransfer.presentation.model.AddressPair
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
 
@@ -135,7 +136,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 				Screens.ABOUT -> return Intent(this@MainActivity, AboutActivity::class.java)
 				Screens.FIND_ADDRESS -> {
 					val intent = Intent(this@MainActivity, SearchActivity::class.java)
-					intent.putExtra(SearchActivity.EXTRA_ADDRESS_PREDICTION, data as String)
+					intent.putExtra(SearchActivity.EXTRA_ADDRESSES, data as AddressPair)
 					return intent
 				}
 			}
@@ -247,8 +248,10 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		// @TODO: https://proandroiddev.com/easy-edittext-content-validation-with-kotlin-316d835d25b3
 		searchTo.address.addTextChangedListener(object: TextWatcher {
 			override fun afterTextChanged(s: Editable?) {
-				val str = s?.toString() ?: ""
-				if(str.length >= ADDRESS_PREDICTION_SIZE) presenter.onSearchClick(str)
+				val addressTo = s?.toString()?.trim() ?: ""
+				if(addressTo.length >= ADDRESS_PREDICTION_SIZE) {
+					presenter.onSearchClick(AddressPair(searchFrom.address.text.toString(), addressTo))
+				}
 				//Timber.d("--------- length: %d", s.length())
 			}
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

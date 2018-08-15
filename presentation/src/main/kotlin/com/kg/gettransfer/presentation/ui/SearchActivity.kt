@@ -47,6 +47,7 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 
 import com.kg.gettransfer.presentation.Screens
+import com.kg.gettransfer.presentation.model.AddressPair
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
 
@@ -72,7 +73,7 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	private val SLIDE_DURATION = 500L
 	
 	companion object {
-		const val EXTRA_ADDRESS_PREDICTION = "address_prediction"
+		const val EXTRA_ADDRESSES = "addresses"
 	}
 	
 	@ProvidePresenter
@@ -95,6 +96,12 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		supportActionBar?.setDisplayShowHomeEnabled(true)
 		(toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 		
+		addressList.layoutManager = LinearLayoutManager(this)
+		
+		val addressPair: AddressPair? = intent?.getParcelableExtra(EXTRA_ADDRESSES)
+		searchFrom.initWidget(addressList, addressPair?.from)
+		searchTo.initWidget(addressList, addressPair?.to)
+		
 		searchTo.requestFocus()
 		searchTo.address.addTextChangedListener(object: TextWatcher {
 			override fun afterTextChanged(s: Editable?) {
@@ -103,12 +110,6 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 		})
-		
-		val prediction = intent?.getStringExtra(EXTRA_ADDRESS_PREDICTION)
-		searchTo.address.setText(prediction)
-		Timber.d("prediction: %s", prediction)
-		
-		addressList.layoutManager = LinearLayoutManager(this)
 		
 		val fade = Fade()
 		fade.setDuration(FADE_DURATION)
