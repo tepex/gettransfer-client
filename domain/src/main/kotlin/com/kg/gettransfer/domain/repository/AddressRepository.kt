@@ -8,5 +8,4 @@ interface AddressRepository
 	fun getAddressByLocation(point: Point): GTAddress?
 	fun getCachedAddress(): GTAddress?
 	fun getAutocompletePredictions(prediction: String): List<GTAddress>
-	fun releaseAutocompletePredictionsResources()
 }

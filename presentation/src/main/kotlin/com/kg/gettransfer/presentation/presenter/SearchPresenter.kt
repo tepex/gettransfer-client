@@ -5,6 +5,8 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 
+import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.AsyncUtils
 
@@ -35,9 +37,20 @@ class SearchPresenter(private val cc: CoroutineContexts,
 
 	fun requestAddressListByPrediction(prediction: String) = utils.launchAsync(compositeDisposable) {
 		viewState.blockInterface(true)
-		val list = utils.asyncAwait { addressInteractor.getAutocompletePredictions(prediction) }
-		viewState.setAddressList(list)
-		viewState.blockInterface(false)
+		utils.asyncAwait {
+			try {
+				val list = addressInteractor.getAutocompletePredictions(prediction)
+				viewState.setAddressList(list)
+			}
+			catch(e: Exception) {
+				withContext(cc.ui) {
+					Timber.e(e)
+					//				if(e is ...) @TODO: обработать ошибки таймаута
+					viewState.setError(R.string.err_address_service_xxx, false)
+				}
+			}
+			finally { withContext(cc.ui) { viewState.blockInterface(false) } }
+		}
 	}
 
 	fun onDestinationAddressSelected(address: GTAddress) {
