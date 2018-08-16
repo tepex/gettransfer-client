@@ -95,6 +95,11 @@ class MainPresenter(private val cc: CoroutineContexts,
 			viewState.setError(R.string.err_address_service_xxx, false)
 		}, { viewState.blockInterface(false) })
 	}
+
+	fun onSettingsClick() {
+		Timber.d("settings click")
+		router.navigateTo(Screens.SETTINGS)
+	}
 	
 	fun onSearchClick(addressPair: AddressPair) { router.navigateTo(Screens.FIND_ADDRESS, addressPair) }
 	fun onAboutClick() { router.navigateTo(Screens.ABOUT) }

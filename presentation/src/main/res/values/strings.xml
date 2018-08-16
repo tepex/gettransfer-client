@@ -194,4 +194,18 @@
     <string name="unable_to_update_transfers">Unable to update transfers</string>
 
     <string name="new_transfer_short">New</string>
+
+    <string name="i_read_and_agree">Я ознакомился и согласен с текстом</string>
+    <string name="license_agreement"><u>Лицензионное соглашение</u></string>
+    <string name="get_offers">Get offers</string>
+    <string name="type_your_comments">Type here your comments, requirements, or driver tasks</string>
+    <string name="flight_or_train_number">Flight or train number</string>
+    <string name="children_seats_count">Children seats count</string>
+    <string name="enter_phone_number">Enter phone number</string>
+    <string name="enter_email">Enter email</string>
+    <string name="your_name">Your name</string>
+    <string name="additional">Additional</string>
+    <string name="number_of_passengers">Number of passengers</string>
+    <string name="transfer_date_and_time">Transfer date and time</string>
+    <string name="average_price_suggest_your_price">Average price, suggest your price</string>
 </resources>
