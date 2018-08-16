@@ -53,12 +53,18 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 			address.setHint(ta.getString(R.styleable.SearchAddress_hint))
 			ta.recycle()
 		}
-		clearBtn.setOnClickListener { text = "" }
+		clearBtn.setOnClickListener { 
+			text = ""
+			clearBtn.visibility = View.GONE
+		}
 	}
 	
-	fun initWidget(listView: RecyclerView, addressPrediction: String?) {
+	fun initWidget(listView: RecyclerView, addressPrediction: String) {
 		this.listView = listView
-		text = addressPrediction ?: ""
+		if(!addressPrediction.isBlank()) {
+			text = addressPrediction.trim()
+			clearBtn.visibility = View.VISIBLE
+		}
 	}
 	
 	/**
@@ -66,7 +72,11 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	 */
 	inline fun onTextChanged(crossinline listener: (String) -> Unit) {
 		address.addTextChangedListener(object: TextWatcher {
-			override fun afterTextChanged(s: Editable?) { if(!implicitInput) listener(s?.toString()?.trim() ?: "") }
+			override fun afterTextChanged(s: Editable?) {
+				val content = s?.toString()?.trim() ?: ""
+				if(content.isBlank()) clearBtn.visibility = View.GONE else clearBtn.visibility = View.VISIBLE
+				if(!implicitInput) listener(content) 
+			}
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 		})

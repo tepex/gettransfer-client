@@ -51,7 +51,7 @@ class AddressRepositoryImpl(private val geocoder: Geocoder, private val gdClient
 		Tasks.await(results)
 		val list = DataBufferUtils.freezeAndClose(results.getResult())
 		list.forEach { Timber.d(it.getFullText(null).toString()) }
-		Thread.sleep(3000)
+		//Thread.sleep(3000)
 		//return list.map { GTAddress(it.getPrimaryText(null).toString()) }
 		return list.map { GTAddress(it.getFullText(null).toString()) }
 	}
