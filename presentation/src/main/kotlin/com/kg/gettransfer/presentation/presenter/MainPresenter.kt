@@ -139,6 +139,11 @@ class MainPresenter(private val cc: CoroutineContexts,
 		Timber.d("read more click")
 		router.navigateTo(Screens.READ_MORE)
 	}
+
+	fun onSettingsClick() {
+		Timber.d("settings click")
+		router.navigateTo(Screens.SETTINGS)
+	}
 	
 	fun onBackCommandClick() {
 		router.exit()

@@ -127,6 +127,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			when(screenKey) {
 				Screens.ABOUT -> return Intent(this@MainActivity, AboutActivity::class.java)
 				Screens.FIND_ADDRESS -> return Intent(this@MainActivity, SearchActivity::class.java)
+				Screens.SETTINGS -> return Intent(this@MainActivity, CreateOrderActivity::class.java)
 			}
 			return null
 		}
@@ -206,6 +207,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			Timber.d("nav view item ${item.title}")
 			when(item.itemId) {
 				R.id.nav_about -> presenter.onAboutClick()
+				R.id.nav_settings -> presenter.onSettingsClick()
 				else -> Timber.d("No route for ${item.title}")
 			}
 			drawer.closeDrawer(GravityCompat.START)
