@@ -35,13 +35,13 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
 	override val containerView: View
 	private lateinit var listView: RecyclerView
-	/** Ввод с помощью setText(). Флаг предотвращает срабатывание afterTextChanged */
+	/** Ввод с помощью setText(). Флаг предотвращает срабатывание onTextChanged */
 	var implicitInput = false
 	
 	var text: String
 		get() { return address.getText().toString() }
 		set(value) {
-			implicitInput = true
+			//implicitInput = true
 			address.setText(value)
 			implicitInput = false
 		}
@@ -53,10 +53,10 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 			address.setHint(ta.getString(R.styleable.SearchAddress_hint))
 			ta.recycle()
 		}
-		clearBtn.setOnClickListener { 
-			text = ""
-			clearBtn.visibility = View.GONE
-		}
+		
+		/* Логика кнопки очистки поля */
+		onTextChanged { if(it.isBlank()) clearBtn.visibility = View.GONE else clearBtn.visibility = View.VISIBLE	}
+		clearBtn.setOnClickListener { text = "" }
 	}
 	
 	fun initWidget(listView: RecyclerView, addressPrediction: String) {
@@ -72,11 +72,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	 */
 	inline fun onTextChanged(crossinline listener: (String) -> Unit) {
 		address.addTextChangedListener(object: TextWatcher {
-			override fun afterTextChanged(s: Editable?) {
-				val content = s?.toString()?.trim() ?: ""
-				if(content.isBlank()) clearBtn.visibility = View.GONE else clearBtn.visibility = View.VISIBLE
-				if(!implicitInput) listener(content) 
-			}
+			override fun afterTextChanged(s: Editable?) { if(!implicitInput) listener(s?.toString()?.trim() ?: "") }
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 		})
