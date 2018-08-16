@@ -54,16 +54,7 @@ class AddressRepositoryImpl(private val geocoder: Geocoder, private val gdClient
 		val results = gdClient.getAutocompletePredictions(prediction, null, null)
 		Tasks.await(results)
 		val list = DataBufferUtils.freezeAndClose(results.getResult())
+		Timber.d(list.toString())
 		return list.map { GTAddress(it.getPrimaryText(null).toString()) }
-		
-		/*
-		apbResponse = suspendCoroutine { cont ->
-			gdClient.getAutocompletePredictions(prediction, null, null)
-//				.addOnCompleteListener { response: AutocompletePredictionBufferResponse -> cont.resume(response) }
-				.addOnCompleteListener { cont.resume(it) }
-				.addOnFailureListener { cont.resumeWithException(it) }
-		}
-		return apbResponse.iterator.map( { GTAddress(it.getPrimaryText(null)) })
-		*/
 	}
 }

@@ -35,23 +35,18 @@ class SearchPresenter(private val cc: CoroutineContexts,
 		if(addr != null) viewState.setAddressFrom(addr.address)
 	}
 
-	fun requestAddressListByPrediction(prediction: String) = utils.launchAsync(compositeDisposable) {
-		viewState.blockInterface(true)
-		utils.asyncAwait {
-			try {
-				val list = addressInteractor.getAutocompletePredictions(prediction)
-				viewState.setAddressList(list)
-			}
-			catch(e: Exception) {
-				withContext(cc.ui) {
-					Timber.e(e)
-					//				if(e is ...) @TODO: обработать ошибки таймаута
-					viewState.setError(R.string.err_address_service_xxx, false)
-				}
-			}
-			finally { withContext(cc.ui) { viewState.blockInterface(false) } }
-		}
-	}
+	fun requestAddressListByPrediction(prediction: String) = 
+		utils.launchAsyncTryCatchFinally(compositeDisposable, {
+			viewState.blockInterface(true)
+			val list = utils.asyncAwait { addressInteractor.getAutocompletePredictions(prediction) }
+			viewState.setAddressList(list)
+		}, {e ->
+			Timber.e(e)
+			// if(e is ...) @TODO: обработать ошибки таймаута
+			viewState.setError(R.string.err_address_service_xxx, false)
+		}, {
+			viewState.blockInterface(false)
+		})
 
 	fun onDestinationAddressSelected(address: GTAddress) {
 		Timber.d("select address: %s", address);

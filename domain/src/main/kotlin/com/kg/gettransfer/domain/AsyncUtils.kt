@@ -28,6 +28,20 @@ class AsyncUtils(private val cc: CoroutineContexts) {
 				else throw e
 			}
 		}
+		
+		suspend fun CoroutineScope.tryCatchFinally(tryBlock: Task,
+			                                       catchBlock: TaskThrowable,
+			                                       finallyBlock: Task) {
+			var caughtThrowable: Throwable? = null
+			
+			try { tryBlock() } catch (e: Throwable) {
+				if(e !is CancellationException) catchBlock(e)
+				else caughtThrowable = e
+			} finally {
+				if(caughtThrowable is CancellationException) throw caughtThrowable
+				else finallyBlock()
+			}
+		}
 	}
 	
 	@Synchronized
@@ -40,6 +54,14 @@ class AsyncUtils(private val cc: CoroutineContexts) {
 		launchAsync(root) { tryCatch(tryBlock, catchBlock) }
 	}
 	
+	@Synchronized
+	fun launchAsyncTryCatchFinally(root: Job,
+		                           tryBlock: Task,
+		                           catchBlock: TaskThrowable,
+		                           finallyBlock: Task) {
+		launchAsync(root) { tryCatchFinally(tryBlock, catchBlock, finallyBlock) }
+	}
+
 	@Synchronized
 	suspend fun <T> asyncAwait(bl: TaskGeneric<T>): T {
 		return async(context = cc.bg, block = bl).await()
