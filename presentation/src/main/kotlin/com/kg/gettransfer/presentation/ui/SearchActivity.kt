@@ -115,6 +115,9 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		searchTo.requestFocus()
 		
 		presenter.requestAddressListByPrediction(addressPair.to)
+		
+		searchFrom.onTextChanged { presenter.requestAddressListByPrediction(it) } 
+		searchTo.onTextChanged { presenter.requestAddressListByPrediction(it) }
 	}
 
 	@CallSuper

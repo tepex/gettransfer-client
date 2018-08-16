@@ -43,18 +43,16 @@ class AddressRepositoryImpl(private val geocoder: Geocoder, private val gdClient
 	
 	override fun getCachedAddress() = addressCache.getLastAddress()
 	
-	/*
-	override fun getAutocompletePredictions(prediction: String): List<GTAddress> {
-		val list = ArrayList<GTAddress>()
-		for(i in 1..40) list.add(GTAddress("$prediction Item ${i+1}"))
-		return list
-	}
-	*/
+	/**
+	 * @TODO: Добавить таймаут
+	 */
 	override fun getAutocompletePredictions(prediction: String): List<GTAddress> {
 		val results = gdClient.getAutocompletePredictions(prediction, null, null)
 		Tasks.await(results)
 		val list = DataBufferUtils.freezeAndClose(results.getResult())
-		Timber.d(list.toString())
-		return list.map { GTAddress(it.getPrimaryText(null).toString()) }
+		list.forEach { Timber.d(it.getFullText(null).toString()) }
+		Thread.sleep(3000)
+		//return list.map { GTAddress(it.getPrimaryText(null).toString()) }
+		return list.map { GTAddress(it.getFullText(null).toString()) }
 	}
 }

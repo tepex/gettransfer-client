@@ -248,10 +248,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		}
 		searchTo.onTextChanged {
 			if(it.length >= ADDRESS_PREDICTION_SIZE)
-			{
-				searchTo.text = "" 
 				presenter.onSearchClick(AddressPair(searchFrom.text, it))
-			}
 		}
 		
 		val fade = Fade()
@@ -294,6 +291,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	@CallSuper
 	protected override fun onStop() {
 		if(permissionsGranted) mapView.onStop()
+		searchTo.text = ""
 		super.onStop()
 	}
 	

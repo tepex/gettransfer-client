@@ -96,10 +96,7 @@ class MainPresenter(private val cc: CoroutineContexts,
 		viewState.blockInterface(false)
 	}
 	
-	fun onSearchClick(addressPair: AddressPair) {
-		router.navigateTo(Screens.FIND_ADDRESS, addressPair)
-	}
-	
+	fun onSearchClick(addressPair: AddressPair) { router.navigateTo(Screens.FIND_ADDRESS, addressPair) }
 	fun onAboutClick() { router.navigateTo(Screens.ABOUT) }
 	fun readMoreClick() { router.navigateTo(Screens.READ_MORE) }
 	fun onBackCommandClick() { router.exit() }
