@@ -35,8 +35,17 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	}
 	
 	override fun onFirstViewAttach() {
-		val addr = addressInteractor.getCachedAddress()
-		if(addr != null) viewState.setAddressFrom(addr.address)
+		utils.launchAsyncTryCatchFinally(compositeDisposable, {
+			viewState.blockInterface(true)
+			val currentAddress = utils.asyncAwait { addressInteractor.getCurrentAddress() }
+			if(currentAddress != null) viewState.setAddressFrom(currentAddress)
+		}, {e ->
+			Timber.e(e)
+			// if(e is ...) @TODO: обработать ошибки таймаута
+			viewState.setError(R.string.err_address_service_xxx, false)
+		}, {
+			viewState.blockInterface(false)
+		})
 	}
 
 	fun requestAddressListByPrediction(prediction: String) {
@@ -60,7 +69,8 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	}
 
 	fun onDestinationAddressSelected(address: GTAddress) {
-		Timber.d("select address: $address")
+		Timber.d("select address from list: $address")
+		viewState.setAddress(address)
 	}
 	
 	fun onBackCommandClick() = viewState.finish()

@@ -4,8 +4,12 @@ import android.location.Address
 import android.location.Geocoder
 
 import com.google.android.gms.common.data.DataBufferUtils
+
 import com.google.android.gms.location.places.AutocompletePredictionBufferResponse
 import com.google.android.gms.location.places.GeoDataClient
+import com.google.android.gms.location.places.Place
+import com.google.android.gms.location.places.PlaceDetectionClient
+
 import com.google.android.gms.tasks.Tasks
 
 import com.kg.gettransfer.data.AddressCache
@@ -18,9 +22,9 @@ import kotlin.coroutines.experimental.suspendCoroutine
 
 import timber.log.Timber
 
-class AddressRepositoryImpl(private val geocoder: Geocoder, private val gdClient: GeoDataClient): 
-	AddressRepository {
-	
+class AddressRepositoryImpl(private val geocoder: Geocoder,
+	                        private val gdClient: GeoDataClient,
+	                        private val pdClient: PlaceDetectionClient): AddressRepository {
 	private val addressCache = AddressCache()
 	
 	override fun getAddressByLocation(point: Point): GTAddress? {
@@ -43,15 +47,26 @@ class AddressRepositoryImpl(private val geocoder: Geocoder, private val gdClient
 	
 	override fun getCachedAddress() = addressCache.getLastAddress()
 	
+	override fun getCurrentAddress(): GTAddress? {
+		val results = pdClient.getCurrentPlace(null)
+		Tasks.await(results)
+		val list = DataBufferUtils.freezeAndClose(results.getResult())
+		return if(!list.isEmpty()) {
+			val place = list.get(0).place
+			Timber.d("Current place name: %s", place.name)
+			GTAddress(place.id, place.placeTypes, place.address.toString(), 
+				Point(place.latLng.latitude, place.latLng.longitude))
+		}
+		else null
+	}
+	
 	/**
 	 * @TODO: Добавить таймаут
 	 */
 	override fun getAutocompletePredictions(prediction: String): List<GTAddress> {
 		val results = gdClient.getAutocompletePredictions(prediction, null, null)
-		val response = Tasks.await(results)
+		Tasks.await(results)
 		val list = DataBufferUtils.freezeAndClose(results.getResult())
-		Timber.d("===== ${Thread.currentThread().name}")
-		Thread.sleep(3000)
 		val ret = list.map { GTAddress(it.placeId, it.placeTypes, it.getFullText(null).toString()) }
 		ret.forEach { Timber.d(it.toString()) }
 		return ret

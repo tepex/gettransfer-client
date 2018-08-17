@@ -17,6 +17,7 @@ import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 
+import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.Screens
@@ -82,22 +83,17 @@ class MainPresenter(private val cc: CoroutineContexts,
 	}
 	
 	fun updateCurrentLocation() {
-		utils.launchAsync(compositeDisposable) {
+		utils.launchAsyncTryCatchFinally(compositeDisposable, {
 			Timber.d("update current location")
 			viewState.blockInterface(true)
-		 
-			val result = utils.asyncAwait { locationInteractor.getCurrentLocation() }
-			if(result.point != null) {
-				val point: Point = result.point as Point
-				val latLng = LatLng(point.latitude, point.longitude)
-				viewState.setMapPoint(latLng)
-			
-				val addr = utils.asyncAwait { addressInteractor.getAddressByLocation(point)	}
-				if(addr != null) viewState.setAddressFrom(addr.address)
-			}
-			else Timber.e(result.error)
-			viewState.blockInterface(false)
-		}
+
+			val currentAddress = utils.asyncAwait { addressInteractor.getCurrentAddress() }
+			if(currentAddress != null) viewState.setAddressFrom(currentAddress)
+		}, {e ->
+			Timber.e(e)
+			// if(e is ...) @TODO: обработать ошибки таймаута
+			viewState.setError(R.string.err_address_service_xxx, false)
+		}, { viewState.blockInterface(false) })
 	}
 	
 	fun onSearchClick(addressPair: AddressPair) { router.navigateTo(Screens.FIND_ADDRESS, addressPair) }

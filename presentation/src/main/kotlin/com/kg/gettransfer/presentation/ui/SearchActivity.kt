@@ -71,15 +71,12 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	private val addressInteractor: AddressInteractor by inject()
 	private val coroutineContexts: CoroutineContexts by inject()
 	
+	private lateinit var currentAddressField: SearchAddress  
+	
 	@ProvidePresenter
 	fun createSearchPresenter(): SearchPresenter = SearchPresenter(coroutineContexts,
 		                                                     router,
 		                                                     addressInteractor)
-	
-	private val focusListener = View.OnFocusChangeListener {_, hasFocus ->
-	//	if(hasFocus) { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
-	}
-	
 	companion object {
 		@JvmField val FADE_DURATION  = 500L
 		@JvmField val SLIDE_DURATION = 500L
@@ -113,6 +110,10 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		
 		addressList.layoutManager = LinearLayoutManager(this)
 		
+		currentAddressField = searchTo
+		searchFrom.onFocusChanged { setAddressReceiver(it) }
+		searchTo.onFocusChanged { setAddressReceiver(it) }
+		
 		val addressPair: AddressPair = intent.getParcelableExtra(EXTRA_ADDRESSES)
 		searchFrom.initWidget(addressList, addressPair.from)
 		searchTo.initWidget(addressList, addressPair.to)
@@ -120,11 +121,13 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		
 		presenter.requestAddressListByPrediction(addressPair.to)
 		
-		
-		/* по 3-м символам */
-		
 		searchFrom.onTextChanged { presenter.requestAddressListByPrediction(it) } 
 		searchTo.onTextChanged { presenter.requestAddressListByPrediction(it) }
+	}
+	
+	private fun setAddressReceiver(sa: SearchAddress) {
+		currentAddressField = sa
+		presenter.requestAddressListByPrediction(sa.text)
 	}
 
 	@CallSuper
@@ -140,17 +143,10 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	/* SearchView */
 	override fun blockInterface(block: Boolean) {}
 	
-	override fun setAddressFrom(address: String) {
-		searchFrom.text = address
-	}
+	override fun setAddressFrom(address: GTAddress) { searchFrom.text = address.address }
+	override fun setAddress(address: GTAddress) { currentAddressField.text = address.address }
 	
-	override fun setAddressTo(address: String) {
-		searchTo.text = address
-	}
-	
-	override fun setAddressList(list: List<GTAddress>) {
-		addressList.adapter = AddressAdapter(presenter, list)
-	}
+	override fun setAddressList(list: List<GTAddress>) { addressList.adapter = AddressAdapter(presenter, list) }
 	
 	override fun setError(@StringRes errId: Int, finish: Boolean) {
 		Utils.showError(this, errId, finish)

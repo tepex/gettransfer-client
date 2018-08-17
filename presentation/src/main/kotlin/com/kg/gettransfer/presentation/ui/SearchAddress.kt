@@ -86,4 +86,8 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		address.setOnFocusChangeListener { _, hasFocus -> if(hasFocus) listener() }
 		onTextChanged { listener() }
 	}
+	
+	inline fun onFocusChanged(crossinline listener: (sa: SearchAddress) -> Unit) {
+		address.setOnFocusChangeListener { view, hasFocus -> if(hasFocus) listener(this@SearchAddress) }
+	}
 }

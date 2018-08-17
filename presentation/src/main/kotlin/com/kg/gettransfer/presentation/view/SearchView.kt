@@ -9,5 +9,6 @@ import com.kg.gettransfer.domain.model.GTAddress
 @StateStrategyType(OneExecutionStateStrategy::class)
 //interface MainView: MvpView, OnCameraMoveListener
 interface SearchView: BaseView {
+	fun setAddress(address: GTAddress)
 	fun setAddressList(list: List<GTAddress>)
 }

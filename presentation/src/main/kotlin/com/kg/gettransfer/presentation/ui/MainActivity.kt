@@ -67,6 +67,8 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 
+import com.kg.gettransfer.domain.model.GTAddress
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.AddressPair
 import com.kg.gettransfer.presentation.presenter.MainPresenter
@@ -416,12 +418,8 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		}
 	}
 	
-	override fun setAddressFrom(address: String) {
-		searchFrom.text = address
-	}
-	
-	override fun setAddressTo(address: String) {
-		searchTo.text = address
+	override fun setAddressFrom(address: GTAddress) {
+		searchFrom.text = address.address
 	}
 	
 	override fun setError(@StringRes errId: Int, finish: Boolean) {

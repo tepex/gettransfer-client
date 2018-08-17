@@ -2,7 +2,8 @@ package com.kg.gettransfer.domain.model
 
 data class GTAddress(val id: String? = null,
 	                 val placeTypes: List<Int>? = null,
-	                 val address: String) {
+	                 val address: String,
+	                 val point: Point? = null) {
 
 	companion object {
 		@JvmField val TYPE_STREET_ADDRESS = 1021
