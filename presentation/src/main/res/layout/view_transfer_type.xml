@@ -17,7 +17,7 @@
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:background="@drawable/cb_transfer_type_selector"
-            android:button="@drawable/cb_transfer_type_selector"/>
+            android:button="@null"/>
 
         <TextView
             android:id="@+id/tvTransferType"
@@ -49,7 +49,7 @@
         android:src="@drawable/ic_person"/>
 
         <TextView
-            android:id="@+id/tvCountPerson"
+            android:id="@+id/tvNumberPersonsTransfer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="11sp"
