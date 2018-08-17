@@ -23,7 +23,7 @@ import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.AddressPair
 import com.kg.gettransfer.presentation.view.MainView
 
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.Job
 
 import ru.terrakok.cicerone.Router
 
@@ -61,10 +61,12 @@ class MainPresenter(private val cc: CoroutineContexts,
 	
 //	fun onFabClick() = launch(cc.ui, parent = compositeDisposable) {
 //val s = withContext(cc.bg) { myCoroutine() }
-	fun onFabClick() = utils.launchAsync(compositeDisposable) {
-		Timber.d("Start coroutine. ${Thread.currentThread().name}")
-		val s = utils.asyncAwait { myCoroutine() }
-		Timber.d("end coroutine, ${Thread.currentThread().name}")
+	fun onFabClick() {
+			utils.launchAsync(compositeDisposable) {
+				Timber.d("Start coroutine. ${Thread.currentThread().name}")
+				val s = utils.asyncAwait { myCoroutine() }
+				Timber.d("end coroutine, ${Thread.currentThread().name}")
+			}
 	}
 	
 	private fun myCoroutine(): String {
@@ -79,21 +81,23 @@ class MainPresenter(private val cc: CoroutineContexts,
 		return "wqeweqw"
 	}
 	
-	fun updateCurrentLocation() = utils.launchAsync(compositeDisposable) {
-		Timber.d("update current location")
-		viewState.blockInterface(true)
+	fun updateCurrentLocation() {
+		utils.launchAsync(compositeDisposable) {
+			Timber.d("update current location")
+			viewState.blockInterface(true)
 		 
-		val result = utils.asyncAwait { locationInteractor.getCurrentLocation() }
-		if(result.point != null) {
-			val point: Point = result.point as Point
-			val latLng = LatLng(point.latitude, point.longitude)
-			viewState.setMapPoint(latLng)
+			val result = utils.asyncAwait { locationInteractor.getCurrentLocation() }
+			if(result.point != null) {
+				val point: Point = result.point as Point
+				val latLng = LatLng(point.latitude, point.longitude)
+				viewState.setMapPoint(latLng)
 			
-			val addr = utils.asyncAwait { addressInteractor.getAddressByLocation(point)	}
-			if(addr != null) viewState.setAddressFrom(addr.address)
+				val addr = utils.asyncAwait { addressInteractor.getAddressByLocation(point)	}
+				if(addr != null) viewState.setAddressFrom(addr.address)
+			}
+			else Timber.e(result.error)
+			viewState.blockInterface(false)
 		}
-		else Timber.e(result.error)
-		viewState.blockInterface(false)
 	}
 	
 	fun onSearchClick(addressPair: AddressPair) { router.navigateTo(Screens.FIND_ADDRESS, addressPair) }

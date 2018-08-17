@@ -16,7 +16,7 @@ import com.kg.gettransfer.domain.interactor.AddressInteractor
 
 import com.kg.gettransfer.presentation.view.SearchView
 
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.Job
 
 import ru.terrakok.cicerone.Router
 
@@ -47,6 +47,7 @@ class SearchPresenter(private val cc: CoroutineContexts,
 		Timber.d("------ request list for prediction $prediction")
 		utils.launchAsyncTryCatchFinally(compositeDisposable, {
 			viewState.blockInterface(true)
+			
 			val list = utils.asyncAwait { addressInteractor.getAutocompletePredictions(prediction) }
 			viewState.setAddressList(list)
 		}, {e ->

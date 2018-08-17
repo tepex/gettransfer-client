@@ -48,11 +48,10 @@ class AddressRepositoryImpl(private val geocoder: Geocoder, private val gdClient
 	 */
 	override fun getAutocompletePredictions(prediction: String): List<GTAddress> {
 		val results = gdClient.getAutocompletePredictions(prediction, null, null)
-		Tasks.await(results)
+		val response = Tasks.await(results)
 		val list = DataBufferUtils.freezeAndClose(results.getResult())
-		
-		//Thread.sleep(3000)
-		//return list.map { GTAddress(it.getPrimaryText(null).toString()) }
+		Timber.d("===== ${Thread.currentThread().name}")
+		Thread.sleep(3000)
 		val ret = list.map { GTAddress(it.placeId, it.placeTypes, it.getFullText(null).toString()) }
 		ret.forEach { Timber.d(it.toString()) }
 		return ret

@@ -117,9 +117,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		                                                     router,
 		                                                     locationInteractor,
 		                                                     addressInteractor)
-	private val focusListener = View.OnFocusChangeListener {_, hasFocus ->
-		if(hasFocus) { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
-	}
 
 	private val readMoreListener = View.OnClickListener {
 		presenter.readMoreClick()

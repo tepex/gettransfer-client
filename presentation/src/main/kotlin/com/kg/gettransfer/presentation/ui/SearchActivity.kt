@@ -76,6 +76,10 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		                                                     router,
 		                                                     addressInteractor)
 	
+	private val focusListener = View.OnFocusChangeListener {_, hasFocus ->
+	//	if(hasFocus) { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
+	}
+	
 	companion object {
 		@JvmField val FADE_DURATION  = 500L
 		@JvmField val SLIDE_DURATION = 500L
