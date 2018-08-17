@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.address_list_item.*
 import timber.log.Timber
 
 class AddressAdapter(private val presenter: SearchPresenter,
-	                 private val list: List<GTAddress>): RecyclerView.Adapter<AddressAdapter.ViewHolder>() {
+	                 private var list: List<GTAddress>): RecyclerView.Adapter<AddressAdapter.ViewHolder>() {
 	companion object {
 		var selectedPos = RecyclerView.NO_POSITION
 	}
@@ -32,6 +32,11 @@ class AddressAdapter(private val presenter: SearchPresenter,
 	
 	override fun onBindViewHolder(holder: ViewHolder, pos: Int) {
 		holder.bind(list.get(pos), { presenter.onDestinationAddressSelected(it) })
+	}
+	
+	fun clear() {
+		list = emptyList()
+		notifyDataSetChanged()
 	}
 	
 	class ViewHolder(override val containerView: View): 

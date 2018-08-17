@@ -238,12 +238,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		if(!permissionsGranted) Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
 		else initGoogleMap(mapViewBundle)
 		
-		/* https://antonioleiva.com/listeners-several-functions-kotlin/ */
-		/*
-		searchFrom.onTextChanged { presenter.onSearchClick(AddressPair(it, searchTo.text)) }
-		searchTo.onTextChanged { presenter.onSearchClick(AddressPair(searchFrom.text, it)) }
-		*/
-		
 		val fade = Fade()
 		fade.setDuration(FADE_DURATION)
 		getWindow().setExitTransition(fade)
@@ -437,3 +431,4 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		Utils.showError(this, errId, finish)
     }
 }
+ 

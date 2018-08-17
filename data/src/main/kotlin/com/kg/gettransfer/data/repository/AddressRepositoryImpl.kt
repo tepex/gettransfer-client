@@ -34,7 +34,7 @@ class AddressRepositoryImpl(private val geocoder: Geocoder, private val gdClient
 			}
 			val addr = list?.firstOrNull()?.getAddressLine(0)
 			if(addr != null) {
-				address = GTAddress(addr)
+				address = GTAddress(address = addr)
 				addressCache.putAddress(point, address)
 			}
 		}
@@ -50,9 +50,11 @@ class AddressRepositoryImpl(private val geocoder: Geocoder, private val gdClient
 		val results = gdClient.getAutocompletePredictions(prediction, null, null)
 		Tasks.await(results)
 		val list = DataBufferUtils.freezeAndClose(results.getResult())
-		list.forEach { Timber.d(it.getFullText(null).toString()) }
+		
 		//Thread.sleep(3000)
 		//return list.map { GTAddress(it.getPrimaryText(null).toString()) }
-		return list.map { GTAddress(it.getFullText(null).toString()) }
+		val ret = list.map { GTAddress(it.placeId, it.placeTypes, it.getFullText(null).toString()) }
+		ret.forEach { Timber.d(it.toString()) }
+		return ret
 	}
 }

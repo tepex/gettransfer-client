@@ -82,7 +82,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 				if(!implicitInput) {
 					val content: String? = s?.toString()?.trim()
 					if(content?.length ?: 0 >= minChars) listener(content!!)
-				} 
+				}
 			}
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
