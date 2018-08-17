@@ -71,17 +71,18 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	private val addressInteractor: AddressInteractor by inject()
 	private val coroutineContexts: CoroutineContexts by inject()
 	
-	private val FADE_DURATION  = 500L
-	private val SLIDE_DURATION = 500L
-	
-	companion object {
-		const val EXTRA_ADDRESSES = "addresses"
-	}
-	
 	@ProvidePresenter
 	fun createSearchPresenter(): SearchPresenter = SearchPresenter(coroutineContexts,
 		                                                     router,
 		                                                     addressInteractor)
+	
+	companion object {
+		@JvmField val ADDRESS_PREDICTION_SIZE = 3
+		@JvmField val FADE_DURATION  = 500L
+		@JvmField val SLIDE_DURATION = 500L
+		@JvmField val EXTRA_ADDRESSES = "addresses"
+	}
+
 	init {
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 	}
@@ -116,8 +117,11 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		
 		presenter.requestAddressListByPrediction(addressPair.to)
 		
-		searchFrom.onTextChanged { presenter.requestAddressListByPrediction(it) } 
-		searchTo.onTextChanged { presenter.requestAddressListByPrediction(it) }
+		
+		/* по 3-м символам */
+		
+		searchFrom.onTextChanged(ADDRESS_PREDICTION_SIZE) { presenter.requestAddressListByPrediction(it) } 
+		searchTo.onTextChanged(ADDRESS_PREDICTION_SIZE) { presenter.requestAddressListByPrediction(it) }
 	}
 
 	@CallSuper

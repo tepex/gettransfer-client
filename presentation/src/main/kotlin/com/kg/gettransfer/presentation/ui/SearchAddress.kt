@@ -35,13 +35,13 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
 	override val containerView: View
 	private lateinit var listView: RecyclerView
-	/** Ввод с помощью setText(). Флаг предотвращает срабатывание onTextChanged */
+	/** true — ввод с помощью setText(). Флаг предотвращает срабатывание onTextChanged */
 	var implicitInput = false
 	
 	var text: String
 		get() { return address.getText().toString() }
 		set(value) {
-			//implicitInput = true
+			implicitInput = true
 			address.setText(value)
 			implicitInput = false
 		}
@@ -55,8 +55,12 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		}
 		
 		/* Логика кнопки очистки поля */
-		onTextChanged { if(it.isBlank()) clearBtn.visibility = View.GONE else clearBtn.visibility = View.VISIBLE	}
-		clearBtn.setOnClickListener { text = "" }
+		address.addTextChangedListener(object: TextWatcher {
+			override fun afterTextChanged(s: Editable?) { if(s?.toString()?.isBlank() ?: false) clearBtn.visibility = View.GONE else clearBtn.visibility = View.VISIBLE }
+			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+		})
+		clearBtn.setOnClickListener { address.setText("") }
 	}
 	
 	fun initWidget(listView: RecyclerView, addressPrediction: String) {
@@ -69,12 +73,24 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	
 	/**
 	 * https://antonioleiva.com/lambdas-kotlin/
+	 *
+	 * @param minChars — минимальное кол-во символов для срабатывания listener
 	 */
-	inline fun onTextChanged(crossinline listener: (String) -> Unit) {
+	inline fun onTextChanged(minChars: Int = 0, crossinline listener: (String) -> Unit) {
 		address.addTextChangedListener(object: TextWatcher {
-			override fun afterTextChanged(s: Editable?) { if(!implicitInput) listener(s?.toString()?.trim() ?: "") }
+			override fun afterTextChanged(s: Editable?) {
+				if(!implicitInput) {
+					val content: String? = s?.toString()?.trim()
+					if(content?.length ?: 0 >= minChars) listener(content!!)
+				} 
+			}
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 		})
+	}
+	
+	inline fun onStartAddressSearch(crossinline listener: () -> Unit) {
+		address.setOnFocusChangeListener { _, hasFocus -> if(hasFocus) listener() }
+		onTextChanged(0) { listener() }
 	}
 }
