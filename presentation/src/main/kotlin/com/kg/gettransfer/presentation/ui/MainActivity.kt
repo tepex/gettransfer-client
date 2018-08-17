@@ -112,8 +112,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private var isFirst = true
 	private var centerMarker: Marker? = null
 	
-	private val FADE_DURATION = 500L
-	
 	@ProvidePresenter
 	fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
 		                                                     router,
@@ -165,14 +163,16 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	}
 	
 	companion object {
-		private val PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-		private val NOT_USED = -1
-		const val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
-		const val PERMISSION_REQUEST = 2211
-		const val MY_LOCATION_BUTTON_INDEX = 2
-		const val COMPASS_BUTTON_INDEX = 5
+		@JvmField val PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+		@JvmField val NOT_USED = -1
+		@JvmField val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
+		@JvmField val PERMISSION_REQUEST = 2211
+		@JvmField val MY_LOCATION_BUTTON_INDEX = 2
+		@JvmField val COMPASS_BUTTON_INDEX = 5
+		@JvmField val FADE_DURATION  = 500L
 	}
-
+	
+	
 	init {
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 	}
@@ -361,8 +361,8 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			customizeGoogleMaps()
 			//presenter.updateCurrentLocation()
 			
-			searchFrom.onFocusChanged { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
-			searchTo.onFocusChanged { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
+			searchFrom.onStartAddressSearch { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
+			searchTo.onStartAddressSearch { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
 		}
 	}
 	

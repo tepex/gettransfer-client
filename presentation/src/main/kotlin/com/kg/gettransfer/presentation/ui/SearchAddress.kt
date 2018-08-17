@@ -35,7 +35,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
 	override val containerView: View
 	private lateinit var listView: RecyclerView
-	/** Ввод с помощью setText(). Флаг предотвращает срабатывание onTextChanged */
+	/** true — ввод с помощью setText(). Флаг предотвращает срабатывание onTextChanged */
 	var implicitInput = false
 	
 	var text: String
@@ -45,11 +45,6 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 			address.setText(value)
 			implicitInput = false
 		}
-	
-	companion object {
-		@JvmField
-		val ADDRESS_PREDICTION_SIZE = 3
-	}
 	
 	init {
 		containerView = LayoutInflater.from(context).inflate(R.layout.search_address, this, true)
@@ -78,13 +73,15 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	
 	/**
 	 * https://antonioleiva.com/lambdas-kotlin/
+	 *
+	 * @param minChars — минимальное кол-во символов для срабатывания listener
 	 */
-	inline fun onTextChanged(crossinline listener: (String) -> Unit) {
+	inline fun onTextChanged(minChars: Int = 0, crossinline listener: (String) -> Unit) {
 		address.addTextChangedListener(object: TextWatcher {
 			override fun afterTextChanged(s: Editable?) {
 				if(!implicitInput) {
 					val content: String? = s?.toString()?.trim()
-					if(content?.length ?: 0 >= ADDRESS_PREDICTION_SIZE) listener(content!!)
+					if(content?.length ?: 0 >= minChars) listener(content!!)
 				} 
 			}
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -92,7 +89,8 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		})
 	}
 	
-	inline fun onFocusChanged(crossinline listener: () -> Unit) {
+	inline fun onStartAddressSearch(crossinline listener: () -> Unit) {
 		address.setOnFocusChangeListener { _, hasFocus -> if(hasFocus) listener() }
+		onTextChanged(0) { listener() }
 	}
 }
