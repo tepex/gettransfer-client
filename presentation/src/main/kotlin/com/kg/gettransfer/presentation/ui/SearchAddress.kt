@@ -46,6 +46,11 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 			implicitInput = false
 		}
 	
+	companion object {
+		@JvmField
+		val ADDRESS_PREDICTION_SIZE = 3
+	}
+	
 	init {
 		containerView = LayoutInflater.from(context).inflate(R.layout.search_address, this, true)
 		if(attrs != null) {
@@ -76,9 +81,18 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	 */
 	inline fun onTextChanged(crossinline listener: (String) -> Unit) {
 		address.addTextChangedListener(object: TextWatcher {
-			override fun afterTextChanged(s: Editable?) {if(!implicitInput) listener(s?.toString()?.trim() ?: "") }
+			override fun afterTextChanged(s: Editable?) {
+				if(!implicitInput) {
+					val content: String? = s?.toString()?.trim()
+					if(content?.length ?: 0 >= ADDRESS_PREDICTION_SIZE) listener(content!!)
+				} 
+			}
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 		})
+	}
+	
+	inline fun onFocusChanged(crossinline listener: () -> Unit) {
+		address.setOnFocusChangeListener { _, hasFocus -> if(hasFocus) listener() }
 	}
 }

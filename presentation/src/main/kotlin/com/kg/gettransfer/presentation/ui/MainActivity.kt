@@ -113,18 +113,15 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private var centerMarker: Marker? = null
 	
 	private val FADE_DURATION = 500L
-	private val ADDRESS_PREDICTION_SIZE = 3
 	
 	@ProvidePresenter
 	fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
 		                                                     router,
 		                                                     locationInteractor,
 		                                                     addressInteractor)
-	/*
 	private val focusListener = View.OnFocusChangeListener {_, hasFocus ->
-		if(hasFocus) { presenter.onSearchClick() }
+		if(hasFocus) { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
 	}
-	*/
 
 	private val readMoreListener = View.OnClickListener {
 		presenter.readMoreClick()
@@ -242,8 +239,10 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		else initGoogleMap(mapViewBundle)
 		
 		/* https://antonioleiva.com/listeners-several-functions-kotlin/ */
+		/*
 		searchFrom.onTextChanged { presenter.onSearchClick(AddressPair(it, searchTo.text)) }
 		searchTo.onTextChanged { presenter.onSearchClick(AddressPair(searchFrom.text, it)) }
+		*/
 		
 		val fade = Fade()
 		fade.setDuration(FADE_DURATION)
@@ -361,8 +360,9 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			*/
 			customizeGoogleMaps()
 			//presenter.updateCurrentLocation()
-			//searchFrom.address.setOnFocusChangeListener(focusListener)
-			//searchTo.address.setOnFocusChangeListener(focusListener)
+			
+			searchFrom.onFocusChanged { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
+			searchTo.onFocusChanged { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
 		}
 	}
 	

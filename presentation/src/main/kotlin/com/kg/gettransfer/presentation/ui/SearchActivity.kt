@@ -116,6 +116,9 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		
 		presenter.requestAddressListByPrediction(addressPair.to)
 		
+		
+		/* по 3-м символам */
+		
 		searchFrom.onTextChanged { presenter.requestAddressListByPrediction(it) } 
 		searchTo.onTextChanged { presenter.requestAddressListByPrediction(it) }
 	}
