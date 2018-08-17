@@ -35,13 +35,13 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
 	override val containerView: View
 	private lateinit var listView: RecyclerView
-	/** Ввод с помощью setText(). Флаг предотвращает срабатывание afterTextChanged */
+	/** Ввод с помощью setText(). Флаг предотвращает срабатывание onTextChanged */
 	var implicitInput = false
 	
 	var text: String
 		get() { return address.getText().toString() }
 		set(value) {
-			implicitInput = true
+			//implicitInput = true
 			address.setText(value)
 			implicitInput = false
 		}
@@ -53,12 +53,18 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 			address.setHint(ta.getString(R.styleable.SearchAddress_hint))
 			ta.recycle()
 		}
+		
+		/* Логика кнопки очистки поля */
+		onTextChanged { if(it.isBlank()) clearBtn.visibility = View.GONE else clearBtn.visibility = View.VISIBLE	}
 		clearBtn.setOnClickListener { text = "" }
 	}
 	
-	fun initWidget(listView: RecyclerView, addressPrediction: String?) {
+	fun initWidget(listView: RecyclerView, addressPrediction: String) {
 		this.listView = listView
-		text = addressPrediction ?: ""
+		if(!addressPrediction.isBlank()) {
+			text = addressPrediction.trim()
+			clearBtn.visibility = View.VISIBLE
+		}
 	}
 	
 	/**

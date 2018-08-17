@@ -242,14 +242,8 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		else initGoogleMap(mapViewBundle)
 		
 		/* https://antonioleiva.com/listeners-several-functions-kotlin/ */
-		searchFrom.onTextChanged {
-			if(it.length >= ADDRESS_PREDICTION_SIZE)
-				presenter.onSearchClick(AddressPair(it, searchTo.text))
-		}
-		searchTo.onTextChanged {
-			if(it.length >= ADDRESS_PREDICTION_SIZE)
-				presenter.onSearchClick(AddressPair(searchFrom.text, it))
-		}
+		searchFrom.onTextChanged { presenter.onSearchClick(AddressPair(it, searchTo.text)) }
+		searchTo.onTextChanged { presenter.onSearchClick(AddressPair(searchFrom.text, it)) }
 		
 		val fade = Fade()
 		fade.setDuration(FADE_DURATION)
