@@ -30,13 +30,20 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	val compositeDisposable = Job()
 	val utils = AsyncUtils(cc)
 	
+	companion object {
+		@JvmField val ADDRESS_PREDICTION_SIZE = 3
+	}
+	
 	override fun onFirstViewAttach() {
 		val addr = addressInteractor.getCachedAddress()
 		if(addr != null) viewState.setAddressFrom(addr.address)
 	}
 
 	fun requestAddressListByPrediction(prediction: String) {
-		if(prediction.isBlank()) return
+		if(prediction.length < ADDRESS_PREDICTION_SIZE) {
+			viewState.setAddressList(emptyList())
+			return
+		}
 		Timber.d("------ request list for prediction $prediction")
 		utils.launchAsyncTryCatchFinally(compositeDisposable, {
 			viewState.blockInterface(true)

@@ -34,11 +34,6 @@ class AddressAdapter(private val presenter: SearchPresenter,
 		holder.bind(list.get(pos), { presenter.onDestinationAddressSelected(it) })
 	}
 	
-	fun clear() {
-		list = emptyList()
-		notifyDataSetChanged()
-	}
-	
 	class ViewHolder(override val containerView: View): 
 		RecyclerView.ViewHolder(containerView), LayoutContainer {
 			

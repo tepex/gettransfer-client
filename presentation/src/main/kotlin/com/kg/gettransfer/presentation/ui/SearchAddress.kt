@@ -73,17 +73,10 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	
 	/**
 	 * https://antonioleiva.com/lambdas-kotlin/
-	 *
-	 * @param minChars — минимальное кол-во символов для срабатывания listener
 	 */
-	inline fun onTextChanged(minChars: Int = 0, crossinline listener: (String) -> Unit) {
+	inline fun onTextChanged(crossinline listener: (String) -> Unit) {
 		address.addTextChangedListener(object: TextWatcher {
-			override fun afterTextChanged(s: Editable?) {
-				if(!implicitInput) {
-					val content: String? = s?.toString()?.trim()
-					if(content?.length ?: 0 >= minChars) listener(content!!)
-				}
-			}
+			override fun afterTextChanged(s: Editable?) { if(!implicitInput) listener(s?.toString()?.trim() ?: "") }
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 		})
@@ -91,6 +84,6 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	
 	inline fun onStartAddressSearch(crossinline listener: () -> Unit) {
 		address.setOnFocusChangeListener { _, hasFocus -> if(hasFocus) listener() }
-		onTextChanged(0) { listener() }
+		onTextChanged { listener() }
 	}
 }

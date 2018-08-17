@@ -77,7 +77,6 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		                                                     addressInteractor)
 	
 	companion object {
-		@JvmField val ADDRESS_PREDICTION_SIZE = 3
 		@JvmField val FADE_DURATION  = 500L
 		@JvmField val SLIDE_DURATION = 500L
 		@JvmField val EXTRA_ADDRESSES = "addresses"
@@ -120,8 +119,8 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		
 		/* по 3-м символам */
 		
-		searchFrom.onTextChanged(ADDRESS_PREDICTION_SIZE) { presenter.requestAddressListByPrediction(it) } 
-		searchTo.onTextChanged(ADDRESS_PREDICTION_SIZE) { presenter.requestAddressListByPrediction(it) }
+		searchFrom.onTextChanged { presenter.requestAddressListByPrediction(it) } 
+		searchTo.onTextChanged { presenter.requestAddressListByPrediction(it) }
 	}
 
 	@CallSuper
