@@ -23,8 +23,8 @@ class AddressCache(private val minDistance: Int = 0) {
 		return checkDistance(point)
 	}
 	
-	fun putAddress(point: Point, address: GTAddress) {
-		this.point = point
+	fun putAddress(address: GTAddress) {
+		this.point = address.point
 		this.address = address
 	}
 	

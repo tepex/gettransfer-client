@@ -33,8 +33,8 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
 			val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
 			val addr = list?.firstOrNull()?.getAddressLine(0)
 			if(addr != null) {
-				address = GTAddress(address = addr)
-				addressCache.putAddress(point, address)
+				address = GTAddress(address = addr, point = point)
+				addressCache.putAddress(address)
 			}
 			else throw RuntimeException("Address not found")
 		}

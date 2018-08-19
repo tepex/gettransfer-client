@@ -41,6 +41,7 @@ class SearchPresenter(private val cc: CoroutineContexts,
 		}
 	}
 
+	/*
 	fun requestAddressListByPrediction(prediction: String) {
 		if(prediction.length < ADDRESS_PREDICTION_SIZE) {
 			viewState.setAddressList(emptyList())
@@ -60,10 +61,11 @@ class SearchPresenter(private val cc: CoroutineContexts,
 			viewState.blockInterface(false)
 		})
 	}
+	*/
 	
 	fun onDestinationAddressSelected(address: GTAddress) {
 		Timber.d("select address from list: $address")
-		viewState.setAddress(address)
+		//viewState.setAddress(address)
 	}
 	
 	fun onBackCommandClick() = viewState.finish()

@@ -62,13 +62,13 @@ import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
-class SearchActivity: MvpAppCompatActivity(), SearchView {
+class SearchActivity: MvpAppCompatActivity(), SearchView, View.OnFocusChangeListener {
 	@InjectPresenter
 	internal lateinit var presenter: SearchPresenter
 	
 	private val router: Router by inject()
-	private val addressInteractor: AddressInteractor by inject()
-	private val coroutineContexts: CoroutineContexts by inject()
+	val addressInteractor: AddressInteractor by inject()
+	val coroutineContexts: CoroutineContexts by inject()
 	
 	private lateinit var currentAddressField: SearchAddress  
 	
@@ -110,6 +110,7 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		
 		addressList.layoutManager = LinearLayoutManager(this)
 		
+		/*
 		currentAddressField = searchTo
 		searchFrom.onFocusChanged { setAddressReceiver(it) }
 		searchTo.onFocusChanged { setAddressReceiver(it) }
@@ -120,13 +121,21 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		
 		searchFrom.onTextChanged { presenter.requestAddressListByPrediction(it) } 
 		searchTo.onTextChanged { presenter.requestAddressListByPrediction(it) }
+		*/
+		
+		searchFrom.initWidget(this, intent.getStringExtra(EXTRA_ADDRESS_FROM))
+		searchTo.initWidget(this, intent.getStringExtra(EXTRA_ADDRESS_TO))
+		searchTo.requestFocus()
 	}
 	
-	private fun setAddressReceiver(sa: SearchAddress) {
-		currentAddressField = sa
-		presenter.requestAddressListByPrediction(sa.text)
+	override fun onFocusChange(view: View, hasFocus: Boolean) {
+		if(!hasFocus) return
+		//addressList.adapter = AddressAdapter(presenter, list) }
+		val current = view.parent.parent as SearchAddress
+		current.requestAddresses()
 	}
 
+	
 	@CallSuper
 	protected override fun onDestroy() {
 		
@@ -141,9 +150,11 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	override fun blockInterface(block: Boolean) {}
 	
 	override fun setAddressFrom(address: GTAddress) { searchFrom.address = address }
-	override fun setAddress(address: GTAddress) { currentAddressField.text = address.address }
-	
 	override fun setAddressList(list: List<GTAddress>) { addressList.adapter = AddressAdapter(presenter, list) }
+	
+	/*
+	override fun setAddress(address: GTAddress) { currentAddressField.text = address.address }
+	*/
 	
 	override fun setError(@StringRes errId: Int, finish: Boolean) {
 		Utils.showError(this, errId, finish)
