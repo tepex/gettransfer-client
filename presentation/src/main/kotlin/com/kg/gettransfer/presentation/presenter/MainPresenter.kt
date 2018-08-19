@@ -37,17 +37,16 @@ class MainPresenter(private val cc: CoroutineContexts,
 	                private val addressInteractor: AddressInteractor): MvpPresenter<MainView>() {
 	                
 	var granted = false
-	val compositeDisposable = Job()
-	val utils = AsyncUtils(cc)
+	
+	private val compositeDisposable = Job()
+	private val utils = AsyncUtils(cc)
 	
 	override fun onFirstViewAttach() {
 		utils.launchAsync(compositeDisposable) {
 			Timber.d("onFirstViewAttach()")
 			if(granted) {
 				// Проверка досупности сервиса геолокации
-				val available = utils.asyncAwait {
-					locationInteractor.checkLocationServicesAvailability() 
-				}
+				val available = utils.asyncAwait { locationInteractor.checkLocationServicesAvailability() }
 				if(available) updateCurrentLocation()
 				else viewState.setError(R.string.err_location_service_not_available, true)
 			}
@@ -60,35 +59,15 @@ class MainPresenter(private val cc: CoroutineContexts,
 		super.onDestroy()
 	}
 	
-//	fun onFabClick() = launch(cc.ui, parent = compositeDisposable) {
-//val s = withContext(cc.bg) { myCoroutine() }
-	fun onFabClick() {
-			utils.launchAsync(compositeDisposable) {
-				Timber.d("Start coroutine. ${Thread.currentThread().name}")
-				val s = utils.asyncAwait { myCoroutine() }
-				Timber.d("end coroutine, ${Thread.currentThread().name}")
-			}
-	}
-	
-	private fun myCoroutine(): String {
-		Timber.d("start qqq: ${Thread.currentThread().name}")
-		//delay(3000)
-		try {
-			Thread.sleep(2000)
-		} catch(e: InterruptedException) {
-			Timber.d(e)
-		}
-		Timber.d("end qqq")
-		return "wqeweqw"
-	}
-	
 	fun updateCurrentLocation() {
 		utils.launchAsyncTryCatchFinally(compositeDisposable, {
 			Timber.d("update current location")
 			viewState.blockInterface(true)
 
 			val currentAddress = utils.asyncAwait { addressInteractor.getCurrentAddress() }
-			if(currentAddress != null) viewState.setAddressFrom(currentAddress)
+			if(currentAddress != null) {
+				viewState.setAddressFrom(currentAddress)
+			}
 		}, {e ->
 			Timber.e(e)
 			// if(e is ...) @TODO: обработать ошибки таймаута

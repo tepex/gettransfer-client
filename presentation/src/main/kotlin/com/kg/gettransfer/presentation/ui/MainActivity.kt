@@ -62,6 +62,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.AddressInteractor
@@ -79,7 +80,7 @@ import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 import kotlin.coroutines.experimental.suspendCoroutine
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.Job
 
 import org.koin.android.ext.android.inject
 
@@ -101,7 +102,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private lateinit var drawer: DrawerLayout
 	private lateinit var toggle: ActionBarDrawerToggle
 	
-	var permissionsGranted = false
+	private var permissionsGranted = false
 	
 	private val navigatorHolder: NavigatorHolder by inject()
 	private val router: Router by inject()
@@ -109,7 +110,9 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private val locationInteractor: LocationInteractor by inject()
 	private val coroutineContexts: CoroutineContexts by inject()
 	
-	var googleMap: GoogleMap? = null
+	private val compositeDisposable = Job()
+	private val utils = AsyncUtils(coroutineContexts)
+	private lateinit var googleMap: GoogleMap
 	
 	private var isFirst = true
 	private var centerMarker: Marker? = null
@@ -223,19 +226,17 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		
 		initNavigation()
 		
-		// test
-		if(BuildConfig.DEBUG) {
-			fab.setVisibility(View.VISIBLE)
-			fab.setOnClickListener { presenter.onFabClick() }
-		}
-		else fab.setVisibility(View.GONE)
-		
 		val mapViewBundle = savedInstanceState?.getBundle(MAP_VIEW_BUNDLE_KEY)
 		isFirst = savedInstanceState == null
 		
 		Timber.d("Permissions granted: ${permissionsGranted}")
 		if(!permissionsGranted) Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
 		else initGoogleMap(mapViewBundle)
+		
+		
+		searchFrom.onStartAddressSearch { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
+		searchTo.onStartAddressSearch { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
+
 		
 		val fade = Fade()
 		fade.setDuration(FADE_DURATION)
@@ -284,6 +285,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	@CallSuper
 	protected override fun onDestroy() {
 		if(permissionsGranted) mapView.onDestroy()
+		compositeDisposable.cancel()
 		super.onDestroy()
 	}
 	
@@ -341,35 +343,24 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	private fun initGoogleMap(mapViewBundle: Bundle?) {
 		mapView.onCreate(mapViewBundle)
-		launch(coroutineContexts.ui, parent = presenter.compositeDisposable) {
+		
+		utils.launchAsync(compositeDisposable) {
 			googleMap = getGoogleMapAsync()
-			/*
-			googleMap!!.setOnMyLocationButtonClickListener(OnMyLocationButtonClickListener {
-				onClickMyLocation()
-				true
-			})
-			googleMap!!.setOnCameraMoveListener(this)
-			presenter.updateCurrentLocation()
-			*/
 			customizeGoogleMaps()
-			//presenter.updateCurrentLocation()
-			
-			searchFrom.onStartAddressSearch { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
-			searchTo.onStartAddressSearch { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
 		}
 	}
 	
 	private suspend fun getGoogleMapAsync(): GoogleMap = suspendCoroutine { cont -> 
 		mapView.getMapAsync { cont.resume(it) } 
-	} 
+	}  
 	
 	/**
 	 * Грязный хак — меняем положение нативной кнопки 'MyLocation'
 	 * https://stackoverflow.com/questions/36785542/how-to-change-the-position-of-my-location-button-in-google-maps-using-android-st
 	 */
-	private suspend fun customizeGoogleMaps() {
-		googleMap!!.setMyLocationEnabled(true)
-		googleMap!!.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
+	private fun customizeGoogleMaps() {
+		googleMap.setMyLocationEnabled(true)
+		googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
 		val parent = (mapView?.findViewById(1) as View).parent as View
 		val myLocationBtn = parent.findViewById(MY_LOCATION_BUTTON_INDEX) as View
 		val rlp = myLocationBtn.getLayoutParams() as RelativeLayout.LayoutParams 
@@ -398,23 +389,22 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	override fun setMapPoint(current: LatLng) {
 		Timber.d("setMapPoint: $current")
-		if(googleMap == null) return
 		if(centerMarker == null)
 		{
 			/* Грязный хак!!! */
-			val cp = googleMap!!.cameraPosition
+			val cp = googleMap.cameraPosition
 			if(isFirst || cp.zoom <= 2.0)
 			{
 				val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
-				googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(current, zoom))
+				googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current, zoom))
 			}
-			else googleMap?.moveCamera(CameraUpdateFactory.newLatLng(current))
-				centerMarker = googleMap?.addMarker(MarkerOptions().position(current))
+			else googleMap.moveCamera(CameraUpdateFactory.newLatLng(current))
+				centerMarker = googleMap.addMarker(MarkerOptions().position(current))
 		}
 		else
 		{
-			googleMap?.moveCamera(CameraUpdateFactory.newLatLng(current))
-			centerMarker?.setPosition(current)
+			googleMap.moveCamera(CameraUpdateFactory.newLatLng(current))
+			centerMarker!!.setPosition(current)
 		}
 	}
 	
