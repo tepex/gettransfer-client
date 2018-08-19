@@ -118,8 +118,6 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		searchTo.initWidget(addressList, intent.getStringExtra(EXTRA_ADDRESS_TO))
 		searchTo.requestFocus()
 		
-		//presenter.requestAddressListByPrediction(addressPair.to)
-		
 		searchFrom.onTextChanged { presenter.requestAddressListByPrediction(it) } 
 		searchTo.onTextChanged { presenter.requestAddressListByPrediction(it) }
 	}
@@ -142,7 +140,7 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	/* SearchView */
 	override fun blockInterface(block: Boolean) {}
 	
-	override fun setAddressFrom(address: GTAddress) { searchFrom.text = address.address }
+	override fun setAddressFrom(address: GTAddress) { searchFrom.address = address }
 	override fun setAddress(address: GTAddress) { currentAddressField.text = address.address }
 	
 	override fun setAddressList(list: List<GTAddress>) { addressList.adapter = AddressAdapter(presenter, list) }
