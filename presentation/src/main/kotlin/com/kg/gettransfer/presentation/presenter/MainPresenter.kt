@@ -100,6 +100,11 @@ class MainPresenter(private val cc: CoroutineContexts,
 		Timber.d("settings click")
 		router.navigateTo(Screens.SETTINGS)
 	}
+
+	fun onSettingsClick() {
+		Timber.d("settings click")
+		router.navigateTo(Screens.SETTINGS)
+	}
 	
 	fun onSearchClick(addressPair: AddressPair) { router.navigateTo(Screens.FIND_ADDRESS, addressPair) }
 	fun onAboutClick() { router.navigateTo(Screens.ABOUT) }
