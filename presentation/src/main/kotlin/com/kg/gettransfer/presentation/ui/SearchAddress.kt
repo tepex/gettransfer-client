@@ -62,15 +62,10 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 			ta.recycle()
 		}
 		
-		/* Логика кнопки очистки поля */
-		/*
-		addressField.addTextChangedListener(object: TextWatcher {
-			override fun afterTextChanged(s: Editable?) { if(s?.toString()?.isBlank() ?: false) clearBtn.visibility = View.GONE else clearBtn.visibility = View.VISIBLE }
-			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-		})
-		clearBtn.setOnClickListener { addressField.setText("") }
-		*/
+		clearBtn.setOnClickListener { 
+			address = null
+			addressField.requestFocus()
+		}
 	}
 	
 	fun initWidget(listView: RecyclerView, addressPrediction: String) {
