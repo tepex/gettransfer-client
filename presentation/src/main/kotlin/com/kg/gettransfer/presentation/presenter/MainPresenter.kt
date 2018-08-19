@@ -4,6 +4,8 @@ import android.location.Location
 
 import android.support.annotation.CallSuper
 
+import android.util.Pair
+
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 
@@ -21,7 +23,6 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.Screens
-import com.kg.gettransfer.presentation.model.AddressPair
 import com.kg.gettransfer.presentation.view.MainView
 
 import kotlinx.coroutines.experimental.Job
@@ -73,7 +74,7 @@ class MainPresenter(private val cc: CoroutineContexts,
 		}, {viewState.blockInterface(false)})
 	}
 	
-	fun onSearchClick(addressPair: AddressPair) { router.navigateTo(Screens.FIND_ADDRESS, addressPair) }
+	fun onSearchClick(from: String, to: String) { router.navigateTo(Screens.FIND_ADDRESS, Pair(from, to)) }
 	fun onAboutClick() { router.navigateTo(Screens.ABOUT) }
 	fun readMoreClick() { router.navigateTo(Screens.READ_MORE) }
 	fun onBackCommandClick() { router.exit() }

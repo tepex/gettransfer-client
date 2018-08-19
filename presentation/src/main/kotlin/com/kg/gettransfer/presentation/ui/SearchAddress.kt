@@ -18,6 +18,8 @@ import android.widget.ImageButton
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.domain.model.GTAddress
+
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.search_address.*
 
@@ -41,47 +43,49 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	var implicitInput = false
 	
 	var text: String
-		get() { return address.getText().toString() }
+		get() { return addressField.getText().toString() }
 		set(value) {
 			implicitInput = true
-			address.setText(value)
+			addressField.setText(value)
 			implicitInput = false
+		}
+	var address: GTAddress? = null
+		set(value) {
+			text = value?.address ?: ""
 		}
 	
 	init {
 		containerView = LayoutInflater.from(context).inflate(R.layout.search_address, this, true)
 		if(attrs != null) {
 			val ta = context.obtainStyledAttributes(attrs, R.styleable.SearchAddress)
-			address.setHint(ta.getString(R.styleable.SearchAddress_hint))
+			addressField.setHint(ta.getString(R.styleable.SearchAddress_hint))
 			ta.recycle()
 		}
 		
 		/* Логика кнопки очистки поля */
 		/*
-		address.addTextChangedListener(object: TextWatcher {
+		addressField.addTextChangedListener(object: TextWatcher {
 			override fun afterTextChanged(s: Editable?) { if(s?.toString()?.isBlank() ?: false) clearBtn.visibility = View.GONE else clearBtn.visibility = View.VISIBLE }
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 		})
-		clearBtn.setOnClickListener { address.setText("") }
+		clearBtn.setOnClickListener { addressField.setText("") }
 		*/
 	}
 	
 	fun initWidget(listView: RecyclerView, addressPrediction: String) {
-		/*
 		this.listView = listView
 		if(!addressPrediction.isBlank()) {
 			text = addressPrediction.trim()
 			clearBtn.visibility = View.VISIBLE
 		}
-		*/
 	}
 	
 	/**
 	 * https://antonioleiva.com/lambdas-kotlin/
 	 */
 	inline fun onTextChanged(crossinline listener: (String) -> Unit) {
-		address.addTextChangedListener(object: TextWatcher {
+		addressField.addTextChangedListener(object: TextWatcher {
 			override fun afterTextChanged(s: Editable?) { if(!implicitInput) listener(s?.toString()?.trim() ?: "") }
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -89,12 +93,12 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	}
 	
 	inline fun onFocusChanged(crossinline listener: (sa: SearchAddress) -> Unit) {
-		address.setOnFocusChangeListener { view, hasFocus -> if(hasFocus) listener(this@SearchAddress) }
+		addressField.setOnFocusChangeListener { view, hasFocus -> if(hasFocus) listener(this@SearchAddress) }
 	}
 	
 	inline fun onStartAddressSearch(crossinline listener: (SearchAddress) -> Unit) {
-		address.setOnFocusChangeListener { _, hasFocus -> if(hasFocus) listener(this@SearchAddress) }
-		address.addTextChangedListener(object: TextWatcher {
+		addressField.setOnFocusChangeListener { _, hasFocus -> if(hasFocus) listener(this@SearchAddress) }
+		addressField.addTextChangedListener(object: TextWatcher {
 			override fun afterTextChanged(s: Editable?) { if(!implicitInput) listener(this@SearchAddress) }
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}

@@ -49,7 +49,6 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 
 import com.kg.gettransfer.presentation.Screens
-import com.kg.gettransfer.presentation.model.AddressPair
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
 
@@ -80,7 +79,8 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	companion object {
 		@JvmField val FADE_DURATION  = 500L
 		@JvmField val SLIDE_DURATION = 500L
-		@JvmField val EXTRA_ADDRESSES = "addresses"
+		@JvmField val EXTRA_ADDRESS_FROM = "address_from"
+		@JvmField val EXTRA_ADDRESS_TO = "address_to"
 	}
 
 	init {
@@ -90,7 +90,7 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	@CallSuper
 	protected override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		/* Анимация */
+		/* Animation */
 		val fade = Fade()
 		fade.setDuration(FADE_DURATION)
 		getWindow().setEnterTransition(fade)
@@ -114,12 +114,11 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		searchFrom.onFocusChanged { setAddressReceiver(it) }
 		searchTo.onFocusChanged { setAddressReceiver(it) }
 		
-		val addressPair: AddressPair = intent.getParcelableExtra(EXTRA_ADDRESSES)
-		searchFrom.initWidget(addressList, addressPair.from)
-		searchTo.initWidget(addressList, addressPair.to)
+		searchFrom.initWidget(addressList, intent.getStringExtra(EXTRA_ADDRESS_FROM))
+		searchTo.initWidget(addressList, intent.getStringExtra(EXTRA_ADDRESS_TO))
 		searchTo.requestFocus()
 		
-		presenter.requestAddressListByPrediction(addressPair.to)
+		//presenter.requestAddressListByPrediction(addressPair.to)
 		
 		searchFrom.onTextChanged { presenter.requestAddressListByPrediction(it) } 
 		searchTo.onTextChanged { presenter.requestAddressListByPrediction(it) }

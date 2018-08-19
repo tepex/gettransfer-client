@@ -1,6 +1,6 @@
 package com.kg.gettransfer.domain.model
 
-data class GTAddress(val id: String? = null,
+class GTAddress(val id: String? = null,
 	                 val placeTypes: List<Int>? = null,
 	                 val address: String,
 	                 val point: Point? = null) {

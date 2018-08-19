@@ -37,8 +37,11 @@ import android.text.TextWatcher
 import android.transition.Fade
 import android.transition.Slide
 
+import android.util.Pair
+
 import android.view.MenuItem
 import android.view.View
+
 import android.view.inputmethod.InputMethodManager
 
 import android.widget.ImageView
@@ -71,7 +74,6 @@ import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.presentation.Screens
-import com.kg.gettransfer.presentation.model.AddressPair
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
 
@@ -133,7 +135,9 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 				Screens.ABOUT -> return Intent(this@MainActivity, AboutActivity::class.java)
 				Screens.FIND_ADDRESS -> {
 					val intent = Intent(this@MainActivity, SearchActivity::class.java)
-					intent.putExtra(SearchActivity.EXTRA_ADDRESSES, data as AddressPair)
+					val pair = data as Pair<String, String>
+					intent.putExtra(SearchActivity.EXTRA_ADDRESS_FROM, pair.first)
+					intent.putExtra(SearchActivity.EXTRA_ADDRESS_TO, pair.second)
 					return intent
 				}
 			}
@@ -233,10 +237,8 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		if(!permissionsGranted) Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
 		else initGoogleMap(mapViewBundle)
 		
-		
-		searchFrom.onStartAddressSearch { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
-		searchTo.onStartAddressSearch { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
-
+		searchFrom.onStartAddressSearch { presenter.onSearchClick(searchFrom.text, searchTo.text) }
+		searchTo.onStartAddressSearch { presenter.onSearchClick(searchFrom.text, searchTo.text) }
 		
 		val fade = Fade()
 		fade.setDuration(FADE_DURATION)
@@ -409,7 +411,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	}
 	
 	override fun setAddressFrom(address: GTAddress) {
-		searchFrom.text = address.address
+		searchFrom.address = address
 	}
 	
 	override fun setError(@StringRes errId: Int, finish: Boolean) {
