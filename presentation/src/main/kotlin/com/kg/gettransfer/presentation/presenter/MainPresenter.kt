@@ -60,19 +60,17 @@ class MainPresenter(private val cc: CoroutineContexts,
 	}
 	
 	fun updateCurrentLocation() {
+		Timber.d("update current location")
+		viewState.blockInterface(true)
 		utils.launchAsyncTryCatchFinally(compositeDisposable, {
-			Timber.d("update current location")
-			viewState.blockInterface(true)
-
-			val currentAddress = utils.asyncAwait { addressInteractor.getCurrentAddress() }
-			if(currentAddress != null) {
-				viewState.setAddressFrom(currentAddress)
-			}
-		}, {e ->
+			val point = utils.asyncAwait { locationInteractor.getCurrentLocation(utils) }
+			viewState.setMapPoint(LatLng(point.latitude, point.longitude))
+			val currentAddress = utils.asyncAwait { addressInteractor.getAddressByLocation(point) }
+			viewState.setAddressFrom(currentAddress)
+		}, { e ->
 			Timber.e(e)
-			// if(e is ...) @TODO: обработать ошибки таймаута
 			viewState.setError(R.string.err_address_service_xxx, false)
-		}, { viewState.blockInterface(false) })
+		}, {viewState.blockInterface(false)})
 	}
 	
 	fun onSearchClick(addressPair: AddressPair) { router.navigateTo(Screens.FIND_ADDRESS, addressPair) }

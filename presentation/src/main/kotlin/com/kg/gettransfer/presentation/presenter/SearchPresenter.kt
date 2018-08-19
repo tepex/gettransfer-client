@@ -35,6 +35,7 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	}
 	
 	override fun onFirstViewAttach() {
+		/*
 		utils.launchAsyncTryCatchFinally(compositeDisposable, {
 			viewState.blockInterface(true)
 			val currentAddress = utils.asyncAwait { addressInteractor.getCurrentAddress() }
@@ -46,6 +47,7 @@ class SearchPresenter(private val cc: CoroutineContexts,
 		}, {
 			viewState.blockInterface(false)
 		})
+		*/
 	}
 
 	fun requestAddressListByPrediction(prediction: String) {
