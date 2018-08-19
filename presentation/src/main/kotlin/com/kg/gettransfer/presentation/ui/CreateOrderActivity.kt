@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.v7.app.AppCompatDelegate
@@ -15,6 +16,16 @@ import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import kotlinx.android.synthetic.main.activity_transfer.*
 import android.support.v7.app.AlertDialog
+import android.text.InputType
+import android.util.DisplayMetrics
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.LinearLayout
+import android.widget.PopupWindow
+import kotlinx.android.synthetic.main.layout_popup_comment.*
+import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 import java.util.*
 
 
@@ -57,6 +68,7 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
         tvChildCounterUp.setOnClickListener(clickListenerCounterButtons)
         btnChangeCurrencyType.setOnClickListener { view -> showDialogChangeCurrency() }
         layoutDateTimeTransfer.setOnClickListener { view -> changeDateTime(true) }
+        tvComments.setOnClickListener { view -> showPopupWindowComment() }
     }
 
     private val clickListenerCounterButtons = View.OnClickListener { view ->
@@ -66,6 +78,36 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
             R.id.tvChildCounterDown -> presenter.changeCounter(tvCountChild, -1)
             R.id.tvChildCounterUp -> presenter.changeCounter(tvCountChild, 1)
         }
+    }
+
+    private fun showPopupWindowComment(){
+        val displaymetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displaymetrics)
+        val screenHeight = displaymetrics.heightPixels
+
+        val layoutPopup = LayoutInflater.from(applicationContext).inflate(R.layout.layout_popup_comment, layoutPopup)
+        val popupWindowComment = PopupWindow(layoutPopup, LinearLayout.LayoutParams.MATCH_PARENT, screenHeight / 3, true)
+        layoutPopup.etPopupComment.setText(tvComments.text)
+        layoutPopup.etPopupComment.setRawInputType(InputType.TYPE_CLASS_TEXT)
+        popupWindowComment.showAtLocation(mainLayoutActivityTransfer, Gravity.CENTER, 0, 0)
+        layoutShadow.visibility = View.VISIBLE
+
+        layoutPopup.btnClearPopupComment.setOnClickListener { view -> layoutPopup.etPopupComment.setText("") }
+        layoutPopup.etPopupComment.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                presenter.setComment(layoutPopup.etPopupComment.text.toString())
+                popupWindowComment.dismiss()
+                return@OnEditorActionListener true
+            }
+            false
+        })
+        popupWindowComment.setOnDismissListener {
+            hideKeyboard()
+            layoutShadow.visibility = View.GONE
+        }
+        layoutPopup.setOnClickListener{ view -> layoutPopup.etPopupComment.requestFocus()}
+        layoutPopup.etPopupComment.setSelection(layoutPopup.etPopupComment.text.length)
+        showKeyboard()
     }
 
     private fun showDialogChangeCurrency() {
@@ -112,6 +154,16 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
         timePickerDialog.show()
     }
 
+    private fun showKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
+    }
+
+    private fun hideKeyboard() {
+        val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputManager.hideSoftInputFromWindow(currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+    }
+
     override fun onBackPressed() {
         presenter.onBackCommandClick()
     }
@@ -127,5 +179,9 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
     override fun setDateTimeTransfer(dateTimeString: String) {
         tvDateTimeTransfer.text = dateTimeString
         tvOrderDateTime.text = dateTimeString
+    }
+
+    override fun setComment(comment: String) {
+        tvComments.text = comment
     }
 }

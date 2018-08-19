@@ -159,4 +159,6 @@
     <string name="number_of_passengers">Number of passengers</string>
     <string name="transfer_date_and_time">Transfer date and time</string>
     <string name="average_price_suggest_your_price">Average price, suggest your price</string>
+
+    <string name="cancel">Cancel</string>
 </resources>

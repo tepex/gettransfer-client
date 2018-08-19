@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBack"
     android:orientation="vertical"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:id="@+id/mainLayoutActivityTransfer">
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="wrap_content"/>
 
     <ScrollView
         android:id="@+id/svTransfer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_below="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -380,6 +378,8 @@
                         android:text=""
                         android:textColor="@color/colorTextBlack"
                         android:textSize="@dimen/create_transfer_additionals_top_text_size"
+                        android:inputType="text"
+                        android:imeOptions="actionDone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         android:background="@null"/>
@@ -429,6 +429,7 @@
                         android:inputType="textEmailAddress"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="@dimen/create_transfer_additionals_top_text_size"
+                        android:imeOptions="actionDone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         android:background="@null"/>
@@ -478,6 +479,7 @@
                         android:textColor="@color/colorTextBlack"
                         android:textSize="@dimen/create_transfer_additionals_top_text_size"
                         android:inputType="phone"
+                        android:imeOptions="actionDone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         android:background="@null"/>
@@ -600,6 +602,8 @@
                         android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:text=""
+                        android:inputType="text"
+                        android:imeOptions="actionDone"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="@dimen/create_transfer_additionals_top_text_size"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -722,4 +726,13 @@
 
     </ScrollView>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/layoutShadow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/toolbar"
+        android:background="#c8000000"
+        android:visibility="gone"/>
+
+</RelativeLayout>

@@ -12,4 +12,5 @@ interface CreateOrderView: MvpView {
     fun setCounters(textViewCounter: TextView, count: Int)
     fun setCurrency(currencySymbol: CharSequence)
     fun setDateTimeTransfer(dateTimeString: String)
+    fun setComment(comment: String)
 }

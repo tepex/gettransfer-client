@@ -33,4 +33,8 @@ class CreateOrderPresenter(): MvpPresenter<CreateOrderView>() {
                 .append(", ").append(hour).append(":").append(minute)
         viewState.setDateTimeTransfer(dateTimeString.toString())
     }
+
+    fun setComment(comment: String){
+        viewState.setComment(comment)
+    }
 }
