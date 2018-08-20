@@ -9,8 +9,6 @@ open class GTAddress(val id: String? = null,
 		@JvmField val TYPE_STREET_ADDRESS = 1021
 	}
 	
-	val selected = false
-	
 	fun hasBuildingNumber(): Boolean {
 		if(placeTypes == null || placeTypes.isEmpty())
 		{

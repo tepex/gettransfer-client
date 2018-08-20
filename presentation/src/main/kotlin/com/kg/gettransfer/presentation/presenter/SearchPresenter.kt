@@ -38,7 +38,7 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	fun onDestinationAddressSelected(address: GTAddress) {
 		Timber.d("select address from list: $address")
 		viewState.setAddress(address)
-		router.navigateTo(Screens.CREATE_ORDER)
+		//router.navigateTo(Screens.CREATE_ORDER)
 	}
 	
 	fun onBackCommandClick() = viewState.finish()

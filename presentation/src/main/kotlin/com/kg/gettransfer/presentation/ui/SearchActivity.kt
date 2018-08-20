@@ -50,6 +50,7 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 
 import com.kg.gettransfer.presentation.Screens
+import com.kg.gettransfer.presentation.model.Address
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
 
@@ -161,7 +162,7 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	/* SearchView */
 	override fun blockInterface(block: Boolean) {}
 	override fun setAddressFrom(address: GTAddress) { searchFrom.address = address }
-	override fun setAddressList(list: List<GTAddress>) { addressList.adapter = AddressAdapter(presenter, list) }
+	override fun setAddressList(list: List<Address>) { addressList.adapter = AddressAdapter(presenter, list) }
 	
 	override fun setAddress(address: GTAddress) { 
 		current.address = address
