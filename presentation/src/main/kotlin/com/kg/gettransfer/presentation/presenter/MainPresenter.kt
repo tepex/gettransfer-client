@@ -37,20 +37,16 @@ class MainPresenter(private val cc: CoroutineContexts,
 	                private val locationInteractor: LocationInteractor,
 	                private val addressInteractor: AddressInteractor): MvpPresenter<MainView>() {
 	                
-	var granted = false
-	
 	private val compositeDisposable = Job()
 	private val utils = AsyncUtils(cc)
 	
 	override fun onFirstViewAttach() {
 		utils.launchAsync(compositeDisposable) {
 			Timber.d("onFirstViewAttach()")
-			if(granted) {
-				// Проверка досупности сервиса геолокации
-				val available = utils.asyncAwait { locationInteractor.checkLocationServicesAvailability() }
-				if(available) updateCurrentLocation()
-				else viewState.setError(R.string.err_location_service_not_available, true)
-			}
+			// Проверка досупности сервиса геолокации
+			val available = utils.asyncAwait { locationInteractor.checkLocationServicesAvailability() }
+			if(available) updateCurrentLocation()
+			else viewState.setError(R.string.err_location_service_not_available, true)
 		}
 	}
 	
