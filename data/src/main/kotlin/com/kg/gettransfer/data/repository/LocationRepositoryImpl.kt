@@ -5,10 +5,12 @@ import android.location.Location
 
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+
 import com.google.android.gms.location.FusedLocationProviderClient
 
 import com.kg.gettransfer.domain.model.Point
-import com.kg.gettransfer.domain.model.LocationResult
+import com.kg.gettransfer.domain.model.Result
+
 import com.kg.gettransfer.domain.repository.LocationRepository
 
 import kotlin.coroutines.experimental.suspendCoroutine
@@ -30,7 +32,7 @@ class LocationRepositoryImpl(val locationProviderClient: FusedLocationProviderCl
 	
 	fun getPlayServicesStatus(): Int = googleApiAvailability.isGooglePlayServicesAvailable(context)
 	
-	override suspend fun getCurrentLocation(): LocationResult {
+	override suspend fun getCurrentLocation(): Result<Point> {
 		val location: Location? = try {
 			suspendCoroutine { cont ->
 				locationProviderClient.lastLocation
@@ -39,9 +41,9 @@ class LocationRepositoryImpl(val locationProviderClient: FusedLocationProviderCl
 			}
 		}
 		catch(e: Exception) {
-			return LocationResult(error = e)
+			return Result(error = e)
 		}
-		return if(location != null) LocationResult(Point(location.latitude, location.longitude))
-		else LocationResult(error = RuntimeException("Location not found"))
+		return if(location != null) Result(Point(location.latitude, location.longitude))
+		else Result(error = RuntimeException("Location not found"))
 	}
 }

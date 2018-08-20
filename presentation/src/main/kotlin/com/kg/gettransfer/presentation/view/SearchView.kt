@@ -1,12 +1,14 @@
 package com.kg.gettransfer.presentation.view
 
-import com.arellomobile.mvp.MvpView
-
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
+import com.kg.gettransfer.domain.model.GTAddress
+
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface SearchView: MvpView {
-	fun finish()
+//interface MainView: MvpView, OnCameraMoveListener
+interface SearchView: BaseView {
+	fun setAddressList(list: List<GTAddress>)
+	fun setAddress(address: GTAddress)
 }

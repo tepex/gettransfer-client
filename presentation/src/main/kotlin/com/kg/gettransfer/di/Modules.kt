@@ -7,8 +7,13 @@ import android.location.Geocoder
 import android.preference.PreferenceManager
 
 import com.google.android.gms.common.GoogleApiAvailability
+
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+
+import com.google.android.gms.location.places.GeoDataClient
+import com.google.android.gms.location.places.PlaceDetectionClient
+import com.google.android.gms.location.places.Places
 
 import com.kg.gettransfer.data.repository.AddressRepositoryImpl
 import com.kg.gettransfer.data.repository.LocationRepositoryImpl
@@ -43,6 +48,8 @@ val appModule = module {
 	single { LocationServices.getFusedLocationProviderClient(get<Context>()) }
 	single { GoogleApiAvailability.getInstance() }
 	single { Geocoder(get(), get()) }
+	single { Places.getGeoDataClient(get() as Context) }
+	single { Places.getPlaceDetectionClient(get() as Context) }
 }
 
 val ciceroneModule = module {
@@ -52,7 +59,7 @@ val ciceroneModule = module {
 }
 
 val domainModule = module {
-	single { AddressRepositoryImpl(get()) as AddressRepository }
+	single { AddressRepositoryImpl(get(), get(), get()) as AddressRepository }
 	single { LocationRepositoryImpl(get(), get(), get()) as LocationRepository }
 	single { AddressInteractor(get()) }
 	single { LocationInteractor(get()) }
