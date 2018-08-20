@@ -4,10 +4,12 @@ import android.widget.TextView
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.CreateOrderView
+import ru.terrakok.cicerone.Router
 
 @InjectViewState
-class CreateOrderPresenter(): MvpPresenter<CreateOrderView>() {
+class CreateOrderPresenter(private val router: Router): MvpPresenter<CreateOrderView>() {
     fun onBackCommandClick() {
         viewState.finish()
     }
@@ -36,5 +38,9 @@ class CreateOrderPresenter(): MvpPresenter<CreateOrderView>() {
 
     fun setComment(comment: String){
         viewState.setComment(comment)
+    }
+
+    fun showLicenceAgreement(){
+        router.navigateTo(Screens.LICENCE_AGREE)
     }
 }

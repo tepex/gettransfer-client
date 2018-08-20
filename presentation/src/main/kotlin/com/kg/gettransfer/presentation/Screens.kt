@@ -11,6 +11,8 @@ object Screens {
 	@JvmField val ARCHIVED_RIDES = "archived_rides"
 	@JvmField val SETTINGS       = "settings"
 	@JvmField val CREATE_ORDER   = "create_order"
+
+	@JvmField val LICENCE_AGREE  = "create_order"
 	
 	@JvmField val NOT_USED = -1
 }
