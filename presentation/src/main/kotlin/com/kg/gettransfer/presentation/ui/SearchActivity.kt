@@ -17,6 +17,7 @@ import android.support.design.widget.AppBarLayout
 import android.support.design.widget.Snackbar
 
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
 
 import android.support.v4.content.ContextCompat
 
@@ -58,7 +59,10 @@ import kotlinx.android.synthetic.main.toolbar.*
 
 import org.koin.android.ext.android.inject
 
+import ru.terrakok.cicerone.Navigator
+import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
+import ru.terrakok.cicerone.android.SupportAppNavigator
 
 import timber.log.Timber
 
@@ -66,6 +70,7 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	@InjectPresenter
 	internal lateinit var presenter: SearchPresenter
 	
+	private val navigatorHolder: NavigatorHolder by inject()
 	private val router: Router by inject()
 	val addressInteractor: AddressInteractor by inject()
 	val coroutineContexts: CoroutineContexts by inject()
@@ -81,6 +86,17 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		@JvmField val SLIDE_DURATION = 500L
 		@JvmField val EXTRA_ADDRESS_FROM = "address_from"
 		@JvmField val EXTRA_ADDRESS_TO = "address_to"
+	}
+	
+	private val navigator: Navigator = object: SupportAppNavigator(this, Screens.NOT_USED) {
+		protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
+			when(screenKey) {
+				Screens.CREATE_ORDER -> return Intent(this@SearchActivity, CreateOrderActivity::class.java)
+			}
+			return null
+		}
+		
+		protected override fun createFragment(screenKey: String, data: Any?): Fragment? = null
 	}
 
 	init {
@@ -120,6 +136,18 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		current.requestAddresses()
 	}
 	
+	@CallSuper
+	protected override fun onResume() {
+		super.onResume()
+		navigatorHolder.setNavigator(navigator)
+	}
+	
+	@CallSuper
+	protected override fun onPause() {
+		navigatorHolder.removeNavigator()
+		super.onPause()
+	}
+
 	@CallSuper
 	protected override fun onDestroy() {
 		

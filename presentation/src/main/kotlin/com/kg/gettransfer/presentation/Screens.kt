@@ -1,15 +1,16 @@
 package com.kg.gettransfer.presentation
 
 object Screens {
-	public val BUNDLE_KEY     = "bundle_key"
+	@JvmField val BUNDLE_KEY     = "bundle_key"
 	
-	public val FIND_ADDRESS   = "find_address"
-	public val ABOUT          = "about"
-	public val READ_MORE      = "read_more"
+	@JvmField val FIND_ADDRESS   = "find_address"
+	@JvmField val ABOUT          = "about"
+	@JvmField val READ_MORE      = "read_more"
 	
-	public val ACTIVE_RIDES   = "active_rides"
-	public val ARCHIVED_RIDES = "archived_rides"
-	public val SETTINGS       = "settings"
+	@JvmField val ACTIVE_RIDES   = "active_rides"
+	@JvmField val ARCHIVED_RIDES = "archived_rides"
+	@JvmField val SETTINGS       = "settings"
+	@JvmField val CREATE_ORDER   = "create_order"
 	
-	
+	@JvmField val NOT_USED = -1
 }

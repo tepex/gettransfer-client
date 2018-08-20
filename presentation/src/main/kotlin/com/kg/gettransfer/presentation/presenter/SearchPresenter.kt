@@ -14,6 +14,7 @@ import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 
+import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.SearchView
 
 import kotlinx.coroutines.experimental.Job
@@ -37,6 +38,7 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	fun onDestinationAddressSelected(address: GTAddress) {
 		Timber.d("select address from list: $address")
 		viewState.setAddress(address)
+		router.navigateTo(Screens.CREATE_ORDER)
 	}
 	
 	fun onBackCommandClick() = viewState.finish()

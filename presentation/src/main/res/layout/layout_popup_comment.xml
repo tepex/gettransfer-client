@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:id="@+id/layoutPopup">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:paddingEnd="50dp"
+            android:id="@+id/etPopupComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="@dimen/create_transfer_additionals_top_text_size"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:imeOptions="actionDone"
+            android:inputType="textMultiLine"
+            android:hint="@string/type_your_comments"
+            android:background="@null" />
+
+    </ScrollView>
+
+    <ImageButton
+        android:id="@+id/btnClearPopupComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@android:drawable/presence_offline"/>
+
+</RelativeLayout>

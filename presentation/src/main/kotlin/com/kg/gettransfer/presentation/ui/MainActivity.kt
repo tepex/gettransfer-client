@@ -129,7 +129,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		presenter.readMoreClick()
 	}
 
-	private val navigator: Navigator = object: SupportAppNavigator(this, NOT_USED) {
+	private val navigator: Navigator = object: SupportAppNavigator(this, Screens.NOT_USED) {
 		protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
 			when(screenKey) {
 				Screens.ABOUT -> return Intent(this@MainActivity, AboutActivity::class.java)
@@ -140,7 +140,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 					intent.putExtra(SearchActivity.EXTRA_ADDRESS_TO, pair.second)
 					return intent
 				}
-				Screens.SETTINGS -> return Intent(this@MainActivity, CreateOrderActivity::class.java)
+				Screens.CREATE_ORDER -> return Intent(this@MainActivity, CreateOrderActivity::class.java)
 			}
 			return null
 		}
@@ -171,7 +171,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	companion object {
 		@JvmField val PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-		@JvmField val NOT_USED = -1
 		@JvmField val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
 		@JvmField val PERMISSION_REQUEST = 2211
 		@JvmField val MY_LOCATION_BUTTON_INDEX = 2
