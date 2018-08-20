@@ -74,18 +74,9 @@ class MainPresenter(private val cc: CoroutineContexts,
 		}, {viewState.blockInterface(false)})
 	}
 
-	fun onSettingsClick() {
-		Timber.d("settings click")
-		router.navigateTo(Screens.SETTINGS)
-	}
-
-	fun onSettingsClick() {
-		Timber.d("settings click")
-		router.navigateTo(Screens.SETTINGS)
-	}
-	
 	fun onSearchClick(from: String, to: String) { router.navigateTo(Screens.FIND_ADDRESS, Pair(from, to)) }
 	fun onAboutClick() { router.navigateTo(Screens.ABOUT) }
 	fun readMoreClick() { router.navigateTo(Screens.READ_MORE) }
+	fun onSettingsClick() { router.navigateTo(Screens.SETTINGS) }
 	fun onBackCommandClick() { router.exit() }
 }

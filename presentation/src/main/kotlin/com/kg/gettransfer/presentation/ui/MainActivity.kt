@@ -351,8 +351,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		utils.launchAsync(compositeDisposable) {
 			googleMap = getGoogleMapAsync()
 			customizeGoogleMaps()
-			searchFrom.onStartAddressSearch { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
-			searchTo.onStartAddressSearch { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
 		}
 	}
 	
