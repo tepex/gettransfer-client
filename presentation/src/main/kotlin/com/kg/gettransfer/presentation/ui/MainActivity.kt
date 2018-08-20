@@ -140,6 +140,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 					intent.putExtra(SearchActivity.EXTRA_ADDRESS_TO, pair.second)
 					return intent
 				}
+				Screens.SETTINGS -> return Intent(this@MainActivity, CreateOrderActivity::class.java)
 			}
 			return null
 		}
@@ -177,8 +178,8 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		@JvmField val COMPASS_BUTTON_INDEX = 5
 		@JvmField val FADE_DURATION  = 500L
 	}
-	
-	
+
+
 	init {
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 	}
@@ -217,16 +218,17 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			}
 		})
 		
-		(navView as NavigationView).setNavigationItemSelectedListener({ item ->
-			when(item.itemId) {
-				R.id.nav_about -> presenter.onAboutClick()
-				else -> Timber.e("No route for ${item.title}")
-			}
-			drawer.closeDrawer(GravityCompat.START)
-			true
-		})
+		(navView as NavigationView).setNavigationItemSelectedListener { item ->
+            when(item.itemId) {
+                R.id.nav_about -> presenter.onAboutClick()
+                R.id.nav_settings -> presenter.onSettingsClick()
+                else -> Timber.d("No route for ${item.title}")
+            }
+            drawer.closeDrawer(GravityCompat.START)
+            true
+        }
 
-		(appbar as AppBarLayout).bringToFront()
+        (appbar as AppBarLayout).bringToFront()
 		
 		initNavigation()
 		
@@ -244,7 +246,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		fade.setDuration(FADE_DURATION)
 		getWindow().setExitTransition(fade)
 	}
-	
+
 	@CallSuper
 	protected override fun onPostCreate(savedInstanceState: Bundle?) {
 		super.onPostCreate(savedInstanceState)
@@ -349,6 +351,8 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		utils.launchAsync(compositeDisposable) {
 			googleMap = getGoogleMapAsync()
 			customizeGoogleMaps()
+			searchFrom.onStartAddressSearch { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
+			searchTo.onStartAddressSearch { presenter.onSearchClick(AddressPair(searchFrom.text, searchTo.text)) }
 		}
 	}
 	
@@ -416,4 +420,3 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		Utils.showError(this, errId, finish)
     }
 }
- 
