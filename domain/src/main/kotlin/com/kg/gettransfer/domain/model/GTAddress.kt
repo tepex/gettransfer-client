@@ -1,6 +1,6 @@
 package com.kg.gettransfer.domain.model
 
-class GTAddress(val id: String? = null,
+open class GTAddress(val id: String? = null,
 	                 val placeTypes: List<Int>? = null,
 	                 val address: String,
 	                 val point: Point? = null) {
@@ -8,6 +8,8 @@ class GTAddress(val id: String? = null,
 	companion object {
 		@JvmField val TYPE_STREET_ADDRESS = 1021
 	}
+	
+	val selected = false
 	
 	fun hasBuildingNumber(): Boolean {
 		if(placeTypes == null || placeTypes.isEmpty())

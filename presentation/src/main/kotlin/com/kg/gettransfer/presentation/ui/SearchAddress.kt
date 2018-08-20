@@ -97,20 +97,27 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	fun createSearchAddressPresenter(): SearchAddressPresenter = SearchAddressPresenter(coroutineContexts,
 		                                                                                addressInteractor)
 
-	fun initWidget(parent: SearchActivity, addressPrediction: String) {
+	fun initWidget(parent: SearchActivity, text: String, focus: Boolean = false) {
 		this.parent = parent
 		addressInteractor = parent.addressInteractor
 		coroutineContexts = parent.coroutineContexts
-		if(!addressPrediction.isBlank()) {
-			text = addressPrediction.trim()
-			clearBtn.visibility = View.VISIBLE
+		
+		addressField.setOnFocusChangeListener { _, hasFocus ->
+			if(!hasFocus) clearBtn.visibility = View.GONE
+			else {
+				checkClearButtonVisibility()
+				parent.onFocusChanged(this)
+			}
 		}
-		addressField.setOnFocusChangeListener(parent)
 		addressField.addTextChangedListener(this)
 		
 		parentDelegate = parent.mvpDelegate
 		mvpDelegate.onCreate()
 		mvpDelegate.onAttach()
+		
+		this.text = text.trim()
+		if(focus) addressField.requestFocus()
+		checkClearButtonVisibility()
 	}
 	
 	@CallSuper
@@ -124,16 +131,25 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		presenter.requestAddressListByPrediction(text.trim())
 	}
 	
-	override fun setAddressList(list: List<GTAddress>) = parent.setAddressList(list)
-	override fun setError(@StringRes errId: Int, finish: Boolean) = parent.setError(errId, finish)
+	override fun setAddressList(list: List<GTAddress>) { 
+		if(addressField.isFocused()) parent.setAddressList(list) 
+	}
+
+	override fun setError(@StringRes errId: Int, finish: Boolean) {
+		if(addressField.isFocused()) parent.setError(errId, finish)
+	}
+
+	override fun afterTextChanged(s: Editable?) {
+		checkClearButtonVisibility()
+		requestAddresses() 
+	}
 	
-	/**
-	 * https://antonioleiva.com/lambdas-kotlin/
-	 */
-	override fun afterTextChanged(s: Editable?) { if(!implicitInput) requestAddresses() }
 	override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 	override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 	
+	/**
+	 * [adding lambdas](https://antonioleiva.com/lambdas-kotlin/}
+	 */
 	inline fun onStartAddressSearch(crossinline listener: (SearchAddress) -> Unit) {
 		addressField.setOnFocusChangeListener { _, hasFocus -> if(hasFocus) listener(this@SearchAddress) }
 		addressField.addTextChangedListener(object: TextWatcher {
@@ -141,5 +157,9 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 		})
+	}
+	
+	private fun checkClearButtonVisibility() {
+		if(text.isBlank()) clearBtn.visibility = View.GONE else clearBtn.visibility = View.VISIBLE
 	}
 }

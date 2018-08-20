@@ -62,7 +62,7 @@ import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
-class SearchActivity: MvpAppCompatActivity(), SearchView, View.OnFocusChangeListener {
+class SearchActivity: MvpAppCompatActivity(), SearchView {
 	@InjectPresenter
 	internal lateinit var presenter: SearchPresenter
 	
@@ -70,7 +70,7 @@ class SearchActivity: MvpAppCompatActivity(), SearchView, View.OnFocusChangeList
 	val addressInteractor: AddressInteractor by inject()
 	val coroutineContexts: CoroutineContexts by inject()
 	
-	private lateinit var currentAddressField: SearchAddress  
+	private lateinit var current: SearchAddress  
 	
 	@ProvidePresenter
 	fun createSearchPresenter(): SearchPresenter = SearchPresenter(coroutineContexts,
@@ -109,32 +109,16 @@ class SearchActivity: MvpAppCompatActivity(), SearchView, View.OnFocusChangeList
 		(toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 		
 		addressList.layoutManager = LinearLayoutManager(this)
-		
-		/*
-		currentAddressField = searchTo
-		searchFrom.onFocusChanged { setAddressReceiver(it) }
-		searchTo.onFocusChanged { setAddressReceiver(it) }
-		
-		searchFrom.initWidget(addressList, intent.getStringExtra(EXTRA_ADDRESS_FROM))
-		searchTo.initWidget(addressList, intent.getStringExtra(EXTRA_ADDRESS_TO))
-		searchTo.requestFocus()
-		
-		searchFrom.onTextChanged { presenter.requestAddressListByPrediction(it) } 
-		searchTo.onTextChanged { presenter.requestAddressListByPrediction(it) }
-		*/
-		
+				
 		searchFrom.initWidget(this, intent.getStringExtra(EXTRA_ADDRESS_FROM))
-		searchTo.initWidget(this, intent.getStringExtra(EXTRA_ADDRESS_TO))
+		searchTo.initWidget(this, intent.getStringExtra(EXTRA_ADDRESS_TO), true)
 		searchTo.requestFocus()
 	}
 	
-	override fun onFocusChange(view: View, hasFocus: Boolean) {
-		if(!hasFocus) return
-		//addressList.adapter = AddressAdapter(presenter, list) }
-		val current = view.parent.parent as SearchAddress
+	fun onFocusChanged(current: SearchAddress) {
+		this.current = current 
 		current.requestAddresses()
 	}
-
 	
 	@CallSuper
 	protected override fun onDestroy() {
@@ -148,15 +132,8 @@ class SearchActivity: MvpAppCompatActivity(), SearchView, View.OnFocusChangeList
 	
 	/* SearchView */
 	override fun blockInterface(block: Boolean) {}
-	
 	override fun setAddressFrom(address: GTAddress) { searchFrom.address = address }
 	override fun setAddressList(list: List<GTAddress>) { addressList.adapter = AddressAdapter(presenter, list) }
-	
-	/*
-	override fun setAddress(address: GTAddress) { currentAddressField.text = address.address }
-	*/
-	
-	override fun setError(@StringRes errId: Int, finish: Boolean) {
-		Utils.showError(this, errId, finish)
-	}
+	override fun setAddress(address: GTAddress) { current.address = address }
+	override fun setError(@StringRes errId: Int, finish: Boolean) { Utils.showError(this, errId, finish) }
 }
