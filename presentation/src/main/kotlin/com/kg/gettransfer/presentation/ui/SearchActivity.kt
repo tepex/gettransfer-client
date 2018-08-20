@@ -49,7 +49,6 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 
 import com.kg.gettransfer.presentation.Screens
-import com.kg.gettransfer.presentation.model.AddressPair
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
 
@@ -68,10 +67,10 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	internal lateinit var presenter: SearchPresenter
 	
 	private val router: Router by inject()
-	private val addressInteractor: AddressInteractor by inject()
-	private val coroutineContexts: CoroutineContexts by inject()
+	val addressInteractor: AddressInteractor by inject()
+	val coroutineContexts: CoroutineContexts by inject()
 	
-	private lateinit var currentAddressField: SearchAddress  
+	private lateinit var current: SearchAddress  
 	
 	@ProvidePresenter
 	fun createSearchPresenter(): SearchPresenter = SearchPresenter(coroutineContexts,
@@ -80,7 +79,8 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	companion object {
 		@JvmField val FADE_DURATION  = 500L
 		@JvmField val SLIDE_DURATION = 500L
-		@JvmField val EXTRA_ADDRESSES = "addresses"
+		@JvmField val EXTRA_ADDRESS_FROM = "address_from"
+		@JvmField val EXTRA_ADDRESS_TO = "address_to"
 	}
 
 	init {
@@ -90,7 +90,7 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	@CallSuper
 	protected override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		/* Анимация */
+		/* Animation */
 		val fade = Fade()
 		fade.setDuration(FADE_DURATION)
 		getWindow().setEnterTransition(fade)
@@ -109,27 +109,17 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		(toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 		
 		addressList.layoutManager = LinearLayoutManager(this)
-		
-		currentAddressField = searchTo
-		searchFrom.onFocusChanged { setAddressReceiver(it) }
-		searchTo.onFocusChanged { setAddressReceiver(it) }
-		
-		val addressPair: AddressPair = intent.getParcelableExtra(EXTRA_ADDRESSES)
-		searchFrom.initWidget(addressList, addressPair.from)
-		searchTo.initWidget(addressList, addressPair.to)
+				
+		searchFrom.initWidget(this, intent.getStringExtra(EXTRA_ADDRESS_FROM))
+		searchTo.initWidget(this, intent.getStringExtra(EXTRA_ADDRESS_TO), true)
 		searchTo.requestFocus()
-		
-		presenter.requestAddressListByPrediction(addressPair.to)
-		
-		searchFrom.onTextChanged { presenter.requestAddressListByPrediction(it) } 
-		searchTo.onTextChanged { presenter.requestAddressListByPrediction(it) }
 	}
 	
-	private fun setAddressReceiver(sa: SearchAddress) {
-		currentAddressField = sa
-		presenter.requestAddressListByPrediction(sa.text)
+	fun onFocusChanged(current: SearchAddress) {
+		this.current = current 
+		current.requestAddresses()
 	}
-
+	
 	@CallSuper
 	protected override fun onDestroy() {
 		
@@ -142,13 +132,13 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	
 	/* SearchView */
 	override fun blockInterface(block: Boolean) {}
-	
-	override fun setAddressFrom(address: GTAddress) { searchFrom.text = address.address }
-	override fun setAddress(address: GTAddress) { currentAddressField.text = address.address }
-	
+	override fun setAddressFrom(address: GTAddress) { searchFrom.address = address }
 	override fun setAddressList(list: List<GTAddress>) { addressList.adapter = AddressAdapter(presenter, list) }
 	
-	override fun setError(@StringRes errId: Int, finish: Boolean) {
-		Utils.showError(this, errId, finish)
+	override fun setAddress(address: GTAddress) { 
+		current.address = address
+		// set current position
 	}
+	
+	override fun setError(@StringRes errId: Int, finish: Boolean) { Utils.showError(this, errId, finish) }
 }

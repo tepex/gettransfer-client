@@ -27,26 +27,23 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
 	                        private val pdClient: PlaceDetectionClient): AddressRepository {
 	private val addressCache = AddressCache()
 	
-	override fun getAddressByLocation(point: Point): GTAddress? {
+	override fun getAddressByLocation(point: Point): GTAddress {
 		var address = addressCache.getAddress(point)
 		if(address == null) {
-			val list = try {
-				geocoder.getFromLocation(point.latitude, point.longitude, 1)
-			} catch(e: Exception) {
-				Timber.e(e)
-				return null
-			}
+			val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
 			val addr = list?.firstOrNull()?.getAddressLine(0)
 			if(addr != null) {
-				address = GTAddress(address = addr)
-				addressCache.putAddress(point, address)
+				address = GTAddress(address = addr, point = point)
+				addressCache.putAddress(address)
 			}
+			else throw RuntimeException("Address not found")
 		}
 		return address
 	}
 	
 	override fun getCachedAddress() = addressCache.getLastAddress()
 	
+	/*
 	override fun getCurrentAddress(): GTAddress? {
 		val results = pdClient.getCurrentPlace(null)
 		Tasks.await(results)
@@ -59,6 +56,7 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
 		}
 		else null
 	}
+	*/
 	
 	/**
 	 * @TODO: Добавить таймаут
