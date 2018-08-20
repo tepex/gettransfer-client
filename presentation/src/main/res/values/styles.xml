@@ -11,6 +11,24 @@
 		<item name="windowNoTitle">true</item>
 		<item name="android:windowDisablePreview">true</item>
 		<item name="android:windowContentTransitions">true</item>
+		<item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
+		<item name="android:timePickerDialogTheme">@style/MyTimePickerDialogTheme</item>
+	</style>
+
+	<style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
+		<item name="android:datePickerStyle">@style/MyDatePickerStyle</item>
+	</style>
+
+	<style name="MyDatePickerStyle" parent="@android:style/Widget.Material.Light.DatePicker">
+		<item name="android:headerBackground">@color/colorPrimary</item>
+	</style>
+
+	<style name="MyTimePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
+		<item name="android:timePickerStyle">@style/MyTimePickerStyle</item>
+	</style>
+
+	<style name="MyTimePickerStyle" parent="@android:style/Widget.Material.Light.TimePicker">
+		<item name="android:headerBackground">@color/colorPrimary</item>
 	</style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
