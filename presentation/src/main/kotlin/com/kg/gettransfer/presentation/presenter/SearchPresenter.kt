@@ -28,17 +28,34 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	                  private val router: Router,
 	                  private val addressInteractor: AddressInteractor): MvpPresenter<SearchView>() {
 	
-	val compositeDisposable = Job()
-	val utils = AsyncUtils(cc)
+	var isTo = false
+	
+	private val compositeDisposable = Job()
+	private val utils = AsyncUtils(cc)
+	
+	private var addressFrom: GTAddress? = null
+	private var addressTo: GTAddress? = null
 	
 	companion object {
 		@JvmField val ADDRESS_PREDICTION_SIZE = 3
 	}
 	
-	fun onDestinationAddressSelected(address: GTAddress) {
-		Timber.d("select address from list: $address")
-		viewState.setAddress(address)
-		router.navigateTo(Screens.CREATE_ORDER)
+	override fun onFirstViewAttach() {
+		addressFrom = addressInteractor.getCachedAddress()
+		if(addressFrom != null) viewState.setAddressFrom(addressFrom.address)
+	}
+
+	fun onAddressSelected(selected: GTAddress) {
+		Timber.d("select address from list (isTo: $isTo): $selected")
+		if(isTo) {
+			//addressTo = selected
+			viewState.setAddressTo(selected.address)
+		}
+		else {
+			//addressFrom = selected
+			viewState.setAddressFrom(selected.address)
+		}
+		//router.navigateTo(Screens.CREATE_ORDER)
 	}
 	
 	fun onBackCommandClick() = viewState.finish()

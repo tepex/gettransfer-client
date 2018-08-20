@@ -91,7 +91,7 @@ import ru.terrakok.cicerone.commands.Replace
 
 import timber.log.Timber
 
-class MainActivity: MvpAppCompatActivity(), MainView {
+class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener {
 	@InjectPresenter
 	internal lateinit var presenter: MainPresenter
 	
@@ -222,12 +222,16 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		
 		initGoogleMap(mapViewBundle)
 		
-		searchFrom.onStartAddressSearch { presenter.onSearchClick(searchFrom.text, searchTo.text) }
-		searchTo.onStartAddressSearch { presenter.onSearchClick(searchFrom.text, searchTo.text) }
+		searchFrom.setOnFocusChangeListener(this)
+		searchTo.setOnFocusChangeListener(this)
 		
 		val fade = Fade()
 		fade.setDuration(FADE_DURATION)
 		getWindow().setExitTransition(fade)
+	}
+	
+	override fun onFocusChange(v: View, hasFocus: Boolean) {
+		if(hasFocus) presenter.onSearchClick(Pair(searchFrom.text, searchTo.text))
 	}
 
 	@CallSuper
