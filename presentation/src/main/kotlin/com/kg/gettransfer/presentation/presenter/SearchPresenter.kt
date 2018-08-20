@@ -34,15 +34,6 @@ class SearchPresenter(private val cc: CoroutineContexts,
 		@JvmField val ADDRESS_PREDICTION_SIZE = 3
 	}
 	
-	override fun onFirstViewAttach() {
-		/*
-		utils.launchAsync(compositeDisposable) {
-			val currentAddress = utils.asyncAwait { addressInteractor.getCachedAddress() }
-			if(currentAddress != null) viewState.setAddressFrom(currentAddress)
-		}
-		*/
-	}
-
 	fun onDestinationAddressSelected(address: GTAddress) {
 		Timber.d("select address from list: $address")
 		viewState.setAddress(address)
