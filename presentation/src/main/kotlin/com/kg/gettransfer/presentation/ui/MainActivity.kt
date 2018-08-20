@@ -1,13 +1,9 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.Manifest
-
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.content.pm.PackageManager
 
-import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
@@ -17,12 +13,10 @@ import android.support.design.widget.AppBarLayout
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 
-import android.support.v4.app.ActivityCompat
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 
-import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 
@@ -104,8 +98,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private lateinit var drawer: DrawerLayout
 	private lateinit var toggle: ActionBarDrawerToggle
 	
-	private var permissionsGranted = false
-	
 	private val navigatorHolder: NavigatorHolder by inject()
 	private val router: Router by inject()
 	private val addressInteractor: AddressInteractor by inject()
@@ -171,9 +163,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	}
 	
 	companion object {
-		@JvmField val PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
 		@JvmField val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
-		@JvmField val PERMISSION_REQUEST = 2211
 		@JvmField val MY_LOCATION_BUTTON_INDEX = 2
 		@JvmField val COMPASS_BUTTON_INDEX = 5
 		@JvmField val FADE_DURATION  = 500L
@@ -187,11 +177,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	@CallSuper
 	protected override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-			permissionsGranted = checkPermission()
-		presenter.granted = true
-		
 		setContentView(R.layout.activity_main)
 		
 		val tb = this.toolbar as Toolbar
@@ -235,9 +220,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		val mapViewBundle = savedInstanceState?.getBundle(MAP_VIEW_BUNDLE_KEY)
 		isFirst = savedInstanceState == null
 		
-		Timber.d("Permissions granted: ${permissionsGranted}")
-		if(!permissionsGranted) Snackbar.make(drawerLayout, "Permissions not granted", Snackbar.LENGTH_SHORT).show()
-		else initGoogleMap(mapViewBundle)
+		initGoogleMap(mapViewBundle)
 		
 		searchFrom.onStartAddressSearch { presenter.onSearchClick(searchFrom.text, searchTo.text) }
 		searchTo.onStartAddressSearch { presenter.onSearchClick(searchFrom.text, searchTo.text) }
@@ -256,20 +239,20 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	@CallSuper
 	protected override fun onStart() {
 		super.onStart()
-		if(permissionsGranted) mapView.onStart()
+		mapView.onStart()
 	}
 
 	@CallSuper
 	protected override fun onResume() {
 		super.onResume()
 		navigatorHolder.setNavigator(navigator)
-		if(permissionsGranted) mapView.onResume()
+		mapView.onResume()
 	}
 	
 	@CallSuper
 	protected override fun onPause() {
 		navigatorHolder.removeNavigator()
-		if(permissionsGranted) mapView.onPause()
+		mapView.onPause()
 		super.onPause()
 	}
 	
@@ -281,21 +264,21 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	@CallSuper
 	protected override fun onStop() {
-		if(permissionsGranted) mapView.onStop()
+		mapView.onStop()
 		searchTo.text = ""
 		super.onStop()
 	}
 	
 	@CallSuper
 	protected override fun onDestroy() {
-		if(permissionsGranted) mapView.onDestroy()
+		mapView.onDestroy()
 		compositeDisposable.cancel()
 		super.onDestroy()
 	}
 	
 	@CallSuper
 	override fun onLowMemory() {
-		if(permissionsGranted) mapView.onLowMemory()
+		mapView.onLowMemory()
 		super.onLowMemory()
 	}
 	
@@ -311,27 +294,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		return toggle.onOptionsItemSelected(item)
 	}
 	
-	/**
-	 * @return true — не требуется разрешение пользователя
-	 */
-	private fun checkPermission(): Boolean {
-		if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-		   ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-				ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_REQUEST)
-				return false
-		}
-		return true
-	}
-	
-	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-		if(requestCode != PERMISSION_REQUEST) return
-		if(grantResults.size == 2 && 
-			grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-			grantResults[1] == PackageManager.PERMISSION_GRANTED) recreate()
-		else finish()
-	}
-
-
 	private fun initNavigation() {
 		val versionName = packageManager.getPackageInfo(packageName, 0).versionName
 		(navFooterVersion as TextView).text = 
