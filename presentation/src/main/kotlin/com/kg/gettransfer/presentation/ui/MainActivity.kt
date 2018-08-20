@@ -135,6 +135,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 				Screens.ABOUT -> return Intent(this@MainActivity, AboutActivity::class.java)
 				Screens.FIND_ADDRESS -> {
 					val intent = Intent(this@MainActivity, SearchActivity::class.java)
+					@Suppress("UNCHECKED_CAST")
 					val pair = data as Pair<String, String>
 					intent.putExtra(SearchActivity.EXTRA_ADDRESS_FROM, pair.first)
 					intent.putExtra(SearchActivity.EXTRA_ADDRESS_TO, pair.second)

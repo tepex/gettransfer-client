@@ -72,10 +72,10 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		set(value) {
 			text = value?.address ?: ""
 		}
-	private lateinit var parentDelegate: MvpDelegate<Any>
+	private var parentDelegate: MvpDelegate<Any>? = null
 	private val mvpDelegate by lazy {
 		val ret = MvpDelegate<SearchAddress>(this)
-		ret.setParentDelegate(parentDelegate, id.toString())
+		ret.setParentDelegate(parentDelegate!!, id.toString())
 		ret
 	}
 	
@@ -94,8 +94,8 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	}
 
 	@ProvidePresenter
-	fun createSearchAddressPresenter(): SearchAddressPresenter = SearchAddressPresenter(coroutineContexts,
-		                                                                                addressInteractor)
+	fun createSearchAddressPresenter(): 
+		SearchAddressPresenter = SearchAddressPresenter(coroutineContexts, addressInteractor)
 
 	fun initWidget(parent: SearchActivity, text: String, focus: Boolean = false) {
 		this.parent = parent
@@ -123,6 +123,9 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	@CallSuper
 	protected override fun onDetachedFromWindow() {
 		super.onDetachedFromWindow()
+		/* Not used in MainActivity */
+		if(parentDelegate == null) return
+			
 		mvpDelegate.onSaveInstanceState()
 		mvpDelegate.onDetach()
 	}
