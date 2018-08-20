@@ -66,9 +66,9 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
         tvPersonsCounterUp.setOnClickListener(clickListenerCounterButtons)
         tvChildCounterDown.setOnClickListener(clickListenerCounterButtons)
         tvChildCounterUp.setOnClickListener(clickListenerCounterButtons)
-        btnChangeCurrencyType.setOnClickListener { view -> showDialogChangeCurrency() }
-        layoutDateTimeTransfer.setOnClickListener { view -> changeDateTime(true) }
-        tvComments.setOnClickListener { view -> showPopupWindowComment() }
+        btnChangeCurrencyType.setOnClickListener { showDialogChangeCurrency() }
+        layoutDateTimeTransfer.setOnClickListener { changeDateTime(true) }
+        tvComments.setOnClickListener { showPopupWindowComment() }
     }
 
     private val clickListenerCounterButtons = View.OnClickListener { view ->
@@ -92,8 +92,8 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
         popupWindowComment.showAtLocation(mainLayoutActivityTransfer, Gravity.CENTER, 0, 0)
         layoutShadow.visibility = View.VISIBLE
 
-        layoutPopup.btnClearPopupComment.setOnClickListener { view -> layoutPopup.etPopupComment.setText("") }
-        layoutPopup.etPopupComment.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+        layoutPopup.btnClearPopupComment.setOnClickListener { layoutPopup.etPopupComment.setText("") }
+        layoutPopup.etPopupComment.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 presenter.setComment(layoutPopup.etPopupComment.text.toString())
                 popupWindowComment.dismiss()
@@ -105,7 +105,7 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
             hideKeyboard()
             layoutShadow.visibility = View.GONE
         }
-        layoutPopup.setOnClickListener{ view -> layoutPopup.etPopupComment.requestFocus()}
+        layoutPopup.setOnClickListener{ layoutPopup.etPopupComment.requestFocus()}
         layoutPopup.etPopupComment.setSelection(layoutPopup.etPopupComment.text.length)
         showKeyboard()
     }
@@ -115,7 +115,7 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
                 "Russian Ruble (\u20BD)", "Baht (฿)", "Renminbi(¥)")
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.currency)
-        builder.setItems(currencies) { dialog, which -> presenter.changeCurrency(which) }
+        builder.setItems(currencies) { _, which -> presenter.changeCurrency(which) }
         builder.setNegativeButton(R.string.cancel, null)
         builder.show()
     }
@@ -160,8 +160,10 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
     }
 
     private fun hideKeyboard() {
-        val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputManager.hideSoftInputFromWindow(currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        val view = currentFocus
+        if(view != null)
+            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+                    .hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     override fun onBackPressed() {

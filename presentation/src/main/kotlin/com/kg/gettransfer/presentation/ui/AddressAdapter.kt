@@ -33,7 +33,7 @@ class AddressAdapter(private val presenter: SearchPresenter,
 	override fun onBindViewHolder(holder: ViewHolder, pos: Int) {
 		holder.bind(list.get(pos), { presenter.onDestinationAddressSelected(it) })
 	}
-	
+
 	fun setSelectedItem(address: GTAddress) {
 		
 	}
