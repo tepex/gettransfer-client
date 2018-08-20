@@ -39,6 +39,8 @@
         <activity android:name=".presentation.ui.CreateOrderActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".presentation.ui.LicenceAgreementActivity"
+            android:screenOrientation="portrait"/>
 <!--
         <activity
             android:name=".presentation.ui.LoginActivity"

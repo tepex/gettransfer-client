@@ -8,4 +8,16 @@
 	android:background="@color/colorPrimary"
 	android:fitsSystemWindows="true"
 	android:minHeight="?attr/actionBarSize"
-	tools:ignore="Overdraw" />
+	tools:ignore="Overdraw" >
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text=""
+		android:layout_gravity="center"
+		android:id="@+id/toolbar_title"
+		android:textSize="18sp"
+		android:fontFamily="@font/sf_pro_text_bold"
+		android:textColor="@android:color/black"/>
+
+</android.support.v7.widget.Toolbar>

@@ -3,8 +3,10 @@ package com.kg.gettransfer.presentation.ui
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.CallSuper
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 import android.view.View
@@ -22,10 +24,22 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.LinearLayout
 import android.widget.PopupWindow
+import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.kg.gettransfer.presentation.Screens
+import com.kg.gettransfer.presentation.presenter.LicenceAgreementPresenter
+import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.*
+import org.koin.android.ext.android.inject
+import ru.terrakok.cicerone.Navigator
+import ru.terrakok.cicerone.NavigatorHolder
+import ru.terrakok.cicerone.Router
+import ru.terrakok.cicerone.android.SupportAppNavigator
 import java.util.*
 
 
@@ -34,11 +48,27 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
 
+    private val navigatorHolder: NavigatorHolder by inject()
+    private val router: Router by inject()
+
     var mYear = 0
     var mMonth = 0
     var mDay = 0
     var mHour = 0
     var mMinute = 0
+
+    @ProvidePresenter
+    fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(router)
+
+    private val navigator: Navigator = object: SupportAppNavigator(this, Screens.NOT_USED) {
+        protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
+            when(screenKey) {
+                Screens.LICENCE_AGREE -> return Intent(this@CreateOrderActivity, LicenceAgreementActivity::class.java)
+            }
+            return null
+        }
+        protected override fun createFragment(screenKey: String, data: Any?): Fragment? = null
+    }
 
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -61,14 +91,22 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
         setOnClickListeners()
     }
 
+    @CallSuper
+    protected override fun onResume() {
+        super.onResume()
+        navigatorHolder.setNavigator(navigator)
+    }
+
     private fun setOnClickListeners() {
         tvPersonsCounterDown.setOnClickListener(clickListenerCounterButtons)
         tvPersonsCounterUp.setOnClickListener(clickListenerCounterButtons)
         tvChildCounterDown.setOnClickListener(clickListenerCounterButtons)
         tvChildCounterUp.setOnClickListener(clickListenerCounterButtons)
-        btnChangeCurrencyType.setOnClickListener { showDialogChangeCurrency() }
-        layoutDateTimeTransfer.setOnClickListener { changeDateTime(true) }
-        tvComments.setOnClickListener { showPopupWindowComment() }
+
+        btnChangeCurrencyType.setOnClickListener { view -> showDialogChangeCurrency() }
+        layoutDateTimeTransfer.setOnClickListener { view -> changeDateTime(true) }
+        tvComments.setOnClickListener { view -> showPopupWindowComment() }
+        layoutAgreement.setOnClickListener { view -> presenter.showLicenceAgreement() }
     }
 
     private val clickListenerCounterButtons = View.OnClickListener { view ->
