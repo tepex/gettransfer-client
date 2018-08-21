@@ -378,7 +378,7 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 		}
 	}
 	
-	override fun setAddressFrom(address: GTAddress) { searchFrom.address = address }
+	override fun setAddressFrom(address: String) { searchFrom.text = address }
 	
 	override fun setError(@StringRes errId: Int, finish: Boolean) {
 		Utils.showError(this, errId, finish)

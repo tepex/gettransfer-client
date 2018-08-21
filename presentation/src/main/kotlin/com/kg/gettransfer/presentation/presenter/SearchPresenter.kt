@@ -41,8 +41,11 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	}
 	
 	override fun onFirstViewAttach() {
-		addressFrom = addressInteractor.getCachedAddress()
-		if(addressFrom != null) viewState.setAddressFrom(addressFrom.address)
+		val cached = addressInteractor.getCachedAddress()
+		if(cached != null) {
+			viewState.setAddressFrom(cached.address)
+			addressFrom = cached
+		}
 	}
 
 	fun onAddressSelected(selected: GTAddress) {

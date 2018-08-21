@@ -63,14 +63,14 @@ class MainPresenter(private val cc: CoroutineContexts,
 			val point = utils.asyncAwait { locationInteractor.getCurrentLocation(utils) }
 			viewState.setMapPoint(LatLng(point.latitude, point.longitude))
 			val currentAddress = utils.asyncAwait { addressInteractor.getAddressByLocation(point) }
-			viewState.setAddressFrom(currentAddress)
+			viewState.setAddressFrom(currentAddress.address)
 		}, { e ->
 			Timber.e(e)
 			viewState.setError(R.string.err_address_service_xxx, false)
 		}, {viewState.blockInterface(false)})
 	}
 
-	fun onSearchClick(adresses: Pair<String, String>) { router.navigateTo(Screens.FIND_ADDRESS, addresses) }
+	fun onSearchClick(addresses: Pair<String, String>) { router.navigateTo(Screens.FIND_ADDRESS, addresses) }
 	fun onAboutClick() { router.navigateTo(Screens.ABOUT) }
 	fun readMoreClick() { router.navigateTo(Screens.READ_MORE) }
 	fun onSettingsClick() { router.navigateTo(Screens.CREATE_ORDER) }

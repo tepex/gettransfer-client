@@ -54,7 +54,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
 	@InjectPresenter
 	lateinit var presenter: SearchAddressPresenter
-	private lateinit var parent: SearchView
+	private lateinit var parent: SearchActivity
 
 	override val containerView: View
 	/** From/To address flag */
@@ -83,7 +83,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		}
 		
 		clearBtn.setOnClickListener { 
-			address = null
+			text = ""
 			addressField.requestFocus()
 		}
 	}

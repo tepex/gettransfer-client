@@ -28,7 +28,7 @@ class AddressAdapter(private val presenter: SearchPresenter,
 		ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.address_list_item, parent, false))
 	
 	override fun onBindViewHolder(holder: ViewHolder, pos: Int) {
-		holder.bind(list.get(pos)) { presenter.onDestinationAddressSelected(it) }
+		holder.bind(list.get(pos)) { presenter.onAddressSelected(it) }
 	}
 
 	class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
