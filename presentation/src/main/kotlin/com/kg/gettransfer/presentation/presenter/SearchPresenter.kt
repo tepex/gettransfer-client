@@ -28,18 +28,43 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	                  private val router: Router,
 	                  private val addressInteractor: AddressInteractor): MvpPresenter<SearchView>() {
 	
-	val compositeDisposable = Job()
-	val utils = AsyncUtils(cc)
+	var isTo = false
+	
+	private val compositeDisposable = Job()
+	private val utils = AsyncUtils(cc)
+	
+	private lateinit var addressFrom: GTAddress
+	private var addressTo: GTAddress? = null
 	
 	companion object {
 		@JvmField val ADDRESS_PREDICTION_SIZE = 3
 	}
 	
-	fun onDestinationAddressSelected(address: GTAddress) {
-		Timber.d("select address from list: $address")
-		viewState.setAddress(address)
-		router.navigateTo(Screens.CREATE_ORDER)
+	override fun onFirstViewAttach() {
+		utils.launchAsyncTryCatchFinally(compositeDisposable, {
+			viewState.blockInterface(true)
+			addressFrom = utils.asyncAwait { addressInteractor.getCurrentAddress() }
+			viewState.setAddressFrom(addressFrom.name)
+		}, { e ->
+			Timber.e(e)
+			viewState.setError(R.string.err_address_service_xxx, false)
+		}, {viewState.blockInterface(false)})
 	}
-	
+
+	fun onAddressSelected(selected: GTAddress) {
+		Timber.d(">>>> ${selected.name} ${selected.isConcreteObject()}")
+		
+		if(isTo) addressTo = selected
+		else addressFrom = selected
+		
+		if(addressFrom.isConcreteObject() && addressTo?.isConcreteObject() ?: false) {
+			addressInteractor.route = Pair(addressFrom, addressTo!!)
+			router.navigateTo(Screens.CREATE_ORDER)
+			return
+		}
+		if(isTo) viewState.setAddressTo(selected.primary ?: selected.name)
+		else viewState.setAddressFrom(selected.primary ?: selected.name)
+	}
+
 	fun onBackCommandClick() = viewState.finish()
 }

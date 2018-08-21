@@ -126,14 +126,10 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 		
 		addressList.layoutManager = LinearLayoutManager(this)
 				
-		searchFrom.initWidget(this, intent.getStringExtra(EXTRA_ADDRESS_FROM))
-		searchTo.initWidget(this, intent.getStringExtra(EXTRA_ADDRESS_TO), true)
-		searchTo.requestFocus()
-	}
-	
-	fun onFocusChanged(current: SearchAddress) {
-		this.current = current 
-		current.requestAddresses()
+		searchFrom.initWidget(this, false)
+		searchFrom.text = intent.getStringExtra(EXTRA_ADDRESS_FROM)
+		searchTo.initWidget(this, true)
+		searchTo.text = intent.getStringExtra(EXTRA_ADDRESS_TO)
 	}
 	
 	@CallSuper
@@ -160,13 +156,9 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	
 	/* SearchView */
 	override fun blockInterface(block: Boolean) {}
-	override fun setAddressFrom(address: GTAddress) { searchFrom.address = address }
+	override fun setAddressFrom(address: String) { searchFrom.initText(address) }
+	override fun setAddressTo(address: String) { searchTo.initText(address) }
 	override fun setAddressList(list: List<GTAddress>) { addressList.adapter = AddressAdapter(presenter, list) }
-	
-	override fun setAddress(address: GTAddress) { 
-		current.address = address
-		// set current position
-	}
 	
 	override fun setError(@StringRes errId: Int, finish: Boolean) { Utils.showError(this, errId, finish) }
 }

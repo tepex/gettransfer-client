@@ -71,6 +71,7 @@
 
 	<!-- Search address -->
 	<dimen name="address_item_size">16sp</dimen>
+	<dimen name="address_secondary_item_size">12sp</dimen>
 	<dimen name="address_item_padding_top">8dp</dimen>
 	<dimen name="address_item_padding_start">12dp</dimen>
 </resources>

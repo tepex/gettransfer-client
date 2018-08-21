@@ -19,10 +19,15 @@ import timber.log.Timber
 
 class AddressAdapter(private val presenter: SearchPresenter,
 	                 private var list: List<GTAddress>): RecyclerView.Adapter<AddressAdapter.ViewHolder>() {
+	                 
 	companion object {
-		var selectedPos = RecyclerView.NO_POSITION
+		private var selected = RecyclerView.NO_POSITION
 	}
 	
+	init {
+		selected = RecyclerView.NO_POSITION
+	}
+	                 
 	override fun getItemCount(): Int {
 		return list.size
 	}
@@ -31,20 +36,19 @@ class AddressAdapter(private val presenter: SearchPresenter,
 		ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.address_list_item, parent, false))
 	
 	override fun onBindViewHolder(holder: ViewHolder, pos: Int) {
-		holder.bind(list.get(pos), { presenter.onDestinationAddressSelected(it) })
+		holder.bind(list.get(pos)) {
+			notifyDataSetChanged()
+			presenter.onAddressSelected(it)
+		}
 	}
 
-	fun setSelectedItem(address: GTAddress) {
-		
-	}
-	
 	class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
 		fun bind(item: GTAddress, listener: ClickHandler) = with(containerView) {
-			addressItem.text = item.address
-			setSelected(selectedPos == adapterPosition)
+			addressItem.text = item.primary
+			addressSecondaryItem.text = item.secondary
+			setSelected(selected == adapterPosition)
 			setOnClickListener {
-				selectedPos = adapterPosition
-				setSelected(selectedPos == adapterPosition)
+				selected = adapterPosition
 				listener(item) 
 			}
 		}

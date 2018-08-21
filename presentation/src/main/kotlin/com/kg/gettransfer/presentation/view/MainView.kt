@@ -11,4 +11,5 @@ import com.google.android.gms.maps.model.LatLng
 //interface MainView: MvpView, OnCameraMoveListener
 interface MainView: BaseView {
 	fun setMapPoint(current: LatLng)
+	fun setAddressFrom(address: String)
 }

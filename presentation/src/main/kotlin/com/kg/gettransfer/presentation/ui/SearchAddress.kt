@@ -53,24 +53,17 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
 	@InjectPresenter
 	lateinit var presenter: SearchAddressPresenter
-	private lateinit var addressInteractor: AddressInteractor
-	private lateinit var coroutineContexts: CoroutineContexts
-	private lateinit var parent: SearchView
+	private lateinit var parent: SearchActivity
 
 	override val containerView: View
-	/** true — ввод с помощью setText(). Флаг предотвращает срабатывание onTextChanged */
-	var implicitInput = false
+	/** From/To address flag */
+	var isTo = false
+		private set
 
 	var text: String
 		get() { return addressField.getText().toString() }
 		set(value) {
-			implicitInput = true
 			addressField.setText(value)
-			implicitInput = false
-		}
-	var address: GTAddress? = null
-		set(value) {
-			text = value?.address ?: ""
 		}
 	private var parentDelegate: MvpDelegate<Any>? = null
 	private val mvpDelegate by lazy {
@@ -78,6 +71,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		ret.setParentDelegate(parentDelegate!!, id.toString())
 		ret
 	}
+	private var blockRequest = false
 	
 	init {
 		containerView = LayoutInflater.from(context).inflate(R.layout.search_address, this, true)
@@ -88,25 +82,26 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		}
 		
 		clearBtn.setOnClickListener { 
-			address = null
+			text = ""
 			addressField.requestFocus()
 		}
 	}
 
 	@ProvidePresenter
 	fun createSearchAddressPresenter(): 
-		SearchAddressPresenter = SearchAddressPresenter(coroutineContexts, addressInteractor)
+		SearchAddressPresenter = SearchAddressPresenter(parent.coroutineContexts,
+			                                            parent.addressInteractor)
 
-	fun initWidget(parent: SearchActivity, text: String, focus: Boolean = false) {
+	fun initWidget(parent: SearchActivity, isTo: Boolean) {
 		this.parent = parent
-		addressInteractor = parent.addressInteractor
-		coroutineContexts = parent.coroutineContexts
+		this.isTo = isTo
 		
 		addressField.setOnFocusChangeListener { _, hasFocus ->
 			if(!hasFocus) clearBtn.visibility = View.GONE
 			else {
 				checkClearButtonVisibility()
-				parent.onFocusChanged(this)
+				parent.presenter.isTo = isTo
+				presenter.requestAddressListByPrediction(text.trim())
 			}
 		}
 		addressField.addTextChangedListener(this)
@@ -115,9 +110,16 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		mvpDelegate.onCreate()
 		mvpDelegate.onAttach()
 		
-		this.text = text.trim()
-		if(focus) addressField.requestFocus()
+		if(isTo) addressField.requestFocus()
 		checkClearButtonVisibility()
+	}
+	
+	/** Set address text without request */
+	fun initText(text: String) {
+		blockRequest = true
+		this.text = text
+		addressField.setSelection(text.length)
+		blockRequest = false
 	}
 	
 	@CallSuper
@@ -130,10 +132,6 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		mvpDelegate.onDetach()
 	}
 	
-	fun requestAddresses() {
-		presenter.requestAddressListByPrediction(text.trim())
-	}
-	
 	override fun setAddressList(list: List<GTAddress>) { 
 		if(addressField.isFocused()) parent.setAddressList(list) 
 	}
@@ -144,22 +142,14 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
 	override fun afterTextChanged(s: Editable?) {
 		checkClearButtonVisibility()
-		requestAddresses() 
+		if(!blockRequest) presenter.requestAddressListByPrediction(text.trim())
 	}
 	
 	override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 	override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 	
-	/**
-	 * [adding lambdas](https://antonioleiva.com/lambdas-kotlin/}
-	 */
-	inline fun onStartAddressSearch(crossinline listener: (SearchAddress) -> Unit) {
-		addressField.setOnFocusChangeListener { _, hasFocus -> if(hasFocus) listener(this@SearchAddress) }
-		addressField.addTextChangedListener(object: TextWatcher {
-			override fun afterTextChanged(s: Editable?) { if(!implicitInput) listener(this@SearchAddress) }
-			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-		})
+	override fun setOnFocusChangeListener(listener: View.OnFocusChangeListener) {
+		addressField.setOnFocusChangeListener(listener)
 	}
 	
 	private fun checkClearButtonVisibility() {
