@@ -28,7 +28,6 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 
-import com.kg.gettransfer.presentation.model.Address
 import com.kg.gettransfer.presentation.presenter.SearchAddressPresenter
 import com.kg.gettransfer.presentation.view.SearchAddressView
 import com.kg.gettransfer.presentation.view.SearchView
@@ -132,7 +131,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		mvpDelegate.onDetach()
 	}
 	
-	override fun setAddressList(list: List<Address>) { 
+	override fun setAddressList(list: List<GTAddress>) { 
 		if(addressField.isFocused()) parent.setAddressList(list) 
 	}
 

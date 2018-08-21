@@ -12,7 +12,6 @@ import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 
-import com.kg.gettransfer.presentation.model.Address
 import com.kg.gettransfer.presentation.view.SearchAddressView
 
 import kotlinx.coroutines.experimental.Job
@@ -28,7 +27,7 @@ class SearchAddressPresenter(private val cc: CoroutineContexts,
 	
 	/* Cache. @TODO */
 	private var lastRequest: String? = null
-	private var lastResult: List<Address>? = null
+	private var lastResult: List<GTAddress>? = null
 	
 	companion object {
 		@JvmField val ADDRESS_PREDICTION_SIZE = 3
@@ -48,7 +47,7 @@ class SearchAddressPresenter(private val cc: CoroutineContexts,
 		Timber.d("------ request list for prediction $prediction")
 		utils.launchAsyncTryCatch(compositeDisposable, {
 			lastResult = utils.asyncAwait { 
-				addressInteractor.getAutocompletePredictions(prediction).map { Address(it) }
+				addressInteractor.getAutocompletePredictions(prediction)
 			}
 			lastRequest = prediction
 			viewState.setAddressList(lastResult!!)
