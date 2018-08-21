@@ -1,19 +1,30 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.widget.TextView
+
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+
 import com.kg.gettransfer.R
+
+import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.interactor.AddressInteractor
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.CreateOrderView
+
 import ru.terrakok.cicerone.Router
 
 @InjectViewState
-class CreateOrderPresenter(private val router: Router): MvpPresenter<CreateOrderView>() {
-    fun onBackCommandClick() {
-        viewState.finish()
-    }
+class CreateOrderPresenter(private val cc: CoroutineContexts,
+                           private val router: Router,
+                           private val addressInteractor: AddressInteractor): MvpPresenter<CreateOrderView>() {
 
+	override fun onFirstViewAttach() {
+		viewState.setRoute(addressInteractor.route)
+	}
+	
     fun changeCounter(counterTextView: TextView, num: Int){
         var counter = counterTextView.text.toString().toInt()
         var minCounter = 0
@@ -36,11 +47,7 @@ class CreateOrderPresenter(private val router: Router): MvpPresenter<CreateOrder
         viewState.setDateTimeTransfer(dateTimeString.toString())
     }
 
-    fun setComment(comment: String){
-        viewState.setComment(comment)
-    }
-
-    fun showLicenceAgreement(){
-        router.navigateTo(Screens.LICENCE_AGREE)
-    }
+    fun setComment(comment: String) { viewState.setComment(comment) }
+    fun showLicenceAgreement() { router.navigateTo(Screens.LICENCE_AGREE) }
+    fun onBackCommandClick() { viewState.finish() }
 }
