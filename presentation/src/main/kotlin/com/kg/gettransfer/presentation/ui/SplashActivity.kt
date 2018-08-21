@@ -15,6 +15,10 @@ import android.support.v4.content.ContextCompat
 
 import android.support.v7.app.AppCompatActivity
 
+import com.kg.gettransfer.domain.interactor.ApiInteractor
+
+import org.koin.android.ext.android.inject
+
 import timber.log.Timber
 
 class SplashActivity: AppCompatActivity() {
@@ -22,6 +26,8 @@ class SplashActivity: AppCompatActivity() {
 		@JvmField val PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
 		@JvmField val PERMISSION_REQUEST = 2211
 	}
+	
+	private val apiInteractor: ApiInteractor by inject()
 	
 	@CallSuper
 	protected override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +47,7 @@ class SplashActivity: AppCompatActivity() {
 			return
 		}
 
-		Timber.d("Permissions granted!")
+		Timber.d("Permissions granted! %s", apiInteractor.qqq())
 		startActivity(Intent(this, MainActivity::class.java))
 		finish()
 	}

@@ -118,10 +118,10 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
         tvChildCounterDown.setOnClickListener(clickListenerCounterButtons)
         tvChildCounterUp.setOnClickListener(clickListenerCounterButtons)
 
-        btnChangeCurrencyType.setOnClickListener { view -> showDialogChangeCurrency() }
-        layoutDateTimeTransfer.setOnClickListener { view -> changeDateTime(true) }
-        tvComments.setOnClickListener { view -> showPopupWindowComment() }
-        layoutAgreement.setOnClickListener { view -> presenter.showLicenceAgreement() }
+        btnChangeCurrencyType.setOnClickListener { showDialogChangeCurrency() }
+        layoutDateTimeTransfer.setOnClickListener { changeDateTime(true) }
+        tvComments.setOnClickListener { showPopupWindowComment() }
+        layoutAgreement.setOnClickListener { presenter.showLicenceAgreement() }
     }
 
     private val clickListenerCounterButtons = View.OnClickListener { view ->
