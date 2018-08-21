@@ -62,7 +62,7 @@ class MainPresenter(private val cc: CoroutineContexts,
 		utils.launchAsyncTryCatchFinally(compositeDisposable, {
 			val current = utils.asyncAwait { addressInteractor.getCurrentAddress() }
 			viewState.setMapPoint(LatLng(current.point!!.latitude, current.point!!.longitude))
-			viewState.setAddressFrom(current.address)
+			viewState.setAddressFrom(current.name)
 		}, { e ->
 			Timber.e(e)
 			viewState.setError(R.string.err_address_service_xxx, false)

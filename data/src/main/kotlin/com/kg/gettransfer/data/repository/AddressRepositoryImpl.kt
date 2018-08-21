@@ -53,8 +53,10 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
 		
 		val place = list.get(0).place
 		Timber.d("++++ Current place name: %s", place.name)
-		return GTAddress(place.id, place.placeTypes, place.name.toString(), // place.address.toString() 
-			Point(place.latLng.latitude, place.latLng.longitude))
+		return GTAddress(place.id, place.placeTypes,
+                         place.name.toString(), // place.address.toString()
+                         null, null,
+                         Point(place.latLng.latitude, place.latLng.longitude))
 	}
 	
 	/**
@@ -66,7 +68,11 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
 		val list = DataBufferUtils.freezeAndClose(results.getResult())
 		val ret = list.map {
 			Timber.d("pr: ${it.getPrimaryText(null)} full: ${it.getFullText(null).toString()}")
-			GTAddress(it.placeId, it.placeTypes, it.getPrimaryText(null).toString()) 
+			GTAddress(it.placeId, it.placeTypes,
+                      it.getFullText(null).toString(),
+                      it.getPrimaryText(null).toString(),
+                      it.getSecondaryText(null).toString(),
+                      null)
 		}
 		ret.forEach { Timber.d(it.toString()) }
 		return ret

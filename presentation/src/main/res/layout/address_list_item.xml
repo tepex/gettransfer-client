@@ -11,4 +11,8 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		style="@style/address_item" />
+	<TextView android:id="@+id/addressSecondaryItem"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		style="@style/address_secondary_item" />
 </LinearLayout>

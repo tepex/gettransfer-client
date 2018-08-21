@@ -44,7 +44,8 @@ class AddressAdapter(private val presenter: SearchPresenter,
 
 	class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
 		fun bind(item: GTAddress, listener: ClickHandler) = with(containerView) {
-			addressItem.text = item.address
+			addressItem.text = item.primary
+			addressSecondaryItem.text = item.secondary
 			setSelected(selected == adapterPosition)
 			setOnClickListener {
 				selected = adapterPosition
