@@ -60,17 +60,16 @@ class MainPresenter(private val cc: CoroutineContexts,
 		Timber.d("update current location")
 		viewState.blockInterface(true)
 		utils.launchAsyncTryCatchFinally(compositeDisposable, {
-			val point = utils.asyncAwait { locationInteractor.getCurrentLocation(utils) }
-			viewState.setMapPoint(LatLng(point.latitude, point.longitude))
-			val currentAddress = utils.asyncAwait { addressInteractor.getAddressByLocation(point) }
-			viewState.setAddressFrom(currentAddress)
+			val current = utils.asyncAwait { addressInteractor.getCurrentAddress() }
+			viewState.setMapPoint(LatLng(current.point!!.latitude, current.point!!.longitude))
+			viewState.setAddressFrom(current.name)
 		}, { e ->
 			Timber.e(e)
 			viewState.setError(R.string.err_address_service_xxx, false)
 		}, {viewState.blockInterface(false)})
 	}
 
-	fun onSearchClick(from: String, to: String) { router.navigateTo(Screens.FIND_ADDRESS, Pair(from, to)) }
+	fun onSearchClick(addresses: Pair<String, String>) { router.navigateTo(Screens.FIND_ADDRESS, addresses) }
 	fun onAboutClick() { router.navigateTo(Screens.ABOUT) }
 	fun readMoreClick() { router.navigateTo(Screens.READ_MORE) }
 	fun onSettingsClick() { router.navigateTo(Screens.CREATE_ORDER) }
