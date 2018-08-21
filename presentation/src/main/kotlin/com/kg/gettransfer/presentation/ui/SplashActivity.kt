@@ -55,7 +55,7 @@ class SplashActivity: AppCompatActivity() {
 			startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 		}, { e ->
 			Timber.e(e)
-			// @TODO: Показать ошибку
+			// @TODO: Показать ошибку. Учесть 401 — протухший ключ
 		}, { finish() })
 	}
 	
