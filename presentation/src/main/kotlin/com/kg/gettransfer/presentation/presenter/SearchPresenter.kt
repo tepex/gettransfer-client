@@ -58,7 +58,8 @@ class SearchPresenter(private val cc: CoroutineContexts,
 		else addressFrom = selected
 		
 		if(addressFrom.isConcreteObject() && addressTo?.isConcreteObject() ?: false) {
-			router.navigateTo(Screens.CREATE_ORDER, Pair(addressFrom, addressTo))
+			addressInteractor.route = Pair(addressFrom, addressTo!!)
+			router.navigateTo(Screens.CREATE_ORDER)
 			return
 		}
 		if(isTo) viewState.setAddressTo(selected.primary ?: selected.name)
