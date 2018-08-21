@@ -9,7 +9,6 @@ ext {
 	constraint_layout_version = "2.0.0-alpha2"
 	r2_k_c_a_version          = "1.0.0"
 	okhttp3_version           = "3.11.0"
-	retrofit_version          = "2.4.0"
 	koin_version              = "1.0.0-beta-7"
 	moxy_version              = "1.5.5"
 	cicerone_version          = "3.0.0"
@@ -114,9 +113,8 @@ dependencies {
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-experimental-adapter:$r2_k_c_a_version"
     implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-//    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation libs.retrofit
+    implementation libs.retrofit_json
     // Logger
     implementation libs.timber
     

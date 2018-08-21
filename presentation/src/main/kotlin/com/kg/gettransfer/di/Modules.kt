@@ -73,7 +73,7 @@ val ciceroneModule = module {
 }
 
 val domainModule = module {
-	single { ApiRepositoryImpl(get()) as ApiRepository }
+	single { ApiRepositoryImpl(get(), (get() as Context).resources.getString(R.string.api_key)) as ApiRepository }
 	single { AddressRepositoryImpl(get(), get(), get()) as AddressRepository }
 	single { LocationRepositoryImpl(get(), get(), get()) as LocationRepository }
 	single { ApiInteractor(get()) }

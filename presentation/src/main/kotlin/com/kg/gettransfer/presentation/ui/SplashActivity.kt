@@ -15,7 +15,11 @@ import android.support.v4.content.ContextCompat
 
 import android.support.v7.app.AppCompatActivity
 
+import com.kg.gettransfer.domain.AsyncUtils
+import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
+
+import kotlinx.coroutines.experimental.Job
 
 import org.koin.android.ext.android.inject
 
@@ -27,17 +31,14 @@ class SplashActivity: AppCompatActivity() {
 		@JvmField val PERMISSION_REQUEST = 2211
 	}
 	
+	private val compositeDisposable = Job()
+	private val coroutineContexts: CoroutineContexts by inject()
+	private val utils = AsyncUtils(coroutineContexts)
 	private val apiInteractor: ApiInteractor by inject()
 	
 	@CallSuper
 	protected override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		/*
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-		   (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-		    ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-		    */
-				
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && 
 			(!check(Manifest.permission.ACCESS_FINE_LOCATION) || 
 			 !check(Manifest.permission.ACCESS_COARSE_LOCATION))) {
@@ -47,11 +48,23 @@ class SplashActivity: AppCompatActivity() {
 			return
 		}
 
-		Timber.d("Permissions granted! %s", apiInteractor.qqq())
-		startActivity(Intent(this, MainActivity::class.java))
-		finish()
+		Timber.d("Permissions granted!")
+		utils.launchAsyncTryCatchFinally(compositeDisposable, {
+			val token = utils.asyncAwait { apiInteractor.updateToken() }
+			Timber.d("new token: $token")
+			startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+		}, { e ->
+			Timber.e(e)
+			// @TODO: Показать ошибку
+		}, { finish() })
 	}
 	
+	@CallSuper
+	protected override fun onDestroy() {
+		compositeDisposable.cancel()
+		super.onDestroy()
+	}
+
 	private fun check(permission: String) =
 		ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 	
