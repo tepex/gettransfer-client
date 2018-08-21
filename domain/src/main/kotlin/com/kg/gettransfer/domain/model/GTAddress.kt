@@ -9,14 +9,11 @@ open class GTAddress(val id: String? = null,
 		@JvmField val TYPE_STREET_ADDRESS = 1021
 	}
 	
-	fun hasBuildingNumber(): Boolean {
-		if(placeTypes == null || placeTypes.isEmpty())
-		{
-			
-			
+	fun isConcreteObject(): Boolean {
+		if(placeTypes == null || placeTypes.isEmpty()) {
 			return false
 		}
-		return placeTypes.contains(TYPE_STREET_ADDRESS)
+		return placeTypes.any { (it > 0 && it < 1000) || it == TYPE_STREET_ADDRESS }
 	}
 
 	override fun equals(other: Any?): Boolean {

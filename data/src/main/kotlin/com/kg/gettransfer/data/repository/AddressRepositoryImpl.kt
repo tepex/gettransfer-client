@@ -64,7 +64,10 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
 		val results = gdClient.getAutocompletePredictions(prediction, null, null)
 		Tasks.await(results)
 		val list = DataBufferUtils.freezeAndClose(results.getResult())
-		val ret = list.map { GTAddress(it.placeId, it.placeTypes, it.getPrimaryText(null).toString()) }
+		val ret = list.map {
+			Timber.d("pr: ${it.getPrimaryText(null)} full: ${it.getFullText(null).toString()}")
+			GTAddress(it.placeId, it.placeTypes, it.getPrimaryText(null).toString()) 
+		}
 		ret.forEach { Timber.d(it.toString()) }
 		return ret
 	}

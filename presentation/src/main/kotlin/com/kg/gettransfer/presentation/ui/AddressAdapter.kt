@@ -23,6 +23,10 @@ class AddressAdapter(private val presenter: SearchPresenter,
 	companion object {
 		private var selected = RecyclerView.NO_POSITION
 	}
+	
+	init {
+		selected = RecyclerView.NO_POSITION
+	}
 	                 
 	override fun getItemCount(): Int {
 		return list.size

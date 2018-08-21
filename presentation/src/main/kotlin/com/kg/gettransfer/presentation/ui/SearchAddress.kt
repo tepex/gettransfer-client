@@ -118,6 +118,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	fun initText(text: String) {
 		blockRequest = true
 		this.text = text
+		addressField.setSelection(text.length)
 		blockRequest = false
 	}
 	

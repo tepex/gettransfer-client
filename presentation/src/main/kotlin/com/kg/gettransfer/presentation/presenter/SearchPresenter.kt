@@ -52,16 +52,17 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	}
 
 	fun onAddressSelected(selected: GTAddress) {
-		Timber.d("select address from list (isTo: $isTo): $selected")
-		if(isTo) {
-			//addressTo = selected
-			viewState.setAddressTo(selected.address)
+		Timber.d(">>>> ${selected.address} ${selected.isConcreteObject()}")
+		
+		if(isTo) addressTo = selected
+		else addressFrom = selected
+		
+		if(addressFrom.isConcreteObject() && addressTo?.isConcreteObject() ?: false) {
+			router.navigateTo(Screens.CREATE_ORDER, Pair(addressFrom, addressTo))
+			return
 		}
-		else {
-			//addressFrom = selected
-			viewState.setAddressFrom(selected.address)
-		}
-		//router.navigateTo(Screens.CREATE_ORDER)
+		if(isTo) viewState.setAddressTo(selected.address)
+		else viewState.setAddressFrom(selected.address)
 	}
 	
 	fun onBackCommandClick() = viewState.finish()
