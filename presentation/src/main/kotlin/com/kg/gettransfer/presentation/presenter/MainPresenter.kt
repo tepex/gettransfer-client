@@ -60,10 +60,9 @@ class MainPresenter(private val cc: CoroutineContexts,
 		Timber.d("update current location")
 		viewState.blockInterface(true)
 		utils.launchAsyncTryCatchFinally(compositeDisposable, {
-			val point = utils.asyncAwait { locationInteractor.getCurrentLocation(utils) }
-			viewState.setMapPoint(LatLng(point.latitude, point.longitude))
-			val currentAddress = utils.asyncAwait { addressInteractor.getAddressByLocation(point) }
-			viewState.setAddressFrom(currentAddress.address)
+			val current = utils.asyncAwait { addressInteractor.getCurrentAddress() }
+			viewState.setMapPoint(LatLng(current.point!!.latitude, current.point!!.longitude))
+			viewState.setAddressFrom(current.address)
 		}, { e ->
 			Timber.e(e)
 			viewState.setError(R.string.err_address_service_xxx, false)

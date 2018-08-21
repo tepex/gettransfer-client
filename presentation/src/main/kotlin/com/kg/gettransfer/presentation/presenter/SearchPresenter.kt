@@ -33,7 +33,7 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	private val compositeDisposable = Job()
 	private val utils = AsyncUtils(cc)
 	
-	private var addressFrom: GTAddress? = null
+	private lateinit var addressFrom: GTAddress
 	private var addressTo: GTAddress? = null
 	
 	companion object {
@@ -41,11 +41,14 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	}
 	
 	override fun onFirstViewAttach() {
-		val cached = addressInteractor.getCachedAddress()
-		if(cached != null) {
-			viewState.setAddressFrom(cached.address)
-			addressFrom = cached
-		}
+		utils.launchAsyncTryCatchFinally(compositeDisposable, {
+			viewState.blockInterface(true)
+			addressFrom = utils.asyncAwait { addressInteractor.getCurrentAddress() }
+			viewState.setAddressFrom(addressFrom.address)
+		}, { e ->
+			Timber.e(e)
+			viewState.setError(R.string.err_address_service_xxx, false)
+		}, {viewState.blockInterface(false)})
 	}
 
 	fun onAddressSelected(selected: GTAddress) {

@@ -25,6 +25,7 @@ import timber.log.Timber
 class AddressRepositoryImpl(private val geocoder: Geocoder,
 	                        private val gdClient: GeoDataClient,
 	                        private val pdClient: PlaceDetectionClient): AddressRepository {
+	/*
 	private val addressCache = AddressCache()
 	
 	override fun getAddressByLocation(point: Point): GTAddress {
@@ -42,21 +43,19 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
 	}
 	
 	override fun getCachedAddress() = addressCache.getLastAddress()
+	*/
 	
-	/*
-	override fun getCurrentAddress(): GTAddress? {
+	override fun getCurrentAddress(): GTAddress {
 		val results = pdClient.getCurrentPlace(null)
 		Tasks.await(results)
 		val list = DataBufferUtils.freezeAndClose(results.getResult())
-		return if(!list.isEmpty()) {
-			val place = list.get(0).place
-			Timber.d("Current place name: %s", place.name)
-			GTAddress(place.id, place.placeTypes, place.address.toString(), 
-				Point(place.latLng.latitude, place.latLng.longitude))
-		}
-		else null
+		if(list.isEmpty()) throw RuntimeException("Address not found")
+		
+		val place = list.get(0).place
+		Timber.d("++++ Current place name: %s", place.name)
+		return GTAddress(place.id, place.placeTypes, place.name.toString(), // place.address.toString() 
+			Point(place.latLng.latitude, place.latLng.longitude))
 	}
-	*/
 	
 	/**
 	 * @TODO: Добавить таймаут
