@@ -50,8 +50,7 @@ class SplashActivity: AppCompatActivity() {
 
 		Timber.d("Permissions granted!")
 		utils.launchAsyncTryCatchFinally(compositeDisposable, {
-			val token = utils.asyncAwait { apiInteractor.updateToken() }
-			Timber.d("new token: $token")
+			utils.asyncAwait { apiInteractor.configs() }
 			startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 		}, { e ->
 			Timber.e(e)

@@ -13,7 +13,7 @@ import timber.log.Timber
 
 class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRepository {
 	
-	private lateinit var accessToken: String
+	private var accessToken: String? = null
 	
 	/* @TODO: Обрабатывать {"result":"error","error":{"type":"wrong_api_key","details":"API key \"ccd9a245018bfe4f386f4045ee4a006fsss\" not found"}} */
 	override suspend fun updateToken(): String {
@@ -23,18 +23,18 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 			throw httpException
 		}
 		accessToken = response.data?.token
+		Timber.d("access token updated: $accessToken")
 		return accessToken!!
 	}
 	
-	override suspend fun configs(): Configs {
-		/*
-		val response: ApiResponse<ApiConfig> = try {
-			api.accessToken(apiKey).await()
+	override suspend fun configs() {
+		if(accessToken == null) updateToken()
+		val response: ApiResponse<ApiConfigs> = try {
+			api.configs(accessToken!!).await()
 		} catch(httpException: HttpException) {
 			throw httpException
 		}
-		accessToken = response.data?.token
-		return accessToken!!
-		*/
+		val ret: ApiConfigs = response.data!!
+		Timber.d("types: %s", ret.transportTypes)
 	}
 }
