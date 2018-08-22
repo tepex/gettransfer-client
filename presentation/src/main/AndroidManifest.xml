@@ -44,6 +44,8 @@
             android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".presentation.ui.LicenceAgreementActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".presentation.ui.SettingsActivity"
+            android:screenOrientation="portrait"/>
 <!--
         <activity
             android:name=".presentation.ui.LoginActivity"

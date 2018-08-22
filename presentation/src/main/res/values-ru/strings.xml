@@ -162,4 +162,9 @@
 
     <string name="cancel">Cancel</string>
     <string name="licence_agreement">Лицензионное соглашение</string>
+
+    <string name="nav_settings_title">Настройки</string>
+    <string name="sign_out">Выйти из профиля</string>
+    <string name="application_language">Язык приложения</string>
+    <string name="distance_units">Единицы расстояния</string>
 </resources>
