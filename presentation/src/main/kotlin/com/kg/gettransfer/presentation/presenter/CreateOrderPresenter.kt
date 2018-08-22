@@ -9,14 +9,26 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.TransferTypeInteractor
+
+import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.interactor.AddressInteractor
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.CreateOrderView
+
 import ru.terrakok.cicerone.Router
 
 @InjectViewState
-class CreateOrderPresenter(private val router: Router,
+class CreateOrderPresenter(private val cc: CoroutineContexts,
+                           private val router: Router,
+                           private val addressInteractor: AddressInteractor,
                            private val transferTypeInteractor: TransferTypeInteractor): MvpPresenter<CreateOrderView>() {
 
+	override fun onFirstViewAttach() {
+		viewState.setRoute(addressInteractor.route)
+	}
+	
     fun changeCounter(counterTextView: TextView, num: Int){
         var counter = counterTextView.text.toString().toInt()
         var minCounter = 0

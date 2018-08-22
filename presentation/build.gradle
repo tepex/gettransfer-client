@@ -7,8 +7,13 @@ ext {
 	multidex_version          = "1.0.3"
 	support_version           = "28.0.0-rc01"
 	constraint_layout_version = "2.0.0-alpha2"
+	r2_k_c_a_version          = "1.0.0"
+	okhttp3_version           = "3.11.0"
+<<<<<<< HEAD
+=======
 	retrofit_version          = "2.4.0"
-	koin_version              = "1.0.0-beta-6"
+>>>>>>> added retrofit and other
+	koin_version              = "1.0.0-beta-7"
 	moxy_version              = "1.5.5"
 	cicerone_version          = "3.0.0"
 	circle_indicator_version  = "1.2.2"
@@ -103,21 +108,23 @@ dependencies {
 	// Cicerone
 	implementation "ru.terrakok.cicerone:cicerone:$cicerone_version"
     
-	// 
+	// WTF? 
 	implementation "me.relex:circleindicator:$circle_indicator_version@aar"
-    // Retrofit network
-    /*
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    // Rx
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
-    implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
-    implementation 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
-    */
     // Koin
     // Достался по наследству от предыдущего бедолаги. В будущем перейти на Dagger
     implementation "org.koin:koin-android:$koin_version"
+    
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-experimental-adapter:$r2_k_c_a_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
+<<<<<<< HEAD
+    implementation libs.retrofit
+    implementation libs.retrofit_json
+=======
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+//    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+>>>>>>> added retrofit and other
     // Logger
     implementation libs.timber
     

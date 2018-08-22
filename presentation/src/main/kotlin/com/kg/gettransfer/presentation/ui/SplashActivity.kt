@@ -15,6 +15,19 @@ import android.support.v4.content.ContextCompat
 
 import android.support.v7.app.AppCompatActivity
 
+<<<<<<< HEAD
+import com.kg.gettransfer.domain.AsyncUtils
+import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.interactor.ApiInteractor
+
+import kotlinx.coroutines.experimental.Job
+
+=======
+import com.kg.gettransfer.domain.interactor.ApiInteractor
+
+>>>>>>> added retrofit and other
+import org.koin.android.ext.android.inject
+
 import timber.log.Timber
 
 class SplashActivity: AppCompatActivity() {
@@ -23,15 +36,17 @@ class SplashActivity: AppCompatActivity() {
 		@JvmField val PERMISSION_REQUEST = 2211
 	}
 	
+<<<<<<< HEAD
+	private val compositeDisposable = Job()
+	private val coroutineContexts: CoroutineContexts by inject()
+	private val utils = AsyncUtils(coroutineContexts)
+=======
+>>>>>>> added retrofit and other
+	private val apiInteractor: ApiInteractor by inject()
+	
 	@CallSuper
 	protected override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		/*
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-		   (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-		    ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-		    */
-				
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && 
 			(!check(Manifest.permission.ACCESS_FINE_LOCATION) || 
 			 !check(Manifest.permission.ACCESS_COARSE_LOCATION))) {
@@ -41,11 +56,28 @@ class SplashActivity: AppCompatActivity() {
 			return
 		}
 
+<<<<<<< HEAD
 		Timber.d("Permissions granted!")
+		utils.launchAsyncTryCatchFinally(compositeDisposable, {
+			utils.asyncAwait { apiInteractor.configs() }
+			startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+		}, { e ->
+			Timber.e(e)
+			// @TODO: Показать ошибку. Учесть 401 — протухший ключ
+		}, { finish() })
+=======
+		Timber.d("Permissions granted! %s", apiInteractor.qqq())
 		startActivity(Intent(this, MainActivity::class.java))
 		finish()
+>>>>>>> added retrofit and other
 	}
 	
+	@CallSuper
+	protected override fun onDestroy() {
+		compositeDisposable.cancel()
+		super.onDestroy()
+	}
+
 	private fun check(permission: String) =
 		ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 	
