@@ -7,7 +7,8 @@ data class Configs(val transportTypes: Map<String, TransportType>,
                    val paypalCredentials: PaypalCredentials,
                    val availableLocales: List<Locale>,
                    val preferredLocale: Locale,
-                   val supportedCurrencies: List<Currency>)
+                   val supportedCurrencies: List<Currency>,
+                   val supportedDistanceUnits: List<String>)
 
 data class TransportType(val id: String, val paxMax: Int, val luggageMax: Int)
 data class PaypalCredentials(val id: String, val env: String)

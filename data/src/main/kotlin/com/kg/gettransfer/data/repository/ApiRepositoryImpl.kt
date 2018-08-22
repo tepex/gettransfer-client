@@ -46,6 +46,7 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
                        PaypalCredentials(data.paypalCredentials.id, data.paypalCredentials.env),
                        locales,
                        locales.find { it.language == data.preferredLocale }!!,
-                       data.supportedCurrencies.map { Currency.getInstance(it.code)!! })
+                       data.supportedCurrencies.map { Currency.getInstance(it.code)!! },
+                       data.supportedDistanceUnits)
 	}
 }

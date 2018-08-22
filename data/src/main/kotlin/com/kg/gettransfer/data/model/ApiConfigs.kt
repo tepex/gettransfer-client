@@ -7,12 +7,9 @@ class ApiConfigs(@SerializedName("transport_types") @Expose var transportTypes: 
                  @SerializedName("paypal_credentials") @Expose var paypalCredentials: ApiPaypalCredentials,
                  @SerializedName("available_locales") @Expose var availableLocales: List<ApiLocales>,
                  @SerializedName("preferred_locale") @Expose var preferredLocale: String,
-                 @SerializedName("supported_currencies") @Expose var supportedCurrencies: List<ApiCurrency>)
+                 @SerializedName("supported_currencies") @Expose var supportedCurrencies: List<ApiCurrency>,
+                 @SerializedName("supported_distance_units") @Expose var supportedDistanceUnits: List<String>)
 	/*
-	@SerializedName("supported_distance_units")
-	@Expose
-	var distanceUnits: List<String>
-	
 	@SerializedName("card_gateways")
 	@Expose
 	var cardGateway: ApiCardGateway

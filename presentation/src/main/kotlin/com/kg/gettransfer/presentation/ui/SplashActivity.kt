@@ -58,6 +58,7 @@ class SplashActivity: AppCompatActivity() {
 			Timber.d("locales: %s", configs.availableLocales)
 			Timber.d("preferred locale: %s", configs.preferredLocale)
 			Timber.d("currencies: %s", configs.supportedCurrencies)
+			Timber.d("distance units: %s", configs.supportedDistanceUnits)
 			startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 		}, { e ->
 			Timber.e(e)
