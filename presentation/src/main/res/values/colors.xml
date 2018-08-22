@@ -53,5 +53,6 @@
     <color name="colorBtnGreenPressed">#769614</color>
     <color name="colorLinkText">#5597c2</color>
     <color name="colorDividerGray">#FFBCBBC1</color>
+    <color name="bg_gray">#EEEEEE</color>
 
 </resources>

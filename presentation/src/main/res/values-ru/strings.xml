@@ -162,4 +162,6 @@
 
     <string name="cancel">Cancel</string>
     <string name="licence_agreement">Лицензионное соглашение</string>
+    <string name="email_address">Email адрес</string>
+    <string name="enter_password">Введите пароль</string>
 </resources>

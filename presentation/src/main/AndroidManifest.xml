@@ -3,7 +3,6 @@
     package="com.kg.gettransfer">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
@@ -15,7 +14,6 @@
         android:roundIcon="@mipmap/ic2"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/geoapikey" />
@@ -25,36 +23,37 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    
         <activity
             android:name=".presentation.ui.MainActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".presentation.ui.AboutActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.SearchActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".presentation.ui.CreateOrderActivity"
+        <activity
+            android:name=".presentation.ui.CreateOrderActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".presentation.ui.LicenceAgreementActivity"
-            android:screenOrientation="portrait"/>
-<!--
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".presentation.ui.LicenceAgreementActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateUnchanged|adjustResize" />
-
+        <!--
         <activity
             android:name="presentation.ui.TransferActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateUnchanged" />
--->
+        -->
     </application>
 
 </manifest>
