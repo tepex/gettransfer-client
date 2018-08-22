@@ -15,16 +15,21 @@ import com.google.android.gms.location.places.GeoDataClient
 import com.google.android.gms.location.places.PlaceDetectionClient
 import com.google.android.gms.location.places.Places
 
+import com.google.gson.GsonBuilder
+
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.data.Api
+import com.kg.gettransfer.data.TransportTypesDeserializer
+
 import com.kg.gettransfer.data.repository.AddressRepositoryImpl
 import com.kg.gettransfer.data.repository.ApiRepositoryImpl
 import com.kg.gettransfer.data.repository.LocationRepositoryImpl
 import com.kg.gettransfer.data.repository.TransferTypeRepositoryImpl
 
 import com.kg.gettransfer.domain.CoroutineContexts
+
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
@@ -100,10 +105,15 @@ val apiModule = module {
 		builder.build()
 	}
 	single {
+		GsonBuilder()
+			.registerTypeAdapter(Map::class.java, TransportTypesDeserializer())
+			.create()
+	}
+	single {
 		Retrofit.Builder()
 		        .baseUrl((get() as Context).resources.getString(R.string.api_url))
 		        .client(get())
-		        .addConverterFactory(GsonConverterFactory.create())
+		        .addConverterFactory(GsonConverterFactory.create(get()))
                 .addCallAdapterFactory(CoroutineCallAdapterFactory()) // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
                 .build()
                 .create(Api::class.java) as Api

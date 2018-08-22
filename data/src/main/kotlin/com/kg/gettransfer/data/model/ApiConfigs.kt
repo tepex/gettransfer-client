@@ -3,7 +3,7 @@ package com.kg.gettransfer.data.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class ApiConfigs(@SerializedName("transport_types") @Expose var transportTypes: ApiTransportTypeWrapper)
+data class ApiConfigs(@SerializedName("transport_types") @Expose var transportTypes: Map<String, ApiTransportType>)
 
 	/*
 	@SerializedName("paypal_credentials")
@@ -46,11 +46,13 @@ data class ApiTransportTypeWrapper(@SerializedName("economy") @Expose var econom
                                    @SerializedName("minibus") @Expose var minibus: ApiTransportType?,
                                    @SerializedName("bus") @Expose var bus: ApiTransportType?,
                                    @SerializedName("limousine") @Expose var limousine: ApiTransportType?,
-                                   @SerializedName("helicopter") @Expose var helicopter: ApiTransportType?)
+                                   @SerializedName("helicopter") @Expose var helicopter: ApiTransportType?,
+                                   @SerializedName("qqq") @Expose var qqq: ApiTransportType?,
+                                   @SerializedName("aaa") @Expose var aaa: ApiTransportType?)
 
-data class ApiTransportType(@SerializedName("id") var id: String,
-                            @SerializedName("pax_max") var paxMax: Int,
-                            @SerializedName("luggage_max") var luggageMax: Int)
+data class ApiTransportType(@SerializedName("id") val id: String,
+                            @SerializedName("pax_max") val paxMax: Int,
+                            @SerializedName("luggage_max") val luggageMax: Int)
 
 
 /*
@@ -96,5 +98,17 @@ data class ApiTransportType(@SerializedName("id") var id: String,
                             },{"iso_code":"EUR","symbol":"€"}],"supported_distance_units":["km","mi"],"office_phone":"+7 499 404 05 05","base_url":"h
                             ttp://stgtr.org"}}		
 		
+                            
+                            
+ApiTransportTypeWrapper(
+	economy=ApiTransportType(id=economy, paxMax=3, luggageMax=3), 
+	business=ApiTransportType(id=business, paxMax=3, luggageMax=3), 
+	premium=ApiTransportType(id=premium, paxMax=3, luggageMax=3), van=ApiTransportType(id
+                            =van, paxMax=8, luggageMax=6), minibus=ApiTransportType(id=minibus, paxMax=16, luggageMax=16), bus=ApiTransportType(id=bu
+                            s, paxMax=50, luggageMax=50), limousine=ApiTransportType(id=limousine, paxMax=20, luggageMax=10), helicopter=ApiTransport
+                            Type(id=helicopter, paxMax=5, luggageMax=2))
+                            
 		*/
+		
+		
 		

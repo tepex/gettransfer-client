@@ -27,14 +27,17 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 		return accessToken!!
 	}
 	
-	override suspend fun configs() {
+	override suspend fun configs(): Configs {
 		if(accessToken == null) updateToken()
 		val response: ApiResponse<ApiConfigs> = try {
 			api.configs(accessToken!!).await()
 		} catch(httpException: HttpException) {
 			throw httpException
 		}
-		val ret: ApiConfigs = response.data!!
-		Timber.d("types: %s", ret.transportTypes)
+		val data: ApiConfigs = response.data!!
+		
+		return Configs(data.transportTypes.mapValues { TransportType(it.value.id,
+                                                                            it.value.paxMax,
+                                                                            it.value.luggageMax) })
 	}
 }

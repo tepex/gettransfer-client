@@ -19,6 +19,8 @@ import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 
+import com.kg.gettransfer.domain.model.Configs
+
 import kotlinx.coroutines.experimental.Job
 
 import org.koin.android.ext.android.inject
@@ -50,7 +52,8 @@ class SplashActivity: AppCompatActivity() {
 
 		Timber.d("Permissions granted!")
 		utils.launchAsyncTryCatchFinally(compositeDisposable, {
-			utils.asyncAwait { apiInteractor.configs() }
+			val configs = utils.asyncAwait { apiInteractor.configs() }
+			Timber.d("types: %s", configs.transportTypes)
 			startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 		}, { e ->
 			Timber.e(e)
