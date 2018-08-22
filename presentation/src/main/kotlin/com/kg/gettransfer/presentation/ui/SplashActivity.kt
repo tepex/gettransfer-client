@@ -15,17 +15,12 @@ import android.support.v4.content.ContextCompat
 
 import android.support.v7.app.AppCompatActivity
 
-<<<<<<< HEAD
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 
 import kotlinx.coroutines.experimental.Job
 
-=======
-import com.kg.gettransfer.domain.interactor.ApiInteractor
-
->>>>>>> added retrofit and other
 import org.koin.android.ext.android.inject
 
 import timber.log.Timber
@@ -36,12 +31,9 @@ class SplashActivity: AppCompatActivity() {
 		@JvmField val PERMISSION_REQUEST = 2211
 	}
 	
-<<<<<<< HEAD
 	private val compositeDisposable = Job()
 	private val coroutineContexts: CoroutineContexts by inject()
 	private val utils = AsyncUtils(coroutineContexts)
-=======
->>>>>>> added retrofit and other
 	private val apiInteractor: ApiInteractor by inject()
 	
 	@CallSuper
@@ -56,7 +48,6 @@ class SplashActivity: AppCompatActivity() {
 			return
 		}
 
-<<<<<<< HEAD
 		Timber.d("Permissions granted!")
 		utils.launchAsyncTryCatchFinally(compositeDisposable, {
 			utils.asyncAwait { apiInteractor.configs() }
@@ -65,11 +56,6 @@ class SplashActivity: AppCompatActivity() {
 			Timber.e(e)
 			// @TODO: Показать ошибку. Учесть 401 — протухший ключ
 		}, { finish() })
-=======
-		Timber.d("Permissions granted! %s", apiInteractor.qqq())
-		startActivity(Intent(this, MainActivity::class.java))
-		finish()
->>>>>>> added retrofit and other
 	}
 	
 	@CallSuper

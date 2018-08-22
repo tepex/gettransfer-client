@@ -10,9 +10,7 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.TransferTypeInteractor
 
-import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.interactor.AddressInteractor
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.CreateOrderView
