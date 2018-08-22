@@ -7,6 +7,7 @@ import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.ApiRepository
 
+import java.util.Currency
 import java.util.Locale
 
 import retrofit2.HttpException
@@ -44,6 +45,7 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
                                                                             it.value.luggageMax) },
                        PaypalCredentials(data.paypalCredentials.id, data.paypalCredentials.env),
                        locales,
-                       locales.find { it.language == data.preferredLocale }!!)
+                       locales.find { it.language == data.preferredLocale }!!,
+                       data.supportedCurrencies.map { Currency.getInstance(it.code)!! })
 	}
 }

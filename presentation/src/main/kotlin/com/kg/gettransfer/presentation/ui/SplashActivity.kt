@@ -57,6 +57,7 @@ class SplashActivity: AppCompatActivity() {
 			Timber.d("paypal: %s", configs.paypalCredentials)
 			Timber.d("locales: %s", configs.availableLocales)
 			Timber.d("preferred locale: %s", configs.preferredLocale)
+			Timber.d("currencies: %s", configs.supportedCurrencies)
 			startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 		}, { e ->
 			Timber.e(e)
