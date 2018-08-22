@@ -84,4 +84,7 @@
 	<dimen name="settings_activity_image_size">14dp</dimen>
 	<dimen name="settings_activity_image_margin_end">15dp</dimen>
 	<dimen name="settings_activity_image_margin_start">5dp</dimen>
+
+	<!-- Transfer types -->
+	<dimen name="transfer_types_text_size">11sp</dimen>
 </resources>
