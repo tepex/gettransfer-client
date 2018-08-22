@@ -1,18 +1,21 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.widget.TextView
+
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.interactor.AddressInteractor
+import com.kg.gettransfer.domain.interactor.TransferTypeInteractor
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import ru.terrakok.cicerone.Router
 
 @InjectViewState
-class CreateOrderPresenter(private val router: Router): MvpPresenter<CreateOrderView>() {
-    fun onBackCommandClick() {
-        viewState.finish()
-    }
+class CreateOrderPresenter(private val router: Router,
+                           private val transferTypeInteractor: TransferTypeInteractor): MvpPresenter<CreateOrderView>() {
 
     fun changeCounter(counterTextView: TextView, num: Int){
         var counter = counterTextView.text.toString().toInt()
@@ -36,11 +39,11 @@ class CreateOrderPresenter(private val router: Router): MvpPresenter<CreateOrder
         viewState.setDateTimeTransfer(dateTimeString.toString())
     }
 
-    fun setComment(comment: String){
-        viewState.setComment(comment)
-    }
+    fun setComment(comment: String) { viewState.setComment(comment) }
+    fun showLicenceAgreement() { router.navigateTo(Screens.LICENCE_AGREE) }
+    fun onBackCommandClick() { viewState.finish() }
 
-    fun showLicenceAgreement(){
-        router.navigateTo(Screens.LICENCE_AGREE)
+    fun getTransferTypeList(){
+        viewState.setTransferTypeList(transferTypeInteractor.getTransferType())
     }
 }
