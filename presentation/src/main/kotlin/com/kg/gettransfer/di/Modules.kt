@@ -38,9 +38,13 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import okhttp3.CookieJar
 =======
 >>>>>>> added retrofit and other
+=======
+import okhttp3.CookieJar
+>>>>>>> Api.configs() WIP
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -99,9 +103,13 @@ val apiModule = module {
 		val builder = OkHttpClient.Builder()
 		builder.addInterceptor(get())
 <<<<<<< HEAD
+<<<<<<< HEAD
 		builder.cookieJar(CookieJar.NO_COOKIES)
 =======
 >>>>>>> added retrofit and other
+=======
+		builder.cookieJar(CookieJar.NO_COOKIES)
+>>>>>>> Api.configs() WIP
 		builder.build()
 	}
 	single {

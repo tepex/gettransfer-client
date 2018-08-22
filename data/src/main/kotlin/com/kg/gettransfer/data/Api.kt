@@ -15,7 +15,10 @@ interface Api {
 	
 	@GET("/api/configs")
 	fun configs(@Header("X-ACCESS-TOKEN") token: String): Deferred<ApiResponse<ApiConfigs>>
+<<<<<<< HEAD
 =======
 interface Api {
 >>>>>>> added retrofit and other
+=======
+>>>>>>> Api.configs() WIP
 }

@@ -37,6 +37,7 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 		}
 		val ret: ApiConfigs = response.data!!
 		Timber.d("types: %s", ret.transportTypes)
+<<<<<<< HEAD
 	}
 =======
 import com.kg.gettransfer.domain.repository.ApiRepository
@@ -45,6 +46,8 @@ class ApiRepositoryImpl(private val api: Api): ApiRepository {
 	
 	init {
 		
+=======
+>>>>>>> Api.configs() WIP
 	}
 	
 	override fun qqq(): String = "sdfsdf"
