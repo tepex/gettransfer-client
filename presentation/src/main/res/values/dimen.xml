@@ -51,7 +51,7 @@
 
 	<!-- Create transfer -->
 	<dimen name="create_transfer_additional_margin">38dp</dimen>
-	<dimen name="create_transfer_btn_get_transfer_margitn">16dp</dimen>
+	<dimen name="create_transfer_btn_get_transfer_margin">16dp</dimen>
 	<dimen name="create_transfer_btn_get_transfer_bottom_margin">23dp</dimen>
 	<dimen name="create_transfer_additionals_view_height">60dp</dimen>
 	<dimen name="create_transfer_btn_get_transfer_height">44dp</dimen>
@@ -74,4 +74,14 @@
 	<dimen name="address_secondary_item_size">12sp</dimen>
 	<dimen name="address_item_padding_top">8dp</dimen>
 	<dimen name="address_item_padding_start">12dp</dimen>
+
+	<!-- Settings -->
+	<dimen name="settings_activity_height_layouts">44dp</dimen>
+	<dimen name="settings_activity_top_margin_layouts">38dp</dimen>
+	<dimen name="settings_activity_button_sign_out_start_end_margins">16dp</dimen>
+	<dimen name="settings_activity_text_size">17sp</dimen>
+	<dimen name="settings_activity_text_margin_start">16dp</dimen>
+	<dimen name="settings_activity_image_size">14dp</dimen>
+	<dimen name="settings_activity_image_margin_end">15dp</dimen>
+	<dimen name="settings_activity_image_margin_start">5dp</dimen>
 </resources>

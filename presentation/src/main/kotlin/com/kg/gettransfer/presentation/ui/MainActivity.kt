@@ -134,6 +134,7 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 					return intent
 				}
 				Screens.CREATE_ORDER -> return Intent(this@MainActivity, CreateOrderActivity::class.java)
+				Screens.SETTINGS -> return Intent(this@MainActivity, SettingsActivity::class.java)
 			}
 			return null
 		}

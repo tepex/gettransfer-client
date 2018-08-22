@@ -47,10 +47,13 @@
 
     <color name="colorBack">#ebebf2</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorWhitePressed">#cdcdcd</color>
     <color name="colorAdditionalText">#6D6D72</color>
 
     <color name="colorBtnGreen">#98B71B</color>
     <color name="colorBtnGreenPressed">#769614</color>
+    <color name="colorBtnRed">#FF0000</color>
+    <color name="colorBtnRedPressed">#dc0007</color>
     <color name="colorLinkText">#5597c2</color>
     <color name="colorDividerGray">#FFBCBBC1</color>
 
