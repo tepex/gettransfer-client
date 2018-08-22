@@ -59,6 +59,9 @@ class SplashActivity: AppCompatActivity() {
 			Timber.d("preferred locale: %s", configs.preferredLocale)
 			Timber.d("currencies: %s", configs.supportedCurrencies)
 			Timber.d("distance units: %s", configs.supportedDistanceUnits)
+			Timber.d("cardGatewasy: %s", configs.cardGateways)
+			Timber.d("office phone: %s", configs.officePhone)
+			Timber.d("base url: %s", configs.baseUrl)
 			startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 		}, { e ->
 			Timber.e(e)

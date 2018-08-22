@@ -47,6 +47,9 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
                        locales,
                        locales.find { it.language == data.preferredLocale }!!,
                        data.supportedCurrencies.map { Currency.getInstance(it.code)!! },
-                       data.supportedDistanceUnits)
+                       data.supportedDistanceUnits,
+                       CardGateways(data.cardGateways.default, data.cardGateways.countryCode),
+                       data.officePhone,
+                       data.baseUrl)
 	}
 }
