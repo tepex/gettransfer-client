@@ -38,6 +38,7 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 		
 		return Configs(data.transportTypes.mapValues { TransportType(it.value.id,
                                                                             it.value.paxMax,
-                                                                            it.value.luggageMax) })
+                                                                            it.value.luggageMax) },
+                       PaypalCredentials(data.paypalCredentials.id, data.paypalCredentials.env))
 	}
 }

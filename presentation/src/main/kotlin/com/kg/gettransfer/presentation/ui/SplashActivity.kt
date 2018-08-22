@@ -54,6 +54,7 @@ class SplashActivity: AppCompatActivity() {
 		utils.launchAsyncTryCatchFinally(compositeDisposable, {
 			val configs = utils.asyncAwait { apiInteractor.configs() }
 			Timber.d("types: %s", configs.transportTypes)
+			Timber.d("paypal: %s", configs.paypalCredentials)
 			startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 		}, { e ->
 			Timber.e(e)

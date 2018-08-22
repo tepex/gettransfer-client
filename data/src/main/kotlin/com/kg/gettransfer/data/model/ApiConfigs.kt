@@ -3,13 +3,10 @@ package com.kg.gettransfer.data.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class ApiConfigs(@SerializedName("transport_types") @Expose var transportTypes: Map<String, ApiTransportType>)
-
-	/*
-	@SerializedName("paypal_credentials")
-	@Expose
-	var paypalCredentials: ApiPaypalCredentials
+data class ApiConfigs(@SerializedName("transport_types") @Expose var transportTypes: Map<String, ApiTransportType>,
+                      @SerializedName("paypal_credentials") @Expose var paypalCredentials: ApiPaypalCredentials)
 	
+	/*
 	@SerializedName("available_locales")
 	@Expose
 	var locales: List<ApiLocale>
@@ -54,6 +51,8 @@ data class ApiTransportType(@SerializedName("id") val id: String,
                             @SerializedName("pax_max") val paxMax: Int,
                             @SerializedName("luggage_max") val luggageMax: Int)
 
+data class ApiPaypalCredentials(@SerializedName("id") val id: String,
+                                @SerializedName("env") val env: String)
 
 /*
 	@SerializedName("")
@@ -63,16 +62,6 @@ data class ApiTransportType(@SerializedName("id") val id: String,
 /*
 {"result":"success",
 "data":{
-	"transport_types":{
-		"economy":{"id":"economy","pax_max":3,"luggage_max":3},
-		"business":{"id":"business","pax_max":3,"luggage_max":3},
-		"premium":{"id":"premium","pax_max":3,"luggage_max":3},
-		"van":{"id":"van","pax_max":8,"luggage_max":6},
-		"minibus":{"id":"minibus","pax_max":16,"luggage_max":16},
-		"bus":{"id":"bus","pax_max":50,"luggage_max":50},
-		"limousine":{"id":"limousine","pax_max":20,"luggage_max":10},
-		"elicopter":{"id":"helicopter","pax_max":5,"luggage_max":2}
-	},
 	"paypal_credentials":{"env":"sandbox","id":"AdH0J3MmKITP9kCPQPYfKN6zjtkORkF_bxM_a9poib9Wh73iD6WXRDYKGxSPRAV-EkKOoLsgr-z0S1cu"},
 	"available_locales":[
 		{"code":"en","title":"English"},
