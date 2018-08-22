@@ -37,7 +37,10 @@ import java.util.Locale
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 
+<<<<<<< HEAD
 import okhttp3.CookieJar
+=======
+>>>>>>> added retrofit and other
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -74,7 +77,11 @@ val ciceroneModule = module {
 }
 
 val domainModule = module {
+<<<<<<< HEAD
 	single { ApiRepositoryImpl(get(), (get() as Context).resources.getString(R.string.api_key)) as ApiRepository }
+=======
+	single { ApiRepositoryImpl(get()) as ApiRepository }
+>>>>>>> added retrofit and other
 	single { AddressRepositoryImpl(get(), get(), get()) as AddressRepository }
 	single { LocationRepositoryImpl(get(), get(), get()) as LocationRepository }
 	single { ApiInteractor(get()) }
@@ -91,7 +98,10 @@ val apiModule = module {
 	single {
 		val builder = OkHttpClient.Builder()
 		builder.addInterceptor(get())
+<<<<<<< HEAD
 		builder.cookieJar(CookieJar.NO_COOKIES)
+=======
+>>>>>>> added retrofit and other
 		builder.build()
 	}
 	single {

@@ -18,6 +18,7 @@ buildscript {
 		mockito_version       = "2.21.0"
 		
 		libs = [
+<<<<<<< HEAD
 			kotlin        : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
 			coroutines    : ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"),
 //    		psMaps        : ("com.google.android.gms:play-services-maps:${PLAY_SERVICES_VERSION}"),
@@ -30,6 +31,18 @@ buildscript {
 			junit         : ("junit:junit:$junit_version"),
 			hamcrest      : ("org.hamcrest:java-hamcrest:$hamcrest_version"),
 			mockito       : ("org.mockito:mockito-core:$mockito_version")
+=======
+			kotlin       : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
+			coroutines   : ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"),
+//    		psMaps       : ("com.google.android.gms:play-services-maps:${PLAY_SERVICES_VERSION}"),
+    		psLocation   : ("com.google.android.gms:play-services-location:$gms_version"),
+    		psPlaces     : ("com.google.android.gms:play-services-places:$gms_version"),
+			timber       : ("com.jakewharton.timber:timber:$timber_version"),
+			jsr250       : ("javax.annotation:jsr250-api:$jsr250_version"),
+			junit        : ("junit:junit:$junit_version"),
+			hamcrest     : ("org.hamcrest:java-hamcrest:$hamcrest_version"),
+			mockito      : ("org.mockito:mockito-core:$mockito_version")
+>>>>>>> added retrofit and other
 		]
 	}
     
