@@ -55,6 +55,8 @@ class SplashActivity: AppCompatActivity() {
 			val configs = utils.asyncAwait { apiInteractor.configs() }
 			Timber.d("types: %s", configs.transportTypes)
 			Timber.d("paypal: %s", configs.paypalCredentials)
+			Timber.d("locales: %s", configs.availableLocales)
+			Timber.d("preferred locale: %s", configs.preferredLocale)
 			startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 		}, { e ->
 			Timber.e(e)

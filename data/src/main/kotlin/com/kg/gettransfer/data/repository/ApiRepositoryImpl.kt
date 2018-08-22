@@ -7,6 +7,8 @@ import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.ApiRepository
 
+import java.util.Locale
+
 import retrofit2.HttpException
 
 import timber.log.Timber
@@ -36,9 +38,12 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 		}
 		val data: ApiConfigs = response.data!!
 		
+		val locales = data.availableLocales.map { Locale.forLanguageTag(it.code)!! }
 		return Configs(data.transportTypes.mapValues { TransportType(it.value.id,
                                                                             it.value.paxMax,
                                                                             it.value.luggageMax) },
-                       PaypalCredentials(data.paypalCredentials.id, data.paypalCredentials.env))
+                       PaypalCredentials(data.paypalCredentials.id, data.paypalCredentials.env),
+                       locales,
+                       locales.find { it.language == data.preferredLocale }!!)
 	}
 }
