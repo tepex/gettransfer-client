@@ -11,13 +11,20 @@ import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.TextView
+
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
+
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.interactor.AddressInteractor
+
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import kotlinx.android.synthetic.main.activity_transfer.*
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.LinearLayoutManager
 import android.text.InputType
 import android.util.DisplayMetrics
 import android.view.Gravity
@@ -29,19 +36,26 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.LinearLayout
 import android.widget.PopupWindow
+
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.kg.gettransfer.domain.interactor.TransferTypeInteractor
+import com.kg.gettransfer.domain.model.TransferType
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.LicenceAgreementPresenter
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
+import kotlinx.android.synthetic.main.activity_search.*
+import kotlinx.android.synthetic.main.activity_transfer.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.*
+
 import org.koin.android.ext.android.inject
+
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
-import java.util.*
 
+import java.util.Calendar
 
 class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
 
@@ -50,6 +64,9 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
 
     private val navigatorHolder: NavigatorHolder by inject()
     private val router: Router by inject()
+    private val transferTypeInteractor: TransferTypeInteractor by inject()
+	val addressInteractor: AddressInteractor by inject()
+	val coroutineContexts: CoroutineContexts by inject()
 
     var mYear = 0
     var mMonth = 0
@@ -58,7 +75,7 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
     var mMinute = 0
 
     @ProvidePresenter
-    fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(router)
+    fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(router, transferTypeInteractor)
 
     private val navigator: Navigator = object: SupportAppNavigator(this, Screens.NOT_USED) {
         protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
@@ -86,6 +103,9 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 
+        rvTransferType.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        presenter.getTransferTypeList()
+
         changeDateTime(false)
 
         setOnClickListeners()
@@ -103,10 +123,10 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
         tvChildCounterDown.setOnClickListener(clickListenerCounterButtons)
         tvChildCounterUp.setOnClickListener(clickListenerCounterButtons)
 
-        btnChangeCurrencyType.setOnClickListener { view -> showDialogChangeCurrency() }
-        layoutDateTimeTransfer.setOnClickListener { view -> changeDateTime(true) }
-        tvComments.setOnClickListener { view -> showPopupWindowComment() }
-        layoutAgreement.setOnClickListener { view -> presenter.showLicenceAgreement() }
+        btnChangeCurrencyType.setOnClickListener { showDialogChangeCurrency() }
+        layoutDateTimeTransfer.setOnClickListener { changeDateTime(true) }
+        tvComments.setOnClickListener { showPopupWindowComment() }
+        layoutAgreement.setOnClickListener { presenter.showLicenceAgreement() }
     }
 
     private val clickListenerCounterButtons = View.OnClickListener { view ->
@@ -223,5 +243,9 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
 
     override fun setComment(comment: String) {
         tvComments.text = comment
+    }
+
+    override fun setTransferTypeList(listTypes: List<TransferType>) {
+        rvTransferType.adapter = TransferTypeAdapter(presenter, listTypes)
     }
 }
