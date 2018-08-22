@@ -17,13 +17,16 @@ import com.google.android.gms.location.places.Places
 
 import com.kg.gettransfer.data.repository.AddressRepositoryImpl
 import com.kg.gettransfer.data.repository.LocationRepositoryImpl
+import com.kg.gettransfer.data.repository.TransferTypeRepositoryImpl
 
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
+import com.kg.gettransfer.domain.interactor.TransferTypeInteractor
 
 import com.kg.gettransfer.domain.repository.AddressRepository
 import com.kg.gettransfer.domain.repository.LocationRepository
+import com.kg.gettransfer.domain.repository.TransferTypeRepository
 
 import java.util.Locale
 
@@ -61,8 +64,10 @@ val ciceroneModule = module {
 val domainModule = module {
 	single { AddressRepositoryImpl(get(), get(), get()) as AddressRepository }
 	single { LocationRepositoryImpl(get(), get(), get()) as LocationRepository }
+	single { TransferTypeRepositoryImpl() as TransferTypeRepository }
 	single { AddressInteractor(get()) }
 	single { LocationInteractor(get()) }
+	single { TransferTypeInteractor(get()) }
 }
 
 val androidModule = module {
