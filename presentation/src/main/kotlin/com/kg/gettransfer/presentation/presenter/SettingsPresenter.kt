@@ -26,7 +26,8 @@ class SettingsPresenter(private val cc: CoroutineContexts,
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(cc)
     private lateinit var configs: Configs
-    lateinit var currencies: Array<CurrencyModel>
+    lateinit var currencies: List<CurrencyModel>
+    lateinit var locales: List<LocaleModel>
     
     fun onBackCommandClick() {
         viewState.finish()
@@ -37,7 +38,8 @@ class SettingsPresenter(private val cc: CoroutineContexts,
             configs = utils.asyncAwait { apiInteractor.configs() }
             currencies = configs.supportedCurrencies.map {
                 CurrencyModel("${it.displayName} (${it.hackedSymbol})", it.currencyCode)
-            }.toTypedArray()
+            }
+            locales = configs.availableLocales.map { LocaleModel(it.getDisplayLanguage(it), it.language) }
         }, { e ->
             Timber.e(e)
             //viewState.setError(R.string.err_address_service_xxx, false)
@@ -45,11 +47,11 @@ class SettingsPresenter(private val cc: CoroutineContexts,
     }
     
     fun changeCurrency(selected: Int) {
-        viewState.setSettingsCurrency(currencies[selected].name)
+        viewState.setSettingsCurrency(currencies.get(selected).name)
     }
 
-    fun changeLanguage(textSelectedLanguage: String){
-        viewState.setSettingsLanguage(textSelectedLanguage)
+    fun changeLanguage(selected: Int) {
+        viewState.setSettingsLanguage(locales.get(selected).name)
     }
 
     fun changeDistanceUnit(which: Int){
@@ -64,9 +66,17 @@ class SettingsPresenter(private val cc: CoroutineContexts,
     }
 }
 
-/* Dirty hack for ruble sign */
+/* Dirty hack for ruble, Yuan ¥ */
 val Currency.hackedSymbol: String
-    get() = if(currencyCode == "RUB") "\u20BD" else symbol
+    get() = when(currencyCode) {
+        "RUB" -> "\u20BD"
+        "CNY" -> "¥"
+        else  -> symbol
+    }
 class CurrencyModel(val name: String, val code: String): CharSequence by name {
+    override fun toString(): String = name
+}
+
+class LocaleModel(val name: String, val code: String): CharSequence by name {
     override fun toString(): String = name
 }

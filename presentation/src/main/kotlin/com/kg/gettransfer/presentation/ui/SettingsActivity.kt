@@ -53,12 +53,9 @@ class SettingsActivity: MvpAppCompatActivity(), SettingsView {
     }
 
     private fun setOnClickListeners(){
-        val currencies = arrayOf("US Dollar ($)", "Euro (€)", "Pound Sterling (£)",
-                "Russian Ruble (\u20BD)", "Baht (฿)", "Renminbi(¥)")
-        val languagies = arrayOf("Русский", "English")
         val distanceUnits = arrayOf("Километры (km)", "Милли (ml)")
 
-        setDefaultTextInFields(currencies[0], languagies[0], 0)
+        //setDefaultTextInFields(currencies[0], languagies[0], 0)
 
         layoutSettingsCurrency.setOnClickListener { showDialogChangeCurrency() }
         layoutSettingsLanguage.setOnClickListener { showDialogChangeLanguage() }
@@ -76,19 +73,17 @@ class SettingsActivity: MvpAppCompatActivity(), SettingsView {
     private fun showDialogChangeCurrency() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.currency)
-        builder.setItems(presenter.currencies) { _, which -> presenter.changeCurrency(which) }
+        builder.setItems(presenter.currencies.toTypedArray()) { _, which -> presenter.changeCurrency(which) }
         builder.setNegativeButton(R.string.cancel, null)
         builder.show()
     }
 
     private fun showDialogChangeLanguage() {
-        /*
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.application_language)
-        builder.setItems(presenter.languagies) { _, which -> presenter.changeLanguage(languagies[which]) }
+        builder.setItems(presenter.locales.toTypedArray()) { _, which -> presenter.changeLanguage(which) }
         builder.setNegativeButton(R.string.cancel, null)
         builder.show()
-        */
     }
 
     private fun showDialogChangeDistanceUnit() {
