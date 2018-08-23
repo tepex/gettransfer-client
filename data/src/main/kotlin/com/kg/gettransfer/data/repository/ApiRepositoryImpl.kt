@@ -17,6 +17,7 @@ import timber.log.Timber
 class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRepository {
 	
 	private var accessToken: String? = null
+	private var configs: Configs? = null
 	
 	/* @TODO: Обрабатывать {"result":"error","error":{"type":"wrong_api_key","details":"API key \"ccd9a245018bfe4f386f4045ee4a006fsss\" not found"}} */
 	override suspend fun updateToken(): String {
@@ -31,6 +32,8 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 	}
 	
 	override suspend fun configs(): Configs {
+		if(configs != null) return configs!!
+			
 		if(accessToken == null) updateToken()
 		val response: ApiResponse<ApiConfigs> = try {
 			api.configs(accessToken!!).await()
@@ -40,7 +43,7 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 		val data: ApiConfigs = response.data!!
 		
 		val locales = data.availableLocales.map { Locale.forLanguageTag(it.code)!! }
-		return Configs(data.transportTypes.mapValues { TransportType(it.value.id,
+		configs = Configs(data.transportTypes.mapValues { TransportType(it.value.id,
                                                                             it.value.paxMax,
                                                                             it.value.luggageMax) },
                        PaypalCredentials(data.paypalCredentials.id, data.paypalCredentials.env),
@@ -51,5 +54,6 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
                        CardGateways(data.cardGateways.default, data.cardGateways.countryCode),
                        data.officePhone,
                        data.baseUrl)
+        return configs!!
 	}
 }
