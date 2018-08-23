@@ -64,6 +64,7 @@ fabric.properties
 .DS_Store
 /captures
 .externalNativeBuild
+*.jks
 
 /app/release
 /tmp

@@ -29,7 +29,7 @@ android {
 		vectorDrawables.useSupportLibrary = true
 		multiDexEnabled true
 	}
-	/*
+
 	signingConfigs {
 		config {
 			keyAlias 'key0'
@@ -38,7 +38,6 @@ android {
 			storePassword 'keygkeyg'
 		}
 	}
-	*/
 	
 	android {
 		lintOptions {
@@ -48,12 +47,12 @@ android {
 	
 	buildTypes {
 		release {
-			shrinkResources true
-			minifyEnabled true
+			shrinkResources false
+			minifyEnabled false
 			useProguard true
 			debuggable false
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-			//signingConfig signingConfigs.config
+			signingConfig signingConfigs.config
 		}
 		debug {
 			minifyEnabled false
