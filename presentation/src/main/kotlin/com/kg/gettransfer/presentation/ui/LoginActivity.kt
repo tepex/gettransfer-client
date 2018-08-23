@@ -26,6 +26,9 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
 
         btnLogin.isEnabled = false
         checkFields()
+        btnLogin.setOnClickListener {
+            loginPresenter.onLoginClick()
+        }
     }
 
     private fun checkFields() {

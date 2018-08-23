@@ -6,5 +6,8 @@ import com.kg.gettransfer.presentation.view.LoginView
 
 @InjectViewState
 class LoginPresenter : MvpPresenter<LoginView>() {
+    fun onLoginClick() {
+
+    }
 
 }
