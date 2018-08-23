@@ -153,7 +153,7 @@
     <string name="flight_or_train_number">Flight or train number</string>
     <string name="children_seats_count">Children seats count</string>
     <string name="enter_phone_number">Enter phone number</string>
-    <string name="enter_email">Enter email</string>
+    <string name="enter_email">Введите email</string>
     <string name="your_name">Your name</string>
     <string name="additional">Additional</string>
     <string name="number_of_passengers">Number of passengers</string>
@@ -164,4 +164,9 @@
     <string name="licence_agreement">Лицензионное соглашение</string>
     <string name="email_address">Email адрес</string>
     <string name="enter_password">Введите пароль</string>
+    <string name="error_login">Неверный логин или пароль</string>
+    <string name="nav_active_rides_title">Активные поездки</string>
+    <string name="nav_archived_rides_title">Архивные поездки</string>
+    <string name="nav_settings_title">Настройки</string>
+    <string name="nav_about_title">О приложении</string>
 </resources>

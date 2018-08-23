@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:android="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -114,11 +114,6 @@
 		<item name="android:textSize">@dimen/address_secondary_item_size</item>
 		<item name="android:paddingStart">@dimen/address_item_padding_start</item>
 	</style>
-
-
-
-
-
 
     <style name="etField">
         <item name="android:background">@android:color/transparent</item>

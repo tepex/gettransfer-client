@@ -1,34 +1,19 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.location.Location
-
 import android.support.annotation.CallSuper
-
 import android.util.Pair
-
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-
 import com.google.android.gms.maps.model.LatLng
-
 import com.kg.gettransfer.R
-
-import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.AsyncUtils
-
+import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
-
-import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Point
-
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.MainView
-
 import kotlinx.coroutines.experimental.Job
-
 import ru.terrakok.cicerone.Router
-
 import timber.log.Timber
 
 @InjectViewState
@@ -74,4 +59,6 @@ class MainPresenter(private val cc: CoroutineContexts,
 	fun readMoreClick() { router.navigateTo(Screens.READ_MORE) }
 	fun onSettingsClick() { router.navigateTo(Screens.CREATE_ORDER) }
 	fun onBackCommandClick() { router.exit() }
+	fun onLoginClick() { router.navigateTo(Screens.LOGIN)
+	}
 }

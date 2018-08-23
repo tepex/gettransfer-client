@@ -13,11 +13,6 @@
 
 	<color name="address_item_subtitle">#9b9b9b</color>
 
-
-
-
-
-
     <color name="colorBGSecondary">#eeeeee</color>
     <color name="colorBG">#fcfcfc</color>
     <color name="colorBGField">#fcfcfc</color>
@@ -54,5 +49,10 @@
     <color name="colorLinkText">#5597c2</color>
     <color name="colorDividerGray">#FFBCBBC1</color>
     <color name="bg_gray">#EEEEEE</color>
+
+    <color name="btn_login_disable">#BDBDBD</color>
+    <color name="btn_login_enable">#98B71B</color>
+
+    <color name="color_error">#FFFF3B30</color>
 
 </resources>
