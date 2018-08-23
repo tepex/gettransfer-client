@@ -2,47 +2,61 @@ package com.kg.gettransfer.presentation.ui
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+
 import android.content.Context
 import android.content.Intent
+
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
+
 import android.support.v4.app.Fragment
+
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDelegate
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
-import android.view.View
+
 import android.widget.TextView
 
-import com.arellomobile.mvp.MvpAppCompatActivity
-import com.arellomobile.mvp.presenter.InjectPresenter
-
-import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.interactor.AddressInteractor
-
-import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
-import com.kg.gettransfer.presentation.view.CreateOrderView
-import kotlinx.android.synthetic.main.activity_transfer.*
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
 import android.text.InputType
 import android.util.DisplayMetrics
+
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
+
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
+
+import com.arellomobile.mvp.MvpAppCompatActivity
+import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.kg.gettransfer.domain.interactor.TransferTypeInteractor
+
+import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.CoroutineContexts
+
+import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.TransferType
+
+import com.kg.gettransfer.domain.interactor.AddressInteractor
+import com.kg.gettransfer.domain.interactor.TransferTypeInteractor
+
 import com.kg.gettransfer.presentation.Screens
+
+import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.presenter.LicenceAgreementPresenter
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
+
+import com.kg.gettransfer.presentation.view.CreateOrderView
+
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.activity_transfer.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
@@ -65,8 +79,8 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
     private val navigatorHolder: NavigatorHolder by inject()
     private val router: Router by inject()
     private val transferTypeInteractor: TransferTypeInteractor by inject()
-	val addressInteractor: AddressInteractor by inject()
-	val coroutineContexts: CoroutineContexts by inject()
+	private val addressInteractor: AddressInteractor by inject()
+	private val coroutineContexts: CoroutineContexts by inject()
 
     var mYear = 0
     var mMonth = 0
@@ -75,7 +89,10 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
     var mMinute = 0
 
     @ProvidePresenter
-    fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(router, transferTypeInteractor)
+    fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(coroutineContexts,
+                                                                                  router,
+                                                                                  addressInteractor,
+                                                                                  transferTypeInteractor)
 
     private val navigator: Navigator = object: SupportAppNavigator(this, Screens.NOT_USED) {
         protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
@@ -247,5 +264,10 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
 
     override fun setTransferTypeList(listTypes: List<TransferType>) {
         rvTransferType.adapter = TransferTypeAdapter(presenter, listTypes)
+    }
+    
+    override fun setRoute(route: Pair<GTAddress, GTAddress>) {
+    	tvFrom.setText(route.first.name)
+    	tvTo.setText(route.second.name)
     }
 }

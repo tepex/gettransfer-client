@@ -79,8 +79,8 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	
 	@ProvidePresenter
 	fun createSearchPresenter(): SearchPresenter = SearchPresenter(coroutineContexts,
-		                                                     router,
-		                                                     addressInteractor)
+                                                                   router,
+                                                                   addressInteractor)
 	companion object {
 		@JvmField val FADE_DURATION  = 500L
 		@JvmField val SLIDE_DURATION = 500L
