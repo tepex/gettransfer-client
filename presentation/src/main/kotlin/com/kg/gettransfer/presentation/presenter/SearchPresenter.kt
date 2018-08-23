@@ -48,7 +48,7 @@ class SearchPresenter(private val cc: CoroutineContexts,
 		}, { e ->
 			Timber.e(e)
 			viewState.setError(R.string.err_address_service_xxx, false)
-		}, {viewState.blockInterface(false)})
+		}, { viewState.blockInterface(false) })
 	}
 
 	fun onAddressSelected(selected: GTAddress) {
