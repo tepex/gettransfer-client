@@ -67,4 +67,10 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	}
 
 	fun onBackCommandClick() = viewState.finish()
+	
+	@CallSuper
+	override fun onDestroy() {
+		compositeDisposable.cancel()
+		super.onDestroy()
+	}
 }

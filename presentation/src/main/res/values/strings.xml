@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">Get Transfer</string>
+	<string name="api_key">ccd9a245018bfe4f386f4045ee4a006f</string>
+	<string name="api_url">https://stgtr.org</string>
+
 	<string name="navigation_drawer_open" translatable="false">Open</string>
 	<string name="navigation_drawer_close" translatable="false">Close</string>
 	<!-- Navigation -->
@@ -211,6 +214,10 @@
 
     <string name="cancel">Cancel</string>
     <string name="licence_agreement">Licence agreement</string>
+
+    <string name="sign_out">Sign out</string>
+    <string name="application_language">Application language</string>
+    <string name="distance_units">Distance units</string>
     <string name="email_address">Email address</string>
     <string name="enter_password">Enter password</string>
     <string name="error_login">Incorrect login or password</string>

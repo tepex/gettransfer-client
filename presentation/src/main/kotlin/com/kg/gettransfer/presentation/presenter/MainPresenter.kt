@@ -57,7 +57,7 @@ class MainPresenter(private val cc: CoroutineContexts,
 	fun onSearchClick(addresses: Pair<String, String>) { router.navigateTo(Screens.FIND_ADDRESS, addresses) }
 	fun onAboutClick() { router.navigateTo(Screens.ABOUT) }
 	fun readMoreClick() { router.navigateTo(Screens.READ_MORE) }
-	fun onSettingsClick() { router.navigateTo(Screens.CREATE_ORDER) }
+	fun onSettingsClick() { router.navigateTo(Screens.SETTINGS) }
 	fun onBackCommandClick() { router.exit() }
 	fun onLoginClick() { router.navigateTo(Screens.LOGIN)
 	}
