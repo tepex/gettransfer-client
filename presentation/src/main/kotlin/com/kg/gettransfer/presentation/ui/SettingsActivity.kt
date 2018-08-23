@@ -87,13 +87,11 @@ class SettingsActivity: MvpAppCompatActivity(), SettingsView {
     }
 
     private fun showDialogChangeDistanceUnit() {
-        /*
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.distance_units)
-        builder.setItems(presenter.distanceUnits) { _, which -> presenter.changeDistanceUnit(which) }
+        builder.setItems(presenter.configs.supportedDistanceUnits.toTypedArray()) { _, which -> presenter.changeDistanceUnit(which) }
         builder.setNegativeButton(R.string.cancel, null)
         builder.show()
-        */
     }
 
     override fun onBackPressed() {

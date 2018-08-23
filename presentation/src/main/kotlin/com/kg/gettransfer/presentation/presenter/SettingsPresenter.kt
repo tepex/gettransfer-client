@@ -25,7 +25,8 @@ class SettingsPresenter(private val cc: CoroutineContexts,
                         private val apiInteractor: ApiInteractor): MvpPresenter<SettingsView>() {
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(cc)
-    private lateinit var configs: Configs
+    
+    lateinit var configs: Configs
     lateinit var currencies: List<CurrencyModel>
     lateinit var locales: List<LocaleModel>
     
@@ -54,9 +55,9 @@ class SettingsPresenter(private val cc: CoroutineContexts,
         viewState.setSettingsLanguage(locales.get(selected).name)
     }
 
-    fun changeDistanceUnit(which: Int){
+    fun changeDistanceUnit(selected: Int){
         val distanceUnits = arrayOf("km", "ml")
-        viewState.setSettingsDistanceUnits(distanceUnits[which])
+        viewState.setSettingsDistanceUnits(configs.supportedDistanceUnits.get(selected))
     }
     
     @CallSuper
