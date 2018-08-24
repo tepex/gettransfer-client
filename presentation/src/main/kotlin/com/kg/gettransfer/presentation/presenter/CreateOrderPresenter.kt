@@ -41,17 +41,18 @@ class CreateOrderPresenter(private val resources: Resources,
 	private val compositeDisposable = Job()
 	private val utils = AsyncUtils(cc)
 	
+	private lateinit var configs: Configs
 	private var account: Account? = null
 
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
             viewState.setRoute(addressInteractor.route)
             utils.asyncAwait { 
-                val configs = apiInteractor.getConfigs()
+                configs = apiInteractor.getConfigs()
                 account = apiInteractor.getAccount()
-                viewState.setTransportTypes(configs.transportTypes.map { 
-                    TransportTypeModel(resources, it.value) })
             }
+            viewState.setTransportTypes(configs.transportTypes.map { 
+            TransportTypeModel(resources, it.value) })
         }, { e ->
             Timber.e(e)
             //viewState.setError(R.string.err_address_service_xxx, false)

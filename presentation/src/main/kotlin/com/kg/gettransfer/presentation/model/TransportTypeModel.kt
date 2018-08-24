@@ -8,6 +8,10 @@ import android.support.annotation.StringRes
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.TransportType
 
+import kotlin.reflect.*
+
+import timber.log.Timber
+
 class TransportTypeModel(private val resources: Resources,
                          val delegate: TransportType,
                          var checked: Boolean = false) {
@@ -18,6 +22,12 @@ class TransportTypeModel(private val resources: Resources,
     var nameId: Int = -1
     
     init {
+        //val cl = R.string
+        //var pr = R.staticProperties.find { it.name == "transport_type_economy" }
+        val cl: KClass<R.string> = R.string::class
+        val pr = cl.members
+        //val pr = cl.staticProperties.forEach { Timber.d(it.name) }
+        Timber.d("77777777               %s", pr)
         when(delegate.id) {
             "economy" -> {
                 imageId = R.drawable.economy
