@@ -1,13 +1,11 @@
 package com.kg.gettransfer.data
 
-import com.kg.gettransfer.data.model.*
-
+import com.kg.gettransfer.data.model.ApiAccountWrapper
+import com.kg.gettransfer.data.model.ApiConfigs
+import com.kg.gettransfer.data.model.ApiResponse
+import com.kg.gettransfer.data.model.ApiToken
 import kotlinx.coroutines.experimental.Deferred
-
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface Api {
 	@GET("/api/access_token")
@@ -28,5 +26,8 @@ interface Api {
 	*/
 
 	@POST("api/login")
-	fun login(@Header("X-ACCESS-TOKEN") token: String): Deferred<ApiResponse<ApiAccount>>
+	@FormUrlEncoded
+	fun login(@Header("X-ACCESS-TOKEN") token: String,
+			  @Field("email") email: String,
+			  @Field("password") password: String): Deferred<ApiResponse<ApiAccountWrapper>>
 }
