@@ -20,7 +20,7 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 	private var configs: Configs? = null
 	
 	/* @TODO: Обрабатывать {"result":"error","error":{"type":"wrong_api_key","details":"API key \"ccd9a245018bfe4f386f4045ee4a006fsss\" not found"}} */
-	override suspend fun updateToken(): String {
+	suspend fun updateToken(): String {
 		val response: ApiResponse<ApiToken> = try {
 			api.accessToken(apiKey).await()
 		} catch(httpException: HttpException) {
@@ -31,7 +31,7 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 		return accessToken!!
 	}
 	
-	override suspend fun configs(): Configs {
+	override suspend fun getConfigs(): Configs {
 		if(configs != null) return configs!!
 			
 		if(accessToken == null) updateToken()

@@ -36,7 +36,7 @@ class SettingsPresenter(private val cc: CoroutineContexts,
     
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
-            configs = utils.asyncAwait { apiInteractor.configs() }
+            configs = utils.asyncAwait { apiInteractor.getConfigs() }
             currencies = configs.supportedCurrencies.map {
                 CurrencyModel("${it.displayName} (${it.hackedSymbol})", it.currencyCode)
             }
