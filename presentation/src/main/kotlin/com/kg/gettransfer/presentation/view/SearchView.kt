@@ -10,6 +10,6 @@ import com.kg.gettransfer.domain.model.GTAddress
 //interface MainView: MvpView, OnCameraMoveListener
 interface SearchView: BaseView {
 	fun setAddressList(list: List<GTAddress>)
-	fun setAddressFrom(address: String)
-	fun setAddressTo(address: String)
+	fun setAddressFrom(address: String, sendRequest: Boolean)
+	fun setAddressTo(address: String, sendRequest: Boolean)
 }

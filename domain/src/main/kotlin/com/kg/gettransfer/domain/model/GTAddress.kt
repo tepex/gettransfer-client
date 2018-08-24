@@ -8,7 +8,9 @@ class GTAddress(val id: String? = null,
                 val point: Point? = null) {
 
 	companion object {
-		@JvmField val TYPE_STREET_ADDRESS = 1021
+	    @JvmField val TYPE_ADMINISTRATIVE_AREA_LEVEL_1 = 1001
+	    @JvmField val TYPE_LOCALITY                    = 1009
+		@JvmField val TYPE_STREET_ADDRESS              = 1021
 	}
 	
 	/**
@@ -18,6 +20,11 @@ class GTAddress(val id: String? = null,
 	fun isConcreteObject(): Boolean {
 		if(placeTypes == null || placeTypes.isEmpty()) return false
 		return placeTypes.any { (it > 0 && it < 1000) || it == TYPE_STREET_ADDRESS }
+	}
+	
+	fun needApproximation(): Boolean {
+	    if(placeTypes == null || placeTypes.isEmpty()) return false
+	    return placeTypes.any { it == TYPE_ADMINISTRATIVE_AREA_LEVEL_1 || it == TYPE_LOCALITY }
 	}
 
 	override fun equals(other: Any?): Boolean {
