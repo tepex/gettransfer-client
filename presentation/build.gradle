@@ -9,7 +9,7 @@ ext {
 	constraint_layout_version = "2.0.0-alpha2"
 	r2_k_c_a_version          = "1.0.0"
 	okhttp3_version           = "3.11.0"
-	koin_version              = "1.0.0-beta-7"
+	koin_version              = "1.0.0-beta-8"
 	moxy_version              = "1.5.5"
 	cicerone_version          = "3.0.0"
 	circle_indicator_version  = "1.2.2"
@@ -29,16 +29,15 @@ android {
 		vectorDrawables.useSupportLibrary = true
 		multiDexEnabled true
 	}
-	/*
+
 	signingConfigs {
 		config {
-			keyAlias 'key0'
-			keyPassword 'keygkeyg'
-			storeFile file('/Users/denisvakulenko/Desktop/gt/keystore')
-			storePassword 'keygkeyg'
+            storeFile file(RELEASE_STORE_FILE)
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
 		}
 	}
-	*/
 	
 	android {
 		lintOptions {
@@ -48,12 +47,12 @@ android {
 	
 	buildTypes {
 		release {
-			shrinkResources true
-			minifyEnabled true
+			shrinkResources false
+			minifyEnabled false
 			useProguard true
 			debuggable false
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-			//signingConfig signingConfigs.config
+			signingConfig signingConfigs.config
 		}
 		debug {
 			minifyEnabled false

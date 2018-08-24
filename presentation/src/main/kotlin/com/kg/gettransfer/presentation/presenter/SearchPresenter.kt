@@ -48,12 +48,10 @@ class SearchPresenter(private val cc: CoroutineContexts,
 		}, { e ->
 			Timber.e(e)
 			viewState.setError(R.string.err_address_service_xxx, false)
-		}, {viewState.blockInterface(false)})
+		}, { viewState.blockInterface(false) })
 	}
 
 	fun onAddressSelected(selected: GTAddress) {
-		Timber.d(">>>> ${selected.name} ${selected.isConcreteObject()}")
-		
 		if(isTo) addressTo = selected
 		else addressFrom = selected
 		

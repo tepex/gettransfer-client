@@ -24,6 +24,7 @@
 .idea/**/libraries
 .gradle/
 build/
+presentation/release/
 
 # CMake
 cmake-build-debug/
@@ -64,6 +65,7 @@ fabric.properties
 .DS_Store
 /captures
 .externalNativeBuild
+*.jks
 
 /app/release
 /tmp
