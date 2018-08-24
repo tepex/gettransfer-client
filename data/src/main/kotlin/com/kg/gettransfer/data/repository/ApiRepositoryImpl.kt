@@ -20,7 +20,7 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 	private var configs: Configs? = null
 	
 	/* @TODO: Обрабатывать {"result":"error","error":{"type":"wrong_api_key","details":"API key \"ccd9a245018bfe4f386f4045ee4a006fsss\" not found"}} */
-	override suspend fun updateToken(): String {
+	suspend fun updateToken(): String {
 		val response: ApiResponse<ApiToken> = try {
 			api.accessToken(apiKey).await()
 		} catch(httpException: HttpException) {
@@ -31,12 +31,12 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 		return accessToken!!
 	}
 	
-	override suspend fun configs(): Configs {
+	override suspend fun getConfigs(): Configs {
 		if(configs != null) return configs!!
 			
 		if(accessToken == null) updateToken()
 		val response: ApiResponse<ApiConfigs> = try {
-			api.configs(accessToken!!).await()
+			api.getConfigs(accessToken!!).await()
 		} catch(httpException: HttpException) {
 			throw httpException
 		}
@@ -55,5 +55,23 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
                        data.officePhone,
                        data.baseUrl)
         return configs!!
+	}
+	
+	override suspend fun getAccount(): Account? {
+		if(accessToken == null) updateToken()
+		if(configs == null) getConfigs()
+		
+		val response: ApiResponse<ApiAccountWrapper> = try {
+			api.getAccount(accessToken!!).await()
+		} catch(httpException: HttpException) {
+			throw httpException
+		}
+		if(response.data!!.account == null) return null
+
+		val account: ApiAccount = response.data!!.account!!
+		return Account(account.email, account.phone,
+		               configs!!.availableLocales.find { it.language == account.locale }!!,
+                       configs!!.supportedCurrencies.find { it.currencyCode == account.currency }!!,
+                       account.distanceUnit, account.fullName, account.groups, account.termsAccepted)
 	}
 }

@@ -52,7 +52,7 @@ class SplashActivity: AppCompatActivity() {
 
 		Timber.d("Permissions granted!")
 		utils.launchAsyncTryCatchFinally(compositeDisposable, {
-			val configs = utils.asyncAwait { apiInteractor.configs() }
+			val configs = utils.asyncAwait { apiInteractor.getConfigs() }
 			Timber.d("types: %s", configs.transportTypes)
 			Timber.d("paypal: %s", configs.paypalCredentials)
 			Timber.d("locales: %s", configs.availableLocales)
