@@ -194,6 +194,7 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 		
 		initGoogleMap(mapViewBundle)
 		
+		search.elevation = resources.getDimension(R.dimen.search_elevation)
 		searchFrom.setOnFocusChangeListener(this)
 		searchTo.setOnFocusChangeListener(this)
 		
@@ -303,6 +304,7 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 	 * https://stackoverflow.com/questions/36785542/how-to-change-the-position-of-my-location-button-in-google-maps-using-android-st
 	 */
 	private fun customizeGoogleMaps() {
+	    googleMap.uiSettings.setRotateGesturesEnabled(false)
 		googleMap.setMyLocationEnabled(true)
 		googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
 		val parent = (mapView?.findViewById(1) as View).parent as View

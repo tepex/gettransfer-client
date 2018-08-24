@@ -1,10 +1,17 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.Api
+
 import com.kg.gettransfer.data.model.*
 import com.kg.gettransfer.domain.model.*
+
 import com.kg.gettransfer.domain.repository.ApiRepository
+
+import java.util.Currency
+import java.util.Locale
+
 import retrofit2.HttpException
+
 import timber.log.Timber
 import java.util.*
 
@@ -51,7 +58,7 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
                        data.baseUrl)
         return configs!!
 	}
-
+	
 	override suspend fun getAccount(): Account? {
 		if(accessToken == null) updateToken()
 		if(configs == null) getConfigs()
@@ -62,9 +69,9 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 		} catch(httpException: HttpException) {
 			throw httpException
 		}
-		if(response.data!!.account == null) return null
+		if(response.data?.account == null) return null
 
-		val apiAccount: ApiAccount = response.data!!.account!!
+		val apiAccount: ApiAccount = response.data?.account!!
 		account = Account(apiAccount.email, apiAccount.phone,
 		               configs!!.availableLocales.find { it.language == apiAccount.locale }!!,
                        configs!!.supportedCurrencies.find { it.currencyCode == apiAccount.currency }!!,

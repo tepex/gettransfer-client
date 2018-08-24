@@ -62,8 +62,7 @@ class SettingsPresenter(private val cc: CoroutineContexts,
         viewState.setSettingsLanguage(locales.get(selected).name)
     }
 
-    fun changeDistanceUnit(selected: Int){
-        val distanceUnits = arrayOf("km", "ml")
+    fun changeDistanceUnit(selected: Int) {
         viewState.setSettingsDistanceUnits(configs.supportedDistanceUnits.get(selected))
     }
     

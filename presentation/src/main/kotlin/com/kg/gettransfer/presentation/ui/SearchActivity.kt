@@ -156,8 +156,8 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	
 	/* SearchView */
 	override fun blockInterface(block: Boolean) {}
-	override fun setAddressFrom(address: String) { searchFrom.initText(address) }
-	override fun setAddressTo(address: String) { searchTo.initText(address) }
+	override fun setAddressFrom(address: String, sendRequest: Boolean) { searchFrom.initText(address, sendRequest) }
+	override fun setAddressTo(address: String, sendRequest: Boolean) { searchTo.initText(address, sendRequest) }
 	override fun setAddressList(list: List<GTAddress>) { addressList.adapter = AddressAdapter(presenter, list) }
 	
 	override fun setError(@StringRes errId: Int, finish: Boolean) { Utils.showError(this, errId, finish) }
