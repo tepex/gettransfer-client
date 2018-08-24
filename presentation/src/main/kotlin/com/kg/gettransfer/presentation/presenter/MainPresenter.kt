@@ -29,7 +29,7 @@ class MainPresenter(private val cc: CoroutineContexts,
                     private val router: Router,
                     private val locationInteractor: LocationInteractor,
                     private val addressInteractor: AddressInteractor,
-                    private val apiInteractor: ApiInteractor) : MvpPresenter<MainView>() {
+                    private val apiInteractor: ApiInteractor): MvpPresenter<MainView>() {
 
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(cc)
@@ -37,17 +37,11 @@ class MainPresenter(private val cc: CoroutineContexts,
 
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatch(compositeDisposable, {
-            Timber.d("onFirstViewAttach()")
             // Проверка досупности сервиса геолокации
-            val available = utils.asyncAwait {
-                locationInteractor.checkLocationServicesAvailability()
-            }
-            if (available) updateCurrentLocation() else {
-                viewState.setError(R.string.err_location_service_not_available, true)
-            }
-        }, { e ->
-            Timber.e(e)
-        })
+            val available = utils.asyncAwait { locationInteractor.checkLocationServicesAvailability() }
+            if(available) updateCurrentLocation()
+            else { viewState.setError(R.string.err_location_service_not_available, true) }
+        }, { e -> Timber.e(e) })
     }
     
     @CallSuper
@@ -56,9 +50,7 @@ class MainPresenter(private val cc: CoroutineContexts,
         utils.launchAsyncTryCatch(compositeDisposable, {
             account = utils.asyncAwait { apiInteractor.getAccount() }
             viewState.showLoginInfo(account)
-        }, { e ->
-            Timber.e(e)
-        })
+        }, { e -> Timber.e(e) })
     }
 
     @CallSuper
@@ -79,28 +71,24 @@ class MainPresenter(private val cc: CoroutineContexts,
             viewState.setError(R.string.err_address_service_xxx, false)
         }, { viewState.blockInterface(false) })
     }
+	
+	fun updateCurrentLocation() {
+		Timber.d("update current location")
+		viewState.blockInterface(true)
+		utils.launchAsyncTryCatchFinally(compositeDisposable, {
+			val current = utils.asyncAwait { addressInteractor.getCurrentAddress() }
+			viewState.setMapPoint(LatLng(current.point!!.latitude, current.point!!.longitude))
+			viewState.setAddressFrom(current.name)
+		}, { e ->
+			Timber.e(e)
+			viewState.setError(R.string.err_address_service_xxx, false)
+		}, {viewState.blockInterface(false)})
+	}
 
-    fun onSearchClick(addresses: Pair<String, String>) {
-        router.navigateTo(Screens.FIND_ADDRESS, addresses)
-    }
-
-    fun onAboutClick() {
-        router.navigateTo(Screens.ABOUT)
-    }
-
-    fun readMoreClick() {
-        router.navigateTo(Screens.READ_MORE)
-    }
-
-    fun onSettingsClick() {
-        router.navigateTo(Screens.SETTINGS)
-    }
-
-    fun onBackCommandClick() {
-        router.exit()
-    }
-
-    fun onLoginClick() {
-        router.navigateTo(Screens.LOGIN)
-    }
+	fun onSearchClick(addresses: Pair<String, String>) { router.navigateTo(Screens.FIND_ADDRESS, addresses) }
+	fun onAboutClick() { router.navigateTo(Screens.ABOUT) }
+	fun readMoreClick() { router.navigateTo(Screens.READ_MORE) }
+	fun onSettingsClick() { router.navigateTo(Screens.SETTINGS) }
+	fun onArchivedRidesClick() {router.navigateTo(Screens.ARCHIVED_RIDES)}
+	fun onBackCommandClick() { router.exit() }
 }

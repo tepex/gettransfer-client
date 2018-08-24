@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="13dp"
+    android:paddingBottom="16dp"
+    android:background="@drawable/back_clicked_layouts">
+
+    <TextView
+        android:id="@+id/tvCostOffer"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:gravity="end"
+        android:textSize="17sp"
+        android:textColor="@color/colorTextBlack"
+        android:fontFamily="@font/sf_pro_text_bold"
+        android:text="2200 ₽"/>
+    
+    <RatingBar
+        android:id="@+id/ratingBarOffer"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/tvCostOffer"
+        android:layout_marginTop="6dp"
+        android:numStars="5"
+        android:rating="4"
+        android:isIndicator="true"
+        style="?android:attr/ratingBarStyleSmall"/>
+
+    <Button
+        android:id="@+id/btnSelect"
+        android:layout_width="100dp"
+        android:layout_height="26dp"
+        android:background="@drawable/btn_get_transfer"
+        android:textColor="@color/colorWhite"
+        android:textSize="17sp"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:textAllCaps="true"
+        android:text="@string/select"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/ratingBarOffer"
+        android:layout_marginTop="6dp"
+        android:stateListAnimator="@null"/>
+
+    <ImageView
+        android:id="@+id/imageCarOffer"
+        android:layout_width="70dp"
+        android:layout_height="80dp"
+        android:src="@drawable/helicopter"
+        android:background="@drawable/back_image_car_offer"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/imageCarOffer"
+        android:layout_toStartOf="@+id/tvCostOffer"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp">
+
+        <CheckBox
+            android:id="@+id/indicatorOffer"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginTop="5dp"
+            android:clickable="false"
+            android:checked="false"
+            android:background="@drawable/cb_indicator_offer_selector"
+            android:button="@null"/>
+
+        <TextView
+            android:id="@+id/tvCarName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf_pro_text_bold"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="15sp"
+            android:text="Volvo s60"
+            android:layout_toEndOf="@+id/indicatorOffer"
+            android:layout_marginStart="5dp"/>
+
+        <LinearLayout
+            android:id="@+id/layoutFeatures"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:orientation="horizontal"
+            android:layout_below="@+id/tvCarName"/>
+
+        <TextView
+            android:id="@+id/tvSuccesfulTransfers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@color/colorTextBlack"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:text="Успешных трансферов: 7"
+            android:layout_below="@+id/layoutFeatures"/>
+
+        <LinearLayout
+            android:id="@+id/layout_more_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/tvSuccesfulTransfers"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="@color/colorTextBlack"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:text="Economy"
+                android:layout_marginEnd="10dp"/>
+
+            <ImageView
+                android:layout_width="7dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_person"/>
+
+            <TextView
+                android:id="@+id/tvNumberPersonsTransfer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/transfer_types_text_size"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:textColor="@color/colorTextBlack"
+                android:gravity="center"
+                android:text=" X 3"/>
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="9dp"
+                android:src="@drawable/ic_baggage"
+                android:layout_marginStart="3dp"/>
+
+            <TextView
+                android:id="@+id/tvCountBaggage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/transfer_types_text_size"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:textColor="@color/colorTextBlack"
+                android:gravity="center"
+                android:text=" X 3"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

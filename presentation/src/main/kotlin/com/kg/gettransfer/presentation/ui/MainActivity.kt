@@ -118,6 +118,7 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 				Screens.CREATE_ORDER -> return Intent(this@MainActivity, CreateOrderActivity::class.java)
 				Screens.SETTINGS -> return Intent(this@MainActivity, SettingsActivity::class.java)
 				Screens.LOGIN -> return Intent(this@MainActivity, LoginActivity::class.java)
+				Screens.ARCHIVED_RIDES -> return Intent(this@MainActivity, OffersActivity::class.java)
 			}
 			return null
 		}
@@ -185,6 +186,7 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 				R.id.nav_login -> presenter.onLoginClick()
                 R.id.nav_about -> presenter.onAboutClick()
                 R.id.nav_settings -> presenter.onSettingsClick()
+				R.id.nav_archived_rides -> presenter.onArchivedRidesClick()
                 else -> Timber.d("No route for ${item.title}")
             }
             drawer.closeDrawer(GravityCompat.START)

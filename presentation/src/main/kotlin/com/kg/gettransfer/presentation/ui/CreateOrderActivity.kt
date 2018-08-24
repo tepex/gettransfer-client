@@ -122,6 +122,7 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
             when(screenKey) {
                 Screens.LICENCE_AGREE -> return Intent(this@CreateOrderActivity, LicenceAgreementActivity::class.java)
+                Screens.OFFERS -> return Intent(this@CreateOrderActivity, OffersActivity::class.java)
             }
             return null
         }
@@ -245,8 +246,17 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         layoutDateTimeTransfer.setOnClickListener { changeDateTime(true) }
         tvComments.setOnClickListener { showPopupWindowComment() }
         layoutAgreement.setOnClickListener { presenter.showLicenceAgreement() }
-        
-        btnGetOffers.setOnClickListener { presenter.onGetOffers() }
+
+        btnGetTransfer.setOnClickListener { presenter.onGetTransferClick() }
+    }
+
+    private val clickListenerCounterButtons = View.OnClickListener { view ->
+        when (view.id) {
+            R.id.tvPersonsCounterDown -> presenter.changeCounter(tvCountPerson, -1)
+            R.id.tvPersonsCounterUp -> presenter.changeCounter(tvCountPerson, 1)
+            R.id.tvChildCounterDown -> presenter.changeCounter(tvCountChild, -1)
+            R.id.tvChildCounterUp -> presenter.changeCounter(tvCountChild, 1)
+        }
     }
 
     private fun showPopupWindowComment(){

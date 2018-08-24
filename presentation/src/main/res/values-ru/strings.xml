@@ -167,26 +167,6 @@
     <string name="sign_out">Выйти из профиля</string>
     <string name="application_language">Язык приложения</string>
     <string name="distance_units">Единицы расстояния</string>
-    <string name="email_address">Email адрес</string>
-    <string name="enter_password">Введите пароль</string>
-    <string name="error_login">Неверный логин или пароль</string>
-    <string name="nav_active_rides_title">Активные поездки</string>
-    <string name="nav_archived_rides_title">Архивные поездки</string>
-    <string name="nav_about_title">О приложении</string>
-
-    <string name="price_from">от %1s</string>
-    <string-array name="months_name">
-        <item>Январь</item>
-        <item>Февраль</item>
-        <item>Март</item>
-        <item>Апрель</item>
-        <item>Май</item>
-        <item>Июнь</item>
-        <item>Июль</item>
-        <item>Август</item>
-        <item>Сентябрь</item>
-        <item>Октябрь</item>
-        <item>Ноябрь</item>
-        <item>Декабрь</item>
-    </string-array>
+    <string name="carrier_offers">Предложения перевозчиков</string>
+    <string name="select">Выбрать</string>
 </resources>

@@ -89,13 +89,10 @@ class CreateOrderPresenter(private val resources: Resources,
 
     fun setComment(comment: String) { viewState.setComment(comment) }
     fun showLicenceAgreement() { router.navigateTo(Screens.LICENCE_AGREE) }
+    fun onGetTransferClick() {router.navigateTo(Screens.OFFERS)}
+    
     fun onBackCommandClick() { viewState.finish() }
     
-    fun onGetOffers() {
-        //validateUserInput()
-        
-    }
-
 	@CallSuper
 	override fun onDestroy() {
 		compositeDisposable.cancel()

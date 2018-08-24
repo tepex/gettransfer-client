@@ -13,7 +13,9 @@ object Screens {
 	@JvmField val SETTINGS       = "settings"
 	@JvmField val CREATE_ORDER   = "create_order"
 
-	@JvmField val LICENCE_AGREE  = "create_order"
+	@JvmField val LICENCE_AGREE  = "licence_agree"
+
+	@JvmField val OFFERS         = "offers"
 	
 	@JvmField val NOT_USED = -1
 }
