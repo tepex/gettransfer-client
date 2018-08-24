@@ -37,11 +37,14 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.AddressInteractor
+import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
+import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.nav_header_main.view.*
 import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.coroutines.experimental.Job
 import org.koin.android.ext.android.inject
@@ -60,12 +63,14 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 	
 	private lateinit var drawer: DrawerLayout
 	private lateinit var toggle: ActionBarDrawerToggle
+	private lateinit var headerView: View
 	
 	private val navigatorHolder: NavigatorHolder by inject()
 	private val router: Router by inject()
 	private val addressInteractor: AddressInteractor by inject()
 	private val locationInteractor: LocationInteractor by inject()
 	private val coroutineContexts: CoroutineContexts by inject()
+	private val apiInteractor: ApiInteractor by inject()
 	
 	private val compositeDisposable = Job()
 	private val utils = AsyncUtils(coroutineContexts)
@@ -73,12 +78,13 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 	
 	private var isFirst = true
 	private var centerMarker: Marker? = null
-	
+
 	@ProvidePresenter
 	fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
-		                                                     router,
-		                                                     locationInteractor,
-		                                                     addressInteractor)
+			router,
+			locationInteractor,
+			addressInteractor,
+			apiInteractor)
 
 	private val readMoreListener = View.OnClickListener {
 		presenter.readMoreClick()
@@ -270,8 +276,9 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 			String.format(getString(R.string.nav_footer_version), versionName)
 		navFooterStamp.setOnClickListener(readMoreListener)
 		navFooterReadMore.setOnClickListener(readMoreListener)
-		
-		val shareBtn: ImageView = (navView as NavigationView).getHeaderView(0).findViewById(R.id.nav_header_share) as ImageView
+
+		headerView = navView.getHeaderView(0)
+		val shareBtn: ImageView = headerView.findViewById(R.id.nav_header_share) as ImageView
 		shareBtn.setOnClickListener {
 			Timber.d("Share action")
 		}
@@ -349,4 +356,24 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 	override fun setError(@StringRes errId: Int, finish: Boolean) {
 		Utils.showError(this, errId, finish)
     }
+
+	override fun showLoginInfo(account: Account) {
+        headerView.navHeaderName.visibility = View.VISIBLE
+        headerView.navHeaderEmail.visibility = View.VISIBLE
+		headerView.navHeaderName.text = account.fullName
+		headerView.navHeaderEmail.text = account.email
+	}
+
+	override fun hideLoginLbl() {
+		navView.menu.findItem(R.id.nav_login).isVisible = false
+	}
+
+	override fun hideLoginInfo() {
+		headerView.navHeaderName.visibility = View.GONE
+		headerView.navHeaderEmail.visibility = View.GONE
+	}
+
+	override fun showLoginLbl() {
+		navView.menu.findItem(R.id.nav_login).isVisible = true
+	}
 }

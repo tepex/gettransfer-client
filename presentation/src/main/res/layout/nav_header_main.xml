@@ -32,16 +32,16 @@
         app:srcCompat="@android:drawable/ic_menu_share" />
 
     <TextView
-        android:id="@+id/nav_header_name"
+        android:id="@+id/navHeaderName"
         style="@style/nav_item_title"
         android:layout_marginStart="@dimen/nav_header_logo_start"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/nav_header_email"
+        app:layout_constraintBottom_toTopOf="@+id/navHeaderEmail"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="Maluta Skuratov" />
 
     <TextView
-        android:id="@+id/nav_header_email"
+        android:id="@+id/navHeaderEmail"
         style="@style/nav_item_subtitle"
         android:layout_marginBottom="@dimen/nav_item_margin_top"
         android:layout_marginStart="@dimen/nav_header_logo_start"

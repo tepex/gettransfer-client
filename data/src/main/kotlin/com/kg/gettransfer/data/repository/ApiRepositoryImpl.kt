@@ -12,6 +12,7 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 	
 	private var accessToken: String? = null
 	private var configs: Configs? = null
+	private var account: Account? = null
 
 	/* @TODO: Обрабатывать {"result":"error","error":{"type":"wrong_api_key","details":"API key \"ccd9a245018bfe4f386f4045ee4a006fsss\" not found"}} */
 	suspend fun updateToken(): String {
@@ -54,6 +55,7 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 	override suspend fun getAccount(): Account? {
 		if(accessToken == null) updateToken()
 		if(configs == null) getConfigs()
+		if (account != null) return account
 
 		val response: ApiResponse<ApiAccountWrapper> = try {
 			api.getAccount(accessToken!!).await()
@@ -62,11 +64,12 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 		}
 		if(response.data!!.account == null) return null
 
-		val account: ApiAccount = response.data!!.account!!
-		return Account(account.email, account.phone,
-		               configs!!.availableLocales.find { it.language == account.locale }!!,
-                       configs!!.supportedCurrencies.find { it.currencyCode == account.currency }!!,
-                       account.distanceUnit, account.fullName, account.groups, account.termsAccepted)
+		val apiAccount: ApiAccount = response.data!!.account!!
+		account = Account(apiAccount.email, apiAccount.phone,
+		               configs!!.availableLocales.find { it.language == apiAccount.locale }!!,
+                       configs!!.supportedCurrencies.find { it.currencyCode == apiAccount.currency }!!,
+                       apiAccount.distanceUnit, apiAccount.fullName, apiAccount.groups, apiAccount.termsAccepted)
+		return account
 	}
 
 	override suspend fun login(email: String, password: String): Account {
