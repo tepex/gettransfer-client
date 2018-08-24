@@ -9,6 +9,8 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.AsyncUtils
 
 import com.kg.gettransfer.domain.interactor.ApiInteractor
+
+import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 
 import com.kg.gettransfer.presentation.view.SettingsView
@@ -29,6 +31,7 @@ class SettingsPresenter(private val cc: CoroutineContexts,
     lateinit var configs: Configs
     lateinit var currencies: List<CurrencyModel>
     lateinit var locales: List<LocaleModel>
+    var account: Account? = null
     
     fun onBackCommandClick() {
         viewState.finish()
@@ -36,11 +39,15 @@ class SettingsPresenter(private val cc: CoroutineContexts,
     
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
-            configs = utils.asyncAwait { apiInteractor.getConfigs() }
+            utils.asyncAwait { 
+                configs = apiInteractor.getConfigs()
+                account = apiInteractor.getAccount()
+            }
             currencies = configs.supportedCurrencies.map {
                 CurrencyModel("${it.displayName} (${it.hackedSymbol})", it.currencyCode)
             }
             locales = configs.availableLocales.map { LocaleModel(it.getDisplayLanguage(it), it.language) }
+            Timber.d("account: %s", account)
         }, { e ->
             Timber.e(e)
             //viewState.setError(R.string.err_address_service_xxx, false)

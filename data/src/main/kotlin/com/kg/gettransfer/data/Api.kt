@@ -13,5 +13,16 @@ interface Api {
 	fun accessToken(@Query("api_key") apiKey: String): Deferred<ApiResponse<ApiToken>>
 	
 	@GET("/api/configs")
-	fun configs(@Header("X-ACCESS-TOKEN") token: String): Deferred<ApiResponse<ApiConfigs>>
+	fun getConfigs(@Header("X-ACCESS-TOKEN") token: String): Deferred<ApiResponse<ApiConfigs>>
+
+	@GET("/api/account")
+	fun getAccount(@Header("X-ACCESS-TOKEN") token: String): Deferred<ApiResponse<ApiAccountWrapper>>
+	
+	/* If we are not signed in, don't post request to save account
+	@POST("/api/account")
+	fun postAccount(@Header("X-ACCESS-TOKEN") token: String): Deferred<ApiResponse<ApiAccountWrapper>>
+	
+	@PUT("/api/account")
+	fun putAccount(@Header("X-ACCESS-TOKEN") token: String): Deferred<ApiResponse<ApiAccountWrapper>>
+	*/
 }

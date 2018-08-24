@@ -36,7 +36,7 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 			
 		if(accessToken == null) updateToken()
 		val response: ApiResponse<ApiConfigs> = try {
-			api.configs(accessToken!!).await()
+			api.getConfigs(accessToken!!).await()
 		} catch(httpException: HttpException) {
 			throw httpException
 		}
@@ -55,5 +55,23 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
                        data.officePhone,
                        data.baseUrl)
         return configs!!
+	}
+	
+	override suspend fun getAccount(): Account? {
+		if(accessToken == null) updateToken()
+		if(configs == null) getConfigs()
+		
+		val response: ApiResponse<ApiAccountWrapper> = try {
+			api.getAccount(accessToken!!).await()
+		} catch(httpException: HttpException) {
+			throw httpException
+		}
+		if(response.data!!.account == null) return null
+
+		val account: ApiAccount = response.data!!.account!!
+		return Account(account.email, account.phone,
+		               configs!!.availableLocales.find { it.language == account.locale }!!,
+                       configs!!.supportedCurrencies.find { it.currencyCode == account.currency }!!,
+                       account.distanceUnit, account.fullName, account.groups, account.termsAccepted)
 	}
 }
