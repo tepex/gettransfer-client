@@ -44,7 +44,7 @@ class SearchPresenter(private val cc: CoroutineContexts,
 		utils.launchAsyncTryCatchFinally(compositeDisposable, {
 			viewState.blockInterface(true)
 			addressFrom = utils.asyncAwait { addressInteractor.getCurrentAddress() }
-			viewState.setAddressFrom(addressFrom.name)
+			viewState.setAddressFrom(addressFrom.name, false)
 		}, { e ->
 			Timber.e(e)
 			viewState.setError(R.string.err_address_service_xxx, false)
@@ -54,14 +54,17 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	fun onAddressSelected(selected: GTAddress) {
 		if(isTo) addressTo = selected
 		else addressFrom = selected
+		Timber.d("3333 selected: %s", selected)
 		
 		if(addressFrom.isConcreteObject() && addressTo?.isConcreteObject() ?: false) {
 			addressInteractor.route = Pair(addressFrom, addressTo!!)
 			router.navigateTo(Screens.CREATE_ORDER)
 			return
 		}
-		if(isTo) viewState.setAddressTo(selected.primary ?: selected.name)
-		else viewState.setAddressFrom(selected.primary ?: selected.name)
+		
+		val sendRequest = selected.needApproximation() /* dirty hack */
+		if(isTo) viewState.setAddressTo(selected.primary ?: selected.name, sendRequest)
+		else viewState.setAddressFrom(selected.primary ?: selected.name, sendRequest)
 	}
 
 	fun onBackCommandClick() = viewState.finish()

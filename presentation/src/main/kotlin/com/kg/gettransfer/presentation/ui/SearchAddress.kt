@@ -115,11 +115,12 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	}
 	
 	/** Set address text without request */
-	fun initText(text: String) {
+	fun initText(text: String, sendRequest: Boolean) {
 		blockRequest = true
 		this.text = text
 		addressField.setSelection(text.length)
 		blockRequest = false
+		if(sendRequest) presenter.requestAddressListByPrediction(text.trim())
 	}
 	
 	@CallSuper

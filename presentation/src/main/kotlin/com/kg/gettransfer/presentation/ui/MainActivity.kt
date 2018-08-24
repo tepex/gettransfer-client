@@ -223,6 +223,7 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 		
 		initGoogleMap(mapViewBundle)
 		
+		search.elevation = resources.getDimension(R.dimen.search_elevation)
 		searchFrom.setOnFocusChangeListener(this)
 		searchTo.setOnFocusChangeListener(this)
 		

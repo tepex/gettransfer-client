@@ -11,7 +11,6 @@
 	android:focusableInTouchMode="true"
 	android:layout_gravity="center_horizontal|top"
 	android:orientation="vertical"
-    android:elevation="@dimen/search_elevation"
 	android:background="@android:color/white" >
 		
 	<com.kg.gettransfer.presentation.ui.SearchAddress

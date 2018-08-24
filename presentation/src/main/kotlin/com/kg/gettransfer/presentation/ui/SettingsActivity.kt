@@ -53,21 +53,9 @@ class SettingsActivity: MvpAppCompatActivity(), SettingsView {
     }
 
     private fun setOnClickListeners(){
-        val distanceUnits = arrayOf("Километры (km)", "Милли (ml)")
-
-        //setDefaultTextInFields(currencies[0], languagies[0], 0)
-
         layoutSettingsCurrency.setOnClickListener { showDialogChangeCurrency() }
         layoutSettingsLanguage.setOnClickListener { showDialogChangeLanguage() }
         layoutSettingsDistanceUnits.setOnClickListener { showDialogChangeDistanceUnit() }
-    }
-
-    private fun setDefaultTextInFields(textCurrency:String, textLanguage: String, whichDistanceUnit: Int){
-        /*
-        presenter.changeCurrency(textCurrency)
-        presenter.changeLanguage(textLanguage)
-        presenter.changeDistanceUnit(whichDistanceUnit)
-        */
     }
 
     private fun showDialogChangeCurrency() {
