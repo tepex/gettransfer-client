@@ -222,6 +222,7 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 	protected override fun onResume() {
 		super.onResume()
 		navigatorHolder.setNavigator(navigator)
+		presenter.getAccount()
 		mapView.onResume()
 	}
 	

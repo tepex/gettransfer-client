@@ -36,11 +36,18 @@ class MainPresenter(private val cc: CoroutineContexts,
             val available = utils.asyncAwait {
                 locationInteractor.checkLocationServicesAvailability()
             }
-            utils.asyncAwait {
-                account = apiInteractor.getAccount()
-            }
             if (available) updateCurrentLocation() else {
                 viewState.setError(R.string.err_location_service_not_available, true)
+            }
+        }, { e ->
+            Timber.e(e)
+        })
+    }
+
+    fun getAccount() {
+        utils.launchAsyncTryCatch(compositeDisposable, {
+            utils.asyncAwait {
+                account = apiInteractor.getAccount()
             }
             checkAccount()
         }, { e ->
