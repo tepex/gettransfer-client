@@ -1,5 +1,10 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.content.Context
+import android.content.res.Resources
+
+import android.support.annotation.CallSuper
+
 import android.widget.TextView
 
 import com.arellomobile.mvp.InjectViewState
@@ -7,25 +12,51 @@ import com.arellomobile.mvp.MvpPresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.AddressInteractor
-import com.kg.gettransfer.domain.interactor.TransferTypeInteractor
+import com.kg.gettransfer.domain.AsyncUtils
 
+import com.kg.gettransfer.domain.interactor.AddressInteractor
+import com.kg.gettransfer.domain.interactor.ApiInteractor
+
+import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.presentation.Screens
+import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.view.CreateOrderView
+
+import kotlinx.coroutines.experimental.Job
 
 import ru.terrakok.cicerone.Router
 
+import timber.log.Timber
+
 @InjectViewState
-class CreateOrderPresenter(private val cc: CoroutineContexts,
+class CreateOrderPresenter(private val resources: Resources,
+                           private val cc: CoroutineContexts,
                            private val router: Router,
                            private val addressInteractor: AddressInteractor,
-                           private val transferTypeInteractor: TransferTypeInteractor): MvpPresenter<CreateOrderView>() {
+                           private val apiInteractor: ApiInteractor): MvpPresenter<CreateOrderView>() {
 
-	override fun onFirstViewAttach() {
-		viewState.setRoute(addressInteractor.route)
-	}
+	private val compositeDisposable = Job()
+	private val utils = AsyncUtils(cc)
+	
+	private var account: Account? = null
+
+    override fun onFirstViewAttach() {
+        utils.launchAsyncTryCatchFinally(compositeDisposable, {
+            viewState.setRoute(addressInteractor.route)
+            utils.asyncAwait { 
+                val configs = apiInteractor.getConfigs()
+                account = apiInteractor.getAccount()
+                viewState.setTransportTypes(configs.transportTypes.map { 
+                    TransportTypeModel(resources, it.value) })
+            }
+        }, { e ->
+            Timber.e(e)
+            //viewState.setError(R.string.err_address_service_xxx, false)
+        }, { /* viewState.blockInterface(false) */ })
+    }
 	
     fun changeCounter(counterTextView: TextView, num: Int){
         var counter = counterTextView.text.toString().toInt()
@@ -53,7 +84,9 @@ class CreateOrderPresenter(private val cc: CoroutineContexts,
     fun showLicenceAgreement() { router.navigateTo(Screens.LICENCE_AGREE) }
     fun onBackCommandClick() { viewState.finish() }
 
-    fun getTransferTypeList(){
-        viewState.setTransferTypeList(transferTypeInteractor.getTransferType())
-    }
+	@CallSuper
+	override fun onDestroy() {
+		compositeDisposable.cancel()
+		super.onDestroy()
+	}
 }

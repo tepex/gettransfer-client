@@ -38,10 +38,21 @@
 	<string name="read_more_item3">• does not participate in the action from the carrier and does not have a discount</string>
 	<string name="read_more_item4">• is provided by a legal entity</string>
 	<string name="read_more_close_button">Close</string>
+    <!-- Transport types -->
+    <string name="transport_type_economy">Economy</string>
+    <string name="transport_type_business">Business</string>
+    <string name="transport_type_premium">Premium</string>
+    <string name="transport_type_van">Van</string>
+    <string name="transport_type_minibus">Minibus</string>
+    <string name="transport_type_bus">Bus</string>
+    <string name="transport_type_limousine">Limousine</string>
+    <string name="transport_type_helicopter">Helicopter</string>
+
+
 	<!--
 	<string name=""></string>
 	-->
-
+    
 
 	<!-- Errors & messages -->
 	<string name="err_title">Ошибка</string>

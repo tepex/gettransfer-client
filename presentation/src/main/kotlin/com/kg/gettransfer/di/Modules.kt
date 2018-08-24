@@ -26,19 +26,16 @@ import com.kg.gettransfer.data.TransportTypesDeserializer
 import com.kg.gettransfer.data.repository.AddressRepositoryImpl
 import com.kg.gettransfer.data.repository.ApiRepositoryImpl
 import com.kg.gettransfer.data.repository.LocationRepositoryImpl
-import com.kg.gettransfer.data.repository.TransferTypeRepositoryImpl
 
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
-import com.kg.gettransfer.domain.interactor.TransferTypeInteractor
 
 import com.kg.gettransfer.domain.repository.AddressRepository
 import com.kg.gettransfer.domain.repository.ApiRepository
 import com.kg.gettransfer.domain.repository.LocationRepository
-import com.kg.gettransfer.domain.repository.TransferTypeRepository
 
 import java.util.Locale
 
@@ -85,11 +82,9 @@ val domainModule = module {
 	single { ApiRepositoryImpl(get(), (get() as Context).resources.getString(R.string.api_key)) as ApiRepository }
 	single { AddressRepositoryImpl(get(), get(), get()) as AddressRepository }
 	single { LocationRepositoryImpl(get(), get(), get()) as LocationRepository }
-	single { TransferTypeRepositoryImpl() as TransferTypeRepository }
 	single { AddressInteractor(get()) }
 	single { ApiInteractor(get()) }
 	single { LocationInteractor(get()) }
-	single { TransferTypeInteractor(get()) }
 }
 
 val apiModule = module {
