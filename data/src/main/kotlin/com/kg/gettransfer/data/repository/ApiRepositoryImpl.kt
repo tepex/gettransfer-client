@@ -66,9 +66,9 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 		} catch(httpException: HttpException) {
 			throw httpException
 		}
-		if(response.data!!.account == null) return null
+		if(response.data?.account == null) return null
 
-		val account: ApiAccount = response.data!!.account!!
+		val account: ApiAccount = response.data?.account!!
 		return Account(account.email, account.phone,
 		               configs!!.availableLocales.find { it.language == account.locale }!!,
                        configs!!.supportedCurrencies.find { it.currencyCode == account.currency }!!,
