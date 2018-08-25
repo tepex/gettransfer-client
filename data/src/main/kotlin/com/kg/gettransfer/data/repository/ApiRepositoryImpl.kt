@@ -39,7 +39,7 @@ class ApiRepositoryImpl(url: String, private val apiKey: String): ApiRepository 
 		builder.cookieJar(CookieJar.NO_COOKIES)
  
 		val gson = GsonBuilder()
-			.registerTypeAdapter(Map::class.java, TransportTypesDeserializer())
+			.registerTypeAdapter(ApiTransportTypesWrapper::class.java, TransportTypesDeserializer())
 			.create()
 
 	    api = Retrofit.Builder()
@@ -75,10 +75,7 @@ class ApiRepositoryImpl(url: String, private val apiKey: String): ApiRepository 
 		val data: ApiConfigs = response.data!!
 		
 		val locales = data.availableLocales.map { Locale.forLanguageTag(it.code)!! }
-		configs = Configs(data.transportTypes.values
-		            /* Very, very dirty hack for opportunistic reasons */
-		            .map { 
-		                TransportType(it.id, it.paxMax, it.luggageMax) },
+		configs = Configs(data.transportTypes.map { TransportType(it.id, it.paxMax, it.luggageMax) },
 		        PaypalCredentials(data.paypalCredentials.id, data.paypalCredentials.env),
 		        locales,
                 locales.find { it.language == data.preferredLocale }!!,

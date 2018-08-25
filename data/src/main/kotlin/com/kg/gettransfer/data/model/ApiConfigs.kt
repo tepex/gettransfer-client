@@ -3,7 +3,7 @@ package com.kg.gettransfer.data.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class ApiConfigs(@SerializedName("transport_types") @Expose var transportTypes: Map<String, ApiTransportType>,
+class ApiConfigs(@SerializedName("transport_types") @Expose var transportTypes: ApiTransportTypesWrapper,
                  @SerializedName("paypal_credentials") @Expose var paypalCredentials: ApiPaypalCredentials,
                  @SerializedName("available_locales") @Expose var availableLocales: List<ApiLocales>,
                  @SerializedName("preferred_locale") @Expose var preferredLocale: String,
@@ -12,6 +12,11 @@ class ApiConfigs(@SerializedName("transport_types") @Expose var transportTypes: 
                  @SerializedName("card_gateways") @Expose var cardGateways: ApiCardGateways,
                  @SerializedName("office_phone") @Expose var officePhone: String,
                  @SerializedName("base_url") @Expose var baseUrl: String) 
+
+/**
+ * Wrapper is used to intercept API `rtansport_types` and convert it into List<ApiTransportType> with origin order.
+ */
+class ApiTransportTypesWrapper: ArrayList<ApiTransportType>()
 
 class ApiTransportType(@SerializedName("id") @Expose val id: String,
                        @SerializedName("pax_max") @Expose val paxMax: Int,
