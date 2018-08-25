@@ -27,7 +27,7 @@ android {
 		versionName androidGitVersion.name()
 		testInstrumentationRunner project.ANDROID_TEST_INSTRUMENTATION_RUNNER
 		vectorDrawables.useSupportLibrary = true
-		multiDexEnabled true
+		multiDexEnabled false
 	}
 
 	signingConfigs {
@@ -81,7 +81,7 @@ dependencies {
 	implementation libs.kotlin
 	implementation libs.coroutines
 	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-	implementation "com.android.support:multidex:$multidex_version"
+//	implementation "com.android.support:multidex:$multidex_version"
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "com.android.support:design:$support_version"
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
