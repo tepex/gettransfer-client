@@ -5,7 +5,8 @@ import android.widget.TextView
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import com.kg.gettransfer.domain.model.TransferType
+
+import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.domain.model.GTAddress
 
@@ -18,5 +19,5 @@ interface CreateOrderView: MvpView {
     fun setCurrency(currencySymbol: CharSequence)
     fun setDateTimeTransfer(dateTimeString: String)
     fun setComment(comment: String)
-    fun setTransferTypeList(listTypes: List<TransferType>)
+    fun setTransportTypes(list: List<TransportTypeModel>)
 }

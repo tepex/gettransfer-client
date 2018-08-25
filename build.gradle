@@ -6,12 +6,10 @@ buildscript {
 
 	ext {
 		kotlin_version        = "1.2.61"
-		coroutines_version    = "0.24.0"
-		gradle_version        = "3.3.0-alpha06"
-//		realm_version         =  "5.4.1"
+		coroutines_version    = "0.25.0"
+		gradle_version        = "3.3.0-alpha07"
 		gms_version           = "15.0.1"
 		jsr250_version        = "1.0"
-		retrofit_version      = "2.4.0"
 		timber_version        = "4.7.1"
 		junit_version         = "4.12"
 		hamcrest_version      = "2.0.0.0"
@@ -23,8 +21,6 @@ buildscript {
 //    		psMaps        : ("com.google.android.gms:play-services-maps:${PLAY_SERVICES_VERSION}"),
     		psLocation    : ("com.google.android.gms:play-services-location:$gms_version"),
     		psPlaces      : ("com.google.android.gms:play-services-places:$gms_version"),
-    		retrofit      : ("com.squareup.retrofit2:retrofit:$retrofit_version"),
-    		retrofit_json : ("com.squareup.retrofit2:converter-gson:$retrofit_version"),
 			timber        : ("com.jakewharton.timber:timber:$timber_version"),
 			jsr250        : ("javax.annotation:jsr250-api:$jsr250_version"),
 			junit         : ("junit:junit:$junit_version"),

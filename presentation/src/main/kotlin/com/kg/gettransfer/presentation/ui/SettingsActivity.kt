@@ -62,7 +62,7 @@ class SettingsActivity: MvpAppCompatActivity(), SettingsView {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.currency)
         builder.setItems(presenter.currencies.toTypedArray()) { _, which -> presenter.changeCurrency(which) }
-        builder.setNegativeButton(R.string.cancel, null)
+        builder.setNegativeButton(android.R.string.cancel, null)
         builder.show()
     }
 
@@ -70,7 +70,7 @@ class SettingsActivity: MvpAppCompatActivity(), SettingsView {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.application_language)
         builder.setItems(presenter.locales.toTypedArray()) { _, which -> presenter.changeLanguage(which) }
-        builder.setNegativeButton(R.string.cancel, null)
+        builder.setNegativeButton(android.R.string.cancel, null)
         builder.show()
     }
 
@@ -78,7 +78,7 @@ class SettingsActivity: MvpAppCompatActivity(), SettingsView {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.distance_units)
         builder.setItems(presenter.configs.supportedDistanceUnits.toTypedArray()) { _, which -> presenter.changeDistanceUnit(which) }
-        builder.setNegativeButton(R.string.cancel, null)
+        builder.setNegativeButton(android.R.string.cancel, null)
         builder.show()
     }
 

@@ -44,12 +44,14 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.TransferType
+import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.domain.interactor.AddressInteractor
-import com.kg.gettransfer.domain.interactor.TransferTypeInteractor
+import com.kg.gettransfer.domain.interactor.ApiInteractor
 
 import com.kg.gettransfer.presentation.Screens
+
+import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.presenter.LicenceAgreementPresenter
@@ -71,15 +73,15 @@ import ru.terrakok.cicerone.android.SupportAppNavigator
 
 import java.util.Calendar
 
-class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
+class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
 
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
 
     private val navigatorHolder: NavigatorHolder by inject()
     private val router: Router by inject()
-    private val transferTypeInteractor: TransferTypeInteractor by inject()
 	private val addressInteractor: AddressInteractor by inject()
+	private val apiInteractor: ApiInteractor by inject()
 	private val coroutineContexts: CoroutineContexts by inject()
 
     var mYear = 0
@@ -89,10 +91,11 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
     var mMinute = 0
 
     @ProvidePresenter
-    fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(coroutineContexts,
+    fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(resources,
+                                                                                  coroutineContexts,
                                                                                   router,
                                                                                   addressInteractor,
-                                                                                  transferTypeInteractor)
+                                                                                  apiInteractor)
 
     private val navigator: Navigator = object: SupportAppNavigator(this, Screens.NOT_USED) {
         protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
@@ -121,7 +124,6 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 
         rvTransferType.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        presenter.getTransferTypeList()
 
         changeDateTime(false)
 
@@ -191,7 +193,7 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.currency)
         builder.setItems(currencies) { _, which -> presenter.changeCurrency(which) }
-        builder.setNegativeButton(R.string.cancel, null)
+        builder.setNegativeButton(android.R.string.cancel, null)
         builder.show()
     }
 
@@ -262,8 +264,8 @@ class CreateOrderActivity : MvpAppCompatActivity(), CreateOrderView {
         tvComments.text = comment
     }
 
-    override fun setTransferTypeList(listTypes: List<TransferType>) {
-        rvTransferType.adapter = TransferTypeAdapter(presenter, listTypes)
+    override fun setTransportTypes(list: List<TransportTypeModel>) {
+        rvTransferType.adapter = TransferTypeAdapter(list)
     }
     
     override fun setRoute(route: Pair<GTAddress, GTAddress>) {
