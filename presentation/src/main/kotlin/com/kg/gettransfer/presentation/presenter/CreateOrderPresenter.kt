@@ -51,8 +51,7 @@ class CreateOrderPresenter(private val resources: Resources,
                 configs = apiInteractor.getConfigs()
                 account = apiInteractor.getAccount()
             }
-            viewState.setTransportTypes(configs.transportTypes.map { 
-            TransportTypeModel(resources, it.value) })
+            viewState.setTransportTypes(configs.transportTypes.map { TransportTypeModel(resources, it) })
         }, { e ->
             Timber.e(e)
             //viewState.setError(R.string.err_address_service_xxx, false)
