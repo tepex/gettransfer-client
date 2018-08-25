@@ -43,17 +43,16 @@ class ApiRepositoryImpl(private val api: Api, private val apiKey: String): ApiRe
 		val data: ApiConfigs = response.data!!
 		
 		val locales = data.availableLocales.map { Locale.forLanguageTag(it.code)!! }
-		configs = Configs(data.transportTypes.mapValues { TransportType(it.value.id,
-                                                                            it.value.paxMax,
-                                                                            it.value.luggageMax) },
-                       PaypalCredentials(data.paypalCredentials.id, data.paypalCredentials.env),
-                       locales,
-                       locales.find { it.language == data.preferredLocale }!!,
-                       data.supportedCurrencies.map { Currency.getInstance(it.code)!! },
-                       data.supportedDistanceUnits,
-                       CardGateways(data.cardGateways.default, data.cardGateways.countryCode),
-                       data.officePhone,
-                       data.baseUrl)
+		configs = Configs(data.transportTypes.mapValues { 
+		        TransportType(it.value.id, it.value.paxMax, it.value.luggageMax) },
+                PaypalCredentials(data.paypalCredentials.id, data.paypalCredentials.env),
+                locales,
+                locales.find { it.language == data.preferredLocale }!!,
+                data.supportedCurrencies.map { Currency.getInstance(it.code)!! },
+                data.supportedDistanceUnits,
+                CardGateways(data.cardGateways.default, data.cardGateways.countryCode),
+                data.officePhone,
+                data.baseUrl)
         return configs!!
 	}
 	
