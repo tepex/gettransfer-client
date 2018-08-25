@@ -15,13 +15,7 @@ import com.google.android.gms.location.places.GeoDataClient
 import com.google.android.gms.location.places.PlaceDetectionClient
 import com.google.android.gms.location.places.Places
 
-import com.google.gson.GsonBuilder
-
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
-
 import com.kg.gettransfer.R
-import com.kg.gettransfer.data.Api
-import com.kg.gettransfer.data.TransportTypesDeserializer
 
 import com.kg.gettransfer.data.repository.AddressRepositoryImpl
 import com.kg.gettransfer.data.repository.ApiRepositoryImpl
@@ -42,15 +36,7 @@ import java.util.Locale
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 
-import okhttp3.CookieJar
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-
 import org.koin.dsl.module.module
-
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
@@ -79,40 +65,13 @@ val ciceroneModule = module {
 }
 
 val domainModule = module {
-	single { ApiRepositoryImpl(get(), (get() as Context).resources.getString(R.string.api_key)) as ApiRepository }
+	single { ApiRepositoryImpl((get() as Context).resources.getString(R.string.api_url),
+	                           (get() as Context).resources.getString(R.string.api_key)) as ApiRepository }
 	single { AddressRepositoryImpl(get(), get(), get()) as AddressRepository }
 	single { LocationRepositoryImpl(get(), get(), get()) as LocationRepository }
 	single { AddressInteractor(get()) }
 	single { ApiInteractor(get()) }
 	single { LocationInteractor(get()) }
-}
-
-val apiModule = module {
-	single {
-		val interceptor = HttpLoggingInterceptor()
-		interceptor.level = HttpLoggingInterceptor.Level.BODY
-		interceptor as Interceptor
-	}
-	single {
-		val builder = OkHttpClient.Builder()
-		builder.addInterceptor(get())
-		builder.cookieJar(CookieJar.NO_COOKIES)
-		builder.build()
-	}
-	single {
-		GsonBuilder()
-			.registerTypeAdapter(Map::class.java, TransportTypesDeserializer())
-			.create()
-	}
-	single {
-		Retrofit.Builder()
-		        .baseUrl((get() as Context).resources.getString(R.string.api_url))
-		        .client(get())
-		        .addConverterFactory(GsonConverterFactory.create(get()))
-                .addCallAdapterFactory(CoroutineCallAdapterFactory()) // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
-                .build()
-                .create(Api::class.java) as Api
-	}
 }
 
 val androidModule = module {

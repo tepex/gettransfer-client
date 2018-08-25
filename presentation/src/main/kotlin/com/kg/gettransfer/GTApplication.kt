@@ -22,6 +22,6 @@ class GTApplication: Application() {
 			System.setProperty("kotlinx.coroutines.debug", "on")
 		}
 		// Start Koin
-		startKoin(this, listOf(appModule, ciceroneModule, domainModule, androidModule, apiModule))
+		startKoin(this, listOf(appModule, ciceroneModule, domainModule, androidModule))
 	}
 }

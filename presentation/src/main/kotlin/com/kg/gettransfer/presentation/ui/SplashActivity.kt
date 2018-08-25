@@ -62,8 +62,8 @@ class SplashActivity: AppCompatActivity() {
 			Timber.d("cardGatewasy: %s", configs.cardGateways)
 			Timber.d("office phone: %s", configs.officePhone)
 			Timber.d("base url: %s", configs.baseUrl)
-			//startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-			finish()
+			startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+			//finish()
 		}, { e ->
 			Timber.e(e)
 			// @TODO: Показать ошибку. Учесть 401 — протухший ключ

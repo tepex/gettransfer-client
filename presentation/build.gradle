@@ -6,8 +6,6 @@ apply plugin: 'kotlin-kapt'
 ext {
 	support_version           = "28.0.0-rc01"
 	constraint_layout_version = "2.0.0-alpha2"
-	r2_k_c_a_version          = "1.0.0"
-	okhttp3_version           = "3.11.0"
 	koin_version              = "1.0.0-beta-8"
 	moxy_version              = "1.5.5"
 	cicerone_version          = "3.0.0"
@@ -108,11 +106,6 @@ dependencies {
     // Достался по наследству от предыдущего бедолаги. В будущем перейти на Dagger
     implementation "org.koin:koin-android:$koin_version"
     
-    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-experimental-adapter:$r2_k_c_a_version"
-    implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
-    implementation libs.retrofit
-    implementation libs.retrofit_json
     // Logger
     implementation libs.timber
     
