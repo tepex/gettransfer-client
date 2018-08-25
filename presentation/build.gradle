@@ -23,8 +23,8 @@ android {
 		applicationId "com.kg.gettransfer"
 		minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION
 		targetSdkVersion project.ANDROID_BUILD_SDK_VERSION
-		versionCode androidGitVersion.code()
-		versionName androidGitVersion.name()
+		versionCode getBuildNumber() as Integer
+		versionName "0." + getBuildNumber()
 		testInstrumentationRunner project.ANDROID_TEST_INSTRUMENTATION_RUNNER
 		vectorDrawables.useSupportLibrary = true
 		multiDexEnabled true
@@ -120,4 +120,8 @@ dependencies {
 	testImplementation libs.junit
 	testImplementation libs.hamcrest
 	testImplementation libs.mockito
+}
+
+def getBuildNumber() {
+	return System.getenv("BUILD_NUMBER") ?: "1"
 }
