@@ -47,6 +47,7 @@
     <string name="transport_type_bus">Bus</string>
     <string name="transport_type_limousine">Limousine</string>
     <string name="transport_type_helicopter">Helicopter</string>
+	<string name="transport_type_unknown">Unknown</string>
 
 
 	<!--

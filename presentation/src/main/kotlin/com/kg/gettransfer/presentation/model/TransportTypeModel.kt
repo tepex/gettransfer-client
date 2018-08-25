@@ -17,17 +17,16 @@ class TransportTypeModel(private val resources: Resources,
                          var checked: Boolean = false) {
 
     @DrawableRes
-    var imageId: Int = -1
+    val imageId: Int
     @StringRes
-    var nameId: Int = -1
+    val nameId: Int
     
     init {
-        //val cl = R.string
-        //var pr = R.staticProperties.find { it.name == "transport_type_economy" }
-        val cl: KClass<R.string> = R.string::class
-        val pr = cl.members
-        //val pr = cl.staticProperties.forEach { Timber.d(it.name) }
-        Timber.d("77777777               %s", pr)
+    	val nameRes = R.string::class.members.find( { it.name == "transport_type_${delegate.id}" } )
+        nameId = (nameRes?.call() as? Int) ?: R.string.transport_type_unknown
+        val imageRes = R.drawable::class.members.find( { it.name == "ic_transport_type_${delegate.id}" } )
+        imageId = (imageRes?.call() as? Int) ?: R.drawable.ic_transport_type_unknown
+        /*
         when(delegate.id) {
             "economy" -> {
                 imageId = R.drawable.economy
@@ -62,5 +61,6 @@ class TransportTypeModel(private val resources: Resources,
                 nameId = R.string.transport_type_helicopter
             }
         }
+        */
     }
 }
