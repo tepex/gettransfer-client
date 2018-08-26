@@ -22,7 +22,10 @@ import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.presentation.Screens
+
+import com.kg.gettransfer.presentation.model.ConfigsModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
+
 import com.kg.gettransfer.presentation.view.CreateOrderView
 
 import kotlinx.coroutines.experimental.Job
@@ -41,17 +44,17 @@ class CreateOrderPresenter(private val resources: Resources,
 	private val compositeDisposable = Job()
 	private val utils = AsyncUtils(cc)
 	
-	private lateinit var configs: Configs
-	private var account: Account? = null
+	lateinit var configs: ConfigsModel
+	var account: Account? = null
 
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
             viewState.setRoute(addressInteractor.route)
             utils.asyncAwait { 
-                configs = apiInteractor.getConfigs()
+                configs = ConfigsModel(apiInteractor.getConfigs())
                 account = apiInteractor.getAccount()
             }
-            viewState.setTransportTypes(configs.transportTypes.map { TransportTypeModel(resources, it) })
+            viewState.setTransportTypes(configs.transportTypes)
         }, { e ->
             Timber.e(e)
             //viewState.setError(R.string.err_address_service_xxx, false)

@@ -14,7 +14,7 @@ class ApiConfigs(@SerializedName("transport_types") @Expose var transportTypes: 
                  @SerializedName("base_url") @Expose var baseUrl: String) 
 
 /**
- * Wrapper is used to intercept API `rtansport_types` and convert it into List<ApiTransportType> with origin order.
+ * Wrapper is used to intercept API `transport_types` and convert it into List<ApiTransportType> with origin order.
  */
 class ApiTransportTypesWrapper: ArrayList<ApiTransportType>()
 

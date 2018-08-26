@@ -142,7 +142,12 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         tvChildCounterDown.setOnClickListener(clickListenerCounterButtons)
         tvChildCounterUp.setOnClickListener(clickListenerCounterButtons)
 
-        btnChangeCurrencyType.setOnClickListener { showDialogChangeCurrency() }
+        //btnChangeCurrencyType.setOnClickListener { showDialogChangeCurrency() }
+        Utils.setCurrenciesDialogListener(this, btnChangeCurrencyType, presenter.configs.currencies) {
+            selected -> presenter.changeCurrency(selected)
+        }
+        
+        
         layoutDateTimeTransfer.setOnClickListener { changeDateTime(true) }
         tvComments.setOnClickListener { showPopupWindowComment() }
         layoutAgreement.setOnClickListener { presenter.showLicenceAgreement() }
@@ -264,8 +269,8 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         tvComments.text = comment
     }
 
-    override fun setTransportTypes(list: List<TransportTypeModel>) {
-        rvTransferType.adapter = TransferTypeAdapter(list)
+    override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
+        rvTransferType.adapter = TransferTypeAdapter(transportTypes)
     }
     
     override fun setRoute(route: Pair<GTAddress, GTAddress>) {

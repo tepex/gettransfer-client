@@ -16,10 +16,15 @@ import timber.log.Timber
 
 class TransportTypesDeserializer: JsonDeserializer<ApiTransportTypesWrapper> {
 	@Throws(JsonParseException::class)
-	override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): 
-		ApiTransportTypesWrapper {
+	override fun deserialize(jsonTransportTypes: JsonElement,
+	                         typeOfT: Type,
+	                         context: JsonDeserializationContext): ApiTransportTypesWrapper {
 		val types = ApiTransportTypesWrapper()
-		json.asJsonObject.entrySet().forEach { types.add(context.deserialize(it.value.asJsonObject, ApiTransportType::class.java)) }
+		/* jsonTransportTypes is natively object with fields of type `ApiTransportType`,
+		   but we need a List of this fields. */
+		jsonTransportTypes.asJsonObject.entrySet().forEach {
+		    types.add(context.deserialize(it.value.asJsonObject, ApiTransportType::class.java))
+		}
 		return types
 	}
 }

@@ -1,22 +1,31 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+
 import android.support.v7.widget.Toolbar
+
 import android.text.TextUtils
+
 import android.util.Patterns
+
 import android.view.View
+
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
+
 import com.kg.gettransfer.presentation.presenter.LoginPresenter
 import com.kg.gettransfer.presentation.view.LoginView
+
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-import org.koin.android.ext.android.inject
 
+import org.koin.android.ext.android.inject
 
 class LoginActivity : MvpAppCompatActivity(), LoginView {
 
@@ -29,7 +38,6 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
     private var emptyEmail = true
     private var emptyPassword = true
     private var correctEmail = false
-
 
     @ProvidePresenter
     fun createLoginPresenter(): LoginPresenter = LoginPresenter(coroutineContexts, apiInteractor)
