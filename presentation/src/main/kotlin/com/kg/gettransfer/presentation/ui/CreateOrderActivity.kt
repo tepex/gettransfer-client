@@ -51,6 +51,7 @@ import com.kg.gettransfer.domain.interactor.ApiInteractor
 
 import com.kg.gettransfer.presentation.Screens
 
+import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
@@ -89,6 +90,15 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
     var mDay = 0
     var mHour = 0
     var mMinute = 0
+    
+    private val clickListenerCounterButtons = View.OnClickListener { view ->
+        when (view.id) {
+            R.id.tvPersonsCounterDown -> presenter.changeCounter(tvCountPerson, -1)
+            R.id.tvPersonsCounterUp -> presenter.changeCounter(tvCountPerson, 1)
+            R.id.tvChildCounterDown -> presenter.changeCounter(tvCountChild, -1)
+            R.id.tvChildCounterUp -> presenter.changeCounter(tvCountChild, 1)
+        }
+    }
 
     @ProvidePresenter
     fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(resources,
@@ -136,30 +146,21 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         navigatorHolder.setNavigator(navigator)
     }
 
+    override fun setCurrencies(currencies: List<CurrencyModel>) {
+        Utils.setCurrenciesDialogListener(this, btnChangeCurrencyType, currencies) { 
+            selected -> presenter.changeCurrency(selected) 
+        }
+    }
+    
     private fun setOnClickListeners() {
         tvPersonsCounterDown.setOnClickListener(clickListenerCounterButtons)
         tvPersonsCounterUp.setOnClickListener(clickListenerCounterButtons)
         tvChildCounterDown.setOnClickListener(clickListenerCounterButtons)
         tvChildCounterUp.setOnClickListener(clickListenerCounterButtons)
-
-        //btnChangeCurrencyType.setOnClickListener { showDialogChangeCurrency() }
-        Utils.setCurrenciesDialogListener(this, btnChangeCurrencyType, presenter.configs.currencies) {
-            selected -> presenter.changeCurrency(selected)
-        }
-        
         
         layoutDateTimeTransfer.setOnClickListener { changeDateTime(true) }
         tvComments.setOnClickListener { showPopupWindowComment() }
         layoutAgreement.setOnClickListener { presenter.showLicenceAgreement() }
-    }
-
-    private val clickListenerCounterButtons = View.OnClickListener { view ->
-        when (view.id) {
-            R.id.tvPersonsCounterDown -> presenter.changeCounter(tvCountPerson, -1)
-            R.id.tvPersonsCounterUp -> presenter.changeCounter(tvCountPerson, 1)
-            R.id.tvChildCounterDown -> presenter.changeCounter(tvCountChild, -1)
-            R.id.tvChildCounterUp -> presenter.changeCounter(tvCountChild, 1)
-        }
     }
 
     private fun showPopupWindowComment(){
@@ -192,16 +193,6 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         showKeyboard()
     }
 
-    private fun showDialogChangeCurrency() {
-        val currencies = arrayOf("US Dollar ($)", "Euro (€)", "Pound Sterling (£)",
-                "Russian Ruble (\u20BD)", "Baht (฿)", "Renminbi(¥)")
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(R.string.currency)
-        builder.setItems(currencies) { _, which -> presenter.changeCurrency(which) }
-        builder.setNegativeButton(android.R.string.cancel, null)
-        builder.show()
-    }
-
     private fun changeDateTime(showDialog: Boolean){
         val calendar = Calendar.getInstance()
         mYear = calendar.get(Calendar.YEAR)
@@ -209,7 +200,7 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         mDay = calendar.get(Calendar.DAY_OF_MONTH)
         mHour = calendar.get(Calendar.HOUR_OF_DAY)
         mMinute = calendar.get(Calendar.MINUTE)
-        if (showDialog) showDatePickerDialog() else presenter.changeDateTimeTransfer(mYear, mMonth, mDay, mHour, mMinute)
+        if(showDialog) showDatePickerDialog() else presenter.changeDateTimeTransfer(mYear, mMonth, mDay, mHour, mMinute)
     }
 
     private fun showDatePickerDialog() {
@@ -256,9 +247,7 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         textViewCounter.text = count.toString()
     }
 
-    override fun setCurrency(currencySymbol: CharSequence) {
-        tvCurrencyType.text = currencySymbol
-    }
+    override fun setCurrency(currency: String) { tvCurrencyType.text = currency }
 
     override fun setDateTimeTransfer(dateTimeString: String) {
         tvDateTimeTransfer.text = dateTimeString

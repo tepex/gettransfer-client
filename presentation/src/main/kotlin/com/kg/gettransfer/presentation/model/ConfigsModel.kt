@@ -18,20 +18,30 @@ class ConfigsModel(private val delegate: Configs) {
     val currencies: List<CurrencyModel>
     val locales: List<LocaleModel>
     val transportTypes: List<TransportTypeModel>
-    val distanceUnits: List<String>
-        get() = delegate.supportedDistanceUnits
+    val distanceUnits: List<String> = delegate.supportedDistanceUnits
 
     init {
-        currencies = delegate.supportedCurrencies.map {
-            CurrencyModel("${it.displayName} (${it.hackedSymbol})", it.currencyCode)
-        }
+        currencies = delegate.supportedCurrencies.map { CurrencyModel(it) }
         locales = delegate.availableLocales.map { LocaleModel(it.getDisplayLanguage(it), it.language) }
         transportTypes = delegate.transportTypes.map { TransportTypeModel(it) }
     }
 }
 
-class CurrencyModel(val name: String, val code: String): CharSequence by name {
+class CurrencyModel(private val delegate: Currency): CharSequence {
+    val name = "${delegate.displayName} ($symbol)"
+    override val length = name.length
+    val code = delegate.currencyCode
+    val symbol: String
+        /* Dirty hack for ruble, Yuan ¥ */
+        get() = when(delegate.currencyCode) {
+            "RUB" -> "\u20BD"
+            "CNY" -> "¥"
+            else  -> delegate.symbol
+        }
+    
     override fun toString(): String = name
+    override operator fun get(index: Int): Char = name.get(index)
+    override fun subSequence(startIndex: Int, endIndex: Int): CharSequence = name.subSequence(startIndex, endIndex)
 }
 
 class LocaleModel(val name: String, val code: String): CharSequence by name {
@@ -51,11 +61,3 @@ class TransportTypeModel(val delegate: TransportType, var checked: Boolean = fal
         imageId = (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_unknown
     }
 }
-
-/* Dirty hack for ruble, Yuan ¥ */
-val Currency.hackedSymbol: String
-    get() = when(currencyCode) {
-        "RUB" -> "\u20BD"
-        "CNY" -> "¥"
-        else  -> symbol
-    }

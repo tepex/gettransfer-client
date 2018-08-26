@@ -55,13 +55,14 @@ class CreateOrderPresenter(private val resources: Resources,
                 account = apiInteractor.getAccount()
             }
             viewState.setTransportTypes(configs.transportTypes)
+            viewState.setCurrencies(configs.currencies)
         }, { e ->
             Timber.e(e)
             //viewState.setError(R.string.err_address_service_xxx, false)
         }, { /* viewState.blockInterface(false) */ })
     }
 	
-    fun changeCounter(counterTextView: TextView, num: Int){
+    fun changeCounter(counterTextView: TextView, num: Int) {
         var counter = counterTextView.text.toString().toInt()
         var minCounter = 0
         if (counterTextView.id == R.id.tvCountPerson) minCounter = 1
@@ -69,18 +70,17 @@ class CreateOrderPresenter(private val resources: Resources,
         viewState.setCounters(counterTextView, counter)
     }
 
-    fun changeCurrency(which: Int){
-        val currencySimbols = arrayOf("$", "€", "£", "\u20BD", "฿", "¥")
-        viewState.setCurrency(currencySimbols[which])
-    }
-
-    fun changeDateTimeTransfer(year: Int, month: Int, day: Int, hour: Int, minute: Int){
+    fun changeDateTimeTransfer(year: Int, month: Int, day: Int, hour: Int, minute: Int) {
         val months = arrayOf("January", "February", "March", "April", "May", "June", "Jule", "August",
                 "September", "October", "November", "December")
         val dateTimeString = StringBuilder()
         dateTimeString.append(day).append(" ").append(months[month]).append(" ").append(year)
                 .append(", ").append(hour).append(":").append(minute)
         viewState.setDateTimeTransfer(dateTimeString.toString())
+    }
+    
+    fun changeCurrency(selected: Int) {
+        viewState.setCurrency(configs.currencies.get(selected).symbol)
     }
 
     fun setComment(comment: String) { viewState.setComment(comment) }
