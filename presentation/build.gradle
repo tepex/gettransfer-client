@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'de.felixschulze.gradle.hockeyapp'
 
 ext {
 	support_version           = "28.0.0-rc01"
@@ -20,8 +21,6 @@ android {
 		applicationId "com.kg.gettransfer"
 		minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION
 		targetSdkVersion project.ANDROID_BUILD_SDK_VERSION
-		versionCode androidGitVersion.code()
-		versionName androidGitVersion.name()
 		testInstrumentationRunner project.ANDROID_TEST_INSTRUMENTATION_RUNNER
 		vectorDrawables.useSupportLibrary = true
 		multiDexEnabled false
@@ -57,6 +56,38 @@ android {
 			shrinkResources false
 		}
 	}
+
+	flavorDimensions "type"
+
+	productFlavors {
+
+		dev {
+			signingConfig signingConfigs.config
+
+			versionCode getBuildNumber() as Integer
+			versionName "2.0"
+
+			manifestPlaceholders = [
+					hockeyAppId   : "1f061f58b7bd42c387ecd8681d30df48",
+			]
+
+			dimension "type"
+
+		}
+
+		prod {
+			signingConfig signingConfigs.config
+
+			versionCode getBuildNumber() as Integer
+			versionName "1.0"
+
+			manifestPlaceholders = [
+					hockeyAppId   : "1f061f58b7bd42c387ecd8681d30df48",
+			]
+
+			dimension "type"
+		}
+	}
 	
 	sourceSets {
 		main.java.srcDirs += 'src/main/kotlin'
@@ -70,6 +101,14 @@ android {
 
 androidExtensions {
 	experimental = true
+}
+
+hockeyapp {
+	apiToken = "7381bebd314d4f69b363cd29d4ce6b41" //api token with owner rights
+	restoreAllowed = true // Enables restoring function for previous versions
+	notes = generateChangeLog() // Generates default notes - feel free to change this
+	buildServerUrl = System.getenv("JOB_URL") ?: "Unknown"
+	repositoryUrl = System.getenv("GIT_URL") ?: "Unknown"
 }
 
 dependencies {
@@ -108,8 +147,25 @@ dependencies {
     
     // Logger
     implementation libs.timber
+
+	// Hockey
+	implementation 'net.hockeyapp.android:HockeySDK:5.0.3'
     
 	testImplementation libs.junit
 	testImplementation libs.hamcrest
 	testImplementation libs.mockito
+}
+
+def getBuildNumber() {
+	return System.getenv("BUILD_NUMBER") ?: "1"
+}
+
+def generateChangeLog() {
+	def changelog = "  \nbranch: " + System.getenv("GIT_BRANCH") ?: "Unknown"
+	changelog += "  \ncommit: " + System.getenv("GIT_COMMIT") ?: "Unknown"
+	changelog += "  \n\njob name: " + System.getenv("JOB_NAME") ?: "Unknown"
+	changelog += "  \nstarted by: " + System.getenv("BUILD_USER") ?: "Unknown"
+	changelog += "  \nbuild number: " + System.getenv("BUILD_NUMBER") ?: "Unknown"
+	println changelog
+	return changelog
 }

@@ -2,6 +2,7 @@ buildscript {
 	repositories {
 		google()
 		jcenter()
+		mavenCentral()
 	}
 
 	ext {
@@ -32,6 +33,7 @@ buildscript {
 	dependencies {
 		classpath "com.android.tools.build:gradle:$gradle_version"
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+		classpath 'com.github.3mph4515:gradle-hockeyapp-plugin:3.7.6'
 //		classpath "io.realm:realm-gradle-plugin:$realm_version"
 	}
 }

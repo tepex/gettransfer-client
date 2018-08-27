@@ -20,6 +20,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/geoapikey" />
 
+        <meta-data
+            android:name="net.hockeyapp.android.appIdentifier"
+            android:value="${hockeyAppId}"/>
+
         <activity
             android:name=".presentation.ui.SplashActivity"
             android:screenOrientation="portrait">
