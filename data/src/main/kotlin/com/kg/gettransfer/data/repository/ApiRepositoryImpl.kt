@@ -105,8 +105,14 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 	    return account
 	}
 	
-	override suspend fun setAccount(account: Account) {
+	override suspend fun putAccount(account: Account) {
 	    cacheRepository.account = account
+		val response: ApiResponse<ApiAccountWrapper> = try {
+			api.putAccount(getAccessToken(), mapAccount(account)).await()
+		} catch(httpException: HttpException) {
+			throw httpException
+		}
+	    Timber.d("putAccount: %s", response)
 	}
 	
 	override suspend fun createAccount(account: Account) {

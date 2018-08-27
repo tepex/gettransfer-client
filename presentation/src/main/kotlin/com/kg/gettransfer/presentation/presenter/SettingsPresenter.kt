@@ -82,7 +82,7 @@ class SettingsPresenter(private val cc: CoroutineContexts,
     
     private fun saveAccount() {
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
-            utils.asyncAwait { apiInteractor.setAccount(account) }
+            utils.asyncAwait { apiInteractor.putAccount(account) }
         }, { e ->
             Timber.e(e)
             //viewState.setError(R.string.err_address_service_xxx, false)

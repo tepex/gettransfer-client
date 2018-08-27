@@ -3,6 +3,8 @@ package com.kg.gettransfer.data.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
+const val CONFIGS = "configs"
+
 class ApiConfigs(@SerializedName("transport_types") @Expose var transportTypes: ApiTransportTypesWrapper,
                  @SerializedName("paypal_credentials") @Expose var paypalCredentials: ApiPaypalCredentials,
                  @SerializedName("available_locales") @Expose var availableLocales: List<ApiLocales>,
