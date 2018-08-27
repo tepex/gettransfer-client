@@ -13,10 +13,9 @@ import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 
-import com.kg.gettransfer.presentation.view.SettingsView
+import com.kg.gettransfer.presentation.model.ConfigsModel
 
-import java.util.Currency
-import java.util.Locale
+import com.kg.gettransfer.presentation.view.SettingsView
 
 import kotlinx.coroutines.experimental.Job
 
@@ -28,9 +27,7 @@ class SettingsPresenter(private val cc: CoroutineContexts,
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(cc)
     
-    lateinit var configs: Configs
-    lateinit var currencies: List<CurrencyModel>
-    lateinit var locales: List<LocaleModel>
+    lateinit var configs: ConfigsModel
     var account: Account? = null
     
     fun onBackCommandClick() {
@@ -40,13 +37,12 @@ class SettingsPresenter(private val cc: CoroutineContexts,
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
             utils.asyncAwait { 
-                configs = apiInteractor.getConfigs()
+                configs = ConfigsModel(apiInteractor.getConfigs())
                 account = apiInteractor.getAccount()
             }
-            currencies = configs.supportedCurrencies.map {
-                CurrencyModel("${it.displayName} (${it.hackedSymbol})", it.currencyCode)
-            }
-            locales = configs.availableLocales.map { LocaleModel(it.getDisplayLanguage(it), it.language) }
+            viewState.setCurrencies(configs.currencies)
+            viewState.setLocales(configs.locales)
+            viewState.setDistanceUnits(configs.distanceUnits)
             Timber.d("account: %s", account)
         }, { e ->
             Timber.e(e)
@@ -55,15 +51,15 @@ class SettingsPresenter(private val cc: CoroutineContexts,
     }
     
     fun changeCurrency(selected: Int) {
-        viewState.setSettingsCurrency(currencies.get(selected).name)
+        viewState.setCurrency(configs.currencies.get(selected).name)
     }
 
-    fun changeLanguage(selected: Int) {
-        viewState.setSettingsLanguage(locales.get(selected).name)
+    fun changeLocale(selected: Int) {
+        viewState.setLocale(configs.locales.get(selected).name)
     }
 
     fun changeDistanceUnit(selected: Int) {
-        viewState.setSettingsDistanceUnits(configs.supportedDistanceUnits.get(selected))
+        viewState.setDistanceUnit(configs.distanceUnits.get(selected))
     }
     
     @CallSuper
@@ -71,19 +67,4 @@ class SettingsPresenter(private val cc: CoroutineContexts,
         compositeDisposable.cancel()
         super.onDestroy()
     }
-}
-
-/* Dirty hack for ruble, Yuan ¥ */
-val Currency.hackedSymbol: String
-    get() = when(currencyCode) {
-        "RUB" -> "\u20BD"
-        "CNY" -> "¥"
-        else  -> symbol
-    }
-class CurrencyModel(val name: String, val code: String): CharSequence by name {
-    override fun toString(): String = name
-}
-
-class LocaleModel(val name: String, val code: String): CharSequence by name {
-    override fun toString(): String = name
 }

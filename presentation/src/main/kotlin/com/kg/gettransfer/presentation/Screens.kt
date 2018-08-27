@@ -6,7 +6,8 @@ object Screens {
 	@JvmField val FIND_ADDRESS   = "find_address"
 	@JvmField val ABOUT          = "about"
 	@JvmField val READ_MORE      = "read_more"
-	
+
+	@JvmField val LOGIN      = "login"
 	@JvmField val ACTIVE_RIDES   = "active_rides"
 	@JvmField val ARCHIVED_RIDES = "archived_rides"
 	@JvmField val SETTINGS       = "settings"

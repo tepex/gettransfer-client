@@ -1,47 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:id="@+id/nav_header"
-	android:layout_width="match_parent"
-	android:layout_height="@dimen/nav_header_height"
-	android:background="@color/colorPrimary">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_header"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/nav_header_height"
+    android:background="@color/colorPrimary">
 
-	<ImageView android:id="@+id/nav_header_logo"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/nav_header_logo_start"
-		android:layout_marginTop="@dimen/nav_header_logo_top"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		app:srcCompat="@drawable/nav_header_logo"
-		android:contentDescription="Header logo" />
+    <ImageView
+        android:id="@+id/nav_header_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/nav_header_logo_start"
+        android:layout_marginTop="@dimen/nav_header_logo_top"
+        android:contentDescription="Header logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/nav_header_logo" />
 
-	<ImageView
-		android:id="@+id/nav_header_share"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginEnd="@dimen/nav_header_share_end"
-		android:layout_marginTop="@dimen/nav_header_share_top"
-		android:contentDescription="Share"
-		android:tint="@android:color/black"
-		android:focusable="false"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		app:srcCompat="@android:drawable/ic_menu_share" />
-		
-	<TextView android:id="@+id/nav_header_name"
-		style="@style/nav_item_title"
-		android:layout_marginStart="@dimen/nav_header_logo_start"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintBottom_toTopOf="@+id/nav_header_email"
-		android:text="Maluta Skuratov" />
+    <ImageView
+        android:id="@+id/nav_header_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/nav_header_share_end"
+        android:layout_marginTop="@dimen/nav_header_share_top"
+        android:contentDescription="Share"
+        android:focusable="false"
+        android:tint="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_share" />
 
-	<TextView android:id="@+id/nav_header_email"
-		style="@style/nav_item_subtitle"
-		android:layout_marginStart="@dimen/nav_header_logo_start"
-		android:layout_marginBottom="@dimen/nav_item_margin_top"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintBottom_toBottomOf="parent"
-		android:text="android.studio@android.com" />		
+    <TextView
+        android:id="@+id/navHeaderName"
+        style="@style/nav_item_title"
+        android:layout_marginStart="@dimen/nav_header_logo_start"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/navHeaderEmail"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Maluta Skuratov" />
+
+    <TextView
+        android:id="@+id/navHeaderEmail"
+        style="@style/nav_item_subtitle"
+        android:layout_marginBottom="@dimen/nav_item_margin_top"
+        android:layout_marginStart="@dimen/nav_header_logo_start"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="android.studio@android.com" />
 </android.support.constraint.ConstraintLayout>

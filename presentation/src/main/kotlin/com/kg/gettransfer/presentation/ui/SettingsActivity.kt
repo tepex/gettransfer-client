@@ -15,6 +15,9 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 
+import com.kg.gettransfer.presentation.model.CurrencyModel
+import com.kg.gettransfer.presentation.model.LocaleModel
+
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.view.SettingsView
 
@@ -48,53 +51,31 @@ class SettingsActivity: MvpAppCompatActivity(), SettingsView {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         (toolbar as Toolbar).toolbar_title.setText(R.string.nav_settings_title)
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
-
-        setOnClickListeners()
     }
 
-    private fun setOnClickListeners(){
-        layoutSettingsCurrency.setOnClickListener { showDialogChangeCurrency() }
-        layoutSettingsLanguage.setOnClickListener { showDialogChangeLanguage() }
-        layoutSettingsDistanceUnits.setOnClickListener { showDialogChangeDistanceUnit() }
+    override fun setCurrencies(currencies: List<CurrencyModel>) {
+        Utils.setCurrenciesDialogListener(this, layoutSettingsCurrency, currencies) { 
+            selected -> presenter.changeCurrency(selected) 
+        }
     }
-
-    private fun showDialogChangeCurrency() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(R.string.currency)
-        builder.setItems(presenter.currencies.toTypedArray()) { _, which -> presenter.changeCurrency(which) }
-        builder.setNegativeButton(R.string.cancel, null)
-        builder.show()
+    
+    override fun setLocales(locales: List<LocaleModel>) {
+        Utils.setLocalesDialogListener(this, layoutSettingsLanguage, locales) { 
+            selected -> presenter.changeLocale(selected) 
+        }
     }
-
-    private fun showDialogChangeLanguage() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(R.string.application_language)
-        builder.setItems(presenter.locales.toTypedArray()) { _, which -> presenter.changeLanguage(which) }
-        builder.setNegativeButton(R.string.cancel, null)
-        builder.show()
+    
+    override fun setDistanceUnits(distanceUnits: List<String>) {
+        Utils.setDistanceUnitsDialogListener(this, layoutSettingsDistanceUnits, distanceUnits) { 
+            selected -> presenter.changeDistanceUnit(selected) 
+        }
     }
-
-    private fun showDialogChangeDistanceUnit() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(R.string.distance_units)
-        builder.setItems(presenter.configs.supportedDistanceUnits.toTypedArray()) { _, which -> presenter.changeDistanceUnit(which) }
-        builder.setNegativeButton(R.string.cancel, null)
-        builder.show()
-    }
-
+    
+    override fun setCurrency(currency: String)         { tvSelectedCurrency.text = currency }
+    override fun setLocale(locale: String)             { tvSelectedLanguage.text = locale }
+    override fun setDistanceUnit(distanceUnit: String) { tvSelectedDistanceUnits.text = distanceUnit }
+    
     override fun onBackPressed() {
         presenter.onBackCommandClick()
-    }
-
-    override fun setSettingsCurrency(textSelectedCurrency: String) {
-        tvSelectedCurrency.text = textSelectedCurrency
-    }
-
-    override fun setSettingsLanguage(textSelectedLanguage: String) {
-        tvSelectedLanguage.text = textSelectedLanguage
-    }
-
-    override fun setSettingsDistanceUnits(textSelectedDistanceUnit: String) {
-        tvSelectedDistanceUnits.text = textSelectedDistanceUnit
     }
 }

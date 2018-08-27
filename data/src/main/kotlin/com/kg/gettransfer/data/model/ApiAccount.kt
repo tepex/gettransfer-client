@@ -12,4 +12,4 @@ class ApiAccount(@SerializedName("email") @Expose var email: String,
                  @SerializedName("distance_unit") @Expose var distanceUnit: String,
                  @SerializedName("full_name") @Expose var fullName: String,
                  @SerializedName("groups") @Expose var groups: Array<String>,
-                 @SerializedName("terms_accepted") @Expose var termsAccepted: Boolean) 
+                 @SerializedName("terms_accepted") @Expose var termsAccepted: Boolean)

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
+	<item android:id="@+id/nav_login"
+		app:actionLayout="@layout/nav_item_login"/>
 	<item android:id="@+id/nav_active_rides"
 		app:actionLayout="@layout/nav_item_active_rides" />
 	<item android:id="@+id/nav_archived_rides"

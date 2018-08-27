@@ -10,4 +10,4 @@ data class Account(var email: String,
                    var distanceUnit: String,
                    var fullName: String,
                    var groups: Array<String>,
-                   var termsAccepted: Boolean) 
+                   var termsAccepted: Boolean)
