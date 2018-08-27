@@ -65,7 +65,6 @@ android {
 	productFlavors {
 
 		dev {
-			applicationIdSuffix ".dev"
 			signingConfig signingConfigs.config
 
 			versionCode getBuildNumber() as Integer
