@@ -1,5 +1,7 @@
 package com.kg.gettransfer.data.repository
 
+import android.content.Context
+
 import com.kg.gettransfer.data.Api
 import com.kg.gettransfer.data.TransportTypesDeserializer
 
@@ -25,11 +27,15 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 import timber.log.Timber
 
-class ApiRepositoryImpl(url: String, private val apiKey: String): ApiRepository {
+class ApiRepositoryImpl(private val context: Context, url: String, private val apiKey: String): ApiRepository {
+    private var tokenRepository: TokenRepositoryImpl
 	private var api: Api
-	private var accessToken: String? = null
 	private var configs: Configs? = null
 	private var account: Account? = null
+	
+	companion object {
+	    val PREFS_ACCOUNT = "account"
+	}
 
 	init {
 		val interceptor = HttpLoggingInterceptor()
@@ -49,26 +55,14 @@ class ApiRepositoryImpl(url: String, private val apiKey: String): ApiRepository 
                 .addCallAdapterFactory(CoroutineCallAdapterFactory()) // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
                 .build()
                 .create(Api::class.java)
-	}
-	
-	/* @TODO: Обрабатывать {"result":"error","error":{"type":"wrong_api_key","details":"API key \"ccd9a245018bfe4f386f4045ee4a006fsss\" not found"}} */
-	suspend fun updateToken(): String {
-		val response: ApiResponse<ApiToken> = try {
-			api.accessToken(apiKey).await()
-		} catch(httpException: HttpException) {
-			throw httpException
-		}
-		accessToken = response.data?.token
-		Timber.d("access token updated: $accessToken")
-		return accessToken!!
+        tokenRepository = TokenRepositoryImpl(api, apiKey, context.getSharedPreferences(TokenRepositoryImpl.PREFS_CONFIGS, Context.MODE_PRIVATE))
 	}
 	
 	override suspend fun getConfigs(): Configs {
 		if(configs != null) return configs!!
 			
-		if(accessToken == null) updateToken()
 		val response: ApiResponse<ApiConfigs> = try {
-			api.getConfigs(accessToken!!).await()
+			api.getConfigs(tokenRepository.getAccessToken()).await()
 		} catch(httpException: HttpException) {
 			throw httpException
 		}
@@ -88,12 +82,11 @@ class ApiRepositoryImpl(url: String, private val apiKey: String): ApiRepository 
 	}
 	
 	override suspend fun getAccount(): Account? {
-		if(accessToken == null) updateToken()
 		if(configs == null) getConfigs()
 		if (account != null) return account
 
 		val response: ApiResponse<ApiAccountWrapper> = try {
-			api.getAccount(accessToken!!).await()
+			api.getAccount(tokenRepository.getAccessToken()).await()
 		} catch(httpException: HttpException) {
 			throw httpException
 		}
@@ -108,10 +101,8 @@ class ApiRepositoryImpl(url: String, private val apiKey: String): ApiRepository 
 	}
 
 	override suspend fun login(email: String, password: String): Account {
-		if (accessToken == null) updateToken()
-
 		val responce: ApiResponse<ApiAccountWrapper> = try {
-		    api.login(accessToken!!, email, password).await()
+		    api.login(tokenRepository.getAccessToken(), email, password).await()
 		} catch(httpException: HttpException) {
 			throw httpException
 		}
