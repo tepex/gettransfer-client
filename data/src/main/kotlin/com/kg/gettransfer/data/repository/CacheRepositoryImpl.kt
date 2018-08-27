@@ -28,16 +28,20 @@ class CacheRepositoryImpl(private val context: Context) {
             editor.commit()
         }
        
-    /* If `email` field is null, Account is empty. */
     var account: Account
         get() {
             if(_account === Account.EMPTY) {
-                val email = accountPrefs.getString(ACCOUNT_EMAIL, null)
-                if(email != null) _account = Account(
-                    email,
+                var locale: Locale? = null
+                var localeCode = accountPrefs.getString(ACCOUNT_LOCALE, null)
+                if(localeCode != null) locale = Locale(localeCode)
+                var currency: Currency? = null
+                var currencyCode = accountPrefs.getString(ACCOUNT_CURRENCY, null)
+                if(currencyCode != null) currency = Currency.getInstance(currencyCode)
+                _account = Account(
+                    accountPrefs.getString(ACCOUNT_EMAIL, null),
                     accountPrefs.getString(ACCOUNT_PHONE, null),
-                    Locale(accountPrefs.getString(ACCOUNT_LOCALE, "en")),
-                    Currency.getInstance(accountPrefs.getString(ACCOUNT_CURRENCY, "USD")),
+                    locale,
+                    currency,
                     accountPrefs.getString(ACCOUNT_DISTANCE_UNIT, null),
                     accountPrefs.getString(ACCOUNT_FULL_NAME, null),
                     accountPrefs.getStringSet(ACCOUNT_GROUPS, null)?.toTypedArray(),
