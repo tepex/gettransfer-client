@@ -9,6 +9,7 @@ import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.TransportType
 
 import java.util.Currency
+import java.util.Locale
 
 import kotlin.reflect.*
 
@@ -22,12 +23,12 @@ class ConfigsModel(private val delegate: Configs) {
 
     init {
         currencies = delegate.supportedCurrencies.map { CurrencyModel(it) }
-        locales = delegate.availableLocales.map { LocaleModel(it.getDisplayLanguage(it), it.language) }
+        locales = delegate.availableLocales.map { LocaleModel(it) }
         transportTypes = delegate.transportTypes.map { TransportTypeModel(it) }
     }
 }
 
-class CurrencyModel(private val delegate: Currency): CharSequence {
+class CurrencyModel(val delegate: Currency): CharSequence {
     val name = "${delegate.displayName} ($symbol)"
     override val length = name.length
     val code = delegate.currencyCode
@@ -44,8 +45,13 @@ class CurrencyModel(private val delegate: Currency): CharSequence {
     override fun subSequence(startIndex: Int, endIndex: Int): CharSequence = name.subSequence(startIndex, endIndex)
 }
 
-class LocaleModel(val name: String, val code: String): CharSequence by name {
+class LocaleModel(val delegate: Locale): CharSequence {
+    val name = delegate.getDisplayLanguage(delegate)
+    override val length = name.length
+    
     override fun toString(): String = name
+    override operator fun get(index: Int): Char = name.get(index)
+    override fun subSequence(startIndex: Int, endIndex: Int): CharSequence = name.subSequence(startIndex, endIndex)
 }
 
 class TransportTypeModel(val delegate: TransportType, var checked: Boolean = false) {

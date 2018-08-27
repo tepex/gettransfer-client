@@ -28,7 +28,7 @@ class SettingsPresenter(private val cc: CoroutineContexts,
     private val utils = AsyncUtils(cc)
     
     lateinit var configs: ConfigsModel
-    var account: Account? = null
+    lateinit var account: Account
     
     fun onBackCommandClick() {
         viewState.finish()
@@ -43,7 +43,17 @@ class SettingsPresenter(private val cc: CoroutineContexts,
             viewState.setCurrencies(configs.currencies)
             viewState.setLocales(configs.locales)
             viewState.setDistanceUnits(configs.distanceUnits)
+            
             Timber.d("account: %s", account)
+            if(account.currency != null) {
+                val currencyModel = configs.currencies.find { it.delegate == account.currency }
+                viewState.setCurrency(currencyModel?.name ?: "")
+            }
+            if(account.locale != null) {
+                val localeModel = configs.locales.find { it.delegate == account.locale }
+                viewState.setLocale(localeModel?.name ?: "")
+            }
+            if(account.distanceUnit != null) viewState.setDistanceUnit(account.distanceUnit!!)
         }, { e ->
             Timber.e(e)
             //viewState.setError(R.string.err_address_service_xxx, false)
@@ -51,15 +61,32 @@ class SettingsPresenter(private val cc: CoroutineContexts,
     }
     
     fun changeCurrency(selected: Int) {
-        viewState.setCurrency(configs.currencies.get(selected).name)
+        val currencyModel = configs.currencies.get(selected)
+        account.currency = currencyModel.delegate
+        viewState.setCurrency(currencyModel.name)
+        saveAccount()
     }
 
     fun changeLocale(selected: Int) {
-        viewState.setLocale(configs.locales.get(selected).name)
+        val localeModel = configs.locales.get(selected)
+        account.locale = localeModel.delegate
+        viewState.setLocale(localeModel.name)
+        saveAccount()
     }
 
     fun changeDistanceUnit(selected: Int) {
-        viewState.setDistanceUnit(configs.distanceUnits.get(selected))
+        account.distanceUnit = configs.distanceUnits.get(selected)
+        viewState.setDistanceUnit(account.distanceUnit!!)
+        saveAccount()
+    }
+    
+    private fun saveAccount() {
+        utils.launchAsyncTryCatchFinally(compositeDisposable, {
+            utils.asyncAwait { apiInteractor.setAccount(account) }
+        }, { e ->
+            Timber.e(e)
+            //viewState.setError(R.string.err_address_service_xxx, false)
+        }, { /* viewState.blockInterface(false) */ })
     }
     
     @CallSuper
