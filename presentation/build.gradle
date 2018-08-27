@@ -110,9 +110,7 @@ androidExtensions {
 
 hockeyapp {
 	apiToken = "7381bebd314d4f69b363cd29d4ce6b41" //api token with owner rights
-	ownerId = "1350121" // Intelectsoft organization id
-	teamId = "84586" // QA team id.
-	tags = "key-g"
+//	ownerId = "1350121"
 	restoreAllowed = true // Enables restoring function for previous versions
 	notes = generateChangeLog() // Generates default notes - feel free to change this
 	buildServerUrl = System.getenv("JOB_URL") ?: "Unknown"
