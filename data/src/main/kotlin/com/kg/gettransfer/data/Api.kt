@@ -29,7 +29,7 @@ interface Api {
 	*/
 	
 	@PUT("/api/account")
-	@FormUrlEncoded
+//	@FormUrlEncoded
 	fun putAccount(@Header(HEADER_TOKEN) token: String, @Body account: ApiAccount): Deferred<ApiResponse<ApiAccountWrapper>>
 
 	@POST("api/login")
