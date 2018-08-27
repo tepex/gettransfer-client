@@ -66,11 +66,10 @@ android {
 
 		dev {
 			applicationIdSuffix ".dev"
-			versionNameSuffix "-dev"
 			signingConfig signingConfigs.config
 
 			versionCode getBuildNumber() as Integer
-			versionName "0." + getBuildNumber()
+			versionName "2.0"
 
 			manifestPlaceholders = [
 					hockeyAppId   : "1f061f58b7bd42c387ecd8681d30df48",
@@ -110,7 +109,6 @@ androidExtensions {
 
 hockeyapp {
 	apiToken = "7381bebd314d4f69b363cd29d4ce6b41" //api token with owner rights
-//	ownerId = "1350121"
 	restoreAllowed = true // Enables restoring function for previous versions
 	notes = generateChangeLog() // Generates default notes - feel free to change this
 	buildServerUrl = System.getenv("JOB_URL") ?: "Unknown"
