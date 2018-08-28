@@ -2,4 +2,5 @@
 <lint>
     <!-- Disable this given check in this project -->
     <issue id="ObsoleteLintCustomCheck" severity="ignore" />
+    <issue id="MissingPermission" severity="ignore" />
 </lint>

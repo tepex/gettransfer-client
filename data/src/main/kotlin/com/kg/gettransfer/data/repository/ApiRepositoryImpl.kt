@@ -74,7 +74,7 @@ class ApiRepositoryImpl(url: String, private val apiKey: String): ApiRepository 
 		}
 		val data: ApiConfigs = response.data!!
 		
-		val locales = data.availableLocales.map { Locale.forLanguageTag(it.code)!! }
+		val locales = data.availableLocales.map { Locale(it.code) }
 		configs = Configs(data.transportTypes.map { TransportType(it.id, it.paxMax, it.luggageMax) },
 		        PaypalCredentials(data.paypalCredentials.id, data.paypalCredentials.env),
 		        locales,
