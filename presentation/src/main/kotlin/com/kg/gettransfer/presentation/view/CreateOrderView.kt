@@ -10,13 +10,16 @@ import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.domain.model.TransportTypePrice
 
 @StateStrategyType (OneExecutionStateStrategy::class)
 interface CreateOrderView: MvpView {
     fun finish()
 
-    fun setTransportTypes(transportTypes: List<TransportTypeModel>)
+    fun setTransportTypes(transportTypes: List<TransportTypeModel>, transportTypePrice: List<TransportTypePrice>)
     fun setCurrencies(currencies: List<CurrencyModel>)
+    fun setMapInfo(routeInfo: RouteInfo, route: Pair<GTAddress, GTAddress>)
     
     fun setRoute(route: Pair<GTAddress, GTAddress>)
     fun setCounters(textViewCounter: TextView, count: Int)

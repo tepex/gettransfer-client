@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.content.Context
 import android.content.res.Resources
 
 import android.support.annotation.CallSuper
@@ -18,13 +17,11 @@ import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 
 import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.Configs
-import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.RouteInfo
 
 import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.model.ConfigsModel
-import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.presentation.view.CreateOrderView
 
@@ -33,6 +30,8 @@ import kotlinx.coroutines.experimental.Job
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
+import java.time.LocalDateTime
+import java.util.*
 
 @InjectViewState
 class CreateOrderPresenter(private val resources: Resources,
@@ -46,6 +45,7 @@ class CreateOrderPresenter(private val resources: Resources,
 	
 	lateinit var configs: ConfigsModel
 	var account: Account? = null
+    lateinit var routeInfo: RouteInfo
 
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
@@ -53,9 +53,12 @@ class CreateOrderPresenter(private val resources: Resources,
             utils.asyncAwait { 
                 configs = ConfigsModel(apiInteractor.getConfigs())
                 account = apiInteractor.getAccount()
+                routeInfo = apiInteractor.getRouteInfo(arrayOf(addressInteractor.route.first.point.toString(), "(55.755826,37.6172999)"),
+                        true, false)
             }
-            viewState.setTransportTypes(configs.transportTypes)
+            viewState.setTransportTypes(configs.transportTypes, routeInfo.prices!!)
             viewState.setCurrencies(configs.currencies)
+            viewState.setMapInfo(routeInfo, addressInteractor.route)
         }, { e ->
             Timber.e(e)
             //viewState.setError(R.string.err_address_service_xxx, false)
@@ -71,11 +74,9 @@ class CreateOrderPresenter(private val resources: Resources,
     }
 
     fun changeDateTimeTransfer(year: Int, month: Int, day: Int, hour: Int, minute: Int) {
-        val months = arrayOf("January", "February", "March", "April", "May", "June", "Jule", "August",
-                "September", "October", "November", "December")
         val dateTimeString = StringBuilder()
-        dateTimeString.append(day).append(" ").append(months[month]).append(" ").append(year)
-                .append(", ").append(hour).append(":").append(minute)
+        dateTimeString.append(day).append(" ").append(resources.getStringArray(R.array.months_name)[month])
+                .append(" ").append(year).append(", ").append(hour).append(":").append(minute)
         viewState.setDateTimeTransfer(dateTimeString.toString())
     }
     

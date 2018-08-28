@@ -5,6 +5,9 @@ import android.app.TimePickerDialog
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 
 import android.os.Bundle
 
@@ -12,7 +15,6 @@ import android.support.annotation.CallSuper
 
 import android.support.v4.app.Fragment
 
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
@@ -21,10 +23,7 @@ import android.widget.TextView
 
 import android.text.InputType
 import android.util.DisplayMetrics
-
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
+import android.view.*
 
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -32,22 +31,26 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.widget.RelativeLayout
 
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.*
+import com.google.maps.android.PolyUtil
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.ApiInteractor
+import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.domain.model.TransportTypePrice
 
 import com.kg.gettransfer.presentation.Screens
 
@@ -55,15 +58,14 @@ import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
-import com.kg.gettransfer.presentation.presenter.LicenceAgreementPresenter
-import com.kg.gettransfer.presentation.presenter.SearchPresenter
 
 import com.kg.gettransfer.presentation.view.CreateOrderView
 
-import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.activity_transfer.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.*
+import kotlinx.android.synthetic.main.view_maps_pin.view.*
+import kotlinx.coroutines.experimental.Job
 
 import org.koin.android.ext.android.inject
 
@@ -73,6 +75,7 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
 import java.util.Calendar
+import kotlin.coroutines.experimental.suspendCoroutine
 
 class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
 
@@ -84,6 +87,10 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
 	private val addressInteractor: AddressInteractor by inject()
 	private val apiInteractor: ApiInteractor by inject()
 	private val coroutineContexts: CoroutineContexts by inject()
+
+    private val compositeDisposable = Job()
+    private val utils = AsyncUtils(coroutineContexts)
+    private lateinit var googleMap: GoogleMap
 
     var mYear = 0
     var mMonth = 0
@@ -138,12 +145,85 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         changeDateTime(false)
 
         setOnClickListeners()
+
+        val mapViewBundle = savedInstanceState?.getBundle(MainActivity.MAP_VIEW_BUNDLE_KEY)
+        initGoogleMap(mapViewBundle)
+    }
+
+    @CallSuper
+    protected override fun onStart() {
+        super.onStart()
+        mapView.onStart()
     }
 
     @CallSuper
     protected override fun onResume() {
         super.onResume()
         navigatorHolder.setNavigator(navigator)
+        mapView.onResume()
+    }
+
+    @CallSuper
+    protected override fun onPause() {
+        navigatorHolder.removeNavigator()
+        mapView.onPause()
+        super.onPause()
+    }
+
+    @CallSuper
+    protected override fun onStop() {
+        mapView.onStop()
+        super.onStop()
+    }
+
+    @CallSuper
+    protected override fun onDestroy() {
+        mapView.onDestroy()
+        compositeDisposable.cancel()
+        super.onDestroy()
+    }
+
+    @CallSuper
+    override fun onLowMemory() {
+        mapView.onLowMemory()
+        super.onLowMemory()
+    }
+
+    private fun initGoogleMap(mapViewBundle: Bundle?) {
+        mapView.onCreate(mapViewBundle)
+
+        utils.launchAsync(compositeDisposable) {
+            googleMap = getGoogleMapAsync()
+            customizeGoogleMaps()
+        }
+    }
+
+    private suspend fun getGoogleMapAsync(): GoogleMap = suspendCoroutine { cont ->
+        mapView.getMapAsync { cont.resume(it) }
+    }
+
+    private fun customizeGoogleMaps() {
+        googleMap.uiSettings.setRotateGesturesEnabled(false)
+        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
+
+        // https://stackoverflow.com/questions/16974983/google-maps-api-v2-supportmapfragment-inside-scrollview-users-cannot-scroll-th
+        transparentImage.setOnTouchListener(View.OnTouchListener { view, motionEvent ->
+            when (motionEvent.action){
+                MotionEvent.ACTION_DOWN -> {
+                    svTransfer.requestDisallowInterceptTouchEvent(true)
+                    return@OnTouchListener false
+                }
+                MotionEvent.ACTION_UP -> {
+                    svTransfer.requestDisallowInterceptTouchEvent(false)
+                    return@OnTouchListener true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    svTransfer.requestDisallowInterceptTouchEvent(true)
+                    return@OnTouchListener false
+                }
+            }
+            return@OnTouchListener true
+        })
     }
 
     override fun setCurrencies(currencies: List<CurrencyModel>) {
@@ -258,12 +338,81 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         tvComments.text = comment
     }
 
-    override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
-        rvTransferType.adapter = TransferTypeAdapter(transportTypes)
+    override fun setTransportTypes(transportTypes: List<TransportTypeModel>, transportTypePrice: List<TransportTypePrice>) {
+        rvTransferType.adapter = TransferTypeAdapter(transportTypes, transportTypePrice)
     }
     
     override fun setRoute(route: Pair<GTAddress, GTAddress>) {
     	tvFrom.setText(route.first.name)
     	tvTo.setText(route.second.name)
+    }
+
+    override fun setMapInfo(routeInfo: RouteInfo, route: Pair<GTAddress, GTAddress>) {
+
+        tvDistance.text = routeInfo.distance.toString()
+
+        //Создание пинов с информацией
+        val ltInflater = layoutInflater
+        val pinLayout = ltInflater.inflate(R.layout.view_maps_pin, null)
+
+        pinLayout.tvPlace.text = route.first.name
+        pinLayout.tvInfo.text = tvDateTimeTransfer.text
+        pinLayout.tvPlaceMirror.text = route.first.name
+        pinLayout.tvInfoMirror.text = tvDateTimeTransfer.text
+        pinLayout.imgPin.setImageResource(R.drawable.map_label_a)
+        val bmPinA = createBitmapFromView(pinLayout)
+
+        pinLayout.tvPlace.text = route.second.name
+        pinLayout.tvInfo.text = String.format(getString(R.string.distance), routeInfo.distance)
+        pinLayout.tvPlaceMirror.text = route.second.name
+        pinLayout.tvInfoMirror.text = String.format(getString(R.string.distance), routeInfo.distance)
+        pinLayout.imgPin.setImageResource(R.drawable.map_label_b)
+        val bmPinB = createBitmapFromView(pinLayout)
+
+        //Создание polyline
+        val mPoints = arrayListOf<LatLng>()
+        for(item in routeInfo.polyLines){
+            mPoints.addAll(PolyUtil.decode(item))
+        }
+
+        val line = PolylineOptions().width(10f).color(applicationContext.resources.getColor(R.color.colorPolyline))
+
+        val latLngBuilder = LatLngBounds.Builder()
+        for (i in mPoints.indices){
+            if(i == 0){
+                val startMakerOptions = MarkerOptions()
+                        .position(mPoints.get(i))
+                        .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
+                googleMap.addMarker(startMakerOptions)
+            } else if (i == mPoints.size - 1){
+                val endMakerOptions = MarkerOptions()
+                        .position(mPoints.get(i))
+                        .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
+                googleMap.addMarker(endMakerOptions)
+            }
+            line.add(mPoints.get(i))
+            latLngBuilder.include(mPoints.get(i))
+        }
+        googleMap.addPolyline(line)
+        val size = resources.displayMetrics.widthPixels
+        val latLngBounds = latLngBuilder.build()
+        val track = CameraUpdateFactory.newLatLngBounds(latLngBounds, size, size, 100)
+        googleMap.moveCamera(track)
+    }
+
+    fun createBitmapFromView(v: View): Bitmap {
+        v.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT)
+        v.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+        v.layout(0, 0, v.measuredWidth, v.measuredHeight)
+        val bitmap = Bitmap.createBitmap(v.measuredWidth,
+                v.measuredHeight,
+                Bitmap.Config.ARGB_8888)
+
+        val c = Canvas(bitmap)
+        v.layout(v.left, v.top, v.right, v.bottom)
+        v.draw(c)
+        return bitmap
     }
 }

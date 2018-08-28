@@ -29,10 +29,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
@@ -345,7 +342,8 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 				googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current, zoom))
 			}
 			else googleMap.moveCamera(CameraUpdateFactory.newLatLng(current))
-				centerMarker = googleMap.addMarker(MarkerOptions().position(current))
+				centerMarker = googleMap.addMarker(MarkerOptions().position(current)
+						.icon(BitmapDescriptorFactory.fromResource(R.drawable.map_label_empty)))
 		}
 		else
 		{

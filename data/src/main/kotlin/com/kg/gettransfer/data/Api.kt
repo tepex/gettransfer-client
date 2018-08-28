@@ -1,9 +1,6 @@
 package com.kg.gettransfer.data
 
-import com.kg.gettransfer.data.model.ApiAccountWrapper
-import com.kg.gettransfer.data.model.ApiConfigs
-import com.kg.gettransfer.data.model.ApiResponse
-import com.kg.gettransfer.data.model.ApiToken
+import com.kg.gettransfer.data.model.*
 import kotlinx.coroutines.experimental.Deferred
 import retrofit2.http.*
 
@@ -17,6 +14,11 @@ interface Api {
 	@GET("/api/account")
 	fun getAccount(@Header("X-ACCESS-TOKEN") token: String): Deferred<ApiResponse<ApiAccountWrapper>>
 
+	@GET("/api/route_info")
+	fun getRouteInfo(@Header("X-ACCESS-TOKEN") token: String,
+					 @Query("points[]") points: Array<String>,
+					 @Query("with_prices") withPrices: Boolean,
+					 @Query("return_way") returnWay: Boolean): Deferred<ApiResponse<ApiRouteInfo>>
 	/* If we are not signed in, don't post request to save account
 	@POST("/api/account")
 	fun postAccount(@Header("X-ACCESS-TOKEN") token: String): Deferred<ApiResponse<ApiAccountWrapper>>

@@ -57,5 +57,6 @@
     <color name="btn_login_enable">#98B71B</color>
 
     <color name="color_error">#FFFF3B30</color>
+    <color name="colorPolyline">#13a2fd</color>
 
 </resources>

@@ -26,10 +26,22 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/mapView"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/create_transfer_map_height" />
+                android:layout_height="wrap_content">
+
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/mapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/create_transfer_map_height" />
+
+                <ImageView
+                    android:id="@+id/transparentImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/create_transfer_map_height"
+                    android:src="@null" />
+
+            </RelativeLayout>
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -46,6 +58,7 @@
                     android:layout_marginStart="@dimen/create_transfer_address_start_margin"
                     android:fontFamily="@font/sf_pro_text_bold"
                     android:lines="1"
+                    android:ellipsize="end"
                     android:textColor="@color/colorTextBlack"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -57,7 +70,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                     android:fontFamily="@font/sf_pro_text_regular"
-                    android:text="31 марта 2018, 10:00"
                     android:textColor="@color/colorBtnGreen"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -72,6 +84,7 @@
                     android:layout_marginTop="7dp"
                     android:fontFamily="@font/sf_pro_text_bold"
                     android:lines="1"
+                    android:ellipsize="end"
                     android:textColor="@color/colorTextBlack"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -84,7 +97,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                     android:fontFamily="@font/sf_pro_text_regular"
-                    android:text="270 miles"
                     android:textColor="@color/colorBtnGreen"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -161,7 +173,6 @@
                         android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                         android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
                         android:fontFamily="@font/sf_pro_text_regular"
-                        android:text="0.00"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="@dimen/create_transfer_additionals_top_text_size"
                         android:inputType="number"
@@ -229,7 +240,6 @@
                         android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                         android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
                         android:fontFamily="@font/sf_pro_text_regular"
-                        android:text="2018-05-04 16:35"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="@dimen/create_transfer_additionals_top_text_size"
                         app:layout_constraintEnd_toEndOf="parent"

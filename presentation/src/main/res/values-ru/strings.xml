@@ -81,6 +81,7 @@
     <string name="pick_up_at">Дата</string>
     <string name="refreshments">Напитки</string>
     <string name="distance_time">Расстояние: %1$s\nВремя в пути: %2$s</string>
+    <string name="distance">Расстояние: %1$s</string>
 
     <string name="status_active">Активен</string>
     <string name="status_confirmed">Подтверждён</string>
@@ -172,4 +173,20 @@
     <string name="nav_active_rides_title">Активные поездки</string>
     <string name="nav_archived_rides_title">Архивные поездки</string>
     <string name="nav_about_title">О приложении</string>
+
+    <string name="price_from">от %1s</string>
+    <string-array name="months_name">
+        <item>Январь</item>
+        <item>Февраль</item>
+        <item>Март</item>
+        <item>Апрель</item>
+        <item>Май</item>
+        <item>Июнь</item>
+        <item>Июль</item>
+        <item>Август</item>
+        <item>Сентябрь</item>
+        <item>Октябрь</item>
+        <item>Ноябрь</item>
+        <item>Декабрь</item>
+    </string-array>
 </resources>
