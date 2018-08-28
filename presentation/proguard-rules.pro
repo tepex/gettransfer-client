@@ -20,22 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-
 -dontwarn sun.misc.**
-
-
--keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
-   long producerIndex;
-   long consumerIndex;
-}
-
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode producerNode;
-}
-
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode consumerNode;
-}
 
 -keep class com.google.maps.DirectionsApi
 -keep class com.google.maps.GeoApiContext
@@ -47,17 +32,13 @@
 
 #-keep interface com.google.android.gms.maps.** { *; }
 
-
--dontnote rx.internal.util.PlatformDependent
-
--dontwarn com.github.davidmoten.rx2.flowable.Serialized*
--dontwarn com.github.davidmoten.rx2.internal.flowable.buffertofile.MemoryMappedFile
--dontwarn com.github.davidmoten.rx2.internal.flowable.buffertofile.UnsafeAccess
-
 -dontwarn okio.DeflaterSink
 -dontwarn okio.Okio
 -dontwarn retrofit2.Platform$Java8
 
 -dontwarn com.google.appengine.api.urlfetch.*
--dontwarn org.joda.convert.*
--dontwarn org.slf4j.impl.*
+
+#-keep class kotlinx.coroutines.experimental.android.AndroidExceptionPreHandler { *; }
+-keepclassmembernames class kotlinx.** {
+    volatile <fields>;
+}

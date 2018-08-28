@@ -24,6 +24,7 @@
 .idea/**/libraries
 .gradle/
 build/
+presentation/dev/
 presentation/release/
 
 # CMake
@@ -67,6 +68,5 @@ fabric.properties
 .externalNativeBuild
 *.jks
 
-/app/release
 /tmp
 
