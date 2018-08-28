@@ -16,7 +16,6 @@ import java.util.Currency
 import java.util.Locale
 
 import okhttp3.CookieJar
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
@@ -25,7 +24,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 import timber.log.Timber
-import java.util.*
 
 class ApiRepositoryImpl(url: String, private val apiKey: String): ApiRepository {
 	private var api: Api
@@ -123,5 +121,20 @@ class ApiRepositoryImpl(url: String, private val apiKey: String): ApiRepository 
 				configs!!.availableLocales.find { it.language == apiAccount.locale }!!,
 				configs!!.supportedCurrencies.find { it.currencyCode == apiAccount.currency }!!,
 				apiAccount.distanceUnit, apiAccount.fullName, apiAccount.groups, apiAccount.termsAccepted)
+	}
+
+	override suspend fun getRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean): RouteInfo {
+		if (accessToken == null) updateToken()
+
+		val response: ApiResponse<ApiRouteInfo> = try {
+		    api.getRouteInfo(accessToken!!, points, withPrices, returnWay).await()
+		} catch(httpException: HttpException) {
+			throw httpException
+		}
+
+		val apiRouteInfo: ApiRouteInfo = response.data!!
+		return RouteInfo(apiRouteInfo.success, apiRouteInfo.distance, apiRouteInfo.duration,
+				apiRouteInfo.prices?.map { TransportTypePrice(it.key, it.value.minFloat, it.value.min, it.value.max) },
+				apiRouteInfo.watertaxi, apiRouteInfo.routes.get(0).legs.get(0).steps.map { it.polyline.points })
 	}
 }

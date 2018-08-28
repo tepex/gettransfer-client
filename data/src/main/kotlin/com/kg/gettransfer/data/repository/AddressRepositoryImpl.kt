@@ -23,8 +23,8 @@ import kotlin.coroutines.experimental.suspendCoroutine
 import timber.log.Timber
 
 class AddressRepositoryImpl(private val geocoder: Geocoder,
-	                        private val gdClient: GeoDataClient,
-	                        private val pdClient: PlaceDetectionClient): AddressRepository {
+							private val gdClient: GeoDataClient,
+							private val pdClient: PlaceDetectionClient): AddressRepository {
 	/*
 	private val addressCache = AddressCache()
 	
@@ -70,7 +70,7 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
                       it.getFullText(null).toString(),
                       it.getPrimaryText(null).toString(),
                       it.getSecondaryText(null).toString(),
-                      null)
+					null)
 		}
 		ret.forEach { Timber.d(it.toString()) }
 		return ret

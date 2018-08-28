@@ -126,6 +126,7 @@ dependencies {
     implementation libs.psLocation
     implementation libs.psPlaces
     implementation "com.google.android.gms:play-services-maps:$gms_version"
+	implementation 'com.google.maps.android:android-maps-utils:0.5'
     /*
     implementation "com.google.android.gms:play-services-places:$gms_version"
     implementation "com.google.android.gms:play-services-drive:$gms_version"
