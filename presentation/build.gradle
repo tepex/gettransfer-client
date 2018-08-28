@@ -23,7 +23,7 @@ android {
 		targetSdkVersion project.ANDROID_BUILD_SDK_VERSION
 		testInstrumentationRunner project.ANDROID_TEST_INSTRUMENTATION_RUNNER
 		vectorDrawables.useSupportLibrary = true
-		multiDexEnabled false
+		multiDexEnabled true
 	}
 
 	signingConfigs {
