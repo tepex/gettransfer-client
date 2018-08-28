@@ -11,12 +11,19 @@ interface Api {
     
 	@GET("/api/access_token")
 	fun accessToken(@Query("api_key") apiKey: String): Deferred<ApiResponse<ApiToken>>
-	
+	/*
 	@GET("/api/configs")
 	fun getConfigs(@Header(HEADER_TOKEN) token: String): Deferred<ApiResponse<ApiConfigs>>
 
 	@GET("/api/account")
 	fun getAccount(@Header(HEADER_TOKEN) token: String): Deferred<ApiResponse<ApiAccountWrapper>>
+	*/
+	
+	@GET("/api/configs")
+	fun getConfigs(): Deferred<ApiResponse<ApiConfigs>>
+
+	@GET("/api/account")
+	fun getAccount(): Deferred<ApiResponse<ApiAccountWrapper>>
 
 	@GET("/api/route_info")
 	fun getRouteInfo(@Header("X-ACCESS-TOKEN") token: String,

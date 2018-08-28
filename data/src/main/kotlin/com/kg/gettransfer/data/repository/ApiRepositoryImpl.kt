@@ -19,6 +19,7 @@ import java.util.Locale
 
 import okhttp3.CookieJar
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 
 import retrofit2.HttpException
@@ -29,14 +30,26 @@ import timber.log.Timber
 
 class ApiRepositoryImpl(private val context: Context, url: String, private val apiKey: String): ApiRepository {
     private var cacheRepository = CacheRepositoryImpl(context)
-	private var api: Api
+	private lateinit var api: Api
+	private var requestToken = false
 	private var configs: Configs? = null
 	
 	init {
-		val interceptor = HttpLoggingInterceptor()
-		interceptor.level = HttpLoggingInterceptor.Level.BODY
+		val loggingInterceptor = HttpLoggingInterceptor()
+		loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 		val builder = OkHttpClient.Builder()
-		builder.addInterceptor(interceptor)
+		builder.addInterceptor(loggingInterceptor)
+		builder.addInterceptor { chain ->  
+		    val request = chain.request()
+		    if(requestToken) chain.proceed(request)
+		    else {
+		        if(cacheRepository.accessToken == null) {
+		        }
+		        Timber.d("     00000       url: %s", cacheRepository.accessToken)
+		        val newRequest = request.newBuilder().addHeader("X-ACCESS-TOKEN", cacheRepository.accessToken).build()
+		        chain.proceed(newRequest)
+	        }
+		}
 		builder.cookieJar(CookieJar.NO_COOKIES)
  
 		val gson = GsonBuilder()
@@ -50,30 +63,35 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
                 .addCallAdapterFactory(CoroutineCallAdapterFactory()) // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
                 .build()
                 .create(Api::class.java)
+        
+		requestToken = true
+		val response: ApiResponse<ApiToken> = api.accessToken(apiKey).getComleted()
+		            requestToken = false
+		            cacheRepository.accessToken = response.data!!.token
+		            Timber.d("access token updated: %s", cacheRepository.accessToken)
+                
 	}
 	
 	/* @TODO: Обрабатывать {"result":"error","error":{"type":"wrong_api_key","details":"API key \"ccd9a245018bfe4f386f4045ee4a006fsss\" not found"}} */
-	private suspend fun getAccessToken(): String {
-	    var accessToken = cacheRepository.accessToken
-	    if(accessToken != null) return accessToken
+	private fun requestAccessToken() {
+	    accessToken = cacheRepository.accessToken
+	    if(accessToken != null) return
 	    
-	    val response: ApiResponse<ApiToken> = try {
-	        api.accessToken(apiKey).await()
-	    } catch(httpException: HttpException) {
-	        throw httpException
-	    }
+	    requestToken = true
+	    val response: ApiResponse<ApiToken> = api.accessToken(apiKey).await()
+	    requestToken = false
 	    accessToken = response.data!!.token
 	    Timber.d("access token updated: $accessToken")
 	    cacheRepository.accessToken = accessToken
-	    return accessToken
 	}
 	
 	override suspend fun getConfigs(): Configs {
 		if(configs != null) return configs!!
 			
 		val response: ApiResponse<ApiConfigs> = try {
-			api.getConfigs(getAccessToken()).await()
+			api.getConfigs().await()
 		} catch(httpException: HttpException) {
+		    
 			throw httpException
 		}
 		val data: ApiConfigs = response.data!!
@@ -96,7 +114,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 		if(account !== Account.EMPTY) return account
 
 		val response: ApiResponse<ApiAccountWrapper> = try {
-			api.getAccount(getAccessToken()).await()
+			api.getAccount().await()
 		} catch(httpException: HttpException) {
 			throw httpException
 		}
