@@ -14,7 +14,4 @@ interface MainView: BaseView {
 	fun setMapPoint(current: LatLng)
 	fun setAddressFrom(address: String)
     fun showLoginInfo(account: Account)
-	fun hideLoginLbl()
-	fun hideLoginInfo()
-	fun showLoginLbl()
 }

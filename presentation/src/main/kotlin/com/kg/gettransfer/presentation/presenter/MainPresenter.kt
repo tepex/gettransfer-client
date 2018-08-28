@@ -27,7 +27,7 @@ class MainPresenter(private val cc: CoroutineContexts,
 
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(cc)
-    private var account: Account? = null
+    private lateinit var account: Account
 
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatch(compositeDisposable, {
@@ -43,26 +43,16 @@ class MainPresenter(private val cc: CoroutineContexts,
             Timber.e(e)
         })
     }
-
-    fun getAccount() {
+    
+    @CallSuper
+    override fun attachView(view: MainView) {
+        super.attachView(view)
         utils.launchAsyncTryCatch(compositeDisposable, {
-            utils.asyncAwait {
-                account = apiInteractor.getAccount()
-            }
-            checkAccount()
+            account = utils.asyncAwait { apiInteractor.getAccount() }
+            viewState.showLoginInfo(account)
         }, { e ->
             Timber.e(e)
         })
-    }
-
-    private fun checkAccount() {
-        if (account != null) {
-            viewState.showLoginInfo(account!!)
-            viewState.hideLoginLbl()
-        } else {
-            viewState.hideLoginInfo()
-            viewState.showLoginLbl()
-        }
     }
 
     @CallSuper

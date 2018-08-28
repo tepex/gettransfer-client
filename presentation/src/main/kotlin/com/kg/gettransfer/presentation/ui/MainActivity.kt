@@ -221,7 +221,6 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 	protected override fun onResume() {
 		super.onResume()
 		navigatorHolder.setNavigator(navigator)
-		presenter.getAccount()
 		mapView.onResume()
 	}
 	
@@ -362,22 +361,18 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
     }
 
 	override fun showLoginInfo(account: Account) {
-        headerView.navHeaderName.visibility = View.VISIBLE
-        headerView.navHeaderEmail.visibility = View.VISIBLE
-		headerView.navHeaderName.text = account.fullName
-		headerView.navHeaderEmail.text = account.email
-	}
-
-	override fun hideLoginLbl() {
-		navView.menu.findItem(R.id.nav_login).isVisible = false
-	}
-
-	override fun hideLoginInfo() {
-		headerView.navHeaderName.visibility = View.GONE
-		headerView.navHeaderEmail.visibility = View.GONE
-	}
-
-	override fun showLoginLbl() {
-		navView.menu.findItem(R.id.nav_login).isVisible = true
+	    Timber.d("show Login: %s", account)
+	    if(account.email == null) {
+	        headerView.navHeaderName.visibility = View.GONE
+	        headerView.navHeaderEmail.visibility = View.GONE
+	        navView.menu.findItem(R.id.nav_login).isVisible = true
+	    }
+	    else {
+	        headerView.navHeaderName.visibility = View.VISIBLE
+	        headerView.navHeaderEmail.visibility = View.VISIBLE
+	        headerView.navHeaderName.text = account.fullName
+	        headerView.navHeaderEmail.text = account.email
+	        navView.menu.findItem(R.id.nav_login).isVisible = false
+	    }
 	}
 }

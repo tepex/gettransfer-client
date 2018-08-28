@@ -87,11 +87,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
         btnLogin.isEnabled = !emptyEmail && !emptyPassword && correctEmail
     }
 
-    override fun showError() {
-        tvLoginError.visibility = View.VISIBLE
-    }
-
-    override fun hideError() {
-        tvLoginError.visibility = View.INVISIBLE
+    override fun showError(show: Boolean) {
+        if(show) tvLoginError.visibility = View.VISIBLE else tvLoginError.visibility = View.INVISIBLE
     }
 }
