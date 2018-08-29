@@ -61,7 +61,7 @@ class CreateOrderPresenter(private val resources: Resources,
 
             viewState.setTransportTypes(configs.transportTypes, routeInfo.prices!!)
             viewState.setCurrencies(configs.currencies)
-            viewState.setMapInfo(routeInfo, addressInteractor.route)
+            viewState.setMapInfo(routeInfo, addressInteractor.route, configs.distanceUnits.get(0))
         }, { e ->
             Timber.e(e)
             //viewState.setError(R.string.err_address_service_xxx, false)

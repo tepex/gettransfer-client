@@ -19,7 +19,7 @@ interface CreateOrderView: MvpView {
 
     fun setTransportTypes(transportTypes: List<TransportTypeModel>, transportTypePrice: List<TransportTypePrice>)
     fun setCurrencies(currencies: List<CurrencyModel>)
-    fun setMapInfo(routeInfo: RouteInfo, route: Pair<GTAddress, GTAddress>)
+    fun setMapInfo(routeInfo: RouteInfo, route: Pair<GTAddress, GTAddress>, distanceUnit: String)
     
     fun setRoute(route: Pair<GTAddress, GTAddress>)
     fun setCounters(textViewCounter: TextView, count: Int)

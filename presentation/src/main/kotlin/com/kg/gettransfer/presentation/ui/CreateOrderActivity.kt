@@ -347,9 +347,10 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
     	tvTo.setText(route.second.name)
     }
 
-    override fun setMapInfo(routeInfo: RouteInfo, route: Pair<GTAddress, GTAddress>) {
+    override fun setMapInfo(routeInfo: RouteInfo, route: Pair<GTAddress, GTAddress>, distanceUnit: String) {
 
-        tvDistance.text = routeInfo.distance.toString()
+        val distance = String.format(getString(R.string.distance), routeInfo.distance, distanceUnit)
+        tvDistance.text = distance
 
         //Создание пинов с информацией
         val ltInflater = layoutInflater
@@ -362,10 +363,10 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         pinLayout.imgPin.setImageResource(R.drawable.map_label_a)
         val bmPinA = createBitmapFromView(pinLayout)
 
-        pinLayout.tvPlace.text = route.second.name
-        pinLayout.tvInfo.text = String.format(getString(R.string.distance), routeInfo.distance)
-        pinLayout.tvPlaceMirror.text = route.second.name
-        pinLayout.tvInfoMirror.text = String.format(getString(R.string.distance), routeInfo.distance)
+        pinLayout.tvPlace.text = route.second.primary
+        pinLayout.tvInfo.text = distance
+        pinLayout.tvPlaceMirror.text = route.second.primary
+        pinLayout.tvInfoMirror.text = distance
         pinLayout.imgPin.setImageResource(R.drawable.map_label_b)
         val bmPinB = createBitmapFromView(pinLayout)
 
@@ -399,9 +400,10 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
             latLngBuilder.include(mPoints.get(i))
         }
         googleMap.addPolyline(line)
-        val size = resources.displayMetrics.widthPixels
+        val sizeWidth = resources.displayMetrics.widthPixels
+        val sizeHeight = mapView.height
         val latLngBounds = latLngBuilder.build()
-        val track = CameraUpdateFactory.newLatLngBounds(latLngBounds, size, size, 100)
+        val track = CameraUpdateFactory.newLatLngBounds(latLngBounds, sizeWidth, sizeHeight, 150)
         googleMap.moveCamera(track)
     }
 
