@@ -197,4 +197,8 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
                        configs!!.supportedCurrencies.find { it.currencyCode == apiAccount.currency }!!,
                        apiAccount.distanceUnit, apiAccount.fullName, apiAccount.groups, apiAccount.termsAccepted)
     }
+
+	override suspend fun getTransfer(): Transfer {
+		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+	}
 }

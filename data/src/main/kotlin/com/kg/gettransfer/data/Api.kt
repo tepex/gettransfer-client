@@ -13,6 +13,7 @@ interface Api {
         const val API_ACCOUNT      = "/api/account"
         const val API_ROUTE_INFO   = "/api/route_info"
         const val API_LOGIN        = "/api/login"
+        const val API_TRANSFERS    = "/api/transfers"
     }
     
 	@GET(API_ACCESS_TOKEN)
@@ -26,11 +27,14 @@ interface Api {
 
 	@PUT(API_ACCOUNT)
 	fun putAccount(@Body account: ApiAccount): Deferred<ApiResponse<ApiAccountWrapper>>
-	
+
 	/* If we are not signed in, don't post request to save account. Not used now
 	@POST("/api/account")
 	fun postAccount(@Body account: ApiAccount): Deferred<ApiResponse<ApiAccountWrapper>>
 	*/
+
+	@GET(API_TRANSFERS)
+	fun getTransfer(@Query("id") id: Long): Deferred<ApiResponse<ApiTransfer>>
 	
 	@POST(API_LOGIN)
 	@FormUrlEncoded
