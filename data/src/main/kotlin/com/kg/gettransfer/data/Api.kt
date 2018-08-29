@@ -26,7 +26,7 @@ interface Api {
 	fun getAccount(): Deferred<ApiResponse<ApiAccountWrapper>>
 
 	@GET("/api/route_info")
-	fun getRouteInfo(@Header("X-ACCESS-TOKEN") token: String,
+	fun getRouteInfo(
 					 @Query("points[]") points: Array<String>,
 					 @Query("with_prices") withPrices: Boolean,
 					 @Query("return_way") returnWay: Boolean): Deferred<ApiResponse<ApiRouteInfo>>
@@ -37,11 +37,10 @@ interface Api {
 	
 	@PUT("/api/account")
 //	@FormUrlEncoded
-	fun putAccount(@Header(HEADER_TOKEN) token: String, @Body account: ApiAccount): Deferred<ApiResponse<ApiAccountWrapper>>
+	fun putAccount(@Body account: ApiAccount): Deferred<ApiResponse<ApiAccountWrapper>>
 
 	@POST("api/login")
 	@FormUrlEncoded
-	fun login(@Header(HEADER_TOKEN) token: String,
-			  @Field(ACCOUNT_EMAIL) email: String,
+	fun login(@Field(ACCOUNT_EMAIL) email: String,
 			  @Field(ACCOUNT_PASSWORD) password: String): Deferred<ApiResponse<ApiAccountWrapper>>
 }

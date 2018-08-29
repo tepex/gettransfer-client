@@ -41,7 +41,7 @@ class Utils {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show()
         }
-       
+        
         fun setCurrenciesDialogListener(context: Context, view: View, items: List<CharSequence>,
             listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.currency, items, listener) }
         fun setLocalesDialogListener(context: Context, view: View, items: List<CharSequence>,

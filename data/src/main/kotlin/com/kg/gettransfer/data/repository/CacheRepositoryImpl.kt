@@ -14,19 +14,19 @@ import timber.log.Timber
 class CacheRepositoryImpl(private val context: Context) {
     private val configsPrefs = context.getSharedPreferences(CONFIGS, Context.MODE_PRIVATE)
     private val accountPrefs = context.getSharedPreferences(ACCOUNT, Context.MODE_PRIVATE)
-    private var _accessToken: String? = null
+    private var _accessToken = ""
     private var _account: Account = Account.EMPTY
     
-    var accessToken: String?
+    var accessToken: String
         get() {
-            if(_accessToken == null) _accessToken = configsPrefs.getString(TOKEN, null)
+            if(_accessToken.isEmpty()) _accessToken = configsPrefs.getString(TOKEN, "")!!
             return _accessToken
         }
         set(value) {
             _accessToken = value
             val editor = configsPrefs.edit()
-            if(value != null) editor.putString(TOKEN, value)
-            else editor.remove(TOKEN)
+            if(value.isEmpty()) editor.remove(TOKEN)
+            else editor.putString(TOKEN, value)
             editor.commit()
         }
        

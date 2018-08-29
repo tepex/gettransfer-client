@@ -17,9 +17,14 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.Coroutin
 import java.util.Currency
 import java.util.Locale
 
+import kotlinx.coroutines.experimental.*
+
 import okhttp3.CookieJar
+import okhttp3.MediaType
 import okhttp3.OkHttpClient
+import okhttp3.Protocol
 import okhttp3.Response
+import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 
 import retrofit2.HttpException
@@ -30,26 +35,25 @@ import timber.log.Timber
 
 class ApiRepositoryImpl(private val context: Context, url: String, private val apiKey: String): ApiRepository {
     private var cacheRepository = CacheRepositoryImpl(context)
-	private lateinit var api: Api
-	private var requestToken = false
-	private var configs: Configs? = null
-	
-	init {
-		val loggingInterceptor = HttpLoggingInterceptor()
-		loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-		val builder = OkHttpClient.Builder()
-		builder.addInterceptor(loggingInterceptor)
-		builder.addInterceptor { chain ->  
-		    val request = chain.request()
-		    if(requestToken) chain.proceed(request)
-		    else {
-		        if(cacheRepository.accessToken == null) {
-		        }
-		        Timber.d("     00000       url: %s", cacheRepository.accessToken)
-		        val newRequest = request.newBuilder().addHeader("X-ACCESS-TOKEN", cacheRepository.accessToken).build()
-		        chain.proceed(newRequest)
-	        }
+    private var api: Api
+    private var configs: Configs? = null
+    
+	/**
+	 * @throws ApiException
+	 */
+    init {
+        val loggingInterceptor = HttpLoggingInterceptor()
+        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        val builder = OkHttpClient.Builder()
+        builder.addInterceptor(loggingInterceptor)
+        builder.addInterceptor { chain ->
+            var request = chain.request()
+            if(!cacheRepository.accessToken.isEmpty()) request = request.newBuilder()
+	                .addHeader(Api.HEADER_TOKEN, cacheRepository.accessToken)
+	                .build()
+		    chain.proceed(request)
 		}
+		
 		builder.cookieJar(CookieJar.NO_COOKIES)
  
 		val gson = GsonBuilder()
@@ -63,37 +67,18 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
                 .addCallAdapterFactory(CoroutineCallAdapterFactory()) // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
                 .build()
                 .create(Api::class.java)
-        
-		requestToken = true
-		val response: ApiResponse<ApiToken> = api.accessToken(apiKey).getComleted()
-		            requestToken = false
-		            cacheRepository.accessToken = response.data!!.token
-		            Timber.d("access token updated: %s", cacheRepository.accessToken)
                 
-	}
+        /* Cold start */
+        if(cacheRepository.accessToken.isEmpty()) runBlocking { updateAccessToken() }
+    }
 	
-	/* @TODO: Обрабатывать {"result":"error","error":{"type":"wrong_api_key","details":"API key \"ccd9a245018bfe4f386f4045ee4a006fsss\" not found"}} */
-	private fun requestAccessToken() {
-	    accessToken = cacheRepository.accessToken
-	    if(accessToken != null) return
-	    
-	    requestToken = true
-	    val response: ApiResponse<ApiToken> = api.accessToken(apiKey).await()
-	    requestToken = false
-	    accessToken = response.data!!.token
-	    Timber.d("access token updated: $accessToken")
-	    cacheRepository.accessToken = accessToken
-	}
-	
+	/**
+	 * @throws ApiException
+	 */
 	override suspend fun getConfigs(): Configs {
 		if(configs != null) return configs!!
-			
-		val response: ApiResponse<ApiConfigs> = try {
-			api.getConfigs().await()
-		} catch(httpException: HttpException) {
-		    
-			throw httpException
-		}
+	    
+		val response: ApiResponse<ApiConfigs> = tryTwice { api.getConfigs() }
 		val data: ApiConfigs = response.data!!
 		
 		val locales = data.availableLocales.map { Locale(it.code) }
@@ -126,7 +111,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 	override suspend fun putAccount(account: Account) {
 	    cacheRepository.account = account
 		val response: ApiResponse<ApiAccountWrapper> = try {
-			api.putAccount(getAccessToken(), mapAccount(account)).await()
+			api.putAccount(mapAccount(account)).await()
 		} catch(httpException: HttpException) {
 			throw httpException
 		}
@@ -138,7 +123,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 
 	override suspend fun login(email: String, password: String): Account {
 		val responce: ApiResponse<ApiAccountWrapper> = try {
-		    api.login(getAccessToken(), email, password).await()
+		    api.login(email, password).await()
 		} catch(httpException: HttpException) {
 			throw httpException
 		}
@@ -148,22 +133,13 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 	}
 	
 	override fun logout() {
-	    cacheRepository.accessToken = null
+	    cacheRepository.accessToken = ""
 	    cacheRepository.account = Account.EMPTY
 	}
 	
-	private fun mapApiAccount(apiAccount: ApiAccount): Account {
-		return  Account(apiAccount.email, apiAccount.phone,
-				configs!!.availableLocales.find { it.language == apiAccount.locale }!!,
-				configs!!.supportedCurrencies.find { it.currencyCode == apiAccount.currency }!!,
-				apiAccount.distanceUnit, apiAccount.fullName, apiAccount.groups, apiAccount.termsAccepted)
-	}
-
 	override suspend fun getRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean): RouteInfo {
-		if (accessToken == null) updateToken()
-
 		val response: ApiResponse<ApiRouteInfo> = try {
-		    api.getRouteInfo(accessToken!!, points, withPrices, returnWay).await()
+		    api.getRouteInfo(points, withPrices, returnWay).await()
 		} catch(httpException: HttpException) {
 			throw httpException
 		}
@@ -173,5 +149,41 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 				apiRouteInfo.prices?.map { TransportTypePrice(it.key, it.value.minFloat, it.value.min, it.value.max) },
 				apiRouteInfo.watertaxi, apiRouteInfo.routes.get(0).legs.get(0).steps.map { it.polyline.points },
 				apiRouteInfo.routes.get(0).overviewPolyline.points)
+	}
+	
+	/**
+	 * 1. Try to call [apiCall] first time.
+	 * 2. If response code is 401 (token expired) — try to call [apiCall] second time. 
+	 */
+	private suspend fun <R> tryTwice(apiCall: () -> Deferred<R>): R {
+	    return try { apiCall().await() }
+	    catch(e: Exception) {
+	        if(e is ApiException) throw e /* second invocation */
+	        val ae = ApiException(e)
+	        if(!ae.isInvalidToken()) throw ae
+	            
+	        try { updateAccessToken() } catch(e1: Exception) { throw ApiException(e1) }
+	        return try { apiCall().await() } catch(e2: Exception) { throw ApiException(e2) }
+	    }
+	}
+	
+	private suspend fun <T, R> tryTwice(param: T, apiCall: (T) -> Deferred<R>): R {
+	    return apiCall(param).await()
+	}
+	
+	private suspend fun updateAccessToken() {
+	    cacheRepository.accessToken = ""
+	    val response: ApiResponse<ApiToken> = api.accessToken(apiKey).await()
+	    cacheRepository.accessToken = response.data!!.token
+	}
+	
+	/**
+	 * Simple mapper: [ApiAccount] -> [Account]
+	 */
+	private fun mapApiAccount(apiAccount: ApiAccount): Account {
+		return  Account(apiAccount.email, apiAccount.phone,
+				configs!!.availableLocales.find { it.language == apiAccount.locale }!!,
+				configs!!.supportedCurrencies.find { it.currencyCode == apiAccount.currency }!!,
+				apiAccount.distanceUnit, apiAccount.fullName, apiAccount.groups, apiAccount.termsAccepted)
 	}
 }
