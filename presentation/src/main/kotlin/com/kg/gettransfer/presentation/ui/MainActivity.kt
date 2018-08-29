@@ -30,6 +30,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
+import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
@@ -270,9 +271,11 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 	}
 	
 	private fun initNavigation() {
-		val versionName = packageManager.getPackageInfo(packageName, 0).versionName
+		//val versionName = packageManager.getPackageInfo(packageName, 0).versionName
+		val versionName = BuildConfig.VERSION_NAME
+		val versionCode = BuildConfig.VERSION_CODE
 		(navFooterVersion as TextView).text = 
-			String.format(getString(R.string.nav_footer_version), versionName)
+			String.format(getString(R.string.nav_footer_version), versionName, versionCode)
 		navFooterStamp.setOnClickListener(readMoreListener)
 		navFooterReadMore.setOnClickListener(readMoreListener)
 
