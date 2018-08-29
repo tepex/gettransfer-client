@@ -370,10 +370,15 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         val bmPinB = createBitmapFromView(pinLayout)
 
         //Создание polyline
+
+        // Для построения подробного маршрута
         val mPoints = arrayListOf<LatLng>()
         for(item in routeInfo.polyLines){
             mPoints.addAll(PolyUtil.decode(item))
         }
+
+        // Для построения упрощённого маршрута (меньше точек)
+        //val mPoints = PolyUtil.decode(routeInfo.overviewPolyline)
 
         val line = PolylineOptions().width(10f).color(applicationContext.resources.getColor(R.color.colorPolyline))
 

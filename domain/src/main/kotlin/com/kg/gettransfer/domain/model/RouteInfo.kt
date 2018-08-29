@@ -5,7 +5,8 @@ data class RouteInfo(var success: Boolean,
                      var duration: Int?,
                      var prices: List<TransportTypePrice>?,
                      var watertaxi: Boolean,
-                     var polyLines: List<String>)
+                     var polyLines: List<String>,
+                     var overviewPolyline: String)
 
 data class TransportTypePrice(var tranferId: String,
                               var minFloat: Float,

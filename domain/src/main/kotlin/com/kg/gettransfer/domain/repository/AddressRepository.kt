@@ -12,4 +12,5 @@ interface AddressRepository
 	
 	fun getCurrentAddress(): GTAddress
 	fun getAutocompletePredictions(prediction: String): List<GTAddress>
+	fun getLatLngByPlaceId(placeId: String): Point
 }
