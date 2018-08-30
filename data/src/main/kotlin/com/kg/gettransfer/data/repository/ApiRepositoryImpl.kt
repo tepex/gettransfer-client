@@ -135,6 +135,7 @@ class ApiRepositoryImpl(url: String, private val apiKey: String): ApiRepository 
 		val apiRouteInfo: ApiRouteInfo = response.data!!
 		return RouteInfo(apiRouteInfo.success, apiRouteInfo.distance, apiRouteInfo.duration,
 				apiRouteInfo.prices?.map { TransportTypePrice(it.key, it.value.minFloat, it.value.min, it.value.max) },
-				apiRouteInfo.watertaxi, apiRouteInfo.routes.get(0).legs.get(0).steps.map { it.polyline.points })
+				apiRouteInfo.watertaxi, apiRouteInfo.routes.get(0).legs.get(0).steps.map { it.polyline.points },
+				apiRouteInfo.routes.get(0).overviewPolyline.points)
 	}
 }

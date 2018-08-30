@@ -50,15 +50,18 @@ class CreateOrderPresenter(private val resources: Resources,
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
             viewState.setRoute(addressInteractor.route)
-            utils.asyncAwait { 
+
+            utils.asyncAwait {
+                val secondPoint = addressInteractor.getLatLngByPlaceId(addressInteractor.route.second.id!!)
                 configs = ConfigsModel(apiInteractor.getConfigs())
                 account = apiInteractor.getAccount()
-                routeInfo = apiInteractor.getRouteInfo(arrayOf(addressInteractor.route.first.point.toString(), "(55.755826,37.6172999)"),
-                        true, false)
+                routeInfo = apiInteractor.getRouteInfo(arrayOf(addressInteractor.route.first.point.toString(),
+                            secondPoint.toString()), true, false)
             }
+
             viewState.setTransportTypes(configs.transportTypes, routeInfo.prices!!)
             viewState.setCurrencies(configs.currencies)
-            viewState.setMapInfo(routeInfo, addressInteractor.route)
+            viewState.setMapInfo(routeInfo, addressInteractor.route, configs.distanceUnits.get(0))
         }, { e ->
             Timber.e(e)
             //viewState.setError(R.string.err_address_service_xxx, false)

@@ -13,4 +13,5 @@ class AddressInteractor(private val repository: AddressRepository) {
 	
 	fun getCurrentAddress() = repository.getCurrentAddress()
 	fun getAutocompletePredictions(prediction: String) = repository.getAutocompletePredictions(prediction)
+	fun getLatLngByPlaceId(placeId: String) = repository.getLatLngByPlaceId(placeId)
 }

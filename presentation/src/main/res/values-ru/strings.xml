@@ -81,7 +81,7 @@
     <string name="pick_up_at">Дата</string>
     <string name="refreshments">Напитки</string>
     <string name="distance_time">Расстояние: %1$s\nВремя в пути: %2$s</string>
-    <string name="distance">Расстояние: %1$s</string>
+    <string name="distance">Расстояние: %1$s %2$s</string>
 
     <string name="status_active">Активен</string>
     <string name="status_confirmed">Подтверждён</string>
