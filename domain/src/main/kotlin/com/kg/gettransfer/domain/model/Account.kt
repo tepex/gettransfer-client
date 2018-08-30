@@ -10,8 +10,4 @@ data class Account(var email: String?,
                    var distanceUnit: String?,
                    var fullName: String?,
                    var groups: Array<String>?,
-                   var termsAccepted: Boolean = false) {
-    companion object {
-        val EMPTY = Account(null, null, null, null, null, null, null)
-    }
-}
+                   var termsAccepted: Boolean = false)

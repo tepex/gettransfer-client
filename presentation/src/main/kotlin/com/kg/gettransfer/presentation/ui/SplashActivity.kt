@@ -19,6 +19,7 @@ import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 
+import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 
 import kotlinx.coroutines.experimental.Job
@@ -62,6 +63,9 @@ class SplashActivity: AppCompatActivity() {
 			Timber.d("cardGatewasy: %s", configs.cardGateways)
 			Timber.d("office phone: %s", configs.officePhone)
 			Timber.d("base url: %s", configs.baseUrl)
+			
+			val account = utils.asyncAwait { apiInteractor.getAccount() }
+			Timber.d("account: %s", account)
 			startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 		}, { e ->
 			Timber.e(e)

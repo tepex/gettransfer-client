@@ -19,7 +19,6 @@ class CacheRepositoryImpl(private val context: Context) {
     private val configsPrefs = context.getSharedPreferences(CONFIGS, Context.MODE_PRIVATE)
     private val accountPrefs = context.getSharedPreferences(ACCOUNT, Context.MODE_PRIVATE)
     private var _accessToken = INVALID_TOKEN
-    private var _account: Account = Account.EMPTY
     
     var accessToken: String
         get() {
@@ -35,10 +34,9 @@ class CacheRepositoryImpl(private val context: Context) {
        
     var account: Account
         get() {
-            if(_account === Account.EMPTY) {
-                var localeCode = accountPrefs.getString(ACCOUNT_LOCALE, null)
-                var currencyCode = accountPrefs.getString(ACCOUNT_CURRENCY, null)
-                _account = Account(
+            var localeCode = accountPrefs.getString(ACCOUNT_LOCALE, null)
+            var currencyCode = accountPrefs.getString(ACCOUNT_CURRENCY, null)
+            return Account(
                     accountPrefs.getString(ACCOUNT_EMAIL, null),
                     accountPrefs.getString(ACCOUNT_PHONE, null),
                     if(localeCode != null) Locale(localeCode) else null,
@@ -47,11 +45,8 @@ class CacheRepositoryImpl(private val context: Context) {
                     accountPrefs.getString(ACCOUNT_FULL_NAME, null),
                     accountPrefs.getStringSet(ACCOUNT_GROUPS, null)?.toTypedArray(),
                     accountPrefs.getBoolean(ACCOUNT_TERMS_ACCEPTED, false))
-            }
-            return _account
         }
         set(value) {
-            _account = value
             val editor = accountPrefs.edit()
             editor.putString(ACCOUNT_EMAIL, value.email)
             editor.putString(ACCOUNT_PHONE, value.phone)

@@ -67,9 +67,6 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
                 .addCallAdapterFactory(CoroutineCallAdapterFactory()) // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
                 .build()
                 .create(Api::class.java)
-                
-        /* Cold start */
-        //if(cacheRepository.accessToken.isEmpty()) runBlocking { updateAccessToken() }
     }
 	
 	/**
@@ -91,35 +88,41 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
                 CardGateways(data.cardGateways.default, data.cardGateways.countryCode),
                 data.officePhone,
                 data.baseUrl)
+        
+        getAccount(true)
         return configs!!
+    }
+    
+    override suspend fun getAccount(request: Boolean): Account {
+        var account = cacheRepository.account
+        if(request) {
+            val response: ApiResponse<ApiAccountWrapper> = tryTwice { api.getAccount() }
+            if(response.data?.account != null) account = mapApiAccount(response.data?.account!!)
+            cacheRepository.account = account
+        }
+        return account
+    }
+    
+    override suspend fun putAccount(account: Account) {
+        cacheRepository.account = account
+        val response = tryPutAccount(mapAccount(account))
 	}
 	
-	override suspend fun getAccount(): Account {
-	    var account = cacheRepository.account
-		if(account !== Account.EMPTY) return account
-
-		val response: ApiResponse<ApiAccountWrapper> = try {
-			api.getAccount().await()
-		} catch(httpException: HttpException) {
-			throw httpException
-		}
-		if(response.data?.account != null) account = mapApiAccount(response.data?.account!!)
-	    cacheRepository.account = account
-	    return account
+	private suspend fun tryPutAccount(apiAccount: ApiAccount): ApiResponse<ApiAccountWrapper> {
+	    return try { api.putAccount(apiAccount).await() }
+	    catch(e: Exception) {
+	        if(e is ApiException) throw e /* second invocation */
+	        val ae = ApiException(e)
+	        if(!ae.isInvalidToken()) throw ae
+	            
+	        try { updateAccessToken() } catch(e1: Exception) { throw ApiException(e1) }
+	        return try { api.putAccount(apiAccount).await() } catch(e2: Exception) { throw ApiException(e2) }
+	    }
 	}
-	
-	override suspend fun putAccount(account: Account) {
-	    cacheRepository.account = account
-		val response: ApiResponse<ApiAccountWrapper> = try {
-			api.putAccount(mapAccount(account)).await()
-		} catch(httpException: HttpException) {
-			throw httpException
-		}
-	    Timber.d("putAccount: %s", response)
-	}
-	
+	/* Not used now.
 	override suspend fun createAccount(account: Account) {
 	}
+	*/
 
 	override suspend fun login(email: String, password: String): Account {
 		val responce: ApiResponse<ApiAccountWrapper> = try {
@@ -134,7 +137,6 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 	
 	override fun logout() {
 	    cacheRepository.accessToken = CacheRepositoryImpl.INVALID_TOKEN
-	    cacheRepository.account = Account.EMPTY
 	}
 	
 	override suspend fun getRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean): RouteInfo {
@@ -153,7 +155,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 	
 	/**
 	 * 1. Try to call [apiCall] first time.
-	 * 2. If response code is 401 (token expired) — try to call [apiCall] second time. 
+	 * 2. If response code is 401 (token expired) — try to call [apiCall] second time.
 	 */
 	private suspend fun <R> tryTwice(apiCall: () -> Deferred<R>): R {
 	    return try { apiCall().await() }
@@ -166,10 +168,11 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 	        return try { apiCall().await() } catch(e2: Exception) { throw ApiException(e2) }
 	    }
 	}
-	
-	private suspend fun <T, R> tryTwice(param: T, apiCall: (T) -> Deferred<R>): R {
+	/*
+	private suspend fun <T, R> tryTwice(vararg param: T, apiCall: (T) -> Deferred<R>): R {
 	    return apiCall(param).await()
 	}
+	*/
 	
 	private suspend fun updateAccessToken() {
 	    cacheRepository.accessToken = ""
