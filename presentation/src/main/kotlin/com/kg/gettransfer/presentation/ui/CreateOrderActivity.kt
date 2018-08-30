@@ -12,6 +12,7 @@ import android.graphics.Color
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+import android.support.annotation.StringRes
 
 import android.support.v4.app.Fragment
 
@@ -26,7 +27,6 @@ import android.util.DisplayMetrics
 import android.view.*
 
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 
 import android.widget.LinearLayout
 import android.widget.PopupWindow
@@ -61,11 +61,15 @@ import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 
 import com.kg.gettransfer.presentation.view.CreateOrderView
 
+import java.util.Calendar
+
 import kotlinx.android.synthetic.main.activity_transfer.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 import kotlinx.android.synthetic.main.view_maps_pin.view.*
+
 import kotlinx.coroutines.experimental.Job
+import kotlin.coroutines.experimental.suspendCoroutine
 
 import org.koin.android.ext.android.inject
 
@@ -74,8 +78,7 @@ import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
-import java.util.Calendar
-import kotlin.coroutines.experimental.suspendCoroutine
+import timber.log.Timber
 
 class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
 
@@ -207,8 +210,8 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
 
         // https://stackoverflow.com/questions/16974983/google-maps-api-v2-supportmapfragment-inside-scrollview-users-cannot-scroll-th
-        transparentImage.setOnTouchListener(View.OnTouchListener { view, motionEvent ->
-            when (motionEvent.action){
+        transparentImage.setOnTouchListener(View.OnTouchListener { _, motionEvent ->
+            when (motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
                     svTransfer.requestDisallowInterceptTouchEvent(true)
                     return@OnTouchListener false
@@ -241,6 +244,8 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         layoutDateTimeTransfer.setOnClickListener { changeDateTime(true) }
         tvComments.setOnClickListener { showPopupWindowComment() }
         layoutAgreement.setOnClickListener { presenter.showLicenceAgreement() }
+        
+        btnGetOffers.setOnClickListener { presenter.onGetOffers() }
     }
 
     private fun showPopupWindowComment(){
@@ -265,12 +270,12 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
             false
         })
         popupWindowComment.setOnDismissListener {
-            hideKeyboard()
+            Utils.hideKeyboard(this, currentFocus)
             layoutShadow.visibility = View.GONE
         }
         layoutPopup.setOnClickListener{ layoutPopup.etPopupComment.requestFocus()}
         layoutPopup.etPopupComment.setSelection(layoutPopup.etPopupComment.text.length)
-        showKeyboard()
+        Utils.showKeyboard(this)
     }
 
     private fun changeDateTime(showDialog: Boolean){
@@ -307,17 +312,12 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         timePickerDialog.show()
     }
 
-    private fun showKeyboard() {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
-    }
-
-    private fun hideKeyboard() {
-        val view = currentFocus
-        if(view != null)
-            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-                    .hideSoftInputFromWindow(view.windowToken, 0)
-    }
+	override fun blockInterface(block: Boolean) {
+	}
+	
+	override fun setError(@StringRes errId: Int, finish: Boolean) {
+	    Utils.showError(this, errId, finish)
+	}
 
     override fun onBackPressed() {
         presenter.onBackCommandClick()
@@ -404,7 +404,8 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         val sizeHeight = mapView.height
         val latLngBounds = latLngBuilder.build()
         val track = CameraUpdateFactory.newLatLngBounds(latLngBounds, sizeWidth, sizeHeight, 150)
-        googleMap.moveCamera(track)
+        try { googleMap.moveCamera(track) }
+        catch(e: Exception) { Timber.e(e) }
     }
 
     fun createBitmapFromView(v: View): Bitmap {

@@ -176,14 +176,7 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 			@CallSuper
 			override fun onDrawerStateChanged(newState: Int) {
 				super.onDrawerStateChanged(newState)
-				if(newState == DrawerLayout.STATE_SETTLING) {
-					// Андроид, такой андроид :-) 
-					// https://stackoverflow.com/questions/1109022/close-hide-the-android-soft-keyboard
-					val view = currentFocus
-					if(view != null)
-						(getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-							.hideSoftInputFromWindow(view.windowToken, 0)
-				}
+				if(newState == DrawerLayout.STATE_SETTLING) Utils.hideKeyboard(this@MainActivity, currentFocus)
 			}
 		})
 		

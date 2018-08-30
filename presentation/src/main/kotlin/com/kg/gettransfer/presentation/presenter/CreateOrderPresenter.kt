@@ -90,6 +90,11 @@ class CreateOrderPresenter(private val resources: Resources,
     fun setComment(comment: String) { viewState.setComment(comment) }
     fun showLicenceAgreement() { router.navigateTo(Screens.LICENCE_AGREE) }
     fun onBackCommandClick() { viewState.finish() }
+    
+    fun onGetOffers() {
+        //validateUserInput()
+        
+    }
 
 	@CallSuper
 	override fun onDestroy() {

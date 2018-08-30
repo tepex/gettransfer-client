@@ -14,9 +14,7 @@ import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.TransportTypePrice
 
 @StateStrategyType (OneExecutionStateStrategy::class)
-interface CreateOrderView: MvpView {
-    fun finish()
-
+interface CreateOrderView: BaseView {
     fun setTransportTypes(transportTypes: List<TransportTypeModel>, transportTypePrice: List<TransportTypePrice>)
     fun setCurrencies(currencies: List<CurrencyModel>)
     fun setMapInfo(routeInfo: RouteInfo, route: Pair<GTAddress, GTAddress>, distanceUnit: String)

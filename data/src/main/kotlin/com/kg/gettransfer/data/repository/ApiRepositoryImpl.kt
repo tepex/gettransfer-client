@@ -102,91 +102,99 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
         }
         return account
     }
-    
+
     override suspend fun putAccount(account: Account) {
         cacheRepository.account = account
         tryPutAccount(mapAccount(account))
-	}
-	
-	private suspend fun tryPutAccount(apiAccount: ApiAccount): ApiResponse<ApiAccountWrapper> {
-	    return try { api.putAccount(apiAccount).await() }
-	    catch(e: Exception) {
-	        if(e is ApiException) throw e /* second invocation */
-	        val ae = ApiException(e)
-	        if(!ae.isInvalidToken()) throw ae
-	            
-	        try { updateAccessToken() } catch(e1: Exception) { throw ApiException(e1) }
-	        return try { api.putAccount(apiAccount).await() } catch(e2: Exception) { throw ApiException(e2) }
-	    }
-	}
-	/* Not used now.
-	override suspend fun createAccount(account: Account) {
-	}
-	*/
+    }
+    
+    private suspend fun tryPutAccount(apiAccount: ApiAccount): ApiResponse<ApiAccountWrapper> {
+        return try { api.putAccount(apiAccount).await() }
+        catch(e: Exception) {
+            if(e is ApiException) throw e /* second invocation */
+            val ae = ApiException(e)
+            if(!ae.isInvalidToken()) throw ae
 
-	override suspend fun login(email: String, password: String): Account {
-		val responce: ApiResponse<ApiAccountWrapper> = try {
-		    api.login(email, password).await()
-		} catch(httpException: HttpException) {
-			throw httpException
-		}
-		val account = mapApiAccount(responce.data!!.account)
-		//cacheRepository.saveAccount(account)
-		return account
-	}
-	
-	override fun logout() {
-	    cacheRepository.accessToken = CacheRepositoryImpl.INVALID_TOKEN
-	}
-	
-	override suspend fun getRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean): RouteInfo {
-		val response: ApiResponse<ApiRouteInfo> = try {
-		    api.getRouteInfo(points, withPrices, returnWay).await()
-		} catch(httpException: HttpException) {
-			throw httpException
-		}
+            try { updateAccessToken() } catch(e1: Exception) { throw ApiException(e1) }
+            return try { api.putAccount(apiAccount).await() } catch(e2: Exception) { throw ApiException(e2) }
+        }
+    }
 
-		val apiRouteInfo: ApiRouteInfo = response.data!!
-		return RouteInfo(apiRouteInfo.success, apiRouteInfo.distance, apiRouteInfo.duration,
+    /* Not used now.
+    override suspend fun createAccount(account: Account) {
+    }
+    */
+    
+    override suspend fun login(email: String, password: String): Account {
+        val response: ApiResponse<ApiAccountWrapper> = try {
+            api.login(email, password).await()
+        } catch(httpException: HttpException) {
+            throw httpException
+        }
+        val account = mapApiAccount(response.data!!.account)
+        //cacheRepository.saveAccount(account)
+        return account
+    }
+    
+    override fun logout() {
+        cacheRepository.accessToken = CacheRepositoryImpl.INVALID_TOKEN
+    }
+    
+    override suspend fun getRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean): RouteInfo {
+        val response: ApiResponse<ApiRouteInfo> = tryGetRouteInfo(points, withPrices, returnWay)
+        val apiRouteInfo: ApiRouteInfo = response.data!!
+        return RouteInfo(apiRouteInfo.success, apiRouteInfo.distance, apiRouteInfo.duration,
 				apiRouteInfo.prices?.map { TransportTypePrice(it.key, it.value.minFloat, it.value.min, it.value.max) },
 				apiRouteInfo.watertaxi, apiRouteInfo.routes.get(0).legs.get(0).steps.map { it.polyline.points },
 				apiRouteInfo.routes.get(0).overviewPolyline.points)
-	}
-	
-	/**
-	 * 1. Try to call [apiCall] first time.
-	 * 2. If response code is 401 (token expired) — try to call [apiCall] second time.
-	 */
-	private suspend fun <R> tryTwice(apiCall: () -> Deferred<R>): R {
-	    return try { apiCall().await() }
-	    catch(e: Exception) {
-	        if(e is ApiException) throw e /* second invocation */
-	        val ae = ApiException(e)
-	        if(!ae.isInvalidToken()) throw ae
-	            
-	        try { updateAccessToken() } catch(e1: Exception) { throw ApiException(e1) }
-	        return try { apiCall().await() } catch(e2: Exception) { throw ApiException(e2) }
-	    }
-	}
-	/*
-	private suspend fun <T, R> tryTwice(vararg param: T, apiCall: (T) -> Deferred<R>): R {
-	    return apiCall(param).await()
-	}
-	*/
-	
-	private suspend fun updateAccessToken() {
-	    cacheRepository.accessToken = ""
-	    val response: ApiResponse<ApiToken> = api.accessToken(apiKey).await()
-	    cacheRepository.accessToken = response.data!!.token
-	}
-	
-	/**
-	 * Simple mapper: [ApiAccount] -> [Account]
-	 */
-	private fun mapApiAccount(apiAccount: ApiAccount): Account {
-		return  Account(apiAccount.email, apiAccount.phone,
-				configs!!.availableLocales.find { it.language == apiAccount.locale }!!,
-				configs!!.supportedCurrencies.find { it.currencyCode == apiAccount.currency }!!,
-				apiAccount.distanceUnit, apiAccount.fullName, apiAccount.groups, apiAccount.termsAccepted)
-	}
+    }
+    
+    private suspend fun tryGetRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean):
+        ApiResponse<ApiRouteInfo> {
+        return try { api.getRouteInfo(points, withPrices, returnWay).await() }
+        catch(e: Exception) {
+            if(e is ApiException) throw e /* second invocation */
+            val ae = ApiException(e)
+            if(!ae.isInvalidToken()) throw ae
+
+            try { updateAccessToken() } catch(e1: Exception) { throw ApiException(e1) }
+            return try { api.getRouteInfo(points, withPrices, returnWay).await() } catch(e2: Exception) { throw ApiException(e2) }
+        }
+    }
+
+    /**
+     * 1. Try to call [apiCall] first time.
+     * 2. If response code is 401 (token expired) — try to call [apiCall] second time.
+     */
+    private suspend fun <R> tryTwice(apiCall: () -> Deferred<R>): R {
+        return try { apiCall().await() }
+        catch(e: Exception) {
+            if(e is ApiException) throw e /* second invocation */
+            val ae = ApiException(e)
+            if(!ae.isInvalidToken()) throw ae
+
+            try { updateAccessToken() } catch(e1: Exception) { throw ApiException(e1) }
+            return try { apiCall().await() } catch(e2: Exception) { throw ApiException(e2) }
+        }
+    }
+    /*
+    private suspend fun <T, R> tryTwice(vararg param: T, apiCall: (T) -> Deferred<R>): R {
+        return apiCall(param).await()
+    }
+    */
+
+    private suspend fun updateAccessToken() {
+        val response: ApiResponse<ApiToken> = api.accessToken(apiKey).await()
+        cacheRepository.accessToken = response.data!!.token
+    }
+
+    /**
+     * Simple mapper: [ApiAccount] -> [Account]
+     */
+    private fun mapApiAccount(apiAccount: ApiAccount): Account {
+        return Account(apiAccount.email, apiAccount.phone,
+                       configs!!.availableLocales.find { it.language == apiAccount.locale }!!,
+                       configs!!.supportedCurrencies.find { it.currencyCode == apiAccount.currency }!!,
+                       apiAccount.distanceUnit, apiAccount.fullName, apiAccount.groups, apiAccount.termsAccepted)
+    }
 }

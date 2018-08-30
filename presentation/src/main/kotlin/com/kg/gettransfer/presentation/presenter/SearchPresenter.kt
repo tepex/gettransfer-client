@@ -54,7 +54,6 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	fun onAddressSelected(selected: GTAddress) {
 		if(isTo) addressTo = selected
 		else addressFrom = selected
-		Timber.d("3333 selected: %s", selected)
 		
 		if(addressFrom.isConcreteObject() && addressTo?.isConcreteObject() ?: false) {
 			addressInteractor.route = Pair(addressFrom, addressTo!!)

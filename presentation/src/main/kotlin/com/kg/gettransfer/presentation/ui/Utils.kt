@@ -14,6 +14,7 @@ import android.text.Editable
 import android.text.TextWatcher
 
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 
 import android.widget.EditText
 
@@ -58,6 +59,19 @@ class Utils {
                     .setNegativeButton(android.R.string.cancel, null)
                     .show()
             }
+        }
+        
+        fun showKeyboard(context: Context) {
+            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
+        }
+        
+		// Андроид, такой андроид :-) 
+		// https://stackoverflow.com/questions/1109022/close-hide-the-android-soft-keyboard
+        fun hideKeyboard(context: Context, view: View?) {
+            if(view == null) return
+            (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+                .hideSoftInputFromWindow(view.windowToken, 0)
         }
 	}
 }
