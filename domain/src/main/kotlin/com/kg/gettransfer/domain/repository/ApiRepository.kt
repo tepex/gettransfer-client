@@ -15,4 +15,6 @@ interface ApiRepository {
     suspend fun getRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean): RouteInfo
 	fun logout()
     suspend fun getTransfer(): Transfer
+    suspend fun getAllTransfers(): List<Transfer>?
+    suspend fun getTransfer(idTransfer: Int): Transfer?
 }

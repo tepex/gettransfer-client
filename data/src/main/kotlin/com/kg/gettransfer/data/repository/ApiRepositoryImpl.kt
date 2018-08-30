@@ -198,7 +198,45 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
                        apiAccount.distanceUnit, apiAccount.fullName, apiAccount.groups, apiAccount.termsAccepted)
     }
 
-	override suspend fun getTransfer(): Transfer {
-		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+	override suspend fun getAllTransfers(): List<Transfer>? {
+		if(accessToken == null) updateToken()
+
+		val response: ApiResponse<ApiTransfers> = try {
+			api.getAllTransfers().await()
+		} catch (httpException: HttpException) {
+			throw httpException
+		}
+		if(response.data?.transfers == null) return null
+
+		val transfers: List<ApiTransfer> = response.data?.transfers!!
+		return transfers.map {transfer -> setTransferData(transfer) }
+	}
+
+	override suspend fun getTransfer(idTransfer: Int): Transfer? {
+		if(accessToken == null) updateToken()
+
+		val response: ApiResponse<ApiTransferWrapper> = try {
+			api.getTransfer("/api/transfers/$idTransfer").await()
+		} catch (httpException: HttpException) {
+			throw httpException
+		}
+		if(response.data?.transfer == null) return null
+
+		val transfer: ApiTransfer = response.data?.transfer!!
+		return setTransferData(transfer)
+	}
+
+	fun setTransferData(transfer: ApiTransfer): Transfer{
+		return Transfer(transfer.id, transfer.createdAt, transfer.duration, transfer.distance, transfer.status,
+				CityPoint(transfer.from.name, transfer.from.point, transfer.from.placeId),
+				CityPoint(transfer.to?.name, transfer.to?.point, transfer.to?.placeId), transfer.dateToLocal,
+				transfer.dateReturnLocal, transfer.dateRefund, transfer.nameSign, transfer.comment,
+				transfer.malinaCard, transfer.flightNumber, transfer.flightNumberReturn, transfer.pax,
+				transfer.childSeats, transfer.offersCount, transfer.relevantCarriersCount, transfer.offersUpdatedAt,
+				transfer.time, Money(transfer.paidSum.default, transfer.paidSum.preferred),
+				Money(transfer.remainsToPay.default, transfer.remainsToPay.preferred), transfer.paidPercentage,
+				transfer.pendingPaymentId, transfer.bookNow, transfer.bookNowExpiration, transfer.transportTypeIds,
+				transfer.passengerOfferedPrice, Money(transfer.price?.default, transfer.price?.preferred),
+				transfer.editableFields)
 	}
 }

@@ -1,9 +1,14 @@
 package com.kg.gettransfer.data.model
 
+import com.google.android.gms.common.api.Api
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class ApiTransfer(@SerializedName("id") @Expose var id: Long,
+class ApiTransfers(@SerializedName("transfers") @Expose var transfers: List<ApiTransfer>)
+
+class ApiTransferWrapper(@SerializedName("transfer") @Expose var transfer: ApiTransfer)
+
+class ApiTransfer(@SerializedName("id") @Expose var id: Int,
                   @SerializedName("created_at") @Expose var createdAt: String,
                   @SerializedName("duration") @Expose var duration: Int?,
                   @SerializedName("distance") @Expose var distance: Int?,
@@ -27,12 +32,12 @@ class ApiTransfer(@SerializedName("id") @Expose var id: Long,
                   @SerializedName("paid_sum") @Expose var paidSum: ApiMoney,
                   @SerializedName("remains_to_pay") @Expose var remainsToPay: ApiMoney,
                   @SerializedName("paid_percentage") @Expose var paidPercentage: Int,
-                  @SerializedName("pending_payment_id") @Expose var pendingPaymentId: Long?,
+                  @SerializedName("pending_payment_id") @Expose var pendingPaymentId: Int?,
                   @SerializedName("book_now") @Expose var bookNow: Boolean,
                   @SerializedName("book_now_expiration") @Expose var bookNowExpiration: String?,
                   @SerializedName("transport_type_ids") @Expose var transportTypeIds: List<String>,
-                  @SerializedName("passenger_offered_price") @Expose var passengerOfferedPrice: String,
-                  @SerializedName("price") @Expose var price: ApiMoney,
+                  @SerializedName("passenger_offered_price") @Expose var passengerOfferedPrice: String?,
+                  @SerializedName("price") @Expose var price: ApiMoney?,
                   @SerializedName("editable_fields") @Expose var editableFields: List<String>)
 
 class ApiMoney(@SerializedName("default") @Expose var default: String,

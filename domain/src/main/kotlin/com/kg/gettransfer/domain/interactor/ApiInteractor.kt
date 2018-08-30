@@ -17,4 +17,6 @@ class ApiInteractor(private val repository: ApiRepository) {
 			RouteInfo = repository.getRouteInfo(points, withPrices, returnWay)
 	fun logout() { repository.logout() }
 	suspend fun getTransfer(): Transfer = repository.getTransfer()
+	suspend fun getAllTransfers(): List<Transfer>? = repository.getAllTransfers()
+	suspend fun getTransfer(idTransfer: Int): Transfer? = repository.getTransfer(idTransfer)
 }

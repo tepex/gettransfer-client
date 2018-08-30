@@ -28,13 +28,10 @@ interface Api {
 	@PUT(API_ACCOUNT)
 	fun putAccount(@Body account: ApiAccount): Deferred<ApiResponse<ApiAccountWrapper>>
 
-	/* If we are not signed in, don't post request to save account. Not used now
+	/* If we are not signed in, don't post request to save account
 	@POST("/api/account")
 	fun postAccount(@Body account: ApiAccount): Deferred<ApiResponse<ApiAccountWrapper>>
 	*/
-
-	@GET(API_TRANSFERS)
-	fun getTransfer(@Query("id") id: Long): Deferred<ApiResponse<ApiTransfer>>
 	
 	@POST(API_LOGIN)
 	@FormUrlEncoded
@@ -47,4 +44,12 @@ interface Api {
 					 @Query("with_prices") withPrices: Boolean,
 					 @Query("return_way") returnWay: Boolean): Deferred<ApiResponse<ApiRouteInfo>>
 	
+	@GET(API_TRANSFERS)
+	fun getAllTransfers(): Deferred<ApiResponse<ApiTransfers>>
+
+	@GET(API_TRANSFERS)
+	fun getTransfer(@Url urlWithId: String): Deferred<ApiResponse<ApiTransferWrapper>>
+
+	@GET(API_TRANSFERS)
+	fun getTransfer(@Query("id") id: Long): Deferred<ApiResponse<ApiTransfer>>
 }

@@ -51,7 +51,6 @@
         android:id="@+id/imageCarOffer"
         android:layout_width="70dp"
         android:layout_height="80dp"
-        android:src="@drawable/helicopter"
         android:background="@drawable/back_image_car_offer"/>
 
     <RelativeLayout

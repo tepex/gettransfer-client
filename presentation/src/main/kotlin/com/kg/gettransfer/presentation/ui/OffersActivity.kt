@@ -15,12 +15,23 @@ import kotlinx.android.synthetic.main.view_offer.view.*
 import android.graphics.PorterDuff
 import com.kg.gettransfer.R.id.ratingBar
 import android.graphics.drawable.LayerDrawable
+import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.interactor.ApiInteractor
+import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import kotlinx.android.synthetic.main.view_offer.*
+import org.koin.android.ext.android.inject
 
 
 class OffersActivity: MvpAppCompatActivity(), OffersView {
     @InjectPresenter
     internal lateinit var presenter: OffersPresenter
+
+    private val apiInteractor: ApiInteractor by inject()
+    private val coroutineContexts: CoroutineContexts by inject()
+
+    @ProvidePresenter
+    fun createOffersPresenter(): OffersPresenter = OffersPresenter(coroutineContexts, apiInteractor)
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
