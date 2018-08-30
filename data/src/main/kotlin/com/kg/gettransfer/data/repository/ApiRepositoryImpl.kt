@@ -48,7 +48,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
         builder.addInterceptor(loggingInterceptor)
         builder.addInterceptor { chain ->
             var request = chain.request()
-            if(!cacheRepository.accessToken.isEmpty()) request = request.newBuilder()
+            if(request.url().encodedPath() != Api.API_ACCESS_TOKEN) request = request.newBuilder()
 	                .addHeader(Api.HEADER_TOKEN, cacheRepository.accessToken)
 	                .build()
 		    chain.proceed(request)
@@ -69,7 +69,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
                 .create(Api::class.java)
                 
         /* Cold start */
-        if(cacheRepository.accessToken.isEmpty()) runBlocking { updateAccessToken() }
+        //if(cacheRepository.accessToken.isEmpty()) runBlocking { updateAccessToken() }
     }
 	
 	/**
@@ -133,7 +133,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 	}
 	
 	override fun logout() {
-	    cacheRepository.accessToken = ""
+	    cacheRepository.accessToken = CacheRepositoryImpl.INVALID_TOKEN
 	    cacheRepository.account = Account.EMPTY
 	}
 	

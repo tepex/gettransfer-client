@@ -12,21 +12,24 @@ import java.util.Locale
 import timber.log.Timber
 
 class CacheRepositoryImpl(private val context: Context) {
+    companion object {
+        @JvmField val INVALID_TOKEN = "invalid_token"
+    }
+    
     private val configsPrefs = context.getSharedPreferences(CONFIGS, Context.MODE_PRIVATE)
     private val accountPrefs = context.getSharedPreferences(ACCOUNT, Context.MODE_PRIVATE)
-    private var _accessToken = ""
+    private var _accessToken = INVALID_TOKEN
     private var _account: Account = Account.EMPTY
     
     var accessToken: String
         get() {
-            if(_accessToken.isEmpty()) _accessToken = configsPrefs.getString(TOKEN, "")!!
+            if(_accessToken == INVALID_TOKEN) _accessToken = configsPrefs.getString(TOKEN, INVALID_TOKEN)!!
             return _accessToken
         }
         set(value) {
             _accessToken = value
             val editor = configsPrefs.edit()
-            if(value.isEmpty()) editor.remove(TOKEN)
-            else editor.putString(TOKEN, value)
+            editor.putString(TOKEN, value)
             editor.commit()
         }
        

@@ -7,25 +7,24 @@ import retrofit2.http.*
 interface Api {
     companion object {
         const val HEADER_TOKEN = "X-ACCESS-TOKEN"
+        
+        const val API_ACCESS_TOKEN = "/api/access_token"
+        const val API_CONFIGS      = "/api/configs"
+        const val API_ACCOUNT      = "/api/account"
+        const val API_ROUTE_INFO   = "/api/route_info"
+        const val API_LOGIN        = "/api/login"
     }
     
-	@GET("/api/access_token")
+	@GET(API_ACCESS_TOKEN)
 	fun accessToken(@Query("api_key") apiKey: String): Deferred<ApiResponse<ApiToken>>
-	/*
-	@GET("/api/configs")
-	fun getConfigs(@Header(HEADER_TOKEN) token: String): Deferred<ApiResponse<ApiConfigs>>
-
-	@GET("/api/account")
-	fun getAccount(@Header(HEADER_TOKEN) token: String): Deferred<ApiResponse<ApiAccountWrapper>>
-	*/
 	
-	@GET("/api/configs")
+	@GET(API_CONFIGS)
 	fun getConfigs(): Deferred<ApiResponse<ApiConfigs>>
 
-	@GET("/api/account")
+	@GET(API_ACCOUNT)
 	fun getAccount(): Deferred<ApiResponse<ApiAccountWrapper>>
 
-	@GET("/api/route_info")
+	@GET(API_ROUTE_INFO)
 	fun getRouteInfo(
 					 @Query("points[]") points: Array<String>,
 					 @Query("with_prices") withPrices: Boolean,
@@ -35,11 +34,11 @@ interface Api {
 	fun postAccount(@Header(HEADER_TOKEN) token: String): Deferred<ApiResponse<ApiAccountWrapper>>
 	*/
 	
-	@PUT("/api/account")
+	@PUT(API_ACCOUNT)
 //	@FormUrlEncoded
 	fun putAccount(@Body account: ApiAccount): Deferred<ApiResponse<ApiAccountWrapper>>
 
-	@POST("api/login")
+	@POST(API_LOGIN)
 	@FormUrlEncoded
 	fun login(@Field(ACCOUNT_EMAIL) email: String,
 			  @Field(ACCOUNT_PASSWORD) password: String): Deferred<ApiResponse<ApiAccountWrapper>>

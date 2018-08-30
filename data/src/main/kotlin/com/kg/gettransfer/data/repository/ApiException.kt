@@ -13,7 +13,7 @@ class ApiException(val e: Exception): RuntimeException(e) {
     }
     
     init {
-        if(e is HttpException) code = (e as HttpException).code()
+        if(e is HttpException) code = e.code()
     }
     
     fun isNoUser(): Boolean = code == NO_USER
