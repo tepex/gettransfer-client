@@ -5,17 +5,23 @@ import android.util.Pair
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.google.android.gms.maps.model.LatLng
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.domain.model.Account
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.MainView
+
 import kotlinx.coroutines.experimental.Job
+
 import ru.terrakok.cicerone.Router
+
 import timber.log.Timber
 
 @InjectViewState

@@ -8,9 +8,7 @@ import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface SettingsView: MvpView {
-    fun finish()
-
+interface SettingsView: BaseView {
     fun setCurrencies(currencies: List<CurrencyModel>)
     fun setLocales(locales: List<LocaleModel>)
     fun setDistanceUnits(distanceUnits: List<String>)

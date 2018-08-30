@@ -5,6 +5,10 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 
+import com.kg.gettransfer.R
+
+import com.kg.gettransfer.data.repository.ApiException
+
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.AsyncUtils
 
@@ -13,22 +17,33 @@ import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 
+import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.ConfigsModel
 
 import com.kg.gettransfer.presentation.view.SettingsView
 
 import kotlinx.coroutines.experimental.Job
 
+import ru.terrakok.cicerone.Router
+
 import timber.log.Timber
 
 @InjectViewState
 class SettingsPresenter(private val cc: CoroutineContexts,
+                        private val router: Router,
                         private val apiInteractor: ApiInteractor): MvpPresenter<SettingsView>() {
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(cc)
     
     lateinit var configs: ConfigsModel
     lateinit var account: Account
+    
+    init {
+        router.setResultListener(LoginPresenter.RESULT_CODE, { _ ->
+                Timber.d("result from login")
+                saveAccount()
+        })
+    }
     
     fun onBackCommandClick() {
         viewState.finish()
@@ -56,6 +71,7 @@ class SettingsPresenter(private val cc: CoroutineContexts,
             if(account.distanceUnit != null) viewState.setDistanceUnit(account.distanceUnit!!)
         }, { e ->
             Timber.e(e)
+            viewState.setError(R.string.err_server)
             //viewState.setError(R.string.err_address_service_xxx, false)
         }, { /* viewState.blockInterface(false) */ })
     }
@@ -81,17 +97,26 @@ class SettingsPresenter(private val cc: CoroutineContexts,
     }
     
     private fun saveAccount() {
+        viewState.blockInterface(true)
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
             utils.asyncAwait { apiInteractor.putAccount(account) }
         }, { e ->
-            Timber.e(e)
-            //viewState.setError(R.string.err_address_service_xxx, false)
-        }, { /* viewState.blockInterface(false) */ })
+            if(e is ApiException && e.isNotLoggedIn()) login()
+            else {
+                Timber.e(e)
+                viewState.setError(R.string.err_server)
+            }
+        }, { viewState.blockInterface(false) })
     }
     
     @CallSuper
     override fun onDestroy() {
         compositeDisposable.cancel()
+        router.removeResultListener(LoginPresenter.RESULT_CODE)
         super.onDestroy()
+    }
+    
+    private fun login() {
+        //router.navigateTo(Screens.LOGIN) 
     }
 }

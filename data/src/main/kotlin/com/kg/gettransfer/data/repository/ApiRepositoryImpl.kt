@@ -105,7 +105,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
     
     override suspend fun putAccount(account: Account) {
         cacheRepository.account = account
-        val response = tryPutAccount(mapAccount(account))
+        tryPutAccount(mapAccount(account))
 	}
 	
 	private suspend fun tryPutAccount(apiAccount: ApiAccount): ApiResponse<ApiAccountWrapper> {

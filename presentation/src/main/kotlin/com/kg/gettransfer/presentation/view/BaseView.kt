@@ -5,6 +5,6 @@ import com.arellomobile.mvp.MvpView
 
 interface BaseView: MvpView {
 	fun blockInterface(block: Boolean)
-	fun setError(@StringRes errId: Int, finish: Boolean = false)
+	fun setError(@StringRes errId: Int = -1, finish: Boolean = false)
 	fun finish()
 }

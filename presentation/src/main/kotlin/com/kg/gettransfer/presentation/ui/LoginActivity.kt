@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 
+import android.support.annotation.StringRes
 import android.support.v7.widget.Toolbar
 
 import android.text.TextUtils
@@ -27,20 +28,22 @@ import kotlinx.android.synthetic.main.toolbar.view.*
 
 import org.koin.android.ext.android.inject
 
-class LoginActivity : MvpAppCompatActivity(), LoginView {
+import ru.terrakok.cicerone.Router
 
+class LoginActivity : MvpAppCompatActivity(), LoginView {
     @InjectPresenter
     lateinit var loginPresenter: LoginPresenter
 
     private val apiInteractor: ApiInteractor by inject()
     private val coroutineContexts: CoroutineContexts by inject()
+    private val router: Router by inject()
 
     private var emptyEmail = true
     private var emptyPassword = true
     private var correctEmail = false
-
+    
     @ProvidePresenter
-    fun createLoginPresenter(): LoginPresenter = LoginPresenter(coroutineContexts, apiInteractor)
+    fun createLoginPresenter(): LoginPresenter = LoginPresenter(coroutineContexts, router, apiInteractor)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,7 +90,11 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
         btnLogin.isEnabled = !emptyEmail && !emptyPassword && correctEmail
     }
 
-    override fun showError(show: Boolean) {
-        if(show) tvLoginError.visibility = View.VISIBLE else tvLoginError.visibility = View.INVISIBLE
+    override fun blockInterface(block: Boolean) {
+        tvLoginError.visibility = View.INVISIBLE
+    }
+    
+    override fun setError(@StringRes errId: Int, finish: Boolean) {
+        tvLoginError.visibility = View.VISIBLE
     }
 }

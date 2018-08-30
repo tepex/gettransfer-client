@@ -13,23 +13,32 @@ import com.kg.gettransfer.presentation.view.LoginView
 
 import kotlinx.coroutines.experimental.Job
 
+import ru.terrakok.cicerone.Router
+
 import timber.log.Timber
 
 @InjectViewState
-class LoginPresenter(cc: CoroutineContexts, private val apiInteractor: ApiInteractor): MvpPresenter<LoginView>() {
+class LoginPresenter(cc: CoroutineContexts, 
+                     private val router: Router,
+                     private val apiInteractor: ApiInteractor): MvpPresenter<LoginView>() {
 
+    companion object {
+        @JvmField val RESULT_CODE = 33
+        @JvmField val RESULT_OK = 1
+    }
+    
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(cc)
-
+    
     fun onLoginClick(email: String, password: String) {
+        viewState.blockInterface(false)
         utils.launchAsyncTryCatch(compositeDisposable, {
-            viewState.showError(false)
             val account = utils.asyncAwait { apiInteractor.login(email, password) }
             Timber.d("account: %s", account)
-            viewState.finish()
+            router.exitWithResult(RESULT_CODE, RESULT_OK)
         }, { e ->
             Timber.e(e)
-            viewState.showError(true)
+            viewState.setError()
         })
     }
 

@@ -15,6 +15,8 @@ import android.support.v4.content.ContextCompat
 
 import android.support.v7.app.AppCompatActivity
 
+import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
@@ -69,6 +71,7 @@ class SplashActivity: AppCompatActivity() {
 			startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 		}, { e ->
 			Timber.e(e)
+			Utils.showError(this@SplashActivity, R.string.err_server, false)
 			// @TODO: Показать ошибку. Учесть 401 — протухший ключ
 		}, { finish() })
 	}
