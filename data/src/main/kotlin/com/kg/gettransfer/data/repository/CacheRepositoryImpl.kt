@@ -29,7 +29,7 @@ class CacheRepositoryImpl(private val context: Context) {
             _accessToken = value
             val editor = configsPrefs.edit()
             editor.putString(TOKEN, value)
-            editor.commit()
+            editor.apply()
         }
        
     var account: Account
@@ -56,6 +56,6 @@ class CacheRepositoryImpl(private val context: Context) {
             editor.putString(ACCOUNT_FULL_NAME, value.fullName)
             editor.putStringSet(ACCOUNT_GROUPS, value.groups?.toSet())
             editor.putBoolean(ACCOUNT_TERMS_ACCEPTED, value.termsAccepted)
-            editor.commit()
+            editor.apply()
         }
 }

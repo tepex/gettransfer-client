@@ -15,6 +15,7 @@ import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
 
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
@@ -381,7 +382,7 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         // Для построения упрощённого маршрута (меньше точек)
         //val mPoints = PolyUtil.decode(routeInfo.overviewPolyline)
 
-        val line = PolylineOptions().width(10f).color(applicationContext.resources.getColor(R.color.colorPolyline))
+        val line = PolylineOptions().width(10f).color(ContextCompat.getColor(this, R.color.colorPolyline))
 
         val latLngBuilder = LatLngBounds.Builder()
         for (i in mPoints.indices){
