@@ -122,7 +122,18 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		blockRequest = false
 		if(sendRequest) presenter.requestAddressListByPrediction(text.trim())
 	}
-	
+
+    fun setUneditable() {
+        addressField.keyListener = null
+        addressField.setCursorVisible(false)
+        addressField.setFocusable(false)
+        addressField.setClickable(true)
+    }
+    
+    fun clearFocusOnExit() {
+        addressField.clearFocus()
+    }
+
 	@CallSuper
 	protected override fun onDetachedFromWindow() {
 		super.onDetachedFromWindow()

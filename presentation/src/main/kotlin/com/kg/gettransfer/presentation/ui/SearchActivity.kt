@@ -151,6 +151,9 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	}
 	
 	override fun onBackPressed() {
+	    Utils.hideKeyboard(this, currentFocus)
+	    searchTo.clearFocusOnExit()
+	    searchFrom.clearFocusOnExit()
 		presenter.onBackCommandClick() 
 	}
 	

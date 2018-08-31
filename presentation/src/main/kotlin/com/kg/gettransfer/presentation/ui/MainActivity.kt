@@ -67,7 +67,7 @@ import timber.log.Timber
 
 import kotlin.coroutines.experimental.suspendCoroutine
 
-class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener {
+class MainActivity: MvpAppCompatActivity(), MainView {
 	@InjectPresenter
 	internal lateinit var presenter: MainPresenter
 	
@@ -211,16 +211,14 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 		initGoogleMap(mapViewBundle)
 		
 		search.elevation = resources.getDimension(R.dimen.search_elevation)
-		searchFrom.setOnFocusChangeListener(this)
-		searchTo.setOnFocusChangeListener(this)
-		
+		searchFrom.setUneditable()
+		searchTo.setUneditable()
+		searchFrom.setOnClickListener { presenter.onSearchClick(Pair(searchFrom.text, searchTo.text)) }
+		searchTo.setOnClickListener { presenter.onSearchClick(Pair(searchFrom.text, searchTo.text)) }
+
 		val fade = Fade()
 		fade.setDuration(FADE_DURATION)
 		getWindow().setExitTransition(fade)
-	}
-	
-	override fun onFocusChange(v: View, hasFocus: Boolean) {
-		if(hasFocus) presenter.onSearchClick(Pair(searchFrom.text, searchTo.text))
 	}
 
 	@CallSuper
@@ -238,6 +236,7 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 	@CallSuper
 	protected override fun onResume() {
 		super.onResume()
+		Utils.hideKeyboard(this, currentFocus)
 		navigatorHolder.setNavigator(navigator)
 		mapView.onResume()
 	}
@@ -332,6 +331,7 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 	    googleMap.uiSettings.setRotateGesturesEnabled(false)
 		googleMap.setMyLocationEnabled(true)
 		googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
+		
 		val parent = (mapView?.findViewById(1) as View).parent as View
 		val myLocationBtn = parent.findViewById(MY_LOCATION_BUTTON_INDEX) as View
 		val rlp = myLocationBtn.getLayoutParams() as RelativeLayout.LayoutParams 
@@ -351,6 +351,13 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 		
 		rlp1.setMargins(resources.getDimension(R.dimen.compass_button_margin_start).toInt(), 0, 
 			0, resources.getDimension(R.dimen.compass_button_margin_bottom).toInt())
+		
+        googleMap.setOnMyLocationButtonClickListener {
+            presenter.updateCurrentLocation()
+            true
+        }
+        googleMap.setOnCameraMoveListener { presenter.onCameraMove() }
+        googleMap.setOnCameraIdleListener { presenter.onCameraIdle() }
 	}
 
 	/* MainView */

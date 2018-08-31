@@ -71,6 +71,12 @@ class MainPresenter(private val cc: CoroutineContexts,
             viewState.setError(R.string.err_address_service_xxx, false)
         }, { viewState.blockInterface(false) })
     }
+    
+    fun onCameraMove() {
+    }
+    
+    fun onCameraIdle() {
+    }
 
     fun onSearchClick(addresses: Pair<String, String>) { router.navigateTo(Screens.FIND_ADDRESS, addresses) }
     fun onLoginClick() { router.navigateTo(Screens.LOGIN) }
