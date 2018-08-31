@@ -8,40 +8,40 @@
 	android:layout_height="match_parent"
 	tools:openDrawer="start"
 	tools:context=".presentation.ui.MainActivity">
-	
+
 	<android.support.design.widget.CoordinatorLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
-	
+
 		<android.support.design.widget.AppBarLayout android:id="@+id/appbar"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:background="@android:color/transparent"
 			android:fitsSystemWindows="true"
 			app:elevation="0dp">
-    
+
 			<android.support.v7.widget.Toolbar android:id="@+id/toolbar"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:minHeight="?attr/actionBarSize"
 				tools:ignore="Overdraw" />
 		</android.support.design.widget.AppBarLayout>
-	
+
 		<FrameLayout
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">
-	
+
 			<com.google.android.gms.maps.MapView android:id="@+id/mapView"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent" />
-	
-			<include layout="@layout/search_form" 
+
+			<include layout="@layout/search_form"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="@dimen/search_form_margin_top"
 				android:layout_marginStart="@dimen/search_form_margin_X"
 				android:layout_marginEnd="@dimen/search_form_margin_X" />
-	
+
 		</FrameLayout>
 
 		<ProgressBar android:id="@+id/progress"
@@ -62,7 +62,7 @@
 		android:fitsSystemWindows="true"
 		android:gravity="start">
 
-		<LinearLayout
+		<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:orientation="vertical">
@@ -75,10 +75,10 @@
 
 				<ImageView
 					android:id="@+id/navHeaderLogo"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
+					android:layout_width="@dimen/nav_header_logo_width"
+					android:layout_height="@dimen/nav_header_logo_height"
 					android:layout_marginStart="@dimen/nav_header_logo_start"
-					android:layout_marginTop="@dimen/nav_header_logo_start"
+					android:layout_marginTop="@dimen/nav_header_logo_top"
 					android:layout_marginBottom="@dimen/nav_header_logo_bottom"
 					android:contentDescription="Header logo"
 					app:srcCompat="@drawable/nav_header_logo" />
@@ -153,8 +153,10 @@
             </android.support.constraint.ConstraintLayout>-->
 
 			<RelativeLayout
+                android:id="@+id/navViewItems"
 				android:layout_width="match_parent"
-				android:layout_height="match_parent">
+				android:layout_height="wrap_content"
+                android:layout_below="@+id/navViewHeader">
 
 				<include android:id="@+id/navLogin"
 					android:layout_width="match_parent"
@@ -195,42 +197,45 @@
 					android:layout_below="@+id/navBecomeACarrier"
 					android:visibility="gone"/>
 
-				<RelativeLayout
-					android:layout_width="match_parent"
+            </RelativeLayout>
+
+			<RelativeLayout
+				android:id="@+id/navViewFooter"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:layout_below="@+id/navViewItems">
+
+				<ImageButton
+					android:id="@+id/navFooterStamp"
+					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_below="@+id/navAbout"
-					android:layout_alignParentBottom="true">
+					android:layout_above="@+id/navFooterReadMore"
+					android:layout_centerHorizontal="true"
+					android:layout_marginBottom="@dimen/nav_footer_stamp_bottom"
+					android:background="@null"
+					android:scaleType="centerInside"
+					android:src="@drawable/ic_stamp" />
 
-					<Button
-						android:id="@+id/navFooterStamp"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_above="@+id/navFooterReadMore"
-						android:layout_centerHorizontal="true"
-						android:background="@drawable/ic_stamp"
-						android:layout_marginBottom="8dp"/>
+				<TextView
+					android:id="@+id/navFooterReadMore"
+					style="@style/nav_item_title"
+					android:layout_above="@+id/navFooterVersion"
+					android:layout_marginBottom="@dimen/nav_footer_read_more_bottom"
+					android:gravity="center_horizontal"
+					android:text="@string/nav_footer_read_more" />
 
-					<TextView
-						android:id="@+id/navFooterReadMore"
-						style="@style/nav_item_title"
-						android:layout_above="@+id/navFooterVersion"
-						android:layout_marginBottom="8dp"
-						android:gravity="center_horizontal"
-						android:text="@string/nav_footer_read_more" />
-
-					<TextView
-						android:id="@+id/navFooterVersion"
-						style="@style/nav_footer_version"
-						android:layout_alignParentBottom="true"
-						android:layout_marginStart="@dimen/nav_footer_version_start"
-						android:layout_marginBottom="5dp"
-						android:text="version" />
-
-				</RelativeLayout>
+				<TextView
+					android:id="@+id/navFooterVersion"
+					style="@style/nav_footer_version"
+					android:layout_alignParentBottom="true"
+					android:layout_marginBottom="@dimen/nav_footer_version_bottom"
+					android:layout_marginStart="@dimen/nav_footer_version_start"
+					android:text="version" />
 
 			</RelativeLayout>
 
-		</LinearLayout>
+		</RelativeLayout>
 
 	</android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

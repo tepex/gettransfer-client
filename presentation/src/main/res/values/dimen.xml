@@ -12,11 +12,15 @@
 
 	<!-- Navigation view menu -->
 	<dimen name="nav_header_height">148dp</dimen>
+	<dimen name="nav_header_logo_width">56dp</dimen>
+	<dimen name="nav_header_logo_height">35dp</dimen>
 	<dimen name="nav_header_logo_start">16dp</dimen>
-	<dimen name="nav_header_logo_top">48dp</dimen>
+	<dimen name="nav_header_logo_top">16dp</dimen>
 	<dimen name="nav_header_logo_bottom">6dp</dimen>
 	<dimen name="nav_header_share_top">48dp</dimen>
 	<dimen name="nav_header_share_end">16dp</dimen>
+
+	<dimen name="nav_header_email_bottom">6dp</dimen>
 
 	<dimen name="nav_item_margin_top">5dp</dimen>
 	<dimen name="nav_item_margin_bottom">5dp</dimen>
@@ -26,9 +30,9 @@
 
 	<dimen name="nav_footer_version_size">10sp</dimen>
 	<dimen name="nav_footer_version_start">50dp</dimen>
-	<dimen name="nav_footer_version_bottom">12dp</dimen>
-	<dimen name="nav_footer_read_more_bottom">20dp</dimen>
-	<dimen name="nav_footer_stamp_bottom">16dp</dimen>
+	<dimen name="nav_footer_version_bottom">5dp</dimen>
+	<dimen name="nav_footer_read_more_bottom">8dp</dimen>
+	<dimen name="nav_footer_stamp_bottom">6dp</dimen>
 
 	<!-- Search form -->
     <dimen name="search_elevation">8dp</dimen>
