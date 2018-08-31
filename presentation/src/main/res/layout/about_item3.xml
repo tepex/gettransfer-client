@@ -6,6 +6,7 @@
 	android:id="@+id/about_item3"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
+	android:layout_marginTop="@dimen/about_item_top"
 	android:orientation="vertical"
 	android:gravity="center_horizontal"
 	tools:context=".presentation.ui.AboutActivity">
@@ -18,4 +19,10 @@
 		android:id="@+id/content3"
 		style="@style/about_content"
 		android:text="@string/about_content_item3" />
+
+	<ImageView
+		android:layout_width="@dimen/about_image_width"
+		android:layout_height="@dimen/about_image_height"
+		android:layout_marginTop="38dp"
+		android:src="@drawable/ic_about_safety"/>
 </LinearLayout>

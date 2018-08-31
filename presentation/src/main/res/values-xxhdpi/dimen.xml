@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- About items -->
+    <dimen name="about_item_top">90dp</dimen>
+    <dimen name="about_item_bottom">40dp</dimen>
+    <dimen name="about_content_top">20dp</dimen>
+    <dimen name="about_content_padding">50dp</dimen>
+    <dimen name="about_title_size">21sp</dimen>
+    <dimen name="about_content_size">17sp</dimen>
+    <dimen name="about_image_width">150dp</dimen>
+    <dimen name="about_image_height">140dp</dimen>
+</resources>
