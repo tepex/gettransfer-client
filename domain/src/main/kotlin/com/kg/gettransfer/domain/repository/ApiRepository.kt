@@ -1,8 +1,6 @@
 package com.kg.gettransfer.domain.repository
 
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.Configs
-import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.domain.model.*
 
 interface ApiRepository {
     suspend fun getConfigs(): Configs
@@ -14,7 +12,6 @@ interface ApiRepository {
 	suspend fun login(email: String, password: String): Account
     suspend fun getRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean): RouteInfo
 	fun logout()
-    suspend fun getTransfer(): Transfer
     suspend fun getAllTransfers(): List<Transfer>
     suspend fun getTransfer(idTransfer: Long): Transfer
 }

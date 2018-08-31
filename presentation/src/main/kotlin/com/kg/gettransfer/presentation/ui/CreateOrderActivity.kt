@@ -250,15 +250,6 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         btnGetTransfer.setOnClickListener { presenter.onGetTransferClick() }
     }
 
-    private val clickListenerCounterButtons = View.OnClickListener { view ->
-        when (view.id) {
-            R.id.tvPersonsCounterDown -> presenter.changeCounter(tvCountPerson, -1)
-            R.id.tvPersonsCounterUp -> presenter.changeCounter(tvCountPerson, 1)
-            R.id.tvChildCounterDown -> presenter.changeCounter(tvCountChild, -1)
-            R.id.tvChildCounterUp -> presenter.changeCounter(tvCountChild, 1)
-        }
-    }
-
     private fun showPopupWindowComment(){
         val displaymetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displaymetrics)

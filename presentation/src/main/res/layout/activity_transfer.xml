@@ -714,11 +714,7 @@
             </android.support.constraint.ConstraintLayout>
 
             <Button
-<<<<<<< HEAD
-                android:id="@+id/btnGetOffers"
-=======
                 android:id="@+id/btnGetTransfer"
->>>>>>> WIP
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/create_transfer_btn_get_transfer_height"
                 android:background="@drawable/btn_get_transfer"

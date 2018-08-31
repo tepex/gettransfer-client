@@ -1,8 +1,7 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.Configs
-import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.domain.model.*
+
 import com.kg.gettransfer.domain.repository.ApiRepository
 
 class ApiInteractor(private val repository: ApiRepository) {
@@ -16,7 +15,6 @@ class ApiInteractor(private val repository: ApiRepository) {
 	suspend fun getRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean):
 			RouteInfo = repository.getRouteInfo(points, withPrices, returnWay)
 	fun logout() { repository.logout() }
-	suspend fun getTransfer(): Transfer = repository.getTransfer()
 	suspend fun getAllTransfers(): List<Transfer> = repository.getAllTransfers()
 	suspend fun getTransfer(idTransfer: Long): Transfer = repository.getTransfer(idTransfer)
 }

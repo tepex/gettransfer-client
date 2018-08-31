@@ -49,7 +49,10 @@
     <string name="transport_type_helicopter">Helicopter</string>
 	<string name="transport_type_unknown">Unknown</string>
 
-
+    <!-- Login -->
+    <string name="email_address">Email address</string>
+    <string name="enter_password">Enter password</string>
+    
 	<!--
 	<string name=""></string>
 	-->
@@ -60,6 +63,7 @@
 	<string name="err_location_service_not_available">Cервис геолокации недоступен!</string>
 	<string name="err_address_service_xxx">Ошибка определения адреса!</string>
 	<string name="err_server">Ошибка сервера!</string>
+	<string name="error_login">Incorrect login or password</string>
 
 
 
@@ -233,4 +237,37 @@
     <string name="distance_units">Distance units</string>
     <string name="carrier_offers">Carrier offers</string>
     <string name="select">Select</string>
+
+
+
+
+
+
+
+
+
+    <string name="count_persons_and_baggage"> X %1s</string>
+    <string name="price_from">from %1s</string>
+    <string-array name="months_name">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>Jule</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+
+
+
+
+
+
+
+
 </resources>

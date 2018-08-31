@@ -199,8 +199,6 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
     }
 
 	override suspend fun getAllTransfers(): List<Transfer> {
-		if(accessToken == null) updateToken()
-
 		val response: ApiResponse<ApiTransfers> = try {
 			api.getAllTransfers().await()
 		} catch (httpException: HttpException) {
@@ -212,10 +210,8 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 	}
 
 	override suspend fun getTransfer(idTransfer: Long): Transfer {
-		if(accessToken == null) updateToken()
-
 		val response: ApiResponse<ApiTransferWrapper> = try {
-			api.getTransfer("/api/transfers/$idTransfer").await()
+			api.getTransfer(idTransfer).await()
 		} catch (httpException: HttpException) {
 			throw httpException
 		}

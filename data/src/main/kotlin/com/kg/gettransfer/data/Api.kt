@@ -47,9 +47,6 @@ interface Api {
 	@GET(API_TRANSFERS)
 	fun getAllTransfers(): Deferred<ApiResponse<ApiTransfers>>
 
-	@GET(API_TRANSFERS)
-	fun getTransfer(@Url urlWithId: String): Deferred<ApiResponse<ApiTransferWrapper>>
-
-	@GET(API_TRANSFERS)
-	fun getTransfer(@Query("id") id: Long): Deferred<ApiResponse<ApiTransfer>>
+	@GET("$API_TRANSFERS/{id}")
+	fun getTransfer(@Path("id") id: Long): Deferred<ApiResponse<ApiTransferWrapper>>
 }
