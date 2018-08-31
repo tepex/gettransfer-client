@@ -1,6 +1,6 @@
 package com.kg.gettransfer.domain.model
 
-data class Transfer(val id: Int,
+data class Transfer(val id: Long,
                     val createdAt: String,
                     val duration: Int?,
                     val distance: Int?,

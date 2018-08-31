@@ -8,7 +8,7 @@ class ApiTransfers(@SerializedName("transfers") @Expose var transfers: List<ApiT
 
 class ApiTransferWrapper(@SerializedName("transfer") @Expose var transfer: ApiTransfer)
 
-class ApiTransfer(@SerializedName("id") @Expose var id: Int,
+class ApiTransfer(@SerializedName("id") @Expose var id: Long,
                   @SerializedName("created_at") @Expose var createdAt: String,
                   @SerializedName("duration") @Expose var duration: Int?,
                   @SerializedName("distance") @Expose var distance: Int?,

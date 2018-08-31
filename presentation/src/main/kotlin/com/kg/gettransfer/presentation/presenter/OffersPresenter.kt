@@ -24,20 +24,9 @@ class OffersPresenter(private val cc: CoroutineContexts,
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
 
             utils.asyncAwait {
-                //val secondPoint = addressInteractor.getLatLngByPlaceId(addressInteractor.route.second.id!!)
-                //configs = ConfigsModel(apiInteractor.getConfigs())
-                //account = apiInteractor.getAccount()
-                //routeInfo = apiInteractor.getRouteInfo(arrayOf(addressInteractor.route.first.point.toString(),
-                //        secondPoint.toString()), true, false)
-                allTransfers = apiInteractor.getAllTransfers()!!
-                transfer = apiInteractor.getTransfer(682)!!
-                println(allTransfers)
-                println(transfer)
+                allTransfers = apiInteractor.getAllTransfers()
+                transfer = apiInteractor.getTransfer(allTransfers.get(0).id)
             }
-
-            //viewState.setTransportTypes(configs.transportTypes, routeInfo.prices!!)
-            //viewState.setCurrencies(configs.currencies)
-            //viewState.setMapInfo(routeInfo, addressInteractor.route, configs.distanceUnits.get(0))
         }, { e ->
             Timber.e(e)
             //viewState.setError(R.string.err_address_service_xxx, false)

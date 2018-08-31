@@ -198,7 +198,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
                        apiAccount.distanceUnit, apiAccount.fullName, apiAccount.groups, apiAccount.termsAccepted)
     }
 
-	override suspend fun getAllTransfers(): List<Transfer>? {
+	override suspend fun getAllTransfers(): List<Transfer> {
 		if(accessToken == null) updateToken()
 
 		val response: ApiResponse<ApiTransfers> = try {
@@ -206,13 +206,12 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 		} catch (httpException: HttpException) {
 			throw httpException
 		}
-		if(response.data?.transfers == null) return null
 
-		val transfers: List<ApiTransfer> = response.data?.transfers!!
+		val transfers: List<ApiTransfer> = response.data!!.transfers
 		return transfers.map {transfer -> setTransferData(transfer) }
 	}
 
-	override suspend fun getTransfer(idTransfer: Int): Transfer? {
+	override suspend fun getTransfer(idTransfer: Long): Transfer {
 		if(accessToken == null) updateToken()
 
 		val response: ApiResponse<ApiTransferWrapper> = try {
@@ -220,9 +219,8 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 		} catch (httpException: HttpException) {
 			throw httpException
 		}
-		if(response.data?.transfer == null) return null
 
-		val transfer: ApiTransfer = response.data?.transfer!!
+		val transfer: ApiTransfer = response.data!!.transfer
 		return setTransferData(transfer)
 	}
 
