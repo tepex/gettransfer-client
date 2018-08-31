@@ -52,6 +52,9 @@ class MainPresenter(private val cc: CoroutineContexts,
             if(available) updateCurrentLocation()
             else { viewState.setError(R.string.err_location_service_not_available, true) }
         }, { e -> Timber.e(e) })
+        
+        // Создать листенер для обновления текущей локации
+        // https://developer.android.com/training/location/receive-location-updates
     }
     
     @CallSuper
