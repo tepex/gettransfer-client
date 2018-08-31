@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	style="@style/nav_item">
-	<TextView 
+
+	<ImageView
+		android:id="@+id/imgSettings"
+		android:layout_width="20dp"
+		android:layout_height="20dp"
+		android:layout_marginStart="16dp"
+		android:layout_marginEnd="16dp"
+		android:layout_centerVertical="true"
+		android:src="@drawable/ic_settings"/>
+
+	<TextView
+		android:id="@+id/title"
 		style="@style/nav_item_title"
-		android:text="@string/nav_settings_title" />
-	<TextView 
+		android:text="@string/text_nav_settings_title"
+		android:layout_toEndOf="@+id/imgSettings"/>
+
+	<TextView
 		style="@style/nav_item_subtitle"
-		android:text="@string/nav_settings_subtitle" />
-</LinearLayout>
+		android:text="@string/text_nav_settings_subtitle"
+		android:layout_below="@+id/title"
+		android:layout_toEndOf="@+id/imgSettings"/>
+</RelativeLayout>

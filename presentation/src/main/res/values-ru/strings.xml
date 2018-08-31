@@ -169,4 +169,24 @@
     <string name="distance_units">Единицы расстояния</string>
     <string name="carrier_offers">Предложения перевозчиков</string>
     <string name="select">Выбрать</string>
+
+    <string name="login_subtitle">Вход для клиентов и водителей</string>
+
+    <string name="text_nav_login_title">Войти</string>
+    <string name="text_nav_login_subtitle">Вход для клиентов и водителей</string>
+
+    <string name="text_nav_requests_title">Поездки</string>
+    <string name="text_nav_requests_subtitle">Текущие и прошлые поездки</string>
+
+    <string name="text_nav_settings_title">Настройки</string>
+    <string name="text_nav_settings_subtitle">Настройки страны и языка</string>
+
+    <string name="text_nav_about_title">О нас</string>
+    <string name="text_nav_about_subtitle">Наши преимущества</string>
+
+    <string name="text_nav_become_a_carrier_title">Стать перевозчиком</string>
+    <string name="text_nav_become_a_carrier_subtitle">Преимущества GetTransfer.com</string>
+
+    <string name="text_nav_passenger_mode_title">Пассажирский режим</string>
+    <string name="text_nav_passenger_mode_subtitle">Пассажирский режим</string>
 </resources>

@@ -45,21 +45,22 @@
 	<style name="nav_item">
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
-		<item name="android:layout_marginTop">@dimen/nav_item_margin_top</item>
-		<item name="android:layout_marginStart">@dimen/nav_item_margin_start</item>
-		<item name="android:layout_marginBottom">@dimen/nav_item_margin_bottom</item>
-		<item name="android:orientation">vertical</item>
+		<item name="android:paddingTop">5dp</item>
+		<item name="android:paddingBottom">5dp</item>
 	</style>
 	<style name="nav_item_title" parent="sf_font">
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:textSize">@dimen/nav_item_title_size</item>
+		<item name="android:textColor">@color/colorTextBlack</item>
+		<item name="fontFamily">@font/sf_pro_text_bold</item>
 	</style>
 	<style name="nav_item_subtitle" parent="sf_font">
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:textSize">@dimen/nav_item_subtitle_size</item>
 		<item name="android:textColor">@color/nav_item_subtitle</item>
+		<item name="fontFamily">@font/sf_pro_text_regular</item>
 	</style>
 	<style name="nav_footer_version" parent="sf_font">
 		<item name="android:layout_width">match_parent</item>

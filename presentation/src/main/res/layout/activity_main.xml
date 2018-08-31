@@ -60,42 +60,177 @@
 		android:layout_height="match_parent"
 		android:layout_gravity="start|top"
 		android:fitsSystemWindows="true"
-		android:gravity="start"
-		app:headerLayout="@layout/nav_header_main"
-		app:menu="@menu/activity_main_drawer">
-		<android.support.constraint.ConstraintLayout
+		android:gravity="start">
+
+		<LinearLayout
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_gravity="bottom">
+			android:layout_height="match_parent"
+			android:orientation="vertical">
 
-			<Button
-				android:id="@+id/navFooterStamp"
-				android:layout_width="wrap_content"
+			<RelativeLayout
+				android:id="@+id/navViewHeader"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginBottom="@dimen/nav_footer_stamp_bottom"
-				android:background="@drawable/ic_stamp"
-				android:gravity="center_horizontal"
-				app:layout_constraintBottom_toTopOf="@+id/navFooterReadMore"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent" />
-			<TextView
-				android:id="@+id/navFooterReadMore"
-				style="@style/nav_item_title"
-				android:layout_marginBottom="@dimen/nav_footer_read_more_bottom"
-				android:gravity="center_horizontal"
-				android:text="@string/nav_footer_read_more"
-				android:focusable="false"
-				app:layout_constraintBottom_toTopOf="@+id/navFooterVersion"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent" />
-			<TextView android:id="@+id/navFooterVersion"
-				style="@style/nav_footer_version"
-				android:layout_marginStart="@dimen/nav_footer_version_start"
-				android:layout_marginBottom="@dimen/nav_footer_version_bottom"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintBottom_toBottomOf="parent"
-				android:text="version" />		
+				android:background="@color/colorPrimary">
 
-		</android.support.constraint.ConstraintLayout>
+				<ImageView
+					android:id="@+id/navHeaderLogo"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/nav_header_logo_start"
+					android:layout_marginTop="@dimen/nav_header_logo_start"
+					android:layout_marginBottom="@dimen/nav_header_logo_bottom"
+					android:contentDescription="Header logo"
+					app:srcCompat="@drawable/nav_header_logo" />
+
+				<ImageView
+					android:id="@+id/navHeaderShare"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="@dimen/nav_header_share_end"
+					android:layout_marginTop="@dimen/nav_header_logo_start"
+					android:layout_alignParentEnd="true"
+					android:contentDescription="Share"
+					android:focusable="false"
+					android:tint="@android:color/black"
+					app:srcCompat="@android:drawable/ic_menu_share" />
+
+				<TextView
+					android:id="@+id/navHeaderName"
+					style="@style/nav_item_title"
+					android:layout_marginStart="@dimen/nav_header_logo_start"
+					android:visibility="visible"
+					android:layout_below="@+id/navHeaderLogo"
+					tools:text="Maluta Skuratov" />
+
+				<TextView
+					android:id="@+id/navHeaderEmail"
+					style="@style/nav_item_subtitle"
+					android:layout_below="@+id/navHeaderName"
+					android:layout_marginBottom="6dp"
+					android:layout_marginStart="@dimen/nav_header_logo_start"
+					android:visibility="visible"
+					tools:text="android.studio@android.com" />
+
+			</RelativeLayout>
+
+			<!--app:headerLayout="@layout/nav_header_main"
+                app:menu="@menu/activity_main_drawer"-->
+
+			<!--<android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom">
+
+                <Button
+                    android:id="@+id/navFooterStamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/nav_footer_stamp_bottom"
+                    android:background="@drawable/ic_stamp"
+                    android:gravity="center_horizontal"
+                    app:layout_constraintBottom_toTopOf="@+id/navFooterReadMore"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+                <TextView
+                    android:id="@+id/navFooterReadMore"
+                    style="@style/nav_item_title"
+                    android:layout_marginBottom="@dimen/nav_footer_read_more_bottom"
+                    android:gravity="center_horizontal"
+                    android:text="@string/nav_footer_read_more"
+                    android:focusable="false"
+                    app:layout_constraintBottom_toTopOf="@+id/navFooterVersion"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+                <TextView android:id="@+id/navFooterVersion"
+                    style="@style/nav_footer_version"
+                    android:layout_marginStart="@dimen/nav_footer_version_start"
+                    android:layout_marginBottom="@dimen/nav_footer_version_bottom"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:text="version" />
+
+            </android.support.constraint.ConstraintLayout>-->
+
+			<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+
+				<include android:id="@+id/navLogin"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					layout="@layout/nav_item_login"
+					android:visibility="visible"/>
+
+				<include android:id="@+id/navTransfers"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					layout="@layout/nav_item_requests"
+					android:layout_below="@+id/navLogin"
+					android:visibility="gone"/>
+
+				<include android:id="@+id/navSettings"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					layout="@layout/nav_item_settings"
+					android:layout_below="@+id/navTransfers"/>
+
+				<include android:id="@+id/navAbout"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					layout="@layout/nav_item_about"
+					android:layout_below="@+id/navSettings"/>
+
+				<include android:id="@+id/navBecomeACarrier"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					layout="@layout/nav_item_become_a_carrier"
+					android:layout_below="@+id/navAbout"
+					android:visibility="visible"/>
+
+				<include android:id="@+id/navPassengerMode"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					layout="@layout/nav_item_passenger_mode"
+					android:layout_below="@+id/navBecomeACarrier"
+					android:visibility="gone"/>
+
+				<RelativeLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_below="@+id/navAbout"
+					android:layout_alignParentBottom="true">
+
+					<Button
+						android:id="@+id/navFooterStamp"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_above="@+id/navFooterReadMore"
+						android:layout_centerHorizontal="true"
+						android:background="@drawable/ic_stamp"
+						android:layout_marginBottom="8dp"/>
+
+					<TextView
+						android:id="@+id/navFooterReadMore"
+						style="@style/nav_item_title"
+						android:layout_above="@+id/navFooterVersion"
+						android:layout_marginBottom="8dp"
+						android:gravity="center_horizontal"
+						android:text="@string/nav_footer_read_more" />
+
+					<TextView
+						android:id="@+id/navFooterVersion"
+						style="@style/nav_footer_version"
+						android:layout_alignParentBottom="true"
+						android:layout_marginStart="@dimen/nav_footer_version_start"
+						android:layout_marginBottom="5dp"
+						android:text="version" />
+
+				</RelativeLayout>
+
+			</RelativeLayout>
+
+		</LinearLayout>
+
 	</android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

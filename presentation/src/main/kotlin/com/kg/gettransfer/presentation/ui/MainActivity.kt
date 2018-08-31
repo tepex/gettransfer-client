@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
 import android.support.design.widget.AppBarLayout
-import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 
 import android.support.v4.app.ActivityOptionsCompat
@@ -25,8 +24,6 @@ import android.transition.Fade
 import android.util.Pair
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 
@@ -103,6 +100,17 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 		presenter.readMoreClick()
 	}
 
+	private val itemsNavigationViewListener = View.OnClickListener { item ->
+		when(item.id){
+			R.id.navLogin -> presenter.onLoginClick()
+			R.id.navAbout -> presenter.onAboutClick()
+			R.id.navSettings -> presenter.onSettingsClick()
+			R.id.navTransfers -> presenter.onTransfersClick()
+			else -> Timber.d("No route")
+		}
+		drawer.closeDrawer(GravityCompat.START)
+	}
+
 	private val navigator: Navigator = object: SupportAppNavigator(this, Screens.NOT_USED) {
 		protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
 			when(screenKey) {
@@ -118,7 +126,7 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 				Screens.CREATE_ORDER -> return Intent(this@MainActivity, CreateOrderActivity::class.java)
 				Screens.SETTINGS -> return Intent(this@MainActivity, SettingsActivity::class.java)
 				Screens.LOGIN -> return Intent(this@MainActivity, LoginActivity::class.java)
-				Screens.ARCHIVED_RIDES -> return Intent(this@MainActivity, OffersActivity::class.java)
+				Screens.TRANSFERS -> return Intent(this@MainActivity, OffersActivity::class.java)
 			}
 			return null
 		}
@@ -181,17 +189,17 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 			}
 		})
 		
-		(navView as NavigationView).setNavigationItemSelectedListener { item ->
+		/*(navView as NavigationView).setNavigationItemSelectedListener { item ->
             when(item.itemId) {
-				R.id.nav_login -> presenter.onLoginClick()
-                R.id.nav_about -> presenter.onAboutClick()
-                R.id.nav_settings -> presenter.onSettingsClick()
-				R.id.nav_archived_rides -> presenter.onArchivedRidesClick()
+				R.id.navLogin -> presenter.onLoginClick()
+                R.id.navAbout -> presenter.onAboutClick()
+                R.id.navSettings -> presenter.onSettingsClick()
+				R.id.nav_archived_rides -> presenter.onTransfersClick()
                 else -> Timber.d("No route for ${item.title}")
             }
             drawer.closeDrawer(GravityCompat.START)
             true
-        }
+        }*/
 
         (appbar as AppBarLayout).bringToFront()
 		
@@ -288,11 +296,19 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 		navFooterStamp.setOnClickListener(readMoreListener)
 		navFooterReadMore.setOnClickListener(readMoreListener)
 
-		headerView = navView.getHeaderView(0)
+		/*headerView = navView.getHeaderView(0)
 		val shareBtn: ImageView = headerView.findViewById(R.id.nav_header_share) as ImageView
 		shareBtn.setOnClickListener {
 			Timber.d("Share action")
-		}
+		}*/
+
+		navHeaderShare.setOnClickListener {Timber.d("Share action")}
+		navLogin.setOnClickListener(itemsNavigationViewListener)
+		navTransfers.setOnClickListener(itemsNavigationViewListener)
+		navSettings.setOnClickListener(itemsNavigationViewListener)
+		navAbout.setOnClickListener(itemsNavigationViewListener)
+		navBecomeACarrier.setOnClickListener(itemsNavigationViewListener)
+		navPassengerMode.setOnClickListener(itemsNavigationViewListener)
 	}
 	
 	private fun initGoogleMap(mapViewBundle: Bundle?) {
@@ -373,16 +389,28 @@ class MainActivity: MvpAppCompatActivity(), MainView, View.OnFocusChangeListener
 	override fun showLoginInfo(account: Account) {
 	    Timber.d("show Login: %s", account)
 	    if(account.email == null) {
-	        headerView.navHeaderName.visibility = View.GONE
+	        /*headerView.navHeaderName.visibility = View.GONE
 	        headerView.navHeaderEmail.visibility = View.GONE
-	        navView.menu.findItem(R.id.nav_login).isVisible = true
+	        navView.menu.findItem(R.id.navLogin).isVisible = true*/
+
+			navHeaderName.visibility = View.GONE
+			navHeaderEmail.visibility = View.GONE
+			navLogin.visibility = View.VISIBLE
+			navTransfers.visibility = View.GONE
 	    }
 	    else {
-	        headerView.navHeaderName.visibility = View.VISIBLE
+	        /*headerView.navHeaderName.visibility = View.VISIBLE
 	        headerView.navHeaderEmail.visibility = View.VISIBLE
 	        headerView.navHeaderName.text = account.fullName
 	        headerView.navHeaderEmail.text = account.email
-	        navView.menu.findItem(R.id.nav_login).isVisible = false
+	        navView.menu.findItem(R.id.navLogin).isVisible = false*/
+
+			navHeaderName.visibility = View.VISIBLE
+			navHeaderEmail.visibility = View.VISIBLE
+			navHeaderName.text = account.fullName
+			navHeaderEmail.text = account.email
+			navLogin.visibility = View.GONE
+			navTransfers.visibility = View.VISIBLE
 	    }
 	}
 }

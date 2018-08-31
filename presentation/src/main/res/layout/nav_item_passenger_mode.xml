@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/nav_item">
+
+    <ImageView
+        android:id="@+id/imgPassengerMode"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_switch_on"/>
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/nav_item_title"
+        android:text="@string/text_nav_passenger_mode_title"
+        android:layout_toEndOf="@+id/imgPassengerMode"/>
+
+    <TextView
+        style="@style/nav_item_subtitle"
+        android:text="@string/text_nav_passenger_mode_subtitle"
+        android:layout_below="@+id/title"
+        android:layout_toEndOf="@+id/imgPassengerMode"/>
+</RelativeLayout>

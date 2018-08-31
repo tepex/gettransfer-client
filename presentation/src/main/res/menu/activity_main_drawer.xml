@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
-	<item android:id="@+id/nav_login"
+	<item android:id="@+id/navLogin"
 		app:actionLayout="@layout/nav_item_login"/>
 	<item android:id="@+id/nav_active_rides"
 		app:actionLayout="@layout/nav_item_active_rides" />
 	<item android:id="@+id/nav_archived_rides"
 		app:actionLayout="@layout/nav_item_archived_rides" />
-	<item android:id="@+id/nav_settings"
+	<item android:id="@+id/navSettings"
 		app:actionLayout="@layout/nav_item_settings" />
-	<item android:id="@+id/nav_about"
+	<item android:id="@+id/navAbout"
 		app:actionLayout="@layout/nav_item_about" />
 </menu>

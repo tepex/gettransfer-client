@@ -77,6 +77,6 @@ class MainPresenter(private val cc: CoroutineContexts,
     fun onAboutClick() { router.navigateTo(Screens.ABOUT) }
     fun readMoreClick() { router.navigateTo(Screens.READ_MORE) }
     fun onSettingsClick() { router.navigateTo(Screens.SETTINGS) }
-    fun onArchivedRidesClick() {router.navigateTo(Screens.ARCHIVED_RIDES)}
+    fun onTransfersClick() {router.navigateTo(Screens.TRANSFERS)}
     fun onBackCommandClick() { router.exit() }
 }

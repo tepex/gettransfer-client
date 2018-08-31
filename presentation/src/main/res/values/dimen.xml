@@ -14,19 +14,20 @@
 	<dimen name="nav_header_height">148dp</dimen>
 	<dimen name="nav_header_logo_start">16dp</dimen>
 	<dimen name="nav_header_logo_top">48dp</dimen>
+	<dimen name="nav_header_logo_bottom">6dp</dimen>
 	<dimen name="nav_header_share_top">48dp</dimen>
 	<dimen name="nav_header_share_end">16dp</dimen>
 
-	<dimen name="nav_item_margin_top">12dp</dimen>
-	<dimen name="nav_item_margin_bottom">16dp</dimen>
+	<dimen name="nav_item_margin_top">5dp</dimen>
+	<dimen name="nav_item_margin_bottom">5dp</dimen>
 	<dimen name="nav_item_margin_start">30dp</dimen>
 	<dimen name="nav_item_title_size">16sp</dimen>
 	<dimen name="nav_item_subtitle_size">14sp</dimen>
 
 	<dimen name="nav_footer_version_size">10sp</dimen>
 	<dimen name="nav_footer_version_start">50dp</dimen>
-	<dimen name="nav_footer_version_bottom">26dp</dimen>
-	<dimen name="nav_footer_read_more_bottom">32dp</dimen>
+	<dimen name="nav_footer_version_bottom">12dp</dimen>
+	<dimen name="nav_footer_read_more_bottom">20dp</dimen>
 	<dimen name="nav_footer_stamp_bottom">16dp</dimen>
 
 	<!-- Search form -->

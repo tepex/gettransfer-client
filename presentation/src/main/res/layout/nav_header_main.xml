@@ -8,7 +8,7 @@
     android:background="@color/colorPrimary">
 
     <ImageView
-        android:id="@+id/nav_header_logo"
+        android:id="@+id/navHeaderLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/nav_header_logo_start"
@@ -19,7 +19,7 @@
         app:srcCompat="@drawable/nav_header_logo" />
 
     <ImageView
-        android:id="@+id/nav_header_share"
+        android:id="@+id/navHeaderShare"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/nav_header_share_end"

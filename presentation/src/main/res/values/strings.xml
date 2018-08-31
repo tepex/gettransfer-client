@@ -232,19 +232,12 @@
 
     <string name="licence_agreement">Licence agreement</string>
 
+    <string name="sign_up">Sign up</string>
     <string name="sign_out">Sign out</string>
     <string name="application_language">Application language</string>
     <string name="distance_units">Distance units</string>
     <string name="carrier_offers">Carrier offers</string>
     <string name="select">Select</string>
-
-
-
-
-
-
-
-
 
     <string name="count_persons_and_baggage"> X %1s</string>
     <string name="price_from">from %1s</string>
@@ -263,11 +256,22 @@
         <item>December</item>
     </string-array>
 
+    <string name="text_nav_login_title">Sign up</string>
+    <string name="text_nav_login_subtitle">Client and drivers login</string>
 
+    <string name="text_nav_requests_title">Requests</string>
+    <string name="text_nav_requests_subtitle">Active and archived rides</string>
 
+    <string name="text_nav_settings_title">Settings</string>
+    <string name="text_nav_settings_subtitle">Language and payment settings</string>
 
+    <string name="text_nav_about_title">About us</string>
+    <string name="text_nav_about_subtitle">Our features</string>
 
+    <string name="text_nav_become_a_carrier_title">Become a carrier</string>
+    <string name="text_nav_become_a_carrier_subtitle">Drivers registration</string>
 
-
+    <string name="text_nav_passenger_mode_title">Passenger mode</string>
+    <string name="text_nav_passenger_mode_subtitle">Passenger mode</string>
 
 </resources>
