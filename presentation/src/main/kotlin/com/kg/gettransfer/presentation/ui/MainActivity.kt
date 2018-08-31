@@ -88,6 +88,8 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	private var isFirst = true
 	private var centerMarker: Marker? = null
+	
+	var pos: LatLng? = null
 
 	@ProvidePresenter
 	fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
@@ -160,6 +162,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		@JvmField val MY_LOCATION_BUTTON_INDEX = 2
 		@JvmField val COMPASS_BUTTON_INDEX = 5
 		@JvmField val FADE_DURATION  = 500L
+		@JvmField val MAX_INIT_ZOOM = 2.0f
 	}
 
 
@@ -356,36 +359,34 @@ class MainActivity: MvpAppCompatActivity(), MainView {
             presenter.updateCurrentLocation()
             true
         }
-        googleMap.setOnCameraMoveListener { presenter.onCameraMove() }
+        googleMap.setOnCameraMoveListener { presenter.onCameraMove(googleMap.getCameraPosition()!!.target) }
         googleMap.setOnCameraIdleListener { presenter.onCameraIdle() }
-	}
+    }
+    
+    /* MainView */
+    
+    override fun blockInterface(block: Boolean) {}
+    
+    override fun setMapPoint(point: LatLng) {
+        if(centerMarker != null) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(point))
+            moveCenterMarker(point)
+        }
+        else {
+            /* Грязный хак!!! */
+            if(isFirst || googleMap.cameraPosition.zoom <= MAX_INIT_ZOOM) {
+                val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+            }
+            else googleMap.moveCamera(CameraUpdateFactory.newLatLng(point))
+                centerMarker = googleMap.addMarker(MarkerOptions().position(point)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_label_empty)))
+        }
+    }
 
-	/* MainView */
-	
-	override fun blockInterface(block: Boolean) {
-	}
-	
-	override fun setMapPoint(current: LatLng) {
-		Timber.d("setMapPoint: $current")
-		if(centerMarker == null)
-		{
-			/* Грязный хак!!! */
-			val cp = googleMap.cameraPosition
-			if(isFirst || cp.zoom <= 2.0)
-			{
-				val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
-				googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current, zoom))
-			}
-			else googleMap.moveCamera(CameraUpdateFactory.newLatLng(current))
-				centerMarker = googleMap.addMarker(MarkerOptions().position(current)
-						.icon(BitmapDescriptorFactory.fromResource(R.drawable.map_label_empty)))
-		}
-		else
-		{
-			googleMap.moveCamera(CameraUpdateFactory.newLatLng(current))
-			centerMarker!!.setPosition(current)
-		}
-	}
+    override fun moveCenterMarker(point: LatLng) {
+        if(centerMarker != null) centerMarker!!.setPosition(point)
+    }
 	
 	override fun setAddressFrom(address: String) { searchFrom.text = address }
 	

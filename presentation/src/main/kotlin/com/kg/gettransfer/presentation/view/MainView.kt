@@ -11,7 +11,8 @@ import com.kg.gettransfer.domain.model.Account
 @StateStrategyType(OneExecutionStateStrategy::class)
 //interface MainView: MvpView, OnCameraMoveListener
 interface MainView: BaseView {
-	fun setMapPoint(current: LatLng)
-	fun setAddressFrom(address: String)
+    fun setMapPoint(point: LatLng)
+    fun moveCenterMarker(point: LatLng)
+    fun setAddressFrom(address: String)
     fun showLoginInfo(account: Account)
 }

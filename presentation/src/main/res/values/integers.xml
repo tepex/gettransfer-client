@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<integer name="map_min_zoom">17</integer>
+	<integer name="map_min_zoom">13</integer>
 	<!-- минимальное расстояние для вычисления адреса -->
 	<integer name="map_min_distance_to_request_address">30</integer>
 </resources>

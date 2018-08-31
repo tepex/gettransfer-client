@@ -20,7 +20,6 @@ import timber.log.Timber
 class AddressRepositoryImpl(private val geocoder: Geocoder,
                             private val gdClient: GeoDataClient,
                             private val pdClient: PlaceDetectionClient) : AddressRepository {
-    /*
     private val addressCache = AddressCache()
 
     override fun getAddressByLocation(point: Point): GTAddress {
@@ -29,7 +28,7 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
             val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
             val addr = list?.firstOrNull()?.getAddressLine(0)
             if(addr != null) {
-                address = GTAddress(address = addr, point = point)
+                address = GTAddress(name = addr, primary = null, secondary = null, point = point)
                 addressCache.putAddress(address)
             }
             else throw RuntimeException("Address not found")
@@ -38,7 +37,6 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
     }
 
     override fun getCachedAddress() = addressCache.getLastAddress()
-    */
 
     override fun getCurrentAddress(): GTAddress {
         val results = pdClient.getCurrentPlace(null)
