@@ -13,6 +13,10 @@ class AddressCache(private val minDistance: Int = 0) {
 	var address: GTAddress? = null
 	var point: Point? = null
 	
+	var lastAddress: GTAddress? = null
+	    get() = address
+	    private set
+	
 	fun getAddress(point: Point): GTAddress? {
 		return if(checkDistance(point)) address
 		else null
@@ -27,8 +31,6 @@ class AddressCache(private val minDistance: Int = 0) {
 		this.point = address.point
 		this.address = address
 	}
-	
-	fun getLastAddress(): GTAddress? = address
 	
 	/**
 	 * Проверка превышения минимального расстояния.

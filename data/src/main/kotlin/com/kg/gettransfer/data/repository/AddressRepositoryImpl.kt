@@ -28,7 +28,7 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
             val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
             val addr = list?.firstOrNull()?.getAddressLine(0)
             if(addr != null) {
-                address = GTAddress(name = addr, primary = null, secondary = null, point = point)
+                address = GTAddress(placeTypes = listOf(GTAddress.TYPE_STREET_ADDRESS), name = addr, primary = null, secondary = null, point = point)
                 addressCache.putAddress(address)
             }
             else throw RuntimeException("Address not found")
@@ -36,7 +36,7 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
         return address
     }
 
-    override fun getCachedAddress() = addressCache.getLastAddress()
+    override fun getCachedAddress() = addressCache.lastAddress
 
     override fun getCurrentAddress(): GTAddress {
         val results = pdClient.getCurrentPlace(null)
@@ -45,10 +45,12 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
         if (list.isEmpty()) throw RuntimeException("Address not found")
 
         val place = list.get(0).place
-        return GTAddress(place.id, place.placeTypes,
+        val address = GTAddress(place.id, place.placeTypes,
                 place.name.toString(), // place.address.toString()
                 null, null,
                 Point(place.latLng.latitude, place.latLng.longitude))
+        addressCache.putAddress(address)
+        return address
     }
 
     /**

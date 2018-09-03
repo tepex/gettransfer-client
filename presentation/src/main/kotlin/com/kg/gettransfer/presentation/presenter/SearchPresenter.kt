@@ -43,7 +43,7 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	override fun onFirstViewAttach() {
 		utils.launchAsyncTryCatchFinally(compositeDisposable, {
 			viewState.blockInterface(true)
-			addressFrom = utils.asyncAwait { addressInteractor.getCurrentAddress() }
+			addressFrom = utils.asyncAwait { addressInteractor.getCachedAddress()!! }
 			viewState.setAddressFrom(addressFrom.name, false)
 		}, { e ->
 			Timber.e(e)
