@@ -91,7 +91,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
         var account = cacheRepository.account
         if(request) {
             val response: ApiResponse<ApiAccountWrapper> = tryTwice { api.getAccount() }
-            if(response.data?.account != null) account = mapApiAccount(response.data?.account!!)
+            if(response.data?.account != null) account = Mappers.mapApiAccount(response.data?.account!!, configs!!)
             cacheRepository.account = account
         }
         return account
@@ -99,7 +99,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 
     override suspend fun putAccount(account: Account) {
         cacheRepository.account = account
-        tryPutAccount(mapAccount(account))
+        tryPutAccount(Mappers.mapAccount(account))
     }
     
     private suspend fun tryPutAccount(apiAccount: ApiAccount): ApiResponse<ApiAccountWrapper> {
@@ -125,7 +125,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
         } catch(httpException: HttpException) {
             throw httpException
         }
-        val account = mapApiAccount(response.data!!.account)
+        val account = Mappers.mapApiAccount(response.data!!.account, configs!!)
         //cacheRepository.saveAccount(account)
         return account
     }
@@ -182,14 +182,36 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
         cacheRepository.accessToken = response.data!!.token
     }
 
-    /**
-     * Simple mapper: [ApiAccount] -> [Account]
-     */
-    private fun mapApiAccount(apiAccount: ApiAccount): Account {
-        return Account(apiAccount.email, apiAccount.phone,
-                       configs!!.availableLocales.find { it.language == apiAccount.locale }!!,
-                       configs!!.supportedCurrencies.find { it.currencyCode == apiAccount.currency }!!,
-                       apiAccount.distanceUnit, apiAccount.fullName, apiAccount.groups, apiAccount.termsAccepted)
+    override suspend fun createTransfer(from: GTAddress,
+                                        to: GTAddress,
+                                        tripTo: Trip,
+                                        tripReturn: Trip?,
+                                        transportTypes: List<String>,
+                                        pax: Int,
+                                        childSeats: Int?,
+                                        passengerOfferedPrice: Int?,
+                                        nameSign: String,
+                                        comment: String?,
+                                        account: Account,
+                                        promoCode: String?,
+                                        paypalOnly: Boolean): Transfer {
+        val response: ApiResponse<ApiTransferWrapper> = tryPostTransfer(Mappers.mapTransferRequest(
+            from, to, tripTo, tripReturn, transportTypes, pax, childSeats, passengerOfferedPrice, nameSign, comment,
+            account, promoCode, paypalOnly))
+        
+        return Mappers.mapApiTransfer(response.data?.transfer!!)
+    }
+    
+    private suspend fun tryPostTransfer(apiTransfer: ApiTransferRequest): ApiResponse<ApiTransferWrapper> {
+        return try { api.postTransfer(apiTransfer).await() }
+        catch(e: Exception) {
+            if(e is ApiException) throw e /* second invocation */
+            val ae = ApiException(e)
+            if(!ae.isInvalidToken()) throw ae
+
+            try { updateAccessToken() } catch(e1: Exception) { throw ApiException(e1) }
+            return try { api.postTransfer(apiTransfer).await() } catch(e2: Exception) { throw ApiException(e2) }
+        }
     }
 
 	override suspend fun getAllTransfers(): List<Transfer> {
@@ -200,7 +222,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 		}
 
 		val transfers: List<ApiTransfer> = response.data!!.transfers
-		return transfers.map {transfer -> setTransferData(transfer) }
+		return transfers.map {transfer -> Mappers.mapApiTransfer(transfer) }
 	}
 
 	override suspend fun getTransfer(idTransfer: Long): Transfer {
@@ -256,6 +278,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 				transfer.time, paidSum, remainsToPay, transfer.paidPercentage, transfer.pendingPaymentId,
                 transfer.bookNow, transfer.bookNowExpiration, transfer.transportTypeIds, transfer.passengerOfferedPrice,
                 price, transfer.editableFields)
+//		return Mappers.mapApiTransfer(transfer)
 	}
 
     override suspend fun getOffers(idTransfer: Long): List<Offer> {

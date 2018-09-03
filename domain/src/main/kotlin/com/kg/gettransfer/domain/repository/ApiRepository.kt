@@ -17,4 +17,17 @@ interface ApiRepository {
     suspend fun getTransfersArchive(): List<Transfer>
     suspend fun getTransfersActive(): List<Transfer>
     suspend fun getOffers(idTransfer: Long): List<Offer>
+    suspend fun createTransfer(from: GTAddress,
+                               to: GTAddress,
+                               tripTo: Trip,
+                               tripReturn: Trip?,
+                               transportTypes: List<String>,
+                               pax: Int,
+                               childSeats: Int?,
+                               passengerOfferedPrice: Int?,
+                               nameSign: String,
+                               comment: String?,
+                               account: Account,
+                               promoCode: String?,
+                               paypalOnly: Boolean): Transfer
 }

@@ -17,6 +17,8 @@ import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 
 import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.Trip
 import com.kg.gettransfer.domain.model.RouteInfo
 
 import com.kg.gettransfer.presentation.Screens
@@ -27,11 +29,11 @@ import com.kg.gettransfer.presentation.view.CreateOrderView
 
 import kotlinx.coroutines.experimental.Job
 
+import java.util.Date
+
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
-import java.time.LocalDateTime
-import java.util.*
 
 @InjectViewState
 class CreateOrderPresenter(private val resources: Resources,
@@ -46,7 +48,16 @@ class CreateOrderPresenter(private val resources: Resources,
 	lateinit var configs: ConfigsModel
 	var account: Account? = null
     lateinit var routeInfo: RouteInfo
-
+    
+    private var passengers: Int = MIN_PASSENGERS
+    private var children: Int = MIN_CHILDREN
+    var flightNumber: String? = null
+    
+    companion object {
+        @JvmField val MIN_PASSENGERS = 1
+        @JvmField val MIN_CHILDREN = 0
+    }
+    
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
             viewState.setRoute(addressInteractor.route)
@@ -68,14 +79,18 @@ class CreateOrderPresenter(private val resources: Resources,
         }, { /* viewState.blockInterface(false) */ })
     }
 	
-    fun changeCounter(counterTextView: TextView, num: Int) {
-        var counter = counterTextView.text.toString().toInt()
-        var minCounter = 0
-        if (counterTextView.id == R.id.tvCountPerson) minCounter = 1
-        if (counter + num >= minCounter) counter += num
-        viewState.setCounters(counterTextView, counter)
+    fun changePassengers(count: Int) {
+        passengers += count
+        if(passengers < MIN_PASSENGERS) passengers = MIN_PASSENGERS
+        viewState.setPassengers(passengers)
     }
 
+    fun changeChildren(count: Int) {
+        children += count
+        if(children < MIN_CHILDREN) children = MIN_CHILDREN
+        viewState.setChildren(children)
+    }
+    
     fun changeDateTimeTransfer(year: Int, month: Int, day: Int, hour: Int, minute: Int) {
         val dateTimeString = StringBuilder()
         dateTimeString.append(day).append(" ").append(resources.getStringArray(R.array.months_name)[month])
@@ -90,7 +105,47 @@ class CreateOrderPresenter(private val resources: Resources,
     fun setComment(comment: String) { viewState.setComment(comment) }
     fun showLicenceAgreement() { router.navigateTo(Screens.LICENCE_AGREE) }
 
-    fun onGetTransferClick() {router.navigateTo(Screens.OFFERS)}
+    fun onGetTransferClick() {
+        viewState.blockInterface(true)
+        val from = addressInteractor.route.first
+        val to = addressInteractor.route.second
+        val trip = Trip(Date(), viewState.getFlightNumber())
+        /* filter */
+        val transportTypes = configs.transportTypes
+        
+        Timber.d("from: %s", from)
+        Timber.d("to: %s", to)
+        Timber.d("trip: %s", trip)
+        Timber.d("transport types: %s", transportTypes)
+        Timber.d("passengers: %d", passengers)
+        Timber.d("children: %d", children)
+        /*
+        utils.launchAsyncTryCatchFinally(compositeDisposable, {
+            utils.asyncAwait { apiInteractor.createTransfer(
+                    addressInteractor.route.first,
+                    addressInteractor.route.second,
+                    Trip(Date()), null,
+                    
+                    
+            
+            ) 
+            router.navigateTo(Screens.OFFERS)
+            }
+        }, { e ->
+            if(e is ApiException && e.isNotLoggedIn()) login()
+            else {
+                Timber.e(e)
+                viewState.setError(R.string.err_server)
+            }
+        }, { viewState.blockInterface(false) })
+        */
+    }
+    
+    private fun login() {
+        Timber.d("go to login")
+        router.navigateTo(Screens.LOGIN) 
+    }
+
     
     fun onBackCommandClick() { viewState.finish() }
     

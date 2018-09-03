@@ -1,0 +1,85 @@
+package com.kg.gettransfer.data.repository
+
+import com.kg.gettransfer.data.model.*
+import com.kg.gettransfer.domain.model.*
+
+import java.text.SimpleDateFormat
+
+class Mappers {
+    companion object {
+        private val SERVER_DATE_FORMAT = SimpleDateFormat("yyyy/MM/dd")
+        private val SERVER_TIME_FORMAT = SimpleDateFormat("HH:mm")
+        /**
+         * Simple mapper: [ApiAccount] -> [Account]
+         */
+        fun mapApiAccount(apiAccount: ApiAccount, configs: Configs): Account {
+            return Account(apiAccount.email, apiAccount.phone,
+                           configs.availableLocales.find { it.language == apiAccount.locale }!!,
+                           configs.supportedCurrencies.find { it.currencyCode == apiAccount.currency }!!,
+                           apiAccount.distanceUnit, apiAccount.fullName, apiAccount.groups, apiAccount.termsAccepted)
+        }
+        
+        /**
+         * [Account] -> [ApiAccount]
+         */
+        fun mapAccount(account: Account): ApiAccount {
+            return ApiAccount(email = account.email, phone = account.phone, fullName = account.fullName)
+        }
+        
+        /**
+         * [ApiTransfer] -> [Transfer]
+         */
+        fun mapApiTransfer(apiTransfer: ApiTransfer): Transfer {
+            var to: CityPoint? = null
+            if(apiTransfer.to != null) to = CityPoint(apiTransfer.to!!.name, apiTransfer.to!!.point, apiTransfer.to!!.placeId)
+	    
+            return Transfer(apiTransfer.id!!, apiTransfer.createdAt!!, apiTransfer.duration, apiTransfer.distance,
+                apiTransfer.status!!, CityPoint(apiTransfer.from.name, apiTransfer.from.point, apiTransfer.from.placeId),
+                to, apiTransfer.dateToLocal!!, apiTransfer.dateReturnLocal, apiTransfer.dateRefund!!, apiTransfer.nameSign,
+                apiTransfer.comment, apiTransfer.malinaCard, apiTransfer.flightNumber, apiTransfer.flightNumberReturn,
+                apiTransfer.pax, apiTransfer.childSeats!!, apiTransfer.offersCount!!, apiTransfer.relevantCarriersCount!!,
+                apiTransfer.offersUpdatedAt, apiTransfer.time!!,
+                Money(apiTransfer.paidSum!!.default, apiTransfer.paidSum!!.preferred),
+                Money(apiTransfer.remainsToPay!!.default, apiTransfer.remainsToPay!!.preferred),
+                apiTransfer.paidPercentage!!, apiTransfer.pendingPaymentId, apiTransfer.bookNow!!,
+                apiTransfer.bookNowExpiration, apiTransfer.transportTypeIds, apiTransfer.passengerOfferedPrice,
+                Money(apiTransfer.price!!.default, apiTransfer.price!!.preferred), apiTransfer.editableFields!!)
+        }
+	
+        /**
+         * [TransferRequest] -> [ApiTransferRequest]
+         */
+        fun mapTransferRequest(from: GTAddress,
+                               to: GTAddress,
+                               tripTo: Trip,
+                               tripReturn: Trip?,
+                               transportTypes: List<String>,
+                               pax: Int,
+                               childSeats: Int?,
+                               passengerOfferedPrice: Int?,
+                               nameSign: String,
+                               comment: String?,
+                               account: Account,
+                               promoCode: String?,
+                               /* Not used now */
+                               paypalOnly: Boolean): ApiTransferRequest {
+            var apiTripReturn: ApiTrip? = null
+            if(tripReturn != null) apiTripReturn = mapTrip(tripReturn)
+            
+            return ApiTransferRequest(mapAddress(from), mapAddress(to), mapTrip(tripTo), apiTripReturn,
+                transportTypes, pax, childSeats, passengerOfferedPrice?.toString(), nameSign, comment, mapAccount(account),
+                promoCode)
+        }
+        
+        /**
+         * [GTAddress] -> [ApiCityPoint]
+         */
+        fun mapAddress(address: GTAddress): ApiCityPoint {
+            return ApiCityPoint(address.name, address.point!!.toString(), address.id!!)
+        }
+        
+        fun mapTrip(trip: Trip): ApiTrip {
+            return ApiTrip(SERVER_DATE_FORMAT.format(trip.dateTime), SERVER_TIME_FORMAT.format(trip.dateTime), trip.flightNumber)
+        }
+    }
+}

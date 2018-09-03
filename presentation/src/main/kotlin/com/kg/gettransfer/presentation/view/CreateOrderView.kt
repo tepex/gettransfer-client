@@ -20,9 +20,9 @@ interface CreateOrderView: BaseView {
     fun setMapInfo(routeInfo: RouteInfo, route: Pair<GTAddress, GTAddress>, distanceUnit: String)
     
     fun setRoute(route: Pair<GTAddress, GTAddress>)
-    fun setCounters(textViewCounter: TextView, count: Int)
+    fun setPassengers(count: Int)
+    fun setChildren(count: Int)
     fun setCurrency(currency: String)
     fun setDateTimeTransfer(dateTimeString: String)
     fun setComment(comment: String)
-    
 }

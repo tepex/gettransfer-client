@@ -1,5 +1,7 @@
 package com.kg.gettransfer.domain.model
 
+import java.util.Date
+
 data class Transfer(val id: Long,
                     val createdAt: String,
                     val duration: Int?,
@@ -29,9 +31,9 @@ data class Transfer(val id: Long,
                     val bookNowExpiration: String?,
                     val transportTypeIds: List<String>,
                     val passengerOfferedPrice: String?,
-                    val price: Money?,
+                    val price: Money,
                     val editableFields: List<String>)
 
-data class Money(val default: String?, val preferred: String?)
-
-data class CityPoint(val name: String?, val point: String?, val placeId: String?)
+data class Money(val default: String, val preferred: String?)
+data class CityPoint(val name: String, val point: String, val placeId: String)
+data class Trip(val dateTime: Date, val flightNumber: String?)

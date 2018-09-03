@@ -102,15 +102,6 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
     var mHour = 0
     var mMinute = 0
     
-    private val clickListenerCounterButtons = View.OnClickListener { view ->
-        when (view.id) {
-            R.id.tvPersonsCounterDown -> presenter.changeCounter(tvCountPerson, -1)
-            R.id.tvPersonsCounterUp -> presenter.changeCounter(tvCountPerson, 1)
-            R.id.tvChildCounterDown -> presenter.changeCounter(tvCountChild, -1)
-            R.id.tvChildCounterUp -> presenter.changeCounter(tvCountChild, 1)
-        }
-    }
-
     @ProvidePresenter
     fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(resources,
                                                                                   coroutineContexts,
@@ -149,7 +140,22 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
 
         changeDateTime(false)
 
-        setOnClickListeners()
+        
+        tvPersonsCounterDown.setOnClickListener { presenter.changePassengers(-1) }
+        tvPersonsCounterUp.setOnClickListener { presenter.changePassengers(1) }
+        tvChildCounterDown.setOnClickListener { presenter.changeChildren(-1) }
+        tvChildCounterUp.setOnClickListener { presenter.changeChildren(1) }
+        
+        layoutDateTimeTransfer.setOnClickListener { changeDateTime(true) }
+        tvComments.setOnClickListener { showPopupWindowComment() }
+        layoutAgreement.setOnClickListener { presenter.showLicenceAgreement() }
+
+        btnGetTransfer.setOnClickListener {
+            var flightNumber = tvFlightOrTrainNumber.text.toString().trim()
+            if(!flightNumber.isEmpty()) presenter.flightNumber = flightNumber
+            else presenter.flightNumber = null
+            presenter.onGetTransferClick() 
+        }
 
         val mapViewBundle = savedInstanceState?.getBundle(MainActivity.MAP_VIEW_BUNDLE_KEY)
         initGoogleMap(mapViewBundle)
@@ -237,19 +243,6 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         }
     }
     
-    private fun setOnClickListeners() {
-        tvPersonsCounterDown.setOnClickListener(clickListenerCounterButtons)
-        tvPersonsCounterUp.setOnClickListener(clickListenerCounterButtons)
-        tvChildCounterDown.setOnClickListener(clickListenerCounterButtons)
-        tvChildCounterUp.setOnClickListener(clickListenerCounterButtons)
-        
-        layoutDateTimeTransfer.setOnClickListener { changeDateTime(true) }
-        tvComments.setOnClickListener { showPopupWindowComment() }
-        layoutAgreement.setOnClickListener { presenter.showLicenceAgreement() }
-
-        btnGetTransfer.setOnClickListener { presenter.onGetTransferClick() }
-    }
-
     private fun showPopupWindowComment(){
         val displaymetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displaymetrics)
@@ -325,10 +318,16 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         presenter.onBackCommandClick()
     }
 
-    override fun setCounters(textViewCounter: TextView, count: Int) {
-        textViewCounter.text = count.toString()
+    override fun setPassengers(count: Int) {
+        tvCountPerson.text = count.toString()
     }
 
+    override fun setChildren(count: Int) {
+        tvCountChild.text = count.toString()
+    }
+    
+    override fun getFlightNumber() = tvFlightOrTrainNumber.text.toString().trim()
+    
     override fun setCurrency(currency: String) { tvCurrencyType.text = currency }
 
     override fun setDateTimeTransfer(dateTimeString: String) {

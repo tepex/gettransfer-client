@@ -53,7 +53,6 @@ interface Api {
 	@GET("$API_TRANSFERS/{id}")
 	fun getTransfer(@Path("id") id: Long): Deferred<ApiResponse<ApiTransferWrapper>>
 
-
 	@GET(API_TRANSFERS_ARCHIVE)
 	fun getTransfersArchive(): Deferred<ApiResponse<ApiTransfers>>
 
@@ -62,4 +61,7 @@ interface Api {
 
 	@GET("$API_TRANSFERS/{id}$API_OFFERS")
 	fun getOffers(@Path("id") id: Long): Deferred<ApiResponse<ApiOffers>>
+	
+	@POST(API_TRANSFERS)
+	fun postTransfer(@Body transfer: ApiTransferRequest): Deferred<ApiResponse<ApiTransferWrapper>>
 }

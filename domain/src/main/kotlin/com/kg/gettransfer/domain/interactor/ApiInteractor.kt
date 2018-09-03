@@ -20,4 +20,20 @@ class ApiInteractor(private val repository: ApiRepository) {
 	suspend fun getTransfersArchive(): List<Transfer> = repository.getTransfersArchive()
 	suspend fun getTransfersActive(): List<Transfer> = repository.getTransfersActive()
 	suspend fun getOffers(idTransfer: Long): List<Offer> = repository.getOffers(idTransfer)
+    suspend fun createTransfer(from: GTAddress,
+                               to: GTAddress,
+                               tripTo: Trip,
+                               tripReturn: Trip?,
+                               transportTypes: List<String>,
+                               pax: Int,
+                               childSeats: Int?,
+                               passengerOfferedPrice: Int?,
+                               nameSign: String,
+                               comment: String?,
+                               account: Account,
+                               promoCode: String?,
+                               paypalOnly: Boolean) = 
+        repository.createTransfer(from, to, tripTo, tripReturn, transportTypes, pax,
+                                  childSeats, passengerOfferedPrice, nameSign, comment,
+                                  account, promoCode, paypalOnly)
 }
