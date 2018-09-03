@@ -20,18 +20,12 @@ import java.util.Locale
 import kotlinx.coroutines.experimental.*
 
 import okhttp3.CookieJar
-import okhttp3.MediaType
 import okhttp3.OkHttpClient
-import okhttp3.Protocol
-import okhttp3.Response
-import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
-import timber.log.Timber
 
 class ApiRepositoryImpl(private val context: Context, url: String, private val apiKey: String): ApiRepository {
     private var cacheRepository = CacheRepositoryImpl(context)
@@ -220,17 +214,82 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 		return setTransferData(transfer)
 	}
 
+    override suspend fun getTransfersArchive(): List<Transfer> {
+        val response: ApiResponse<ApiTransfers> = try {
+            api.getTransfersArchive().await()
+        } catch (httpException: HttpException) {
+            throw httpException
+        }
+
+        val transfers: List<ApiTransfer> = response.data!!.transfers
+        return transfers.map {transfer -> setTransferData(transfer) }
+    }
+
+    override suspend fun getTransfersActive(): List<Transfer> {
+        val response: ApiResponse<ApiTransfers> = try {
+            api.getTransfersActive().await()
+        } catch (httpException: HttpException) {
+            throw httpException
+        }
+
+        val transfers: List<ApiTransfer> = response.data!!.transfers
+        return transfers.map {transfer -> setTransferData(transfer) }
+    }
+
 	fun setTransferData(transfer: ApiTransfer): Transfer{
+        val from = CityPoint(transfer.from.name, transfer.from.point, transfer.from.placeId)
+
+        val to = if (transfer.to != null) CityPoint(transfer.to?.name, transfer.to?.point, transfer.to?.placeId)
+                 else null
+
+        val paidSum = Money(transfer.paidSum.default, transfer.paidSum.preferred)
+
+        val remainsToPay = Money(transfer.remainsToPay.default, transfer.remainsToPay.preferred)
+
+        val price = if(transfer.price != null) Money(transfer.price?.default, transfer.price?.preferred)
+                    else null
+
 		return Transfer(transfer.id, transfer.createdAt, transfer.duration, transfer.distance, transfer.status,
-				CityPoint(transfer.from.name, transfer.from.point, transfer.from.placeId),
-				CityPoint(transfer.to?.name, transfer.to?.point, transfer.to?.placeId), transfer.dateToLocal,
-				transfer.dateReturnLocal, transfer.dateRefund, transfer.nameSign, transfer.comment,
-				transfer.malinaCard, transfer.flightNumber, transfer.flightNumberReturn, transfer.pax,
+				from, to, transfer.dateToLocal, transfer.dateReturnLocal, transfer.dateRefund, transfer.nameSign,
+                transfer.comment, transfer.malinaCard, transfer.flightNumber, transfer.flightNumberReturn, transfer.pax,
 				transfer.childSeats, transfer.offersCount, transfer.relevantCarriersCount, transfer.offersUpdatedAt,
-				transfer.time, Money(transfer.paidSum.default, transfer.paidSum.preferred),
-				Money(transfer.remainsToPay.default, transfer.remainsToPay.preferred), transfer.paidPercentage,
-				transfer.pendingPaymentId, transfer.bookNow, transfer.bookNowExpiration, transfer.transportTypeIds,
-				transfer.passengerOfferedPrice, Money(transfer.price?.default, transfer.price?.preferred),
-				transfer.editableFields)
+				transfer.time, paidSum, remainsToPay, transfer.paidPercentage, transfer.pendingPaymentId,
+                transfer.bookNow, transfer.bookNowExpiration, transfer.transportTypeIds, transfer.passengerOfferedPrice,
+                price, transfer.editableFields)
 	}
+
+    override suspend fun getOffers(idTransfer: Long): List<Offer> {
+        val response: ApiResponse<ApiOffers> = try {
+            api.getOffers(idTransfer).await()
+        } catch (httpException: HttpException) {
+            throw httpException
+        }
+
+        val transfers: List<ApiOffer> = response.data!!.offers
+        return transfers.map {offer -> setOfferData(offer) }
+    }
+
+    fun setOfferData(offer: ApiOffer): Offer{
+        val price = Price(Money(offer.price.base.default, offer.price.base.preferred), offer.price.percentage30,
+                offer.price.percentage70, offer.price.amount)
+
+        val ratings = if(offer.ratings != null) Ratings(offer.ratings?.average, offer.ratings?.vehicle,
+                offer.ratings?.driver, offer.ratings?.fair)
+                      else null
+
+        val carrierLanguages = offer.carrier.languages.map { Locale(it.code) }
+        val carrierRatings = Ratings(offer.carrier.ratings.average, offer.carrier.ratings.vehicle,
+                offer.carrier.ratings.driver, offer.carrier.ratings.fair)
+        val carrier = Carrier(offer.carrier.title, offer.carrier.email, offer.carrier.phone, offer.carrier.id,
+                offer.carrier.approved, offer.carrier.completedTransfers, carrierLanguages, carrierRatings, offer.carrier.canUpdateOffers)
+
+        val vehicle = Vehicle(offer.vehicle.name, offer.vehicle.registrationNumber, offer.vehicle.year, offer.vehicle.color,
+                offer.vehicle.transportTypeId, offer.vehicle.paxMax, offer.vehicle.luggageMax, offer.vehicle.photos)
+
+        val driver = if(offer.driver != null) Driver(offer.driver!!.fullName, offer.driver!!.phone)
+                     else null
+
+        return Offer(offer.id, offer.status, offer.wifi, offer.refreshments, offer.createdAt,
+                price, ratings, offer.passengerFeedback, carrier, vehicle, driver)
+    }
 }

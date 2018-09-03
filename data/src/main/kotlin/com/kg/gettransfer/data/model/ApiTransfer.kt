@@ -1,6 +1,5 @@
 package com.kg.gettransfer.data.model
 
-import com.google.android.gms.common.api.Api
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 

@@ -14,6 +14,9 @@ interface Api {
         const val API_ROUTE_INFO   = "/api/route_info"
         const val API_LOGIN        = "/api/login"
         const val API_TRANSFERS    = "/api/transfers"
+		const val API_TRANSFERS_ARCHIVE = "/api/transfers/archive"
+		const val API_TRANSFERS_ACTIVE  = "/api/transfers/active"
+		const val API_OFFERS       = "/offers"
     }
     
 	@GET(API_ACCESS_TOKEN)
@@ -49,4 +52,14 @@ interface Api {
 
 	@GET("$API_TRANSFERS/{id}")
 	fun getTransfer(@Path("id") id: Long): Deferred<ApiResponse<ApiTransferWrapper>>
+
+
+	@GET(API_TRANSFERS_ARCHIVE)
+	fun getTransfersArchive(): Deferred<ApiResponse<ApiTransfers>>
+
+	@GET(API_TRANSFERS_ACTIVE)
+	fun getTransfersActive(): Deferred<ApiResponse<ApiTransfers>>
+
+	@GET("$API_TRANSFERS/{id}$API_OFFERS")
+	fun getOffers(@Path("id") id: Long): Deferred<ApiResponse<ApiOffers>>
 }

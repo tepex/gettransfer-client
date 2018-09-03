@@ -5,6 +5,7 @@ import com.arellomobile.mvp.MvpPresenter
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
+import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.presentation.view.OffersView
 import kotlinx.coroutines.experimental.Job
@@ -19,6 +20,9 @@ class OffersPresenter(private val cc: CoroutineContexts,
 
     lateinit var allTransfers: List<Transfer>
     lateinit var transfer: Transfer
+    lateinit var archivedTransfers: List<Transfer>
+    lateinit var activeTransfers: List<Transfer>
+    lateinit var offers: List<Offer>
 
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
@@ -26,6 +30,9 @@ class OffersPresenter(private val cc: CoroutineContexts,
             utils.asyncAwait {
                 allTransfers = apiInteractor.getAllTransfers()
                 transfer = apiInteractor.getTransfer(allTransfers.get(0).id)
+                archivedTransfers = apiInteractor.getTransfersArchive()
+                activeTransfers = apiInteractor.getTransfersActive()
+                offers = apiInteractor.getOffers(allTransfers.get(0).id)
             }
         }, { e ->
             Timber.e(e)
