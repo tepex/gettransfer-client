@@ -7,10 +7,11 @@ apply plugin: 'de.felixschulze.gradle.hockeyapp'
 ext {
 	support_version           = "28.0.0-rc01"
 	constraint_layout_version = "2.0.0-alpha2"
-	koin_version              = "1.0.0-beta-8"
+	koin_version              = "1.0.0-beta-9"
 	moxy_version              = "1.5.5"
 	cicerone_version          = "3.0.0"
 	circle_indicator_version  = "1.2.2"
+	hockey_version            = "5.1.1"
 }
 
 android {
@@ -150,7 +151,7 @@ dependencies {
     implementation libs.timber
 
 	// Hockey
-	implementation 'net.hockeyapp.android:HockeySDK:5.0.3'
+	implementation "net.hockeyapp.android:HockeySDK:$hockey_version"
     
 	testImplementation libs.junit
 	testImplementation libs.hamcrest
