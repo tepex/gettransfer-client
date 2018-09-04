@@ -1,70 +1,35 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.Manifest
-
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
-import android.content.pm.PackageManager
-
-import android.os.Build
 import android.os.Bundle
-
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
-
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.Snackbar
-
-import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
-
-import android.support.v4.content.ContextCompat
-
 import android.support.v7.app.AppCompatDelegate
-
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
-
-import android.text.Editable
-import android.text.TextWatcher
-
-import android.transition.Explode
 import android.transition.Fade
 import android.transition.Slide
-
-import android.view.MenuItem
-import android.view.View
-import android.view.inputmethod.InputMethodManager
-
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-
 import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.CoroutineContexts
-
-import com.kg.gettransfer.domain.model.GTAddress
-
 import com.kg.gettransfer.domain.interactor.AddressInteractor
-
+import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
-
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.android.synthetic.main.toolbar.*
-
 import org.koin.android.ext.android.inject
-
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
-
-import timber.log.Timber
 
 class SearchActivity: MvpAppCompatActivity(), SearchView {
 	@InjectPresenter
@@ -146,8 +111,7 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 
 	@CallSuper
 	protected override fun onDestroy() {
-		
-		super.onDestroy();
+		super.onDestroy()
 	}
 	
 	override fun onBackPressed() {
