@@ -62,12 +62,11 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
         val list = DataBufferUtils.freezeAndClose(results.getResult())
         val ret = list.map {
             GTAddress(it.placeId, it.placeTypes,
-                    it.getFullText(null).toString(),
-                    it.getPrimaryText(null).toString(),
-                    it.getSecondaryText(null).toString(),
-                    null)
+                      it.getFullText(null).toString(),
+                      it.getPrimaryText(null).toString(),
+                      it.getSecondaryText(null).toString(),
+                      null)
         }
-        ret.forEach { Timber.d(it.toString()) }
         return ret
     }
 

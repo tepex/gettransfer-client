@@ -35,5 +35,5 @@ data class Transfer(val id: Long,
                     val editableFields: List<String>)
 
 data class Money(val default: String, val preferred: String?)
-data class CityPoint(val name: String, val point: String, val placeId: String)
+data class CityPoint(val name: String, val point: String, val placeId: String?)
 data class Trip(val dateTime: Date, val flightNumber: String?)

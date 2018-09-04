@@ -12,6 +12,9 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 
 import com.kg.gettransfer.R
+
+import com.kg.gettransfer.data.repository.ApiException
+
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.AsyncUtils
 
@@ -50,7 +53,7 @@ class CreateOrderPresenter(private val resources: Resources,
 	private val utils = AsyncUtils(cc)
 	
 	lateinit var configs: ConfigsModel
-	var account: Account? = null
+	lateinit var account: Account
     lateinit var routeInfo: RouteInfo
     lateinit var dateTimeFormat: DateFormat
     
@@ -63,9 +66,6 @@ class CreateOrderPresenter(private val resources: Resources,
             field = value
             viewState.setDateTimeTransfer(dateTimeFormat.format(date))
         }
-    private var name: String? = null
-    private var email: String? = null
-    private var phone: String? = null
     private var flightNumber: String? = null
     private var comment: String? = null
     private var agreeLicence = false
@@ -86,15 +86,18 @@ class CreateOrderPresenter(private val resources: Resources,
                 account = apiInteractor.getAccount()
                 routeInfo = apiInteractor.getRouteInfo(arrayOf(addressInteractor.route.first.point.toString(),
                             secondPoint.toString()), true, false)
-                if(account!!.locale != null) dateTimeFormat = SimpleDateFormat(DATE_TIME_PATTERN, account!!.locale)
-                else dateTimeFormat = SimpleDateFormat(DATE_TIME_PATTERN)
             }
+            
+            viewState.setAccount(account)
 
+            if(account.locale != null) dateTimeFormat = SimpleDateFormat(DATE_TIME_PATTERN, account.locale)
+            else dateTimeFormat = SimpleDateFormat(DATE_TIME_PATTERN)
+            
             viewState.setTransportTypes(configs.transportTypes, routeInfo.prices!!)
             viewState.setCurrencies(configs.currencies)
-            if(account?.currency != null) {
+            if(account.currency != null) {
                 for((i, item) in configs.currencies.withIndex()) {
-                    if(item.code == account!!.currency!!.currencyCode) {
+                    if(item.code == account.currency!!.currencyCode) {
                         changeCurrency(i)
                         break
                     }
@@ -119,20 +122,20 @@ class CreateOrderPresenter(private val resources: Resources,
     }
     
     fun setName(name: String) {
-        if(name.isEmpty()) this.name = null
-        else this.name = name
+        if(name.isEmpty()) account.fullName = null
+        else account.fullName = name
         checkFields()
     }
     
     fun setEmail(email: String) {
-        if(email.isEmpty()) this.email = null
-        else this.email = email
+        if(email.isEmpty()) account.email = null
+        else account.email = email
         checkFields()
     }
     
     fun setPhone(phone: String) {
-        if(phone.isEmpty()) this.phone = phone
-        else this.phone = phone
+        if(phone.isEmpty()) account.phone = phone
+        else account.phone = phone
         checkFields()
     }
 
@@ -164,37 +167,35 @@ class CreateOrderPresenter(private val resources: Resources,
         viewState.blockInterface(true)
         val from = addressInteractor.route.first
         val to = addressInteractor.route.second
+        val trip = Trip(date, flightNumber)
         /* filter */
         val transportTypes = configs.transportTypes.filter { it.checked }.map { it.delegate.id }
         
         Timber.d("from: %s", from)
-        Timber.d("to: %s", to)
-        //Timber.d("trip: %s", trip)
+        Timber.d("to: %s, %s", to, to.point)
+        Timber.d("trip: %s", trip)
         Timber.d("transport types: %s", transportTypes)
         Timber.d("===========")
         Timber.d("passenger price: $cost")
         Timber.d("date: $date")
         Timber.d("passengers: $passengers")
         Timber.d("===========")
-        Timber.d("name: $name")
-        Timber.d("email: $email")
-        Timber.d("phone: $phone")
+        Timber.d("name: ${account.fullName}")
+        Timber.d("email: ${account.email}")
+        Timber.d("phone: ${account.phone}")
         Timber.d("children: $children")
         Timber.d("flightNumber: $flightNumber")
         Timber.d("comment: $comment")
         Timber.d("agree: $agreeLicence")
-        /*
+        Timber.d("account: %s", account)
+
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
-            utils.asyncAwait { apiInteractor.createTransfer(
-                    addressInteractor.route.first,
-                    addressInteractor.route.second,
-                    Trip(Date()), null,
-                    
-                    
-            
-            ) 
-            router.navigateTo(Screens.OFFERS)
+            utils.asyncAwait {
+                val transfer = apiInteractor.createTransfer(from, to, trip, null, transportTypes,
+                                                            passengers, children, cost, account.fullName!!, comment,
+                                                            account, null, false)
             }
+            router.navigateTo(Screens.OFFERS)
         }, { e ->
             if(e is ApiException && e.isNotLoggedIn()) login()
             else {
@@ -202,17 +203,16 @@ class CreateOrderPresenter(private val resources: Resources,
                 viewState.setError(R.string.err_server)
             }
         }, { viewState.blockInterface(false) })
-        */
     }
     
     /* @TODO: Добавить реакцию на некорректное значение в поле. Отображать, где и что введено некорректно. */
     fun checkFields() {
         val typesHasSelected = configs.transportTypes.filter { it.checked }.size > 0
         val actionEnabled = typesHasSelected &&
-                            name != null &&
-                            email != null &&
-                            Patterns.EMAIL_ADDRESS.matcher(email!!).matches() &&
-                            Utils.checkPhone(phone) &&
+                            account.fullName != null &&
+                            account.email != null &&
+                            Patterns.EMAIL_ADDRESS.matcher(account.email!!).matches() &&
+                            Utils.checkPhone(account.phone) &&
                             agreeLicence
         viewState.setGetTransferEnabled(actionEnabled)
     }

@@ -63,5 +63,5 @@ interface Api {
 	fun getOffers(@Path("id") id: Long): Deferred<ApiResponse<ApiOffers>>
 	
 	@POST(API_TRANSFERS)
-	fun postTransfer(@Body transfer: ApiTransferRequest): Deferred<ApiResponse<ApiTransferWrapper>>
+	fun postTransfer(@Body transfer: ApiTransferWrapper): Deferred<ApiResponse<ApiTransferWrapper>>
 }

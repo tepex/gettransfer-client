@@ -5,6 +5,8 @@ import com.kg.gettransfer.domain.model.*
 
 import java.text.SimpleDateFormat
 
+import timber.log.Timber
+
 class Mappers {
     companion object {
         private val SERVER_DATE_FORMAT = SimpleDateFormat("yyyy/MM/dd")
@@ -75,7 +77,10 @@ class Mappers {
          * [GTAddress] -> [ApiCityPoint]
          */
         fun mapAddress(address: GTAddress): ApiCityPoint {
-            return ApiCityPoint(address.name, address.point!!.toString(), address.id!!)
+            Timber.d("address.name: %s", address.name)
+            Timber.d("address.point: %s", address.point)
+            Timber.d("address.id: %s", address.id)
+            return ApiCityPoint(address.name, address.point!!.toString(), address.id)
         }
         
         fun mapTrip(trip: Trip): ApiTrip {

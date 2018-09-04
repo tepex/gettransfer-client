@@ -10,4 +10,6 @@ data class Account(var email: String?,
                    var distanceUnit: String?,
                    var fullName: String?,
                    var groups: Array<String>?,
-                   var termsAccepted: Boolean = true)
+                   var termsAccepted: Boolean = true) {
+    fun isLoggedIn() = email != null
+}

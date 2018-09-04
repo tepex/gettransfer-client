@@ -195,14 +195,14 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
                                         account: Account,
                                         promoCode: String?,
                                         paypalOnly: Boolean): Transfer {
-        val response: ApiResponse<ApiTransferWrapper> = tryPostTransfer(Mappers.mapTransferRequest(
+        val response: ApiResponse<ApiTransferWrapper> = tryPostTransfer(ApiTransferWrapper(Mappers.mapTransferRequest(
             from, to, tripTo, tripReturn, transportTypes, pax, childSeats, passengerOfferedPrice, nameSign, comment,
-            account, promoCode, paypalOnly))
+            account, promoCode, paypalOnly)))
         
         return Mappers.mapApiTransfer(response.data?.transfer!!)
     }
     
-    private suspend fun tryPostTransfer(apiTransfer: ApiTransferRequest): ApiResponse<ApiTransferWrapper> {
+    private suspend fun tryPostTransfer(apiTransfer: ApiTransferWrapper): ApiResponse<ApiTransferWrapper> {
         return try { api.postTransfer(apiTransfer).await() }
         catch(e: Exception) {
             if(e is ApiException) throw e /* second invocation */

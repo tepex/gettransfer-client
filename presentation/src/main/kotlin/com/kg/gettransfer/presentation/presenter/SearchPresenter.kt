@@ -56,9 +56,17 @@ class SearchPresenter(private val cc: CoroutineContexts,
 		else addressFrom = selected
 		
 		if(addressFrom.isConcreteObject() && addressTo?.isConcreteObject() ?: false) {
-			addressInteractor.route = Pair(addressFrom, addressTo!!)
-			router.navigateTo(Screens.CREATE_ORDER)
-			return
+		    utils.launchAsyncTryCatchFinally(compositeDisposable, {
+		        viewState.blockInterface(true)
+	            if(addressTo!!.point == null)
+	                addressTo!!.point = utils.asyncAwait { addressInteractor.getLatLngByPlaceId(addressTo!!.id!!) }
+		        addressInteractor.route = Pair(addressFrom, addressTo!!)
+		        router.navigateTo(Screens.CREATE_ORDER)
+		    }, { e ->
+		        Timber.e(e)
+		        viewState.setError(R.string.err_address_service_xxx, false)
+		    }, { viewState.blockInterface(false) })
+		    return
 		}
 		
 		val sendRequest = selected.needApproximation() /* dirty hack */

@@ -61,7 +61,7 @@ class ApiMoney(@SerializedName("default") @Expose var default: String,
 
 class ApiCityPoint(@SerializedName("name") @Expose var name: String,
                    @SerializedName("point") @Expose var point: String,
-                   @SerializedName("place_id") @Expose var placeId: String)
+                   @SerializedName("place_id") @Expose var placeId: String?)
 
 class ApiTrip(@SerializedName("date") @Expose val date: String,
               @SerializedName("time") @Expose val time: String,

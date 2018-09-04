@@ -9,6 +9,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
+import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.TransportTypePrice
@@ -25,5 +26,6 @@ interface CreateOrderView: BaseView {
     fun setCurrency(currency: String)
     fun setDateTimeTransfer(dateTimeString: String)
     fun setComment(comment: String)
-    fun setGetTransferEnabled(enaled: Boolean)
+    fun setGetTransferEnabled(enabled: Boolean)
+    fun setAccount(account: Account)
 }

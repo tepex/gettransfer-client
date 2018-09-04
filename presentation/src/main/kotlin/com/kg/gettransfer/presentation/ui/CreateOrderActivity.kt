@@ -38,15 +38,18 @@ import android.widget.RelativeLayout
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
+
 import com.google.maps.android.PolyUtil
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 
+import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.domain.interactor.AddressInteractor
@@ -330,10 +333,19 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
     	tvTo.setText(route.second.name)
     }
     
+    override fun setAccount(account: Account) {
+        if(account.fullName != null) tvName.setText(account.fullName)
+        if(account.email != null) {
+            tvEmail.setText(account.email)
+            tvEmail.isEnabled = false
+        }
+        if(account.phone != null) tvPhone.setText(account.phone)
+    }
+    
     override fun setGetTransferEnabled(enabled: Boolean) {
         btnGetTransfer.isEnabled = enabled
     }
-
+    
     override fun setMapInfo(routeInfo: RouteInfo, route: Pair<GTAddress, GTAddress>, distanceUnit: String) {
 
         val distance = String.format(getString(R.string.distance), routeInfo.distance, distanceUnit)
