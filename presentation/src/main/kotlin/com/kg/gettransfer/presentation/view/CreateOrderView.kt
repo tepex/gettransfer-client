@@ -25,4 +25,5 @@ interface CreateOrderView: BaseView {
     fun setCurrency(currency: String)
     fun setDateTimeTransfer(dateTimeString: String)
     fun setComment(comment: String)
+    fun setGetTransferEnabled(enaled: Boolean)
 }

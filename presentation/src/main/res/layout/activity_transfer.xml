@@ -727,7 +727,8 @@
                 android:textSize="@dimen/create_transfer_additionals_top_text_size"
                 android:textColor="@color/colorWhite"
                 android:fontFamily="@font/sf_pro_text_regular"
-                android:stateListAnimator="@null"/>
+                android:stateListAnimator="@null"
+                android:enabled="false" />
 
         </LinearLayout>
 

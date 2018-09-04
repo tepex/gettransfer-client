@@ -21,10 +21,14 @@ import android.widget.EditText
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.CurrencyModel
 
+import java.util.regex.Pattern
+
 import timber.log.Timber
 
 class Utils {
     companion object {
+        private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11}$")
+        
         fun getAlertDialogBuilder(context: Context): AlertDialog.Builder {
             return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && false)
                 AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert)
@@ -72,6 +76,11 @@ class Utils {
             if(view == null) return
             (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
                 .hideSoftInputFromWindow(view.windowToken, 0)
+        }
+        
+        fun checkPhone(phone: String?): Boolean {
+            if(phone == null) return false
+            return PHONE_PATTERN.matcher(phone.trim()).matches()
         }
 	}
 }

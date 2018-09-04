@@ -15,7 +15,9 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.address_list_item.*
 import kotlinx.android.synthetic.main.view_transfer_type.view.*
 
-class TransferTypeAdapter(private var list: List<TransportTypeModel>, private var listPrice: List<TransportTypePrice>):
+class TransferTypeAdapter(private var list: List<TransportTypeModel>,
+                          private var listPrice: List<TransportTypePrice>,
+                          private val listener: ChangeListener):
     RecyclerView.Adapter<TransferTypeAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = list.size
@@ -24,11 +26,11 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>, private va
         ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_transfer_type, parent, false))
 
     override fun onBindViewHolder(holder: ViewHolder, pos: Int) {
-        holder.bind(list.get(pos), listPrice.find { it.tranferId.equals(list.get(pos).delegate.id) }!!)
+        holder.bind(list.get(pos), listPrice.find { it.tranferId.equals(list.get(pos).delegate.id) }!!, listener)
     }
 
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(item: TransportTypeModel, itemPrice: TransportTypePrice) = with(containerView) {
+        fun bind(item: TransportTypeModel, itemPrice: TransportTypePrice, listener: ChangeListener) = with(containerView) {
             tvTransferType.setText(item.nameId)
             tvNumberPersonsTransfer.text = String.format(resources.getString(R.string.count_persons_and_baggage), item.delegate.paxMax)
             tvCountBaggage.text = String.format(resources.getString(R.string.count_persons_and_baggage), item.delegate.luggageMax)
@@ -38,7 +40,10 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>, private va
             setOnClickListener {
                 item.checked = !item.checked
                 cbTransferType.isChecked = item.checked
+                listener()
             }
         }
     }
 }
+
+typealias ChangeListener = () -> Unit

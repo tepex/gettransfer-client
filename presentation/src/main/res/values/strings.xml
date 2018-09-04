@@ -241,20 +241,6 @@
 
     <string name="count_persons_and_baggage"> X %1s</string>
     <string name="price_from">from %1s</string>
-    <string-array name="months_name">
-        <item>January</item>
-        <item>February</item>
-        <item>March</item>
-        <item>April</item>
-        <item>May</item>
-        <item>June</item>
-        <item>Jule</item>
-        <item>August</item>
-        <item>September</item>
-        <item>October</item>
-        <item>November</item>
-        <item>December</item>
-    </string-array>
 
     <!--NavigationView-->
     <string name="text_nav_login_title">Sign up</string>

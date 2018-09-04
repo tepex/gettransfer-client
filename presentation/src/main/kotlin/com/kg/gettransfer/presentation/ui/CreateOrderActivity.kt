@@ -5,6 +5,7 @@ import android.app.TimePickerDialog
 
 import android.content.Context
 import android.content.Intent
+
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -95,12 +96,8 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(coroutineContexts)
     private lateinit var googleMap: GoogleMap
-
-    var mYear = 0
-    var mMonth = 0
-    var mDay = 0
-    var mHour = 0
-    var mMinute = 0
+    
+    private val calendar = Calendar.getInstance()
     
     @ProvidePresenter
     fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(resources,
@@ -138,24 +135,24 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
 
         rvTransferType.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        changeDateTime(false)
+        tvCost.onTextChanged { presenter.cost = it.toIntOrNull() }
+        layoutDateTimeTransfer.setOnClickListener { showDatePickerDialog() }
 
-        
         tvPersonsCounterDown.setOnClickListener { presenter.changePassengers(-1) }
         tvPersonsCounterUp.setOnClickListener { presenter.changePassengers(1) }
+        
+        tvName.onTextChanged { presenter.setName(it.trim()) }
+        tvEmail.onTextChanged { presenter.setEmail(it.trim()) }
+        tvPhone.onTextChanged { presenter.setPhone(it.trim()) }
         tvChildCounterDown.setOnClickListener { presenter.changeChildren(-1) }
         tvChildCounterUp.setOnClickListener { presenter.changeChildren(1) }
+        tvFlightOrTrainNumber.onTextChanged { presenter.setFlightNumber(it.trim()) }
         
-        layoutDateTimeTransfer.setOnClickListener { changeDateTime(true) }
         tvComments.setOnClickListener { showPopupWindowComment() }
         layoutAgreement.setOnClickListener { presenter.showLicenceAgreement() }
+        cbAgreement.setOnClickListener { presenter.setAgreeLicence(cbAgreement.isChecked()) }
 
-        btnGetTransfer.setOnClickListener {
-            var flightNumber = tvFlightOrTrainNumber.text.toString().trim()
-            if(!flightNumber.isEmpty()) presenter.flightNumber = flightNumber
-            else presenter.flightNumber = null
-            presenter.onGetTransferClick() 
-        }
+        btnGetTransfer.setOnClickListener { presenter.onGetTransferClick() }
 
         val mapViewBundle = savedInstanceState?.getBundle(MainActivity.MAP_VIEW_BUNDLE_KEY)
         initGoogleMap(mapViewBundle)
@@ -258,7 +255,7 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         layoutPopup.btnClearPopupComment.setOnClickListener { layoutPopup.etPopupComment.setText("") }
         layoutPopup.etPopupComment.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                presenter.setComment(layoutPopup.etPopupComment.text.toString())
+                presenter.setComment(layoutPopup.etPopupComment.text.toString().trim())
                 popupWindowComment.dismiss()
                 return@OnEditorActionListener true
             }
@@ -273,37 +270,24 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         Utils.showKeyboard(this)
     }
 
-    private fun changeDateTime(showDialog: Boolean){
-        val calendar = Calendar.getInstance()
-        mYear = calendar.get(Calendar.YEAR)
-        mMonth = calendar.get(Calendar.MONTH)
-        mDay = calendar.get(Calendar.DAY_OF_MONTH)
-        mHour = calendar.get(Calendar.HOUR_OF_DAY)
-        mMinute = calendar.get(Calendar.MINUTE)
-        if(showDialog) showDatePickerDialog() else presenter.changeDateTimeTransfer(mYear, mMonth, mDay, mHour, mMinute)
-    }
-
     private fun showDatePickerDialog() {
-        val datePickerDialog = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-            run {
-                mYear = year
-                mMonth = monthOfYear
-                mDay = dayOfMonth
+        calendar.setTime(presenter.date)
+        val datePickerDialog = DatePickerDialog(this, { _, year, monthOfYear, dayOfMonth ->
+                calendar.set(year, monthOfYear, dayOfMonth)
+                presenter.date = calendar.getTime()
                 showTimePickerDialog()
-            }
-        }, mYear, mMonth, mDay)
+            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+        
         datePickerDialog.datePicker.minDate = System.currentTimeMillis()
         datePickerDialog.show()
     }
 
     private fun showTimePickerDialog() {
-        val timePickerDialog = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-            run {
-                mHour = hour
-                mMinute = minute
-                presenter.changeDateTimeTransfer(mYear, mMonth, mDay, mHour, mMinute)
-            }
-        }, mHour, mMinute, true)
+        val timePickerDialog = TimePickerDialog(this, { _, hour, minute ->
+                calendar.set(Calendar.HOUR_OF_DAY, hour)
+                calendar.set(Calendar.MINUTE, minute)
+                presenter.date = calendar.getTime()
+            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true)
         timePickerDialog.show()
     }
 
@@ -326,8 +310,6 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         tvCountChild.text = count.toString()
     }
     
-    override fun getFlightNumber() = tvFlightOrTrainNumber.text.toString().trim()
-    
     override fun setCurrency(currency: String) { tvCurrencyType.text = currency }
 
     override fun setDateTimeTransfer(dateTimeString: String) {
@@ -340,12 +322,16 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
     }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>, transportTypePrice: List<TransportTypePrice>) {
-        rvTransferType.adapter = TransferTypeAdapter(transportTypes, transportTypePrice)
+        rvTransferType.adapter = TransferTypeAdapter(transportTypes, transportTypePrice, { presenter.checkFields() })
     }
     
     override fun setRoute(route: Pair<GTAddress, GTAddress>) {
     	tvFrom.setText(route.first.name)
     	tvTo.setText(route.second.name)
+    }
+    
+    override fun setGetTransferEnabled(enabled: Boolean) {
+        btnGetTransfer.isEnabled = enabled
     }
 
     override fun setMapInfo(routeInfo: RouteInfo, route: Pair<GTAddress, GTAddress>, distanceUnit: String) {
