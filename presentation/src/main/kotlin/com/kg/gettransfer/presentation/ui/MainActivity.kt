@@ -24,6 +24,7 @@ import android.transition.Fade
 import android.util.Pair
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.RelativeLayout
 import android.widget.TextView
 
@@ -44,9 +45,11 @@ import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.extensions.hideKeyboard
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.MainPresenter
+import com.kg.gettransfer.presentation.ui.Utils.Companion.hideKeyboard
 import com.kg.gettransfer.presentation.view.MainView
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -241,6 +244,11 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		super.onResume()
 		Utils.hideKeyboard(this, currentFocus)
 		navigatorHolder.setNavigator(navigator)
+
+		val view = currentFocus
+		view?.hideKeyboard()
+		view?.clearFocus()
+
 		mapView.onResume()
 	}
 	

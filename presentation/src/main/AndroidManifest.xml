@@ -16,6 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/geoapikey" />
@@ -36,7 +38,7 @@
 
         <activity
             android:name=".presentation.ui.MainActivity"
-            android:windowSoftInputMode="stateHidden"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.AboutActivity"
