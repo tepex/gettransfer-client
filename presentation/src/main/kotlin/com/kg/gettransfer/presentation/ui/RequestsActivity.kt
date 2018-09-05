@@ -2,6 +2,9 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import com.arellomobile.mvp.MvpAppCompatActivity
@@ -40,10 +43,38 @@ class RequestsActivity: MvpAppCompatActivity(), RequestsView {
         (toolbar as Toolbar).toolbar_title.setText(R.string.text_nav_requests_title)
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 
-        rvRequests.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        //rvRequests.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
     }
 
-    override fun setRequests(transfers: List<Transfer>, distanceUnit: String) {
+    /*override fun setRequests(transfers: List<Transfer>, distanceUnit: String) {
         rvRequests.adapter = RequestsRVAdapter(transfers, distanceUnit)
+    }*/
+
+    override fun setRequestsFragments(transfersActive: List<Transfer>, transfersAll: List<Transfer>, transfersCompleted: List<Transfer>){
+        val requestsVPAdapter = RequestsViewPagerAdapter(supportFragmentManager)
+
+        val fragmentRequestsActive = RequestsFragment.newInstance("1")
+        requestsVPAdapter.addFragment(fragmentRequestsActive, "Active")
+        val fragmentRequestsAll = RequestsFragment.newInstance("2")
+        requestsVPAdapter.addFragment(fragmentRequestsAll, "All")
+        val fragmentRequestsCompleted = RequestsFragment.newInstance("3")
+        requestsVPAdapter.addFragment(fragmentRequestsCompleted, "Completed")
+
+        vpRequests.adapter = requestsVPAdapter
+    }
+
+    private class RequestsViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager) {
+        val fragments = arrayListOf<Fragment>()
+        val titles = arrayListOf<String>()
+        override fun getItem(position: Int): Fragment = fragments.get(position)
+
+        override fun getCount(): Int = fragments.size
+
+        override fun getPageTitle(position: Int): CharSequence? = titles.get(position)
+
+        fun addFragment(fragment: Fragment, title: String) {
+            fragments.add(fragment)
+            titles.add(title)
+        }
     }
 }

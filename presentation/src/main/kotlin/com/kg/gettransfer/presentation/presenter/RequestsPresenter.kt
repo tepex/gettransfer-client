@@ -21,6 +21,10 @@ class RequestsPresenter(private val cc: CoroutineContexts,
     var account: Account? = null
     lateinit var transfers: List<Transfer>
 
+    var transfersAll: ArrayList<Transfer> = arrayListOf()
+    var transfersActive: ArrayList<Transfer> = arrayListOf()
+    var transfersCompleted: ArrayList<Transfer> = arrayListOf()
+
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
 
@@ -29,7 +33,16 @@ class RequestsPresenter(private val cc: CoroutineContexts,
                 transfers = apiInteractor.getAllTransfers()
             }
 
-            viewState.setRequests(transfers, account?.distanceUnit!!)
+            for(transfer in transfers){
+                when (transfer.status){
+                    "new" -> transfersActive.add(transfer)
+                    "completed" -> transfersCompleted.add(transfer)
+                    else -> transfersAll.add(transfer)
+                }
+            }
+
+            viewState.setRequestsFragments(transfersActive, transfersAll, transfersCompleted)
+            //viewState.setRequests(transfers, account?.distanceUnit!!)
         }, { e ->
             Timber.e(e)
             //viewState.setError(R.string.err_address_service_xxx, false)
