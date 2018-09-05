@@ -50,7 +50,6 @@ import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
 
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.nav_header_main.view.*
 import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.coroutines.experimental.Job
 
@@ -107,7 +106,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			R.id.navLogin -> presenter.onLoginClick()
 			R.id.navAbout -> presenter.onAboutClick()
 			R.id.navSettings -> presenter.onSettingsClick()
-			R.id.navTransfers -> presenter.onTransfersClick()
+			R.id.navRequests -> presenter.onRequestsClick()
 			else -> Timber.d("No route")
 		}
 		drawer.closeDrawer(GravityCompat.START)
@@ -128,7 +127,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 				Screens.CREATE_ORDER -> return Intent(this@MainActivity, CreateOrderActivity::class.java)
 				Screens.SETTINGS -> return Intent(this@MainActivity, SettingsActivity::class.java)
 				Screens.LOGIN -> return Intent(this@MainActivity, LoginActivity::class.java)
-				Screens.TRANSFERS -> return Intent(this@MainActivity, OffersActivity::class.java)
+				Screens.REQUESTS -> return Intent(this@MainActivity, RequestsActivity::class.java)
 			}
 			return null
 		}
@@ -197,7 +196,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 				R.id.navLogin -> presenter.onLoginClick()
                 R.id.navAbout -> presenter.onAboutClick()
                 R.id.navSettings -> presenter.onSettingsClick()
-				R.id.nav_archived_rides -> presenter.onTransfersClick()
+				R.id.nav_archived_rides -> presenter.onRequestsClick()
                 else -> Timber.d("No route for ${item.title}")
             }
             drawer.closeDrawer(GravityCompat.START)
@@ -306,7 +305,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 
 		navHeaderShare.setOnClickListener {Timber.d("Share action")}
 		navLogin.setOnClickListener(itemsNavigationViewListener)
-		navTransfers.setOnClickListener(itemsNavigationViewListener)
+		navRequests.setOnClickListener(itemsNavigationViewListener)
 		navSettings.setOnClickListener(itemsNavigationViewListener)
 		navAbout.setOnClickListener(itemsNavigationViewListener)
 		navBecomeACarrier.setOnClickListener(itemsNavigationViewListener)
@@ -404,7 +403,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			navHeaderName.visibility = View.GONE
 			navHeaderEmail.visibility = View.GONE
 			navLogin.visibility = View.VISIBLE
-			navTransfers.visibility = View.GONE
+			navRequests.visibility = View.GONE
 	    }
 	    else {
 	        /*headerView.navHeaderName.visibility = View.VISIBLE
@@ -418,7 +417,7 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			navHeaderName.text = account.fullName
 			navHeaderEmail.text = account.email
 			navLogin.visibility = View.GONE
-			navTransfers.visibility = View.VISIBLE
+			navRequests.visibility = View.VISIBLE
 	    }
 	}
 }

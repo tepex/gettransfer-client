@@ -172,6 +172,8 @@
 
     <string name="login_subtitle">Вход для клиентов и водителей</string>
 
+
+    <!--NavigationView-->
     <string name="text_nav_login_title">Войти</string>
     <string name="text_nav_login_subtitle">Вход для клиентов и водителей</string>
 
@@ -189,4 +191,11 @@
 
     <string name="text_nav_passenger_mode_title">Пассажирский режим</string>
     <string name="text_nav_passenger_mode_subtitle">Пассажирский режим</string>
+
+    <!--Title text-->
+    <string name="requests">Поездки</string>
+
+    <!--view_transfer_request_info-->
+    <string name="transfer_request_num">Заявка на трансфер № %1$s</string>
+
 </resources>

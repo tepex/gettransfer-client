@@ -93,4 +93,23 @@
 
 	<!-- Transfer types -->
 	<dimen name="transfer_types_text_size">11sp</dimen>
+
+	<!-- view_transfer_info -->
+	<dimen name="view_transfer_info_big_text_size">17sp</dimen>
+	<dimen name="view_transfer_info_small_text_size">12sp</dimen>
+	<dimen name="view_transfer_info_request_number_text_size">12sp</dimen>
+	<dimen name="view_transfer_info_request_number_margin_top">10dp</dimen>
+	<dimen name="view_transfer_info_from_margin_end">37dp</dimen>
+	<dimen name="view_transfer_info_from_margin_start">48dp</dimen>
+	<dimen name="view_transfer_info_from_margin_top">3dp</dimen>
+	<dimen name="view_transfer_info_to_margin_top">7dp</dimen>
+	<dimen name="view_transfer_info_order_date_margin_end">37dp</dimen>
+	<dimen name="view_transfer_info_markers_size">23dp</dimen>
+	<dimen name="view_transfer_info_markers_margin_start">18dp</dimen>
+	<dimen name="view_transfer_info_markers_margin_top">7dp</dimen>
+	<dimen name="view_transfer_info_chevron_size">14dp</dimen>
+	<dimen name="view_transfer_info_chevron_margin_end">23dp</dimen>
+	<dimen name="view_transfer_info_divider_height">0.5dp</dimen>
+	<dimen name="view_transfer_info_divider_margin_top">10dp</dimen>
+
 </resources>

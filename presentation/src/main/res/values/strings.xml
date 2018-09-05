@@ -258,6 +258,7 @@
         <item>December</item>
     </string-array>
 
+    <!--NavigationView-->
     <string name="text_nav_login_title">Sign up</string>
     <string name="text_nav_login_subtitle">Client and drivers login</string>
 
@@ -275,5 +276,11 @@
 
     <string name="text_nav_passenger_mode_title">Passenger mode</string>
     <string name="text_nav_passenger_mode_subtitle">Passenger mode</string>
+
+    <!--Title text-->
+    <string name="requests">Requests</string>
+
+    <!--view_transfer_request_info-->
+    <string name="transfer_request_num">Transfer request № %1$s</string>
 
 </resources>

@@ -1,94 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/back_clicked_layouts"
-    android:paddingBottom="10dp"
-    android:paddingTop="10dp">
+    android:background="@drawable/back_clicked_layouts">
 
     <TextView
         android:id="@+id/tvTransferRequestNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/view_transfer_info_request_number_margin_top"
         android:fontFamily="@font/sf_pro_text_regular"
-        android:textSize="12sp"
-        android:textColor="@color/colorTextBlack"
+        android:gravity="center_horizontal"
         android:text="Заявка на трансфер #1234"
-        android:gravity="center_horizontal"/>
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/view_transfer_info_request_number_text_size"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvFrom"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="37dp"
-        android:layout_marginStart="@dimen/create_transfer_address_start_margin"
+        android:layout_marginEnd="@dimen/view_transfer_info_from_margin_end"
+        android:layout_marginStart="@dimen/view_transfer_info_from_margin_start"
+        android:layout_marginTop="@dimen/view_transfer_info_from_margin_top"
+        android:ellipsize="end"
         android:fontFamily="@font/sf_pro_text_bold"
         android:lines="1"
-        android:textColor="@color/colorTextBlack"
-        android:textSize="17sp"
-        android:layout_marginTop="3dp"
         android:text="Тверская 21, Москва"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/view_transfer_info_big_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTransferRequestNumber"
-        android:ellipsize="end"/>
+        app:layout_constraintTop_toBottomOf="@+id/tvTransferRequestNumber" />
 
     <TextView
         android:id="@+id/tvOrderDateTime"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="37dp"
+        android:ellipsize="end"
         android:fontFamily="@font/sf_pro_text_regular"
         android:text="31 января 2018, 11:42"
         android:textColor="@color/colorBtnGreen"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="@dimen/view_transfer_info_small_text_size"
+        app:layout_constraintEnd_toEndOf="@+id/tvFrom"
         app:layout_constraintStart_toStartOf="@+id/tvFrom"
-        app:layout_constraintTop_toBottomOf="@+id/tvFrom"
-        android:ellipsize="end"/>
+        app:layout_constraintTop_toBottomOf="@+id/tvFrom" />
 
     <TextView
         android:id="@+id/tvTo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="37dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="@dimen/view_transfer_info_to_margin_top"
+        android:ellipsize="end"
         android:fontFamily="@font/sf_pro_text_bold"
         android:lines="1"
         android:text="Шереметьево Терминал"
         android:textColor="@color/colorTextBlack"
-        android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="@dimen/view_transfer_info_big_text_size"
+        app:layout_constraintEnd_toEndOf="@+id/tvFrom"
         app:layout_constraintStart_toStartOf="@+id/tvFrom"
-        app:layout_constraintTop_toBottomOf="@+id/tvOrderDateTime"
-        android:ellipsize="end"/>
+        app:layout_constraintTop_toBottomOf="@+id/tvOrderDateTime" />
 
     <TextView
         android:id="@+id/tvDistance"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="37dp"
+        android:ellipsize="end"
         android:fontFamily="@font/sf_pro_text_regular"
         android:text="Расстояние: 32 km"
         android:textColor="@color/colorBtnGreen"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="@dimen/view_transfer_info_small_text_size"
+        app:layout_constraintEnd_toEndOf="@+id/tvFrom"
         app:layout_constraintStart_toStartOf="@+id/tvFrom"
-        app:layout_constraintTop_toBottomOf="@+id/tvTo"
-        android:ellipsize="end"/>
+        app:layout_constraintTop_toBottomOf="@+id/tvTo" />
 
     <TextView
         android:id="@+id/tvMarkerFrom"
-        android:layout_width="@dimen/create_transfer_marker_size"
-        android:layout_height="@dimen/create_transfer_marker_size"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="7dp"
+        android:layout_width="@dimen/view_transfer_info_markers_size"
+        android:layout_height="@dimen/view_transfer_info_markers_size"
+        android:layout_marginStart="@dimen/view_transfer_info_markers_margin_start"
+        android:layout_marginTop="@dimen/view_transfer_info_markers_margin_top"
         android:background="@drawable/back_circle_marker"
         android:gravity="center"
         android:text="A"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvFrom"/>
+        app:layout_constraintTop_toTopOf="@+id/tvFrom" />
 
     <ImageView
         android:id="@+id/ivMarkersLine"
@@ -103,23 +100,31 @@
 
     <TextView
         android:id="@+id/tvMarkerTo"
-        android:layout_width="@dimen/create_transfer_marker_size"
-        android:layout_height="@dimen/create_transfer_marker_size"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="7dp"
+        android:layout_width="@dimen/view_transfer_info_markers_size"
+        android:layout_height="@dimen/view_transfer_info_markers_size"
+        android:layout_marginStart="@dimen/view_transfer_info_markers_margin_start"
+        android:layout_marginTop="@dimen/view_transfer_info_markers_margin_top"
         android:background="@drawable/back_circle_marker"
         android:gravity="center"
         android:text="B"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvTo"/>
-    
+        app:layout_constraintTop_toTopOf="@+id/tvTo" />
+
     <ImageView
-        android:layout_width="14dp"
-        android:layout_height="14dp"
+        android:layout_width="@dimen/view_transfer_info_chevron_size"
+        android:layout_height="@dimen/view_transfer_info_chevron_size"
+        android:layout_marginEnd="@dimen/view_transfer_info_chevron_margin_end"
         android:src="@drawable/chevron"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="23dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_transfer_info_divider_height"
+        android:layout_marginTop="@dimen/view_transfer_info_divider_margin_top"
+        android:background="@color/colorDividerGray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvDistance" />
 
 </android.support.constraint.ConstraintLayout>

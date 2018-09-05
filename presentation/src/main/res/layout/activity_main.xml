@@ -164,7 +164,7 @@
 					layout="@layout/nav_item_login"
 					android:visibility="visible"/>
 
-				<include android:id="@+id/navTransfers"
+				<include android:id="@+id/navRequests"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					layout="@layout/nav_item_requests"
@@ -175,7 +175,7 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					layout="@layout/nav_item_settings"
-					android:layout_below="@+id/navTransfers"/>
+					android:layout_below="@+id/navRequests"/>
 
 				<include android:id="@+id/navAbout"
 					android:layout_width="match_parent"
