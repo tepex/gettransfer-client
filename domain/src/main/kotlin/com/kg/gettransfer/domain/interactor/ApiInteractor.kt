@@ -17,4 +17,7 @@ class ApiInteractor(private val repository: ApiRepository) {
 	fun logout() { repository.logout() }
 	suspend fun getAllTransfers(): List<Transfer> = repository.getAllTransfers()
 	suspend fun getTransfer(idTransfer: Long): Transfer = repository.getTransfer(idTransfer)
+	suspend fun getTransfersArchive(): List<Transfer> = repository.getTransfersArchive()
+	suspend fun getTransfersActive(): List<Transfer> = repository.getTransfersActive()
+	suspend fun getOffers(idTransfer: Long): List<Offer> = repository.getOffers(idTransfer)
 }

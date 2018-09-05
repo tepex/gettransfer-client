@@ -8,9 +8,7 @@ object Screens {
 	@JvmField val READ_MORE      = "read_more"
 
 	@JvmField val LOGIN          = "login"
-	@JvmField val ACTIVE_RIDES   = "active_rides"
-	@JvmField val ARCHIVED_RIDES = "archived_rides"
-	@JvmField val TRANSFERS      = "transfers"
+	@JvmField val REQUESTS       = "requests"
 	@JvmField val SETTINGS       = "settings"
 	@JvmField val CREATE_ORDER   = "create_order"
 

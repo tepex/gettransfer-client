@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">Get Transfer</string>
-	<!--<string name="api_key">ccd9a245018bfe4f386f4045ee4a006f</string>-->
-	<!--<string name="api_url">https://stgtr.org</string>-->
-    <string name="api_url">https://gettransfer.com</string>
-    <string name="api_key">127746ae669e195d1e05807aaadb97af</string>
+	<string name="api_key">ccd9a245018bfe4f386f4045ee4a006f</string>
+	<string name="api_url">https://stgtr.org</string>
+    <!--<string name="api_url">https://gettransfer.com</string>
+    <string name="api_key">127746ae669e195d1e05807aaadb97af</string>-->
 
 	<string name="navigation_drawer_open" translatable="false">Open</string>
 	<string name="navigation_drawer_close" translatable="false">Close</string>
@@ -258,6 +258,7 @@
         <item>December</item>
     </string-array>
 
+    <!--NavigationView-->
     <string name="text_nav_login_title">Sign up</string>
     <string name="text_nav_login_subtitle">Client and drivers login</string>
 
@@ -275,5 +276,11 @@
 
     <string name="text_nav_passenger_mode_title">Passenger mode</string>
     <string name="text_nav_passenger_mode_subtitle">Passenger mode</string>
+
+    <!--Title text-->
+    <string name="requests">Requests</string>
+
+    <!--view_transfer_request_info-->
+    <string name="transfer_request_num">Transfer request № %1$s</string>
 
 </resources>

@@ -5,40 +5,35 @@ import com.arellomobile.mvp.MvpPresenter
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
-import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.presentation.view.OffersView
+import com.kg.gettransfer.presentation.view.RequestsView
 import kotlinx.coroutines.experimental.Job
 import timber.log.Timber
 
 @InjectViewState
-class OffersPresenter(private val cc: CoroutineContexts,
-                      private val apiInteractor: ApiInteractor): MvpPresenter<OffersView>() {
+class RequestsPresenter(private val cc: CoroutineContexts,
+                        private val apiInteractor: ApiInteractor): MvpPresenter<RequestsView>() {
 
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(cc)
 
-    lateinit var allTransfers: List<Transfer>
-    lateinit var transfer: Transfer
-    lateinit var archivedTransfers: List<Transfer>
-    lateinit var activeTransfers: List<Transfer>
-    lateinit var offers: List<Offer>
+    var account: Account? = null
+    lateinit var transfers: List<Transfer>
 
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
 
             utils.asyncAwait {
-                allTransfers = apiInteractor.getAllTransfers()
-                transfer = apiInteractor.getTransfer(allTransfers.get(0).id)
-                archivedTransfers = apiInteractor.getTransfersArchive()
-                activeTransfers = apiInteractor.getTransfersActive()
-                offers = apiInteractor.getOffers(allTransfers.get(0).id)
+                account = apiInteractor.getAccount()
+                transfers = apiInteractor.getAllTransfers()
             }
+
+            viewState.setRequests(transfers, account?.distanceUnit!!)
         }, { e ->
             Timber.e(e)
             //viewState.setError(R.string.err_address_service_xxx, false)
         }, { /* viewState.blockInterface(false) */ })
-
     }
 
     fun onBackCommandClick() {

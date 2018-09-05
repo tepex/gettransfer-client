@@ -14,4 +14,7 @@ interface ApiRepository {
 	fun logout()
     suspend fun getAllTransfers(): List<Transfer>
     suspend fun getTransfer(idTransfer: Long): Transfer
+    suspend fun getTransfersArchive(): List<Transfer>
+    suspend fun getTransfersActive(): List<Transfer>
+    suspend fun getOffers(idTransfer: Long): List<Offer>
 }
