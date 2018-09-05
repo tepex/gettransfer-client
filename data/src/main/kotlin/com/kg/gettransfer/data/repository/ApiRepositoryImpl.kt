@@ -233,7 +233,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 		}
 
 		val transfer: ApiTransfer = response.data!!.transfer
-		return setTransferData(transfer)
+		return Mappers.mapApiTransfer(transfer)
 	}
 
     override suspend fun getTransfersArchive(): List<Transfer> {
@@ -244,7 +244,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
         }
 
         val transfers: List<ApiTransfer> = response.data!!.transfers
-        return transfers.map {transfer -> setTransferData(transfer) }
+        return transfers.map {transfer -> Mappers.mapApiTransfer(transfer) }
     }
 
     override suspend fun getTransfersActive(): List<Transfer> {
@@ -255,12 +255,12 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
         }
 
         val transfers: List<ApiTransfer> = response.data!!.transfers
-        return transfers.map {transfer -> setTransferData(transfer) }
+        return transfers.map {transfer -> Mappers.mapApiTransfer(transfer) }
     }
 
-	fun setTransferData(transfer: ApiTransfer): Transfer{
+    /*
+	fun setTransferData(transfer: ApiTransfer): Transfer {
         val from = CityPoint(transfer.from.name, transfer.from.point, transfer.from.placeId)
-
         val to = if (transfer.to != null) CityPoint(transfer.to?.name, transfer.to?.point, transfer.to?.placeId)
                  else null
 
@@ -280,6 +280,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
                 price, transfer.editableFields)
 //		return Mappers.mapApiTransfer(transfer)
 	}
+	*/
 
     override suspend fun getOffers(idTransfer: Long): List<Offer> {
         val response: ApiResponse<ApiOffers> = try {
