@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.os.Parcel
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -10,33 +9,33 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.presentation.presenter.RequestsFragmentPresenter
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
 import kotlinx.android.synthetic.main.fragment_requests.*
+import org.koin.android.ext.android.inject
 
 class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView{
     @InjectPresenter
     internal lateinit var presenter: RequestsFragmentPresenter
 
-    @ProvidePresenter
-    fun createRequestsFragmentPresenter(): RequestsFragmentPresenter = RequestsFragmentPresenter()
+    private val apiInteractor: ApiInteractor by inject()
+    private val coroutineContexts: CoroutineContexts by inject()
 
-    private var bundleKey = ""
-    private var distanceUnit = ""
-    private var transfers = arrayListOf<Transfer>()
+    @ProvidePresenter
+    fun createRequestsFragmentPresenter(): RequestsFragmentPresenter = RequestsFragmentPresenter(coroutineContexts, apiInteractor)
+
+    private var categoryName = ""
 
     companion object {
-        @JvmField val BUNDLE_KEY    = "BundleKey"
-        @JvmField val DISTANCE_UNIT = "DistanceUnit"
-        @JvmField val TRANSFERS     = "Transfers"
+        @JvmField val CATEGORY   = "category"
 
-        fun newInstance(transfers: ArrayList<Transfer>, distanceUnit: String, bundleKey: String): RequestsFragment {
+        fun newInstance(categoryName: String): RequestsFragment {
             val fragment = RequestsFragment()
             val bundle = Bundle()
-            bundle.putString(BUNDLE_KEY, bundleKey)
-            bundle.putString(bundleKey + DISTANCE_UNIT, distanceUnit)
-            bundle.putSerializable(bundleKey + TRANSFERS, transfers)
+            bundle.putString(CATEGORY, categoryName)
             fragment.arguments = bundle
             return fragment
         }
@@ -45,9 +44,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val bundle = arguments!!
-        bundle.getString(BUNDLE_KEY)?.let{bundleKey = it}
-        bundle.getString(bundleKey + DISTANCE_UNIT)?.let{distanceUnit = it}
-        bundle.getSerializable(bundleKey + TRANSFERS)?.let { transfers.addAll(it as ArrayList<Transfer>) }
+        bundle.getString(CATEGORY)?.let{categoryName = it}
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -58,7 +55,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         rvRequests.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        presenter.setData(transfers, distanceUnit)
+        presenter.setData(categoryName)
     }
 
     override fun setRequests(transfers: List<Transfer>, distanceUnit: String) {

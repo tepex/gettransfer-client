@@ -1,9 +1,5 @@
 package com.kg.gettransfer.domain.model
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
-
-@Parcelize
 data class Transfer(val id: Long,
                     val createdAt: String,
                     val duration: Int?,
@@ -34,10 +30,8 @@ data class Transfer(val id: Long,
                     val transportTypeIds: List<String>,
                     val passengerOfferedPrice: String?,
                     val price: Money?,
-                    val editableFields: List<String>): Parcelable
+                    val editableFields: List<String>)
 
-@Parcelize
-data class Money(val default: String?, val preferred: String?): Parcelable
+data class Money(val default: String?, val preferred: String?)
 
-@Parcelize
-data class CityPoint(val name: String?, val point: String?, val placeId: String?): Parcelable
+data class CityPoint(val name: String?, val point: String?, val placeId: String?)
