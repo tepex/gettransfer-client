@@ -18,5 +18,5 @@ class ApiError {
 	lateinit var type: String
 
     @SerializedName("details")
-    lateinit var details: String
+    lateinit var details: Any /* String | JsonObject */
 }

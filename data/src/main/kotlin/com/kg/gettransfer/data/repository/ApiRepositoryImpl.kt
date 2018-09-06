@@ -30,6 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ApiRepositoryImpl(private val context: Context, url: String, private val apiKey: String): ApiRepository {
     private var cacheRepository = CacheRepositoryImpl(context)
     private var api: Api
+    private val gson = GsonBuilder().registerTypeAdapter(ApiTransportTypesWrapper::class.java, TransportTypesDeserializer()).create()
     private var configs: Configs? = null
     
 	/**
@@ -50,10 +51,6 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 		
 		builder.cookieJar(CookieJar.NO_COOKIES)
  
-		val gson = GsonBuilder()
-			.registerTypeAdapter(ApiTransportTypesWrapper::class.java, TransportTypesDeserializer())
-			.create()
-
 	    api = Retrofit.Builder()
 		        .baseUrl(url)
 		        .client(builder.build())
