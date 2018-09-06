@@ -8,7 +8,6 @@ import com.kg.gettransfer.domain.model.Transfer
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface RequestsView: MvpView {
     fun finish()
-
-    //fun setRequests(transfers: List<Transfer>, distanceUnit: String)
-    fun setRequestsFragments(transfersActive: List<Transfer>, transfersAll: List<Transfer>, transfersCompleted: List<Transfer>)
+    fun setRequestsFragments(transfersActive: ArrayList<Transfer>, transfersAll: ArrayList<Transfer>,
+                             transfersCompleted: ArrayList<Transfer>, distanceUnit: String)
 }

@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+import android.view.Gravity
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -21,6 +22,13 @@ import kotlinx.android.synthetic.main.toolbar.view.*
 import org.koin.android.ext.android.inject
 
 class RequestsActivity: MvpAppCompatActivity(), RequestsView {
+
+    companion object {
+        @JvmField val TRANSFERS_ACTIVE   = "Active"
+        @JvmField val TRANSFERS_ALL      = "All"
+        @JvmField val TRANSFERS_COMLETED = "Completed"
+    }
+
     @InjectPresenter
     internal lateinit var presenter: RequestsPresenter
 
@@ -42,25 +50,21 @@ class RequestsActivity: MvpAppCompatActivity(), RequestsView {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         (toolbar as Toolbar).toolbar_title.setText(R.string.text_nav_requests_title)
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
-
-        //rvRequests.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
     }
 
-    /*override fun setRequests(transfers: List<Transfer>, distanceUnit: String) {
-        rvRequests.adapter = RequestsRVAdapter(transfers, distanceUnit)
-    }*/
-
-    override fun setRequestsFragments(transfersActive: List<Transfer>, transfersAll: List<Transfer>, transfersCompleted: List<Transfer>){
+    override fun setRequestsFragments(transfersActive: ArrayList<Transfer>, transfersAll: ArrayList<Transfer>,
+                                      transfersCompleted: ArrayList<Transfer>, distanceUnit: String){
         val requestsVPAdapter = RequestsViewPagerAdapter(supportFragmentManager)
 
-        val fragmentRequestsActive = RequestsFragment.newInstance("1")
-        requestsVPAdapter.addFragment(fragmentRequestsActive, "Active")
-        val fragmentRequestsAll = RequestsFragment.newInstance("2")
-        requestsVPAdapter.addFragment(fragmentRequestsAll, "All")
-        val fragmentRequestsCompleted = RequestsFragment.newInstance("3")
-        requestsVPAdapter.addFragment(fragmentRequestsCompleted, "Completed")
+        val fragmentRequestsActive = RequestsFragment.newInstance(transfersActive, distanceUnit, TRANSFERS_ACTIVE)
+        requestsVPAdapter.addFragment(fragmentRequestsActive, TRANSFERS_ACTIVE)
+        val fragmentRequestsAll = RequestsFragment.newInstance(transfersAll, distanceUnit, TRANSFERS_ALL)
+        requestsVPAdapter.addFragment(fragmentRequestsAll, TRANSFERS_ALL)
+        val fragmentRequestsCompleted = RequestsFragment.newInstance(transfersCompleted, distanceUnit, TRANSFERS_COMLETED)
+        requestsVPAdapter.addFragment(fragmentRequestsCompleted, TRANSFERS_COMLETED)
 
         vpRequests.adapter = requestsVPAdapter
+        tabs.setupWithViewPager(vpRequests)
     }
 
     private class RequestsViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager) {

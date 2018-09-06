@@ -1,5 +1,29 @@
-apply plugin: 'java-library'
-apply plugin: 'kotlin'
+/*apply plugin: 'java-library'
+apply plugin: 'kotlin'*/
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+	compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
+	buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+
+	defaultConfig {
+		minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION
+		targetSdkVersion project.ANDROID_BUILD_SDK_VERSION
+		testInstrumentationRunner project.ANDROID_TEST_INSTRUMENTATION_RUNNER
+	}
+
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
+	}
+}
+
+androidExtensions {
+	experimental = true
+}
 
 dependencies {
 	implementation libs.kotlin
@@ -9,14 +33,14 @@ dependencies {
 	testImplementation libs.mockito
 }
 
-compileKotlin {
+/*compileKotlin {
 	kotlinOptions {
 		jvmTarget = JavaVersion.VERSION_1_8
 	}
-}
+}*/
 
-compileTestKotlin {
+/*compileTestKotlin {
 	kotlinOptions {
 		jvmTarget = JavaVersion.VERSION_1_8
 	}
-}
+}*/

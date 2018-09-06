@@ -15,6 +15,11 @@ import timber.log.Timber
 class RequestsPresenter(private val cc: CoroutineContexts,
                         private val apiInteractor: ApiInteractor): MvpPresenter<RequestsView>() {
 
+    companion object {
+        @JvmField val STATUS_NEW       = "new"
+        @JvmField val STATUS_COMPLETED = "completed"
+    }
+
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(cc)
 
@@ -35,14 +40,13 @@ class RequestsPresenter(private val cc: CoroutineContexts,
 
             for(transfer in transfers){
                 when (transfer.status){
-                    "new" -> transfersActive.add(transfer)
-                    "completed" -> transfersCompleted.add(transfer)
+                    STATUS_NEW -> transfersActive.add(transfer)
+                    STATUS_COMPLETED -> transfersCompleted.add(transfer)
                     else -> transfersAll.add(transfer)
                 }
             }
 
-            viewState.setRequestsFragments(transfersActive, transfersAll, transfersCompleted)
-            //viewState.setRequests(transfers, account?.distanceUnit!!)
+            viewState.setRequestsFragments(transfersActive, transfersAll, transfersCompleted, account?.distanceUnit!!)
         }, { e ->
             Timber.e(e)
             //viewState.setError(R.string.err_address_service_xxx, false)
