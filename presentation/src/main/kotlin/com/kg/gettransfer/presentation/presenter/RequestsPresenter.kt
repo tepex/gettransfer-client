@@ -39,7 +39,7 @@ class RequestsPresenter(private val cc: CoroutineContexts,
 
             viewState.setRequests(transfers, account?.distanceUnit!!)
         }, { e -> 
-                if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code?.toString(), e.details)
+                if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
                 else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
     }

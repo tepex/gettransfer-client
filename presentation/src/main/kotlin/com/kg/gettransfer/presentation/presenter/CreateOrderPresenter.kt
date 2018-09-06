@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.content.res.Resources
-
 import android.support.annotation.CallSuper
 
 import android.util.Patterns
@@ -42,8 +40,7 @@ import ru.terrakok.cicerone.Router
 import timber.log.Timber
 
 @InjectViewState
-class CreateOrderPresenter(private val resources: Resources,
-                           private val cc: CoroutineContexts,
+class CreateOrderPresenter(private val cc: CoroutineContexts,
                            private val router: Router,
                            private val addressInteractor: AddressInteractor,
                            private val apiInteractor: ApiInteractor): MvpPresenter<CreateOrderView>() {
@@ -87,6 +84,8 @@ class CreateOrderPresenter(private val resources: Resources,
                             secondPoint.toString()), true, false)
             }
             
+            Timber.d("account: $account")
+            
             viewState.setAccount(account)
 
             if(account.locale != null) dateTimeFormat = SimpleDateFormat(DATE_TIME_PATTERN, account.locale)
@@ -102,7 +101,7 @@ class CreateOrderPresenter(private val resources: Resources,
                     }
                 }
             }
-            date = Date()
+            date = Date()            
             viewState.setMapInfo(routeInfo, addressInteractor.route, configs.distanceUnits.get(0))
         }, { e ->
                 if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
@@ -189,13 +188,12 @@ class CreateOrderPresenter(private val resources: Resources,
         Timber.d("account: %s", account)
 
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
-            utils.asyncAwait {
-                val transfer = apiInteractor.createTransfer(from, to, trip, null, transportTypes,
+            val transfer = utils.asyncAwait { apiInteractor.createTransfer(from, to, trip, null, transportTypes,
                                                             passengers, children, cost, account.fullName!!, comment,
-                                                            account, null, false)
-            }
+                                                            account, null, false) }
+            Timber.d("new transfer: %s", transfer)
             router.navigateTo(Screens.OFFERS)
-        }, { e -> 
+        }, { e ->
                 if(e is ApiException) {
                     if(e.isNotLoggedIn()) login()
                     else viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)

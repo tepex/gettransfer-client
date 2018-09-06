@@ -37,7 +37,8 @@ class LoginPresenter(cc: CoroutineContexts,
         utils.launchAsyncTryCatch(compositeDisposable, {
             val account = utils.asyncAwait { apiInteractor.login(email, password) }
             Timber.d("account: %s", account)
-            router.exitWithResult(RESULT_CODE, RESULT_OK)
+            //router.exitWithResult(RESULT_CODE, RESULT_OK)
+            router.exit()
         }, { e -> viewState.setError(false, R.string.err_server, e.message) })
     }
 

@@ -170,6 +170,19 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
             return try { apiCall().await() } catch(e2: Exception) { throw apiException(e2) }
         }
     }
+    
+    private suspend fun <R> tryTwice(id: Long, apiCall: (Long) -> Deferred<R>): R {
+        return try { apiCall(id).await() }
+        catch(e: Exception) {
+            if(e is ApiException) throw e /* second invocation */
+            val ae = apiException(e)
+            if(!ae.isInvalidToken()) throw ae
+
+            try { updateAccessToken() } catch(e1: Exception) { throw apiException(e1) }
+            return try { apiCall(id).await() } catch(e2: Exception) { throw apiException(e2) }
+        }
+    }
+    
     /*
     private suspend fun <T, R> tryTwice(vararg param: T, apiCall: (T) -> Deferred<R>): R {
         return apiCall(param).await()
@@ -214,85 +227,36 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
     }
 
 	override suspend fun getAllTransfers(): List<Transfer> {
-		val response: ApiResponse<ApiTransfers> = try {
-			api.getAllTransfers().await()
-		} catch (httpException: HttpException) {
-			throw httpException
-		}
-
+		val response: ApiResponse<ApiTransfers> = tryTwice { api.getAllTransfers() }
 		val transfers: List<ApiTransfer> = response.data!!.transfers
 		return transfers.map {transfer -> Mappers.mapApiTransfer(transfer) }
 	}
 
 	override suspend fun getTransfer(idTransfer: Long): Transfer {
-		val response: ApiResponse<ApiTransferWrapper> = try {
-			api.getTransfer(idTransfer).await()
-		} catch (httpException: HttpException) {
-			throw httpException
-		}
-
+		val response: ApiResponse<ApiTransferWrapper> = tryTwice(idTransfer, { id -> api.getTransfer(id) })
 		val transfer: ApiTransfer = response.data!!.transfer
 		return Mappers.mapApiTransfer(transfer)
 	}
-
+	
     override suspend fun getTransfersArchive(): List<Transfer> {
-        val response: ApiResponse<ApiTransfers> = try {
-            api.getTransfersArchive().await()
-        } catch (httpException: HttpException) {
-            throw httpException
-        }
-
+        val response: ApiResponse<ApiTransfers> = tryTwice { api.getTransfersArchive() }
         val transfers: List<ApiTransfer> = response.data!!.transfers
         return transfers.map {transfer -> Mappers.mapApiTransfer(transfer) }
     }
 
     override suspend fun getTransfersActive(): List<Transfer> {
-        val response: ApiResponse<ApiTransfers> = try {
-            api.getTransfersActive().await()
-        } catch (httpException: HttpException) {
-            throw httpException
-        }
-
+        val response: ApiResponse<ApiTransfers> = tryTwice { api.getTransfersActive() }
         val transfers: List<ApiTransfer> = response.data!!.transfers
         return transfers.map {transfer -> Mappers.mapApiTransfer(transfer) }
     }
 
-    /*
-	fun setTransferData(transfer: ApiTransfer): Transfer {
-        val from = CityPoint(transfer.from.name, transfer.from.point, transfer.from.placeId)
-        val to = if (transfer.to != null) CityPoint(transfer.to?.name, transfer.to?.point, transfer.to?.placeId)
-                 else null
-
-        val paidSum = Money(transfer.paidSum.default, transfer.paidSum.preferred)
-
-        val remainsToPay = Money(transfer.remainsToPay.default, transfer.remainsToPay.preferred)
-
-        val price = if(transfer.price != null) Money(transfer.price?.default, transfer.price?.preferred)
-                    else null
-
-		return Transfer(transfer.id, transfer.createdAt, transfer.duration, transfer.distance, transfer.status,
-				from, to, transfer.dateToLocal, transfer.dateReturnLocal, transfer.dateRefund, transfer.nameSign,
-                transfer.comment, transfer.malinaCard, transfer.flightNumber, transfer.flightNumberReturn, transfer.pax,
-				transfer.childSeats, transfer.offersCount, transfer.relevantCarriersCount, transfer.offersUpdatedAt,
-				transfer.time, paidSum, remainsToPay, transfer.paidPercentage, transfer.pendingPaymentId,
-                transfer.bookNow, transfer.bookNowExpiration, transfer.transportTypeIds, transfer.passengerOfferedPrice,
-                price, transfer.editableFields)
-//		return Mappers.mapApiTransfer(transfer)
-	}
-	*/
-
     override suspend fun getOffers(idTransfer: Long): List<Offer> {
-        val response: ApiResponse<ApiOffers> = try {
-            api.getOffers(idTransfer).await()
-        } catch (httpException: HttpException) {
-            throw httpException
-        }
-
+        val response: ApiResponse<ApiOffers> = tryTwice(idTransfer, { id -> api.getOffers(id) })
         val transfers: List<ApiOffer> = response.data!!.offers
         return transfers.map {offer -> setOfferData(offer) }
     }
 
-    fun setOfferData(offer: ApiOffer): Offer{
+    fun setOfferData(offer: ApiOffer): Offer {
         val price = Price(Money(offer.price.base.default, offer.price.base.preferred), offer.price.percentage30,
                 offer.price.percentage70, offer.price.amount)
 

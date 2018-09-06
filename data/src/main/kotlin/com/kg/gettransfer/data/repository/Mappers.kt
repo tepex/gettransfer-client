@@ -28,24 +28,60 @@ class Mappers {
             return ApiAccount(email = account.email, phone = account.phone, fullName = account.fullName)
         }
         
+        
+        
+        
+        
+        
+        
+        
         /**
          * [ApiTransfer] -> [Transfer]
          */
         fun mapApiTransfer(apiTransfer: ApiTransfer): Transfer {
             var to: CityPoint? = null
             if(apiTransfer.to != null) to = CityPoint(apiTransfer.to!!.name, apiTransfer.to!!.point, apiTransfer.to!!.placeId)
-	    
-            return Transfer(apiTransfer.id!!, apiTransfer.createdAt!!, apiTransfer.duration, apiTransfer.distance,
-                apiTransfer.status!!, CityPoint(apiTransfer.from.name, apiTransfer.from.point, apiTransfer.from.placeId),
-                to, apiTransfer.dateToLocal!!, apiTransfer.dateReturnLocal, apiTransfer.dateRefund!!, apiTransfer.nameSign,
-                apiTransfer.comment, apiTransfer.malinaCard, apiTransfer.flightNumber, apiTransfer.flightNumberReturn,
-                apiTransfer.pax, apiTransfer.childSeats!!, apiTransfer.offersCount!!, apiTransfer.relevantCarriersCount!!,
-                apiTransfer.offersUpdatedAt, apiTransfer.time!!,
-                Money(apiTransfer.paidSum!!.default, apiTransfer.paidSum!!.preferred),
-                Money(apiTransfer.remainsToPay!!.default, apiTransfer.remainsToPay!!.preferred),
-                apiTransfer.paidPercentage!!, apiTransfer.pendingPaymentId, apiTransfer.bookNow!!,
-                apiTransfer.bookNowExpiration, apiTransfer.transportTypeIds, apiTransfer.passengerOfferedPrice,
-                Money(apiTransfer.price!!.default, apiTransfer.price!!.preferred), apiTransfer.editableFields!!)
+            var paidSum: Money? = null
+            if(apiTransfer.paidSum != null) paidSum = Money(apiTransfer.paidSum!!.default, apiTransfer.paidSum!!.preferred)
+            var remainsToPay: Money? = null
+            if(apiTransfer.remainsToPay != null) remainsToPay = Money(apiTransfer.remainsToPay!!.default, apiTransfer.remainsToPay!!.preferred)
+            var price: Money? = null
+            if(apiTransfer.price != null) price = Money(apiTransfer.price!!.default, apiTransfer.price!!.preferred)
+            /* Align to line:50 */
+            return Transfer(apiTransfer.id!!,
+                            apiTransfer.createdAt!!,
+                            apiTransfer.duration,
+                            apiTransfer.distance,
+                            apiTransfer.status!!,
+                            CityPoint(apiTransfer.from.name, apiTransfer.from.point, apiTransfer.from.placeId),
+                            to,
+                            apiTransfer.dateToLocal!!,
+                            apiTransfer.dateReturnLocal,
+                            apiTransfer.dateRefund,
+                            
+                            apiTransfer.nameSign,
+                            apiTransfer.comment,
+                            apiTransfer.malinaCard,
+                            apiTransfer.flightNumber,
+                            apiTransfer.flightNumberReturn,
+                            apiTransfer.pax,
+                            apiTransfer.childSeats,
+                            apiTransfer.offersCount,
+                            apiTransfer.relevantCarriersCount,
+                            apiTransfer.offersUpdatedAt,
+                            
+                            apiTransfer.time,
+                            paidSum,
+                            remainsToPay,
+                            apiTransfer.paidPercentage,
+                            apiTransfer.pendingPaymentId,
+                            apiTransfer.bookNow!!,
+                            apiTransfer.bookNowExpiration,
+                            apiTransfer.transportTypeIds,
+                            apiTransfer.passengerOfferedPrice,
+                            price,
+                            
+                            apiTransfer.editableFields!!)
         }
 	
         /**

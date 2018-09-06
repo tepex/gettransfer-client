@@ -14,14 +14,18 @@ import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 
+import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.OffersView
 
 import kotlinx.coroutines.experimental.Job
+
+import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
 @InjectViewState
 class OffersPresenter(private val cc: CoroutineContexts,
+                      private val router: Router,
                       private val apiInteractor: ApiInteractor): MvpPresenter<OffersView>() {
 
     private val compositeDisposable = Job()
@@ -43,11 +47,18 @@ class OffersPresenter(private val cc: CoroutineContexts,
                 activeTransfers = apiInteractor.getTransfersActive()
                 offers = apiInteractor.getOffers(allTransfers.get(0).id)
             }
-        }, { e -> 
-                if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code?.toString(), e.details)
+        }, { e ->
+                if(e is ApiException) {
+                    if(e.isNotLoggedIn()) login()
+                    else viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
+                }
                 else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
-
+    }
+    
+    private fun login() {
+        Timber.d("go to login")
+        router.navigateTo(Screens.LOGIN) 
     }
 
     fun onBackCommandClick() {

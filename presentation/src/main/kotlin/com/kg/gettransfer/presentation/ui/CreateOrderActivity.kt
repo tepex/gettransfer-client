@@ -103,8 +103,7 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
     private val calendar = Calendar.getInstance()
     
     @ProvidePresenter
-    fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(resources,
-                                                                                  coroutineContexts,
+    fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(coroutineContexts,
                                                                                   router,
                                                                                   addressInteractor,
                                                                                   apiInteractor)
@@ -114,6 +113,7 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
             when(screenKey) {
                 Screens.LICENCE_AGREE -> return Intent(this@CreateOrderActivity, LicenceAgreementActivity::class.java)
                 Screens.OFFERS -> return Intent(this@CreateOrderActivity, OffersActivity::class.java)
+                Screens.LOGIN -> return Intent(this@CreateOrderActivity, LoginActivity::class.java)
             }
             return null
         }
