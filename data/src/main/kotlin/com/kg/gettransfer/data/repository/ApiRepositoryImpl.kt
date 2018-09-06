@@ -4,10 +4,10 @@ import android.content.Context
 
 import com.kg.gettransfer.data.Api
 import com.kg.gettransfer.data.TransportTypesDeserializer
-
 import com.kg.gettransfer.data.model.*
-import com.kg.gettransfer.domain.model.*
 
+import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.domain.repository.ApiRepository
 
 import com.google.gson.GsonBuilder
@@ -26,6 +26,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+
+import timber.log.Timber
 
 class ApiRepositoryImpl(private val context: Context, url: String, private val apiKey: String): ApiRepository {
     private var cacheRepository = CacheRepositoryImpl(context)
@@ -103,11 +105,11 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
         return try { api.putAccount(apiAccount).await() }
         catch(e: Exception) {
             if(e is ApiException) throw e /* second invocation */
-            val ae = ApiException(e)
+            val ae = apiException(e)
             if(!ae.isInvalidToken()) throw ae
 
-            try { updateAccessToken() } catch(e1: Exception) { throw ApiException(e1) }
-            return try { api.putAccount(apiAccount).await() } catch(e2: Exception) { throw ApiException(e2) }
+            try { updateAccessToken() } catch(e1: Exception) { throw apiException(e1) }
+            return try { api.putAccount(apiAccount).await() } catch(e2: Exception) { throw apiException(e2) }
         }
     }
 
@@ -145,11 +147,11 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
         return try { api.getRouteInfo(points, withPrices, returnWay).await() }
         catch(e: Exception) {
             if(e is ApiException) throw e /* second invocation */
-            val ae = ApiException(e)
+            val ae = apiException(e)
             if(!ae.isInvalidToken()) throw ae
 
-            try { updateAccessToken() } catch(e1: Exception) { throw ApiException(e1) }
-            return try { api.getRouteInfo(points, withPrices, returnWay).await() } catch(e2: Exception) { throw ApiException(e2) }
+            try { updateAccessToken() } catch(e1: Exception) { throw apiException(e1) }
+            return try { api.getRouteInfo(points, withPrices, returnWay).await() } catch(e2: Exception) { throw apiException(e2) }
         }
     }
 
@@ -161,11 +163,11 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
         return try { apiCall().await() }
         catch(e: Exception) {
             if(e is ApiException) throw e /* second invocation */
-            val ae = ApiException(e)
+            val ae = apiException(e)
             if(!ae.isInvalidToken()) throw ae
 
-            try { updateAccessToken() } catch(e1: Exception) { throw ApiException(e1) }
-            return try { apiCall().await() } catch(e2: Exception) { throw ApiException(e2) }
+            try { updateAccessToken() } catch(e1: Exception) { throw apiException(e1) }
+            return try { apiCall().await() } catch(e2: Exception) { throw apiException(e2) }
         }
     }
     /*
@@ -203,11 +205,11 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
         return try { api.postTransfer(apiTransfer).await() }
         catch(e: Exception) {
             if(e is ApiException) throw e /* second invocation */
-            val ae = ApiException(e)
+            val ae = apiException(e)
             if(!ae.isInvalidToken()) throw ae
 
-            try { updateAccessToken() } catch(e1: Exception) { throw ApiException(e1) }
-            return try { api.postTransfer(apiTransfer).await() } catch(e2: Exception) { throw ApiException(e2) }
+            try { updateAccessToken() } catch(e1: Exception) { throw apiException(e1) }
+            return try { api.postTransfer(apiTransfer).await() } catch(e2: Exception) { throw apiException(e2) }
         }
     }
 
@@ -312,5 +314,12 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 
         return Offer(offer.id, offer.status, offer.wifi, offer.refreshments, offer.createdAt,
                 price, ratings, offer.passengerFeedback, carrier, vehicle, driver)
+    }
+    
+    private fun apiException(e: Exception): ApiException {
+        if(e is HttpException)
+            return ApiException(e.code(), gson.fromJson(e.response().errorBody()?.string(), ApiResponse::class.java).
+                error?.details?.toString() ?: e.message!!)
+        else return ApiException(ApiException.NOT_HTTP, e.message!!)
     }
 }

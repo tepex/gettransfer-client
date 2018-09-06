@@ -1,20 +1,27 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
+import android.support.annotation.StringRes
+
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.presentation.presenter.RequestsPresenter
 import com.kg.gettransfer.presentation.view.RequestsView
+
 import kotlinx.android.synthetic.main.activity_requests.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+
 import org.koin.android.ext.android.inject
 
 class RequestsActivity: MvpAppCompatActivity(), RequestsView {
@@ -41,6 +48,12 @@ class RequestsActivity: MvpAppCompatActivity(), RequestsView {
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 
         rvRequests.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+    }
+
+    override fun blockInterface(block: Boolean) {}
+
+    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
+        Utils.showError(this, finish, getString(errId, *args))
     }
 
     override fun setRequests(transfers: List<Transfer>, distanceUnit: String) {

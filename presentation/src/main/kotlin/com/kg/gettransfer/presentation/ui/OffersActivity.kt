@@ -7,6 +7,8 @@ import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+import android.support.annotation.StringRes
+
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 
@@ -63,6 +65,12 @@ class OffersActivity: MvpAppCompatActivity(), OffersView {
 
     fun setOnClickListeners(){
         layoutTransferRequestInfo.setOnClickListener{}
+    }
+
+    override fun blockInterface(block: Boolean) {}
+
+    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
+        Utils.showError(this, finish, getString(errId, *args))
     }
 
     override fun onBackPressed() {

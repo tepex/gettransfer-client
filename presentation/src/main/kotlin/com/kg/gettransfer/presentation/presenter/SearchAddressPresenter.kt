@@ -52,7 +52,7 @@ class SearchAddressPresenter(private val cc: CoroutineContexts,
 		}, {e ->
 			Timber.e(e)
 			// if(e is ...) @TODO: обработать ошибки таймаута
-			viewState.setError(R.string.err_address_service_xxx, false)
+			viewState.setError(false, R.string.err_address_service_xxx)
 		})
 	}
 }

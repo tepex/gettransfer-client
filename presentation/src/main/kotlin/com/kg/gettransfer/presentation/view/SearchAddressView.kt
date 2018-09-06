@@ -12,5 +12,5 @@ import com.kg.gettransfer.domain.model.GTAddress
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface SearchAddressView: MvpView {
 	fun setAddressList(list: List<GTAddress>)
-	fun setError(@StringRes errId: Int, finish: Boolean = false)
+	fun setError(finish: Boolean = false, @StringRes errId: Int)
 }

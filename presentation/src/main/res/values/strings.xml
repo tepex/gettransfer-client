@@ -62,7 +62,8 @@
 	<string name="err_title">Ошибка</string>
 	<string name="err_location_service_not_available">Cервис геолокации недоступен!</string>
 	<string name="err_address_service_xxx">Ошибка определения адреса!</string>
-	<string name="err_server">Ошибка сервера!</string>
+	<string name="err_server">Ошибка: %1$s</string>
+	<string name="err_server_code">Ошибка сервера %1$s! %2$s</string>
 	<string name="error_login">Incorrect login or password</string>
 
 

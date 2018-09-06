@@ -42,7 +42,7 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
         val results = pdClient.getCurrentPlace(null)
         Tasks.await(results)
         val list = DataBufferUtils.freezeAndClose(results.getResult())
-        if (list.isEmpty()) throw RuntimeException("Address not found")
+        if(list.isEmpty()) throw RuntimeException("Address not found")
 
         val place = list.get(0).place
         val address = GTAddress(place.id, place.placeTypes,

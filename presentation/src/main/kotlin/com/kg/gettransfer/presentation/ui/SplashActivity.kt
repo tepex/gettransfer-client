@@ -69,9 +69,7 @@ class SplashActivity: AppCompatActivity() {
 			val account = utils.asyncAwait { apiInteractor.getAccount() }
 			Timber.d("account: %s", account)
 			startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-		}, { e ->
-			Timber.e(e)
-			Utils.showError(this@SplashActivity, R.string.err_server, false)
+		}, { e -> Utils.showError(this@SplashActivity, false, getString(R.string.err_server, e.message))
 			// @TODO: Показать ошибку. Учесть 401 — протухший ключ
 		}, { finish() })
 	}

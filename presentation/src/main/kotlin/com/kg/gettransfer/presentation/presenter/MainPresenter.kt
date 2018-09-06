@@ -14,6 +14,7 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
+
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
@@ -50,7 +51,7 @@ class MainPresenter(private val cc: CoroutineContexts,
             // Проверка досупности сервиса геолокации
             val available = utils.asyncAwait { locationInteractor.checkLocationServicesAvailability() }
             if(available) updateCurrentLocation()
-            else { viewState.setError(R.string.err_location_service_not_available, true) }
+            else { viewState.setError(true, R.string.err_location_service_not_available) }
         }, { e -> Timber.e(e) })
         
         // Создать листенер для обновления текущей локации
@@ -74,16 +75,14 @@ class MainPresenter(private val cc: CoroutineContexts,
 
     fun updateCurrentLocation() {
         Timber.d("update current location")
-        viewState.blockInterface(true)
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
+            viewState.blockInterface(true)
             val currentAddress = utils.asyncAwait { addressInteractor.getCurrentAddress() }
             lastAddressPoint = LatLng(currentAddress.point!!.latitude, currentAddress.point!!.longitude)
             onCameraMove(lastAddressPoint)
             viewState.setMapPoint(lastAddressPoint)
             viewState.setAddressFrom(currentAddress.name)
-        }, { e ->
-            Timber.e(e)
-            viewState.setError(R.string.err_address_service_xxx, false)
+        }, { e -> viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
     }
     

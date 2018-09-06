@@ -148,8 +148,8 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		if(addressField.isFocused()) parent.setAddressList(list) 
 	}
 
-	override fun setError(@StringRes errId: Int, finish: Boolean) {
-		if(addressField.isFocused()) parent.setError(errId, finish)
+	override fun setError(finish: Boolean, @StringRes errId: Int) {
+		if(addressField.isFocused()) parent.setError(finish, errId)
 	}
 
 	override fun afterTextChanged(s: Editable?) {

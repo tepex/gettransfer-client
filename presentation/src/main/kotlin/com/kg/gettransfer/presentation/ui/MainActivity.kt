@@ -397,8 +397,8 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	override fun setAddressFrom(address: String) { searchFrom.text = address }
 	
-	override fun setError(@StringRes errId: Int, finish: Boolean) {
-		Utils.showError(this, errId, finish)
+	override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
+		Utils.showError(this, finish, getString(errId, *args))
     }
 
 	override fun showLoginInfo(account: Account) {

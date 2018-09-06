@@ -6,8 +6,6 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.kg.gettransfer.domain.model.Transfer
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface RequestsView: MvpView {
-    fun finish()
-
+interface RequestsView: BaseView {
     fun setRequests(transfers: List<Transfer>, distanceUnit: String)
 }

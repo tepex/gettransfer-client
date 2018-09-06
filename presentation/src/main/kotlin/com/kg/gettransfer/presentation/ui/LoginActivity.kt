@@ -94,7 +94,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
         tvLoginError.visibility = View.INVISIBLE
     }
     
-    override fun setError(@StringRes errId: Int, finish: Boolean) {
+    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
         tvLoginError.visibility = View.VISIBLE
     }
 }

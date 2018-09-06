@@ -35,10 +35,10 @@ class Utils {
             else AlertDialog.Builder(context)
         }
         
-        fun showError(context: Context, @StringRes errId: Int, finish: Boolean) {
+        fun showError(context: Context, finish: Boolean, message: String) {
             getAlertDialogBuilder(context)
                 .setTitle(R.string.err_title)
-                .setMessage(errId)
+                .setMessage(message)
                 .setPositiveButton(android.R.string.ok, { dialog, _ ->
                    dialog.dismiss()
                    if(finish) (context as Activity).finish()

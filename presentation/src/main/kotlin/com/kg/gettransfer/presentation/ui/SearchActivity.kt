@@ -126,6 +126,8 @@ class SearchActivity: MvpAppCompatActivity(), SearchView {
 	override fun setAddressFrom(address: String, sendRequest: Boolean) { searchFrom.initText(address, sendRequest) }
 	override fun setAddressTo(address: String, sendRequest: Boolean) { searchTo.initText(address, sendRequest) }
 	override fun setAddressList(list: List<GTAddress>) { addressList.adapter = AddressAdapter(presenter, list) }
-	
-	override fun setError(@StringRes errId: Int, finish: Boolean) { Utils.showError(this, errId, finish) }
+
+    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
+        Utils.showError(this, finish, getString(errId, *args))
+    }
 }

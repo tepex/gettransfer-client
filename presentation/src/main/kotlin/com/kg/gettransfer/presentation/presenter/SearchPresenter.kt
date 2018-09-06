@@ -45,9 +45,7 @@ class SearchPresenter(private val cc: CoroutineContexts,
 			viewState.blockInterface(true)
 			addressFrom = utils.asyncAwait { addressInteractor.getCachedAddress()!! }
 			viewState.setAddressFrom(addressFrom.name, false)
-		}, { e ->
-			Timber.e(e)
-			viewState.setError(R.string.err_address_service_xxx, false)
+		}, { e -> viewState.setError(false, R.string.err_address_service_xxx)
 		}, { viewState.blockInterface(false) })
 	}
 
@@ -62,9 +60,7 @@ class SearchPresenter(private val cc: CoroutineContexts,
 	                addressTo!!.point = utils.asyncAwait { addressInteractor.getLatLngByPlaceId(addressTo!!.id!!) }
 		        addressInteractor.route = Pair(addressFrom, addressTo!!)
 		        router.navigateTo(Screens.CREATE_ORDER)
-		    }, { e ->
-		        Timber.e(e)
-		        viewState.setError(R.string.err_address_service_xxx, false)
+		    }, { e -> viewState.setError(false, R.string.err_address_service_xxx)
 		    }, { viewState.blockInterface(false) })
 		    return
 		}

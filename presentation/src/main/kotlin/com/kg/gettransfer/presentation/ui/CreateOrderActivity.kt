@@ -297,8 +297,8 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
 	override fun blockInterface(block: Boolean) {
 	}
 	
-	override fun setError(@StringRes errId: Int, finish: Boolean) {
-	    Utils.showError(this, errId, finish)
+	override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
+	    Utils.showError(this, finish, getString(errId, *args))
 	}
 
     override fun onBackPressed() {

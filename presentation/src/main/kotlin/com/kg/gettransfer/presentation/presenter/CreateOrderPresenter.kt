@@ -13,10 +13,9 @@ import com.arellomobile.mvp.MvpPresenter
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.data.repository.ApiException
-
-import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.AsyncUtils
+import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.ApiInteractor
@@ -106,9 +105,9 @@ class CreateOrderPresenter(private val resources: Resources,
             date = Date()
             viewState.setMapInfo(routeInfo, addressInteractor.route, configs.distanceUnits.get(0))
         }, { e ->
-            Timber.e(e)
-            //viewState.setError(R.string.err_address_service_xxx, false)
-        }, { /* viewState.blockInterface(false) */ })
+                if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
+                else viewState.setError(false, R.string.err_server, e.message)
+        }, { viewState.blockInterface(false) })
     }
     
     fun changeCurrency(selected: Int) {
@@ -196,12 +195,12 @@ class CreateOrderPresenter(private val resources: Resources,
                                                             account, null, false)
             }
             router.navigateTo(Screens.OFFERS)
-        }, { e ->
-            if(e is ApiException && e.isNotLoggedIn()) login()
-            else {
-                Timber.e(e)
-                viewState.setError(R.string.err_server)
-            }
+        }, { e -> 
+                if(e is ApiException) {
+                    if(e.isNotLoggedIn()) login()
+                    else viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
+                }
+                else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
     }
     
@@ -224,10 +223,10 @@ class CreateOrderPresenter(private val resources: Resources,
 
     
     fun onBackCommandClick() { viewState.finish() }
-    
-	@CallSuper
-	override fun onDestroy() {
-		compositeDisposable.cancel()
-		super.onDestroy()
-	}
+
+    @CallSuper
+    override fun onDestroy() {
+        compositeDisposable.cancel()
+        super.onDestroy()
+    }
 }
