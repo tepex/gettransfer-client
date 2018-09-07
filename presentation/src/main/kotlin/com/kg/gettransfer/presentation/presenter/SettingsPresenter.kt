@@ -21,6 +21,9 @@ import com.kg.gettransfer.presentation.model.ConfigsModel
 
 import com.kg.gettransfer.presentation.view.SettingsView
 
+import java.util.Currency
+import java.util.Locale
+
 import kotlinx.coroutines.experimental.Job
 
 import ru.terrakok.cicerone.Router
@@ -57,17 +60,18 @@ class SettingsPresenter(private val cc: CoroutineContexts,
             viewState.setCurrencies(configs.currencies)
             viewState.setLocales(configs.locales)
             viewState.setDistanceUnits(configs.distanceUnits)
+            Timber.d("account: $account")
             
-            Timber.d("account: %s", account)
-            if(account.currency != null) {
-                val currencyModel = configs.currencies.find { it.delegate == account.currency }
-                viewState.setCurrency(currencyModel?.name ?: "")
-            }
-            if(account.locale != null) {
-                val localeModel = configs.locales.find { it.delegate == account.locale }
-                viewState.setLocale(localeModel?.name ?: "")
-            }
-            if(account.distanceUnit != null) viewState.setDistanceUnit(account.distanceUnit!!)
+			val locale = account.locale ?: Locale.getDefault()
+            val localeModel = configs.locales.find { it.delegate.language == locale.language }
+            viewState.setLocale(localeModel?.name ?: "")
+            
+            val currency = account.currency ?: Currency.getInstance(locale)
+            val currencyModel = configs.currencies.find { it.delegate == currency }
+            viewState.setCurrency(currencyModel?.name ?: "")
+            
+            viewState.setDistanceUnit(account.distanceUnit ?: configs.distanceUnits.first())
+                
         }, { e ->
                 if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
                 else viewState.setError(false, R.string.err_server, e.message)

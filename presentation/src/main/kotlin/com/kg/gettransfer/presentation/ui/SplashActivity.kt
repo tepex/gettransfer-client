@@ -24,6 +24,9 @@ import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 
+import java.util.Currency
+import java.util.Locale
+
 import kotlinx.coroutines.experimental.Job
 
 import org.koin.android.ext.android.inject

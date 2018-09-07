@@ -110,9 +110,9 @@ class Mappers {
                                nameSign: String,
                                comment: String?,
                                account: Account,
-                               promoCode: String?,
-                               /* Not used now */
-                               paypalOnly: Boolean): ApiTransferRequest {
+                               promoCode: String?/*,
+                                Not used now 
+                               paypalOnly: Boolean*/): ApiTransferRequest {
             var apiTripReturn: ApiTrip? = null
             if(tripReturn != null) apiTripReturn = mapTrip(tripReturn)
             

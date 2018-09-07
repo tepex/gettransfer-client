@@ -218,7 +218,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
                                         paypalOnly: Boolean): Transfer {
         val response: ApiResponse<ApiTransferWrapper> = tryPostTransfer(ApiTransferWrapper(Mappers.mapTransferRequest(
             from, to, tripTo, tripReturn, transportTypes, pax, childSeats, passengerOfferedPrice, nameSign, comment,
-            account, promoCode, paypalOnly)))
+            account, promoCode/*, paypalOnly*/)))
         
         return Mappers.mapApiTransfer(response.data?.transfer!!)
     }

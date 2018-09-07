@@ -33,7 +33,10 @@ import kotlinx.coroutines.experimental.Job
 
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+
+import java.util.Currency
 import java.util.Date
+import java.util.Locale
 
 import ru.terrakok.cicerone.Router
 
@@ -85,20 +88,18 @@ class CreateOrderPresenter(private val cc: CoroutineContexts,
             }
             
             Timber.d("account: $account")
-            
+            if(account.locale == null) account.locale = Locale.getDefault()
+            if(account.currency == null) account.currency = Currency.getInstance(account.locale)
             viewState.setAccount(account)
 
-            if(account.locale != null) dateTimeFormat = SimpleDateFormat(DATE_TIME_PATTERN, account.locale)
-            else dateTimeFormat = SimpleDateFormat(DATE_TIME_PATTERN)
+            dateTimeFormat = SimpleDateFormat(DATE_TIME_PATTERN, account.locale)
             
             viewState.setTransportTypes(configs.transportTypes, routeInfo.prices!!)
             viewState.setCurrencies(configs.currencies)
-            if(account.currency != null) {
-                for((i, item) in configs.currencies.withIndex()) {
-                    if(item.code == account.currency!!.currencyCode) {
-                        changeCurrency(i)
-                        break
-                    }
+            for((i, item) in configs.currencies.withIndex()) {
+                if(item.code == account.currency!!.currencyCode) {
+                    changeCurrency(i)
+                    break
                 }
             }
             date = Date()            
