@@ -120,20 +120,17 @@ class CreateOrderPresenter(private val cc: CoroutineContexts,
     }
     
     fun setName(name: String) {
-        if(name.isEmpty()) account.fullName = null
-        else account.fullName = name
+        if(name.isEmpty()) account.fullName = null else account.fullName = name
         checkFields()
     }
     
     fun setEmail(email: String) {
-        if(email.isEmpty()) account.email = null
-        else account.email = email
+        if(email.isEmpty()) account.email = null else account.email = email
         checkFields()
     }
     
     fun setPhone(phone: String) {
-        if(phone.isEmpty()) account.phone = phone
-        else account.phone = phone
+        if(phone.isEmpty()) account.phone = phone else account.phone = phone
         checkFields()
     }
 
@@ -144,13 +141,11 @@ class CreateOrderPresenter(private val cc: CoroutineContexts,
     }
     
     fun setFlightNumber(flightNumber: String) {
-        if(flightNumber.isEmpty()) this.flightNumber = null
-        else this.flightNumber = flightNumber
+        if(flightNumber.isEmpty()) this.flightNumber = null else this.flightNumber = flightNumber
     }
 
     fun setComment(comment: String) {
-        if(comment.isEmpty()) this.comment = null
-        else this.comment = comment
+        if(comment.isEmpty()) this.comment = null else this.comment = comment
         viewState.setComment(comment)
     }
     

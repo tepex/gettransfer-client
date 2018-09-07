@@ -381,10 +381,9 @@
                         android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                         android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
                         android:fontFamily="@font/sf_pro_text_regular"
-                        android:text=""
                         android:textColor="@color/colorTextBlack"
                         android:textSize="@dimen/create_transfer_additionals_top_text_size"
-                        android:inputType="text"
+                        android:inputType="textCapWords"
                         android:imeOptions="actionDone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -425,7 +424,7 @@
                     android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding">
 
                     <EditText
-                        android:id="@+id/tvEmail"
+                        android:id="@+id/etEmail"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
@@ -441,6 +440,7 @@
                         android:background="@null"/>
 
                     <TextView
+                        android:id="@+id/tvEmail"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
@@ -449,15 +449,15 @@
                         android:textColor="@color/colorTextLightGray"
                         android:textSize="@dimen/create_transfer_additionals_bottom_text_size"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/tvEmail"
-                        app:layout_constraintTop_toBottomOf="@+id/tvEmail" />
+                        app:layout_constraintStart_toStartOf="@+id/etEmail"
+                        app:layout_constraintTop_toBottomOf="@+id/etEmail" />
 
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="21dp"
                         android:src="@drawable/ic_email"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/tvEmail"
+                        app:layout_constraintEnd_toStartOf="@+id/etEmail"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 

@@ -15,25 +15,29 @@ class Mappers {
          * Simple mapper: [ApiAccount] -> [Account]
          */
         fun mapApiAccount(apiAccount: ApiAccount, configs: Configs): Account {
-            return Account(apiAccount.email, apiAccount.phone,
+            return Account(apiAccount.email,
+                           apiAccount.phone,
                            configs.availableLocales.find { it.language == apiAccount.locale }!!,
                            configs.supportedCurrencies.find { it.currencyCode == apiAccount.currency }!!,
-                           apiAccount.distanceUnit, apiAccount.fullName, apiAccount.groups, apiAccount.termsAccepted)
+                           apiAccount.distanceUnit,
+                           apiAccount.fullName,
+                           apiAccount.groups,
+                           apiAccount.termsAccepted)
         }
-        
+
         /**
          * [Account] -> [ApiAccount]
          */
         fun mapAccount(account: Account): ApiAccount {
-            return ApiAccount(email = account.email, phone = account.phone, fullName = account.fullName)
+            return ApiAccount(account.email,
+                              account.phone,
+                              account.locale?.language,
+                              account.currency?.currencyCode,
+                              account.distanceUnit,
+                              account.fullName,
+                              account.groups,
+                              account.termsAccepted)
         }
-        
-        
-        
-        
-        
-        
-        
         
         /**
          * [ApiTransfer] -> [Transfer]
@@ -47,7 +51,13 @@ class Mappers {
             if(apiTransfer.remainsToPay != null) remainsToPay = Money(apiTransfer.remainsToPay!!.default, apiTransfer.remainsToPay!!.preferred)
             var price: Money? = null
             if(apiTransfer.price != null) price = Money(apiTransfer.price!!.default, apiTransfer.price!!.preferred)
-            /* Align to line:50 */
+
+                
+                
+                
+                
+            
+            /* Align to line:60 */
             return Transfer(apiTransfer.id!!,
                             apiTransfer.createdAt!!,
                             apiTransfer.duration,

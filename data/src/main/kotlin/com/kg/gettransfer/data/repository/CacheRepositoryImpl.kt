@@ -58,4 +58,17 @@ class CacheRepositoryImpl(private val context: Context) {
             editor.putBoolean(ACCOUNT_TERMS_ACCEPTED, value.termsAccepted)
             editor.apply()
         }
+        
+    fun cleanAccount() {
+        val editor = accountPrefs.edit()
+        editor.remove(ACCOUNT_EMAIL)
+        editor.remove(ACCOUNT_PHONE)
+        editor.remove(ACCOUNT_LOCALE)
+        editor.remove(ACCOUNT_CURRENCY)
+        editor.remove(ACCOUNT_DISTANCE_UNIT)
+        editor.remove(ACCOUNT_FULL_NAME)
+        editor.remove(ACCOUNT_GROUPS)
+        editor.remove(ACCOUNT_TERMS_ACCEPTED)
+        editor.apply()
+    }
 }

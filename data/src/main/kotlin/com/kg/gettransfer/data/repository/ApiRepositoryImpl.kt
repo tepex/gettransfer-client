@@ -119,18 +119,27 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
     */
     
     override suspend fun login(email: String, password: String): Account {
-        val response: ApiResponse<ApiAccountWrapper> = try {
-            api.login(email, password).await()
-        } catch(httpException: HttpException) {
-            throw httpException
-        }
+        val response: ApiResponse<ApiAccountWrapper> = tryLogin(email, password)
         val account = Mappers.mapApiAccount(response.data!!.account, configs!!)
-        //cacheRepository.saveAccount(account)
+        cacheRepository.account = account
         return account
+    }
+    
+    private suspend fun tryLogin(email: String, password: String): ApiResponse<ApiAccountWrapper> {
+        return try { api.login(email, password).await() }
+        catch(e: Exception) {
+            if(e is ApiException) throw e /* second invocation */
+            val ae = apiException(e)
+            if(!ae.isInvalidToken()) throw ae
+
+            try { updateAccessToken() } catch(e1: Exception) { throw apiException(e1) }
+            return try { api.login(email, password).await() } catch(e2: Exception) { throw apiException(e2) }
+        }
     }
     
     override fun logout() {
         cacheRepository.accessToken = CacheRepositoryImpl.INVALID_TOKEN
+        cacheRepository.cleanAccount()
     }
     
     override suspend fun getRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean): RouteInfo {

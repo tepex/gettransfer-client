@@ -37,6 +37,12 @@ class OffersPresenter(private val cc: CoroutineContexts,
     lateinit var activeTransfers: List<Transfer>
     lateinit var offers: List<Offer>
 
+    init {
+        router.setResultListener(LoginPresenter.RESULT_CODE, { _ ->
+                Timber.d("result from login")
+        })
+    }
+    
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
             viewState.blockInterface(true)
@@ -68,6 +74,7 @@ class OffersPresenter(private val cc: CoroutineContexts,
     @CallSuper
     override fun onDestroy() {
         compositeDisposable.cancel()
+        router.removeResultListener(LoginPresenter.RESULT_CODE)
         super.onDestroy()
     }
 }

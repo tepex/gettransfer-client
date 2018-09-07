@@ -94,6 +94,12 @@ class SettingsPresenter(private val cc: CoroutineContexts,
         saveAccount()
     }
     
+    fun onLogout() {
+        Timber.d("account logout")
+        apiInteractor.logout()
+        router.exit()
+    }
+    
     private fun saveAccount() {
         viewState.blockInterface(true)
         utils.launchAsyncTryCatchFinally(compositeDisposable, {

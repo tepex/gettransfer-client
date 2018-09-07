@@ -7,7 +7,7 @@ import java.util.Date
 
 
 
-
+/* Align to line:10 */
 data class Transfer(val id: Long,
                     val createdAt: String,
                     val duration: Int?,

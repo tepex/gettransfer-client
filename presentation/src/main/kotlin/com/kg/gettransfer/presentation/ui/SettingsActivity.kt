@@ -76,6 +76,8 @@ class SettingsActivity: MvpAppCompatActivity(), SettingsView {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         (toolbar as Toolbar).toolbar_title.setText(R.string.nav_settings_title)
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
+        
+        btnSignOut.setOnClickListener { presenter.onLogout() }
     }
 
     @CallSuper

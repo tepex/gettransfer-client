@@ -157,6 +157,7 @@
             android:background="@color/colorDividerGray" />
 
         <Button
+            android:id="@+id/btnSignOut"
             android:layout_width="match_parent"
             android:layout_height="@dimen/settings_activity_height_layouts"
             android:background="@drawable/btn_sign_out"

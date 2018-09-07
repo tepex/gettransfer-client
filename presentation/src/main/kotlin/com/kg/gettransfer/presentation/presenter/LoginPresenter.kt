@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+import android.util.Patterns
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
@@ -32,16 +33,33 @@ class LoginPresenter(cc: CoroutineContexts,
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(cc)
     
-    fun onLoginClick(email: String, password: String) {
+    private var email: String? = null
+    private var password: String? = null
+    
+    fun onLoginClick() {
         viewState.blockInterface(false)
         utils.launchAsyncTryCatch(compositeDisposable, {
-            val account = utils.asyncAwait { apiInteractor.login(email, password) }
-            Timber.d("account: %s", account)
-            //router.exitWithResult(RESULT_CODE, RESULT_OK)
-            router.exit()
+            val account = utils.asyncAwait { apiInteractor.login(email!!, password!!) }
+            router.exitWithResult(RESULT_CODE, RESULT_OK)
         }, { e -> viewState.setError(false, R.string.err_server, e.message) })
     }
+    
+    fun setEmail(email: String) {
+        if(email.isEmpty()) this.email = null else this.email = email
+        checkFields()
+    }
 
+    fun setPassword(password: String) {
+        if(password.isEmpty()) this.password = null else this.password = password
+        checkFields()
+    }
+    
+    private fun checkFields() {
+        val checkEmail = email != null && Patterns.EMAIL_ADDRESS.matcher(email!!).matches()
+        val checkPassword = password != null && password!!.length >= 6
+        viewState.enableBtnLogin(checkEmail && checkPassword)
+    }
+    
     @CallSuper
     override fun onDestroy() {
         compositeDisposable.cancel()

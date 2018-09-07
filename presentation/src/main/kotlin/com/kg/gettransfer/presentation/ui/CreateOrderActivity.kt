@@ -145,7 +145,7 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
         tvPersonsCounterUp.setOnClickListener { presenter.changePassengers(1) }
         
         tvName.onTextChanged { presenter.setName(it.trim()) }
-        tvEmail.onTextChanged { presenter.setEmail(it.trim()) }
+        etEmail.onTextChanged { presenter.setEmail(it.trim()) }
         tvPhone.onTextChanged { presenter.setPhone(it.trim()) }
         tvChildCounterDown.setOnClickListener { presenter.changeChildren(-1) }
         tvChildCounterUp.setOnClickListener { presenter.changeChildren(1) }
@@ -298,6 +298,7 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
 	}
 	
 	override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
+	    Timber.e(Exception(args[0]))
 	    Utils.showError(this, finish, getString(errId, *args))
 	}
 
@@ -336,8 +337,9 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
     override fun setAccount(account: Account) {
         if(account.fullName != null) tvName.setText(account.fullName)
         if(account.email != null) {
-            tvEmail.setText(account.email)
-            tvEmail.isEnabled = false
+            etEmail.setText(account.email)
+            etEmail.isEnabled = false
+            tvEmail.visibility = View.GONE
         }
         if(account.phone != null) tvPhone.setText(account.phone)
     }
