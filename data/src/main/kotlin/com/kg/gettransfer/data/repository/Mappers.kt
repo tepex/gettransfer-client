@@ -5,12 +5,14 @@ import com.kg.gettransfer.domain.model.*
 
 import java.text.SimpleDateFormat
 
+import java.util.Locale
+
 import timber.log.Timber
 
 class Mappers {
     companion object {
-        private val SERVER_DATE_FORMAT = SimpleDateFormat("yyyy/MM/dd")
-        private val SERVER_TIME_FORMAT = SimpleDateFormat("HH:mm")
+        private val SERVER_DATE_FORMAT = SimpleDateFormat("yyyy/MM/dd", Locale.US)
+        private val SERVER_TIME_FORMAT = SimpleDateFormat("HH:mm", Locale.US)
         /**
          * Simple mapper: [ApiAccount] -> [Account]
          */
