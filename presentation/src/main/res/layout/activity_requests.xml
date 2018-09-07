@@ -14,10 +14,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvRequests"
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_transfer_info_divider_height"
+        android:background="@color/colorTextBlack"
+        android:layout_below="@+id/toolbar"/>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        android:background="@color/colorPrimary"
+        app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+        app:tabTextColor="@color/colorTextBlack"
+        app:tabSelectedTextColor="@color/colorTextBlack"
+        app:tabIndicatorColor="@color/colorTextBlack"
+        android:layout_below="@+id/divider"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vpRequests"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"/>
+        android:layout_below="@+id/tabs">
+
+    </android.support.v4.view.ViewPager>
 
 </RelativeLayout>

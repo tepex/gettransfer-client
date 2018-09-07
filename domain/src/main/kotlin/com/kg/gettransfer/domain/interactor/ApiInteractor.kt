@@ -5,6 +5,10 @@ import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.domain.repository.ApiRepository
 
 class ApiInteractor(private val repository: ApiRepository) {
+	lateinit var activeTransfers: List<Transfer>
+	lateinit var allTransfers: List<Transfer>
+	lateinit var completedTransfers: List<Transfer>
+
 	suspend fun getConfigs(): Configs = repository.getConfigs()
 	suspend fun getAccount(): Account = repository.getAccount()
 	suspend fun putAccount(account: Account) { repository.putAccount(account) }
