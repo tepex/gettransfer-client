@@ -36,9 +36,9 @@ import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
-class LoginActivity : MvpAppCompatActivity(), LoginView {
+class LoginActivity: BaseActivity {
     @InjectPresenter
-    lateinit var presenter: LoginPresenter
+    override lateinit var presenter
 
     private val apiInteractor: ApiInteractor by inject()
     private val coroutineContexts: CoroutineContexts by inject()
