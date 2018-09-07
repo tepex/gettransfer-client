@@ -36,20 +36,10 @@ import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
-class LoginActivity: BaseActivity {
+class LoginActivity: BaseActivity(), LoginView {
     @InjectPresenter
-    override lateinit var presenter
+    lateinit var presenter: LoginPresenter
 
-    private val apiInteractor: ApiInteractor by inject()
-    private val coroutineContexts: CoroutineContexts by inject()
-    private val navigatorHolder: NavigatorHolder by inject()
-    private val router: Router by inject()
-    
-    private val navigator: Navigator = object: SupportAppNavigator(this, Screens.NOT_USED) {
-        protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? = null
-        protected override fun createFragment(screenKey: String, data: Any?): Fragment? = null
-    }
-	
     @ProvidePresenter
     fun createLoginPresenter(): LoginPresenter = LoginPresenter(coroutineContexts, router, apiInteractor)
 
@@ -67,18 +57,6 @@ class LoginActivity: BaseActivity {
         btnLogin.setOnClickListener { presenter.onLoginClick() }
     }
 
-    @CallSuper
-    protected override fun onResume() {
-        super.onResume()
-        navigatorHolder.setNavigator(navigator)
-    }
-    
-    @CallSuper
-    protected override fun onPause() {
-        navigatorHolder.removeNavigator()
-        super.onPause()
-    }
-    
     private fun setupToolbar() {
         setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
