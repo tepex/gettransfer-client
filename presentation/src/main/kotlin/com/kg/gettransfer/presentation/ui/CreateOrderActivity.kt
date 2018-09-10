@@ -35,7 +35,6 @@ import android.widget.PopupWindow
 
 import android.widget.RelativeLayout
 
-import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
@@ -94,7 +93,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
                                                                                   addressInteractor,
                                                                                   apiInteractor)
 
-    protected override var navigator: BaseNavigator = object: BaseNavigator(this) {
+    protected override var navigator = object: BaseNavigator(this) {
         @CallSuper
         protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
             val intent = super.createActivityIntent(context, screenKey, data)

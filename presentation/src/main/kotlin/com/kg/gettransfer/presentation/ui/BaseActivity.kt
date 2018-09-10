@@ -7,6 +7,7 @@ import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
+import android.support.design.widget.Snackbar
 
 import android.support.v4.app.Fragment
 
@@ -32,7 +33,7 @@ import ru.terrakok.cicerone.android.SupportAppNavigator
 
 open class BaseActivity: MvpAppCompatActivity(), BaseView {
     protected val apiInteractor: ApiInteractor by inject()
-    protected val coroutineContexts: CoroutineContexts by inject()
+    internal val coroutineContexts: CoroutineContexts by inject()
     protected val utils = AsyncUtils(coroutineContexts)
     protected val navigatorHolder: NavigatorHolder by inject()
     protected val router: Router by inject()
@@ -56,8 +57,6 @@ open class BaseActivity: MvpAppCompatActivity(), BaseView {
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
         Utils.showError(this, finish, getString(errId, *args))
     }
-    
-    override fun onBackPressed() { /*presenter.onBackCommandClick()*/ }
 }
 
 open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, Screens.NOT_USED) {

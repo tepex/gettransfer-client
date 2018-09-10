@@ -51,9 +51,9 @@ import timber.log.Timber
 class SearchAddress @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0): 
 	ConstraintLayout(context, attrs, defStyleAttr), LayoutContainer, SearchAddressView, TextWatcher {
 
-	@InjectPresenter
-	lateinit var presenter: SearchAddressPresenter
-	private lateinit var parent: SearchActivity
+    @InjectPresenter
+    lateinit var presenter: SearchAddressPresenter
+    private lateinit var parent: SearchActivity
 
 	override val containerView: View
 	/** From/To address flag */

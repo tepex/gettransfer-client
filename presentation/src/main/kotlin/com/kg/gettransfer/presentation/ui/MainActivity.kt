@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
 import android.support.design.widget.AppBarLayout
-import android.support.design.widget.Snackbar
 
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
@@ -69,7 +68,7 @@ import timber.log.Timber
 
 import kotlin.coroutines.experimental.suspendCoroutine
 
-class MainActivity: MvpAppCompatActivity(), MainView {
+class MainActivity: BaseActivity(), MainView {
 	@InjectPresenter
 	internal lateinit var presenter: MainPresenter
 	
@@ -77,22 +76,15 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	private lateinit var toggle: ActionBarDrawerToggle
 	private lateinit var headerView: View
 	
-	private val navigatorHolder: NavigatorHolder by inject()
-	private val router: Router by inject()
 	private val addressInteractor: AddressInteractor by inject()
 	private val locationInteractor: LocationInteractor by inject()
-	private val coroutineContexts: CoroutineContexts by inject()
-	private val apiInteractor: ApiInteractor by inject()
 	
 	private val compositeDisposable = Job()
-	private val utils = AsyncUtils(coroutineContexts)
 	private lateinit var googleMap: GoogleMap
 	
 	private var isFirst = true
 	private var centerMarker: Marker? = null
 	
-	var pos: LatLng? = null
-
 	@ProvidePresenter
 	fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
 			router,
@@ -115,22 +107,24 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 		drawer.closeDrawer(GravityCompat.START)
 	}
 
-	private val navigator: Navigator = object: SupportAppNavigator(this, Screens.NOT_USED) {
-		protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
-			when(screenKey) {
-				Screens.ABOUT -> return Intent(this@MainActivity, AboutActivity::class.java)
+    protected override var navigator = object: BaseNavigator(this) {
+        protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
+            val intent = super.createActivityIntent(context, screenKey, data)
+            if(intent != null) return intent
+
+            when(screenKey) {
+				Screens.ABOUT -> return Intent(context, AboutActivity::class.java)
 				Screens.FIND_ADDRESS -> {
-					val intent = Intent(this@MainActivity, SearchActivity::class.java)
+					val searchIntent = Intent(context, SearchActivity::class.java)
 					@Suppress("UNCHECKED_CAST")
 					val pair = data as Pair<String, String>
-					intent.putExtra(SearchActivity.EXTRA_ADDRESS_FROM, pair.first)
-					intent.putExtra(SearchActivity.EXTRA_ADDRESS_TO, pair.second)
-					return intent
+					searchIntent.putExtra(SearchActivity.EXTRA_ADDRESS_FROM, pair.first)
+					searchIntent.putExtra(SearchActivity.EXTRA_ADDRESS_TO, pair.second)
+					return searchIntent
 				}
-				Screens.CREATE_ORDER -> return Intent(this@MainActivity, CreateOrderActivity::class.java)
-				Screens.SETTINGS -> return Intent(this@MainActivity, SettingsActivity::class.java)
-				Screens.LOGIN -> return Intent(this@MainActivity, LoginActivity::class.java)
-				Screens.REQUESTS -> return Intent(this@MainActivity, RequestsActivity::class.java)
+				Screens.CREATE_ORDER -> return Intent(context, CreateOrderActivity::class.java)
+				Screens.SETTINGS -> return Intent(context, SettingsActivity::class.java)
+				Screens.REQUESTS -> return Intent(context, RequestsActivity::class.java)
 			}
 			return null
 		}
@@ -151,12 +145,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 				    search,
 				    getString(R.string.searchTransitionName))
 				.toBundle()
-
-		protected override fun showSystemMessage(message: String) {
-			Snackbar.make(drawerLayout, message, Snackbar.LENGTH_SHORT).show()
-		}
-		
-		protected override fun createFragment(screenKey: String, data: Any?): Fragment? = null
 	}
 	
 	companion object {
@@ -194,18 +182,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 			}
 		})
 		
-		/*(navView as NavigationView).setNavigationItemSelectedListener { item ->
-            when(item.itemId) {
-				R.id.navLogin -> presenter.onLoginClick()
-                R.id.navAbout -> presenter.onAboutClick()
-                R.id.navSettings -> presenter.onSettingsClick()
-				R.id.nav_archived_rides -> presenter.onRequestsClick()
-                else -> Timber.d("No route for ${item.title}")
-            }
-            drawer.closeDrawer(GravityCompat.START)
-            true
-        }*/
-
         (appbar as AppBarLayout).bringToFront()
 		
 		initNavigation()
@@ -242,7 +218,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	protected override fun onResume() {
 		super.onResume()
 		Utils.hideKeyboard(this, currentFocus)
-		navigatorHolder.setNavigator(navigator)
 
 		val view = currentFocus
 		view?.hideKeyboard()
@@ -253,7 +228,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	@CallSuper
 	protected override fun onPause() {
-		navigatorHolder.removeNavigator()
 		mapView.onPause()
 		super.onPause()
 	}
@@ -371,9 +345,6 @@ class MainActivity: MvpAppCompatActivity(), MainView {
     }
     
     /* MainView */
-    
-    override fun blockInterface(block: Boolean) {}
-    
     override fun setMapPoint(point: LatLng) {
         if(centerMarker != null) {
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(point))
@@ -397,29 +368,15 @@ class MainActivity: MvpAppCompatActivity(), MainView {
 	
 	override fun setAddressFrom(address: String) { searchFrom.text = address }
 	
-	override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-		Utils.showError(this, finish, getString(errId, *args))
-    }
-
 	override fun showLoginInfo(account: Account) {
 	    Timber.d("show Login: %s", account)
 	    if(account.email == null) {
-	        /*headerView.navHeaderName.visibility = View.GONE
-	        headerView.navHeaderEmail.visibility = View.GONE
-	        navView.menu.findItem(R.id.navLogin).isVisible = true*/
-
 			navHeaderName.visibility = View.GONE
 			navHeaderEmail.visibility = View.GONE
 			navLogin.visibility = View.VISIBLE
 			navRequests.visibility = View.GONE
 	    }
 	    else {
-	        /*headerView.navHeaderName.visibility = View.VISIBLE
-	        headerView.navHeaderEmail.visibility = View.VISIBLE
-	        headerView.navHeaderName.text = account.fullName
-	        headerView.navHeaderEmail.text = account.email
-	        navView.menu.findItem(R.id.navLogin).isVisible = false*/
-
 			navHeaderName.visibility = View.VISIBLE
 			navHeaderEmail.visibility = View.VISIBLE
 			navHeaderName.text = account.fullName
