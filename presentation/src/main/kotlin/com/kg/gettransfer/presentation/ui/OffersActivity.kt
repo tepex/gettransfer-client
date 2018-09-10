@@ -16,15 +16,11 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 
-import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.R.id.ratingBar
-
-import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.ApiInteractor
 
 import com.kg.gettransfer.presentation.Screens
 
@@ -40,30 +36,10 @@ import kotlinx.android.synthetic.main.view_offer.*
 
 import org.koin.android.ext.android.inject
 
-import ru.terrakok.cicerone.Navigator
-import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.Router
-import ru.terrakok.cicerone.android.SupportAppNavigator
-
-class OffersActivity: MvpAppCompatActivity(), OffersView {
+class OffersActivity: BaseActivity(), OffersView {
     @InjectPresenter
     internal lateinit var presenter: OffersPresenter
-
-    private val apiInteractor: ApiInteractor by inject()
-    private val coroutineContexts: CoroutineContexts by inject()
-    private val navigatorHolder: NavigatorHolder by inject()
-    private val router: Router by inject()
     
-    private val navigator: Navigator = object: SupportAppNavigator(this, Screens.NOT_USED) {
-        protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
-            when(screenKey) {
-                Screens.LOGIN -> return Intent(this@OffersActivity, LoginActivity::class.java)
-            }
-            return null
-        }
-        protected override fun createFragment(screenKey: String, data: Any?): Fragment? = null
-    }
-
     @ProvidePresenter
     fun createOffersPresenter(): OffersPresenter = OffersPresenter(coroutineContexts, router, apiInteractor)
 
@@ -86,29 +62,7 @@ class OffersActivity: MvpAppCompatActivity(), OffersView {
         stars.getDrawable(2).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP)
     }
 
-    @CallSuper
-    protected override fun onResume() {
-        super.onResume()
-        navigatorHolder.setNavigator(navigator)
-    }
-
-    @CallSuper
-    protected override fun onPause() {
-        navigatorHolder.removeNavigator()
-        super.onPause()
-    }
+    fun setOnClickListeners() { layoutTransferRequestInfo.setOnClickListener{} }
     
-    fun setOnClickListeners(){
-        layoutTransferRequestInfo.setOnClickListener{}
-    }
-
-    override fun blockInterface(block: Boolean) {}
-
-    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-        Utils.showError(this, finish, getString(errId, *args))
-    }
-
-    override fun onBackPressed() {
-        presenter.onBackCommandClick()
-    }
+    override fun onBackPressed() { presenter.onBackCommandClick() }
 }
