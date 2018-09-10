@@ -89,6 +89,7 @@ class MainPresenter(private val cc: CoroutineContexts,
     fun onCameraMove(lastPoint: LatLng) {
         this.lastPoint = lastPoint
         viewState.moveCenterMarker(lastPoint)
+        viewState.blockInterface(true)
     }
     
     fun onCameraIdle() {

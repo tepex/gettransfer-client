@@ -15,11 +15,12 @@
 	<string name="nav_settings_subtitle">Language and regional preferences</string>
 	<string name="nav_about_title">About</string>
 	<string name="nav_about_subtitle">Advantages of GetTransport</string>
-	<string name="nav_footer_version">Version %1s\nBuild %2s</string>
+	<string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
 	<string name="nav_footer_read_more">Read more</string>
 	<!-- Search form -->
 	<string name="search_from_hint">From</string>
 	<string name="search_to_hint">To</string>
+    <string name="search_start">Loading…</string>
 	<string name="searchTransitionName">SEARCH_FORM</string>
 	<!-- About -->
 	<string name="about_title_item1">ЛУЧШИЕ ЦЕНЫ</string>
@@ -175,8 +176,8 @@
     <string name="fair">Fair</string>
     <string name="successful_transfers">Successful transfers</string>
     <string name="price">Price</string>
-    <string name="pay_30_now_70_to_the_driver">Pay 30%% now, 70%% later to the driver</string>
-    <string name="pay_100_now">Pay 100%% now</string>
+    <string name="pay_30_now_70_to_the_driver" formatted="false">Pay 30% now, 70% later to the driver</string>
+    <string name="pay_100_now" formatted="false">Pay 100% now</string>
     <string name="pay_n_now_n_to_the_driver">%1$s now, %2$s later</string>
     <string name="pay_n_now">%1$s now</string>
     <string name="pay">Pay</string>
@@ -212,7 +213,7 @@
     <string name="unable_to_update_offers">Unable to update offers</string>
     <string name="unable_to_update_transfer">Unable to update transfer</string>
 
-    <string name="payment_processing_fee_etc">"Payment processing fee is 3%\nRefund is available 3 days before trip"</string>
+    <string name="payment_processing_fee_etc" formatted="false">"Payment processing fee is 3%\nRefund is available 3 days before trip"</string>
     <string name="unable_to_update_transfers">Unable to update transfers</string>
 
     <string name="new_transfer_short">New</string>
@@ -240,8 +241,8 @@
     <string name="carrier_offers">Carrier offers</string>
     <string name="select">Select</string>
 
-    <string name="count_persons_and_baggage"> X %1s</string>
-    <string name="price_from">from %1s</string>
+    <string name="count_persons_and_baggage"> X %1$s</string>
+    <string name="price_from">from %1$s</string>
 
     <!--NavigationView-->
     <string name="text_nav_login_title">Sign up</string>

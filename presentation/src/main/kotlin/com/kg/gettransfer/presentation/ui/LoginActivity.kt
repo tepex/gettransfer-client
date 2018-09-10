@@ -42,6 +42,8 @@ class LoginActivity: BaseActivity(), LoginView {
 
     @ProvidePresenter
     fun createLoginPresenter(): LoginPresenter = LoginPresenter(coroutineContexts, router, apiInteractor)
+    
+    protected override var navigator = BaseNavigator(this)
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +80,5 @@ class LoginActivity: BaseActivity(), LoginView {
         tvLoginError.visibility = View.VISIBLE
     }
     
-    override fun onBackPressed() {
-        presenter.onBackCommandClick()
-    }
+    override fun onBackPressed() { presenter.onBackCommandClick() }
 }

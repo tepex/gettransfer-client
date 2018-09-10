@@ -30,6 +30,8 @@ class RequestsActivity: BaseActivity(), RequestsView {
 
     @ProvidePresenter
     fun createRequestsPresenter(): RequestsPresenter = RequestsPresenter(coroutineContexts, apiInteractor)
+    
+    protected override var navigator = BaseNavigator(this)
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {

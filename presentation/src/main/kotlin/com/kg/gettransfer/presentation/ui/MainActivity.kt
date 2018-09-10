@@ -365,6 +365,10 @@ class MainActivity: BaseActivity(), MainView {
     override fun moveCenterMarker(point: LatLng) {
         if(centerMarker != null) centerMarker!!.setPosition(point)
     }
+
+    override fun blockInterface(block: Boolean) {
+        if(block) searchFrom.text = getString(R.string.search_start)
+    }
 	
 	override fun setAddressFrom(address: String) { searchFrom.text = address }
 	

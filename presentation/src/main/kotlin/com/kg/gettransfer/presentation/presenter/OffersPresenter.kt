@@ -38,9 +38,7 @@ class OffersPresenter(private val cc: CoroutineContexts,
     lateinit var offers: List<Offer>
 
     init {
-        router.setResultListener(LoginPresenter.RESULT_CODE, { _ ->
-                Timber.d("result from login")
-        })
+        router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
     
     override fun onFirstViewAttach() {
@@ -63,13 +61,10 @@ class OffersPresenter(private val cc: CoroutineContexts,
     }
     
     private fun login() {
-        Timber.d("go to login")
         router.navigateTo(Screens.LOGIN) 
     }
 
-    fun onBackCommandClick() {
-        viewState.finish()
-    }
+    fun onBackCommandClick() { viewState.finish() }
 
     @CallSuper
     override fun onDestroy() {

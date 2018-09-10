@@ -39,6 +39,8 @@ class SettingsActivity: BaseActivity(), SettingsView {
     @ProvidePresenter
 	fun createSettingsPresenter(): SettingsPresenter = SettingsPresenter(coroutineContexts, router, apiInteractor)
 	
+	protected override var navigator = BaseNavigator(this)
+	
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

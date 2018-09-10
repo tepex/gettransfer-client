@@ -361,9 +361,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
 
         // Для построения подробного маршрута
         val mPoints = arrayListOf<LatLng>()
-        for(item in routeInfo.polyLines){
-            mPoints.addAll(PolyUtil.decode(item))
-        }
+        for(item in routeInfo.polyLines) mPoints.addAll(PolyUtil.decode(item))
 
         // Для построения упрощённого маршрута (меньше точек)
         //val mPoints = PolyUtil.decode(routeInfo.overviewPolyline)
@@ -371,13 +369,13 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         val line = PolylineOptions().width(10f).color(ContextCompat.getColor(this, R.color.colorPolyline))
 
         val latLngBuilder = LatLngBounds.Builder()
-        for (i in mPoints.indices){
-            if(i == 0){
+        for(i in mPoints.indices) {
+            if(i == 0) {
                 val startMakerOptions = MarkerOptions()
                         .position(mPoints.get(i))
                         .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
                 googleMap.addMarker(startMakerOptions)
-            } else if (i == mPoints.size - 1){
+            } else if(i == mPoints.size - 1) {
                 val endMakerOptions = MarkerOptions()
                         .position(mPoints.get(i))
                         .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
@@ -387,10 +385,15 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
             latLngBuilder.include(mPoints.get(i))
         }
         googleMap.addPolyline(line)
+        
+        /*
         val sizeWidth = resources.displayMetrics.widthPixels
         val sizeHeight = mapView.height
         val latLngBounds = latLngBuilder.build()
         val track = CameraUpdateFactory.newLatLngBounds(latLngBounds, sizeWidth, sizeHeight, 150)
+        */
+        Timber.d("sizeWidth: ${resources.displayMetrics.widthPixels}, sizeHeight: ${mapView.height}")
+        val track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 15)
         try { googleMap.moveCamera(track) }
         catch(e: Exception) { Timber.e(e) }
     }
