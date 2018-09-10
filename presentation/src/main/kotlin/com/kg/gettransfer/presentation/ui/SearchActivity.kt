@@ -26,6 +26,7 @@ import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.presentation.Screens
+import com.kg.gettransfer.presentation.adapter.AddressAdapter
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
 

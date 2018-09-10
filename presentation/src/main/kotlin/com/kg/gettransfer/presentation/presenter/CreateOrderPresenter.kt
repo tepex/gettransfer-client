@@ -72,7 +72,6 @@ class CreateOrderPresenter(private val cc: CoroutineContexts,
     companion object {
         @JvmField val MIN_PASSENGERS    = 1
         @JvmField val MIN_CHILDREN      = 0
-        @JvmField val DATE_TIME_PATTERN = "dd MMMM yyyy, HH:mm"
     }
     
     override fun onFirstViewAttach() {
@@ -92,7 +91,7 @@ class CreateOrderPresenter(private val cc: CoroutineContexts,
             if(account.currency == null) account.currency = Currency.getInstance(account.locale)
             viewState.setAccount(account)
 
-            dateTimeFormat = SimpleDateFormat(DATE_TIME_PATTERN, account.locale)
+            dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, account.locale)
             
             viewState.setTransportTypes(configs.transportTypes, routeInfo.prices!!)
             viewState.setCurrencies(configs.currencies)

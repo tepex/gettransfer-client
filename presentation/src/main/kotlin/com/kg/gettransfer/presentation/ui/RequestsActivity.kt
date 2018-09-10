@@ -10,13 +10,10 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.widget.Toolbar
 
-import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.presentation.TransfersConstants
 import com.kg.gettransfer.presentation.presenter.RequestsPresenter
 import com.kg.gettransfer.presentation.view.RequestsView
@@ -26,13 +23,10 @@ import kotlinx.android.synthetic.main.toolbar.view.*
 
 import org.koin.android.ext.android.inject
 
-class RequestsActivity: MvpAppCompatActivity(), RequestsView {
+class RequestsActivity: BaseActivity(), RequestsView {
 
     @InjectPresenter
     internal lateinit var presenter: RequestsPresenter
-
-    private val apiInteractor: ApiInteractor by inject()
-    private val coroutineContexts: CoroutineContexts by inject()
 
     @ProvidePresenter
     fun createRequestsPresenter(): RequestsPresenter = RequestsPresenter(coroutineContexts, apiInteractor)
@@ -51,7 +45,7 @@ class RequestsActivity: MvpAppCompatActivity(), RequestsView {
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
     }
 
-    override fun setRequestsFragments(){
+    override fun setRequestsFragments() {
         val requestsVPAdapter = RequestsViewPagerAdapter(supportFragmentManager)
 
         val fragmentRequestsActive = RequestsFragment.newInstance(TransfersConstants.CATEGORY_ACTIVE)
@@ -63,12 +57,6 @@ class RequestsActivity: MvpAppCompatActivity(), RequestsView {
 
         vpRequests.adapter = requestsVPAdapter
         tabs.setupWithViewPager(vpRequests)
-    }
-
-    override fun blockInterface(block: Boolean) {}
-
-    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-        Utils.showError(this, finish, getString(errId, *args))
     }
 
     private class RequestsViewPagerAdapter(manager: FragmentManager): FragmentPagerAdapter(manager) {

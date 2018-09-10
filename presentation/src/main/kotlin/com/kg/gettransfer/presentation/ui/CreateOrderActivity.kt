@@ -50,7 +50,7 @@ import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.domain.interactor.AddressInteractor
-import com.kg.gettransfer.domain.interactor.ApiInteractor
+
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.TransportTypePrice
 
@@ -59,6 +59,7 @@ import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
+import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 
 import com.kg.gettransfer.presentation.view.CreateOrderView

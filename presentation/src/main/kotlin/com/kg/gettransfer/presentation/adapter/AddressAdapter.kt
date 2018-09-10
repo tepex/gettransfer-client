@@ -1,4 +1,4 @@
-package com.kg.gettransfer.presentation.ui
+package com.kg.gettransfer.presentation.adapter
 
 import android.graphics.Color
 

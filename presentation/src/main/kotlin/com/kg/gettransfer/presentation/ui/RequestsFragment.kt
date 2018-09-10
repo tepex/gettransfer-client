@@ -1,20 +1,28 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+
 import android.support.v7.widget.LinearLayoutManager
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.model.Transfer
+
+import com.kg.gettransfer.presentation.adapter.RequestsRVAdapter
 import com.kg.gettransfer.presentation.presenter.RequestsFragmentPresenter
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
+
 import kotlinx.android.synthetic.main.fragment_requests.*
+
 import org.koin.android.ext.android.inject
 
 class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView{

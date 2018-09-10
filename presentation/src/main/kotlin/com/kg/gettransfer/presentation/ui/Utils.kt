@@ -28,6 +28,8 @@ import timber.log.Timber
 class Utils {
     companion object {
         private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11}$")
+        @JvmField val DATE_TIME_FULL_PATTERN = "yyyy-MM-dd'T'HH:mm:ss"
+        @JvmField val DATE_TIME_PATTERN = "dd MMMM yyyy, HH:mm"
         
         fun getAlertDialogBuilder(context: Context): AlertDialog.Builder {
             return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && false)
