@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation.presenter
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 
 import com.kg.gettransfer.R
 
@@ -16,7 +15,6 @@ import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 
-import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.ConfigsModel
 
 import com.kg.gettransfer.presentation.view.SettingsView
@@ -24,22 +22,14 @@ import com.kg.gettransfer.presentation.view.SettingsView
 import java.util.Currency
 import java.util.Locale
 
-import kotlinx.coroutines.experimental.Job
-
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
 @InjectViewState
-class SettingsPresenter(private val cc: CoroutineContexts,
-                        private val router: Router,
-                        private val apiInteractor: ApiInteractor): MvpPresenter<SettingsView>() {
-    private val compositeDisposable = Job()
-    private val utils = AsyncUtils(cc)
-    
-    lateinit var configs: ConfigsModel
-    lateinit var account: Account
-    
+class SettingsPresenter(cc: CoroutineContexts,
+                        router: Router,
+                        apiInteractor: ApiInteractor): BasePresenter<SettingsView>(cc, router, apiInteractor) {
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ ->
                 Timber.d("result from login")
@@ -47,21 +37,28 @@ class SettingsPresenter(private val cc: CoroutineContexts,
         })
     }
     
-    fun onBackCommandClick() {
-        viewState.finish()
-    }
-    
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
             utils.asyncAwait { 
                 configs = ConfigsModel(apiInteractor.getConfigs())
-                account = apiInteractor.getAccount()
             }
             viewState.setCurrencies(configs.currencies)
             viewState.setLocales(configs.locales)
             viewState.setDistanceUnits(configs.distanceUnits)
-            Timber.d("account: $account")
             
+                
+        }, { e ->
+                if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
+                else viewState.setError(false, R.string.err_server, e.message)
+        }, { viewState.blockInterface(false) })
+    }
+    
+    @CallSuper
+    override fun attachView(view: SettingsView) {
+        super.attachView(view)
+        utils.launchAsyncTryCatchFinally(compositeDisposable, {
+            account = utils.asyncAwait { apiInteractor.getAccount() }
+            Timber.d("account: $account")
 			val locale = account.locale ?: Locale.getDefault()
             val localeModel = configs.locales.find { it.delegate.language == locale.language }
             viewState.setLocale(localeModel?.name ?: "")
@@ -71,11 +68,7 @@ class SettingsPresenter(private val cc: CoroutineContexts,
             viewState.setCurrency(currencyModel?.name ?: "")
             
             viewState.setDistanceUnit(account.distanceUnit ?: configs.distanceUnits.first())
-                
-        }, { e ->
-                if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
-                else viewState.setError(false, R.string.err_server, e.message)
-        }, { viewState.blockInterface(false) })
+        }, { e -> Timber.e(e) })
     }
     
     fun changeCurrency(selected: Int) {
@@ -116,7 +109,6 @@ class SettingsPresenter(private val cc: CoroutineContexts,
 
     @CallSuper
     override fun onDestroy() {
-        compositeDisposable.cancel()
         router.removeResultListener(LoginPresenter.RESULT_CODE)
         super.onDestroy()
     }
