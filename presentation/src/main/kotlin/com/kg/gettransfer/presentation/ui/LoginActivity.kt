@@ -38,7 +38,7 @@ import ru.terrakok.cicerone.android.SupportAppNavigator
 
 class LoginActivity: BaseActivity(), LoginView {
     @InjectPresenter
-    lateinit var presenter: LoginPresenter
+    internal lateinit var presenter: LoginPresenter
 
     @ProvidePresenter
     fun createLoginPresenter(): LoginPresenter = LoginPresenter(coroutineContexts, router, apiInteractor)

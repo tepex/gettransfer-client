@@ -46,8 +46,6 @@ import com.google.android.gms.maps.model.*
 import com.google.maps.android.PolyUtil
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.AsyncUtils
-import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
@@ -78,28 +76,16 @@ import kotlin.coroutines.experimental.suspendCoroutine
 
 import org.koin.android.ext.android.inject
 
-import ru.terrakok.cicerone.Navigator
-import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.Router
-import ru.terrakok.cicerone.android.SupportAppNavigator
-
 import timber.log.Timber
 
-class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
+class CreateOrderActivity: BaseActivity(), CreateOrderView {
 
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
 
-    private val navigatorHolder: NavigatorHolder by inject()
-    private val router: Router by inject()
 	private val addressInteractor: AddressInteractor by inject()
-	private val apiInteractor: ApiInteractor by inject()
-	private val coroutineContexts: CoroutineContexts by inject()
-
     private val compositeDisposable = Job()
-    private val utils = AsyncUtils(coroutineContexts)
     private lateinit var googleMap: GoogleMap
-    
     private val calendar = Calendar.getInstance()
     
     @ProvidePresenter
@@ -108,16 +94,18 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
                                                                                   addressInteractor,
                                                                                   apiInteractor)
 
-    private val navigator: Navigator = object: SupportAppNavigator(this, Screens.NOT_USED) {
+    protected override var navigator: BaseNavigator = object: BaseNavigator(this) {
+        @CallSuper
         protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
+            val intent = super.createActivityIntent(context, screenKey, data)
+            if(intent != null) return intent
+                
             when(screenKey) {
-                Screens.LICENCE_AGREE -> return Intent(this@CreateOrderActivity, LicenceAgreementActivity::class.java)
-                Screens.OFFERS -> return Intent(this@CreateOrderActivity, OffersActivity::class.java)
-                Screens.LOGIN -> return Intent(this@CreateOrderActivity, LoginActivity::class.java)
+                Screens.LICENCE_AGREE -> return Intent(context, LicenceAgreementActivity::class.java)
+                Screens.OFFERS -> return Intent(context, OffersActivity::class.java)
             }
             return null
         }
-        protected override fun createFragment(screenKey: String, data: Any?): Fragment? = null
     }
 
     init {
@@ -170,13 +158,11 @@ class CreateOrderActivity: MvpAppCompatActivity(), CreateOrderView {
     @CallSuper
     protected override fun onResume() {
         super.onResume()
-        navigatorHolder.setNavigator(navigator)
         mapView.onResume()
     }
 
     @CallSuper
     protected override fun onPause() {
-        navigatorHolder.removeNavigator()
         mapView.onPause()
         super.onPause()
     }

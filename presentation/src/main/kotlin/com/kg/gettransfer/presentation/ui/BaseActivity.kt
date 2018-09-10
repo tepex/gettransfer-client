@@ -16,6 +16,7 @@ import com.arellomobile.mvp.MvpAppCompatActivity
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 
@@ -32,13 +33,11 @@ import ru.terrakok.cicerone.android.SupportAppNavigator
 open class BaseActivity: MvpAppCompatActivity(), BaseView {
     protected val apiInteractor: ApiInteractor by inject()
     protected val coroutineContexts: CoroutineContexts by inject()
+    protected val utils = AsyncUtils(coroutineContexts)
     protected val navigatorHolder: NavigatorHolder by inject()
     protected val router: Router by inject()
     
-    protected val navigator: Navigator = object: SupportAppNavigator(this, Screens.NOT_USED) {
-        protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? = null
-        protected override fun createFragment(screenKey: String, data: Any?): Fragment? = null
-    }
+    protected open lateinit var navigator: BaseNavigator
 	
     @CallSuper
     protected override fun onResume() {
@@ -59,4 +58,14 @@ open class BaseActivity: MvpAppCompatActivity(), BaseView {
     }
     
     override fun onBackPressed() { /*presenter.onBackCommandClick()*/ }
+}
+
+open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, Screens.NOT_USED) {
+    protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
+        when(screenKey) {
+            Screens.LOGIN -> return Intent(context, LoginActivity::class.java)
+        }
+        return null
+    }
+    protected override fun createFragment(screenKey: String, data: Any?): Fragment? = null
 }
