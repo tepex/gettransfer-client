@@ -101,7 +101,7 @@ class CreateOrderPresenter(private val cc: CoroutineContexts,
                     break
                 }
             }
-            date = Date()            
+            date = Date()
             viewState.setMapInfo(routeInfo, addressInteractor.route, configs.distanceUnits.get(0))
         }, { e ->
                 if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)

@@ -392,7 +392,6 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         val latLngBounds = latLngBuilder.build()
         val track = CameraUpdateFactory.newLatLngBounds(latLngBounds, sizeWidth, sizeHeight, 150)
         */
-        Timber.d("sizeWidth: ${resources.displayMetrics.widthPixels}, sizeHeight: ${mapView.height}")
         val track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 15)
         try { googleMap.moveCamera(track) }
         catch(e: Exception) { Timber.e(e) }
