@@ -3,33 +3,32 @@ package com.kg.gettransfer.presentation.presenter
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
+
 import com.kg.gettransfer.domain.interactor.ApiInteractor
+
 import com.kg.gettransfer.domain.model.Transfer
+
 import com.kg.gettransfer.presentation.TransfersConstants
 import com.kg.gettransfer.presentation.view.RequestsView
 
-import kotlinx.coroutines.experimental.Job
+import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
 @InjectViewState
-class RequestsPresenter(private val cc: CoroutineContexts,
-                        private val apiInteractor: ApiInteractor): MvpPresenter<RequestsView>() {
+class RequestsPresenter(cc: CoroutineContexts,
+                        router: Router,
+                        apiInteractor: ApiInteractor): BasePresenter<RequestsView>(cc, router, apiInteractor) {
 
-    private val compositeDisposable = Job()
-    private val utils = AsyncUtils(cc)
-
-    lateinit var transfers: List<Transfer>
-    var transfersAll: ArrayList<Transfer> = arrayListOf()
-    var transfersActive: ArrayList<Transfer> = arrayListOf()
-    var transfersCompleted: ArrayList<Transfer> = arrayListOf()
+    private lateinit var transfers: List<Transfer>
+    private var transfersAll: ArrayList<Transfer> = arrayListOf()
+    private var transfersActive: ArrayList<Transfer> = arrayListOf()
+    private var transfersCompleted: ArrayList<Transfer> = arrayListOf()
 
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
@@ -53,15 +52,5 @@ class RequestsPresenter(private val cc: CoroutineContexts,
                 if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
                 else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
-    }
-
-    fun onBackCommandClick() {
-        viewState.finish()
-    }
-
-    @CallSuper
-    override fun onDestroy() {
-        compositeDisposable.cancel()
-        super.onDestroy()
     }
 }

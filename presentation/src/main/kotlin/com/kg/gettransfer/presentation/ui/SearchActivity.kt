@@ -46,6 +46,7 @@ class SearchActivity: BaseActivity(), SearchView {
     @ProvidePresenter
     fun createSearchPresenter(): SearchPresenter = SearchPresenter(coroutineContexts,
                                                                    router,
+                                                                   apiInteractor,
                                                                    addressInteractor)
     companion object {
         @JvmField val FADE_DURATION  = 500L
@@ -66,6 +67,8 @@ class SearchActivity: BaseActivity(), SearchView {
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
+    
+    override fun getPresenter(): SearchPresenter = presenter
     
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {

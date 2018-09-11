@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 
+import android.support.annotation.StringRes
 import android.support.v7.widget.LinearLayoutManager
 
 import android.view.LayoutInflater
@@ -19,21 +20,35 @@ import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.adapter.RequestsRVAdapter
 import com.kg.gettransfer.presentation.presenter.RequestsFragmentPresenter
+
+import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
 
 import kotlinx.android.synthetic.main.fragment_requests.*
 
 import org.koin.android.ext.android.inject
 
-class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView{
+import ru.terrakok.cicerone.Navigator
+import ru.terrakok.cicerone.NavigatorHolder
+import ru.terrakok.cicerone.Router
+import ru.terrakok.cicerone.android.SupportAppNavigator
+
+/**
+ * @TODO: Выделить BaseFragment
+ */
+class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     @InjectPresenter
     internal lateinit var presenter: RequestsFragmentPresenter
 
     private val apiInteractor: ApiInteractor by inject()
     private val coroutineContexts: CoroutineContexts by inject()
+    
+    private val navigatorHolder: NavigatorHolder by inject()
+    private val router: Router by inject()
+    //private lateinit var navigator: BaseNavigator = BaseNavigator(this)
 
     @ProvidePresenter
-    fun createRequestsFragmentPresenter(): RequestsFragmentPresenter = RequestsFragmentPresenter(coroutineContexts, apiInteractor)
+    fun createRequestsFragmentPresenter(): RequestsFragmentPresenter = RequestsFragmentPresenter(coroutineContexts, router, apiInteractor)
 
     private var categoryName = ""
 
@@ -68,5 +83,11 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView{
 
     override fun setRequests(transfers: List<Transfer>, distanceUnit: String) {
         rvRequests.adapter = RequestsRVAdapter(transfers, distanceUnit)
+    }
+    
+    override fun blockInterface(block: Boolean) { (activity as BaseView).blockInterface(block) }
+    
+    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
+        (activity as BaseView).setError(finish, errId, *args)
     }
 }

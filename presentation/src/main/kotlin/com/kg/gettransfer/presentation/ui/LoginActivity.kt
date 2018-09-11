@@ -44,6 +44,8 @@ class LoginActivity: BaseActivity(), LoginView {
     fun createLoginPresenter(): LoginPresenter = LoginPresenter(coroutineContexts, router, apiInteractor)
     
     protected override var navigator = BaseNavigator(this)
+    
+    override fun getPresenter(): LoginPresenter = presenter
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {

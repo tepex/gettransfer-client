@@ -1,30 +1,27 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.AsyncUtils
 
 import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.domain.interactor.AddressInteractor
+import com.kg.gettransfer.domain.interactor.ApiInteractor
 
 import com.kg.gettransfer.presentation.view.SearchAddressView
 
-import kotlinx.coroutines.experimental.Job
+import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
 @InjectViewState
-class SearchAddressPresenter(private val cc: CoroutineContexts,
-	                         private val addressInteractor: AddressInteractor): MvpPresenter<SearchAddressView>() {
-	
-	val compositeDisposable = Job()
-	val utils = AsyncUtils(cc)
-	
+class SearchAddressPresenter(cc: CoroutineContexts,
+                             router: Router,
+                             apiInteractor: ApiInteractor,
+	                         private val addressInteractor: AddressInteractor): BasePresenter<SearchAddressView>(cc, router, apiInteractor) {
 	/* Cache. @TODO */
 	private var lastRequest: String? = null
 	private var lastResult: List<GTAddress>? = null

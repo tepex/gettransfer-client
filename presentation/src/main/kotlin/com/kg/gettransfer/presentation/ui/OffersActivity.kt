@@ -44,6 +44,8 @@ class OffersActivity: BaseActivity(), OffersView {
     fun createOffersPresenter(): OffersPresenter = OffersPresenter(coroutineContexts, router, apiInteractor)
     
     protected override var navigator = BaseNavigator(this)
+    
+    override fun getPresenter(): OffersPresenter = presenter
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {

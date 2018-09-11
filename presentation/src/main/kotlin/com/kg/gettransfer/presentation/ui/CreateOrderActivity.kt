@@ -111,6 +111,8 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
+    
+    override fun getPresenter(): CreateOrderPresenter = presenter
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {

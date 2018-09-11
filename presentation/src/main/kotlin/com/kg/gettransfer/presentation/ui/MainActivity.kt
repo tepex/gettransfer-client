@@ -156,7 +156,9 @@ class MainActivity: BaseActivity(), MainView {
 	init {
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 	}
-	
+
+	override fun getPresenter(): MainPresenter = presenter
+
 	@CallSuper
 	protected override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -232,7 +234,7 @@ class MainActivity: BaseActivity(), MainView {
 	@CallSuper
 	override fun onBackPressed() {
 		if(drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START)
-		else presenter.onBackCommandClick() 
+		else super.onBackPressed() 
 	}
 	
 	@CallSuper

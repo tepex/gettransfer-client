@@ -22,6 +22,7 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 
 import com.kg.gettransfer.presentation.Screens
+import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.view.BaseView
 
 import org.koin.android.ext.android.inject
@@ -31,14 +32,16 @@ import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
-open class BaseActivity: MvpAppCompatActivity(), BaseView {
-    protected val apiInteractor: ApiInteractor by inject()
+abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
+    internal val apiInteractor: ApiInteractor by inject()
     internal val coroutineContexts: CoroutineContexts by inject()
+    internal val router: Router by inject()
     protected val utils = AsyncUtils(coroutineContexts)
     protected val navigatorHolder: NavigatorHolder by inject()
-    protected val router: Router by inject()
     
     protected open lateinit var navigator: BaseNavigator
+    
+    abstract fun getPresenter(): BasePresenter<*>
 	
     @CallSuper
     protected override fun onResume() {
@@ -51,6 +54,10 @@ open class BaseActivity: MvpAppCompatActivity(), BaseView {
         navigatorHolder.removeNavigator()
         super.onPause()
     }
+    
+	override fun onBackPressed() {
+	    getPresenter().onBackCommandClick()
+	}
     
     override fun blockInterface(block: Boolean) {}
     

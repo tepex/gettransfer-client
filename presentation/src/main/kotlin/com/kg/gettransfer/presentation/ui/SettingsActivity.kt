@@ -41,6 +41,8 @@ class SettingsActivity: BaseActivity(), SettingsView {
 	
 	protected override var navigator = BaseNavigator(this)
 	
+	override fun getPresenter(): SettingsPresenter = presenter
+	
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

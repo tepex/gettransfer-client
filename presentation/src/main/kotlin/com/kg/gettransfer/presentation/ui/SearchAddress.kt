@@ -90,6 +90,8 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	@ProvidePresenter
 	fun createSearchAddressPresenter(): 
 		SearchAddressPresenter = SearchAddressPresenter(parent.coroutineContexts,
+		                                                parent.router,
+		                                                parent.apiInteractor,
 			                                            parent.addressInteractor)
 
 	fun initWidget(parent: SearchActivity, isTo: Boolean) {
@@ -153,8 +155,10 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		if(addressField.isFocused()) parent.setAddressList(list) 
 	}
 
-	override fun setError(finish: Boolean, @StringRes errId: Int) {
-		if(addressField.isFocused()) parent.setError(finish, errId)
+    override fun blockInterface(block: Boolean) { parent.blockInterface(block) }
+
+	override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
+		if(addressField.isFocused()) parent.setError(finish, errId, *args)
 	}
 
 	override fun afterTextChanged(s: Editable?) {

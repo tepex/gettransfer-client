@@ -32,10 +32,9 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
     lateinit var configs: ConfigsModel
     lateinit var account: Account
 
-//    fun onBackCommandClick() { viewState.finish() }
-    fun onBackCommandClick() { router.exit() }
+    fun onBackCommandClick() = router.exit()
 
-    protected fun login() { router.navigateTo(Screens.LOGIN) }
+    protected fun login() = router.navigateTo(Screens.LOGIN)
 
     @CallSuper
     override fun onDestroy() {

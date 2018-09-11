@@ -29,9 +29,11 @@ class RequestsActivity: BaseActivity(), RequestsView {
     internal lateinit var presenter: RequestsPresenter
 
     @ProvidePresenter
-    fun createRequestsPresenter(): RequestsPresenter = RequestsPresenter(coroutineContexts, apiInteractor)
+    fun createRequestsPresenter(): RequestsPresenter = RequestsPresenter(coroutineContexts, router, apiInteractor)
     
     protected override var navigator = BaseNavigator(this)
+    
+    override fun getPresenter(): RequestsPresenter = presenter
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
