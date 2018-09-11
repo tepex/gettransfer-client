@@ -18,9 +18,8 @@ import com.kg.gettransfer.domain.model.TransportTypePrice
 interface CreateOrderView: BaseView {
     fun setTransportTypes(transportTypes: List<TransportTypeModel>, transportTypePrice: List<TransportTypePrice>)
     fun setCurrencies(currencies: List<CurrencyModel>)
-    fun setMapInfo(routeInfo: RouteInfo, route: Pair<GTAddress, GTAddress>, distanceUnit: String)
+    fun setRouteInfo(distance: String, polyLines: List<String>, route: Pair<GTAddress, GTAddress>)
     
-    fun setRoute(route: Pair<GTAddress, GTAddress>)
     fun setPassengers(count: Int)
     fun setChildren(count: Int)
     fun setCurrency(currency: String)

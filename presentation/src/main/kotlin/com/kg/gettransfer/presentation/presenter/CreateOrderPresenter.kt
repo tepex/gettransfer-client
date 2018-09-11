@@ -2,6 +2,8 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
 
+import android.content.Context
+
 import android.util.Patterns
 
 import com.arellomobile.mvp.InjectViewState
@@ -63,34 +65,23 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         @JvmField val MIN_CHILDREN      = 0
     }
     
-    override fun onFirstViewAttach() {
-        viewState.setRoute(addressInteractor.route)
-        utils.launchAsyncTryCatchFinally(compositeDisposable, {
-            viewState.blockInterface(true)
-            utils.asyncAwait {
-                val secondPoint = addressInteractor.getLatLngByPlaceId(addressInteractor.route.second.id!!)
-                configs = ConfigsModel(apiInteractor.getConfigs())
-                //account = apiInteractor.getAccount()
-                routeInfo = apiInteractor.getRouteInfo(arrayOf(addressInteractor.route.first.point.toString(),
-                            secondPoint.toString()), true, false)
-            }
-        }, { e ->
-                if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
-                else viewState.setError(false, R.string.err_server, e.message)
-        }, { viewState.blockInterface(false) })
-    }
-    
     @CallSuper
     override fun attachView(view: CreateOrderView) {
         super.attachView(view)
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
             viewState.blockInterface(false)
-            account = utils.asyncAwait { apiInteractor.getAccount() }
+            utils.asyncAwait {
+                configs = ConfigsModel(apiInteractor.getConfigs())
+                account = apiInteractor.getAccount()
+                val secondPoint = addressInteractor.getLatLngByPlaceId(addressInteractor.route.second.id!!)
+                routeInfo = apiInteractor.getRouteInfo(arrayOf(addressInteractor.route.first.point.toString(),
+                            secondPoint.toString()), true, false)
+            }
             Timber.d("account: $account")
             if(account.locale == null) account.locale = Locale.getDefault()
             if(account.currency == null) account.currency = Currency.getInstance(account.locale)
             viewState.setAccount(account)
-
+            
             dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, account.locale)
             
             viewState.setTransportTypes(configs.transportTypes, routeInfo.prices!!)
@@ -102,7 +93,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                 }
             }
             date = Date()
-            viewState.setMapInfo(routeInfo, addressInteractor.route, configs.distanceUnits.get(0))
+            val distance = (view as Context).getString(R.string.distance, routeInfo.distance, account.distanceUnit)
+            viewState.setRouteInfo(distance, routeInfo.polyLines, addressInteractor.route)
         }, { e ->
                 if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
                 else viewState.setError(false, R.string.err_server, e.message)

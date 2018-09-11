@@ -317,11 +317,6 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         rvTransferType.adapter = TransferTypeAdapter(transportTypes, transportTypePrice, { presenter.checkFields() })
     }
     
-    override fun setRoute(route: Pair<GTAddress, GTAddress>) {
-    	tvFrom.setText(route.first.name)
-    	tvTo.setText(route.second.name)
-    }
-    
     override fun setAccount(account: Account) {
         if(account.fullName != null) tvName.setText(account.fullName)
         if(account.email != null) {
@@ -336,11 +331,10 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         btnGetTransfer.isEnabled = enabled
     }
     
-    override fun setMapInfo(routeInfo: RouteInfo, route: Pair<GTAddress, GTAddress>, distanceUnit: String) {
-
-        val distance = String.format(getString(R.string.distance), routeInfo.distance, distanceUnit)
-        tvDistance.text = distance
-
+    override fun setRouteInfo(distance: String, polyLines: List<String>, route: Pair<GTAddress, GTAddress>) {
+    	tvFrom.setText(route.first.name)
+    	tvTo.setText(route.second.name)
+    	tvDistance.text = distance
         //Создание пинов с информацией
         val ltInflater = layoutInflater
         val pinLayout = ltInflater.inflate(R.layout.view_maps_pin, null)
@@ -363,7 +357,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
 
         // Для построения подробного маршрута
         val mPoints = arrayListOf<LatLng>()
-        for(item in routeInfo.polyLines) mPoints.addAll(PolyUtil.decode(item))
+        for(item in polyLines) mPoints.addAll(PolyUtil.decode(item))
 
         // Для построения упрощённого маршрута (меньше точек)
         //val mPoints = PolyUtil.decode(routeInfo.overviewPolyline)

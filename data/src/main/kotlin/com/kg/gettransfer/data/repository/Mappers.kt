@@ -134,5 +134,15 @@ class Mappers {
         fun mapTrip(trip: Trip): ApiTrip {
             return ApiTrip(SERVER_DATE_FORMAT.format(trip.dateTime), SERVER_TIME_FORMAT.format(trip.dateTime), trip.flightNumber)
         }
+        
+        fun mapApiRouteInfo(apiRouteInfo: ApiRouteInfo): RouteInfo {
+            return RouteInfo(apiRouteInfo.success,
+                             apiRouteInfo.distance,
+                             apiRouteInfo.duration,
+                             apiRouteInfo.prices?.map { TransportTypePrice(it.key, it.value.minFloat, it.value.min, it.value.max) },
+                             apiRouteInfo.watertaxi,
+                             apiRouteInfo.routes.first().legs.first().steps.map { it.polyline.points },
+                             apiRouteInfo.routes.first().overviewPolyline.points)
+        }
     }
 }
