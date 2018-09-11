@@ -5,6 +5,7 @@ import com.kg.gettransfer.domain.model.*
 
 import java.text.SimpleDateFormat
 
+import java.util.Currency
 import java.util.Locale
 
 import timber.log.Timber
@@ -13,15 +14,31 @@ class Mappers {
     companion object {
         private val SERVER_DATE_FORMAT = SimpleDateFormat("yyyy/MM/dd", Locale.US)
         private val SERVER_TIME_FORMAT = SimpleDateFormat("HH:mm", Locale.US)
+        
+        fun mapApiConfigs(apiConfigs: ApiConfigs): Configs {
+            val locales = apiConfigs.availableLocales.map { Locale(it.code) }
+            
+            return Configs(apiConfigs.transportTypes.map { TransportType(it.id, it.paxMax, it.luggageMax) },
+		                   PaypalCredentials(apiConfigs.paypalCredentials.id, apiConfigs.paypalCredentials.env),
+		                   locales,
+		                   locales.find { it.language == apiConfigs.preferredLocale }!!,
+		                   apiConfigs.supportedCurrencies.map { Currency.getInstance(it.code)!! },
+		                   apiConfigs.supportedDistanceUnits.map { DistanceUnit.parse(it) },
+		                   CardGateways(apiConfigs.cardGateways.default, apiConfigs.cardGateways.countryCode),
+		                   apiConfigs.officePhone,
+		                   apiConfigs.baseUrl)
+		}
+        
         /**
          * Simple mapper: [ApiAccount] -> [Account]
          */
         fun mapApiAccount(apiAccount: ApiAccount, configs: Configs): Account {
+            
             return Account(apiAccount.email,
                            apiAccount.phone,
                            configs.availableLocales.find { it.language == apiAccount.locale }!!,
                            configs.supportedCurrencies.find { it.currencyCode == apiAccount.currency }!!,
-                           apiAccount.distanceUnit,
+                           DistanceUnit.parse(apiAccount.distanceUnit),
                            apiAccount.fullName,
                            apiAccount.groups,
                            apiAccount.termsAccepted)
@@ -35,7 +52,7 @@ class Mappers {
                               account.phone,
                               account.locale?.language,
                               account.currency?.currencyCode,
-                              account.distanceUnit,
+                              account.distanceUnit.name,
                               account.fullName,
                               account.groups,
                               account.termsAccepted)

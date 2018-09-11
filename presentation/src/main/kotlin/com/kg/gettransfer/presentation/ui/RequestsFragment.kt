@@ -10,12 +10,16 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.arellomobile.mvp.MvpAppCompatFragment
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
+
+import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.adapter.RequestsRVAdapter
@@ -81,7 +85,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         presenter.setData(categoryName)
     }
 
-    override fun setRequests(transfers: List<Transfer>, distanceUnit: String) {
+    override fun setRequests(transfers: List<Transfer>, distanceUnit: DistanceUnit) {
         rvRequests.adapter = RequestsRVAdapter(transfers, distanceUnit)
     }
     

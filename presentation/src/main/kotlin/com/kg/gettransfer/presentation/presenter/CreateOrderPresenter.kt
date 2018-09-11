@@ -93,7 +93,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                 }
             }
             date = Date()
-            val distance = (view as Context).getString(R.string.distance, routeInfo.distance, account.distanceUnit)
+            val distance = Utils.formatDistance(view as Context, R.string.distance, account.distanceUnit, routeInfo.distance)
             viewState.setRouteInfo(distance, routeInfo.polyLines, addressInteractor.route)
         }, { e ->
                 if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)

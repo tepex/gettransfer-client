@@ -30,25 +30,3 @@ class ApiAccount(@SerializedName(ACCOUNT_EMAIL) @Expose var email: String? = nul
                  @SerializedName(ACCOUNT_FULL_NAME) @Expose var fullName: String? = null,
                  @SerializedName(ACCOUNT_GROUPS) @Expose var groups: Array<String>? = null,
                  @SerializedName(ACCOUNT_TERMS_ACCEPTED) @Expose var termsAccepted: Boolean = true)
-
-/** ApiAccount -> Account */
-fun mapApiAccount(apiAccount: ApiAccount): Account = Account(
-    apiAccount.email,
-    apiAccount.phone,
-    if(apiAccount.locale != null) Locale(apiAccount.locale) else null,
-    if(apiAccount.currency != null) Currency.getInstance(apiAccount.currency) else null,
-    apiAccount.distanceUnit,
-    apiAccount.fullName,
-    apiAccount.groups,
-    apiAccount.termsAccepted)
-
-/** Account -> ApiAccount */
-fun mapAccount(account: Account): ApiAccount = ApiAccount(
-    account.email,
-    account.phone,
-    account.locale?.language,
-    account.currency?.currencyCode,
-    account.distanceUnit,
-    account.fullName,
-    account.groups,
-    account.termsAccepted)

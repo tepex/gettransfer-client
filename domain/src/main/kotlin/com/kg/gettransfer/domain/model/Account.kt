@@ -7,7 +7,7 @@ data class Account(var email: String?,
                    var phone: String?,
                    var locale: Locale?,
                    var currency: Currency?,
-                   var distanceUnit: String?,
+                   var distanceUnit: DistanceUnit,
                    var fullName: String?,
                    var groups: Array<String>?,
                    var termsAccepted: Boolean = true) {

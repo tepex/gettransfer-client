@@ -8,7 +8,7 @@ data class Configs(val transportTypes: List<TransportType>,
                    val availableLocales: List<Locale>,
                    val preferredLocale: Locale,
                    val supportedCurrencies: List<Currency>,
-                   val supportedDistanceUnits: List<String>,
+                   val supportedDistanceUnits: List<DistanceUnit>,
                    val cardGateways: CardGateways,
                    val officePhone: String,
                    val baseUrl: String)

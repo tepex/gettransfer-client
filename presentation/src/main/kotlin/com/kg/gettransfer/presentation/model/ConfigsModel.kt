@@ -6,6 +6,7 @@ import android.support.annotation.StringRes
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.Configs
+import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.TransportType
 
 import java.util.Currency
@@ -19,12 +20,13 @@ class ConfigsModel(private val delegate: Configs) {
     val currencies: List<CurrencyModel>
     val locales: List<LocaleModel>
     val transportTypes: List<TransportTypeModel>
-    val distanceUnits: List<String> = delegate.supportedDistanceUnits
+    val distanceUnits: List<DistanceUnitModel>
 
     init {
         currencies = delegate.supportedCurrencies.map { CurrencyModel(it) }
         locales = delegate.availableLocales.map { LocaleModel(it) }
         transportTypes = delegate.transportTypes.map { TransportTypeModel(it) }
+        distanceUnits = delegate.supportedDistanceUnits.map { DistanceUnitModel(it) }
     }
 }
 
@@ -66,4 +68,13 @@ class TransportTypeModel(val delegate: TransportType, var checked: Boolean = fal
         val imageRes = R.drawable::class.members.find( { it.name == "ic_transport_type_${delegate.id}" } )
         imageId = (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_unknown
     }
+}
+
+class DistanceUnitModel(val delegate: DistanceUnit): CharSequence {
+    val name = delegate.name
+    override val length = name.length
+    
+    override fun toString(): String = name
+    override operator fun get(index: Int): Char = name.get(index)
+    override fun subSequence(startIndex: Int, endIndex: Int): CharSequence = name.subSequence(startIndex, endIndex)
 }

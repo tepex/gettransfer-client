@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.presentation.model.CurrencyModel
 
 import java.util.regex.Pattern
@@ -83,6 +84,13 @@ class Utils {
         fun checkPhone(phone: String?): Boolean {
             if(phone == null) return false
             return PHONE_PATTERN.matcher(phone.trim()).matches()
+        }
+        
+        fun formatDistance(context: Context, @StringRes stringId: Int, distanceUnit: DistanceUnit, distance: Int?): String {
+            if(distance == null) return ""
+            var d = distance
+            if(distanceUnit == DistanceUnit.Mi) d = DistanceUnit.km2Mi(distance)
+            return context.getString(stringId, d)
         }
 	}
 }

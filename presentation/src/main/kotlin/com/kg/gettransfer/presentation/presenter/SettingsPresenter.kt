@@ -65,7 +65,7 @@ class SettingsPresenter(cc: CoroutineContexts,
             val currencyModel = configs.currencies.find { it.delegate == currency }
             viewState.setCurrency(currencyModel?.name ?: "")
             
-            viewState.setDistanceUnit(account.distanceUnit ?: configs.distanceUnits.first())
+            viewState.setDistanceUnit(account.distanceUnit.name)
         }, { e ->
                 if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
                 else viewState.setError(false, R.string.err_server, e.message)
@@ -88,8 +88,8 @@ class SettingsPresenter(cc: CoroutineContexts,
     }
 
     fun changeDistanceUnit(selected: Int) {
-        account.distanceUnit = configs.distanceUnits.get(selected)
-        viewState.setDistanceUnit(account.distanceUnit!!)
+        account.distanceUnit = configs.distanceUnits.get(selected).delegate
+        viewState.setDistanceUnit(account.distanceUnit.name)
         saveAccount()
     }
     

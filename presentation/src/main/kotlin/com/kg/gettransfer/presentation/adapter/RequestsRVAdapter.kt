@@ -7,7 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.kg.gettransfer.R
+
+import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.Transfer
+
 import com.kg.gettransfer.presentation.ui.Utils
 
 import kotlinx.android.extensions.LayoutContainer
@@ -16,7 +19,7 @@ import kotlinx.android.synthetic.main.view_transfer_request_info.*
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class RequestsRVAdapter(private var transfers: List<Transfer>, private var distanceUnit: String):
+class RequestsRVAdapter(private var transfers: List<Transfer>, private var distanceUnit: DistanceUnit):
         RecyclerView.Adapter<RequestsRVAdapter.ViewHolder>() {
 
 	companion object {
@@ -35,12 +38,12 @@ class RequestsRVAdapter(private var transfers: List<Transfer>, private var dista
     }
 
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(item: Transfer, distanceUnit: String) = with(containerView) {
-            tvTransferRequestNumber.text = String.format(resources.getString(R.string.transfer_request_num), item.id)
+        fun bind(item: Transfer, distanceUnit: DistanceUnit) = with(containerView) {
+            tvTransferRequestNumber.text = context.getString(R.string.transfer_request_num, item.id)
             tvFrom.text = item.from.name
             tvTo.text = item.to!!.name
             tvOrderDateTime.text = changeDateFormat(item.dateToLocal)
-            tvDistance.text = String.format(resources.getString(R.string.distance), item.distance, distanceUnit)
+            tvDistance.text = Utils.formatDistance(context, R.string.distance, distanceUnit, item.distance)
         }
 
         fun changeDateFormat(dateTime: String): String {

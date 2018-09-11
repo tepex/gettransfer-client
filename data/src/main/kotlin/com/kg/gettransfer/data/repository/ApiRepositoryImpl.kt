@@ -69,19 +69,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 		if(configs != null) return configs!!
 	    
 		val response: ApiResponse<ApiConfigs> = tryTwice { api.getConfigs() }
-		val data: ApiConfigs = response.data!!
-		
-		val locales = data.availableLocales.map { Locale(it.code) }
-		configs = Configs(data.transportTypes.map { TransportType(it.id, it.paxMax, it.luggageMax) },
-		        PaypalCredentials(data.paypalCredentials.id, data.paypalCredentials.env),
-		        locales,
-                locales.find { it.language == data.preferredLocale }!!,
-                data.supportedCurrencies.map { Currency.getInstance(it.code)!! },
-                data.supportedDistanceUnits,
-                CardGateways(data.cardGateways.default, data.cardGateways.countryCode),
-                data.officePhone,
-                data.baseUrl)
-        
+		configs = Mappers.mapApiConfigs(response.data!!)
         getAccount(true)
         return configs!!
     }

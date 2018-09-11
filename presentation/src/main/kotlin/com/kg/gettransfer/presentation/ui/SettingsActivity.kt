@@ -20,6 +20,7 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.CurrencyModel
+import com.kg.gettransfer.presentation.model.DistanceUnitModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
@@ -71,7 +72,7 @@ class SettingsActivity: BaseActivity(), SettingsView {
         }
     }
     
-    override fun setDistanceUnits(distanceUnits: List<String>) {
+    override fun setDistanceUnits(distanceUnits: List<DistanceUnitModel>) {
         Utils.setDistanceUnitsDialogListener(this, layoutSettingsDistanceUnits, distanceUnits) { 
             selected -> presenter.changeDistanceUnit(selected) 
         }
