@@ -134,6 +134,11 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         addressField.clearFocus()
     }
 
+	override fun setOnClickListener(l: OnClickListener?) {
+		super.setOnClickListener(l)
+		addressField.setOnClickListener(l)
+	}
+
 	@CallSuper
 	protected override fun onDetachedFromWindow() {
 		super.onDetachedFromWindow()
