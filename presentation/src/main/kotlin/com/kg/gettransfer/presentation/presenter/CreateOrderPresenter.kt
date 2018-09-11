@@ -209,9 +209,4 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                             agreeLicence
         viewState.setGetTransferEnabled(actionEnabled)
     }
-    
-    private fun login() {
-        Timber.d("go to login")
-        router.navigateTo(Screens.LOGIN) 
-    }
 }

@@ -3,39 +3,31 @@ package com.kg.gettransfer.presentation.presenter
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 
-import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.OffersView
-
-import kotlinx.coroutines.experimental.Job
 
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
 @InjectViewState
-class OffersPresenter(private val cc: CoroutineContexts,
-                      private val router: Router,
-                      private val apiInteractor: ApiInteractor): MvpPresenter<OffersView>() {
+class OffersPresenter(cc: CoroutineContexts,
+                      router: Router,
+                      apiInteractor: ApiInteractor): BasePresenter<OffersView>(cc, router, apiInteractor) {
 
-    private val compositeDisposable = Job()
-    private val utils = AsyncUtils(cc)
-
-    lateinit var allTransfers: List<Transfer>
-    lateinit var transfer: Transfer
-    lateinit var archivedTransfers: List<Transfer>
-    lateinit var activeTransfers: List<Transfer>
-    lateinit var offers: List<Offer>
+    private lateinit var allTransfers: List<Transfer>
+    private lateinit var transfer: Transfer
+    private lateinit var archivedTransfers: List<Transfer>
+    private lateinit var activeTransfers: List<Transfer>
+    private lateinit var offers: List<Offer>
 
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
@@ -60,15 +52,8 @@ class OffersPresenter(private val cc: CoroutineContexts,
         }, { viewState.blockInterface(false) })
     }
     
-    private fun login() {
-        router.navigateTo(Screens.LOGIN) 
-    }
-
-    fun onBackCommandClick() { viewState.finish() }
-
     @CallSuper
     override fun onDestroy() {
-        compositeDisposable.cancel()
         router.removeResultListener(LoginPresenter.RESULT_CODE)
         super.onDestroy()
     }

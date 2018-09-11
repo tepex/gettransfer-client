@@ -13,6 +13,7 @@ import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 
+import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.ConfigsModel
 import com.kg.gettransfer.presentation.view.BaseView
 
@@ -33,6 +34,8 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
 
 //    fun onBackCommandClick() { viewState.finish() }
     fun onBackCommandClick() { router.exit() }
+
+    protected fun login() { router.navigateTo(Screens.LOGIN) }
 
     @CallSuper
     override fun onDestroy() {

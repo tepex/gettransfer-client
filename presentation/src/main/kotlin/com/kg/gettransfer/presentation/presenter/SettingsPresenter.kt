@@ -104,7 +104,7 @@ class SettingsPresenter(cc: CoroutineContexts,
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
             utils.asyncAwait { apiInteractor.putAccount(account) }
         }, { e ->
-            if(e is ApiException && e.isNotLoggedIn()) login()
+            if(e is ApiException && e.isNotLoggedIn()) {}
             else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
     }
@@ -113,9 +113,5 @@ class SettingsPresenter(cc: CoroutineContexts,
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
         super.onDestroy()
-    }
-    
-    private fun login() {
-        //router.navigateTo(Screens.LOGIN) 
     }
 }
