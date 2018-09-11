@@ -69,43 +69,41 @@ import timber.log.Timber
 import kotlin.coroutines.experimental.suspendCoroutine
 
 class MainActivity: BaseActivity(), MainView {
-	@InjectPresenter
-	internal lateinit var presenter: MainPresenter
-	
-	private lateinit var drawer: DrawerLayout
-	private lateinit var toggle: ActionBarDrawerToggle
-	private lateinit var headerView: View
-	
-	private val addressInteractor: AddressInteractor by inject()
-	private val locationInteractor: LocationInteractor by inject()
-	
-	private val compositeDisposable = Job()
-	private lateinit var googleMap: GoogleMap
-	
-	private var isFirst = true
-	private var centerMarker: Marker? = null
-	
-	@ProvidePresenter
-	fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
-			router,
-			locationInteractor,
-			addressInteractor,
-			apiInteractor)
+    @InjectPresenter
+    internal lateinit var presenter: MainPresenter
 
-	private val readMoreListener = View.OnClickListener {
-		presenter.readMoreClick()
-	}
+    private lateinit var drawer: DrawerLayout
+    private lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var headerView: View
+    
+    private val addressInteractor: AddressInteractor by inject()
+    private val locationInteractor: LocationInteractor by inject()
+    
+    private val compositeDisposable = Job()
+    private lateinit var googleMap: GoogleMap
+    
+    private var isFirst = true
+    private var centerMarker: Marker? = null
+    
+    @ProvidePresenter
+    fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
+                                                             router,
+                                                             apiInteractor,
+                                                             locationInteractor,
+                                                             addressInteractor)
+    
+    private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
-	private val itemsNavigationViewListener = View.OnClickListener { item ->
-		when(item.id){
-			R.id.navLogin -> presenter.onLoginClick()
-			R.id.navAbout -> presenter.onAboutClick()
-			R.id.navSettings -> presenter.onSettingsClick()
-			R.id.navRequests -> presenter.onRequestsClick()
-			else -> Timber.d("No route")
-		}
-		drawer.closeDrawer(GravityCompat.START)
-	}
+    private val itemsNavigationViewListener = View.OnClickListener { item ->
+        when(item.id) {
+            R.id.navLogin -> presenter.onLoginClick()
+            R.id.navAbout -> presenter.onAboutClick()
+            R.id.navSettings -> presenter.onSettingsClick()
+            R.id.navRequests -> presenter.onRequestsClick()
+            else -> Timber.d("No route")
+        }
+        drawer.closeDrawer(GravityCompat.START)
+    }
 
     protected override var navigator = object: BaseNavigator(this) {
         protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
@@ -146,7 +144,7 @@ class MainActivity: BaseActivity(), MainView {
 				    getString(R.string.searchTransitionName))
 				.toBundle()
 	}
-	
+
 	companion object {
 		@JvmField val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
 		@JvmField val MY_LOCATION_BUTTON_INDEX = 2
@@ -154,7 +152,6 @@ class MainActivity: BaseActivity(), MainView {
 		@JvmField val FADE_DURATION  = 500L
 		@JvmField val MAX_INIT_ZOOM = 2.0f
 	}
-
 
 	init {
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)

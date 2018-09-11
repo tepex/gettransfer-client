@@ -6,13 +6,12 @@ import android.support.annotation.CallSuper
 import android.util.Pair
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.AsyncUtils
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.AddressInteractor
@@ -26,22 +25,17 @@ import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.MainView
 
-import kotlinx.coroutines.experimental.Job
-
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
 @InjectViewState
-class MainPresenter(private val cc: CoroutineContexts,
-                    private val router: Router,
+class MainPresenter(cc: CoroutineContexts,
+                    router: Router,
+                    apiInteractor: ApiInteractor,
                     private val locationInteractor: LocationInteractor,
-                    private val addressInteractor: AddressInteractor,
-                    private val apiInteractor: ApiInteractor): MvpPresenter<MainView>() {
+                    private val addressInteractor: AddressInteractor): BasePresenter<MainView>(cc, router, apiInteractor) {
 
-    private val compositeDisposable = Job()
-    private val utils = AsyncUtils(cc)
-    private lateinit var account: Account
     private lateinit var lastAddressPoint: LatLng
     private var lastPoint: LatLng? = null
     private var minDistance: Int = 30
@@ -61,16 +55,14 @@ class MainPresenter(private val cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: MainView) {
         super.attachView(view)
-        utils.launchAsyncTryCatch(compositeDisposable, {
+        utils.launchAsyncTryCatchFinally(compositeDisposable, {
+            viewState.blockInterface(false)
             account = utils.asyncAwait { apiInteractor.getAccount() }
             viewState.showLoginInfo(account)
-        }, { e -> Timber.e(e) })
-    }
-
-    @CallSuper
-    override fun onDestroy() {
-        compositeDisposable.cancel()
-        super.onDestroy()
+        }, { e ->
+                if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
+                else viewState.setError(false, R.string.err_server, e.message)
+        }, { viewState.blockInterface(false) })
     }
 
     fun updateCurrentLocation() {
@@ -116,5 +108,5 @@ class MainPresenter(private val cc: CoroutineContexts,
     fun readMoreClick() { router.navigateTo(Screens.READ_MORE) }
     fun onSettingsClick() { router.navigateTo(Screens.SETTINGS) }
     fun onRequestsClick() {router.navigateTo(Screens.REQUESTS)}
-    fun onBackCommandClick() { router.exit() }
+//    fun onBackCommandClick() { router.exit() }
 }
