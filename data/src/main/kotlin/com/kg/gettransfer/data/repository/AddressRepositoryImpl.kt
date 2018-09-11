@@ -46,7 +46,7 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
 
         val place = list.get(0).place
         val address = GTAddress(place.id, place.placeTypes,
-                place.name.toString(), // place.address.toString()
+                place.address.toString(),
                 null, null,
                 Point(place.latLng.latitude, place.latLng.longitude))
         addressCache.putAddress(address)
