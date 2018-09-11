@@ -91,8 +91,8 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     @ProvidePresenter
     fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(coroutineContexts,
                                                                                   router,
-                                                                                  addressInteractor,
-                                                                                  apiInteractor)
+                                                                                  apiInteractor,
+                                                                                  addressInteractor)
 
     protected override var navigator = object: BaseNavigator(this) {
         @CallSuper

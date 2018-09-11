@@ -4,15 +4,11 @@ import android.support.annotation.CallSuper
 
 import android.util.Patterns
 
-import android.widget.TextView
-
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.AddressInteractor
@@ -29,8 +25,6 @@ import com.kg.gettransfer.presentation.model.ConfigsModel
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
 
-import kotlinx.coroutines.experimental.Job
-
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
@@ -43,18 +37,13 @@ import ru.terrakok.cicerone.Router
 import timber.log.Timber
 
 @InjectViewState
-class CreateOrderPresenter(private val cc: CoroutineContexts,
-                           private val router: Router,
-                           private val addressInteractor: AddressInteractor,
-                           private val apiInteractor: ApiInteractor): MvpPresenter<CreateOrderView>() {
+class CreateOrderPresenter(cc: CoroutineContexts,
+                           router: Router,
+                           apiInteractor: ApiInteractor,
+                           private val addressInteractor: AddressInteractor): BasePresenter<CreateOrderView>(cc, router, apiInteractor) {
 
-	private val compositeDisposable = Job()
-	private val utils = AsyncUtils(cc)
-	
-	lateinit var configs: ConfigsModel
-	lateinit var account: Account
-    lateinit var routeInfo: RouteInfo
-    lateinit var dateTimeFormat: DateFormat
+    private lateinit var routeInfo: RouteInfo
+    private lateinit var dateTimeFormat: DateFormat
     
     private var passengers: Int = MIN_PASSENGERS
     private var children: Int = MIN_CHILDREN
@@ -75,17 +64,28 @@ class CreateOrderPresenter(private val cc: CoroutineContexts,
     }
     
     override fun onFirstViewAttach() {
+        viewState.setRoute(addressInteractor.route)
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
-            viewState.setRoute(addressInteractor.route)
-
+            viewState.blockInterface(true)
             utils.asyncAwait {
                 val secondPoint = addressInteractor.getLatLngByPlaceId(addressInteractor.route.second.id!!)
                 configs = ConfigsModel(apiInteractor.getConfigs())
-                account = apiInteractor.getAccount()
+                //account = apiInteractor.getAccount()
                 routeInfo = apiInteractor.getRouteInfo(arrayOf(addressInteractor.route.first.point.toString(),
                             secondPoint.toString()), true, false)
             }
-            
+        }, { e ->
+                if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
+                else viewState.setError(false, R.string.err_server, e.message)
+        }, { viewState.blockInterface(false) })
+    }
+    
+    @CallSuper
+    override fun attachView(view: CreateOrderView) {
+        super.attachView(view)
+        utils.launchAsyncTryCatchFinally(compositeDisposable, {
+            viewState.blockInterface(false)
+            account = utils.asyncAwait { apiInteractor.getAccount() }
             Timber.d("account: $account")
             if(account.locale == null) account.locale = Locale.getDefault()
             if(account.currency == null) account.currency = Currency.getInstance(account.locale)
@@ -108,7 +108,7 @@ class CreateOrderPresenter(private val cc: CoroutineContexts,
                 else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
     }
-    
+
     fun changeCurrency(selected: Int) {
         viewState.setCurrency(configs.currencies.get(selected).symbol)
     }
@@ -183,6 +183,7 @@ class CreateOrderPresenter(private val cc: CoroutineContexts,
         Timber.d("account: %s", account)
 
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
+            viewState.blockInterface(true)
             val transfer = utils.asyncAwait { apiInteractor.createTransfer(from, to, trip, null, transportTypes,
                                                             passengers, children, cost, account.fullName!!, comment,
                                                             account, null, false) }
@@ -212,14 +213,5 @@ class CreateOrderPresenter(private val cc: CoroutineContexts,
     private fun login() {
         Timber.d("go to login")
         router.navigateTo(Screens.LOGIN) 
-    }
-
-    
-    fun onBackCommandClick() { viewState.finish() }
-
-    @CallSuper
-    override fun onDestroy() {
-        compositeDisposable.cancel()
-        super.onDestroy()
     }
 }

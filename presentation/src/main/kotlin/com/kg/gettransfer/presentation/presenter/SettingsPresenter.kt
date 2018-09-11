@@ -7,7 +7,6 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.ApiInteractor
@@ -45,8 +44,6 @@ class SettingsPresenter(cc: CoroutineContexts,
             viewState.setCurrencies(configs.currencies)
             viewState.setLocales(configs.locales)
             viewState.setDistanceUnits(configs.distanceUnits)
-            
-                
         }, { e ->
                 if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
                 else viewState.setError(false, R.string.err_server, e.message)
@@ -57,6 +54,7 @@ class SettingsPresenter(cc: CoroutineContexts,
     override fun attachView(view: SettingsView) {
         super.attachView(view)
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
+            viewState.blockInterface(false)
             account = utils.asyncAwait { apiInteractor.getAccount() }
             Timber.d("account: $account")
 			val locale = account.locale ?: Locale.getDefault()
@@ -68,7 +66,11 @@ class SettingsPresenter(cc: CoroutineContexts,
             viewState.setCurrency(currencyModel?.name ?: "")
             
             viewState.setDistanceUnit(account.distanceUnit ?: configs.distanceUnits.first())
-        }, { e -> Timber.e(e) })
+        }, { e ->
+                if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
+                else viewState.setError(false, R.string.err_server, e.message)
+        }, { viewState.blockInterface(false) })
+
     }
     
     fun changeCurrency(selected: Int) {
