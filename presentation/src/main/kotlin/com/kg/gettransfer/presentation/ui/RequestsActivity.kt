@@ -4,7 +4,6 @@ import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
-
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -32,9 +31,9 @@ class RequestsActivity: BaseActivity(), RequestsView {
     
     @ProvidePresenter
     fun createRequestsPresenter(): RequestsPresenter = RequestsPresenter(coroutineContexts, router, systemInteractor)
-    
+
     protected override var navigator = BaseNavigator(this)
-    
+
     override fun getPresenter(): RequestsPresenter = presenter
 
     @CallSuper

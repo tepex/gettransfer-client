@@ -106,6 +106,7 @@
         app:layout_constraintTop_toTopOf="@+id/tvTo" />
 
     <ImageView
+        android:id="@+id/ivChevron"
         android:layout_width="@dimen/view_transfer_info_chevron_size"
         android:layout_height="@dimen/view_transfer_info_chevron_size"
         android:layout_marginEnd="@dimen/view_transfer_info_chevron_margin_end"

@@ -47,3 +47,5 @@ class RequestsRVAdapter(private val transfers: List<Transfer>,
         }
     }
 }
+
+typealias ItemClickListener = (Transfer) -> Unit

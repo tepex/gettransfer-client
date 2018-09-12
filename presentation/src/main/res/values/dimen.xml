@@ -112,4 +112,7 @@
 	<dimen name="view_transfer_info_divider_height">0.5dp</dimen>
 	<dimen name="view_transfer_info_divider_margin_top">10dp</dimen>
 
+	<!--activity_transfer_details-->
+	<dimen name="activity_transfer_details_map_height">200dp</dimen>
+
 </resources>

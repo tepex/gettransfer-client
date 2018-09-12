@@ -49,7 +49,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
     private val systemInteractor: SystemInteractor by inject()
     private val coroutineContexts: CoroutineContexts by inject()
-    
+
     private val navigatorHolder: NavigatorHolder by inject()
     private val router: Router by inject()
     //private lateinit var navigator: BaseNavigator = BaseNavigator(this)
@@ -91,9 +91,9 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     override fun setRequests(transfers: List<Transfer>, distanceUnit: DistanceUnit, dateFormat: Format) {
         rvRequests.adapter = RequestsRVAdapter(transfers, distanceUnit, dateFormat)
     }
-    
+
     override fun blockInterface(block: Boolean) { (activity as BaseView).blockInterface(block) }
-    
+
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
         (activity as BaseView).setError(finish, errId, *args)
     }

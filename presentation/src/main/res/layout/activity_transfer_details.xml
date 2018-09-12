@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorBack">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <ScrollView
+        android:id="@+id/svTransferDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_transfer_details_map_height" />
+
+            <ImageView
+                android:id="@+id/transparentImage"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_transfer_details_map_height"
+                android:src="@null"
+                app:layout_constraintTop_toTopOf="@+id/mapView"/>
+
+            <include
+                android:id="@+id/layoutTransferInfo"
+                layout="@layout/view_transfer_request_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/mapView"/>
+
+            <LinearLayout
+                android:id="@+id/layoutPassengerInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/layoutTransferInfo"
+                android:background="@color/colorWhite">
+
+                <RelativeLayout
+                    android:id="@+id/layoutPassengers"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp">
+
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="22dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="25dp"
+                        android:src="@drawable/ic_person"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="55dp"
+                        android:text="Passenger"
+                        android:textColor="@color/colorTextBlack"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"/>
+
+                    <TextView
+                        android:id="@+id/tvCountPassengers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:text="1"
+                        android:textColor="@color/colorTextLightGray"
+                        android:layout_marginEnd="22dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5px"
+                        android:background="@color/colorDividerGray"
+                        android:layout_alignParentBottom="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/layoutName"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="16dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/ic_passport"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="55dp"
+                        android:text="Name"
+                        android:textColor="@color/colorTextBlack"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"/>
+
+                    <TextView
+                        android:id="@+id/tvPassengerName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:text="Alexey"
+                        android:textColor="@color/colorTextLightGray"
+                        android:layout_marginEnd="22dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5px"
+                        android:background="@color/colorDividerGray"
+                        android:layout_alignParentBottom="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/layoutChilds"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="23dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/ic_child_seat"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="55dp"
+                        android:text="Child seats"
+                        android:textColor="@color/colorTextBlack"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"/>
+
+                    <TextView
+                        android:id="@+id/tvCountChilds"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:text="0"
+                        android:textColor="@color/colorTextLightGray"
+                        android:layout_marginEnd="22dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5px"
+                        android:background="@color/colorDividerGray"
+                        android:layout_alignParentBottom="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/layoutFlightNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/ic_aircraft"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="55dp"
+                        android:text="Flight or train number"
+                        android:textColor="@color/colorTextBlack"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"/>
+
+                    <TextView
+                        android:id="@+id/tvFlightNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:text="123456"
+                        android:textColor="@color/colorTextLightGray"
+                        android:layout_marginEnd="22dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5px"
+                        android:background="@color/colorDividerGray"
+                        android:layout_alignParentBottom="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/layoutComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="44dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tvComment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Не опаздывать, быть с цветами и шампанским + Тут будет комментарий, и хоробы если поле меняло высоту"
+                        android:textColor="@color/colorTextBlack"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:layout_marginStart="13dp"
+                        android:layout_marginEnd="22dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginBottom="23dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5px"
+                        android:background="@color/colorDividerGray"
+                        android:layout_alignParentBottom="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/layoutTransportTypes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="44dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="13dp"
+                        android:text="Transport Type"
+                        android:textColor="@color/colorTextBlack"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"/>
+
+                    <LinearLayout
+                        android:id="@+id/layoutTransportTypesList"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginEnd="22dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5px"
+                        android:background="@color/colorDividerGray"
+                        android:layout_alignParentBottom="true"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutPaymentInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/layoutPassengerInfo"
+                android:visibility="gone">
+                
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:textColor="@color/colorTextLightGray"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textAllCaps="true"
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="Детали оплаты"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"/>
+                
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:background="@color/colorWhite">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/colorTextBlack"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="16dp"
+                        android:text="Оплачен"/>
+
+                    <TextView
+                        android:id="@+id/paymentInfoPaid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:gravity="center_vertical"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/colorTextLightGray"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="18dp"
+                        android:text="1500 ₽ (100%)"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:background="@color/colorWhite">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/colorTextBlack"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="16dp"
+                        android:text="Оплатить"/>
+
+                    <TextView
+                        android:id="@+id/paymentInfoPay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:gravity="center_vertical"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/colorTextLightGray"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="18dp"
+                        android:text="0,00 ₽"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:background="@color/colorWhite">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/colorTextBlack"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="16dp"
+                        android:text="Сумма"/>
+
+                    <TextView
+                        android:id="@+id/paymentInfoSum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:gravity="center_vertical"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/colorTextLightGray"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="18dp"
+                        android:text="1500 ₽"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutOfferDriverInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/layoutPaymentInfo"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:textColor="@color/colorTextLightGray"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textAllCaps="true"
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="Choosen offer"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"/>
+
+                <TextView
+                    android:id="@+id/offerDriverInfoEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:textSize="17sp"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textColor="@color/colorTextBlack"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="18dp"
+                    android:gravity="center_vertical"
+                    android:text="mail@mai.ru"
+                    android:background="@color/colorWhite"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"/>
+
+                <TextView
+                    android:id="@+id/offerDriverInfoTel"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:textSize="17sp"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textColor="@color/colorTextBlack"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="18dp"
+                    android:gravity="center_vertical"
+                    android:text="+7(906)012-23-23"
+                    android:background="@color/colorWhite"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"/>
+
+                <TextView
+                    android:id="@+id/offerDriverInfoName"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:textSize="17sp"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textColor="@color/colorTextBlack"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="18dp"
+                    android:gravity="center_vertical"
+                    android:text="Имя перевозчика"
+                    android:background="@color/colorWhite"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutOfferTransportInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/layoutOfferDriverInfo"
+                android:layout_marginTop="38dp"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:background="@color/colorWhite">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/colorTextBlack"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="16dp"
+                        android:text="Тип транспорта"/>
+
+                    <TextView
+                        android:id="@+id/offerTransportInfoCarType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:gravity="center_vertical"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/colorTextLightGray"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="18dp"
+                        android:text="Эконом"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:background="@color/colorWhite">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/colorTextBlack"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="16dp"
+                        android:text="Транспорт"/>
+
+                    <TextView
+                        android:id="@+id/offerTransportInfoCarName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:gravity="center_vertical"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/colorTextLightGray"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="18dp"
+                        android:text="Volvo s60 2014"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:background="@color/colorWhite">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/colorTextBlack"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="16dp"
+                        android:text="Номер"/>
+
+                    <TextView
+                        android:id="@+id/offerTransportInfoCarNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:gravity="center_vertical"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/colorTextLightGray"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="18dp"
+                        android:text="123456"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:background="@color/colorWhite">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/colorTextBlack"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="16dp"
+                        android:text="Стоимость"/>
+
+                    <TextView
+                        android:id="@+id/offerTransportInfoPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:gravity="center_vertical"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/colorTextLightGray"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="18dp"
+                        android:text="1500 ₽"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:background="@color/colorWhite">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="16dp"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:text="Языки"
+                        android:textColor="@color/colorTextBlack"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+                        android:id="@+id/offerTransportInfoLayoutLanguages"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="18dp"
+                        android:orientation="horizontal"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"/>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@drawable/btn_sign_out"
+                android:layout_margin="16dp"
+                android:text="Отменить"
+                android:textAllCaps="true"
+                android:textSize="17sp"
+                android:textColor="@color/colorWhite"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:stateListAnimator="@null"
+                app:layout_constraintTop_toBottomOf="@id/layoutOfferTransportInfo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:visibility="gone"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

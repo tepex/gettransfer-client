@@ -276,4 +276,7 @@
     <!--view_transfer_request_info-->
     <string name="transfer_request_num">Transfer request № %1$s</string>
 
+    <!--activity_transfer_details-->
+    <string name="activity_transfer_details_title">Request details</string>
+
 </resources>

@@ -59,4 +59,6 @@
     <color name="color_error">#FFFF3B30</color>
     <color name="colorPolyline">#13a2fd</color>
 
+    <color name="colorTextLightGrayTransportType">#787878</color>
+
 </resources>

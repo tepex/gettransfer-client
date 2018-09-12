@@ -11,6 +11,7 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Transfer
 
+import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.TransfersConstants
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
@@ -45,5 +46,10 @@ class RequestsFragmentPresenter(cc: CoroutineContexts,
                 else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
         */
+    }
+
+    fun openTransferDetails(transfer: Transfer){
+        apiInteractor.transferDetails = transfer
+        router.navigateTo(Screens.DETAILS)
     }
 }

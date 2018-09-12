@@ -195,4 +195,7 @@
     <!--view_transfer_request_info-->
     <string name="transfer_request_num">Заявка на трансфер № %1$s</string>
 
+    <!--activity_transfer_details-->
+    <string name="activity_transfer_details_title">Детали заявки</string>
+
 </resources>

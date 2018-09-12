@@ -1,10 +1,14 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+import android.support.v4.content.ContextCompat
 
 import android.util.Patterns
 
 import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
+import com.google.android.gms.maps.model.*
+import com.google.maps.android.PolyUtil
 
 import com.kg.gettransfer.R
 
