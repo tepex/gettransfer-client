@@ -2,6 +2,9 @@ package com.kg.gettransfer.domain.model
 
 import kotlin.math.roundToInt
 
+/**
+ * Kilometers & miles
+ */
 sealed class DistanceUnit(val name: String) {
     object Km: DistanceUnit(KM)
     object Mi: DistanceUnit(MI)
@@ -15,7 +18,7 @@ sealed class DistanceUnit(val name: String) {
             else return Km
         }
     
-        fun km2Mi(km: Int) = (km / 1609.344).roundToInt()
+        fun km2Mi(km: Int) = (km.toDouble() / 1.609344).roundToInt()
     }
     
     override fun toString() = name

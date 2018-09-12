@@ -90,7 +90,7 @@ class Utils {
             if(distance == null) return ""
             var d = distance
             if(distanceUnit == DistanceUnit.Mi) d = DistanceUnit.km2Mi(distance)
-            return context.getString(stringId, d)
+            return context.getString(stringId, d, distanceUnit.name)
         }
 	}
 }

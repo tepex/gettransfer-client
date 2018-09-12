@@ -96,6 +96,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             val distance = Utils.formatDistance(view as Context, R.string.distance, account.distanceUnit, routeInfo.distance)
             viewState.setRouteInfo(distance, routeInfo.polyLines, addressInteractor.route)
         }, { e ->
+                Timber.e(e)
                 if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
                 else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })

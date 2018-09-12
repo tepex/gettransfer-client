@@ -36,26 +36,19 @@ class SettingsPresenter(cc: CoroutineContexts,
         })
     }
     
-    override fun onFirstViewAttach() {
-        utils.launchAsyncTryCatchFinally(compositeDisposable, {
-            utils.asyncAwait { 
-                configs = ConfigsModel(apiInteractor.getConfigs())
-            }
-            viewState.setCurrencies(configs.currencies)
-            viewState.setLocales(configs.locales)
-            viewState.setDistanceUnits(configs.distanceUnits)
-        }, { e ->
-                if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
-                else viewState.setError(false, R.string.err_server, e.message)
-        }, { viewState.blockInterface(false) })
-    }
-    
     @CallSuper
     override fun attachView(view: SettingsView) {
         super.attachView(view)
         utils.launchAsyncTryCatchFinally(compositeDisposable, {
-            viewState.blockInterface(false)
-            account = utils.asyncAwait { apiInteractor.getAccount() }
+            viewState.blockInterface(true)
+            utils.asyncAwait { 
+                configs = ConfigsModel(apiInteractor.getConfigs())
+                account = apiInteractor.getAccount()
+            }
+            viewState.setCurrencies(configs.currencies)
+            viewState.setLocales(configs.locales)
+            viewState.setDistanceUnits(configs.distanceUnits)
+            
             Timber.d("account: $account")
 			val locale = account.locale ?: Locale.getDefault()
             val localeModel = configs.locales.find { it.delegate.language == locale.language }
@@ -63,14 +56,14 @@ class SettingsPresenter(cc: CoroutineContexts,
             
             val currency = account.currency ?: Currency.getInstance(locale)
             val currencyModel = configs.currencies.find { it.delegate == currency }
-            viewState.setCurrency(currencyModel?.name ?: "")
-            
+            viewState.setCurrency(currencyModel?.name ?: "")           
             viewState.setDistanceUnit(account.distanceUnit.name)
+            
+            viewState.setLogoutButtonEnabled(account.loggedIn)
         }, { e ->
                 if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
                 else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
-
     }
     
     fun changeCurrency(selected: Int) {

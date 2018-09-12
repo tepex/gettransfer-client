@@ -13,6 +13,8 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
 
+import android.view.View
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
@@ -82,5 +84,7 @@ class SettingsActivity: BaseActivity(), SettingsView {
     override fun setLocale(locale: String)             { tvSelectedLanguage.text = locale }
     override fun setDistanceUnit(distanceUnit: String) { tvSelectedDistanceUnits.text = distanceUnit }
     
-    override fun onBackPressed() { presenter.onBackCommandClick() }
+    override fun setLogoutButtonEnabled(enabled: Boolean) {
+        if(enabled) btnSignOut.visibility = View.VISIBLE else btnSignOut.visibility = View.GONE
+    }
 }

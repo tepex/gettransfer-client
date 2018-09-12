@@ -17,4 +17,5 @@ interface SettingsView: BaseView {
     fun setCurrency(currency: String)
     fun setLocale(locale: String)
     fun setDistanceUnit(distanceUnit: String)
+    fun setLogoutButtonEnabled(enabled: Boolean)
 }

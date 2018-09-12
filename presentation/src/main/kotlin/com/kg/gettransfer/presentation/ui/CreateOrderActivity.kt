@@ -282,18 +282,6 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         timePickerDialog.show()
     }
 
-	override fun blockInterface(block: Boolean) {
-	}
-	
-	override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-	    Timber.e(Exception(args[0]))
-	    Utils.showError(this, finish, getString(errId, *args))
-	}
-
-    override fun onBackPressed() {
-        presenter.onBackCommandClick()
-    }
-
     override fun setPassengers(count: Int) {
         tvCountPerson.text = count.toString()
     }
@@ -319,7 +307,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     
     override fun setAccount(account: Account) {
         if(account.fullName != null) tvName.setText(account.fullName)
-        if(account.email != null) {
+        if(account.loggedIn) {
             etEmail.setText(account.email)
             etEmail.isEnabled = false
             tvEmail.visibility = View.GONE

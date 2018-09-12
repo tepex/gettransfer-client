@@ -11,5 +11,6 @@ data class Account(var email: String?,
                    var fullName: String?,
                    var groups: Array<String>?,
                    var termsAccepted: Boolean = true) {
-    fun isLoggedIn() = email != null
+    val loggedIn: Boolean
+        get() = email != null
 }
