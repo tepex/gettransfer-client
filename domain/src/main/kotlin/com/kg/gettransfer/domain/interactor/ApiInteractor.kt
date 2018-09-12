@@ -40,5 +40,5 @@ class ApiInteractor(private val repository: ApiRepository) {
         repository.createTransfer(from, to, tripTo, tripReturn, transportTypes, pax,
                                   childSeats, passengerOfferedPrice, nameSign, comment,
                                   account, promoCode, paypalOnly)
-	suspend fun cancelTransfer(idTransfer: Long): Transfer = repository.cancelTransfer(idTransfer)
+	suspend fun cancelTransfer(idTransfer: Long, reason: String): Transfer = repository.cancelTransfer(idTransfer, reason)
 }
