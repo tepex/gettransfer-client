@@ -112,4 +112,6 @@
 	<dimen name="view_transfer_info_divider_height">0.5dp</dimen>
 	<dimen name="view_transfer_info_divider_margin_top">10dp</dimen>
 
+	<dimen name="btn_next_main_margin_16dp">16dp</dimen>
+
 </resources>

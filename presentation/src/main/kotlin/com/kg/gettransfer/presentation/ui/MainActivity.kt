@@ -3,69 +3,41 @@ package com.kg.gettransfer.presentation.ui
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-
 import android.os.Bundle
-
 import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
 import android.support.design.widget.AppBarLayout
-
 import android.support.v4.app.ActivityOptionsCompat
-import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
-
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
-
 import android.transition.Fade
 import android.util.Pair
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.InputMethodManager
-import android.widget.RelativeLayout
 import android.widget.TextView
-
-import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
-
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
-
-import com.kg.gettransfer.domain.AsyncUtils
-import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.AddressInteractor
-import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.extensions.hideKeyboard
-
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.MainPresenter
-import com.kg.gettransfer.presentation.ui.Utils.Companion.hideKeyboard
 import com.kg.gettransfer.presentation.view.MainView
-
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main_new.*
 import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.coroutines.experimental.Job
-
 import org.koin.android.ext.android.inject
-
-import ru.terrakok.cicerone.Navigator
-import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.Router
-import ru.terrakok.cicerone.android.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.cicerone.commands.Forward
-
 import timber.log.Timber
-
 import kotlin.coroutines.experimental.suspendCoroutine
 
 class MainActivity: BaseActivity(), MainView {
@@ -162,7 +134,7 @@ class MainActivity: BaseActivity(), MainView {
 	@CallSuper
 	protected override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_main)
+		setContentView(R.layout.activity_main_new)
 		
 		val tb = this.toolbar as Toolbar
 		
@@ -306,40 +278,14 @@ class MainActivity: BaseActivity(), MainView {
 		mapView.getMapAsync { cont.resume(it) } 
 	}  
 	
-	/**
-	 * Грязный хак — меняем положение нативной кнопки 'MyLocation'
-	 * https://stackoverflow.com/questions/36785542/how-to-change-the-position-of-my-location-button-in-google-maps-using-android-st
-	 */
 	private fun customizeGoogleMaps() {
 	    googleMap.uiSettings.setRotateGesturesEnabled(false)
 		googleMap.setMyLocationEnabled(true)
+		googleMap.uiSettings.isMyLocationButtonEnabled = false
 		googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
-		
-		val parent = (mapView?.findViewById(1) as View).parent as View
-		val myLocationBtn = parent.findViewById(MY_LOCATION_BUTTON_INDEX) as View
-		val rlp = myLocationBtn.getLayoutParams() as RelativeLayout.LayoutParams 
-		// position on right bottom
-		rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0)
-		rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
-		
-		rlp.setMargins(0, 0, 
-			resources.getDimension(R.dimen.location_button_margin_end).toInt(),
-			resources.getDimension(R.dimen.location_button_margin_bottom).toInt())
-		
-		val compassBtn = parent.findViewById(COMPASS_BUTTON_INDEX) as View
-		val rlp1 = compassBtn.getLayoutParams() as RelativeLayout.LayoutParams 
-		// position on right bottom
-		rlp1.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0)
-		rlp1.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
-		
-		rlp1.setMargins(resources.getDimension(R.dimen.compass_button_margin_start).toInt(), 0, 
-			0, resources.getDimension(R.dimen.compass_button_margin_bottom).toInt())
-		
-        googleMap.setOnMyLocationButtonClickListener {
-            presenter.updateCurrentLocation()
-            true
-        }
-        googleMap.setOnCameraMoveListener { presenter.onCameraMove(googleMap.getCameraPosition()!!.target) }
+		btnMyLocation.setOnClickListener {
+			presenter.updateCurrentLocation() }
+		googleMap.setOnCameraMoveListener { presenter.onCameraMove(googleMap.getCameraPosition()!!.target) }
         googleMap.setOnCameraIdleListener { presenter.onCameraIdle() }
     }
     

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/search"
+	android:transitionName="@string/searchTransitionName"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:descendantFocusability="beforeDescendants"
+	android:focusableInTouchMode="true"
+	android:layout_gravity="center_horizontal|top"
+	android:orientation="vertical"
+	android:background="@android:color/white">
+
+	<TextView
+		android:id="@+id/tvTransferDate"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:drawableStart="@drawable/ic_calendar"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="10dp"
+		android:layout_marginBottom="5dp"
+		android:drawablePadding="10dp"
+		android:gravity="center"
+		android:text="@string/transfer_date_and_time"/>
+
+	<com.kg.gettransfer.presentation.ui.SearchAddress
+		android:id="@+id/searchFrom"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:hint="@string/search_from_hint" />
+
+	<com.kg.gettransfer.presentation.ui.SearchAddress
+		android:id="@+id/searchTo"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:hint="@string/search_to_hint" />
+
+	<Button
+		android:id="@+id/btnNext"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/btn_next_main_margin_16dp"
+		android:text="@string/next"
+		android:textColor="@color/colorWhite"
+		android:background="@drawable/btn_bg_rounded"
+		android:enabled="false"
+		android:layout_gravity="center"/>
+
+</LinearLayout>

@@ -2,81 +2,53 @@ package com.kg.gettransfer.presentation.ui
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-
 import android.content.Context
 import android.content.Intent
-
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
-
 import android.os.Bundle
-
 import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
-
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
-
-import android.widget.TextView
-
 import android.text.InputType
 import android.util.DisplayMetrics
-import android.view.*
-
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
 import android.view.inputmethod.EditorInfo
-
 import android.widget.LinearLayout
 import android.widget.PopupWindow
-
 import android.widget.RelativeLayout
-
+import android.widget.TextView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
-
 import com.google.maps.android.PolyUtil
-
 import com.kg.gettransfer.R
-
+import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
-
-import com.kg.gettransfer.domain.interactor.AddressInteractor
-
-import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.TransportTypePrice
-
 import com.kg.gettransfer.presentation.Screens
-
+import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
-
-import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
-
 import com.kg.gettransfer.presentation.view.CreateOrderView
-
-import java.util.Calendar
-
-import kotlinx.android.synthetic.main.activity_transfer.*
+import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 import kotlinx.android.synthetic.main.view_maps_pin.view.*
-
 import kotlinx.coroutines.experimental.Job
-import kotlin.coroutines.experimental.suspendCoroutine
-
 import org.koin.android.ext.android.inject
-
 import timber.log.Timber
+import java.util.*
+import kotlin.coroutines.experimental.suspendCoroutine
 
 class CreateOrderActivity: BaseActivity(), CreateOrderView {
 
@@ -118,7 +90,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_transfer)
+        setContentView(R.layout.activity_create_order)
 
         setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
