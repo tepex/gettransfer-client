@@ -206,6 +206,11 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
         
         return Mappers.mapApiTransfer(response.data?.transfer!!)
     }
+
+    override suspend fun cancelTransfer(idTransfer: Long): Transfer {
+        val response: ApiResponse<ApiTransferWrapper> = tryTwice(idTransfer) { id -> api.cancelTransfer(id) }
+        return Mappers.mapApiTransfer(response.data?.transfer!!)
+    }
     
     private suspend fun tryPostTransfer(apiTransfer: ApiTransferWrapper): ApiResponse<ApiTransferWrapper> {
         return try { api.postTransfer(apiTransfer).await() }

@@ -16,6 +16,7 @@ interface Api {
         const val API_TRANSFERS    = "/api/transfers"
 		const val API_TRANSFERS_ARCHIVE = "/api/transfers/archive"
 		const val API_TRANSFERS_ACTIVE  = "/api/transfers/active"
+		const val API_CANCEL_TRANSFER = "$API_TRANSFERS/{id}/cancel"
     }
     
 	@GET(API_ACCESS_TOKEN)
@@ -63,4 +64,7 @@ interface Api {
 	
 	@GET("$API_TRANSFERS/{id}/offers")
 	fun getOffers(@Path("id") id: Long): Deferred<ApiResponse<ApiOffers>>
+
+	@POST(API_CANCEL_TRANSFER)
+	fun cancelTransfer(@Path("id") id: Long): Deferred<ApiResponse<ApiTransferWrapper>>
 }
