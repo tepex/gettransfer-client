@@ -46,6 +46,7 @@ import com.google.maps.android.PolyUtil
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
 
@@ -66,13 +67,14 @@ import com.kg.gettransfer.presentation.view.CreateOrderView
 
 import java.util.Calendar
 
+import kotlin.coroutines.experimental.suspendCoroutine
 import kotlinx.android.synthetic.main.activity_transfer.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 import kotlinx.android.synthetic.main.view_maps_pin.view.*
 
 import kotlinx.coroutines.experimental.Job
-import kotlin.coroutines.experimental.suspendCoroutine
+import kotlinx.coroutines.experimental.launch
 
 import org.koin.android.ext.android.inject
 
@@ -85,6 +87,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
 
 	private val addressInteractor: AddressInteractor by inject()
     private val compositeDisposable = Job()
+    private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
     private lateinit var googleMap: GoogleMap
     private val calendar = Calendar.getInstance()
     
@@ -191,7 +194,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     private fun initGoogleMap(mapViewBundle: Bundle?) {
         mapView.onCreate(mapViewBundle)
 
-        utils.launchAsync(compositeDisposable) {
+        utils.launch {
             googleMap = getGoogleMapAsync()
             customizeGoogleMaps()
         }

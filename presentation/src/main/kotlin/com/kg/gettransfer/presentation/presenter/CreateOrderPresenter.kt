@@ -68,7 +68,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: CreateOrderView) {
         super.attachView(view)
-        utils.launchAsyncTryCatchFinally(compositeDisposable, {
+        utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(false)
             utils.asyncAwait {
                 configs = ConfigsModel(apiInteractor.getConfigs())
@@ -175,7 +175,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         Timber.d("agree: $agreeLicence")
         Timber.d("account: %s", account)
 
-        utils.launchAsyncTryCatchFinally(compositeDisposable, {
+        utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             val transfer = utils.asyncAwait { apiInteractor.createTransfer(from, to, trip, null, transportTypes,
                                                             passengers, children, cost, account.fullName!!, comment,

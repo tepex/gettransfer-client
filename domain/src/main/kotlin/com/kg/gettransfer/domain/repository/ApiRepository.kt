@@ -31,4 +31,5 @@ interface ApiRepository {
                                promoCode: String?,
                                paypalOnly: Boolean): Transfer
     suspend fun cancelTransfer(idTransfer: Long, reason: String): Transfer
+    fun getLastTransfer(): Transfer
 }

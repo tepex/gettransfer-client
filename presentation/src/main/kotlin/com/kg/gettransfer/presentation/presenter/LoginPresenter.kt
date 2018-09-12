@@ -31,7 +31,7 @@ class LoginPresenter(cc: CoroutineContexts,
     
     fun onLoginClick() {
         viewState.blockInterface(false)
-        utils.launchAsyncTryCatch(compositeDisposable, {
+        utils.launchAsyncTryCatch({
             utils.asyncAwait { apiInteractor.login(email!!, password!!) }
             router.exitWithResult(RESULT_CODE, RESULT_OK)
         }, { e -> viewState.setError(false, R.string.err_server, e.message) })

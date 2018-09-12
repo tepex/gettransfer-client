@@ -31,7 +31,7 @@ class RequestsPresenter(cc: CoroutineContexts,
     private var transfersCompleted: ArrayList<Transfer> = arrayListOf()
 
     override fun onFirstViewAttach() {
-        utils.launchAsyncTryCatchFinally(compositeDisposable, {
+        utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             transfers = utils.asyncAwait { apiInteractor.getAllTransfers() }
             

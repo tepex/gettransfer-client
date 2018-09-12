@@ -34,6 +34,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
     private var api: Api
     private val gson = GsonBuilder().registerTypeAdapter(ApiTransportTypesWrapper::class.java, TransportTypesDeserializer()).create()
     private var configs: Configs? = null
+    private var transfer: Transfer? = null
     
 	/**
 	 * @throws ApiException
@@ -204,13 +205,17 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
             from, to, tripTo, tripReturn, transportTypes, pax, childSeats, passengerOfferedPrice, nameSign, comment,
             account, promoCode/*, paypalOnly*/)))
         
-        return Mappers.mapApiTransfer(response.data?.transfer!!)
+        transfer = Mappers.mapApiTransfer(response.data?.transfer!!)
+        return transfer!!
     }
 
     override suspend fun cancelTransfer(idTransfer: Long, reason: String): Transfer {
         val response: ApiResponse<ApiTransferWrapper> = tryTwice(idTransfer) { id -> api.cancelTransfer(id, ApiReason(reason)) }
-        return Mappers.mapApiTransfer(response.data?.transfer!!)
+        transfer = Mappers.mapApiTransfer(response.data?.transfer!!)
+        return transfer!!
     }
+    
+    override fun getLastTransfer() = transfer!!
     
     private suspend fun tryPostTransfer(apiTransfer: ApiTransferWrapper): ApiResponse<ApiTransferWrapper> {
         return try { api.postTransfer(apiTransfer).await() }

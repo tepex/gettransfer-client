@@ -35,7 +35,7 @@ class SearchPresenter(cc: CoroutineContexts,
 	}
 	
 	override fun onFirstViewAttach() {
-		utils.launchAsyncTryCatchFinally(compositeDisposable, {
+		utils.launchAsyncTryCatchFinally({
 			viewState.blockInterface(true)
 			addressFrom = utils.asyncAwait { addressInteractor.getCachedAddress()!! }
 			viewState.setAddressFrom(addressFrom.name, false)
@@ -48,7 +48,7 @@ class SearchPresenter(cc: CoroutineContexts,
 		else addressFrom = selected
 		
 		if(addressFrom.isConcreteObject() && addressTo?.isConcreteObject() ?: false) {
-		    utils.launchAsyncTryCatchFinally(compositeDisposable, {
+		    utils.launchAsyncTryCatchFinally({
 		        viewState.blockInterface(true)
 	            if(addressTo!!.point == null)
 	                addressTo!!.point = utils.asyncAwait { addressInteractor.getLatLngByPlaceId(addressTo!!.id!!) }

@@ -33,8 +33,9 @@ import com.kg.gettransfer.domain.repository.LocationRepository
 
 import java.util.Locale
 
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.IO
+import kotlinx.coroutines.experimental.android.Main
 
 import org.koin.dsl.module.module
 
@@ -79,10 +80,9 @@ val domainModule = module {
 }
 
 val androidModule = module {
-	single { CoroutineContexts(UI, CommonPool) }
+	single { CoroutineContexts(Dispatchers.Main, Dispatchers.IO) }
 }
 
-/** @TODO: заменить на single thread */
 val testModule = module {
-	single { CoroutineContexts(CommonPool, CommonPool) }
+	single { CoroutineContexts(Dispatchers.IO, Dispatchers.IO) }
 }

@@ -26,7 +26,7 @@ class RequestsFragmentPresenter(cc: CoroutineContexts,
     var transfers = listOf<Transfer>()
 
     fun setData(categoryName: String){
-        utils.launchAsyncTryCatchFinally(compositeDisposable, {
+        utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             account = utils.asyncAwait { apiInteractor.getAccount() }
             transfers = when(categoryName) {

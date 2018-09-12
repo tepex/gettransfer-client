@@ -41,7 +41,7 @@ class MainPresenter(cc: CoroutineContexts,
     private var minDistance: Int = 30
 
     override fun onFirstViewAttach() {
-        utils.launchAsyncTryCatch(compositeDisposable, {
+        utils.launchAsyncTryCatch({
             // Проверка досупности сервиса геолокации
             val available = utils.asyncAwait { locationInteractor.checkLocationServicesAvailability() }
             if(available) updateCurrentLocation()
@@ -55,7 +55,7 @@ class MainPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: MainView) {
         super.attachView(view)
-        utils.launchAsyncTryCatchFinally(compositeDisposable, {
+        utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(false)
             account = utils.asyncAwait { apiInteractor.getAccount() }
             viewState.showLoginInfo(account)
@@ -67,7 +67,7 @@ class MainPresenter(cc: CoroutineContexts,
 
     fun updateCurrentLocation() {
         Timber.d("update current location")
-        utils.launchAsyncTryCatchFinally(compositeDisposable, {
+        utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             val currentAddress = utils.asyncAwait { addressInteractor.getCurrentAddress() }
             lastAddressPoint = LatLng(currentAddress.point!!.latitude, currentAddress.point!!.longitude)
@@ -94,7 +94,7 @@ class MainPresenter(cc: CoroutineContexts,
         */
 
         lastAddressPoint = lastPoint!!
-        utils.launchAsyncTryCatch(compositeDisposable, {
+        utils.launchAsyncTryCatch({
             val currentAddress = utils.asyncAwait {
                 addressInteractor.getAddressByLocation(Point(lastPoint!!.latitude, lastPoint!!.longitude))
             }

@@ -17,7 +17,6 @@ import com.arellomobile.mvp.MvpAppCompatActivity
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 
@@ -36,7 +35,6 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     internal val apiInteractor: ApiInteractor by inject()
     internal val coroutineContexts: CoroutineContexts by inject()
     internal val router: Router by inject()
-    protected val utils = AsyncUtils(coroutineContexts)
     protected val navigatorHolder: NavigatorHolder by inject()
     
     protected open lateinit var navigator: BaseNavigator

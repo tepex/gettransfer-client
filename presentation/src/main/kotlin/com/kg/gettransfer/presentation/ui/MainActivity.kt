@@ -39,7 +39,6 @@ import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.AsyncUtils
-import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
@@ -51,9 +50,14 @@ import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.Utils.Companion.hideKeyboard
 import com.kg.gettransfer.presentation.view.MainView
 
+import kotlin.coroutines.experimental.suspendCoroutine
+
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_form.*
+
+import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.launch
 
 import org.koin.android.ext.android.inject
 
@@ -65,8 +69,6 @@ import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.cicerone.commands.Forward
 
 import timber.log.Timber
-
-import kotlin.coroutines.experimental.suspendCoroutine
 
 class MainActivity: BaseActivity(), MainView {
     @InjectPresenter
@@ -80,6 +82,7 @@ class MainActivity: BaseActivity(), MainView {
     private val locationInteractor: LocationInteractor by inject()
     
     private val compositeDisposable = Job()
+    private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
     private lateinit var googleMap: GoogleMap
     
     private var isFirst = true
@@ -296,7 +299,7 @@ class MainActivity: BaseActivity(), MainView {
 	private fun initGoogleMap(mapViewBundle: Bundle?) {
 		mapView.onCreate(mapViewBundle)
 		
-		utils.launchAsync(compositeDisposable) {
+		utils.launch {
 			googleMap = getGoogleMapAsync()
 			customizeGoogleMaps()
 		}
