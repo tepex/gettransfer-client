@@ -42,6 +42,10 @@
     <!-- Transfer -->
     <string name="distance_time">Distance: %1$s\nExpected travel time: %2$s</string>
     <string name="distance">Distance: %1$d %2$s</string>
+    <string name="transfer_connecting_carriers">Соединяем с ближайшими перевозчиками</string>
+    <string name="transfer_order">Заявка на трансфер №%1$d</string>
+    <string name="transfer_start_sign">A</string>
+    <string name="transfer_end_sign">B</string>
     <!-- Transport types -->
     <string name="transport_type_economy">Economy</string>
     <string name="transport_type_business">Business</string>

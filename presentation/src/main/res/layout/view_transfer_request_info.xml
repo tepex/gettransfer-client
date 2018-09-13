@@ -12,7 +12,6 @@
         android:layout_marginTop="@dimen/view_transfer_info_request_number_margin_top"
         android:fontFamily="@font/sf_pro_text_regular"
         android:gravity="center_horizontal"
-        android:text="Заявка на трансфер #1234"
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/view_transfer_info_request_number_text_size"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,7 +26,6 @@
         android:ellipsize="end"
         android:fontFamily="@font/sf_pro_text_bold"
         android:lines="1"
-        android:text="Тверская 21, Москва"
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/view_transfer_info_big_text_size"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,7 +38,6 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:fontFamily="@font/sf_pro_text_regular"
-        android:text="31 января 2018, 11:42"
         android:textColor="@color/colorBtnGreen"
         android:textSize="@dimen/view_transfer_info_small_text_size"
         app:layout_constraintEnd_toEndOf="@+id/tvFrom"
@@ -55,7 +52,6 @@
         android:ellipsize="end"
         android:fontFamily="@font/sf_pro_text_bold"
         android:lines="1"
-        android:text="Шереметьево Терминал"
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/view_transfer_info_big_text_size"
         app:layout_constraintEnd_toEndOf="@+id/tvFrom"
@@ -68,7 +64,6 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:fontFamily="@font/sf_pro_text_regular"
-        android:text="Расстояние: 32 km"
         android:textColor="@color/colorBtnGreen"
         android:textSize="@dimen/view_transfer_info_small_text_size"
         app:layout_constraintEnd_toEndOf="@+id/tvFrom"
@@ -83,7 +78,7 @@
         android:layout_marginTop="@dimen/view_transfer_info_markers_margin_top"
         android:background="@drawable/back_circle_marker"
         android:gravity="center"
-        android:text="A"
+        android:text="@string/transfer_start_sign"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvFrom" />
 
@@ -106,7 +101,7 @@
         android:layout_marginTop="@dimen/view_transfer_info_markers_margin_top"
         android:background="@drawable/back_circle_marker"
         android:gravity="center"
-        android:text="B"
+        android:text="@string/transfer_end_sign"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvTo" />
 
