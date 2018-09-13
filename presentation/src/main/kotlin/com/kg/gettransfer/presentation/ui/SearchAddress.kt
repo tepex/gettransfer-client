@@ -1,43 +1,23 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
-
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
-
 import android.support.constraint.ConstraintLayout
-
 import android.text.Editable
 import android.text.TextWatcher
-
 import android.util.AttributeSet
-
 import android.view.LayoutInflater
 import android.view.View
-
-import android.widget.EditText
-import android.widget.ImageButton
-
 import com.arellomobile.mvp.MvpDelegate
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-
 import com.kg.gettransfer.R
-
-import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.interactor.AddressInteractor
-
 import com.kg.gettransfer.presentation.presenter.SearchAddressPresenter
 import com.kg.gettransfer.presentation.view.SearchAddressView
-import com.kg.gettransfer.presentation.view.SearchView
-
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.search_address.*
-
-import org.koin.android.ext.android.inject
-
-import timber.log.Timber
 
 /**
  * 
@@ -120,7 +100,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	fun initText(text: String, sendRequest: Boolean) {
 		blockRequest = true
 		this.text = text
-		addressField.setSelection(text.length)
+		addressField.setSelection(0, 0)
 		blockRequest = false
 		if(sendRequest) presenter.requestAddressListByPrediction(text.trim())
 	}
