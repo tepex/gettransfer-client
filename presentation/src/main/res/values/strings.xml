@@ -278,5 +278,20 @@
 
     <!--activity_transfer_details-->
     <string name="activity_transfer_details_title">Request details</string>
+    <string name="activity_transfer_details_paid_sum">%1$s (%2$s\%%)</string>
+    <string name="activity_transfer_details_btn_cancel">Cancel</string>
+    <string name="activity_transfer_details_languages">Languges</string>
+    <string name="activity_transfer_details_price">Price</string>
+    <string name="activity_transfer_details_car_number">Number</string>
+    <string name="activity_transfer_details_car_name">Transport</string>
+    <string name="activity_transfer_details_transport_type">Transport type</string>
+    <string name="activity_transfer_details_choosen_offer">Chosen offer</string>
+    <string name="activity_transfer_details_pay">Pay</string>
+    <string name="activity_transfer_details_paid">Paid</string>
+    <string name="activity_transfer_details_paid_details">Paid details</string>
+    <string name="activity_transfer_details_flight_or_train_number">Flight or train number</string>
+    <string name="activity_transfer_details_child_seats">Child seats</string>
+    <string name="activity_transfer_details_name">Name</string>
+    <string name="activity_transfer_details_passenger">Passenger</string>
 
 </resources>

@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar
 import android.view.MotionEvent
 import android.view.View
 import android.widget.RelativeLayout
-import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -20,10 +19,8 @@ import com.google.android.gms.maps.model.*
 import com.google.maps.android.PolyUtil
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
-import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.model.RouteInfo
-import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
 import com.kg.gettransfer.presentation.view.TransferDetailsView
 import kotlinx.android.synthetic.main.activity_transfer_details.*
@@ -32,29 +29,30 @@ import kotlinx.android.synthetic.main.view_maps_pin.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.view.*
 import kotlinx.android.synthetic.main.view_transport_type_transfer_details.view.*
 import kotlinx.coroutines.experimental.Job
-import org.koin.android.ext.android.inject
+import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import kotlin.coroutines.experimental.suspendCoroutine
 
-class TransferDetailsActivity: MvpAppCompatActivity(), TransferDetailsView {
+class TransferDetailsActivity: BaseActivity(), TransferDetailsView {
 
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
 
-    private val apiInteractor: ApiInteractor by inject()
-    private val coroutineContexts: CoroutineContexts by inject()
-
     private val compositeDisposable = Job()
-    private val utils = AsyncUtils(coroutineContexts)
+    private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
+
     private lateinit var googleMap: GoogleMap
 
     @ProvidePresenter
-    fun createTransferDetailsPresenter(): TransferDetailsPresenter = TransferDetailsPresenter(coroutineContexts, apiInteractor)
+    fun createTransferDetailsPresenter(): TransferDetailsPresenter = TransferDetailsPresenter(coroutineContexts, router, apiInteractor)
+
+    protected override var navigator = object: BaseNavigator(this){}
 
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
 
+    override fun getPresenter(): TransferDetailsPresenter = presenter
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,7 +112,7 @@ class TransferDetailsActivity: MvpAppCompatActivity(), TransferDetailsView {
     private fun initGoogleMap(mapViewBundle: Bundle?) {
         mapView.onCreate(mapViewBundle)
 
-        utils.launchAsync(compositeDisposable) {
+        utils.launch {
             googleMap = getGoogleMapAsync()
             customizeGoogleMaps()
         }
@@ -148,18 +146,18 @@ class TransferDetailsActivity: MvpAppCompatActivity(), TransferDetailsView {
         })
     }
 
-    override fun setTransferInfo(transferId: Long, from: String, to: String, dateTimeString: String, distance: Int, distanceUnit: String) {
+    override fun setTransferInfo(transferId: Long, from: String, to: String, dateTimeString: String, distance: String) {
         layoutTransferInfo.tvTransferRequestNumber.text = String.format(resources.getString(R.string.transfer_request_num), transferId)
         layoutTransferInfo.tvFrom.text = from
         layoutTransferInfo.tvTo.text = to
         layoutTransferInfo.tvOrderDateTime.text = dateTimeString
-        layoutTransferInfo.tvDistance.text = String.format(getString(R.string.distance), distance, distanceUnit)
+        layoutTransferInfo.tvDistance.text = distance
     }
 
-    override fun setPassengerInfo(countPassengers: Int, personName: String?, countChilds: Int?, flightNumber: String?, comment: String?, transportTypes: List<TransportType>) {
+    override fun setPassengerInfo(countPassengers: Int, personName: String?, countChilds: Int?, flightNumber: String?, comment: String?, transportTypes: List<TransportTypeModel>) {
         tvCountPassengers.text = countPassengers.toString()
 
-        if (personName != null && personName != ""){
+        if (personName != null && !personName.isEmpty()){
             tvPassengerName.text = personName
             layoutName.visibility = View.VISIBLE
         }
@@ -169,21 +167,21 @@ class TransferDetailsActivity: MvpAppCompatActivity(), TransferDetailsView {
             layoutChilds.visibility = View.VISIBLE
         }
 
-        if (flightNumber != null && flightNumber != ""){
+        if (flightNumber != null && !flightNumber.isEmpty()){
             tvFlightNumber.text = flightNumber
             layoutFlightNumber.visibility = View.VISIBLE
         }
 
-        if (comment != null && comment != ""){
+        if (comment != null && !comment.isEmpty()){
             tvComment.text = comment
             layoutComment.visibility = View.VISIBLE
         }
 
         transportTypes.forEach {
             var viewTransportType = layoutInflater.inflate(R.layout.view_transport_type_transfer_details, null, false)
-            viewTransportType.tvNameTransportType.text = it.id.substring(0, 1).toUpperCase() + it.id.substring(1) + " "
-            viewTransportType.tvCountPersons.text = String.format(resources.getString(R.string.count_persons_and_baggage), it.paxMax)
-            viewTransportType.tvCountBaggage.text = String.format(resources.getString(R.string.count_persons_and_baggage), it.luggageMax)
+            viewTransportType.tvNameTransportType.text = it.delegate.id.substring(0, 1).toUpperCase() + it.delegate.id.substring(1) + " "
+            viewTransportType.tvCountPersons.text = String.format(getString(R.string.count_persons_and_baggage), it.delegate.paxMax)
+            viewTransportType.tvCountBaggage.text = String.format(getString(R.string.count_persons_and_baggage), it.delegate.luggageMax)
             layoutTransportTypesList.addView(viewTransportType)
         }
     }
@@ -192,17 +190,29 @@ class TransferDetailsActivity: MvpAppCompatActivity(), TransferDetailsView {
         btnCancel.visibility = View.VISIBLE
     }
 
-    override fun setPaymentInfo() {
-        
+    override fun setPaymentInfo(price: String, paidSum: String, paidPercentage: Int, remainToPay: String) {
+        paymentInfoPaid.text = String.format(getString(R.string.activity_transfer_details_paid_sum), paidSum, paidPercentage)
+        paymentInfoPay.text = remainToPay
+        paymentInfoSum.text = price
+        layoutPaymentInfo.visibility = View.VISIBLE
     }
 
-    override fun setOfferInfo() {
+    override fun setOfferInfo(driverEmail: String, driverPhone: String, driverName: String,
+                              transportType: String, transportName: String, transportNumber: String,
+                              price: String) {
+        offerDriverInfoEmail.text = driverEmail
+        offerDriverInfoPhone.text = driverPhone
+        offerDriverInfoName.text = driverName
+        layoutOfferDriverInfo.visibility = View.VISIBLE
 
+        offerTransportInfoCarType.text = transportType
+        offerTransportInfoCarName.text = transportName
+        offerTransportInfoCarNumber.text = transportNumber
+        offerTransportInfoPrice.text = price
+        layoutOfferTransportInfo.visibility = View.VISIBLE
     }
 
-    override fun setMapInfo(routeInfo: RouteInfo, from: String, to: String, dateTimeString: String, distanceUnit: String) {
-        val distanceString = String.format(getString(R.string.distance), routeInfo.distance, distanceUnit)
-
+    override fun setMapInfo(routeInfo: RouteInfo, from: String, to: String, dateTimeString: String, distance: String) {
         //Создание пинов с информацией
         val ltInflater = layoutInflater
         val pinLayout = ltInflater.inflate(R.layout.view_maps_pin, null)
@@ -215,9 +225,9 @@ class TransferDetailsActivity: MvpAppCompatActivity(), TransferDetailsView {
         val bmPinA = createBitmapFromView(pinLayout)
 
         pinLayout.tvPlace.text = to
-        pinLayout.tvInfo.text = distanceString
+        pinLayout.tvInfo.text = distance
         pinLayout.tvPlaceMirror.text = to
-        pinLayout.tvInfoMirror.text = distanceString
+        pinLayout.tvInfoMirror.text = distance
         pinLayout.imgPin.setImageResource(R.drawable.map_label_b)
         val bmPinB = createBitmapFromView(pinLayout)
 

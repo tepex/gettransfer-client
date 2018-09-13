@@ -67,7 +67,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="55dp"
-                        android:text="Passenger"
+                        android:text="@string/activity_transfer_details_passenger"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="17sp"
                         android:fontFamily="@font/sf_pro_text_regular"/>
@@ -80,7 +80,6 @@
                         android:layout_centerVertical="true"
                         android:textSize="17sp"
                         android:fontFamily="@font/sf_pro_text_regular"
-                        android:text="1"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_marginEnd="22dp"/>
 
@@ -111,7 +110,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="55dp"
-                        android:text="Name"
+                        android:text="@string/activity_transfer_details_name"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="17sp"
                         android:fontFamily="@font/sf_pro_text_regular"/>
@@ -124,7 +123,6 @@
                         android:layout_centerVertical="true"
                         android:textSize="17sp"
                         android:fontFamily="@font/sf_pro_text_regular"
-                        android:text="Alexey"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_marginEnd="22dp"/>
 
@@ -155,7 +153,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="55dp"
-                        android:text="Child seats"
+                        android:text="@string/activity_transfer_details_child_seats"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="17sp"
                         android:fontFamily="@font/sf_pro_text_regular"/>
@@ -168,7 +166,6 @@
                         android:layout_centerVertical="true"
                         android:textSize="17sp"
                         android:fontFamily="@font/sf_pro_text_regular"
-                        android:text="0"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_marginEnd="22dp"/>
 
@@ -199,7 +196,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="55dp"
-                        android:text="Flight or train number"
+                        android:text="@string/activity_transfer_details_flight_or_train_number"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="17sp"
                         android:fontFamily="@font/sf_pro_text_regular"/>
@@ -212,7 +209,6 @@
                         android:layout_centerVertical="true"
                         android:textSize="17sp"
                         android:fontFamily="@font/sf_pro_text_regular"
-                        android:text="123456"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_marginEnd="22dp"/>
 
@@ -235,7 +231,6 @@
                         android:id="@+id/tvComment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Не опаздывать, быть с цветами и шампанским + Тут будет комментарий, и хоробы если поле меняло высоту"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="15sp"
                         android:fontFamily="@font/sf_pro_text_regular"
@@ -263,7 +258,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="13dp"
-                        android:text="Transport Type"
+                        android:text="@string/activity_transfer_details_transport_type"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="17sp"
                         android:fontFamily="@font/sf_pro_text_regular"/>
@@ -307,7 +302,7 @@
                     android:gravity="center_vertical"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:text="Детали оплаты"/>
+                    android:text="@string/activity_transfer_details_paid_details"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -328,7 +323,7 @@
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
                         android:layout_marginStart="16dp"
-                        android:text="Оплачен"/>
+                        android:text="@string/activity_transfer_details_paid"/>
 
                     <TextView
                         android:id="@+id/paymentInfoPaid"
@@ -340,8 +335,7 @@
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="18dp"
-                        android:text="1500 ₽ (100%)"/>
+                        android:layout_marginEnd="18dp"/>
 
                 </RelativeLayout>
 
@@ -364,7 +358,7 @@
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
                         android:layout_marginStart="16dp"
-                        android:text="Оплатить"/>
+                        android:text="@string/activity_transfer_details_pay"/>
 
                     <TextView
                         android:id="@+id/paymentInfoPay"
@@ -376,8 +370,7 @@
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="18dp"
-                        android:text="0,00 ₽"/>
+                        android:layout_marginEnd="18dp"/>
 
                 </RelativeLayout>
 
@@ -400,7 +393,7 @@
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
                         android:layout_marginStart="16dp"
-                        android:text="Сумма"/>
+                        android:text="@string/activity_transfer_details_price"/>
 
                     <TextView
                         android:id="@+id/paymentInfoSum"
@@ -412,8 +405,7 @@
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="18dp"
-                        android:text="1500 ₽"/>
+                        android:layout_marginEnd="18dp"/>
 
                 </RelativeLayout>
 
@@ -442,7 +434,7 @@
                     android:gravity="center_vertical"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:text="Choosen offer"/>
+                    android:text="@string/activity_transfer_details_choosen_offer"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -459,7 +451,6 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="18dp"
                     android:gravity="center_vertical"
-                    android:text="mail@mai.ru"
                     android:background="@color/colorWhite"/>
 
                 <View
@@ -468,7 +459,7 @@
                     android:background="@color/colorDividerGray"/>
 
                 <TextView
-                    android:id="@+id/offerDriverInfoTel"
+                    android:id="@+id/offerDriverInfoPhone"
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
                     android:textSize="17sp"
@@ -477,7 +468,6 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="18dp"
                     android:gravity="center_vertical"
-                    android:text="+7(906)012-23-23"
                     android:background="@color/colorWhite"/>
 
                 <View
@@ -495,7 +485,6 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="18dp"
                     android:gravity="center_vertical"
-                    android:text="Имя перевозчика"
                     android:background="@color/colorWhite"/>
 
                 <View
@@ -528,7 +517,7 @@
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
                         android:layout_marginStart="16dp"
-                        android:text="Тип транспорта"/>
+                        android:text="@string/activity_transfer_details_transport_type"/>
 
                     <TextView
                         android:id="@+id/offerTransportInfoCarType"
@@ -540,8 +529,7 @@
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="18dp"
-                        android:text="Эконом"/>
+                        android:layout_marginEnd="18dp"/>
 
                 </RelativeLayout>
 
@@ -564,7 +552,7 @@
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
                         android:layout_marginStart="16dp"
-                        android:text="Транспорт"/>
+                        android:text="@string/activity_transfer_details_car_name"/>
 
                     <TextView
                         android:id="@+id/offerTransportInfoCarName"
@@ -576,8 +564,7 @@
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="18dp"
-                        android:text="Volvo s60 2014"/>
+                        android:layout_marginEnd="18dp"/>
 
                 </RelativeLayout>
 
@@ -600,7 +587,7 @@
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
                         android:layout_marginStart="16dp"
-                        android:text="Номер"/>
+                        android:text="@string/activity_transfer_details_car_number"/>
 
                     <TextView
                         android:id="@+id/offerTransportInfoCarNumber"
@@ -612,8 +599,7 @@
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="18dp"
-                        android:text="123456"/>
+                        android:layout_marginEnd="18dp"/>
 
                 </RelativeLayout>
 
@@ -636,7 +622,7 @@
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
                         android:layout_marginStart="16dp"
-                        android:text="Стоимость"/>
+                        android:text="@string/activity_transfer_details_price"/>
 
                     <TextView
                         android:id="@+id/offerTransportInfoPrice"
@@ -648,8 +634,7 @@
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="18dp"
-                        android:text="1500 ₽"/>
+                        android:layout_marginEnd="18dp"/>
 
                 </RelativeLayout>
 
@@ -670,7 +655,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="16dp"
                         android:fontFamily="@font/sf_pro_text_regular"
-                        android:text="Языки"
+                        android:text="@string/activity_transfer_details_languages"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="17sp" />
 
@@ -698,7 +683,7 @@
                 android:layout_height="44dp"
                 android:background="@drawable/btn_sign_out"
                 android:layout_margin="16dp"
-                android:text="Отменить"
+                android:text="@string/activity_transfer_details_btn_cancel"
                 android:textAllCaps="true"
                 android:textSize="17sp"
                 android:textColor="@color/colorWhite"

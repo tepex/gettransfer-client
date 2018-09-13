@@ -1,101 +1,101 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.content.Context
+import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.presentation.TransfersConstants
+import com.kg.gettransfer.presentation.model.ConfigsModel
+import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.TransferDetailsView
-import kotlinx.coroutines.experimental.Job
+import ru.terrakok.cicerone.Router
+import timber.log.Timber
 import java.text.SimpleDateFormat
+import java.util.*
 
 @InjectViewState
-class TransferDetailsPresenter(private val cc: CoroutineContexts,
-                               private val apiInteractor: ApiInteractor): MvpPresenter<TransferDetailsView>() {
+class TransferDetailsPresenter(cc: CoroutineContexts,
+                               router: Router,
+                               apiInteractor: ApiInteractor): BasePresenter<TransferDetailsView>(cc, router, apiInteractor) {
 
-    private val compositeDisposable = Job()
-    private val utils = AsyncUtils(cc)
-
-    lateinit var account: Account
     lateinit var routeInfo: RouteInfo
-    lateinit var configs: Configs
-
+    lateinit var offers: List<Offer>
     lateinit var transferDetails: Transfer
 
     companion object {
-        @JvmField val DATE_TIME_PATTERN_SERVER = "yyyy-MM-dd'T'HH:mm:ss"
-        @JvmField val DATE_TIME_PATTERN_APP = "dd MMMM yyyy, HH:mm"
+        private val DATE_TIME_FULL_FORMAT = SimpleDateFormat(Utils.DATE_TIME_FULL_PATTERN, Locale.US)
+        private val DATE_TIME_FORMAT = SimpleDateFormat(Utils.DATE_TIME_PATTERN, Locale.US)
     }
 
-    override fun onFirstViewAttach() {
-        utils.launchAsyncTryCatchFinally(compositeDisposable, {
+    @CallSuper
+    override fun attachView(view: TransferDetailsView) {
+        super.attachView(view)
+        utils.launchAsyncTryCatchFinally({
             transferDetails = apiInteractor.transferDetails
 
-
             utils.asyncAwait {
-                configs = apiInteractor.getConfigs()
+                configs = ConfigsModel(apiInteractor.getConfigs())
                 account = apiInteractor.getAccount()
-            }
-
-            viewState.setTransferInfo(transferDetails.id, transferDetails.from.name, transferDetails.to!!.name,
-                    changeDateFormat(transferDetails.dateToLocal), transferDetails.distance!!, account.distanceUnit!!)
-
-            val selectedTransportTypes = arrayListOf<TransportType>()
-            transferDetails.transportTypeIds.forEach {
-                selectedTransportTypes.add(configs.transportTypes.find { type -> it == type.id}!!)
-            }
-            viewState.setPassengerInfo(transferDetails.pax!!, transferDetails.nameSign, transferDetails.childSeats,
-                    transferDetails.flightNumber, transferDetails.comment, selectedTransportTypes)
-
-            /*when (transferDetails.status){
-                "new" -> viewState.activateButtonCancel()
-                "performed" -> {
-                    viewState.activateButtonCancel()
-                    viewState.setPaymentInfo()
-                    viewState.setOfferInfo()
-                }
-
-            }*/
-
-            val transferStatus = transferDetails.status
-            if (transferStatus == "new") viewState.activateButtonCancel()
-            if (transferStatus == "performed" || transferStatus == "pending_confirmation" ||
-                    transferStatus == "completed" || transferStatus == "not_completed"){
-                viewState.setPaymentInfo()
-                viewState.setOfferInfo()
-            }
-
-            utils.asyncAwait {
                 routeInfo = apiInteractor.getRouteInfo(arrayOf(transferDetails.from.point,
                         transferDetails.to!!.point), true, false)
             }
+            val distance = Utils.formatDistance(view as Context, R.string.distance, account.distanceUnit, transferDetails.distance)
+            val selectedTransportTypes = arrayListOf<TransportTypeModel>()
+            configs.transportTypes[0].delegate
+            transferDetails.transportTypeIds.forEach {
+                selectedTransportTypes.add(configs.transportTypes.find { type -> it == type.delegate.id}!!)
+            }
 
-            val fromName = if(transferDetails.from.name.indexOf(",") >= 0) transferDetails.from.name.substring(0, transferDetails.from.name.indexOf(","))
-                           else transferDetails.from.name
+            viewState.setTransferInfo(transferDetails.id, transferDetails.from.name, transferDetails.to!!.name,
+                    changeDateFormat(transferDetails.dateToLocal), distance)
+            viewState.setPassengerInfo(transferDetails.pax!!, transferDetails.nameSign, transferDetails.childSeats,
+                    transferDetails.flightNumber, transferDetails.comment, selectedTransportTypes)
+            viewState.setMapInfo(routeInfo, getPlaceNameFromAddress(transferDetails.from.name),
+                    getPlaceNameFromAddress(transferDetails.to!!.name), changeDateFormat(transferDetails.dateToLocal), distance)
 
-            val toName = if(transferDetails.to!!.name.indexOf(",") >= 0) transferDetails.to!!.name.substring(0, transferDetails.to!!.name.indexOf(","))
-                         else transferDetails.to!!.name
+            val transferStatus = transferDetails.status
+            if (transferStatus == TransfersConstants.STATUS_NEW || transferStatus == TransfersConstants.STATUS_DRAFT) viewState.activateButtonCancel()
+            if (transferStatus == TransfersConstants.STATUS_PERFORMED || transferStatus == TransfersConstants.STATUS_PENDING ||
+                    transferStatus == TransfersConstants.STATUS_COMPLETED || transferStatus == TransfersConstants.STATUS_NOT_COMPLETED){
 
-            viewState.setMapInfo(routeInfo, fromName, toName, changeDateFormat(transferDetails.dateToLocal), account.distanceUnit!!)
+                viewState.setPaymentInfo(transferDetails.price!!.default, transferDetails.paidSum!!.default,
+                        transferDetails.paidPercentage!!, transferDetails.remainsToPay!!.default)
+                utils.asyncAwait {
+                    offers = apiInteractor.getOffers(transferDetails.id)
+                }
+                if(transferDetails.offersCount!! >= 1 && offers.size == 1){
+                    val driver = offers[0].driver
+                    val vehicle = offers[0].vehicle
+                    viewState.setOfferInfo(driver!!.email, driver.phone, driver.fullName,
+                            setFirstCharToUpperCase(vehicle.transportTypeId), vehicle.name,
+                            vehicle.registrationNumber, offers[0].price.base.default)
+                }
+            }
 
         }, { e ->
+            Timber.e(e)
             if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
             else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
     }
 
-    fun changeDateFormat(dateTime: String): String{
-        val formatDate = SimpleDateFormat(DATE_TIME_PATTERN_SERVER)
-        val newDate = formatDate.parse(dateTime)
-
-        val dateTimeFormat = SimpleDateFormat(DATE_TIME_PATTERN_APP)
-        return dateTimeFormat.format(newDate)
+    fun changeDateFormat(dateTime: String): String {
+        val newDate = TransferDetailsPresenter.DATE_TIME_FULL_FORMAT.parse(dateTime)
+        return TransferDetailsPresenter.DATE_TIME_FORMAT.format(newDate)
     }
 
-    fun onBackCommandClick() {
-        viewState.finish()
+    fun getPlaceNameFromAddress(address: String): String{
+        val index = address.indexOf(",")
+        if(index > 0) return address.substring(0, index)
+        else return address
+    }
+
+    fun setFirstCharToUpperCase(str: String): String{
+        return str.substring(0, 1).toUpperCase() + str.substring(1)
     }
 }

@@ -44,4 +44,5 @@ data class Vehicle(val name: String,
                    val photos: List<String>)
 
 data class Driver(val fullName: String,
-                  val phone: String)
+                  val phone: String,
+                  val email: String)

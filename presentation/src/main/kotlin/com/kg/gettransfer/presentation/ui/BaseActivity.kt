@@ -71,6 +71,7 @@ open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, 
     protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
         when(screenKey) {
             Screens.LOGIN -> return Intent(context, LoginActivity::class.java)
+            Screens.DETAILS -> return Intent(context, TransferDetailsActivity::class.java)
         }
         return null
     }

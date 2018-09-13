@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.support.annotation.CallSuper
-
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
@@ -17,8 +15,6 @@ import com.kg.gettransfer.presentation.TransfersConstants
 import com.kg.gettransfer.presentation.view.RequestsView
 
 import ru.terrakok.cicerone.Router
-
-import timber.log.Timber
 
 @InjectViewState
 class RequestsPresenter(cc: CoroutineContexts,
@@ -38,9 +34,17 @@ class RequestsPresenter(cc: CoroutineContexts,
             
             for(transfer in transfers) {
                 when(transfer.status) {
-                    TransfersConstants.STATUS_NEW -> transfersActive.add(transfer)
+                    TransfersConstants.STATUS_NEW -> addToActive(transfer)
+                    TransfersConstants.STATUS_DRAFT -> addToActive(transfer)
+                    TransfersConstants.STATUS_PERFORMED -> addToActive(transfer)
+                    TransfersConstants.STATUS_PENDING -> addToActive(transfer)
+
                     TransfersConstants.STATUS_COMPLETED -> transfersCompleted.add(transfer)
-                    else -> transfersAll.add(transfer)
+                    TransfersConstants.STATUS_NOT_COMPLETED -> transfersCompleted.add(transfer)
+
+                    TransfersConstants.STATUS_OUTDATED -> transfersAll.add(transfer)
+                    TransfersConstants.STATUS_CANCELED -> transfersAll.add(transfer)
+                    TransfersConstants.STATUS_REJECTED -> transfersAll.add(transfer)
                 }
             }
 
@@ -54,5 +58,10 @@ class RequestsPresenter(cc: CoroutineContexts,
                 else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
         */
+    }
+
+    fun addToActive(transfer: Transfer){
+        transfersActive.add(transfer)
+        transfersAll.add(transfer)
     }
 }
