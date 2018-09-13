@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -32,12 +34,13 @@ import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
 import kotlinx.android.synthetic.main.activity_main_new.*
-import kotlinx.android.synthetic.main.search_form.*
+import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.coroutines.experimental.Job
 import org.koin.android.ext.android.inject
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.cicerone.commands.Forward
 import timber.log.Timber
+import java.util.*
 import kotlin.coroutines.experimental.suspendCoroutine
 
 class MainActivity: BaseActivity(), MainView {
@@ -56,6 +59,7 @@ class MainActivity: BaseActivity(), MainView {
     
     private var isFirst = true
     private var centerMarker: Marker? = null
+	private val calendar = Calendar.getInstance()
     
     @ProvidePresenter
     fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
@@ -142,6 +146,8 @@ class MainActivity: BaseActivity(), MainView {
 		supportActionBar?.setDisplayShowTitleEnabled(false)
 		supportActionBar?.setDisplayHomeAsUpEnabled(false)
 		supportActionBar?.setDisplayShowHomeEnabled(false)
+
+		tvTransferDate.setOnClickListener { showDatePickerDialog() }
 		
 		drawer = drawerLayout as DrawerLayout
 		toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -171,6 +177,27 @@ class MainActivity: BaseActivity(), MainView {
 		val fade = Fade()
 		fade.setDuration(FADE_DURATION)
 		getWindow().setExitTransition(fade)
+	}
+
+	private fun showDatePickerDialog() {
+		calendar.time = presenter.date
+		val datePickerDialog = DatePickerDialog(this, { _, year, monthOfYear, dayOfMonth ->
+			calendar.set(year, monthOfYear, dayOfMonth)
+			presenter.date = calendar.time
+			showTimePickerDialog()
+		}, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+
+		datePickerDialog.datePicker.minDate = System.currentTimeMillis()
+		datePickerDialog.show()
+	}
+
+	private fun showTimePickerDialog() {
+		val timePickerDialog = TimePickerDialog(this, { _, hour, minute ->
+			calendar.set(Calendar.HOUR_OF_DAY, hour)
+			calendar.set(Calendar.MINUTE, minute)
+			presenter.date = calendar.time
+		}, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true)
+		timePickerDialog.show()
 	}
 
 	@CallSuper
@@ -333,5 +360,9 @@ class MainActivity: BaseActivity(), MainView {
 			navLogin.visibility = View.GONE
 			navRequests.visibility = View.VISIBLE
 	    }
+	}
+
+	override fun setDateTimeTransfer(dateTime: String) {
+		tvTransferDate.text = dateTime
 	}
 }

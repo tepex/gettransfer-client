@@ -15,4 +15,5 @@ interface MainView: BaseView {
     fun moveCenterMarker(point: LatLng)
     fun setAddressFrom(address: String)
     fun showLoginInfo(account: Account)
+    fun setDateTimeTransfer(dateTime: String)
 }
