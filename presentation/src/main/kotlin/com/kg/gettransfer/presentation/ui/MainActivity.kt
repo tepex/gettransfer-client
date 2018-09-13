@@ -5,73 +5,42 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-
 import android.os.Bundle
-
 import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
 import android.support.design.widget.AppBarLayout
-
 import android.support.v4.app.ActivityOptionsCompat
-import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
-
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
-
 import android.transition.Fade
 import android.util.Pair
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.InputMethodManager
-import android.widget.RelativeLayout
 import android.widget.TextView
-
-import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
-
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
-import com.kg.gettransfer.R.id.*
-
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.interactor.AddressInteractor
-import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.extensions.hideKeyboard
-
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.MainPresenter
-import com.kg.gettransfer.presentation.ui.Utils.Companion.hideKeyboard
 import com.kg.gettransfer.presentation.view.MainView
 import kotlinx.android.synthetic.main.activity_main_new.*
-
-import kotlin.coroutines.experimental.suspendCoroutine
-
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.search_form.*
-
-import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
-
 import org.koin.android.ext.android.inject
-
-import ru.terrakok.cicerone.Navigator
-import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.Router
-import ru.terrakok.cicerone.android.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.cicerone.commands.Forward
-
 import timber.log.Timber
 import java.util.*
 import kotlin.coroutines.experimental.suspendCoroutine
