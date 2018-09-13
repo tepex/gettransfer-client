@@ -2,16 +2,28 @@ package com.kg.gettransfer.presentation.ui
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+
 import android.content.Context
 import android.content.Intent
+
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
+
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
+import android.support.annotation.StringRes
+
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+
+import android.widget.TextView
+
 import android.text.InputType
 import android.util.DisplayMetrics
 import android.view.Gravity
@@ -30,6 +42,9 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.PolyUtil
 import com.kg.gettransfer.R
+import com.kg.gettransfer.R.id.*
+
+import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
@@ -40,11 +55,18 @@ import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.view.CreateOrderView
+
+import java.util.Calendar
+
+import kotlin.coroutines.experimental.suspendCoroutine
+import kotlinx.android.synthetic.main.activity_transfer.*
 import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 import kotlinx.android.synthetic.main.view_maps_pin.view.*
 import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.launch
+
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.util.*
@@ -57,6 +79,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
 
 	private val addressInteractor: AddressInteractor by inject()
     private val compositeDisposable = Job()
+    private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
     private lateinit var googleMap: GoogleMap
     private val calendar = Calendar.getInstance()
     
@@ -163,7 +186,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     private fun initGoogleMap(mapViewBundle: Bundle?) {
         mapView.onCreate(mapViewBundle)
 
-        utils.launchAsync(compositeDisposable) {
+        utils.launch {
             googleMap = getGoogleMapAsync()
             customizeGoogleMaps()
         }

@@ -63,4 +63,7 @@ interface Api {
 	
 	@GET("$API_TRANSFERS/{id}/offers")
 	fun getOffers(@Path("id") id: Long): Deferred<ApiResponse<ApiOffers>>
+
+	@POST("$API_TRANSFERS/{id}/cancel")
+	fun cancelTransfer(@Path("id") id: Long, @Body reason: ApiReason): Deferred<ApiResponse<ApiTransferWrapper>>
 }

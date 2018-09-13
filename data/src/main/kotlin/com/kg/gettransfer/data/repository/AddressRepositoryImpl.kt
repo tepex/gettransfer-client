@@ -54,15 +54,13 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
         val results = gdClient.getAutocompletePredictions(prediction, null, null)
         Tasks.await(results)
         val list = DataBufferUtils.freezeAndClose(results.getResult())
-        val gtAddress: GTAddress
-        val ret = list.map {
+        return list.map {
             GTAddress(it.placeId, it.placeTypes,
                       it.getFullText(null).toString(),
                       it.getPrimaryText(null).toString(),
                       it.getSecondaryText(null).toString(),
                       null)
         }
-        return ret
     }
 
     override fun getLatLngByPlaceId(placeId: String): Point {

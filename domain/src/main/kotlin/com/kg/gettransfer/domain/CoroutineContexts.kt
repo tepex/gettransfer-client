@@ -1,5 +1,5 @@
 package com.kg.gettransfer.domain
 
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlinx.coroutines.experimental.CoroutineDispatcher
 
-class CoroutineContexts(val ui: CoroutineContext, val bg: CoroutineContext)
+class CoroutineContexts(val ui: CoroutineDispatcher, val bg: CoroutineDispatcher)

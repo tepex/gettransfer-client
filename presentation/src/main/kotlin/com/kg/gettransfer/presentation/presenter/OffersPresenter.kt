@@ -34,7 +34,7 @@ class OffersPresenter(cc: CoroutineContexts,
     }
     
     override fun onFirstViewAttach() {
-        utils.launchAsyncTryCatchFinally(compositeDisposable, {
+        utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             utils.asyncAwait {
                 allTransfers = apiInteractor.getAllTransfers()

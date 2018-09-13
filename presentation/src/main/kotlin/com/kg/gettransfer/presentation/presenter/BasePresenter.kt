@@ -27,7 +27,7 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
                          protected val router: Router,
                          protected val apiInteractor: ApiInteractor): MvpPresenter<BV>() {
     protected val compositeDisposable = Job()
-    protected val utils = AsyncUtils(cc)
+    protected val utils = AsyncUtils(cc, compositeDisposable)
 
     lateinit var configs: ConfigsModel
     lateinit var account: Account

@@ -66,3 +66,5 @@ class ApiCityPoint(@SerializedName("name") @Expose var name: String,
 class ApiTrip(@SerializedName("date") @Expose val date: String,
               @SerializedName("time") @Expose val time: String,
               @SerializedName("flight_number") @Expose val flight: String?)
+
+class ApiReason(@SerializedName("reason") val reason: String)

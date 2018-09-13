@@ -39,7 +39,7 @@ class SettingsPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: SettingsView) {
         super.attachView(view)
-        utils.launchAsyncTryCatchFinally(compositeDisposable, {
+        utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             utils.asyncAwait { 
                 configs = ConfigsModel(apiInteractor.getConfigs())
@@ -94,7 +94,7 @@ class SettingsPresenter(cc: CoroutineContexts,
     
     private fun saveAccount() {
         viewState.blockInterface(true)
-        utils.launchAsyncTryCatchFinally(compositeDisposable, {
+        utils.launchAsyncTryCatchFinally({
             utils.asyncAwait { apiInteractor.putAccount(account) }
         }, { e ->
             if(e is ApiException && e.isNotLoggedIn()) {}

@@ -42,7 +42,7 @@ class SearchAddressPresenter(cc: CoroutineContexts,
 		}
 			
 		Timber.d("------ request list for prediction $prediction")
-		utils.launchAsyncTryCatch(compositeDisposable, {
+		utils.launchAsyncTryCatch({
 			lastResult = utils.asyncAwait { addressInteractor.getAutocompletePredictions(prediction) }
 			lastRequest = prediction
 			viewState.setAddressList(lastResult!!)

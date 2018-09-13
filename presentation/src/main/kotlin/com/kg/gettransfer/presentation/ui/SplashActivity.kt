@@ -41,7 +41,7 @@ class SplashActivity: AppCompatActivity() {
 	
 	private val compositeDisposable = Job()
 	private val coroutineContexts: CoroutineContexts by inject()
-	private val utils = AsyncUtils(coroutineContexts)
+	private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
 	private val apiInteractor: ApiInteractor by inject()
 	
 	@CallSuper
@@ -57,7 +57,7 @@ class SplashActivity: AppCompatActivity() {
 		}
 
 		Timber.d("Permissions granted!")
-		utils.launchAsyncTryCatchFinally(compositeDisposable, {
+		utils.launchAsyncTryCatchFinally({
 			val configs = utils.asyncAwait { apiInteractor.getConfigs() }
 			Timber.d("types: %s", configs.transportTypes)
 			Timber.d("paypal: %s", configs.paypalCredentials)
