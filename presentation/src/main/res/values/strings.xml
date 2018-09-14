@@ -270,5 +270,6 @@
     <!--view_transfer_request_info-->
     <string name="transfer_request_num">Transfer request № %1$s</string>
     <string name="next">Next</string>
+    <string name="done">Done</string>
 
 </resources>

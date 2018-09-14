@@ -198,5 +198,6 @@
     <!--view_transfer_request_info-->
     <string name="transfer_request_num">Заявка на трансфер № %1$s</string>
     <string name="next">Далее</string>
+    <string name="done">Сделано</string>
 
 </resources>

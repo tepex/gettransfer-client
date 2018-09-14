@@ -109,10 +109,16 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
 //        layoutAgreement.setOnClickListener { presenter.showLicenceAgreement() }
 //        cbAgreement.setOnClickListener { presenter.setAgreeLicence(cbAgreement.isChecked()) }
 
+        tvAdditional.setOnClickListener { showAdditional() }
+
         btnGetTransfer.setOnClickListener { presenter.onGetTransferClick() }
 
         val mapViewBundle = savedInstanceState?.getBundle(MainActivity.MAP_VIEW_BUNDLE_KEY)
         initGoogleMap(mapViewBundle)
+    }
+
+    private fun showAdditional() {
+
     }
 
     @CallSuper
