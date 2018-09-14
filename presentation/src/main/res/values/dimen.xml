@@ -114,5 +114,31 @@
 
 	<!--activity_transfer_details-->
 	<dimen name="activity_transfer_details_map_height">200dp</dimen>
+	<dimen name="activity_transfer_details_fields_height">44dp</dimen>
+	<dimen name="activity_transfer_details_button_height">44dp</dimen>
+	<dimen name="activity_transfer_details_img_person_width">10dp</dimen>
+	<dimen name="activity_transfer_details_img_person_height">22dp</dimen>
+	<dimen name="activity_transfer_details_img_person_margin_start">25dp</dimen>
+    <dimen name="activity_transfer_details_images_margin_start">20dp</dimen>
+    <dimen name="activity_transfer_details_images_width">20dp</dimen>
+    <dimen name="activity_transfer_details_img_passport_height">16dp</dimen>
+    <dimen name="activity_transfer_details_img_childs_height">23dp</dimen>
+    <dimen name="activity_transfer_details_img_aircraft_height">20dp</dimen>
+	<dimen name="activity_transfer_details_text_size">17sp</dimen>
+	<dimen name="activity_transfer_details_comment_text_size">15sp</dimen>
+	<dimen name="activity_transfer_details_tv_to_right_of_img_margin_start">55dp</dimen>
+	<dimen name="activity_transfer_details_elements_padding_end">22dp</dimen>
+	<dimen name="activity_transfer_details_dividers_height">0.5px</dimen>
+	<dimen name="activity_transfer_details_tv_comment_margin_start">13dp</dimen>
+	<dimen name="activity_transfer_details_tv_comment_margin_top">7dp</dimen>
+	<dimen name="activity_transfer_details_tv_comment_margin_bottom">23dp</dimen>
+	<dimen name="activity_transfer_details_tv_transport_types_margin_start">13dp</dimen>
+	<dimen name="activity_transfer_details_layout_transport_types_list_padding_top_bottom">5dp</dimen>
+	<dimen name="activity_transfer_details_titles_text_size">13sp</dimen>
+	<dimen name="activity_transfer_details_titles_height">38dp</dimen>
+	<dimen name="activity_transfer_details_elements_padding_start_end">16dp</dimen>
+	<dimen name="activity_transfer_details_text_in_fields_margin_start_end">16dp</dimen>
+	<dimen name="activity_transfer_details_button_margin">16dp</dimen>
+
 
 </resources>

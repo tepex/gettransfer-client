@@ -52,24 +52,24 @@
                 <RelativeLayout
                     android:id="@+id/layoutPassengers"
                     android:layout_width="match_parent"
-                    android:layout_height="44dp">
+                    android:layout_height="@dimen/activity_transfer_details_fields_height">
 
                     <ImageView
-                        android:layout_width="10dp"
-                        android:layout_height="22dp"
+                        android:layout_width="@dimen/activity_transfer_details_img_person_width"
+                        android:layout_height="@dimen/activity_transfer_details_img_person_height"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="25dp"
+                        android:layout_marginStart="@dimen/activity_transfer_details_img_person_margin_start"
                         android:src="@drawable/ic_person"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="55dp"
+                        android:layout_marginStart="@dimen/activity_transfer_details_tv_to_right_of_img_margin_start"
                         android:text="@string/activity_transfer_details_passenger"
                         android:textColor="@color/colorTextBlack"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"/>
 
                     <TextView
@@ -78,14 +78,14 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:textColor="@color/colorTextLightGray"
-                        android:layout_marginEnd="22dp"/>
+                        android:layout_marginEnd="@dimen/activity_transfer_details_elements_padding_end"/>
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5px"
+                        android:layout_height="@dimen/activity_transfer_details_dividers_height"
                         android:background="@color/colorDividerGray"
                         android:layout_alignParentBottom="true"/>
 
@@ -94,25 +94,25 @@
                 <RelativeLayout
                     android:id="@+id/layoutName"
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="@dimen/activity_transfer_details_fields_height"
                     android:visibility="gone">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="16dp"
+                        android:layout_width="@dimen/activity_transfer_details_images_width"
+                        android:layout_height="@dimen/activity_transfer_details_img_passport_height"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="@dimen/activity_transfer_details_images_margin_start"
                         android:src="@drawable/ic_passport"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="55dp"
+                        android:layout_marginStart="@dimen/activity_transfer_details_tv_to_right_of_img_margin_start"
                         android:text="@string/activity_transfer_details_name"
                         android:textColor="@color/colorTextBlack"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"/>
 
                     <TextView
@@ -121,14 +121,14 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:textColor="@color/colorTextLightGray"
-                        android:layout_marginEnd="22dp"/>
+                        android:layout_marginEnd="@dimen/activity_transfer_details_elements_padding_end"/>
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5px"
+                        android:layout_height="@dimen/activity_transfer_details_dividers_height"
                         android:background="@color/colorDividerGray"
                         android:layout_alignParentBottom="true"/>
 
@@ -137,25 +137,25 @@
                 <RelativeLayout
                     android:id="@+id/layoutChilds"
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="@dimen/activity_transfer_details_fields_height"
                     android:visibility="gone">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="23dp"
+                        android:layout_width="@dimen/activity_transfer_details_images_width"
+                        android:layout_height="@dimen/activity_transfer_details_img_childs_height"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="@dimen/activity_transfer_details_images_margin_start"
                         android:src="@drawable/ic_child_seat"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="55dp"
+                        android:layout_marginStart="@dimen/activity_transfer_details_tv_to_right_of_img_margin_start"
                         android:text="@string/activity_transfer_details_child_seats"
                         android:textColor="@color/colorTextBlack"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"/>
 
                     <TextView
@@ -164,14 +164,14 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:textColor="@color/colorTextLightGray"
-                        android:layout_marginEnd="22dp"/>
+                        android:layout_marginEnd="@dimen/activity_transfer_details_elements_padding_end"/>
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5px"
+                        android:layout_height="@dimen/activity_transfer_details_dividers_height"
                         android:background="@color/colorDividerGray"
                         android:layout_alignParentBottom="true"/>
 
@@ -180,25 +180,25 @@
                 <RelativeLayout
                     android:id="@+id/layoutFlightNumber"
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="@dimen/activity_transfer_details_fields_height"
                     android:visibility="gone">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/activity_transfer_details_images_width"
+                        android:layout_height="@dimen/activity_transfer_details_img_aircraft_height"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="@dimen/activity_transfer_details_images_margin_start"
                         android:src="@drawable/ic_aircraft"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="55dp"
+                        android:layout_marginStart="@dimen/activity_transfer_details_tv_to_right_of_img_margin_start"
                         android:text="@string/activity_transfer_details_flight_or_train_number"
                         android:textColor="@color/colorTextBlack"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"/>
 
                     <TextView
@@ -207,14 +207,14 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:textColor="@color/colorTextLightGray"
-                        android:layout_marginEnd="22dp"/>
+                        android:layout_marginEnd="@dimen/activity_transfer_details_elements_padding_end"/>
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5px"
+                        android:layout_height="@dimen/activity_transfer_details_dividers_height"
                         android:background="@color/colorDividerGray"
                         android:layout_alignParentBottom="true"/>
 
@@ -224,7 +224,7 @@
                     android:id="@+id/layoutComment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="44dp"
+                    android:minHeight="@dimen/activity_transfer_details_fields_height"
                     android:visibility="gone">
 
                     <TextView
@@ -232,16 +232,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorTextBlack"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/activity_transfer_details_comment_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
-                        android:layout_marginStart="13dp"
-                        android:layout_marginEnd="22dp"
-                        android:layout_marginTop="7dp"
-                        android:layout_marginBottom="23dp"/>
+                        android:layout_marginStart="@dimen/activity_transfer_details_tv_comment_margin_start"
+                        android:layout_marginEnd="@dimen/activity_transfer_details_elements_padding_end"
+                        android:layout_marginTop="@dimen/activity_transfer_details_tv_comment_margin_top"
+                        android:layout_marginBottom="@dimen/activity_transfer_details_tv_comment_margin_bottom"/>
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5px"
+                        android:layout_height="@dimen/activity_transfer_details_dividers_height"
                         android:background="@color/colorDividerGray"
                         android:layout_alignParentBottom="true"/>
 
@@ -251,32 +251,32 @@
                     android:id="@+id/layoutTransportTypes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="44dp">
+                    android:minHeight="@dimen/activity_transfer_details_fields_height">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="13dp"
+                        android:layout_marginStart="@dimen/activity_transfer_details_tv_transport_types_margin_start"
                         android:text="@string/activity_transfer_details_transport_type"
                         android:textColor="@color/colorTextBlack"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"/>
 
                     <LinearLayout
                         android:id="@+id/layoutTransportTypesList"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginEnd="22dp"
+                        android:layout_marginTop="@dimen/activity_transfer_details_layout_transport_types_list_padding_top_bottom"
+                        android:layout_marginBottom="@dimen/activity_transfer_details_layout_transport_types_list_padding_top_bottom"
+                        android:layout_marginEnd="@dimen/activity_transfer_details_elements_padding_end"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:orientation="vertical" />
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5px"
+                        android:layout_height="@dimen/activity_transfer_details_dividers_height"
                         android:background="@color/colorDividerGray"
                         android:layout_alignParentBottom="true"/>
 
@@ -294,124 +294,124 @@
                 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"
+                    android:layout_height="@dimen/activity_transfer_details_titles_height"
                     android:textColor="@color/colorTextLightGray"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/activity_transfer_details_titles_text_size"
                     android:fontFamily="@font/sf_pro_text_regular"
                     android:textAllCaps="true"
                     android:gravity="center_vertical"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
+                    android:paddingStart="@dimen/activity_transfer_details_elements_padding_start_end"
+                    android:paddingEnd="@dimen/activity_transfer_details_elements_padding_start_end"
                     android:text="@string/activity_transfer_details_paid_details"/>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5px"
+                    android:layout_height="@dimen/activity_transfer_details_dividers_height"
                     android:background="@color/colorDividerGray"/>
                 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="@dimen/activity_transfer_details_fields_height"
                     android:background="@color/colorWhite">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginStart="@dimen/activity_transfer_details_text_in_fields_margin_start_end"
                         android:text="@string/activity_transfer_details_paid"/>
 
                     <TextView
                         android:id="@+id/paymentInfoPaid"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:gravity="center_vertical"
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="18dp"/>
+                        android:layout_marginEnd="@dimen/activity_transfer_details_text_in_fields_margin_start_end"/>
 
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5px"
+                    android:layout_height="@dimen/activity_transfer_details_dividers_height"
                     android:background="@color/colorDividerGray"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="@dimen/activity_transfer_details_fields_height"
                     android:background="@color/colorWhite">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginStart="@dimen/activity_transfer_details_text_in_fields_margin_start_end"
                         android:text="@string/activity_transfer_details_pay"/>
 
                     <TextView
                         android:id="@+id/paymentInfoPay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:gravity="center_vertical"
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="18dp"/>
+                        android:layout_marginEnd="@dimen/activity_transfer_details_text_in_fields_margin_start_end"/>
 
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5px"
+                    android:layout_height="@dimen/activity_transfer_details_dividers_height"
                     android:background="@color/colorDividerGray"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="@dimen/activity_transfer_details_fields_height"
                     android:background="@color/colorWhite">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginStart="@dimen/activity_transfer_details_text_in_fields_margin_start_end"
                         android:text="@string/activity_transfer_details_price"/>
 
                     <TextView
                         android:id="@+id/paymentInfoSum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:gravity="center_vertical"
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="18dp"/>
+                        android:layout_marginEnd="@dimen/activity_transfer_details_text_in_fields_margin_start_end"/>
 
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5px"
+                    android:layout_height="@dimen/activity_transfer_details_dividers_height"
                     android:background="@color/colorDividerGray"/>
 
             </LinearLayout>
@@ -426,70 +426,70 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"
+                    android:layout_height="@dimen/activity_transfer_details_titles_height"
                     android:textColor="@color/colorTextLightGray"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/activity_transfer_details_titles_text_size"
                     android:fontFamily="@font/sf_pro_text_regular"
                     android:textAllCaps="true"
                     android:gravity="center_vertical"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
+                    android:paddingStart="@dimen/activity_transfer_details_elements_padding_start_end"
+                    android:paddingEnd="@dimen/activity_transfer_details_elements_padding_start_end"
                     android:text="@string/activity_transfer_details_choosen_offer"/>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5px"
+                    android:layout_height="@dimen/activity_transfer_details_dividers_height"
                     android:background="@color/colorDividerGray"/>
 
                 <TextView
                     android:id="@+id/offerDriverInfoEmail"
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:textSize="17sp"
+                    android:layout_height="@dimen/activity_transfer_details_fields_height"
+                    android:textSize="@dimen/activity_transfer_details_text_size"
                     android:fontFamily="@font/sf_pro_text_regular"
                     android:textColor="@color/colorTextBlack"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="18dp"
+                    android:paddingStart="@dimen/activity_transfer_details_elements_padding_start_end"
+                    android:paddingEnd="@dimen/activity_transfer_details_elements_padding_start_end"
                     android:gravity="center_vertical"
                     android:background="@color/colorWhite"/>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5px"
+                    android:layout_height="@dimen/activity_transfer_details_dividers_height"
                     android:background="@color/colorDividerGray"/>
 
                 <TextView
                     android:id="@+id/offerDriverInfoPhone"
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:textSize="17sp"
+                    android:layout_height="@dimen/activity_transfer_details_fields_height"
+                    android:textSize="@dimen/activity_transfer_details_text_size"
                     android:fontFamily="@font/sf_pro_text_regular"
                     android:textColor="@color/colorTextBlack"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="18dp"
+                    android:paddingStart="@dimen/activity_transfer_details_elements_padding_start_end"
+                    android:paddingEnd="@dimen/activity_transfer_details_elements_padding_start_end"
                     android:gravity="center_vertical"
                     android:background="@color/colorWhite"/>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5px"
+                    android:layout_height="@dimen/activity_transfer_details_dividers_height"
                     android:background="@color/colorDividerGray"/>
 
                 <TextView
                     android:id="@+id/offerDriverInfoName"
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:textSize="17sp"
+                    android:layout_height="@dimen/activity_transfer_details_fields_height"
+                    android:textSize="@dimen/activity_transfer_details_text_size"
                     android:fontFamily="@font/sf_pro_text_regular"
                     android:textColor="@color/colorTextBlack"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="18dp"
+                    android:paddingStart="@dimen/activity_transfer_details_elements_padding_start_end"
+                    android:paddingEnd="@dimen/activity_transfer_details_elements_padding_start_end"
                     android:gravity="center_vertical"
                     android:background="@color/colorWhite"/>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5px"
+                    android:layout_height="@dimen/activity_transfer_details_dividers_height"
                     android:background="@color/colorDividerGray"/>
 
             </LinearLayout>
@@ -500,152 +500,152 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintTop_toBottomOf="@id/layoutOfferDriverInfo"
-                android:layout_marginTop="38dp"
+                android:layout_marginTop="@dimen/activity_transfer_details_titles_height"
                 android:visibility="gone">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="@dimen/activity_transfer_details_fields_height"
                     android:background="@color/colorWhite">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginStart="@dimen/activity_transfer_details_text_in_fields_margin_start_end"
                         android:text="@string/activity_transfer_details_transport_type"/>
 
                     <TextView
                         android:id="@+id/offerTransportInfoCarType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:gravity="center_vertical"
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="18dp"/>
+                        android:layout_marginEnd="@dimen/activity_transfer_details_text_in_fields_margin_start_end"/>
 
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5px"
+                    android:layout_height="@dimen/activity_transfer_details_dividers_height"
                     android:background="@color/colorDividerGray"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="@dimen/activity_transfer_details_fields_height"
                     android:background="@color/colorWhite">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginStart="@dimen/activity_transfer_details_text_in_fields_margin_start_end"
                         android:text="@string/activity_transfer_details_car_name"/>
 
                     <TextView
                         android:id="@+id/offerTransportInfoCarName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:gravity="center_vertical"
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="18dp"/>
+                        android:layout_marginEnd="@dimen/activity_transfer_details_text_in_fields_margin_start_end"/>
 
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5px"
+                    android:layout_height="@dimen/activity_transfer_details_dividers_height"
                     android:background="@color/colorDividerGray"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="@dimen/activity_transfer_details_fields_height"
                     android:background="@color/colorWhite">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginStart="@dimen/activity_transfer_details_text_in_fields_margin_start_end"
                         android:text="@string/activity_transfer_details_car_number"/>
 
                     <TextView
                         android:id="@+id/offerTransportInfoCarNumber"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:gravity="center_vertical"
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="18dp"/>
+                        android:layout_marginEnd="@dimen/activity_transfer_details_text_in_fields_margin_start_end"/>
 
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5px"
+                    android:layout_height="@dimen/activity_transfer_details_dividers_height"
                     android:background="@color/colorDividerGray"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="@dimen/activity_transfer_details_fields_height"
                     android:background="@color/colorWhite">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginStart="@dimen/activity_transfer_details_text_in_fields_margin_start_end"
                         android:text="@string/activity_transfer_details_price"/>
 
                     <TextView
                         android:id="@+id/offerTransportInfoPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:gravity="center_vertical"
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorTextLightGray"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="18dp"/>
+                        android:layout_marginEnd="@dimen/activity_transfer_details_text_in_fields_margin_start_end"/>
 
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5px"
+                    android:layout_height="@dimen/activity_transfer_details_dividers_height"
                     android:background="@color/colorDividerGray"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="@dimen/activity_transfer_details_fields_height"
                     android:background="@color/colorWhite">
 
                     <TextView
@@ -653,11 +653,11 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginStart="@dimen/activity_transfer_details_text_in_fields_margin_start_end"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:text="@string/activity_transfer_details_languages"
                         android:textColor="@color/colorTextBlack"
-                        android:textSize="17sp" />
+                        android:textSize="@dimen/activity_transfer_details_text_size" />
 
                     <LinearLayout
                         android:id="@+id/offerTransportInfoLayoutLanguages"
@@ -665,14 +665,14 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="18dp"
+                        android:layout_marginEnd="@dimen/activity_transfer_details_text_in_fields_margin_start_end"
                         android:orientation="horizontal"/>
 
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5px"
+                    android:layout_height="@dimen/activity_transfer_details_dividers_height"
                     android:background="@color/colorDividerGray"/>
 
             </LinearLayout>
@@ -680,12 +680,12 @@
             <Button
                 android:id="@+id/btnCancel"
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
+                android:layout_height="@dimen/activity_transfer_details_button_height"
                 android:background="@drawable/btn_sign_out"
-                android:layout_margin="16dp"
+                android:layout_margin="@dimen/activity_transfer_details_button_margin"
                 android:text="@string/activity_transfer_details_btn_cancel"
                 android:textAllCaps="true"
-                android:textSize="17sp"
+                android:textSize="@dimen/activity_transfer_details_text_size"
                 android:textColor="@color/colorWhite"
                 android:fontFamily="@font/sf_pro_text_regular"
                 android:stateListAnimator="@null"
