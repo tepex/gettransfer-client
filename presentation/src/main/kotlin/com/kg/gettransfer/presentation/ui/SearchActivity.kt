@@ -2,38 +2,25 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
 import android.content.Intent
-
 import android.os.Bundle
-
 import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
-
-import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
-
 import android.transition.Fade
 import android.transition.Slide
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-
 import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.model.GTAddress
-
-import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.AddressAdapter
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
-
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.android.synthetic.main.toolbar.*
-
 import org.koin.android.ext.android.inject
 
 class SearchActivity: BaseActivity(), SearchView {
@@ -75,12 +62,12 @@ class SearchActivity: BaseActivity(), SearchView {
         super.onCreate(savedInstanceState)
         /* Animation */
         val fade = Fade()
-        fade.setDuration(FADE_DURATION)
-        getWindow().setEnterTransition(fade)
+        fade.duration = FADE_DURATION
+        window.enterTransition = fade
 
         val slide = Slide()
-        slide.setDuration(SLIDE_DURATION)
-        getWindow().setReturnTransition(slide)
+        slide.duration = SLIDE_DURATION
+        window.returnTransition = slide
 
         /* init UI */
         setContentView(R.layout.activity_search)

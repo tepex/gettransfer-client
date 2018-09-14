@@ -1,20 +1,13 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
-
 import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.CoroutineContexts
-
-import com.kg.gettransfer.domain.model.GTAddress
-
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.ApiInteractor
-
+import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.presentation.view.SearchAddressView
-
 import ru.terrakok.cicerone.Router
-
 import timber.log.Timber
 
 @InjectViewState
