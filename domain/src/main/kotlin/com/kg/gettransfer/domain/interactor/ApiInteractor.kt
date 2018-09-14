@@ -9,8 +9,9 @@ class ApiInteractor(private val repository: ApiRepository) {
 	lateinit var allTransfers: List<Transfer>
 	lateinit var completedTransfers: List<Transfer>
 
-	suspend fun getConfigs(): Configs = repository.getConfigs()
-	suspend fun getAccount(): Account = repository.getAccount()
+	suspend fun coldStart() { repository.coldStart() }
+	fun getConfigs() = repository.getConfigs()
+	fun getAccount() = repository.getAccount()
 	suspend fun putAccount(account: Account) { repository.putAccount(account) }
 	/* Not used now.
 	suspend fun createAccount(account: Account) { repository.createAccount(account) }

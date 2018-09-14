@@ -29,6 +29,9 @@ import timber.log.Timber
 class SettingsPresenter(cc: CoroutineContexts,
                         router: Router,
                         apiInteractor: ApiInteractor): BasePresenter<SettingsView>(cc, router, apiInteractor) {
+
+    private lateinit var account: Account
+    
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ ->
                 Timber.d("result from login")
@@ -39,31 +42,22 @@ class SettingsPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: SettingsView) {
         super.attachView(view)
-        utils.launchAsyncTryCatchFinally({
-            viewState.blockInterface(true)
-            utils.asyncAwait { 
-                configs = ConfigsModel(apiInteractor.getConfigs())
-                account = apiInteractor.getAccount()
-            }
-            viewState.setCurrencies(configs.currencies)
-            viewState.setLocales(configs.locales)
-            viewState.setDistanceUnits(configs.distanceUnits)
+        account = apiInteractor.getAccount()
+        viewState.setCurrencies(configs.currencies)
+        viewState.setLocales(configs.locales)
+        viewState.setDistanceUnits(configs.distanceUnits)
             
-            Timber.d("account: $account")
-			val locale = account.locale ?: Locale.getDefault()
-            val localeModel = configs.locales.find { it.delegate.language == locale.language }
-            viewState.setLocale(localeModel?.name ?: "")
+        Timber.d("account: $account")
+		val locale = account.locale ?: Locale.getDefault()
+        val localeModel = configs.locales.find { it.delegate.language == locale.language }
+        viewState.setLocale(localeModel?.name ?: "")
             
-            val currency = account.currency ?: Currency.getInstance(locale)
-            val currencyModel = configs.currencies.find { it.delegate == currency }
-            viewState.setCurrency(currencyModel?.name ?: "")           
-            viewState.setDistanceUnit(account.distanceUnit.name)
+        val currency = account.currency ?: Currency.getInstance(locale)
+        val currencyModel = configs.currencies.find { it.delegate == currency }
+        viewState.setCurrency(currencyModel?.name ?: "")           
+        viewState.setDistanceUnit(account.distanceUnit.name)
             
-            viewState.setLogoutButtonEnabled(account.loggedIn)
-        }, { e ->
-                if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
-                else viewState.setError(false, R.string.err_server, e.message)
-        }, { viewState.blockInterface(false) })
+        viewState.setLogoutButtonEnabled(account.loggedIn)
     }
     
     fun changeCurrency(selected: Int) {

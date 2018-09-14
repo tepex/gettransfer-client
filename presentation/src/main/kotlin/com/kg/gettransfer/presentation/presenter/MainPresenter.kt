@@ -39,14 +39,15 @@ class MainPresenter(cc: CoroutineContexts,
     private lateinit var lastAddressPoint: LatLng
     private var lastPoint: LatLng? = null
     private var minDistance: Int = 30
+    private var available: Boolean = false
 
     override fun onFirstViewAttach() {
-        utils.launchAsyncTryCatch({
+        utils.launchAsyncTryCatch( {
             // Проверка досупности сервиса геолокации
-            val available = utils.asyncAwait { locationInteractor.checkLocationServicesAvailability() }
-            if(available) updateCurrentLocation()
-            else { viewState.setError(true, R.string.err_location_service_not_available) }
-        }, { e -> Timber.e(e) })
+            available = utils.asyncAwait { locationInteractor.checkLocationServicesAvailability() }
+            if(available) updateCurrentLocationAsync()
+            else viewState.setError(true, R.string.err_location_service_not_available)
+        }, { e -> Timber.e(e) } )
         
         // Создать листенер для обновления текущей локации
         // https://developer.android.com/training/location/receive-location-updates
@@ -55,27 +56,24 @@ class MainPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: MainView) {
         super.attachView(view)
-        utils.launchAsyncTryCatchFinally({
-            viewState.blockInterface(false)
-            account = utils.asyncAwait { apiInteractor.getAccount() }
-            viewState.showLoginInfo(account)
-        }, { e ->
-                if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
-                else viewState.setError(false, R.string.err_server, e.message)
-        }, { viewState.blockInterface(false) })
+        viewState.showLoginInfo(apiInteractor.getAccount())
     }
 
     fun updateCurrentLocation() {
         Timber.d("update current location")
-        utils.launchAsyncTryCatchFinally({
-            viewState.blockInterface(true)
-            val currentAddress = utils.asyncAwait { addressInteractor.getCurrentAddress() }
-            lastAddressPoint = LatLng(currentAddress.point!!.latitude, currentAddress.point!!.longitude)
-            onCameraMove(lastAddressPoint)
-            viewState.setMapPoint(lastAddressPoint)
-            viewState.setAddressFrom(currentAddress.name)
-        }, { e -> viewState.setError(false, R.string.err_server, e.message)
-        }, { viewState.blockInterface(false) })
+        utils.launchAsyncTryCatch(
+            { updateCurrentLocationAsync() },
+            { e -> viewState.setError(false, R.string.err_server, e.message) })
+    }
+    
+    private suspend fun updateCurrentLocationAsync() {
+        viewState.blockInterface(true)
+        val currentAddress = utils.asyncAwait { addressInteractor.getCurrentAddress() }
+        lastAddressPoint = LatLng(currentAddress.point!!.latitude, currentAddress.point!!.longitude)
+        
+        onCameraMove(lastAddressPoint)
+        viewState.setMapPoint(lastAddressPoint)
+        viewState.setAddressFrom(currentAddress.name)
     }
     
     fun onCameraMove(lastPoint: LatLng) {

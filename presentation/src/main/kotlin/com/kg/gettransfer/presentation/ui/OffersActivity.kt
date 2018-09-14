@@ -70,9 +70,11 @@ class OffersActivity: BaseActivity(), OffersView {
     }
     
     override fun setTransfer(transfer: Transfer) {
+        tvConnectingCarriers.text = getString(R.string.transfer_connecting_carriers, transfer.relevantCarriersCount)
         tvTransferRequestNumber.text = getString(R.string.transfer_order, transfer.id)
         tvFrom.text = transfer.from.name
         tvTo.text = transfer.to?.name
-        //tvOrderDateTime.text = 
     }
+    
+    override fun setDate(date: String) { tvOrderDateTime.text = date }
 }

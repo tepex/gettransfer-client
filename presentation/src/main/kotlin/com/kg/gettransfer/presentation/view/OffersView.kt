@@ -10,4 +10,5 @@ import com.kg.gettransfer.domain.model.Transfer
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface OffersView: BaseView {
     fun setTransfer(transfer: Transfer)
+    fun setDate(date: String)
 }

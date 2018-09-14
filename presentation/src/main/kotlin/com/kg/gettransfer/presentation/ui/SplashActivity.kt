@@ -58,19 +58,7 @@ class SplashActivity: AppCompatActivity() {
 
 		Timber.d("Permissions granted!")
 		utils.launchAsyncTryCatchFinally({
-			val configs = utils.asyncAwait { apiInteractor.getConfigs() }
-			Timber.d("types: %s", configs.transportTypes)
-			Timber.d("paypal: %s", configs.paypalCredentials)
-			Timber.d("locales: %s", configs.availableLocales)
-			Timber.d("preferred locale: %s", configs.preferredLocale)
-			Timber.d("currencies: %s", configs.supportedCurrencies)
-			Timber.d("distance units: %s", configs.supportedDistanceUnits)
-			Timber.d("cardGatewasy: %s", configs.cardGateways)
-			Timber.d("office phone: %s", configs.officePhone)
-			Timber.d("base url: %s", configs.baseUrl)
-			
-			val account = utils.asyncAwait { apiInteractor.getAccount() }
-			Timber.d("account: %s", account)
+		    utils.asyncAwait { apiInteractor.coldStart() }
 			startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 		}, { e -> Utils.showError(this@SplashActivity, false, getString(R.string.err_server, e.message))
 			// @TODO: Показать ошибку. Учесть 401 — протухший ключ

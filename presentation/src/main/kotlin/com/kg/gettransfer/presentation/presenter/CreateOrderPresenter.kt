@@ -23,12 +23,10 @@ import com.kg.gettransfer.domain.model.RouteInfo
 
 import com.kg.gettransfer.presentation.Screens
 
-import com.kg.gettransfer.presentation.model.ConfigsModel
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
 
-import java.text.DateFormat
-import java.text.SimpleDateFormat
+import java.text.Format
 
 import java.util.Currency
 import java.util.Date
@@ -44,8 +42,9 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                            apiInteractor: ApiInteractor,
                            private val addressInteractor: AddressInteractor): BasePresenter<CreateOrderView>(cc, router, apiInteractor) {
 
+    private lateinit var account: Account
     private lateinit var routeInfo: RouteInfo
-    private lateinit var dateTimeFormat: DateFormat
+    private lateinit var dateTimeFormat: Format
     
     private var passengers: Int = MIN_PASSENGERS
     private var children: Int = MIN_CHILDREN
@@ -65,46 +64,50 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         @JvmField val MIN_CHILDREN      = 0
     }
     
-    @CallSuper
-    override fun attachView(view: CreateOrderView) {
-        super.attachView(view)
+    override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally({
-            viewState.blockInterface(false)
+            viewState.blockInterface(true)
             utils.asyncAwait {
-                configs = ConfigsModel(apiInteractor.getConfigs())
-                account = apiInteractor.getAccount()
-                val secondPoint = addressInteractor.getLatLngByPlaceId(addressInteractor.route.second.id!!)
+                
                 routeInfo = apiInteractor.getRouteInfo(arrayOf(addressInteractor.route.first.point.toString(),
-                            secondPoint.toString()), true, false)
+                                                               secondPoint.toString()), true, false)
             }
-            Timber.d("account: $account")
-            if(account.locale == null) account.locale = Locale.getDefault()
-            if(account.currency == null) account.currency = Currency.getInstance(account.locale)
-            viewState.setAccount(account)
-            
-            dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, account.locale)
-            
-            viewState.setTransportTypes(configs.transportTypes, routeInfo.prices!!)
-            viewState.setCurrencies(configs.currencies)
-            for((i, item) in configs.currencies.withIndex()) {
-                if(item.code == account.currency!!.currencyCode) {
-                    changeCurrency(i)
-                    break
-                }
-            }
-            date = Date()
-            val distance = Utils.formatDistance(view as Context, R.string.distance, account.distanceUnit, routeInfo.distance)
-            viewState.setRouteInfo(distance, routeInfo.polyLines, addressInteractor.route)
         }, { e ->
                 Timber.e(e)
                 if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
                 else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
     }
-
-    fun changeCurrency(selected: Int) {
-        viewState.setCurrency(configs.currencies.get(selected).symbol)
+    
+    @CallSuper
+    override fun attachView(view: CreateOrderView) {
+        super.attachView(view)
+        viewState.setTransportTypes(configs.transportTypes, routeInfo.prices!!)
+        viewState.setCurrencies(configs.currencies)
+        
+        account = apiInteractor.getAccount()
+        if(account.locale == null) account.locale = Locale.getDefault()
+        if(account.currency == null) account.currency = Currency.getInstance(account.locale)
+        viewState.setAccount(account)
+            
+        dateTimeFormat = Utils.createDateTimeFormat(account.locale!!)
+            
+        for((i, item) in configs.currencies.withIndex()) {
+            if(item.code == account.currency!!.currencyCode) {
+                changeCurrency(i)
+                break
+            }
+        }
+            
+        val distance = Utils.formatDistance(view as Context, R.string.distance, account.distanceUnit, routeInfo.distance)
+        
+        
+        
+        
+        viewState.setRouteInfo(distance, routeInfo.polyLines, addressInteractor.route)
     }
+
+    fun changeCurrency(selected: Int) { viewState.setCurrency(configs.currencies.get(selected).symbol) }
     
     fun changePassengers(count: Int) {
         passengers += count

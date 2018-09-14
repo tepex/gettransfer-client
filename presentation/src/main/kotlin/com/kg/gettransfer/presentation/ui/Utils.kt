@@ -22,14 +22,15 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.presentation.model.CurrencyModel
 
+import java.text.SimpleDateFormat
+import java.util.Locale
 import java.util.regex.Pattern
 
 import timber.log.Timber
 
-class Utils {
+internal class Utils {
     companion object {
         private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11}$")
-        @JvmField val DATE_TIME_FULL_PATTERN = "yyyy-MM-dd'T'HH:mm:ss"
         @JvmField val DATE_TIME_PATTERN = "dd MMMM yyyy, HH:mm"
         
         fun getAlertDialogBuilder(context: Context): AlertDialog.Builder {
@@ -92,6 +93,8 @@ class Utils {
             if(distanceUnit == DistanceUnit.Mi) d = DistanceUnit.km2Mi(distance)
             return context.getString(stringId, d, distanceUnit.name)
         }
+        
+        fun createDateTimeFormat(locale: Locale) = SimpleDateFormat(DATE_TIME_PATTERN, locale)
 	}
 }
 

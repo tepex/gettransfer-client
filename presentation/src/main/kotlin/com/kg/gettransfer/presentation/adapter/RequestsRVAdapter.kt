@@ -13,19 +13,19 @@ import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.ui.Utils
 
+import java.text.Format
+import java.util.Locale
+
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
 
-import java.text.SimpleDateFormat
-import java.util.Locale
-
-class RequestsRVAdapter(private var transfers: List<Transfer>, private var distanceUnit: DistanceUnit):
+class RequestsRVAdapter(private val transfers: List<Transfer>,
+                        private val distanceUnit: DistanceUnit,
+                        private val dateFormat: Format):
         RecyclerView.Adapter<RequestsRVAdapter.ViewHolder>() {
 
 	companion object {
 		private var selected = RecyclerView.NO_POSITION
-		private val DATE_TIME_FULL_FORMAT = SimpleDateFormat(Utils.DATE_TIME_FULL_PATTERN, Locale.US)
-		private val DATE_TIME_FORMAT = SimpleDateFormat(Utils.DATE_TIME_PATTERN, Locale.US)
 	}
 
     override fun getItemCount(): Int = transfers.size
@@ -34,21 +34,16 @@ class RequestsRVAdapter(private var transfers: List<Transfer>, private var dista
             RequestsRVAdapter.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_transfer_request_info, parent, false))
 
     override fun onBindViewHolder(holder: RequestsRVAdapter.ViewHolder, pos: Int) {
-        holder.bind(transfers.get(pos), distanceUnit)
+        holder.bind(transfers.get(pos), distanceUnit, dateFormat)
     }
 
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(item: Transfer, distanceUnit: DistanceUnit) = with(containerView) {
+        fun bind(item: Transfer, distanceUnit: DistanceUnit, dateFormat: Format) = with(containerView) {
             tvTransferRequestNumber.text = context.getString(R.string.transfer_request_num, item.id)
             tvFrom.text = item.from.name
             tvTo.text = item.to!!.name
-            tvOrderDateTime.text = changeDateFormat(item.dateToLocal)
+            tvOrderDateTime.text = context.getString(R.string.transfer_date_local, dateFormat.format(item.dateToLocal))
             tvDistance.text = Utils.formatDistance(context, R.string.distance, distanceUnit, item.distance)
-        }
-
-        fun changeDateFormat(dateTime: String): String {
-            val newDate = DATE_TIME_FULL_FORMAT.parse(dateTime)
-            return DATE_TIME_FORMAT.format(newDate)
         }
     }
 }

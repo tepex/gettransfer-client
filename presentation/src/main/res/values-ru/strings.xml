@@ -170,9 +170,6 @@
     <string name="carrier_offers">Предложения перевозчиков</string>
     <string name="select">Выбрать</string>
 
-    <string name="login_subtitle">Вход для клиентов и водителей</string>
-
-
     <!--NavigationView-->
     <string name="text_nav_login_title">Войти</string>
     <string name="text_nav_login_subtitle">Вход для клиентов и водителей</string>

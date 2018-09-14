@@ -3,8 +3,9 @@ package com.kg.gettransfer.domain.repository
 import com.kg.gettransfer.domain.model.*
 
 interface ApiRepository {
-    suspend fun getConfigs(): Configs
-    suspend fun getAccount(request: Boolean = false): Account
+    suspend fun coldStart()
+    fun getConfigs(): Configs
+    fun getAccount(): Account
     suspend fun putAccount(account: Account)
     /* Not used
     suspend fun createAccount(account: Account)

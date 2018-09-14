@@ -9,15 +9,15 @@ import java.util.Date
 
 /* Align to line:10 */
 data class Transfer(val id: Long,
-                    val createdAt: String,
+                    val createdAt: Date,
                     val duration: Int?,
                     val distance: Int?,
                     val status: String,
                     val from: CityPoint,
                     val to: CityPoint?,
-                    val dateToLocal: String,
-                    val dateReturnLocal: String?,
-                    val dateRefund: String?,
+                    val dateToLocal: Date,
+                    val dateReturnLocal: Date?,
+                    val dateRefund: Date?,
 
                     val nameSign: String?,
                     val comment: String?,
@@ -28,7 +28,7 @@ data class Transfer(val id: Long,
                     val childSeats: Int?,
                     val offersCount: Int?,
                     val relevantCarriersCount: Int?,
-                    val offersUpdatedAt: String?,
+                    val offersUpdatedAt: Date?,
                     
                     val time: Int?,
                     val paidSum: Money?,

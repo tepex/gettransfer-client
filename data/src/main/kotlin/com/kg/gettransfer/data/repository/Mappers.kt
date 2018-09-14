@@ -6,6 +6,7 @@ import com.kg.gettransfer.domain.model.*
 import java.text.SimpleDateFormat
 
 import java.util.Currency
+import java.util.Date
 import java.util.Locale
 
 import timber.log.Timber
@@ -14,10 +15,10 @@ class Mappers {
     companion object {
         private val SERVER_DATE_FORMAT = SimpleDateFormat("yyyy/MM/dd", Locale.US)
         private val SERVER_TIME_FORMAT = SimpleDateFormat("HH:mm", Locale.US)
+        private val ISO_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
         
         fun mapApiConfigs(apiConfigs: ApiConfigs): Configs {
             val locales = apiConfigs.availableLocales.map { Locale(it.code) }
-            
             return Configs(apiConfigs.transportTypes.map { TransportType(it.id, it.paxMax, it.luggageMax) },
 		                   PaypalCredentials(apiConfigs.paypalCredentials.id, apiConfigs.paypalCredentials.env),
 		                   locales,
@@ -70,23 +71,23 @@ class Mappers {
             if(apiTransfer.remainsToPay != null) remainsToPay = Money(apiTransfer.remainsToPay!!.default, apiTransfer.remainsToPay!!.preferred)
             var price: Money? = null
             if(apiTransfer.price != null) price = Money(apiTransfer.price!!.default, apiTransfer.price!!.preferred)
-
-                
-                
-                
-                
-            
-            /* Align to line:60 */
+            var dateReturnLocal: Date? = null
+            if(apiTransfer.dateReturnLocal != null) dateReturnLocal = ISO_FORMAT.parse(apiTransfer.dateReturnLocal)
+            var dateRefund: Date? = null
+            if(apiTransfer.dateRefund != null) dateRefund = ISO_FORMAT.parse(apiTransfer.dateRefund) 
+            var offersUpdatedAt: Date? = null
+            if(apiTransfer.offersUpdatedAt != null) offersUpdatedAt = ISO_FORMAT.parse(apiTransfer.offersUpdatedAt)
+            /* Align to line:80 */
             return Transfer(apiTransfer.id!!,
-                            apiTransfer.createdAt!!,
+                            ISO_FORMAT.parse(apiTransfer.createdAt!!),
                             apiTransfer.duration,
                             apiTransfer.distance,
                             apiTransfer.status!!,
                             CityPoint(apiTransfer.from.name, apiTransfer.from.point, apiTransfer.from.placeId),
                             to,
-                            apiTransfer.dateToLocal!!,
-                            apiTransfer.dateReturnLocal,
-                            apiTransfer.dateRefund,
+                            ISO_FORMAT.parse(apiTransfer.dateToLocal!!),
+                            dateReturnLocal,
+                            dateRefund,
                             
                             apiTransfer.nameSign,
                             apiTransfer.comment,
@@ -97,7 +98,7 @@ class Mappers {
                             apiTransfer.childSeats,
                             apiTransfer.offersCount,
                             apiTransfer.relevantCarriersCount,
-                            apiTransfer.offersUpdatedAt,
+                            offersUpdatedAt,
                             
                             apiTransfer.time,
                             paidSum,

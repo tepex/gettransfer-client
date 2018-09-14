@@ -30,10 +30,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 
 class ApiRepositoryImpl(private val context: Context, url: String, private val apiKey: String): ApiRepository {
+    private lateinit var configs: Configs
+    
     private var cacheRepository = CacheRepositoryImpl(context)
     private var api: Api
     private val gson = GsonBuilder().registerTypeAdapter(ApiTransportTypesWrapper::class.java, TransportTypesDeserializer()).create()
-    private var configs: Configs? = null
     private var transfer: Transfer? = null
     
 	/**
@@ -62,28 +63,19 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
                 .build()
                 .create(Api::class.java)
     }
-	
-	/**
-	 * @throws ApiException
-	 */
-	override suspend fun getConfigs(): Configs {
-		if(configs != null) return configs!!
-	    
-		val response: ApiResponse<ApiConfigs> = tryTwice { api.getConfigs() }
-		configs = Mappers.mapApiConfigs(response.data!!)
-        getAccount(true)
-        return configs!!
-    }
     
-    override suspend fun getAccount(request: Boolean): Account {
-        var account = cacheRepository.account
-        if(request) {
-            val response: ApiResponse<ApiAccountWrapper> = tryTwice { api.getAccount() }
-            if(response.data?.account != null) account = Mappers.mapApiAccount(response.data?.account!!, configs!!)
-            cacheRepository.account = account
-        }
-        return account
+    override suspend fun coldStart() {
+		val configsResponse: ApiResponse<ApiConfigs> = tryTwice { api.getConfigs() }
+		configs = Mappers.mapApiConfigs(configsResponse.data!!)
+		
+        val accountResponse: ApiResponse<ApiAccountWrapper> = tryTwice { api.getAccount() }
+        if(accountResponse.data?.account != null)
+            cacheRepository.account = Mappers.mapApiAccount(accountResponse.data?.account!!, configs)
     }
+	
+	override fun getConfigs() = configs
+	
+    override fun getAccount() = cacheRepository.account
 
     override suspend fun putAccount(account: Account) {
         cacheRepository.account = account
@@ -109,7 +101,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
     
     override suspend fun login(email: String, password: String): Account {
         val response: ApiResponse<ApiAccountWrapper> = tryLogin(email, password)
-        val account = Mappers.mapApiAccount(response.data!!.account, configs!!)
+        val account = Mappers.mapApiAccount(response.data!!.account, configs)
         cacheRepository.account = account
         return account
     }

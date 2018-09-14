@@ -42,10 +42,11 @@
     <!-- Transfer -->
     <string name="distance_time">Distance: %1$s\nExpected travel time: %2$s</string>
     <string name="distance">Distance: %1$d %2$s</string>
-    <string name="transfer_connecting_carriers">Соединяем с ближайшими перевозчиками</string>
+    <string name="transfer_connecting_carriers">Соединяем с ближайшими %1$d перевозчиками</string>
     <string name="transfer_order">Заявка на трансфер №%1$d</string>
     <string name="transfer_start_sign">A</string>
     <string name="transfer_end_sign">B</string>
+    <string name="transfer_date_local">%1$s (местное)</string>
     <!-- Transport types -->
     <string name="transport_type_economy">Economy</string>
     <string name="transport_type_business">Business</string>
@@ -60,6 +61,7 @@
     <!-- Login -->
     <string name="email_address">Email address</string>
     <string name="enter_password">Enter password</string>
+    <string name="login_subtitle">Вход для клиентов и водителей</string>
     
 	<!--
 	<string name=""></string>

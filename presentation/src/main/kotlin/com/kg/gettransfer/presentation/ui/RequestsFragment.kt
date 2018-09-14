@@ -28,6 +28,8 @@ import com.kg.gettransfer.presentation.presenter.RequestsFragmentPresenter
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
 
+import java.text.Format
+
 import kotlinx.android.synthetic.main.fragment_requests.*
 
 import org.koin.android.ext.android.inject
@@ -85,8 +87,8 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         presenter.setData(categoryName)
     }
 
-    override fun setRequests(transfers: List<Transfer>, distanceUnit: DistanceUnit) {
-        rvRequests.adapter = RequestsRVAdapter(transfers, distanceUnit)
+    override fun setRequests(transfers: List<Transfer>, distanceUnit: DistanceUnit, dateFormat: Format) {
+        rvRequests.adapter = RequestsRVAdapter(transfers, distanceUnit, dateFormat)
     }
     
     override fun blockInterface(block: Boolean) { (activity as BaseView).blockInterface(block) }
