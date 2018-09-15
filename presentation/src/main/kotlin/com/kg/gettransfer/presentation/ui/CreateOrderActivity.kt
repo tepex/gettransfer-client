@@ -22,13 +22,10 @@ import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 
-import android.widget.TextView
-
 import android.text.InputType
 import android.util.DisplayMetrics
-import android.view.*
-
 import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 
 import android.widget.LinearLayout
 import android.widget.PopupWindow
@@ -40,24 +37,25 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.*
+//import com.google.android.gms.maps.model.*
 
 import com.google.maps.android.PolyUtil
 
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.AsyncUtils
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.GTAddress
+//import com.kg.gettransfer.domain.model.GTAddress
 
-import com.kg.gettransfer.domain.interactor.AddressInteractor
+import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.SystemInteractor
 
-import com.kg.gettransfer.domain.model.RouteInfo
-import com.kg.gettransfer.domain.model.TransportTypePrice
+//import com.kg.gettransfer.domain.model.RouteInfo
 
 import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
+import com.kg.gettransfer.presentation.model.LoginModel
+import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
@@ -234,7 +232,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         }
     }
     
-    private fun showPopupWindowComment(){
+    private fun showPopupWindowComment() {
         val displaymetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displaymetrics)
         val screenHeight = displaymetrics.heightPixels
@@ -304,43 +302,42 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         tvComments.text = comment
     }
 
-    override fun setTransportTypes(transportTypes: List<TransportTypeModel>, transportTypePrice: List<TransportTypePrice>) {
-        rvTransferType.adapter = TransferTypeAdapter(transportTypes, transportTypePrice, { presenter.checkFields() })
+    override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
+        rvTransferType.adapter = TransferTypeAdapter(transportTypes, { presenter.checkFields() })
     }
     
     override fun setAccount(account: Account) {
-        if(account.fullName != null) tvName.setText(account.fullName)
-        if(account.loggedIn) {
+        tvName.setText(account.fullName ?: "")
+        tvPhone.setText(account.phone ?: "")
+        if(loginInfo.loggedIn) {
             etEmail.setText(account.email)
             etEmail.isEnabled = false
             tvEmail.visibility = View.GONE
         }
-        if(account.phone != null) tvPhone.setText(account.phone)
     }
     
     override fun setGetTransferEnabled(enabled: Boolean) {
         btnGetTransfer.isEnabled = enabled
     }
     
-    override fun setRouteInfo(distance: String, polyLines: List<String>, route: Pair<GTAddress, GTAddress>) {
-    	tvFrom.setText(route.first.name)
-    	tvTo.setText(route.second.name)
-    	tvDistance.text = distance
+    override fun setRoute(routeModel: RouteModel) {
+    	tvFrom.setText(routeModel.route.first.name)
+    	tvTo.setText(routeModel.route.second.name)
+    	tvDistance.text = routeModel.distance
         //Создание пинов с информацией
-        val ltInflater = layoutInflater
-        val pinLayout = ltInflater.inflate(R.layout.view_maps_pin, null)
+        val pinLayout = layoutInflater.inflate(R.layout.view_maps_pin, null)
 
-        pinLayout.tvPlace.text = route.first.name
-        pinLayout.tvInfo.text = tvDateTimeTransfer.text
-        pinLayout.tvPlaceMirror.text = route.first.name
-        pinLayout.tvInfoMirror.text = tvDateTimeTransfer.text
+        pinLayout.tvPlace.text = routeModel.route.first.name
+        //pinLayout.tvInfo.text = tvDateTimeTransfer.text
+        pinLayout.tvPlaceMirror.text = routeModel.route.first.name
+        //pinLayout.tvInfoMirror.text = tvDateTimeTransfer.text
         pinLayout.imgPin.setImageResource(R.drawable.map_label_a)
         val bmPinA = createBitmapFromView(pinLayout)
 
         pinLayout.tvPlace.text = route.second.primary
         pinLayout.tvInfo.text = distance
         pinLayout.tvPlaceMirror.text = route.second.primary
-        pinLayout.tvInfoMirror.text = distance
+        pinLayout.tvInfoMirror.text = Utils.formatDistance(this, R.string.distance, routeModel.distance, routeModel.distanceUnit)
         pinLayout.imgPin.setImageResource(R.drawable.map_label_b)
         val bmPinB = createBitmapFromView(pinLayout)
 

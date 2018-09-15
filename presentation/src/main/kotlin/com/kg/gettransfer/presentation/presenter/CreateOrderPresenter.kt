@@ -2,8 +2,6 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
 
-import android.content.Context
-
 import android.util.Patterns
 
 import com.arellomobile.mvp.InjectViewState
@@ -13,20 +11,23 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
-import com.kg.gettransfer.domain.interactor.AddressInteractor
-import com.kg.gettransfer.domain.interactor.ApiInteractor
-
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Trip
-import com.kg.gettransfer.domain.model.RouteInfo
+
+import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.Screens
+
+import com.kg.gettransfer.presentation.model.Mappers
+import com.kg.gettransfer.presentation.model.CurrencyModel
+import com.kg.gettransfer.presentation.model.RouteModel
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
 
 import java.text.Format
+import java.text.SimpleDateFormat
 
 import java.util.Currency
 import java.util.Date
@@ -39,15 +40,15 @@ import timber.log.Timber
 @InjectViewState
 class CreateOrderPresenter(cc: CoroutineContexts,
                            router: Router,
-                           apiInteractor: ApiInteractor,
-                           private val addressInteractor: AddressInteractor): BasePresenter<CreateOrderView>(cc, router, apiInteractor) {
+                           systemInteractor: SystemInteractor,
+                           private val routeInteractor: RouteInteractor,
+                           private val transferInteractor: TransferInteractor): BasePresenter<CreateOrderView>(cc, router, systemInteractor) {
 
-    private lateinit var account: Account
-    private lateinit var routeInfo: RouteInfo
-    private lateinit var dateTimeFormat: Format
-    
+    private val transportTypes = Mappers.getTransportTypesModels(systemInteractor.transportTypes, routeInteractor.prices)
+    private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
     private var passengers: Int = MIN_PASSENGERS
     private var children: Int = MIN_CHILDREN
+    private lateinit var dateTimeFormat: Format
     
     var cost: Int? = null
     var date: Date = Date()
@@ -57,7 +58,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         }
     private var flightNumber: String? = null
     private var comment: String? = null
-    private var agreeLicence = false
     
     companion object {
         @JvmField val MIN_PASSENGERS    = 1
@@ -65,12 +65,15 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
     
     override fun onFirstViewAttach() {
+        
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             utils.asyncAwait {
                 
+                /* REFACTORING
                 routeInfo = apiInteractor.getRouteInfo(arrayOf(addressInteractor.route.first.point.toString(),
                                                                secondPoint.toString()), true, false)
+                                                               */
             }
         }, { e ->
                 Timber.e(e)
@@ -82,32 +85,20 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: CreateOrderView) {
         super.attachView(view)
-        viewState.setTransportTypes(configs.transportTypes, routeInfo.prices!!)
-        viewState.setCurrencies(configs.currencies)
-        
-        account = apiInteractor.getAccount()
-        if(account.locale == null) account.locale = Locale.getDefault()
-        if(account.currency == null) account.currency = Currency.getInstance(account.locale)
-        viewState.setAccount(account)
+        viewState.setTransportTypes(transportTypes)
+        viewState.setCurrencies(currencies)
+        val i = systemInteractor.currentCurrencyIndex
+        if(i != -1) changeCurrency(i)
             
-        dateTimeFormat = Utils.createDateTimeFormat(account.locale!!)
-            
-        for((i, item) in configs.currencies.withIndex()) {
-            if(item.code == account.currency!!.currencyCode) {
-                changeCurrency(i)
-                break
-            }
-        }
-            
-        val distance = Utils.formatDistance(view as Context, R.string.distance, account.distanceUnit, routeInfo.distance)
-        
-        
-        
-        
-        viewState.setRouteInfo(distance, routeInfo.polyLines, addressInteractor.route)
+        viewState.setAccount(systemInteractor.account)
+        dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
+        viewState.setRoute(Mappers.getRouteModel(routeInteractor.distance,
+                                                 systemInteractor.distanceUnit,
+                                                 routeInteractor.polyLines,
+                                                 routeInteractor.route))
     }
 
-    fun changeCurrency(selected: Int) { viewState.setCurrency(configs.currencies.get(selected).symbol) }
+    fun changeCurrency(selected: Int) { viewState.setCurrency(currencies.get(selected).symbol) }
     
     fun changePassengers(count: Int) {
         passengers += count
@@ -116,17 +107,17 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
     
     fun setName(name: String) {
-        if(name.isEmpty()) account.fullName = null else account.fullName = name
+        systemInteractor.account.fullName = name
         checkFields()
     }
     
     fun setEmail(email: String) {
-        if(email.isEmpty()) account.email = null else account.email = email
+        systemInteractor.account.email = email
         checkFields()
     }
     
     fun setPhone(phone: String) {
-        if(phone.isEmpty()) account.phone = phone else account.phone = phone
+        systemInteractor.account.phone = phone
         checkFields()
     }
 
@@ -146,7 +137,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
     
     fun setAgreeLicence(agreeLicence: Boolean) {
-        this.agreeLicence = agreeLicence
+        systemInteractor.account.termsAccepted = agreeLicence
         checkFields()
     }
     
@@ -154,35 +145,42 @@ class CreateOrderPresenter(cc: CoroutineContexts,
 
     fun onGetTransferClick() {
         viewState.blockInterface(true)
-        val from = addressInteractor.route.first
-        val to = addressInteractor.route.second
         val trip = Trip(date, flightNumber)
         /* filter */
-        val transportTypes = configs.transportTypes.filter { it.checked }.map { it.delegate.id }
+        val selectedTransportTypes = transportTypes.filter { it.checked }.map { it.id }
+        
+        val from = routeInteractor.route.first
+        val to = routeInteractor.route.second
         
         Timber.d("from: %s", from)
         Timber.d("to: %s, %s", to, to.point)
         Timber.d("trip: %s", trip)
-        Timber.d("transport types: %s", transportTypes)
+        Timber.d("transport types: %s", selectedTransportTypes)
         Timber.d("===========")
         Timber.d("passenger price: $cost")
         Timber.d("date: $date")
         Timber.d("passengers: $passengers")
         Timber.d("===========")
-        Timber.d("name: ${account.fullName}")
-        Timber.d("email: ${account.email}")
-        Timber.d("phone: ${account.phone}")
+        Timber.d("account: ${systemInteractor.account}")
         Timber.d("children: $children")
         Timber.d("flightNumber: $flightNumber")
         Timber.d("comment: $comment")
-        Timber.d("agree: $agreeLicence")
-        Timber.d("account: %s", account)
 
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
-            val transfer = utils.asyncAwait { apiInteractor.createTransfer(from, to, trip, null, transportTypes,
-                                                            passengers, children, cost, account.fullName!!, comment,
-                                                            account, null, false) }
+            val transfer = utils.asyncAwait {
+                transferInteractor.createTransfer(from,
+                                                  to,
+                                                  trip,
+                                                  null,
+                                                  selectedTransportTypes,
+                                                  passengers,
+                                                  children,
+                                                  cost,
+                                                  comment,
+                                                  systemInteractor.account,
+                                                  null,
+                                                  false) }
             Timber.d("new transfer: %s", transfer)
             router.navigateTo(Screens.OFFERS)
         }, { e ->
@@ -196,13 +194,14 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     
     /* @TODO: Добавить реакцию на некорректное значение в поле. Отображать, где и что введено некорректно. */
     fun checkFields() {
-        val typesHasSelected = configs.transportTypes.filter { it.checked }.size > 0
+        val typesHasSelected = transportTypes.filter { it.checked }.size > 0
         val actionEnabled = typesHasSelected &&
-                            account.fullName != null &&
-                            account.email != null &&
-                            Patterns.EMAIL_ADDRESS.matcher(account.email!!).matches() &&
-                            Utils.checkPhone(account.phone) &&
-                            agreeLicence
+                            !systemInteractor.account.fullName.isNullOrBlank() &&
+                            !systemInteractor.account.email.isNullOrBlank() &&
+                            !systemInteractor.account.email.isNullOrBlank() &&
+                            Patterns.EMAIL_ADDRESS.matcher(systemInteractor.account.email!!).matches() &&
+                            Utils.checkPhone(systemInteractor.account.phone) &&
+                            systemInteractor.account.termsAccepted
         viewState.setGetTransferEnabled(actionEnabled)
     }
 }

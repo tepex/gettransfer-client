@@ -1,14 +1,14 @@
 package com.kg.gettransfer.domain.model
 
-data class RouteInfo(var success: Boolean,
-                     var distance: Int?,
-                     var duration: Int?,
-                     var prices: List<TransportTypePrice>?,
-                     var watertaxi: Boolean,
-                     var polyLines: List<String>,
-                     var overviewPolyline: String)
+data class RouteInfo(val success: Boolean,
+                     val distance: Int?,
+                     val duration: Int?,
+                     val prices: List<TransportTypePrice>?,
+                     val watertaxi: Boolean,
+                     val polyLines: List<String>,
+                     val overviewPolyline: String)
 
-data class TransportTypePrice(var tranferId: String,
-                              var minFloat: Float,
-                              var min: String,
-                              var max: String)
+data class TransportTypePrice(val tranferId: String,
+                              val minFloat: Float,
+                              val min: String,
+                              val max: String)

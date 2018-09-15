@@ -7,24 +7,23 @@ import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
+import com.kg.gettransfer.presentation.model.LoginModel
+import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
-import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.RouteInfo
-import com.kg.gettransfer.domain.model.TransportTypePrice
 
 @StateStrategyType (OneExecutionStateStrategy::class)
 interface CreateOrderView: BaseView {
-    fun setTransportTypes(transportTypes: List<TransportTypeModel>, transportTypePrice: List<TransportTypePrice>)
+    fun setTransportTypes(transportTypes: List<TransportTypeModel>)
     fun setCurrencies(currencies: List<CurrencyModel>)
-    fun setRouteInfo(distance: String, polyLines: List<String>, route: Pair<GTAddress, GTAddress>)
-    
+    fun setRoute(routeModel: RouteModel)
+    fun setAccount(account: Account)
     fun setPassengers(count: Int)
     fun setChildren(count: Int)
     fun setCurrency(currency: String)
     fun setDateTimeTransfer(dateTimeString: String)
     fun setComment(comment: String)
     fun setGetTransferEnabled(enabled: Boolean)
-    fun setAccount(account: Account)
+    
 }

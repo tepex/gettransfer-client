@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation.presenter
 import android.location.Location
 
 import android.support.annotation.CallSuper
-import android.util.Pair
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -14,15 +13,16 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
-import com.kg.gettransfer.domain.interactor.AddressInteractor
-import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
+import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.Screens
+import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.view.MainView
 
 import ru.terrakok.cicerone.Router
@@ -32,9 +32,9 @@ import timber.log.Timber
 @InjectViewState
 class MainPresenter(cc: CoroutineContexts,
                     router: Router,
-                    apiInteractor: ApiInteractor,
+                    systemInteractor: SystemInteractor,
                     private val locationInteractor: LocationInteractor,
-                    private val addressInteractor: AddressInteractor): BasePresenter<MainView>(cc, router, apiInteractor) {
+                    private val routeInteractor: RouteInteractor): BasePresenter<MainView>(cc, router, systemInteractor) {
 
     private lateinit var lastAddressPoint: LatLng
     private var lastPoint: LatLng? = null
@@ -56,7 +56,7 @@ class MainPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: MainView) {
         super.attachView(view)
-        viewState.showLoginInfo(apiInteractor.getAccount())
+        viewState.setLogin(Mappers.getLoginModel(systemInteractor.account))
     }
 
     fun updateCurrentLocation() {
@@ -68,8 +68,8 @@ class MainPresenter(cc: CoroutineContexts,
     
     private suspend fun updateCurrentLocationAsync() {
         viewState.blockInterface(true)
-        val currentAddress = utils.asyncAwait { addressInteractor.getCurrentAddress() }
-        lastAddressPoint = LatLng(currentAddress.point!!.latitude, currentAddress.point!!.longitude)
+        val currentAddress = utils.asyncAwait { routeInteractor.getCurrentAddress() }
+        lastAddressPoint = Mappers.point2LatLng(currentAddress.point!!)
         
         onCameraMove(lastAddressPoint)
         viewState.setMapPoint(lastAddressPoint)
@@ -93,18 +93,15 @@ class MainPresenter(cc: CoroutineContexts,
 
         lastAddressPoint = lastPoint!!
         utils.launchAsyncTryCatch({
-            val currentAddress = utils.asyncAwait {
-                addressInteractor.getAddressByLocation(Point(lastPoint!!.latitude, lastPoint!!.longitude))
-            }
+            val currentAddress = utils.asyncAwait { routeInteractor.getAddressByLocation(Mappers.latLng2Point(lastPoint!!)) }
             viewState.setAddressFrom(currentAddress.name)
         }, { e -> Timber.e(e) })
     }
     
     fun onSearchClick(addresses: Pair<String, String>) { router.navigateTo(Screens.FIND_ADDRESS, addresses) }
-    fun onLoginClick() { router.navigateTo(Screens.LOGIN) }
-    fun onAboutClick() { router.navigateTo(Screens.ABOUT) }
-    fun readMoreClick() { router.navigateTo(Screens.READ_MORE) }
+    fun onLoginClick()    { router.navigateTo(Screens.LOGIN) }
+    fun onAboutClick()    { router.navigateTo(Screens.ABOUT) }
+    fun readMoreClick()   { router.navigateTo(Screens.READ_MORE) }
     fun onSettingsClick() { router.navigateTo(Screens.SETTINGS) }
-    fun onRequestsClick() {router.navigateTo(Screens.REQUESTS)}
-//    fun onBackCommandClick() { router.exit() }
+    fun onRequestsClick() { router.navigateTo(Screens.REQUESTS) }
 }

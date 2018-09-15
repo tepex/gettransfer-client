@@ -5,8 +5,6 @@ import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.repository.AddressRepository
 
 class AddressInteractor(private val repository: AddressRepository) {
-	lateinit var route: Pair<GTAddress, GTAddress>
-	
 	fun getAddressByLocation(point: Point) = repository.getAddressByLocation(point)
 	fun getCachedAddress() = repository.getCachedAddress()
 	

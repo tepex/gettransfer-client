@@ -22,7 +22,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.presentation.model.CurrencyModel
 
-import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.regex.Pattern
 
@@ -69,32 +68,17 @@ internal class Utils {
             }
         }
         
-        fun showKeyboard(context: Context) {
-            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
-        }
-        
-		// Андроид, такой андроид :-) 
-		// https://stackoverflow.com/questions/1109022/close-hide-the-android-soft-keyboard
-        fun hideKeyboard(context: Context, view: View?) {
-            if(view == null) return
-            (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-                .hideSoftInputFromWindow(view.windowToken, 0)
-        }
-        
         fun checkPhone(phone: String?): Boolean {
             if(phone == null) return false
             return PHONE_PATTERN.matcher(phone.trim()).matches()
         }
         
-        fun formatDistance(context: Context, @StringRes stringId: Int, distanceUnit: DistanceUnit, distance: Int?): String {
+        fun formatDistance(context: Context, @StringRes stringId: Int, distance: Int?, distanceUnit: DistanceUnit): String {
             if(distance == null) return ""
             var d = distance
             if(distanceUnit == DistanceUnit.Mi) d = DistanceUnit.km2Mi(distance)
             return context.getString(stringId, d, distanceUnit.name)
         }
-        
-        fun createDateTimeFormat(locale: Locale) = SimpleDateFormat(DATE_TIME_PATTERN, locale)
 	}
 }
 

@@ -57,6 +57,7 @@
     <string name="transport_type_limousine">Limousine</string>
     <string name="transport_type_helicopter">Helicopter</string>
 	<string name="transport_type_unknown">Unknown</string>
+	<string name="count_persons_and_baggage"> X %1$d</string>
 
     <!-- Login -->
     <string name="email_address">Email address</string>
@@ -248,7 +249,6 @@
     <string name="carrier_offers">Carrier offers</string>
     <string name="select">Select</string>
 
-    <string name="count_persons_and_baggage"> X %1$s</string>
     <string name="price_from">from %1$s</string>
 
     <!--NavigationView-->

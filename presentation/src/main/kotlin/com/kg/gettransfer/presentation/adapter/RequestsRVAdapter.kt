@@ -43,7 +43,7 @@ class RequestsRVAdapter(private val transfers: List<Transfer>,
             tvFrom.text = item.from.name
             tvTo.text = item.to!!.name
             tvOrderDateTime.text = context.getString(R.string.transfer_date_local, dateFormat.format(item.dateToLocal))
-            tvDistance.text = Utils.formatDistance(context, R.string.distance, distanceUnit, item.distance)
+            tvDistance.text = Utils.formatDistance(context, R.string.distance, item.distance, distanceUnit)
         }
     }
 }

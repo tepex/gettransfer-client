@@ -20,10 +20,13 @@ import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 
 import android.transition.Fade
+
 import android.util.Pair
+
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+
 import android.widget.RelativeLayout
 import android.widget.TextView
 
@@ -40,14 +43,13 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.interactor.AddressInteractor
-import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
-import com.kg.gettransfer.domain.model.Account
+
 import com.kg.gettransfer.extensions.hideKeyboard
 
 import com.kg.gettransfer.presentation.Screens
+import com.kg.gettransfer.presentation.model.LoginInfo
 import com.kg.gettransfer.presentation.presenter.MainPresenter
-import com.kg.gettransfer.presentation.ui.Utils.Companion.hideKeyboard
 import com.kg.gettransfer.presentation.view.MainView
 
 import kotlin.coroutines.experimental.suspendCoroutine
@@ -374,9 +376,8 @@ class MainActivity: BaseActivity(), MainView {
 	
 	override fun setAddressFrom(address: String) { searchFrom.text = address }
 	
-	override fun showLoginInfo(account: Account) {
-	    Timber.d("show Login: %s", account)
-	    if(account.email == null) {
+	override fun setLogin(loginModel: LoginModel) {
+	    if(!loginModel.loggedIn) {
 			navHeaderName.visibility = View.GONE
 			navHeaderEmail.visibility = View.GONE
 			navLogin.visibility = View.VISIBLE
@@ -385,8 +386,8 @@ class MainActivity: BaseActivity(), MainView {
 	    else {
 			navHeaderName.visibility = View.VISIBLE
 			navHeaderEmail.visibility = View.VISIBLE
-			navHeaderName.text = account.fullName
-			navHeaderEmail.text = account.email
+			navHeaderName.text = loginModel.name
+			navHeaderEmail.text = loginModel.email
 			navLogin.visibility = View.GONE
 			navRequests.visibility = View.VISIBLE
 	    }
