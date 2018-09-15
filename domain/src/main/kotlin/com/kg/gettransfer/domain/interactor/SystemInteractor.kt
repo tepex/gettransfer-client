@@ -28,4 +28,6 @@ class SystemInteractor(private val apiRepository: ApiRepository) {
         configs = apiRepository.getConfigs()
         account = apiRepository.getAccount()
     }
+    
+    suspend fun login(email: String, password: String) = apiRepository.login(email, password)
 }

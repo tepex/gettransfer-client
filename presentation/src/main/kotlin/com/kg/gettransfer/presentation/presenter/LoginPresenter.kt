@@ -8,7 +8,9 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.ApiInteractor
+
+import com.kg.gettransfer.domain.interactor.SystemInteractor
+
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.presentation.view.LoginView
 
@@ -19,7 +21,7 @@ import timber.log.Timber
 @InjectViewState
 class LoginPresenter(cc: CoroutineContexts, 
                      router: Router,
-                     apiInteractor: ApiInteractor): BasePresenter<LoginView>(cc, router, apiInteractor) {
+                     systemInteractor: SystemInteractor): BasePresenter<LoginView>(cc, router, systemInteractor) {
 
     companion object {
         @JvmField val RESULT_CODE = 33
@@ -32,7 +34,7 @@ class LoginPresenter(cc: CoroutineContexts,
     fun onLoginClick() {
         viewState.blockInterface(false)
         utils.launchAsyncTryCatch({
-            utils.asyncAwait { apiInteractor.login(email!!, password!!) }
+            utils.asyncAwait { systemInteractor.login(email!!, password!!) }
             router.exitWithResult(RESULT_CODE, RESULT_OK)
         }, { e -> viewState.setError(false, R.string.err_server, e.message) })
     }
