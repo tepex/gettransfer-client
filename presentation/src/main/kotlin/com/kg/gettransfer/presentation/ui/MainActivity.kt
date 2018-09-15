@@ -30,7 +30,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.RelativeLayout
 import android.widget.TextView
 
-import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
@@ -42,13 +41,16 @@ import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.AsyncUtils
-import com.kg.gettransfer.domain.interactor.AddressInteractor
+
 import com.kg.gettransfer.domain.interactor.LocationInteractor
+import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.SystemInteractor
+
+import com.kg.gettransfer.domain.model.Account
 
 import com.kg.gettransfer.extensions.hideKeyboard
 
 import com.kg.gettransfer.presentation.Screens
-import com.kg.gettransfer.presentation.model.LoginInfo
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
 
@@ -80,8 +82,9 @@ class MainActivity: BaseActivity(), MainView {
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var headerView: View
     
-    private val addressInteractor: AddressInteractor by inject()
     private val locationInteractor: LocationInteractor by inject()
+    private val routeInteractor: RouteInteractor by inject()
+    private val systemInteractor: SystemInteractor by inject()
     
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
@@ -93,9 +96,9 @@ class MainActivity: BaseActivity(), MainView {
     @ProvidePresenter
     fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
                                                              router,
-                                                             apiInteractor,
+                                                             systemInteractor,
                                                              locationInteractor,
-                                                             addressInteractor)
+                                                             routerInteractor)
     
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
@@ -269,11 +272,9 @@ class MainActivity: BaseActivity(), MainView {
 	 	 toggle.onConfigurationChanged(newConfig)
 	}
 	
-	/** @see {@link android.support.v7.app.ActionBarDrawerToggle} */
-	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		return toggle.onOptionsItemSelected(item)
-	}
-	
+    /** @see {@link android.support.v7.app.ActionBarDrawerToggle} */
+    override fun onOptionsItemSelected(item: MenuItem) = toggle.onOptionsItemSelected(item)
+
 	private fun initNavigation() {
 		//val versionName = packageManager.getPackageInfo(packageName, 0).versionName
 		val versionName = BuildConfig.VERSION_NAME
@@ -307,9 +308,9 @@ class MainActivity: BaseActivity(), MainView {
 		}
 	}
 	
-	private suspend fun getGoogleMapAsync(): GoogleMap = suspendCoroutine { cont -> 
-		mapView.getMapAsync { cont.resume(it) } 
-	}  
+    private suspend fun getGoogleMapAsync(): GoogleMap = suspendCoroutine { cont -> 
+        mapView.getMapAsync { cont.resume(it) }
+    }  
 	
 	/**
 	 * Грязный хак — меняем положение нативной кнопки 'MyLocation'
@@ -376,8 +377,8 @@ class MainActivity: BaseActivity(), MainView {
 	
 	override fun setAddressFrom(address: String) { searchFrom.text = address }
 	
-	override fun setLogin(loginModel: LoginModel) {
-	    if(!loginModel.loggedIn) {
+	override fun setAccount(account: Account) {
+	    if(!account.loggedIn) {
 			navHeaderName.visibility = View.GONE
 			navHeaderEmail.visibility = View.GONE
 			navLogin.visibility = View.VISIBLE
@@ -386,8 +387,8 @@ class MainActivity: BaseActivity(), MainView {
 	    else {
 			navHeaderName.visibility = View.VISIBLE
 			navHeaderEmail.visibility = View.VISIBLE
-			navHeaderName.text = loginModel.name
-			navHeaderEmail.text = loginModel.email
+			navHeaderName.text = account.fullName
+			navHeaderEmail.text = account.email
 			navLogin.visibility = View.GONE
 			navRequests.visibility = View.VISIBLE
 	    }

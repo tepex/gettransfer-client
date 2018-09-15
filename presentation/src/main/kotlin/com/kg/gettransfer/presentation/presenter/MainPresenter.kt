@@ -56,7 +56,7 @@ class MainPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: MainView) {
         super.attachView(view)
-        viewState.setLogin(Mappers.getLoginModel(systemInteractor.account))
+        viewState.setAccount(systemInteractor.account)
     }
 
     fun updateCurrentLocation() {
@@ -68,7 +68,7 @@ class MainPresenter(cc: CoroutineContexts,
     
     private suspend fun updateCurrentLocationAsync() {
         viewState.blockInterface(true)
-        val currentAddress = utils.asyncAwait { routeInteractor.getCurrentAddress() }
+        val currentAddress = utils.asyncAwait { routeInteractor.currentAddress }
         lastAddressPoint = Mappers.point2LatLng(currentAddress.point!!)
         
         onCameraMove(lastAddressPoint)
