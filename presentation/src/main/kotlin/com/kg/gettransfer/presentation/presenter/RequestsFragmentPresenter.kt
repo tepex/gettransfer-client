@@ -6,7 +6,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
-import com.kg.gettransfer.domain.interactor.ApiInteractor
+import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Transfer
@@ -24,11 +24,12 @@ import timber.log.Timber
 @InjectViewState
 class RequestsFragmentPresenter(cc: CoroutineContexts,
                                 router: Router,
-                                apiInteractor: ApiInteractor): BasePresenter<RequestsFragmentView>(cc, router, apiInteractor) {
+                                systemInteractor: SystemInteractor): BasePresenter<RequestsFragmentView>(cc, router, systemInteractor) {
 
     var transfers = listOf<Transfer>()
 
     fun setData(categoryName: String) {
+        /*
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             val account = utils.asyncAwait { apiInteractor.getAccount() }
@@ -43,5 +44,6 @@ class RequestsFragmentPresenter(cc: CoroutineContexts,
                 if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
                 else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
+        */
     }
 }
