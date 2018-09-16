@@ -9,7 +9,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
-import com.kg.gettransfer.domain.interactor.ApiInteractor
+import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.Transfer
 
@@ -23,7 +23,7 @@ import timber.log.Timber
 @InjectViewState
 class RequestsPresenter(cc: CoroutineContexts,
                         router: Router,
-                        apiInteractor: ApiInteractor): BasePresenter<RequestsView>(cc, router, apiInteractor) {
+                        systemInteractor: SystemInteractor): BasePresenter<RequestsView>(cc, router, systemInteractor) {
 
     private lateinit var transfers: List<Transfer>
     private var transfersAll: ArrayList<Transfer> = arrayListOf()
@@ -31,6 +31,7 @@ class RequestsPresenter(cc: CoroutineContexts,
     private var transfersCompleted: ArrayList<Transfer> = arrayListOf()
 
     override fun onFirstViewAttach() {
+        /*
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             transfers = utils.asyncAwait { apiInteractor.getAllTransfers() }
@@ -52,5 +53,6 @@ class RequestsPresenter(cc: CoroutineContexts,
                 if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
                 else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
+        */
     }
 }

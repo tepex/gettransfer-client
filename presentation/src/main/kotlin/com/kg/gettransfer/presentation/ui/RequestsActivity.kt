@@ -8,12 +8,16 @@ import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+
 import android.support.v7.widget.Toolbar
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+
+import com.kg.gettransfer.domain.interactor.SystemInteractor
+
 import com.kg.gettransfer.presentation.TransfersConstants
 import com.kg.gettransfer.presentation.presenter.RequestsPresenter
 import com.kg.gettransfer.presentation.view.RequestsView
@@ -27,9 +31,11 @@ class RequestsActivity: BaseActivity(), RequestsView {
 
     @InjectPresenter
     internal lateinit var presenter: RequestsPresenter
+    
+    private val systemInteractor: SystemInteractor by inject()
 
     @ProvidePresenter
-    fun createRequestsPresenter(): RequestsPresenter = RequestsPresenter(coroutineContexts, router, apiInteractor)
+    fun createRequestsPresenter(): RequestsPresenter = RequestsPresenter(coroutineContexts, router, systemInteractor)
     
     protected override var navigator = BaseNavigator(this)
     

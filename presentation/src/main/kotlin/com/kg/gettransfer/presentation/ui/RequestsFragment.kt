@@ -17,7 +17,8 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.ApiInteractor
+
+import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.Transfer
@@ -46,7 +47,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     @InjectPresenter
     internal lateinit var presenter: RequestsFragmentPresenter
 
-    private val apiInteractor: ApiInteractor by inject()
+    private val systemInteractor: SystemInteractor by inject()
     private val coroutineContexts: CoroutineContexts by inject()
     
     private val navigatorHolder: NavigatorHolder by inject()
@@ -54,7 +55,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     //private lateinit var navigator: BaseNavigator = BaseNavigator(this)
 
     @ProvidePresenter
-    fun createRequestsFragmentPresenter(): RequestsFragmentPresenter = RequestsFragmentPresenter(coroutineContexts, router, apiInteractor)
+    fun createRequestsFragmentPresenter() = RequestsFragmentPresenter(coroutineContexts, router, systemInteractor)
 
     private var categoryName = ""
 
