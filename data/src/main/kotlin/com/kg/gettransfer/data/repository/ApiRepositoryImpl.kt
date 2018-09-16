@@ -123,8 +123,8 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
         cacheRepository.cleanAccount()
     }
     
-    override suspend fun getRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean): RouteInfo {
-        val response: ApiResponse<ApiRouteInfo> = tryGetRouteInfo(points, withPrices, returnWay)
+    override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean): RouteInfo {
+        val response: ApiResponse<ApiRouteInfo> = tryGetRouteInfo(arrayOf(from, to), withPrices, returnWay)
         return Mappers.mapApiRouteInfo(response.data!!)
     }
     

@@ -18,7 +18,8 @@ import com.arellomobile.mvp.MvpAppCompatActivity
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.ApiInteractor
+
+import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.BasePresenter
@@ -32,7 +33,9 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
-    internal val apiInteractor: ApiInteractor by inject()
+    
+    internal val systemInteractor: SystemInteractor by inject()
+    
     internal val coroutineContexts: CoroutineContexts by inject()
     internal val router: Router by inject()
     protected val navigatorHolder: NavigatorHolder by inject()

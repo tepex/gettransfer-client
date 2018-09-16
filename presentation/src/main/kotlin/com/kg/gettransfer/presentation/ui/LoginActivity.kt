@@ -21,8 +21,6 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.CoroutineContexts
 
-import com.kg.gettransfer.domain.interactor.SystemInteractor
-
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.LoginPresenter
 import com.kg.gettransfer.presentation.view.LoginView
@@ -41,8 +39,6 @@ class LoginActivity: BaseActivity(), LoginView {
     @InjectPresenter
     internal lateinit var presenter: LoginPresenter
     
-    private val systemInteractor: SystemInteractor by inject()
-
     @ProvidePresenter
     fun createLoginPresenter(): LoginPresenter = LoginPresenter(coroutineContexts, router, systemInteractor)
     

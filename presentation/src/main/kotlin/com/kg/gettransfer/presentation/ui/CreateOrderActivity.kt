@@ -52,7 +52,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Account
@@ -91,7 +90,6 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     internal lateinit var presenter: CreateOrderPresenter
 
     private val routeInteractor: RouteInteractor by inject()
-	private val systemInteractor: SystemInteractor by inject()
 	private val transferInteractor: TransferInteractor by inject()
 	
     private val compositeDisposable = Job()
@@ -334,22 +332,22 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     
     override fun setRoute(routeModel: RouteModel) {
         val distance = Utils.formatDistance(this, R.string.distance, routeModel.distance, routeModel.distanceUnit)
-    	tvFrom.setText(routeModel.route.first.name)
-    	tvTo.setText(routeModel.route.second.name)
+    	tvFrom.setText(routeModel.from.name)
+    	tvTo.setText(routeModel.to.name)
     	tvDistance.text = distance
         //Создание пинов с информацией
         val pinLayout = layoutInflater.inflate(R.layout.view_maps_pin, null)
 
-        pinLayout.tvPlace.text = routeModel.route.first.name
+        pinLayout.tvPlace.text = routeModel.from.name
         //pinLayout.tvInfo.text = tvDateTimeTransfer.text
-        pinLayout.tvPlaceMirror.text = routeModel.route.first.name
+        pinLayout.tvPlaceMirror.text = routeModel.from.name
         //pinLayout.tvInfoMirror.text = tvDateTimeTransfer.text
         pinLayout.imgPin.setImageResource(R.drawable.map_label_a)
         val bmPinA = createBitmapFromView(pinLayout)
 
-        pinLayout.tvPlace.text = routeModel.route.second.primary
+        pinLayout.tvPlace.text = routeModel.to.primary
         pinLayout.tvInfo.text = distance
-        pinLayout.tvPlaceMirror.text = routeModel.route.second.primary
+        pinLayout.tvPlaceMirror.text = routeModel.to.primary
         pinLayout.tvInfoMirror.text = distance
         pinLayout.imgPin.setImageResource(R.drawable.map_label_b)
         val bmPinB = createBitmapFromView(pinLayout)

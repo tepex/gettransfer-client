@@ -8,8 +8,8 @@ import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.model.GTAddress
 
-import com.kg.gettransfer.domain.interactor.AddressInteractor
-import com.kg.gettransfer.domain.interactor.ApiInteractor
+import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.presentation.view.SearchAddressView
 
@@ -20,8 +20,8 @@ import timber.log.Timber
 @InjectViewState
 class SearchAddressPresenter(cc: CoroutineContexts,
                              router: Router,
-                             apiInteractor: ApiInteractor,
-	                         private val addressInteractor: AddressInteractor): BasePresenter<SearchAddressView>(cc, router, apiInteractor) {
+                             systemInteractor: SystemInteractor,
+	                         private val routeInteractor: RouteInteractor): BasePresenter<SearchAddressView>(cc, router, systemInteractor) {
 	/* Cache. @TODO */
 	private var lastRequest: String? = null
 	private var lastResult: List<GTAddress>? = null
@@ -43,7 +43,7 @@ class SearchAddressPresenter(cc: CoroutineContexts,
 			
 		Timber.d("------ request list for prediction $prediction")
 		utils.launchAsyncTryCatch({
-			lastResult = utils.asyncAwait { addressInteractor.getAutocompletePredictions(prediction) }
+			lastResult = utils.asyncAwait { routeInteractor.getAutocompletePredictions(prediction) }
 			lastRequest = prediction
 			viewState.setAddressList(lastResult!!)
 		}, {e ->

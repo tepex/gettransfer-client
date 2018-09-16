@@ -11,7 +11,7 @@ interface ApiRepository {
     suspend fun createAccount(account: Account)
     */
 	suspend fun login(email: String, password: String): Account
-    suspend fun getRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean): RouteInfo
+    suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean): RouteInfo
 	fun logout()
     suspend fun getAllTransfers(): List<Transfer>
     suspend fun getTransfer(idTransfer: Long): Transfer

@@ -22,6 +22,7 @@ import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
@@ -44,11 +45,11 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                            private val routeInteractor: RouteInteractor,
                            private val transferInteractor: TransferInteractor): BasePresenter<CreateOrderView>(cc, router, systemInteractor) {
 
-    private val transportTypes = Mappers.getTransportTypesModels(systemInteractor.transportTypes, routeInteractor.prices)
     private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
     private var passengers: Int = MIN_PASSENGERS
     private var children: Int = MIN_CHILDREN
     private lateinit var dateTimeFormat: Format
+    private lateinit var transportTypes: List<TransportTypeModel>
     
     var cost: Int? = null
     var date: Date = Date()
@@ -64,38 +65,29 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         @JvmField val MIN_CHILDREN      = 0
     }
     
-    override fun onFirstViewAttach() {
-        
-        utils.launchAsyncTryCatchFinally({
-            viewState.blockInterface(true)
-            utils.asyncAwait {
-                
-                /* REFACTORING
-                routeInfo = apiInteractor.getRouteInfo(arrayOf(addressInteractor.route.first.point.toString(),
-                                                               secondPoint.toString()), true, false)
-                                                               */
-            }
-        }, { e ->
-                Timber.e(e)
-                if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
-                else viewState.setError(false, R.string.err_server, e.message)
-        }, { viewState.blockInterface(false) })
-    }
-    
     @CallSuper
     override fun attachView(view: CreateOrderView) {
         super.attachView(view)
-        viewState.setTransportTypes(transportTypes)
         viewState.setCurrencies(currencies)
         val i = systemInteractor.currentCurrencyIndex
         if(i != -1) changeCurrency(i)
             
         viewState.setAccount(systemInteractor.account)
         dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
-        viewState.setRoute(Mappers.getRouteModel(routeInteractor.distance,
-                                                 systemInteractor.distanceUnit,
-                                                 routeInteractor.polyLines,
-                                                 routeInteractor.route))
+            
+        utils.launchAsyncTryCatchFinally({
+            viewState.blockInterface(true)
+	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(true, false) }
+	        val prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
+	        transportTypes = Mappers.getTransportTypesModels(systemInteractor.transportTypes, prices)
+	        viewState.setTransportTypes(transportTypes)
+	        viewState.setRoute(Mappers.getRouteModel(routeInfo.distance,
+                                                     systemInteractor.distanceUnit,
+                                                     routeInfo.polyLines,
+                                                     routeInteractor.from,
+                                                     routeInteractor.to!!))
+	    }, { _ -> viewState.setError(false, R.string.err_address_service_xxx)
+        }, { viewState.blockInterface(false) })
     }
 
     fun changeCurrency(selected: Int) { viewState.setCurrency(currencies.get(selected).symbol) }
@@ -149,11 +141,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         /* filter */
         val selectedTransportTypes = transportTypes.filter { it.checked }.map { it.id }
         
-        val from = routeInteractor.route.first
-        val to = routeInteractor.route.second
-        
-        Timber.d("from: %s", from)
-        Timber.d("to: %s, %s", to, to.point)
+        Timber.d("from: %s", routeInteractor.from)
+        Timber.d("to: %s", routeInteractor.to!!)
         Timber.d("trip: %s", trip)
         Timber.d("transport types: %s", selectedTransportTypes)
         Timber.d("===========")
@@ -169,8 +158,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             val transfer = utils.asyncAwait {
-                transferInteractor.createTransfer(from,
-                                                  to,
+                transferInteractor.createTransfer(routeInteractor.from,
+                                                  routeInteractor.to!!,
                                                   trip,
                                                   null,
                                                   selectedTransportTypes,

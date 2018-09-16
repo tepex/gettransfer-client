@@ -40,7 +40,7 @@ class SettingsActivity: BaseActivity(), SettingsView {
     internal lateinit var presenter: SettingsPresenter
     
     @ProvidePresenter
-	fun createSettingsPresenter(): SettingsPresenter = SettingsPresenter(coroutineContexts, router, apiInteractor)
+	fun createSettingsPresenter(): SettingsPresenter = SettingsPresenter(coroutineContexts, router, systemInteractor)
 	
 	protected override var navigator = BaseNavigator(this)
 	

@@ -9,13 +9,22 @@ import com.kg.gettransfer.domain.repository.ApiRepository
 
 class RouteInteractor(private val addressRepository: AddressRepository,
                       private val apiRepository: ApiRepository) {
-    lateinit var route: Pair<GTAddress, GTAddress>
-    private lateinit var routeInfo: RouteInfo
-    
+    lateinit var from: GTAddress
+    var to: GTAddress? = null 
     val currentAddress = addressRepository.getCurrentAddress()
-    val prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
-    val distance = routeInfo.distance
-    val polyLines = routeInfo.polyLines
     
-    fun getAddressByLocation(point: Point) = addressRepository.getAddressByLocation(point)
+    fun getAddressByLocation(point: Point): GTAddress {
+        from = addressRepository.getAddressByLocation(point)
+        return from
+    }
+    
+    fun isConcreteObjects() = from.isConcreteObject() && to?.isConcreteObject() ?: false
+    fun getAutocompletePredictions(prediction: String) = addressRepository.getAutocompletePredictions(prediction)
+    
+    fun updateDestinationPoint() {
+        if(to!!.point == null) to!!.point = addressRepository.getLatLngByPlaceId(to!!.id!!)
+    }
+
+    suspend fun getRouteInfo(withPrices: Boolean, returnWay: Boolean) = 
+        apiRepository.getRouteInfo(from.point.toString(), to!!.point.toString(), withPrices, returnWay)
 }

@@ -26,7 +26,9 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.interactor.AddressInteractor
+
+import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.presentation.presenter.SearchAddressPresenter
 import com.kg.gettransfer.presentation.view.SearchAddressView
@@ -91,8 +93,8 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	fun createSearchAddressPresenter(): 
 		SearchAddressPresenter = SearchAddressPresenter(parent.coroutineContexts,
 		                                                parent.router,
-		                                                parent.apiInteractor,
-			                                            parent.addressInteractor)
+		                                                parent.systemInteractor,
+			                                            parent.routeInteractor)
 
 	fun initWidget(parent: SearchActivity, isTo: Boolean) {
 		this.parent = parent

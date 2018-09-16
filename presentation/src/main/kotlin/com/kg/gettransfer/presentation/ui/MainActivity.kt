@@ -42,7 +42,6 @@ import com.kg.gettransfer.domain.AsyncUtils
 
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.Account
 
@@ -82,7 +81,6 @@ class MainActivity: BaseActivity(), MainView {
     
     private val locationInteractor: LocationInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
-    private val systemInteractor: SystemInteractor by inject()
     
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(coroutineContexts, compositeDisposable)

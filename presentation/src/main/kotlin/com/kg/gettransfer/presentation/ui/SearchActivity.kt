@@ -21,7 +21,8 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.interactor.AddressInteractor
+import com.kg.gettransfer.domain.interactor.RouteInteractor
+
 import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.extensions.hideKeyboard
@@ -41,14 +42,14 @@ class SearchActivity: BaseActivity(), SearchView {
     @InjectPresenter
     internal lateinit var presenter: SearchPresenter
     
-    internal val addressInteractor: AddressInteractor by inject()
+    internal val routeInteractor: RouteInteractor by inject()
     private lateinit var current: SearchAddress
     
     @ProvidePresenter
     fun createSearchPresenter(): SearchPresenter = SearchPresenter(coroutineContexts,
                                                                    router,
-                                                                   apiInteractor,
-                                                                   addressInteractor)
+                                                                   systemInteractor,
+                                                                   routeInteractor)
     companion object {
         @JvmField val FADE_DURATION  = 500L
         @JvmField val SLIDE_DURATION = 500L

@@ -22,7 +22,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 //import com.kg.gettransfer.R.id.ratingBar
 
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Offer
@@ -47,7 +46,6 @@ class OffersActivity: BaseActivity(), OffersView {
     @InjectPresenter
     internal lateinit var presenter: OffersPresenter
     
-    private val systemInteractor: SystemInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
     
     @ProvidePresenter

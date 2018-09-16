@@ -23,7 +23,12 @@ object Mappers {
         }
     
     fun getCurrenciesModels(currencies: List<Currency>) = currencies.map { CurrencyModel(it) }
+    fun getLocalesModels(locales: List<Locale>) = locales.map { LocaleModel(it) }
+    fun getDistanceUnitsModels(distanceUnits: List<DistanceUnit>) = distanceUnits.map { DistanceUnitModel(it) }
     
-    fun getRouteModel(distance: Int?, distanceUnit: DistanceUnit, polyLines: List<String>, route: Pair<GTAddress, GTAddress>) = 
-        RouteModel(distance, distanceUnit, polyLines, route)
+    fun getRouteModel(distance: Int?,
+                      distanceUnit: DistanceUnit,
+                      polyLines: List<String>,
+                      from: GTAddress,
+                      to: GTAddress) = RouteModel(distance, distanceUnit, polyLines, from, to)
 }
