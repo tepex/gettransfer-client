@@ -50,11 +50,14 @@ import com.google.maps.android.PolyUtil
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.AsyncUtils
-//import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+
+import com.kg.gettransfer.domain.model.Account
+
+import com.kg.gettransfer.extensions.hideKeyboard
 
 import com.kg.gettransfer.presentation.Screens
 
@@ -262,12 +265,13 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
             false
         })
         popupWindowComment.setOnDismissListener {
-            Utils.hideKeyboard(this, currentFocus)
+			val view = currentFocus
+			view?.hideKeyboard()
+			view?.clearFocus()
             layoutShadow.visibility = View.GONE
         }
         layoutPopup.setOnClickListener{ layoutPopup.etPopupComment.requestFocus()}
         layoutPopup.etPopupComment.setSelection(layoutPopup.etPopupComment.text.length)
-        Utils.showKeyboard(this)
     }
 
     private fun showDatePickerDialog() {
@@ -317,7 +321,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     override fun setAccount(account: Account) {
         tvName.setText(account.fullName ?: "")
         tvPhone.setText(account.phone ?: "")
-        if(loginInfo.loggedIn) {
+        if(account.loggedIn) {
             etEmail.setText(account.email)
             etEmail.isEnabled = false
             tvEmail.visibility = View.GONE
@@ -329,9 +333,10 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     }
     
     override fun setRoute(routeModel: RouteModel) {
+        val distance = Utils.formatDistance(this, R.string.distance, routeModel.distance, routeModel.distanceUnit)
     	tvFrom.setText(routeModel.route.first.name)
     	tvTo.setText(routeModel.route.second.name)
-    	tvDistance.text = routeModel.distance
+    	tvDistance.text = distance
         //Создание пинов с информацией
         val pinLayout = layoutInflater.inflate(R.layout.view_maps_pin, null)
 
@@ -342,10 +347,10 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         pinLayout.imgPin.setImageResource(R.drawable.map_label_a)
         val bmPinA = createBitmapFromView(pinLayout)
 
-        pinLayout.tvPlace.text = route.second.primary
+        pinLayout.tvPlace.text = routeModel.route.second.primary
         pinLayout.tvInfo.text = distance
-        pinLayout.tvPlaceMirror.text = route.second.primary
-        pinLayout.tvInfoMirror.text = Utils.formatDistance(this, R.string.distance, routeModel.distance, routeModel.distanceUnit)
+        pinLayout.tvPlaceMirror.text = routeModel.route.second.primary
+        pinLayout.tvInfoMirror.text = distance
         pinLayout.imgPin.setImageResource(R.drawable.map_label_b)
         val bmPinB = createBitmapFromView(pinLayout)
 
@@ -353,7 +358,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
 
         // Для построения подробного маршрута
         val mPoints = arrayListOf<LatLng>()
-        for(item in polyLines) mPoints.addAll(PolyUtil.decode(item))
+        for(item in routeModel.polyLines) mPoints.addAll(PolyUtil.decode(item))
 
         // Для построения упрощённого маршрута (меньше точек)
         //val mPoints = PolyUtil.decode(routeInfo.overviewPolyline)

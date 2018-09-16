@@ -25,6 +25,7 @@ import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.extensions.hideKeyboard
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.AddressAdapter
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
@@ -100,7 +101,6 @@ class SearchActivity: BaseActivity(), SearchView {
     }
 
     override fun onBackPressed() {
-        Utils.hideKeyboard(this, currentFocus)
         searchTo.clearFocusOnExit()
         searchFrom.clearFocusOnExit()
         presenter.onBackCommandClick()
