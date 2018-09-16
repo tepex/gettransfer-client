@@ -24,7 +24,13 @@ import android.support.v7.widget.Toolbar
 
 import android.text.InputType
 import android.util.DisplayMetrics
+
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
 import android.view.inputmethod.EditorInfo
+
 import android.widget.TextView
 
 import android.widget.LinearLayout
@@ -37,7 +43,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-//import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.*
 
 import com.google.maps.android.PolyUtil
 
@@ -48,13 +54,11 @@ import com.kg.gettransfer.domain.AsyncUtils
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
-
-//import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
-import com.kg.gettransfer.presentation.model.LoginModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
@@ -83,7 +87,10 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
 
-	private val addressInteractor: AddressInteractor by inject()
+    private val routeInteractor: RouteInteractor by inject()
+	private val systemInteractor: SystemInteractor by inject()
+	private val transferInteractor: TransferInteractor by inject()
+	
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
     private lateinit var googleMap: GoogleMap
@@ -92,8 +99,9 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     @ProvidePresenter
     fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(coroutineContexts,
                                                                                   router,
-                                                                                  apiInteractor,
-                                                                                  addressInteractor)
+                                                                                  systemInteractor,
+                                                                                  routeInteractor,
+                                                                                  transferInteractor)
 
     protected override var navigator = object: BaseNavigator(this) {
         @CallSuper

@@ -21,8 +21,6 @@ import android.support.v7.widget.Toolbar
 
 import android.transition.Fade
 
-import android.util.Pair
-
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -98,7 +96,7 @@ class MainActivity: BaseActivity(), MainView {
                                                              router,
                                                              systemInteractor,
                                                              locationInteractor,
-                                                             routerInteractor)
+                                                             routeInteractor)
     
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
@@ -185,7 +183,11 @@ class MainActivity: BaseActivity(), MainView {
 			@CallSuper
 			override fun onDrawerStateChanged(newState: Int) {
 				super.onDrawerStateChanged(newState)
-				if(newState == DrawerLayout.STATE_SETTLING) Utils.hideKeyboard(this@MainActivity, currentFocus)
+				if(newState == DrawerLayout.STATE_SETTLING) {
+				    val view = currentFocus
+				    view?.hideKeyboard()
+				    view?.clearFocus()
+				}
 			}
 		})
 		
@@ -224,8 +226,6 @@ class MainActivity: BaseActivity(), MainView {
 	@CallSuper
 	protected override fun onResume() {
 		super.onResume()
-		Utils.hideKeyboard(this, currentFocus)
-
 		val view = currentFocus
 		view?.hideKeyboard()
 		view?.clearFocus()
