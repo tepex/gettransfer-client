@@ -1,11 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.support.annotation.CallSuper
-
 import com.arellomobile.mvp.InjectViewState
-
 import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.model.GTAddress
@@ -15,10 +11,7 @@ import com.kg.gettransfer.domain.interactor.RouteInteractor
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.SearchView
-
 import ru.terrakok.cicerone.Router
-
-import timber.log.Timber
 
 @InjectViewState
 class SearchPresenter(cc: CoroutineContexts,

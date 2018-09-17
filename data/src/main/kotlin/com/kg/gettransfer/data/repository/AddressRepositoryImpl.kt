@@ -50,10 +50,11 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
         val list = DataBufferUtils.freezeAndClose(results.getResult())
         return list.map {
             GTAddress(it.placeId, it.placeTypes,
-                      it.getFullText(null).toString(),
-                      it.getPrimaryText(null).toString(),
-                      it.getSecondaryText(null).toString(),
-                      null)
+                    it.getFullText(null).toString(),
+                    it.getFullText(null).toString(),
+                    it.getPrimaryText(null).toString(),
+                    it.getSecondaryText(null).toString(),
+                    null)
         }
     }
 
