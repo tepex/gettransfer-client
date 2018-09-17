@@ -25,7 +25,4 @@ class RouteInteractor(private val addressRepository: AddressRepository,
     fun updateDestinationPoint() {
         if(to!!.point == null) to!!.point = addressRepository.getLatLngByPlaceId(to!!.id!!)
     }
-
-    suspend fun getRouteInfo(withPrices: Boolean, returnWay: Boolean) = 
-        apiRepository.getRouteInfo(from.point.toString(), to!!.point.toString(), withPrices, returnWay)
 }

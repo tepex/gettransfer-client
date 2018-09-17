@@ -26,12 +26,12 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
 
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(item: TransportTypeModel, listener: ChangeListener) = with(containerView) {
-            tvTransferType.setText(item.nameId)
+            tvTransferType.setText(item.nameId!!)
             tvNumberPersonsTransfer.text = context.getString(R.string.count_persons_and_baggage, item.paxMax)
             tvCountBaggage.text = context.getString(R.string.count_persons_and_baggage, item.luggageMax)
             priceFrom.text = context.getString(R.string.price_from, item.price)
             
-            ivTransferType.setImageResource(item.imageId)
+            ivTransferType.setImageResource(item.imageId!!)
             cbTransferType.isChecked = item.checked
             setOnClickListener {
                 item.checked = !item.checked

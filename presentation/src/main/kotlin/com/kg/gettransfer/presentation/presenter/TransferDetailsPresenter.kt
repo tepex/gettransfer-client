@@ -1,50 +1,83 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.content.Context
+
 import android.support.annotation.CallSuper
+
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.ApiInteractor
-import com.kg.gettransfer.domain.model.*
-import com.kg.gettransfer.presentation.TransfersConstants
-import com.kg.gettransfer.presentation.model.ConfigsModel
-import com.kg.gettransfer.presentation.model.TransportTypeModel
+
+import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
+
+import com.kg.gettransfer.presentation.model.Mappers
+import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.TransferModel
+
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.TransferDetailsView
+
 import ru.terrakok.cicerone.Router
+
 import timber.log.Timber
+
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 @InjectViewState
 class TransferDetailsPresenter(cc: CoroutineContexts,
                                router: Router,
-                               apiInteractor: ApiInteractor): BasePresenter<TransferDetailsView>(cc, router, apiInteractor) {
+                               systemInteractor: SystemInteractor,
+                               private val transferInteractor: TransferInteractor): BasePresenter<TransferDetailsView>(cc, router, systemInteractor) {
 
-    lateinit var routeInfo: RouteInfo
-    lateinit var offers: List<Offer>
-    lateinit var transferDetails: Transfer
+    private var routeModel: RouteModel? = null
+    private lateinit var transferModel: TransferModel
+    private var offerModel: OfferModel? = null
 
-    companion object {
-        private val DATE_TIME_FULL_FORMAT = SimpleDateFormat(Utils.DATE_TIME_FULL_PATTERN, Locale.US)
-        private val DATE_TIME_FORMAT = SimpleDateFormat(Utils.DATE_TIME_PATTERN, Locale.US)
-    }
-
+    override fun onFirstViewAttach() {
+        utils.launchAsyncTryCatchFinally({
+            viewState.blockInterface(true)
+	        if(transferInteractor.transfer.checkOffers) {
+	            val offers = utils.asyncAwait { transferInteractor.getOffers() }
+	            if(transferInteractor.transfer.offersCount!! >= 1 && offers.size >= 1)
+	                offerModel = Mappers.getOfferModel(offers.first())
+	        }
+            
+            val from = transferInteractor.transfer.from.name
+            val to = transferInteractor.transfer.to!!.name
+	        val routeInfo = utils.asyncAwait { transferInteractor.getRouteInfo(from, to, true, false) }
+	        routeModel = Mappers.getRouteModel(routeInfo.distance,
+                                               systemInteractor.getDistanceUnit(),
+                                               routeInfo.polyLines,
+                                               from,
+                                               to)
+	        viewState.setRoute(routeModel!!)
+	    }, { e -> viewState.setError(false, R.string.err_server, e.message)
+        }, { viewState.blockInterface(false) })        
+	}
+	
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
-        utils.launchAsyncTryCatchFinally({
-            transferDetails = apiInteractor.transferDetails
-
-            utils.asyncAwait {
-                configs = ConfigsModel(apiInteractor.getConfigs())
-                account = apiInteractor.getAccount()
-                routeInfo = apiInteractor.getRouteInfo(arrayOf(transferDetails.from.point,
-                        transferDetails.to!!.point), true, false)
-            }
-            val distance = Utils.formatDistance(view as Context, R.string.distance, account.distanceUnit, transferDetails.distance)
+        val locale = systemInteractor.getLocale()
+        val distanceUnit = systemInteractor.getDistanceUnit()
+        val distance = Utils.formatDistance(view as Context, R.string.distance, transferInteractor.transfer.distance, distanceUnit)
+        viewState.setTransfer(Mappers.getTransferModel(transferInteractor.transfer,
+                                                       locale,
+                                                       distance,
+                                                       systemInteractor.getTransportTypes()))
+        viewState.setRoute(routeModel!!)
+        if(offerModel != null) viewState.setOffer(offerModel!!)
+    }
+        
+            /*
+            
+            
             val selectedTransportTypes = arrayListOf<TransportTypeModel>()
             configs.transportTypes[0].delegate
             transferDetails.transportTypeIds.forEach {
@@ -55,18 +88,22 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
                     changeDateFormat(transferDetails.dateToLocal), distance)
             viewState.setPassengerInfo(transferDetails.pax!!, transferDetails.nameSign, transferDetails.childSeats,
                     transferDetails.flightNumber, transferDetails.comment, selectedTransportTypes)
+            
+            
+            
+            
             viewState.setMapInfo(routeInfo, getPlaceNameFromAddress(transferDetails.from.name),
                     getPlaceNameFromAddress(transferDetails.to!!.name), changeDateFormat(transferDetails.dateToLocal), distance)
 
             val transferStatus = transferDetails.status
-            if (transferStatus == TransfersConstants.STATUS_NEW || transferStatus == TransfersConstants.STATUS_DRAFT) viewState.activateButtonCancel()
+            if(transferStatus == TransfersConstants.STATUS_NEW || transferStatus == TransfersConstants.STATUS_DRAFT) viewState.activateButtonCancel()
+                
             if (transferStatus == TransfersConstants.STATUS_PERFORMED || transferStatus == TransfersConstants.STATUS_PENDING ||
                     transferStatus == TransfersConstants.STATUS_COMPLETED || transferStatus == TransfersConstants.STATUS_NOT_COMPLETED){
 
                 viewState.setPaymentInfo(transferDetails.price!!.default, transferDetails.paidSum!!.default,
                         transferDetails.paidPercentage!!, transferDetails.remainsToPay!!.default)
-                utils.asyncAwait {
-                    offers = apiInteractor.getOffers(transferDetails.id)
+                offers = utils.asyncAwait { apiInteractor.getOffers(transferDetails.id) }
                 }
                 if(transferDetails.offersCount!! >= 1 && offers.size == 1){
                     val driver = offers[0].driver
@@ -76,26 +113,12 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
                             vehicle.registrationNumber, offers[0].price.base.default)
                 }
             }
-
-        }, { e ->
-            Timber.e(e)
-            if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
-            else viewState.setError(false, R.string.err_server, e.message)
-        }, { viewState.blockInterface(false) })
-    }
-
-    fun changeDateFormat(dateTime: String): String {
-        val newDate = TransferDetailsPresenter.DATE_TIME_FULL_FORMAT.parse(dateTime)
-        return TransferDetailsPresenter.DATE_TIME_FORMAT.format(newDate)
-    }
-
+            */
+    /*
     fun getPlaceNameFromAddress(address: String): String{
         val index = address.indexOf(",")
         if(index > 0) return address.substring(0, index)
         else return address
     }
-
-    fun setFirstCharToUpperCase(str: String): String{
-        return str.substring(0, 1).toUpperCase() + str.substring(1)
-    }
+    */
 }

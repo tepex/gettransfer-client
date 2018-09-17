@@ -2,18 +2,15 @@ package com.kg.gettransfer.presentation.view
 
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import com.kg.gettransfer.domain.model.RouteInfo
-import com.kg.gettransfer.presentation.model.TransportTypeModel
+
+import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.TransferModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface TransferDetailsView: BaseView {
-    fun setTransferInfo(transferId: Long, from: String, to: String, dateTimeString: String, distance: String)
-    fun setPassengerInfo(countPassengers: Int, personName: String?, countChilds: Int?, flightNumber: String?,
-                         comment: String?, transportTypes: List<TransportTypeModel>)
-    fun setMapInfo(routeInfo: RouteInfo, from: String, to: String, dateTimeString: String, distance: String)
-
-    fun activateButtonCancel()
-    fun setPaymentInfo(price: String, paidSum: String, paidPercentage: Int, remainToPay: String)
-    fun setOfferInfo(driverEmail: String, driverPhone: String, driverName: String, transportType: String,
-                     transportName: String, transportNumber: String, price: String)
+    fun setTransfer(transferModel: TransferModel)
+    fun setOffer(offerModel: OfferModel)
+    fun setRoute(routeModel: RouteModel)
+    fun setButtonCancelVisible(visible: Boolean)
 }

@@ -8,12 +8,9 @@ import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
-import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.Screens
-import com.kg.gettransfer.presentation.TransfersConstants
-import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
 
 import java.util.Locale
@@ -33,12 +30,10 @@ class RequestsFragmentPresenter(cc: CoroutineContexts,
         /*
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
-            val account = utils.asyncAwait { apiInteractor.getAccount() }
-            if(account.locale == null) account.locale = Locale.getDefault()
             transfers = when(categoryName) {
-                TransfersConstants.CATEGORY_ACTIVE -> apiInteractor.activeTransfers
-                TransfersConstants.CATEGORY_COMPLETED -> apiInteractor.completedTransfers
-                else -> apiInteractor.allTransfers
+                TransfersConstants.CATEGORY_ACTIVE -> transferInteractor.activeTransfers
+                TransfersConstants.CATEGORY_COMPLETED -> transferInteractor.completedTransfers
+                else -> transferInteractor.allTransfers
             }
             viewState.setRequests(transfers, account.distanceUnit, Utils.createDateTimeFormat(account.locale!!))
         }, { e ->
@@ -48,8 +43,8 @@ class RequestsFragmentPresenter(cc: CoroutineContexts,
         */
     }
 
-    fun openTransferDetails(transfer: Transfer){
-        apiInteractor.transferDetails = transfer
+    fun openTransferDetails(transfer: Transfer) {
+        //transferInteractor.transferDetails = transfer
         router.navigateTo(Screens.DETAILS)
     }
 }

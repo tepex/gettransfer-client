@@ -72,14 +72,16 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
-	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(true, false) }
+            val from = routeInteractor.from.point.toString()
+            val to = routeInteractor.to!!.point.toString()
+	        val routeInfo = utils.asyncAwait { transferInteractor.getRouteInfo(from, to, true, false) }
 	        val prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
 	        transportTypes = Mappers.getTransportTypesModels(systemInteractor.getTransportTypes(), prices)
 	        routeModel = Mappers.getRouteModel(routeInfo.distance,
                                                systemInteractor.getDistanceUnit(),
                                                routeInfo.polyLines,
-                                               routeInteractor.from,
-                                               routeInteractor.to!!)
+                                               from,
+                                               to)
             
             viewState.setTransportTypes(transportTypes!!)
             viewState.setRoute(routeModel!!)

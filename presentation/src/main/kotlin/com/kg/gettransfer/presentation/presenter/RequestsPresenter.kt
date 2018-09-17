@@ -11,7 +11,6 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.Transfer
 
-import com.kg.gettransfer.presentation.TransfersConstants
 import com.kg.gettransfer.presentation.view.RequestsView
 
 import ru.terrakok.cicerone.Router

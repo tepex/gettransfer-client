@@ -6,17 +6,12 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
 
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
@@ -36,16 +31,11 @@ import android.widget.TextView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 
-import android.widget.RelativeLayout
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.*
-
-import com.google.maps.android.PolyUtil
+import com.google.android.gms.maps.model.MapStyleOptions
 
 import com.kg.gettransfer.R
 
@@ -332,79 +322,10 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     
     override fun setRoute(routeModel: RouteModel) {
         val distance = Utils.formatDistance(this, R.string.distance, routeModel.distance, routeModel.distanceUnit)
-    	tvFrom.setText(routeModel.from.name)
-    	tvTo.setText(routeModel.to.name)
+    	tvFrom.setText(routeModel.from)
+    	tvTo.setText(routeModel.to)
     	tvDistance.text = distance
-        //Создание пинов с информацией
-        val pinLayout = layoutInflater.inflate(R.layout.view_maps_pin, null)
 
-        pinLayout.tvPlace.text = routeModel.from.name
-        //pinLayout.tvInfo.text = tvDateTimeTransfer.text
-        pinLayout.tvPlaceMirror.text = routeModel.from.name
-        //pinLayout.tvInfoMirror.text = tvDateTimeTransfer.text
-        pinLayout.imgPin.setImageResource(R.drawable.map_label_a)
-        val bmPinA = createBitmapFromView(pinLayout)
-
-        pinLayout.tvPlace.text = routeModel.to.primary
-        pinLayout.tvInfo.text = distance
-        pinLayout.tvPlaceMirror.text = routeModel.to.primary
-        pinLayout.tvInfoMirror.text = distance
-        pinLayout.imgPin.setImageResource(R.drawable.map_label_b)
-        val bmPinB = createBitmapFromView(pinLayout)
-
-        //Создание polyline
-
-        // Для построения подробного маршрута
-        val mPoints = arrayListOf<LatLng>()
-        for(item in routeModel.polyLines) mPoints.addAll(PolyUtil.decode(item))
-
-        // Для построения упрощённого маршрута (меньше точек)
-        //val mPoints = PolyUtil.decode(routeInfo.overviewPolyline)
-
-        val line = PolylineOptions().width(10f).color(ContextCompat.getColor(this, R.color.colorPolyline))
-
-        val latLngBuilder = LatLngBounds.Builder()
-        for(i in mPoints.indices) {
-            if(i == 0) {
-                val startMakerOptions = MarkerOptions()
-                        .position(mPoints.get(i))
-                        .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
-                googleMap.addMarker(startMakerOptions)
-            } else if(i == mPoints.size - 1) {
-                val endMakerOptions = MarkerOptions()
-                        .position(mPoints.get(i))
-                        .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
-                googleMap.addMarker(endMakerOptions)
-            }
-            line.add(mPoints.get(i))
-            latLngBuilder.include(mPoints.get(i))
-        }
-        googleMap.addPolyline(line)
-        
-        /*
-        val sizeWidth = resources.displayMetrics.widthPixels
-        val sizeHeight = mapView.height
-        val latLngBounds = latLngBuilder.build()
-        val track = CameraUpdateFactory.newLatLngBounds(latLngBounds, sizeWidth, sizeHeight, 150)
-        */
-        val track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 15)
-        try { googleMap.moveCamera(track) }
-        catch(e: Exception) { Timber.e(e) }
-    }
-
-    fun createBitmapFromView(v: View): Bitmap {
-        v.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT)
-        v.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
-        v.layout(0, 0, v.measuredWidth, v.measuredHeight)
-        val bitmap = Bitmap.createBitmap(v.measuredWidth,
-                v.measuredHeight,
-                Bitmap.Config.ARGB_8888)
-
-        val c = Canvas(bitmap)
-        v.layout(v.left, v.top, v.right, v.bottom)
-        v.draw(c)
-        return bitmap
+    	Utils.setPins(this, googleMap, routeModel, distance)
     }
 }

@@ -4,6 +4,9 @@ import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.presentation.ui.Utils
+
+import java.text.SimpleDateFormat
 
 import java.util.Currency
 import java.util.Locale
@@ -29,6 +32,36 @@ object Mappers {
     fun getRouteModel(distance: Int?,
                       distanceUnit: DistanceUnit,
                       polyLines: List<String>,
-                      from: GTAddress,
-                      to: GTAddress) = RouteModel(distance, distanceUnit, polyLines, from, to)
+                      from: String,
+                      to: String) = RouteModel(distance, distanceUnit, polyLines, from, to)
+    
+    fun getTransferModel(transfer: Transfer,
+                         locale: Locale,
+                         distance: String,
+                         transportTypes: List<TransportType>): TransferModel {
+        val selected = transportTypes.filter { transfer.transportTypeIds.contains(it.id) }
+        return TransferModel(transfer.id,
+                      transfer.from.name,
+                      transfer.to!!.name,
+                      SimpleDateFormat(Utils.DATE_TIME_PATTERN, locale).format(transfer.dateToLocal),
+                      distance,
+                      transfer.pax!!,
+                      transfer.nameSign,
+                      transfer.childSeats ?: 0,
+                      transfer.flightNumber,
+                      transfer.comment,
+                      selected.map { TransportTypeModel(it.id, null, null, it.paxMax, it.luggageMax, null) },
+                      transfer.paidSum!!.default,
+                      transfer.paidPercentage!!,
+                      transfer.remainsToPay!!.default,
+                      transfer.price!!.default)
+    }
+    
+    fun getOfferModel(offer: Offer) = OfferModel(offer.driver!!.fullName,
+                                                 offer.driver!!.email,
+                                                 offer.driver!!.phone,
+                                                 offer.vehicle.transportTypeId,
+                                                 offer.vehicle.name,
+                                                 offer.vehicle.registrationNumber,
+                                                 offer.price.base.default)
 }

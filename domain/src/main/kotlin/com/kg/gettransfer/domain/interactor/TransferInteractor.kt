@@ -9,7 +9,10 @@ import com.kg.gettransfer.domain.repository.ApiRepository
 
 class TransferInteractor(private val repository: ApiRepository) {
     lateinit var transfer: Transfer
-    
+
+    suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean) = 
+        repository.getRouteInfo(from, to, withPrices, returnWay)
+
     suspend fun createTransfer(from: GTAddress,
                                to: GTAddress,
                                tripTo: Trip,
@@ -37,4 +40,6 @@ class TransferInteractor(private val repository: ApiRepository) {
                                              paypalOnly)
         return transfer
     }
+    
+    suspend fun getOffers() = repository.getOffers(transfer.id)
 }

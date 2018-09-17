@@ -1,6 +1,6 @@
 package com.kg.gettransfer.domain.model
 
-import java.util.*
+import java.util.Locale
 
 data class Offer(val id: Long,
                  val status: String,
