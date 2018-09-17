@@ -51,7 +51,7 @@
             android:fontFamily="@font/sf_pro_text_regular"
             android:textColor="@color/colorTextBlack"
             android:textSize="@dimen/create_transfer_additionals_top_text_size"
-            app:layout_constraintEnd_toEndOf="@+id/tvPersonsCounterDown"
+            app:layout_constraintEnd_toEndOf="@+id/ivPersonsCounterDown"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="1" />
 
@@ -67,40 +67,30 @@
             app:layout_constraintTop_toBottomOf="@+id/tvCountPerson" />
 
         <ImageView
-            android:layout_width="9dp"
-            android:layout_height="22dp"
-            android:src="@drawable/ic_person"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_passenger"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tvCountPerson"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tvPersonsCounterDown"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+        <ImageView
+            android:id="@+id/ivPersonsCounterDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/back_circle_counter"
-            android:gravity="center"
-            android:text="-"
-            android:textColor="@color/colorTextBlack"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            app:srcCompat="@drawable/ic_circle_minus"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tvPersonsCounterUp"
+            app:layout_constraintEnd_toStartOf="@+id/ivPersonsCounterUp"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tvPersonsCounterUp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+        <ImageView
+            android:id="@+id/ivPersonsCounterUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/back_circle_counter"
-            android:gravity="center"
-            android:text="+"
-            android:textColor="@color/colorTextBlack"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            app:srcCompat="@drawable/ic_circle_plus"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -156,9 +146,9 @@
             app:layout_constraintTop_toBottomOf="@+id/tvName" />
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="16dp"
-            android:src="@drawable/ic_passport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_passport"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tvName"
             app:layout_constraintStart_toStartOf="parent"
@@ -217,9 +207,9 @@
             app:layout_constraintTop_toBottomOf="@+id/etEmail" />
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="21dp"
-            android:src="@drawable/ic_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_email"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/etEmail"
             app:layout_constraintStart_toStartOf="parent"
@@ -277,9 +267,9 @@
             app:layout_constraintTop_toBottomOf="@+id/tvPhone" />
 
         <ImageView
-            android:layout_width="13dp"
-            android:layout_height="22dp"
-            android:src="@drawable/ic_mobile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_phone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tvPhone"
             app:layout_constraintStart_toStartOf="parent"
@@ -340,9 +330,9 @@
             app:layout_constraintTop_toBottomOf="@+id/tvFlightOrTrainNumber" />
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_aircraft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_flight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tvFlightOrTrainNumber"
             app:layout_constraintStart_toStartOf="parent"
@@ -382,7 +372,7 @@
             android:text="0"
             android:textColor="@color/colorTextBlack"
             android:textSize="@dimen/create_transfer_additionals_top_text_size"
-            app:layout_constraintEnd_toEndOf="@+id/tvChildCounterDown"
+            app:layout_constraintEnd_toEndOf="@+id/ivChildCounterDown"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
@@ -397,40 +387,30 @@
             app:layout_constraintTop_toBottomOf="@+id/tvCountChild" />
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="23dp"
-            android:src="@drawable/ic_child_seat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_child_seat"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tvCountChild"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tvChildCounterDown"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+        <ImageView
+            android:id="@+id/ivChildCounterDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/back_circle_counter"
-            android:gravity="center"
-            android:text="-"
-            android:textColor="@color/colorTextBlack"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            app:srcCompat="@drawable/ic_circle_minus"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tvChildCounterUp"
+            app:layout_constraintEnd_toStartOf="@+id/ivChildCounterUp"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tvChildCounterUp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+        <ImageView
+            android:id="@+id/ivChildCounterUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/back_circle_counter"
-            android:gravity="center"
-            android:text="+"
-            android:textColor="@color/colorTextBlack"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            app:srcCompat="@drawable/ic_circle_plus"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -452,8 +432,12 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/create_transfer_additionals_view_height"
         android:layout_marginTop="1dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:padding="8dp"
         android:hint="@string/type_your_comments"
+        android:drawableStart="@drawable/ic_comment"
+        android:drawablePadding="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout6" />

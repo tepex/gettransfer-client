@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvDateTimeTransfer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvDateTimeTransfer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="10dp"
+        android:drawablePadding="10dp"
+        android:drawableStart="@drawable/ic_calendar"
+        android:gravity="center"
+        android:text="@string/transfer_date_and_time"
+        app:layout_constraintBottom_toTopOf="@+id/rvTransferType"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mapView" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvTransferType"
+        android:layout_width="0dp"
+        android:layout_height="83dp"
+        android:background="@color/colorWhite"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDateTimeTransfer" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="55dp"
+        android:background="@color/colorWhite"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/btnGetOffers"
+        app:layout_constraintStart_toStartOf="@+id/rvTransferType"
+        app:layout_constraintTop_toBottomOf="@+id/rvTransferType">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/create_transfer_additionals_view_height"
+            android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
+            android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding"
+            app:layout_constraintBottom_toTopOf="@+id/btnGetOffers"
+            app:layout_constraintStart_toStartOf="@+id/rvTransferType"
+            app:layout_constraintTop_toBottomOf="@+id/rvTransferType">
+
+            <EditText
+                android:id="@+id/tvCost"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
+                android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
+                android:background="@null"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:inputType="number"
+                android:textColor="@color/colorTextBlack"
+                android:textSize="@dimen/create_transfer_additionals_top_text_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:text="@string/average_price_suggest_your_price"
+                android:textColor="@color/colorTextLightGray"
+                android:textSize="@dimen/create_transfer_additionals_bottom_text_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tvCost"
+                app:layout_constraintTop_toBottomOf="@+id/tvCost" />
+
+            <RelativeLayout
+                android:id="@+id/btnChangeCurrencyType"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tvCost"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tvCurrencyType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/helvetica_neue"
+                    android:text="₽"
+                    android:textColor="@color/colorTextBlack"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"
+                    android:layout_toEndOf="@id/tvCurrencyType"
+                    android:src="@drawable/ic_currency_type_triangle" />
+
+            </RelativeLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/create_transfer_divider_height"
+            android:background="@color/colorDividerGray" />
+
+        <TextView
+            android:id="@+id/tvAdditional"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:gravity="center"
+            android:text="@string/additional" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/create_transfer_divider_height"
+            android:background="@color/colorDividerGray" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/create_transfer_divider_height"
+            android:background="@color/colorDividerGray" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnGetOffers"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="23dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/btn_get_transfer"
+        android:enabled="false"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:stateListAnimator="@null"
+        android:text="@string/get_offers"
+        android:textAllCaps="true"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/create_transfer_additionals_top_text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+</android.support.constraint.ConstraintLayout>

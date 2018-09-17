@@ -288,7 +288,7 @@
                         android:text="1"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="@dimen/create_transfer_additionals_top_text_size"
-                        app:layout_constraintEnd_toEndOf="@+id/tvPersonsCounterDown"
+                        app:layout_constraintEnd_toEndOf="@+id/ivPersonsCounterDown"
                         app:layout_constraintStart_toStartOf="parent" />
 
                     <TextView
@@ -312,7 +312,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/tvPersonsCounterDown"
+                        android:id="@+id/ivPersonsCounterDown"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="10dp"
@@ -323,11 +323,11 @@
                         android:textSize="20sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/tvPersonsCounterUp"
+                        app:layout_constraintEnd_toStartOf="@+id/ivPersonsCounterUp"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/tvPersonsCounterUp"
+                        android:id="@+id/ivPersonsCounterUp"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="10dp"
@@ -533,7 +533,7 @@
                         android:text="0"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="@dimen/create_transfer_additionals_top_text_size"
-                        app:layout_constraintEnd_toEndOf="@+id/tvChildCounterDown"
+                        app:layout_constraintEnd_toEndOf="@+id/ivChildCounterDown"
                         app:layout_constraintStart_toStartOf="parent" />
 
                     <TextView
@@ -557,7 +557,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/tvChildCounterDown"
+                        android:id="@+id/ivChildCounterDown"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="10dp"
@@ -568,11 +568,11 @@
                         android:textSize="20sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/tvChildCounterUp"
+                        app:layout_constraintEnd_toStartOf="@+id/ivChildCounterUp"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/tvChildCounterUp"
+                        android:id="@+id/ivChildCounterUp"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="10dp"
@@ -713,7 +713,7 @@
             </android.support.constraint.ConstraintLayout>
 
             <Button
-                android:id="@+id/btnGetTransfer"
+                android:id="@+id/btnGetOffers"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/create_transfer_btn_get_transfer_height"
                 android:background="@drawable/btn_get_transfer"

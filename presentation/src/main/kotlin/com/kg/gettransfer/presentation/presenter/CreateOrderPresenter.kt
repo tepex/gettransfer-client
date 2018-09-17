@@ -1,42 +1,25 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.support.annotation.CallSuper
-
 import android.content.Context
-
+import android.support.annotation.CallSuper
 import android.util.Patterns
-
 import com.arellomobile.mvp.InjectViewState
-
 import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
-
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.ApiInteractor
-
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.domain.model.Trip
 import com.kg.gettransfer.domain.model.RouteInfo
-
+import com.kg.gettransfer.domain.model.Trip
 import com.kg.gettransfer.presentation.Screens
-
 import com.kg.gettransfer.presentation.model.ConfigsModel
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
-
+import ru.terrakok.cicerone.Router
+import timber.log.Timber
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-
-import java.util.Currency
-import java.util.Date
-import java.util.Locale
-
-import ru.terrakok.cicerone.Router
-
-import timber.log.Timber
+import java.util.*
 
 @InjectViewState
 class CreateOrderPresenter(cc: CoroutineContexts,
@@ -58,7 +41,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         }
     private var flightNumber: String? = null
     private var comment: String? = null
-    private var agreeLicence = false
     
     companion object {
         @JvmField val MIN_PASSENGERS    = 1
@@ -141,13 +123,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         if(comment.isEmpty()) this.comment = null else this.comment = comment
         viewState.setComment(comment)
     }
-    
-    fun setAgreeLicence(agreeLicence: Boolean) {
-        this.agreeLicence = agreeLicence
-        checkFields()
-    }
-    
-    fun showLicenceAgreement() { router.navigateTo(Screens.LICENCE_AGREE) }
 
     fun onGetTransferClick() {
         viewState.blockInterface(true)
@@ -172,7 +147,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         Timber.d("children: $children")
         Timber.d("flightNumber: $flightNumber")
         Timber.d("comment: $comment")
-        Timber.d("agree: $agreeLicence")
         Timber.d("account: %s", account)
 
         utils.launchAsyncTryCatchFinally({
@@ -198,8 +172,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                             account.fullName != null &&
                             account.email != null &&
                             Patterns.EMAIL_ADDRESS.matcher(account.email!!).matches() &&
-                            Utils.checkPhone(account.phone) &&
-                            agreeLicence
+                            Utils.checkPhone(account.phone)
         viewState.setGetTransferEnabled(actionEnabled)
     }
 }

@@ -8,12 +8,21 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
 import android.support.annotation.CallSuper
+import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+import android.text.InputType
+import android.util.DisplayMetrics
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.LinearLayout
+import android.widget.PopupWindow
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -33,6 +42,10 @@ import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import kotlinx.android.synthetic.main.activity_create_order_new.*
+import kotlinx.android.synthetic.main.bottom_sheet_additional.*
+import kotlinx.android.synthetic.main.content_create_order.*
+import kotlinx.android.synthetic.main.layout_popup_comment.*
+import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 import kotlinx.android.synthetic.main.view_maps_pin.view.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
@@ -51,6 +64,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
     private lateinit var googleMap: GoogleMap
     private val calendar = Calendar.getInstance()
+    private lateinit var sheetBehavior: BottomSheetBehavior<View>
     
     @ProvidePresenter
     fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(coroutineContexts,
@@ -65,7 +79,6 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
             if(intent != null) return intent
                 
             when(screenKey) {
-                Screens.LICENCE_AGREE -> return Intent(context, LicenceAgreementActivity::class.java)
                 Screens.OFFERS -> return Intent(context, OffersActivity::class.java)
             }
             return null
@@ -95,30 +108,33 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         tvCost.onTextChanged { presenter.cost = it.toIntOrNull() }
         tvDateTimeTransfer.setOnClickListener { showDatePickerDialog() }
 
-//        tvPersonsCounterDown.setOnClickListener { presenter.changePassengers(-1) }
-//        tvPersonsCounterUp.setOnClickListener { presenter.changePassengers(1) }
-//
-//        tvName.onTextChanged { presenter.setName(it.trim()) }
-//        etEmail.onTextChanged { presenter.setEmail(it.trim()) }
-//        tvPhone.onTextChanged { presenter.setPhone(it.trim()) }
-//        tvChildCounterDown.setOnClickListener { presenter.changeChildren(-1) }
-//        tvChildCounterUp.setOnClickListener { presenter.changeChildren(1) }
-//        tvFlightOrTrainNumber.onTextChanged { presenter.setFlightNumber(it.trim()) }
-//
-//        tvComments.setOnClickListener { showPopupWindowComment() }
-//        layoutAgreement.setOnClickListener { presenter.showLicenceAgreement() }
-//        cbAgreement.setOnClickListener { presenter.setAgreeLicence(cbAgreement.isChecked()) }
+        ivPersonsCounterDown.setOnClickListener { presenter.changePassengers(-1) }
+        ivPersonsCounterUp.setOnClickListener { presenter.changePassengers(1) }
+
+        tvName.onTextChanged { presenter.setName(it.trim()) }
+        etEmail.onTextChanged { presenter.setEmail(it.trim()) }
+        tvPhone.onTextChanged { presenter.setPhone(it.trim()) }
+        ivChildCounterDown.setOnClickListener { presenter.changeChildren(-1) }
+        ivChildCounterUp.setOnClickListener { presenter.changeChildren(1) }
+        tvFlightOrTrainNumber.onTextChanged { presenter.setFlightNumber(it.trim()) }
+
+        tvComments.setOnClickListener { showPopupWindowComment() }
 
         tvAdditional.setOnClickListener { showAdditional() }
 
-        btnGetTransfer.setOnClickListener { presenter.onGetTransferClick() }
+        btnGetOffers.setOnClickListener { presenter.onGetTransferClick() }
 
         val mapViewBundle = savedInstanceState?.getBundle(MainActivity.MAP_VIEW_BUNDLE_KEY)
         initGoogleMap(mapViewBundle)
+
+        sheetBehavior = BottomSheetBehavior.from(bottom_sheet)
+        sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     private fun showAdditional() {
-
+        if (sheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
+            sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
     }
 
     @CallSuper
@@ -182,35 +198,35 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         }
     }
     
-//    private fun showPopupWindowComment(){
-//        val displaymetrics = DisplayMetrics()
-//        windowManager.defaultDisplay.getMetrics(displaymetrics)
-//        val screenHeight = displaymetrics.heightPixels
-//
-//        val layoutPopup = LayoutInflater.from(applicationContext).inflate(R.layout.layout_popup_comment, layoutPopup)
-//        val popupWindowComment = PopupWindow(layoutPopup, LinearLayout.LayoutParams.MATCH_PARENT, screenHeight / 3, true)
-//        layoutPopup.etPopupComment.setText(tvComments.text)
-//        layoutPopup.etPopupComment.setRawInputType(InputType.TYPE_CLASS_TEXT)
-//        popupWindowComment.showAtLocation(mainLayoutActivityTransfer, Gravity.CENTER, 0, 0)
-//        layoutShadow.visibility = View.VISIBLE
-//
-//        layoutPopup.btnClearPopupComment.setOnClickListener { layoutPopup.etPopupComment.setText("") }
-//        layoutPopup.etPopupComment.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
-//            if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                presenter.setComment(layoutPopup.etPopupComment.text.toString().trim())
-//                popupWindowComment.dismiss()
-//                return@OnEditorActionListener true
-//            }
-//            false
-//        })
-//        popupWindowComment.setOnDismissListener {
-//            Utils.hideKeyboard(this, currentFocus)
-//            layoutShadow.visibility = View.GONE
-//        }
-//        layoutPopup.setOnClickListener{ layoutPopup.etPopupComment.requestFocus()}
-//        layoutPopup.etPopupComment.setSelection(layoutPopup.etPopupComment.text.length)
-//        Utils.showKeyboard(this)
-//    }
+    private fun showPopupWindowComment(){
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val screenHeight = displayMetrics.heightPixels
+
+        val layoutPopup = LayoutInflater.from(applicationContext).inflate(R.layout.layout_popup_comment, layoutPopup)
+        val popupWindowComment = PopupWindow(layoutPopup, LinearLayout.LayoutParams.MATCH_PARENT, screenHeight / 3, true)
+        layoutPopup.etPopupComment.setText(tvComments.text)
+        layoutPopup.etPopupComment.setRawInputType(InputType.TYPE_CLASS_TEXT)
+        popupWindowComment.showAtLocation(mainLayoutActivityTransfer, Gravity.CENTER, 0, 0)
+        layoutShadow.visibility = View.VISIBLE
+
+        layoutPopup.btnClearPopupComment.setOnClickListener { layoutPopup.etPopupComment.setText("") }
+        layoutPopup.etPopupComment.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                presenter.setComment(layoutPopup.etPopupComment.text.toString().trim())
+                popupWindowComment.dismiss()
+                return@OnEditorActionListener true
+            }
+            false
+        })
+        popupWindowComment.setOnDismissListener {
+            Utils.hideKeyboard(this, currentFocus)
+            layoutShadow.visibility = View.GONE
+        }
+        layoutPopup.setOnClickListener{ layoutPopup.etPopupComment.requestFocus()}
+        layoutPopup.etPopupComment.setSelection(layoutPopup.etPopupComment.text.length)
+        Utils.showKeyboard(this)
+    }
 
     private fun showDatePickerDialog() {
         calendar.setTime(presenter.date)
@@ -234,22 +250,21 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     }
 
     override fun setPassengers(count: Int) {
-//        tvCountPerson.text = count.toString()
+        tvCountPerson.text = count.toString()
     }
 
     override fun setChildren(count: Int) {
-//        tvCountChild.text = count.toString()
+        tvCountChild.text = count.toString()
     }
     
     override fun setCurrency(currency: String) { tvCurrencyType.text = currency }
 
     override fun setDateTimeTransfer(dateTimeString: String) {
-//        tvDateTimeTransfer.text = dateTimeString
-//        tvOrderDateTime.text = dateTimeString
+        tvDateTimeTransfer.text = dateTimeString
     }
 
     override fun setComment(comment: String) {
-//        tvComments.text = comment
+        tvComments.text = comment
     }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>, transportTypePrice: List<TransportTypePrice>) {
@@ -257,31 +272,28 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     }
     
     override fun setAccount(account: Account) {
-//        if(account.fullName != null) tvName.setText(account.fullName)
-//        if(account.loggedIn) {
-//            etEmail.setText(account.email)
-//            etEmail.isEnabled = false
-//            tvEmail.visibility = View.GONE
-//        }
-//        if(account.phone != null) tvPhone.setText(account.phone)
+        if(account.fullName != null) tvName.setText(account.fullName)
+        if(account.loggedIn) {
+            etEmail.setText(account.email)
+            etEmail.isEnabled = false
+            tvEmail.visibility = View.GONE
+        }
+        if(account.phone != null) tvPhone.setText(account.phone)
     }
     
     override fun setGetTransferEnabled(enabled: Boolean) {
-        btnGetTransfer.isEnabled = enabled
+        btnGetOffers.isEnabled = enabled
     }
     
     override fun setRouteInfo(distance: String, polyLines: List<String>, route: Pair<GTAddress, GTAddress>) {
-//    	tvFrom.setText(route.first.name)
-//    	tvTo.setText(route.second.name)
-//    	tvDistance.text = distance
         //Создание пинов с информацией
         val ltInflater = layoutInflater
         val pinLayout = ltInflater.inflate(R.layout.view_maps_pin, null)
 
         pinLayout.tvPlace.text = route.first.name
-//        pinLayout.tvInfo.text = tvDateTimeTransfer.text
-//        pinLayout.tvPlaceMirror.text = route.first.name
-//        pinLayout.tvInfoMirror.text = tvDateTimeTransfer.text
+        pinLayout.tvInfo.text = tvDateTimeTransfer.text
+        pinLayout.tvPlaceMirror.text = route.first.name
+        pinLayout.tvInfoMirror.text = tvDateTimeTransfer.text
         pinLayout.imgPin.setImageResource(R.drawable.map_label_a)
         val bmPinA = createBitmapFromView(pinLayout)
 
