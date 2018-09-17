@@ -61,4 +61,9 @@
 
     <color name="colorTextLightGrayTransportType">#787878</color>
 
+    <!--view_trip_info-->
+    <color name="colorTransferRequestText">#9b9b9b</color>
+    <color name="colorGreenSmallText">#417505</color>
+    <color name="colorRedPriceText">#d0021b</color>
+
 </resources>

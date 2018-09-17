@@ -59,6 +59,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".presentation.ui.TransferDetailsActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".presentation.ui.CarrierTripsActivitty"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".presentation.ui.LoginActivity"
             android:screenOrientation="portrait"

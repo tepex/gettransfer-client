@@ -63,7 +63,7 @@
     <string name="email_address">Email address</string>
     <string name="enter_password">Enter password</string>
     <string name="login_subtitle">Вход для клиентов и водителей</string>
-    
+
 	<!--
 	<string name=""></string>
 	-->
@@ -293,5 +293,8 @@
     <string name="activity_transfer_details_child_seats">Child seats</string>
     <string name="activity_transfer_details_name">Name</string>
     <string name="activity_transfer_details_passenger">Passenger</string>
+
+    <!--activity_carrier_trips-->
+    <string name="activity_carrier_trips_title">Upcoming transfers</string>
 
 </resources>

@@ -67,7 +67,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     private lateinit var drawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var headerView: View
-    
+
     private val locationInteractor: LocationInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
     
@@ -89,6 +89,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
             R.id.navAbout -> presenter.onAboutClick()
             R.id.navSettings -> presenter.onSettingsClick()
             R.id.navRequests -> presenter.onRequestsClick()
+			R.id.navBecomeACarrier -> presenter.onBecomeACarrierClick()
             else -> Timber.d("No route")
         }
         drawer.closeDrawer(GravityCompat.START)
@@ -112,6 +113,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 				Screens.CREATE_ORDER -> return Intent(context, CreateOrderActivity::class.java)
 				Screens.SETTINGS -> return Intent(context, SettingsActivity::class.java)
 				Screens.REQUESTS -> return Intent(context, RequestsActivity::class.java)
+				Screens.CARRIER -> return  Intent(context, CarrierTripsActivitty::class.java)
 			}
 			return null
 		}
@@ -150,12 +152,12 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 	@CallSuper
 	protected override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		
+
 		setContentView(R.layout.activity_main)
 		
 		_mapView = mapView
 		initGoogleMap(savedInstanceState)
-		
+
 		val tb = this.toolbar as Toolbar
 		
 		setSupportActionBar(tb)
@@ -180,9 +182,9 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         (appbar as AppBarLayout).bringToFront()
 		
 		initNavigation()
-		
+
 		isFirst = savedInstanceState == null
-		
+
 		search.elevation = resources.getDimension(R.dimen.search_elevation)
 		searchFrom.setUneditable()
 		searchTo.setUneditable()
@@ -199,7 +201,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 		super.onPostCreate(savedInstanceState)
 		toggle.syncState()
 	}
-	
+
 	@CallSuper
 	protected override fun onResume() {
 		super.onResume()
@@ -219,7 +221,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 		searchTo.text = ""
 		super.onStop()
 	}
-	
+
 	/** @see {@link android.support.v7.app.ActionBarDrawerToggle} */
 	@CallSuper
 	override fun onConfigurationChanged(newConfig: Configuration) {
@@ -253,7 +255,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 		navBecomeACarrier.setOnClickListener(itemsNavigationViewListener)
 		navPassengerMode.setOnClickListener(itemsNavigationViewListener)
 	}
-	
+
 	/**
 	 * Грязный хак — меняем положение нативной кнопки 'MyLocation'
 	 * https://stackoverflow.com/questions/36785542/how-to-change-the-position-of-my-location-button-in-google-maps-using-android-st

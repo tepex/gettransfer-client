@@ -141,4 +141,27 @@
 	<dimen name="activity_transfer_details_button_margin">16dp</dimen>
 
 
+	<!-- view_trips_info -->
+	<dimen name="view_trips_info_big_text_size">13sp</dimen>
+	<dimen name="view_trips_info_request_number_text_size">11sp</dimen>
+	<dimen name="view_trips_info_small_text_size">11sp</dimen>
+	<dimen name="view_trips_info_request_number_margin_top">7dp</dimen>
+	<dimen name="view_trips_info_markers_size">23dp</dimen>
+	<dimen name="view_trips_info_markers_margin_start">16dp</dimen>
+	<dimen name="view_trips_info_from_margin_start">47dp</dimen>
+	<dimen name="view_trips_info_from_margin_end">12dp</dimen>
+	<dimen name="view_trips_info_from_margin_top">3dp</dimen>
+	<dimen name="view_trips_info_to_margin_top">8dp</dimen>
+	<dimen name="view_trips_info_divider_height">0.5dp</dimen>
+	<dimen name="view_trips_info_divider_margin_top">10dp</dimen>
+	<dimen name="view_trips_info_price_vehicle_text_size">12sp</dimen>
+	<dimen name="view_trips_info_tv_price_margin_top">3dp</dimen>
+	<dimen name="view_trips_info_tv_vehicle_margin_top">7dp</dimen>
+	<dimen name="view_trips_info_iv_child_width">20dp</dimen>
+	<dimen name="view_trips_info_iv_child_height">23dp</dimen>
+	<dimen name="view_trips_info_iv_child_margin_end">28dp</dimen>
+	<dimen name="view_trips_info_iv_comment_width">20dp</dimen>
+	<dimen name="view_trips_info_iv_comment_height">18dp</dimen>
+	<dimen name="view_trips_info_iv_comment_margin_end">11dp</dimen>
+
 </resources>

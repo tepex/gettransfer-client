@@ -65,12 +65,12 @@ class MainPresenter(cc: CoroutineContexts,
             { updateCurrentLocationAsync() },
             { e -> viewState.setError(false, R.string.err_server, e.message) })
     }
-    
+
     private suspend fun updateCurrentLocationAsync() {
         viewState.blockInterface(true)
         val currentAddress = utils.asyncAwait { routeInteractor.getCurrentAddress() }
         lastAddressPoint = Mappers.point2LatLng(currentAddress.point!!)
-        
+
         onCameraMove(lastAddressPoint)
         viewState.setMapPoint(lastAddressPoint)
         viewState.setAddressFrom(currentAddress.name)
@@ -104,4 +104,6 @@ class MainPresenter(cc: CoroutineContexts,
     fun readMoreClick()   { router.navigateTo(Screens.READ_MORE) }
     fun onSettingsClick() { router.navigateTo(Screens.SETTINGS) }
     fun onRequestsClick() { router.navigateTo(Screens.REQUESTS) }
+    fun onBecomeACarrierClick() {router.navigateTo(Screens.CARRIER)}
+//    fun onBackCommandClick() { router.exit() }
 }
