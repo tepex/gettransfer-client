@@ -231,7 +231,7 @@
     <string name="additional">Additional</string>
     <string name="number_of_passengers">Number of passengers</string>
     <string name="transfer_date_and_time">Transfer date and time</string>
-    <string name="average_price_suggest_your_price">Average price, suggest your price</string>
+    <string name="suggest_your_price">Suggest your price</string>
 
     <string name="licence_agreement">Licence agreement</string>
 
@@ -271,5 +271,8 @@
     <string name="transfer_request_num">Transfer request № %1$s</string>
     <string name="next">Next</string>
     <string name="done">Done</string>
+    <string name="tvFare">Average fare offered by carriers is $s</string>
+    <string name="rub">₽</string>
+    <string name="comment_options">Comment and options</string>
 
 </resources>

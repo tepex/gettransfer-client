@@ -184,7 +184,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                         android:fontFamily="@font/sf_pro_text_regular"
-                        android:text="@string/average_price_suggest_your_price"
+                        android:text="@string/suggest_your_price"
                         android:textColor="@color/colorTextLightGray"
                         android:textSize="@dimen/create_transfer_additionals_bottom_text_size"
                         app:layout_constraintEnd_toEndOf="parent"

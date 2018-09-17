@@ -59,5 +59,6 @@
     <color name="color_error">#FFFF3B30</color>
     <color name="colorPolyline">#13a2fd</color>
     <color name="rectangle_swipe_down">#d8d8d8</color>
+    <color name="bg_average_fare">#66d8d8d8</color>
 
 </resources>

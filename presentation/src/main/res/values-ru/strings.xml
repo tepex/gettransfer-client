@@ -159,7 +159,7 @@
     <string name="additional">Additional</string>
     <string name="number_of_passengers">Number of passengers</string>
     <string name="transfer_date_and_time">Transfer date and time</string>
-    <string name="average_price_suggest_your_price">Average price, suggest your price</string>
+    <string name="suggest_your_price">Предложите вашу цену</string>
 
     <string name="licence_agreement">Лицензионное соглашение</string>
 
@@ -199,5 +199,8 @@
     <string name="transfer_request_num">Заявка на трансфер № %1$s</string>
     <string name="next">Далее</string>
     <string name="done">Сделано</string>
+    <string name="tvFare">Средний тариф, предлагаемый перевозчиками $s</string>
+    <string name="rub">₽</string>
+    <string name="comment_options">омментарий и опции</string>
 
 </resources>

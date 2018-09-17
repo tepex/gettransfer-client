@@ -105,7 +105,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
 
         rvTransferType.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        tvCost.onTextChanged { presenter.cost = it.toIntOrNull() }
+        etYourPrice.onTextChanged { presenter.cost = it.toIntOrNull() }
         tvDateTimeTransfer.setOnClickListener { showDatePickerDialog() }
 
         ivPersonsCounterDown.setOnClickListener { presenter.changePassengers(-1) }
@@ -120,7 +120,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
 
         tvComments.setOnClickListener { showPopupWindowComment() }
 
-        tvAdditional.setOnClickListener { showAdditional() }
+        tvOptions.setOnClickListener { showAdditional() }
 
         btnGetOffers.setOnClickListener { presenter.onGetTransferClick() }
 
@@ -193,7 +193,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     }
 
     override fun setCurrencies(currencies: List<CurrencyModel>) {
-        Utils.setCurrenciesDialogListener(this, btnChangeCurrencyType, currencies) { 
+        Utils.setCurrenciesDialogListener(this, ivChangeCurrency, currencies) {
             selected -> presenter.changeCurrency(selected) 
         }
     }
@@ -272,6 +272,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     }
     
     override fun setAccount(account: Account) {
+        if(account.fullName != null) tvName.setText(account.fullName)
         if(account.fullName != null) tvName.setText(account.fullName)
         if(account.loggedIn) {
             etEmail.setText(account.email)
