@@ -42,8 +42,12 @@ class SearchPresenter(cc: CoroutineContexts,
         if(isTo) routeInteractor.to = selected else routeInteractor.from = selected
         
         if(routeInteractor.isConcreteObjects()) {
-            routeInteractor.updateDestinationPoint()
-            router.navigateTo(Screens.CREATE_ORDER)
+            utils.launchAsyncTryCatchFinally({
+                viewState.blockInterface(true)
+                utils.asyncAwait { routeInteractor.updateDestinationPoint() }
+                router.navigateTo(Screens.CREATE_ORDER)
+            }, { e -> viewState.setError(false, R.string.err_server, e.message)
+            }, { viewState.blockInterface(false) })
         }
         else {
             val sendRequest = selected.needApproximation() /* dirty hack */

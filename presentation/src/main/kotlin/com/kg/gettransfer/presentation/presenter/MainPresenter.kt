@@ -68,7 +68,7 @@ class MainPresenter(cc: CoroutineContexts,
     
     private suspend fun updateCurrentLocationAsync() {
         viewState.blockInterface(true)
-        val currentAddress = utils.asyncAwait { routeInteractor.currentAddress }
+        val currentAddress = utils.asyncAwait { routeInteractor.getCurrentAddress() }
         lastAddressPoint = Mappers.point2LatLng(currentAddress.point!!)
         
         onCameraMove(lastAddressPoint)

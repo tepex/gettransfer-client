@@ -30,9 +30,9 @@ class SettingsPresenter(cc: CoroutineContexts,
                         router: Router,
                         systemInteractor: SystemInteractor): BasePresenter<SettingsView>(cc, router, systemInteractor) {
 
-    private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
-    private val locales = Mappers.getLocalesModels(systemInteractor.locales)
-    private val distanceUnits = Mappers.getDistanceUnitsModels(systemInteractor.distanceUnits)
+    private val currencies = Mappers.getCurrenciesModels(systemInteractor.getCurrencies())
+    private val locales = Mappers.getLocalesModels(systemInteractor.getLocales())
+    private val distanceUnits = Mappers.getDistanceUnitsModels(systemInteractor.getDistanceUnits())
     
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ ->
@@ -48,14 +48,14 @@ class SettingsPresenter(cc: CoroutineContexts,
         viewState.setLocales(locales)
         viewState.setDistanceUnits(distanceUnits)
             
-		val locale = systemInteractor.locale
-        val localeModel = locales.find { it.delegate.language == locale.language }
+		val locale = systemInteractor.getLocale()
+        val localeModel = locales.find { it.delegate.language == locale.getLanguage() }
         viewState.setLocale(localeModel?.name ?: "")
             
-        val currency = systemInteractor.currency
+        val currency = systemInteractor.getCurrency()
         val currencyModel = currencies.find { it.delegate == currency }
         viewState.setCurrency(currencyModel?.name ?: "")           
-        viewState.setDistanceUnit(systemInteractor.distanceUnit.name)
+        viewState.setDistanceUnit(systemInteractor.getDistanceUnit().name)
             
         viewState.setLogoutButtonEnabled(systemInteractor.account.loggedIn)
     }

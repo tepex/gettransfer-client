@@ -30,9 +30,8 @@ import com.kg.gettransfer.presentation.view.CreateOrderView
 import java.text.Format
 import java.text.SimpleDateFormat
 
-import java.util.Currency
+import java.util.Calendar
 import java.util.Date
-import java.util.Locale
 
 import ru.terrakok.cicerone.Router
 
@@ -45,17 +44,18 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                            private val routeInteractor: RouteInteractor,
                            private val transferInteractor: TransferInteractor): BasePresenter<CreateOrderView>(cc, router, systemInteractor) {
 
-    private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
+    private val currencies = Mappers.getCurrenciesModels(systemInteractor.getCurrencies())
     private var passengers: Int = MIN_PASSENGERS
     private var children: Int = MIN_CHILDREN
-    private lateinit var dateTimeFormat: Format
-    private lateinit var transportTypes: List<TransportTypeModel>
+    private var dateTimeFormat: Format? = null
+    private var transportTypes: List<TransportTypeModel>? = null
+    private var routeModel: RouteModel? = null
     
     var cost: Int? = null
     var date: Date = Date()
         set(value) {
             field = value
-            viewState.setDateTimeTransfer(dateTimeFormat.format(date))
+            if(dateTimeFormat != null) viewState.setDateTimeTransfer(dateTimeFormat!!.format(date))
         }
     private var flightNumber: String? = null
     private var comment: String? = null
@@ -65,29 +65,41 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         @JvmField val MIN_CHILDREN      = 0
     }
     
-    @CallSuper
-    override fun attachView(view: CreateOrderView) {
-        super.attachView(view)
-        viewState.setCurrencies(currencies)
-        val i = systemInteractor.currentCurrencyIndex
-        if(i != -1) changeCurrency(i)
-            
-        viewState.setAccount(systemInteractor.account)
-        dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
-            
+    override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
 	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(true, false) }
 	        val prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
-	        transportTypes = Mappers.getTransportTypesModels(systemInteractor.transportTypes, prices)
-	        viewState.setTransportTypes(transportTypes)
-	        viewState.setRoute(Mappers.getRouteModel(routeInfo.distance,
-                                                     systemInteractor.distanceUnit,
-                                                     routeInfo.polyLines,
-                                                     routeInteractor.from,
-                                                     routeInteractor.to!!))
-	    }, { _ -> viewState.setError(false, R.string.err_address_service_xxx)
-        }, { viewState.blockInterface(false) })
+	        transportTypes = Mappers.getTransportTypesModels(systemInteractor.getTransportTypes(), prices)
+	        routeModel = Mappers.getRouteModel(routeInfo.distance,
+                                               systemInteractor.getDistanceUnit(),
+                                               routeInfo.polyLines,
+                                               routeInteractor.from,
+                                               routeInteractor.to!!)
+            
+            viewState.setTransportTypes(transportTypes!!)
+            viewState.setRoute(routeModel!!)
+	    }, { e -> viewState.setError(false, R.string.err_server, e.message)
+        }, { viewState.blockInterface(false) })        
+        
+        val calendar = Calendar.getInstance(systemInteractor.getLocale())
+        /* Server must send current locale time */
+        calendar.add(Calendar.HOUR_OF_DAY, 3)
+        date = calendar.getTime()
+    }
+    
+    @CallSuper
+    override fun attachView(view: CreateOrderView) {
+        super.attachView(view)
+        viewState.setCurrencies(currencies)
+        val i = systemInteractor.getCurrentCurrencyIndex()
+        if(i != -1) changeCurrency(i)
+            
+        viewState.setAccount(systemInteractor.account)
+        dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.getLocale())
+        viewState.setDateTimeTransfer(dateTimeFormat!!.format(date))
+	    if(transportTypes != null) viewState.setTransportTypes(transportTypes!!)
+	    if(routeModel != null) viewState.setRoute(routeModel!!)
     }
 
     fun changeCurrency(selected: Int) { viewState.setCurrency(currencies.get(selected).symbol) }
@@ -139,7 +151,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         viewState.blockInterface(true)
         val trip = Trip(date, flightNumber)
         /* filter */
-        val selectedTransportTypes = transportTypes.filter { it.checked }.map { it.id }
+        val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
         
         Timber.d("from: %s", routeInteractor.from)
         Timber.d("to: %s", routeInteractor.to!!)
@@ -183,7 +195,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     
     /* @TODO: Добавить реакцию на некорректное значение в поле. Отображать, где и что введено некорректно. */
     fun checkFields() {
-        val typesHasSelected = transportTypes.filter { it.checked }.size > 0
+        if(transportTypes == null) return
+        val typesHasSelected = transportTypes!!.filter { it.checked }.size > 0
         val actionEnabled = typesHasSelected &&
                             !systemInteractor.account.fullName.isNullOrBlank() &&
                             !systemInteractor.account.email.isNullOrBlank() &&

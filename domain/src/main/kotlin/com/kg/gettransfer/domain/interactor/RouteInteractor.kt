@@ -11,7 +11,8 @@ class RouteInteractor(private val addressRepository: AddressRepository,
                       private val apiRepository: ApiRepository) {
     lateinit var from: GTAddress
     var to: GTAddress? = null 
-    val currentAddress = addressRepository.getCurrentAddress()
+    
+    fun getCurrentAddress() = addressRepository.getCurrentAddress()
     
     fun getAddressByLocation(point: Point): GTAddress {
         from = addressRepository.getAddressByLocation(point)

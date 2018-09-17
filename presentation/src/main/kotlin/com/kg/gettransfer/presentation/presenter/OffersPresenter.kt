@@ -37,7 +37,7 @@ class OffersPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: OffersView) {
         super.attachView(view)
-        viewState.setDate(SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
+        viewState.setDate(SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.getLocale())
             .format(transferInteractor.transfer.dateToLocal))
     }
     

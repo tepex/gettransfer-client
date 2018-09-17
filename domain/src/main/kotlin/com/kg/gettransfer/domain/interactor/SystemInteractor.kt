@@ -13,26 +13,23 @@ class SystemInteractor(private val apiRepository: ApiRepository) {
     lateinit var account: Account
         private set
     
-    val locale       = account.locale ?: Locale.getDefault()
-    val distanceUnit = account.distanceUnit
-    val currency     = account.currency ?: Currency.getInstance(locale)
-    
-    val transportTypes = configs.transportTypes
-    val locales        = configs.availableLocales
-    val distanceUnits  = configs.supportedDistanceUnits
-    
-    val currencies = configs.supportedCurrencies
-    var currentCurrencyIndex = -1
-        get() = currencies.indexOf(currency)
-        private set
-        
     suspend fun coldStart() {
         apiRepository.coldStart()
         configs = apiRepository.getConfigs()
         account = apiRepository.getAccount()
     }
     
-    suspend fun login(email: String, password: String) = apiRepository.login(email, password)
+    fun getTransportTypes()       = configs.transportTypes
+    fun getLocales()              = configs.availableLocales
+    fun getDistanceUnits()        = configs.supportedDistanceUnits
+    fun getCurrencies()           = configs.supportedCurrencies
+    fun getCurrentCurrencyIndex() = getCurrencies().indexOf(getCurrency()) 
+    
+    fun getLocale()       = account.locale ?: Locale.getDefault()
+    fun getDistanceUnit() = account.distanceUnit
+    fun getCurrency()     = account.currency ?: Currency.getInstance(getLocale())
+    
     fun logout() { apiRepository.logout() }
+    suspend fun login(email: String, password: String) = apiRepository.login(email, password)
     suspend fun putAccount() { apiRepository.putAccount(account) }
 }
