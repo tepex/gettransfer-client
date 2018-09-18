@@ -2,15 +2,21 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
 import android.content.Intent
+
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
+
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+
 import android.transition.Fade
 import android.transition.Slide
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
@@ -23,9 +29,11 @@ import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.AddressAdapter
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
+
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.android.synthetic.main.toolbar.*
+
 import org.koin.android.ext.android.inject
 
 class SearchActivity: BaseActivity(), SearchView {
@@ -54,10 +62,6 @@ class SearchActivity: BaseActivity(), SearchView {
             }
             return null
         }
-    }
-    
-    init {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
     
     override fun getPresenter(): SearchPresenter = presenter

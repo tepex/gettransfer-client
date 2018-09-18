@@ -15,8 +15,6 @@ import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
-import com.google.android.gms.maps.model.MapStyleOptions
-
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.TransferInteractor
@@ -30,7 +28,6 @@ import com.kg.gettransfer.presentation.view.TransferDetailsView
 
 import kotlinx.android.synthetic.main.activity_transfer_details.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-import kotlinx.android.synthetic.main.view_maps_pin.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.view.*
 import kotlinx.android.synthetic.main.view_transport_type_transfer_details.view.*
 
@@ -70,13 +67,11 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         layoutTransferInfo.ivChevron.visibility = View.GONE
 
         _mapView = mapView
-        val mapViewBundle = savedInstanceState?.getBundle(MainActivity.MAP_VIEW_BUNDLE_KEY)
-        initGoogleMap(mapViewBundle)
+        initGoogleMap(savedInstanceState)
     }
     
     protected override fun customizeGoogleMaps() {
-        googleMap.uiSettings.setRotateGesturesEnabled(false)
-        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
+        super.customizeGoogleMaps()
 
         // https://stackoverflow.com/questions/16974983/google-maps-api-v2-supportmapfragment-inside-scrollview-users-cannot-scroll-th
         transparentImage.setOnTouchListener(View.OnTouchListener { _, motionEvent ->

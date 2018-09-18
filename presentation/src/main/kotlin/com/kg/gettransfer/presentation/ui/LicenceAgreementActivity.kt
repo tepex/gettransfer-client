@@ -1,15 +1,23 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.annotation.SuppressLint
+
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
+
 import android.support.v7.widget.Toolbar
+
 import android.webkit.WebViewClient
+
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.presentation.presenter.LicenceAgreementPresenter
 import com.kg.gettransfer.presentation.view.LicenceAgreementView
+
 import kotlinx.android.synthetic.main.activity_licence_agreement.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 

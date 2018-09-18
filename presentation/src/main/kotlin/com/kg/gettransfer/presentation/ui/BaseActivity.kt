@@ -10,6 +10,7 @@ import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatDelegate
 
 import android.view.View
 
@@ -33,7 +34,6 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
-    
     internal val systemInteractor: SystemInteractor by inject()
     
     internal val coroutineContexts: CoroutineContexts by inject()
@@ -41,6 +41,11 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     protected val navigatorHolder: NavigatorHolder by inject()
     
     protected open lateinit var navigator: BaseNavigator
+    
+    /** [https://stackoverflow.com/questions/37615470/support-library-vectordrawable-resourcesnotfoundexception] */
+    init {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+    }
     
     abstract fun getPresenter(): BasePresenter<*>
 	

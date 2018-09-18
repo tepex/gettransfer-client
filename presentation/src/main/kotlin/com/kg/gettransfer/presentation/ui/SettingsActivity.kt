@@ -8,9 +8,6 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
 
-import android.support.v4.app.Fragment
-
-import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
 
 import android.view.View
@@ -20,7 +17,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.DistanceUnitModel
 import com.kg.gettransfer.presentation.model.LocaleModel
@@ -30,8 +26,6 @@ import com.kg.gettransfer.presentation.view.SettingsView
 
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-
-import org.koin.android.ext.android.inject
 
 import timber.log.Timber
 

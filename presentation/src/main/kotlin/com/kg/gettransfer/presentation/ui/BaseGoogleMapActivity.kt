@@ -7,6 +7,9 @@ import android.support.annotation.CallSuper
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 
+import com.google.android.gms.maps.model.MapStyleOptions
+
+import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
 
 import kotlin.coroutines.experimental.suspendCoroutine
@@ -21,6 +24,10 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
 
+	companion object {
+		@JvmField val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
+	}
+	
     @CallSuper
     protected override fun onStart() {
         super.onStart()
@@ -58,7 +65,8 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         super.onLowMemory()
     }
 
-    protected fun initGoogleMap(mapViewBundle: Bundle?) {
+    protected fun initGoogleMap(savedInstanceState: Bundle?) {
+        val mapViewBundle = savedInstanceState?.getBundle(MAP_VIEW_BUNDLE_KEY)
         _mapView.onCreate(mapViewBundle)
 
         utils.launch {
@@ -71,5 +79,8 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         _mapView.getMapAsync { cont.resume(it) }
     }
 
-    protected abstract fun customizeGoogleMaps()
+    protected open fun customizeGoogleMaps() {
+        googleMap.uiSettings.setRotateGesturesEnabled(false)
+        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
+    }
 }

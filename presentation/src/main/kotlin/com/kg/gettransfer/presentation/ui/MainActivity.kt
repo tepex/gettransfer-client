@@ -3,15 +3,20 @@ package com.kg.gettransfer.presentation.ui
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
 import android.support.design.widget.AppBarLayout
+
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
+
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
+
 import android.transition.Fade
 
 import android.view.MenuItem
@@ -23,12 +28,16 @@ import android.widget.TextView
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.AsyncUtils
 
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
@@ -36,20 +45,22 @@ import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.model.Account
 
 import com.kg.gettransfer.extensions.hideKeyboard
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
+
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_form.*
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
+
 import org.koin.android.ext.android.inject
+
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.cicerone.commands.Forward
-import timber.log.Timber
-import kotlin.coroutines.experimental.suspendCoroutine
 
-class MainActivity: BaseActivity(), MainView {
+import timber.log.Timber
+
+class MainActivity: BaseGoogleMapActivity(), MainView {
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
 
@@ -59,10 +70,6 @@ class MainActivity: BaseActivity(), MainView {
     
     private val locationInteractor: LocationInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
-    
-    private val compositeDisposable = Job()
-    private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
-    private lateinit var googleMap: GoogleMap
     
     private var isFirst = true
     private var centerMarker: Marker? = null
@@ -128,7 +135,6 @@ class MainActivity: BaseActivity(), MainView {
 	}
 
 	companion object {
-		@JvmField val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
 		@JvmField val MY_LOCATION_BUTTON_INDEX = 2
 		@JvmField val COMPASS_BUTTON_INDEX = 5
 		@JvmField val FADE_DURATION  = 500L
@@ -144,7 +150,11 @@ class MainActivity: BaseActivity(), MainView {
 	@CallSuper
 	protected override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+		
 		setContentView(R.layout.activity_main)
+		
+		_mapView = mapView
+		initGoogleMap(savedInstanceState)
 		
 		val tb = this.toolbar as Toolbar
 		
@@ -171,10 +181,7 @@ class MainActivity: BaseActivity(), MainView {
 		
 		initNavigation()
 		
-		val mapViewBundle = savedInstanceState?.getBundle(MAP_VIEW_BUNDLE_KEY)
 		isFirst = savedInstanceState == null
-		
-		initGoogleMap(mapViewBundle)
 		
 		search.elevation = resources.getDimension(R.dimen.search_elevation)
 		searchFrom.setUneditable()
@@ -194,25 +201,11 @@ class MainActivity: BaseActivity(), MainView {
 	}
 	
 	@CallSuper
-	protected override fun onStart() {
-		super.onStart()
-		mapView.onStart()
-	}
-
-	@CallSuper
 	protected override fun onResume() {
 		super.onResume()
 		val view = currentFocus
 		view?.hideKeyboard()
 		view?.clearFocus()
-
-		mapView.onResume()
-	}
-	
-	@CallSuper
-	protected override fun onPause() {
-		mapView.onPause()
-		super.onPause()
 	}
 	
 	@CallSuper
@@ -223,22 +216,8 @@ class MainActivity: BaseActivity(), MainView {
 	
 	@CallSuper
 	protected override fun onStop() {
-		mapView.onStop()
 		searchTo.text = ""
 		super.onStop()
-	}
-	
-	@CallSuper
-	protected override fun onDestroy() {
-		mapView.onDestroy()
-		compositeDisposable.cancel()
-		super.onDestroy()
-	}
-	
-	@CallSuper
-	override fun onLowMemory() {
-		mapView.onLowMemory()
-		super.onLowMemory()
 	}
 	
 	/** @see {@link android.support.v7.app.ActionBarDrawerToggle} */
@@ -275,27 +254,13 @@ class MainActivity: BaseActivity(), MainView {
 		navPassengerMode.setOnClickListener(itemsNavigationViewListener)
 	}
 	
-	private fun initGoogleMap(mapViewBundle: Bundle?) {
-		mapView.onCreate(mapViewBundle)
-		
-		utils.launch {
-			googleMap = getGoogleMapAsync()
-			customizeGoogleMaps()
-		}
-	}
-	
-    private suspend fun getGoogleMapAsync(): GoogleMap = suspendCoroutine { cont -> 
-        mapView.getMapAsync { cont.resume(it) }
-    }  
-	
 	/**
 	 * Грязный хак — меняем положение нативной кнопки 'MyLocation'
 	 * https://stackoverflow.com/questions/36785542/how-to-change-the-position-of-my-location-button-in-google-maps-using-android-st
 	 */
-	private fun customizeGoogleMaps() {
-	    googleMap.uiSettings.setRotateGesturesEnabled(false)
+	protected override fun customizeGoogleMaps() {
+	    super.customizeGoogleMaps()
 		googleMap.setMyLocationEnabled(true)
-		googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
 		
 		val parent = (mapView?.findViewById(1) as View).parent as View
 		val myLocationBtn = parent.findViewById(MY_LOCATION_BUTTON_INDEX) as View

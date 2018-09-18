@@ -11,9 +11,6 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
 
-import android.support.v4.app.Fragment
-
-import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 
@@ -34,12 +31,7 @@ import android.widget.PopupWindow
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.MapStyleOptions
-
 import com.kg.gettransfer.R
-
-import com.kg.gettransfer.domain.AsyncUtils
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
@@ -61,30 +53,20 @@ import com.kg.gettransfer.presentation.view.CreateOrderView
 
 import java.util.Calendar
 
-import kotlin.coroutines.experimental.suspendCoroutine
 import kotlinx.android.synthetic.main.activity_transfer.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.*
-import kotlinx.android.synthetic.main.view_maps_pin.view.*
-
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
 
 import org.koin.android.ext.android.inject
 
 import timber.log.Timber
 
-class CreateOrderActivity: BaseActivity(), CreateOrderView {
-
+class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
 
     private val routeInteractor: RouteInteractor by inject()
 	private val transferInteractor: TransferInteractor by inject()
-	
-    private val compositeDisposable = Job()
-    private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
-    private lateinit var googleMap: GoogleMap
     private val calendar = Calendar.getInstance()
     
     @ProvidePresenter
@@ -108,10 +90,6 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         }
     }
 
-    init {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-    }
-    
     override fun getPresenter(): CreateOrderPresenter = presenter
 
     @CallSuper
@@ -119,6 +97,8 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_transfer)
+		_mapView = mapView
+		initGoogleMap(savedInstanceState)
 
         setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -146,65 +126,10 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         cbAgreement.setOnClickListener { presenter.setAgreeLicence(cbAgreement.isChecked()) }
 
         btnGetTransfer.setOnClickListener { presenter.onGetTransferClick() }
-
-        val mapViewBundle = savedInstanceState?.getBundle(MainActivity.MAP_VIEW_BUNDLE_KEY)
-        initGoogleMap(mapViewBundle)
     }
 
-    @CallSuper
-    protected override fun onStart() {
-        super.onStart()
-        mapView.onStart()
-    }
-
-    @CallSuper
-    protected override fun onResume() {
-        super.onResume()
-        mapView.onResume()
-    }
-
-    @CallSuper
-    protected override fun onPause() {
-        mapView.onPause()
-        super.onPause()
-    }
-
-    @CallSuper
-    protected override fun onStop() {
-        mapView.onStop()
-        super.onStop()
-    }
-
-    @CallSuper
-    protected override fun onDestroy() {
-        mapView.onDestroy()
-        compositeDisposable.cancel()
-        super.onDestroy()
-    }
-
-    @CallSuper
-    override fun onLowMemory() {
-        mapView.onLowMemory()
-        super.onLowMemory()
-    }
-
-    private fun initGoogleMap(mapViewBundle: Bundle?) {
-        mapView.onCreate(mapViewBundle)
-
-        utils.launch {
-            googleMap = getGoogleMapAsync()
-            customizeGoogleMaps()
-        }
-    }
-
-    private suspend fun getGoogleMapAsync(): GoogleMap = suspendCoroutine { cont ->
-        mapView.getMapAsync { cont.resume(it) }
-    }
-
-    private fun customizeGoogleMaps() {
-        googleMap.uiSettings.setRotateGesturesEnabled(false)
-        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
-
+    protected override fun customizeGoogleMaps() {
+        super.customizeGoogleMaps()
         // https://stackoverflow.com/questions/16974983/google-maps-api-v2-supportmapfragment-inside-scrollview-users-cannot-scroll-th
         transparentImage.setOnTouchListener(View.OnTouchListener { _, motionEvent ->
             when (motionEvent.action) {
