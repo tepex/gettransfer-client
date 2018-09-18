@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/btn_get_transfer"
+    android:paddingStart="@dimen/activity_carrier_transfer_details_btn_padding_start">
+    
+    <ImageView
+        android:layout_width="@dimen/activity_carrier_transfer_details_btn_icons_size"
+        android:layout_height="@dimen/activity_carrier_transfer_details_btn_icons_size"
+        android:src="@drawable/ic_btn_chat"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/chat"
+        android:textAllCaps="true"
+        android:textSize="@dimen/activity_carrier_transfer_details_btn_text_size"
+        android:layout_marginStart="@dimen/activity_carrier_transfer_details_btn_text_margin_start"
+        android:textColor="@color/colorWhite"
+        android:fontFamily="@font/sf_pro_text_regular"/>
+
+</LinearLayout>

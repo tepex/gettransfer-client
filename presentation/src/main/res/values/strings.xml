@@ -297,4 +297,11 @@
     <!--activity_carrier_trips-->
     <string name="activity_carrier_trips_title">Upcoming transfers</string>
 
+    <!--activity_carrier_transfer_details-->
+    <string name="activity_carrier_transfer_details_title">Trip details</string>
+    <string name="call">Call</string>
+    <string name="chat">Chat</string>
+    <string name="btn_confirm_appointment">Confirm appointment</string>
+    <string name="transfer_details">Transfer details</string>
+
 </resources>

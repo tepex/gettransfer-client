@@ -204,4 +204,11 @@
     <!--activity_carrier_trips-->
     <string name="activity_carrier_trips_title">Входящие заявки</string>
 
+    <!--activity_carrier_transfer_details-->
+    <string name="activity_carrier_transfer_details_title">Детали заявки</string>
+    <string name="call">Call</string>
+    <string name="chat">Chat</string>
+    <string name="btn_confirm_appointment">Подтвердить встречу</string>
+    <string name="transfer_details">Transfer details</string>
+
 </resources>
