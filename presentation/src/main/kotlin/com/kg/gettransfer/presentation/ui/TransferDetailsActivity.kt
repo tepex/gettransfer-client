@@ -98,7 +98,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         layoutTransferInfo.tvFrom.text = transferModel.from
         layoutTransferInfo.tvTo.text = transferModel.to
         layoutTransferInfo.tvOrderDateTime.text = transferModel.dateTime
-        layoutTransferInfo.tvDistance.text = transferModel.distance
+        layoutTransferInfo.tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
 
         tvCountPassengers.text = transferModel.countPassengers.toString()
         if(transferModel.nameSign != null) {
@@ -151,8 +151,5 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         layoutOfferTransportInfo.visibility = View.VISIBLE
     }
 
-    override fun setRoute(routeModel: RouteModel) {
-        val distance = Utils.formatDistance(this, R.string.distance, routeModel.distance, routeModel.distanceUnit)
-    	Utils.setPins(this, googleMap, routeModel, distance)
-    }
+    override fun setRoute(routeModel: RouteModel) { Utils.setPins(this, googleMap, routeModel) }
 }

@@ -246,11 +246,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
     
     override fun setRoute(routeModel: RouteModel) {
-        val distance = Utils.formatDistance(this, R.string.distance, routeModel.distance, routeModel.distanceUnit)
     	tvFrom.setText(routeModel.from)
     	tvTo.setText(routeModel.to)
-    	tvDistance.text = distance
+    	tvDistance.text = Utils.formatDistance(this, routeModel.distance, routeModel.distanceUnit)
 
-    	Utils.setPins(this, googleMap, routeModel, distance)
+    	Utils.setPins(this, googleMap, routeModel)
     }
 }

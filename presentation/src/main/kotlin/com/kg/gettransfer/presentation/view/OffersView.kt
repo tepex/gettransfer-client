@@ -5,10 +5,10 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
-import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.presentation.model.TransferModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface OffersView: BaseView {
-    fun setTransfer(transfer: Transfer)
+    fun setTransfer(transferModel: TransferModel)
     fun setDate(date: String)
 }

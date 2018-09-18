@@ -21,15 +21,13 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.DistanceUnit
-import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.adapter.RequestsRVAdapter
+import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.RequestsFragmentPresenter
 
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
-
-import java.text.Format
 
 import kotlinx.android.synthetic.main.fragment_requests.*
 
@@ -88,8 +86,8 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         presenter.setData(categoryName)
     }
 
-    override fun setRequests(transfers: List<Transfer>, distanceUnit: DistanceUnit, dateFormat: Format) {
-        rvRequests.adapter = RequestsRVAdapter(transfers, distanceUnit, dateFormat)
+    override fun setRequests(transfers: List<TransferModel>, distanceUnit: DistanceUnit) {
+        rvRequests.adapter = RequestsRVAdapter(transfers, distanceUnit)
     }
 
     override fun blockInterface(block: Boolean) { (activity as BaseView).blockInterface(block) }

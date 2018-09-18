@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.model
 
+import android.content.Context
+
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
@@ -37,14 +39,15 @@ object Mappers {
     
     fun getTransferModel(transfer: Transfer,
                          locale: Locale,
-                         distance: String,
+                         distanceUnit: DistanceUnit,
                          transportTypes: List<TransportType>): TransferModel {
         val selected = transportTypes.filter { transfer.transportTypeIds.contains(it.id) }
         return TransferModel(transfer.id,
                       transfer.from.name,
                       transfer.to!!.name,
                       SimpleDateFormat(Utils.DATE_TIME_PATTERN, locale).format(transfer.dateToLocal),
-                      distance,
+                      transfer.distance,
+                      distanceUnit,
                       transfer.pax!!,
                       transfer.nameSign,
                       transfer.childSeats ?: 0,
@@ -54,7 +57,8 @@ object Mappers {
                       transfer.paidSum!!.default,
                       transfer.paidPercentage!!,
                       transfer.remainsToPay!!.default,
-                      transfer.price!!.default)
+                      transfer.price!!.default,
+                      transfer.relevantCarriersCount)
     }
     
     fun getOfferModel(offer: Offer) = OfferModel(offer.driver!!.fullName,

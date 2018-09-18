@@ -8,6 +8,7 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Transfer
 
@@ -18,12 +19,13 @@ import ru.terrakok.cicerone.Router
 @InjectViewState
 class RequestsPresenter(cc: CoroutineContexts,
                         router: Router,
-                        systemInteractor: SystemInteractor): BasePresenter<RequestsView>(cc, router, systemInteractor) {
-
-    private lateinit var transfers: List<Transfer>
+                        systemInteractor: SystemInteractor,
+                        private val transferInteractor: TransferInteractor): BasePresenter<RequestsView>(cc, router, systemInteractor) {
+                     /*
     private var transfersAll: ArrayList<Transfer> = arrayListOf()
     private var transfersActive: ArrayList<Transfer> = arrayListOf()
     private var transfersCompleted: ArrayList<Transfer> = arrayListOf()
+    */
 
     override fun onFirstViewAttach() {
         /*
@@ -50,8 +52,10 @@ class RequestsPresenter(cc: CoroutineContexts,
             apiInteractor.activeTransfers = transfersActive
             apiInteractor.allTransfers = transfersAll
             apiInteractor.completedTransfers = transfersCompleted
+            */
 
             viewState.setRequestsFragments()
+            /*
         }, { e ->
                 if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
                 else viewState.setError(false, R.string.err_server, e.message)
@@ -59,8 +63,10 @@ class RequestsPresenter(cc: CoroutineContexts,
         */
     }
 
+    /*
     fun addToActive(transfer: Transfer){
         transfersActive.add(transfer)
         transfersAll.add(transfer)
     }
+    */
 }

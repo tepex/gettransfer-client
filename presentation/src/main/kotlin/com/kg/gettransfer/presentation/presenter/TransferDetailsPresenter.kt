@@ -66,12 +66,10 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
-        val locale = systemInteractor.getLocale()
-        val distanceUnit = systemInteractor.getDistanceUnit()
-        val distance = Utils.formatDistance(view as Context, R.string.distance, transferInteractor.transfer.distance, distanceUnit)
+        //val distance = Utils.formatDistance(view as Context, R.string.distance, transferInteractor.transfer.distance, distanceUnit)
         viewState.setTransfer(Mappers.getTransferModel(transferInteractor.transfer,
-                                                       locale,
-                                                       distance,
+                                                       systemInteractor.getLocale(),
+                                                       systemInteractor.getDistanceUnit(),
                                                        systemInteractor.getTransportTypes()))
         viewState.setRoute(routeModel!!)
         if(offerModel != null) viewState.setOffer(offerModel!!)

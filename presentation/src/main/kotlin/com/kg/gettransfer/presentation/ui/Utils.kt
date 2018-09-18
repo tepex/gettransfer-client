@@ -91,14 +91,14 @@ internal class Utils {
             return PHONE_PATTERN.matcher(phone.trim()).matches()
         }
         
-        fun formatDistance(context: Context, @StringRes stringId: Int, distance: Int?, distanceUnit: DistanceUnit): String {
+        fun formatDistance(context: Context, distance: Int?, distanceUnit: DistanceUnit): String {
             if(distance == null) return ""
             var d = distance
             if(distanceUnit == DistanceUnit.Mi) d = DistanceUnit.km2Mi(distance)
-            return context.getString(stringId, d, distanceUnit.name)
+            return context.getString(R.string.distance, d, distanceUnit.name)
         }
         
-        fun setPins(activity: Activity, googleMap: GoogleMap, routeModel: RouteModel, distance: String) {
+        fun setPins(activity: Activity, googleMap: GoogleMap, routeModel: RouteModel) {
             //Создание пинов с информацией
             val pinLayout = activity.layoutInflater.inflate(R.layout.view_maps_pin, null)
 
@@ -109,6 +109,7 @@ internal class Utils {
             pinLayout.imgPin.setImageResource(R.drawable.map_label_a)
             val bmPinA = createBitmapFromView(pinLayout)
 
+            val distance = formatDistance(activity, routeModel.distance, routeModel.distanceUnit)
             pinLayout.tvPlace.text = routeModel.to
             pinLayout.tvInfo.text = distance
             pinLayout.tvPlaceMirror.text = routeModel.to
