@@ -48,14 +48,16 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
 	                offerModel = Mappers.getOfferModel(offers.first())
 	        }
             
-            val from = transferInteractor.transfer.from.name
-            val to = transferInteractor.transfer.to!!.name
-	        val routeInfo = utils.asyncAwait { transferInteractor.getRouteInfo(from, to, true, false) }
+            val from = transferInteractor.transfer.from
+            val to = transferInteractor.transfer.to!!
+	        val routeInfo = utils.asyncAwait {
+	            transferInteractor.getRouteInfo(from.point.toString(), to.point.toString(), true, false)
+	        }
 	        routeModel = Mappers.getRouteModel(routeInfo.distance,
                                                systemInteractor.getDistanceUnit(),
                                                routeInfo.polyLines,
-                                               from,
-                                               to)
+                                               from.name,
+                                               to.name)
 	        viewState.setRoute(routeModel!!)
 	    }, { e -> viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })        

@@ -67,21 +67,24 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     companion object {
         @JvmField val MIN_PASSENGERS    = 1
         @JvmField val MIN_CHILDREN      = 0
+        /* Пока сервевер не присылает минимальный временной промежуток до заказа */
+        @JvmField val FUTURE_HOUR       = 6
+        @JvmField val FUTURE_MINUTE     = 5
     }
     
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
-            val from = routeInteractor.from.point
-            val to = routeInteractor.to!!.point
-	        val routeInfo = utils.asyncAwait { transferInteractor.getRouteInfo(from, to, true, false) }
+            val from = routeInteractor.from
+            val to = routeInteractor.to!!
+	        val routeInfo = utils.asyncAwait { transferInteractor.getRouteInfo(from.point.toString(), to.point.toString(), true, false) }
 	        val prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
 	        transportTypes = Mappers.getTransportTypesModels(systemInteractor.getTransportTypes(), prices)
 	        routeModel = Mappers.getRouteModel(routeInfo.distance,
                                                systemInteractor.getDistanceUnit(),
                                                routeInfo.polyLines,
-                                               from,
-                                               to)
+                                               from.name,
+                                               to.name)
             
             viewState.setTransportTypes(transportTypes!!)
             viewState.setRoute(routeModel!!)
@@ -90,7 +93,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         
         val calendar = Calendar.getInstance(systemInteractor.getLocale())
         /* Server must send current locale time */
-        calendar.add(Calendar.HOUR_OF_DAY, 3)
+        calendar.add(Calendar.HOUR_OF_DAY, FUTURE_HOUR)
+        calendar.add(Calendar.MINUTE, FUTURE_MINUTE)
         date = calendar.getTime()
     }
     
