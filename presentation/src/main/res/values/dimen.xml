@@ -182,7 +182,7 @@
 	<dimen name="activity_carrier_transfer_details_editable_text_margin_end">18dp</dimen>
 	<dimen name="activity_carrier_transfer_details_comment_text_size">15sp</dimen>
 	<dimen name="activity_carrier_transfer_details_comment_margin_start">15dp</dimen>
-	<dimen name="activity_carrier_transfer_details_comment_margin_top_bottom">7dp</dimen>
+	<dimen name="activity_carrier_transfer_details_comment_margin_top_bottom">16dp</dimen>
 	<dimen name="activity_carrier_transfer_details_btn_confirm_meeting_margin_start_end_top">16dp</dimen>
 	<dimen name="activity_carrier_transfer_details_btn_confirm_meeting_margin_bottom">42dp</dimen>
 

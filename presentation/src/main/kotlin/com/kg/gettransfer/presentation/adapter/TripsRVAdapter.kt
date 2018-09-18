@@ -7,16 +7,20 @@ import android.view.ViewGroup
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.CarrierTrip
 import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.presentation.presenter.CarrierTripsPresenter
 import com.kg.gettransfer.presentation.ui.Utils
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_trips_info.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TripsRVAdapter(private var trips: List<CarrierTrip>, private var distanceUnit: DistanceUnit):
+class TripsRVAdapter(private val presenter: CarrierTripsPresenter,
+                     private var trips: List<CarrierTrip>,
+                     private var distanceUnit: DistanceUnit):
         RecyclerView.Adapter<TripsRVAdapter.ViewHolder>() {
 
     companion object {
+        private var selected = RecyclerView.NO_POSITION
         private val DATE_TIME_FULL_FORMAT = SimpleDateFormat(Utils.DATE_TIME_FULL_PATTERN, Locale.US)
         private val DATE_TIME_FORMAT = SimpleDateFormat(Utils.DATE_TIME_PATTERN, Locale.US)
     }
@@ -27,11 +31,13 @@ class TripsRVAdapter(private var trips: List<CarrierTrip>, private var distanceU
             TripsRVAdapter.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_trips_info, parent, false))
 
     override fun onBindViewHolder(holder: TripsRVAdapter.ViewHolder, pos: Int) {
-        holder.bind(trips.get(pos), distanceUnit)
+        holder.bind(trips.get(pos), distanceUnit){
+            presenter.onTripSelected(it)
+        }
     }
 
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(item: CarrierTrip, distanceUnit: DistanceUnit) = with(containerView) {
+        fun bind(item: CarrierTrip, distanceUnit: DistanceUnit, listener: ClickOnCarrierTripHandler) = with(containerView) {
             tvTransferRequestNumber.text = context.getString(R.string.transfer_request_num, item.transferId)
             tvFrom.text = item.from.name
             tvTo.text = item.to.name
@@ -41,6 +47,10 @@ class TripsRVAdapter(private var trips: List<CarrierTrip>, private var distanceU
             tvVehicle.text = item.vehicle.name
             if(item.childSeats == 0) ivChildSeat.visibility = View.INVISIBLE
             if(item.comment == null || item.comment == "") ivComment.visibility = View.INVISIBLE
+            setOnClickListener {
+                selected = adapterPosition
+                listener(item.id)
+            }
         }
 
         fun changeDateFormat(dateTime: String): String {
@@ -49,3 +59,5 @@ class TripsRVAdapter(private var trips: List<CarrierTrip>, private var distanceU
         }
     }
 }
+
+typealias ClickOnCarrierTripHandler = (Long) -> Unit

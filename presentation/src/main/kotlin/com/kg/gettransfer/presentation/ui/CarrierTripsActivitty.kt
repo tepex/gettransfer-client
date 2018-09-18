@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.v7.widget.LinearLayoutManager
@@ -9,6 +11,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.CarrierTrip
 import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TripsRVAdapter
 import com.kg.gettransfer.presentation.presenter.CarrierTripsPresenter
 import com.kg.gettransfer.presentation.view.CarrierTripsView
@@ -20,9 +23,16 @@ class CarrierTripsActivitty: BaseActivity(), CarrierTripsView{
     internal lateinit var presenter: CarrierTripsPresenter
 
     @ProvidePresenter
-    fun createRequestsPresenter(): CarrierTripsPresenter = CarrierTripsPresenter(coroutineContexts, router, apiInteractor)
+    fun createCarrierTripsPresenter(): CarrierTripsPresenter = CarrierTripsPresenter(coroutineContexts, router, apiInteractor)
 
-    protected override var navigator = BaseNavigator(this)
+    protected override var navigator = object: BaseNavigator(this) {
+        protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
+            when(screenKey) {
+                Screens.TRIP_DETAILS -> return Intent(context, CarrierTripDetailsActivity::class.java)
+            }
+            return null
+        }
+    }
 
     override fun getPresenter(): CarrierTripsPresenter = presenter
 
@@ -43,6 +53,6 @@ class CarrierTripsActivitty: BaseActivity(), CarrierTripsView{
     }
 
     override fun setTrips(trips: List<CarrierTrip>, distanceUnit: DistanceUnit) {
-        rvTrips.adapter = TripsRVAdapter(trips, distanceUnit)
+        rvTrips.adapter = TripsRVAdapter(presenter, trips, distanceUnit)
     }
 }

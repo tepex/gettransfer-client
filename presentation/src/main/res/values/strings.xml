@@ -303,5 +303,7 @@
     <string name="chat">Chat</string>
     <string name="btn_confirm_appointment">Confirm appointment</string>
     <string name="transfer_details">Transfer details</string>
+    <string name="payment_details">Payment details</string>
+    <string name="remains_to_pay">Remain to pay</string>
 
 </resources>

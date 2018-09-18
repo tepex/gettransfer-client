@@ -60,7 +60,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_marginEnd="@dimen/activity_carrier_transfer_details_btns_margin" />
+                    android:layout_marginEnd="@dimen/activity_carrier_transfer_details_btns_margin"
+                    />
 
                 <include
                     layout="@layout/btn_layout_chat_passenger"
@@ -187,7 +188,7 @@
                 android:background="@color/colorDividerGray"
                 android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"/>
 
-            <android.support.constraint.ConstraintLayout
+            <!--<android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/activity_carrier_transfer_details_info_field_height">
 
@@ -235,7 +236,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:background="@color/colorDividerGray"
-                android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"/>
+                android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"/>-->
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -286,6 +287,56 @@
                 android:background="@color/colorDividerGray"
                 android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"/>
 
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_carrier_transfer_details_info_field_height">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_aircraft"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/textFlightOrTrainNumber"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/textFlightOrTrainNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/activity_carrier_transfer_details_info_text_size"
+                    android:textColor="@color/colorTextBlack"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/flight_or_train"
+                    android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvFlightOrTrainNumber"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="QWE 123"
+                    android:textSize="@dimen/activity_carrier_transfer_details_info_text_size"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textColor="@color/colorTextLightGray"
+                    android:gravity="end"
+                    android:textAllCaps="true"
+                    android:layout_marginEnd="@dimen/activity_carrier_transfer_details_editable_text_margin_end"
+                    app:layout_constraintStart_toEndOf="@id/textFlightOrTrainNumber"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:background="@color/colorDividerGray"
+                android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"/>
+
             <TextView
                 android:id="@+id/tvComment"
                 android:layout_width="match_parent"
@@ -298,6 +349,64 @@
                 android:paddingTop="@dimen/activity_carrier_transfer_details_comment_margin_top_bottom"
                 android:paddingEnd="@dimen/activity_carrier_transfer_details_editable_text_margin_end"
                 android:paddingBottom="@dimen/activity_carrier_transfer_details_comment_margin_top_bottom"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_carrier_transfer_details_header_text_field_height"
+                android:text="@string/payment_details"
+                android:textAllCaps="true"
+                android:textColor="@color/colorTextLightGray"
+                android:textSize="@dimen/activity_carrier_transfer_details_header_text_size"
+                android:fontFamily="@font/sf_pro_text_bold"
+                android:gravity="center_vertical"
+                android:background="@color/colorBack"
+                android:paddingStart="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"
+                android:paddingEnd="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:background="@color/colorDividerGray" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_carrier_transfer_details_info_field_height">
+
+                <TextView
+                    android:id="@+id/textPay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/activity_carrier_transfer_details_info_text_size"
+                    android:textColor="@color/colorTextBlack"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/remains_to_pay"
+                    android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvPay"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="$1,00"
+                    android:textSize="@dimen/activity_carrier_transfer_details_info_text_size"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textColor="@color/colorTextLightGray"
+                    android:gravity="end"
+                    android:textAllCaps="true"
+                    android:layout_marginEnd="@dimen/activity_carrier_transfer_details_editable_text_margin_end"
+                    app:layout_constraintStart_toEndOf="@id/textPay"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:background="@color/colorDividerGray" />
 
             <!--<Button
                 android:id="@+id/btnConfirmMeeting"

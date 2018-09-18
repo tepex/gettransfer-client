@@ -24,7 +24,7 @@ class ApiCarrierTrip(@SerializedName("id") @Expose var id: Long,
                      @SerializedName("name_sign") @Expose var nameSign: String?,
                      @SerializedName("flight_number") @Expose var flightNumber: String?,
                      @SerializedName("paid_sum") @Expose var paidSum: String?,
-                     @SerializedName("remain_to_pay") @Expose var remainToPay: String?,
+                     @SerializedName("remains_to_pay") @Expose var remainToPay: String?,
                      @SerializedName("paid_percentage") @Expose var paidPercentage: Int?,
                      @SerializedName("passenger_account") @Expose var passengerAccount: ApiPassengerAccount?)
 

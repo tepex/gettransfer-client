@@ -209,6 +209,8 @@
     <string name="call">Call</string>
     <string name="chat">Chat</string>
     <string name="btn_confirm_appointment">Подтвердить встречу</string>
-    <string name="transfer_details">Transfer details</string>
+    <string name="transfer_details">Детали заявки</string>
+    <string name="payment_details">Детали оплаты</string>
+    <string name="remains_to_pay">Осталось оплатить</string>
 
 </resources>
