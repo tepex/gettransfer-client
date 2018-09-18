@@ -24,7 +24,7 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
     protected val compositeDisposable = Job()
     protected val utils = AsyncUtils(cc, compositeDisposable)
 
-    fun onBackCommandClick() = router.exit()
+    open fun onBackCommandClick() = router.exit()
 
     protected fun login() = router.navigateTo(Screens.LOGIN)
 

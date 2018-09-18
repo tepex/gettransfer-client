@@ -52,4 +52,10 @@ class SearchPresenter(cc: CoroutineContexts,
             else viewState.setAddressFrom(selected.primary ?: selected.name, sendRequest)
         }
     }
+    
+    @CallSuper
+    override fun onBackCommandClick() {
+        routeInteractor.to = null
+        super.onBackCommandClick()
+    }
 }
