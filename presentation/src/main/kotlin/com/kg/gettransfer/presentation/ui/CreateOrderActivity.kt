@@ -37,8 +37,7 @@ import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import kotlinx.android.synthetic.main.activity_create_order.*
-import kotlinx.android.synthetic.main.bottom_sheet_additional.*
-import kotlinx.android.synthetic.main.content_create_order.*
+import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 import kotlinx.coroutines.experimental.Job

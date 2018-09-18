@@ -17,10 +17,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <include layout="@layout/content_create_order" />
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <include android:id="@+id/bottom_sheet"
-        layout="@layout/bottom_sheet_additional" />
+        layout="@layout/bottom_sheet_create_order" />
 
     <LinearLayout
         android:id="@+id/layoutShadow"
