@@ -15,10 +15,14 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 import android.transition.Fade
-import android.util.Pair
+
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+
+import android.widget.RelativeLayout
 import android.widget.TextView
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -27,15 +31,20 @@ import com.google.android.gms.maps.model.*
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
-import com.kg.gettransfer.domain.interactor.AddressInteractor
+
 import com.kg.gettransfer.domain.interactor.LocationInteractor
+import com.kg.gettransfer.domain.interactor.RouteInteractor
+
 import com.kg.gettransfer.domain.model.Account
+
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
 import kotlinx.android.synthetic.main.activity_main_new.*
 import kotlinx.android.synthetic.main.search_form_main.*
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
 import org.koin.android.ext.android.inject
@@ -45,6 +54,7 @@ import timber.log.Timber
 import java.util.*
 import kotlin.coroutines.experimental.suspendCoroutine
 
+import kotlin.coroutines.experimental.suspendCoroutine
 
 class MainActivity: BaseActivity(), MainView {
     @InjectPresenter
@@ -53,10 +63,10 @@ class MainActivity: BaseActivity(), MainView {
     private lateinit var drawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var headerView: View
-    
-    private val addressInteractor: AddressInteractor by inject()
+
     private val locationInteractor: LocationInteractor by inject()
-    
+    private val routeInteractor: RouteInteractor by inject()
+
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
     private lateinit var googleMap: GoogleMap
@@ -68,9 +78,9 @@ class MainActivity: BaseActivity(), MainView {
     @ProvidePresenter
     fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
                                                              router,
-                                                             apiInteractor,
+                                                             systemInteractor,
                                                              locationInteractor,
-                                                             addressInteractor)
+                                                             routeInteractor)
     
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
@@ -159,7 +169,11 @@ class MainActivity: BaseActivity(), MainView {
 			@CallSuper
 			override fun onDrawerStateChanged(newState: Int) {
 				super.onDrawerStateChanged(newState)
-				if(newState == DrawerLayout.STATE_SETTLING) Utils.hideKeyboard(this@MainActivity, currentFocus)
+				if(newState == DrawerLayout.STATE_SETTLING) {
+				    val view = currentFocus
+				    view?.hideKeyboard()
+				    view?.clearFocus()
+				}
 			}
 		})
 		
@@ -179,8 +193,8 @@ class MainActivity: BaseActivity(), MainView {
 		searchTo.setOnClickListener { presenter.onSearchClick(Pair(searchFrom.text, searchTo.text)) }
 
 		val fade = Fade()
-		fade.setDuration(FADE_DURATION)
-		getWindow().setExitTransition(fade)
+        fade.duration = FADE_DURATION
+		window.setExitTransition(fade)
 	}
 
 	private fun showDatePickerDialog() {
@@ -219,8 +233,6 @@ class MainActivity: BaseActivity(), MainView {
 	@CallSuper
 	protected override fun onResume() {
 		super.onResume()
-		Utils.hideKeyboard(this, currentFocus)
-
 		val view = currentFocus
 		view?.hideKeyboard()
 		view?.clearFocus()
@@ -267,11 +279,9 @@ class MainActivity: BaseActivity(), MainView {
 	 	 toggle.onConfigurationChanged(newConfig)
 	}
 	
-	/** @see {@link android.support.v7.app.ActionBarDrawerToggle} */
-	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		return toggle.onOptionsItemSelected(item)
-	}
-	
+    /** @see {@link android.support.v7.app.ActionBarDrawerToggle} */
+    override fun onOptionsItemSelected(item: MenuItem) = toggle.onOptionsItemSelected(item)
+
 	private fun initNavigation() {
 		//val versionName = packageManager.getPackageInfo(packageName, 0).versionName
 		val versionName = BuildConfig.VERSION_NAME
@@ -305,9 +315,9 @@ class MainActivity: BaseActivity(), MainView {
 		}
 	}
 	
-	private suspend fun getGoogleMapAsync(): GoogleMap = suspendCoroutine { cont -> 
-		mapView.getMapAsync { cont.resume(it) } 
-	}  
+    private suspend fun getGoogleMapAsync(): GoogleMap = suspendCoroutine { cont ->
+        mapView.getMapAsync { cont.resume(it) }
+    }
 
 	private fun customizeGoogleMaps() {
 	    googleMap.uiSettings.setRotateGesturesEnabled(false)
@@ -348,9 +358,8 @@ class MainActivity: BaseActivity(), MainView {
 	
 	override fun setAddressFrom(address: String) { searchFrom.text = address }
 	
-	override fun showLoginInfo(account: Account) {
-	    Timber.d("show Login: %s", account)
-	    if(account.email == null) {
+	override fun setAccount(account: Account) {
+	    if(!account.loggedIn) {
 			navHeaderName.visibility = View.GONE
 			navHeaderEmail.visibility = View.GONE
 			navLogin.visibility = View.VISIBLE

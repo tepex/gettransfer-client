@@ -1,6 +1,6 @@
 package com.kg.gettransfer.domain.model
 
-import java.util.*
+import java.util.Locale
 
 data class Offer(val id: Long,
                  val status: String,
@@ -44,4 +44,5 @@ data class Vehicle(val name: String,
                    val photos: List<String>)
 
 data class Driver(val fullName: String,
-                  val phone: String)
+                  val phone: String,
+                  val email: String)

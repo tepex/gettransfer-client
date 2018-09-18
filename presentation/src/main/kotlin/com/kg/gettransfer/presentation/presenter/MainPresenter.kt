@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
 import android.util.Pair
+
 import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.R
@@ -9,10 +10,17 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.interactor.ApiInteractor
+
 import com.kg.gettransfer.domain.interactor.LocationInteractor
+import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.SystemInteractor
+
+import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.ui.Utils
+import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.view.MainView
 import ru.terrakok.cicerone.Router
 import timber.log.Timber
@@ -23,9 +31,9 @@ import java.util.*
 @InjectViewState
 class MainPresenter(cc: CoroutineContexts,
                     router: Router,
-                    apiInteractor: ApiInteractor,
+                    systemInteractor: SystemInteractor,
                     private val locationInteractor: LocationInteractor,
-                    private val addressInteractor: AddressInteractor): BasePresenter<MainView>(cc, router, apiInteractor) {
+                    private val routeInteractor: RouteInteractor): BasePresenter<MainView>(cc, router, systemInteractor) {
 
     private lateinit var lastAddressPoint: LatLng
     private var lastPoint: LatLng? = null
@@ -37,14 +45,15 @@ class MainPresenter(cc: CoroutineContexts,
             field = value
             viewState.setDateTimeTransfer(dateTimeFormat.format(date))
         }
+    private var available: Boolean = false
 
     override fun onFirstViewAttach() {
-        utils.launchAsyncTryCatch({
+        utils.launchAsyncTryCatch( {
             // Проверка досупности сервиса геолокации
-            val available = utils.asyncAwait { locationInteractor.checkLocationServicesAvailability() }
-            if(available) updateCurrentLocation()
-            else { viewState.setError(true, R.string.err_location_service_not_available) }
-        }, { e -> Timber.e(e) })
+            available = utils.asyncAwait { locationInteractor.checkLocationServicesAvailability() }
+            if(available) updateCurrentLocationAsync()
+            else viewState.setError(true, R.string.err_location_service_not_available)
+        }, { e -> Timber.e(e) } )
         
         // Создать листенер для обновления текущей локации
         // https://developer.android.com/training/location/receive-location-updates
@@ -53,29 +62,24 @@ class MainPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: MainView) {
         super.attachView(view)
-        utils.launchAsyncTryCatchFinally({
-            viewState.blockInterface(false)
-            account = utils.asyncAwait { apiInteractor.getAccount() }
-            viewState.showLoginInfo(account)
-            dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, account.locale)
-            date = Date()
-        }, { e ->
-                if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
-                else viewState.setError(false, R.string.err_server, e.message)
-        }, { viewState.blockInterface(false) })
+        viewState.setAccount(systemInteractor.account)
     }
 
     fun updateCurrentLocation() {
         Timber.d("update current location")
-        utils.launchAsyncTryCatchFinally({
-            viewState.blockInterface(true)
-            val currentAddress = utils.asyncAwait { addressInteractor.getCurrentAddress() }
-            lastAddressPoint = LatLng(currentAddress.point!!.latitude, currentAddress.point!!.longitude)
-            onCameraMove(lastAddressPoint)
-            viewState.setMapPoint(lastAddressPoint)
-            viewState.setAddressFrom(currentAddress.name)
-        }, { e -> viewState.setError(false, R.string.err_server, e.message)
-        }, { viewState.blockInterface(false) })
+        utils.launchAsyncTryCatch(
+            { updateCurrentLocationAsync() },
+            { e -> viewState.setError(false, R.string.err_server, e.message) })
+    }
+
+    private suspend fun updateCurrentLocationAsync() {
+        viewState.blockInterface(true)
+        val currentAddress = utils.asyncAwait { routeInteractor.getCurrentAddress() }
+        lastAddressPoint = Mappers.point2LatLng(currentAddress.point!!)
+
+        onCameraMove(lastAddressPoint)
+        viewState.setMapPoint(lastAddressPoint)
+        viewState.setAddressFrom(currentAddress.name)
     }
     
     fun onCameraMove(lastPoint: LatLng) {
@@ -95,18 +99,15 @@ class MainPresenter(cc: CoroutineContexts,
 
         lastAddressPoint = lastPoint!!
         utils.launchAsyncTryCatch({
-            val currentAddress = utils.asyncAwait {
-                addressInteractor.getAddressByLocation(Point(lastPoint!!.latitude, lastPoint!!.longitude))
-            }
+            val currentAddress = utils.asyncAwait { routeInteractor.getAddressByLocation(Mappers.latLng2Point(lastPoint!!)) }
             viewState.setAddressFrom(currentAddress.name)
         }, { e -> Timber.e(e) })
     }
     
     fun onSearchClick(addresses: Pair<String, String>) { router.navigateTo(Screens.FIND_ADDRESS, addresses) }
-    fun onLoginClick() { router.navigateTo(Screens.LOGIN) }
-    fun onAboutClick() { router.navigateTo(Screens.ABOUT) }
-    fun readMoreClick() { router.navigateTo(Screens.READ_MORE) }
+    fun onLoginClick()    { router.navigateTo(Screens.LOGIN) }
+    fun onAboutClick()    { router.navigateTo(Screens.ABOUT) }
+    fun readMoreClick()   { router.navigateTo(Screens.READ_MORE) }
     fun onSettingsClick() { router.navigateTo(Screens.SETTINGS) }
-    fun onRequestsClick() {router.navigateTo(Screens.REQUESTS)}
-//    fun onBackCommandClick() { router.exit() }
+    fun onRequestsClick() { router.navigateTo(Screens.REQUESTS) }
 }

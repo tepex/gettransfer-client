@@ -15,6 +15,7 @@ object Screens {
 	@JvmField val LICENCE_AGREE  = "licence_agree"
 
 	@JvmField val OFFERS         = "offers"
+	@JvmField val DETAILS        = "details"
 	
 	@JvmField val NOT_USED = -1
 }

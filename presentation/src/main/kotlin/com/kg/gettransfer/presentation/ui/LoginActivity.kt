@@ -20,7 +20,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.ApiInteractor
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.LoginPresenter
@@ -39,9 +38,9 @@ import ru.terrakok.cicerone.android.SupportAppNavigator
 class LoginActivity: BaseActivity(), LoginView {
     @InjectPresenter
     internal lateinit var presenter: LoginPresenter
-
+    
     @ProvidePresenter
-    fun createLoginPresenter(): LoginPresenter = LoginPresenter(coroutineContexts, router, apiInteractor)
+    fun createLoginPresenter(): LoginPresenter = LoginPresenter(coroutineContexts, router, systemInteractor)
     
     protected override var navigator = BaseNavigator(this)
     

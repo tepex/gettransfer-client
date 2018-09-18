@@ -42,6 +42,11 @@
     <!-- Transfer -->
     <string name="distance_time">Distance: %1$s\nExpected travel time: %2$s</string>
     <string name="distance">Distance: %1$d %2$s</string>
+    <string name="transfer_connecting_carriers">Соединяем с ближайшими %1$d перевозчиками</string>
+    <string name="transfer_order">Заявка на трансфер №%1$d</string>
+    <string name="transfer_start_sign">A</string>
+    <string name="transfer_end_sign">B</string>
+    <string name="transfer_date_local">%1$s (местное)</string>
     <!-- Transport types -->
     <string name="transport_type_economy">Economy</string>
     <string name="transport_type_business">Business</string>
@@ -52,10 +57,12 @@
     <string name="transport_type_limousine">Limousine</string>
     <string name="transport_type_helicopter">Helicopter</string>
 	<string name="transport_type_unknown">Unknown</string>
+	<string name="count_persons_and_baggage"> X %1$d</string>
 
     <!-- Login -->
     <string name="email_address">Email address</string>
     <string name="enter_password">Enter password</string>
+    <string name="login_subtitle">Вход для клиентов и водителей</string>
     
 	<!--
 	<string name=""></string>
@@ -242,7 +249,6 @@
     <string name="carrier_offers">Carrier offers</string>
     <string name="select">Select</string>
 
-    <string name="count_persons_and_baggage"> X %1$s</string>
     <string name="price_from">from %1$s</string>
 
     <!--NavigationView-->
@@ -274,5 +280,23 @@
     <string name="tvFare">Average fare offered by carriers is $s</string>
     <string name="rub">₽</string>
     <string name="comment_options">Comment and options</string>
+
+    <!--activity_transfer_details-->
+    <string name="activity_transfer_details_title">Request details</string>
+    <string name="activity_transfer_details_paid_sum">%1$s (%2$s\%%)</string>
+    <string name="activity_transfer_details_btn_cancel">Cancel</string>
+    <string name="activity_transfer_details_languages">Languges</string>
+    <string name="activity_transfer_details_price">Price</string>
+    <string name="activity_transfer_details_car_number">Number</string>
+    <string name="activity_transfer_details_car_name">Transport</string>
+    <string name="activity_transfer_details_transport_type">Transport type</string>
+    <string name="activity_transfer_details_choosen_offer">Chosen offer</string>
+    <string name="activity_transfer_details_pay">Pay</string>
+    <string name="activity_transfer_details_paid">Paid</string>
+    <string name="activity_transfer_details_paid_details">Paid details</string>
+    <string name="activity_transfer_details_flight_or_train_number">Flight or train number</string>
+    <string name="activity_transfer_details_child_seats">Child seats</string>
+    <string name="activity_transfer_details_name">Name</string>
+    <string name="activity_transfer_details_passenger">Passenger</string>
 
 </resources>

@@ -9,12 +9,12 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
-import com.kg.gettransfer.domain.interactor.ApiInteractor
+import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 
-import com.kg.gettransfer.presentation.model.ConfigsModel
+import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.view.SettingsView
 
@@ -28,7 +28,12 @@ import timber.log.Timber
 @InjectViewState
 class SettingsPresenter(cc: CoroutineContexts,
                         router: Router,
-                        apiInteractor: ApiInteractor): BasePresenter<SettingsView>(cc, router, apiInteractor) {
+                        systemInteractor: SystemInteractor): BasePresenter<SettingsView>(cc, router, systemInteractor) {
+
+    private val currencies = Mappers.getCurrenciesModels(systemInteractor.getCurrencies())
+    private val locales = Mappers.getLocalesModels(systemInteractor.getLocales())
+    private val distanceUnits = Mappers.getDistanceUnitsModels(systemInteractor.getDistanceUnits())
+    
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ ->
                 Timber.d("result from login")
@@ -39,63 +44,53 @@ class SettingsPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: SettingsView) {
         super.attachView(view)
-        utils.launchAsyncTryCatchFinally({
-            viewState.blockInterface(true)
-            utils.asyncAwait { 
-                configs = ConfigsModel(apiInteractor.getConfigs())
-                account = apiInteractor.getAccount()
-            }
-            viewState.setCurrencies(configs.currencies)
-            viewState.setLocales(configs.locales)
-            viewState.setDistanceUnits(configs.distanceUnits)
+        viewState.setCurrencies(currencies)
+        viewState.setLocales(locales)
+        viewState.setDistanceUnits(distanceUnits)
             
-            Timber.d("account: $account")
-			val locale = account.locale ?: Locale.getDefault()
-            val localeModel = configs.locales.find { it.delegate.language == locale.language }
-            viewState.setLocale(localeModel?.name ?: "")
+		val locale = systemInteractor.getLocale()
+        val localeModel = locales.find { it.delegate.language == locale.getLanguage() }
+        viewState.setLocale(localeModel?.name ?: "")
             
-            val currency = account.currency ?: Currency.getInstance(locale)
-            val currencyModel = configs.currencies.find { it.delegate == currency }
-            viewState.setCurrency(currencyModel?.name ?: "")           
-            viewState.setDistanceUnit(account.distanceUnit.name)
+        val currency = systemInteractor.getCurrency()
+        val currencyModel = currencies.find { it.delegate == currency }
+        viewState.setCurrency(currencyModel?.name ?: "")           
+        viewState.setDistanceUnit(systemInteractor.getDistanceUnit().name)
             
-            viewState.setLogoutButtonEnabled(account.loggedIn)
-        }, { e ->
-                if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
-                else viewState.setError(false, R.string.err_server, e.message)
-        }, { viewState.blockInterface(false) })
+        viewState.setLogoutButtonEnabled(systemInteractor.account.loggedIn)
     }
     
     fun changeCurrency(selected: Int) {
-        val currencyModel = configs.currencies.get(selected)
-        account.currency = currencyModel.delegate
+        val currencyModel = currencies.get(selected)
+        systemInteractor.account.currency = currencyModel.delegate
         viewState.setCurrency(currencyModel.name)
         saveAccount()
     }
 
     fun changeLocale(selected: Int) {
-        val localeModel = configs.locales.get(selected)
-        account.locale = localeModel.delegate
+        val localeModel = locales.get(selected)
+        systemInteractor.account.locale = localeModel.delegate
         viewState.setLocale(localeModel.name)
         saveAccount()
     }
 
     fun changeDistanceUnit(selected: Int) {
-        account.distanceUnit = configs.distanceUnits.get(selected).delegate
-        viewState.setDistanceUnit(account.distanceUnit.name)
+        val distanceUnit = distanceUnits.get(selected)
+        systemInteractor.account.distanceUnit = distanceUnit.delegate
+        viewState.setDistanceUnit(distanceUnit.name)
         saveAccount()
     }
     
     fun onLogout() {
         Timber.d("account logout")
-        apiInteractor.logout()
+        systemInteractor.logout()
         router.exit()
     }
     
     private fun saveAccount() {
         viewState.blockInterface(true)
         utils.launchAsyncTryCatchFinally({
-            utils.asyncAwait { apiInteractor.putAccount(account) }
+            utils.asyncAwait { systemInteractor.putAccount() }
         }, { e ->
             if(e is ApiException && e.isNotLoggedIn()) {}
             else viewState.setError(false, R.string.err_server, e.message)

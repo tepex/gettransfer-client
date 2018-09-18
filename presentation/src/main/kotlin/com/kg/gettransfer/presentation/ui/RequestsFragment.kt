@@ -17,7 +17,8 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.ApiInteractor
+
+import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.Transfer
@@ -27,6 +28,8 @@ import com.kg.gettransfer.presentation.presenter.RequestsFragmentPresenter
 
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
+
+import java.text.Format
 
 import kotlinx.android.synthetic.main.fragment_requests.*
 
@@ -44,15 +47,15 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     @InjectPresenter
     internal lateinit var presenter: RequestsFragmentPresenter
 
-    private val apiInteractor: ApiInteractor by inject()
+    private val systemInteractor: SystemInteractor by inject()
     private val coroutineContexts: CoroutineContexts by inject()
-    
+
     private val navigatorHolder: NavigatorHolder by inject()
     private val router: Router by inject()
     //private lateinit var navigator: BaseNavigator = BaseNavigator(this)
 
     @ProvidePresenter
-    fun createRequestsFragmentPresenter(): RequestsFragmentPresenter = RequestsFragmentPresenter(coroutineContexts, router, apiInteractor)
+    fun createRequestsFragmentPresenter() = RequestsFragmentPresenter(coroutineContexts, router, systemInteractor)
 
     private var categoryName = ""
 
@@ -85,12 +88,12 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         presenter.setData(categoryName)
     }
 
-    override fun setRequests(transfers: List<Transfer>, distanceUnit: DistanceUnit) {
-        rvRequests.adapter = RequestsRVAdapter(transfers, distanceUnit)
+    override fun setRequests(transfers: List<Transfer>, distanceUnit: DistanceUnit, dateFormat: Format) {
+        rvRequests.adapter = RequestsRVAdapter(transfers, distanceUnit, dateFormat)
     }
-    
+
     override fun blockInterface(block: Boolean) { (activity as BaseView).blockInterface(block) }
-    
+
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
         (activity as BaseView).setError(finish, errId, *args)
     }

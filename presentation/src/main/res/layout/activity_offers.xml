@@ -22,7 +22,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <TextView android:id="@+id/tvConnectingCarriers"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
                 android:background="#88ac16"
@@ -32,8 +32,7 @@
                 android:textColor="@color/colorWhite"
                 android:textSize="13sp"
                 android:textAllCaps="true"
-                android:fontFamily="@font/sf_pro_text_regular"
-                android:text="Соединяем с ближайшими перевозчиками"/>
+                android:fontFamily="@font/sf_pro_text_regular" />
 
             <include
                 android:id="@+id/layoutTransferRequestInfo"

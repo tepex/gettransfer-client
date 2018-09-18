@@ -4,7 +4,6 @@ import android.content.Context
 
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
-
 import android.support.constraint.ConstraintLayout
 
 import android.text.Editable
@@ -15,29 +14,21 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 
-import android.widget.EditText
-import android.widget.ImageButton
-
 import com.arellomobile.mvp.MvpDelegate
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-
-import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.interactor.AddressInteractor
+
+import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.presentation.presenter.SearchAddressPresenter
 import com.kg.gettransfer.presentation.view.SearchAddressView
-import com.kg.gettransfer.presentation.view.SearchView
 
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.search_address.*
-
-import org.koin.android.ext.android.inject
-
-import timber.log.Timber
 
 /**
  * 
@@ -61,7 +52,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		private set
 
 	var text: String
-		get() { return addressField.getText().toString() }
+		get() { return addressField.text.toString() }
 		set(value) {
 			addressField.setText(value)
 		}
@@ -72,12 +63,13 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		ret
 	}
 	private var blockRequest = false
+	private var hasFocus: Boolean = false
 	
 	init {
 		containerView = LayoutInflater.from(context).inflate(R.layout.search_address, this, true)
 		if(attrs != null) {
 			val ta = context.obtainStyledAttributes(attrs, R.styleable.SearchAddress)
-			addressField.setHint(ta.getString(R.styleable.SearchAddress_hint))
+			addressField.hint = ta.getString(R.styleable.SearchAddress_hint)
 			ta.recycle()
 		}
 		
@@ -91,15 +83,18 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	fun createSearchAddressPresenter(): 
 		SearchAddressPresenter = SearchAddressPresenter(parent.coroutineContexts,
 		                                                parent.router,
-		                                                parent.apiInteractor,
-			                                            parent.addressInteractor)
+		                                                parent.systemInteractor,
+			                                            parent.routeInteractor)
 
 	fun initWidget(parent: SearchActivity, isTo: Boolean) {
 		this.parent = parent
 		this.isTo = isTo
 		
 		addressField.setOnFocusChangeListener { _, hasFocus ->
-			if(!hasFocus) clearBtn.visibility = View.GONE
+			this.hasFocus = hasFocus
+			if(!hasFocus){
+				clearBtn.visibility = View.GONE
+			}
 			else {
 				checkClearButtonVisibility()
 				parent.presenter.isTo = isTo
@@ -120,16 +115,16 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	fun initText(text: String, sendRequest: Boolean) {
 		blockRequest = true
 		this.text = text
-		addressField.setSelection(text.length)
+		addressField.setSelection(0, 0)
 		blockRequest = false
 		if(sendRequest) presenter.requestAddressListByPrediction(text.trim())
 	}
 
     fun setUneditable() {
         addressField.keyListener = null
-        addressField.setCursorVisible(false)
-        addressField.setFocusable(false)
-        addressField.setClickable(true)
+		addressField.isCursorVisible = false
+		addressField.isFocusable = false
+		addressField.isClickable = true
     }
     
     fun clearFocusOnExit() {
@@ -152,13 +147,13 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	}
 	
 	override fun setAddressList(list: List<GTAddress>) { 
-		if(addressField.isFocused()) parent.setAddressList(list) 
+		if(addressField.isFocused) parent.setAddressList(list)
 	}
 
-    override fun blockInterface(block: Boolean) { parent.blockInterface(block) }
+	override fun blockInterface(block: Boolean) { parent.blockInterface(block) }
 
 	override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-		if(addressField.isFocused()) parent.setError(finish, errId, *args)
+		if(addressField.isFocused) parent.setError(finish, errId, *args)
 	}
 
 	override fun afterTextChanged(s: Editable?) {
@@ -170,10 +165,16 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 	
 	override fun setOnFocusChangeListener(listener: View.OnFocusChangeListener) {
-		addressField.setOnFocusChangeListener(listener)
+		addressField.onFocusChangeListener = listener
 	}
 	
 	private fun checkClearButtonVisibility() {
-		if(text.isBlank()) clearBtn.visibility = View.GONE else clearBtn.visibility = View.VISIBLE
+		if(text.isBlank()) {
+			clearBtn.visibility = View.GONE
+		} else {
+			if (hasFocus) {
+				clearBtn.visibility = View.VISIBLE
+			}
+		}
 	}
 }

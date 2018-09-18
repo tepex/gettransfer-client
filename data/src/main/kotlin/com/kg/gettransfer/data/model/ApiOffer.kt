@@ -47,4 +47,5 @@ class ApiVehicle(@SerializedName("name") @Expose var name: String,
                  @SerializedName("photos") @Expose var photos: List<String>)
 
 class ApiDriver(@SerializedName("full_name") @Expose var fullName: String,
-                @SerializedName("phone") @Expose var phone: String)
+                @SerializedName("phone") @Expose var phone: String,
+                @SerializedName("email") @Expose var email: String)

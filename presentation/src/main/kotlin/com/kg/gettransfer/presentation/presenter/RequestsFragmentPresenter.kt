@@ -6,13 +6,14 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
-import com.kg.gettransfer.domain.interactor.ApiInteractor
+import com.kg.gettransfer.domain.interactor.SystemInteractor
 
-import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Transfer
 
-import com.kg.gettransfer.presentation.TransfersConstants
+import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
+
+import java.util.Locale
 
 import ru.terrakok.cicerone.Router
 
@@ -21,23 +22,29 @@ import timber.log.Timber
 @InjectViewState
 class RequestsFragmentPresenter(cc: CoroutineContexts,
                                 router: Router,
-                                apiInteractor: ApiInteractor): BasePresenter<RequestsFragmentView>(cc, router, apiInteractor) {
+                                systemInteractor: SystemInteractor): BasePresenter<RequestsFragmentView>(cc, router, systemInteractor) {
 
     var transfers = listOf<Transfer>()
 
-    fun setData(categoryName: String){
+    fun setData(categoryName: String) {
+        /*
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
-            account = utils.asyncAwait { apiInteractor.getAccount() }
             transfers = when(categoryName) {
-                TransfersConstants.CATEGORY_ACTIVE -> apiInteractor.activeTransfers
-                TransfersConstants.CATEGORY_COMPLETED -> apiInteractor.completedTransfers
-                else -> apiInteractor.allTransfers
+                TransfersConstants.CATEGORY_ACTIVE -> transferInteractor.activeTransfers
+                TransfersConstants.CATEGORY_COMPLETED -> transferInteractor.completedTransfers
+                else -> transferInteractor.allTransfers
             }
-            viewState.setRequests(transfers, account.distanceUnit)
+            viewState.setRequests(transfers, account.distanceUnit, Utils.createDateTimeFormat(account.locale!!))
         }, { e ->
                 if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
                 else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
+        */
+    }
+
+    fun openTransferDetails(transfer: Transfer) {
+        //transferInteractor.transferDetails = transfer
+        router.navigateTo(Screens.DETAILS)
     }
 }

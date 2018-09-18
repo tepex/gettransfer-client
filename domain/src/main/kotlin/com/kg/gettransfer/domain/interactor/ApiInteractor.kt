@@ -9,16 +9,14 @@ class ApiInteractor(private val repository: ApiRepository) {
 	lateinit var allTransfers: List<Transfer>
 	lateinit var completedTransfers: List<Transfer>
 
-	suspend fun getConfigs(): Configs = repository.getConfigs()
-	suspend fun getAccount(): Account = repository.getAccount()
-	suspend fun putAccount(account: Account) { repository.putAccount(account) }
+	suspend fun coldStart() { repository.coldStart() }
+	fun getConfigs() = repository.getConfigs()
+	fun getAccount() = repository.getAccount()
+	
 	/* Not used now.
 	suspend fun createAccount(account: Account) { repository.createAccount(account) }
 	*/
-	suspend fun login(email: String, password: String): Account = repository.login(email, password)
-	suspend fun getRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean):
-			RouteInfo = repository.getRouteInfo(points, withPrices, returnWay)
-	fun logout() { repository.logout() }
+	
 	suspend fun getAllTransfers(): List<Transfer> = repository.getAllTransfers()
 	suspend fun getTransfer(idTransfer: Long): Transfer = repository.getTransfer(idTransfer)
 	suspend fun getTransfersArchive(): List<Transfer> = repository.getTransfersArchive()

@@ -170,9 +170,6 @@
     <string name="carrier_offers">Предложения перевозчиков</string>
     <string name="select">Выбрать</string>
 
-    <string name="login_subtitle">Вход для клиентов и водителей</string>
-
-
     <!--NavigationView-->
     <string name="text_nav_login_title">Войти</string>
     <string name="text_nav_login_subtitle">Вход для клиентов и водителей</string>
@@ -202,5 +199,8 @@
     <string name="tvFare">Средний тариф, предлагаемый перевозчиками $s</string>
     <string name="rub">₽</string>
     <string name="comment_options">омментарий и опции</string>
+
+    <!--activity_transfer_details-->
+    <string name="activity_transfer_details_title">Детали заявки</string>
 
 </resources>

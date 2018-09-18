@@ -6,38 +6,64 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
+
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.content.ContextCompat
+import android.support.annotation.StringRes
+
+import android.support.v4.app.Fragment
+
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+
 import android.text.InputType
 import android.util.DisplayMetrics
+
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
+
+import android.widget.TextView
+
 import android.widget.LinearLayout
 import android.widget.PopupWindow
+
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.MapStyleOptions
+
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.PolyUtil
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
+
+import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
+
 import com.kg.gettransfer.domain.interactor.AddressInteractor
 import com.kg.gettransfer.domain.model.Account
+
+import com.kg.gettransfer.extensions.hideKeyboard
+
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.TransportTypePrice
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 import com.kg.gettransfer.presentation.model.CurrencyModel
+import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.view.CreateOrderView
@@ -59,18 +85,21 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
 
-	private val addressInteractor: AddressInteractor by inject()
+    private val routeInteractor: RouteInteractor by inject()
+	private val transferInteractor: TransferInteractor by inject()
+
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
     private lateinit var googleMap: GoogleMap
     private val calendar = Calendar.getInstance()
     private lateinit var sheetBehavior: BottomSheetBehavior<View>
-    
+
     @ProvidePresenter
     fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(coroutineContexts,
                                                                                   router,
-                                                                                  apiInteractor,
-                                                                                  addressInteractor)
+                                                                                  systemInteractor,
+                                                                                  routeInteractor,
+                                                                                  transferInteractor)
 
     protected override var navigator = object: BaseNavigator(this) {
         @CallSuper
@@ -220,12 +249,13 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
             false
         })
         popupWindowComment.setOnDismissListener {
-            Utils.hideKeyboard(this, currentFocus)
+			val view = currentFocus
+			view?.hideKeyboard()
+			view?.clearFocus()
             layoutShadow.visibility = View.GONE
         }
         layoutPopup.setOnClickListener{ layoutPopup.etPopupComment.requestFocus()}
         layoutPopup.etPopupComment.setSelection(layoutPopup.etPopupComment.text.length)
-        Utils.showKeyboard(this)
     }
 
     private fun showDatePickerDialog() {
@@ -267,97 +297,26 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         tvComments.text = comment
     }
 
-    override fun setTransportTypes(transportTypes: List<TransportTypeModel>, transportTypePrice: List<TransportTypePrice>) {
-        rvTransferType.adapter = TransferTypeAdapter(transportTypes, transportTypePrice, { presenter.checkFields() })
+    override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
+        rvTransferType.adapter = TransferTypeAdapter(transportTypes, { presenter.checkFields() })
     }
     
     override fun setAccount(account: Account) {
-        if(account.fullName != null) tvName.setText(account.fullName)
-        if(account.fullName != null) tvName.setText(account.fullName)
+        tvName.setText(account.fullName ?: "")
+        tvPhone.setText(account.phone ?: "")
         if(account.loggedIn) {
             etEmail.setText(account.email)
             etEmail.isEnabled = false
             tvEmail.visibility = View.GONE
         }
-        if(account.phone != null) tvPhone.setText(account.phone)
     }
     
     override fun setGetTransferEnabled(enabled: Boolean) {
         btnGetOffers.isEnabled = enabled
     }
-    
-    override fun setRouteInfo(distance: String, polyLines: List<String>, route: Pair<GTAddress, GTAddress>) {
-        //Создание пинов с информацией
-        val ltInflater = layoutInflater
-        val pinLayout = ltInflater.inflate(R.layout.view_maps_pin, null)
 
-        pinLayout.tvPlace.text = route.first.name
-        pinLayout.tvInfo.text = tvDateTimeTransfer.text
-        pinLayout.tvPlaceMirror.text = route.first.name
-        pinLayout.tvInfoMirror.text = tvDateTimeTransfer.text
-        pinLayout.imgPin.setImageResource(R.drawable.map_label_a)
-        val bmPinA = createBitmapFromView(pinLayout)
-
-        pinLayout.tvPlace.text = route.second.primary
-        pinLayout.tvInfo.text = distance
-        pinLayout.tvPlaceMirror.text = route.second.primary
-        pinLayout.tvInfoMirror.text = distance
-        pinLayout.imgPin.setImageResource(R.drawable.map_label_b)
-        val bmPinB = createBitmapFromView(pinLayout)
-
-        //Создание polyline
-
-        // Для построения подробного маршрута
-        val mPoints = arrayListOf<LatLng>()
-        for(item in polyLines) mPoints.addAll(PolyUtil.decode(item))
-
-        // Для построения упрощённого маршрута (меньше точек)
-        //val mPoints = PolyUtil.decode(routeInfo.overviewPolyline)
-
-        val line = PolylineOptions().width(10f).color(ContextCompat.getColor(this, R.color.colorPolyline))
-
-        val latLngBuilder = LatLngBounds.Builder()
-        for(i in mPoints.indices) {
-            if(i == 0) {
-                val startMakerOptions = MarkerOptions()
-                        .position(mPoints.get(i))
-                        .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
-                googleMap.addMarker(startMakerOptions)
-            } else if(i == mPoints.size - 1) {
-                val endMakerOptions = MarkerOptions()
-                        .position(mPoints.get(i))
-                        .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
-                googleMap.addMarker(endMakerOptions)
-            }
-            line.add(mPoints.get(i))
-            latLngBuilder.include(mPoints.get(i))
-        }
-        googleMap.addPolyline(line)
-        
-        /*
-        val sizeWidth = resources.displayMetrics.widthPixels
-        val sizeHeight = mapView.height
-        val latLngBounds = latLngBuilder.build()
-        val track = CameraUpdateFactory.newLatLngBounds(latLngBounds, sizeWidth, sizeHeight, 150)
-        */
-        val track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 15)
-        try { googleMap.moveCamera(track) }
-        catch(e: Exception) { Timber.e(e) }
-    }
-
-    fun createBitmapFromView(v: View): Bitmap {
-        v.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT)
-        v.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
-        v.layout(0, 0, v.measuredWidth, v.measuredHeight)
-        val bitmap = Bitmap.createBitmap(v.measuredWidth,
-                v.measuredHeight,
-                Bitmap.Config.ARGB_8888)
-
-        val c = Canvas(bitmap)
-        v.layout(v.left, v.top, v.right, v.bottom)
-        v.draw(c)
-        return bitmap
+    override fun setRoute(routeModel: RouteModel) {
+        val distance = Utils.formatDistance(this, R.string.distance, routeModel.distance, routeModel.distanceUnit)
+    	Utils.setPins(this, googleMap, routeModel, distance)
     }
 }
