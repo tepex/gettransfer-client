@@ -203,5 +203,6 @@
     <!--activity_transfer_details-->
     <string name="activity_transfer_details_title">Детали заявки</string>
     <string name="luggage">Багаж</string>
+    <string name="entrance">Вход</string>
 
 </resources>
