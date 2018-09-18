@@ -97,7 +97,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:hint="@string/suggest_your_price"
-        android:background="null"
+        android:background="@null"
         app:layout_constraintStart_toEndOf="@+id/ivChangeCurrency"
         app:layout_constraintTop_toBottomOf="@+id/tvFare" />
 

@@ -1,53 +1,26 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.content.Context
 import android.support.annotation.CallSuper
-import android.support.annotation.CallSuper
-import android.support.v4.content.ContextCompat
-
 import android.util.Patterns
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
-import com.google.android.gms.maps.model.*
-import com.google.maps.android.PolyUtil
-
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.AddressInteractor
-import com.kg.gettransfer.domain.interactor.ApiInteractor
-import com.kg.gettransfer.domain.model.RouteInfo
-
-import com.kg.gettransfer.domain.model.Trip
-
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
-
+import com.kg.gettransfer.domain.model.Trip
 import com.kg.gettransfer.presentation.Screens
-import com.kg.gettransfer.presentation.model.ConfigsModel
-
 import com.kg.gettransfer.presentation.model.Mappers
-import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
-
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import ru.terrakok.cicerone.Router
 import timber.log.Timber
-import java.text.DateFormat
-
 import java.text.Format
 import java.text.SimpleDateFormat
 import java.util.*
-
-import java.util.Calendar
-import java.util.Date
-
-import ru.terrakok.cicerone.Router
-
-import timber.log.Timber
 
 @InjectViewState
 class CreateOrderPresenter(cc: CoroutineContexts,

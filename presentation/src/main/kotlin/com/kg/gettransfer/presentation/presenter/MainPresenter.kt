@@ -2,30 +2,19 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
 import android.util.Pair
-
 import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.AddressInteractor
-import com.kg.gettransfer.domain.interactor.ApiInteractor
-
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
-
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.presentation.Screens
-import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.view.MainView
 import ru.terrakok.cicerone.Router
 import timber.log.Timber
 import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 @InjectViewState

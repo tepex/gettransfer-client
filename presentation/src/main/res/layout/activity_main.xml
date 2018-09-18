@@ -35,12 +35,23 @@
 				android:layout_width="match_parent"
 				android:layout_height="match_parent" />
 
-			<include layout="@layout/search_form"
+			<android.support.design.widget.FloatingActionButton
+				android:id="@+id/btnMyLocation"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:background="@drawable/bg_circle_bg"
+				app:srcCompat="@drawable/ic_my_location_gray_24dp"
+				android:layout_gravity="top|end"
+				android:layout_margin="16dp"
+				app:fabSize="mini"
+				app:backgroundTint="@color/colorWhite"
+				android:clickable="true"
+				android:focusable="true"/>
+
+			<include layout="@layout/search_form_main"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/search_form_margin_top"
-				android:layout_marginStart="@dimen/search_form_margin_X"
-				android:layout_marginEnd="@dimen/search_form_margin_X" />
+				android:layout_gravity="bottom"/>
 
 		</FrameLayout>
 
@@ -113,44 +124,6 @@
 					tools:text="android.studio@android.com" />
 
 			</RelativeLayout>
-
-			<!--app:headerLayout="@layout/nav_header_main"
-                app:menu="@menu/activity_main_drawer"-->
-
-			<!--<android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom">
-
-                <Button
-                    android:id="@+id/navFooterStamp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/nav_footer_stamp_bottom"
-                    android:background="@drawable/ic_stamp"
-                    android:gravity="center_horizontal"
-                    app:layout_constraintBottom_toTopOf="@+id/navFooterReadMore"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-                <TextView
-                    android:id="@+id/navFooterReadMore"
-                    style="@style/nav_item_title"
-                    android:layout_marginBottom="@dimen/nav_footer_read_more_bottom"
-                    android:gravity="center_horizontal"
-                    android:text="@string/nav_footer_read_more"
-                    android:focusable="false"
-                    app:layout_constraintBottom_toTopOf="@+id/navFooterVersion"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-                <TextView android:id="@+id/navFooterVersion"
-                    style="@style/nav_footer_version"
-                    android:layout_marginStart="@dimen/nav_footer_version_start"
-                    android:layout_marginBottom="@dimen/nav_footer_version_bottom"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:text="version" />
-
-            </android.support.constraint.ConstraintLayout>-->
 
 			<RelativeLayout
                 android:id="@+id/navViewItems"
