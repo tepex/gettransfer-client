@@ -23,7 +23,6 @@ import com.kg.gettransfer.data.repository.LocationRepositoryImpl
 
 import com.kg.gettransfer.domain.CoroutineContexts
 
-import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
@@ -77,7 +76,6 @@ val domainModule = module {
 	single { AddressRepositoryImpl(get(), get(), get()) as AddressRepository }
 	single { LocationRepositoryImpl(get(), get(), get()) as LocationRepository }
 	
-	single { ApiInteractor(get()) }
 	single { LocationInteractor(get()) }
 	single { RouteInteractor(get(), get()) }
 	single { SystemInteractor(get()) }

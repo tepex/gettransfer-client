@@ -40,6 +40,8 @@ import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
+import timber.log.Timber
+
 /**
  * @TODO: Выделить BaseFragment
  */
@@ -56,7 +58,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     private lateinit var categoryName: String
 
     @ProvidePresenter
-    fun createRequestsFragmentPresenter() = RequestsFragmentPresenter(coroutineContexts, router, systemInteractor, transferInteractor)
+    fun createRequestsFragmentPresenter() = RequestsFragmentPresenter(coroutineContexts, router, systemInteractor, transferInteractor, categoryName)
 
     companion object {
         @JvmField val CATEGORY = "category"
@@ -72,24 +74,20 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         arguments!!.getString(CATEGORY)?.let { categoryName = it }
+        super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_requests, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+        inflater.inflate(R.layout.fragment_requests, container, false)
 
+    @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         rvRequests.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        presenter.setData(categoryName)
     }
-
-    override fun setRequests(transfers: List<TransferModel>, distanceUnit: DistanceUnit) {
-        rvRequests.adapter = RequestsRVAdapter(transfers, distanceUnit)
-    }
+    
+    override fun setRequests(transfers: List<TransferModel>) { rvRequests.adapter = RequestsRVAdapter(transfers) }
 
     override fun blockInterface(block: Boolean) { (activity as BaseView).blockInterface(block) }
 

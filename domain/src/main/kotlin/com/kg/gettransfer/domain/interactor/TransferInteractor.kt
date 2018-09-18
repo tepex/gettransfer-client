@@ -9,6 +9,10 @@ import com.kg.gettransfer.domain.repository.ApiRepository
 
 class TransferInteractor(private val repository: ApiRepository) {
     lateinit var transfer: Transfer
+    
+    private var allTransfers: List<Transfer>? = null
+    private var activeTransfers: List<Transfer>? = null
+    private var completedTransfers: List<Transfer>? = null
 
     suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean) = 
         repository.getRouteInfo(from, to, withPrices, returnWay)
@@ -42,4 +46,28 @@ class TransferInteractor(private val repository: ApiRepository) {
     }
     
     suspend fun getOffers() = repository.getOffers(transfer.id)
+    
+    suspend fun getAllTransfers(): List<Transfer> {
+        if(allTransfers == null) allTransfers = repository.getAllTransfers()
+        return allTransfers!!
+    }
+
+    suspend fun getActiveTransfers(): List<Transfer> {
+        if(activeTransfers == null) activeTransfers = repository.getTransfersActive()
+        return activeTransfers!!
+    }
+
+    suspend fun getCompletedTransfers(): List<Transfer> {
+        if(completedTransfers == null) completedTransfers = repository.getTransfersArchive()
+        return completedTransfers!!
+    }
+    
+    fun invalidate() {
+        allTransfers = null
+        activeTransfers = null
+        completedTransfers = null
+    }
+
+    suspend fun getTransfer(transferId: Long) = repository.getTransfer(transferId)
+    suspend fun cancelTransfer(transferId: Long, reason: String) = repository.cancelTransfer(transferId, reason)
 }

@@ -14,10 +14,10 @@ interface ApiRepository {
     suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean): RouteInfo
 	fun logout()
     suspend fun getAllTransfers(): List<Transfer>
-    suspend fun getTransfer(idTransfer: Long): Transfer
+    suspend fun getTransfer(transferId: Long): Transfer
     suspend fun getTransfersArchive(): List<Transfer>
     suspend fun getTransfersActive(): List<Transfer>
-    suspend fun getOffers(idTransfer: Long): List<Offer>
+    suspend fun getOffers(transferId: Long): List<Offer>
     suspend fun createTransfer(from: GTAddress,
                                to: GTAddress,
                                tripTo: Trip,
@@ -31,6 +31,5 @@ interface ApiRepository {
                                account: Account,
                                promoCode: String?,
                                paypalOnly: Boolean): Transfer
-    suspend fun cancelTransfer(idTransfer: Long, reason: String): Transfer
-    fun getLastTransfer(): Transfer
+    suspend fun cancelTransfer(transferId: Long, reason: String): Transfer
 }

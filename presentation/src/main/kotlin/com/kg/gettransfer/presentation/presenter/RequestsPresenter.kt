@@ -21,12 +21,6 @@ class RequestsPresenter(cc: CoroutineContexts,
                         router: Router,
                         systemInteractor: SystemInteractor,
                         private val transferInteractor: TransferInteractor): BasePresenter<RequestsView>(cc, router, systemInteractor) {
-                     /*
-    private var transfersAll: ArrayList<Transfer> = arrayListOf()
-    private var transfersActive: ArrayList<Transfer> = arrayListOf()
-    private var transfersCompleted: ArrayList<Transfer> = arrayListOf()
-    */
-
     override fun onFirstViewAttach() {
         /*
         utils.launchAsyncTryCatchFinally({

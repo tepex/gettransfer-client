@@ -17,5 +17,5 @@ class TransferModel(val id: Long,
                     val paidSum: String,
                     val paidPercentage: Int,
                     val remainToPay: String,
-                    val price: String,
+                    val price: String?,
                     val relevantCarriersCount: Int?)

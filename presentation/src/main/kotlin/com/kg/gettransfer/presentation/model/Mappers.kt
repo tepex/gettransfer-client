@@ -57,7 +57,7 @@ object Mappers {
                       transfer.paidSum!!.default,
                       transfer.paidPercentage!!,
                       transfer.remainsToPay!!.default,
-                      transfer.price!!.default,
+                      transfer.price?.default,
                       transfer.relevantCarriersCount)
     }
     
