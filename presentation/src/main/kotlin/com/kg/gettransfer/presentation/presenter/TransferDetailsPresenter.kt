@@ -66,59 +66,11 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
-        //val distance = Utils.formatDistance(view as Context, R.string.distance, transferInteractor.transfer.distance, distanceUnit)
         viewState.setTransfer(Mappers.getTransferModel(transferInteractor.transfer,
                                                        systemInteractor.getLocale(),
                                                        systemInteractor.getDistanceUnit(),
                                                        systemInteractor.getTransportTypes()))
         viewState.setRoute(routeModel!!)
-        if(offerModel != null) viewState.setOffer(offerModel!!)
+        offerModel?.let { viewState.setOffer(it) }
     }
-        
-            /*
-            
-            
-            val selectedTransportTypes = arrayListOf<TransportTypeModel>()
-            configs.transportTypes[0].delegate
-            transferDetails.transportTypeIds.forEach {
-                selectedTransportTypes.add(configs.transportTypes.find { type -> it == type.delegate.id}!!)
-            }
-
-            viewState.setTransferInfo(transferDetails.id, transferDetails.from.name, transferDetails.to!!.name,
-                    changeDateFormat(transferDetails.dateToLocal), distance)
-            viewState.setPassengerInfo(transferDetails.pax!!, transferDetails.nameSign, transferDetails.childSeats,
-                    transferDetails.flightNumber, transferDetails.comment, selectedTransportTypes)
-            
-            
-            
-            
-            viewState.setMapInfo(routeInfo, getPlaceNameFromAddress(transferDetails.from.name),
-                    getPlaceNameFromAddress(transferDetails.to!!.name), changeDateFormat(transferDetails.dateToLocal), distance)
-
-            val transferStatus = transferDetails.status
-            if(transferStatus == TransfersConstants.STATUS_NEW || transferStatus == TransfersConstants.STATUS_DRAFT) viewState.activateButtonCancel()
-                
-            if (transferStatus == TransfersConstants.STATUS_PERFORMED || transferStatus == TransfersConstants.STATUS_PENDING ||
-                    transferStatus == TransfersConstants.STATUS_COMPLETED || transferStatus == TransfersConstants.STATUS_NOT_COMPLETED){
-
-                viewState.setPaymentInfo(transferDetails.price!!.default, transferDetails.paidSum!!.default,
-                        transferDetails.paidPercentage!!, transferDetails.remainsToPay!!.default)
-                offers = utils.asyncAwait { apiInteractor.getOffers(transferDetails.id) }
-                }
-                if(transferDetails.offersCount!! >= 1 && offers.size == 1){
-                    val driver = offers[0].driver
-                    val vehicle = offers[0].vehicle
-                    viewState.setOfferInfo(driver!!.email, driver.phone, driver.fullName,
-                            setFirstCharToUpperCase(vehicle.transportTypeId), vehicle.name,
-                            vehicle.registrationNumber, offers[0].price.base.default)
-                }
-            }
-            */
-    /*
-    fun getPlaceNameFromAddress(address: String): String{
-        val index = address.indexOf(",")
-        if(index > 0) return address.substring(0, index)
-        else return address
-    }
-    */
 }

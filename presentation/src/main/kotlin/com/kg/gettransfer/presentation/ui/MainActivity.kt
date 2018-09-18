@@ -309,7 +309,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
     override fun moveCenterMarker(point: LatLng) {
-        if(centerMarker != null) centerMarker!!.setPosition(point)
+        centerMarker?.let { it.setPosition(point) }
     }
 
     override fun blockInterface(block: Boolean) {

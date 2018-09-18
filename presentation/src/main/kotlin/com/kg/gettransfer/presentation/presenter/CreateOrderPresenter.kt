@@ -1,12 +1,12 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
-import android.support.v4.content.ContextCompat
 
 import android.util.Patterns
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.PolyUtil
 
@@ -59,7 +59,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     var date: Date = Date()
         set(value) {
             field = value
-            if(dateTimeFormat != null) viewState.setDateTimeTransfer(dateTimeFormat!!.format(date))
+            dateTimeFormat?.let { viewState.setDateTimeTransfer(it.format(date)) }
         }
     private var flightNumber: String? = null
     private var comment: String? = null
@@ -108,8 +108,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         viewState.setAccount(systemInteractor.account)
         dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.getLocale())
         viewState.setDateTimeTransfer(dateTimeFormat!!.format(date))
-	    if(transportTypes != null) viewState.setTransportTypes(transportTypes!!)
-	    if(routeModel != null) viewState.setRoute(routeModel!!)
+	    transportTypes?.let { viewState.setTransportTypes(it) }
+	    routeModel?.let     { viewState.setRoute(it) }
     }
 
     fun changeCurrency(selected: Int) { viewState.setCurrency(currencies.get(selected).symbol) }
