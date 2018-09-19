@@ -15,7 +15,6 @@ import com.kg.gettransfer.presentation.view.MainView
 import ru.terrakok.cicerone.Router
 import timber.log.Timber
 import java.text.DateFormat
-import java.util.*
 
 @InjectViewState
 class MainPresenter(cc: CoroutineContexts,
@@ -29,11 +28,6 @@ class MainPresenter(cc: CoroutineContexts,
     private var minDistance: Int = 30
     private lateinit var dateTimeFormat: DateFormat
 
-    var date: Date = Date()
-        set(value) {
-            field = value
-            viewState.setDateTimeTransfer(dateTimeFormat.format(date))
-        }
     private var available: Boolean = false
 
     override fun onFirstViewAttach() {

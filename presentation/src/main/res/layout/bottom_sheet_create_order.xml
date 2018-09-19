@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:behavior_hideable="true"
-    app:behavior_peekHeight="210dp"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="250dp"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
     android:background="@color/colorWhite">
 
@@ -25,10 +25,11 @@
                 android:id="@+id/tvDateTimeTransfer"
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="16dp"
                 android:text="@string/transfer_date_and_time"
                 app:layout_constraintBottom_toBottomOf="@+id/ivTranferDate"
-                app:layout_constraintStart_toEndOf="@+id/ivChangeCurrency" />
+                app:layout_constraintStart_toEndOf="@+id/ivTranferDate"
+                app:layout_constraintTop_toTopOf="@+id/ivTranferDate" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvTransferType"
@@ -43,12 +44,12 @@
 
 
             <TextView
-                android:id="@+id/tvFare"
+                android:id="@+id/tvRate"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="44dp"
                 android:gravity="center"
                 android:padding="12dp"
-                android:text="@string/tvFare"
+                android:text="@string/average_rate"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rvTransferType" />
@@ -58,55 +59,56 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/rub"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvFare" />
+                app:layout_constraintTop_toBottomOf="@+id/view13" />
 
             <ImageView
                 android:id="@+id/ivChangeCurrency"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
-                app:layout_constraintStart_toEndOf="@+id/ivTranferDate"
-                app:layout_constraintTop_toTopOf="@+id/ivTranferDate"
-                app:srcCompat="@drawable/ic_currency_type_triangle" />
-
-            <ImageView
-                android:id="@+id/ivChangeCurrency2"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
                 android:layout_marginStart="3dp"
                 app:layout_constraintStart_toEndOf="@+id/tvCurrencyType"
                 app:layout_constraintTop_toTopOf="@+id/tvCurrencyType"
-                app:srcCompat="@drawable/ic_currency_type_triangle" />
+                app:srcCompat="@drawable/ic_triangle" />
 
             <EditText
                 android:id="@+id/etYourPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
                 android:background="@null"
                 android:hint="@string/suggest_your_price"
                 app:layout_constraintBottom_toBottomOf="@+id/tvCurrencyType"
-                app:layout_constraintStart_toEndOf="@+id/ivChangeCurrency2"
-                app:layout_constraintTop_toBottomOf="@+id/tvFare" />
+                app:layout_constraintStart_toEndOf="@+id/ivChangeCurrency"
+                app:layout_constraintTop_toTopOf="@+id/tvCurrencyType" />
 
             <View
                 android:id="@+id/view9"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/create_transfer_divider_height"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:background="@color/colorDividerGray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etYourPrice" />
 
             <View
+                android:id="@+id/view13"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:background="@color/colorDividerGray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvRate"
+                tools:layout_editor_absoluteY="139dp" />
+
+            <View
                 android:id="@+id/view2"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/create_transfer_divider_height"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:background="@color/colorDividerGray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -135,13 +137,13 @@
 
             <ImageView
                 android:id="@+id/ivTranferDate"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view9"
-                app:srcCompat="@drawable/ic_calendar" />
+                app:srcCompat="@drawable/ic_calendar_triangle" />
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraintLayout"
@@ -291,7 +293,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                     android:fontFamily="@font/sf_pro_text_regular"
-                    android:text="@string/enter_email"
+                    android:text="@string/email_"
                     android:textColor="@color/colorTextLightGray"
                     android:textSize="@dimen/create_transfer_additionals_bottom_text_size"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -351,7 +353,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                     android:fontFamily="@font/sf_pro_text_regular"
-                    android:text="@string/enter_phone_number"
+                    android:text="@string/phone_"
                     android:textColor="@color/colorTextLightGray"
                     android:textSize="@dimen/create_transfer_additionals_bottom_text_size"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -471,7 +473,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/sf_pro_text_regular"
-                    android:text="@string/children_seats_count"
+                    android:text="@string/child_seats"
                     android:textColor="@color/colorTextLightGray"
                     android:textSize="@dimen/create_transfer_additionals_bottom_text_size"
                     app:layout_constraintEnd_toEndOf="@+id/tvCountChild"

@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -42,7 +40,6 @@ import org.koin.android.ext.android.inject
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.cicerone.commands.Forward
 import timber.log.Timber
-import java.util.*
 import kotlin.coroutines.experimental.suspendCoroutine
 
 class MainActivity: BaseActivity(), MainView {
@@ -62,7 +59,6 @@ class MainActivity: BaseActivity(), MainView {
     
     private var isFirst = true
     private var centerMarker: Marker? = null
-	private val calendar = Calendar.getInstance()
 
     @ProvidePresenter
     fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
@@ -150,8 +146,6 @@ class MainActivity: BaseActivity(), MainView {
 		supportActionBar?.setDisplayHomeAsUpEnabled(false)
 		supportActionBar?.setDisplayShowHomeEnabled(false)
 
-		tvTransferDate.setOnClickListener { showDatePickerDialog() }
-
 		drawer = drawerLayout as DrawerLayout
 		toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
 		drawer.addDrawerListener(object: DrawerLayout.SimpleDrawerListener() {
@@ -184,27 +178,6 @@ class MainActivity: BaseActivity(), MainView {
 		val fade = Fade()
         fade.duration = FADE_DURATION
 		window.setExitTransition(fade)
-	}
-
-	private fun showDatePickerDialog() {
-		calendar.time = presenter.date
-		val datePickerDialog = DatePickerDialog(this, { _, year, monthOfYear, dayOfMonth ->
-			calendar.set(year, monthOfYear, dayOfMonth)
-			presenter.date = calendar.time
-			showTimePickerDialog()
-		}, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
-
-		datePickerDialog.datePicker.minDate = System.currentTimeMillis()
-		datePickerDialog.show()
-	}
-
-	private fun showTimePickerDialog() {
-		val timePickerDialog = TimePickerDialog(this, { _, hour, minute ->
-			calendar.set(Calendar.HOUR_OF_DAY, hour)
-			calendar.set(Calendar.MINUTE, minute)
-			presenter.date = calendar.time
-		}, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true)
-		timePickerDialog.show()
 	}
 
 	@CallSuper
@@ -362,9 +335,5 @@ class MainActivity: BaseActivity(), MainView {
 			navLogin.visibility = View.GONE
 			navRequests.visibility = View.VISIBLE
 	    }
-	}
-
-	override fun setDateTimeTransfer(dateTime: String) {
-		tvTransferDate.text = dateTime
 	}
 }

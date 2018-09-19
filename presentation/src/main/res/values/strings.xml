@@ -85,6 +85,7 @@
 
     <string name="login">Login</string>
     <string name="email">Email</string>
+    <string name="email_">*Email</string>
     <string name="password">Password</string>
     <string name="restore_password"><a href="https://gettransfer.com/en/forgot_password">Restore password</a></string>
     <string name="no_net_info">No internet</string>
@@ -172,6 +173,7 @@
 
     <string name="status_long_connecting">Connecting …</string>
     <string name="phone">Phone</string>
+    <string name="phone_">*Phone</string>
     <string name="currency">Currency</string>
     <string name="distance_unit">Distance unit</string>
     <string name="name">Name</string>
@@ -231,10 +233,9 @@
     <string name="get_offers">Get offers</string>
     <string name="type_your_comments">Type here your comments, requirements, or driver tasks</string>
     <string name="flight_or_train_number">Flight or train number</string>
-    <string name="children_seats_count">Children seats count</string>
     <string name="enter_phone_number">Enter phone number</string>
     <string name="enter_email">Enter email</string>
-    <string name="your_name">Your name</string>
+    <string name="your_name">*Your name</string>
     <string name="additional">Additional</string>
     <string name="number_of_passengers">Number of passengers</string>
     <string name="transfer_date_and_time">Transfer date and time</string>
@@ -277,7 +278,7 @@
     <string name="transfer_request_num">Transfer request № %1$s</string>
     <string name="next">Next</string>
     <string name="done">Done</string>
-    <string name="tvFare">Average fare offered by carriers is $s</string>
+    <string name="average_rate">average rate on route %1$s</string>
     <string name="rub">₽</string>
     <string name="comment_options">Comment and options</string>
 

@@ -4,6 +4,7 @@
 
     <string name="login">Войти</string>
     <string name="email">Email</string>
+    <string name="email_">*Email</string>
     <string name="password">Пароль</string>
     <string name="restore_password"><a href="https://gettransfer.com/en/forgot_password">Восстановить пароль</a></string>
     <string name="no_net_info">Не соединения с сетью</string>
@@ -92,6 +93,7 @@
 
     <string name="status_long_connecting">Соединяем …</string>
     <string name="phone">Телефон</string>
+    <string name="phone_">*Телефон</string>
     <string name="currency">Валюта</string>
     <string name="distance_unit">Единица расстояния</string>
     <string name="name">Имя</string>
@@ -152,10 +154,9 @@
     <string name="get_offers">Get offers</string>
     <string name="type_your_comments">Type here your comments, requirements, or driver tasks</string>
     <string name="flight_or_train_number">Flight or train number</string>
-    <string name="children_seats_count">Children seats count</string>
     <string name="enter_phone_number">Enter phone number</string>
     <string name="enter_email">Введите email</string>
-    <string name="your_name">Your name</string>
+    <string name="your_name">*Ваше имя</string>
     <string name="additional">Additional</string>
     <string name="number_of_passengers">Number of passengers</string>
     <string name="transfer_date_and_time">Transfer date and time</string>
@@ -196,7 +197,7 @@
     <string name="transfer_request_num">Заявка на трансфер № %1$s</string>
     <string name="next">Далее</string>
     <string name="done">Сделано</string>
-    <string name="tvFare">Средний тариф, предлагаемый перевозчиками $s</string>
+    <string name="average_rate">Средний тариф маршрута %1$s</string>
     <string name="rub">₽</string>
     <string name="comment_options">омментарий и опции</string>
 
