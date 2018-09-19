@@ -11,6 +11,9 @@ object Screens {
 	@JvmField val REQUESTS       = "requests"
 	@JvmField val SETTINGS       = "settings"
 	@JvmField val CREATE_ORDER   = "create_order"
+	@JvmField val CARRIER        = "become_a_carrier"
+
+	@JvmField val TRIP_DETAILS   = "carrier_trip_details"
 
 	@JvmField val LICENCE_AGREE  = "licence_agree"
 

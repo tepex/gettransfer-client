@@ -32,4 +32,7 @@ interface ApiRepository {
                                promoCode: String?,
                                paypalOnly: Boolean): Transfer
     suspend fun cancelTransfer(transferId: Long, reason: String): Transfer
+
+    suspend fun getCarrierTrips(): List<CarrierTrip>
+    suspend fun getCarrierTrip(carrierTripId: Long): CarrierTrip
 }

@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.model
 
-import android.content.Context
-
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
@@ -9,7 +7,6 @@ import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.presentation.ui.Utils
 
 import java.text.SimpleDateFormat
-
 import java.util.Currency
 import java.util.Locale
 
@@ -35,7 +32,8 @@ object Mappers {
                       distanceUnit: DistanceUnit,
                       polyLines: List<String>,
                       from: String,
-                      to: String) = RouteModel(distance, distanceUnit, polyLines, from, to)
+                      to: String,
+                      dateTime: String) = RouteModel(distance, distanceUnit, polyLines, from, to, dateTime)
     
     fun getTransferModel(transfer: Transfer,
                          locale: Locale,
@@ -68,4 +66,22 @@ object Mappers {
                                                  offer.vehicle.name,
                                                  offer.vehicle.registrationNumber,
                                                  offer.price.base.default)
+
+    fun getCarrierTripModel(carrierTrip: CarrierTrip,
+                            locale: Locale,
+                            distanceUnit: DistanceUnit) = CarrierTripModel(carrierTrip.id,
+                                                                           carrierTrip.transferId,
+                                                                           carrierTrip.from.name,
+                                                                           carrierTrip.to.name,
+                                                                           SimpleDateFormat(Utils.DATE_TIME_PATTERN, locale).format(carrierTrip.dateLocal),
+                                                                           carrierTrip.distance,
+                                                                           distanceUnit,
+                                                                           carrierTrip.childSeats,
+                                                                           carrierTrip.comment,
+                                                                           carrierTrip.price,
+                                                                           carrierTrip.vehicle.name,
+                                                                           carrierTrip.pax,
+                                                                           carrierTrip.nameSign,
+                                                                           carrierTrip.flightNumber,
+                                                                           carrierTrip.remainToPay)
 }

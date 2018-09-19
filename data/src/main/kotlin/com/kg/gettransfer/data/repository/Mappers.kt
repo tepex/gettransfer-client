@@ -162,5 +162,35 @@ class Mappers {
                              apiRouteInfo.routes.first().legs.first().steps.map { it.polyline.points },
                              apiRouteInfo.routes.first().overviewPolyline.points)
         }
+
+        /**
+         * [ApiCarrierTrip] -> [CarrierTrip]
+         */
+        fun mapApiCarrierTrip(apiCarrierTrip: ApiCarrierTrip): CarrierTrip{
+            var passengerAccount: PassengerAccount? = null
+            if(apiCarrierTrip.passengerAccount != null) passengerAccount = PassengerAccount(apiCarrierTrip.passengerAccount!!.email,
+                    apiCarrierTrip.passengerAccount!!.phone, apiCarrierTrip.passengerAccount!!.fullName, apiCarrierTrip.passengerAccount!!.lastSeen)
+
+            return CarrierTrip(apiCarrierTrip.id,
+                               apiCarrierTrip.transferId,
+                               CityPoint(apiCarrierTrip.from.name, apiCarrierTrip.from.point, apiCarrierTrip.from.placeId),
+                               CityPoint(apiCarrierTrip.to.name, apiCarrierTrip.to.point, apiCarrierTrip.to.placeId),
+                               ISO_FORMAT.parse(apiCarrierTrip.dateLocal),
+                               apiCarrierTrip.duration,
+                               apiCarrierTrip.distance,
+                               apiCarrierTrip.time,
+                               apiCarrierTrip.childSeats,
+                               apiCarrierTrip.comment,
+                               apiCarrierTrip.waterTaxi,
+                               apiCarrierTrip.price,
+                               CarrierTripVehicle(apiCarrierTrip.vehicle.name, apiCarrierTrip.vehicle.registrationNumber),
+                               apiCarrierTrip.pax,
+                               apiCarrierTrip.nameSign,
+                               apiCarrierTrip.flightNumber,
+                               apiCarrierTrip.paidSum,
+                               apiCarrierTrip.remainToPay,
+                               apiCarrierTrip.paidPercentage,
+                               passengerAccount)
+        }
     }
 }

@@ -97,7 +97,7 @@
 	<!-- view_transfer_info -->
 	<dimen name="view_transfer_info_big_text_size">17sp</dimen>
 	<dimen name="view_transfer_info_small_text_size">12sp</dimen>
-	<dimen name="view_transfer_info_request_number_text_size">12sp</dimen>
+	<dimen name="view_transfer_info_request_number_text_size">11sp</dimen>
 	<dimen name="view_transfer_info_request_number_margin_top">10dp</dimen>
 	<dimen name="view_transfer_info_from_margin_end">37dp</dimen>
 	<dimen name="view_transfer_info_from_margin_start">48dp</dimen>
@@ -140,5 +140,51 @@
 	<dimen name="activity_transfer_details_text_in_fields_margin_start_end">16dp</dimen>
 	<dimen name="activity_transfer_details_button_margin">16dp</dimen>
 
+
+	<!-- view_trips_info -->
+	<dimen name="view_trips_info_big_text_size">13sp</dimen>
+	<dimen name="view_trips_info_request_number_text_size">11sp</dimen>
+	<dimen name="view_trips_info_small_text_size">11sp</dimen>
+	<dimen name="view_trips_info_request_number_margin_top">7dp</dimen>
+	<dimen name="view_trips_info_markers_size">23dp</dimen>
+	<dimen name="view_trips_info_markers_margin_start">16dp</dimen>
+	<dimen name="view_trips_info_from_margin_start">47dp</dimen>
+	<dimen name="view_trips_info_from_margin_end">12dp</dimen>
+	<dimen name="view_trips_info_from_margin_top">3dp</dimen>
+	<dimen name="view_trips_info_to_margin_top">8dp</dimen>
+	<dimen name="view_trips_info_divider_height">0.5dp</dimen>
+	<dimen name="view_trips_info_divider_margin_top">10dp</dimen>
+	<dimen name="view_trips_info_price_vehicle_text_size">12sp</dimen>
+	<dimen name="view_trips_info_tv_price_margin_top">3dp</dimen>
+	<dimen name="view_trips_info_tv_vehicle_margin_top">7dp</dimen>
+	<dimen name="view_trips_info_iv_child_width">20dp</dimen>
+	<dimen name="view_trips_info_iv_child_height">23dp</dimen>
+	<dimen name="view_trips_info_iv_child_margin_end">28dp</dimen>
+	<dimen name="view_trips_info_iv_comment_width">20dp</dimen>
+	<dimen name="view_trips_info_iv_comment_height">18dp</dimen>
+	<dimen name="view_trips_info_iv_comment_margin_end">11dp</dimen>
+
+	<!--activity_carrier_transfer_details-->
+	<dimen name="activity_carrier_transfer_details_btn_padding_start">12dp</dimen>
+	<dimen name="activity_carrier_transfer_details_btn_text_size">17sp</dimen>
+	<dimen name="activity_carrier_transfer_details_btn_icons_size">16dp</dimen>
+	<dimen name="activity_carrier_transfer_details_btn_text_margin_start">4dp</dimen>
+	<dimen name="activity_carrier_transfer_details_btns_margin">21dp</dimen>
+	<dimen name="activity_carrier_transfer_details_btns_layout_padding_top_bottom">16dp</dimen>
+	<dimen name="activity_carrier_transfer_details_btns_layout_padding_start_end">52dp</dimen>
+	<dimen name="activity_carrier_transfer_details_btns_layout_height">72dp</dimen>
+	<dimen name="activity_carrier_transfer_details_header_text_field_height">37dp</dimen>
+	<dimen name="activity_carrier_transfer_details_header_text_size">13sp</dimen>
+	<dimen name="activity_carrier_transfer_details_header_text_padding_start_end">16dp</dimen>
+	<dimen name="activity_carrier_transfer_details_info_field_height">44dp</dimen>
+	<dimen name="activity_carrier_transfer_details_info_text_size">17sp</dimen>
+	<dimen name="activity_carrier_transfer_details_info_text_margin_start">57dp</dimen>
+	<dimen name="activity_carrier_transfer_details_editable_text_margin_end">18dp</dimen>
+	<dimen name="activity_carrier_transfer_details_comment_text_size">15sp</dimen>
+	<dimen name="activity_carrier_transfer_details_comment_margin_start">15dp</dimen>
+	<dimen name="activity_carrier_transfer_details_comment_margin_top_bottom">16dp</dimen>
+	<dimen name="activity_carrier_transfer_details_btn_confirm_meeting_margin_start_end_top">16dp</dimen>
+	<dimen name="activity_carrier_transfer_details_btn_confirm_meeting_margin_bottom">42dp</dimen>
+	<dimen name="activity_carrier_transfer_details_layout_remains_to_pay_margin_bottom">16dp</dimen>
 
 </resources>

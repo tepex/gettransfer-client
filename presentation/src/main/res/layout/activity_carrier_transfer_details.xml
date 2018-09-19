@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorBack">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"/>
+
+    <ScrollView
+        android:id="@+id/svTransfer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/mapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/create_transfer_map_height" />
+
+                <ImageView
+                    android:id="@+id/transparentImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/create_transfer_map_height"
+                    android:src="@null" />
+
+            </RelativeLayout>
+
+            <include
+                android:id="@+id/layoutTransferInfo"
+                layout="@layout/view_transfer_request_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_carrier_transfer_details_btns_layout_height"
+                android:paddingTop="@dimen/activity_carrier_transfer_details_btns_layout_padding_top_bottom"
+                android:paddingBottom="@dimen/activity_carrier_transfer_details_btns_layout_padding_top_bottom"
+                android:paddingStart="@dimen/activity_carrier_transfer_details_btns_layout_padding_start_end"
+                android:paddingEnd="@dimen/activity_carrier_transfer_details_btns_layout_padding_start_end"
+                android:orientation="horizontal"
+                android:background="@color/colorWhite">
+                
+                <include
+                    android:id="@+id/btnCall"
+                    layout="@layout/btn_layout_call_passenger"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/activity_carrier_transfer_details_btns_margin" />
+
+                <include
+                    android:id="@+id/btnChat"
+                    layout="@layout/btn_layout_chat_passenger"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/activity_carrier_transfer_details_btns_margin"/>
+                
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_carrier_transfer_details_header_text_field_height"
+                android:text="@string/transfer_details"
+                android:textAllCaps="true"
+                android:textColor="@color/colorTextLightGray"
+                android:textSize="@dimen/activity_carrier_transfer_details_header_text_size"
+                android:fontFamily="@font/sf_pro_text_bold"
+                android:gravity="center_vertical"
+                android:background="@color/colorBack"
+                android:paddingStart="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"
+                android:paddingEnd="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"/>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layoutCountPassengers"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_carrier_transfer_details_info_field_height"
+                android:background="@color/colorWhite">
+                
+                <ImageView
+                    android:layout_width="9dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_person"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/textPassenger"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+                
+                <TextView
+                    android:id="@+id/textPassenger"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/activity_carrier_transfer_details_info_text_size"
+                    android:textColor="@color/colorTextBlack"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/passengers"
+                    android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvCountPassengers"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/activity_carrier_transfer_details_info_text_size"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textColor="@color/colorTextLightGray"
+                    android:gravity="end"
+                    android:layout_marginEnd="@dimen/activity_carrier_transfer_details_editable_text_margin_end"
+                    app:layout_constraintStart_toEndOf="@id/textPassenger"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layoutName"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_carrier_transfer_details_info_field_height"
+                android:background="@color/colorWhite">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"
+                    android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_passport"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/textName"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/textName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/activity_carrier_transfer_details_info_text_size"
+                    android:textColor="@color/colorTextBlack"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/name"
+                    android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvPassengerName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/activity_carrier_transfer_details_info_text_size"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textColor="@color/colorTextLightGray"
+                    android:gravity="end"
+                    android:layout_marginEnd="@dimen/activity_carrier_transfer_details_editable_text_margin_end"
+                    app:layout_constraintStart_toEndOf="@id/textName"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <!--<android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_carrier_transfer_details_info_field_height">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="17dp"
+                    android:src="@drawable/ic_passport"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/textNameSign"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/textNameSign"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/activity_carrier_transfer_details_info_text_size"
+                    android:textColor="@color/colorTextBlack"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/name_sign"
+                    android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvNameSign"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Yes"
+                    android:textSize="@dimen/activity_carrier_transfer_details_info_text_size"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textColor="@color/colorTextLightGray"
+                    android:gravity="end"
+                    android:textAllCaps="true"
+                    android:layout_marginEnd="@dimen/activity_carrier_transfer_details_editable_text_margin_end"
+                    app:layout_constraintStart_toEndOf="@id/textNameSign"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"
+                    android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </android.support.constraint.ConstraintLayout>/>-->
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layoutChildSeat"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_carrier_transfer_details_info_field_height"
+                android:background="@color/colorWhite">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"
+                    android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="23dp"
+                    android:src="@drawable/ic_child_seat"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/textChildSeats"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/textChildSeats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/activity_carrier_transfer_details_info_text_size"
+                    android:textColor="@color/colorTextBlack"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/child_seats"
+                    android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvCountChildSeats"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/activity_carrier_transfer_details_info_text_size"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textColor="@color/colorTextLightGray"
+                    android:gravity="end"
+                    android:layout_marginEnd="@dimen/activity_carrier_transfer_details_editable_text_margin_end"
+                    app:layout_constraintStart_toEndOf="@id/textChildSeats"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layoutFlightNumber"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_carrier_transfer_details_info_field_height"
+                android:background="@color/colorWhite">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"
+                    android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_aircraft"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/textFlightOrTrainNumber"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/textFlightOrTrainNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/activity_carrier_transfer_details_info_text_size"
+                    android:textColor="@color/colorTextBlack"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/flight_or_train"
+                    android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvFlightOrTrainNumber"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/activity_carrier_transfer_details_info_text_size"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textColor="@color/colorTextLightGray"
+                    android:gravity="end"
+                    android:textAllCaps="true"
+                    android:layout_marginEnd="@dimen/activity_carrier_transfer_details_editable_text_margin_end"
+                    app:layout_constraintStart_toEndOf="@id/textFlightOrTrainNumber"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layoutComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/colorDividerGray"
+                    android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/activity_carrier_transfer_details_comment_text_size"
+                    android:textColor="@color/colorTextBlack"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:paddingStart="@dimen/activity_carrier_transfer_details_comment_margin_start"
+                    android:paddingTop="@dimen/activity_carrier_transfer_details_comment_margin_top_bottom"
+                    android:paddingEnd="@dimen/activity_carrier_transfer_details_editable_text_margin_end"
+                    android:paddingBottom="@dimen/activity_carrier_transfer_details_comment_margin_top_bottom"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:background="@color/colorDividerGray"/>
+
+            <LinearLayout
+                android:id="@+id/layoutRemainsToPay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/activity_carrier_transfer_details_header_text_field_height"
+                    android:text="@string/payment_details"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorTextLightGray"
+                    android:textSize="@dimen/activity_carrier_transfer_details_header_text_size"
+                    android:fontFamily="@font/sf_pro_text_bold"
+                    android:gravity="center_vertical"
+                    android:background="@color/colorBack"
+                    android:paddingStart="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"
+                    android:paddingEnd="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"/>
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/activity_carrier_transfer_details_info_field_height"
+                    android:background="@color/colorWhite"
+                    android:layout_marginBottom="@dimen/activity_carrier_transfer_details_layout_remains_to_pay_margin_bottom">
+
+                    <TextView
+                        android:id="@+id/textPay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/activity_carrier_transfer_details_info_text_size"
+                        android:textColor="@color/colorTextBlack"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:text="@string/remains_to_pay"
+                        android:layout_marginStart="@dimen/activity_carrier_transfer_details_info_text_margin_start"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/tvPay"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/activity_carrier_transfer_details_info_text_size"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:textColor="@color/colorTextLightGray"
+                        android:gravity="end"
+                        android:textAllCaps="true"
+                        android:layout_marginEnd="@dimen/activity_carrier_transfer_details_editable_text_margin_end"
+                        app:layout_constraintStart_toEndOf="@id/textPay"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5px"
+                        android:background="@color/colorDividerGray"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </android.support.constraint.ConstraintLayout>
+
+            </LinearLayout>
+
+            <!--<Button
+                android:id="@+id/btnConfirmMeeting"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_btn_get_transfer_height"
+                android:background="@drawable/btn_get_transfer"
+                android:layout_marginTop="@dimen/activity_carrier_transfer_details_btn_confirm_meeting_margin_start_end_top"
+                android:layout_marginStart="@dimen/activity_carrier_transfer_details_btn_confirm_meeting_margin_start_end_top"
+                android:layout_marginEnd="@dimen/activity_carrier_transfer_details_btn_confirm_meeting_margin_start_end_top"
+                android:layout_marginBottom="@dimen/activity_carrier_transfer_details_btn_confirm_meeting_margin_bottom"
+                android:text="@string/btn_confirm_appointment"
+                android:textAllCaps="true"
+                android:textSize="@dimen/create_transfer_additionals_top_text_size"
+                android:textColor="@color/colorWhite"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:stateListAnimator="@null"
+                android:enabled="true" />-->
+            
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

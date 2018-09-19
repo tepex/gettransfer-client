@@ -40,7 +40,7 @@
 
     <color name="colorTextPrice">#216edd</color>
 
-    <color name="colorBack">#ebebf2</color>
+    <color name="colorBack">#efeff4</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorWhitePressed">#d2d2d2</color>
     <color name="colorAdditionalText">#6D6D72</color>
@@ -60,5 +60,10 @@
     <color name="colorPolyline">#13a2fd</color>
 
     <color name="colorTextLightGrayTransportType">#787878</color>
+
+    <!--view_trip_info-->
+    <color name="colorTransferRequestText">#9b9b9b</color>
+    <color name="colorGreenSmallText">#417505</color>
+    <color name="colorRedPriceText">#d0021b</color>
 
 </resources>

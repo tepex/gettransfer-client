@@ -16,6 +16,7 @@ interface Api {
         const val API_TRANSFERS    = "/api/transfers"
 		const val API_TRANSFERS_ARCHIVE = "/api/transfers/archive"
 		const val API_TRANSFERS_ACTIVE  = "/api/transfers/active"
+		const val API_CARRIER_TRIPS = "/api/trips"
     }
     
 	@GET(API_ACCESS_TOKEN)
@@ -65,4 +66,10 @@ interface Api {
 
 	@POST("$API_TRANSFERS/{id}/cancel")
 	fun cancelTransfer(@Path("id") id: Long, @Body reason: ApiReason): Deferred<ApiResponse<ApiTransferWrapper>>
+
+	@GET(API_CARRIER_TRIPS)
+	fun getCarrierTrips(): Deferred<ApiResponse<ApiCarrierTrips>>
+
+	@GET("$API_CARRIER_TRIPS/{id}")
+	fun getCarrierTrip(@Path("id") id: Long): Deferred<ApiResponse<ApiCarrierTripWrapper>>
 }

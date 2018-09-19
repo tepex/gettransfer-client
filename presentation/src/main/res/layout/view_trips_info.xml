@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/back_clicked_layouts">
+
+    <TextView
+        android:id="@+id/tvTransferRequestNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/view_trips_info_request_number_margin_top"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:gravity="center_horizontal"
+        android:text="Заявка на трансфер #1234"
+        android:textColor="@color/colorTransferRequestText"
+        android:textSize="@dimen/view_trips_info_request_number_text_size"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvFrom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/view_trips_info_from_margin_end"
+        android:layout_marginStart="@dimen/view_trips_info_from_margin_start"
+        android:layout_marginTop="@dimen/view_trips_info_from_margin_top"
+        android:ellipsize="end"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:lines="1"
+        android:text="Тверская 21, Москва"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/view_trips_info_big_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTransferRequestNumber" />
+
+    <TextView
+        android:id="@+id/tvOrderDateTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:text="31 января 2018, 11:42"
+        android:textColor="@color/colorGreenSmallText"
+        android:textSize="@dimen/view_trips_info_small_text_size"
+        app:layout_constraintEnd_toEndOf="@+id/tvFrom"
+        app:layout_constraintStart_toStartOf="@+id/tvFrom"
+        app:layout_constraintTop_toBottomOf="@+id/tvFrom" />
+
+    <TextView
+        android:id="@+id/tvTo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/view_trips_info_to_margin_top"
+        android:ellipsize="end"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:lines="1"
+        android:text="Шереметьево Терминал"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/view_trips_info_big_text_size"
+        app:layout_constraintEnd_toEndOf="@+id/tvFrom"
+        app:layout_constraintStart_toStartOf="@+id/tvFrom"
+        app:layout_constraintTop_toBottomOf="@+id/tvOrderDateTime" />
+
+    <TextView
+        android:id="@+id/tvDistance"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:text="Расстояние: 32 km"
+        android:textColor="@color/colorGreenSmallText"
+        android:textSize="@dimen/view_trips_info_small_text_size"
+        app:layout_constraintEnd_toEndOf="@+id/tvFrom"
+        app:layout_constraintStart_toStartOf="@+id/tvFrom"
+        app:layout_constraintTop_toBottomOf="@+id/tvTo" />
+
+    <TextView
+        android:id="@+id/tvMarkerFrom"
+        android:layout_width="@dimen/view_trips_info_markers_size"
+        android:layout_height="@dimen/view_trips_info_markers_size"
+        android:layout_marginStart="@dimen/view_trips_info_markers_margin_start"
+        android:background="@drawable/back_circle_marker"
+        android:gravity="center"
+        android:text="A"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:textColor="@color/colorTextBlack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvFrom"
+        app:layout_constraintBottom_toBottomOf="@+id/tvOrderDateTime"/>
+
+    <ImageView
+        android:id="@+id/ivMarkersLine"
+        android:layout_width="5dp"
+        android:layout_height="0dp"
+        android:layerType="software"
+        app:layout_constraintBottom_toTopOf="@+id/tvMarkerTo"
+        app:layout_constraintEnd_toEndOf="@+id/tvMarkerFrom"
+        app:layout_constraintStart_toStartOf="@+id/tvMarkerFrom"
+        app:layout_constraintTop_toBottomOf="@+id/tvMarkerFrom"
+        app:srcCompat="@drawable/sh_h_line" />
+
+    <TextView
+        android:id="@+id/tvMarkerTo"
+        android:layout_width="@dimen/view_trips_info_markers_size"
+        android:layout_height="@dimen/view_trips_info_markers_size"
+        android:layout_marginStart="@dimen/view_trips_info_markers_margin_start"
+        android:background="@drawable/back_circle_marker"
+        android:gravity="center"
+        android:text="B"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:textColor="@color/colorTextBlack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvTo"
+        app:layout_constraintBottom_toBottomOf="@+id/tvDistance"/>
+
+    <TextView
+        android:id="@+id/tvPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/view_trips_info_price_vehicle_text_size"
+        android:textColor="@color/colorRedPriceText"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:layout_marginTop="@dimen/view_trips_info_tv_price_margin_top"
+        app:layout_constraintStart_toStartOf="@+id/tvDistance"
+        app:layout_constraintTop_toBottomOf="@+id/tvDistance"
+        android:text="3000$"/>
+
+    <TextView
+        android:id="@+id/tvVehicle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/view_trips_info_price_vehicle_text_size"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:layout_marginTop="@dimen/view_trips_info_tv_vehicle_margin_top"
+        app:layout_constraintStart_toStartOf="@+id/tvPrice"
+        app:layout_constraintTop_toBottomOf="@+id/tvPrice"
+        android:text="Volkswagen Golf 7"/>
+    
+    <ImageView
+        android:id="@+id/ivComment"
+        android:layout_width="@dimen/view_trips_info_iv_comment_width"
+        android:layout_height="@dimen/view_trips_info_iv_comment_height"
+        android:src="@drawable/ic_comment"
+        android:layout_marginEnd="@dimen/view_trips_info_iv_comment_margin_end"
+        app:layout_constraintEnd_toStartOf="@+id/ivChildSeat"
+        app:layout_constraintTop_toTopOf="@+id/tvPrice"
+        app:layout_constraintBottom_toBottomOf="@+id/tvVehicle"/>
+    
+    <ImageView
+        android:id="@+id/ivChildSeat"
+        android:layout_width="@dimen/view_trips_info_iv_child_width"
+        android:layout_height="@dimen/view_trips_info_iv_child_height"
+        android:src="@drawable/ic_child_seat"
+        android:layout_marginEnd="@dimen/view_trips_info_iv_child_margin_end"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvPrice"
+        app:layout_constraintBottom_toBottomOf="@id/tvVehicle"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_trips_info_divider_height"
+        android:layout_marginTop="@dimen/view_trips_info_divider_margin_top"
+        android:background="@color/colorDividerGray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvVehicle" />
+
+</android.support.constraint.ConstraintLayout>

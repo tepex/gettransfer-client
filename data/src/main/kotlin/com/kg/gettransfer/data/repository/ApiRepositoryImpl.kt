@@ -14,7 +14,6 @@ import com.google.gson.GsonBuilder
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
 
-import java.util.Currency
 import java.util.Locale
 
 import kotlinx.coroutines.experimental.*
@@ -26,8 +25,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
-import timber.log.Timber
 
 class ApiRepositoryImpl(private val context: Context, url: String, private val apiKey: String): ApiRepository {
     private lateinit var configs: Configs
@@ -268,6 +265,18 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 
         return Offer(offer.id, offer.status, offer.wifi, offer.refreshments, offer.createdAt,
                 price, ratings, offer.passengerFeedback, carrier, vehicle, driver)
+    }
+
+    override suspend fun getCarrierTrips(): List<CarrierTrip> {
+        val response: ApiResponse<ApiCarrierTrips> = tryTwice { api.getCarrierTrips() }
+        val carrierTrips: List<ApiCarrierTrip> = response.data!!.trips
+        return carrierTrips.map { carrierTrip -> Mappers.mapApiCarrierTrip(carrierTrip) }
+    }
+
+    override suspend fun getCarrierTrip(carrierTripId: Long): CarrierTrip {
+        val response: ApiResponse<ApiCarrierTripWrapper> = tryTwice(carrierTripId, { id -> api.getCarrierTrip(id) })
+        val carrierTrip: ApiCarrierTrip = response.data!!.trip
+        return Mappers.mapApiCarrierTrip(carrierTrip)
     }
     
     private fun apiException(e: Exception): ApiException {
