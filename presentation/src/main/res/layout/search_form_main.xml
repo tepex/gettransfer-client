@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/search"
 	android:transitionName="@string/searchTransitionName"
 	android:layout_width="match_parent"
@@ -28,7 +27,23 @@
 		android:id="@+id/searchFrom"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		app:hint="@string/search_from_hint" />
+		app:hint="@string/search_from_hint" >
+
+		<Button
+			android:id="@+id/btnEntrance2"
+			android:layout_width="103dp"
+			android:layout_height="26dp"
+			android:layout_marginBottom="8dp"
+			android:layout_marginEnd="8dp"
+			android:layout_marginTop="8dp"
+			android:layout_marginStart="10dp"
+			android:background="@drawable/btn_bg_rounded"
+			android:text="@string/entrance"
+			android:textColor="@color/colorWhite"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+	</com.kg.gettransfer.presentation.ui.SearchAddress>
 
 	<com.kg.gettransfer.presentation.ui.SearchAddress
 		android:id="@+id/searchTo"
@@ -36,15 +51,6 @@
 		android:layout_height="wrap_content"
 		app:hint="@string/search_to_hint" >
 
-		<Button
-			android:id="@+id/btnEntrance"
-			android:layout_width="103dp"
-			android:layout_height="26dp"
-			android:background="@drawable/btn_bg_rounded"
-			android:text="@string/entrance"
-			android:textColor="@color/colorWhite"
-			tools:layout_editor_absoluteX="241dp"
-			tools:layout_editor_absoluteY="7dp" />
 	</com.kg.gettransfer.presentation.ui.SearchAddress>
 
 	<Button

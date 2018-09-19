@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:behavior_hideable="true"
-    app:behavior_peekHeight="0dp"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+    app:behavior_peekHeight="210dp"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+    android:background="@color/colorWhite">
 
     <ScrollView
         android:layout_width="0dp"
@@ -56,7 +57,7 @@
                 android:id="@+id/tvCurrencyType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/rub"
                 app:layout_constraintStart_toStartOf="parent"
@@ -136,7 +137,7 @@
                 android:id="@+id/ivTranferDate"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view9"
@@ -528,6 +529,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvComments" />
 
+            <View
+                android:id="@+id/view3"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorDividerGray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutAgreement" />
+
             <TextView
                 android:id="@+id/tvComments"
                 android:layout_width="0dp"
@@ -542,6 +554,53 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout6" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layoutAgreement"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:paddingEnd="@dimen/create_transfer_agreement_padding"
+                android:paddingStart="@dimen/create_transfer_agreement_padding"
+                android:paddingTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvComments">
+
+                <CheckBox
+                    android:id="@+id/cbAgreement"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/cb_agreement_selector"
+                    android:button="@null"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvAgreement1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/create_transfer_agreement_margin_text_start"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/i_read_and_agree"
+                    android:textColor="@color/colorTextLightGray"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toBottomOf="@id/cbAgreement"
+                    app:layout_constraintStart_toEndOf="@id/cbAgreement" />
+
+                <TextView
+                    android:id="@+id/tvAgreement2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/create_transfer_agreement_margin_text_start"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/license_agreement"
+                    android:textColor="@color/colorLinkText"
+                    android:textSize="13sp"
+                    app:layout_constraintStart_toEndOf="@id/cbAgreement"
+                    app:layout_constraintTop_toBottomOf="@id/tvAgreement1" />
+
+            </android.support.constraint.ConstraintLayout>
+
 
             <Button
                 android:id="@+id/btnGetOffers"
@@ -561,9 +620,10 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view12" />
+                app:layout_constraintTop_toBottomOf="@id/view3" />
 
         </android.support.constraint.ConstraintLayout>
+
     </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

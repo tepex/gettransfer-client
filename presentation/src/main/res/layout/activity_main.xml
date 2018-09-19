@@ -23,7 +23,7 @@
 			<android.support.v7.widget.Toolbar android:id="@+id/toolbar"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:minHeight="?attr/actionBarSize"
+				android:minHeight="?android:attr/actionBarSize"
 				tools:ignore="Overdraw" />
 		</android.support.design.widget.AppBarLayout>
 
@@ -35,16 +35,13 @@
 				android:layout_width="match_parent"
 				android:layout_height="match_parent" />
 
-			<android.support.design.widget.FloatingActionButton
+			<ImageView
 				android:id="@+id/btnMyLocation"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:background="@drawable/bg_circle_bg"
-				app:srcCompat="@drawable/ic_my_location_gray_24dp"
+				app:srcCompat="@drawable/ic_my_location"
 				android:layout_gravity="top|end"
 				android:layout_margin="16dp"
-				app:fabSize="mini"
-				app:backgroundTint="@color/colorWhite"
 				android:clickable="true"
 				android:focusable="true"/>
 

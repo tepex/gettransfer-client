@@ -44,7 +44,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         }
     private var flightNumber: String? = null
     private var comment: String? = null
-    
+    private var agreeLicence = false
+
     companion object {
         @JvmField val MIN_PASSENGERS    = 1
         @JvmField val MIN_CHILDREN      = 0
@@ -127,6 +128,13 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         viewState.setComment(comment)
     }
 
+    fun setAgreeLicence(agreeLicence: Boolean) {
+        this.agreeLicence = agreeLicence
+        checkFields()
+    }
+
+    fun showLicenceAgreement() { router.navigateTo(Screens.LICENCE_AGREE) }
+
     fun onGetTransferClick() {
         viewState.blockInterface(true)
         val trip = Trip(date, flightNumber)
@@ -146,6 +154,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         Timber.d("children: $children")
         Timber.d("flightNumber: $flightNumber")
         Timber.d("comment: $comment")
+        Timber.d("agree: $agreeLicence")
 
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)

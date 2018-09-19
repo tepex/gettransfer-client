@@ -401,22 +401,19 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabMyLocation"
+    <ImageView
+        android:id="@+id/ivMyLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:clickable="true"
-        android:focusable="false"
+        android:focusable="true"
         android:padding="0dp"
         android:scaleType="center"
-        app:backgroundTint="@color/colorBGSecondary"
-        app:fabSize="mini"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/line7"
-        app:srcCompat="@drawable/ic_my_location_gray_24dp" />
+        app:srcCompat="@drawable/ic_my_location" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabRecenter"
@@ -433,7 +430,7 @@
         app:backgroundTint="@color/colorBGSecondary"
         app:fabSize="mini"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fabMyLocation"
+        app:layout_constraintTop_toBottomOf="@+id/ivMyLocation"
         app:srcCompat="@mipmap/ic_route_96_2" />
 
     <android.support.design.widget.FloatingActionButton

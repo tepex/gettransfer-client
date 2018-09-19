@@ -74,6 +74,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
             if(intent != null) return intent
                 
             when(screenKey) {
+                Screens.LICENCE_AGREE -> return Intent(context, LicenceAgreementActivity::class.java)
                 Screens.OFFERS -> return Intent(context, OffersActivity::class.java)
             }
             return null
@@ -114,20 +115,23 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         tvFlightOrTrainNumber.onTextChanged { presenter.setFlightNumber(it.trim()) }
 
         tvComments.setOnClickListener { showPopupWindowComment() }
-
-        tvOptions.setOnClickListener { showAdditional() }
+        layoutAgreement.setOnClickListener { presenter.showLicenceAgreement() }
+        cbAgreement.setOnClickListener { presenter.setAgreeLicence(cbAgreement.isChecked()) }
 
         btnGetOffers.setOnClickListener { presenter.onGetTransferClick() }
 
         val mapViewBundle = savedInstanceState?.getBundle(MainActivity.MAP_VIEW_BUNDLE_KEY)
         initGoogleMap(mapViewBundle)
 
-        sheetBehavior = BottomSheetBehavior.from(bottom_sheet)
-        sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        sheetBehavior = BottomSheetBehavior.from(bottomSheet)
+//        sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomSheet.setOnClickListener { toggleBottomSheet() }
     }
 
-    private fun showAdditional() {
-        if (sheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
+    private fun toggleBottomSheet() {
+        if (sheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+            sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        } else {
             sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
@@ -278,7 +282,7 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     }
     
     override fun setGetTransferEnabled(enabled: Boolean) {
-        btnGetOffers.isEnabled = enabled
+
     }
 
     override fun setRoute(routeModel: RouteModel) {
