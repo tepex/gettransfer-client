@@ -96,7 +96,7 @@
                 <ImageView
                     android:layout_width="9dp"
                     android:layout_height="22dp"
-                    android:src="@drawable/ic_person"
+                    android:src="@drawable/ic_passenger"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/textPassenger"
                     app:layout_constraintTop_toTopOf="parent"
@@ -300,7 +300,7 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/ic_aircraft"
+                    android:src="@drawable/ic_flight"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/textFlightOrTrainNumber"
                     app:layout_constraintTop_toTopOf="parent"

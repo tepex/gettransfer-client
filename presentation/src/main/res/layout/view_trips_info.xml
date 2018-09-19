@@ -143,7 +143,7 @@
         android:id="@+id/ivComment"
         android:layout_width="@dimen/view_trips_info_iv_comment_width"
         android:layout_height="@dimen/view_trips_info_iv_comment_height"
-        android:src="@drawable/ic_comment"
+        app:srcCompat="@drawable/ic_comment"
         android:layout_marginEnd="@dimen/view_trips_info_iv_comment_margin_end"
         app:layout_constraintEnd_toStartOf="@+id/ivChildSeat"
         app:layout_constraintTop_toTopOf="@+id/tvPrice"
