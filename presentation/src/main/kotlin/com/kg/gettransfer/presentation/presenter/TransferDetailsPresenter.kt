@@ -45,7 +45,8 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
                                                            systemInteractor.getLocale(),
                                                            systemInteractor.getDistanceUnit(),
                                                            systemInteractor.getTransportTypes()))
-	        if(transfer!!.checkOffers) {
+	        Timber.d("offers: ${transfer!!.id} status=${transfer!!.status} checkOffers: ${transfer!!.checkOffers}")
+            if(transfer!!.checkOffers) {
 	            val offers = utils.asyncAwait { transferInteractor.getOffers() }
 	            if(transfer!!.offersCount!! >= 1 && offers.size >= 1) {
 	                offerModel = Mappers.getOfferModel(offers.first())
@@ -65,7 +66,8 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
                                                to.name)
 	        
             viewState.setRoute(routeModel!!)
-	    }, { e -> viewState.setError(false, R.string.err_server, e.message)
+	    }, { e -> Timber.e(e)
+	        viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })        
 	}
 	

@@ -114,6 +114,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
             layoutComment.visibility = View.VISIBLE
         }
 
+        layoutTransportTypesList.removeAllViews()
         transferModel.transportTypes.forEach {
             var viewTransportType = layoutInflater.inflate(R.layout.view_transport_type_transfer_details, null, false)
             viewTransportType.tvNameTransportType.text = it.id

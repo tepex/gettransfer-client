@@ -52,15 +52,14 @@ data class Transfer(val id: Long,
         @JvmField val STATUS_DRAFT         = "draft"
         @JvmField val STATUS_PENDING       = "pending_confirmation"
         @JvmField val STATUS_OUTDATED      = "outdated"
-
-        /*@JvmField val OFFER_NEW        = "new"
-        @JvmField val OFFER_PERFORMED  = "performed"
-        @JvmField val OFFER_OUTDATED   = "outdated"
-        @JvmField val OFFER_UNAPPROVED = "unapproved"
-        @JvmField val OFFER_REJECTED   = "rejected"
-        @JvmField val OFFER_BLOCKED    = "blocked"
-        @JvmField val OFFER_CANCELED   = "canceled"*/
     }
 
-    val checkOffers = status == STATUS_PERFORMED || status == STATUS_PENDING || status == STATUS_COMPLETED || status == STATUS_NOT_COMPLETED
+    /*
+    val checkOffers = status == STATUS_PERFORMED ||
+                      status == STATUS_PERFORMED ||
+                      status == STATUS_PENDING ||
+                      status == STATUS_COMPLETED ||
+                      status == STATUS_NOT_COMPLETED
+                      */
+    val checkOffers = true
 }

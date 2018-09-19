@@ -16,8 +16,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.interactor.TransferInteractor
-
 import com.kg.gettransfer.presentation.presenter.RequestsPresenter
 import com.kg.gettransfer.presentation.view.RequestsView
 
@@ -30,10 +28,9 @@ class RequestsActivity: BaseActivity(), RequestsView {
 
     @InjectPresenter
     internal lateinit var presenter: RequestsPresenter
-    private val transferInteractor: TransferInteractor by inject()
     
     @ProvidePresenter
-    fun createRequestsPresenter(): RequestsPresenter = RequestsPresenter(coroutineContexts, router, systemInteractor, transferInteractor)
+    fun createRequestsPresenter() = RequestsPresenter(coroutineContexts, router, systemInteractor)
 
     protected override var navigator = BaseNavigator(this)
 
@@ -57,9 +54,7 @@ class RequestsActivity: BaseActivity(), RequestsView {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         (toolbar as Toolbar).toolbar_title.setText(R.string.text_nav_requests_title)
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
-    }
 
-    override fun setRequestsFragments() {
         val requestsVPAdapter = RequestsViewPagerAdapter(supportFragmentManager)
 
         val fragmentRequestsActive = RequestsFragment.newInstance(CATEGORY_ACTIVE)
