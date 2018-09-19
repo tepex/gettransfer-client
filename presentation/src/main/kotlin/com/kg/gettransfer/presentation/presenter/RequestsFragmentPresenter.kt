@@ -55,5 +55,8 @@ class RequestsFragmentPresenter(cc: CoroutineContexts,
         transfers?.let { viewState.setRequests(it) }
     }
 
-    fun openTransferDetails(id: Long) { router.navigateTo(Screens.DETAILS, id) }
+    fun openTransferDetails(id: Long) {
+        transferInteractor.selectedId = id
+        router.navigateTo(Screens.DETAILS)
+    }
 }

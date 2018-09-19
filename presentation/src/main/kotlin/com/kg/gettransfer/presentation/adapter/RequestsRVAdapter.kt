@@ -15,7 +15,7 @@ import com.kg.gettransfer.presentation.ui.Utils
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
 
-class RequestsRVAdapter(private val transfers: List<TransferModel>):
+class RequestsRVAdapter(private val transfers: List<TransferModel>, private val listener: ItemClickListener):
         RecyclerView.Adapter<RequestsRVAdapter.ViewHolder>() {
 
 	companion object {
@@ -28,18 +28,19 @@ class RequestsRVAdapter(private val transfers: List<TransferModel>):
             RequestsRVAdapter.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_transfer_request_info, parent, false))
 
     override fun onBindViewHolder(holder: RequestsRVAdapter.ViewHolder, pos: Int) {
-        holder.bind(transfers.get(pos))
+        holder.bind(transfers.get(pos), listener)
     }
 
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(item: TransferModel) = with(containerView) {
+        fun bind(item: TransferModel, listener: ItemClickListener) = with(containerView) {
             tvTransferRequestNumber.text = context.getString(R.string.transfer_request_num, item.id)
             tvFrom.text = item.from
             tvTo.text = item.to
             tvOrderDateTime.text = context.getString(R.string.transfer_date_local, item.dateTime)
             tvDistance.text = Utils.formatDistance(context, item.distance, item.distanceUnit)
+            setOnClickListener { listener(item.id) }
         }
     }
 }
 
-typealias ItemClickListener = (TransferModel) -> Unit
+typealias ItemClickListener = (Long) -> Unit

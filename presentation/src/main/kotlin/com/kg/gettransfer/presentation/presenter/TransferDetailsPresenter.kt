@@ -14,10 +14,11 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
+import com.kg.gettransfer.domain.model.Transfer
+
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.TransferDetailsView
@@ -26,30 +27,34 @@ import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
-import java.text.SimpleDateFormat
-import java.util.Locale
-
 @InjectViewState
 class TransferDetailsPresenter(cc: CoroutineContexts,
                                router: Router,
                                systemInteractor: SystemInteractor,
                                private val transferInteractor: TransferInteractor): BasePresenter<TransferDetailsView>(cc, router, systemInteractor) {
 
+    private var transfer: Transfer? = null
     private var routeModel: RouteModel? = null
-    private lateinit var transferModel: TransferModel
     private var offerModel: OfferModel? = null
 
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
-	        if(transferInteractor.transfer.checkOffers) {
+            transfer = utils.asyncAwait { transferInteractor.getTransfer() }
+            viewState.setTransfer(Mappers.getTransferModel(transfer!!,
+                                                           systemInteractor.getLocale(),
+                                                           systemInteractor.getDistanceUnit(),
+                                                           systemInteractor.getTransportTypes()))
+	        if(transfer!!.checkOffers) {
 	            val offers = utils.asyncAwait { transferInteractor.getOffers() }
-	            if(transferInteractor.transfer.offersCount!! >= 1 && offers.size >= 1)
+	            if(transfer!!.offersCount!! >= 1 && offers.size >= 1) {
 	                offerModel = Mappers.getOfferModel(offers.first())
+	                viewState.setOffer(offerModel!!)
+	            }	            
 	        }
             
-            val from = transferInteractor.transfer.from
-            val to = transferInteractor.transfer.to!!
+            val from = transfer!!.from
+            val to = transfer!!.to!!
 	        val routeInfo = utils.asyncAwait {
 	            transferInteractor.getRouteInfo(from.point.toString(), to.point.toString(), true, false)
 	        }
@@ -58,7 +63,8 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
                                                routeInfo.polyLines,
                                                from.name,
                                                to.name)
-	        viewState.setRoute(routeModel!!)
+	        
+            viewState.setRoute(routeModel!!)
 	    }, { e -> viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })        
 	}
@@ -66,11 +72,12 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
-        viewState.setTransfer(Mappers.getTransferModel(transferInteractor.transfer,
+        transfer?.let { viewState.setTransfer(Mappers.getTransferModel(it,
                                                        systemInteractor.getLocale(),
                                                        systemInteractor.getDistanceUnit(),
                                                        systemInteractor.getTransportTypes()))
-        viewState.setRoute(routeModel!!)
+        }
+        routeModel?.let { viewState.setRoute(it) }
         offerModel?.let { viewState.setOffer(it) }
     }
 }

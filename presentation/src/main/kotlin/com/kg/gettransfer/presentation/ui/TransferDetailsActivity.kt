@@ -39,22 +39,18 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
     private val transferInteractor: TransferInteractor by inject()
-
+    
     @ProvidePresenter
-    fun createTransferDetailsPresenter(): TransferDetailsPresenter = TransferDetailsPresenter(coroutineContexts, router, systemInteractor, transferInteractor)
+    fun createTransferDetailsPresenter() = TransferDetailsPresenter(coroutineContexts, router, systemInteractor, transferInteractor)
 
-    protected override var navigator = object: BaseNavigator(this){}
-
-    init {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-    }
+    protected override var navigator = object: BaseNavigator(this) {}
 
     override fun getPresenter(): TransferDetailsPresenter = presenter
     
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        
         setContentView(R.layout.activity_transfer_details)
 
         setSupportActionBar(toolbar as Toolbar)

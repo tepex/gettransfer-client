@@ -22,8 +22,6 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
-import com.kg.gettransfer.domain.model.DistanceUnit
-
 import com.kg.gettransfer.presentation.adapter.RequestsRVAdapter
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.RequestsFragmentPresenter
@@ -34,11 +32,6 @@ import com.kg.gettransfer.presentation.view.RequestsFragmentView
 import kotlinx.android.synthetic.main.fragment_requests.*
 
 import org.koin.android.ext.android.inject
-
-import ru.terrakok.cicerone.Navigator
-import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.Router
-import ru.terrakok.cicerone.android.SupportAppNavigator
 
 import timber.log.Timber
 
@@ -52,13 +45,12 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     private val systemInteractor: SystemInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
     private val coroutineContexts: CoroutineContexts by inject()
-    private val navigatorHolder: NavigatorHolder by inject()
-    private val router: Router by inject()
     
     private lateinit var categoryName: String
 
     @ProvidePresenter
-    fun createRequestsFragmentPresenter() = RequestsFragmentPresenter(coroutineContexts, router, systemInteractor, transferInteractor, categoryName)
+    fun createRequestsFragmentPresenter() = RequestsFragmentPresenter(coroutineContexts, 
+        (activity as BaseActivity).router, systemInteractor, transferInteractor, categoryName)
 
     companion object {
         @JvmField val CATEGORY = "category"
@@ -87,7 +79,9 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         rvRequests.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
     
-    override fun setRequests(transfers: List<TransferModel>) { rvRequests.adapter = RequestsRVAdapter(transfers) }
+    override fun setRequests(transfers: List<TransferModel>) {
+        rvRequests.adapter = RequestsRVAdapter(transfers) { transferId -> presenter.openTransferDetails(transferId) }
+    }
 
     override fun blockInterface(block: Boolean) { (activity as BaseView).blockInterface(block) }
 
