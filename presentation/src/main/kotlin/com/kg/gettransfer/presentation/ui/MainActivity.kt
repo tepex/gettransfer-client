@@ -3,38 +3,55 @@ package com.kg.gettransfer.presentation.ui
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
 import android.support.design.widget.AppBarLayout
+
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
+
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
+
 import android.transition.Fade
 import android.util.Pair
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+
+import android.widget.RelativeLayout
 import android.widget.TextView
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.*
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
+
 import com.kg.gettransfer.domain.model.Account
+
 import com.kg.gettransfer.extensions.hideKeyboard
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
+
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import org.koin.android.ext.android.inject
+
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.cicerone.commands.Forward
+
 import timber.log.Timber
 
 class MainActivity: BaseGoogleMapActivity(), MainView {
@@ -46,7 +63,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
     private val locationInteractor: LocationInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
-
+    
     private var isFirst = true
     private var centerMarker: Marker? = null
     
@@ -65,6 +82,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
             R.id.navAbout -> presenter.onAboutClick()
             R.id.navSettings -> presenter.onSettingsClick()
             R.id.navRequests -> presenter.onRequestsClick()
+			R.id.navBecomeACarrier -> presenter.onBecomeACarrierClick()
             else -> Timber.d("No route")
         }
         drawer.closeDrawer(GravityCompat.START)
@@ -88,6 +106,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 				Screens.CREATE_ORDER -> return Intent(context, CreateOrderActivity::class.java)
 				Screens.SETTINGS -> return Intent(context, SettingsActivity::class.java)
 				Screens.REQUESTS -> return Intent(context, RequestsActivity::class.java)
+				Screens.CARRIER -> return  Intent(context, CarrierTripsActivitty::class.java)
 			}
 			return null
 		}
@@ -126,12 +145,12 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 	@CallSuper
 	protected override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-
+		
 		setContentView(R.layout.activity_main)
 		
 		_mapView = mapView
 		initGoogleMap(savedInstanceState)
-
+		
 		val tb = this.toolbar as Toolbar
 		
 		setSupportActionBar(tb)
@@ -156,9 +175,9 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         (appbar as AppBarLayout).bringToFront()
 		
 		initNavigation()
-
+		
 		isFirst = savedInstanceState == null
-
+		
 		search.elevation = resources.getDimension(R.dimen.search_elevation)
 		searchFrom.setUneditable()
 		searchTo.setUneditable()
@@ -175,7 +194,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 		super.onPostCreate(savedInstanceState)
 		toggle.syncState()
 	}
-
+	
 	@CallSuper
 	protected override fun onResume() {
 		super.onResume()
@@ -195,7 +214,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 		searchTo.text = ""
 		super.onStop()
 	}
-
+	
 	/** @see {@link android.support.v7.app.ActionBarDrawerToggle} */
 	@CallSuper
 	override fun onConfigurationChanged(newConfig: Configuration) {

@@ -19,6 +19,7 @@ import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.TransferDetailsView
@@ -36,6 +37,7 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
     private var transfer: Transfer? = null
     private var routeModel: RouteModel? = null
     private var offerModel: OfferModel? = null
+    private var transferModel: TransferModel? = null
 
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally({
@@ -45,7 +47,8 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
                                                            systemInteractor.getLocale(),
                                                            systemInteractor.getDistanceUnit(),
                                                            systemInteractor.getTransportTypes()))
-	        if(transfer!!.checkOffers) {
+	        Timber.d("offers: ${transfer!!.id} status=${transfer!!.status} checkOffers: ${transfer!!.checkOffers}")
+            if(transfer!!.checkOffers) {
 	            val offers = utils.asyncAwait { transferInteractor.getOffers() }
 	            if(transfer!!.offersCount!! >= 1 && offers.size >= 1) {
 	                offerModel = Mappers.getOfferModel(offers.first())
@@ -56,16 +59,18 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
             val from = transfer!!.from
             val to = transfer!!.to!!
 	        val routeInfo = utils.asyncAwait {
-	            transferInteractor.getRouteInfo(from.point.toString(), to.point.toString(), true, false)
+	            transferInteractor.getRouteInfo(from.point, to.point, true, false)
 	        }
 	        routeModel = Mappers.getRouteModel(routeInfo.distance,
                                                systemInteractor.getDistanceUnit(),
                                                routeInfo.polyLines,
                                                from.name,
-                                               to.name)
+                                               to.name,
+                                               transferModel!!.dateTime)
 	        
             viewState.setRoute(routeModel!!)
-	    }, { e -> viewState.setError(false, R.string.err_server, e.message)
+	    }, { e -> Timber.e(e)
+	        viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })        
 	}
 	

@@ -8,7 +8,7 @@ import com.kg.gettransfer.domain.model.Trip
 import com.kg.gettransfer.domain.repository.ApiRepository
 
 class TransferInteractor(private val repository: ApiRepository) {
-    lateinit var transfer: Transfer
+    var transfer: Transfer? = null
     var selectedId: Long = -1
     
     private var allTransfers: List<Transfer>? = null
@@ -43,7 +43,7 @@ class TransferInteractor(private val repository: ApiRepository) {
                                              account,
                                              promoCode,
                                              paypalOnly)
-        return transfer
+        return transfer!!
     }
     
     suspend fun getTransfer() = repository.getTransfer(selectedId)
@@ -52,22 +52,31 @@ class TransferInteractor(private val repository: ApiRepository) {
     
     suspend fun getAllTransfers(): List<Transfer> {
         if(allTransfers == null) allTransfers = repository.getAllTransfers()
+        transfer?.let {
+            if(allTransfers!!.firstOrNull()?.id != it.id) {
+                val mutableList = allTransfers!!.toMutableList()
+                mutableList.add(0, it)
+                allTransfers = mutableList
+            }
+        }
         return allTransfers!!
     }
 
     suspend fun getActiveTransfers(): List<Transfer> {
-        if(activeTransfers == null) activeTransfers = repository.getTransfersActive()
+        if(activeTransfers == null) activeTransfers = getAllTransfers().filter {
+                it.status == Transfer.STATUS_NEW ||
+                it.status == Transfer.STATUS_DRAFT ||
+                it.status == Transfer.STATUS_PERFORMED ||
+                it.status == Transfer.STATUS_PENDING
+            }
         return activeTransfers!!
     }
 
     suspend fun getCompletedTransfers(): List<Transfer> {
-        if(completedTransfers == null) completedTransfers = repository.getTransfersArchive()
+        if(completedTransfers == null) completedTransfers = getAllTransfers().filter {
+                it.status == Transfer.STATUS_COMPLETED ||
+                it.status == Transfer.STATUS_NOT_COMPLETED
+            }
         return completedTransfers!!
-    }
-    
-    fun invalidate() {
-        allTransfers = null
-        activeTransfers = null
-        completedTransfers = null
     }
 }

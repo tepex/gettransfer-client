@@ -60,7 +60,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
         (toolbar as Toolbar).toolbar_title.text = resources.getString(R.string.activity_transfer_details_title)
 
-        layoutTransferInfo.ivChevron.visibility = View.GONE
+        layoutTransferInfo.chevron.visibility = View.GONE
 
         _mapView = mapView
         initGoogleMap(savedInstanceState)
@@ -114,6 +114,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
             layoutComment.visibility = View.VISIBLE
         }
 
+        layoutTransportTypesList.removeAllViews()
         transferModel.transportTypes.forEach {
             var viewTransportType = layoutInflater.inflate(R.layout.view_transport_type_transfer_details, null, false)
             viewTransportType.tvNameTransportType.text = it.id
@@ -121,13 +122,15 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
             viewTransportType.tvCountBaggage.text = getString(R.string.count_persons_and_baggage, it.luggageMax)
             layoutTransportTypesList.addView(viewTransportType)
         }
-        
-        paymentInfoPaid.text = getString(R.string.activity_transfer_details_paid_sum,
-                                         transferModel.paidSum,
-                                         transferModel.paidPercentage)
-        paymentInfoPay.text = transferModel.remainToPay
-        paymentInfoSum.text = transferModel.price
-        layoutPaymentInfo.visibility = View.VISIBLE
+
+        if(transferModel.price != null) {
+            paymentInfoPaid.text = getString(R.string.activity_transfer_details_paid_sum,
+                    transferModel.paidSum,
+                    transferModel.paidPercentage)
+            paymentInfoPay.text = transferModel.remainToPay
+            paymentInfoSum.text = transferModel.price
+            layoutPaymentInfo.visibility = View.VISIBLE
+        }
     }
 
     override fun setButtonCancelVisible(visible: Boolean) {

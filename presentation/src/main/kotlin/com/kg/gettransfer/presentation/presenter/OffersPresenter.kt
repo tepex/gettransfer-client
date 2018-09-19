@@ -41,9 +41,9 @@ class OffersPresenter(cc: CoroutineContexts,
     override fun attachView(view: OffersView) {
         super.attachView(view)
         viewState.setDate(SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.getLocale())
-            .format(transferInteractor.transfer.dateToLocal))
+            .format(transferInteractor.transfer!!.dateToLocal))
 
-        viewState.setTransfer(Mappers.getTransferModel(transferInteractor.transfer,
+        viewState.setTransfer(Mappers.getTransferModel(transferInteractor.transfer!!,
                                                        systemInteractor.getLocale(),
                                                        systemInteractor.getDistanceUnit(),
                                                        systemInteractor.getTransportTypes()))

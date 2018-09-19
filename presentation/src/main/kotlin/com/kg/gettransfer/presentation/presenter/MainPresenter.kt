@@ -93,4 +93,6 @@ class MainPresenter(cc: CoroutineContexts,
     fun readMoreClick()   { router.navigateTo(Screens.READ_MORE) }
     fun onSettingsClick() { router.navigateTo(Screens.SETTINGS) }
     fun onRequestsClick() { router.navigateTo(Screens.REQUESTS) }
+    fun onBecomeACarrierClick() {router.navigateTo(Screens.CARRIER)}
+//    fun onBackCommandClick() { router.exit() }
 }
