@@ -35,7 +35,6 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
     private var cacheRepository = CacheRepositoryImpl(context)
     private var api: Api
     private val gson = GsonBuilder().registerTypeAdapter(ApiTransportTypesWrapper::class.java, TransportTypesDeserializer()).create()
-    private var transfer: Transfer? = null
     
 	/**
 	 * @throws ApiException
@@ -197,17 +196,13 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
             from, to, tripTo, tripReturn, transportTypes, pax, childSeats, passengerOfferedPrice, nameSign, comment,
             account, promoCode/*, paypalOnly*/)))
         
-        transfer = Mappers.mapApiTransfer(response.data?.transfer!!)
-        return transfer!!
+        return Mappers.mapApiTransfer(response.data?.transfer!!)
     }
 
-    override suspend fun cancelTransfer(idTransfer: Long, reason: String): Transfer {
-        val response: ApiResponse<ApiTransferWrapper> = tryTwice(idTransfer) { id -> api.cancelTransfer(id, ApiReason(reason)) }
-        transfer = Mappers.mapApiTransfer(response.data?.transfer!!)
-        return transfer!!
+    override suspend fun cancelTransfer(transferId: Long, reason: String): Transfer {
+        val response: ApiResponse<ApiTransferWrapper> = tryTwice(transferId) { id -> api.cancelTransfer(id, ApiReason(reason)) }
+        return Mappers.mapApiTransfer(response.data?.transfer!!)
     }
-    
-    override fun getLastTransfer() = transfer!!
     
     private suspend fun tryPostTransfer(apiTransfer: ApiTransferWrapper): ApiResponse<ApiTransferWrapper> {
         return try { api.postTransfer(apiTransfer).await() }
@@ -227,8 +222,8 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 		return transfers.map {transfer -> Mappers.mapApiTransfer(transfer) }
 	}
 
-	override suspend fun getTransfer(idTransfer: Long): Transfer {
-		val response: ApiResponse<ApiTransferWrapper> = tryTwice(idTransfer, { id -> api.getTransfer(id) })
+	override suspend fun getTransfer(transferId: Long): Transfer {
+		val response: ApiResponse<ApiTransferWrapper> = tryTwice(transferId, { id -> api.getTransfer(id) })
 		val transfer: ApiTransfer = response.data!!.transfer
 		return Mappers.mapApiTransfer(transfer)
 	}
@@ -245,8 +240,8 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
         return transfers.map {transfer -> Mappers.mapApiTransfer(transfer) }
     }
 
-    override suspend fun getOffers(idTransfer: Long): List<Offer> {
-        val response: ApiResponse<ApiOffers> = tryTwice(idTransfer, { id -> api.getOffers(id) })
+    override suspend fun getOffers(transferId: Long): List<Offer> {
+        val response: ApiResponse<ApiOffers> = tryTwice(transferId, { id -> api.getOffers(id) })
         val transfers: List<ApiOffer> = response.data!!.offers
         return transfers.map {offer -> setOfferData(offer) }
     }

@@ -1,8 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
@@ -15,22 +12,12 @@ import android.support.v7.widget.Toolbar
 import android.view.MotionEvent
 import android.view.View
 
-import android.widget.RelativeLayout
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.*
-
-import com.google.maps.android.PolyUtil
-
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.interactor.TransferInteractor
-import com.kg.gettransfer.domain.model.RouteInfo
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.RouteModel
@@ -41,43 +28,29 @@ import com.kg.gettransfer.presentation.view.TransferDetailsView
 
 import kotlinx.android.synthetic.main.activity_transfer_details.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-import kotlinx.android.synthetic.main.view_maps_pin.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.view.*
 import kotlinx.android.synthetic.main.view_transport_type_transfer_details.view.*
-
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
 
 import org.koin.android.ext.android.inject
 
 import timber.log.Timber
 
-import kotlin.coroutines.experimental.suspendCoroutine
-
-class TransferDetailsActivity: BaseActivity(), TransferDetailsView {
+class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
-
     private val transferInteractor: TransferInteractor by inject()
-    private val compositeDisposable = Job()
-    private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
-
-    private lateinit var googleMap: GoogleMap
-
+    
     @ProvidePresenter
-    fun createTransferDetailsPresenter(): TransferDetailsPresenter = TransferDetailsPresenter(coroutineContexts, router, systemInteractor, transferInteractor)
+    fun createTransferDetailsPresenter() = TransferDetailsPresenter(coroutineContexts, router, systemInteractor, transferInteractor)
 
-    protected override var navigator = object: BaseNavigator(this){}
-
-    init {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-    }
+    protected override var navigator = object: BaseNavigator(this) {}
 
     override fun getPresenter(): TransferDetailsPresenter = presenter
+    
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        
         setContentView(R.layout.activity_transfer_details)
 
         setSupportActionBar(toolbar as Toolbar)
@@ -89,63 +62,12 @@ class TransferDetailsActivity: BaseActivity(), TransferDetailsView {
 
         layoutTransferInfo.ivChevron.visibility = View.GONE
 
-        val mapViewBundle = savedInstanceState?.getBundle(MainActivity.MAP_VIEW_BUNDLE_KEY)
-        initGoogleMap(mapViewBundle)
+        _mapView = mapView
+        initGoogleMap(savedInstanceState)
     }
-
-    @CallSuper
-    protected override fun onStart() {
-        super.onStart()
-        mapView.onStart()
-    }
-
-    @CallSuper
-    protected override fun onResume() {
-        super.onResume()
-        mapView.onResume()
-    }
-
-    @CallSuper
-    protected override fun onPause() {
-        mapView.onPause()
-        super.onPause()
-    }
-
-    @CallSuper
-    protected override fun onStop() {
-        mapView.onStop()
-        super.onStop()
-    }
-
-    @CallSuper
-    protected override fun onDestroy() {
-        mapView.onDestroy()
-        compositeDisposable.cancel()
-        super.onDestroy()
-    }
-
-    @CallSuper
-    override fun onLowMemory() {
-        mapView.onLowMemory()
-        super.onLowMemory()
-    }
-
-    private fun initGoogleMap(mapViewBundle: Bundle?) {
-        mapView.onCreate(mapViewBundle)
-
-        utils.launch {
-            googleMap = getGoogleMapAsync()
-            customizeGoogleMaps()
-        }
-    }
-
-    private suspend fun getGoogleMapAsync(): GoogleMap = suspendCoroutine { cont ->
-        mapView.getMapAsync { cont.resume(it) }
-    }
-
-    private fun customizeGoogleMaps() {
-        googleMap.uiSettings.setRotateGesturesEnabled(false)
-        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
+    
+    protected override fun customizeGoogleMaps() {
+        super.customizeGoogleMaps()
 
         // https://stackoverflow.com/questions/16974983/google-maps-api-v2-supportmapfragment-inside-scrollview-users-cannot-scroll-th
         transparentImage.setOnTouchListener(View.OnTouchListener { _, motionEvent ->
@@ -166,13 +88,13 @@ class TransferDetailsActivity: BaseActivity(), TransferDetailsView {
             return@OnTouchListener true
         })
     }
-    
+
     override fun setTransfer(transferModel: TransferModel) {
         layoutTransferInfo.tvTransferRequestNumber.text = getString(R.string.transfer_request_num, transferModel.id)
         layoutTransferInfo.tvFrom.text = transferModel.from
         layoutTransferInfo.tvTo.text = transferModel.to
         layoutTransferInfo.tvOrderDateTime.text = transferModel.dateTime
-        layoutTransferInfo.tvDistance.text = transferModel.distance
+        layoutTransferInfo.tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
 
         tvCountPassengers.text = transferModel.countPassengers.toString()
         if(transferModel.nameSign != null) {
@@ -212,10 +134,6 @@ class TransferDetailsActivity: BaseActivity(), TransferDetailsView {
         if(visible) btnCancel.visibility = View.VISIBLE else btnCancel.visibility = View.GONE
     }
 
-    /*
-    override fun setOffer(driverEmail: String, driverPhone: String, driverName: String,
-                              transportType: String, transportName: String, transportNumber: String,
-                              price: String) {*/
     override fun setOffer(offerModel: OfferModel) {
         offerDriverInfoEmail.text = offerModel.driverEmail
         offerDriverInfoPhone.text = offerModel.driverPhone
@@ -229,8 +147,5 @@ class TransferDetailsActivity: BaseActivity(), TransferDetailsView {
         layoutOfferTransportInfo.visibility = View.VISIBLE
     }
 
-    override fun setRoute(routeModel: RouteModel) {
-        val distance = Utils.formatDistance(this, R.string.distance, routeModel.distance, routeModel.distanceUnit)
-    	Utils.setPins(this, googleMap, routeModel, distance)
-    }
+    override fun setRoute(routeModel: RouteModel) { Utils.setPins(this, googleMap, routeModel) }
 }

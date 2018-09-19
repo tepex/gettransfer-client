@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation.ui
 import android.content.Context
 import android.content.Intent
 
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.LayerDrawable
 
@@ -12,7 +11,6 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
 
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 
@@ -24,12 +22,9 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
-import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.domain.model.Transfer
-
 import com.kg.gettransfer.presentation.Screens
 
-import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
+import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
 
 import com.kg.gettransfer.presentation.view.OffersView
@@ -77,11 +72,11 @@ class OffersActivity: BaseActivity(), OffersView {
         stars.getDrawable(2).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP)
     }
     
-    override fun setTransfer(transfer: Transfer) {
-        tvConnectingCarriers.text = getString(R.string.transfer_connecting_carriers, transfer.relevantCarriersCount)
-        tvTransferRequestNumber.text = getString(R.string.transfer_order, transfer.id)
-        tvFrom.text = transfer.from.name
-        tvTo.text = transfer.to?.name
+    override fun setTransfer(transferModel: TransferModel) {
+        tvConnectingCarriers.text = getString(R.string.transfer_connecting_carriers, transferModel.relevantCarriersCount)
+        tvTransferRequestNumber.text = getString(R.string.transfer_order, transferModel.id)
+        tvFrom.text = transferModel.from
+        tvTo.text = transferModel.to
     }
     
     override fun setDate(date: String) { tvOrderDateTime.text = date }

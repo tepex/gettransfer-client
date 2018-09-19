@@ -16,18 +16,31 @@ import android.transition.Fade
 import android.util.Pair
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+
+import android.widget.RelativeLayout
 import android.widget.TextView
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
+import com.kg.gettransfer.R.id.*
 import com.kg.gettransfer.domain.AsyncUtils
+
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
+
 import com.kg.gettransfer.domain.model.Account
+
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.MainPresenter
@@ -42,24 +55,20 @@ import ru.terrakok.cicerone.commands.Forward
 import timber.log.Timber
 import kotlin.coroutines.experimental.suspendCoroutine
 
-class MainActivity: BaseActivity(), MainView {
+class MainActivity: BaseGoogleMapActivity(), MainView {
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
 
     private lateinit var drawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var headerView: View
-
+    
     private val locationInteractor: LocationInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
 
-    private val compositeDisposable = Job()
-    private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
-    private lateinit var googleMap: GoogleMap
-    
     private var isFirst = true
     private var centerMarker: Marker? = null
-
+    
     @ProvidePresenter
     fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
                                                              router,
@@ -121,7 +130,6 @@ class MainActivity: BaseActivity(), MainView {
 	}
 
 	companion object {
-		@JvmField val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
 		@JvmField val MY_LOCATION_BUTTON_INDEX = 2
 		@JvmField val COMPASS_BUTTON_INDEX = 5
 		@JvmField val FADE_DURATION  = 500L
@@ -137,15 +145,19 @@ class MainActivity: BaseActivity(), MainView {
 	@CallSuper
 	protected override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+
 		setContentView(R.layout.activity_main)
 		
+		_mapView = mapView
+		initGoogleMap(savedInstanceState)
+
 		val tb = this.toolbar as Toolbar
 		
 		setSupportActionBar(tb)
 		supportActionBar?.setDisplayShowTitleEnabled(false)
 		supportActionBar?.setDisplayHomeAsUpEnabled(false)
 		supportActionBar?.setDisplayShowHomeEnabled(false)
-
+		
 		drawer = drawerLayout as DrawerLayout
 		toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
 		drawer.addDrawerListener(object: DrawerLayout.SimpleDrawerListener() {
@@ -163,12 +175,9 @@ class MainActivity: BaseActivity(), MainView {
         (appbar as AppBarLayout).bringToFront()
 		
 		initNavigation()
-		
-		val mapViewBundle = savedInstanceState?.getBundle(MAP_VIEW_BUNDLE_KEY)
+
 		isFirst = savedInstanceState == null
-		
-		initGoogleMap(mapViewBundle)
-		
+
 		search.elevation = resources.getDimension(R.dimen.search_elevation)
 		searchFrom.setUneditable()
 		searchTo.setUneditable()
@@ -185,12 +194,6 @@ class MainActivity: BaseActivity(), MainView {
 		super.onPostCreate(savedInstanceState)
 		toggle.syncState()
 	}
-	
-	@CallSuper
-	protected override fun onStart() {
-		super.onStart()
-		mapView.onStart()
-	}
 
 	@CallSuper
 	protected override fun onResume() {
@@ -198,14 +201,6 @@ class MainActivity: BaseActivity(), MainView {
 		val view = currentFocus
 		view?.hideKeyboard()
 		view?.clearFocus()
-
-		mapView.onResume()
-	}
-	
-	@CallSuper
-	protected override fun onPause() {
-		mapView.onPause()
-		super.onPause()
 	}
 	
 	@CallSuper
@@ -216,24 +211,10 @@ class MainActivity: BaseActivity(), MainView {
 	
 	@CallSuper
 	protected override fun onStop() {
-		mapView.onStop()
 		searchTo.text = ""
 		super.onStop()
 	}
-	
-	@CallSuper
-	protected override fun onDestroy() {
-		mapView.onDestroy()
-		compositeDisposable.cancel()
-		super.onDestroy()
-	}
-	
-	@CallSuper
-	override fun onLowMemory() {
-		mapView.onLowMemory()
-		super.onLowMemory()
-	}
-	
+
 	/** @see {@link android.support.v7.app.ActionBarDrawerToggle} */
 	@CallSuper
 	override fun onConfigurationChanged(newConfig: Configuration) {
@@ -268,28 +249,17 @@ class MainActivity: BaseActivity(), MainView {
 		navPassengerMode.setOnClickListener(itemsNavigationViewListener)
 	}
 	
-	private fun initGoogleMap(mapViewBundle: Bundle?) {
-		mapView.onCreate(mapViewBundle)
-		
-		utils.launch {
-			googleMap = getGoogleMapAsync()
-			customizeGoogleMaps()
-		}
-	}
-	
-    private suspend fun getGoogleMapAsync(): GoogleMap = suspendCoroutine { cont ->
-        mapView.getMapAsync { cont.resume(it) }
-    }
 
-	private fun customizeGoogleMaps() {
-	    googleMap.uiSettings.setRotateGesturesEnabled(false)
+	protected override fun customizeGoogleMaps() {
+	    super.customizeGoogleMaps()
+		googleMap.uiSettings.setRotateGesturesEnabled(false)
 		googleMap.setMyLocationEnabled(true)
 		googleMap.uiSettings.isMyLocationButtonEnabled = false
 		googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
 		btnMyLocation.setOnClickListener {
 			presenter.updateCurrentLocation() }
 		googleMap.setOnCameraMoveListener { presenter.onCameraMove(googleMap.getCameraPosition()!!.target) }
-        googleMap.setOnCameraIdleListener { presenter.onCameraIdle() }
+		googleMap.setOnCameraIdleListener { presenter.onCameraIdle() }
     }
     
     /* MainView */
@@ -311,7 +281,7 @@ class MainActivity: BaseActivity(), MainView {
     }
 
     override fun moveCenterMarker(point: LatLng) {
-        if(centerMarker != null) centerMarker!!.setPosition(point)
+        centerMarker?.let { it.setPosition(point) }
     }
 
     override fun blockInterface(block: Boolean) {

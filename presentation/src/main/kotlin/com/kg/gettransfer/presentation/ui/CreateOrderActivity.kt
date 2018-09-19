@@ -2,61 +2,80 @@ package com.kg.gettransfer.presentation.ui
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+
 import android.content.Context
 import android.content.Intent
+
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.app.AppCompatDelegate
+import android.support.annotation.StringRes
+
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+
 import android.text.InputType
 import android.util.DisplayMetrics
+
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+
+import android.widget.TextView
+
 import android.widget.LinearLayout
 import android.widget.PopupWindow
-import android.widget.TextView
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.kg.gettransfer.R
+import com.kg.gettransfer.R.id.*
+
 import com.kg.gettransfer.domain.AsyncUtils
+
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+
 import com.kg.gettransfer.domain.model.Account
+
 import com.kg.gettransfer.extensions.hideKeyboard
+
 import com.kg.gettransfer.presentation.Screens
-import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
+
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
+
+import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
+
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
+
+import java.util.Calendar
+
 import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
+
 import org.koin.android.ext.android.inject
 import java.util.*
 import kotlin.coroutines.experimental.suspendCoroutine
 
-class CreateOrderActivity: BaseActivity(), CreateOrderView {
-
+class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
 
     private val routeInteractor: RouteInteractor by inject()
 	private val transferInteractor: TransferInteractor by inject()
-
-    private val compositeDisposable = Job()
-    private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
-    private lateinit var googleMap: GoogleMap
     private val calendar = Calendar.getInstance()
     private lateinit var sheetBehavior: BottomSheetBehavior<View>
 
@@ -81,10 +100,6 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         }
     }
 
-    init {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-    }
-    
     override fun getPresenter(): CreateOrderPresenter = presenter
 
     @CallSuper
@@ -92,6 +107,8 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_create_order)
+		_mapView = mapView
+		initGoogleMap(savedInstanceState)
 
         setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -124,7 +141,6 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         initGoogleMap(mapViewBundle)
 
         sheetBehavior = BottomSheetBehavior.from(bottomSheet)
-//        sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         bottomSheet.setOnClickListener { toggleBottomSheet() }
     }
 
@@ -136,57 +152,8 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
         }
     }
 
-    @CallSuper
-    protected override fun onStart() {
-        super.onStart()
-        mapView.onStart()
-    }
-
-    @CallSuper
-    protected override fun onResume() {
-        super.onResume()
-        mapView.onResume()
-    }
-
-    @CallSuper
-    protected override fun onPause() {
-        mapView.onPause()
-        super.onPause()
-    }
-
-    @CallSuper
-    protected override fun onStop() {
-        mapView.onStop()
-        super.onStop()
-    }
-
-    @CallSuper
-    protected override fun onDestroy() {
-        mapView.onDestroy()
-        compositeDisposable.cancel()
-        super.onDestroy()
-    }
-
-    @CallSuper
-    override fun onLowMemory() {
-        mapView.onLowMemory()
-        super.onLowMemory()
-    }
-
-    private fun initGoogleMap(mapViewBundle: Bundle?) {
-        mapView.onCreate(mapViewBundle)
-
-        utils.launch {
-            googleMap = getGoogleMapAsync()
-            customizeGoogleMaps()
-        }
-    }
-
-    private suspend fun getGoogleMapAsync(): GoogleMap = suspendCoroutine { cont ->
-        mapView.getMapAsync { cont.resume(it) }
-    }
-
-    private fun customizeGoogleMaps() {
+    protected override fun customizeGoogleMaps() {
+        super.customizeGoogleMaps()
         googleMap.uiSettings.setRotateGesturesEnabled(false)
         googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
     }
@@ -286,7 +253,6 @@ class CreateOrderActivity: BaseActivity(), CreateOrderView {
     }
 
     override fun setRoute(routeModel: RouteModel) {
-        val distance = Utils.formatDistance(this, R.string.distance, routeModel.distance, routeModel.distanceUnit)
-    	Utils.setPins(this, googleMap, routeModel, distance)
+    	Utils.setPins(this, googleMap, routeModel)
     }
 }

@@ -1,26 +1,45 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+
 import android.util.Patterns
+
 import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
+
+import com.google.android.gms.maps.model.*
+import com.google.maps.android.PolyUtil
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
+
+import com.kg.gettransfer.domain.model.Trip
+
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
-import com.kg.gettransfer.domain.model.Trip
+
 import com.kg.gettransfer.presentation.Screens
+
 import com.kg.gettransfer.presentation.model.Mappers
+import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
+
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
-import ru.terrakok.cicerone.Router
-import timber.log.Timber
+
 import java.text.Format
 import java.text.SimpleDateFormat
-import java.util.*
+
+import java.util.Calendar
+import java.util.Date
+
+import ru.terrakok.cicerone.Router
+
+import timber.log.Timber
 
 @InjectViewState
 class CreateOrderPresenter(cc: CoroutineContexts,
@@ -35,47 +54,50 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     private var dateTimeFormat: Format? = null
     private var transportTypes: List<TransportTypeModel>? = null
     private var routeModel: RouteModel? = null
-
+    
     var cost: Int? = null
     var date: Date = Date()
         set(value) {
             field = value
-            if(dateTimeFormat != null) viewState.setDateTimeTransfer(dateTimeFormat!!.format(date))
+            dateTimeFormat?.let { viewState.setDateTimeTransfer(it.format(date)) }
         }
     private var flightNumber: String? = null
     private var comment: String? = null
-    private var agreeLicence = false
-
+    
     companion object {
         @JvmField val MIN_PASSENGERS    = 1
         @JvmField val MIN_CHILDREN      = 0
+        /* Пока сервевер не присылает минимальный временной промежуток до заказа */
+        @JvmField val FUTURE_HOUR       = 6
+        @JvmField val FUTURE_MINUTE     = 5
     }
     
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
-            val from = routeInteractor.from.point.toString()
-            val to = routeInteractor.to!!.point.toString()
-	        val routeInfo = utils.asyncAwait { transferInteractor.getRouteInfo(from, to, true, false) }
+            val from = routeInteractor.from
+            val to = routeInteractor.to!!
+	        val routeInfo = utils.asyncAwait { transferInteractor.getRouteInfo(from.point.toString(), to.point.toString(), true, false) }
 	        val prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
 	        transportTypes = Mappers.getTransportTypesModels(systemInteractor.getTransportTypes(), prices)
 	        routeModel = Mappers.getRouteModel(routeInfo.distance,
                                                systemInteractor.getDistanceUnit(),
                                                routeInfo.polyLines,
-                                               from,
-                                               to)
-
+                                               from.name,
+                                               to.name)
+            
             viewState.setTransportTypes(transportTypes!!)
             viewState.setRoute(routeModel!!)
 	    }, { e -> viewState.setError(false, R.string.err_server, e.message)
-        }, { viewState.blockInterface(false) })
-
+        }, { viewState.blockInterface(false) })        
+        
         val calendar = Calendar.getInstance(systemInteractor.getLocale())
         /* Server must send current locale time */
-        calendar.add(Calendar.HOUR_OF_DAY, 3)
+        calendar.add(Calendar.HOUR_OF_DAY, FUTURE_HOUR)
+        calendar.add(Calendar.MINUTE, FUTURE_MINUTE)
         date = calendar.getTime()
     }
-
+    
     @CallSuper
     override fun attachView(view: CreateOrderView) {
         super.attachView(view)
@@ -86,8 +108,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         viewState.setAccount(systemInteractor.account)
         dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.getLocale())
         viewState.setDateTimeTransfer(dateTimeFormat!!.format(date))
-	    if(transportTypes != null) viewState.setTransportTypes(transportTypes!!)
-	    if(routeModel != null) viewState.setRoute(routeModel!!)
+	    transportTypes?.let { viewState.setTransportTypes(it) }
+	    routeModel?.let     { viewState.setRoute(it) }
     }
 
     fun changeCurrency(selected: Int) { viewState.setCurrency(currencies.get(selected).symbol) }
@@ -127,12 +149,12 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         if(comment.isEmpty()) this.comment = null else this.comment = comment
         viewState.setComment(comment)
     }
-
+    
     fun setAgreeLicence(agreeLicence: Boolean) {
-        this.agreeLicence = agreeLicence
+        systemInteractor.account.termsAccepted = agreeLicence
         checkFields()
     }
-
+    
     fun showLicenceAgreement() { router.navigateTo(Screens.LICENCE_AGREE) }
 
     fun onGetTransferClick() {
@@ -154,7 +176,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         Timber.d("children: $children")
         Timber.d("flightNumber: $flightNumber")
         Timber.d("comment: $comment")
-        Timber.d("agree: $agreeLicence")
 
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)

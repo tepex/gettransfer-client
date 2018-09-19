@@ -96,7 +96,7 @@ class SettingsPresenter(cc: CoroutineContexts,
             else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
     }
-
+    
     @CallSuper
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
