@@ -18,7 +18,7 @@ import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 
 import android.transition.Fade
-import android.util.Pair
+
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -30,7 +30,13 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.*
+
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
@@ -47,6 +53,7 @@ import com.kg.gettransfer.presentation.view.MainView
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_form_main.*
+
 import org.koin.android.ext.android.inject
 
 import ru.terrakok.cicerone.commands.Command
@@ -252,12 +259,9 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
 	protected override fun customizeGoogleMaps() {
 	    super.customizeGoogleMaps()
-		googleMap.uiSettings.setRotateGesturesEnabled(false)
 		googleMap.setMyLocationEnabled(true)
 		googleMap.uiSettings.isMyLocationButtonEnabled = false
-		googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
-		btnMyLocation.setOnClickListener {
-			presenter.updateCurrentLocation() }
+		btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
 		googleMap.setOnCameraMoveListener { presenter.onCameraMove(googleMap.getCameraPosition()!!.target) }
 		googleMap.setOnCameraIdleListener { presenter.onCameraIdle() }
     }
