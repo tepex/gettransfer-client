@@ -103,9 +103,9 @@ internal class Utils {
             val pinLayout = activity.layoutInflater.inflate(R.layout.view_maps_pin, null)
 
             pinLayout.tvPlace.text = routeModel.from
-            //pinLayout.tvInfo.text = tvDateTimeTransfer.text
+            pinLayout.tvInfo.text = routeModel.dateTime
             pinLayout.tvPlaceMirror.text = routeModel.from
-            //pinLayout.tvInfoMirror.text = tvDateTimeTransfer.text
+            pinLayout.tvInfoMirror.text = routeModel.dateTime
             pinLayout.imgPin.setImageResource(R.drawable.map_label_a)
             val bmPinA = createBitmapFromView(pinLayout)
 

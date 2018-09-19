@@ -121,13 +121,15 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
             viewTransportType.tvCountBaggage.text = getString(R.string.count_persons_and_baggage, it.luggageMax)
             layoutTransportTypesList.addView(viewTransportType)
         }
-        
-        paymentInfoPaid.text = getString(R.string.activity_transfer_details_paid_sum,
-                                         transferModel.paidSum,
-                                         transferModel.paidPercentage)
-        paymentInfoPay.text = transferModel.remainToPay
-        paymentInfoSum.text = transferModel.price
-        layoutPaymentInfo.visibility = View.VISIBLE
+
+        if(transferModel.price != null) {
+            paymentInfoPaid.text = getString(R.string.activity_transfer_details_paid_sum,
+                    transferModel.paidSum,
+                    transferModel.paidPercentage)
+            paymentInfoPay.text = transferModel.remainToPay
+            paymentInfoSum.text = transferModel.price
+            layoutPaymentInfo.visibility = View.VISIBLE
+        }
     }
 
     override fun setButtonCancelVisible(visible: Boolean) {

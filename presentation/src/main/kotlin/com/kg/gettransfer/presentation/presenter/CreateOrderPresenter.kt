@@ -5,10 +5,6 @@ import android.support.annotation.CallSuper
 import android.util.Patterns
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
-
-import com.google.android.gms.maps.model.*
-import com.google.maps.android.PolyUtil
 
 import com.kg.gettransfer.R
 
@@ -24,7 +20,6 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.model.Mappers
-import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
@@ -73,6 +68,12 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
     
     override fun onFirstViewAttach() {
+        val calendar = Calendar.getInstance(systemInteractor.getLocale())
+        /* Server must send current locale time */
+        calendar.add(Calendar.HOUR_OF_DAY, FUTURE_HOUR)
+        calendar.add(Calendar.MINUTE, FUTURE_MINUTE)
+        date = calendar.getTime()
+
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             val from = routeInteractor.from
@@ -84,18 +85,13 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                systemInteractor.getDistanceUnit(),
                                                routeInfo.polyLines,
                                                from.name,
-                                               to.name)
+                                               to.name,
+                                               SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
             
             viewState.setTransportTypes(transportTypes!!)
             viewState.setRoute(routeModel!!)
 	    }, { e -> viewState.setError(false, R.string.err_server, e.message)
-        }, { viewState.blockInterface(false) })        
-        
-        val calendar = Calendar.getInstance(systemInteractor.getLocale())
-        /* Server must send current locale time */
-        calendar.add(Calendar.HOUR_OF_DAY, FUTURE_HOUR)
-        calendar.add(Calendar.MINUTE, FUTURE_MINUTE)
-        date = calendar.getTime()
+        }, { viewState.blockInterface(false) })
     }
     
     @CallSuper

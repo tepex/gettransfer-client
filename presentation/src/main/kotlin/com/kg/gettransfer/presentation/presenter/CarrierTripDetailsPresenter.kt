@@ -18,7 +18,7 @@ class CarrierTripDetailsPresenter(cc: CoroutineContexts,
                                   router: Router,
                                   systemInteractor: SystemInteractor,
                                   private val carrierTripInteractor: CarrierTripInteractor,
-                                  private val transferInteractor: TransferInteractor): BasePresenter<CarrierTripDetailsView>(cc, router, systemInteractor){
+                                  private val transferInteractor: TransferInteractor) : BasePresenter<CarrierTripDetailsView>(cc, router, systemInteractor) {
 
     private var selectedTripId: Long? = null
     private lateinit var trip: CarrierTripModel
@@ -28,28 +28,28 @@ class CarrierTripDetailsPresenter(cc: CoroutineContexts,
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             selectedTripId = carrierTripInteractor.selectedTripId
-            utils.asyncAwait {
-                val tripInfo = carrierTripInteractor.getCarrierTrip(selectedTripId!!)
-                val routeInfo = transferInteractor.getRouteInfo(tripInfo.from.point, tripInfo.to.point, false, false)
-                trip = Mappers.getCarrierTripModel(tripInfo,
-                        systemInteractor.getLocale(),
-                        systemInteractor.getDistanceUnit())
-                routeModel = Mappers.getRouteModel(routeInfo.distance,
-                        systemInteractor.getDistanceUnit(),
-                        routeInfo.polyLines,
-                        trip.from,
-                        trip.to)
-            }
+            val tripInfo = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(selectedTripId!!) }
+            trip = Mappers.getCarrierTripModel(tripInfo,
+                    systemInteractor.getLocale(),
+                    systemInteractor.getDistanceUnit())
+
+            val routeInfo = transferInteractor.getRouteInfo(tripInfo.from.point, tripInfo.to.point, false, false)
+            routeModel = Mappers.getRouteModel(routeInfo.distance,
+                    systemInteractor.getDistanceUnit(),
+                    routeInfo.polyLines,
+                    trip.from,
+                    trip.to,
+                    trip.dateTime)
 
             viewState.setTripInfo(trip)
             viewState.setRoute(routeModel!!)
         }, { e ->
-            if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
+            if (e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
             else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
     }
 
-    fun onCallClick(){
+    fun onCallClick() {
 
     }
 }

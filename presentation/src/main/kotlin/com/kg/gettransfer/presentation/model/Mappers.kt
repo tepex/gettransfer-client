@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.model
 
-import android.content.Context
-
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
@@ -9,7 +7,6 @@ import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.presentation.ui.Utils
 
 import java.text.SimpleDateFormat
-
 import java.util.Currency
 import java.util.Locale
 
@@ -35,7 +32,8 @@ object Mappers {
                       distanceUnit: DistanceUnit,
                       polyLines: List<String>,
                       from: String,
-                      to: String) = RouteModel(distance, distanceUnit, polyLines, from, to)
+                      to: String,
+                      dateTime: String) = RouteModel(distance, distanceUnit, polyLines, from, to, dateTime)
     
     fun getTransferModel(transfer: Transfer,
                          locale: Locale,
