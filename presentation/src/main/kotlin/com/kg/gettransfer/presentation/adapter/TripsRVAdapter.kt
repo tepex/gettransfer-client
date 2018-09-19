@@ -5,19 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.CarrierTrip
-import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.presenter.CarrierTripsPresenter
 import com.kg.gettransfer.presentation.ui.Utils
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_trips_info.view.*
-import java.text.SimpleDateFormat
-import java.util.*
 
 class TripsRVAdapter(private val presenter: CarrierTripsPresenter,
-                     private var trips: List<CarrierTrip>,
-                     private var distanceUnit: DistanceUnit,
-                     private val dateTimeFormat: SimpleDateFormat): RecyclerView.Adapter<TripsRVAdapter.ViewHolder>() {
+                     private var trips: List<CarrierTripModel>): RecyclerView.Adapter<TripsRVAdapter.ViewHolder>() {
 
     companion object {
         private var selected = RecyclerView.NO_POSITION
@@ -29,25 +24,25 @@ class TripsRVAdapter(private val presenter: CarrierTripsPresenter,
             TripsRVAdapter.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_trips_info, parent, false))
 
     override fun onBindViewHolder(holder: TripsRVAdapter.ViewHolder, pos: Int) {
-        holder.bind(trips.get(pos), distanceUnit, dateTimeFormat){
+        holder.bind(trips.get(pos)){
             presenter.onTripSelected(it)
         }
     }
 
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(item: CarrierTrip, distanceUnit: DistanceUnit, dateTimeFormat: SimpleDateFormat, listener: ClickOnCarrierTripHandler) = with(containerView) {
+        fun bind(item: CarrierTripModel, listener: ClickOnCarrierTripHandler) = with(containerView) {
             tvTransferRequestNumber.text = context.getString(R.string.transfer_request_num, item.transferId)
-            tvFrom.text = item.from.name
-            tvTo.text = item.to.name
-            tvOrderDateTime.text = dateTimeFormat.format(item.dateLocal)
-            tvDistance.text = Utils.formatDistance(context, R.string.distance, item.distance, distanceUnit)
-            tvPrice.text = item.price
-            tvVehicle.text = item.vehicle.name
-            if(item.childSeats == 0) ivChildSeat.visibility = View.INVISIBLE
+            tvFrom.text = item.from
+            tvTo.text = item.to
+            tvOrderDateTime.text = context.getString(R.string.transfer_date_local, item.dateTime)
+            tvDistance.text = Utils.formatDistance(context, item.distance, item.distanceUnit)
+            tvPrice.text = item.pay
+            tvVehicle.text = item.vehicleName
+            if(item.countChild == 0) ivChildSeat.visibility = View.INVISIBLE
             if(item.comment == null || item.comment == "") ivComment.visibility = View.INVISIBLE
             setOnClickListener {
                 selected = adapterPosition
-                listener(item.id)
+                listener(item.tripId)
             }
         }
     }

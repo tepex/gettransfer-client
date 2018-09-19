@@ -1,10 +1,12 @@
 package com.kg.gettransfer.domain.model
 
+import java.util.Date
+
 data class CarrierTrip(val id: Long,
                        val transferId: Long,
                        val from: CityPoint,
                        val to: CityPoint,
-                       val dateLocal: String,
+                       val dateLocal: Date,
                        val duration: Int?,
                        val distance: Int,
                        val time: Int,

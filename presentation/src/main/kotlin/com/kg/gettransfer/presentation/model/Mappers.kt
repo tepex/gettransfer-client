@@ -68,4 +68,22 @@ object Mappers {
                                                  offer.vehicle.name,
                                                  offer.vehicle.registrationNumber,
                                                  offer.price.base.default)
+
+    fun getCarrierTripModel(carrierTrip: CarrierTrip,
+                            locale: Locale,
+                            distanceUnit: DistanceUnit) = CarrierTripModel(carrierTrip.id,
+                                                                           carrierTrip.transferId,
+                                                                           carrierTrip.from.name,
+                                                                           carrierTrip.to.name,
+                                                                           SimpleDateFormat(Utils.DATE_TIME_PATTERN, locale).format(carrierTrip.dateLocal),
+                                                                           carrierTrip.distance,
+                                                                           distanceUnit,
+                                                                           carrierTrip.childSeats,
+                                                                           carrierTrip.comment,
+                                                                           carrierTrip.price,
+                                                                           carrierTrip.vehicle.name,
+                                                                           carrierTrip.pax,
+                                                                           carrierTrip.nameSign,
+                                                                           carrierTrip.flightNumber,
+                                                                           carrierTrip.remainToPay)
 }

@@ -4,9 +4,12 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.ApiInteractor
+import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
-import com.kg.gettransfer.domain.model.CarrierTrip
+import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.presentation.model.CarrierTripModel
+import com.kg.gettransfer.presentation.model.Mappers
+import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
 import ru.terrakok.cicerone.Router
 
@@ -14,23 +17,39 @@ import ru.terrakok.cicerone.Router
 class CarrierTripDetailsPresenter(cc: CoroutineContexts,
                                   router: Router,
                                   systemInteractor: SystemInteractor,
-                                  private val apiInteractor: ApiInteractor): BasePresenter<CarrierTripDetailsView>(cc, router, systemInteractor){
+                                  private val carrierTripInteractor: CarrierTripInteractor,
+                                  private val transferInteractor: TransferInteractor): BasePresenter<CarrierTripDetailsView>(cc, router, systemInteractor){
 
     private var selectedTripId: Long? = null
-    private lateinit var trip: CarrierTrip
+    private lateinit var trip: CarrierTripModel
+    private var routeModel: RouteModel? = null
 
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
-            selectedTripId = apiInteractor.selectedTripId
-            utils.asyncAwait{
-                trip = apiInteractor.getCarrierTrip(selectedTripId!!)
+            selectedTripId = carrierTripInteractor.selectedTripId
+            utils.asyncAwait {
+                val tripInfo = carrierTripInteractor.getCarrierTrip(selectedTripId!!)
+                val routeInfo = transferInteractor.getRouteInfo(tripInfo.from.point, tripInfo.to.point, false, false)
+                trip = Mappers.getCarrierTripModel(tripInfo,
+                        systemInteractor.getLocale(),
+                        systemInteractor.getDistanceUnit())
+                routeModel = Mappers.getRouteModel(routeInfo.distance,
+                        systemInteractor.getDistanceUnit(),
+                        routeInfo.polyLines,
+                        trip.from,
+                        trip.to)
             }
-            viewState.setTripInfo(trip.transferId, trip.from.name, trip.to.name, trip.dateLocal, trip.distance,
-                        trip.pax, trip.nameSign,trip.childSeats, trip.flightNumber, trip.comment, trip.remainToPay )
+
+            viewState.setTripInfo(trip)
+            viewState.setRoute(routeModel!!)
         }, { e ->
             if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
             else viewState.setError(false, R.string.err_server, e.message)
         }, { viewState.blockInterface(false) })
+    }
+
+    fun onCallClick(){
+
     }
 }
