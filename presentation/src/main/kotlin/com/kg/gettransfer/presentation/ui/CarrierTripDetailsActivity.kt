@@ -7,18 +7,22 @@ import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.interactor.ApiInteractor
 import com.kg.gettransfer.presentation.presenter.CarrierTripDetailsPresenter
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
 import kotlinx.android.synthetic.main.activity_carrier_transfer_details.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.view.*
+import org.koin.android.ext.android.inject
 
 class CarrierTripDetailsActivity: BaseActivity(), CarrierTripDetailsView{
     @InjectPresenter
     internal lateinit var presenter: CarrierTripDetailsPresenter
 
+    private val apiInteractor: ApiInteractor by inject()
+
     @ProvidePresenter
-    fun createCarrierTripDetailsPresenter(): CarrierTripDetailsPresenter = CarrierTripDetailsPresenter(coroutineContexts, router, apiInteractor)
+    fun createCarrierTripDetailsPresenter(): CarrierTripDetailsPresenter = CarrierTripDetailsPresenter(coroutineContexts, router, systemInteractor, apiInteractor)
 
     override fun getPresenter(): CarrierTripDetailsPresenter = presenter
 

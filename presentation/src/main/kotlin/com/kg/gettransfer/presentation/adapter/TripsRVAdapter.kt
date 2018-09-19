@@ -16,13 +16,11 @@ import java.util.*
 
 class TripsRVAdapter(private val presenter: CarrierTripsPresenter,
                      private var trips: List<CarrierTrip>,
-                     private var distanceUnit: DistanceUnit):
-        RecyclerView.Adapter<TripsRVAdapter.ViewHolder>() {
+                     private var distanceUnit: DistanceUnit,
+                     private val dateTimeFormat: SimpleDateFormat): RecyclerView.Adapter<TripsRVAdapter.ViewHolder>() {
 
     companion object {
         private var selected = RecyclerView.NO_POSITION
-        private val DATE_TIME_FULL_FORMAT = SimpleDateFormat(Utils.DATE_TIME_FULL_PATTERN, Locale.US)
-        private val DATE_TIME_FORMAT = SimpleDateFormat(Utils.DATE_TIME_PATTERN, Locale.US)
     }
 
     override fun getItemCount(): Int = trips.size
@@ -31,18 +29,18 @@ class TripsRVAdapter(private val presenter: CarrierTripsPresenter,
             TripsRVAdapter.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_trips_info, parent, false))
 
     override fun onBindViewHolder(holder: TripsRVAdapter.ViewHolder, pos: Int) {
-        holder.bind(trips.get(pos), distanceUnit){
+        holder.bind(trips.get(pos), distanceUnit, dateTimeFormat){
             presenter.onTripSelected(it)
         }
     }
 
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(item: CarrierTrip, distanceUnit: DistanceUnit, listener: ClickOnCarrierTripHandler) = with(containerView) {
+        fun bind(item: CarrierTrip, distanceUnit: DistanceUnit, dateTimeFormat: SimpleDateFormat, listener: ClickOnCarrierTripHandler) = with(containerView) {
             tvTransferRequestNumber.text = context.getString(R.string.transfer_request_num, item.transferId)
             tvFrom.text = item.from.name
             tvTo.text = item.to.name
-            tvOrderDateTime.text = changeDateFormat(item.dateLocal)
-            tvDistance.text = Utils.formatDistance(context, R.string.distance, distanceUnit, item.distance)
+            tvOrderDateTime.text = dateTimeFormat.format(item.dateLocal)
+            tvDistance.text = Utils.formatDistance(context, R.string.distance, item.distance, distanceUnit)
             tvPrice.text = item.price
             tvVehicle.text = item.vehicle.name
             if(item.childSeats == 0) ivChildSeat.visibility = View.INVISIBLE
@@ -51,11 +49,6 @@ class TripsRVAdapter(private val presenter: CarrierTripsPresenter,
                 selected = adapterPosition
                 listener(item.id)
             }
-        }
-
-        fun changeDateFormat(dateTime: String): String {
-            val newDate = DATE_TIME_FULL_FORMAT.parse(dateTime)
-            return DATE_TIME_FORMAT.format(newDate)
         }
     }
 }

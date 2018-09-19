@@ -60,7 +60,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
         (toolbar as Toolbar).toolbar_title.text = resources.getString(R.string.activity_transfer_details_title)
 
-        layoutTransferInfo.ivChevron.visibility = View.GONE
+        layoutTransferInfo.chevron.visibility = View.GONE
 
         _mapView = mapView
         initGoogleMap(savedInstanceState)

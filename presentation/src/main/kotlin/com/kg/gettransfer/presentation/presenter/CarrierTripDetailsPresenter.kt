@@ -5,6 +5,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ApiInteractor
+import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.model.CarrierTrip
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
 import ru.terrakok.cicerone.Router
@@ -12,7 +13,8 @@ import ru.terrakok.cicerone.Router
 @InjectViewState
 class CarrierTripDetailsPresenter(cc: CoroutineContexts,
                                   router: Router,
-                                  apiInteractor: ApiInteractor): BasePresenter<CarrierTripDetailsView>(cc, router, apiInteractor){
+                                  systemInteractor: SystemInteractor,
+                                  private val apiInteractor: ApiInteractor): BasePresenter<CarrierTripDetailsView>(cc, router, systemInteractor){
 
     private var selectedTripId: Long? = null
     private lateinit var trip: CarrierTrip
@@ -22,7 +24,6 @@ class CarrierTripDetailsPresenter(cc: CoroutineContexts,
             viewState.blockInterface(true)
             selectedTripId = apiInteractor.selectedTripId
             utils.asyncAwait{
-                account = apiInteractor.getAccount()
                 trip = apiInteractor.getCarrierTrip(selectedTripId!!)
             }
             viewState.setTripInfo(trip.transferId, trip.from.name, trip.to.name, trip.dateLocal, trip.distance,
