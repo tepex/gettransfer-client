@@ -16,44 +16,26 @@ import android.transition.Fade
 import android.util.Pair
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.InputMethodManager
-
-import android.widget.RelativeLayout
 import android.widget.TextView
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
-
+import com.google.android.gms.maps.model.*
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
-import com.kg.gettransfer.R.id.*
-import com.kg.gettransfer.domain.AsyncUtils
-
 import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
-
 import com.kg.gettransfer.domain.model.Account
-
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_form_main.*
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
 import org.koin.android.ext.android.inject
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.cicerone.commands.Forward
 import timber.log.Timber
-import kotlin.coroutines.experimental.suspendCoroutine
 
 class MainActivity: BaseGoogleMapActivity(), MainView {
     @InjectPresenter
@@ -61,8 +43,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
     private lateinit var drawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
-    private lateinit var headerView: View
-    
+
     private val locationInteractor: LocationInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
 
