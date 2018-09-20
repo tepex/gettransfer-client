@@ -28,8 +28,15 @@
             android:textColor="@color/colorTextBlack"
             android:textSize="@dimen/transfer_types_text_size" />
 
+        <ImageView
+            android:id="@+id/ivTransportInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_info_cars_type"
+            android:layout_gravity="end|center_vertical"/>
+
     </LinearLayout>
-    
+
     <ImageView
         android:id="@+id/ivTransferType"
         android:layout_width="100dp"
@@ -42,7 +49,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="3dp">
-        
+
         <ImageView
         android:layout_width="15dp"
         android:layout_height="15dp"
@@ -72,7 +79,7 @@
             android:fontFamily="@font/sf_pro_text_regular"
             android:textColor="@color/colorTextBlack"
             android:gravity="center"/>
-        
+
     </LinearLayout>
 
     <TextView

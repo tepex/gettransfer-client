@@ -39,8 +39,12 @@
     </FrameLayout>
 
     <include
-        android:id="@+id/bottomSheet"
+        android:id="@+id/sheetOrder"
         layout="@layout/bottom_sheet_create_order" />
+
+    <include
+        android:id="@+id/sheetTransport"
+        layout="@layout/bottom_sheet_type_transport" />
 
     <LinearLayout
         android:id="@+id/layoutShadow"

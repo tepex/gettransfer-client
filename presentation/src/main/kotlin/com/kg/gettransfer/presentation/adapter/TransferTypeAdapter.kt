@@ -1,17 +1,11 @@
 package com.kg.gettransfer.presentation.adapter
 
-import android.support.v7.widget.RecyclerView
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.presentation.model.TransportTypeModel
-
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.address_list_item.*
 import kotlinx.android.synthetic.main.view_transfer_type.view.*
 
 class TransferTypeAdapter(private var list: List<TransportTypeModel>,
@@ -36,10 +30,10 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
             setOnClickListener {
                 item.checked = !item.checked
                 cbTransferType.isChecked = item.checked
-                listener()
+                listener(item)
             }
         }
     }
 }
 
-typealias ChangeListener = () -> Unit
+typealias ChangeListener = (TransportTypeModel) -> Unit

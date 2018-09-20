@@ -62,30 +62,30 @@ import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 import org.koin.android.ext.android.inject
 
 class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
-
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
 
     private val routeInteractor: RouteInteractor by inject()
-	private val transferInteractor: TransferInteractor by inject()
+    private val transferInteractor: TransferInteractor by inject()
     private val calendar = Calendar.getInstance()
-    private lateinit var sheetBehavior: BottomSheetBehavior<View>
+    private lateinit var bsOrder: BottomSheetBehavior<View>
+    private lateinit var bsTransport: BottomSheetBehavior<View>
     private lateinit var popupWindowComment: PopupWindow
 
     @ProvidePresenter
     fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(coroutineContexts,
-                                                                                  router,
-                                                                                  systemInteractor,
-                                                                                  routeInteractor,
-                                                                                  transferInteractor)
+            router,
+            systemInteractor,
+            routeInteractor,
+            transferInteractor)
 
-    protected override var navigator = object: BaseNavigator(this) {
+    protected override var navigator = object : BaseNavigator(this) {
         @CallSuper
         protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
             val intent = super.createActivityIntent(context, screenKey, data)
-            if(intent != null) return intent
-                
-            when(screenKey) {
+            if (intent != null) return intent
+
+            when (screenKey) {
                 Screens.LICENCE_AGREE -> return Intent(context, LicenceAgreementActivity::class.java)
                 Screens.OFFERS -> return Intent(context, OffersActivity::class.java)
             }
@@ -172,12 +172,12 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun setCurrencies(currencies: List<CurrencyModel>) {
-        Utils.setCurrenciesDialogListener(this, ivChangeCurrency, currencies) {
-            selected -> presenter.changeCurrency(selected) 
+        Utils.setCurrenciesDialogListener(this, ivChangeCurrency, currencies) { selected ->
+            presenter.changeCurrency(selected)
         }
     }
-    
-    private fun showPopupWindowComment(){
+
+    private fun showPopupWindowComment() {
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         val screenHeight = displayMetrics.heightPixels
@@ -200,34 +200,34 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             false
         })
         popupWindowComment.setOnDismissListener {
-			val view = currentFocus
-			view?.hideKeyboard()
-			view?.clearFocus()
+            val view = currentFocus
+            view?.hideKeyboard()
+            view?.clearFocus()
             layoutShadow.visibility = View.GONE
             toggleBottomSheet()
         }
-        layoutPopup.setOnClickListener{ layoutPopup.etPopupComment.requestFocus()}
+        layoutPopup.setOnClickListener { layoutPopup.etPopupComment.requestFocus() }
         layoutPopup.etPopupComment.setSelection(layoutPopup.etPopupComment.text.length)
     }
 
     private fun showDatePickerDialog() {
         calendar.setTime(presenter.date)
         val datePickerDialog = DatePickerDialog(this, { _, year, monthOfYear, dayOfMonth ->
-                calendar.set(year, monthOfYear, dayOfMonth)
-                presenter.date = calendar.getTime()
-                showTimePickerDialog()
-            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
-        
+            calendar.set(year, monthOfYear, dayOfMonth)
+            presenter.date = calendar.getTime()
+            showTimePickerDialog()
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+
         datePickerDialog.datePicker.minDate = System.currentTimeMillis()
         datePickerDialog.show()
     }
 
     private fun showTimePickerDialog() {
         val timePickerDialog = TimePickerDialog(this, { _, hour, minute ->
-                calendar.set(Calendar.HOUR_OF_DAY, hour)
-                calendar.set(Calendar.MINUTE, minute)
-                presenter.date = calendar.getTime()
-            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true)
+            calendar.set(Calendar.HOUR_OF_DAY, hour)
+            calendar.set(Calendar.MINUTE, minute)
+            presenter.date = calendar.getTime()
+        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true)
         timePickerDialog.show()
     }
 
@@ -238,8 +238,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     override fun setChildren(count: Int) {
         tvCountChild.text = count.toString()
     }
-    
-    override fun setCurrency(currency: String) { tvCurrencyType.text = currency }
+
+    override fun setCurrency(currency: String) {
+        tvCurrencyType.text = currency
+    }
 
     override fun setDateTimeTransfer(dateTimeString: String) {
         tvDateTimeTransfer.text = dateTimeString
@@ -250,24 +252,43 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
-        rvTransferType.adapter = TransferTypeAdapter(transportTypes, { presenter.checkFields() })
+        rvTransferType.adapter = TransferTypeAdapter(transportTypes)
+        {
+            presenter.checkFields()
+            transportTypeClicked(it)
+        }
     }
-    
+
     override fun setAccount(account: Account) {
         tvName.setText(account.fullName ?: "")
         tvPhone.setText(account.phone ?: "")
-        if(account.loggedIn) {
+        if (account.loggedIn) {
             etEmail.setText(account.email)
             etEmail.isEnabled = false
             tvEmail.visibility = View.GONE
         }
     }
-    
-    override fun setGetTransferEnabled(enabled: Boolean) {
 
+    override fun setGetTransferEnabled(enabled: Boolean) {
+        //TODO сделать подсветку не заполненных полей
     }
 
     override fun setRoute(routeModel: RouteModel) {
-    	Utils.setPins(this, googleMap, routeModel)
+        Utils.setPins(this, googleMap, routeModel)
+    }
+
+    private fun transportTypeClicked(transportType: TransportTypeModel) {
+        if (transportType.checked) {
+            bsTransport.state = BottomSheetBehavior.STATE_EXPANDED
+            setTransportInfo(transportType)
+        }
+    }
+
+    private fun setTransportInfo(transportType: TransportTypeModel) {
+//        tvTransferType.text = transportType.nameId
+        ivTypeTransfer.setImageResource(transportType.imageId!!)
+        tvPrice.text = transportType.price
+        tvCountPassengers.text = transportType.paxMax.toString()
+        tvCountLuggage.text = transportType.luggageMax.toString()
     }
 }
