@@ -21,9 +21,7 @@ import android.transition.Fade
 
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 
-import android.widget.RelativeLayout
 import android.widget.TextView
 
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -33,7 +31,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
@@ -114,6 +111,11 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 				Screens.SETTINGS -> return Intent(context, SettingsActivity::class.java)
 				Screens.REQUESTS -> return Intent(context, RequestsActivity::class.java)
 				Screens.CARRIER -> return  Intent(context, CarrierTripsActivitty::class.java)
+				Screens.REG_CARRIER -> {
+					val intentRegCarrier = Intent(context, WebPageActivity()::class.java)
+					intentRegCarrier.putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_REG_CARRIER)
+					return intentRegCarrier
+				}
 			}
 			return null
 		}

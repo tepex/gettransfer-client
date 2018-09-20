@@ -71,19 +71,23 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     @ProvidePresenter
     fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(coroutineContexts,
-            router,
-            systemInteractor,
-            routeInteractor,
-            transferInteractor)
+                                                                                  router,
+                                                                                  systemInteractor,
+                                                                                  routeInteractor,
+                                                                                  transferInteractor)
 
-    protected override var navigator = object : BaseNavigator(this) {
+    protected override var navigator = object: BaseNavigator(this) {
         @CallSuper
         protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
             val intent = super.createActivityIntent(context, screenKey, data)
-            if (intent != null) return intent
-
-            when (screenKey) {
-                Screens.LICENCE_AGREE -> return Intent(context, LicenceAgreementActivity::class.java)
+            if(intent != null) return intent
+                
+            when(screenKey) {
+                Screens.LICENCE_AGREE -> {
+                    val intentLicense = Intent(context, WebPageActivity()::class.java)
+                    intentLicense.putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_LICENSE)
+                    return intentLicense
+                }
                 Screens.OFFERS -> return Intent(context, OffersActivity::class.java)
             }
             return null

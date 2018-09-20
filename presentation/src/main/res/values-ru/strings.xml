@@ -195,6 +195,7 @@
 
     <!--Title text-->
     <string name="requests">Поездки</string>
+    <string name="become_carrier">Стать перевозчиком</string>
 
     <!--view_transfer_request_info-->
     <string name="transfer_request_num">Заявка на трансфер № %1$s</string>

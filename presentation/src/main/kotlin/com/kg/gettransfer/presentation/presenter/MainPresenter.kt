@@ -100,5 +100,11 @@ class MainPresenter(cc: CoroutineContexts,
     fun readMoreClick()         { router.navigateTo(Screens.READ_MORE) }
     fun onSettingsClick()       { router.navigateTo(Screens.SETTINGS) }
     fun onRequestsClick()       { router.navigateTo(Screens.REQUESTS) }
-    fun onBecomeACarrierClick() { router.navigateTo(Screens.CARRIER) }
+    fun onBecomeACarrierClick() {
+        if(systemInteractor.account.loggedIn) {
+            if(systemInteractor.account.groups!!.indexOf("carrier/driver") >= 0) router.navigateTo(Screens.CARRIER)
+            else router.navigateTo(Screens.REG_CARRIER)
+        }
+        else router.navigateTo(Screens.LOGIN)
+    }
 }

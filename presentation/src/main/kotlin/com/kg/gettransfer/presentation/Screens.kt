@@ -16,6 +16,7 @@ object Screens {
 	@JvmField val TRIP_DETAILS   = "carrier_trip_details"
 
 	@JvmField val LICENCE_AGREE  = "licence_agree"
+	@JvmField val REG_CARRIER    = "registration_carrier"
 
 	@JvmField val OFFERS         = "offers"
 	@JvmField val DETAILS        = "details"

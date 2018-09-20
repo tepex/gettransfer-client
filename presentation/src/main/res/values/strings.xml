@@ -4,6 +4,9 @@
 	<string name="api_key">ccd9a245018bfe4f386f4045ee4a006f</string>
 	<string name="api_url">https://stgtr.org</string>
 
+    <string name="licence_agreement_url">https://gettransfer.com/en/terms_of_use</string>
+    <string name="registration_carrier_url">https://stgtr.org/carrier/new</string>
+
 	<string name="navigation_drawer_open" translatable="false">Open</string>
 	<string name="navigation_drawer_close" translatable="false">Close</string>
 	<!-- Navigation -->
@@ -274,6 +277,7 @@
 
     <!--Title text-->
     <string name="requests">Requests</string>
+    <string name="become_carrier">Become a ccarrier</string>
 
     <!--view_transfer_request_info-->
     <string name="transfer_request_num">Transfer request № %1$s</string>
