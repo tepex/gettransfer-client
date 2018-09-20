@@ -39,6 +39,9 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Account
 
+import com.kg.gettransfer.extensions.hideKeyboard
+import com.kg.gettransfer.extensions.showKeyboard
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 
@@ -50,9 +53,6 @@ import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.view.CreateOrderView
 
 import java.util.Calendar
-
-import com.kg.gettransfer.extensions.hideKeyboard
-import com.kg.gettransfer.extensions.showKeyboard
 
 import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
@@ -69,9 +69,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private val routeInteractor: RouteInteractor by inject()
 	private val transferInteractor: TransferInteractor by inject()
     private val calendar = Calendar.getInstance()
-    
-    private lateinit var bsOrder: BottomSheetBehavior<View>
-    private lateinit var bsTransport: BottomSheetBehavior<View>
+    private lateinit var sheetBehavior: BottomSheetBehavior<View>
     private lateinit var popupWindowComment: PopupWindow
 
     @ProvidePresenter
@@ -152,6 +150,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         view?.showKeyboard()
     }
 
+    private fun showKeyboard() {
+        val view = currentFocus
+        view?.showKeyboard()
+    }
+
     private fun toggleBottomSheet() {
         if(sheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
@@ -191,7 +194,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 presenter.setComment(layoutPopup.etPopupComment.text.toString().trim())
                 popupWindowComment.dismiss()
-                toggleBottomSheet()
+//                toggleBottomSheet()
                 return@OnEditorActionListener true
             }
             false
