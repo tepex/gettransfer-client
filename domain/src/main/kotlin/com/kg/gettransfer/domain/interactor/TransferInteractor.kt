@@ -8,13 +8,13 @@ import com.kg.gettransfer.domain.model.Trip
 import com.kg.gettransfer.domain.repository.ApiRepository
 
 class TransferInteractor(private val repository: ApiRepository) {
-    var transfer: Transfer? = null
     var selectedId: Long = -1
+    var transfer: Transfer? = null
     
     private var allTransfers: List<Transfer>? = null
     private var activeTransfers: List<Transfer>? = null
     private var completedTransfers: List<Transfer>? = null
-
+    
     suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean) = 
         repository.getRouteInfo(from, to, withPrices, returnWay)
 
