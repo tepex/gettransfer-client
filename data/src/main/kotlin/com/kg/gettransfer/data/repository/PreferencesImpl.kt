@@ -2,6 +2,7 @@ package com.kg.gettransfer.data.repository
 
 import android.content.Context
 
+import com.kg.gettransfer.data.Preferences
 import com.kg.gettransfer.data.model.*
 
 import com.kg.gettransfer.domain.model.Account
@@ -12,18 +13,14 @@ import java.util.Locale
 
 import timber.log.Timber
 
-class CacheRepositoryImpl(private val context: Context) {
-    companion object {
-        @JvmField val INVALID_TOKEN = "invalid_token"
-    }
-    
+class PreferencesImpl(context: Context): Preferences {
     private val configsPrefs = context.getSharedPreferences(CONFIGS, Context.MODE_PRIVATE)
     private val accountPrefs = context.getSharedPreferences(ACCOUNT, Context.MODE_PRIVATE)
-    private var _accessToken = INVALID_TOKEN
+    private var _accessToken = Preferences.INVALID_TOKEN
     
-    var accessToken: String
+    override var accessToken: String
         get() {
-            if(_accessToken == INVALID_TOKEN) _accessToken = configsPrefs.getString(TOKEN, INVALID_TOKEN)!!
+            if(_accessToken == Preferences.INVALID_TOKEN) _accessToken = configsPrefs.getString(TOKEN, Preferences.INVALID_TOKEN)!!
             return _accessToken
         }
         set(value) {
@@ -33,7 +30,7 @@ class CacheRepositoryImpl(private val context: Context) {
             editor.apply()
         }
        
-    var account: Account
+    override var account: Account
         get() {
             var localeCode = accountPrefs.getString(ACCOUNT_LOCALE, null)
             var currencyCode = accountPrefs.getString(ACCOUNT_CURRENCY, null)
@@ -60,7 +57,7 @@ class CacheRepositoryImpl(private val context: Context) {
             editor.apply()
         }
         
-    fun cleanAccount() {
+    override fun cleanAccount() {
         val editor = accountPrefs.edit()
         editor.remove(ACCOUNT_EMAIL)
         editor.remove(ACCOUNT_PHONE)

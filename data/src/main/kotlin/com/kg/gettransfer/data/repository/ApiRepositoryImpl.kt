@@ -1,8 +1,7 @@
 package com.kg.gettransfer.data.repository
 
-import android.content.Context
-
 import com.kg.gettransfer.data.Api
+import com.kg.gettransfer.data.Preferences
 import com.kg.gettransfer.data.TransportTypesDeserializer
 import com.kg.gettransfer.data.model.*
 
@@ -16,7 +15,7 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.Coroutin
 
 import java.util.Locale
 
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.Deferred
 
 import okhttp3.CookieJar
 import okhttp3.OkHttpClient
@@ -26,10 +25,11 @@ import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class ApiRepositoryImpl(private val context: Context, url: String, private val apiKey: String): ApiRepository {
+class ApiRepositoryImpl(private val preferences: Preferences,
+                        private val apiKey: String,
+                        url: String): ApiRepository {
     private lateinit var configs: Configs
     
-    private var cacheRepository = CacheRepositoryImpl(context)
     private var api: Api
     private val gson = GsonBuilder().registerTypeAdapter(ApiTransportTypesWrapper::class.java, TransportTypesDeserializer()).create()
     
@@ -44,7 +44,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
         builder.addInterceptor { chain ->
             var request = chain.request()
             if(request.url().encodedPath() != Api.API_ACCESS_TOKEN) request = request.newBuilder()
-	                .addHeader(Api.HEADER_TOKEN, cacheRepository.accessToken)
+	                .addHeader(Api.HEADER_TOKEN, preferences.accessToken)
 	                .build()
 		    chain.proceed(request)
 		}
@@ -66,15 +66,15 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 		
         val accountResponse: ApiResponse<ApiAccountWrapper> = tryTwice { api.getAccount() }
         if(accountResponse.data?.account != null)
-            cacheRepository.account = Mappers.mapApiAccount(accountResponse.data?.account!!, configs)
+            preferences.account = Mappers.mapApiAccount(accountResponse.data?.account!!, configs)
     }
 	
 	override fun getConfigs() = configs
 	
-    override fun getAccount() = cacheRepository.account
+    override fun getAccount() = preferences.account
 
     override suspend fun putAccount(account: Account) {
-        cacheRepository.account = account
+        preferences.account = account
         tryPutAccount(Mappers.mapAccount(account))
     }
     
@@ -98,7 +98,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
     override suspend fun login(email: String, password: String): Account {
         val response: ApiResponse<ApiAccountWrapper> = tryLogin(email, password)
         val account = Mappers.mapApiAccount(response.data!!.account, configs)
-        cacheRepository.account = account
+        preferences.account = account
         return account
     }
     
@@ -115,8 +115,8 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
     }
     
     override fun logout() {
-        cacheRepository.accessToken = CacheRepositoryImpl.INVALID_TOKEN
-        cacheRepository.cleanAccount()
+        preferences.accessToken = Preferences.INVALID_TOKEN
+        preferences.cleanAccount()
     }
     
     override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean): RouteInfo {
@@ -173,7 +173,7 @@ class ApiRepositoryImpl(private val context: Context, url: String, private val a
 
     private suspend fun updateAccessToken() {
         val response: ApiResponse<ApiToken> = api.accessToken(apiKey).await()
-        cacheRepository.accessToken = response.data!!.token
+        preferences.accessToken = response.data!!.token
     }
 
     override suspend fun createTransfer(from: GTAddress,

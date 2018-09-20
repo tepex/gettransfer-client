@@ -17,9 +17,11 @@ import com.google.android.gms.location.places.Places
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.data.Preferences
 import com.kg.gettransfer.data.repository.AddressRepositoryImpl
 import com.kg.gettransfer.data.repository.ApiRepositoryImpl
 import com.kg.gettransfer.data.repository.LocationRepositoryImpl
+import com.kg.gettransfer.data.repository.PreferencesImpl
 
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.*
@@ -63,9 +65,10 @@ val ciceroneModule = module {
 }
 
 val domainModule = module {
+    single { PreferencesImpl(get()) as Preferences }
 	single {
 	    val context: Context = get()
-	    ApiRepositoryImpl(context,
+	    ApiRepositoryImpl(get(),
 	                      context.resources.getString(R.string.api_url),
 	                      context.resources.getString(R.string.api_key)) as ApiRepository
 	}
