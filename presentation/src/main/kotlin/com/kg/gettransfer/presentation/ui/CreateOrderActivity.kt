@@ -103,8 +103,12 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         tvFlightOrTrainNumber.onTextChanged { presenter.setFlightNumber(it.trim()) }
 
         tvComments.setOnClickListener { showPopupWindowComment() }
-        layoutAgreement.setOnClickListener { presenter.showLicenceAgreement() }
-        cbAgreement.setOnClickListener { presenter.setAgreeLicence(cbAgreement.isChecked()) }
+        tvAgreement1.setOnClickListener { presenter.showLicenceAgreement() }
+        tvAgreement2.setOnClickListener { presenter.showLicenceAgreement() }
+        layoutCBAgreement.setOnClickListener {
+            cbAgreement.isChecked = !cbAgreement.isChecked
+            presenter.setAgreeLicence(cbAgreement.isChecked())
+        }
 
         btnGetOffers.setOnClickListener { presenter.onGetTransferClick() }
 
