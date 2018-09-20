@@ -6,9 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.CallSuper
-import android.support.design.widget.BottomSheetBehavior
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
 import android.text.InputType
 import android.util.DisplayMetrics
 import android.view.Gravity
@@ -20,12 +17,11 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.google.android.gms.maps.model.MapStyleOptions
 import com.kg.gettransfer.R
+import com.kg.gettransfer.R.id.*
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 import com.kg.gettransfer.presentation.model.CurrencyModel
@@ -33,11 +29,6 @@ import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.view.CreateOrderView
-import kotlinx.android.synthetic.main.activity_create_order.*
-import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
-import kotlinx.android.synthetic.main.layout_popup_comment.*
-import kotlinx.android.synthetic.main.layout_popup_comment.view.*
-import org.koin.android.ext.android.inject
 import java.util.*
 
 class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
@@ -48,6 +39,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 	private val transferInteractor: TransferInteractor by inject()
     private val calendar = Calendar.getInstance()
     private lateinit var sheetBehavior: BottomSheetBehavior<View>
+    private lateinit var popupWindowComment: PopupWindow
 
     @ProvidePresenter
     fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(coroutineContexts,
@@ -105,6 +97,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         tvComments.setOnClickListener {
             showPopupWindowComment()
             toggleBottomSheet()
+            showKeyboard()
         }
         tvAgreement1.setOnClickListener { presenter.showLicenceAgreement() }
         tvAgreement2.setOnClickListener { presenter.showLicenceAgreement() }
@@ -118,11 +111,18 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         sheetBehavior = BottomSheetBehavior.from(bottomSheet)
     }
 
+    private fun showKeyboard() {
+        val view = currentFocus
+        view?.showKeyboard()
+    }
+
     private fun toggleBottomSheet() {
         if (sheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            sheetBehavior.peekHeight = 656
         } else {
             sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            sheetBehavior.peekHeight = 250
         }
     }
 
@@ -144,7 +144,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         val screenHeight = displayMetrics.heightPixels
 
         val layoutPopup = LayoutInflater.from(applicationContext).inflate(R.layout.layout_popup_comment, layoutPopup)
-        val popupWindowComment = PopupWindow(layoutPopup, LinearLayout.LayoutParams.MATCH_PARENT, screenHeight / 3, true)
+        popupWindowComment = PopupWindow(layoutPopup, LinearLayout.LayoutParams.MATCH_PARENT, screenHeight / 3, true)
         layoutPopup.etPopupComment.setText(tvComments.text)
         layoutPopup.etPopupComment.setRawInputType(InputType.TYPE_CLASS_TEXT)
         popupWindowComment.showAtLocation(mainLayoutActivityTransfer, Gravity.CENTER, 0, 0)
@@ -155,7 +155,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 presenter.setComment(layoutPopup.etPopupComment.text.toString().trim())
                 popupWindowComment.dismiss()
-                toggleBottomSheet()
+//                toggleBottomSheet()
                 return@OnEditorActionListener true
             }
             false
@@ -165,6 +165,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 			view?.hideKeyboard()
 			view?.clearFocus()
             layoutShadow.visibility = View.GONE
+            toggleBottomSheet()
         }
         layoutPopup.setOnClickListener{ layoutPopup.etPopupComment.requestFocus()}
         layoutPopup.etPopupComment.setSelection(layoutPopup.etPopupComment.text.length)
