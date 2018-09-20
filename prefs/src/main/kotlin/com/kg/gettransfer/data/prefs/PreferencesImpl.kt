@@ -1,4 +1,4 @@
-package com.kg.gettransfer.data.repository
+package com.kg.gettransfer.data.prefs
 
 import android.content.Context
 
