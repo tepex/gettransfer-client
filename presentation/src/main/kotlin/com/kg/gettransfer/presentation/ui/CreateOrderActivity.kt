@@ -102,7 +102,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         ivChildCounterUp.setOnClickListener { presenter.changeChildren(1) }
         tvFlightOrTrainNumber.onTextChanged { presenter.setFlightNumber(it.trim()) }
 
-        tvComments.setOnClickListener { showPopupWindowComment() }
+        tvComments.setOnClickListener {
+            showPopupWindowComment()
+            toggleBottomSheet()
+        }
         tvAgreement1.setOnClickListener { presenter.showLicenceAgreement() }
         tvAgreement2.setOnClickListener { presenter.showLicenceAgreement() }
         layoutCBAgreement.setOnClickListener {
@@ -113,7 +116,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         btnGetOffers.setOnClickListener { presenter.onGetTransferClick() }
 
         sheetBehavior = BottomSheetBehavior.from(bottomSheet)
-        bottomSheet.setOnClickListener { toggleBottomSheet() }
     }
 
     private fun toggleBottomSheet() {
@@ -153,6 +155,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 presenter.setComment(layoutPopup.etPopupComment.text.toString().trim())
                 popupWindowComment.dismiss()
+                toggleBottomSheet()
                 return@OnEditorActionListener true
             }
             false
