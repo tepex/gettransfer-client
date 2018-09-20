@@ -33,7 +33,6 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-//import com.kg.gettransfer.R.id.*
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
@@ -70,7 +69,9 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private val routeInteractor: RouteInteractor by inject()
 	private val transferInteractor: TransferInteractor by inject()
     private val calendar = Calendar.getInstance()
-    private lateinit var sheetBehavior: BottomSheetBehavior<View>
+    
+    private lateinit var bsOrder: BottomSheetBehavior<View>
+    private lateinit var bsTransport: BottomSheetBehavior<View>
     private lateinit var popupWindowComment: PopupWindow
 
     @ProvidePresenter
@@ -140,7 +141,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
         btnGetOffers.setOnClickListener { presenter.onGetTransferClick() }
 
-        sheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        bsOrder = BottomSheetBehavior.from(sheetOrder)
+        bsTransport = BottomSheetBehavior.from(sheetTransport)
+        bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
+        btnOk.setOnClickListener { hideSheetTransport() }
     }
 
     private fun showKeyboard() {
@@ -187,6 +191,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 presenter.setComment(layoutPopup.etPopupComment.text.toString().trim())
                 popupWindowComment.dismiss()
+                toggleBottomSheet()
                 return@OnEditorActionListener true
             }
             false
