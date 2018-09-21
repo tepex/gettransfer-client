@@ -1,55 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:id="@+id/search"
-	android:transitionName="@string/searchTransitionName"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:descendantFocusability="beforeDescendants"
-	android:focusableInTouchMode="true"
-	android:layout_gravity="center_horizontal|top"
-	android:orientation="vertical"
-	android:background="@android:color/white">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/search"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal|top"
+    android:background="@android:color/white"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:transitionName="@string/searchTransitionName">
 
-	<com.kg.gettransfer.presentation.ui.SearchAddress
-		android:id="@+id/searchFrom"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		app:hint="@string/search_from_hint" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:weightSum="1">
 
-		<Button
-			android:id="@+id/btnEntrance2"
-			android:layout_width="103dp"
-			android:layout_height="26dp"
-			android:layout_marginBottom="8dp"
-			android:layout_marginEnd="8dp"
-			android:layout_marginTop="8dp"
-			android:layout_marginStart="10dp"
-			android:background="@drawable/btn_bg_rounded"
-			android:text="@string/entrance"
-			android:textColor="@color/colorWhite"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
-	</com.kg.gettransfer.presentation.ui.SearchAddress>
+        <com.kg.gettransfer.presentation.ui.SearchAddress
+            android:id="@+id/searchFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.9"
+            app:hint="@string/search_from_hint" />
 
-	<com.kg.gettransfer.presentation.ui.SearchAddress
-		android:id="@+id/searchTo"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		app:hint="@string/search_to_hint" >
+        <Button
+            android:id="@+id/btnEntrance2"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="0.1"
+            android:background="@drawable/btn_bg_rounded"
+            android:text="@string/entrance"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
 
-	</com.kg.gettransfer.presentation.ui.SearchAddress>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/create_transfer_divider_height"
+        android:background="@color/colorDividerGray" />
 
-	<Button
-		android:id="@+id/btnNext"
-		android:layout_width="300dp"
-		android:layout_height="wrap_content"
-		android:layout_margin="@dimen/btn_next_main_margin_16dp"
-		android:text="@string/next"
-		android:textColor="@color/colorWhite"
-		android:background="@drawable/btn_bg_rounded"
-		android:enabled="false"
-		android:layout_gravity="center"/>
+
+    <com.kg.gettransfer.presentation.ui.SearchAddress
+        android:id="@+id/searchTo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        app:hint="@string/search_to_hint">
+
+    </com.kg.gettransfer.presentation.ui.SearchAddress>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/create_transfer_divider_height"
+        android:background="@color/colorDividerGray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+
+    <Button
+        android:id="@+id/btnNext"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/btn_next_main_margin_16dp"
+        android:background="@drawable/btn_bg_rounded"
+        android:enabled="false"
+        android:text="@string/next"
+        android:textColor="@color/colorWhite" />
 
 </LinearLayout>
