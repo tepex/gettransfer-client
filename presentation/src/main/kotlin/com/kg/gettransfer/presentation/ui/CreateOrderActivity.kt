@@ -15,9 +15,16 @@ import android.view.inputmethod.EditorInfo
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
-import android.widget.Toolbar
+
+import android.support.design.widget.BottomSheetBehavior
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.Toolbar
+
+import com.google.android.gms.maps.model.MapStyleOptions
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.R.id.*
 import com.kg.gettransfer.domain.interactor.RouteInteractor
@@ -31,6 +38,13 @@ import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import java.util.*
+import com.kg.gettransfer.extensions.hideKeyboard
+import com.kg.gettransfer.extensions.showKeyboard
+import kotlinx.android.synthetic.main.activity_create_order.*
+import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
+import kotlinx.android.synthetic.main.layout_popup_comment.*
+import kotlinx.android.synthetic.main.layout_popup_comment.view.*
+import org.koin.android.ext.android.inject
 
 class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
