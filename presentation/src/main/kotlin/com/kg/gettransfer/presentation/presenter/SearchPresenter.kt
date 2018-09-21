@@ -31,7 +31,7 @@ class SearchPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: SearchView) {
         super.attachView(view)
-        viewState.setAddressFrom(routeInteractor.from.name, false)
+        viewState.setAddressFrom(routeInteractor.from!!.name, false)
         viewState.setAddressTo(routeInteractor.to?.name ?: "", false)
     }
     

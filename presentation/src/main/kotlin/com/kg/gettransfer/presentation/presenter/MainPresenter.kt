@@ -89,8 +89,11 @@ class MainPresenter(cc: CoroutineContexts,
             viewState.setAddressFrom(currentAddress.name)
         }, { e -> Timber.e(e) })
     }
-    
-    fun onSearchClick(addresses: Pair<String, String>) { router.navigateTo(Screens.FIND_ADDRESS, addresses) }
+
+    fun onSearchClick(addresses: Pair<String, String>) {
+        if(routeInteractor.from != null) router.navigateTo(Screens.FIND_ADDRESS, addresses)
+    }
+
     fun onLoginClick()          { router.navigateTo(Screens.LOGIN) }
     fun onAboutClick()          { router.navigateTo(Screens.ABOUT) }
     fun readMoreClick()         { router.navigateTo(Screens.READ_MORE) }
