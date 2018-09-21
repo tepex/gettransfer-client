@@ -3,4 +3,6 @@
 	<integer name="map_min_zoom">13</integer>
 	<!-- минимальное расстояние для вычисления адреса -->
 	<integer name="map_min_distance_to_request_address">30</integer>
+	<integer name="max_height_sheet_create_order">656</integer>
+	<integer name="min_height_sheet_create_order">250</integer>
 </resources>
