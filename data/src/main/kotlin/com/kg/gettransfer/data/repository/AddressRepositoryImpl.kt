@@ -16,7 +16,7 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
                             private val pdClient: PlaceDetectionClient): AddressRepository {
     override fun getAddressByLocation(point: Point): GTAddress {
         val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
-        val addr = list?.firstOrNull()?.getAddressLine(0)
+        val addr = list?.firstOrNull()?.thoroughfare + " " + list?.firstOrNull()?.subThoroughfare
         if(addr == null) throw RuntimeException("Address not found") 
         return GTAddress(placeTypes = listOf(GTAddress.TYPE_STREET_ADDRESS),
                          name = addr,
@@ -50,7 +50,7 @@ class AddressRepositoryImpl(private val geocoder: Geocoder,
         val list = DataBufferUtils.freezeAndClose(results.getResult())
         return list.map {
             GTAddress(it.placeId, it.placeTypes,
-                    it.getFullText(null).toString(),
+                    it.getPrimaryText(null).toString(),
                     it.getFullText(null).toString(),
                     it.getPrimaryText(null).toString(),
                     it.getSecondaryText(null).toString(),

@@ -10,7 +10,8 @@
 	<include layout="@layout/toolbar" />
 	<include layout="@layout/search_form" />
 
-	<android.support.v7.widget.RecyclerView android:id="@+id/addressList"
+	<android.support.v7.widget.RecyclerView
+		android:id="@+id/addressList"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
