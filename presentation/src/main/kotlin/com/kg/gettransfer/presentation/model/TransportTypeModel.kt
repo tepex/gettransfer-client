@@ -9,4 +9,7 @@ class TransportTypeModel(val id: String,
                          val paxMax: Int,
                          val luggageMax: Int,
                          val price: String?,
-                         var checked: Boolean = false)
+                         var checked: Boolean = false) {
+
+    var showInfo = false
+}

@@ -29,6 +29,7 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
             ivTransferType.setImageResource(item.imageId!!)
             cbTransferType.isChecked = item.checked
             setOnClickListener {
+                item.showInfo = ivTransportInfo.visibility == View.VISIBLE
                 item.checked = !item.checked
                 cbTransferType.isChecked = item.checked
                 if (item.checked) ivTransportInfo.visibility = View.VISIBLE else ivTransportInfo.visibility = View.INVISIBLE
