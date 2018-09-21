@@ -200,7 +200,7 @@
     <string name="transfer_request_num">Заявка на трансфер № %1$s</string>
     <string name="next">Далее</string>
     <string name="done">Сделано</string>
-    <string name="average_rate">Средний тариф маршрута %1$s</string>
+    <string name="average_rate">Средний тариф маршрута</string>
     <string name="rub">₽</string>
     <string name="comment_options">омментарий и опции</string>
 

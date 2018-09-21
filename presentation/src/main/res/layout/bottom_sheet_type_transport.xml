@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     app:behavior_hideable="true"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-    android:background="@color/colorWhite">
+    android:background="@color/colorWhite"
+    app:behavior_skipCollapsed="true">
 
     <View
         android:id="@+id/view"
@@ -45,22 +46,21 @@
         android:id="@+id/tvPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivTypeTransfer"
-        tools:text="From $32"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
         android:textColor="@color/colorTextBlack"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/ivTypeTransfer"
+        app:layout_constraintTop_toBottomOf="@+id/ivTypeTransfer"
+        tools:text="From $32" />
 
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tvPrice"
         app:layout_constraintTop_toBottomOf="@+id/tvPrice"
         app:srcCompat="@drawable/ic_passenger" />
 
@@ -116,24 +116,25 @@
         android:id="@+id/tvCars"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/imageView5"
         app:layout_constraintTop_toBottomOf="@+id/imageView5"
         tools:text="Toyota Prius, Nissan, Kia Rio" />
 
     <Button
         android:id="@+id/btnOk"
-        android:layout_width="0dp"
+        android:layout_width="336dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="80dp"
+        android:background="@drawable/btn_bg_rounded"
         android:text="@android:string/ok"
+        android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/btn_bg_rounded"
-        android:textColor="@color/colorWhite"/>
+        app:layout_constraintTop_toBottomOf="@+id/tvCars" />
 
 </android.support.constraint.ConstraintLayout>

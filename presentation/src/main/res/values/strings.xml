@@ -279,7 +279,7 @@
     <string name="transfer_request_num">Transfer request № %1$s</string>
     <string name="next">Next</string>
     <string name="done">Done</string>
-    <string name="average_rate">average rate on route %1$s</string>
+    <string name="average_rate">average rate on route</string>
     <string name="rub">₽</string>
     <string name="comment_options">Comment and options</string>
 

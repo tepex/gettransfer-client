@@ -10,6 +10,10 @@ import android.os.Bundle
 
 import android.support.annotation.CallSuper
 
+import android.support.design.widget.BottomSheetBehavior
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.Toolbar
+
 import android.text.InputType
 import android.util.DisplayMetrics
 
@@ -103,7 +107,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         _mapView = mapView
         initGoogleMap(savedInstanceState)
 
-
         setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -127,7 +130,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
         tvComments.setOnClickListener {
             showPopupWindowComment()
-            toggleBottomSheet()
+            toggleSheetOrder()
             showKeyboard()
         }
         tvAgreement1.setOnClickListener { presenter.showLicenceAgreement() }
@@ -145,9 +148,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         btnOk.setOnClickListener { hideSheetTransport() }
     }
 
-    private fun showKeyboard() {
-        val view = currentFocus
-        view?.showKeyboard()
+    private fun hideSheetTransport() {
+        bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     private fun showKeyboard() {
@@ -178,9 +180,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     private fun showPopupWindowComment() {
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        val screenHeight = displayMetrics.heightPixels
+        val screenHeight = getScreenHeight()
 
         val layoutPopup = LayoutInflater.from(applicationContext).inflate(R.layout.layout_popup_comment, layoutPopup)
         popupWindowComment = PopupWindow(layoutPopup, LinearLayout.LayoutParams.MATCH_PARENT, screenHeight / 3, true)
@@ -204,10 +204,16 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             view?.hideKeyboard()
             view?.clearFocus()
             layoutShadow.visibility = View.GONE
-            toggleBottomSheet()
+            toggleSheetOrder()
         }
         layoutPopup.setOnClickListener { layoutPopup.etPopupComment.requestFocus() }
         layoutPopup.etPopupComment.setSelection(layoutPopup.etPopupComment.text.length)
+    }
+
+    private fun getScreenHeight(): Int {
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        return displayMetrics.heightPixels
     }
 
     private fun showDatePickerDialog() {
@@ -279,15 +285,15 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {
         if (transportType.checked) {
-            bsTransport.state = BottomSheetBehavior.STATE_EXPANDED
+            bsTransport.state = BottomSheetBehavior.STATE_COLLAPSED
             setTransportInfo(transportType)
         }
     }
 
     private fun setTransportInfo(transportType: TransportTypeModel) {
-//        tvTransferType.text = transportType.nameId
+        tvTypeTransfer.text = transportType.id
         ivTypeTransfer.setImageResource(transportType.imageId!!)
-        tvPrice.text = transportType.price
+        tvPrice.text = getString(R.string.price_from, transportType.price)
         tvCountPassengers.text = transportType.paxMax.toString()
         tvCountLuggage.text = transportType.luggageMax.toString()
     }

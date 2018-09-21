@@ -4,16 +4,20 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.CallSuper
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.Toolbar
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
-import com.kg.gettransfer.R.id.rvTrips
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TripsRVAdapter
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.presenter.CarrierTripsPresenter
 import com.kg.gettransfer.presentation.view.CarrierTripsView
+import kotlinx.android.synthetic.main.activity_carrier_trips.*
+import kotlinx.android.synthetic.main.toolbar.view.*
+import org.koin.android.ext.android.inject
 
 class CarrierTripsActivitty: BaseActivity(), CarrierTripsView{
     @InjectPresenter
