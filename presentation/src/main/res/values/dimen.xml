@@ -10,6 +10,10 @@
 	<dimen name="search_form_margin_top">126dp</dimen>
 	<dimen name="search_form_margin_X">16dp</dimen>
 
+	<dimen name="status_bar_height">24dp</dimen>
+	<dimen name="activity_main_buttons_margin_top">38dp</dimen>
+	<dimen name="activity_main_buttons_margin_start_end">8dp</dimen>
+
 	<!-- Navigation view menu -->
 	<dimen name="nav_header_height">148dp</dimen>
 	<dimen name="nav_header_logo_width">56dp</dimen>

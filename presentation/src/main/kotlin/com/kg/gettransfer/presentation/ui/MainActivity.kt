@@ -3,11 +3,11 @@ package com.kg.gettransfer.presentation.ui
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.os.Build
 
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
-import android.support.design.widget.AppBarLayout
 
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.view.GravityCompat
@@ -15,12 +15,13 @@ import android.support.v4.widget.DrawerLayout
 
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.Toolbar
 
 import android.transition.Fade
+import android.view.Gravity
 
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 
 import android.widget.TextView
 
@@ -156,19 +157,25 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 		super.onCreate(savedInstanceState)
 		
 		setContentView(R.layout.activity_main)
-		
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
+			window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+		}
+
 		_mapView = mapView
 		initGoogleMap(savedInstanceState)
-		
-		val tb = this.toolbar as Toolbar
+
+		/*val tb = this.toolbar as Toolbar
 		
 		setSupportActionBar(tb)
 		supportActionBar?.setDisplayShowTitleEnabled(false)
 		supportActionBar?.setDisplayHomeAsUpEnabled(false)
-		supportActionBar?.setDisplayShowHomeEnabled(false)
-		
+		supportActionBar?.setDisplayShowHomeEnabled(false)*/
+
+		btnShowDrawerLayout.setOnClickListener { drawer.openDrawer(Gravity.START) }
 		drawer = drawerLayout as DrawerLayout
-		toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+		//toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
 		drawer.addDrawerListener(object: DrawerLayout.SimpleDrawerListener() {
 			@CallSuper
 			override fun onDrawerStateChanged(newState: Int) {
@@ -177,11 +184,13 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 				    val view = currentFocus
 				    view?.hideKeyboard()
 				    view?.clearFocus()
-				}
+				} /*else if(newState == DrawerLayout.STATE_IDLE){
+					if(drawerLayout.isDrawerOpen(GravityCompat.START)) hideStatusBar() else showStatusBar()
+				}*/
 			}
 		})
 		
-        (appbar as AppBarLayout).bringToFront()
+        //(appbar as AppBarLayout).bringToFront()
 		
 		initNavigation()
 		
@@ -201,7 +210,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 	@CallSuper
 	protected override fun onPostCreate(savedInstanceState: Bundle?) {
 		super.onPostCreate(savedInstanceState)
-		toggle.syncState()
+		//toggle.syncState()
 	}
 	
 	@CallSuper
@@ -312,4 +321,12 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 			navRequests.visibility = View.VISIBLE
 	    }
 	}
+
+	/*private fun hideStatusBar() {
+		window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+	}
+
+	private fun showStatusBar() {
+		window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+	}*/
 }
