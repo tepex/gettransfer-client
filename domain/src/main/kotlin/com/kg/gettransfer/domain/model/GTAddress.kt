@@ -2,14 +2,11 @@ package com.kg.gettransfer.domain.model
 
 class GTAddress(var id: String? = null,
                 val placeTypes: List<Int>? = null,
-                name: String,
+                val name: String,
                 val address: String,
                 val primary: String?,
                 val secondary: String?,
                 var point: Point? = null) {
-
-    val name: String
-    get() = address
 
     companion object {
         @JvmField
