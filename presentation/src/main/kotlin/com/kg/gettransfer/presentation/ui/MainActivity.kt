@@ -279,8 +279,6 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
             }
             else googleMap.moveCamera(CameraUpdateFactory.newLatLng(point))
-/*                centerMarker = googleMap.addMarker(MarkerOptions().position(point)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_label_empty)))*/
         }
     }
 
