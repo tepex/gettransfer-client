@@ -292,7 +292,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         if(block) searchFrom.text = getString(R.string.search_start)
     }
 	
-	override fun setAddressFrom(address: String) { searchFrom.text = address }
+	override fun setAddressFrom(address: String) {
+		searchFrom.text = address }
 	
 	override fun setAccount(account: Account) {
 	    if(!account.loggedIn) {
