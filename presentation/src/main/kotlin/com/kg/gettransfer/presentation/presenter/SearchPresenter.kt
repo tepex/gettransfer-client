@@ -43,7 +43,7 @@ class SearchPresenter(cc: CoroutineContexts,
                 viewState.blockInterface(true)
                 utils.asyncAwait { routeInteractor.updateDestinationPoint() }
                 router.navigateTo(Screens.CREATE_ORDER)
-            }, { e -> viewState.setError(false, R.string.err_server, e.message)
+            }, { e -> viewState.setError(e)
             }, { viewState.blockInterface(false) })
         }
         else {

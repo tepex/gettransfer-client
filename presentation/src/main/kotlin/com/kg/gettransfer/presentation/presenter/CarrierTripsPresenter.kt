@@ -28,7 +28,7 @@ class CarrierTripsPresenter(cc: CoroutineContexts,
             viewState.setTrips(trips!!)
         }, { e ->
             if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
-            else viewState.setError(false, R.string.err_server, e.message)
+            else viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }
 

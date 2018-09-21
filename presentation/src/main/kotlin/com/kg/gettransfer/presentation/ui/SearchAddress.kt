@@ -30,6 +30,8 @@ import com.kg.gettransfer.presentation.view.SearchAddressView
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.search_address.*
 
+import timber.log.Timber
+
 /**
  * 
  *
@@ -155,6 +157,11 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
 		if(addressField.isFocused) parent.setError(finish, errId, *args)
 	}
+
+    override fun setError(e: Throwable) {
+        Timber.e(e)
+        if(addressField.isFocused) parent.setError(e)
+    }
 
 	override fun afterTextChanged(s: Editable?) {
 		checkClearButtonVisibility()

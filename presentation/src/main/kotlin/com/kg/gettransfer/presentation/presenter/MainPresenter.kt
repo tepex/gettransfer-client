@@ -55,7 +55,7 @@ class MainPresenter(cc: CoroutineContexts,
     fun updateCurrentLocation() {
         utils.launchAsyncTryCatch(
             { updateCurrentLocationAsync() },
-            { e -> viewState.setError(false, R.string.err_server, e.message) })
+            { e -> viewState.setError(e) })
     }
 
     private suspend fun updateCurrentLocationAsync() {
@@ -84,10 +84,11 @@ class MainPresenter(cc: CoroutineContexts,
         */
 
         lastAddressPoint = lastPoint!!
-        utils.launchAsyncTryCatch({
+        utils.launchAsyncTryCatchFinally({
             val currentAddress = utils.asyncAwait { routeInteractor.getAddressByLocation(Mappers.latLng2Point(lastPoint!!)) }
             viewState.setAddressFrom(currentAddress.name)
-        }, { e -> Timber.e(e) })
+        }, { e -> viewState.setError(e)
+        }, { viewState.blockInterface(false) })
     }
 
     fun onSearchClick(addresses: Pair<String, String>) {

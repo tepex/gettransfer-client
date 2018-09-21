@@ -93,7 +93,7 @@ class SettingsPresenter(cc: CoroutineContexts,
             utils.asyncAwait { systemInteractor.putAccount() }
         }, { e ->
             if(e is ApiException && e.isNotLoggedIn()) {}
-            else viewState.setError(false, R.string.err_server, e.message)
+            else viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }
     
