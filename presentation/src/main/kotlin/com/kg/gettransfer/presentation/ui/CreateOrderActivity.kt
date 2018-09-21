@@ -33,6 +33,11 @@ import com.kg.gettransfer.presentation.view.CreateOrderView
 import java.util.*
 
 class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
+    companion object{
+        private const val MAX_HEIGHT_SHEET = 656
+        private const val MIN_HEIGHT_SHEET = 250
+    }
+
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
 
@@ -120,10 +125,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun toggleBottomSheet() {
         if (sheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            sheetBehavior.peekHeight = 656
+            sheetBehavior.peekHeight = MAX_HEIGHT_SHEET
         } else {
             sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            sheetBehavior.peekHeight = 250
+            sheetBehavior.peekHeight = MIN_HEIGHT_SHEET
         }
     }
 
