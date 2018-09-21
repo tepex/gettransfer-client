@@ -21,6 +21,7 @@
 	<string name="search_from_hint">From</string>
 	<string name="search_to_hint">To</string>
     <string name="search_start">Loading…</string>
+    <string name="search_nothing"></string>
 	<string name="searchTransitionName">SEARCH_FORM</string>
 	<!-- About -->
 	<string name="about_title_item1">ЛУЧШИЕ ЦЕНЫ</string>

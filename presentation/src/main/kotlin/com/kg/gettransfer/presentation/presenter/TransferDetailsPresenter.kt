@@ -70,7 +70,7 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
 	        
             viewState.setRoute(routeModel!!)
 	    }, { e -> Timber.e(e)
-	        viewState.setError(false, R.string.err_server, e.message)
+	        viewState.setError(e)
         }, { viewState.blockInterface(false) })        
 	}
 	

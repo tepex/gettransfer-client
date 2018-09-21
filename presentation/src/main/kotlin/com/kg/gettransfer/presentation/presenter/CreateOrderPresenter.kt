@@ -76,7 +76,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
 
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
-            val from = routeInteractor.from
+            val from = routeInteractor.from!!
             val to = routeInteractor.to!!
 	        val routeInfo = utils.asyncAwait { transferInteractor.getRouteInfo(from.point.toString(), to.point.toString(), true, false) }
 	        val prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
@@ -90,7 +90,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             
             viewState.setTransportTypes(transportTypes!!)
             viewState.setRoute(routeModel!!)
-	    }, { e -> viewState.setError(false, R.string.err_server, e.message)
+	    }, { e -> viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }
     
@@ -176,7 +176,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             val transfer = utils.asyncAwait {
-                transferInteractor.createTransfer(routeInteractor.from,
+                transferInteractor.createTransfer(routeInteractor.from!!,
                                                   routeInteractor.to!!,
                                                   trip,
                                                   null,
@@ -195,7 +195,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                     if(e.isNotLoggedIn()) login()
                     else viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
                 }
-                else viewState.setError(false, R.string.err_server, e.message)
+                else viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }
     

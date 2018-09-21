@@ -31,7 +31,7 @@ class SearchPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: SearchView) {
         super.attachView(view)
-        viewState.setAddressFrom(routeInteractor.from.name, false)
+        viewState.setAddressFrom(routeInteractor.from!!.name, false)
         viewState.setAddressTo(routeInteractor.to?.name ?: "", false)
     }
     
@@ -43,7 +43,7 @@ class SearchPresenter(cc: CoroutineContexts,
                 viewState.blockInterface(true)
                 utils.asyncAwait { routeInteractor.updateDestinationPoint() }
                 router.navigateTo(Screens.CREATE_ORDER)
-            }, { e -> viewState.setError(false, R.string.err_server, e.message)
+            }, { e -> viewState.setError(e)
             }, { viewState.blockInterface(false) })
         }
         else {

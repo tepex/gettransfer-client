@@ -36,7 +36,7 @@ class LoginPresenter(cc: CoroutineContexts,
         utils.launchAsyncTryCatch({
             utils.asyncAwait { systemInteractor.login(email!!, password!!) }
             router.exitWithResult(RESULT_CODE, RESULT_OK)
-        }, { e -> viewState.setError(false, R.string.err_server, e.message) })
+        }, { e -> viewState.setError(e) })
     }
     
     fun setEmail(email: String) {

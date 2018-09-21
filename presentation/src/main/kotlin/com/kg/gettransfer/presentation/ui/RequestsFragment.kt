@@ -88,4 +88,9 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
         (activity as BaseView).setError(finish, errId, *args)
     }
+    
+    override fun setError(e: Throwable) {
+        Timber.e(e)
+        Utils.showError(context!!, false, getString(R.string.err_server, e.message))
+    }    
 }

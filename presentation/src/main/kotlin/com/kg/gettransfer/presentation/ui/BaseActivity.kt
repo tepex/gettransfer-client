@@ -33,6 +33,8 @@ import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
+import timber.log.Timber
+
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     internal val systemInteractor: SystemInteractor by inject()
     
@@ -70,6 +72,11 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
         Utils.showError(this, finish, getString(errId, *args))
     }
+    
+    override fun setError(e: Throwable) {
+        Timber.e(e)
+        Utils.showError(this, false, getString(R.string.err_server, e.message))
+    }    
 }
 
 open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, Screens.NOT_USED) {
