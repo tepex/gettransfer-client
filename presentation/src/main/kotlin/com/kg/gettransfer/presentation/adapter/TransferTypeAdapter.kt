@@ -25,18 +25,17 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
             tvNumberPersonsTransfer.text = context.getString(R.string.count_persons_and_baggage, item.paxMax)
             tvCountBaggage.text = context.getString(R.string.count_persons_and_baggage, item.luggageMax)
             tvPriceFrom.text = context.getString(R.string.price_from, item.price)
-            
+
             ivTransferType.setImageResource(item.imageId!!)
             cbTransferType.isChecked = item.checked
-            cbTransferType.setOnClickListener {
+            setOnClickListener {
                 item.checked = !item.checked
                 cbTransferType.isChecked = item.checked
                 if (item.checked) ivTransportInfo.visibility = View.VISIBLE else ivTransportInfo.visibility = View.INVISIBLE
-                item.showInfo = ivTransportInfo.visibility == View.VISIBLE && cbTransferType.isChecked
-
+                item.showInfo = ivTransportInfo.visibility == View.VISIBLE
             }
-            setOnClickListener {
-                if (item.checked && item.showInfo) {
+            ivTransportInfo.setOnClickListener {
+                if (item.checked) {
                     listener(item)
                 }
             }

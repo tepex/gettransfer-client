@@ -16,7 +16,8 @@
         android:background="@drawable/cb_transfer_type_selector"
         android:button="@null"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:clickable="false"/>
 
     <TextView
         android:id="@+id/tvTransferType"
