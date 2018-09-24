@@ -122,11 +122,35 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         bsOrder = BottomSheetBehavior.from(sheetOrder)
         bsTransport = BottomSheetBehavior.from(sheetTransport)
         bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
+        setTransportSheetListener()
         btnOk.setOnClickListener { hideSheetTransport() }
+    }
+
+    private fun setTransportSheetListener() {
+        bsTransport.setBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(p0: View, p1: Float) {
+
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when(newState) {
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+                        collapsedOrderSheet()
+                    }
+                }
+            }
+
+        })
     }
 
     private fun hideSheetTransport() {
         bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
+        collapsedOrderSheet()
+    }
+
+    private fun collapsedOrderSheet() {
+        bsOrder.state = BottomSheetBehavior.STATE_COLLAPSED
+        bsOrder.isHideable = false
     }
 
     private fun showKeyboard() {
@@ -262,6 +286,9 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun transportTypeClicked(transportType: TransportTypeModel) {
         if (transportType.checked && transportType.showInfo) {
             bsTransport.state = BottomSheetBehavior.STATE_COLLAPSED
+            bsOrder.isHideable = true
+            bsOrder.state = BottomSheetBehavior.STATE_HIDDEN
+            bsOrder.skipCollapsed = true
             showTransportInfo(transportType)
         }
     }
