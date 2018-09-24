@@ -271,7 +271,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         if (account.loggedIn) {
             etEmail.setText(account.email)
             etEmail.isEnabled = false
-            tvEmail.visibility = View.GONE
         }
     }
 

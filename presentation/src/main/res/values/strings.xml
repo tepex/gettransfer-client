@@ -236,11 +236,11 @@
     <string name="flight_or_train_number">Flight or train number</string>
     <string name="enter_phone_number">Enter phone number</string>
     <string name="enter_email">Enter email</string>
-    <string name="your_name">*Your name</string>
+    <string name="your_name">Your name</string>
     <string name="additional">Additional</string>
     <string name="number_of_passengers">Number of passengers</string>
     <string name="transfer_date_and_time">Transfer date and time</string>
-    <string name="suggest_your_price">Suggest your price</string>
+    <string name="suggest_your_price"><font size = "15">Suggest your price</font></string>
 
     <string name="licence_agreement">Licence agreement</string>
 
@@ -314,5 +314,7 @@
     <string name="transfer_details">Transfer details</string>
     <string name="payment_details">Payment details</string>
     <string name="remains_to_pay">Remain to pay</string>
+    <string name="driver_will_meet_you">*Driver will meet you with a name sign</string>
+    <string name="example_flight">Example: BA 2243</string>
 
 </resources>

@@ -151,16 +151,16 @@
 
     <string name="i_read_and_agree">Я ознакомился и согласен с текстом</string>
     <string name="license_agreement"><u>Лицензионного соглашения</u></string>
-    <string name="get_offers">Get offers</string>
-    <string name="type_your_comments">Type here your comments, requirements, or driver tasks</string>
-    <string name="flight_or_train_number">Flight or train number</string>
-    <string name="enter_phone_number">Enter phone number</string>
+    <string name="get_offers">Получить предложения</string>
+    <string name="type_your_comments">Введите здесь свои комментарии, пожелания или задачи водителя</string>
+    <string name="flight_or_train_number">Номер рейса или поезда</string>
+    <string name="enter_phone_number">Введите номер телефона</string>
     <string name="enter_email">Введите email</string>
-    <string name="your_name">*Ваше имя</string>
+    <string name="your_name">Ваше имя</string>
     <string name="additional">Additional</string>
     <string name="number_of_passengers">Number of passengers</string>
     <string name="transfer_date_and_time">Transfer date and time</string>
-    <string name="suggest_your_price">Предложите вашу цену</string>
+    <string name="suggest_your_price"><font size = "15">Предложите вашу цену</font></string>
 
     <string name="licence_agreement">Лицензионное соглашение</string>
 
@@ -220,5 +220,7 @@
     <string name="transfer_details">Детали заявки</string>
     <string name="payment_details">Детали оплаты</string>
     <string name="remains_to_pay">Осталось оплатить</string>
+    <string name="driver_will_meet_you">*Водитель встретит вас с табличкой</string>
+    <string name="example_flight">Например: BA 2243</string>
 
 </resources>
