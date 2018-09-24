@@ -181,6 +181,9 @@
     <string name="text_nav_requests_title">Поездки</string>
     <string name="text_nav_requests_subtitle">Текущие и прошлые поездки</string>
 
+    <string name="text_nav_carrier_trips_title">Входящие заявки</string>
+    <string name="text_nav_carrier_trips_subtitle">Входящие заявки</string>
+
     <string name="text_nav_settings_title">Настройки</string>
     <string name="text_nav_settings_subtitle">Настройки страны и языка</string>
 

@@ -17,7 +17,7 @@
 
 	<style name="AppThemeTransparentStatusBar" parent="AppTheme">
 		<item name="android:windowLightStatusBar">true</item>
-		<item name="android:windowTranslucentStatus">true</item>
+		<item name="colorPrimaryDark">@color/colorWhite</item>
 	</style>
 
 	<style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">

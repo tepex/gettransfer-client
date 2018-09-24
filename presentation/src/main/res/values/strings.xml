@@ -263,6 +263,9 @@
     <string name="text_nav_requests_title">Requests</string>
     <string name="text_nav_requests_subtitle">Active and archived rides</string>
 
+    <string name="text_nav_carrier_trips_title">Upcoming transfers</string>
+    <string name="text_nav_carrier_trips_subtitle">Upcoming transfers</string>
+
     <string name="text_nav_settings_title">Settings</string>
     <string name="text_nav_settings_subtitle">Language and payment settings</string>
 

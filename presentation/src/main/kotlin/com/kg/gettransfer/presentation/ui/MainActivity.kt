@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Build
 
 import android.os.Bundle
@@ -18,10 +19,8 @@ import android.support.v7.app.AppCompatDelegate
 
 import android.transition.Fade
 import android.view.Gravity
-
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
 
 import android.widget.TextView
 
@@ -51,6 +50,7 @@ import com.kg.gettransfer.presentation.view.MainView
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_form_main.*
+import kotlinx.android.synthetic.main.view_navigation.*
 
 import org.koin.android.ext.android.inject
 
@@ -111,12 +111,11 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 				Screens.CREATE_ORDER -> return Intent(context, CreateOrderActivity::class.java)
 				Screens.SETTINGS -> return Intent(context, SettingsActivity::class.java)
 				Screens.REQUESTS -> return Intent(context, RequestsActivity::class.java)
-				Screens.CARRIER -> return  Intent(context, CarrierTripsActivitty::class.java)
-				Screens.REG_CARRIER -> {
-					val intentRegCarrier = Intent(context, WebPageActivity()::class.java)
-					intentRegCarrier.putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_REG_CARRIER)
-					return intentRegCarrier
-				}
+				Screens.CARRIER_MODE -> return Intent(context, CarrierTripsActivity::class.java)
+										  .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+										  .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+				Screens.REG_CARRIER -> return Intent(context, WebPageActivity()::class.java)
+											  .putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_REG_CARRIER)
 			}
 			return null
 		}
@@ -158,9 +157,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 		
 		setContentView(R.layout.activity_main)
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
-			window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			window.statusBarColor = Color.TRANSPARENT
 		}
 
 		_mapView = mapView
@@ -184,9 +182,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 				    val view = currentFocus
 				    view?.hideKeyboard()
 				    view?.clearFocus()
-				} /*else if(newState == DrawerLayout.STATE_IDLE){
-					if(drawerLayout.isDrawerOpen(GravityCompat.START)) hideStatusBar() else showStatusBar()
-				}*/
+				}
 			}
 		})
 		
@@ -247,7 +243,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 		//val versionName = packageManager.getPackageInfo(packageName, 0).versionName
 		val versionName = BuildConfig.VERSION_NAME
 		val versionCode = BuildConfig.VERSION_CODE
-		(navFooterVersion as TextView).text = 
+		(navFooterVersion as TextView).text =
 			String.format(getString(R.string.nav_footer_version), versionName, versionCode)
 		navFooterStamp.setOnClickListener(readMoreListener)
 		navFooterReadMore.setOnClickListener(readMoreListener)
@@ -321,12 +317,4 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 			navRequests.visibility = View.VISIBLE
 	    }
 	}
-
-	/*private fun hideStatusBar() {
-		window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-	}
-
-	private fun showStatusBar() {
-		window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-	}*/
 }

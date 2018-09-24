@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.NavigationView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navView"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="start|top"
+    android:gravity="start">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/navViewHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:paddingTop="@dimen/status_bar_height">
+
+            <ImageView
+                android:id="@+id/navHeaderLogo"
+                android:layout_width="@dimen/nav_header_logo_width"
+                android:layout_height="@dimen/nav_header_logo_height"
+                android:layout_marginStart="@dimen/nav_header_logo_start"
+                android:layout_marginTop="@dimen/nav_header_logo_top"
+                android:layout_marginBottom="@dimen/nav_header_logo_bottom"
+                android:contentDescription="Header logo"
+                app:srcCompat="@drawable/nav_header_logo" />
+
+            <ImageView
+                android:id="@+id/navHeaderShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/nav_header_share_end"
+                android:layout_marginTop="@dimen/nav_header_logo_start"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="Share"
+                android:focusable="false"
+                android:tint="@android:color/black"
+                app:srcCompat="@android:drawable/ic_menu_share" />
+
+            <TextView
+                android:id="@+id/navHeaderName"
+                style="@style/nav_item_title"
+                android:layout_marginStart="@dimen/nav_header_logo_start"
+                android:visibility="visible"
+                android:layout_below="@+id/navHeaderLogo"
+                android:text="Maluta Skuratov"/>
+
+            <TextView
+                android:id="@+id/navHeaderEmail"
+                style="@style/nav_item_subtitle"
+                android:layout_below="@+id/navHeaderName"
+                android:layout_marginBottom="6dp"
+                android:layout_marginStart="@dimen/nav_header_logo_start"
+                android:visibility="visible"
+                android:text="android.studio@android.com"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/navViewItems"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/navViewHeader"
+            android:orientation="vertical">
+
+            <include android:id="@+id/navLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/nav_item_login"
+                android:visibility="visible"/>
+
+            <include android:id="@+id/navRequests"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/nav_item_requests"
+                android:visibility="gone"/>
+
+            <include android:id="@+id/navCarrierTrips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/nav_item_carrier_trips"
+                android:visibility="gone"/>
+
+            <include android:id="@+id/navSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/nav_item_settings"/>
+
+            <include android:id="@+id/navAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/nav_item_about"/>
+
+            <include android:id="@+id/navBecomeACarrier"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/nav_item_become_a_carrier"
+                android:visibility="visible"/>
+
+            <include android:id="@+id/navPassengerMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/nav_item_passenger_mode"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/navViewFooter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/navViewItems">
+
+            <ImageButton
+                android:id="@+id/navFooterStamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/navFooterReadMore"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/nav_footer_stamp_bottom"
+                android:background="@null"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_stamp" />
+
+            <TextView
+                android:id="@+id/navFooterReadMore"
+                style="@style/nav_item_title"
+                android:layout_above="@+id/navFooterVersion"
+                android:layout_marginBottom="@dimen/nav_footer_read_more_bottom"
+                android:gravity="center_horizontal"
+                android:text="@string/nav_footer_read_more" />
+
+            <TextView
+                android:id="@+id/navFooterVersion"
+                style="@style/nav_footer_version"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/nav_footer_version_bottom"
+                android:layout_marginStart="@dimen/nav_footer_version_start"
+                android:text="version" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</android.support.design.widget.NavigationView>

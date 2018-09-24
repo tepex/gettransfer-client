@@ -9,9 +9,11 @@ object Screens {
 
 	@JvmField val LOGIN          = "login"
 	@JvmField val REQUESTS       = "requests"
+	@JvmField val CARRIER_TRIPS  = "carrier_trips"
 	@JvmField val SETTINGS       = "settings"
 	@JvmField val CREATE_ORDER   = "create_order"
-	@JvmField val CARRIER        = "become_a_carrier"
+	@JvmField val CARRIER_MODE   = "carrier_mode"
+	@JvmField val PASSENGER_MODE = "passenger_mode"
 
 	@JvmField val TRIP_DETAILS   = "carrier_trip_details"
 

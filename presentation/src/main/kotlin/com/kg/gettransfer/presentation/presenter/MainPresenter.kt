@@ -102,7 +102,7 @@ class MainPresenter(cc: CoroutineContexts,
     fun onRequestsClick()       { router.navigateTo(Screens.REQUESTS) }
     fun onBecomeACarrierClick() {
         if(systemInteractor.account.loggedIn) {
-            if(systemInteractor.account.groups!!.indexOf("carrier/driver") >= 0) router.navigateTo(Screens.CARRIER)
+            if(systemInteractor.account.groups!!.indexOf("carrier/driver") >= 0) router.navigateTo(Screens.CARRIER_MODE)
             else router.navigateTo(Screens.REG_CARRIER)
         }
         else router.navigateTo(Screens.LOGIN)

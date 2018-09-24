@@ -25,6 +25,7 @@ class CarrierTripsPresenter(cc: CoroutineContexts,
             viewState.blockInterface(true)
             trips = carrierTripInteractor.getCarrierTrips().map {
                 Mappers.getCarrierTripModel(it, systemInteractor.getLocale(), systemInteractor.getDistanceUnit()) }
+            viewState.initNavigation(systemInteractor.account)
             viewState.setTrips(trips!!)
         }, { e ->
             if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
@@ -36,4 +37,10 @@ class CarrierTripsPresenter(cc: CoroutineContexts,
         carrierTripInteractor.selectedTripId = tripId
         router.navigateTo(Screens.TRIP_DETAILS)
     }
+
+    fun onCarrierTripsClick()   { router.navigateTo(Screens.CARRIER_TRIPS) }
+    fun onAboutClick()          { router.navigateTo(Screens.ABOUT) }
+    fun readMoreClick()         { router.navigateTo(Screens.READ_MORE) }
+    fun onSettingsClick()       { router.navigateTo(Screens.SETTINGS) }
+    fun onPassengerModeClick()  { router.navigateTo(Screens.PASSENGER_MODE) }
 }
