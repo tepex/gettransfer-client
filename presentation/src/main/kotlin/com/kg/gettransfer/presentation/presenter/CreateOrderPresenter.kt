@@ -212,4 +212,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                             systemInteractor.account.termsAccepted
         viewState.setGetTransferEnabled(actionEnabled)
     }
+
+    fun onCenterRouteClick() {
+        viewState.setRoute(routeModel!!)
+    }
 }
