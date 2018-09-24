@@ -262,11 +262,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun transportTypeClicked(transportType: TransportTypeModel) {
         if (transportType.checked && transportType.showInfo) {
             bsTransport.state = BottomSheetBehavior.STATE_COLLAPSED
-            setTransportInfo(transportType)
+            showTransportInfo(transportType)
         }
     }
 
-    private fun setTransportInfo(transportType: TransportTypeModel) {
+    private fun showTransportInfo(transportType: TransportTypeModel) {
         tvTypeTransfer.text = transportType.id
         ivTypeTransfer.setImageResource(transportType.imageId!!)
         tvPrice.text = getString(R.string.price_from, transportType.price)
