@@ -2,31 +2,44 @@ package com.kg.gettransfer.presentation.ui
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+
 import android.content.Context
 import android.content.Intent
+
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
+
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+
 import android.text.InputType
 import android.util.DisplayMetrics
+
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
+
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.google.android.gms.maps.model.MapStyleOptions
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.Account
+
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 import com.kg.gettransfer.presentation.model.CurrencyModel
@@ -34,13 +47,16 @@ import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.view.CreateOrderView
+
 import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.*
+
 import org.koin.android.ext.android.inject
-import java.util.*
+
+import java.util.Calendar
 
 class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     @InjectPresenter
