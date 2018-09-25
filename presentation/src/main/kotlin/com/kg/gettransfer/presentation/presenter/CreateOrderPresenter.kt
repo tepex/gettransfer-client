@@ -216,4 +216,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     fun onCenterRouteClick() {
         viewState.setRoute(routeModel!!)
     }
+
+    fun onBackClick() {
+        onBackCommandClick()
+    }
 }

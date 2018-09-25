@@ -135,6 +135,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
         btnGetOffers.setOnClickListener { presenter.onGetTransferClick() }
         btnCenterRoute.setOnClickListener { presenter.onCenterRouteClick() }
+        btnBack.setOnClickListener { presenter.onBackClick() }
 
         bsOrder = BottomSheetBehavior.from(sheetOrder)
         bsTransport = BottomSheetBehavior.from(sheetTransport)
