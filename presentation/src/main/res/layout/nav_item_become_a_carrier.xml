@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/nav_item">
 
     <ImageView
         android:id="@+id/imgBecomeACarrier"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="@dimen/nav_icons_size"
+        android:layout_height="@dimen/nav_icons_size"
+        android:layout_marginStart="@dimen/nav_icons_margin_start_end"
+        android:layout_marginEnd="@dimen/nav_icons_margin_start_end"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_switch_on"/>
+        app:srcCompat="@drawable/ic_menu_switch_off"/>
 
     <TextView
         android:id="@+id/title"

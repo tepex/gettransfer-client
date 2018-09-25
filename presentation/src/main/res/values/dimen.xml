@@ -39,6 +39,9 @@
 	<dimen name="nav_footer_read_more_bottom">8dp</dimen>
 	<dimen name="nav_footer_stamp_bottom">6dp</dimen>
 
+	<dimen name="nav_icons_size">20dp</dimen>
+	<dimen name="nav_icons_margin_start_end">16dp</dimen>
+
 	<!-- Search form -->
     <dimen name="search_elevation">8dp</dimen>
 	<dimen name="search_form_vertical_padding">8dp</dimen>
