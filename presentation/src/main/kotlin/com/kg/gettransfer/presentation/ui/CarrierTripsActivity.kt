@@ -3,32 +3,45 @@ package com.kg.gettransfer.presentation.ui
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
+
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+
 import android.view.MenuItem
 import android.view.View
+
 import android.widget.TextView
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 import com.kg.gettransfer.domain.model.Account
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TripsRVAdapter
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.presenter.CarrierTripsPresenter
 import com.kg.gettransfer.presentation.view.CarrierTripsView
+
 import kotlinx.android.synthetic.main.activity_carrier_trips.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
+
 import org.koin.android.ext.android.inject
+
 import ru.terrakok.cicerone.commands.Forward
+
 import timber.log.Timber
 
 class CarrierTripsActivity: BaseActivity(), CarrierTripsView{
