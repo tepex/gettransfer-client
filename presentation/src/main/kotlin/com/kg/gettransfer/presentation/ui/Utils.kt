@@ -106,7 +106,7 @@ internal class Utils {
             pinLayout.tvInfo.text = routeModel.dateTime
             pinLayout.tvPlaceMirror.text = routeModel.from
             pinLayout.tvInfoMirror.text = routeModel.dateTime
-            pinLayout.imgPin.setImageResource(R.drawable.map_label_a)
+            pinLayout.imgPin.setImageResource(R.drawable.ic_map_label_a)
             val bmPinA = createBitmapFromView(pinLayout)
 
             val distance = formatDistance(activity, routeModel.distance, routeModel.distanceUnit)
@@ -114,7 +114,7 @@ internal class Utils {
             pinLayout.tvInfo.text = distance
             pinLayout.tvPlaceMirror.text = routeModel.to
             pinLayout.tvInfoMirror.text = distance
-            pinLayout.imgPin.setImageResource(R.drawable.map_label_b)
+            pinLayout.imgPin.setImageResource(R.drawable.ic_map_label_b)
             val bmPinB = createBitmapFromView(pinLayout)
             
             //Создание polyline
