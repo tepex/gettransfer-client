@@ -35,6 +35,7 @@ class MainPresenter(cc: CoroutineContexts,
     private var available: Boolean = false
 
     override fun onFirstViewAttach() {
+        systemInteractor.putLastMode(Screens.PASSENGER_MODE)
         utils.launchAsyncTryCatch( {
             // Проверка досупности сервиса геолокации
             available = utils.asyncAwait { locationInteractor.checkLocationServicesAvailability() }

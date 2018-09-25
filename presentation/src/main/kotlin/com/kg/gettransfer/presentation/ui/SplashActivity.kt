@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.Manifest
+import android.content.Context
 
 import android.content.pm.PackageManager
 import android.content.Intent
@@ -24,6 +25,7 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
+import com.kg.gettransfer.presentation.Screens
 
 import kotlinx.coroutines.experimental.Job
 
@@ -57,7 +59,12 @@ class SplashActivity: AppCompatActivity() {
 		Timber.d("Permissions granted!")
 		utils.launchAsyncTryCatchFinally({
 		    utils.asyncAwait { systemInteractor.coldStart() }
-			startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+			when(systemInteractor.lastMode){
+				Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsActivity::class.java))
+				Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+				else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+			}
+			//startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 		}, { e -> Utils.showError(this@SplashActivity, false, getString(R.string.err_server, e.message))
 			// @TODO: Показать ошибку. Учесть 401 — протухший ключ
 		}, { finish() })

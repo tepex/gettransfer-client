@@ -9,6 +9,7 @@ import java.util.Currency
 import java.util.Locale
 
 class SystemInteractor(private val apiRepository: ApiRepository) {
+    lateinit var lastMode: String
     private lateinit var configs: Configs
     lateinit var account: Account
         private set
@@ -17,6 +18,7 @@ class SystemInteractor(private val apiRepository: ApiRepository) {
         apiRepository.coldStart()
         configs = apiRepository.getConfigs()
         account = apiRepository.getAccount()
+        lastMode = apiRepository.getLastMode()
     }
     
     fun getTransportTypes()       = configs.transportTypes
@@ -32,4 +34,5 @@ class SystemInteractor(private val apiRepository: ApiRepository) {
     fun logout() { apiRepository.logout() }
     suspend fun login(email: String, password: String) = apiRepository.login(email, password)
     suspend fun putAccount() { apiRepository.putAccount(account) }
+    fun putLastMode(mode: String) { apiRepository.putLastMode(mode) }
 }

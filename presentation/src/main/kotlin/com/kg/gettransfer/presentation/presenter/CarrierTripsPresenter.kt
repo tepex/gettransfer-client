@@ -21,6 +21,7 @@ class CarrierTripsPresenter(cc: CoroutineContexts,
     private var trips: List<CarrierTripModel>? = null
 
     override fun onFirstViewAttach() {
+        systemInteractor.putLastMode(Screens.CARRIER_MODE)
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             trips = carrierTripInteractor.getCarrierTrips().map {

@@ -90,6 +90,10 @@ class ApiRepositoryImpl(private val preferences: Preferences,
         }
     }
 
+    override fun getLastMode() = preferences.lastMode
+
+    override fun putLastMode(mode: String) { preferences.lastMode = mode }
+
     /* Not used now.
     override suspend fun createAccount(account: Account) {
     }

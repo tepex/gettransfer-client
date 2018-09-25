@@ -11,9 +11,12 @@ import com.kg.gettransfer.domain.model.DistanceUnit
 import java.util.Currency
 import java.util.Locale
 
-import timber.log.Timber
-
 class PreferencesImpl(context: Context): Preferences {
+
+    companion object {
+        @JvmField val LAST_MODE = "last_mode"
+    }
+
     private val configsPrefs = context.getSharedPreferences(CONFIGS, Context.MODE_PRIVATE)
     private val accountPrefs = context.getSharedPreferences(ACCOUNT, Context.MODE_PRIVATE)
     private var _accessToken = Preferences.INVALID_TOKEN
@@ -54,6 +57,14 @@ class PreferencesImpl(context: Context): Preferences {
             editor.putString(ACCOUNT_FULL_NAME, value.fullName)
             editor.putStringSet(ACCOUNT_GROUPS, value.groups?.toSet())
             editor.putBoolean(ACCOUNT_TERMS_ACCEPTED, value.termsAccepted)
+            editor.apply()
+        }
+
+    override var lastMode: String
+        get() = configsPrefs.getString(LAST_MODE, "")
+        set(value) {
+            val editor = configsPrefs.edit()
+            editor.putString(LAST_MODE, value)
             editor.apply()
         }
         

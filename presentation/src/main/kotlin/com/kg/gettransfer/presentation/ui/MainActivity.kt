@@ -277,6 +277,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     override fun setMapPoint(point: LatLng) {
         if(centerMarker != null) {
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(point))
+			//googleMap.animateCamera(CameraUpdateFactory.newLatLng(point))
             moveCenterMarker(point)
         }
         else {
@@ -284,8 +285,10 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
             if(isFirst || googleMap.cameraPosition.zoom <= MAX_INIT_ZOOM) {
                 val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+				//googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
             }
             else googleMap.moveCamera(CameraUpdateFactory.newLatLng(point))
+			//else googleMap.animateCamera(CameraUpdateFactory.newLatLng(point))
         }
     }
 

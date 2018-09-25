@@ -7,6 +7,8 @@ interface ApiRepository {
     fun getConfigs(): Configs
     fun getAccount(): Account
     suspend fun putAccount(account: Account)
+    fun getLastMode(): String
+    fun putLastMode(mode: String)
     /* Not used
     suspend fun createAccount(account: Account)
     */

@@ -9,6 +9,7 @@ interface Preferences {
     
     var accessToken: String
     var account: Account
+    var lastMode: String
     
     fun cleanAccount()
 }
