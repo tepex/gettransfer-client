@@ -82,7 +82,6 @@ class SettingsPresenter(cc: CoroutineContexts,
     }
     
     fun onLogout() {
-        Timber.d("account logout")
         systemInteractor.logout()
         router.exit()
     }

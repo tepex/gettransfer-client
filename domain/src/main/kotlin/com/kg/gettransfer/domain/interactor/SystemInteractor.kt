@@ -29,7 +29,7 @@ class SystemInteractor(private val apiRepository: ApiRepository) {
     
     fun getLocale()       = account.locale ?: Locale.getDefault()
     fun getDistanceUnit() = account.distanceUnit
-    fun getCurrency()     = account.currency ?: Currency.getInstance(getLocale())
+    fun getCurrency()     = account.currency ?: Currency.getInstance("USD")
     
     fun logout() { apiRepository.logout() }
     suspend fun login(email: String, password: String) = apiRepository.login(email, password)
