@@ -38,8 +38,6 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView{
     private lateinit var drawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
 
-    private var goToSettings = false
-
     private val carrierTripInteractor: CarrierTripInteractor by inject()
 
     @ProvidePresenter
@@ -65,10 +63,7 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView{
 
             when(screenKey) {
                 Screens.ABOUT -> return Intent(context, AboutActivity::class.java)
-                Screens.SETTINGS -> {
-                    goToSettings = true
-                    return Intent(context, SettingsActivity::class.java)
-                }
+                Screens.SETTINGS -> return Intent(context, SettingsActivity::class.java)
                 Screens.PASSENGER_MODE -> return Intent(context, MainActivity::class.java)
                                                  .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                                  .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -112,15 +107,6 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView{
         initNavigation()
 
         rvTrips.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-    }
-
-    @CallSuper
-    protected override fun onResume() {
-        super.onResume()
-        if(goToSettings){
-            presenter.checkLoggedIn()
-            goToSettings = false
-        }
     }
 
     @CallSuper

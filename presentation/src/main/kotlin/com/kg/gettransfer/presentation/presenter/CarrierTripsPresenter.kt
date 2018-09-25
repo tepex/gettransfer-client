@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
@@ -10,6 +11,7 @@ import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.view.CarrierTripsView
+import com.kg.gettransfer.presentation.view.MainView
 import ru.terrakok.cicerone.Router
 
 @InjectViewState
@@ -21,7 +23,7 @@ class CarrierTripsPresenter(cc: CoroutineContexts,
     private var trips: List<CarrierTripModel>? = null
 
     override fun onFirstViewAttach() {
-        if(!systemInteractor.account.loggedIn) onPassengerModeClick()
+        checkLoggedIn()
         systemInteractor.putLastMode(Screens.CARRIER_MODE)
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
@@ -35,14 +37,20 @@ class CarrierTripsPresenter(cc: CoroutineContexts,
         }, { viewState.blockInterface(false) })
     }
 
+    @CallSuper
+    override fun attachView(view: CarrierTripsView) {
+        super.attachView(view)
+        systemInteractor.getAccount()
+        checkLoggedIn()
+    }
+
     fun onTripSelected(tripId: Long){
         carrierTripInteractor.selectedTripId = tripId
         router.navigateTo(Screens.TRIP_DETAILS)
     }
 
     fun checkLoggedIn(){
-        systemInteractor.getAccount()
-        if(!systemInteractor.account.loggedIn) onPassengerModeClick()
+        if(!systemInteractor.account.loggedIn) router.navigateTo(Screens.PASSENGER_MODE)
     }
 
     fun onCarrierTripsClick()   { router.navigateTo(Screens.CARRIER_TRIPS) }

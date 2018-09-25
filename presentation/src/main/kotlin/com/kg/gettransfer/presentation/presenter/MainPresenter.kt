@@ -50,6 +50,7 @@ class MainPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: MainView) {
         super.attachView(view)
+        systemInteractor.getAccount()
         viewState.setAccount(systemInteractor.account)
     }
 
