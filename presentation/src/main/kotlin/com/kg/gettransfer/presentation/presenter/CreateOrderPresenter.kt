@@ -22,6 +22,7 @@ import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.UserModel
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
@@ -43,6 +44,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                            private val routeInteractor: RouteInteractor,
                            private val transferInteractor: TransferInteractor): BasePresenter<CreateOrderView>(cc, router, systemInteractor) {
 
+    private var user: UserModel = Mappers.getUserModel(systemInteractor.account)
     private val currencies = Mappers.getCurrenciesModels(systemInteractor.getCurrencies())
     private var passengers: Int = MIN_PASSENGERS
     private var children: Int = MIN_CHILDREN
@@ -68,7 +70,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
     
     override fun onFirstViewAttach() {
-        val calendar = Calendar.getInstance(systemInteractor.getLocale())
+        val calendar = Calendar.getInstance(systemInteractor.locale)
         /* Server must send current locale time */
         calendar.add(Calendar.HOUR_OF_DAY, FUTURE_HOUR)
         calendar.add(Calendar.MINUTE, FUTURE_MINUTE)
@@ -82,7 +84,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
 	        val prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
 	        transportTypes = Mappers.getTransportTypesModels(systemInteractor.getTransportTypes(), prices)
 	        routeModel = Mappers.getRouteModel(routeInfo.distance,
-                                               systemInteractor.getDistanceUnit(),
+                                               systemInteractor.distanceUnit,
                                                routeInfo.polyLines,
                                                from.name,
                                                to.name,
@@ -101,8 +103,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         val i = systemInteractor.getCurrentCurrencyIndex()
         if(i != -1) changeCurrency(i)
             
-        viewState.setAccount(systemInteractor.account)
-        dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.getLocale())
+        viewState.setUser(user)
+        dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
         viewState.setDateTimeTransfer(dateTimeFormat!!.format(date))
 	    transportTypes?.let { viewState.setTransportTypes(it) }
 	    routeModel?.let     { viewState.setRoute(it) }
@@ -117,17 +119,17 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
     
     fun setName(name: String) {
-        systemInteractor.account.fullName = name
+        user.name = name
         checkFields()
     }
     
     fun setEmail(email: String) {
-        systemInteractor.account.email = email
+        user.email = email
         checkFields()
     }
     
     fun setPhone(phone: String) {
-        systemInteractor.account.phone = phone
+        user.phone = phone
         checkFields()
     }
 
@@ -147,7 +149,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
     
     fun setAgreeLicence(agreeLicence: Boolean) {
-        systemInteractor.account.termsAccepted = agreeLicence
+        user.termsAccepted = agreeLicence
         checkFields()
     }
     
@@ -164,11 +166,11 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         Timber.d("trip: %s", trip)
         Timber.d("transport types: %s", selectedTransportTypes)
         Timber.d("===========")
+        Timber.d("user: $user")
         Timber.d("passenger price: $cost")
         Timber.d("date: $date")
         Timber.d("passengers: $passengers")
         Timber.d("===========")
-        Timber.d("account: ${systemInteractor.account}")
         Timber.d("children: $children")
         Timber.d("flightNumber: $flightNumber")
         Timber.d("comment: $comment")
@@ -185,7 +187,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                   children,
                                                   cost,
                                                   comment,
-                                                  systemInteractor.account,
+                                                  Mappers.getAccount(user),
                                                   null,
                                                   false) }
             Timber.d("new transfer: %s", transfer)
@@ -204,12 +206,12 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         if(transportTypes == null) return
         val typesHasSelected = transportTypes!!.filter { it.checked }.size > 0
         val actionEnabled = typesHasSelected &&
-                            !systemInteractor.account.fullName.isNullOrBlank() &&
-                            !systemInteractor.account.email.isNullOrBlank() &&
-                            !systemInteractor.account.email.isNullOrBlank() &&
-                            Patterns.EMAIL_ADDRESS.matcher(systemInteractor.account.email!!).matches() &&
-                            Utils.checkPhone(systemInteractor.account.phone) &&
-                            systemInteractor.account.termsAccepted
+                            !user.name.isNullOrBlank() &&
+                            !user.email.isNullOrBlank() &&
+                            !user.email.isNullOrBlank() &&
+                            Patterns.EMAIL_ADDRESS.matcher(user.email!!).matches() &&
+                            Utils.checkPhone(user.phone) &&
+                            user.termsAccepted
         viewState.setGetTransferEnabled(actionEnabled)
     }
 

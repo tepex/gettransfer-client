@@ -44,8 +44,8 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
             viewState.blockInterface(true)
             transfer = utils.asyncAwait { transferInteractor.getTransfer() }
             viewState.setTransfer(Mappers.getTransferModel(transfer!!,
-                                                           systemInteractor.getLocale(),
-                                                           systemInteractor.getDistanceUnit(),
+                                                           systemInteractor.locale,
+                                                           systemInteractor.distanceUnit,
                                                            systemInteractor.getTransportTypes()))
 	        Timber.d("offers: ${transfer!!.id} status=${transfer!!.status} checkOffers: ${transfer!!.checkOffers}")
             if(transfer!!.checkOffers) {
@@ -62,7 +62,7 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
 	            transferInteractor.getRouteInfo(from.point, to.point, true, false)
 	        }
 	        routeModel = Mappers.getRouteModel(routeInfo.distance,
-                                               systemInteractor.getDistanceUnit(),
+                                               systemInteractor.distanceUnit,
                                                routeInfo.polyLines,
                                                from.name,
                                                to.name,
@@ -78,8 +78,8 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
         transfer?.let { viewState.setTransfer(Mappers.getTransferModel(it,
-                                                       systemInteractor.getLocale(),
-                                                       systemInteractor.getDistanceUnit(),
+                                                       systemInteractor.locale,
+                                                       systemInteractor.distanceUnit,
                                                        systemInteractor.getTransportTypes()))
         }
         routeModel?.let { viewState.setRoute(it) }

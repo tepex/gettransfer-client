@@ -14,11 +14,17 @@ class SystemInteractor(private val apiRepository: ApiRepository) {
     private lateinit var configs: Configs
     lateinit var account: Account
         private set
-    
+
     var locale: Locale
         get() = account.locale ?: Locale.getDefault()
         set(value) { account.locale = value }
-    
+    var currency: Currency
+        get() = account.currency ?: Currency.getInstance(locale)
+        set(value) { account.currency = value }
+    var distanceUnit: DistanceUnit
+        get() = account.distanceUnit ?: DistanceUnit.Km
+        set(value) { account.distanceUnit = value }
+
     suspend fun coldStart() {
         apiRepository.coldStart()
         configs = apiRepository.getConfigs()
@@ -32,7 +38,7 @@ class SystemInteractor(private val apiRepository: ApiRepository) {
     fun getLocales()              = configs.availableLocales
     fun getDistanceUnits()        = configs.supportedDistanceUnits
     fun getCurrencies()           = configs.supportedCurrencies
-    fun getCurrentCurrencyIndex() = getCurrencies().indexOf(account.currency) 
+    fun getCurrentCurrencyIndex() = getCurrencies().indexOf(account.currency)
     
     fun logout() { apiRepository.logout() }
     suspend fun login(email: String, password: String) = apiRepository.login(email, password)

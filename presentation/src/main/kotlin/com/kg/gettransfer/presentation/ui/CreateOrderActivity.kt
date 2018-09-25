@@ -35,16 +35,18 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
-import com.kg.gettransfer.domain.model.Account
 
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
+
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.UserModel
+
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.view.CreateOrderView
 
@@ -287,11 +289,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
     }
 
-    override fun setAccount(account: Account) {
-        tvName.setText(account.fullName ?: "")
-        tvPhone.setText(account.phone ?: "")
-        if (account.loggedIn) {
-            etEmail.setText(account.email)
+    override fun setUser(user: UserModel) {
+        tvName.setText(user.name ?: "")
+        tvPhone.setText(user.phone ?: "")
+        if(user.email != null) {
+            etEmail.setText(user.email)
             etEmail.isEnabled = false
         }
     }

@@ -7,6 +7,8 @@ import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.domain.model.Account
 
+import com.kg.gettransfer.presentation.model.UserModel
+
 //import com.google.android.gms.maps.GoogleMap.OnCameraMoveListener
 
 @StateStrategyType(OneExecutionStateStrategy::class)
@@ -15,5 +17,5 @@ interface MainView: BaseView {
     fun setMapPoint(point: LatLng)
     fun moveCenterMarker(point: LatLng)
     fun setAddressFrom(address: String)
-    fun setAccount(account: Account)
+    fun setUser(user: UserModel)
 }

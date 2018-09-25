@@ -53,7 +53,7 @@ class PreferencesImpl(context: Context): Preferences {
             editor.putString(ACCOUNT_PHONE, value.phone)
             editor.putString(ACCOUNT_LOCALE, value.locale?.language)
             editor.putString(ACCOUNT_CURRENCY, value.currency?.currencyCode)
-            editor.putString(ACCOUNT_DISTANCE_UNIT, value.distanceUnit.name)
+            editor.putString(ACCOUNT_DISTANCE_UNIT, value.distanceUnit?.name)
             editor.putString(ACCOUNT_FULL_NAME, value.fullName)
             editor.putStringSet(ACCOUNT_GROUPS, value.groups?.toSet())
             editor.putBoolean(ACCOUNT_TERMS_ACCEPTED, value.termsAccepted)

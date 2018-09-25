@@ -9,6 +9,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.UserModel
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
@@ -18,7 +19,7 @@ interface CreateOrderView: BaseView {
     fun setTransportTypes(transportTypes: List<TransportTypeModel>)
     fun setCurrencies(currencies: List<CurrencyModel>)
     fun setRoute(routeModel: RouteModel)
-    fun setAccount(account: Account)
+    fun setUser(user: UserModel)
     fun setPassengers(count: Int)
     fun setChildren(count: Int)
     fun setCurrency(currency: String)

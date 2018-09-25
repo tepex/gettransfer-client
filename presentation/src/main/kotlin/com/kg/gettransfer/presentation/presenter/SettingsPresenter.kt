@@ -52,17 +52,17 @@ class SettingsPresenter(cc: CoroutineContexts,
         val localeModel = locales.find { it.delegate.language == locale.getLanguage() }
         viewState.setLocale(localeModel?.name ?: "")
             
-        val currency = systemInteractor.account.currency
+        val currency = systemInteractor.currency
         val currencyModel = currencies.find { it.delegate == currency }
         viewState.setCurrency(currencyModel?.name ?: "")           
-        viewState.setDistanceUnit(systemInteractor.account.distanceUnit.name)
+        viewState.setDistanceUnit(systemInteractor.distanceUnit.name)
             
-        viewState.setLogoutButtonEnabled(systemInteractor.account.loggedIn)
+        viewState.setLogoutButtonEnabled(systemInteractor.account.email != null)
     }
     
     fun changeCurrency(selected: Int) {
         val currencyModel = currencies.get(selected)
-        systemInteractor.account.currency = currencyModel.delegate
+        systemInteractor.currency = currencyModel.delegate
         viewState.setCurrency(currencyModel.name)
         saveAccount()
     }
@@ -76,7 +76,7 @@ class SettingsPresenter(cc: CoroutineContexts,
 
     fun changeDistanceUnit(selected: Int) {
         val distanceUnit = distanceUnits.get(selected)
-        systemInteractor.account.distanceUnit = distanceUnit.delegate
+        systemInteractor.distanceUnit = distanceUnit.delegate
         viewState.setDistanceUnit(distanceUnit.name)
         saveAccount()
     }

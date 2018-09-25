@@ -53,7 +53,7 @@ class Mappers {
                               account.phone,
                               account.locale?.language,
                               account.currency?.currencyCode,
-                              account.distanceUnit.name,
+                              account.distanceUnit?.name,
                               account.fullName,
                               account.groups,
                               account.termsAccepted)
