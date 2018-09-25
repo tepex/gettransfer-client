@@ -21,6 +21,7 @@ class CarrierTripsPresenter(cc: CoroutineContexts,
     private var trips: List<CarrierTripModel>? = null
 
     override fun onFirstViewAttach() {
+        if(!systemInteractor.account.loggedIn) onPassengerModeClick()
         systemInteractor.putLastMode(Screens.CARRIER_MODE)
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
@@ -37,6 +38,11 @@ class CarrierTripsPresenter(cc: CoroutineContexts,
     fun onTripSelected(tripId: Long){
         carrierTripInteractor.selectedTripId = tripId
         router.navigateTo(Screens.TRIP_DETAILS)
+    }
+
+    fun checkLoggedIn(){
+        systemInteractor.getAccount()
+        if(!systemInteractor.account.loggedIn) onPassengerModeClick()
     }
 
     fun onCarrierTripsClick()   { router.navigateTo(Screens.CARRIER_TRIPS) }

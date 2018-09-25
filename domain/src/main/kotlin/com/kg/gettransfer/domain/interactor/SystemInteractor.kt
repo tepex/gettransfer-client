@@ -34,5 +34,6 @@ class SystemInteractor(private val apiRepository: ApiRepository) {
     fun logout() { apiRepository.logout() }
     suspend fun login(email: String, password: String) = apiRepository.login(email, password)
     suspend fun putAccount() { apiRepository.putAccount(account) }
+    fun getAccount() { account = apiRepository.getAccount() }
     fun putLastMode(mode: String) { apiRepository.putLastMode(mode) }
 }
