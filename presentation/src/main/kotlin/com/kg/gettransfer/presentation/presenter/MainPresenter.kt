@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.content.Context
-
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
@@ -40,9 +38,10 @@ class MainPresenter(cc: CoroutineContexts,
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         utils.launchAsyncTryCatch( {
             // @TODO выкинуть эту порнографию в …
-            if(GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(viewState as Context) == ConnectionResult.SUCCESS)
+            //if(GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable() == ConnectionResult.SUCCESS)
+            
                 updateCurrentLocationAsync()
-            else viewState.setError(true, R.string.err_location_service_not_available)
+            //else viewState.setError(true, R.string.err_location_service_not_available)
         }, { e -> Timber.e(e) } )
         
         // Создать листенер для обновления текущей локации

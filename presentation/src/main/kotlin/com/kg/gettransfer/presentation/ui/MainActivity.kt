@@ -5,8 +5,8 @@ import android.content.Intent
 import android.content.res.Configuration
 
 import android.graphics.Color
-import android.os.Build
 
+import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
@@ -146,11 +146,13 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 	}
 
-	override fun getPresenter(): MainPresenter = presenter
+    override fun getPresenter(): MainPresenter = presenter
 
 	@CallSuper
 	protected override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+		
+		
 		
 		setContentView(R.layout.activity_main)
 
