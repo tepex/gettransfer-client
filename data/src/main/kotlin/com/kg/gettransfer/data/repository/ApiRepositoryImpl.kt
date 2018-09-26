@@ -1,13 +1,14 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.Api
-import com.kg.gettransfer.data.Preferences
 import com.kg.gettransfer.data.TransportTypesDeserializer
 import com.kg.gettransfer.data.model.*
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.*
+
 import com.kg.gettransfer.domain.repository.ApiRepository
+import com.kg.gettransfer.domain.repository.Preferences
 
 import com.google.gson.GsonBuilder
 
@@ -89,10 +90,6 @@ class ApiRepositoryImpl(private val preferences: Preferences,
             return try { api.putAccount(apiAccount).await() } catch(e2: Exception) { throw apiException(e2) }
         }
     }
-
-    override fun getLastMode() = preferences.lastMode
-
-    override fun putLastMode(mode: String) { preferences.lastMode = mode }
 
     /* Not used now.
     override suspend fun createAccount(account: Account) {

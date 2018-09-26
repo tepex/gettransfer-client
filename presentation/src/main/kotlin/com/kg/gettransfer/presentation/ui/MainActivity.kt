@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+
 import android.graphics.Color
 import android.os.Build
 
@@ -37,7 +38,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 
 import com.kg.gettransfer.extensions.hideKeyboard
@@ -65,7 +65,6 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     private lateinit var drawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
 
-    private val locationInteractor: LocationInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
     
     private var isFirst = true
@@ -75,7 +74,6 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
                                                              router,
                                                              systemInteractor,
-                                                             locationInteractor,
                                                              routeInteractor)
     
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
@@ -304,7 +302,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 	override fun setAddressFrom(address: String) { searchFrom.text = address }
 	
 	override fun setUser(user: UserModel) {
-	    if(user == null) {
+	    if(user.email == null) {
 			navHeaderName.visibility = View.GONE
 			navHeaderEmail.visibility = View.GONE
 			navLogin.visibility = View.VISIBLE

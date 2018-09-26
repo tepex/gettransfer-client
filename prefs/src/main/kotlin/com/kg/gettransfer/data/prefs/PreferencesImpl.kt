@@ -2,11 +2,12 @@ package com.kg.gettransfer.data.prefs
 
 import android.content.Context
 
-import com.kg.gettransfer.data.Preferences
 import com.kg.gettransfer.data.model.*
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.DistanceUnit
+
+import com.kg.gettransfer.domain.repository.Preferences
 
 import java.util.Currency
 import java.util.Locale

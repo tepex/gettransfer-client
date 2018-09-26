@@ -1,15 +1,18 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.content.Context
+
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
@@ -25,7 +28,6 @@ import timber.log.Timber
 class MainPresenter(cc: CoroutineContexts,
                     router: Router,
                     systemInteractor: SystemInteractor,
-                    private val locationInteractor: LocationInteractor,
                     private val routeInteractor: RouteInteractor): BasePresenter<MainView>(cc, router, systemInteractor) {
 
     private lateinit var lastAddressPoint: LatLng
@@ -35,11 +37,11 @@ class MainPresenter(cc: CoroutineContexts,
     private var available: Boolean = false
 
     override fun onFirstViewAttach() {
-        systemInteractor.putLastMode(Screens.PASSENGER_MODE)
+        systemInteractor.lastMode = Screens.PASSENGER_MODE
         utils.launchAsyncTryCatch( {
-            // Проверка досупности сервиса геолокации
-            available = utils.asyncAwait { locationInteractor.checkLocationServicesAvailability() }
-            if(available) updateCurrentLocationAsync()
+            // @TODO выкинуть эту порнографию в …
+            if(GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(viewState as Context) == ConnectionResult.SUCCESS)
+                updateCurrentLocationAsync()
             else viewState.setError(true, R.string.err_location_service_not_available)
         }, { e -> Timber.e(e) } )
         
@@ -102,7 +104,7 @@ class MainPresenter(cc: CoroutineContexts,
     fun onSettingsClick()       { router.navigateTo(Screens.SETTINGS) }
     fun onRequestsClick()       { router.navigateTo(Screens.REQUESTS) }
     fun onBecomeACarrierClick() {
-        if(systemInteractor.account.loggedIn) {
+        if(systemInteractor.isLoggedIn()) {
             if(systemInteractor.account.groups!!.indexOf("carrier/driver") >= 0) router.navigateTo(Screens.CARRIER_MODE)
             else router.navigateTo(Screens.REG_CARRIER)
         }
