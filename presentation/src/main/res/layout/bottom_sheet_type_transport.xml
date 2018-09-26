@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:behavior_hideable="true"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/colorWhite"
+    android:clickable="true"
+    app:behavior_hideable="true"
     app:behavior_skipCollapsed="true"
-    android:clickable="true">
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
     <View
         android:id="@+id/view"
@@ -27,12 +27,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        tools:text="Economy"
-        android:textStyle="bold"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:textColor="@android:color/black"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>
+        tools:text="Economy" />
 
     <ImageView
         android:id="@+id/ivTypeTransfer"
@@ -124,12 +124,12 @@
 
     <Button
         android:id="@+id/btnOk"
-        android:layout_width="336dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/btn_bg_rounded"
         android:text="@android:string/ok"
         android:textColor="@color/colorWhite"
