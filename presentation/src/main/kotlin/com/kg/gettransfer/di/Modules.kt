@@ -61,9 +61,9 @@ val domainModule = module {
 	single { GeoRepositoryImpl(get()) as GeoRepository }
 	single { RouteRepositoryImpl(get()) as RouteRepository }
 	
-	single { RouteInteractor(get()) }
+	single { RouteInteractor(get(), get()) }
 	single { SystemInteractor(get(), get(), get()) }
-	single { TransferInteractor(get(), get()) }
+	single { TransferInteractor(get()) }
 	single { CarrierTripInteractor(get()) }
 }
 

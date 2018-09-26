@@ -11,6 +11,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
+import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
@@ -32,6 +33,7 @@ import timber.log.Timber
 class TransferDetailsPresenter(cc: CoroutineContexts,
                                router: Router,
                                systemInteractor: SystemInteractor,
+                               private val routeInteractor: RouteInteractor,
                                private val transferInteractor: TransferInteractor): BasePresenter<TransferDetailsView>(cc, router, systemInteractor) {
 
     private var transfer: Transfer? = null
@@ -58,9 +60,7 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
             
             val from = transfer!!.from
             val to = transfer!!.to!!
-	        val routeInfo = utils.asyncAwait {
-	            transferInteractor.getRouteInfo(from.point, to.point, true, false)
-	        }
+	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point, to.point, true, false) }
 	        routeModel = Mappers.getRouteModel(routeInfo.distance,
                                                systemInteractor.distanceUnit,
                                                routeInfo.polyLines,

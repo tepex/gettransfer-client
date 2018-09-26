@@ -1,22 +1,32 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
 import android.support.v7.widget.Toolbar
+
 import android.view.MotionEvent
 import android.view.View
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.interactor.RouteInteractor
+
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.RouteModel
+
 import com.kg.gettransfer.presentation.presenter.CarrierTripDetailsPresenter
+
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
+
 import kotlinx.android.synthetic.main.activity_carrier_transfer_details.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.view.*
+
 import org.koin.android.ext.android.inject
 
 class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsView{
@@ -24,14 +34,14 @@ class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsVie
     internal lateinit var presenter: CarrierTripDetailsPresenter
 
     private val carrierTripInteractor: CarrierTripInteractor by inject()
-    private val transferInteractor: TransferInteractor by inject()
+    private val routeInteractor: RouteInteractor by inject()
 
     @ProvidePresenter
     fun createCarrierTripDetailsPresenter(): CarrierTripDetailsPresenter = CarrierTripDetailsPresenter(coroutineContexts,
                                                                                                        router,
                                                                                                        systemInteractor,
                                                                                                        carrierTripInteractor,
-                                                                                                       transferInteractor)
+                                                                                                       routeInteractor)
 
     override fun getPresenter(): CarrierTripDetailsPresenter = presenter
 

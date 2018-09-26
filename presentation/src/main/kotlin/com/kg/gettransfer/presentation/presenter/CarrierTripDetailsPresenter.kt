@@ -1,16 +1,22 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
+
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
+import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
+
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.RouteModel
+
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
+
 import ru.terrakok.cicerone.Router
 
 @InjectViewState
@@ -18,7 +24,7 @@ class CarrierTripDetailsPresenter(cc: CoroutineContexts,
                                   router: Router,
                                   systemInteractor: SystemInteractor,
                                   private val carrierTripInteractor: CarrierTripInteractor,
-                                  private val transferInteractor: TransferInteractor) : BasePresenter<CarrierTripDetailsView>(cc, router, systemInteractor) {
+                                  private val routeInteractor: RouteInteractor): BasePresenter<CarrierTripDetailsView>(cc, router, systemInteractor) {
 
     private var selectedTripId: Long? = null
     private lateinit var trip: CarrierTripModel
@@ -33,7 +39,7 @@ class CarrierTripDetailsPresenter(cc: CoroutineContexts,
                     systemInteractor.locale,
                     systemInteractor.distanceUnit)
 
-            val routeInfo = transferInteractor.getRouteInfo(tripInfo.from.point, tripInfo.to.point, false, false)
+            val routeInfo = routeInteractor.getRouteInfo(tripInfo.from.point, tripInfo.to.point, false, false)
             routeModel = Mappers.getRouteModel(routeInfo.distance,
                     systemInteractor.distanceUnit,
                     routeInfo.polyLines,

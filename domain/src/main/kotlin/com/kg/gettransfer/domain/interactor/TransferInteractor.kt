@@ -6,10 +6,8 @@ import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Trip
 
 import com.kg.gettransfer.domain.repository.ApiRepository
-import com.kg.gettransfer.domain.repository.RouteRepository
 
-class TransferInteractor(private val apiRepository: ApiRepository,
-                         private val routeRepository: RouteRepository) {
+class TransferInteractor(private val apiRepository: ApiRepository) {
     var selectedId: Long = -1
     var transfer: Transfer? = null
     
@@ -17,9 +15,6 @@ class TransferInteractor(private val apiRepository: ApiRepository,
     private var activeTransfers: List<Transfer>? = null
     private var completedTransfers: List<Transfer>? = null
     
-    suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean) = 
-        routeRepository.getRouteInfo(from, to, withPrices, returnWay)
-
     suspend fun createTransfer(from: GTAddress,
                                to: GTAddress,
                                tripTo: Trip,
