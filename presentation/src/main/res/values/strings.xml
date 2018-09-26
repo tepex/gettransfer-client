@@ -323,5 +323,6 @@
     <string name="remains_to_pay">Remain to pay</string>
     <string name="driver_will_meet_you">*Driver will meet you with a name sign</string>
     <string name="example_flight">Example: BA 2243</string>
+    <string name="number_entrance">Number entrance</string>
 
 </resources>

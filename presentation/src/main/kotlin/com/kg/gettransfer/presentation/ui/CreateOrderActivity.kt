@@ -36,9 +36,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
-import com.kg.gettransfer.extensions.hideKeyboard
-import com.kg.gettransfer.extensions.showKeyboard
-
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 
@@ -178,11 +175,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         bsOrder.isHideable = false
     }
 
-    private fun showKeyboard() {
-        val view = currentFocus
-        view?.showKeyboard()
-    }
-
     private fun toggleSheetOrder() {
         if (bsOrder.state != BottomSheetBehavior.STATE_EXPANDED) {
             bsOrder.state = BottomSheetBehavior.STATE_EXPANDED
@@ -225,9 +217,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             false
         })
         popupWindowComment.setOnDismissListener {
-            val view = currentFocus
-            view?.hideKeyboard()
-            view?.clearFocus()
+            hideKeyboard()
             layoutShadow.visibility = View.GONE
             toggleSheetOrder()
         }

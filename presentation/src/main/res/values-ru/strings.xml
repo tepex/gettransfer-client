@@ -226,5 +226,6 @@
     <string name="remains_to_pay">Осталось оплатить</string>
     <string name="driver_will_meet_you">*Водитель встретит вас с табличкой</string>
     <string name="example_flight">Например: BA 2243</string>
+    <string name="number_entrance">Номер подъезда</string>
 
 </resources>

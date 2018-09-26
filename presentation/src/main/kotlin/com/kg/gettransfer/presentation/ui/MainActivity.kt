@@ -19,9 +19,9 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
 
 import android.transition.Fade
-import android.view.Gravity
-import android.view.MenuItem
-import android.view.View
+import android.view.*
+import android.widget.LinearLayout
+import android.widget.PopupWindow
 
 import android.widget.TextView
 
@@ -40,14 +40,13 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 
-import com.kg.gettransfer.extensions.hideKeyboard
-
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.UserModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
 
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.popup_entrance.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_navigation.*
 
@@ -178,9 +177,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 			override fun onDrawerStateChanged(newState: Int) {
 				super.onDrawerStateChanged(newState)
 				if(newState == DrawerLayout.STATE_SETTLING) {
-				    val view = currentFocus
-				    view?.hideKeyboard()
-				    view?.clearFocus()
+				    hideKeyboard()
 				}
 			}
 		})
@@ -197,9 +194,34 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 		searchFrom.setOnClickListener { presenter.onSearchClick(Pair(searchFrom.text, searchTo.text)) }
 		searchTo.setOnClickListener { presenter.onSearchClick(Pair(searchFrom.text, searchTo.text)) }
 
+		btnEntrance.setOnClickListener {
+			showKeyboard()
+			showPopupEntrance()
+		}
+
 		val fade = Fade()
         fade.duration = FADE_DURATION
 		window.setExitTransition(fade)
+	}
+
+	private fun hideSearch() {
+		search.visibility = View.INVISIBLE
+	}
+
+	private fun showPopupEntrance() {
+		val layoutEntrance = LayoutInflater.from(applicationContext).inflate(R.layout.popup_entrance, popupEntrance)
+
+		val popupEntrance = PopupWindow(layoutEntrance, LinearLayout.LayoutParams.MATCH_PARENT,
+										LinearLayout.LayoutParams.WRAP_CONTENT, true)
+		popupEntrance.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+		popupEntrance.inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
+		popupEntrance.showAtLocation(contentMain, Gravity.BOTTOM, 0, search.height + popupEntrance.height)
+
+		popupEntrance.setOnDismissListener { hideKeyboard() }
+	}
+
+	private fun showSearch() {
+		search.visibility = View.VISIBLE
 	}
 
 	@CallSuper
@@ -211,9 +233,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 	@CallSuper
 	protected override fun onResume() {
 		super.onResume()
-		val view = currentFocus
-		view?.hideKeyboard()
-		view?.clearFocus()
+		hideKeyboard()
 	}
 	
 	@CallSuper

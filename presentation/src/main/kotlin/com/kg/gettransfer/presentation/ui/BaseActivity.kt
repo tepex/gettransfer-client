@@ -21,6 +21,8 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.extensions.hideKeyboard
+import com.kg.gettransfer.extensions.showKeyboard
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.BasePresenter
@@ -76,7 +78,18 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     override fun setError(e: Throwable) {
         Timber.e(e)
         Utils.showError(this, false, getString(R.string.err_server, e.message))
-    }    
+    }
+
+    protected fun showKeyboard() {
+        val view = currentFocus
+        view?.showKeyboard()
+    }
+
+    protected fun hideKeyboard() {
+        val view = currentFocus
+        view?.hideKeyboard()
+        view?.clearFocus()
+    }
 }
 
 open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, Screens.NOT_USED) {
