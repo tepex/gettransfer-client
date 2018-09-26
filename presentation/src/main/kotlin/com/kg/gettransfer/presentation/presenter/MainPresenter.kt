@@ -4,12 +4,13 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.LocationInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
@@ -25,7 +26,6 @@ import timber.log.Timber
 class MainPresenter(cc: CoroutineContexts,
                     router: Router,
                     systemInteractor: SystemInteractor,
-                    private val locationInteractor: LocationInteractor,
                     private val routeInteractor: RouteInteractor): BasePresenter<MainView>(cc, router, systemInteractor) {
 
     private lateinit var lastAddressPoint: LatLng
@@ -37,10 +37,11 @@ class MainPresenter(cc: CoroutineContexts,
     override fun onFirstViewAttach() {
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         utils.launchAsyncTryCatch( {
-            // Проверка досупности сервиса геолокации
-            available = utils.asyncAwait { locationInteractor.checkLocationServicesAvailability() }
-            if(available) updateCurrentLocationAsync()
-            else viewState.setError(true, R.string.err_location_service_not_available)
+            // @TODO выкинуть эту порнографию в …
+            //if(GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable() == ConnectionResult.SUCCESS)
+            
+                updateCurrentLocationAsync()
+            //else viewState.setError(true, R.string.err_location_service_not_available)
         }, { e -> Timber.e(e) } )
         
         // Создать листенер для обновления текущей локации

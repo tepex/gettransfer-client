@@ -5,12 +5,14 @@ import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.DistanceUnit
 
 import com.kg.gettransfer.domain.repository.ApiRepository
+import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.Preferences
 
 import java.util.Currency
 import java.util.Locale
 
 class SystemInteractor(private val apiRepository: ApiRepository,
+                       private val geoRepository: GeoRepository,
                        private val preferences: Preferences) {
     private lateinit var configs: Configs
     lateinit var account: Account
@@ -18,7 +20,10 @@ class SystemInteractor(private val apiRepository: ApiRepository,
 
     var locale: Locale
         get() = account.locale ?: Locale.getDefault()
-        set(value) { account.locale = value }
+        set(value) {
+            account.locale = value
+            geoRepository.initGeocoder(value)
+        }
     var currency: Currency
         get() = account.currency ?: Currency.getInstance(locale)
         set(value) { account.currency = value }
@@ -34,7 +39,7 @@ class SystemInteractor(private val apiRepository: ApiRepository,
         apiRepository.coldStart()
         configs = apiRepository.getConfigs()
         account = apiRepository.getAccount()
-
+        geoRepository.initGeocoder(locale)
     }
     
     fun getTransportTypes()       = configs.transportTypes

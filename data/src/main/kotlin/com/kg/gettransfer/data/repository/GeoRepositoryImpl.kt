@@ -1,22 +1,56 @@
 package com.kg.gettransfer.data.repository
 
+import android.content.Context
+
 import android.location.Geocoder
+import android.location.Location
 
 import com.google.android.gms.common.data.DataBufferUtils
 
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.FusedLocationProviderClient
+
 import com.google.android.gms.location.places.GeoDataClient
+import com.google.android.gms.location.places.Places
 import com.google.android.gms.location.places.PlaceDetectionClient
 
 import com.google.android.gms.tasks.Tasks
 
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
+import com.kg.gettransfer.domain.model.Result
 
-import com.kg.gettransfer.domain.repository.AddressRepository
+import com.kg.gettransfer.domain.repository.GeoRepository
 
-class AddressRepositoryImpl(private val geocoder: Geocoder,
-                            private val gdClient: GeoDataClient,
-                            private val pdClient: PlaceDetectionClient): AddressRepository {
+import java.util.Locale
+
+import kotlin.coroutines.experimental.suspendCoroutine
+
+import timber.log.Timber
+
+class GeoRepositoryImpl(private val context: Context): GeoRepository {
+    private lateinit var geocoder: Geocoder
+    private val locationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+    private val gdClient = Places.getGeoDataClient(context)
+    private val pdClient = Places.getPlaceDetectionClient(context)
+ 
+	override fun initGeocoder(locale: Locale) {
+	    Timber.d("init geocoder: $locale")
+	    geocoder = Geocoder(context, locale)
+	}
+
+    override suspend fun getCurrentLocation(): Result<Point> {
+        val location: Location? = try {
+            suspendCoroutine { cont ->
+                locationProviderClient.lastLocation
+                    .addOnSuccessListener { location: Location? -> cont.resume(location) }
+                    .addOnFailureListener { cont.resumeWithException(it) }
+            }
+        } catch(e: Exception) { return Result(error = e) }
+        return if(location != null) Result(Point(location.latitude, location.longitude))
+        else Result(error = RuntimeException("Location not found"))
+    }
+
     override fun getAddressByLocation(point: Point): GTAddress {
         val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
         val addr = list?.firstOrNull()?.thoroughfare + " " + list?.firstOrNull()?.subThoroughfare
