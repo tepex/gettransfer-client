@@ -25,7 +25,7 @@ class SystemInteractor(private val apiRepository: ApiRepository,
             geoRepository.initGeocoder(value)
         }
     var currency: Currency
-        get() = account.currency ?: Currency.getInstance(locale)
+        get() = account.currency ?: Currency.getInstance("USD")
         set(value) { account.currency = value }
     var distanceUnit: DistanceUnit
         get() = account.distanceUnit ?: DistanceUnit.Km
@@ -49,7 +49,14 @@ class SystemInteractor(private val apiRepository: ApiRepository,
     fun getCurrentCurrencyIndex() = getCurrencies().indexOf(account.currency)
     fun isLoggedIn()              = account.email != null
     
-    fun logout() { apiRepository.logout() }
-    suspend fun login(email: String, password: String) = apiRepository.login(email, password)
+    fun logout() {
+        apiRepository.logout()
+        account = apiRepository.getAccount()
+    }
+    
+    suspend fun login(email: String, password: String) {
+        account = apiRepository.login(email, password)
+    }
+    
     suspend fun putAccount() { apiRepository.putAccount(account) }
 }
