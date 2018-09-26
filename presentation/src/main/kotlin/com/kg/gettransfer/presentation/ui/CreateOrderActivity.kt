@@ -5,6 +5,8 @@ import android.app.TimePickerDialog
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.os.Build
 
 import android.os.Bundle
 
@@ -20,6 +22,7 @@ import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 
 import android.widget.LinearLayout
@@ -103,14 +106,23 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_create_order)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.statusBarColor = Color.WHITE
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        } else{
+            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            viewGradient.visibility = View.GONE
+        }
+
         _mapView = mapView
         initGoogleMap(savedInstanceState)
 
-        setSupportActionBar(toolbar as Toolbar)
+        /*setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
+        (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }*/
 
         rvTransferType.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvTransferType.isNestedScrollingEnabled = false

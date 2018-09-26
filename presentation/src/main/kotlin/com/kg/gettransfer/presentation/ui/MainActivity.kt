@@ -22,6 +22,7 @@ import android.transition.Fade
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 
 import android.widget.TextView
 
@@ -156,8 +157,11 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 		
 		setContentView(R.layout.activity_main)
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			window.statusBarColor = Color.TRANSPARENT
+		} else{
+			window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+			viewGradient.visibility = View.GONE
 		}
 
 		_mapView = mapView
