@@ -57,7 +57,7 @@ class SettingsPresenter(cc: CoroutineContexts,
         viewState.setCurrency(currencyModel?.name ?: "")           
         viewState.setDistanceUnit(systemInteractor.distanceUnit.name)
             
-        viewState.setLogoutButtonEnabled(systemInteractor.account.email != null)
+        viewState.setLogoutButtonEnabled(systemInteractor.isLoggedIn())
     }
     
     fun changeCurrency(selected: Int) {

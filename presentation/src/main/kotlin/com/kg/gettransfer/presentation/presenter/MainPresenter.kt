@@ -35,7 +35,7 @@ class MainPresenter(cc: CoroutineContexts,
     private var available: Boolean = false
 
     override fun onFirstViewAttach() {
-        systemInteractor.putLastMode(Screens.PASSENGER_MODE)
+        systemInteractor.lastMode = Screens.PASSENGER_MODE
         utils.launchAsyncTryCatch( {
             // Проверка досупности сервиса геолокации
             available = utils.asyncAwait { locationInteractor.checkLocationServicesAvailability() }
@@ -102,7 +102,7 @@ class MainPresenter(cc: CoroutineContexts,
     fun onSettingsClick()       { router.navigateTo(Screens.SETTINGS) }
     fun onRequestsClick()       { router.navigateTo(Screens.REQUESTS) }
     fun onBecomeACarrierClick() {
-        if(systemInteractor.account.loggedIn) {
+        if(systemInteractor.isLoggedIn()) {
             if(systemInteractor.account.groups!!.indexOf("carrier/driver") >= 0) router.navigateTo(Screens.CARRIER_MODE)
             else router.navigateTo(Screens.REG_CARRIER)
         }

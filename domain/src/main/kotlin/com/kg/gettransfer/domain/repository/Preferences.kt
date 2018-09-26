@@ -1,4 +1,4 @@
-package com.kg.gettransfer.data
+package com.kg.gettransfer.domain.repository
 
 import com.kg.gettransfer.domain.model.Account
 

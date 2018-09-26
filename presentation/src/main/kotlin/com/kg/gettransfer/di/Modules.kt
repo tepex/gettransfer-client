@@ -17,7 +17,6 @@ import com.google.android.gms.location.places.Places
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.data.Preferences
 import com.kg.gettransfer.data.prefs.PreferencesImpl
 
 import com.kg.gettransfer.data.repository.AddressRepositoryImpl
@@ -30,6 +29,7 @@ import com.kg.gettransfer.domain.interactor.*
 import com.kg.gettransfer.domain.repository.AddressRepository
 import com.kg.gettransfer.domain.repository.ApiRepository
 import com.kg.gettransfer.domain.repository.LocationRepository
+import com.kg.gettransfer.domain.repository.Preferences
 
 import java.util.Locale
 
@@ -78,7 +78,7 @@ val domainModule = module {
 	
 	single { LocationInteractor(get()) }
 	single { RouteInteractor(get(), get()) }
-	single { SystemInteractor(get()) }
+	single { SystemInteractor(get(), get()) }
 	single { TransferInteractor(get()) }
 	single { CarrierTripInteractor(get()) }
 }

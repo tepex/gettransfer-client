@@ -304,7 +304,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 	override fun setAddressFrom(address: String) { searchFrom.text = address }
 	
 	override fun setUser(user: UserModel) {
-	    if(user == null) {
+	    if(user.email == null) {
 			navHeaderName.visibility = View.GONE
 			navHeaderEmail.visibility = View.GONE
 			navLogin.visibility = View.VISIBLE

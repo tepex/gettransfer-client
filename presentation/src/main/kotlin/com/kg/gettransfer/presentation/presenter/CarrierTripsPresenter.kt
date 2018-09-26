@@ -24,7 +24,7 @@ class CarrierTripsPresenter(cc: CoroutineContexts,
 
     override fun onFirstViewAttach() {
         checkLoggedIn()
-        systemInteractor.putLastMode(Screens.CARRIER_MODE)
+        systemInteractor.lastMode = Screens.CARRIER_MODE
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             trips = carrierTripInteractor.getCarrierTrips().map {
@@ -40,7 +40,6 @@ class CarrierTripsPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: CarrierTripsView) {
         super.attachView(view)
-        systemInteractor.getAccount()
         checkLoggedIn()
     }
 
@@ -49,8 +48,8 @@ class CarrierTripsPresenter(cc: CoroutineContexts,
         router.navigateTo(Screens.TRIP_DETAILS)
     }
 
-    fun checkLoggedIn(){
-        if(!systemInteractor.account.loggedIn) router.navigateTo(Screens.PASSENGER_MODE)
+    fun checkLoggedIn() {
+        if(!systemInteractor.isLoggedIn()) router.navigateTo(Screens.PASSENGER_MODE)
     }
 
     fun onCarrierTripsClick()   { router.navigateTo(Screens.CARRIER_TRIPS) }
