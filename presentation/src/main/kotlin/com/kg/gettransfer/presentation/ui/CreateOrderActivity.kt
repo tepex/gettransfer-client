@@ -113,6 +113,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 
         rvTransferType.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        rvTransferType.isNestedScrollingEnabled = false
 
         etYourPrice.onTextChanged { presenter.cost = it.toIntOrNull() }
         tvDateTimeTransfer.setOnClickListener { showDatePickerDialog() }
