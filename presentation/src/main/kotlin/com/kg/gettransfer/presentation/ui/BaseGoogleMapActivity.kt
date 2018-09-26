@@ -42,6 +42,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         val locale = systemInteractor.locale
         Locale.setDefault(locale)
         var config = Configuration()
+        @Suppress("DEPRECATION")
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N) config.locale = locale
         else config.setLocales(LocaleList(locale))
         createConfigurationContext(config) 

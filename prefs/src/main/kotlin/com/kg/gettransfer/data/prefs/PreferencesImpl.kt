@@ -62,7 +62,7 @@ class PreferencesImpl(context: Context): Preferences {
         }
 
     override var lastMode: String
-        get() = configsPrefs.getString(LAST_MODE, "")
+        get() = configsPrefs.getString(LAST_MODE, "")!!
         set(value) {
             val editor = configsPrefs.edit()
             editor.putString(LAST_MODE, value)
