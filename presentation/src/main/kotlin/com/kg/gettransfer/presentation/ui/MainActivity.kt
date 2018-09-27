@@ -3,8 +3,11 @@ package com.kg.gettransfer.presentation.ui
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Bitmap
 
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
 
 import android.os.Build
 import android.os.Bundle
@@ -17,6 +20,7 @@ import android.support.v4.widget.DrawerLayout
 
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
+import android.text.TextUtils
 
 import android.transition.Fade
 import android.view.*
@@ -39,6 +43,8 @@ import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.extensions.hideKeyboard
+import com.kg.gettransfer.extensions.showKeyboard
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.UserModel
@@ -47,6 +53,7 @@ import com.kg.gettransfer.presentation.view.MainView
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.popup_entrance.*
+import kotlinx.android.synthetic.main.popup_entrance.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_navigation.*
 
@@ -195,17 +202,12 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 		searchTo.setOnClickListener { presenter.onSearchClick(Pair(searchFrom.text, searchTo.text)) }
 
 		btnEntrance.setOnClickListener {
-			showKeyboard()
 			showPopupEntrance()
 		}
 
 		val fade = Fade()
         fade.duration = FADE_DURATION
 		window.setExitTransition(fade)
-	}
-
-	private fun hideSearch() {
-		search.visibility = View.INVISIBLE
 	}
 
 	private fun showPopupEntrance() {
@@ -217,11 +219,24 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 		popupEntrance.inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
 		popupEntrance.showAtLocation(contentMain, Gravity.BOTTOM, 0, search.height + popupEntrance.height)
 
-		popupEntrance.setOnDismissListener { hideKeyboard() }
-	}
+		layoutEntrance.etEntrance.showKeyboard()
 
-	private fun showSearch() {
-		search.visibility = View.VISIBLE
+		popupEntrance.setOnDismissListener { layoutEntrance.etEntrance.hideKeyboard() }
+
+        layoutEntrance.tvClose.setOnClickListener { popupEntrance.dismiss() }
+        layoutEntrance.tvReady.setOnClickListener {
+			presenter.setEntrance(layoutEntrance.etEntrance.text.toString().trim())
+			popupEntrance.dismiss()
+		}
+        layoutEntrance.etEntrance.onTextChanged {
+            if (TextUtils.isEmpty(it)) {
+				layoutEntrance.tvClose.visibility = View.VISIBLE
+				layoutEntrance.tvReady.visibility = View.INVISIBLE
+            } else {
+				layoutEntrance.tvClose.visibility = View.INVISIBLE
+				layoutEntrance.tvReady.visibility = View.VISIBLE
+            }
+        }
 	}
 
 	@CallSuper
@@ -235,11 +250,11 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 		super.onResume()
 		hideKeyboard()
 	}
-	
+
 	@CallSuper
 	override fun onBackPressed() {
 		if(drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START)
-		else super.onBackPressed() 
+		else super.onBackPressed()
 	}
 	
 	@CallSuper
@@ -339,4 +354,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 			navRequests.visibility = View.VISIBLE
 	    }
 	}
+
+    override fun setEntrance(entrance: String) {
+        searchFrom.text += "${getString(R.string.short_entrance)}$entrance"
+    }
 }

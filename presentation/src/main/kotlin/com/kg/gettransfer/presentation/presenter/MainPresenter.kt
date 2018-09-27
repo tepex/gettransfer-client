@@ -109,4 +109,8 @@ class MainPresenter(cc: CoroutineContexts,
         }
         else router.navigateTo(Screens.LOGIN)
     }
+
+    fun setEntrance(entrance: String) {
+        viewState.setEntrance(entrance)
+    }
 }

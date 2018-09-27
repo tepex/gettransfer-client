@@ -324,5 +324,8 @@
     <string name="driver_will_meet_you">*Driver will meet you with a name sign</string>
     <string name="example_flight">Example: BA 2243</string>
     <string name="number_entrance">Number entrance</string>
+    <string name="close">Close</string>
+    <string name="ready">Ready</string>
+    <string name="short_entrance">, en.</string>
 
 </resources>
