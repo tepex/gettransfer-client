@@ -7,8 +7,8 @@ buildscript {
 
 	ext {
 		kotlin_version        = "1.2.71"
-		coroutines_version    = "0.26.1"
-		gradle_version        = '3.3.0-alpha11'
+		coroutines_version    = "0.27.0"
+		gradle_version        = '3.3.0-alpha12'
 		gms_version           = "15.0.1"
 		jsr250_version        = "1.0"
 		timber_version        = "4.7.1"
