@@ -30,6 +30,7 @@ import android.widget.TextView
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.google.android.gms.maps.CameraUpdate
 
 import com.google.android.gms.maps.model.MapStyleOptions
 
@@ -43,8 +44,8 @@ import com.kg.gettransfer.extensions.showKeyboard
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
-
 import com.kg.gettransfer.presentation.model.CurrencyModel
+import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.UserModel
@@ -317,8 +318,16 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         //TODO сделать подсветку не заполненных полей
     }
 
-    override fun setRoute(routeModel: RouteModel) {
+    /*override fun setRoute(routeModel: RouteModel) {
         Utils.setPins(this, googleMap, routeModel)
+    }*/
+
+    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel) {
+        setPolyline(polyline, routeModel)
+    }
+
+    override fun centerRoute(cameraUpdate: CameraUpdate){
+        showTrack(cameraUpdate)
     }
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {

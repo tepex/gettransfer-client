@@ -6,6 +6,7 @@ import android.support.annotation.CallSuper
 import android.util.Patterns
 
 import com.arellomobile.mvp.InjectViewState
+import com.google.android.gms.maps.CameraUpdate
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.R.string.from
@@ -53,6 +54,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     private var dateTimeFormat: Format? = null
     private var transportTypes: List<TransportTypeModel>? = null
     private var routeModel: RouteModel? = null
+    private var track: CameraUpdate? = null
     
     var cost: Int? = null
     var date: Date = Date()
@@ -97,7 +99,11 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
             
             viewState.setTransportTypes(transportTypes!!)
-            viewState.setRoute(routeModel!!)
+
+            //viewState.setRoute(routeModel!!)
+            val polyline = Utils.getPolyline(routeModel!!)
+            track = polyline.track
+            viewState.setRoute(polyline, routeModel!!)
 	    }, { e -> viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }
@@ -113,7 +119,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
         viewState.setDateTimeTransfer(dateTimeFormat!!.format(date))
 	    transportTypes?.let { viewState.setTransportTypes(it) }
-	    routeModel?.let     { viewState.setRoute(it) }
+	    //routeModel?.let     { viewState.setRoute(it) }
     }
 
     fun changeCurrency(selected: Int) { viewState.setCurrency(currencies.get(selected).symbol) }
@@ -230,7 +236,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
 
     fun onCenterRouteClick() {
-        viewState.setRoute(routeModel!!)
+        //viewState.setRoute(routeModel!!)
+        viewState.centerRoute(track!!)
     }
 
     fun onBackClick() {

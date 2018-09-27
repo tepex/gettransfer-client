@@ -5,8 +5,10 @@ import android.widget.TextView
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import com.google.android.gms.maps.CameraUpdate
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
+import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.UserModel
@@ -18,7 +20,9 @@ import com.kg.gettransfer.domain.model.GTAddress
 interface CreateOrderView: BaseView {
     fun setTransportTypes(transportTypes: List<TransportTypeModel>)
     fun setCurrencies(currencies: List<CurrencyModel>)
-    fun setRoute(routeModel: RouteModel)
+    //fun setRoute(routeModel: RouteModel)
+    fun setRoute(polyline: PolylineModel, routeModel: RouteModel)
+    fun centerRoute(cameraUpdate: CameraUpdate)
     fun setUser(user: UserModel)
     fun setPassengers(count: Int)
     fun setChildren(count: Int)

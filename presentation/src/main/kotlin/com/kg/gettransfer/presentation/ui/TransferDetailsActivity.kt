@@ -21,6 +21,7 @@ import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
@@ -152,5 +153,11 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         layoutOfferTransportInfo.visibility = View.VISIBLE
     }
 
-    override fun setRoute(routeModel: RouteModel) { Utils.setPins(this, googleMap, routeModel) }
+    /*override fun setRoute(routeModel: RouteModel) {
+        Utils.setPins(this, googleMap, routeModel)
+    }*/
+
+    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel) {
+        setPolyline(polyline, routeModel)
+    }
 }

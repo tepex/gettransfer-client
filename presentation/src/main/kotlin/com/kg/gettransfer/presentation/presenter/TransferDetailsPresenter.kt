@@ -68,7 +68,9 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
                                                to.name,
                                                transferModel!!.dateTime)
 	        
-            viewState.setRoute(routeModel!!)
+            //viewState.setRoute(routeModel!!)
+            val polyline = Utils.getPolyline(routeModel!!)
+            viewState.setRoute(polyline, routeModel!!)
 	    }, { e -> Timber.e(e)
 	        viewState.setError(e)
         }, { viewState.blockInterface(false) })        
@@ -82,7 +84,7 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
                                                        systemInteractor.distanceUnit,
                                                        systemInteractor.getTransportTypes()))
         }
-        routeModel?.let { viewState.setRoute(it) }
+        //routeModel?.let { viewState.setRoute(it) }
         offerModel?.let { viewState.setOffer(it) }
     }
 }

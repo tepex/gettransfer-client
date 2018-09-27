@@ -36,6 +36,7 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.DistanceUnit
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
+import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import kotlinx.android.synthetic.main.activity_create_order.*
 
@@ -98,8 +99,27 @@ internal class Utils {
             if(distanceUnit == DistanceUnit.Mi) d = DistanceUnit.km2Mi(distance)
             return context.getString(R.string.distance, d, distanceUnit.name)
         }
+
+        fun getPolyline(routeModel: RouteModel): PolylineModel{
+            val mPoints = arrayListOf<LatLng>()
+            for(item in routeModel.polyLines) mPoints.addAll(PolyUtil.decode(item))
+
+            // Для построения упрощённого маршрута (меньше точек)
+            //val mPoints = PolyUtil.decode(routeInfo.overviewPolyline)
+
+            val line = PolylineOptions()
+
+            val latLngBuilder = LatLngBounds.Builder()
+            for(i in mPoints.indices) {
+                line.add(mPoints.get(i))
+                latLngBuilder.include(mPoints.get(i))
+            }
+            val track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150)
+
+            return PolylineModel(mPoints.get(0), mPoints.get(mPoints.size - 1), line, track)
+        }
         
-        fun setPins(activity: Activity, googleMap: GoogleMap, routeModel: RouteModel) {
+        /*fun setPins(activity: Activity, googleMap: GoogleMap, routeModel: RouteModel) {
             //Создание пинов с информацией
             val pinLayout = activity.layoutInflater.inflate(R.layout.view_maps_pin, null)
 
@@ -147,12 +167,12 @@ internal class Utils {
             }
             googleMap.addPolyline(line)
         
-            /*
+            *//*
             val sizeWidth = resources.displayMetrics.widthPixels
             val sizeHeight = mapView.height
             val latLngBounds = latLngBuilder.build()
             val track = CameraUpdateFactory.newLatLngBounds(latLngBounds, sizeWidth, sizeHeight, 150)
-            */
+            *//*
             val track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150)
             try { //googleMap.moveCamera(track)
             googleMap.animateCamera(track)}
@@ -172,7 +192,7 @@ internal class Utils {
             v.layout(v.left, v.top, v.right, v.bottom)
             v.draw(Canvas(bitmap))
             return bitmap
-        }
+        }*/
 	}
 }
 

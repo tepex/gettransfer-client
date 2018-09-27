@@ -1,20 +1,30 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.Canvas
 
 import android.os.Build
 import android.os.Bundle
 import android.os.LocaleList
 
 import android.support.annotation.CallSuper
+import android.support.v4.content.ContextCompat
+import android.view.View
+import android.widget.RelativeLayout
+import com.google.android.gms.maps.CameraUpdate
 
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
-
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.MarkerOptions
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
+import com.kg.gettransfer.presentation.model.PolylineModel
+import com.kg.gettransfer.presentation.model.RouteModel
+import kotlinx.android.synthetic.main.view_maps_pin.view.*
 
 import java.util.Locale
 
@@ -102,5 +112,62 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     protected open fun customizeGoogleMaps() {
         googleMap.uiSettings.setRotateGesturesEnabled(false)
         googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
+    }
+
+    protected fun setPolyline(polyline: PolylineModel, routeModel: RouteModel){
+        val pinLayout = layoutInflater.inflate(R.layout.view_maps_pin, null)
+
+        pinLayout.tvPlace.text = routeModel.from
+        pinLayout.tvInfo.text = routeModel.dateTime
+        pinLayout.tvPlaceMirror.text = routeModel.from
+        pinLayout.tvInfoMirror.text = routeModel.dateTime
+        pinLayout.imgPin.setImageResource(R.drawable.ic_map_label_a)
+        val bmPinA = createBitmapFromView(pinLayout)
+
+        val distance = Utils.formatDistance(this, routeModel.distance, routeModel.distanceUnit)
+        pinLayout.tvPlace.text = routeModel.to
+        pinLayout.tvInfo.text = distance
+        pinLayout.tvPlaceMirror.text = routeModel.to
+        pinLayout.tvInfoMirror.text = distance
+        pinLayout.imgPin.setImageResource(R.drawable.ic_map_label_b)
+        val bmPinB = createBitmapFromView(pinLayout)
+
+        val startMakerOptions = MarkerOptions()
+                .position(polyline.startPoint)
+                .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
+        val endMakerOptions = MarkerOptions()
+                .position(polyline.finishPoint)
+                .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
+
+        polyline.line.width(10f).color(ContextCompat.getColor(this, R.color.colorPolyline))
+
+        googleMap.addMarker(startMakerOptions)
+        googleMap.addMarker(endMakerOptions)
+        googleMap.addPolyline(polyline.line)
+
+        try {
+            googleMap.moveCamera(polyline.track)
+            //showTrack(polyline.track)
+        }
+        catch(e: Exception) { Timber.e(e) }
+    }
+
+    protected fun showTrack (track: CameraUpdate){
+        googleMap.animateCamera(track)
+    }
+
+    private fun createBitmapFromView(v: View): Bitmap {
+        v.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT)
+        v.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+        v.layout(0, 0, v.measuredWidth, v.measuredHeight)
+        val bitmap = Bitmap.createBitmap(v.measuredWidth,
+                v.measuredHeight,
+                Bitmap.Config.ARGB_8888)
+
+        v.layout(v.left, v.top, v.right, v.bottom)
+        v.draw(Canvas(bitmap))
+        return bitmap
     }
 }

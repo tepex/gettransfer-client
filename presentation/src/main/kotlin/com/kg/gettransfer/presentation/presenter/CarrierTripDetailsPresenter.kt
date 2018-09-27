@@ -14,6 +14,7 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
 
@@ -48,7 +49,9 @@ class CarrierTripDetailsPresenter(cc: CoroutineContexts,
                     trip.dateTime)
 
             viewState.setTripInfo(trip)
-            viewState.setRoute(routeModel!!)
+            //viewState.setRoute(routeModel!!)
+            val polyline = Utils.getPolyline(routeModel!!)
+            viewState.setRoute(polyline, routeModel!!)
         }, { e ->
             if (e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
             else viewState.setError(e)
