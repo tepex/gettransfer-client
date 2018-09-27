@@ -1,13 +1,12 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.Api
+import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.TransportTypesDeserializer
 import com.kg.gettransfer.data.model.*
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.*
-
-import com.kg.gettransfer.domain.repository.Preferences
 
 import com.google.gson.GsonBuilder
 
@@ -90,7 +89,7 @@ class ApiRepositoryImpl(private val preferences: Preferences,
                 .create(Api::class.java)
     }
 
-    private fun initUrl(urlIndex: Int){
+    fun initUrl(urlIndex: Int) {
         url = apiUrls[urlIndex]
         apiKey = apiKeys[urlIndex]
     }
@@ -150,7 +149,7 @@ class ApiRepositoryImpl(private val preferences: Preferences,
     }
     
     fun logout() {
-        preferences.accessToken = Preferences.INVALID_TOKEN
+        preferences.accessToken = PreferencesCache.INVALID_TOKEN
         preferences.cleanAccount()
     }
     
