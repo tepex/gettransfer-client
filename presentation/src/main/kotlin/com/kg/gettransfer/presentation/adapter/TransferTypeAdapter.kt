@@ -24,7 +24,8 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
             tvTransferType.setText(item.nameId!!)
             tvNumberPersonsTransfer.text = context.getString(R.string.count_persons_and_baggage, item.paxMax)
             tvCountBaggage.text = context.getString(R.string.count_persons_and_baggage, item.luggageMax)
-            tvPriceFrom.text = context.getString(R.string.price_from, item.price)
+            if (item.price == null) tvPriceFrom.visibility = View.GONE
+            else tvPriceFrom.text = context.getString(R.string.price_from, item.price)
 
             ivTransferType.setImageResource(item.imageId!!)
             cbTransferType.isChecked = item.checked

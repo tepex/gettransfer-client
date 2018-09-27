@@ -37,6 +37,7 @@ import com.kg.gettransfer.domain.model.DistanceUnit
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.RouteModel
+import kotlinx.android.synthetic.main.activity_create_order.*
 
 import java.util.Locale
 import java.util.regex.Pattern
@@ -152,8 +153,9 @@ internal class Utils {
             val latLngBounds = latLngBuilder.build()
             val track = CameraUpdateFactory.newLatLngBounds(latLngBounds, sizeWidth, sizeHeight, 150)
             */
-            val track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 15)
-            try { googleMap.moveCamera(track) }
+            val track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150)
+            try { //googleMap.moveCamera(track)
+            googleMap.animateCamera(track)}
             catch(e: Exception) { Timber.e(e) }
         }
         

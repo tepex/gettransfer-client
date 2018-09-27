@@ -24,14 +24,14 @@ object Mappers {
                                               null,
                                               user.termsAccepted)
     
-    fun getTransportTypesModels(transportTypes: List<TransportType>, prices: Map<String, String>) = 
+    fun getTransportTypesModels(transportTypes: List<TransportType>, prices: Map<String, String>?) =
         transportTypes.map {
             val id = it.id
             val nameRes = R.string::class.members.find( { it.name == "transport_type_$id" } )
             val nameId = (nameRes?.call() as Int?) ?: R.string.transport_type_unknown
             val imageRes = R.drawable::class.members.find( { it.name == "ic_transport_type_$id" } )
             val imageId = (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_unknown
-            TransportTypeModel(id, nameId, imageId, it.paxMax, it.luggageMax, prices.get(id)!!)
+            TransportTypeModel(id, nameId, imageId, it.paxMax, it.luggageMax, prices?.get(id))
         }
     
     fun getCurrenciesModels(currencies: List<Currency>) = currencies.map { CurrencyModel(it) }

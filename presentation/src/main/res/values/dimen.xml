@@ -88,6 +88,8 @@
 	<dimen name="create_transfer_additionals_top_text_size">17sp</dimen>
 	<dimen name="create_transfer_additionals_bottom_text_size">15sp</dimen>
 
+	<dimen name="create_order_behaviour_peek_height">250dp</dimen>
+
 	<!-- Search address -->
 	<dimen name="address_item_size">16sp</dimen>
 	<dimen name="address_secondary_item_size">12sp</dimen>
