@@ -1,15 +1,14 @@
-package com.kg.gettransfer.data.prefs
+package com.kg.gettransfer.prefs
 
 import android.content.Context
 
+import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.model.*
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.Profile
 import com.kg.gettransfer.domain.model.User
-
-import com.kg.gettransfer.domain.repository.Preferences
 
 import java.util.Currency
 import java.util.Locale
@@ -23,11 +22,11 @@ class PreferencesImpl(context: Context): Preferences {
 
     private val configsPrefs = context.getSharedPreferences(CONFIGS, Context.MODE_PRIVATE)
     private val accountPrefs = context.getSharedPreferences(ACCOUNT, Context.MODE_PRIVATE)
-    private var _accessToken = Preferences.INVALID_TOKEN
+    private var _accessToken = PreferencesCache.INVALID_TOKEN
     
     override var accessToken: String
         get() {
-            if(_accessToken == Preferences.INVALID_TOKEN) _accessToken = configsPrefs.getString(TOKEN, Preferences.INVALID_TOKEN)!!
+            if(_accessToken == PreferencesCache.INVALID_TOKEN) _accessToken = configsPrefs.getString(TOKEN, PreferencesCache.INVALID_TOKEN)!!
             return _accessToken
         }
         set(value) {
@@ -69,10 +68,10 @@ class PreferencesImpl(context: Context): Preferences {
         }
 
     override var lastMode: String
-        get() = configsPrefs.getString(LAST_MODE, "")!!
+        get() = configsPrefs.getString(PreferencesCache.LAST_MODE, "")!!
         set(value) {
             val editor = configsPrefs.edit()
-            editor.putString(LAST_MODE, value)
+            editor.putString(PreferencesCache.LAST_MODE, value)
             editor.apply()
         }
 

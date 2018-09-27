@@ -9,8 +9,9 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.kg.gettransfer.R
 import com.kg.gettransfer.data.logging.LoggingImpl
 
-import com.kg.gettransfer.data.prefs.PreferencesImpl
+import com.kg.gettransfer.prefs.PreferencesImpl
 
+import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.repository.*
 
 import com.kg.gettransfer.domain.CoroutineContexts
@@ -42,7 +43,7 @@ val ciceroneModule = module {
 }
 
 val domainModule = module {
-    single { PreferencesImpl(get()) as Preferences }
+    single { PreferencesImpl(get()) as PreferencesCache } bind PreferencesRepository::class
 	single {
 		val context: Context = get()
 		LoggingImpl(get(),
