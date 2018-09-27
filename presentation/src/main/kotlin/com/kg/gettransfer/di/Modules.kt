@@ -9,19 +9,11 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.data.prefs.PreferencesImpl
 
-import com.kg.gettransfer.data.repository.ApiRepositoryImpl
-import com.kg.gettransfer.data.repository.CarrierTripRepositoryImpl
-import com.kg.gettransfer.data.repository.GeoRepositoryImpl
-import com.kg.gettransfer.data.repository.RouteRepositoryImpl
+import com.kg.gettransfer.data.repository.*
 
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.*
-
-import com.kg.gettransfer.domain.repository.ApiRepository
-import com.kg.gettransfer.domain.repository.CarrierTripRepository
-import com.kg.gettransfer.domain.repository.GeoRepository
-import com.kg.gettransfer.domain.repository.Preferences
-import com.kg.gettransfer.domain.repository.RouteRepository
+import com.kg.gettransfer.domain.repository.*
 
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.IO
@@ -55,16 +47,18 @@ val domainModule = module {
 	    val context: Context = get()
 	    ApiRepositoryImpl(get(),
 	                      context.resources.getString(R.string.api_key),
-	                      context.resources.getString(R.string.api_url)) as ApiRepository
+	                      context.resources.getString(R.string.api_url))
 	}
 	single { CarrierTripRepositoryImpl(get()) as CarrierTripRepository }
 	single { GeoRepositoryImpl(get()) as GeoRepository }
 	single { RouteRepositoryImpl(get()) as RouteRepository }
+	single { SystemRepositoryImpl(get()) as SystemRepository }
+	single { TransferRepositoryImpl(get()) as TransferRepository }
 	
+	single { CarrierTripInteractor(get()) }
 	single { RouteInteractor(get(), get()) }
 	single { SystemInteractor(get(), get(), get()) }
 	single { TransferInteractor(get()) }
-	single { CarrierTripInteractor(get()) }
 }
 
 val androidModule = module {

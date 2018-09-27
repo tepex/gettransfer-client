@@ -5,9 +5,9 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Trip
 
-import com.kg.gettransfer.domain.repository.ApiRepository
+import com.kg.gettransfer.domain.repository.TransferRepository
 
-class TransferInteractor(private val apiRepository: ApiRepository) {
+class TransferInteractor(private val repository: TransferRepository) {
     var selectedId: Long = -1
     var transfer: Transfer? = null
     
@@ -27,7 +27,7 @@ class TransferInteractor(private val apiRepository: ApiRepository) {
                                account: Account,
                                promoCode: String?,
                                paypalOnly: Boolean): Transfer {
-        transfer = apiRepository.createTransfer(from,
+        transfer = repository.createTransfer(from,
                                              to,
                                              tripTo,
                                              tripReturn,
@@ -43,12 +43,12 @@ class TransferInteractor(private val apiRepository: ApiRepository) {
         return transfer!!
     }
     
-    suspend fun getTransfer() = apiRepository.getTransfer(selectedId)
-    suspend fun getOffers() = apiRepository.getOffers(selectedId)
-    suspend fun cancelTransfer(reason: String) = apiRepository.cancelTransfer(selectedId, reason)
+    suspend fun getTransfer() = repository.getTransfer(selectedId)
+    suspend fun getOffers() = repository.getOffers(selectedId)
+    suspend fun cancelTransfer(reason: String) = repository.cancelTransfer(selectedId, reason)
     
     suspend fun getAllTransfers(): List<Transfer> {
-        if(allTransfers == null) allTransfers = apiRepository.getAllTransfers()
+        if(allTransfers == null) allTransfers = repository.getAllTransfers()
         transfer?.let {
             if(allTransfers!!.firstOrNull()?.id != it.id) {
                 val mutableList = allTransfers!!.toMutableList()

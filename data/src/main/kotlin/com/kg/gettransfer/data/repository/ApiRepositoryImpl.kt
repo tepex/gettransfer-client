@@ -7,7 +7,6 @@ import com.kg.gettransfer.data.model.*
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.*
 
-import com.kg.gettransfer.domain.repository.ApiRepository
 import com.kg.gettransfer.domain.repository.Preferences
 
 import com.google.gson.GsonBuilder
@@ -28,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiRepositoryImpl(private val preferences: Preferences,
                         private val apiKey: String,
-                        url: String): ApiRepository {
+                        url: String) {
     private lateinit var configs: Configs
     
     private var api: Api
@@ -61,7 +60,7 @@ class ApiRepositoryImpl(private val preferences: Preferences,
                 .create(Api::class.java)
     }
     
-    override suspend fun coldStart() {
+    suspend fun coldStart() {
 		val configsResponse: ApiResponse<ApiConfigs> = tryTwice { api.getConfigs() }
 		configs = Mappers.mapApiConfigs(configsResponse.data!!)
 		
@@ -70,11 +69,11 @@ class ApiRepositoryImpl(private val preferences: Preferences,
             preferences.account = Mappers.mapApiAccount(accountResponse.data?.account!!, configs)
     }
 	
-	override fun getConfigs() = configs
+	fun getConfigs() = configs
 	
-    override fun getAccount() = preferences.account
+    fun getAccount() = preferences.account
 
-    override suspend fun putAccount(account: Account) {
+    suspend fun putAccount(account: Account) {
         preferences.account = account
         tryPutAccount(Mappers.mapAccount(account))
     }
@@ -92,11 +91,11 @@ class ApiRepositoryImpl(private val preferences: Preferences,
     }
 
     /* Not used now.
-    override suspend fun createAccount(account: Account) {
+    suspend fun createAccount(account: Account) {
     }
     */
     
-    override suspend fun login(email: String, password: String): Account {
+    suspend fun login(email: String, password: String): Account {
         val response: ApiResponse<ApiAccountWrapper> = tryLogin(email, password)
         val account = Mappers.mapApiAccount(response.data!!.account, configs)
         preferences.account = account
@@ -115,12 +114,12 @@ class ApiRepositoryImpl(private val preferences: Preferences,
         }
     }
     
-    override fun logout() {
+    fun logout() {
         preferences.accessToken = Preferences.INVALID_TOKEN
         preferences.cleanAccount()
     }
     
-    override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean): RouteInfo {
+    suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean): RouteInfo {
         val response: ApiResponse<ApiRouteInfo> = tryGetRouteInfo(arrayOf(from, to), withPrices, returnWay)
         return Mappers.mapApiRouteInfo(response.data!!)
     }
@@ -142,7 +141,7 @@ class ApiRepositoryImpl(private val preferences: Preferences,
      * 1. Try to call [apiCall] first time.
      * 2. If response code is 401 (token expired) — try to call [apiCall] second time.
      */
-    private suspend fun <R> tryTwice(apiCall: () -> Deferred<R>): R {
+    suspend fun <R> tryTwice(apiCall: () -> Deferred<R>): R {
         return try { apiCall().await() }
         catch(e: Exception) {
             if(e is ApiException) throw e /* second invocation */
@@ -154,7 +153,7 @@ class ApiRepositoryImpl(private val preferences: Preferences,
         }
     }
     
-    private suspend fun <R> tryTwice(id: Long, apiCall: (Long) -> Deferred<R>): R {
+    suspend fun <R> tryTwice(id: Long, apiCall: (Long) -> Deferred<R>): R {
         return try { apiCall(id).await() }
         catch(e: Exception) {
             if(e is ApiException) throw e /* second invocation */
@@ -177,7 +176,7 @@ class ApiRepositoryImpl(private val preferences: Preferences,
         preferences.accessToken = response.data!!.token
     }
 
-    override suspend fun createTransfer(from: GTAddress,
+    suspend fun createTransfer(from: GTAddress,
                                         to: GTAddress,
                                         tripTo: Trip,
                                         tripReturn: Trip?,
@@ -197,7 +196,7 @@ class ApiRepositoryImpl(private val preferences: Preferences,
         return Mappers.mapApiTransfer(response.data?.transfer!!)
     }
 
-    override suspend fun cancelTransfer(transferId: Long, reason: String): Transfer {
+    suspend fun cancelTransfer(transferId: Long, reason: String): Transfer {
         val response: ApiResponse<ApiTransferWrapper> = tryTwice(transferId) { id -> api.cancelTransfer(id, ApiReason(reason)) }
         return Mappers.mapApiTransfer(response.data?.transfer!!)
     }
@@ -214,31 +213,31 @@ class ApiRepositoryImpl(private val preferences: Preferences,
         }
     }
 
-	override suspend fun getAllTransfers(): List<Transfer> {
+	suspend fun getAllTransfers(): List<Transfer> {
 		val response: ApiResponse<ApiTransfers> = tryTwice { api.getAllTransfers() }
 		val transfers: List<ApiTransfer> = response.data!!.transfers
 		return transfers.map {transfer -> Mappers.mapApiTransfer(transfer) }
 	}
 
-	override suspend fun getTransfer(transferId: Long): Transfer {
+	suspend fun getTransfer(transferId: Long): Transfer {
 		val response: ApiResponse<ApiTransferWrapper> = tryTwice(transferId, { id -> api.getTransfer(id) })
 		val transfer: ApiTransfer = response.data!!.transfer
 		return Mappers.mapApiTransfer(transfer)
 	}
 	
-    override suspend fun getTransfersArchive(): List<Transfer> {
+    suspend fun getTransfersArchive(): List<Transfer> {
         val response: ApiResponse<ApiTransfers> = tryTwice { api.getTransfersArchive() }
         val transfers: List<ApiTransfer> = response.data!!.transfers
         return transfers.map {transfer -> Mappers.mapApiTransfer(transfer) }
     }
 
-    override suspend fun getTransfersActive(): List<Transfer> {
+    suspend fun getTransfersActive(): List<Transfer> {
         val response: ApiResponse<ApiTransfers> = tryTwice { api.getTransfersActive() }
         val transfers: List<ApiTransfer> = response.data!!.transfers
         return transfers.map {transfer -> Mappers.mapApiTransfer(transfer) }
     }
 
-    override suspend fun getOffers(transferId: Long): List<Offer> {
+    suspend fun getOffers(transferId: Long): List<Offer> {
         val response: ApiResponse<ApiOffers> = tryTwice(transferId, { id -> api.getOffers(id) })
         val transfers: List<ApiOffer> = response.data!!.offers
         return transfers.map {offer -> setOfferData(offer) }
@@ -268,19 +267,19 @@ class ApiRepositoryImpl(private val preferences: Preferences,
                 price, ratings, offer.passengerFeedback, carrier, vehicle, driver)
     }
 
-    override suspend fun getCarrierTrips(): List<CarrierTrip> {
+    suspend fun getCarrierTrips(): List<CarrierTrip> {
         val response: ApiResponse<ApiCarrierTrips> = tryTwice { api.getCarrierTrips() }
         val carrierTrips: List<ApiCarrierTrip> = response.data!!.trips
         return carrierTrips.map { carrierTrip -> Mappers.mapApiCarrierTrip(carrierTrip) }
     }
 
-    override suspend fun getCarrierTrip(carrierTripId: Long): CarrierTrip {
+    suspend fun getCarrierTrip(carrierTripId: Long): CarrierTrip {
         val response: ApiResponse<ApiCarrierTripWrapper> = tryTwice(carrierTripId, { id -> api.getCarrierTrip(id) })
         val carrierTrip: ApiCarrierTrip = response.data!!.trip
         return Mappers.mapApiCarrierTrip(carrierTrip)
     }
     
-    private fun apiException(e: Exception): ApiException {
+    fun apiException(e: Exception): ApiException {
         if(e is HttpException)
             return ApiException(e.code(), gson.fromJson(e.response().errorBody()?.string(), ApiResponse::class.java).
                 error?.details?.toString() ?: e.message!!)

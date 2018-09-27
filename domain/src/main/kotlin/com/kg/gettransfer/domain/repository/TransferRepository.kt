@@ -1,25 +1,17 @@
 package com.kg.gettransfer.domain.repository
 
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.Trip
 
-interface ApiRepository {
-    suspend fun coldStart()
-    fun getConfigs(): Configs
-    fun getAccount(): Account
-    suspend fun putAccount(account: Account)
-    /* Not used
-    suspend fun createAccount(account: Account)
-    */
-	suspend fun login(email: String, password: String): Account
-	fun logout()
-	
-	suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean): RouteInfo
-	
+interface TransferRepository {
     suspend fun getAllTransfers(): List<Transfer>
-    suspend fun getTransfer(transferId: Long): Transfer
+    suspend fun getTransfer(id: Long): Transfer
     suspend fun getTransfersArchive(): List<Transfer>
     suspend fun getTransfersActive(): List<Transfer>
-    suspend fun getOffers(transferId: Long): List<Offer>
+    suspend fun getOffers(id: Long): List<Offer>
     suspend fun createTransfer(from: GTAddress,
                                to: GTAddress,
                                tripTo: Trip,
@@ -33,8 +25,5 @@ interface ApiRepository {
                                account: Account,
                                promoCode: String?,
                                paypalOnly: Boolean): Transfer
-    suspend fun cancelTransfer(transferId: Long, reason: String): Transfer
-
-    suspend fun getCarrierTrips(): List<CarrierTrip>
-    suspend fun getCarrierTrip(carrierTripId: Long): CarrierTrip
+    suspend fun cancelTransfer(id: Long, reason: String): Transfer
 }
