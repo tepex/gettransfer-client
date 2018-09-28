@@ -96,7 +96,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                routeInfo.polyLines,
                                                from.name,
                                                to.name,
-                                               SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
+                                               //SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
+                                               Utils.getFormatedDate(systemInteractor.locale, date))
             
             viewState.setTransportTypes(transportTypes!!)
 
@@ -116,8 +117,9 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         if(i != -1) changeCurrency(i)
             
         viewState.setUser(user)
-        dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
-        viewState.setDateTimeTransfer(dateTimeFormat!!.format(date))
+        /*dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
+        viewState.setDateTimeTransfer(dateTimeFormat!!.format(date))*/
+        viewState.setDateTimeTransfer(Utils.getFormatedDate(systemInteractor.locale, date))
 	    transportTypes?.let { viewState.setTransportTypes(it) }
 	    //routeModel?.let     { viewState.setRoute(it) }
     }

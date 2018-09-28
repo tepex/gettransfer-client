@@ -39,7 +39,7 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
     private var transfer: Transfer? = null
     private var routeModel: RouteModel? = null
     private var offerModel: OfferModel? = null
-    private var transferModel: TransferModel? = null
+    //private var transferModel: TransferModel? = null
 
     override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally({
@@ -66,7 +66,8 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
                                                routeInfo.polyLines,
                                                from.name,
                                                to.name,
-                                               transferModel!!.dateTime)
+                                               //transferModel!!.dateTime)
+                                               Utils.getFormatedDate(systemInteractor.locale, transfer!!.dateToLocal))
 	        
             //viewState.setRoute(routeModel!!)
             val polyline = Utils.getPolyline(routeModel!!)

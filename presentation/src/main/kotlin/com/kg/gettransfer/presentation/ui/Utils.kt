@@ -46,6 +46,8 @@ import java.util.regex.Pattern
 import kotlinx.android.synthetic.main.view_maps_pin.view.*
 
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.Date
 
 internal class Utils {
     companion object {
@@ -117,6 +119,10 @@ internal class Utils {
             val track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150)
 
             return PolylineModel(mPoints.get(0), mPoints.get(mPoints.size - 1), line, track)
+        }
+
+        fun getFormatedDate(locale: Locale, dateToLocal: Date): String{
+            return SimpleDateFormat(DATE_TIME_PATTERN, locale).format(dateToLocal)
         }
         
         /*fun setPins(activity: Activity, googleMap: GoogleMap, routeModel: RouteModel) {
