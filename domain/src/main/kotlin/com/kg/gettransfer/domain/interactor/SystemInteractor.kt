@@ -26,12 +26,15 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         get() = account.currency ?: Currency.getInstance("USD")
         set(value) { account.currency = value }
     var distanceUnit: DistanceUnit
-        get() = account.distanceUnit ?: DistanceUnit.Km
+        get() = account.distanceUnit
         set(value) { account.distanceUnit = value }
 
-    var lastMode: String
-        get() = systemRepository.getLastMode()
-        set(value) { systemRepository.setLastMode(value) }
+    val transportTypes       = systemRepository.getConfigs().transportTypes
+    val locales              = systemRepository.getConfigs().availableLocales
+    val distanceUnits        = systemRepository.getConfigs().supportedDistanceUnits
+    val currencies           = systemRepository.getConfigs().supportedCurrencies
+    val currentCurrencyIndex = currencies.indexOf(account.currency)
+    val loggedIn             = account.email != null
 
     var endpoint: String
         get() = systemRepository.getEndpoint()
@@ -39,7 +42,6 @@ class SystemInteractor(private val systemRepository: SystemRepository,
 
     suspend fun coldStart() {
         systemRepository.coldStart()
-        configs = systemRepository.getConfigs()
         account = systemRepository.getAccount()
         geoRepository.initGeocoder(locale)
     }
@@ -56,7 +58,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         systemRepository.logout()
         account = systemRepository.getAccount()
     }
-    
+
     suspend fun login(email: String, password: String) {
         account = systemRepository.login(email, password)
     }

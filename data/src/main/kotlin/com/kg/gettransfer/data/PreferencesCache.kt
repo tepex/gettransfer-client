@@ -1,9 +1,6 @@
 package com.kg.gettransfer.data
 
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.repository.PreferencesRepository
-
-interface PreferencesCache: PreferencesRepository {
+interface PreferencesCache {
     companion object {
         const val LAST_MODE = "last_mode"
         const val INVALID_TOKEN = "invalid_token"
