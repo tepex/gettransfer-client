@@ -99,16 +99,18 @@ class ApiRepositoryImpl(private val preferences: Preferences,
 		configs = Mappers.mapApiConfigs(configsResponse.data!!)
 		
         val accountResponse: ApiResponse<ApiAccountWrapper> = tryTwice { api.getAccount() }
+/*
         if(accountResponse.data?.account != null)
             preferences.account = Mappers.mapApiAccount(accountResponse.data?.account!!, configs)
+*/
     }
 	
 	fun getConfigs() = configs
 	
-    fun getAccount() = preferences.account
+//    fun getAccount() = preferences.account
 
     suspend fun putAccount(account: Account) {
-        preferences.account = account
+//        preferences.account = account
         tryPutAccount(Mappers.mapAccount(account))
     }
     
@@ -132,7 +134,7 @@ class ApiRepositoryImpl(private val preferences: Preferences,
     suspend fun login(email: String, password: String): Account {
         val response: ApiResponse<ApiAccountWrapper> = tryLogin(email, password)
         val account = Mappers.mapApiAccount(response.data!!.account, configs)
-        preferences.account = account
+//        preferences.account = account
         return account
     }
     
@@ -148,10 +150,12 @@ class ApiRepositoryImpl(private val preferences: Preferences,
         }
     }
     
+    /*
     fun logout() {
         preferences.accessToken = PreferencesCache.INVALID_TOKEN
         preferences.cleanAccount()
     }
+    */
     
     suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean): RouteInfo {
         val response: ApiResponse<ApiRouteInfo> = tryGetRouteInfo(arrayOf(from, to), withPrices, returnWay)
