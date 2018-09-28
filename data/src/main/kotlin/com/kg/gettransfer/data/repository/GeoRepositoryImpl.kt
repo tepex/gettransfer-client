@@ -27,6 +27,7 @@ import java.util.Locale
 import kotlin.coroutines.experimental.suspendCoroutine
 
 import timber.log.Timber
+import java.lang.StringBuilder
 
 class GeoRepositoryImpl(private val context: Context): GeoRepository {
     private lateinit var geocoder: Geocoder
@@ -53,11 +54,42 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
 
     override fun getAddressByLocation(point: Point): GTAddress {
         val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
-        val addr = list?.firstOrNull()?.thoroughfare + " " + list?.firstOrNull()?.subThoroughfare
-        if(addr == null) throw RuntimeException("Address not found") 
+        /*val addr = list?.firstOrNull()?.thoroughfare + " " + list?.firstOrNull()?.subThoroughfare
+        if(addr == null) throw RuntimeException("Address not found") */
+
+        val street = list.firstOrNull()?.thoroughfare
+        val house = list.firstOrNull()?.subThoroughfare
+        val city = list.firstOrNull()?.locality
+        val area = list.firstOrNull()?.adminArea
+        val country = list.firstOrNull()?.countryName
+
+        val addr = StringBuilder()
+
+        if(street == null && list.firstOrNull()?.getAddressLine(0)!!.isNotEmpty()){
+            addr.append(list.firstOrNull()?.getAddressLine(0))
+        } else{
+            if(street != null && street.isNotEmpty()){
+                addr.append(street).append(", ")
+            }
+            if(house != null && house.isNotEmpty()){
+                addr.append(house).append(", ")
+            }
+            if(city != null && city.isNotEmpty()){
+                addr.append(city).append(", ")
+            }
+            if(area != null && area.isNotEmpty() && area != city){
+                addr.append(area).append(", ")
+            }
+            if(country != null && country.isNotEmpty()){
+                addr.append(country)
+            }
+        }
+
+        val text = getAutocompletePredictions(addr.toString())
+        val address = if(text.isNotEmpty()) text.get(0).address else addr.toString()
         return GTAddress(placeTypes = listOf(GTAddress.TYPE_STREET_ADDRESS),
-                         name = addr,
-                         address = addr,
+                         name = address,
+                         address = address,
                          primary = null,
                          secondary = null,
                          point = point)
