@@ -33,6 +33,12 @@ class MainPresenter(cc: CoroutineContexts,
     private var minDistance: Int = 30
 
     private var available: Boolean = false
+    private var currentLocation: String = ""
+    var entrance: String = ""
+        set(value) {
+            field = value
+            viewState.setEntrance(currentLocation, value)
+        }
 
     override fun onFirstViewAttach() {
         systemInteractor.lastMode = Screens.PASSENGER_MODE
@@ -68,6 +74,7 @@ class MainPresenter(cc: CoroutineContexts,
         onCameraMove(lastAddressPoint)
         viewState.setMapPoint(lastAddressPoint)
         viewState.setAddressFrom(currentAddress.name)
+        currentLocation = currentAddress.name
     }
     
     fun onCameraMove(lastPoint: LatLng) {
@@ -89,6 +96,7 @@ class MainPresenter(cc: CoroutineContexts,
         utils.launchAsyncTryCatchFinally({
             val currentAddress = utils.asyncAwait { routeInteractor.getAddressByLocation(Mappers.latLng2Point(lastPoint!!)) }
             viewState.setAddressFrom(currentAddress.name)
+            currentLocation = currentAddress.name
         }, { e -> viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }
@@ -108,9 +116,5 @@ class MainPresenter(cc: CoroutineContexts,
             else router.navigateTo(Screens.REG_CARRIER)
         }
         else router.navigateTo(Screens.LOGIN)
-    }
-
-    fun setEntrance(entrance: String) {
-        viewState.setEntrance(entrance)
     }
 }

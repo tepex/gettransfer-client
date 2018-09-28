@@ -75,6 +75,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     
     private var isFirst = true
     private var centerMarker: Marker? = null
+
+	private lateinit var popupEntrance: PopupWindow
     
     @ProvidePresenter
     fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
@@ -211,21 +213,28 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 	}
 
 	private fun showPopupEntrance() {
-		val layoutEntrance = LayoutInflater.from(applicationContext).inflate(R.layout.popup_entrance, popupEntrance)
+		val layoutEntrance = LayoutInflater.from(applicationContext).inflate(R.layout.popup_entrance, layoutEntrance)
 
-		val popupEntrance = PopupWindow(layoutEntrance, LinearLayout.LayoutParams.MATCH_PARENT,
+		popupEntrance = PopupWindow(layoutEntrance, LinearLayout.LayoutParams.MATCH_PARENT,
 										LinearLayout.LayoutParams.WRAP_CONTENT, true)
 		popupEntrance.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 		popupEntrance.inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
 		popupEntrance.showAtLocation(contentMain, Gravity.BOTTOM, 0, search.height + popupEntrance.height)
+        popupEntrance.isOutsideTouchable = true
+        popupEntrance.isFocusable = true
 
 		layoutEntrance.etEntrance.showKeyboard()
+		layoutEntrance.etEntrance.setText(presenter.entrance)
+		layoutEntrance.etEntrance.setSelection(layoutEntrance.etEntrance.text.length)
 
 		popupEntrance.setOnDismissListener { layoutEntrance.etEntrance.hideKeyboard() }
 
-        layoutEntrance.tvClose.setOnClickListener { popupEntrance.dismiss() }
+        layoutEntrance.tvClose.setOnClickListener {
+			presenter.entrance = ""
+			popupEntrance.dismiss()
+		}
         layoutEntrance.tvReady.setOnClickListener {
-			presenter.setEntrance(layoutEntrance.etEntrance.text.toString().trim())
+			presenter.entrance = (layoutEntrance.etEntrance.text.toString().trim())
 			popupEntrance.dismiss()
 		}
         layoutEntrance.etEntrance.onTextChanged {
@@ -355,7 +364,11 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 	    }
 	}
 
-    override fun setEntrance(entrance: String) {
-        searchFrom.text += "${getString(R.string.short_entrance)}$entrance"
+    override fun setEntrance(address: String, entrance: String) {
+		if (!TextUtils.isEmpty(entrance)) {
+			searchFrom.text = "$address${getString(R.string.short_entrance)}$entrance"
+		} else {
+			searchFrom.text = address
+		}
     }
 }
