@@ -37,7 +37,7 @@ class RequestsFragmentPresenter(cc: CoroutineContexts,
             transfers = when(categoryName) {
                 RequestsActivity.CATEGORY_ACTIVE -> transferInteractor.getActiveTransfers()
                 RequestsActivity.CATEGORY_COMPLETED -> transferInteractor.getCompletedTransfers()
-                else -> transferInteractor.getAllTransfers()
+                else -> transferInteractor.getArchivedTransfers()
             }.map { Mappers.getTransferModel(it,
                                              systemInteractor.locale,
                                              systemInteractor.distanceUnit,

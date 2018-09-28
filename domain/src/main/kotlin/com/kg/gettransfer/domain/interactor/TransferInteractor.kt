@@ -14,6 +14,7 @@ class TransferInteractor(private val repository: TransferRepository) {
     private var allTransfers: List<Transfer>? = null
     private var activeTransfers: List<Transfer>? = null
     private var completedTransfers: List<Transfer>? = null
+    private var archivedTransfers: List<Transfer>? = null
     
     suspend fun createTransfer(from: GTAddress,
                                to: GTAddress,
@@ -75,5 +76,13 @@ class TransferInteractor(private val repository: TransferRepository) {
                 it.status == Transfer.STATUS_NOT_COMPLETED
             }
         return completedTransfers!!
+    }
+
+    suspend fun getArchivedTransfers(): List<Transfer> {
+        if(archivedTransfers == null) archivedTransfers = getAllTransfers().filter {
+                    it.status != Transfer.STATUS_COMPLETED ||
+                    it.status != Transfer.STATUS_NOT_COMPLETED
+        }
+        return archivedTransfers!!
     }
 }
