@@ -121,9 +121,7 @@ internal class Utils {
             return PolylineModel(mPoints.get(0), mPoints.get(mPoints.size - 1), line, track)
         }
 
-        fun getFormatedDate(locale: Locale, dateToLocal: Date): String{
-            return SimpleDateFormat(DATE_TIME_PATTERN, locale).format(dateToLocal)
-        }
+        fun getFormatedDate(locale: Locale, dateToLocal: Date) = SimpleDateFormat(DATE_TIME_PATTERN, locale).format(dateToLocal)
         
         /*fun setPins(activity: Activity, googleMap: GoogleMap, routeModel: RouteModel) {
             //Создание пинов с информацией
