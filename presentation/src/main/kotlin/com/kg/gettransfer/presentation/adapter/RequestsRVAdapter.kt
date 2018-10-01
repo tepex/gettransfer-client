@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.model.TransferModel
 
@@ -38,9 +39,9 @@ class RequestsRVAdapter(private val transfers: List<TransferModel>, private val 
             tvTo.text = item.to
             tvOrderDateTime.text = context.getString(R.string.transfer_date_local, item.dateTime)
             tvDistance.text = Utils.formatDistance(context, item.distance, item.distanceUnit)
-            setOnClickListener { listener(item.id) }
+            setOnClickListener { listener(item) }
         }
     }
 }
 
-typealias ItemClickListener = (Long) -> Unit
+typealias ItemClickListener = (TransferModel) -> Unit

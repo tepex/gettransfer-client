@@ -120,7 +120,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/view_trips_info_price_vehicle_text_size"
-        android:textColor="@color/colorRedPriceText"
+        android:textColor="@color/colorRedText"
         android:fontFamily="@font/sf_pro_text_regular"
         android:layout_marginTop="@dimen/view_trips_info_tv_price_margin_top"
         app:layout_constraintStart_toStartOf="@+id/tvDistance"

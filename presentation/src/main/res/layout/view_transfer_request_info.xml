@@ -8,14 +8,30 @@
 
     <TextView
         android:id="@+id/tvTransferRequestNumber"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/view_transfer_info_request_number_margin_start"
         android:layout_marginTop="@dimen/view_transfer_info_request_number_margin_top"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:gravity="center_horizontal"
+        android:fontFamily="@font/helvetica_neue"
         android:textColor="@color/colorTransferRequestText"
         android:textSize="@dimen/view_transfer_info_request_number_text_size"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnCancelRequest"/>
+
+    <TextView
+        android:id="@+id/btnCancelRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel_request_underlined"
+        android:fontFamily="@font/helvetica_neue"
+        android:textColor="@color/colorRedText"
+        android:layout_marginTop="@dimen/view_transfer_info_request_number_margin_top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="@dimen/view_transfer_info_request_number_text_size"
+        android:layout_marginEnd="@dimen/view_transfer_info_btn_cancel_request_margin_end"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/tvFrom"

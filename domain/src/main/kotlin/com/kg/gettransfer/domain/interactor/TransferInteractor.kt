@@ -41,6 +41,7 @@ class TransferInteractor(private val repository: TransferRepository) {
                                              account,
                                              promoCode,
                                              paypalOnly)
+        selectedId = transfer!!.id
         return transfer!!
     }
     

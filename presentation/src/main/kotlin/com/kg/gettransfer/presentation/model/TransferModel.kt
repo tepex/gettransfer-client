@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.model
 import com.kg.gettransfer.domain.model.DistanceUnit
 
 class TransferModel(val id: Long,
+                    val status: String,
                     val from: String,
                     val to: String,
                     val dateTime: String,

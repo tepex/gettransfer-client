@@ -322,4 +322,11 @@
     <string name="driver_will_meet_you">*Driver will meet you with a name sign</string>
     <string name="example_flight">Example: BA 2243</string>
 
+    <!--activity_offers-->
+    <string name="excellent_price_text_1">Fix an excellent price for your trip now</string>
+    <string name="excellent_price_text_2">Prices can grow, book now to guarantee best price</string>
+
+    <!--view_transfer_request_info-->
+    <string name="cancel_request_underlined"><u>Cancel request</u></string>
+
 </resources>

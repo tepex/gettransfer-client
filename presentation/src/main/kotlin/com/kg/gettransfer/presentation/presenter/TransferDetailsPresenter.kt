@@ -52,12 +52,12 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
 	        Timber.d("offers: ${transfer!!.id} status=${transfer!!.status} checkOffers: ${transfer!!.checkOffers}")
             if(transfer!!.checkOffers) {
 	            val offers = utils.asyncAwait { transferInteractor.getOffers() }
-	            if(transfer!!.offersCount!! >= 1 && offers.size >= 1) {
+	            if(transfer!!.offersCount!! >= 1 && offers.size == 1) {
 	                offerModel = Mappers.getOfferModel(offers.first())
 	                viewState.setOffer(offerModel!!)
-	            }	            
+	            }
 	        }
-            
+
             val from = transfer!!.from
             val to = transfer!!.to!!
 	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point, to.point, true, false) }

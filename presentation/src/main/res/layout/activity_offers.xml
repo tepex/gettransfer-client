@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_root_offers"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBack"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
 
     <include
@@ -22,53 +22,69 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView android:id="@+id/tvConnectingCarriers"
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:background="#88ac16"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="@color/colorWhite"
-                android:textSize="13sp"
-                android:textAllCaps="true"
-                android:fontFamily="@font/sf_pro_text_regular" />
-
             <include
                 android:id="@+id/layoutTransferRequestInfo"
                 layout="@layout/view_transfer_request_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+            
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_offers_excellent_price_layout_height"
+                android:background="@color/colorBtnGreen">
+                
+                <ImageView
+                    android:id="@+id/ivLock"
+                    android:layout_width="@dimen/activity_offers_iv_lock_width"
+                    android:layout_height="@dimen/activity_offers_iv_lock_height"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginStart="@dimen/activity_offers_iv_lock_margin_start"
+                    app:srcCompat="@drawable/ic_lock"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginStart="@dimen/activity_offers_excellent_price_layout_margin_start"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvExcellentPrice1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sf_pro_text_bold"
+                        android:textSize="@dimen/activity_offers_excellent_price_text_size"
+                        android:gravity="center"
+                        android:text="@string/excellent_price_text_1"
+                        android:textColor="@color/colorWhite" />
+
+                    <TextView
+                        android:id="@+id/tvExcellentPrice2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:textSize="@dimen/activity_offers_excellent_price_text_size"
+                        android:gravity="center"
+                        android:text="@string/excellent_price_text_2"
+                        android:textColor="@color/colorWhite" />
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5px"
+                android:layout_height="@dimen/activity_offers_divider_height"
                 android:background="@color/colorDividerGray" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="@color/colorTextLightGray"
-                android:textSize="13sp"
-                android:textAllCaps="true"
-                android:fontFamily="@font/sf_pro_text_regular"
-                android:text="Предложения перевозчиков"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:background="@color/colorDividerGray" />
-
-            <include
-                android:id="@+id/testOffer"
-                layout="@layout/view_offer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
 
             <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvOffers"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

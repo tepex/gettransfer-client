@@ -54,12 +54,10 @@ data class Transfer(val id: Long,
         @JvmField val STATUS_OUTDATED      = "outdated"
     }
 
-    /*
     val checkOffers = status == STATUS_PERFORMED ||
-                      status == STATUS_PERFORMED ||
                       status == STATUS_PENDING ||
                       status == STATUS_COMPLETED ||
                       status == STATUS_NOT_COMPLETED
-                      */
-    val checkOffers = true
+
+    //val checkOffers = true
 }

@@ -6,4 +6,9 @@ class OfferModel(val driverName: String?,
                  val transportType: String,
                  val transportName: String,
                  val transportNumber: String,
-                 val price: String)
+                 val price: String,
+                 val paxMax: Int,
+                 val baggageMax: Int,
+                 val transportYear: Int,
+                 val carrierId: Long,
+                 val completedTransfers: Int)

@@ -80,7 +80,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     }
     
     override fun setRequests(transfers: List<TransferModel>) {
-        rvRequests.adapter = RequestsRVAdapter(transfers) { transferId -> presenter.openTransferDetails(transferId) }
+        rvRequests.adapter = RequestsRVAdapter(transfers) { transfer -> presenter.openTransferDetails(transfer.id, transfer.status) }
     }
 
     override fun blockInterface(block: Boolean) { (activity as BaseView).blockInterface(block) }

@@ -10,6 +10,7 @@ import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
@@ -55,8 +56,11 @@ class RequestsFragmentPresenter(cc: CoroutineContexts,
         transfers?.let { viewState.setRequests(it) }
     }
 
-    fun openTransferDetails(id: Long) {
+    fun openTransferDetails(id: Long, status: String) {
         transferInteractor.selectedId = id
-        router.navigateTo(Screens.DETAILS)
+        when(status){
+            Transfer.STATUS_NEW -> router.navigateTo(Screens.OFFERS)
+            else -> router.navigateTo(Screens.DETAILS)
+        }
     }
 }

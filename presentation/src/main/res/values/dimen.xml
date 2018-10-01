@@ -109,15 +109,21 @@
 
 	<!-- Transfer types -->
 	<dimen name="transfer_types_text_size">11sp</dimen>
+	<dimen name="transfer_types_image_person_width">7dp</dimen>
+	<dimen name="transfer_types_image_person_height">14dp</dimen>
+	<dimen name="transfer_types_image_baggage_width">10dp</dimen>
+	<dimen name="transfer_types_image_baggage_height">9dp</dimen>
+	<dimen name="transfer_types_image_baggage_margin_start">3dp</dimen>
 
 	<!-- view_transfer_info -->
 	<dimen name="view_transfer_info_big_text_size">17sp</dimen>
 	<dimen name="view_transfer_info_small_text_size">12sp</dimen>
-	<dimen name="view_transfer_info_request_number_text_size">11sp</dimen>
+	<dimen name="view_transfer_info_request_number_text_size">13sp</dimen>
 	<dimen name="view_transfer_info_request_number_margin_top">10dp</dimen>
+	<dimen name="view_transfer_info_request_number_margin_start">16dp</dimen>
 	<dimen name="view_transfer_info_from_margin_end">37dp</dimen>
 	<dimen name="view_transfer_info_from_margin_start">48dp</dimen>
-	<dimen name="view_transfer_info_from_margin_top">3dp</dimen>
+	<dimen name="view_transfer_info_from_margin_top">9dp</dimen>
 	<dimen name="view_transfer_info_to_margin_top">7dp</dimen>
 	<dimen name="view_transfer_info_order_date_margin_end">37dp</dimen>
 	<dimen name="view_transfer_info_markers_size">23dp</dimen>
@@ -127,6 +133,7 @@
 	<dimen name="view_transfer_info_chevron_margin_end">23dp</dimen>
 	<dimen name="view_transfer_info_divider_height">0.5dp</dimen>
 	<dimen name="view_transfer_info_divider_margin_top">10dp</dimen>
+	<dimen name="view_transfer_info_btn_cancel_request_margin_end">11dp</dimen>
 
 	<!--activity_transfer_details-->
 	<dimen name="activity_transfer_details_map_height">200dp</dimen>
@@ -144,7 +151,7 @@
 	<dimen name="activity_transfer_details_comment_text_size">15sp</dimen>
 	<dimen name="activity_transfer_details_tv_to_right_of_img_margin_start">55dp</dimen>
 	<dimen name="activity_transfer_details_elements_padding_end">22dp</dimen>
-	<dimen name="activity_transfer_details_dividers_height">0.5px</dimen>
+	<dimen name="activity_transfer_details_dividers_height">0.5dp</dimen>
 	<dimen name="activity_transfer_details_tv_comment_margin_start">13dp</dimen>
 	<dimen name="activity_transfer_details_tv_comment_margin_top">7dp</dimen>
 	<dimen name="activity_transfer_details_tv_comment_margin_bottom">23dp</dimen>
@@ -204,5 +211,38 @@
 	<dimen name="activity_carrier_transfer_details_btn_confirm_meeting_margin_start_end_top">16dp</dimen>
 	<dimen name="activity_carrier_transfer_details_btn_confirm_meeting_margin_bottom">42dp</dimen>
 	<dimen name="activity_carrier_transfer_details_layout_remains_to_pay_margin_bottom">16dp</dimen>
+
+	<!--activity_offers-->
+	<dimen name="activity_offers_divider_height">0.5dp</dimen>
+	<dimen name="activity_offers_excellent_price_text_size">12sp</dimen>
+	<dimen name="activity_offers_excellent_price_layout_margin_start">9dp</dimen>
+	<dimen name="activity_offers_excellent_price_layout_height">56dp</dimen>
+	<dimen name="activity_offers_iv_lock_width">19dp</dimen>
+	<dimen name="activity_offers_iv_lock_height">25dp</dimen>
+	<dimen name="activity_offers_iv_lock_margin_start">20dp</dimen>
+
+	<!--view_offer-->
+	<dimen name="view_offer_padding_top_bottom">10dp</dimen>
+	<dimen name="view_offer_margin">4dp</dimen>
+	<dimen name="view_offer_min_height">150dp</dimen>
+	<dimen name="view_offer_column1_width">130dp</dimen>
+	<dimen name="view_offer_column1_padding_start_end">8dp</dimen>
+	<dimen name="view_offer_column2_margin_start_end">16dp</dimen>
+	<dimen name="view_offer_column3_width">100dp</dimen>
+	<dimen name="view_offer_column3_margin_end">8dp</dimen>
+	<dimen name="view_offer_cost_text_size">14sp</dimen>
+	<dimen name="view_offer_cost_margin_bottom">13dp</dimen>
+	<dimen name="view_offer_btn_select_height">32dp</dimen>
+	<dimen name="view_offer_text_sizes">13sp</dimen>
+	<dimen name="view_offer_completed_transfers_text_margin_top">10dp</dimen>
+	<dimen name="view_offer_driver_image_size">17dp</dimen>
+	<dimen name="view_offer_driver_image_margin_end">4dp</dimen>
+	<dimen name="view_offer_vehicle_name_text_size">12sp</dimen>
+	<dimen name="view_offer_vehicle_name_margin_top">6dp</dimen>
+	<dimen name="view_offer_vehicle_type_margin_bottom">3dp</dimen>
+	<dimen name="view_offer_"></dimen>
+	<dimen name="view_offer_"></dimen>
+	<dimen name="view_offer_"></dimen>
+
 
 </resources>

@@ -1,141 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:paddingTop="13dp"
-    android:paddingBottom="16dp"
-    android:background="@drawable/back_clicked_layouts">
+    android:paddingBottom="@dimen/view_offer_padding_top_bottom"
+    android:paddingTop="@dimen/view_offer_padding_top_bottom"
+    android:layout_marginTop="@dimen/view_offer_margin"
+    android:layout_marginStart="@dimen/view_offer_margin"
+    android:layout_marginEnd="@dimen/view_offer_margin"
+    android:background="@drawable/back_card_offer"
+    android:minHeight="@dimen/view_offer_min_height">
 
-    <TextView
-        android:id="@+id/tvCostOffer"
-        android:layout_width="100dp"
+    <LinearLayout
+        android:id="@+id/column1"
+        android:layout_width="@dimen/view_offer_column1_width"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:gravity="end"
-        android:textSize="17sp"
-        android:textColor="@color/colorTextBlack"
-        android:fontFamily="@font/sf_pro_text_bold"
-        android:text="2200 ₽"/>
-    
-    <RatingBar
-        android:id="@+id/ratingBarOffer"
-        android:layout_width="wrap_content"
-        android:layout_height="16dp"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/tvCostOffer"
-        android:layout_marginTop="6dp"
-        android:numStars="5"
-        android:rating="4"
-        android:isIndicator="true"
-        style="?android:attr/ratingBarStyleSmall"/>
-
-    <Button
-        android:id="@+id/btnSelect"
-        android:layout_width="100dp"
-        android:layout_height="26dp"
-        android:background="@drawable/btn_get_transfer"
-        android:textColor="@color/colorWhite"
-        android:textSize="17sp"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:textAllCaps="true"
-        android:text="@string/select"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/ratingBarOffer"
-        android:layout_marginTop="6dp"
-        android:stateListAnimator="@null"/>
-
-    <ImageView
-        android:id="@+id/imageCarOffer"
-        android:layout_width="70dp"
-        android:layout_height="80dp"
-        android:background="@drawable/back_image_car_offer"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/imageCarOffer"
-        android:layout_toStartOf="@+id/tvCostOffer"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp">
-
-        <CheckBox
-            android:id="@+id/indicatorOffer"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_marginTop="5dp"
-            android:clickable="false"
-            android:checked="false"
-            android:background="@drawable/cb_indicator_offer_selector"
-            android:button="@null"/>
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingStart="@dimen/view_offer_column1_padding_start_end"
+        android:paddingEnd="@dimen/view_offer_column1_padding_start_end">
 
         <TextView
-            android:id="@+id/tvCarName"
-            android:layout_width="match_parent"
+            android:id="@+id/tvVehicleType"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/sf_pro_text_bold"
             android:textColor="@color/colorTextBlack"
-            android:textSize="15sp"
-            android:text="Volvo s60"
-            android:layout_toEndOf="@+id/indicatorOffer"
-            android:layout_marginStart="5dp"/>
+            android:textSize="@dimen/view_offer_text_sizes"
+            android:fontFamily="@font/helvetica_neue"
+            android:layout_marginBottom="@dimen/view_offer_vehicle_type_margin_bottom"/>
 
         <LinearLayout
-            android:id="@+id/layoutFeatures"
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:orientation="horizontal"
-            android:layout_below="@+id/tvCarName"/>
-
-        <TextView
-            android:id="@+id/tvSuccesfulTransfers"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:textColor="@color/colorTextBlack"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:text="Успешных трансферов: 7"
-            android:layout_below="@+id/layoutFeatures"/>
-
-        <LinearLayout
-            android:id="@+id/layout_more_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@+id/tvSuccesfulTransfers"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:textColor="@color/colorTextBlack"
-                android:fontFamily="@font/sf_pro_text_regular"
-                android:text="Economy"
-                android:layout_marginEnd="10dp"/>
+            android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="7dp"
-                android:layout_height="14dp"
-                app:srcCompat="@drawable/ic_passenger"/>
+                android:layout_width="@dimen/transfer_types_image_person_width"
+                android:layout_height="@dimen/transfer_types_image_person_height"
+                app:srcCompat="@drawable/ic_passenger_small"/>
 
             <TextView
-                android:id="@+id/tvNumberPersonsTransfer"
+                android:id="@+id/tvCountPersons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/transfer_types_text_size"
                 android:fontFamily="@font/sf_pro_text_regular"
                 android:textColor="@color/colorTextBlack"
-                android:gravity="center"
-                android:text=" X 3"/>
+                android:gravity="center"/>
 
             <ImageView
-                android:layout_width="10dp"
-                android:layout_height="9dp"
-                android:src="@drawable/ic_baggage"
-                android:layout_marginStart="3dp"/>
+                android:layout_width="@dimen/transfer_types_image_baggage_width"
+                android:layout_height="@dimen/transfer_types_image_baggage_height"
+                app:srcCompat="@drawable/ic_baggage_small"
+                android:layout_marginStart="@dimen/transfer_types_image_baggage_margin_start"
+                android:layout_gravity="center_vertical"/>
 
             <TextView
                 android:id="@+id/tvCountBaggage"
@@ -144,11 +66,101 @@
                 android:textSize="@dimen/transfer_types_text_size"
                 android:fontFamily="@font/sf_pro_text_regular"
                 android:textColor="@color/colorTextBlack"
-                android:gravity="center"
-                android:text=" X 3"/>
+                android:gravity="center"/>
 
         </LinearLayout>
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/tvVehicleName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/view_offer_vehicle_name_margin_top"
+            android:gravity="center"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="@dimen/view_offer_vehicle_name_text_size"
+            android:fontFamily="@font/helvetica_neue"/>
 
-</RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/column2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/column1"
+        app:layout_constraintEnd_toStartOf="@id/column3"
+        android:layout_marginStart="@dimen/view_offer_column2_margin_start_end"
+        android:layout_marginEnd="@dimen/view_offer_column2_margin_start_end">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="@dimen/view_offer_driver_image_size"
+                android:layout_height="@dimen/view_offer_driver_image_size"
+                app:srcCompat="@drawable/ic_driver"
+                android:layout_marginEnd="@dimen/view_offer_driver_image_margin_end"/>
+
+            <TextView
+                android:id="@+id/tvCarrierId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/helvetica_neue"
+                android:textSize="@dimen/view_offer_text_sizes"
+                android:textColor="@color/colorTextBlack"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvCompletedTransfers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/helvetica_neue"
+            android:textSize="@dimen/view_offer_text_sizes"
+            android:textColor="@color/colorTextBlack"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/view_offer_completed_transfers_text_margin_top"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/column3"
+        android:layout_width="@dimen/view_offer_column3_width"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/view_offer_column3_margin_end">
+
+        <TextView
+            android:id="@+id/tvCost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/helvetica_neue"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="@dimen/view_offer_cost_text_size"
+            android:layout_marginBottom="@dimen/view_offer_cost_margin_bottom"/>
+
+        <Button
+            android:id="@+id/btnSelect"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/view_offer_btn_select_height"
+            android:background="@drawable/btn_get_transfer"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/view_offer_text_sizes"
+            android:fontFamily="@font/helvetica_neue"
+            android:textAllCaps="true"
+            android:text="@string/select"
+            android:stateListAnimator="@null" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

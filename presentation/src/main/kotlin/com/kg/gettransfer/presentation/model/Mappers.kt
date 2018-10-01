@@ -51,6 +51,7 @@ object Mappers {
                          transportTypes: List<TransportType>): TransferModel {
         val selected = transportTypes.filter { transfer.transportTypeIds.contains(it.id) }
         return TransferModel(transfer.id,
+                      transfer.status,
                       transfer.from.name,
                       transfer.to!!.name,
                       //SimpleDateFormat(Utils.DATE_TIME_PATTERN, locale).format(transfer.dateToLocal),
@@ -76,7 +77,12 @@ object Mappers {
                                                  offer.vehicle.transportTypeId,
                                                  offer.vehicle.name,
                                                  offer.vehicle.registrationNumber,
-                                                 offer.price.base.default)
+                                                 offer.price.base.default,
+                                                 offer.vehicle.paxMax,
+                                                 offer.vehicle.luggageMax,
+                                                 offer.vehicle.year,
+                                                 offer.carrier.id,
+                                                 offer.carrier.completedTransfers)
 
     fun getCarrierTripModel(carrierTrip: CarrierTrip,
                             locale: Locale,
