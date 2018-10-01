@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 include ':presentation', ':data', ':domain', ':prefs', ':logging'
+=======
+include ':presentation', ':data', ':domain', ':prefs', ':remote'
+>>>>>>> remote module. System
