@@ -2,6 +2,7 @@ package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.Api
 import com.kg.gettransfer.data.PreferencesCache
+import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.TransportTypesDeserializer
 import com.kg.gettransfer.data.model.*
 
@@ -117,7 +118,7 @@ class ApiRepositoryImpl(private val preferences: Preferences,
     private suspend fun tryPutAccount(apiAccount: ApiAccount): ApiResponse<ApiAccountWrapper> {
         return try { api.putAccount(apiAccount).await() }
         catch(e: Exception) {
-            if(e is ApiException) throw e /* second invocation */
+            if(e is RemoteException) throw e /* second invocation */
             val ae = apiException(e)
             if(!ae.isInvalidToken()) throw ae
 
@@ -141,7 +142,7 @@ class ApiRepositoryImpl(private val preferences: Preferences,
     private suspend fun tryLogin(email: String, password: String): ApiResponse<ApiAccountWrapper> {
         return try { api.login(email, password).await() }
         catch(e: Exception) {
-            if(e is ApiException) throw e /* second invocation */
+            if(e is RemoteException) throw e /* second invocation */
             val ae = apiException(e)
             if(!ae.isInvalidToken()) throw ae
 
@@ -166,7 +167,7 @@ class ApiRepositoryImpl(private val preferences: Preferences,
         ApiResponse<ApiRouteInfo> {
         return try { api.getRouteInfo(points, withPrices, returnWay).await() }
         catch(e: Exception) {
-            if(e is ApiException) throw e /* second invocation */
+            if(e is RemoteException) throw e /* second invocation */
             val ae = apiException(e)
             if(!ae.isInvalidToken()) throw ae
 
@@ -182,7 +183,7 @@ class ApiRepositoryImpl(private val preferences: Preferences,
     suspend fun <R> tryTwice(apiCall: () -> Deferred<R>): R {
         return try { apiCall().await() }
         catch(e: Exception) {
-            if(e is ApiException) throw e /* second invocation */
+            if(e is RemoteException) throw e /* second invocation */
             val ae = apiException(e)
             if(!ae.isInvalidToken()) throw ae
 
@@ -194,7 +195,7 @@ class ApiRepositoryImpl(private val preferences: Preferences,
     suspend fun <R> tryTwice(id: Long, apiCall: (Long) -> Deferred<R>): R {
         return try { apiCall(id).await() }
         catch(e: Exception) {
-            if(e is ApiException) throw e /* second invocation */
+            if(e is RemoteException) throw e /* second invocation */
             val ae = apiException(e)
             if(!ae.isInvalidToken()) throw ae
 
@@ -210,8 +211,10 @@ class ApiRepositoryImpl(private val preferences: Preferences,
     */
 
     private suspend fun updateAccessToken() {
-        val response: ApiResponse<ApiToken> = api.accessToken(apiKey).await()
+        /*
+        val response: Response<ApiToken> = api.accessToken(apiKey).await()
         preferences.accessToken = response.data!!.token
+        */  
     }
 
     suspend fun createTransfer(from: GTAddress,
@@ -252,7 +255,7 @@ class ApiRepositoryImpl(private val preferences: Preferences,
     private suspend fun tryPostTransfer(apiTransfer: ApiTransferWrapper): ApiResponse<ApiTransferWrapper> {
         return try { api.postTransfer(apiTransfer).await() }
         catch(e: Exception) {
-            if(e is ApiException) throw e /* second invocation */
+            if(e is RemoteException) throw e /* second invocation */
             val ae = apiException(e)
             if(!ae.isInvalidToken()) throw ae
 
@@ -333,10 +336,10 @@ class ApiRepositoryImpl(private val preferences: Preferences,
         return Mappers.mapApiCarrierTrip(carrierTrip)
     }
     
-    fun apiException(e: Exception): ApiException {
+    fun apiException(e: Exception): RemoteException {
         if(e is HttpException)
-            return ApiException(e.code(), gson.fromJson(e.response().errorBody()?.string(), ApiResponse::class.java).
+            return RemoteException(e.code(), gson.fromJson(e.response().errorBody()?.string(), ApiResponse::class.java).
                 error?.details?.toString() ?: e.message!!)
-        else return ApiException(ApiException.NOT_HTTP, e.message!!)
+        else return RemoteException(RemoteException.NOT_HTTP, e.message!!)
     }
 }
