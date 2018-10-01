@@ -12,6 +12,10 @@ import com.kg.gettransfer.data.logging.LoggingImpl
 import com.kg.gettransfer.prefs.PreferencesImpl
 
 import com.kg.gettransfer.data.PreferencesCache
+import com.kg.gettransfer.data.SystemCache
+
+import com.kg.gettransfer.data.ds.*
+import com.kg.gettransfer.data.mapper.*
 import com.kg.gettransfer.data.repository.*
 
 import com.kg.gettransfer.domain.CoroutineContexts
@@ -43,7 +47,15 @@ val ciceroneModule = module {
 }
 
 val domainModule = module {
-    single { PreferencesImpl(get()) as PreferencesCache } bind PreferencesRepository::class
+//    single { PreferencesImpl(get()) as PreferencesCache } bind PreferencesRepository::class
+    single { PreferencesImpl(get()) as PreferencesCache } bind SystemCache::class
+    
+    single { SystemCacheDataStore(get()) }
+    single { SystemRemoteDataStore(get()) }
+    single { SystemDataStoreFactory(get(), get()) }
+    single { AccountMapper() }
+    single { ConfigsMapper() }
+    
 	single {
 		val context: Context = get()
 		LoggingImpl(get(),
@@ -59,7 +71,7 @@ val domainModule = module {
 	single { OfferRepositoryImpl(get()) as OfferRepository }
 	single { PaymentRepositoryImpl(get()) as PaymentRepository }
 	single { RouteRepositoryImpl(get()) as RouteRepository }
-	single { SystemRepositoryImpl(get(), get(), get()) as SystemRepository }
+	single { SystemRepositoryImpl(get(), get(), get(), get()) as SystemRepository }
 	single { TransferRepositoryImpl(get()) as TransferRepository }
 	
 	single { CarrierTripInteractor(get()) }

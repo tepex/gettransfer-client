@@ -3,6 +3,7 @@ package com.kg.gettransfer.prefs
 import android.content.Context
 
 import com.kg.gettransfer.data.PreferencesCache
+import com.kg.gettransfer.data.SystemCache
 import com.kg.gettransfer.data.model.*
 
 import com.kg.gettransfer.domain.model.Account
@@ -22,11 +23,11 @@ class PreferencesImpl(context: Context): Preferences {
 
     private val configsPrefs = context.getSharedPreferences(CONFIGS, Context.MODE_PRIVATE)
     private val accountPrefs = context.getSharedPreferences(ACCOUNT, Context.MODE_PRIVATE)
-    private var _accessToken = PreferencesCache.INVALID_TOKEN
+    private var _accessToken = SystemCache.INVALID_TOKEN
     
     override var accessToken: String
         get() {
-            if(_accessToken == PreferencesCache.INVALID_TOKEN) _accessToken = configsPrefs.getString(TOKEN, PreferencesCache.INVALID_TOKEN)!!
+            if(_accessToken == SystemCache.INVALID_TOKEN) _accessToken = configsPrefs.getString(TOKEN, SystemCache.INVALID_TOKEN)!!
             return _accessToken
         }
         set(value) {
@@ -53,7 +54,8 @@ class PreferencesImpl(context: Context): Preferences {
                            accountPrefs.getStringSet(ACCOUNT_GROUPS, null)?.toTypedArray(),
                            carrierId)
         }
-        set(value) {
+
+    override fun setAccount(accountEntity: AccountEntity) {
             val editor = accountPrefs.edit()
             editor.putString(ACCOUNT_EMAIL, value.user.profile.email)
             editor.putString(ACCOUNT_PHONE, value.user.profile.phone)
@@ -83,7 +85,7 @@ class PreferencesImpl(context: Context): Preferences {
             editor.apply()
         }
         
-    override fun cleanAccount() {
+    override fun clearAccount() {
         val editor = accountPrefs.edit()
         editor.remove(ACCOUNT_EMAIL)
         editor.remove(ACCOUNT_PHONE)

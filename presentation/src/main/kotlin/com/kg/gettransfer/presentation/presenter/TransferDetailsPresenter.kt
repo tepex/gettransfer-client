@@ -68,5 +68,5 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
 	    }, { e -> Timber.e(e)
 	        viewState.setError(e)
         }, { viewState.blockInterface(false) })        
-	}	
+	}
 }
