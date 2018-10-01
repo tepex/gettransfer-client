@@ -6,7 +6,8 @@ import java.util.Locale
 data class Account(val user: User,
                    var locale: Locale?,
                    var currency: Currency?,
-                   var distanceUnit: DistanceUnit,
+                    /* Only for Tepex: Server protocol problem */
+                   var distanceUnit: DistanceUnit?,
                    var fullName: String?,
                    var groups: Array<String>?,
                    var carrierId: Long?) {

@@ -26,7 +26,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         get() = account.currency ?: Currency.getInstance("USD")
         set(value) { account.currency = value }
     var distanceUnit: DistanceUnit
-        get() = account.distanceUnit
+        get() = account.distanceUnit!!
         set(value) { account.distanceUnit = value }
 
     val transportTypes       = systemRepository.getConfigs().transportTypes

@@ -31,7 +31,7 @@ open class AccountMapper(): Mapper<AccountEntity, Account> {
                       type.phone,
                       type.locale,
                       type.currency,
-                      type.distanceUnit.name,
+                      type.distanceUnit?.name,
                       type.fullName,
                       type.groups,
                       type.termsAccepted)
