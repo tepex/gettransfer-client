@@ -35,7 +35,7 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
                 if (item.checked) ivTransportInfo.visibility = View.VISIBLE else ivTransportInfo.visibility = View.INVISIBLE
                 item.showInfo = ivTransportInfo.visibility == View.VISIBLE
             }
-            ivTransportInfo.setOnClickListener {
+            layoutTransportInfo.setOnClickListener {
                 if (item.checked) {
                     listener(item)
                 }

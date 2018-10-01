@@ -220,7 +220,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/tvName"
+                    android:id="@+id/etName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -239,7 +239,7 @@
                     android:layout_marginTop="24dp"
                     android:text="@string/receive_email_notifications"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvName" />
+                    app:layout_constraintTop_toBottomOf="@id/etName" />
             </android.support.constraint.ConstraintLayout>
 
             <Button

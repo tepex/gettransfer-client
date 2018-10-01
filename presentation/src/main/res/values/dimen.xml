@@ -70,12 +70,12 @@
 	<dimen name="create_transfer_btn_get_transfer_bottom_margin">23dp</dimen>
 	<dimen name="create_transfer_additionals_view_height">60dp</dimen>
 	<dimen name="create_transfer_btn_get_transfer_height">44dp</dimen>
-	<dimen name="create_transfer_cb_agreement_margin">8dp</dimen>
+	<dimen name="create_transfer_cb_agreement_margin">10dp</dimen>
 	<dimen name="create_transfer_agreement_padding">15dp</dimen>
 	<dimen name="create_transfer_agreement_margin_text_start">24dp</dimen>
 	<dimen name="create_transfer_cb_size">15dp</dimen>
 	<dimen name="create_transfer_agreement_text_size">13sp</dimen>
-	<dimen name="create_transfer_agreement_text_margin_start">44dp</dimen>
+	<dimen name="create_transfer_agreement_text_margin_start">55dp</dimen>
 	<dimen name="create_transfer_agreement_text_margin_end">17dp</dimen>
 	<dimen name="create_transfer_map_height">200dp</dimen>
 	<dimen name="create_transfer_additionals_end_margin">25dp</dimen>
@@ -87,6 +87,7 @@
 
 	<dimen name="create_transfer_additionals_top_text_size">17sp</dimen>
 	<dimen name="create_transfer_additionals_bottom_text_size">15sp</dimen>
+	<dimen name="height_title_sheet_order">35dp</dimen>
 
 	<dimen name="create_order_behaviour_peek_height">250dp</dimen>
 

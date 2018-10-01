@@ -14,7 +14,6 @@ import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
 
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
 
 import android.text.InputType
 import android.util.DisplayMetrics
@@ -94,6 +93,9 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
                     return intentLicense
                 }
                 Screens.OFFERS -> return Intent(context, OffersActivity::class.java)
+                Screens.PASSENGER_MODE -> return Intent(context, MainActivity::class.java)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             }
             return null
         }
@@ -133,7 +135,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         ivPersonsCounterDown.setOnClickListener { presenter.changePassengers(-1) }
         ivPersonsCounterUp.setOnClickListener { presenter.changePassengers(1) }
 
-        tvName.onTextChanged { presenter.setName(it.trim()) }
+        etName.onTextChanged { presenter.setName(it.trim()) }
         etEmail.onTextChanged { presenter.setEmail(it.trim()) }
         tvPhone.onTextChanged { presenter.setPhone(it.trim()) }
         ivChildCounterDown.setOnClickListener { presenter.changeChildren(-1) }
@@ -303,7 +305,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun setUser(user: UserModel) {
-        tvName.setText(user.name ?: "")
+        etName.setText(user.name ?: "")
         tvPhone.setText(user.phone ?: "")
         if(user.email != null) {
             etEmail.setText(user.email)

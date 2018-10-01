@@ -222,6 +222,10 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
 
     fun onBackClick() {
-        onBackCommandClick()
+        router.navigateTo(Screens.PASSENGER_MODE)
+    }
+
+    override fun onBackCommandClick() {
+        router.navigateTo(Screens.PASSENGER_MODE)
     }
 }

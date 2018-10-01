@@ -27,23 +27,29 @@
         android:fontFamily="@font/sf_pro_text_regular"
         android:textSize="@dimen/transfer_types_text_size"
         app:layout_constraintBottom_toBottomOf="@+id/cbTransferType"
-        app:layout_constraintEnd_toStartOf="@+id/ivTransportInfo"
+        app:layout_constraintEnd_toStartOf="@+id/layoutTransportInfo"
         app:layout_constraintStart_toEndOf="@+id/cbTransferType"
         app:layout_constraintTop_toTopOf="@+id/cbTransferType"
         tools:text="Economy" />
 
-    <ImageView
-        android:id="@+id/ivTransportInfo"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_marginBottom="8dp"
+    <FrameLayout
+        android:id="@+id/layoutTransportInfo"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/tvTransferType"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvTransferType"
-        app:srcCompat="@drawable/ic_info_cars_type"
-        android:visibility="invisible"/>
+        app:layout_constraintTop_toTopOf="@+id/tvTransferType">
+
+        <ImageView
+            android:id="@+id/ivTransportInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_info_cars_type" />
+    </FrameLayout>
+
 
     <ImageView
         android:id="@+id/ivTransferType"
