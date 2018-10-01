@@ -72,7 +72,9 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     override fun blockInterface(block: Boolean) {}
     
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-        Utils.showError(this, finish, getString(errId, *args))
+        var errMessage = getString(errId, *args)
+        Timber.e(RuntimeException(errMessage))
+        Utils.showError(this, finish, errMessage)
     }
     
     override fun setError(e: Throwable) {

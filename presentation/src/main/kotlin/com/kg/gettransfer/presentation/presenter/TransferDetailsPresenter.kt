@@ -8,7 +8,6 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
