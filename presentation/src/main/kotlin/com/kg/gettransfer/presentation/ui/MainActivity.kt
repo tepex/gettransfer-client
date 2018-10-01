@@ -6,7 +6,6 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 
 import android.os.Build
@@ -34,10 +33,8 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdateFactory
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
@@ -217,17 +214,16 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
 		popupEntrance = PopupWindow(layoutEntrance, LinearLayout.LayoutParams.MATCH_PARENT,
 										LinearLayout.LayoutParams.WRAP_CONTENT, true)
-		popupEntrance.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-		popupEntrance.inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
+        popupEntrance.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        popupEntrance.inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
+		popupEntrance.isOutsideTouchable = true
+		popupEntrance.setBackgroundDrawable(ColorDrawable())
+		popupEntrance.setOnDismissListener { layoutEntrance.etEntrance.hideKeyboard() }
 		popupEntrance.showAtLocation(contentMain, Gravity.BOTTOM, 0, search.height + popupEntrance.height)
-        popupEntrance.isOutsideTouchable = true
-        popupEntrance.isFocusable = true
 
 		layoutEntrance.etEntrance.showKeyboard()
 		layoutEntrance.etEntrance.setText(presenter.entrance)
 		layoutEntrance.etEntrance.setSelection(layoutEntrance.etEntrance.text.length)
-
-		popupEntrance.setOnDismissListener { layoutEntrance.etEntrance.hideKeyboard() }
 
         layoutEntrance.tvClose.setOnClickListener {
 			presenter.entrance = ""
