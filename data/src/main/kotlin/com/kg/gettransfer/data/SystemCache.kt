@@ -1,7 +1,6 @@
 package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.model.AccountEntity
-import com.kg.gettransfer.data.model.ConfigsEntity
 
 interface SystemCache {
     companion object {

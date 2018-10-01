@@ -9,7 +9,7 @@ interface SystemRepository {
         
     suspend fun coldStart()
     fun getConfigs(): Configs
-    fun getAccount(): Account
+    suspend fun getAccount(): Account
     suspend fun putAccount(account: Account)
     /* Not used
     suspend fun createAccount(account: Account)

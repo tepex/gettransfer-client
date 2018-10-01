@@ -10,9 +10,9 @@ import com.kg.gettransfer.data.model.ConfigsEntity
  * Implementation of the [SystemDataStore] interface to provide a means of communicating with the local data source.
  */
 open class SystemCacheDataStore(private val cache: SystemCache): SystemDataStore {
-    override fun getConfigs(): ConfigsEntity { throw UnsupportedOperationException() }
-    override fun getAccount() = cache.getAccount()
-    override fun setAccount(accountEntity: AccountEntity) = cache.setAccount(accountEntity)
+    override suspend fun getConfigs(): ConfigsEntity { throw UnsupportedOperationException() }
+    override suspend fun getAccount() = cache.getAccount()
+    override suspend fun setAccount(accountEntity: AccountEntity) = cache.setAccount(accountEntity)
     override fun clearAccount() = cache.clearAccount()
-    override fun login(email: String, password: String): AccountEntity { throw UnsupportedOperationException() }
+    override suspend fun login(email: String, password: String): AccountEntity { throw UnsupportedOperationException() }
 }
