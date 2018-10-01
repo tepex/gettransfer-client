@@ -56,7 +56,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     
     fun logout() {
         systemRepository.logout()
-        account = systemRepository.getAccount()
+        account = Account.NO_ACCOUNT
     }
 
     suspend fun login(email: String, password: String) {

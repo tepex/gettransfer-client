@@ -13,22 +13,29 @@ buildscript {
 		gs_version            = "4.0.1"
 		hockeyapp_version     = "3.7.6"
 		jsr250_version        = "1.0"
+		retrofit_version      = "2.4.0"
+		r2_k_c_a_version      = "1.0.0"
+		okhttp3_version       = "3.11.0"
 		timber_version        = "4.7.1"
 		junit_version         = "4.12"
 		hamcrest_version      = "2.0.0.0"
 		mockito_version       = "2.22.0"
 		
 		libs = [
-			kotlin        : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
-			coroutines    : ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"),
-//    		psMaps        : ("com.google.android.gms:play-services-maps:${PLAY_SERVICES_VERSION}"),
-    		psLocation    : ("com.google.android.gms:play-services-location:$gms_version"),
-    		psPlaces      : ("com.google.android.gms:play-services-places:$gms_version"),
-			timber        : ("com.jakewharton.timber:timber:$timber_version"),
-			jsr250        : ("javax.annotation:jsr250-api:$jsr250_version"),
-			junit         : ("junit:junit:$junit_version"),
-			hamcrest      : ("org.hamcrest:java-hamcrest:$hamcrest_version"),
-			mockito       : ("org.mockito:mockito-core:$mockito_version")
+			kotlin          : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
+			coroutines      : ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"),
+    		psLocation      : ("com.google.android.gms:play-services-location:$gms_version"),
+    		psPlaces        : ("com.google.android.gms:play-services-places:$gms_version"),
+    		retrofit        : ("com.squareup.retrofit2:retrofit:$retrofit_version"),
+    		retrofit_json   : ("com.squareup.retrofit2:converter-gson:$retrofit_version"),
+    		retrofit_kotlin : ("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-experimental-adapter:$r2_k_c_a_version"),
+    		okhttp3         : ("com.squareup.okhttp3:okhttp:$okhttp3_version"),
+    		okhttp3_logging : ("com.squareup.okhttp3:logging-interceptor:$okhttp3_version"),
+			timber          : ("com.jakewharton.timber:timber:$timber_version"),
+			jsr250          : ("javax.annotation:jsr250-api:$jsr250_version"),
+			junit           : ("junit:junit:$junit_version"),
+			hamcrest        : ("org.hamcrest:java-hamcrest:$hamcrest_version"),
+			mockito         : ("org.mockito:mockito-core:$mockito_version")
 		]
 	}
     

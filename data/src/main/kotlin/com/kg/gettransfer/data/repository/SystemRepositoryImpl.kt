@@ -23,13 +23,14 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
 
     override suspend fun coldStart() {
         configs = configsMapper.fromEntity(factory.retrieveRemoteDataStore().getConfigs())
+        accountMapper.configs = configs
         val accountEntity = factory.retrieveRemoteDataStore().getAccount()
         factory.retrieveCacheDataStore().setAccount(accountEntity)
     }
     
     override fun getConfigs() = configs
     
-    override fun getAccount() = accountMapper.fromEntity(factory.retrieveCacheDataStore().getAccount())
+    override suspend fun getAccount() = accountMapper.fromEntity(factory.retrieveCacheDataStore().getAccount())
 
     override suspend fun putAccount(account: Account) {
         val accountEntity = accountMapper.toEntity(account)

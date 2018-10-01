@@ -37,7 +37,7 @@ import ru.terrakok.cicerone.Router
  */
 val appModule = module {
 	// Util
-	single { PreferenceManager.getDefaultSharedPreferences(get()) as SharedPreferences }
+	//single { PreferenceManager.getDefaultSharedPreferences(get()) as SharedPreferences }
 }
 
 val ciceroneModule = module {
@@ -48,7 +48,7 @@ val ciceroneModule = module {
 
 val domainModule = module {
 //    single { PreferencesImpl(get()) as PreferencesCache } bind PreferencesRepository::class
-    single { PreferencesImpl(get()) as PreferencesCache } bind SystemCache::class
+    single { PreferencesImpl(get()) } bind PreferencesCache::class bind SystemCache::class
     
     single { SystemCacheDataStore(get()) }
     single { SystemRemoteDataStore(get()) }
@@ -66,6 +66,7 @@ val domainModule = module {
                 context.resources.getStringArray(R.array.api_keys),
 				context.resources.getStringArray(R.array.api_urls))
 	}
+	
 	single { CarrierTripRepositoryImpl(get()) as CarrierTripRepository }
 	single { GeoRepositoryImpl(get()) as GeoRepository }
 	single { OfferRepositoryImpl(get()) as OfferRepository }

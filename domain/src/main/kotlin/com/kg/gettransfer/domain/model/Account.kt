@@ -11,7 +11,6 @@ data class Account(val user: User,
                    var fullName: String?,
                    var groups: Array<String>?,
                    var carrierId: Long?) {
-
     companion object {
         val NO_ACCOUNT = Account(User(Profile(null, null, null)), null, null, null, null, null)
         @JvmField val GROUP_CARRIER_DRIVER = "carrier/driver"
