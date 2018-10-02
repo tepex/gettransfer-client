@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 
 import android.preference.PreferenceManager
+import com.arellomobile.mvp.MvpPresenter
+import com.google.firebase.analytics.FirebaseAnalytics
 
 import com.kg.gettransfer.R
 
@@ -14,10 +16,12 @@ import com.kg.gettransfer.data.repository.*
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.*
 import com.kg.gettransfer.domain.repository.*
+import com.kg.gettransfer.presentation.presenter.BasePresenter
 
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.IO
 import kotlinx.coroutines.experimental.android.Main
+import org.koin.android.ext.koin.androidApplication
 
 import org.koin.dsl.module.module
 
@@ -63,6 +67,7 @@ val domainModule = module {
 
 val androidModule = module {
 	single { CoroutineContexts(Dispatchers.Main, Dispatchers.IO) }
+	single { FirebaseAnalytics.getInstance(androidApplication().applicationContext)  }
 }
 
 val testModule = module {

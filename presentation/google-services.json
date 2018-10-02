@@ -1,0 +1,37 @@
+{
+  "project_info": {
+    "project_number": "215265777280",
+    "firebase_url": "https://get-transfer-mobile.firebaseio.com",
+    "project_id": "get-transfer-mobile",
+    "storage_bucket": "get-transfer-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215265777280:android:6102b6945a841ae4",
+        "android_client_info": {
+          "package_name": "com.kg.gettransfer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJr7vDNzW1tZqZYCwDa8wybpp3Fz1QNeo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

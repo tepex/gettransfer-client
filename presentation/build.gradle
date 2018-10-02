@@ -153,6 +153,9 @@ dependencies {
 
 	// Hockey
 	implementation "net.hockeyapp.android:HockeySDK:$hockey_version"
+
+	//Firebase
+	implementation 'com.google.firebase:firebase-core:16.0.1'
     
 	testImplementation libs.junit
 	testImplementation libs.hamcrest
@@ -172,3 +175,5 @@ def generateChangeLog() {
 	println changelog
 	return changelog
 }
+
+apply plugin: 'com.google.gms.google-services'
