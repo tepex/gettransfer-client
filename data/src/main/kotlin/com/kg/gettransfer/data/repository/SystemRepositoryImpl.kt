@@ -15,7 +15,7 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
                            private val factory: SystemDataStoreFactory,
                            private val configsMapper: ConfigsMapper,
                            private val accountMapper: AccountMapper): SystemRepository {
-    private lateinit var configs: Configs
+    override lateinit var configs: Configs
 
     override var lastMode: String
         get() = preferencesCache.lastMode
@@ -27,8 +27,6 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
         val accountEntity = factory.retrieveRemoteDataStore().getAccount()
         factory.retrieveCacheDataStore().setAccount(accountEntity)
     }
-    
-    override fun getConfigs() = configs
     
     override suspend fun getAccount() = accountMapper.fromEntity(factory.retrieveCacheDataStore().getAccount())
 
