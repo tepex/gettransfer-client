@@ -78,11 +78,14 @@ object Mappers {
                                                  offer.vehicle.name,
                                                  offer.vehicle.registrationNumber,
                                                  offer.price.base.default,
+                                                 offer.price.base.preferred,
                                                  offer.vehicle.paxMax,
                                                  offer.vehicle.luggageMax,
                                                  offer.vehicle.year,
                                                  offer.carrier.id,
-                                                 offer.carrier.completedTransfers)
+                                                 offer.carrier.completedTransfers,
+                                                 offer.wifi,
+                                                 offer.refreshments)
 
     fun getCarrierTripModel(carrierTrip: CarrierTrip,
                             locale: Locale,

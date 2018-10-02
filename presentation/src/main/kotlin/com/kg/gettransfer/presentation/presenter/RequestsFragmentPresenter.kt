@@ -32,7 +32,7 @@ class RequestsFragmentPresenter(cc: CoroutineContexts,
     
     private var transfers: List<TransferModel>? = null
                                 
-    override fun onFirstViewAttach() {
+    /*override fun onFirstViewAttach() {
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             transfers = when(categoryName) {
@@ -47,13 +47,32 @@ class RequestsFragmentPresenter(cc: CoroutineContexts,
         }, { e ->
                 if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
                 else viewState.setError(e)
-        }, { viewState.blockInterface(false) })
-    }
+        }, { viewState.blockInterface(false) }
+    }*/
         
     @CallSuper
     override fun attachView(view: RequestsFragmentView) {
         super.attachView(view)
+        getTransfers()
         transfers?.let { viewState.setRequests(it) }
+    }
+
+    fun getTransfers(){
+        utils.launchAsyncTryCatchFinally({
+            viewState.blockInterface(true)
+            transfers = when(categoryName) {
+                RequestsActivity.CATEGORY_ACTIVE -> transferInteractor.getActiveTransfers()
+                RequestsActivity.CATEGORY_COMPLETED -> transferInteractor.getCompletedTransfers()
+                else -> transferInteractor.getArchivedTransfers()
+            }.map { Mappers.getTransferModel(it,
+                    systemInteractor.locale,
+                    systemInteractor.distanceUnit,
+                    systemInteractor.getTransportTypes()) }
+            viewState.setRequests(transfers!!)
+        }, { e ->
+            if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
+            else viewState.setError(e)
+        }, { viewState.blockInterface(false) })
     }
 
     fun openTransferDetails(id: Long, status: String) {

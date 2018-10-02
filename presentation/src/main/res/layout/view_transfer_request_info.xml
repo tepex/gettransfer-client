@@ -31,6 +31,8 @@
         app:layout_constraintTop_toTopOf="parent"
         android:textSize="@dimen/view_transfer_info_request_number_text_size"
         android:layout_marginEnd="@dimen/view_transfer_info_btn_cancel_request_margin_end"
+        android:paddingTop="@dimen/view_transfer_info_btn_cancel_request_padding_top_bottom"
+        android:paddingBottom="@dimen/view_transfer_info_btn_cancel_request_padding_top_bottom"
         android:visibility="gone"/>
 
     <TextView

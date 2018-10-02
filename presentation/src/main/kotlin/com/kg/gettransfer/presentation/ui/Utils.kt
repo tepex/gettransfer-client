@@ -71,6 +71,14 @@ internal class Utils {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show()
         }
+
+        fun showAlertCancelRequest(context: Context, listener: (Boolean) -> Unit){
+            getAlertDialogBuilder(context)
+                    .setTitle(R.string.alert_cancel_transfer_text)
+                    .setPositiveButton(R.string.alert_yes) { dialog, which -> listener(true) }
+                    .setNegativeButton(R.string.alert_no) {dialog, which -> listener(false) }
+                    .show()
+        }
         
         fun setCurrenciesDialogListener(context: Context, view: View, items: List<CharSequence>,
             listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.currency, items, listener) }
@@ -197,6 +205,11 @@ internal class Utils {
             v.draw(Canvas(bitmap))
             return bitmap
         }*/
+
+        fun getTransportTypeName(id: String): Int{
+            val nameRes = R.string::class.members.find( { it.name == "transport_type_$id" } )
+            return (nameRes?.call() as Int?) ?: R.string.transport_type_unknown
+        }
 	}
 }
 

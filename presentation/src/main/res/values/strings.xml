@@ -329,4 +329,12 @@
     <!--view_transfer_request_info-->
     <string name="cancel_request_underlined"><u>Cancel request</u></string>
 
+    <string name="alert_cancel_transfer_text">Are you shure cancel transfer?</string>
+    <string name="alert_no">No</string>
+    <string name="alert_yes">Yes</string>
+
+    <string name="driver_number">#%1$d</string>
+    <string name="driver_completed_transfers">made %1$d transfers</string>
+    <string name="preferred_cost">(%1$s)</string>
+
 </resources>

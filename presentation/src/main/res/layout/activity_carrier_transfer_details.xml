@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -94,9 +95,9 @@
                 android:background="@color/colorWhite">
                 
                 <ImageView
-                    android:layout_width="9dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_passenger"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_passenger"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/textPassenger"
                     app:layout_constraintTop_toTopOf="parent"
@@ -145,9 +146,9 @@
                     app:layout_constraintTop_toTopOf="parent"/>
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/ic_passport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_passport"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/textName"
                     app:layout_constraintTop_toTopOf="parent"
@@ -247,11 +248,11 @@
                     app:layout_constraintTop_toTopOf="parent"/>
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="23dp"
-                    android:src="@drawable/ic_child_seat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_child_seat"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/textChildSeats"
+                    app:layout_constraintEnd_toStartOf="@id/textChildSeats"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -298,9 +299,9 @@
                     app:layout_constraintTop_toTopOf="parent"/>
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_flight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_flight"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/textFlightOrTrainNumber"
                     app:layout_constraintTop_toTopOf="parent"

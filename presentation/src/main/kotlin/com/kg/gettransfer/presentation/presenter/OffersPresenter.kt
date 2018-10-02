@@ -85,7 +85,23 @@ class OffersPresenter(cc: CoroutineContexts,
         router.navigateTo(Screens.DETAILS)
     }
 
-    fun onSelectOfferClicked(){
+    fun onSelectOfferClicked(offer: OfferModel){
 
+    }
+
+    fun onCancelRequestClicked(){
+        viewState.showAlertCancelRequest()
+    }
+
+    fun cancelRequest(isCancel: Boolean){
+        if(isCancel) {
+            utils.launchAsyncTryCatchFinally({
+                utils.asyncAwait { transferInteractor.cancelTransfer("") }
+                router.exit()
+            }, { e ->
+                Timber.e(e)
+                viewState.setError(e)
+            }, { viewState.blockInterface(false) })
+        }
     }
 }

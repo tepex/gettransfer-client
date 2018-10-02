@@ -11,7 +11,7 @@
     <string name="log_in_to_see_transfers_and_offers">Войдите в кабинет, чтобы посмотреть заявки</string>
     <string name="create_new_transfer">Создать трансфер</string>
     <string name="no_transfers">Нет заявок</string>
-    <string name="book">Бронь</string>
+    <string name="book">Заказать</string>
 
     <string name="newTransfer">Новый трансфер</string>
     <string name="list">Список</string>
@@ -227,4 +227,23 @@
     <string name="driver_will_meet_you">*Водитель встретит вас с табличкой</string>
     <string name="example_flight">Например: BA 2243</string>
 
+    <string name="alert_cancel_transfer_text">Точно отменить поездку?</string>
+    <string name="alert_no">Нет</string>
+    <string name="alert_yes">Да</string>
+
+    <string name="driver_number">#%1$d</string>
+    <string name="driver_completed_transfers">сделал %1$d поездок</string>
+    <string name="preferred_cost">(%1$s)</string>
+
+    <!-- Transport types -->
+    <string name="transport_type_economy">Эконом</string>
+    <string name="transport_type_business">Бизнес</string>
+    <string name="transport_type_premium">Премиум</string>
+    <string name="transport_type_van">Минивен</string>
+    <string name="transport_type_minibus">Микроавтобус</string>
+    <string name="transport_type_bus">Автобус</string>
+    <string name="transport_type_limousine">Лимузин</string>
+    <string name="transport_type_helicopter">Вертолет</string>
+    <string name="transport_type_unknown">Unknown</string>
+    
 </resources>

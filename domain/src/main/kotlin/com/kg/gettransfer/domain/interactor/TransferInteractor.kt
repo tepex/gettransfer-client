@@ -41,13 +41,23 @@ class TransferInteractor(private val repository: TransferRepository) {
                                              account,
                                              promoCode,
                                              paypalOnly)
+        if(allTransfers != null){
+            val muttableList = allTransfers!!.toMutableList()
+            muttableList.add(0, transfer!!)
+            allTransfers = muttableList
+        }
         selectedId = transfer!!.id
         return transfer!!
     }
     
     suspend fun getTransfer() = repository.getTransfer(selectedId)
     suspend fun getOffers() = repository.getOffers(selectedId)
-    suspend fun cancelTransfer(reason: String) = repository.cancelTransfer(selectedId, reason)
+    suspend fun cancelTransfer(reason: String){
+        val cancelledTransfer = repository.cancelTransfer(selectedId, reason)
+        if(allTransfers != null){
+            allTransfers!!.map { if(it.id == selectedId) it.status = cancelledTransfer.status }
+        }
+    }
     
     suspend fun getAllTransfers(): List<Transfer> {
         if(allTransfers == null) allTransfers = repository.getAllTransfers()
@@ -62,17 +72,17 @@ class TransferInteractor(private val repository: TransferRepository) {
     }
 
     suspend fun getActiveTransfers(): List<Transfer> {
-        if(activeTransfers == null) activeTransfers = getAllTransfers().filter {
+        /*if(activeTransfers == null) */activeTransfers = getAllTransfers().filter {
                 it.status == Transfer.STATUS_NEW ||
                 it.status == Transfer.STATUS_DRAFT ||
                 it.status == Transfer.STATUS_PERFORMED ||
                 it.status == Transfer.STATUS_PENDING
-            }
+        }
         return activeTransfers!!
     }
 
     suspend fun getCompletedTransfers(): List<Transfer> {
-        if(completedTransfers == null) completedTransfers = getAllTransfers().filter {
+        /*if(completedTransfers == null) */completedTransfers = getAllTransfers().filter {
                 it.status == Transfer.STATUS_COMPLETED ||
                 it.status == Transfer.STATUS_NOT_COMPLETED
             }
@@ -80,7 +90,7 @@ class TransferInteractor(private val repository: TransferRepository) {
     }
 
     suspend fun getArchivedTransfers(): List<Transfer> {
-        if(archivedTransfers == null) archivedTransfers = getAllTransfers().filter {
+        /*if(archivedTransfers == null) */archivedTransfers = getAllTransfers().filter {
                     it.status != Transfer.STATUS_COMPLETED ||
                     it.status != Transfer.STATUS_NOT_COMPLETED
         }

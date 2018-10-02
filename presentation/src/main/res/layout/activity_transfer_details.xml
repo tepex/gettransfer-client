@@ -55,11 +55,11 @@
                     android:layout_height="@dimen/activity_transfer_details_fields_height">
 
                     <ImageView
-                        android:layout_width="@dimen/activity_transfer_details_img_person_width"
-                        android:layout_height="@dimen/activity_transfer_details_img_person_height"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="@dimen/activity_transfer_details_img_person_margin_start"
+                        android:layout_marginStart="@dimen/activity_transfer_details_images_margin_start"
                         app:srcCompat="@drawable/ic_passenger"/>
 
                     <TextView
@@ -98,8 +98,8 @@
                     android:visibility="gone">
 
                     <ImageView
-                        android:layout_width="@dimen/activity_transfer_details_images_width"
-                        android:layout_height="@dimen/activity_transfer_details_img_passport_height"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/activity_transfer_details_images_margin_start"
@@ -141,8 +141,8 @@
                     android:visibility="gone">
 
                     <ImageView
-                        android:layout_width="@dimen/activity_transfer_details_images_width"
-                        android:layout_height="@dimen/activity_transfer_details_img_childs_height"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/activity_transfer_details_images_margin_start"
@@ -184,8 +184,8 @@
                     android:visibility="gone">
 
                     <ImageView
-                        android:layout_width="@dimen/activity_transfer_details_images_width"
-                        android:layout_height="@dimen/activity_transfer_details_img_aircraft_height"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/activity_transfer_details_images_margin_start"
