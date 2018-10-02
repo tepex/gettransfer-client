@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import android.util.Patterns
 
@@ -71,7 +70,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         @JvmField val FUTURE_HOUR       = 6
         @JvmField val FUTURE_MINUTE     = 5
 
-        const val PARAM_KEY = "offer_order"
+        @JvmField val PARAM_KEY = "offer_order"
 
     }
     

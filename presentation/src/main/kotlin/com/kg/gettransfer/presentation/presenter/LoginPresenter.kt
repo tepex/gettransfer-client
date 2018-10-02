@@ -25,7 +25,7 @@ class LoginPresenter(cc: CoroutineContexts,
         @JvmField val RESULT_CODE = 33
         @JvmField val RESULT_OK = 1
 
-        const val PARAM_KEY = "login_attempt"
+        @JvmField val PARAM_KEY = "login_attempt"
     }
 
     private var email: String? = null

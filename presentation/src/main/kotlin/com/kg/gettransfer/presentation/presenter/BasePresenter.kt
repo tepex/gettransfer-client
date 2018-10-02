@@ -23,8 +23,8 @@ import ru.terrakok.cicerone.Router
 import timber.log.Timber
 
 open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
-                         protected val router: Router,
-                         protected val systemInteractor: SystemInteractor): MvpPresenter<BV>() {
+                                       protected val router: Router,
+                                       protected val systemInteractor: SystemInteractor): MvpPresenter<BV>() {
     protected val compositeDisposable = Job()
     protected val utils = AsyncUtils(cc, compositeDisposable)
     protected val mFBA: FirebaseAnalytics by inject()
@@ -39,19 +39,16 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
         super.onDestroy()
     }
 
+    companion object AnalyticProps {
+        @JvmField val USER_EVENT = "user_action"
 
-    companion object AnalyticProps{
-        const val USER_EVENT = "user_action"
+        @JvmField val RESULT_SUCCESS   = "success"
+        @JvmField val RESULT_REJECTION = "rejection"
 
-        const val RESULT_SUCCESS = "success"
-        const val RESULT_REJECTION= "rejection"
-
-        const val SINGLE_CAPACITY = 1
-
-
+        @JvmField val SINGLE_CAPACITY = 1
     }
 
-    protected fun createBundle(param: String,value: String):Bundle {
+    protected fun createBundle(param: String, value: String): Bundle {
         val bundle = Bundle(SINGLE_CAPACITY)
         bundle.putString(param, value)
         return bundle

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">Get Transfer</string>
-	<string name="api_key">ccd9a245018bfe4f386f4045ee4a006f</string>
-	<string name="api_url">https://stgtr.org</string>
 
     <string name="licence_agreement_url">https://gettransfer.com/en/terms_of_use</string>
     <string name="registration_carrier_url">https://stgtr.org/carrier/new</string>
