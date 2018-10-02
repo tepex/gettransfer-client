@@ -8,6 +8,8 @@ class GTAddress(var id: String? = null,
                 val secondary: String?,
                 var point: Point? = null) {
 
+    var entrance: String = ""
+
     companion object {
         @JvmField
         val TYPE_ADMINISTRATIVE_AREA_LEVEL_1 = 1001

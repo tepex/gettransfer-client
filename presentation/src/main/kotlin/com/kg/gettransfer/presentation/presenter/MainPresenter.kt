@@ -102,7 +102,10 @@ class MainPresenter(cc: CoroutineContexts,
     }
 
     fun onSearchClick(addresses: Pair<String, String>) {
-        if(routeInteractor.from != null) router.navigateTo(Screens.FIND_ADDRESS, addresses)
+        if(routeInteractor.from != null) {
+            routeInteractor.from!!.entrance = entrance
+            router.navigateTo(Screens.FIND_ADDRESS, addresses)
+        }
     }
 
     fun onLoginClick()          { router.navigateTo(Screens.LOGIN) }

@@ -297,6 +297,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         Utils.setPins(this, googleMap, routeModel)
     }
 
+    override fun setEntrance(entrance: String) {
+        tvComments.text = getString(R.string.entrance_no, entrance)
+    }
+
     private fun transportTypeClicked(transportType: TransportTypeModel) {
         if (transportType.checked && transportType.showInfo) {
             bsTransport.state = BottomSheetBehavior.STATE_COLLAPSED

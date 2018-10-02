@@ -26,5 +26,5 @@ interface CreateOrderView: BaseView {
     fun setDateTimeTransfer(dateTimeString: String)
     fun setComment(comment: String)
     fun setGetTransferEnabled(enabled: Boolean)
-    
+    fun setEntrance(entrance: String)
 }

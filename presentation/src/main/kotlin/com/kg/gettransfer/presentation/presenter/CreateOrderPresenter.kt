@@ -82,16 +82,19 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             val to = routeInteractor.to!!
 	        val routeInfo = utils.asyncAwait { transferInteractor.getRouteInfo(from.point.toString(), to.point.toString(), true, false) }
 	        val prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
-	        transportTypes = Mappers.getTransportTypesModels(systemInteractor.getTransportTypes(), prices)
+            val entrance = routeInteractor.from!!.entrance
+            transportTypes = Mappers.getTransportTypesModels(systemInteractor.getTransportTypes(), prices)
 	        routeModel = Mappers.getRouteModel(routeInfo.distance,
                                                systemInteractor.distanceUnit,
                                                routeInfo.polyLines,
                                                from.name,
                                                to.name,
                                                SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
-            
+
             viewState.setTransportTypes(transportTypes!!)
             viewState.setRoute(routeModel!!)
+            viewState.setEntrance(entrance)
+
 	    }, { e -> viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }

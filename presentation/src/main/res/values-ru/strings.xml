@@ -212,6 +212,7 @@
     <string name="activity_transfer_details_title">Детали заявки</string>
     <string name="luggage">Багаж</string>
     <string name="entrance">Вход</string>
+    <string name="entrance_no">Вход %1$s</string>
 
     <!--activity_carrier_trips-->
     <string name="activity_carrier_trips_title">Входящие заявки</string>
