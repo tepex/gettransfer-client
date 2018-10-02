@@ -5,10 +5,10 @@ import com.kg.gettransfer.domain.model.Configs
 import java.io.File
 
 interface SystemRepository {
+    var configs: Configs
     var lastMode: String
         
     suspend fun coldStart()
-    fun getConfigs(): Configs
     suspend fun getAccount(): Account
     suspend fun putAccount(account: Account)
     /* Not used

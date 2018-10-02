@@ -9,10 +9,9 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.kg.gettransfer.R
 import com.kg.gettransfer.data.logging.LoggingImpl
 
-import com.kg.gettransfer.prefs.PreferencesImpl
-
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.SystemCache
+import com.kg.gettransfer.data.SystemRemote
 
 import com.kg.gettransfer.data.ds.*
 import com.kg.gettransfer.data.mapper.*
@@ -21,6 +20,14 @@ import com.kg.gettransfer.data.repository.*
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.*
 import com.kg.gettransfer.domain.repository.*
+
+import com.kg.gettransfer.prefs.PreferencesImpl
+
+import com.kg.gettransfer.remote.ApiCore
+import com.kg.gettransfer.remote.SystemRemoteImpl
+
+import com.kg.gettransfer.remote.mapper.AccountMapper as EntityAccountMapper
+import com.kg.gettransfer.remote.mapper.ConfigsMapper as EntityConfigsMapper
 
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.IO
@@ -47,8 +54,13 @@ val ciceroneModule = module {
 }
 
 val domainModule = module {
-//    single { PreferencesImpl(get()) as PreferencesCache } bind PreferencesRepository::class
     single { PreferencesImpl(get()) } bind PreferencesCache::class bind SystemCache::class
+    
+    single {
+        val resources = (get() as Context).resources
+        ApiCore(get(), resources.getString(R.string.api_key), resources.getString(R.string.api_url))
+    }
+    single { SystemRemoteImpl(get(), EntityConfigsMapper(), EntityAccountMapper()) as SystemRemote }
     
     single { SystemCacheDataStore(get()) }
     single { SystemRemoteDataStore(get()) }

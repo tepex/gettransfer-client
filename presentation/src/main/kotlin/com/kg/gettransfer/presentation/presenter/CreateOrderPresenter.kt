@@ -140,7 +140,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         super.attachView(view)
         dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
         viewState.setCurrencies(currencies)
-        val i = systemInteractor.currentCurrencyIndex
+        val i = systemInteractor.getCurrentCurrencyIndex()
         if(i != -1) changeCurrency(i)
             
         viewState.setUser(user)
