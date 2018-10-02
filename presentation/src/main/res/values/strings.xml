@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">Get Transfer</string>
-	<string name="api_key">ccd9a245018bfe4f386f4045ee4a006f</string>
-	<string name="api_url">https://stgtr.org</string>
+    <string name="app_name">Get Transfer</string>
+    <string name="api_key">ccd9a245018bfe4f386f4045ee4a006f</string>
+    <string name="api_url">https://stgtr.org</string>
 
     <string name="licence_agreement_url">https://gettransfer.com/en/terms_of_use</string>
     <string name="registration_carrier_url">https://stgtr.org/carrier/new</string>
 
-	<string name="navigation_drawer_open" translatable="false">Open</string>
-	<string name="navigation_drawer_close" translatable="false">Close</string>
-	<!-- Navigation -->
-	<string name="nav_active_rides_title">Active rides</string>
-	<string name="nav_active_rides_subtitle">Current transfers</string>
-	<string name="nav_archived_rides_title">Archived rides</string>
-	<string name="nav_archived_rides_subtitle">Last transfers</string>
-	<string name="nav_settings_title">Settings</string>
-	<string name="nav_settings_subtitle">Language and regional preferences</string>
-	<string name="nav_about_title">About</string>
-	<string name="nav_about_subtitle">Advantages of GetTransport</string>
-	<string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
-	<string name="nav_footer_read_more">Read more</string>
-	<!-- Search form -->
-	<string name="search_from_hint">From</string>
-	<string name="search_to_hint">To</string>
+    <string name="navigation_drawer_open" translatable="false">Open</string>
+    <string name="navigation_drawer_close" translatable="false">Close</string>
+    <!-- Navigation -->
+    <string name="nav_active_rides_title">Active rides</string>
+    <string name="nav_active_rides_subtitle">Current transfers</string>
+    <string name="nav_archived_rides_title">Archived rides</string>
+    <string name="nav_archived_rides_subtitle">Last transfers</string>
+    <string name="nav_settings_title">Settings</string>
+    <string name="nav_settings_subtitle">Language and regional preferences</string>
+    <string name="nav_about_title">About</string>
+    <string name="nav_about_subtitle">Advantages of GetTransport</string>
+    <string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
+    <string name="nav_footer_read_more">Read more</string>
+    <!-- Search form -->
+    <string name="search_from_hint">From</string>
+    <string name="search_to_hint">To</string>
     <string name="search_start">Loading…</string>
     <string name="search_nothing"></string>
-	<string name="searchTransitionName">SEARCH_FORM</string>
-	<!-- About -->
-	<string name="about_title_item1">ЛУЧШИЕ ЦЕНЫ</string>
-	<string name="about_content_item1">Выберите цену перевозки из множества предложений.</string>
-	<string name="about_title_item2">ЛУЧШИЕ УСЛОВИЯ</string>
-	<string name="about_content_item2">Широкий выбор классов и типов машин. Все включено. Время ожидания до 45 минут — бесплатно.</string>
-	<string name="about_title_item3">БЕЗОПАСНЫЕ ПЕРЕВОЗКИ</string>
-	<string name="about_content_item3">Вы всегда заранее знаете, кто вас везет. Все перевозчики аккредитованы и проверены.</string>
-	<!-- Read more -->
-	<string name="read_more_title">We return the difference in price</string>
-	<string name="read_more_content1">You can claim a refund of the difference in price, if you find a similar offer on another site at a lower price.</string>
-	<string name="read_more_content2">Just remember to contact us after booking with us and at least 48 hours before your check-in date. You\'ll need to provide us with the link to the other offer and it must be online and available when we check.</string>
-	<string name="read_more_title1">We will refund you the difference provided that the other offer:</string>
-	<string name="read_more_item1">• identical to our transfer</string>
-	<string name="read_more_item2">• designated on the relevant dates</string>
-	<string name="read_more_item3">• does not participate in the action from the carrier and does not have a discount</string>
-	<string name="read_more_item4">• is provided by a legal entity</string>
-	<string name="read_more_close_button">Close</string>
+    <string name="searchTransitionName">SEARCH_FORM</string>
+    <!-- About -->
+    <string name="about_title_item1">ЛУЧШИЕ ЦЕНЫ</string>
+    <string name="about_content_item1">Выберите цену перевозки из множества предложений.</string>
+    <string name="about_title_item2">ЛУЧШИЕ УСЛОВИЯ</string>
+    <string name="about_content_item2">Широкий выбор классов и типов машин. Все включено. Время ожидания до 45 минут — бесплатно.</string>
+    <string name="about_title_item3">БЕЗОПАСНЫЕ ПЕРЕВОЗКИ</string>
+    <string name="about_content_item3">Вы всегда заранее знаете, кто вас везет. Все перевозчики аккредитованы и проверены.</string>
+    <!-- Read more -->
+    <string name="read_more_title">We return the difference in price</string>
+    <string name="read_more_content1">You can claim a refund of the difference in price, if you find a similar offer on another site at a lower price.</string>
+    <string name="read_more_content2">Just remember to contact us after booking with us and at least 48 hours before your check-in date. You\'ll need to provide us with the link to the other offer and it must be online and available when we check.</string>
+    <string name="read_more_title1">We will refund you the difference provided that the other offer:</string>
+    <string name="read_more_item1">• identical to our transfer</string>
+    <string name="read_more_item2">• designated on the relevant dates</string>
+    <string name="read_more_item3">• does not participate in the action from the carrier and does not have a discount</string>
+    <string name="read_more_item4">• is provided by a legal entity</string>
+    <string name="read_more_close_button">Close</string>
     <!-- Transfer -->
     <string name="distance_time">Distance: %1$s\nExpected travel time: %2$s</string>
     <string name="distance">Distance: %1$d %2$s</string>
@@ -60,31 +60,26 @@
     <string name="transport_type_bus">Bus</string>
     <string name="transport_type_limousine">Limousine</string>
     <string name="transport_type_helicopter">Helicopter</string>
-	<string name="transport_type_unknown">Unknown</string>
-	<string name="count_persons_and_baggage"> X %1$d</string>
+    <string name="transport_type_unknown">Unknown</string>
+    <string name="count_persons_and_baggage"> X %1$d</string>
 
     <!-- Login -->
     <string name="email_address">Email address</string>
     <string name="enter_password">Enter password</string>
     <string name="login_subtitle">Вход для клиентов и водителей</string>
 
-	<!--
+    <!--
 	<string name=""></string>
 	-->
-    
-
-	<!-- Errors & messages -->
-	<string name="err_title">Ошибка</string>
-	<string name="err_location_service_not_available">Cервис геолокации недоступен!</string>
-	<string name="err_address_service_xxx">Ошибка определения адреса!</string>
-	<string name="err_server">Ошибка: %1$s</string>
-	<string name="err_server_code">Ошибка сервера %1$s! %2$s</string>
-	<string name="error_login">Incorrect login or password</string>
 
 
-
-
-
+    <!-- Errors & messages -->
+    <string name="err_title">Ошибка</string>
+    <string name="err_location_service_not_available">Cервис геолокации недоступен!</string>
+    <string name="err_address_service_xxx">Ошибка определения адреса!</string>
+    <string name="err_server">Ошибка: %1$s</string>
+    <string name="err_server_code">Ошибка сервера %1$s! %2$s</string>
+    <string name="error_login">Incorrect login or password</string>
 
 
     <string name="login">Login</string>
@@ -243,7 +238,7 @@
     <string name="additional">Additional</string>
     <string name="number_of_passengers">Number of passengers</string>
     <string name="transfer_date_and_time">Transfer date and time</string>
-    <string name="suggest_your_price"><font size = "15">Suggest your price</font></string>
+    <string name="suggest_your_price"><font size="15">Suggest your price</font></string>
 
     <string name="licence_agreement">Licence agreement</string>
 

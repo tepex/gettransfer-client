@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@color/colorWhite">
 
-    <EditText
+    <com.kg.gettransfer.presentation.ui.CustomEditText
         android:id="@+id/etEntrance"
         android:layout_width="0dp"
         android:layout_height="60dp"

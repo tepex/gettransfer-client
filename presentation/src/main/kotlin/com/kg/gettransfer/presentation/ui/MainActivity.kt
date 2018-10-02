@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation.ui
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Bitmap
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -221,6 +220,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 		popupEntrance.setOnDismissListener { layoutEntrance.etEntrance.hideKeyboard() }
 		popupEntrance.showAtLocation(contentMain, Gravity.BOTTOM, 0, search.height + popupEntrance.height)
 
+		layoutEntrance.etEntrance.popupWindow = popupEntrance
 		layoutEntrance.etEntrance.showKeyboard()
 		layoutEntrance.etEntrance.setText(presenter.entrance)
 		layoutEntrance.etEntrance.setSelection(layoutEntrance.etEntrance.text.length)
