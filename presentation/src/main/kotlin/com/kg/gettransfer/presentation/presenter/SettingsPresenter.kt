@@ -67,7 +67,6 @@ class SettingsPresenter(cc: CoroutineContexts,
         viewState.setDistanceUnit(systemInteractor.distanceUnit.name)
 
         viewState.setEndpoint(systemInteractor.endpoint)
-
         viewState.setLogoutButtonEnabled(systemInteractor.isLoggedIn())
     }
 

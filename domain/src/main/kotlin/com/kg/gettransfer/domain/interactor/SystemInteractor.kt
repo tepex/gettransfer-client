@@ -29,12 +29,13 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         get() = account.distanceUnit!!
         set(value) { account.distanceUnit = value }
 
-    val transportTypes       = systemRepository.getConfigs().transportTypes
-    val locales              = systemRepository.getConfigs().availableLocales
-    val distanceUnits        = systemRepository.getConfigs().supportedDistanceUnits
-    val currencies           = systemRepository.getConfigs().supportedCurrencies
-    val currentCurrencyIndex = currencies.indexOf(account.currency)
-    val loggedIn             = account.email != null
+    val transportTypes by lazy { systemRepository.configs.transportTypes }
+    val locales        by lazy { systemRepository.configs.availableLocales }
+    val distanceUnits  by lazy { systemRepository.configs.supportedDistanceUnits }
+    val currencies     by lazy { systemRepository.configs.supportedCurrencies }
+    
+    fun isLoggedIn() = account.email != null
+    fun getCurrentCurrencyIndex() = currencies.indexOf(currency)
 
     var endpoint: String
         get() = systemRepository.getEndpoint()

@@ -57,7 +57,7 @@ class CarrierTripsPresenter(cc: CoroutineContexts,
     }
 
     fun checkLoggedIn() {
-        if(!systemInteractor.loggedIn) router.navigateTo(Screens.PASSENGER_MODE)
+        if(!systemInteractor.isLoggedIn()) router.navigateTo(Screens.PASSENGER_MODE)
     }
 
     fun onCarrierTripsClick()   { router.navigateTo(Screens.CARRIER_TRIPS) }

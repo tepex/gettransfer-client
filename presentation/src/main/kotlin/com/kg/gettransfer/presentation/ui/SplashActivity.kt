@@ -66,7 +66,7 @@ class SplashActivity: AppCompatActivity() {
 				else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 			}
 			//startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-		}, { e -> Utils.showError(this@SplashActivity, false, getString(R.string.err_server, e.message))
+		}, { e -> Timber.e(e); Utils.showError(this@SplashActivity, false, getString(R.string.err_server, e.message))
 			// @TODO: Показать ошибку. Учесть 401 — протухший ключ
 		}, { finish() })
 	}

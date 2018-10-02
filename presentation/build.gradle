@@ -118,6 +118,7 @@ dependencies {
 	implementation project(":data")
 	implementation project(":prefs")
 	implementation project(':logging')
+	implementation project(":remote")
 	implementation libs.kotlin
 	implementation libs.coroutines
 	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
@@ -186,4 +187,3 @@ def generateChangeLog() {
 }
 
 apply plugin: 'com.google.gms.google-services'
-
