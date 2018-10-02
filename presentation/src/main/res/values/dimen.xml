@@ -14,6 +14,7 @@
 	<dimen name="activity_main_buttons_margin_top">14dp</dimen>
 	<dimen name="activity_main_buttons_margin_start_end">8dp</dimen>
 	<dimen name="activity_main_gradient_layout_height">48dp</dimen>
+	<dimen name="text_size_entrance">24sp</dimen>
 
 	<!-- Navigation view menu -->
 	<dimen name="nav_header_height">148dp</dimen>
