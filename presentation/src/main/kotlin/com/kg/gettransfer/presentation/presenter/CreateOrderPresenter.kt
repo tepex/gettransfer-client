@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.os.Bundle
 import android.support.annotation.CallSuper
 
 import android.util.Patterns
@@ -68,6 +69,9 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         /* Пока сервевер не присылает минимальный временной промежуток до заказа */
         @JvmField val FUTURE_HOUR       = 6
         @JvmField val FUTURE_MINUTE     = 5
+
+        @JvmField val PARAM_KEY = "offer_order"
+
     }
     
     override fun onFirstViewAttach() {
@@ -193,13 +197,21 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                   null,
                                                   false) }
             Timber.d("new transfer: %s", transfer)
+            mFBA.logEvent(USER_EVENT,createBundle(PARAM_KEY, RESULT_SUCCESS))
             router.navigateTo(Screens.OFFERS)
         }, { e ->
                 if(e is ApiException) {
-                    if(e.isNotLoggedIn()) login()
-                    else viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
+                    if(e.isNotLoggedIn()) {
+                        login()
+                    }
+                    else {
+                        viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
+                    }
                 }
-                else viewState.setError(e)
+                else {
+                    viewState.setError(e)
+                }
+            mFBA.logEvent(USER_EVENT,createBundle(PARAM_KEY, RESULT_REJECTION))
         }, { viewState.blockInterface(false) })
     }
     
@@ -228,4 +240,5 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     override fun onBackCommandClick() {
         router.navigateTo(Screens.PASSENGER_MODE)
     }
+
 }
