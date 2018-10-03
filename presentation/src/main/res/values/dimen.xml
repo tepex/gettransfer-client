@@ -236,7 +236,7 @@
 	<dimen name="view_offer_margin">4dp</dimen>
 	<dimen name="view_offer_min_height">150dp</dimen>
 	<dimen name="view_offer_column1_width">130dp</dimen>
-	<dimen name="view_offer_column1_padding_start_end">8dp</dimen>
+	<dimen name="view_offer_column1_car_name_margin_start_end">8dp</dimen>
 	<dimen name="view_offer_column2_margin_start_end">16dp</dimen>
 	<dimen name="view_offer_column3_width">100dp</dimen>
 	<dimen name="view_offer_column3_margin_end">8dp</dimen>
@@ -253,5 +253,7 @@
 	<dimen name="view_offer_images_option_margin_top">5dp</dimen>
 	<dimen name="view_offer_images_option_margin">8dp</dimen>
 	<dimen name="view_offer_images_option_height">23dp</dimen>
+	<dimen name="view_offer_top_layout_on_image_padding_start_end">5dp</dimen>
+	<dimen name="view_offer_layouts_on_image_height">24dp</dimen>
 
 </resources>

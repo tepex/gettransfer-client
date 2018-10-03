@@ -87,7 +87,8 @@ object Mappers {
                                                  offer.wifi,
                                                  offer.refreshments,
                                                  offer.carrier.ratings.average,
-                                                 offer.price.amount)
+                                                 offer.price.amount,
+                                                 offer.vehicle.photos)
 
     fun getCarrierTripModel(carrierTrip: CarrierTrip,
                             locale: Locale,

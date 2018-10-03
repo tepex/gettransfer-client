@@ -72,5 +72,7 @@
     <color name="colorOfferBack">#f6f6f6</color>
     <color name="colorOfferStroke">#dfdfdf</color>
     <color name="colorSortOffersStroke">#cacace</color>
+    <color name="colorLayoutsOnImageBack">#60000000</color>
+    <color name="colorStarsInRatingBar">#f6dc66</color>
 
 </resources>

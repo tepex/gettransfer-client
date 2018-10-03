@@ -10,4 +10,9 @@ data class Account(var email: String?,
                    var distanceUnit: DistanceUnit?,
                    var fullName: String?,
                    var groups: Array<String>?,
-                   var termsAccepted: Boolean = true)
+                   var termsAccepted: Boolean = true){
+
+    companion object {
+        @JvmField val GROUP_CARRIER_DRIVER = "carrier/driver"
+    }
+}

@@ -5,112 +5,213 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingBottom="@dimen/view_offer_padding_top_bottom"
-    android:paddingTop="@dimen/view_offer_padding_top_bottom"
     android:layout_marginTop="@dimen/view_offer_margin"
     android:layout_marginStart="@dimen/view_offer_margin"
     android:layout_marginEnd="@dimen/view_offer_margin"
     android:background="@drawable/back_card_offer"
     android:minHeight="@dimen/view_offer_min_height">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/column1"
         android:layout_width="@dimen/view_offer_column1_width"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
+        android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:paddingStart="@dimen/view_offer_column1_padding_start_end"
-        android:paddingEnd="@dimen/view_offer_column1_padding_start_end">
-
-        <TextView
-            android:id="@+id/tvVehicleType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorTextBlack"
-            android:textSize="@dimen/view_offer_text_sizes"
-            android:fontFamily="@font/helvetica_bold"
-            android:layout_marginBottom="@dimen/view_offer_vehicle_type_margin_bottom"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="@dimen/transfer_types_image_person_width"
-                android:layout_height="@dimen/transfer_types_image_person_height"
-                app:srcCompat="@drawable/ic_passenger_small"/>
-
-            <TextView
-                android:id="@+id/tvCountPersons"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/transfer_types_text_size"
-                android:fontFamily="@font/sf_pro_text_regular"
-                android:layout_marginStart="@dimen/transfer_types_text_margin"
-                android:textColor="@color/colorTextBlack"
-                android:gravity="center"/>
-
-            <ImageView
-                android:layout_width="@dimen/transfer_types_image_baggage_width"
-                android:layout_height="@dimen/transfer_types_image_baggage_height"
-                app:srcCompat="@drawable/ic_baggage_small"
-                android:layout_marginStart="@dimen/transfer_types_image_baggage_margin_start"
-                android:layout_gravity="center_vertical"/>
-
-            <TextView
-                android:id="@+id/tvCountBaggage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/transfer_types_text_size"
-                android:fontFamily="@font/sf_pro_text_regular"
-                android:layout_marginStart="@dimen/transfer_types_text_margin"
-                android:textColor="@color/colorTextBlack"
-                android:gravity="center"/>
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvVehicleName"
+        android:orientation="vertical">
+        
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/layoutWithCarImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/view_offer_vehicle_name_margin_top"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone">
+            
+            <ImageView
+                android:id="@+id/carPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_offer_layouts_on_image_height"
+                android:background="@color/colorLayoutsOnImageBack"
+                app:layout_constraintTop_toTopOf="@id/carPhoto"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:paddingStart="@dimen/view_offer_top_layout_on_image_padding_start_end"
+                android:paddingEnd="@dimen/view_offer_top_layout_on_image_padding_start_end">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <ImageView
+                        android:layout_width="@dimen/transfer_types_image_person_width"
+                        android:layout_height="@dimen/transfer_types_image_person_height"
+                        app:srcCompat="@drawable/ic_passenger_small_white"/>
+
+                    <TextView
+                        android:id="@+id/tvCountPersonsOnCarImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/transfer_types_text_size"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:layout_marginStart="@dimen/transfer_types_text_margin"
+                        android:textColor="@color/colorWhite"
+                        android:gravity="center"/>
+
+                    <ImageView
+                        android:layout_width="@dimen/transfer_types_image_baggage_width"
+                        android:layout_height="@dimen/transfer_types_image_baggage_height"
+                        app:srcCompat="@drawable/ic_baggage_small_white"
+                        android:layout_marginStart="@dimen/transfer_types_image_baggage_margin_start"
+                        android:layout_gravity="center_vertical"/>
+
+                    <TextView
+                        android:id="@+id/tvCountBaggageOnCarImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/transfer_types_text_size"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:layout_marginStart="@dimen/transfer_types_text_margin"
+                        android:textColor="@color/colorWhite"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+                
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_gallery_small_white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/bottomCarImage"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_offer_layouts_on_image_height"
+                android:background="@color/colorLayoutsOnImageBack"
+                app:layout_constraintBottom_toBottomOf="@id/carPhoto"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:gravity="center">
+
+                    <RatingBar
+                        android:id="@+id/ratingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.AppCompat.RatingBar.Small" />
+
+                    <ImageView
+                        android:id="@+id/ivLike"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_like_button"/>
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <include
+                android:id="@+id/bottomLayoutForImage"
+                layout="@layout/view_offer_car_name_and_options"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/carPhoto"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+            
+        </android.support.constraint.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutNoCarImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:gravity="center"
-            android:textColor="@color/colorTextBlack"
-            android:textSize="@dimen/view_offer_vehicle_name_text_size"
-            android:fontFamily="@font/helvetica_bold"/>
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/view_offer_images_option_margin_top"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/imgOptionFreeWiFi"
+            <TextView
+                android:id="@+id/tvVehicleType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_wifi"
-                android:layout_marginStart="@dimen/view_offer_images_option_margin"
-                android:layout_marginEnd="@dimen/view_offer_images_option_margin"
-                android:visibility="gone"/>
+                android:textColor="@color/colorTextBlack"
+                android:textSize="@dimen/view_offer_text_sizes"
+                android:fontFamily="@font/helvetica_bold"
+                android:layout_marginBottom="@dimen/view_offer_vehicle_type_margin_bottom"/>
 
-            <ImageView
-                android:id="@+id/imgOptionFreeWater"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_free_water"
-                android:layout_marginStart="@dimen/view_offer_images_option_margin"
-                android:layout_marginEnd="@dimen/view_offer_images_option_margin"
-                android:visibility="gone"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/transfer_types_image_person_width"
+                    android:layout_height="@dimen/transfer_types_image_person_height"
+                    app:srcCompat="@drawable/ic_passenger_small"/>
+
+                <TextView
+                    android:id="@+id/tvCountPersons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/transfer_types_text_size"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:layout_marginStart="@dimen/transfer_types_text_margin"
+                    android:textColor="@color/colorTextBlack"
+                    android:gravity="center"/>
+
+                <ImageView
+                    android:layout_width="@dimen/transfer_types_image_baggage_width"
+                    android:layout_height="@dimen/transfer_types_image_baggage_height"
+                    app:srcCompat="@drawable/ic_baggage_small"
+                    android:layout_marginStart="@dimen/transfer_types_image_baggage_margin_start"
+                    android:layout_gravity="center_vertical"/>
+
+                <TextView
+                    android:id="@+id/tvCountBaggage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/transfer_types_text_size"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:layout_marginStart="@dimen/transfer_types_text_margin"
+                    android:textColor="@color/colorTextBlack"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+            <include
+                android:id="@+id/bottomLayoutNoImage"
+                layout="@layout/view_offer_car_name_and_options"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/column2"

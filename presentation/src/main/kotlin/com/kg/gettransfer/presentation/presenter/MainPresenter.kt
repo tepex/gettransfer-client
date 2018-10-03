@@ -13,6 +13,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.domain.model.Account
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
@@ -104,7 +105,7 @@ class MainPresenter(cc: CoroutineContexts,
     fun onRequestsClick()       { router.navigateTo(Screens.REQUESTS) }
     fun onBecomeACarrierClick() {
         if(systemInteractor.isLoggedIn()) {
-            if(systemInteractor.account.groups!!.indexOf("carrier/driver") >= 0) router.navigateTo(Screens.CARRIER_MODE)
+            if(systemInteractor.account.groups!!.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) router.navigateTo(Screens.CARRIER_MODE)
             else router.navigateTo(Screens.REG_CARRIER)
         }
         else router.navigateTo(Screens.LOGIN)

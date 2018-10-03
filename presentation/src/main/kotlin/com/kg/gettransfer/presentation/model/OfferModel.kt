@@ -16,4 +16,5 @@ class OfferModel(val driverName: String?,
                  val wifi: Boolean,
                  val refreshments: Boolean,
                  val averageRating: Double?,
-                 val priceAmount: Double)
+                 val priceAmount: Double,
+                 val vehiclePhotos: List<String>)
