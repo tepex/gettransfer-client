@@ -151,31 +151,6 @@ class ApiRepositoryImpl(private val preferences: Preferences,
         }
     }
     
-    /*
-    fun logout() {
-        preferences.accessToken = PreferencesCache.INVALID_TOKEN
-        preferences.cleanAccount()
-    }
-    */
-    
-    suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean): RouteInfo {
-        val response: ApiResponse<ApiRouteInfo> = tryGetRouteInfo(arrayOf(from, to), withPrices, returnWay)
-        return Mappers.mapApiRouteInfo(response.data!!)
-    }
-    
-    private suspend fun tryGetRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean):
-        ApiResponse<ApiRouteInfo> {
-        return try { api.getRouteInfo(points, withPrices, returnWay).await() }
-        catch(e: Exception) {
-            if(e is RemoteException) throw e /* second invocation */
-            val ae = apiException(e)
-            if(!ae.isInvalidToken()) throw ae
-
-            try { updateAccessToken() } catch(e1: Exception) { throw apiException(e1) }
-            return try { api.getRouteInfo(points, withPrices, returnWay).await() } catch(e2: Exception) { throw apiException(e2) }
-        }
-    }
-
     /**
      * 1. Try to call [apiCall] first time.
      * 2. If response code is 401 (token expired) — try to call [apiCall] second time.
