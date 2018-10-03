@@ -11,6 +11,7 @@ import org.koin.android.ext.android.startKoin
 import timber.log.Timber
 
 class GTApplication: MultiDexApplication() {
+<<<<<<< HEAD
     @CallSuper
     override fun onCreate() {
         super.onCreate()
@@ -24,6 +25,12 @@ class GTApplication: MultiDexApplication() {
             System.setProperty("kotlinx.coroutines.debug", "on")
         }
         // Start Koin
-        startKoin(this, listOf(appModule, ciceroneModule, domainModule, androidModule))
+        startKoin(this, listOf(appModule,
+                               ciceroneModule,
+                               geoModule,
+                               prefsModule,
+                               systemModule,
+                               domainModule,
+                               androidModule))
     }
 }
