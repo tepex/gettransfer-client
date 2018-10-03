@@ -14,4 +14,6 @@ class OfferModel(val driverName: String?,
                  val carrierId: Long,
                  val completedTransfers: Int,
                  val wifi: Boolean,
-                 val refreshments: Boolean)
+                 val refreshments: Boolean,
+                 val averageRating: Double?,
+                 val priceAmount: Double)

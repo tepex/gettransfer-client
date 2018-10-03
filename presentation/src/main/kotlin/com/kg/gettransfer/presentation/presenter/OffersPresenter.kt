@@ -19,6 +19,7 @@ import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.ui.OffersActivity
 
 import com.kg.gettransfer.presentation.view.OffersView
 
@@ -41,6 +42,9 @@ class OffersPresenter(cc: CoroutineContexts,
 
     private var transfer: Transfer? = null
     private var offers: List<OfferModel>? = null
+
+    private var sortCategory: String? = null
+    private var sortHigherToLower = true
 
     @CallSuper
     override fun attachView(view: OffersView) {
@@ -68,8 +72,8 @@ class OffersPresenter(cc: CoroutineContexts,
                                                            systemInteractor.distanceUnit,
                                                            systemInteractor.getTransportTypes()))
 
-            viewState.setOffers(offers!!)
-
+            //viewState.setOffers(offers!!)
+            changeSortType(OffersActivity.SORT_PRICE)
         }, { e -> Timber.e(e)
             viewState.setError(e)
         }, { viewState.blockInterface(false) })
@@ -102,6 +106,29 @@ class OffersPresenter(cc: CoroutineContexts,
                 Timber.e(e)
                 viewState.setError(e)
             }, { viewState.blockInterface(false) })
+        }
+    }
+
+    fun changeSortType(sortType: String){
+        if(sortCategory == sortType) sortHigherToLower = !sortHigherToLower
+        else {
+            sortCategory = sortType
+            sortHigherToLower = true
+        }
+        sortOffers()
+        viewState.setOffers(offers!!)
+        viewState.setSortState(sortCategory!!, sortHigherToLower)
+    }
+
+    private fun sortOffers(){
+        if(offers != null){
+            offers = when(sortCategory){
+                OffersActivity.SORT_YEAR -> offers!!.sortedWith(compareBy {it.transportYear})
+                OffersActivity.SORT_RATING -> offers!!.sortedWith(compareBy {it.averageRating})
+                OffersActivity.SORT_PRICE -> offers!!.sortedWith(compareBy {it.priceAmount})
+                else -> { offers!! }
+            }
+            if (sortHigherToLower) offers = offers!!.reversed()
         }
     }
 }

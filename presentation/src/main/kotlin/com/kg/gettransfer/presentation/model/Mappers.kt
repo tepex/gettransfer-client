@@ -85,7 +85,9 @@ object Mappers {
                                                  offer.carrier.id,
                                                  offer.carrier.completedTransfers,
                                                  offer.wifi,
-                                                 offer.refreshments)
+                                                 offer.refreshments,
+                                                 offer.carrier.ratings.average,
+                                                 offer.price.amount)
 
     fun getCarrierTripModel(carrierTrip: CarrierTrip,
                             locale: Locale,

@@ -71,5 +71,6 @@
     <!--offers_card-->
     <color name="colorOfferBack">#f6f6f6</color>
     <color name="colorOfferStroke">#dfdfdf</color>
+    <color name="colorSortOffersStroke">#cacace</color>
 
 </resources>

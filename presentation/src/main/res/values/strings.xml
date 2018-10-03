@@ -323,6 +323,9 @@
     <!--activity_offers-->
     <string name="excellent_price_text_1">Fix an excellent price for your trip now</string>
     <string name="excellent_price_text_2">Prices can grow, book now to guarantee best price</string>
+    <string name="sorted_year_made_text">Year made</string>
+    <string name="sorted_rating_text">Rating</string>
+    <string name="sorted_price_text">Price</string>
 
     <!--view_transfer_request_info-->
     <string name="cancel_request_underlined"><u>Cancel request</u></string>

@@ -7,6 +7,8 @@ import android.support.annotation.CallSuper
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -46,6 +48,12 @@ class OffersActivity: BaseActivity(), OffersView {
     
     override fun getPresenter(): OffersPresenter = presenter
 
+    companion object {
+        @JvmField val SORT_YEAR = "sort_year"
+        @JvmField val SORT_RATING = "sort_rating"
+        @JvmField val SORT_PRICE = "sort_price"
+    }
+
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +75,9 @@ class OffersActivity: BaseActivity(), OffersView {
 
         btnCancelRequest.setOnClickListener { presenter.onCancelRequestClicked() }
         layoutTransferRequestInfo.setOnClickListener { presenter.onRequestInfoClicked() }
+        sortYear.setOnClickListener { presenter.changeSortType(SORT_YEAR) }
+        sortRating.setOnClickListener { presenter.changeSortType(SORT_RATING) }
+        sortPrice.setOnClickListener { presenter.changeSortType(SORT_PRICE) }
     }
     
     override fun setTransfer(transferModel: TransferModel) {
@@ -81,6 +92,31 @@ class OffersActivity: BaseActivity(), OffersView {
 
     override fun setOffers(offers: List<OfferModel>) {
         rvOffers.adapter = OffersRVAdapter(offers) { offer -> presenter.onSelectOfferClicked(offer) }
+    }
+
+    override fun setSortState(sortCategory: String, sortHigherToLower: Boolean) {
+        cleanSortState()
+        when(sortCategory){
+            SORT_YEAR -> { selectSort(sortYear, triangleYear, sortHigherToLower) }
+            SORT_RATING -> { selectSort(sortRating, triangleRating, sortHigherToLower) }
+            SORT_PRICE -> { selectSort(sortPrice, trianglePrice, sortHigherToLower) }
+        }
+    }
+
+    private fun cleanSortState(){
+        sortYear.isSelected = false
+        triangleYear.visibility = View.GONE
+        sortRating.isSelected = false
+        triangleRating.visibility = View.GONE
+        sortPrice.isSelected = false
+        trianglePrice.visibility = View.GONE
+    }
+
+    private fun selectSort(layout: LinearLayout, triangleImage: ImageView, higherToLower: Boolean){
+        layout.isSelected = true
+        triangleImage.visibility = View.VISIBLE
+        if(!higherToLower) triangleImage.rotation = 180f
+        else triangleImage.rotation = 0f
     }
 
     override fun showAlertCancelRequest() {

@@ -225,6 +225,13 @@
     <string name="driver_will_meet_you">*Водитель встретит вас с табличкой</string>
     <string name="example_flight">Например: BA 2243</string>
 
+    <!--activity_offers-->
+    <string name="excellent_price_text_1">Fix an excellent price for your trip now</string>
+    <string name="excellent_price_text_2">Prices can grow, book now to guarantee best price</string>
+    <string name="sorted_year_made_text">Год выпуска</string>
+    <string name="sorted_rating_text">Рейтинг</string>
+    <string name="sorted_price_text">Цена</string>
+
     <string name="alert_cancel_transfer_text">Точно отменить поездку?</string>
     <string name="alert_no">Нет</string>
     <string name="alert_yes">Да</string>

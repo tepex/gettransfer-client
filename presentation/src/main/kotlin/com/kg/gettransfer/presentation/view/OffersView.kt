@@ -14,5 +14,6 @@ interface OffersView: BaseView {
     fun setTransfer(transferModel: TransferModel)
     fun setDate(date: String)
     fun setOffers(offers: List<OfferModel>)
+    fun setSortState(sortCategory: String, sortHigherToLower: Boolean)
     fun showAlertCancelRequest()
 }
