@@ -33,7 +33,7 @@ class MainPresenter(cc: CoroutineContexts,
 
     private var available: Boolean = false
     private var currentLocation: String = ""
-    var entrance: String = ""
+    internal var entrance: String = ""
         set(value) {
             field = value
             viewState.setEntrance(currentLocation, value)
@@ -57,39 +57,35 @@ class MainPresenter(cc: CoroutineContexts,
         @JvmField val EVENT_MENU = "menu"
         @JvmField val EVENT_MAIN = "main"
 
-
         //navigation drawer log params
-        @JvmField val LOGIN_CLICKED = "login"
-        @JvmField val TRANSFER_CLICKED = "transfers"
-        @JvmField val SETTINGS_CLICKED = "settings"
-        @JvmField val ABOUT_CLICKED = "about"
-        @JvmField val DRIVER_CLICKED = "driver"
-        @JvmField val CUSTOMER_CLICKED = "customer"
+        @JvmField val LOGIN_CLICKED      = "login"
+        @JvmField val TRANSFER_CLICKED   = "transfers"
+        @JvmField val SETTINGS_CLICKED   = "settings"
+        @JvmField val ABOUT_CLICKED      = "about"
+        @JvmField val DRIVER_CLICKED     = "driver"
+        @JvmField val CUSTOMER_CLICKED   = "customer"
         @JvmField val BEST_PRICE_CLICKED = "best_price"
-        @JvmField val SHARE_CLICKED = "share"
+        @JvmField val SHARE_CLICKED      = "share"
 
         //other buttons log params
-        @JvmField val MY_PLACE_CLICKED = "my_place"
+        @JvmField val MY_PLACE_CLICKED   = "my_place"
 //        @JvmField val SHOW_ROUTE_CLICKED = "show_route"
-        @JvmField val ENTRANCE_CLICKED = "entrance"
+        @JvmField val ENTRANCE_CLICKED   = "entrance"
 //        @JvmField val CAR_INFO_CLICKED = "car_info"
 //        @JvmField val BACK_CLICKED = "back"
         @JvmField val POINT_ON_MAP_CLICKED = "point_on_map"
-        @JvmField val AIRPORT_CLICKED = "predefined_airport"
-        @JvmField val TRAIN_CLICKED = "predefined_train"
-        @JvmField val HOTEL_CLICKED = "predefined_hotel"
-        @JvmField val LAST_PLACE_CLICKED = "last_place"
-        @JvmField val SWAP_CLICKED = "swap"
-
+        @JvmField val AIRPORT_CLICKED      = "predefined_airport"
+        @JvmField val TRAIN_CLICKED        = "predefined_train"
+        @JvmField val HOTEL_CLICKED        = "predefined_hotel"
+        @JvmField val LAST_PLACE_CLICKED   = "last_place"
+        @JvmField val SWAP_CLICKED         = "swap"
     }
 
     @CallSuper
     override fun attachView(view: MainView) {
         super.attachView(view)
         viewState.setUser(Mappers.getUserModel(systemInteractor.account))
-        if (routeInteractor.from != null) {
-            entrance = routeInteractor.from!!.entrance
-        }
+        routeInteractor.from?.let { entrance = it.entrance }
     }
 
     fun updateCurrentLocation() {
@@ -142,17 +138,17 @@ class MainPresenter(cc: CoroutineContexts,
     }
 
     fun onSearchClick(addresses: Pair<String, String>) {
-        if(routeInteractor.from != null) {
-            routeInteractor.from!!.entrance = entrance
+        routeInteractor.from?.let {
+            it.entrance = entrance
             router.navigateTo(Screens.FIND_ADDRESS, addresses)
         }
     }
 
-    fun onLoginClick()          { router.navigateTo(Screens.LOGIN) ; logEvent(LOGIN_CLICKED)}
-    fun onAboutClick()          { router.navigateTo(Screens.ABOUT) ; logEvent(ABOUT_CLICKED) }
+    fun onLoginClick()          { router.navigateTo(Screens.LOGIN) ;     logEvent(LOGIN_CLICKED)}
+    fun onAboutClick()          { router.navigateTo(Screens.ABOUT) ;     logEvent(ABOUT_CLICKED) }
     fun readMoreClick()         { router.navigateTo(Screens.READ_MORE) ; logEvent(BEST_PRICE_CLICKED) }
-    fun onSettingsClick()       { router.navigateTo(Screens.SETTINGS) ; logEvent(SETTINGS_CLICKED) }
-    fun onRequestsClick()       { router.navigateTo(Screens.REQUESTS) ; logEvent(TRANSFER_CLICKED) }
+    fun onSettingsClick()       { router.navigateTo(Screens.SETTINGS) ;  logEvent(SETTINGS_CLICKED) }
+    fun onRequestsClick()       { router.navigateTo(Screens.REQUESTS) ;  logEvent(TRANSFER_CLICKED) }
     fun onBecomeACarrierClick() {
         logEvent(DRIVER_CLICKED)
         if(systemInteractor.isLoggedIn()) {

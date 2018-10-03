@@ -2,9 +2,11 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Build
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.MvpPresenter
+
 import com.google.firebase.analytics.FirebaseAnalytics
 
 import com.kg.gettransfer.domain.AsyncUtils
@@ -21,7 +23,6 @@ import kotlinx.coroutines.experimental.Job
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
-import java.util.*
 
 open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
                                        protected val router: Router,
@@ -32,7 +33,7 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
 
     open fun onBackCommandClick() {
         router.exit()
-        mFBA.logEvent(MainPresenter.EVENT_MAIN,createSingeBundle(PARAM_KEY_NAME, SYSTEM_BACK_CLICKED))
+        mFBA.logEvent(MainPresenter.EVENT_MAIN, createSingeBundle(PARAM_KEY_NAME, SYSTEM_BACK_CLICKED))
     }
 
     protected fun login() = router.navigateTo(Screens.LOGIN)
@@ -43,12 +44,10 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
         super.onDestroy()
     }
 
-
-
     companion object AnalyticProps {
- //       см. табл. https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0
+        /** [см. табл.][https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0] */
         @JvmField val RESULT_SUCCESS   = "success"
-        @JvmField val RESULT_FAIL = "fail"
+        @JvmField val RESULT_FAIL      = "fail"
 
         @JvmField val PARAM_KEY_NAME = "name"
 
@@ -63,9 +62,9 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
         bundle.putString(param, value)
         return bundle
     }
-    protected fun createMultipleBundle(map: Map<String,Any>): Bundle{
+    protected fun createMultipleBundle(map: Map<String, Any>): Bundle {
         val bundle = Bundle()
-        map.forEach{(k,v) -> bundle.putString(k,v.toString())}
+        map.forEach { (k,v) -> bundle.putString(k, v.toString()) }
         return bundle
     }
 }
