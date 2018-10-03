@@ -17,7 +17,6 @@ interface Api {
 		const val API_TRANSFERS_ARCHIVE = "/api/transfers/archive"
 		const val API_TRANSFERS_ACTIVE  = "/api/transfers/active"
 		const val API_CARRIER_TRIPS = "/api/trips"
-		const val API_CREATE_NEW_PAYMENT = "/api/payments"
     }
     
 	@GET(API_ACCESS_TOKEN)
@@ -73,11 +72,4 @@ interface Api {
 
 	@GET("$API_CARRIER_TRIPS/{id}")
 	fun getCarrierTrip(@Path("id") id: Long): Deferred<ApiResponse<ApiCarrierTripWrapper>>
-
-	@POST(API_CREATE_NEW_PAYMENT)
-	fun createNewPayment(@Body createPaymentEntity: ApiCreatePaymentEntity): Deferred<ApiResponse<ApiPaymentResult>>
-
-	@GET("$API_CREATE_NEW_PAYMENT/{status}")
-	fun changePaymentStatus(@Path("status") status: String, @Body payment: ApiPayment)
-
 }

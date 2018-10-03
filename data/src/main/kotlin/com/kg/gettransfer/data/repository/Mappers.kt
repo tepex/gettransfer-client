@@ -201,9 +201,5 @@ class Mappers {
                                apiCarrierTrip.paidPercentage,
                                passengerAccount)
         }
-
-        fun mapPaymentResult(paymentResult: ApiPaymentResult): PaymentResult {
-            return PaymentResult(paymentResult.type, paymentResult.url)
-        }
     }
 }
