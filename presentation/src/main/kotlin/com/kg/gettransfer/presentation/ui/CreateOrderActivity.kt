@@ -336,7 +336,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {
         if (transportType.checked && transportType.showInfo) {
-            bsTransport.state = BottomSheetBehavior.STATE_COLLAPSED
+            bsTransport.state = BottomSheetBehavior.STATE_EXPANDED
             bsOrder.isHideable = true
             bsOrder.state = BottomSheetBehavior.STATE_HIDDEN
             bsOrder.skipCollapsed = true
