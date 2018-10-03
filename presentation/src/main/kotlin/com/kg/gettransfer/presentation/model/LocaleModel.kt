@@ -9,4 +9,5 @@ class LocaleModel(val delegate: Locale): CharSequence {
     override fun toString(): String = name
     override operator fun get(index: Int): Char = name.get(index)
     override fun subSequence(startIndex: Int, endIndex: Int): CharSequence = name.subSequence(startIndex, endIndex)
+    fun getLocale():String = delegate.language.toUpperCase()
 }

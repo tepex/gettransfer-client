@@ -29,7 +29,10 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
     protected val utils = AsyncUtils(cc, compositeDisposable)
     protected val mFBA: FirebaseAnalytics by inject()
 
-    open fun onBackCommandClick() = router.exit()
+    open fun onBackCommandClick() {
+        router.exit()
+        mFBA.logEvent(MainPresenter.EVENT_MAIN,createSingeBundle(PARAM_KEY_NAME, SYSTEM_BACK_CLICKED))
+    }
 
     protected fun login() = router.navigateTo(Screens.LOGIN)
 
@@ -39,16 +42,22 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
         super.onDestroy()
     }
 
+
+
     companion object AnalyticProps {
-        @JvmField val USER_EVENT = "user_action"
 
         @JvmField val RESULT_SUCCESS   = "success"
-        @JvmField val RESULT_REJECTION = "rejection"
+        @JvmField val RESULT_FAIL = "fail"
+
+        @JvmField val PARAM_KEY_NAME = "name"
 
         @JvmField val SINGLE_CAPACITY = 1
+        @JvmField val DOUBLE_CAPACITY = 2
+
+        @JvmField val SYSTEM_BACK_CLICKED = "back"
     }
 
-    protected fun createBundle(param: String, value: String): Bundle {
+    protected fun createSingeBundle(param: String, value: String): Bundle {
         val bundle = Bundle(SINGLE_CAPACITY)
         bundle.putString(param, value)
         return bundle

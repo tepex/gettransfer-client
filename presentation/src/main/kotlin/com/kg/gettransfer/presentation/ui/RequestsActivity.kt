@@ -8,8 +8,10 @@ import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.view.ViewPager
 
 import android.support.v7.widget.Toolbar
+import android.util.Log
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -35,6 +37,7 @@ class RequestsActivity: BaseActivity(), RequestsView {
     protected override var navigator = BaseNavigator(this)
 
     override fun getPresenter(): RequestsPresenter = presenter
+    private fun sendEventLog(param: String) = presenter.logEvent(param)
     
     companion object {
         @JvmField val CATEGORY_ACTIVE    = "Active"
@@ -66,6 +69,7 @@ class RequestsActivity: BaseActivity(), RequestsView {
 
         vpRequests.adapter = requestsVPAdapter
         tabs.setupWithViewPager(vpRequests)
+        setListenersForLog()
     }
 
     private class RequestsViewPagerAdapter(manager: FragmentManager): FragmentPagerAdapter(manager) {
@@ -82,5 +86,19 @@ class RequestsActivity: BaseActivity(), RequestsView {
             fragments.add(fragment)
             titles.add(title)
         }
+    }
+
+    private fun setListenersForLog(){
+        vpRequests.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(p0: Int) {}
+            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
+            override fun onPageSelected(p0: Int) {
+                when (p0) {
+                    0 -> sendEventLog(CATEGORY_ACTIVE)
+                    1 -> sendEventLog(CATEGORY_ALL)
+                    2 -> sendEventLog(CATEGORY_COMPLETED)
+                }
+            }
+        })
     }
 }

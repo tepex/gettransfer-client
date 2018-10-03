@@ -343,6 +343,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             bsOrder.skipCollapsed = true
             showTransportInfo(transportType)
         }
+        presenter.logEventMain(CreateOrderPresenter.CAR_INFO_CLICKED)
     }
 
     private fun showTransportInfo(transportType: TransportTypeModel) {

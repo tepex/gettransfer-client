@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.os.Bundle
 import android.util.Patterns
 
 import com.arellomobile.mvp.InjectViewState
@@ -25,7 +24,8 @@ class LoginPresenter(cc: CoroutineContexts,
         @JvmField val RESULT_CODE = 33
         @JvmField val RESULT_OK = 1
 
-        @JvmField val PARAM_KEY = "login_attempt"
+        @JvmField val EVENT = "login"
+        @JvmField val PARAM_KEY = "status"
     }
 
     private var email: String? = null
@@ -36,9 +36,9 @@ class LoginPresenter(cc: CoroutineContexts,
         utils.launchAsyncTryCatch({
             utils.asyncAwait { systemInteractor.login(email!!, password!!) }
             router.exitWithResult(RESULT_CODE, RESULT_OK)
-            mFBA.logEvent(USER_EVENT,createBundle(PARAM_KEY, RESULT_SUCCESS))
+            mFBA.logEvent(EVENT,createSingeBundle(PARAM_KEY, RESULT_SUCCESS))
         }, { e -> viewState.setError(e)
-            mFBA.logEvent(USER_EVENT,createBundle(PARAM_KEY, RESULT_REJECTION))
+            mFBA.logEvent(EVENT,createSingeBundle(PARAM_KEY, RESULT_FAIL))
         })
     }
 

@@ -4,8 +4,6 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
@@ -46,15 +44,45 @@ class MainPresenter(cc: CoroutineContexts,
         utils.launchAsyncTryCatch( {
             // @TODO выкинуть эту порнографию в …
             //if(GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable() == ConnectionResult.SUCCESS)
-            
+
                 updateCurrentLocationAsync()
             //else viewState.setError(true, R.string.err_location_service_not_available)
         }, { e -> Timber.e(e) } )
-        
+
         // Создать листенер для обновления текущей локации
         // https://developer.android.com/training/location/receive-location-updates
     }
-    
+
+    companion object {
+        @JvmField val EVENT_MENU = "menu"
+        @JvmField val EVENT_MAIN = "main"
+
+
+        //navigation drawer log params
+        @JvmField val LOGIN_CLICKED = "login"
+        @JvmField val TRANSFER_CLICKED = "transfers"
+        @JvmField val SETTINGS_CLICKED = "settings"
+        @JvmField val ABOUT_CLICKED = "about"
+        @JvmField val DRIVER_CLICKED = "driver"
+        @JvmField val CUSTOMER_CLICKED = "customer"
+        @JvmField val BEST_PRICE_CLICKED = "best_price"
+        @JvmField val SHARE_CLICKED = "share"
+
+        //other buttons log params
+        @JvmField val MY_PLACE_CLICKED = "my_place"
+//        @JvmField val SHOW_ROUTE_CLICKED = "show_route"
+        @JvmField val ENTRANCE_CLICKED = "entrance"
+//        @JvmField val CAR_INFO_CLICKED = "car_info"
+//        @JvmField val BACK_CLICKED = "back"
+        @JvmField val POINT_ON_MAP_CLICKED = "point_on_map"
+        @JvmField val AIRPORT_CLICKED = "predefined_airport"
+        @JvmField val TRAIN_CLICKED = "predefined_train"
+        @JvmField val HOTEL_CLICKED = "predefined_hotel"
+        @JvmField val LAST_PLACE_CLICKED = "last_place"
+        @JvmField val SWAP_CLICKED = "swap"
+
+    }
+
     @CallSuper
     override fun attachView(view: MainView) {
         super.attachView(view)
@@ -68,6 +96,7 @@ class MainPresenter(cc: CoroutineContexts,
         utils.launchAsyncTryCatch(
             { updateCurrentLocationAsync() },
             { e -> viewState.setError(e) })
+        logEvent(MY_PLACE_CLICKED)
     }
 
     private suspend fun updateCurrentLocationAsync() {
@@ -81,16 +110,16 @@ class MainPresenter(cc: CoroutineContexts,
         currentLocation = currentAddress.name
         entrance = ""
     }
-    
+
     fun onCameraMove(lastPoint: LatLng) {
         this.lastPoint = lastPoint
         viewState.moveCenterMarker(lastPoint)
         viewState.blockInterface(true)
     }
-    
+
     fun onCameraIdle() {
         if(lastPoint == null) return
-		/* Не запрашивать адрес, если перемещение составило менее minDistance 
+		/* Не запрашивать адрес, если перемещение составило менее minDistance
         val distance = FloatArray(2)
         Location.distanceBetween(lastPoint!!.latitude, lastPoint!!.longitude,
                                  lastAddressPoint.latitude, lastAddressPoint.longitude, distance)
@@ -114,16 +143,21 @@ class MainPresenter(cc: CoroutineContexts,
         }
     }
 
-    fun onLoginClick()          { router.navigateTo(Screens.LOGIN) }
-    fun onAboutClick()          { router.navigateTo(Screens.ABOUT) }
-    fun readMoreClick()         { router.navigateTo(Screens.READ_MORE) }
-    fun onSettingsClick()       { router.navigateTo(Screens.SETTINGS) }
-    fun onRequestsClick()       { router.navigateTo(Screens.REQUESTS) }
+    fun onLoginClick()          { router.navigateTo(Screens.LOGIN) ; logEvent(LOGIN_CLICKED)}
+    fun onAboutClick()          { router.navigateTo(Screens.ABOUT) ; logEvent(ABOUT_CLICKED) }
+    fun readMoreClick()         { router.navigateTo(Screens.READ_MORE) ; logEvent(BEST_PRICE_CLICKED) }
+    fun onSettingsClick()       { router.navigateTo(Screens.SETTINGS) ; logEvent(SETTINGS_CLICKED) }
+    fun onRequestsClick()       { router.navigateTo(Screens.REQUESTS) ; logEvent(TRANSFER_CLICKED) }
     fun onBecomeACarrierClick() {
+        logEvent(DRIVER_CLICKED)
         if(systemInteractor.isLoggedIn()) {
             if(systemInteractor.account.groups!!.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) router.navigateTo(Screens.CARRIER_MODE)
             else router.navigateTo(Screens.REG_CARRIER)
         }
         else router.navigateTo(Screens.LOGIN)
+    }
+
+    fun logEvent(value: String){
+        mFBA.logEvent(EVENT_MENU,createSingeBundle(PARAM_KEY_NAME,value))
     }
 }

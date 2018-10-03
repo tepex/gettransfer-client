@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.os.Bundle
 import android.support.annotation.CallSuper
 
 import android.util.Patterns
@@ -72,7 +71,22 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         @JvmField val FUTURE_HOUR       = 6
         @JvmField val FUTURE_MINUTE     = 5
 
-        @JvmField val PARAM_KEY = "offer_order"
+        @JvmField val EVENT_TRANSFER = "create_transfer"
+        @JvmField val EVENT_MAIN = MainPresenter.EVENT_MAIN
+
+        @JvmField val PARAM_KEY = "result"
+
+
+        @JvmField val NO_TRANSPORT_SELECTED = "no_transport_type"
+        @JvmField val NO_EMAIL = "invalid_email"
+        @JvmField val NO_PHONE = "invalid_phone"
+        @JvmField val NO_NAME = "invalid_name"
+        @JvmField val NO_LICENSE_ACCEPTED = "license_not_accepted"
+
+        //Main params: см. табл. https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0
+        @JvmField val SHOW_ROUTE_CLICKED = "show_route"
+        @JvmField val CAR_INFO_CLICKED = "car_info"
+        @JvmField val BACK_CLICKED = "back"
 
     }
     
@@ -172,6 +186,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         val trip = Trip(date, flightNumber)
         /* filter */
         val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
+        if(selectedTransportTypes.isEmpty()) mFBA.logEvent(EVENT_TRANSFER,createSingeBundle(PARAM_KEY, NO_TRANSPORT_SELECTED))
         
         Timber.d("from: %s", routeInteractor.from)
         Timber.d("to: %s", routeInteractor.to!!)
@@ -203,7 +218,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                   null,
                                                   false) }
             Timber.d("new transfer: %s", transfer)
-            mFBA.logEvent(USER_EVENT,createBundle(PARAM_KEY, RESULT_SUCCESS))
             router.navigateTo(Screens.OFFERS)
         }, { e ->
                 if(e is ApiException) {
@@ -217,7 +231,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                 else {
                     viewState.setError(e)
                 }
-            mFBA.logEvent(USER_EVENT,createBundle(PARAM_KEY, RESULT_REJECTION))
         }, { viewState.blockInterface(false) })
     }
     
@@ -238,14 +251,21 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     fun onCenterRouteClick() {
         //viewState.setRoute(routeModel!!)
         viewState.centerRoute(track!!)
+        logEventMain(SHOW_ROUTE_CLICKED)
     }
 
     fun onBackClick() {
         router.navigateTo(Screens.PASSENGER_MODE)
+        logEventMain(BACK_CLICKED)
     }
 
     override fun onBackCommandClick() {
         router.navigateTo(Screens.PASSENGER_MODE)
+        logEventMain(BACK_CLICKED)
+    }
+
+    fun logEventMain(value: String){
+        mFBA.logEvent(EVENT_MAIN,createSingeBundle(PARAM_KEY_NAME,value))
     }
 
 }
