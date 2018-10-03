@@ -288,6 +288,12 @@ class ApiRepositoryImpl(private val preferences: Preferences,
         val carrierTrip: ApiCarrierTrip = response.data!!.trip
         return Mappers.mapApiCarrierTrip(carrierTrip)
     }
+
+    override suspend fun createNewPayment(transferId: Long, offerId: Long?, gatewayId: String, percentage: Int): PaymentResult {
+        val response: ApiResponse<ApiPaymentResult> = tryTwice { api.createNewPayment(ApiCreatePaymentEntity(transferId, offerId, gatewayId, percentage)) }
+        val paymentResult = response.data!!
+        return Mappers.mapPaymentResult(paymentResult)
+    }
     
     fun apiException(e: Exception): ApiException {
         if(e is HttpException)
