@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.Configuration
 
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 
 import android.os.Build
 import android.os.Bundle
@@ -17,13 +18,18 @@ import android.support.v4.widget.DrawerLayout
 
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
+import android.text.TextUtils
 
 import android.transition.Fade
+
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 
+import android.widget.LinearLayout
+import android.widget.PopupWindow
 import android.widget.TextView
 
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -31,17 +37,15 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdateFactory
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
-
 import com.kg.gettransfer.extensions.hideKeyboard
+import com.kg.gettransfer.extensions.showKeyboard
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.UserModel
@@ -49,6 +53,8 @@ import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
 
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.popup_entrance.*
+import kotlinx.android.synthetic.main.popup_entrance.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_navigation.*
 
@@ -70,6 +76,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     
     private var isFirst = true
     private var centerMarker: Marker? = null
+
+	private lateinit var popupEntrance: PopupWindow
     
     @ProvidePresenter
     fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
@@ -182,9 +190,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 			override fun onDrawerStateChanged(newState: Int) {
 				super.onDrawerStateChanged(newState)
 				if(newState == DrawerLayout.STATE_SETTLING) {
-				    val view = currentFocus
-				    view?.hideKeyboard()
-				    view?.clearFocus()
+				    hideKeyboard()
 				}
 			}
 		})
@@ -201,9 +207,54 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 		searchFrom.setOnClickListener { presenter.onSearchClick(Pair(searchFrom.text, searchTo.text)) }
 		searchTo.setOnClickListener { presenter.onSearchClick(Pair(searchFrom.text, searchTo.text)) }
 
+		btnEntrance.setOnClickListener {
+			showPopupEntrance()
+		}
+
 		val fade = Fade()
         fade.duration = FADE_DURATION
 		window.setExitTransition(fade)
+	}
+
+	private fun showPopupEntrance() {
+		val layoutEntrance = LayoutInflater.from(applicationContext).inflate(R.layout.popup_entrance, layoutEntrance)
+
+		popupEntrance = PopupWindow(layoutEntrance, LinearLayout.LayoutParams.MATCH_PARENT,
+										LinearLayout.LayoutParams.WRAP_CONTENT, true)
+        popupEntrance.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        popupEntrance.inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
+		popupEntrance.isOutsideTouchable = true
+		popupEntrance.setBackgroundDrawable(ColorDrawable())
+		popupEntrance.setOnDismissListener { layoutEntrance.etEntrance.hideKeyboard() }
+		popupEntrance.showAtLocation(contentMain, Gravity.BOTTOM, 0, search.height + popupEntrance.height)
+
+		layoutEntrance.etEntrance.popupWindow = popupEntrance
+		layoutEntrance.etEntrance.showKeyboard()
+		layoutEntrance.etEntrance.setText(presenter.entrance)
+		layoutEntrance.etEntrance.setSelection(layoutEntrance.etEntrance.text.length)
+
+		if (!TextUtils.isEmpty(presenter.entrance)) {
+			layoutEntrance.tvReady.visibility = View.VISIBLE
+			layoutEntrance.tvClose.visibility = View.INVISIBLE
+		}
+
+        layoutEntrance.tvClose.setOnClickListener {
+			presenter.entrance = ""
+			popupEntrance.dismiss()
+		}
+        layoutEntrance.tvReady.setOnClickListener {
+			presenter.entrance = (layoutEntrance.etEntrance.text.toString().trim())
+			popupEntrance.dismiss()
+		}
+        layoutEntrance.etEntrance.onTextChanged {
+            if (TextUtils.isEmpty(it)) {
+				layoutEntrance.tvClose.visibility = View.VISIBLE
+				layoutEntrance.tvReady.visibility = View.INVISIBLE
+            } else {
+				layoutEntrance.tvClose.visibility = View.INVISIBLE
+				layoutEntrance.tvReady.visibility = View.VISIBLE
+            }
+        }
 	}
 
 	@CallSuper
@@ -215,15 +266,13 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 	@CallSuper
 	protected override fun onResume() {
 		super.onResume()
-		val view = currentFocus
-		view?.hideKeyboard()
-		view?.clearFocus()
+		hideKeyboard()
 	}
-	
+
 	@CallSuper
 	override fun onBackPressed() {
 		if(drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START)
-		else super.onBackPressed() 
+		else super.onBackPressed()
 	}
 	
 	@CallSuper
@@ -324,4 +373,12 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 			navRequests.visibility = View.VISIBLE
 	    }
 	}
+
+    override fun setEntrance(address: String, entrance: String) {
+		if (!TextUtils.isEmpty(entrance)) {
+			searchFrom.text = "$address${getString(R.string.short_entrance)}$entrance"
+		} else {
+			searchFrom.text = address
+		}
+    }
 }

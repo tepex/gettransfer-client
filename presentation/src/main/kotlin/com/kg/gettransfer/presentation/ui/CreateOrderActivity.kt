@@ -16,6 +16,7 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.widget.LinearLayoutManager
 
 import android.text.InputType
+import android.text.TextUtils
 import android.util.DisplayMetrics
 
 import android.view.Gravity
@@ -38,9 +39,6 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
-
-import com.kg.gettransfer.extensions.hideKeyboard
-import com.kg.gettransfer.extensions.showKeyboard
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
@@ -193,11 +191,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         bsOrder.isHideable = false
     }
 
-    private fun showKeyboard() {
-        val view = currentFocus
-        view?.showKeyboard()
-    }
-
     private fun toggleSheetOrder() {
         if (bsOrder.state != BottomSheetBehavior.STATE_EXPANDED) {
             bsOrder.state = BottomSheetBehavior.STATE_EXPANDED
@@ -240,14 +233,17 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             false
         })
         popupWindowComment.setOnDismissListener {
-            val view = currentFocus
-            view?.hideKeyboard()
-            view?.clearFocus()
+            hideKeyboard()
             layoutShadow.visibility = View.GONE
             toggleSheetOrder()
         }
         layoutPopup.setOnClickListener { layoutPopup.etPopupComment.requestFocus() }
         layoutPopup.etPopupComment.setSelection(layoutPopup.etPopupComment.text.length)
+        layoutPopup.etPopupComment.onTextChanged {
+            if (!it.equals(routeInteractor.from?.entrance)) {
+                routeInteractor.from!!.entrance = ""
+            }
+        }
     }
 
     private fun getScreenHeight(): Int {
@@ -328,6 +324,14 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     override fun centerRoute(cameraUpdate: CameraUpdate){
         showTrack(cameraUpdate)
+    }
+
+    override fun setEntrance(entrance: String) {
+        if (TextUtils.isEmpty(entrance)) {
+           tvComments.text = ""
+        } else {
+            tvComments.text = getString(R.string.entrance_no, entrance)
+        }
     }
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {

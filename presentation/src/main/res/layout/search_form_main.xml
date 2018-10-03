@@ -7,7 +7,7 @@
     android:layout_gravity="center_horizontal|top"
     android:background="@android:color/white"
     android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
+    android:focusableInTouchMode="false"
     android:orientation="vertical"
     android:transitionName="@string/searchTransitionName">
 
@@ -26,7 +26,7 @@
             app:hint="@string/search_from_hint" />
 
         <Button
-            android:id="@+id/btnEntrance2"
+            android:id="@+id/btnEntrance"
             android:layout_width="wrap_content"
             android:layout_height="26dp"
             android:layout_marginBottom="8dp"

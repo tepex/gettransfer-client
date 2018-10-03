@@ -34,6 +34,12 @@ class MainPresenter(cc: CoroutineContexts,
     private var minDistance: Int = 30
 
     private var available: Boolean = false
+    private var currentLocation: String = ""
+    var entrance: String = ""
+        set(value) {
+            field = value
+            viewState.setEntrance(currentLocation, value)
+        }
 
     override fun onFirstViewAttach() {
         systemInteractor.lastMode = Screens.PASSENGER_MODE
@@ -53,6 +59,9 @@ class MainPresenter(cc: CoroutineContexts,
     override fun attachView(view: MainView) {
         super.attachView(view)
         viewState.setUser(Mappers.getUserModel(systemInteractor.account))
+        if (routeInteractor.from != null) {
+            entrance = routeInteractor.from!!.entrance
+        }
     }
 
     fun updateCurrentLocation() {
@@ -69,6 +78,8 @@ class MainPresenter(cc: CoroutineContexts,
         onCameraMove(lastAddressPoint)
         viewState.setMapPoint(lastAddressPoint)
         viewState.setAddressFrom(currentAddress.name)
+        currentLocation = currentAddress.name
+        entrance = ""
     }
     
     fun onCameraMove(lastPoint: LatLng) {
@@ -90,12 +101,17 @@ class MainPresenter(cc: CoroutineContexts,
         utils.launchAsyncTryCatchFinally({
             val currentAddress = utils.asyncAwait { routeInteractor.getAddressByLocation(Mappers.latLng2Point(lastPoint!!)) }
             viewState.setAddressFrom(currentAddress.name)
+            currentLocation = currentAddress.name
+            entrance = ""
         }, { e -> viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }
 
     fun onSearchClick(addresses: Pair<String, String>) {
-        if(routeInteractor.from != null) router.navigateTo(Screens.FIND_ADDRESS, addresses)
+        if(routeInteractor.from != null) {
+            routeInteractor.from!!.entrance = entrance
+            router.navigateTo(Screens.FIND_ADDRESS, addresses)
+        }
     }
 
     fun onLoginClick()          { router.navigateTo(Screens.LOGIN) }
