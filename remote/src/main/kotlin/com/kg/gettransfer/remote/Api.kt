@@ -12,6 +12,7 @@ interface Api {
         const val API_CONFIGS      = "/api/configs"
         const val API_ACCOUNT      = "/api/account"
         const val API_LOGIN        = "/api/login"
+        const val API_ROUTE_INFO   = "/api/route_info"
     }
     
 	@GET(API_ACCESS_TOKEN)
@@ -35,4 +36,9 @@ interface Api {
 	@FormUrlEncoded
 	fun login(@Field(ACCOUNT_EMAIL) email: String,
 			  @Field(ACCOUNT_PASSWORD) password: String): Deferred<ResponseModel<AccountWrapperModel>>
+	
+	@GET(API_ROUTE_INFO)
+	fun getRouteInfo(@Query("points[]") points: Array<String>,
+					 @Query("with_prices") withPrices: Boolean,
+					 @Query("return_way") returnWay: Boolean): Deferred<ResponseModel<RouteInfoModel>>
 }

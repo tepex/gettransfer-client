@@ -42,11 +42,6 @@ interface Api {
 	fun login(@Field(ACCOUNT_EMAIL) email: String,
 			  @Field(ACCOUNT_PASSWORD) password: String): Deferred<ApiResponse<ApiAccountWrapper>>
 	
-	@GET(API_ROUTE_INFO)
-	fun getRouteInfo(@Query("points[]") points: Array<String>,
-					 @Query("with_prices") withPrices: Boolean,
-					 @Query("return_way") returnWay: Boolean): Deferred<ApiResponse<ApiRouteInfo>>
-	
 	@GET(API_TRANSFERS)
 	fun getAllTransfers(): Deferred<ApiResponse<ApiTransfers>>
 
