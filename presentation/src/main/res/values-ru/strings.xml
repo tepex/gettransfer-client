@@ -227,7 +227,7 @@
     <string name="remains_to_pay">Осталось оплатить</string>
     <string name="driver_will_meet_you">*Водитель встретит вас с табличкой</string>
     <string name="example_flight">Например: BA 2243</string>
-    <string name="number_entrance">Номер подъезда</string>
+    <string name="number_entrance">Подъезд или номер входа</string>
     <string name="close">Закрыть</string>
     <string name="ready">Готово</string>
     <string name="short_entrance">, п.</string>

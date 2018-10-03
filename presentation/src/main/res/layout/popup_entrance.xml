@@ -17,7 +17,7 @@
         android:gravity="center"
         android:hint="@string/number_entrance"
         android:imeOptions="actionDone"
-        android:inputType="number"
+        android:inputType="text"
         android:singleLine="true"
         android:textSize="@dimen/text_size_entrance"
         app:layout_constraintBottom_toBottomOf="parent"

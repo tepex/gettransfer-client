@@ -81,6 +81,7 @@
                 android:layout_marginStart="16dp"
                 android:background="@null"
                 android:hint="@string/suggest_your_price"
+                android:singleLine="true"
                 app:layout_constraintBottom_toBottomOf="@+id/tvCurrencyType"
                 app:layout_constraintStart_toEndOf="@+id/ivChangeCurrency"
                 app:layout_constraintTop_toTopOf="@+id/tvCurrencyType" />
