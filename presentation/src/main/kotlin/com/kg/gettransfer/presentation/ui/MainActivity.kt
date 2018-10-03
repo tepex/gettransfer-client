@@ -21,10 +21,15 @@ import android.support.v7.app.AppCompatDelegate
 import android.text.TextUtils
 
 import android.transition.Fade
-import android.view.*
+
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.WindowManager
+
 import android.widget.LinearLayout
 import android.widget.PopupWindow
-
 import android.widget.TextView
 
 import com.arellomobile.mvp.presenter.InjectPresenter
