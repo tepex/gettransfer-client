@@ -225,6 +225,11 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 		layoutEntrance.etEntrance.setText(presenter.entrance)
 		layoutEntrance.etEntrance.setSelection(layoutEntrance.etEntrance.text.length)
 
+		if (!TextUtils.isEmpty(presenter.entrance)) {
+			layoutEntrance.tvReady.visibility = View.VISIBLE
+			layoutEntrance.tvClose.visibility = View.INVISIBLE
+		}
+
         layoutEntrance.tvClose.setOnClickListener {
 			presenter.entrance = ""
 			popupEntrance.dismiss()

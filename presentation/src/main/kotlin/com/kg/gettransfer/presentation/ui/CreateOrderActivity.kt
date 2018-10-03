@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 
 import android.text.InputType
+import android.text.TextUtils
 import android.util.DisplayMetrics
 
 import android.view.Gravity
@@ -223,6 +224,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
         layoutPopup.setOnClickListener { layoutPopup.etPopupComment.requestFocus() }
         layoutPopup.etPopupComment.setSelection(layoutPopup.etPopupComment.text.length)
+        layoutPopup.etPopupComment.onTextChanged {
+            if (!it.equals(routeInteractor.from?.entrance)) {
+                routeInteractor.from!!.entrance = ""
+            }
+        }
     }
 
     private fun getScreenHeight(): Int {
@@ -298,7 +304,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun setEntrance(entrance: String) {
-        tvComments.text = getString(R.string.entrance_no, entrance)
+        if (TextUtils.isEmpty(entrance)) {
+           tvComments.text = ""
+        } else {
+            tvComments.text = getString(R.string.entrance_no, entrance)
+        }
     }
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {
