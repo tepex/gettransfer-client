@@ -7,7 +7,7 @@ import com.kg.gettransfer.domain.model.Trip
 
 interface TransferRepository {
     suspend fun getAllTransfers(): List<Transfer>
-    suspend fun getTransfer(id: Long): Transfer
+    suspend fun getTransfer(transferId: Long): Transfer
     suspend fun getTransfersArchive(): List<Transfer>
     suspend fun getTransfersActive(): List<Transfer>
     suspend fun createTransfer(from: GTAddress,
@@ -23,5 +23,5 @@ interface TransferRepository {
                                profile: Profile,
                                promoCode: String?,
                                paypalOnly: Boolean): Transfer
-    suspend fun cancelTransfer(id: Long, reason: String): Transfer
+    suspend fun cancelTransfer(transferId: Long, reason: String): Transfer
 }
