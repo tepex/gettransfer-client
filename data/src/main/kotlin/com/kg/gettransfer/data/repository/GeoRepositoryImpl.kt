@@ -65,24 +65,15 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
 
         val addr = StringBuilder()
 
-        if(street == null && list.firstOrNull()?.getAddressLine(0)!!.isNotEmpty()){
+        if(street == null && list.firstOrNull()?.getAddressLine(0)!!.isNotEmpty()) {
             addr.append(list.firstOrNull()?.getAddressLine(0))
-        } else{
-            if(street != null && street.isNotEmpty()){
-                addr.append(street).append(", ")
-            }
-            if(house != null && house.isNotEmpty()){
-                addr.append(house).append(", ")
-            }
-            if(city != null && city.isNotEmpty()){
-                addr.append(city).append(", ")
-            }
-            if(area != null && area.isNotEmpty() && area != city){
-                addr.append(area).append(", ")
-            }
-            if(country != null && country.isNotEmpty()){
-                addr.append(country)
-            }
+        }
+        else {
+            if(!street.isNullOrEmpty())  addr.append(street).append(", ")
+            if(!house.isNullOrEmpty())   addr.append(house).append(", ")
+            if(!city.isNullOrEmpty())    addr.append(city).append(", ")
+            if(!country.isNullOrEmpty()) addr.append(country)
+            if(!area.isNullOrEmpty() && area != city) addr.append(area).append(", ")
         }
 
         val text = getAutocompletePredictions(addr.toString())

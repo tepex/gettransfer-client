@@ -286,8 +286,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         else {
             /* Грязный хак!!! */
             if(isFirst || googleMap.cameraPosition.zoom <= MAX_INIT_ZOOM) {
-                val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+                val zoom1 = resources.getInteger(R.integer.map_min_zoom).toFloat()
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom1))
 				isFirst = false
 				//googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
             }

@@ -75,8 +75,8 @@ internal class Utils {
         fun showAlertCancelRequest(context: Context, listener: (Boolean) -> Unit){
             getAlertDialogBuilder(context)
                     .setTitle(R.string.alert_cancel_transfer_text)
-                    .setPositiveButton(R.string.alert_yes) { dialog, which -> listener(true) }
-                    .setNegativeButton(R.string.alert_no) {dialog, which -> listener(false) }
+                    .setPositiveButton(R.string.alert_yes) { _, _ -> listener(true) }
+                    .setNegativeButton(R.string.alert_no)  { _, _ -> listener(false) }
                     .show()
         }
         
