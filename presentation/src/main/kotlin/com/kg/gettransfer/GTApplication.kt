@@ -11,7 +11,6 @@ import org.koin.android.ext.android.startKoin
 import timber.log.Timber
 
 class GTApplication: MultiDexApplication() {
-<<<<<<< HEAD
     @CallSuper
     override fun onCreate() {
         super.onCreate()

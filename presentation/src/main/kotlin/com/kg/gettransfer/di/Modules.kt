@@ -13,6 +13,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.data.logging.LoggingImpl
 
 import com.kg.gettransfer.data.PreferencesCache
+import com.kg.gettransfer.data.RouteDataStore
 import com.kg.gettransfer.data.SystemCache
 import com.kg.gettransfer.data.SystemRemote
 
@@ -25,14 +26,15 @@ import com.kg.gettransfer.domain.interactor.*
 import com.kg.gettransfer.domain.repository.*
 
 import com.kg.gettransfer.geo.GeoRepositoryImpl
-
 import com.kg.gettransfer.prefs.PreferencesImpl
 
 import com.kg.gettransfer.remote.ApiCore
+import com.kg.gettransfer.remote.RouteRemoteImpl
 import com.kg.gettransfer.remote.SystemRemoteImpl
 
-import com.kg.gettransfer.remote.mapper.AccountMapper as EntityAccountMapper
-import com.kg.gettransfer.remote.mapper.ConfigsMapper as EntityConfigsMapper
+import com.kg.gettransfer.remote.mapper.AccountMapper as AccountRemoteMapper
+import com.kg.gettransfer.remote.mapper.ConfigsMapper as ConfigsRemoteMapper
+import com.kg.gettransfer.remote.mapper.RouteInfoMapper as RouteInfoRemoteMapper
 
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.IO
@@ -47,11 +49,6 @@ import ru.terrakok.cicerone.Router
 /**
  * Koin main module
  */
-val appModule = module {
-	// Util
-	//single { PreferenceManager.getDefaultSharedPreferences(get()) as SharedPreferences }
-}
-
 val ciceroneModule = module {
     single { Cicerone.create() as Cicerone<Router> }
     single { get<Cicerone<Router>>().router }
@@ -66,21 +63,19 @@ val prefsModule = module {
     single { PreferencesImpl(get()) } bind PreferencesCache::class bind SystemCache::class
 }
 
-val systemModule = module {
+val remoteModule = module {
     single {
         val resources = (get() as Context).resources
         ApiCore(get(), resources.getString(R.string.api_key), resources.getString(R.string.api_url))
     }
-    single { SystemRemoteImpl(get(), EntityConfigsMapper(), EntityAccountMapper()) as SystemRemote }
-    
-    single { SystemCacheDataStore(get()) }
-    single { SystemRemoteDataStore(get()) }
-    single { SystemDataStoreFactory(get(), get()) }
-    single { AccountMapper() }
-    single { ConfigsMapper() }
+    single { RouteInfoRemoteMapper() }
+    single { RouteRemoteImpl(get(), get()) as RouteDataStore }
+    single { AccountRemoteMapper() }
+    single { ConfigsRemoteMapper() }    
+    single { SystemRemoteImpl(get(), get(), get()) as SystemRemote }
 }
 
-val domainModule = module {
+val dataModule = module {
 	single {
 		val context: Context = get()
 		LoggingImpl(get(),
@@ -106,6 +101,9 @@ val domainModule = module {
 	single { RouteInteractor(get(), get()) }
 	single { SystemInteractor(get(), get()) }
 	single { TransferInteractor(get()) }
+    
+    single { CarrierTripRepositoryImpl(get()) as CarrierTripRepository }
+    single { CarrierTripInteractor(get()) }
 }
 
 val androidModule = module {
