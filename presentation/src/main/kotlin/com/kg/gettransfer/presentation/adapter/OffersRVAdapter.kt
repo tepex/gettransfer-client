@@ -51,8 +51,6 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
                 Glide.with(this).load(context.getString(R.string.api_photo_url, item.vehiclePhotos[0])).into(carPhoto)
                 tvCountPersonsOnCarImage.text = context.getString(R.string.count_persons_and_baggage, item.paxMax)
                 tvCountBaggageOnCarImage.text = context.getString(R.string.count_persons_and_baggage, item.baggageMax)
-                val stars = ratingBar.progressDrawable as LayerDrawable
-                stars.getDrawable(2).setColorFilter(ContextCompat.getColor(context, R.color.colorStarsInRatingBar), PorterDuff.Mode.SRC_ATOP)
                 ratingBar.rating = item.averageRating!!.toFloat()
                 setVehicleNameAndOptions(bottomLayoutForImage, item)
             } else {
@@ -62,7 +60,6 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
                 tvCountBaggage.text = context.getString(R.string.count_persons_and_baggage, item.baggageMax)
                 setVehicleNameAndOptions(bottomLayoutNoImage, item)
             }
-
             val carrierLanguages = item.carrierLanguages
 
             val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)

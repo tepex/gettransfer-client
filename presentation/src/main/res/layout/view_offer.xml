@@ -115,17 +115,29 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:gravity="center">
 
-                    <RatingBar
+                    <com.willy.ratingbar.ScaleRatingBar
                         android:id="@+id/ratingBar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/Widget.AppCompat.RatingBar.Small" />
+                        app:srb_numStars="5"
+                        app:srb_minimumStars="0"
+                        app:srb_rating="2"
+                        app:srb_starWidth="12dp"
+                        app:srb_starHeight="12dp"
+                        app:srb_starPadding="2dp"
+                        app:srb_stepSize="0.1"
+                        app:srb_isIndicator="true"
+                        app:srb_clickable="false"
+                        app:srb_drawableEmpty="@drawable/ic_star_empty"
+                        app:srb_drawableFilled="@drawable/ic_star_filled">
+                    </com.willy.ratingbar.ScaleRatingBar>
 
                     <ImageView
                         android:id="@+id/ivLike"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_like_button"/>
+                        app:srcCompat="@drawable/ic_like_button"
+                        android:layout_marginStart="@dimen/view_offer_image_like_margin_start"/>
 
                 </LinearLayout>
 

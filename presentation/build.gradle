@@ -13,6 +13,8 @@ ext {
 	circle_indicator_version  = "1.2.2"
 	hockey_version            = "5.1.1"
 	firebase_version          = "16.0.4"
+	glide_version			  = "4.7.1"
+	simple_rating_bar_version = "1.4.2"
 }
 
 android {
@@ -157,8 +159,11 @@ dependencies {
 	implementation "com.google.firebase:firebase-core:$firebase_version"
 
 	//Glide
-	implementation 'com.github.bumptech.glide:glide:4.7.1'
-	annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+	implementation "com.github.bumptech.glide:glide:$glide_version"
+	annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
+
+	//RatingBar with vector images
+	implementation "com.github.ome450901:SimpleRatingBar:$simple_rating_bar_version"
     
 	testImplementation libs.junit
 	testImplementation libs.hamcrest

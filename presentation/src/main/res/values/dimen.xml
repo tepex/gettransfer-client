@@ -255,5 +255,6 @@
 	<dimen name="view_offer_images_option_height">23dp</dimen>
 	<dimen name="view_offer_top_layout_on_image_padding_start_end">5dp</dimen>
 	<dimen name="view_offer_layouts_on_image_height">24dp</dimen>
+	<dimen name="view_offer_image_like_margin_start">5dp</dimen>
 
 </resources>
