@@ -1,8 +1,6 @@
 package com.kg.gettransfer.presentation.adapter
 
-import android.graphics.PorterDuff
-import android.graphics.drawable.LayerDrawable
-import android.support.v4.content.ContextCompat
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 
 import android.view.LayoutInflater
@@ -20,6 +18,7 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_offer_car_name_and_options.view.*
 import android.view.Gravity
 import android.widget.LinearLayout
+import android.widget.TextView
 
 class OffersRVAdapter(private val offers: List<OfferModel>, private val listener: SelectOfferClickListener):
         RecyclerView.Adapter<OffersRVAdapter.ViewHolder>() {
@@ -49,16 +48,12 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
             if(item.vehiclePhotos.isNotEmpty()) {
                 layoutWithCarImage.visibility = View.VISIBLE
                 Glide.with(this).load(context.getString(R.string.api_photo_url, item.vehiclePhotos[0])).into(carPhoto)
-                tvCountPersonsOnCarImage.text = context.getString(R.string.count_persons_and_baggage, item.paxMax)
-                tvCountBaggageOnCarImage.text = context.getString(R.string.count_persons_and_baggage, item.baggageMax)
                 ratingBar.rating = item.averageRating!!.toFloat()
-                setVehicleNameAndOptions(bottomLayoutForImage, item)
+                setTexts(bottomLayoutForImage, tvCountPersonsOnCarImage, tvCountBaggageOnCarImage, item, context)
             } else {
                 layoutNoCarImage.visibility = View.VISIBLE
                 tvVehicleType.setText(Utils.getTransportTypeName(item.transportType))
-                tvCountPersons.text = context.getString(R.string.count_persons_and_baggage, item.paxMax)
-                tvCountBaggage.text = context.getString(R.string.count_persons_and_baggage, item.baggageMax)
-                setVehicleNameAndOptions(bottomLayoutNoImage, item)
+                setTexts(bottomLayoutNoImage, tvCountPersons, tvCountBaggage, item, context)
             }
             val carrierLanguages = item.carrierLanguages
 
@@ -85,10 +80,12 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
             setOnClickListener { listener(item) }
         }
 
-        fun setVehicleNameAndOptions(layout: View, item: OfferModel) {
+        fun setTexts(layout: View, textViewPax: TextView, textViewBaggage: TextView, item: OfferModel, context: Context){
             layout.tvVehicleName.text = item.transportName
             if(item.wifi) layout.bottomLayoutForImage.imgOptionFreeWiFi.visibility = View.VISIBLE
             if(item.refreshments) layout.bottomLayoutForImage.imgOptionFreeWater.visibility = View.VISIBLE
+            textViewPax.text = context.getString(R.string.count_persons_and_baggage, item.paxMax)
+            textViewBaggage.text = context.getString(R.string.count_persons_and_baggage, item.baggageMax)
         }
     }
 }
