@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.model
 
+import java.util.Locale
+
 class OfferModel(val driverName: String?,
                  val driverEmail: String?,
                  val driverPhone: String?,
@@ -17,4 +19,5 @@ class OfferModel(val driverName: String?,
                  val refreshments: Boolean,
                  val averageRating: Double?,
                  val priceAmount: Double,
-                 val vehiclePhotos: List<String>)
+                 val vehiclePhotos: List<String>,
+                 val carrierLanguages: List<Locale>)

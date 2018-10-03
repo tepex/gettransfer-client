@@ -258,6 +258,12 @@
             android:gravity="center"
             android:layout_marginTop="@dimen/view_offer_completed_transfers_text_margin_top"/>
 
+        <LinearLayout
+            android:id="@+id/layoutLanguages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+
     </LinearLayout>
 
     <LinearLayout

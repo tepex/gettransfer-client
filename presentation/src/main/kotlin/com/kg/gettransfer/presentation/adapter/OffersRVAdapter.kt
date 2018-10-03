@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -17,6 +18,8 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_offer.view.*
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_offer_car_name_and_options.view.*
+import android.view.Gravity
+import android.widget.LinearLayout
 
 class OffersRVAdapter(private val offers: List<OfferModel>, private val listener: SelectOfferClickListener):
         RecyclerView.Adapter<OffersRVAdapter.ViewHolder>() {
@@ -59,7 +62,30 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
                 tvCountBaggage.text = context.getString(R.string.count_persons_and_baggage, item.baggageMax)
                 setVehicleNameAndOptions(bottomLayoutNoImage, item)
             }
-            btnSelect.setOnClickListener { listener(item) }
+
+            val carrierLanguages = item.carrierLanguages
+
+            val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            lp.setMargins(8, 0, 8, 0)
+
+            var raws = carrierLanguages.size / 2
+            if (carrierLanguages.size % 2 == 0) raws -= 1
+
+            for (i in 0..raws){
+                val layout = LinearLayout(context)
+                layout.orientation = LinearLayout.HORIZONTAL
+                layout.gravity = Gravity.CENTER
+                for (j in 0..1){
+                    if(i * 2 + j == carrierLanguages.size) break
+                    val ivLanguage = ImageView(context)
+                    ivLanguage.setImageResource(Utils.getLanguageImage(carrierLanguages[i * 2 + j].language))
+                    ivLanguage.layoutParams = lp
+                    layout.addView(ivLanguage)
+                }
+                layoutLanguages.addView(layout)
+            }
+
+            setOnClickListener { listener(item) }
         }
 
         fun setVehicleNameAndOptions(layout: View, item: OfferModel){

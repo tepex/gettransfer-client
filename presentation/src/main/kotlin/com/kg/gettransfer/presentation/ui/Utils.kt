@@ -210,6 +210,11 @@ internal class Utils {
             val nameRes = R.string::class.members.find( { it.name == "transport_type_$id" } )
             return (nameRes?.call() as Int?) ?: R.string.transport_type_unknown
         }
+
+        fun getLanguageImage(code: String): Int{
+            val imageRes = R.drawable::class.members.find( { it.name == "ic_language_$code" } )
+            return (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_unknown
+        }
 	}
 }
 
