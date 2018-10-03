@@ -1,8 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
-//apply plugin: 'realm-android'
 
 android {
     compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
@@ -11,9 +8,8 @@ android {
     defaultConfig {
         minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION
         targetSdkVersion project.ANDROID_BUILD_SDK_VERSION
-        versionCode androidGitVersion.code()
-        versionName androidGitVersion.name()
-        testInstrumentationRunner project.ANDROID_TEST_INSTRUMENTATION_RUNNER
+        versionCode 1
+        versionName "1.0"
     }
     buildTypes {
         debug {
@@ -48,19 +44,11 @@ android {
         exclude 'META-INF/LGPL2.1'
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
+    
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
 }
-
-// This is added automatically if Kotlin is registered in the project, but Kotlin extension functions
-// for Realm can be excluded if needed.
-/*
-realm {
-	kotlinExtensionsEnabled = true
-}
-
-*/
 
 // enable @ParametersAreNonnullByDefault annotation. See https://blog.jetbrains.com/kotlin/2017/09/kotlin-1-1-50-is-out/
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -69,24 +57,13 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 	}
 }
 
-androidExtensions {
-	experimental = true
-}
-
 dependencies {
 	implementation libs.kotlin
 	implementation libs.coroutines
-	implementation project(":domain")
-    // Realm db. To presentation layer
-//    implementation 'io.realm:android-adapters:3.0.0'
-
-    implementation libs.retrofit
-    implementation libs.retrofit_json
-    implementation libs.retrofit_kotlin
-    implementation libs.okhttp3
-    implementation libs.okhttp3_logging
-
+    implementation libs.psLocation
+    implementation libs.psPlaces
     implementation libs.timber
+	implementation project(":domain")
     
 	testImplementation libs.junit
 	testImplementation libs.hamcrest

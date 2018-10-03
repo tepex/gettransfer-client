@@ -4,9 +4,12 @@ import android.content.Context
 import android.content.SharedPreferences
 
 import android.preference.PreferenceManager
+
 import com.google.firebase.analytics.FirebaseAnalytics
 
+import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.data.logging.LoggingImpl
 
 import com.kg.gettransfer.data.PreferencesCache
@@ -20,6 +23,8 @@ import com.kg.gettransfer.data.repository.*
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.*
 import com.kg.gettransfer.domain.repository.*
+
+import com.kg.gettransfer.geo.GeoRepositoryImpl
 
 import com.kg.gettransfer.prefs.PreferencesImpl
 
@@ -48,14 +53,20 @@ val appModule = module {
 }
 
 val ciceroneModule = module {
-	single { Cicerone.create() as Cicerone<Router> }
-	single { get<Cicerone<Router>>().router }
-	single { get<Cicerone<Router>>().navigatorHolder }
+    single { Cicerone.create() as Cicerone<Router> }
+    single { get<Cicerone<Router>>().router }
+    single { get<Cicerone<Router>>().navigatorHolder }
 }
 
-val domainModule = module {
+val geoModule = module {
+    single { GeoRepositoryImpl(get()) as GeoRepository }
+}
+
+val prefsModule = module {
     single { PreferencesImpl(get()) } bind PreferencesCache::class bind SystemCache::class
-    
+}
+
+val systemModule = module {
     single {
         val resources = (get() as Context).resources
         ApiCore(get(), resources.getString(R.string.api_key), resources.getString(R.string.api_url))
@@ -67,7 +78,9 @@ val domainModule = module {
     single { SystemDataStoreFactory(get(), get()) }
     single { AccountMapper() }
     single { ConfigsMapper() }
-    
+}
+
+val domainModule = module {
 	single {
 		val context: Context = get()
 		LoggingImpl(get(),

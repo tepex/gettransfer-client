@@ -1,4 +1,4 @@
-package com.kg.gettransfer.data.repository
+package com.kg.gettransfer.geo
 
 import android.content.Context
 
@@ -33,12 +33,11 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
     private val locationProviderClient = LocationServices.getFusedLocationProviderClient(context)
     private val gdClient = Places.getGeoDataClient(context)
     private val pdClient = Places.getPlaceDetectionClient(context)
- 
-	override fun initGeocoder(locale: Locale) {
-	    Timber.d("init geocoder: $locale")
-	    geocoder = Geocoder(context, locale)
-	}
 
+    override fun initGeocoder(locale: Locale) {
+        geocoder = Geocoder(context, locale)
+    }
+    
     override suspend fun getCurrentLocation(): Result<Point> {
         val location: Location? = try {
             suspendCoroutine { cont ->
@@ -53,8 +52,6 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
 
     override fun getAddressByLocation(point: Point): GTAddress {
         val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
-        /*val addr = list?.firstOrNull()?.thoroughfare + " " + list?.firstOrNull()?.subThoroughfare
-        if(addr == null) throw RuntimeException("Address not found") */
 
         val street  = list.firstOrNull()?.thoroughfare
         val house   = list.firstOrNull()?.subThoroughfare
