@@ -63,7 +63,7 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
             val carrierLanguages = item.carrierLanguages
 
             val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            lp.setMargins(8, 0, 8, 0)
+            lp.setMargins(8, 4, 8, 4)
 
             var raws = carrierLanguages.size / 2
             if (carrierLanguages.size % 2 == 0) raws -= 1
