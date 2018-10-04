@@ -1,7 +1,10 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
-import com.kg.gettransfer.data.ds.SystemDataStoreFactory
+
+import com.kg.gettransfer.data.ds.DataStoreFactory
+import com.kg.gettransfer.data.ds.SystemCacheDataStore
+import com.kg.gettransfer.data.ds.SystemRemoteDataStore
 
 import com.kg.gettransfer.data.mapper.AccountMapper
 import com.kg.gettransfer.data.mapper.ConfigsMapper
@@ -12,7 +15,7 @@ import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.repository.SystemRepository
 
 class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
-                           private val factory: SystemDataStoreFactory,
+                           private val factory: DataStoreFactory<SystemCacheDataStore, SystemRemoteDataStore>,
                            private val configsMapper: ConfigsMapper,
                            private val accountMapper: AccountMapper): SystemRepository {
     override lateinit var configs: Configs
