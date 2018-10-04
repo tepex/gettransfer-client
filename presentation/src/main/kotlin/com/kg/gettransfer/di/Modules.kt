@@ -13,7 +13,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.data.logging.LoggingImpl
 
 import com.kg.gettransfer.data.PreferencesCache
-import com.kg.gettransfer.data.RouteDataStore
+import com.kg.gettransfer.data.RouteRemote
 import com.kg.gettransfer.data.SystemCache
 import com.kg.gettransfer.data.SystemRemote
 
@@ -69,7 +69,7 @@ val remoteModule = module {
         ApiCore(get(), resources.getString(R.string.api_key), resources.getString(R.string.api_url))
     }
     single { RouteInfoRemoteMapper() }
-    single { RouteRemoteImpl(get(), get()) as RouteDataStore }
+    single { RouteRemoteImpl(get(), get()) as RouteRemote }
     single { AccountRemoteMapper() }
     single { ConfigsRemoteMapper() }    
     single { SystemRemoteImpl(get(), get(), get()) as SystemRemote }
