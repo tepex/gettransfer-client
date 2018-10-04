@@ -39,6 +39,7 @@ import com.kg.gettransfer.remote.mapper.RouteInfoMapper as RouteInfoRemoteMapper
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.IO
 import kotlinx.coroutines.experimental.android.Main
+
 import org.koin.android.ext.koin.androidApplication
 
 import org.koin.dsl.module.module
