@@ -158,6 +158,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         btnBack.setOnClickListener { presenter.onBackClick() }
 
         bsOrder = BottomSheetBehavior.from(sheetOrder)
+        sheetOrder.visibility = View.VISIBLE
         bsTransport = BottomSheetBehavior.from(sheetTransport)
         bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
         setTransportSheetListener()

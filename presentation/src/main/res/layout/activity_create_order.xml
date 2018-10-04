@@ -63,9 +63,17 @@
 
     </FrameLayout>
 
-    <include
-        android:id="@+id/sheetOrder"
-        layout="@layout/bottom_sheet_create_order" />
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/expended_sheet_order_height">
+
+        <include
+            android:id="@+id/sheetOrder"
+            layout="@layout/bottom_sheet_create_order"
+            android:visibility="gone" />
+    </android.support.design.widget.CoordinatorLayout>
+
 
     <include
         android:id="@+id/sheetTransport"

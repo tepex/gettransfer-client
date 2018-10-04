@@ -194,23 +194,25 @@
 
                 <ImageView
                     android:id="@+id/ivPersonsCounterDown"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/circle_plus_height"
+                    android:layout_height="@dimen/circle_plus_height"
                     android:layout_marginEnd="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/ivPersonsCounterUp"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_circle_minus" />
+                    app:srcCompat="@drawable/ic_circle_minus"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
 
                 <ImageView
                     android:id="@+id/ivPersonsCounterUp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/circle_plus_height"
+                    android:layout_height="@dimen/circle_plus_height"
                     android:layout_marginEnd="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_circle_plus" />
+                    app:srcCompat="@drawable/ic_circle_plus"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -495,23 +497,25 @@
 
                 <ImageView
                     android:id="@+id/ivChildCounterDown"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/circle_plus_height"
+                    android:layout_height="@dimen/circle_plus_height"
                     android:layout_marginEnd="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/ivChildCounterUp"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_circle_minus" />
+                    app:srcCompat="@drawable/ic_circle_minus"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
 
                 <ImageView
                     android:id="@+id/ivChildCounterUp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/circle_plus_height"
+                    android:layout_height="@dimen/circle_plus_height"
                     android:layout_marginEnd="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_circle_plus" />
+                    app:srcCompat="@drawable/ic_circle_plus"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
 
             </android.support.constraint.ConstraintLayout>
 

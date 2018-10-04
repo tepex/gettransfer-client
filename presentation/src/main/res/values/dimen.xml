@@ -96,6 +96,10 @@
 	<dimen name="card_transfer_type_elevation_default">0dp</dimen>
 	<item name="card_transfer_type_elevation" format="float" type="dimen">8.0</item>
 
+	<dimen name="circle_plus_height">36dp</dimen>
+	<dimen name="circle_minus_height">@dimen/circle_plus_height</dimen>
+	<dimen name="expended_sheet_order_height">70dp</dimen>
+
 	<!-- Search address -->
 	<dimen name="address_item_size">16sp</dimen>
 	<dimen name="address_secondary_item_size">12sp</dimen>
