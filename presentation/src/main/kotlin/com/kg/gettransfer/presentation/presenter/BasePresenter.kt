@@ -21,6 +21,7 @@ import kotlinx.coroutines.experimental.Job
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
+import java.util.*
 
 open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
                                        protected val router: Router,
@@ -45,7 +46,7 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
 
 
     companion object AnalyticProps {
-
+ //       см. табл. https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0
         @JvmField val RESULT_SUCCESS   = "success"
         @JvmField val RESULT_FAIL = "fail"
 
@@ -60,6 +61,11 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
     protected fun createSingeBundle(param: String, value: String): Bundle {
         val bundle = Bundle(SINGLE_CAPACITY)
         bundle.putString(param, value)
+        return bundle
+    }
+    protected fun createMultipleBundle(map: Map<String,Any>): Bundle{
+        val bundle = Bundle()
+        map.forEach{(k,v) -> bundle.putString(k,v.toString())}
         return bundle
     }
 }

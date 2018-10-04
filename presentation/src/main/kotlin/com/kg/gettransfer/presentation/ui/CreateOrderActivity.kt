@@ -55,7 +55,6 @@ import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
-import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 
 import org.koin.android.ext.android.inject
 
@@ -129,7 +128,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         rvTransferType.isNestedScrollingEnabled = false
 
         etYourPrice.onTextChanged { presenter.cost = it.toIntOrNull() }
-        tvDateTimeTransfer.setOnClickListener { showDatePickerDialog() }
+        etYourPrice.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) presenter.logTransferSettingsEvent(CreateOrderPresenter.OFFER_PRICE_FOCUSED)}
+        tvDateTimeTransfer.setOnClickListener { showDatePickerDialog()
+        presenter.logTransferSettingsEvent(CreateOrderPresenter.DATE_TIME_CHANGED)}
 
         ivPersonsCounterDown.setOnClickListener { presenter.changePassengers(-1) }
         ivPersonsCounterUp.setOnClickListener { presenter.changePassengers(1) }
@@ -145,6 +147,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             showPopupWindowComment()
             toggleSheetOrder()
             showKeyboard()
+            presenter.logTransferSettingsEvent(CreateOrderPresenter.COMMENT_INPUT)
         }
         tvAgreement1.setOnClickListener { presenter.showLicenceAgreement() }
         tvAgreement2.setOnClickListener { presenter.showLicenceAgreement() }

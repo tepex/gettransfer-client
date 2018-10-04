@@ -71,22 +71,37 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         @JvmField val FUTURE_HOUR       = 6
         @JvmField val FUTURE_MINUTE     = 5
 
+ //       см. табл. https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0
         @JvmField val EVENT_TRANSFER = "create_transfer"
+        @JvmField val EVENT_SETTINGS = "transfer_settings"
         @JvmField val EVENT_MAIN = MainPresenter.EVENT_MAIN
 
-        @JvmField val PARAM_KEY = "result"
+        @JvmField val PARAM_KEY_FIELD = "field"
+        @JvmField val PARAM_KEY_RESULT = "result"
 
 
+        //TransferSettings Params:
+        @JvmField val OFFER_PRICE_FOCUSED = "offer_price"
+        @JvmField val DATE_TIME_CHANGED = "date_time"
+        @JvmField val PASSENGERS_ADDED = "pax"
+        @JvmField val FLIGHT_NUMBER_ADDED = "flight_number"
+        @JvmField val CHILDREN_ADDED = "children"
+        @JvmField val COMMENT_INPUT = "comment"
+
+        //CreateTransfer Params:
         @JvmField val NO_TRANSPORT_SELECTED = "no_transport_type"
         @JvmField val NO_EMAIL = "invalid_email"
         @JvmField val NO_PHONE = "invalid_phone"
         @JvmField val NO_NAME = "invalid_name"
         @JvmField val NO_LICENSE_ACCEPTED = "license_not_accepted"
+        @JvmField val SERVER_ERROR = "server_error"
 
-        //Main params: см. табл. https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0
+        //Main params:
         @JvmField val SHOW_ROUTE_CLICKED = "show_route"
         @JvmField val CAR_INFO_CLICKED = "car_info"
         @JvmField val BACK_CLICKED = "back"
+
+        val userActionsMap = HashMap<String,Any>()
 
     }
     
@@ -142,6 +157,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         passengers += count
         if(passengers < MIN_PASSENGERS) passengers = MIN_PASSENGERS
         viewState.setPassengers(passengers)
+        logTransferSettingsEvent(PASSENGERS_ADDED)
     }
     
     fun setName(name: String) {
@@ -163,10 +179,12 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         children += count
         if(children < MIN_CHILDREN) children = MIN_CHILDREN
         viewState.setChildren(children)
+        logTransferSettingsEvent(CHILDREN_ADDED)
     }
     
     fun setFlightNumber(flightNumber: String) {
         if(flightNumber.isEmpty()) this.flightNumber = null else this.flightNumber = flightNumber
+        logTransferSettingsEvent(FLIGHT_NUMBER_ADDED)
     }
 
     fun setComment(comment: String) {
@@ -186,7 +204,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         val trip = Trip(date, flightNumber)
         /* filter */
         val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
-        if(selectedTransportTypes.isEmpty()) mFBA.logEvent(EVENT_TRANSFER,createSingeBundle(PARAM_KEY, NO_TRANSPORT_SELECTED))
         
         Timber.d("from: %s", routeInteractor.from)
         Timber.d("to: %s", routeInteractor.to!!)
@@ -219,6 +236,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                   false) }
             Timber.d("new transfer: %s", transfer)
             router.navigateTo(Screens.OFFERS)
+            logCreateTransfer(RESULT_SUCCESS)
         }, { e ->
                 if(e is ApiException) {
                     if(e.isNotLoggedIn()) {
@@ -266,6 +284,14 @@ class CreateOrderPresenter(cc: CoroutineContexts,
 
     fun logEventMain(value: String){
         mFBA.logEvent(EVENT_MAIN,createSingeBundle(PARAM_KEY_NAME,value))
+    }
+
+    fun logTransferSettingsEvent(value: String){
+        mFBA.logEvent(EVENT_SETTINGS,createSingeBundle(PARAM_KEY_FIELD,value))
+    }
+
+    private fun logCreateTransfer(value: String){
+        mFBA.logEvent(EVENT_TRANSFER,createSingeBundle(PARAM_KEY_RESULT,value))
     }
 
 }

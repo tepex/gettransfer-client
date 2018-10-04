@@ -46,6 +46,22 @@ class OffersPresenter(cc: CoroutineContexts,
     private var sortCategory: String? = null
     private var sortHigherToLower = true
 
+    companion object {
+        @JvmField val EVENT = "offers"
+
+        @JvmField val PARAM_KEY_FILTER = "filter"
+        @JvmField val PARAM_KEY_BUTTON  = "button"
+
+        @JvmField val YEAH_FILTER_UP = "year_asc"
+        @JvmField val YEAH_FILTER_DOWN = "year_desc"
+        @JvmField val RATING_UP = "rating_asc"
+        @JvmField val RATING_DOWN = "rating_desc"
+        @JvmField val PRICE_UP = "price_asc"
+        @JvmField val PRICE_DOWN = "price_desc"
+
+        @JvmField val CAR_INFO_CLICKED = "car_info"
+    }
+
     @CallSuper
     override fun attachView(view: OffersView) {
         super.attachView(view)
@@ -122,13 +138,26 @@ class OffersPresenter(cc: CoroutineContexts,
 
     private fun sortOffers() {
         if(offers != null) {
+            var sortType = ""
             offers = when(sortCategory) {
-                OffersActivity.SORT_YEAR   -> offers!!.sortedWith(compareBy {it.transportYear})
-                OffersActivity.SORT_RATING -> offers!!.sortedWith(compareBy {it.averageRating})
-                OffersActivity.SORT_PRICE  -> offers!!.sortedWith(compareBy {it.priceAmount})
+                OffersActivity.SORT_YEAR   -> { sortType = if (sortHigherToLower) YEAH_FILTER_DOWN else YEAH_FILTER_UP
+                    offers!!.sortedWith(compareBy {it.transportYear})}
+                OffersActivity.SORT_RATING -> { sortType = if (sortHigherToLower) RATING_DOWN else RATING_UP
+                    offers!!.sortedWith(compareBy {it.averageRating})}
+                OffersActivity.SORT_PRICE  -> { sortType = if (sortHigherToLower) PRICE_DOWN else PRICE_UP
+                    offers!!.sortedWith(compareBy {it.priceAmount})}
                 else -> { offers!! }
             }
             if(sortHigherToLower) offers = offers!!.reversed()
+            logFilterEvent(sortType)
         }
     }
+
+    private fun logFilterEvent(value: String){
+        mFBA.logEvent(EVENT,createSingeBundle(PARAM_KEY_FILTER,value))
+    }
+    private fun logButtonEvent(value: String){
+        mFBA.logEvent(EVENT,createSingeBundle(PARAM_KEY_BUTTON,value))
+    }
+
 }

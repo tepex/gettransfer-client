@@ -209,6 +209,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
 		btnEntrance.setOnClickListener {
 			showPopupEntrance()
+			presenter.logEvent(MainPresenter.ENTRANCE_CLICKED)
 		}
 
 		val fade = Fade()
