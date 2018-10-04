@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.adapter
 
 import android.content.Context
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 
 import android.view.LayoutInflater
@@ -19,6 +20,10 @@ import kotlinx.android.synthetic.main.view_offer_car_name_and_options.view.*
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.text.style.ImageSpan
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.graphics.PorterDuff
 
 class OffersRVAdapter(private val offers: List<OfferModel>, private val listener: SelectOfferClickListener):
         RecyclerView.Adapter<OffersRVAdapter.ViewHolder>() {
@@ -81,7 +86,14 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
         }
 
         fun setTexts(layout: View, textViewPax: TextView, textViewBaggage: TextView, item: OfferModel, context: Context){
-            layout.tvVehicleName.text = item.transportName
+            val drawableCompat = ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)
+            drawableCompat!!.setColorFilter(ContextCompat.getColor(context, Utils.getColorVehicle(item.vehicleColor)), PorterDuff.Mode.SRC_IN)
+            drawableCompat.setBounds(4, 0, drawableCompat.intrinsicWidth + 4, drawableCompat.intrinsicHeight)
+            val ssBuilder = SpannableStringBuilder(item.transportName + " ")
+            val colorCarImageSpan = ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE)
+            ssBuilder.setSpan(colorCarImageSpan, ssBuilder.length - 1, ssBuilder.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            layout.tvVehicleName.text = ssBuilder
+
             if(item.wifi) layout.bottomLayoutForImage.imgOptionFreeWiFi.visibility = View.VISIBLE
             if(item.refreshments) layout.bottomLayoutForImage.imgOptionFreeWater.visibility = View.VISIBLE
             textViewPax.text = context.getString(R.string.count_persons_and_baggage, item.paxMax)

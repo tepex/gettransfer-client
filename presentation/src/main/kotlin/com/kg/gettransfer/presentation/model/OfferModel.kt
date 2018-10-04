@@ -20,4 +20,5 @@ class OfferModel(val driverName: String?,
                  val averageRating: Double?,
                  val priceAmount: Double,
                  val vehiclePhotos: List<String>,
-                 val carrierLanguages: List<Locale>)
+                 val carrierLanguages: List<Locale>,
+                 val vehicleColor: String)

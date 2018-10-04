@@ -215,6 +215,11 @@ internal class Utils {
             val imageRes = R.drawable::class.members.find( { it.name == "ic_language_$code" } )
             return (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_unknown
         }
+
+        fun getColorVehicle(color: String): Int{
+            val colorRes = R.color::class.members.find( { it.name == "color_vehicle_$color" } )
+            return (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
+        }
 	}
 }
 

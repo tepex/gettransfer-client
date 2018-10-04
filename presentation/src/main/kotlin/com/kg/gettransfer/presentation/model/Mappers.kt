@@ -89,7 +89,8 @@ object Mappers {
                                                  offer.carrier.ratings.average,
                                                  offer.price.amount,
                                                  offer.vehicle.photos,
-                                                 offer.carrier.languages)
+                                                 offer.carrier.languages,
+                                                 offer.vehicle.color)
 
     fun getCarrierTripModel(carrierTrip: CarrierTrip,
                             locale: Locale,

@@ -75,4 +75,16 @@
     <color name="colorLayoutsOnImageBack">#60000000</color>
     <color name="colorStarsInRatingBar">#f6dc66</color>
 
+    <!--vehicle_colors-->
+    <color name="color_vehicle_black">#000000</color>
+    <color name="color_vehicle_white">#FFFFFF</color>
+    <color name="color_vehicle_red">#FF0000</color>
+    <color name="color_vehicle_blue">#0000ff</color>
+    <color name="color_vehicle_yellow">#FFFF00</color>
+    <color name="color_vehicle_brown">#A52A2A</color>
+    <color name="color_vehicle_silver">#C0C0C0</color>
+    <color name="color_vehicle_green">#008000</color>
+    <color name="color_vehicle_gray">#808080</color>
+    <color name="color_vehicle_purple">#800080</color>
+    <color name="color_vehicle_orange">#FFA500</color>
 </resources>
