@@ -85,19 +85,19 @@ class OffersPresenter(cc: CoroutineContexts,
         super.onDestroy()
     }
 
-    fun onRequestInfoClicked(){
+    fun onRequestInfoClicked() {
         router.navigateTo(Screens.DETAILS)
     }
 
-    fun onSelectOfferClicked(offer: OfferModel){
+    fun onSelectOfferClicked(offer: OfferModel) {
 
     }
 
-    fun onCancelRequestClicked(){
+    fun onCancelRequestClicked() {
         viewState.showAlertCancelRequest()
     }
 
-    fun cancelRequest(isCancel: Boolean){
+    fun cancelRequest(isCancel: Boolean) {
         if(isCancel) {
             utils.launchAsyncTryCatchFinally({
                 utils.asyncAwait { transferInteractor.cancelTransfer("") }
@@ -109,7 +109,7 @@ class OffersPresenter(cc: CoroutineContexts,
         }
     }
 
-    fun changeSortType(sortType: String){
+    fun changeSortType(sortType: String) {
         if(sortCategory == sortType) sortHigherToLower = !sortHigherToLower
         else {
             sortCategory = sortType
@@ -120,15 +120,15 @@ class OffersPresenter(cc: CoroutineContexts,
         viewState.setSortState(sortCategory!!, sortHigherToLower)
     }
 
-    private fun sortOffers(){
-        if(offers != null){
-            offers = when(sortCategory){
-                OffersActivity.SORT_YEAR -> offers!!.sortedWith(compareBy {it.transportYear})
+    private fun sortOffers() {
+        if(offers != null) {
+            offers = when(sortCategory) {
+                OffersActivity.SORT_YEAR   -> offers!!.sortedWith(compareBy {it.transportYear})
                 OffersActivity.SORT_RATING -> offers!!.sortedWith(compareBy {it.averageRating})
-                OffersActivity.SORT_PRICE -> offers!!.sortedWith(compareBy {it.priceAmount})
+                OffersActivity.SORT_PRICE  -> offers!!.sortedWith(compareBy {it.priceAmount})
                 else -> { offers!! }
             }
-            if (sortHigherToLower) offers = offers!!.reversed()
+            if(sortHigherToLower) offers = offers!!.reversed()
         }
     }
 }

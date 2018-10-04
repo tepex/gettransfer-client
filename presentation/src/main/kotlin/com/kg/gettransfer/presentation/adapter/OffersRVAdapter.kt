@@ -46,7 +46,7 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
                 tvCostPreferred.text = context.getString(R.string.preferred_cost, item.pricePreferred)
                 tvCostPreferred.visibility = View.VISIBLE
             }
-            if(item.vehiclePhotos.isNotEmpty()){
+            if(item.vehiclePhotos.isNotEmpty()) {
                 layoutWithCarImage.visibility = View.VISIBLE
                 Glide.with(this).load(context.getString(R.string.api_photo_url, item.vehiclePhotos[0])).into(carPhoto)
                 tvCountPersonsOnCarImage.text = context.getString(R.string.count_persons_and_baggage, item.paxMax)
@@ -71,7 +71,7 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
             var raws = carrierLanguages.size / 2
             if (carrierLanguages.size % 2 == 0) raws -= 1
 
-            for (i in 0..raws){
+            for(i in 0..raws) {
                 val layout = LinearLayout(context)
                 layout.orientation = LinearLayout.HORIZONTAL
                 layout.gravity = Gravity.CENTER
@@ -88,7 +88,7 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
             setOnClickListener { listener(item) }
         }
 
-        fun setVehicleNameAndOptions(layout: View, item: OfferModel){
+        fun setVehicleNameAndOptions(layout: View, item: OfferModel) {
             layout.tvVehicleName.text = item.transportName
             if(item.wifi) layout.bottomLayoutForImage.imgOptionFreeWiFi.visibility = View.VISIBLE
             if(item.refreshments) layout.bottomLayoutForImage.imgOptionFreeWater.visibility = View.VISIBLE

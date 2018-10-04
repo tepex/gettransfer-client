@@ -326,6 +326,7 @@
     <string name="sorted_year_made_text">Year made</string>
     <string name="sorted_rating_text">Rating</string>
     <string name="sorted_price_text">Price</string>
+    <string name="api_photo_url">https://gettransfer.com%1$s</string>
 
     <!--view_transfer_request_info-->
     <string name="cancel_request_underlined"><u>Cancel request</u></string>
