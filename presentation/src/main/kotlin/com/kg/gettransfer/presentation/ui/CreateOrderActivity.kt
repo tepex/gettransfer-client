@@ -5,9 +5,10 @@ import android.app.TimePickerDialog
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.os.Build
 
+import android.graphics.Color
+
+import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
@@ -31,8 +32,8 @@ import android.widget.TextView
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.google.android.gms.maps.CameraUpdate
 
+import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.MapStyleOptions
 
 import com.kg.gettransfer.R
@@ -42,6 +43,7 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
+
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
@@ -55,7 +57,6 @@ import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
-import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 
 import org.koin.android.ext.android.inject
 
@@ -282,29 +283,14 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         timePickerDialog.show()
     }
 
-    override fun setPassengers(count: Int) {
-        tvCountPerson.text = count.toString()
-    }
-
-    override fun setChildren(count: Int) {
-        tvCountChild.text = count.toString()
-    }
-
-    override fun setCurrency(currency: String) {
-        tvCurrencyType.text = currency
-    }
-
-    override fun setDateTimeTransfer(dateTimeString: String) {
-        tvDateTimeTransfer.text = dateTimeString
-    }
-
-    override fun setComment(comment: String) {
-        tvComments.text = comment
-    }
+    override fun setPassengers(count: Int)                   { tvCountPerson.text = count.toString() }
+    override fun setChildren(count: Int)                     { tvCountChild.text = count.toString() }
+    override fun setCurrency(currency: String)               { tvCurrencyType.text = currency }
+    override fun setComment(comment: String)                 { tvComments.text = comment }
+    override fun setDateTimeTransfer(dateTimeString: String) { tvDateTimeTransfer.text = dateTimeString }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
-        rvTransferType.adapter = TransferTypeAdapter(transportTypes)
-        {
+        rvTransferType.adapter = TransferTypeAdapter(transportTypes) {
             presenter.checkFields()
             transportTypeClicked(it)
         }
@@ -319,21 +305,12 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
     }
 
-    override fun setGetTransferEnabled(enabled: Boolean) {
-        //TODO сделать подсветку не заполненных полей
-    }
+    //TODO сделать подсветку не заполненных полей
+    override fun setGetTransferEnabled(enabled: Boolean) {}
 
-    /*override fun setRoute(routeModel: RouteModel) {
-        Utils.setPins(this, googleMap, routeModel)
-    }*/
+    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel) { setPolyline(polyline, routeModel) }
 
-    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel) {
-        setPolyline(polyline, routeModel)
-    }
-
-    override fun centerRoute(cameraUpdate: CameraUpdate) {
-        showTrack(cameraUpdate)
-    }
+    override fun centerRoute(cameraUpdate: CameraUpdate) { showTrack(cameraUpdate) }
 
     override fun setEntrance(entrance: String) {
         if(TextUtils.isEmpty(entrance)) tvComments.text = ""

@@ -62,6 +62,7 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
         bundle.putString(param, value)
         return bundle
     }
+    
     protected fun createMultipleBundle(map: Map<String, Any>): Bundle {
         val bundle = Bundle()
         map.forEach { (k,v) -> bundle.putString(k, v.toString()) }

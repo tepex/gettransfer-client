@@ -142,8 +142,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         if(i != -1) changeCurrency(i)
             
         viewState.setUser(user)
-        /*dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
-        viewState.setDateTimeTransfer(dateTimeFormat!!.format(date))*/
         viewState.setDateTimeTransfer(Utils.getFormatedDate(systemInteractor.locale, date))
 	    transportTypes?.let { viewState.setTransportTypes(it) }
 	    //routeModel?.let     { viewState.setRoute(it) }
@@ -202,7 +200,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         val trip = Trip(date, flightNumber)
         /* filter */
         val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
-        if(selectedTransportTypes.isEmpty()) mFBA.logEvent(EVENT_TRANSFER,createSingeBundle(PARAM_KEY, NO_TRANSPORT_SELECTED))
         
         Timber.d("from: %s", routeInteractor.from)
         Timber.d("to: %s", routeInteractor.to!!)
