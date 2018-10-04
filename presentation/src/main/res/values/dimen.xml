@@ -91,6 +91,10 @@
 
 	<dimen name="create_order_behaviour_peek_height">250dp</dimen>
 	<dimen name="get_offers_btn_height">300dp</dimen>
+	<dimen name="card_transfer_type_corner_radius_default">0dp</dimen>
+	<item name="card_transfer_type_corner_radius" format="float" type="dimen">8.0</item>
+	<dimen name="card_transfer_type_elevation_default">0dp</dimen>
+	<item name="card_transfer_type_elevation" format="float" type="dimen">8.0</item>
 
 	<!-- Search address -->
 	<dimen name="address_item_size">16sp</dimen>

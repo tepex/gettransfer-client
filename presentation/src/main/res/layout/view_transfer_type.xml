@@ -1,122 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearLayout"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardTransferType"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground">
+    android:layout_margin="3dp"
+    card_view:cardCornerRadius="@dimen/card_transfer_type_corner_radius_default"
+    card_view:cardElevation="@dimen/card_transfer_type_elevation_default">
 
-    <CheckBox
-        android:id="@+id/cbTransferType"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/cb_transfer_type_selector"
-        android:button="@null"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:clickable="false"/>
-
-    <TextView
-        android:id="@+id/tvTransferType"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:textSize="@dimen/transfer_types_text_size"
-        app:layout_constraintBottom_toBottomOf="@+id/cbTransferType"
-        app:layout_constraintEnd_toStartOf="@+id/layoutTransportInfo"
-        app:layout_constraintStart_toEndOf="@+id/cbTransferType"
-        app:layout_constraintTop_toTopOf="@+id/cbTransferType"
-        tools:text="Economy" />
+        android:background="?android:attr/selectableItemBackground">
 
-    <FrameLayout
-        android:id="@+id/layoutTransportInfo"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tvTransferType"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvTransferType">
+        <CheckBox
+            android:id="@+id/cbTransferType"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/cb_transfer_type_selector"
+            android:button="@null"
+            android:clickable="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/ivTransportInfo"
+        <TextView
+            android:id="@+id/tvTransferType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="invisible"
-            app:srcCompat="@drawable/ic_info_cars_type" />
-    </FrameLayout>
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:textSize="@dimen/transfer_types_text_size"
+            app:layout_constraintBottom_toBottomOf="@+id/cbTransferType"
+            app:layout_constraintEnd_toStartOf="@+id/layoutTransportInfo"
+            app:layout_constraintStart_toEndOf="@+id/cbTransferType"
+            app:layout_constraintTop_toTopOf="@+id/cbTransferType"
+            tools:text="Economy" />
+
+        <FrameLayout
+            android:id="@+id/layoutTransportInfo"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTransferType"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvTransferType">
+
+            <ImageView
+                android:id="@+id/ivTransportInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/ic_info_cars_type" />
+        </FrameLayout>
 
 
-    <ImageView
-        android:id="@+id/ivTransferType"
-        android:layout_width="100dp"
-        android:layout_height="35dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTransferType" />
+        <ImageView
+            android:id="@+id/ivTransferType"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTransferType" />
 
-    <ImageView
-        android:id="@+id/ivPassanger"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="3dp"
-        app:layout_constraintStart_toStartOf="@+id/ivTransferType"
-        app:layout_constraintTop_toBottomOf="@+id/ivTransferType"
-        app:srcCompat="@drawable/ic_passenger" />
+        <ImageView
+            android:id="@+id/ivPassanger"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="3dp"
+            app:layout_constraintStart_toStartOf="@+id/ivTransferType"
+            app:layout_constraintTop_toBottomOf="@+id/ivTransferType"
+            app:srcCompat="@drawable/ic_passenger" />
 
-    <TextView
-        android:id="@+id/tvNumberPersonsTransfer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:textSize="@dimen/transfer_types_text_size"
-        app:layout_constraintBottom_toBottomOf="@+id/ivPassanger"
-        app:layout_constraintStart_toEndOf="@+id/ivPassanger"
-        app:layout_constraintTop_toTopOf="@+id/ivPassanger"
-        tools:text="x3" />
+        <TextView
+            android:id="@+id/tvNumberPersonsTransfer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:textSize="@dimen/transfer_types_text_size"
+            app:layout_constraintBottom_toBottomOf="@+id/ivPassanger"
+            app:layout_constraintStart_toEndOf="@+id/ivPassanger"
+            app:layout_constraintTop_toTopOf="@+id/ivPassanger"
+            tools:text="x3" />
 
-    <ImageView
-        android:id="@+id/ivLuggage"
-        android:layout_width="20dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="2dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tvNumberPersonsTransfer"
-        app:layout_constraintEnd_toStartOf="@+id/tvCountBaggage"
-        app:layout_constraintTop_toTopOf="@+id/tvNumberPersonsTransfer"
-        app:srcCompat="@drawable/ic_luggage" />
+        <ImageView
+            android:id="@+id/ivLuggage"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvNumberPersonsTransfer"
+            app:layout_constraintEnd_toStartOf="@+id/tvCountBaggage"
+            app:layout_constraintTop_toTopOf="@+id/tvNumberPersonsTransfer"
+            app:srcCompat="@drawable/ic_luggage" />
 
-    <TextView
-        android:id="@+id/tvCountBaggage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:textSize="@dimen/transfer_types_text_size"
-        app:layout_constraintBottom_toBottomOf="@+id/ivLuggage"
-        app:layout_constraintEnd_toEndOf="@+id/ivTransferType"
-        app:layout_constraintTop_toTopOf="@+id/ivLuggage"
-        tools:text="x3" />
+        <TextView
+            android:id="@+id/tvCountBaggage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:textSize="@dimen/transfer_types_text_size"
+            app:layout_constraintBottom_toBottomOf="@+id/ivLuggage"
+            app:layout_constraintEnd_toEndOf="@+id/ivTransferType"
+            app:layout_constraintTop_toTopOf="@+id/ivLuggage"
+            tools:text="x3" />
 
-    <TextView
-        android:id="@+id/tvPriceFrom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="2dp"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:textSize="@dimen/transfer_types_text_size"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvNumberPersonsTransfer"
-        tools:text="from $1" />
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/tvPriceFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="2dp"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:textSize="@dimen/transfer_types_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvNumberPersonsTransfer"
+            tools:text="from $1" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

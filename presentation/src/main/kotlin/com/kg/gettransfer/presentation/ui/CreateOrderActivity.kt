@@ -351,4 +351,14 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         tvCountPassengers.text = transportType.paxMax.toString()
         tvCountLuggage.text = transportType.luggageMax.toString()
     }
+
+    override fun onBackPressed() {
+        if (bsTransport.state == BottomSheetBehavior.STATE_EXPANDED) {
+            hideSheetTransport()
+        } else if (bsOrder.state == BottomSheetBehavior.STATE_EXPANDED) {
+            collapsedOrderSheet()
+        } else {
+            super.onBackPressed()
+        }
+    }
 }

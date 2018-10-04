@@ -1,12 +1,15 @@
 package com.kg.gettransfer.presentation.adapter
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.view_transfer_type.*
 import kotlinx.android.synthetic.main.view_transfer_type.view.*
 
 class TransferTypeAdapter(private var list: List<TransportTypeModel>,
@@ -34,12 +37,32 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
                 cbTransferType.isChecked = item.checked
                 if (item.checked) ivTransportInfo.visibility = View.VISIBLE else ivTransportInfo.visibility = View.INVISIBLE
                 item.showInfo = ivTransportInfo.visibility == View.VISIBLE
+                if (item.checked) {
+                    showItemShadowAndCorners(context)
+                } else {
+                    hideItemShadowAndCorners(context)
+                }
             }
             layoutTransportInfo.setOnClickListener {
                 if (item.checked) {
                     listener(item)
                 }
             }
+        }
+
+        private fun hideItemShadowAndCorners(context: Context) {
+            cardTransferType.cardElevation = context.resources.getDimension(R.dimen.card_transfer_type_elevation_default)
+            cardTransferType.radius = context.resources.getDimension(R.dimen.card_transfer_type_corner_radius_default)
+        }
+
+        private fun showItemShadowAndCorners(context: Context) {
+            val elevation = TypedValue()
+            val radius = TypedValue()
+            context.resources.getValue(R.dimen.card_transfer_type_elevation, elevation, true)
+            context.resources.getValue(R.dimen.card_transfer_type_corner_radius, radius, true)
+
+            cardTransferType.cardElevation = elevation.float
+            cardTransferType.radius = radius.float
         }
     }
 }
