@@ -34,29 +34,27 @@ class Mappers {
          * Simple mapper: [ApiAccount] -> [Account]
          */
         fun mapApiAccount(apiAccount: ApiAccount, configs: Configs): Account {
-            
-            return Account(apiAccount.email,
-                           apiAccount.phone,
+            return Account(User(apiAccount.email, apiAccount.phone, apiAccount.fullName),
                            configs.availableLocales.find { it.language == apiAccount.locale }!!,
                            configs.supportedCurrencies.find { it.currencyCode == apiAccount.currency }!!,
                            DistanceUnit.parse(apiAccount.distanceUnit),
-                           apiAccount.fullName,
                            apiAccount.groups,
-                           apiAccount.termsAccepted)
+                           apiAccount.carrierId)
         }
 
         /**
          * [Account] -> [ApiAccount]
          */
         fun mapAccount(account: Account): ApiAccount {
-            return ApiAccount(account.email,
-                              account.phone,
+            return ApiAccount(account.user.email,
+                              account.user.phone,
                               account.locale?.language,
                               account.currency?.currencyCode,
                               account.distanceUnit?.name,
-                              account.fullName,
+                              account.user.fullName,
                               account.groups,
-                              account.termsAccepted)
+                              account.user.termsAccepted,
+                              null)
         }
         
         /**
@@ -166,11 +164,11 @@ class Mappers {
         /**
          * [ApiCarrierTrip] -> [CarrierTrip]
          */
-        fun mapApiCarrierTrip(apiCarrierTrip: ApiCarrierTrip): CarrierTrip{
+        fun mapApiCarrierTrip(apiCarrierTrip: ApiCarrierTrip): CarrierTrip {
             var passengerAccount: PassengerAccount? = null
-            if(apiCarrierTrip.passengerAccount != null) passengerAccount = PassengerAccount(apiCarrierTrip.passengerAccount!!.email,
-                    apiCarrierTrip.passengerAccount!!.phone, apiCarrierTrip.passengerAccount!!.fullName, apiCarrierTrip.passengerAccount!!.lastSeen)
-
+            apiCarrierTrip.passengerAccount?.let { passengerAccount =
+                PassengerAccount(User(it.email, it.phone, it.fullName), ISO_FORMAT.parse(it.lastSeen))
+            }
             return CarrierTrip(apiCarrierTrip.id,
                                apiCarrierTrip.transferId,
                                CityPoint(apiCarrierTrip.from.name, apiCarrierTrip.from.point, apiCarrierTrip.from.placeId),

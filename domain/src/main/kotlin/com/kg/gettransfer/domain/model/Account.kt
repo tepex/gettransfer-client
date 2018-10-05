@@ -3,14 +3,12 @@ package com.kg.gettransfer.domain.model
 import java.util.Currency
 import java.util.Locale
 
-data class Account(var email: String?,
-                   var phone: String?,
+data class Account(val user: User,
                    var locale: Locale?,
                    var currency: Currency?,
                    var distanceUnit: DistanceUnit?,
-                   var fullName: String?,
                    var groups: Array<String>?,
-                   var termsAccepted: Boolean = true){
+                   var carrierId: Long?) {
 
     companion object {
         @JvmField val GROUP_CARRIER_DRIVER = "carrier/driver"
