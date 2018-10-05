@@ -17,6 +17,7 @@ const val ACCOUNT_DISTANCE_UNIT  = "distance_unit"
 const val ACCOUNT_FULL_NAME      = "full_name"
 const val ACCOUNT_GROUPS         = "groups"
 const val ACCOUNT_TERMS_ACCEPTED = "terms_accepted"
+const val ACCOUNT_CARRIER_ID     = "carrier_id"
 
 class AccountWrapperModel(@SerializedName(ACCOUNT) @Expose var account: AccountModel)
 
@@ -27,4 +28,5 @@ class AccountModel(@SerializedName(ACCOUNT_EMAIL) @Expose var email: String? = n
                    @SerializedName(ACCOUNT_DISTANCE_UNIT) @Expose var distanceUnit: String? = null,
                    @SerializedName(ACCOUNT_FULL_NAME) @Expose var fullName: String? = null,
                    @SerializedName(ACCOUNT_GROUPS) @Expose var groups: Array<String>? = null,
-                   @SerializedName(ACCOUNT_TERMS_ACCEPTED) @Expose var termsAccepted: Boolean = true)
+                   @SerializedName(ACCOUNT_TERMS_ACCEPTED) @Expose var termsAccepted: Boolean = true,
+                   @SerializedName(ACCOUNT_CARRIER_ID) @Expose var carrierId: Long? = null)
