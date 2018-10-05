@@ -1,17 +1,15 @@
 package com.kg.gettransfer.data.model
 
 /**
- * Representation for a [AccountEntity] fetched from an external layer data source
+ * Representation for a [AccountEntity] fetched from an external layer data source.
  */
-data class AccountEntity(val email: String?,
-                         val phone: String?,
+data class AccountEntity(val user: UserEntity?,
                          val locale: String?,
                          val currency: String?,
                          val distanceUnit: String?,
-                         val fullName: String?,
                          val groups: Array<String>?,
-                         val termsAccepted: Boolean = true) {
+                         val carrierId: Long?) {
     companion object {
-        val NO_ACCOUNT = AccountEntity(null, null, null, null, null, null, null)
+        val NO_ACCOUNT = AccountEntity(UserEntity(null, null, null), null, null, null, null, null)
     }
 }
