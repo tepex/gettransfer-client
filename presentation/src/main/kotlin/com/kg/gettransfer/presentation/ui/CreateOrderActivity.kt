@@ -129,20 +129,24 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         rvTransferType.isNestedScrollingEnabled = false
 
         etYourPrice.onTextChanged { presenter.cost = it.toIntOrNull() }
-        etYourPrice.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) presenter.logTransferSettingsEvent(CreateOrderPresenter.OFFER_PRICE_FOCUSED)}
-        tvDateTimeTransfer.setOnClickListener { showDatePickerDialog()
-        presenter.logTransferSettingsEvent(CreateOrderPresenter.DATE_TIME_CHANGED)}
+        etYourPrice.setOnFocusChangeListener { _, hasFocus ->
+            if(hasFocus) presenter.logTransferSettingsEvent(CreateOrderPresenter.OFFER_PRICE_FOCUSED)
+        }
+        tvDateTimeTransfer.setOnClickListener {
+            showDatePickerDialog()
+            presenter.logTransferSettingsEvent(CreateOrderPresenter.DATE_TIME_CHANGED)
+        }
 
         ivPersonsCounterDown.setOnClickListener { presenter.changePassengers(-1) }
-        ivPersonsCounterUp.setOnClickListener { presenter.changePassengers(1) }
+        ivPersonsCounterUp.setOnClickListener   { presenter.changePassengers(1) }
 
-        etName.onTextChanged { presenter.setName(it.trim()) }
+        etName.onTextChanged  { presenter.setName(it.trim()) }
         etEmail.onTextChanged { presenter.setEmail(it.trim()) }
         tvPhone.onTextChanged { presenter.setPhone(it.trim()) }
+        
         ivChildCounterDown.setOnClickListener { presenter.changeChildren(-1) }
-        ivChildCounterUp.setOnClickListener { presenter.changeChildren(1) }
-        tvFlightOrTrainNumber.onTextChanged { presenter.setFlightNumber(it.trim()) }
+        ivChildCounterUp.setOnClickListener   { presenter.changeChildren(1) }
+        tvFlightOrTrainNumber.onTextChanged   { presenter.setFlightNumber(it.trim()) }
 
         tvComments.setOnClickListener {
             showPopupWindowComment()
@@ -157,7 +161,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             presenter.setAgreeLicence(cbAgreement.isChecked())
         }
 
-        btnGetOffers.setOnClickListener { presenter.onGetTransferClick() }
+        btnGetOffers.setOnClickListener   { presenter.onGetTransferClick() }
         btnCenterRoute.setOnClickListener { presenter.onCenterRouteClick() }
         btnBack.setOnClickListener { presenter.onBackClick() }
 
@@ -230,7 +234,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
         layoutPopup.btnClearPopupComment.setOnClickListener { layoutPopup.etPopupComment.setText("") }
         layoutPopup.etPopupComment.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
+            if(actionId == EditorInfo.IME_ACTION_DONE) {
                 presenter.setComment(layoutPopup.etPopupComment.text.toString().trim())
                 popupWindowComment.dismiss()
                 return@OnEditorActionListener true
@@ -245,7 +249,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         layoutPopup.setOnClickListener { layoutPopup.etPopupComment.requestFocus() }
         layoutPopup.etPopupComment.setSelection(layoutPopup.etPopupComment.text.length)
         layoutPopup.etPopupComment.onTextChanged {
-            if (!it.equals(routeInteractor.from?.entrance)) {
+            if(!it.equals(routeInteractor.from?.entrance)) {
                 routeInteractor.from!!.entrance = ""
             }
         }
@@ -327,20 +331,17 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         setPolyline(polyline, routeModel)
     }
 
-    override fun centerRoute(cameraUpdate: CameraUpdate){
+    override fun centerRoute(cameraUpdate: CameraUpdate) {
         showTrack(cameraUpdate)
     }
 
     override fun setEntrance(entrance: String) {
-        if (TextUtils.isEmpty(entrance)) {
-           tvComments.text = ""
-        } else {
-            tvComments.text = getString(R.string.entrance_no, entrance)
-        }
+        if(TextUtils.isEmpty(entrance)) tvComments.text = ""
+        else tvComments.text = getString(R.string.entrance_no, entrance)
     }
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {
-        if (transportType.checked && transportType.showInfo) {
+        if(transportType.checked && transportType.showInfo) {
             bsTransport.state = BottomSheetBehavior.STATE_EXPANDED
             bsOrder.isHideable = true
             bsOrder.state = BottomSheetBehavior.STATE_HIDDEN
@@ -358,13 +359,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         tvCountLuggage.text = transportType.luggageMax.toString()
     }
 
+    @CallSuper
     override fun onBackPressed() {
-        if (bsTransport.state == BottomSheetBehavior.STATE_EXPANDED) {
-            hideSheetTransport()
-        } else if (bsOrder.state == BottomSheetBehavior.STATE_EXPANDED) {
-            collapsedOrderSheet()
-        } else {
-            super.onBackPressed()
-        }
+        if(bsTransport.state == BottomSheetBehavior.STATE_EXPANDED) hideSheetTransport()
+        else if(bsOrder.state == BottomSheetBehavior.STATE_EXPANDED) collapsedOrderSheet()
+        else super.onBackPressed()
     }
 }

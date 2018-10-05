@@ -14,16 +14,15 @@ object Mappers {
     fun point2LatLng(point: Point) = LatLng(point.latitude, point.longitude)
     fun latLng2Point(latLng: LatLng) = Point(latLng.latitude, latLng.longitude)
     
-    fun getUserModel(account: Account) = UserModel(account.fullName, account.email, account.phone)
-    fun getAccount(user: UserModel) = Account(user.email,
-                                              user.phone,
-                                              null,
-                                              null,
-                                              null,
-                                              user.name,
-                                              null,
-                                              user.termsAccepted)
+    fun getUserModel(account: Account) = UserModel(account.user.fullName,
+                                                   account.user.email,
+                                                   account.user.phone,
+                                                   account.user.termsAccepted)
     
+    fun getUser(userModel: UserModel) = User(userModel.email, userModel.phone, userModel.name, userModel.termsAccepted)
+    
+    fun getAccount(userModel: UserModel) = Account(getUser(userModel), null, null, null, null, null)
+
     fun getTransportTypesModels(transportTypes: List<TransportType>, prices: Map<String, String>?) =
         transportTypes.map {
             val id = it.id

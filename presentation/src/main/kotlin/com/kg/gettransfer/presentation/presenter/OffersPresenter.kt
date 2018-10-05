@@ -159,5 +159,4 @@ class OffersPresenter(cc: CoroutineContexts,
     private fun logButtonEvent(value: String){
         mFBA.logEvent(EVENT,createSingeBundle(PARAM_KEY_BUTTON,value))
     }
-
 }
