@@ -36,7 +36,7 @@ class TransferInteractor(private val repository: TransferRepository) {
                                              pax,
                                              childSeats,
                                              passengerOfferedPrice,
-                                             account.user.fullName!!,
+                                             account.user.name!!,
                                              comment,
                                              account,
                                              promoCode,

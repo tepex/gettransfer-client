@@ -34,7 +34,7 @@ class Mappers {
          * Simple mapper: [ApiAccount] -> [Account]
          */
         fun mapApiAccount(apiAccount: ApiAccount, configs: Configs): Account {
-            return Account(User(apiAccount.email, apiAccount.phone, apiAccount.fullName),
+            return Account(User(apiAccount.fullName, apiAccount.email, apiAccount.phone),
                            configs.availableLocales.find { it.language == apiAccount.locale }!!,
                            configs.supportedCurrencies.find { it.currencyCode == apiAccount.currency }!!,
                            DistanceUnit.parse(apiAccount.distanceUnit),
@@ -51,10 +51,10 @@ class Mappers {
                               account.locale?.language,
                               account.currency?.currencyCode,
                               account.distanceUnit?.name,
-                              account.user.fullName,
+                              account.user.name,
                               account.groups,
                               account.user.termsAccepted,
-                              null)
+                              account.carrierId)
         }
         
         /**
@@ -167,7 +167,7 @@ class Mappers {
         fun mapApiCarrierTrip(apiCarrierTrip: ApiCarrierTrip): CarrierTrip {
             var passengerAccount: PassengerAccount? = null
             apiCarrierTrip.passengerAccount?.let { passengerAccount =
-                PassengerAccount(User(it.email, it.phone, it.fullName), ISO_FORMAT.parse(it.lastSeen))
+                PassengerAccount(User(it.fullName, it.email, it.phone), ISO_FORMAT.parse(it.lastSeen))
             }
             return CarrierTrip(apiCarrierTrip.id,
                                apiCarrierTrip.transferId,

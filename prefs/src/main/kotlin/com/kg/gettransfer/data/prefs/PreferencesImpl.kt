@@ -42,9 +42,9 @@ class PreferencesImpl(context: Context): Preferences {
             var carrierId: Long? = accountPrefs.getLong(ACCOUNT_CARRIER_ID, -1)
             if(carrierId == -1L) carrierId = null
             
-            return Account(User(accountPrefs.getString(ACCOUNT_EMAIL, null),
+            return Account(User(accountPrefs.getString(ACCOUNT_FULL_NAME, null),
+                                accountPrefs.getString(ACCOUNT_EMAIL, null),
                                 accountPrefs.getString(ACCOUNT_PHONE, null),
-                                accountPrefs.getString(ACCOUNT_FULL_NAME, null),
                                 accountPrefs.getBoolean(ACCOUNT_TERMS_ACCEPTED, false)),
                            if(localeCode != null) Locale(localeCode) else null,
                            if(currencyCode != null) Currency.getInstance(currencyCode) else null,
@@ -59,7 +59,7 @@ class PreferencesImpl(context: Context): Preferences {
             editor.putString(ACCOUNT_LOCALE, value.locale?.language)
             editor.putString(ACCOUNT_CURRENCY, value.currency?.currencyCode)
             editor.putString(ACCOUNT_DISTANCE_UNIT, value.distanceUnit?.name)
-            editor.putString(ACCOUNT_FULL_NAME, value.user.fullName)
+            editor.putString(ACCOUNT_FULL_NAME, value.user.name)
             editor.putStringSet(ACCOUNT_GROUPS, value.groups?.toSet())
             editor.putBoolean(ACCOUNT_TERMS_ACCEPTED, value.user.termsAccepted)
             value.carrierId?.let { editor.putLong(ACCOUNT_CARRIER_ID, it) }
