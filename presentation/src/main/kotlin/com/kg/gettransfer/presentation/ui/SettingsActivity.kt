@@ -1,12 +1,10 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
 import android.content.Intent
 
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
 
 import android.support.v7.widget.Toolbar
 
@@ -14,6 +12,7 @@ import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.kg.gettransfer.BuildConfig
 
 import com.kg.gettransfer.R
 
@@ -26,8 +25,6 @@ import com.kg.gettransfer.presentation.view.SettingsView
 
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-
-import timber.log.Timber
 
 class SettingsActivity: BaseActivity(), SettingsView {
     @InjectPresenter
@@ -54,6 +51,11 @@ class SettingsActivity: BaseActivity(), SettingsView {
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
         
         btnSignOut.setOnClickListener { presenter.onLogout() }
+
+        //Not showing some layouts in release
+        if(BuildConfig.FLAVOR != "dev"){
+            layoutSettingsEndpoint.visibility = View.GONE
+        }
     }
 
     override fun setCurrencies(currencies: List<CurrencyModel>) {
@@ -73,12 +75,26 @@ class SettingsActivity: BaseActivity(), SettingsView {
             selected -> presenter.changeDistanceUnit(selected) 
         }
     }
+
+    override fun setEndpoints(urls: List<String>) {
+        Utils.setEndpointsDialogListener(this, layoutSettingsEndpoint, urls) {
+            selected -> presenter.changeEndpoint(selected)
+        }
+    }
     
     override fun setCurrency(currency: String)         { tvSelectedCurrency.text = currency }
     override fun setLocale(locale: String)             { tvSelectedLanguage.text = locale }
     override fun setDistanceUnit(distanceUnit: String) { tvSelectedDistanceUnits.text = distanceUnit }
+    override fun setEndpoint(endpoint: String)         { tvSelectedEndpoint.text = endpoint }
     
     override fun setLogoutButtonEnabled(enabled: Boolean) {
         if(enabled) btnSignOut.visibility = View.VISIBLE else btnSignOut.visibility = View.GONE
+    }
+
+    override fun restartApp() {
+        finish()
+        val intent = baseContext.packageManager.getLaunchIntentForPackage( baseContext.packageName);
+        intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 }

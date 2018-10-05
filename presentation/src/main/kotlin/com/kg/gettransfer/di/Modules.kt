@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.arellomobile.mvp.MvpPresenter
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.kg.gettransfer.BuildConfig
 
 import com.kg.gettransfer.R
 
@@ -50,8 +51,9 @@ val domainModule = module {
 	single {
 	    val context: Context = get()
 	    ApiRepositoryImpl(get(),
-	                      context.resources.getString(R.string.api_key),
-	                      context.resources.getString(R.string.api_url))
+	                      context.resources.getStringArray(R.array.api_keys),
+	                      context.resources.getStringArray(R.array.api_urls),
+						  BuildConfig.FLAVOR)
 	}
 	single { CarrierTripRepositoryImpl(get()) as CarrierTripRepository }
 	single { GeoRepositoryImpl(get()) as GeoRepository }

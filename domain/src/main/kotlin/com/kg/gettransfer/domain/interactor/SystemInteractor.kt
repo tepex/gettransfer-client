@@ -35,6 +35,10 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         get() = preferences.lastMode
         set(value) { preferences.lastMode = value }
 
+    var endpoint: String
+        get() = preferences.endpoint
+        set(value) { preferences.endpoint = value}
+
     suspend fun coldStart() {
         systemRepository.coldStart()
         configs = systemRepository.getConfigs()
@@ -46,6 +50,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     fun getLocales()              = configs.availableLocales
     fun getDistanceUnits()        = configs.supportedDistanceUnits
     fun getCurrencies()           = configs.supportedCurrencies
+    fun getEndpoints()            = arrayListOf(Preferences.ENDPOINT_DEMO, Preferences.ENDPOINT_PROD)
     fun getCurrentCurrencyIndex() = getCurrencies().indexOf(account.currency)
     fun isLoggedIn()              = account.user.isLoggedIn()
     

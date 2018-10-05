@@ -172,6 +172,47 @@
             android:fontFamily="@font/sf_pro_text_regular"
             android:stateListAnimator="@null"/>
 
+        <RelativeLayout
+            android:id="@+id/layoutSettingsEndpoint"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/settings_activity_height_layouts"
+            android:layout_marginTop="@dimen/settings_activity_top_margin_layouts"
+            android:background="@drawable/back_clicked_layouts">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/endpoint"
+                android:textSize="@dimen/settings_activity_text_size"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:textColor="@color/colorTextBlack"
+                android:layout_marginStart="@dimen/settings_activity_text_margin_start"
+                android:layout_toStartOf="@+id/tvSelectedEndpoint"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/tvSelectedEndpoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/imgSettingsEndpoint"
+                android:textSize="@dimen/settings_activity_text_size"
+                android:textColor="@color/colorTextLightGray"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/settings_activity_image_margin_start"/>
+
+            <ImageView
+                android:id="@+id/imgSettingsEndpoint"
+                android:layout_width="@dimen/settings_activity_image_size"
+                android:layout_height="@dimen/settings_activity_image_size"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/settings_activity_image_margin_end"
+                android:layout_marginStart="@dimen/settings_activity_image_margin_start"
+                android:layout_centerVertical="true"
+                android:src="@drawable/chevron"/>
+
+        </RelativeLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

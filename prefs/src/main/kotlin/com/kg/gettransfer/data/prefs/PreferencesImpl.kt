@@ -18,6 +18,7 @@ class PreferencesImpl(context: Context): Preferences {
 
     companion object {
         @JvmField val LAST_MODE = "last_mode"
+        @JvmField val ENDPOINT  = "endpoint"
     }
 
     private val configsPrefs = context.getSharedPreferences(CONFIGS, Context.MODE_PRIVATE)
@@ -72,6 +73,14 @@ class PreferencesImpl(context: Context): Preferences {
         set(value) {
             val editor = configsPrefs.edit()
             editor.putString(LAST_MODE, value)
+            editor.apply()
+        }
+
+    override var apiEndpoint: String
+        get() = configsPrefs.getString(ENDPOINT, "")!!
+        set(value){
+            val editor = configsPrefs.edit()
+            editor.putString(ENDPOINT, value)
             editor.apply()
         }
         

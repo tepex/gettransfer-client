@@ -86,6 +86,8 @@ internal class Utils {
             listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.application_language, items, listener) }
         fun setDistanceUnitsDialogListener(context: Context, view: View, items: List<CharSequence>,
             listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.distance_units, items, listener) }
+        fun setEndpointsDialogListener(context: Context, view: View, items: List<CharSequence>,
+                                       listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.endpoint, items, listener)}
 
         fun setModelsDialogListener(context: Context, view: View, @StringRes titleId: Int, items: List<CharSequence>, 
                                     listener: (Int) -> Unit) {
