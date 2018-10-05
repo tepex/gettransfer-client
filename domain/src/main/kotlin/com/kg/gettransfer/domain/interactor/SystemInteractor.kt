@@ -34,7 +34,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     val distanceUnits  by lazy { systemRepository.configs.supportedDistanceUnits }
     val currencies     by lazy { systemRepository.configs.supportedCurrencies }
     
-    fun isLoggedIn() = account.email != null
+    fun isLoggedIn() = account.user.isLoggedIn()
     fun getCurrentCurrencyIndex() = currencies.indexOf(currency)
 
     var endpoint: String
