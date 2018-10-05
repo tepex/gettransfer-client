@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/search"
 	android:transitionName="@string/searchTransitionName"
 	android:layout_width="match_parent"
@@ -11,17 +9,46 @@
 	android:focusableInTouchMode="true"
 	android:layout_gravity="center_horizontal|top"
 	android:orientation="vertical"
-	android:background="@android:color/white" >
+	android:background="@android:color/white">
 		
 	<com.kg.gettransfer.presentation.ui.SearchAddress
 		android:id="@+id/searchFrom"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content" 
+		android:layout_height="@dimen/search_form_height"
+		android:paddingEnd="@dimen/search_form_clear_padding_end"
+		android:paddingStart="0dp"
 		app:hint="@string/search_from_hint" />
-		
+
+	<View
+		android:id="@+id/separator"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/search_divider_height"
+		android:background="@color/colorDividerGray"
+		android:layout_below="@+id/searchFrom" />
+
 	<com.kg.gettransfer.presentation.ui.SearchAddress
 		android:id="@+id/searchTo"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content" 
-		app:hint="@string/search_to_hint" />
-</LinearLayout>
+		android:layout_height="@dimen/search_form_height"
+		android:paddingStart="0dp"
+		android:paddingEnd="@dimen/search_form_clear_padding_end"
+		app:hint="@string/search_to_hint"
+		android:layout_below="@+id/separator"/>
+
+	<FrameLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentEnd="true"
+		android:layout_centerVertical="true"
+		android:layout_marginEnd="@dimen/inverse_btn_margin_end">
+
+		<ImageView
+			android:id="@+id/ivInverseWay"
+			android:layout_width="@dimen/image_inverse_size"
+			android:layout_height="@dimen/image_inverse_size"
+			app:srcCompat="@drawable/ic_inverse"
+			android:background="?attr/selectableItemBackgroundBorderless"
+			android:clickable="true"/>
+	</FrameLayout>
+
+</RelativeLayout>

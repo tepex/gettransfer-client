@@ -32,7 +32,8 @@ import com.kg.gettransfer.presentation.view.SearchView
 
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.search_form.*
-import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.toolbar_search_address.*
+import kotlinx.android.synthetic.main.toolbar_search_address.view.*
 
 import org.koin.android.ext.android.inject
 
@@ -78,14 +79,9 @@ class SearchActivity: BaseActivity(), SearchView {
         slide.duration = SLIDE_DURATION
         window.returnTransition = slide
 
-        /* init UI */
         setContentView(R.layout.activity_search)
 
-        setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
+        setupToolbar()
 
         addressList.layoutManager = LinearLayoutManager(this)
 
@@ -93,6 +89,12 @@ class SearchActivity: BaseActivity(), SearchView {
         searchFrom.text = intent.getStringExtra(EXTRA_ADDRESS_FROM)
         searchTo.initWidget(this, true)
         searchTo.text = intent.getStringExtra(EXTRA_ADDRESS_TO)
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(toolbar as Toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar.ivBack.setOnClickListener { presenter.onBackCommandClick() }
     }
 
     override fun onBackPressed() {

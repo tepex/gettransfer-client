@@ -255,5 +255,8 @@
     <string name="transport_type_limousine">Лимузин</string>
     <string name="transport_type_helicopter">Вертолет</string>
     <string name="transport_type_unknown">Unknown</string>
-    
+
+    <string name="point_on_the_map">Указать на карте</string>
+    <string name="search">Поиск</string>
+
 </resources>
