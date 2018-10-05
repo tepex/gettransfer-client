@@ -78,7 +78,7 @@ class SettingsPresenter(cc: CoroutineContexts,
         systemInteractor.currency = currencyModel.delegate
         viewState.setCurrency(currencyModel.name)
         saveAccount()
-        logEvent(CURRENCY_PARAM, currencyModel.getCode())
+        logEvent(CURRENCY_PARAM, currencyModel.code)
     }
 
     fun changeLocale(selected: Int) {

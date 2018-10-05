@@ -5,7 +5,7 @@ import java.util.Currency
 class CurrencyModel(val delegate: Currency): CharSequence {
     val name = "${delegate.displayName} ($symbol)"
     override val length = name.length
-    private val code = delegate.currencyCode
+    val code = delegate.currencyCode
     val symbol: String
         /* Dirty hack for ruble, Yuan ¥ */
         get() = when(code) {
@@ -13,9 +13,8 @@ class CurrencyModel(val delegate: Currency): CharSequence {
             "CNY" -> "¥"
             else  -> delegate.symbol
         }
-    
+
     override fun toString(): String = name
     override operator fun get(index: Int): Char = name.get(index)
     override fun subSequence(startIndex: Int, endIndex: Int): CharSequence = name.subSequence(startIndex, endIndex)
-    fun getCode():String = code
 }
