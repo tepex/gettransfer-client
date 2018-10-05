@@ -55,6 +55,7 @@
 	<dimen name="search_form_height">44dp</dimen>
 	<dimen name="image_inverse_size">40dp</dimen>
 	<dimen name="back_circle_size">40.3dp</dimen>
+	<dimen name="btn_entrance_height">24dp</dimen>
 
 	<!-- About items -->
 	<dimen name="about_item_top">100dp</dimen>
