@@ -103,7 +103,11 @@ val dataModule = module {
 	single { SystemInteractor(get(), get()) }
 	single { TransferInteractor(get()) }
     
-    single { CarrierTripRepositoryImpl(get()) as CarrierTripRepository }
+	single { CityPointMapper() }
+	single { CarrierVehicleMapper() }
+	single { PassengerAccountMapper(get()) }
+	single { CarrierTripMapper(get(), get(), get()) }
+    single { CarrierTripRepositoryImpl(get(), get()) as CarrierTripRepository }
     single { CarrierTripInteractor(get()) }
 }
 

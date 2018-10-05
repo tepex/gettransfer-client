@@ -4,7 +4,9 @@ import android.content.Context
 
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.SystemCache
-import com.kg.gettransfer.data.model.*
+
+import com.kg.gettransfer.data.model.AccountEntity
+import com.kg.gettransfer.data.model.UserEntity
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.DistanceUnit
@@ -54,8 +56,18 @@ class PreferencesImpl(context: Context): Preferences {
                            accountPrefs.getStringSet(ACCOUNT_GROUPS, null)?.toTypedArray(),
                            carrierId)
         }
-
-    override fun setAccount(accountEntity: AccountEntity) {
+       
+    override var account: AccountEntity 
+        get() = AccountEntity(UserEntity(accountPrefs.getString(ACCOUNT_FULL_NAME, null),
+                                         accountPrefs.getString(ACCOUNT_EMAIL, null),
+                                         accountPrefs.getString(ACCOUNT_PHONE, null),
+                                         accountPrefs.getBoolean(ACCOUNT_TERMS_ACCEPTED, false)),
+                              accountPrefs.getString(ACCOUNT_LOCALE, null),
+                              accountPrefs.getString(ACCOUNT_CURRENCY, null),
+                              accountPrefs.getString(ACCOUNT_DISTANCE_UNIT, null),
+                              accountPrefs.getStringSet(ACCOUNT_GROUPS, null)?.toTypedArray(),
+                              accountPrefs.getLong(ACCOUNT_CARRIER_ID, -1))
+        set(value) {
             val editor = accountPrefs.edit()
             editor.putString(ACCOUNT_EMAIL, value.user.profile.email)
             editor.putString(ACCOUNT_PHONE, value.user.profile.phone)
@@ -65,7 +77,8 @@ class PreferencesImpl(context: Context): Preferences {
             editor.putString(ACCOUNT_FULL_NAME, value.user.profile.name)
             editor.putStringSet(ACCOUNT_GROUPS, value.groups?.toSet())
             editor.putBoolean(ACCOUNT_TERMS_ACCEPTED, value.user.termsAccepted)
-            value.carrierId?.let { editor.putLong(ACCOUNT_CARRIER_ID, it) }
+            if(value.carrierId == null) editor.remove(ACCOUNT_CARRIER_ID)
+            else editor.putLong(ACCOUNT_CARRIER_ID, value.carrierId!!)
             editor.apply()
         }
 
