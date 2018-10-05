@@ -126,7 +126,7 @@
                 android:layout_marginBottom="@dimen/nav_footer_stamp_bottom"
                 android:background="@null"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_stamp" />
+                android:src="@drawable/ic_best_price" />
 
             <TextView
                 android:id="@+id/navFooterReadMore"

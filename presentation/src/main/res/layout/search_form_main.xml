@@ -67,8 +67,8 @@
 
     <Button
         android:id="@+id/btnNext"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/general_button_width"
+        android:layout_height="@dimen/general_button_height"
         android:layout_gravity="center"
         android:layout_margin="@dimen/btn_next_main_margin_16dp"
         android:background="@drawable/btn_bg_rounded"

@@ -266,4 +266,7 @@
 	<dimen name="view_offer_layouts_on_image_height">24dp</dimen>
 	<dimen name="view_offer_image_like_margin_start">5dp</dimen>
 
+	<dimen name="general_button_width">300dp</dimen>
+	<dimen name="general_button_height">44dp</dimen>
+
 </resources>

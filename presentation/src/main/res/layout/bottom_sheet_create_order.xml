@@ -627,9 +627,7 @@
 
             </android.support.constraint.ConstraintLayout>
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
+            <LinearLayout
                 android:id="@+id/btnGetOffers"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="@dimen/get_offers_btn_height"
