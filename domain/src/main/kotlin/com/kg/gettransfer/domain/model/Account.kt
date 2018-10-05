@@ -8,7 +8,6 @@ data class Account(val user: User,
                    var currency: Currency?,
                     /* Only for Tepex: Server protocol problem */
                    var distanceUnit: DistanceUnit?,
-                   var fullName: String?,
                    var groups: Array<String>?,
                    var carrierId: Long?) {
     companion object {

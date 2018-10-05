@@ -10,7 +10,7 @@ import com.kg.gettransfer.domain.model.DistanceUnit
  * Map a [AccountEntity] to and from a [Account] instance when data is moving between
  * this later and the Domain layer
  */
-open class AccountMapper(): Mapper<AccountEntity, Account> {
+open class AccountMapper(private val userMapper: UserMapper): Mapper<AccountEntity, Account> {
     internal lateinit var configs: Configs
     
     /**
@@ -18,26 +18,22 @@ open class AccountMapper(): Mapper<AccountEntity, Account> {
      */
     override fun fromEntity(type: AccountEntity): Account {
         if(type == AccountEntity.NO_ACCOUNT) return Account.NO_ACCOUNT
-        return Account(type.email,
-                       type.phone,
+        return Account(userMapper.fromEntity(type.user),
                        configs.availableLocales.find { it.language == type.locale }!!,
                        configs.supportedCurrencies.find { it.currencyCode == type.currency }!!,
                        DistanceUnit.parse(type.distanceUnit),
-                       type.fullName,
                        type.groups,
-                       type.termsAccepted)
+                       type.carrierId)
     }
 
     /**
      * Map a [Account] instance to a [AccountEntity] instance
      */
     override fun toEntity(type: Account) = 
-        AccountEntity(type.email,
-                      type.phone,
+        AccountEntity(userMapper.toEntity(type.user),
                       type.locale?.language,
                       type.currency?.currencyCode,
                       type.distanceUnit?.name,
-                      type.fullName,
                       type.groups,
-                      type.termsAccepted)
+                      type.carrierId)
 }
