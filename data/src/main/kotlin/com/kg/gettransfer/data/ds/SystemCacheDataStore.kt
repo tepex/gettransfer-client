@@ -11,8 +11,8 @@ import com.kg.gettransfer.data.model.ConfigsEntity
  */
 open class SystemCacheDataStore(private val cache: SystemCache): SystemDataStore {
     override suspend fun getConfigs(): ConfigsEntity { throw UnsupportedOperationException() }
-    override suspend fun getAccount() = cache.getAccount()
-    override suspend fun setAccount(accountEntity: AccountEntity) = cache.setAccount(accountEntity)
+    override suspend fun getAccount() = cache.account
+    override suspend fun setAccount(accountEntity: AccountEntity) { cache.account = accountEntity }
     override fun clearAccount() = cache.clearAccount()
     override suspend fun login(email: String, password: String): AccountEntity { throw UnsupportedOperationException() }
 }

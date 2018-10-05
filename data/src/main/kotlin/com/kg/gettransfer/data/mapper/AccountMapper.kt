@@ -23,7 +23,7 @@ open class AccountMapper(private val userMapper: UserMapper): Mapper<AccountEnti
                        configs.supportedCurrencies.find { it.currencyCode == type.currency }!!,
                        DistanceUnit.parse(type.distanceUnit),
                        type.groups,
-                       type.carrierId)
+                       if(type.carrierId == -1L) null else type.carrierId)
     }
 
     /**

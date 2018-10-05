@@ -7,7 +7,7 @@ interface SystemCache {
         const val INVALID_TOKEN = "invalid_token"
     }
 
-    fun getAccount(): AccountEntity
-    fun setAccount(accountEntity: AccountEntity)
+    var account: AccountEntity
+    
     fun clearAccount()
 }
