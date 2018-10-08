@@ -108,8 +108,8 @@ class OffersPresenter(cc: CoroutineContexts,
         router.navigateTo(Screens.DETAILS)
     }
 
-    fun onSelectOfferClicked(offer: OfferModel){
-        transferInteractor.selectedOffer = offers?.first { it.id  == offer.id}
+    fun onSelectOfferClicked(offer: OfferModel) {
+        transferInteractor.selectedOffer = offers?.first { it.id == offer.id }
         router.navigateTo(Screens.PAYMENT_SETTINGS)
     }
 
@@ -118,7 +118,7 @@ class OffersPresenter(cc: CoroutineContexts,
     }
 
     fun cancelRequest(isCancel: Boolean) {
-        if(isCancel) {
+        if (isCancel) {
             utils.launchAsyncTryCatchFinally({
                 utils.asyncAwait { transferInteractor.cancelTransfer("") }
                 router.exit()
@@ -130,7 +130,7 @@ class OffersPresenter(cc: CoroutineContexts,
     }
 
     fun changeSortType(sortType: String) {
-        if(sortCategory == sortType) sortHigherToLower = !sortHigherToLower
+        if (sortCategory == sortType) sortHigherToLower = !sortHigherToLower
         else {
             sortCategory = sortType
             sortHigherToLower = true
@@ -141,34 +141,35 @@ class OffersPresenter(cc: CoroutineContexts,
     }
 
     private fun sortOffers() {
-        if(offers != null) {
+        if (offers != null) {
             var sortType = ""
-            offers = when(sortCategory) {
-                OffersActivity.SORT_YEAR   -> { sortType = if (sortHigherToLower) YEAH_FILTER_DOWN else YEAH_FILTER_UP
-                    offers!!.sortedWith(compareBy {it.transportYear})}
-                OffersActivity.SORT_RATING -> { sortType = if (sortHigherToLower) RATING_DOWN else RATING_UP
-                    offers!!.sortedWith(compareBy {it.averageRating})}
-                OffersActivity.SORT_PRICE  -> { sortType = if (sortHigherToLower) PRICE_DOWN else PRICE_UP
-                    offers!!.sortedWith(compareBy {it.priceAmount})}
-/*
-    private fun sortOffers(){
-        if(offers != null){
-            offers = when(sortCategory){
-                OffersActivity.SORT_YEAR -> offers!!.sortedWith(compareBy {it.vehicle.year})
-                OffersActivity.SORT_RATING -> offers!!.sortedWith(compareBy {it.carrier.ratings.average})
-                OffersActivity.SORT_PRICE -> offers!!.sortedWith(compareBy {it.price.amount})
-*/
-                else -> { offers!! }
+            offers = when (sortCategory) {
+                OffersActivity.SORT_YEAR -> {
+                    sortType = if (sortHigherToLower) YEAH_FILTER_DOWN else YEAH_FILTER_UP
+                    offers!!.sortedWith(compareBy { it.vehicle.year })
+                }
+                OffersActivity.SORT_RATING -> {
+                    sortType = if (sortHigherToLower) RATING_DOWN else RATING_UP
+                    offers!!.sortedWith(compareBy { it.carrier.ratings.average })
+                }
+                OffersActivity.SORT_PRICE -> {
+                    sortType = if (sortHigherToLower) PRICE_DOWN else PRICE_UP
+                    offers!!.sortedWith(compareBy { it.price.amount })
+                }
+                else -> {
+                    offers!!
+                }
             }
-            if(sortHigherToLower) offers = offers!!.reversed()
+            if (sortHigherToLower) offers = offers!!.reversed()
             logFilterEvent(sortType)
         }
     }
 
-    private fun logFilterEvent(value: String){
-        mFBA.logEvent(EVENT,createSingeBundle(PARAM_KEY_FILTER,value))
+    private fun logFilterEvent(value: String) {
+        mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value))
     }
-    private fun logButtonEvent(value: String){
-        mFBA.logEvent(EVENT,createSingeBundle(PARAM_KEY_BUTTON,value))
+
+    private fun logButtonEvent(value: String) {
+        mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value))
     }
 }

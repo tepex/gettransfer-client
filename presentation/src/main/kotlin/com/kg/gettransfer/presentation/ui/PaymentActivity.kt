@@ -33,6 +33,8 @@ class PaymentActivity: BaseActivity(), PaymentView {
     @ProvidePresenter
     fun createPaymentPresenter(): PaymentPresenter = PaymentPresenter(coroutineContexts, router, systemInteractor)
 
+    protected override var navigator = BaseNavigator(this)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment)
