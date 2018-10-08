@@ -16,6 +16,7 @@ import android.transition.Slide
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.google.android.gms.maps.model.LatLngBounds
 
 import com.google.android.gms.maps.model.LatLngBounds
 
@@ -58,8 +59,8 @@ class SearchActivity: BaseActivity(), SearchView {
         @JvmField val SLIDE_DURATION = 500L
         @JvmField val EXTRA_ADDRESS_FROM = "address_from"
         @JvmField val EXTRA_ADDRESS_TO   = "address_to"
-        @JvmField val EXTRA_FROM_CLICK = "from_click"
-        @JvmField val EXTRA_TO_CLICK = "to_click"
+        @JvmField val EXTRA_FROM_CLICK   = "from_click"
+        @JvmField val EXTRA_TO_CLICK     = "to_click"
 
         @JvmField val LATLON_BOUNDS = "latlon_map_bounds"
     }
