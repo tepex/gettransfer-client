@@ -16,6 +16,7 @@ import android.transition.Slide
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.R
 
@@ -43,7 +44,9 @@ class SearchActivity: BaseActivity(), SearchView {
     
     internal val routeInteractor: RouteInteractor by inject()
     private lateinit var current: SearchAddress
-    
+
+    var mBounds: LatLngBounds? = null
+
     @ProvidePresenter
     fun createSearchPresenter(): SearchPresenter = SearchPresenter(coroutineContexts,
                                                                    router,
@@ -54,6 +57,8 @@ class SearchActivity: BaseActivity(), SearchView {
         @JvmField val SLIDE_DURATION = 500L
         @JvmField val EXTRA_ADDRESS_FROM = "address_from"
         @JvmField val EXTRA_ADDRESS_TO = "address_to"
+
+        @JvmField val LATLON_BOUNDS = "latlon_map_bounds"
     }
     
     protected override var navigator = object: BaseNavigator(this) {
@@ -84,6 +89,8 @@ class SearchActivity: BaseActivity(), SearchView {
         setupToolbar()
 
         addressList.layoutManager = LinearLayoutManager(this)
+
+        mBounds = intent.getParcelableExtra(LATLON_BOUNDS)
 
         searchFrom.initWidget(this, false)
         searchFrom.text = intent.getStringExtra(EXTRA_ADDRESS_FROM)

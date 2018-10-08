@@ -112,6 +112,9 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 					val pair = data as Pair<String, String>
 					searchIntent.putExtra(SearchActivity.EXTRA_ADDRESS_FROM, pair.first)
 					searchIntent.putExtra(SearchActivity.EXTRA_ADDRESS_TO, pair.second)
+
+					val bounds = googleMap.projection.visibleRegion.latLngBounds
+					searchIntent.putExtra(SearchActivity.LATLON_BOUNDS, bounds)
 					return searchIntent
 				}
 				Screens.CREATE_ORDER -> return Intent(context, CreateOrderActivity::class.java)

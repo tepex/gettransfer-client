@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+import com.google.android.gms.maps.model.LatLngBounds
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.CoroutineContexts
 
@@ -8,6 +9,7 @@ import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.view.SearchAddressView
 import ru.terrakok.cicerone.Router
@@ -21,6 +23,7 @@ class SearchAddressPresenter(cc: CoroutineContexts,
 	/* Cache. @TODO */
 	private var lastRequest: String? = null
 	private var lastResult: List<GTAddress>? = null
+	var mBounds: LatLngBounds? = null
 	
 	companion object {
 		@JvmField val ADDRESS_PREDICTION_SIZE = 3
@@ -38,8 +41,16 @@ class SearchAddressPresenter(cc: CoroutineContexts,
 		}
 			
 		Timber.d("------ request list for prediction $prediction")
+		var latLonPair: Pair<Point,Point>? = null
+		if(mBounds != null) {
+			val nePoint = Point(mBounds!!.northeast.latitude, mBounds!!.northeast.longitude)
+			val swPoint = Point(mBounds!!.southwest.latitude, mBounds!!.southwest.longitude)
+			latLonPair = Pair(nePoint,swPoint)
+		}
+
 		utils.launchAsyncTryCatch({
-			lastResult = utils.asyncAwait { routeInteractor.getAutocompletePredictions(prediction) }
+
+			lastResult = utils.asyncAwait { routeInteractor.getAutocompletePredictions(prediction,latLonPair) }
 			lastRequest = prediction
 			viewState.setAddressList(lastResult!!)
 		}, {e ->

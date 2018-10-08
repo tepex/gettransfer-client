@@ -91,7 +91,6 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	fun initWidget(parent: SearchActivity, isTo: Boolean) {
 		this.parent = parent
 		this.isTo = isTo
-		
 		addressField.setOnFocusChangeListener { _, hasFocus ->
 			this.hasFocus = hasFocus
 			if(!hasFocus){
@@ -108,6 +107,8 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		parentDelegate = parent.mvpDelegate
 		mvpDelegate.onCreate()
 		mvpDelegate.onAttach()
+
+		presenter.mBounds = parent.mBounds
 		
 		if(isTo) addressField.requestFocus()
 		checkClearButtonVisibility()
@@ -117,7 +118,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	fun initText(text: String, sendRequest: Boolean) {
 		blockRequest = true
 		this.text = text + " "
-		addressField.setSelection(addressField.text.length)
+		//addressField.setSelection(addressField.text.length)
 		blockRequest = false
 		if(sendRequest) presenter.requestAddressListByPrediction(text.trim())
 	}
