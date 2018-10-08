@@ -23,8 +23,7 @@ class RouteInteractor(private val geoRepository: GeoRepository,
     fun getCurrentAddress() = geoRepository.getCurrentAddress()
 
     fun getAddressByLocation(point: Point, pair: Pair<Point, Point>): GTAddress {
-        from = geoRepository.getAddressByLocation(point, pair)
-        return from!!
+        return geoRepository.getAddressByLocation(point, pair)!!
     }
 
     fun isConcreteObjects() = from?.isConcreteObject() ?: false && to?.isConcreteObject() ?: false
@@ -43,5 +42,4 @@ class RouteInteractor(private val geoRepository: GeoRepository,
 
     suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean) = 
         routeRepository.getRouteInfo(from, to, withPrices, returnWay)
-
 }
