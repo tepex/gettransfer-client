@@ -8,11 +8,10 @@ import android.location.Location
 import com.google.android.gms.common.data.DataBufferUtils
 
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.FusedLocationProviderClient
 
-import com.google.android.gms.location.places.GeoDataClient
 import com.google.android.gms.location.places.Places
-import com.google.android.gms.location.places.PlaceDetectionClient
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 
 import com.google.android.gms.tasks.Tasks
 
@@ -76,7 +75,7 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
             if(!area.isNullOrEmpty() && area != city) addr.append(area).append(", ")
         }
 
-        val text = getAutocompletePredictions(addr.toString())
+        val text = getAutocompletePredictions(addr.toString(),null)
         val address = if(text.isNotEmpty()) text.get(0).address else addr.toString()
         return GTAddress(placeTypes = listOf(GTAddress.TYPE_STREET_ADDRESS),
                          name = address,
@@ -105,8 +104,14 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
     /**
      * @TODO: Добавить таймаут
      */
-    override fun getAutocompletePredictions(prediction: String): List<GTAddress> {
-        val results = gdClient.getAutocompletePredictions(prediction, null, null)
+    override fun getAutocompletePredictions(prediction: String, points: Pair<Point,Point>?): List<GTAddress> {
+        var bounds: LatLngBounds? = null
+        if(points != null){
+            val northEastPoint = LatLng(points.first.latitude,points.first.longitude)
+            val southWestPoint = LatLng(points.second.latitude,points.second.longitude)
+            bounds = LatLngBounds(southWestPoint,northEastPoint)
+        }
+        val results = gdClient.getAutocompletePredictions(prediction, bounds, null)
         Tasks.await(results)
         val list = DataBufferUtils.freezeAndClose(results.getResult())
         return list.map {

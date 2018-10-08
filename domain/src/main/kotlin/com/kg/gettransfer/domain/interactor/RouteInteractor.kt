@@ -29,7 +29,7 @@ class RouteInteractor(private val geoRepository: GeoRepository,
 
     fun isConcreteObjects() = from?.isConcreteObject() ?: false && to?.isConcreteObject() ?: false
 
-    fun getAutocompletePredictions(prediction: String) = geoRepository.getAutocompletePredictions(prediction)
+    fun getAutocompletePredictions(prediction: String, pointsPair: Pair<Point,Point>?) = geoRepository.getAutocompletePredictions(prediction, pointsPair)
 
     fun updateDestinationPoint() {
         if(to!!.point == null) to!!.point = geoRepository.getLatLngByPlaceId(to!!.id!!)
