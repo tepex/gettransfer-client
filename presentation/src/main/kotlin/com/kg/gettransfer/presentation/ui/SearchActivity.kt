@@ -16,7 +16,6 @@ import android.transition.Slide
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.google.android.gms.maps.model.LatLngBounds
 
 import com.google.android.gms.maps.model.LatLngBounds
 
@@ -57,6 +56,7 @@ class SearchActivity: BaseActivity(), SearchView {
     companion object {
         @JvmField val FADE_DURATION  = 500L
         @JvmField val SLIDE_DURATION = 500L
+        
         @JvmField val EXTRA_ADDRESS_FROM = "address_from"
         @JvmField val EXTRA_ADDRESS_TO   = "address_to"
         @JvmField val EXTRA_FROM_CLICK   = "from_click"
@@ -110,11 +110,8 @@ class SearchActivity: BaseActivity(), SearchView {
     }
 
     private fun changeFocusForSearch() {
-        if (intent.getBooleanExtra(EXTRA_FROM_CLICK, false)) {
-            searchFrom.changeFocus()
-        } else if (intent.getBooleanExtra(EXTRA_TO_CLICK, false)) {
-            searchTo.changeFocus()
-        }
+        if(intent.getBooleanExtra(EXTRA_FROM_CLICK, false)) searchFrom.changeFocus()
+        else if(intent.getBooleanExtra(EXTRA_TO_CLICK, false)) searchTo.changeFocus()
     }
 
     private fun setupToolbar() {
@@ -131,6 +128,6 @@ class SearchActivity: BaseActivity(), SearchView {
 
     override fun blockInterface(block: Boolean) {}
     override fun setAddressFrom(address: String, sendRequest: Boolean) { searchFrom.initText(address, sendRequest) }
-    override fun setAddressTo(address: String, sendRequest: Boolean) { searchTo.initText(address, sendRequest) }
+    override fun setAddressTo(address: String, sendRequest: Boolean)   { searchTo.initText(address, sendRequest) }
     override fun setAddressList(list: List<GTAddress>) { addressList.adapter = AddressAdapter(presenter, list) }
 }
