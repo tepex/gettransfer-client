@@ -17,6 +17,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.domain.interactor.OffersInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
@@ -40,11 +41,18 @@ import timber.log.Timber
 class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
+    
+    private val offersInteractor: OffersInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
     
     @ProvidePresenter
-    fun createTransferDetailsPresenter() = TransferDetailsPresenter(coroutineContexts, router, systemInteractor, routeInteractor, transferInteractor)
+    fun createTransferDetailsPresenter() = TransferDetailsPresenter(coroutineContexts,
+                                                                    router,
+                                                                    systemInteractor,
+                                                                    routeInteractor,
+                                                                    transferInteractor,
+                                                                    offersInteractor)
 
     protected override var navigator = object: BaseNavigator(this) {}
 

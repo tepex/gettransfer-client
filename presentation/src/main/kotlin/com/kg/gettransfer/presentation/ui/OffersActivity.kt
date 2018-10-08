@@ -14,8 +14,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-//import com.kg.gettransfer.R.id.ratingBar
 
+import com.kg.gettransfer.domain.interactor.OffersInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.adapter.OffersRVAdapter
@@ -36,13 +36,15 @@ class OffersActivity: BaseActivity(), OffersView {
     @InjectPresenter
     internal lateinit var presenter: OffersPresenter
     
+    private val offersInteractor: OffersInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
     
     @ProvidePresenter
     fun createOffersPresenter(): OffersPresenter = OffersPresenter(coroutineContexts,
                                                                    router,
                                                                    systemInteractor,
-                                                                   transferInteractor)
+                                                                   transferInteractor,
+                                                                   offersInteractor)
     
     protected override var navigator = BaseNavigator(this)
     

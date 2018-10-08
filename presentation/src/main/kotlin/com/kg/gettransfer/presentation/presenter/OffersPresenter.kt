@@ -9,6 +9,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
+import com.kg.gettransfer.domain.interactor.OffersInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
@@ -19,6 +20,7 @@ import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
+
 import com.kg.gettransfer.presentation.ui.OffersActivity
 
 import com.kg.gettransfer.presentation.view.OffersView
@@ -35,7 +37,8 @@ import timber.log.Timber
 class OffersPresenter(cc: CoroutineContexts,
                       router: Router,
                       systemInteractor: SystemInteractor,
-                      private val transferInteractor: TransferInteractor): BasePresenter<OffersView>(cc, router, systemInteractor) {
+                      private val transferInteractor: TransferInteractor,
+                      private val offersInteractor: OffersInteractor): BasePresenter<OffersView>(cc, router, systemInteractor) {
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
@@ -79,7 +82,7 @@ class OffersPresenter(cc: CoroutineContexts,
 
             transfer = transferInteractor.transfer
             if(transfer == null) transfer = utils.asyncAwait{ transferInteractor.getTransfer() }
-            offers = transferInteractor.getOffers().map { Mappers.getOfferModel(it) }
+            offers = offersInteractor.getOffers(transfer!!.id).map { Mappers.getOfferModel(it) }
 
             viewState.setDate(Utils.getFormatedDate(systemInteractor.locale, transfer!!.dateToLocal))
 
