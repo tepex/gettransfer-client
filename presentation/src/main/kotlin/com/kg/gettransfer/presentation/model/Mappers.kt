@@ -67,8 +67,9 @@ object Mappers {
                       transfer.price?.default,
                       transfer.relevantCarriersCount)
     }
-    
-    fun getOfferModel(offer: Offer) = OfferModel(offer.driver?.fullName,
+
+    fun getOfferModel(offer: Offer) = OfferModel(offer.id,
+                                                 offer.driver?.fullName,
                                                  offer.driver?.email,
                                                  offer.driver?.phone,
                                                  offer.vehicle.transportTypeId,

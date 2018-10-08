@@ -7,8 +7,11 @@ import android.os.Bundle
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.arellomobile.mvp.MvpAppCompatActivity
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.presenter.PaymentPresenter
+import com.kg.gettransfer.presentation.view.PaymentView
 import kotlinx.android.synthetic.main.activity_payment.*
 
 fun Context.getPaymentActivityLaunchIntent(paymentUrl: String): Intent {
@@ -17,10 +20,18 @@ fun Context.getPaymentActivityLaunchIntent(paymentUrl: String): Intent {
     return intent
 }
 
-class PaymentActivity: MvpAppCompatActivity() {
+class PaymentActivity: BaseActivity(), PaymentView {
 
     private val PAYMENT_RESULT = "payment_result"
     private val SUCCESS = "success"
+
+    @InjectPresenter
+    internal lateinit var presenter: PaymentPresenter
+
+    override fun getPresenter(): PaymentPresenter = presenter
+
+    @ProvidePresenter
+    fun createPaymentPresenter(): PaymentPresenter = PaymentPresenter(coroutineContexts, router, systemInteractor)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

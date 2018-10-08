@@ -49,6 +49,11 @@ class TransferInteractor(private val repository: TransferRepository) {
         selectedId = transfer!!.id
         return transfer!!
     }
+
+    suspend fun getPayment(transferId: Long,
+                           offerId: Long?,
+                           gatewayId: String,
+                           percentage: Int) = repository.getPayment(transferId, offerId, gatewayId, percentage)
     
     suspend fun getTransfer() = repository.getTransfer(selectedId)
     suspend fun cancelTransfer(reason: String){

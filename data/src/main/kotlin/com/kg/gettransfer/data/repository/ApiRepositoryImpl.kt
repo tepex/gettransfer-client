@@ -10,6 +10,7 @@ import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.domain.repository.Preferences
 
 import com.google.gson.GsonBuilder
+import com.google.gson.annotations.SerializedName
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
 
@@ -277,6 +278,12 @@ class ApiRepositoryImpl(private val preferences: Preferences,
                 price, ratings, offer.passengerFeedback, carrier, vehicle, driver)
     }
 
+    suspend fun createPayment(transferId: Long, offerId: Long?, gatewayId: String, percentage: Int): PaymentResult {
+        val response: ApiResponse<ApiPaymentResult> = tryTwice { api.createNewPayment(ApiCreatePaymentEntity(transferId, offerId, gatewayId, percentage)) }
+        val payment: ApiPaymentResult = response.data!!
+        return PaymentResult(payment.type, payment.url)
+    }
+
     suspend fun getCarrierTrips(): List<CarrierTrip> {
         val response: ApiResponse<ApiCarrierTrips> = tryTwice { api.getCarrierTrips() }
         val carrierTrips: List<ApiCarrierTrip> = response.data!!.trips
@@ -287,12 +294,6 @@ class ApiRepositoryImpl(private val preferences: Preferences,
         val response: ApiResponse<ApiCarrierTripWrapper> = tryTwice(carrierTripId, { id -> api.getCarrierTrip(id) })
         val carrierTrip: ApiCarrierTrip = response.data!!.trip
         return Mappers.mapApiCarrierTrip(carrierTrip)
-    }
-
-    override suspend fun createNewPayment(transferId: Long, offerId: Long?, gatewayId: String, percentage: Int): PaymentResult {
-        val response: ApiResponse<ApiPaymentResult> = tryTwice { api.createNewPayment(ApiCreatePaymentEntity(transferId, offerId, gatewayId, percentage)) }
-        val paymentResult = response.data!!
-        return Mappers.mapPaymentResult(paymentResult)
     }
     
     fun apiException(e: Exception): ApiException {

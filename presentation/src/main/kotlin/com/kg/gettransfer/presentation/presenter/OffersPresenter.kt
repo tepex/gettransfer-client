@@ -44,7 +44,7 @@ class OffersPresenter(cc: CoroutineContexts,
     }
 
     private var transfer: Transfer? = null
-    private var offers: List<OfferModel>? = null
+    private var offers: List<Offer>? = null
 
     private var sortCategory: String? = null
     private var sortHigherToLower = true
@@ -108,8 +108,9 @@ class OffersPresenter(cc: CoroutineContexts,
         router.navigateTo(Screens.DETAILS)
     }
 
-    fun onSelectOfferClicked(offer: OfferModel) {
-
+    fun onSelectOfferClicked(offer: OfferModel){
+        transferInteractor.selectedOffer = offers?.first { it.id  == offer.id}
+        router.navigateTo(Screens.PAYMENT_SETTINGS)
     }
 
     fun onCancelRequestClicked() {
@@ -135,7 +136,7 @@ class OffersPresenter(cc: CoroutineContexts,
             sortHigherToLower = true
         }
         sortOffers()
-        viewState.setOffers(offers!!)
+        viewState.setOffers(Mappers.getOfferModels(offers!!))
         viewState.setSortState(sortCategory!!, sortHigherToLower)
     }
 
@@ -149,6 +150,14 @@ class OffersPresenter(cc: CoroutineContexts,
                     offers!!.sortedWith(compareBy {it.averageRating})}
                 OffersActivity.SORT_PRICE  -> { sortType = if (sortHigherToLower) PRICE_DOWN else PRICE_UP
                     offers!!.sortedWith(compareBy {it.priceAmount})}
+/*
+    private fun sortOffers(){
+        if(offers != null){
+            offers = when(sortCategory){
+                OffersActivity.SORT_YEAR -> offers!!.sortedWith(compareBy {it.vehicle.year})
+                OffersActivity.SORT_RATING -> offers!!.sortedWith(compareBy {it.carrier.ratings.average})
+                OffersActivity.SORT_PRICE -> offers!!.sortedWith(compareBy {it.price.amount})
+*/
                 else -> { offers!! }
             }
             if(sortHigherToLower) offers = offers!!.reversed()

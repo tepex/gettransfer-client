@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
@@ -17,6 +19,7 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.OffersInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.adapter.OffersRVAdapter
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -46,7 +49,15 @@ class OffersActivity: BaseActivity(), OffersView {
                                                                    transferInteractor,
                                                                    offersInteractor)
     
-    protected override var navigator = BaseNavigator(this)
+    protected override var navigator = object : BaseNavigator(this) {
+        override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
+            return if (screenKey == Screens.PAYMENT_SETTINGS) {
+                context.getPaymentSettingsActivityLaunchIntent()
+            } else {
+                null
+            }
+        }
+    }
     
     override fun getPresenter(): OffersPresenter = presenter
 

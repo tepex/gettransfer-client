@@ -38,4 +38,8 @@ class TransferRepositoryImpl(private val apiRepository: ApiRepositoryImpl): Tran
 	override suspend fun getTransfer(id: Long) = apiRepository.getTransfer(id)
     override suspend fun getTransfersArchive() = apiRepository.getTransfersActive()
     override suspend fun getTransfersActive() = apiRepository.getTransfersActive()
+    override suspend fun getPayment(transferId: Long,
+                                    offerId: Long?,
+                                    gatewayId: String,
+                                    percentage: Int) = apiRepository.createPayment(transferId, offerId, gatewayId, percentage)
 }
