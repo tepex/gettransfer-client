@@ -36,7 +36,7 @@ class TransferInteractor(private val repository: TransferRepository) {
                                              pax,
                                              childSeats,
                                              passengerOfferedPrice,
-                                             account.fullName!!,
+                                             account.user.name!!,
                                              comment,
                                              account,
                                              promoCode,
@@ -51,7 +51,6 @@ class TransferInteractor(private val repository: TransferRepository) {
     }
     
     suspend fun getTransfer() = repository.getTransfer(selectedId)
-    suspend fun getOffers() = repository.getOffers(selectedId)
     suspend fun cancelTransfer(reason: String){
         val cancelledTransfer = repository.cancelTransfer(selectedId, reason)
         if(allTransfers != null){

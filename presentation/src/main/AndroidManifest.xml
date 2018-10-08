@@ -46,7 +46,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.SearchActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeTransparentStatusBar"/>
         <activity android:name=".presentation.ui.CreateOrderActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>

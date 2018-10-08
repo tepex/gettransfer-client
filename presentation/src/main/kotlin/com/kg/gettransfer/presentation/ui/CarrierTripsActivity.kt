@@ -26,11 +26,13 @@ import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
-import com.kg.gettransfer.domain.model.Account
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TripsRVAdapter
+
 import com.kg.gettransfer.presentation.model.CarrierTripModel
+import com.kg.gettransfer.presentation.model.UserModel
+
 import com.kg.gettransfer.presentation.presenter.CarrierTripsPresenter
 import com.kg.gettransfer.presentation.view.CarrierTripsView
 
@@ -164,11 +166,11 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView{
         rvTrips.adapter = TripsRVAdapter(presenter, trips)
     }
 
-    override fun initNavigation(account: Account) {
+    override fun initNavigation(user: UserModel) {
         navHeaderName.visibility = View.VISIBLE
         navHeaderEmail.visibility = View.VISIBLE
-        navHeaderName.text = account.fullName
-        navHeaderEmail.text = account.email
+        navHeaderName.text = user.name
+        navHeaderEmail.text = user.email
 
         navLogin.visibility = View.GONE
         navCarrierTrips.visibility = View.VISIBLE

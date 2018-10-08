@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutPointMap"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/point_map_height"
+    android:background="@color/bg_point_on_map"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="30.7dp"
+        android:layout_height="30.7dp"
+        android:layout_margin="@dimen/point_map_icon_margin"
+        app:srcCompat="@drawable/ic_point_on_map" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:letterSpacing="-0.02"
+        android:text="@string/point_on_the_map"
+        android:textColor="#000000"
+        android:textSize="14sp" />
+
+</LinearLayout>

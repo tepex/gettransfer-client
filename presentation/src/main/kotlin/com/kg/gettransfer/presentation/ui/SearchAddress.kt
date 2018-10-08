@@ -94,7 +94,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		addressField.setOnFocusChangeListener { _, hasFocus ->
 			this.hasFocus = hasFocus
 			if(!hasFocus){
-				clearBtn.visibility = View.GONE
+				clearBtn.visibility = View.INVISIBLE
 			}
 			else {
 				checkClearButtonVisibility()
@@ -178,7 +178,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	
 	private fun checkClearButtonVisibility() {
 		if(text.isBlank()) {
-			clearBtn.visibility = View.GONE
+			clearBtn.visibility = View.INVISIBLE
 		} else {
 			if (hasFocus) {
 				clearBtn.visibility = View.VISIBLE

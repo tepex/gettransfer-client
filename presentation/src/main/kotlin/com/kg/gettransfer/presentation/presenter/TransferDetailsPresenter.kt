@@ -11,6 +11,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
+import com.kg.gettransfer.domain.interactor.OffersInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
@@ -34,7 +35,8 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
                                router: Router,
                                systemInteractor: SystemInteractor,
                                private val routeInteractor: RouteInteractor,
-                               private val transferInteractor: TransferInteractor): BasePresenter<TransferDetailsView>(cc, router, systemInteractor) {
+                               private val transferInteractor: TransferInteractor,
+                               private val offersInteractor: OffersInteractor): BasePresenter<TransferDetailsView>(cc, router, systemInteractor) {
 
     private var transfer: Transfer? = null
     private var routeModel: RouteModel? = null
@@ -51,7 +53,7 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
                                                            systemInteractor.getTransportTypes()))
 	        Timber.d("offers: ${transfer!!.id} status=${transfer!!.status} checkOffers: ${transfer!!.checkOffers}")
             if(transfer!!.checkOffers) {
-	            val offers = utils.asyncAwait { transferInteractor.getOffers() }
+	            val offers = utils.asyncAwait { offersInteractor.getOffers(transfer!!.id) }
 	            if(transfer!!.offersCount!! >= 1 && offers.size == 1) {
 	                offerModel = Mappers.getOfferModel(offers.first())
 	                viewState.setOffer(offerModel!!)

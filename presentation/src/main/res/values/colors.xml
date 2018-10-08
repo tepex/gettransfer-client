@@ -87,4 +87,6 @@
     <color name="color_vehicle_gray">#808080</color>
     <color name="color_vehicle_purple">#800080</color>
     <color name="color_vehicle_orange">#FFA500</color>
+
+    <color name="bg_point_on_map">#f7f7f7</color>
 </resources>

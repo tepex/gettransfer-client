@@ -47,7 +47,15 @@
     <dimen name="search_elevation">8dp</dimen>
 	<dimen name="search_form_vertical_padding">8dp</dimen>
 	<dimen name="search_form_array_margin">12dp</dimen>
-	<dimen name="search_form_clear_margin">12dp</dimen>
+	<dimen name="search_form_clear_padding_end">65dp</dimen>
+	<dimen name="search_form_address_margin">10dp</dimen>
+	<dimen name="inverse_btn_margin_end">16dp</dimen>
+    <dimen name="point_map_icon_margin">10dp</dimen>
+    <dimen name="point_map_height">46.1dp</dimen>
+	<dimen name="search_form_height">44dp</dimen>
+	<dimen name="image_inverse_size">40dp</dimen>
+	<dimen name="back_circle_size">40.3dp</dimen>
+	<dimen name="btn_entrance_height">24dp</dimen>
 
 	<!-- About items -->
 	<dimen name="about_item_top">100dp</dimen>
@@ -81,6 +89,7 @@
 	<dimen name="create_transfer_additionals_end_margin">25dp</dimen>
 	<dimen name="create_transfer_additionals_start_margin">57dp</dimen>
 	<dimen name="create_transfer_divider_height">0.5dp</dimen>
+	<dimen name="search_divider_height">0.5dp</dimen>
 	<dimen name="create_transfer_address_start_margin">48dp</dimen>
 	<dimen name="create_transfer_additionals_top_and_bottom_padding">8dp</dimen>
 	<dimen name="create_transfer_marker_size">23dp</dimen>
@@ -265,5 +274,8 @@
 	<dimen name="view_offer_top_layout_on_image_padding_start_end">5dp</dimen>
 	<dimen name="view_offer_layouts_on_image_height">24dp</dimen>
 	<dimen name="view_offer_image_like_margin_start">5dp</dimen>
+
+	<dimen name="general_button_width">300dp</dimen>
+	<dimen name="general_button_height">44dp</dimen>
 
 </resources>

@@ -13,7 +13,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/search_form_array_margin"
-		android:background="@drawable/ic_search_addr"
+		android:background="@drawable/ic_dark_arrow"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
@@ -21,7 +21,7 @@
 	<EditText android:id="@+id/addressField"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:layout_marginEnd="@dimen/search_form_clear_margin"
+		android:layout_marginEnd="@dimen/search_form_address_margin"
 		android:layout_marginStart="@dimen/search_form_array_margin"
 		android:background="@null"
 		android:singleLine="true"
@@ -34,9 +34,8 @@
 	<ImageButton android:id="@+id/clearBtn"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginEnd="@dimen/search_form_clear_margin"
 		android:background="@android:drawable/presence_offline"
-		android:visibility="gone"
+		android:visibility="invisible"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />

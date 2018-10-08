@@ -22,6 +22,8 @@
     <string name="search_start">Loading…</string>
     <string name="search_nothing"></string>
     <string name="searchTransitionName">SEARCH_FORM</string>
+    <string name="point_on_the_map">Point on the map</string>
+    <string name="search">Search</string>
     <!-- About -->
     <string name="about_title_item1">ЛУЧШИЕ ЦЕНЫ</string>
     <string name="about_content_item1">Выберите цену перевозки из множества предложений.</string>

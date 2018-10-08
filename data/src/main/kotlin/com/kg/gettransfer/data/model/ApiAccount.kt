@@ -18,6 +18,7 @@ const val ACCOUNT_CURRENCY       = "currency"
 const val ACCOUNT_DISTANCE_UNIT  = "distance_unit"
 const val ACCOUNT_FULL_NAME      = "full_name"
 const val ACCOUNT_GROUPS         = "groups"
+const val ACCOUNT_CARRIER_ID     = "carrier_id"
 const val ACCOUNT_TERMS_ACCEPTED = "terms_accepted"
 
 class ApiAccountWrapper(@SerializedName(ACCOUNT) @Expose var account: ApiAccount)
@@ -29,4 +30,5 @@ class ApiAccount(@SerializedName(ACCOUNT_EMAIL) @Expose var email: String? = nul
                  @SerializedName(ACCOUNT_DISTANCE_UNIT) @Expose var distanceUnit: String? = null,
                  @SerializedName(ACCOUNT_FULL_NAME) @Expose var fullName: String? = null,
                  @SerializedName(ACCOUNT_GROUPS) @Expose var groups: Array<String>? = null,
-                 @SerializedName(ACCOUNT_TERMS_ACCEPTED) @Expose var termsAccepted: Boolean = true)
+                 @SerializedName(ACCOUNT_TERMS_ACCEPTED) @Expose var termsAccepted: Boolean = true,
+                 @SerializedName(ACCOUNT_CARRIER_ID) @Expose var carrierId: Long? = null)

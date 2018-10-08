@@ -1,12 +1,7 @@
 package com.kg.gettransfer.data.repository
 
-import com.kg.gettransfer.data.model.ApiOffer
-import com.kg.gettransfer.data.model.ApiResponse
-import com.kg.gettransfer.data.model.ApiTransferWrapper
-
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Trip
 
 import com.kg.gettransfer.domain.repository.TransferRepository
@@ -43,5 +38,4 @@ class TransferRepositoryImpl(private val apiRepository: ApiRepositoryImpl): Tran
 	override suspend fun getTransfer(id: Long) = apiRepository.getTransfer(id)
     override suspend fun getTransfersArchive() = apiRepository.getTransfersActive()
     override suspend fun getTransfersActive() = apiRepository.getTransfersActive()
-    override suspend fun getOffers(id: Long) = apiRepository.getOffers(id)
 }

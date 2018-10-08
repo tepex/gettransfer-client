@@ -1,17 +1,25 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
+
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+
 import com.kg.gettransfer.presentation.Screens
+
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.Mappers
+
 import com.kg.gettransfer.presentation.view.CarrierTripsView
 import com.kg.gettransfer.presentation.view.MainView
+
 import ru.terrakok.cicerone.Router
 
 @InjectViewState
@@ -29,7 +37,7 @@ class CarrierTripsPresenter(cc: CoroutineContexts,
             viewState.blockInterface(true)
             trips = carrierTripInteractor.getCarrierTrips().map {
                 Mappers.getCarrierTripModel(it, systemInteractor.locale, systemInteractor.distanceUnit) }
-                viewState.initNavigation(systemInteractor.account)
+                viewState.initNavigation(Mappers.getUserModel(systemInteractor.account))
             viewState.setTrips(trips!!)
         }, { e ->
             if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)

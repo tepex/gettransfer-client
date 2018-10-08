@@ -6,6 +6,7 @@ import com.kg.gettransfer.data.model.*
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.domain.model.User
 
 import com.kg.gettransfer.domain.repository.Preferences
 
@@ -38,26 +39,30 @@ class PreferencesImpl(context: Context): Preferences {
         get() {
             var localeCode = accountPrefs.getString(ACCOUNT_LOCALE, null)
             var currencyCode = accountPrefs.getString(ACCOUNT_CURRENCY, null)
-            return Account(
-                    accountPrefs.getString(ACCOUNT_EMAIL, null),
-                    accountPrefs.getString(ACCOUNT_PHONE, null),
-                    if(localeCode != null) Locale(localeCode) else null,
-                    if(currencyCode != null) Currency.getInstance(currencyCode) else null,
-                    DistanceUnit.parse(accountPrefs.getString(ACCOUNT_DISTANCE_UNIT, null)),
-                    accountPrefs.getString(ACCOUNT_FULL_NAME, null),
-                    accountPrefs.getStringSet(ACCOUNT_GROUPS, null)?.toTypedArray(),
-                    accountPrefs.getBoolean(ACCOUNT_TERMS_ACCEPTED, false))
+            var carrierId: Long? = accountPrefs.getLong(ACCOUNT_CARRIER_ID, -1)
+            if(carrierId == -1L) carrierId = null
+            
+            return Account(User(accountPrefs.getString(ACCOUNT_FULL_NAME, null),
+                                accountPrefs.getString(ACCOUNT_EMAIL, null),
+                                accountPrefs.getString(ACCOUNT_PHONE, null),
+                                accountPrefs.getBoolean(ACCOUNT_TERMS_ACCEPTED, false)),
+                           if(localeCode != null) Locale(localeCode) else null,
+                           if(currencyCode != null) Currency.getInstance(currencyCode) else null,
+                           DistanceUnit.parse(accountPrefs.getString(ACCOUNT_DISTANCE_UNIT, null)),
+                           accountPrefs.getStringSet(ACCOUNT_GROUPS, null)?.toTypedArray(),
+                           carrierId)
         }
         set(value) {
             val editor = accountPrefs.edit()
-            editor.putString(ACCOUNT_EMAIL, value.email)
-            editor.putString(ACCOUNT_PHONE, value.phone)
+            editor.putString(ACCOUNT_EMAIL, value.user.email)
+            editor.putString(ACCOUNT_PHONE, value.user.phone)
             editor.putString(ACCOUNT_LOCALE, value.locale?.language)
             editor.putString(ACCOUNT_CURRENCY, value.currency?.currencyCode)
             editor.putString(ACCOUNT_DISTANCE_UNIT, value.distanceUnit?.name)
-            editor.putString(ACCOUNT_FULL_NAME, value.fullName)
+            editor.putString(ACCOUNT_FULL_NAME, value.user.name)
             editor.putStringSet(ACCOUNT_GROUPS, value.groups?.toSet())
-            editor.putBoolean(ACCOUNT_TERMS_ACCEPTED, value.termsAccepted)
+            editor.putBoolean(ACCOUNT_TERMS_ACCEPTED, value.user.termsAccepted)
+            value.carrierId?.let { editor.putLong(ACCOUNT_CARRIER_ID, it) }
             editor.apply()
         }
 
@@ -79,6 +84,7 @@ class PreferencesImpl(context: Context): Preferences {
         editor.remove(ACCOUNT_FULL_NAME)
         editor.remove(ACCOUNT_GROUPS)
         editor.remove(ACCOUNT_TERMS_ACCEPTED)
+        editor.remove(ACCOUNT_CARRIER_ID)
         editor.apply()
     }
 }
