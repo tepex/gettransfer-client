@@ -186,12 +186,22 @@ class ApiRepositoryImpl(private val preferences: Preferences,
                                         passengerOfferedPrice: Int?,
                                         nameSign: String,
                                         comment: String?,
-                                        account: Account,
+                                        profile: Profile,
                                         promoCode: String?,
                                         paypalOnly: Boolean): Transfer {
-        val response: ApiResponse<ApiTransferWrapper> = tryPostTransfer(ApiTransferWrapper(Mappers.mapTransferRequest(
-            from, to, tripTo, tripReturn, transportTypes, pax, childSeats, passengerOfferedPrice, nameSign, comment,
-            account, promoCode/*, paypalOnly*/)))
+        val response: ApiResponse<ApiTransferWrapper> = tryPostTransfer(
+            ApiTransferWrapper(Mappers.mapTransferRequest(from,
+                                                          to,
+                                                          tripTo,
+                                                          tripReturn,
+                                                          transportTypes,
+                                                          pax,
+                                                          childSeats,
+                                                          passengerOfferedPrice,
+                                                          nameSign,
+                                                          comment,
+                                                          profile,
+                                                          promoCode/*, paypalOnly*/)))
         
         return Mappers.mapApiTransfer(response.data?.transfer!!)
     }

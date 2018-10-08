@@ -34,7 +34,7 @@ class Mappers {
          * Simple mapper: [ApiAccount] -> [Account]
          */
         fun mapApiAccount(apiAccount: ApiAccount, configs: Configs): Account {
-            return Account(User(apiAccount.fullName, apiAccount.email, apiAccount.phone),
+            return Account(User(Profile(apiAccount.fullName, apiAccount.email, apiAccount.phone)),
                            configs.availableLocales.find { it.language == apiAccount.locale }!!,
                            configs.supportedCurrencies.find { it.currencyCode == apiAccount.currency }!!,
                            DistanceUnit.parse(apiAccount.distanceUnit),
@@ -46,16 +46,18 @@ class Mappers {
          * [Account] -> [ApiAccount]
          */
         fun mapAccount(account: Account): ApiAccount {
-            return ApiAccount(account.user.email,
-                              account.user.phone,
+            return ApiAccount(account.user.profile.email,
+                              account.user.profile.phone,
                               account.locale?.language,
                               account.currency?.currencyCode,
                               account.distanceUnit?.name,
-                              account.user.name,
+                              account.user.profile.name,
                               account.groups,
                               account.user.termsAccepted,
                               account.carrierId)
         }
+        
+        fun mapProfile(profile: Profile) = ApiProfile(profile.email, profile.phone, profile.name)
         
         /**
          * [ApiTransfer] -> [Transfer]
@@ -125,16 +127,25 @@ class Mappers {
                                passengerOfferedPrice: Int?,
                                nameSign: String,
                                comment: String?,
-                               account: Account,
+                               profile: Profile,
                                promoCode: String?/*,
                                 Not used now 
                                paypalOnly: Boolean*/): ApiTransferRequest {
             var apiTripReturn: ApiTrip? = null
             if(tripReturn != null) apiTripReturn = mapTrip(tripReturn)
             
-            return ApiTransferRequest(mapAddress(from), mapAddress(to), mapTrip(tripTo), apiTripReturn,
-                transportTypes, pax, childSeats, passengerOfferedPrice?.toString(), nameSign, comment, mapAccount(account),
-                promoCode)
+            return ApiTransferRequest(mapAddress(from),
+                                      mapAddress(to),
+                                      mapTrip(tripTo),
+                                      apiTripReturn,
+                                      transportTypes,
+                                      pax,
+                                      childSeats,
+                                      passengerOfferedPrice?.toString(),
+                                      nameSign,
+                                      comment,
+                                      mapProfile(profile),
+                                      promoCode)
         }
         
         /**
@@ -167,7 +178,7 @@ class Mappers {
         fun mapApiCarrierTrip(apiCarrierTrip: ApiCarrierTrip): CarrierTrip {
             var passengerAccount: PassengerAccount? = null
             apiCarrierTrip.passengerAccount?.let { passengerAccount =
-                PassengerAccount(User(it.fullName, it.email, it.phone), ISO_FORMAT.parse(it.lastSeen))
+                PassengerAccount(Profile(it.fullName, it.email, it.phone), ISO_FORMAT.parse(it.lastSeen))
             }
             return CarrierTrip(apiCarrierTrip.id,
                                apiCarrierTrip.transferId,

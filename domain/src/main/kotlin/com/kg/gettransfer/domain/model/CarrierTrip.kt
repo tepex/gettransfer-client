@@ -23,7 +23,7 @@ data class CarrierTrip(val id: Long,
                        val paidPercentage: Int?,
                        val passengerAccount: PassengerAccount?)
 
-data class PassengerAccount(val user: User,
+data class PassengerAccount(val profile: Profile,
                             val lastSeen: Date)
 
 data class CarrierTripVehicle(val name: String,

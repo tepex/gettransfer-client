@@ -47,7 +47,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     fun getDistanceUnits()        = configs.supportedDistanceUnits
     fun getCurrencies()           = configs.supportedCurrencies
     fun getCurrentCurrencyIndex() = getCurrencies().indexOf(account.currency)
-    fun isLoggedIn()              = account.user.email != null
+    fun isLoggedIn()              = account.user.isLoggedIn()
     
     fun logout() {
         systemRepository.logout()

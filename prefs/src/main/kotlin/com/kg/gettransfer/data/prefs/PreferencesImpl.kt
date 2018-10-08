@@ -6,6 +6,7 @@ import com.kg.gettransfer.data.model.*
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.domain.model.Profile
 import com.kg.gettransfer.domain.model.User
 
 import com.kg.gettransfer.domain.repository.Preferences
@@ -42,9 +43,9 @@ class PreferencesImpl(context: Context): Preferences {
             var carrierId: Long? = accountPrefs.getLong(ACCOUNT_CARRIER_ID, -1)
             if(carrierId == -1L) carrierId = null
             
-            return Account(User(accountPrefs.getString(ACCOUNT_FULL_NAME, null),
-                                accountPrefs.getString(ACCOUNT_EMAIL, null),
-                                accountPrefs.getString(ACCOUNT_PHONE, null),
+            return Account(User(Profile(accountPrefs.getString(ACCOUNT_FULL_NAME, null),
+                                        accountPrefs.getString(ACCOUNT_EMAIL, null),
+                                        accountPrefs.getString(ACCOUNT_PHONE, null)),
                                 accountPrefs.getBoolean(ACCOUNT_TERMS_ACCEPTED, false)),
                            if(localeCode != null) Locale(localeCode) else null,
                            if(currencyCode != null) Currency.getInstance(currencyCode) else null,
@@ -54,12 +55,12 @@ class PreferencesImpl(context: Context): Preferences {
         }
         set(value) {
             val editor = accountPrefs.edit()
-            editor.putString(ACCOUNT_EMAIL, value.user.email)
-            editor.putString(ACCOUNT_PHONE, value.user.phone)
+            editor.putString(ACCOUNT_EMAIL, value.user.profile.email)
+            editor.putString(ACCOUNT_PHONE, value.user.profile.phone)
             editor.putString(ACCOUNT_LOCALE, value.locale?.language)
             editor.putString(ACCOUNT_CURRENCY, value.currency?.currencyCode)
             editor.putString(ACCOUNT_DISTANCE_UNIT, value.distanceUnit?.name)
-            editor.putString(ACCOUNT_FULL_NAME, value.user.name)
+            editor.putString(ACCOUNT_FULL_NAME, value.user.profile.name)
             editor.putStringSet(ACCOUNT_GROUPS, value.groups?.toSet())
             editor.putBoolean(ACCOUNT_TERMS_ACCEPTED, value.user.termsAccepted)
             value.carrierId?.let { editor.putLong(ACCOUNT_CARRIER_ID, it) }

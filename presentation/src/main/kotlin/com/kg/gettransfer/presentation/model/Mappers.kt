@@ -14,14 +14,12 @@ object Mappers {
     fun point2LatLng(point: Point) = LatLng(point.latitude, point.longitude)
     fun latLng2Point(latLng: LatLng) = Point(latLng.latitude, latLng.longitude)
     
-    fun getUserModel(account: Account) = UserModel(account.user.name,
-                                                   account.user.email,
-                                                   account.user.phone,
+    fun getUserModel(account: Account) = UserModel(account.user.profile.name,
+                                                   account.user.profile.email,
+                                                   account.user.profile.phone,
                                                    account.user.termsAccepted)
     
-    fun getUser(userModel: UserModel) = User(userModel.name, userModel.email, userModel.phone, userModel.termsAccepted)
-    
-    fun getAccount(userModel: UserModel) = Account(getUser(userModel), null, null, null, null, null)
+    fun getProfile(userModel: UserModel) = Profile(userModel.name, userModel.email, userModel.phone)
 
     fun getTransportTypesModels(transportTypes: List<TransportType>, prices: Map<String, String>?) =
         transportTypes.map {

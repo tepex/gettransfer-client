@@ -49,7 +49,7 @@ class ApiTransferRequest(from: ApiCityPoint, to: ApiCityPoint,
                          passengerOfferedPrice: String?,
                          nameSign: String,
                          comment: String?,
-                         @SerializedName("passenger_account") @Expose val account: ApiAccount,
+                         @SerializedName("passenger_account") @Expose val profile: ApiProfile,
                          @SerializedName("promo_code") @Expose val promoCode: String?): ApiTransfer(
                              from = from, to = to, transportTypeIds = transportTypeIds, pax = pax, childSeats = childSeats,
                              passengerOfferedPrice = passengerOfferedPrice, nameSign = nameSign, comment = comment)

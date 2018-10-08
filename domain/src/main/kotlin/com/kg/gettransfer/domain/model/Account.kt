@@ -11,6 +11,7 @@ data class Account(val user: User,
                    var carrierId: Long?) {
 
     companion object {
+        val NO_ACCOUNT = Account(User(Profile(null, null, null)), null, null, null, null, null)
         @JvmField val GROUP_CARRIER_DRIVER = "carrier/driver"
     }
 }
