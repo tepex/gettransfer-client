@@ -16,6 +16,7 @@ import android.transition.Slide
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.google.android.gms.maps.model.LatLngBounds
 
 import com.google.android.gms.maps.model.LatLngBounds
 

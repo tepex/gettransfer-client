@@ -8,8 +8,8 @@ import android.location.Location
 import com.google.android.gms.common.data.DataBufferUtils
 
 import com.google.android.gms.location.LocationServices
-
 import com.google.android.gms.location.places.Places
+
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 
