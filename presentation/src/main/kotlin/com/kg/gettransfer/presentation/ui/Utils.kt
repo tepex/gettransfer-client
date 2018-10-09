@@ -222,6 +222,32 @@ internal class Utils {
             val colorRes = R.color::class.members.find( { it.name == "color_vehicle_$color" } )
             return (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
         }
+
+        fun formatJsonString(text: String): String {
+
+            val json = StringBuilder()
+            var indentString = ""
+
+            for (i in 0 until text.length) {
+                val letter = text[i]
+                when (letter) {
+                    '{', '[' -> {
+                        json.append("\n" + indentString + letter + "\n")
+                        indentString += "\t"
+                        json.append(indentString)
+                    }
+                    '}', ']' -> {
+                        indentString = indentString.replaceFirst("\t".toRegex(), "")
+                        json.append("\n" + indentString + letter)
+                    }
+                    ',' -> json.append(letter + "\n" + indentString)
+
+                    else -> json.append(letter)
+                }
+            }
+
+            return json.toString()
+        }
 	}
 }
 

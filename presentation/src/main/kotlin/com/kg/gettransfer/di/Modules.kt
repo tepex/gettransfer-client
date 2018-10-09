@@ -4,11 +4,11 @@ import android.content.Context
 import android.content.SharedPreferences
 
 import android.preference.PreferenceManager
-import com.arellomobile.mvp.MvpPresenter
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.kg.gettransfer.BuildConfig
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.data.logging.LoggingImpl
 
 import com.kg.gettransfer.data.prefs.PreferencesImpl
 
@@ -17,7 +17,6 @@ import com.kg.gettransfer.data.repository.*
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.*
 import com.kg.gettransfer.domain.repository.*
-import com.kg.gettransfer.presentation.presenter.BasePresenter
 
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.IO
@@ -27,10 +26,7 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module.module
 
 import ru.terrakok.cicerone.Cicerone
-import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
-
-import timber.log.Timber
 
 /**
  * Koin main module
@@ -48,6 +44,10 @@ val ciceroneModule = module {
 
 val domainModule = module {
     single { PreferencesImpl(get()) as Preferences }
+	single {
+		val context: Context = get()
+		LoggingImpl(get(),
+				context.getString(R.string.logs_file_name)) as Logging}
 	single {
 	    val context: Context = get()
 	    ApiRepositoryImpl(get(),
@@ -67,7 +67,7 @@ val domainModule = module {
 	single { OfferInteractor(get()) }
 	single { PaymentInteractor(get()) }
 	single { RouteInteractor(get(), get()) }
-	single { SystemInteractor(get(), get(), get()) }
+	single { SystemInteractor(get(), get(), get(), get()) }
 	single { TransferInteractor(get()) }
 }
 

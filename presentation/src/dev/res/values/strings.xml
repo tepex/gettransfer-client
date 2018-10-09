@@ -18,4 +18,7 @@
 		<item>Demo</item>
 		<item>Prod</item>
 	</string-array>
+
+	<string name="logs_file_name">Logs.txt</string>
+	<string name="file_provider_authority" translatable="false">com.kg.gettransfer.fileprovider</string>
 </resources>

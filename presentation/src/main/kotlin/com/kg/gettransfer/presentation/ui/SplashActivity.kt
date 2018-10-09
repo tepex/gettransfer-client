@@ -56,6 +56,7 @@ class SplashActivity: AppCompatActivity() {
 			return
 		}
 
+		Timber.d(getString(R.string.title_starting_session))
 		Timber.d("Permissions granted!")
 		utils.launchAsyncTryCatchFinally({
 		    utils.asyncAwait { systemInteractor.coldStart() }

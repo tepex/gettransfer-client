@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Context
 import android.content.Intent
 
 import android.os.Bundle
@@ -15,6 +16,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.BuildConfig
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.DistanceUnitModel
@@ -33,7 +35,18 @@ class SettingsActivity: BaseActivity(), SettingsView {
     @ProvidePresenter
 	fun createSettingsPresenter(): SettingsPresenter = SettingsPresenter(coroutineContexts, router, systemInteractor)
 	
-	protected override var navigator = BaseNavigator(this)
+	protected override var navigator = object: BaseNavigator(this) {
+        @CallSuper
+        protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
+            val intent = super.createActivityIntent(context, screenKey, data)
+            if (intent != null) return intent
+
+            when (screenKey) {
+                Screens.SHARE_LOGS -> return Intent(context, LogsActivity::class.java)
+            }
+            return null
+        }
+    }
 	
 	override fun getPresenter(): SettingsPresenter = presenter
 	
@@ -51,10 +64,12 @@ class SettingsActivity: BaseActivity(), SettingsView {
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
         
         btnSignOut.setOnClickListener { presenter.onLogout() }
+        layoutSettingsLogs.setOnClickListener { presenter.onLogsClicked() }
 
         //Not showing some layouts in release
         if(BuildConfig.FLAVOR != "dev"){
             layoutSettingsEndpoint.visibility = View.GONE
+            layoutSettingsLogs.visibility = View.GONE
         }
     }
 

@@ -15,8 +15,38 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"
 		android:id="@+id/toolbar_title"
-		android:textSize="18sp"
+		android:textSize="@dimen/toolbar_title_text_size"
 		android:fontFamily="@font/sf_pro_text_bold"
 		android:textColor="@android:color/black"/>
+
+	<LinearLayout
+		android:id="@+id/layoutLogs"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:orientation="horizontal"
+		android:layout_gravity="end"
+		android:layout_marginEnd="@dimen/toolbar_buttons_margin_end"
+		android:visibility="gone">
+
+		<TextView
+			android:id="@+id/btnClear"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:text="@string/clear"
+			android:textSize="@dimen/toolber_buttons_text_size"
+			android:fontFamily="@font/sf_pro_text_regular"
+			android:textColor="@android:color/black"
+			android:layout_marginEnd="@dimen/toolbar_buttons_margin_end"/>
+
+		<TextView
+			android:id="@+id/btnShare"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:text="@string/share"
+			android:textSize="@dimen/toolber_buttons_text_size"
+			android:fontFamily="@font/sf_pro_text_regular"
+			android:textColor="@android:color/black" />
+
+	</LinearLayout>
 
 </android.support.v7.widget.Toolbar>

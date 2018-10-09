@@ -76,7 +76,7 @@ class PreferencesImpl(context: Context): Preferences {
             editor.apply()
         }
 
-    override var apiEndpoint: String
+    override var endpoint: String
         get() = configsPrefs.getString(ENDPOINT, "")!!
         set(value){
             val editor = configsPrefs.edit()

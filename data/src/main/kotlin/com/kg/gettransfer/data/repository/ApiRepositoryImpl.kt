@@ -25,6 +25,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import timber.log.Timber
 
 class ApiRepositoryImpl(private val preferences: Preferences,
                         private val apiKeys: Array<String>,
@@ -50,7 +51,7 @@ class ApiRepositoryImpl(private val preferences: Preferences,
 	 * @throws ApiException
 	 */
     init {
-        val loggingInterceptor = HttpLoggingInterceptor()
+        val loggingInterceptor = HttpLoggingInterceptor { message -> Timber.d(message) }
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         val builder = OkHttpClient.Builder()
         builder.addInterceptor(loggingInterceptor)
