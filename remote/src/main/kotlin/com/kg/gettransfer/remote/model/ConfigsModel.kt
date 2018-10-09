@@ -7,7 +7,7 @@ const val CONFIGS = "configs"
 
 class ConfigsModel(@SerializedName("transport_types") @Expose var transportTypes: TransportTypesWrapperModel,
                    @SerializedName("paypal_credentials") @Expose var paypalCredentials: PaypalCredentialsModel,
-                   @SerializedName("available_locales") @Expose var availableLocales: List<LocalesModel>,
+                   @SerializedName("available_locales") @Expose var availableLocales: List<LocaleModel>,
                    @SerializedName("preferred_locale") @Expose var preferredLocale: String,
                    @SerializedName("supported_currencies") @Expose var supportedCurrencies: List<CurrencyModel>,
                    @SerializedName("supported_distance_units") @Expose var supportedDistanceUnits: List<String>,
@@ -27,8 +27,8 @@ class TransportTypeModel(@SerializedName("id") @Expose val id: String,
 class PaypalCredentialsModel(@SerializedName("id") @Expose val id: String,
                              @SerializedName("env") @Expose val env: String)
 
-class LocalesModel(@SerializedName("code") @Expose val code: String,
-                   @SerializedName("title") @Expose val title: String)
+class LocaleModel(@SerializedName("code") @Expose val code: String,
+                  @SerializedName("title") @Expose val title: String)
 
 class CurrencyModel(@SerializedName("iso_code") @Expose val code: String,
                     @SerializedName("symbol") @Expose val symbol: String)

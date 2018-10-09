@@ -1,11 +1,8 @@
 package com.kg.gettransfer.data.mapper
 
 import com.kg.gettransfer.data.model.CarrierTripEntity
-import com.kg.gettransfer.data.model.CarrierTripVehicleEntity
-import com.kg.gettransfer.data.model.PassengerAccountEntity
 
 import com.kg.gettransfer.domain.model.CarrierTrip
-import com.kg.gettransfer.domain.model.CarrierTripVehicle
 import com.kg.gettransfer.domain.model.PassengerAccount
 
 /**
@@ -25,7 +22,7 @@ open class CarrierTripMapper(private val cityPointMapper: CityPointMapper,
                            type.transferId,
                            cityPointMapper.fromEntity(type.from),
                            cityPointMapper.fromEntity(type.to),
-                           type.dateLocal,
+                           Mapper.ISO_FORMAT.parse(type.dateLocal),
                            type.duration,
                            type.distance,
                            type.time,
@@ -49,16 +46,4 @@ open class CarrierTripMapper(private val cityPointMapper: CityPointMapper,
     override fun toEntity(type: CarrierTrip): CarrierTripEntity {
         throw UnsupportedOperationException()
     }
-}
-
-open class CarrierVehicleMapper(): Mapper<CarrierTripVehicleEntity, CarrierTripVehicle> {
-    override fun fromEntity(type: CarrierTripVehicleEntity) = CarrierTripVehicle(type.name, type.registrationNumber)
-    override fun toEntity(type: CarrierTripVehicle) = CarrierTripVehicleEntity(type.name, type.registrationNumber) 
-}
-
-open class PassengerAccountMapper(private val userMapper: UserMapper): Mapper<PassengerAccountEntity, PassengerAccount> {
-    override fun fromEntity(type: PassengerAccountEntity) = 
-        PassengerAccount(userMapper.fromEntity(type.user), type.lastSeen)
-    override fun toEntity(type: PassengerAccount) =
-        PassengerAccountEntity(userMapper.toEntity(type.user), type.lastSeen) 
 }

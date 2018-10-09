@@ -33,8 +33,13 @@ import com.kg.gettransfer.remote.RouteRemoteImpl
 import com.kg.gettransfer.remote.SystemRemoteImpl
 
 import com.kg.gettransfer.remote.mapper.AccountMapper as AccountRemoteMapper
+import com.kg.gettransfer.remote.mapper.CardGatewaysMapper as CardGatewaysRemoteMapper
 import com.kg.gettransfer.remote.mapper.ConfigsMapper as ConfigsRemoteMapper
+import com.kg.gettransfer.remote.mapper.CurrencyMapper as CurrencyRemoteMapper
+import com.kg.gettransfer.remote.mapper.LocaleMapper as LocaleRemoteMapper
+import com.kg.gettransfer.remote.mapper.PaypalCredentialsMapper as PaypalCredentialsRemoteMapper
 import com.kg.gettransfer.remote.mapper.RouteInfoMapper as RouteInfoRemoteMapper
+import com.kg.gettransfer.remote.mapper.TransportTypeMapper as TransportTypeRemoteMapper
 
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.IO
@@ -72,8 +77,17 @@ val remoteModule = module {
     single { RouteInfoRemoteMapper() }
     single { RouteRemoteImpl(get(), get()) as RouteRemote }
     single { AccountRemoteMapper() }
-    single { ConfigsRemoteMapper() }    
+    single { TransportTypeRemoteMapper() }
+    single { PaypalCredentialsRemoteMapper() }
+    single { LocaleRemoteMapper() }
+    single { CurrencyRemoteMapper() }
+    single { CardGatewaysRemoteMapper() }
+    single { ConfigsRemoteMapper(get(), get(), get(), get(), get()) }    
     single { SystemRemoteImpl(get(), get(), get()) as SystemRemote }
+    
+    
+    single { CarrierTripRemoteMapper(get(), get()) as CarrierTripRemote }
+    single { CarrierTripRemoteImpl(get(), get()) as CarrierTripRemote }
 }
 
 val dataModule = module {
@@ -107,7 +121,7 @@ val dataModule = module {
 	single { CarrierVehicleMapper() }
 	single { PassengerAccountMapper(get()) }
 	single { CarrierTripMapper(get(), get(), get()) }
-    single { CarrierTripRepositoryImpl(get(), get()) as CarrierTripRepository }
+    
     single { CarrierTripInteractor(get()) }
 }
 
