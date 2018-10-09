@@ -55,13 +55,13 @@ val domainModule = module {
 	}
 	single { CarrierTripRepositoryImpl(get()) as CarrierTripRepository }
 	single { GeoRepositoryImpl(get()) as GeoRepository }
-	single { OffersRepositoryImpl(get()) as OffersRepository }
+	single { OfferRepositoryImpl(get()) as OfferRepository }
 	single { RouteRepositoryImpl(get()) as RouteRepository }
 	single { SystemRepositoryImpl(get()) as SystemRepository }
 	single { TransferRepositoryImpl(get()) as TransferRepository }
 	
 	single { CarrierTripInteractor(get()) }
-	single { OffersInteractor(get()) }
+	single { OfferInteractor(get()) }
 	single { RouteInteractor(get(), get()) }
 	single { SystemInteractor(get(), get(), get()) }
 	single { TransferInteractor(get()) }

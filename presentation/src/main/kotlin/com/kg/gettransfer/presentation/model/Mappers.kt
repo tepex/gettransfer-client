@@ -65,7 +65,8 @@ object Mappers {
                       transfer.paidPercentage!!,
                       transfer.remainsToPay!!.default,
                       transfer.price?.default,
-                      transfer.relevantCarriersCount)
+                      transfer.relevantCarriersCount,
+                      transfer.checkOffers)
     }
 
     fun getOfferModel(offer: Offer) = OfferModel(offer.id,
@@ -86,6 +87,7 @@ object Mappers {
                                                  offer.refreshments,
                                                  offer.carrier.ratings.average,
                                                  offer.price.amount,
+                                                 offer.price.percentage30,
                                                  offer.vehicle.photos,
                                                  offer.carrier.languages,
                                                  offer.vehicle.color)

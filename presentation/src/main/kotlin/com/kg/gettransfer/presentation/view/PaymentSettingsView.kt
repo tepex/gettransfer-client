@@ -6,5 +6,5 @@ import com.kg.gettransfer.presentation.model.OfferModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface PaymentSettingsView: BaseView {
-    fun setUpViews(offer: OfferModel)
+    fun setOffer(offer: OfferModel)
 }

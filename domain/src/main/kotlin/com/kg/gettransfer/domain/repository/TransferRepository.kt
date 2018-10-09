@@ -24,5 +24,4 @@ interface TransferRepository {
                                promoCode: String?,
                                paypalOnly: Boolean): Transfer
     suspend fun cancelTransfer(id: Long, reason: String): Transfer
-    suspend fun getPayment(transferId: Long, offerId: Long?, gatewayId: String, percentage: Int): PaymentResult
 }

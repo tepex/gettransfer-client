@@ -9,19 +9,14 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
-import com.kg.gettransfer.domain.interactor.OffersInteractor
+import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
-import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.TransferModel
-
-import com.kg.gettransfer.presentation.ui.OffersActivity
 
 import com.kg.gettransfer.presentation.view.OffersView
 
@@ -38,13 +33,12 @@ class OffersPresenter(cc: CoroutineContexts,
                       router: Router,
                       systemInteractor: SystemInteractor,
                       private val transferInteractor: TransferInteractor,
-                      private val offersInteractor: OffersInteractor): BasePresenter<OffersView>(cc, router, systemInteractor) {
+                      private val offerInteractor: OfferInteractor): BasePresenter<OffersView>(cc, router, systemInteractor) {
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
 
-    private var transfer: Transfer? = null
-    private var offers: List<Offer>? = null
+    private lateinit var offers: List<OfferModel>
 
     private var sortCategory: String? = null
     private var sortHigherToLower = true
@@ -55,44 +49,39 @@ class OffersPresenter(cc: CoroutineContexts,
         @JvmField val PARAM_KEY_FILTER = "filter"
         @JvmField val PARAM_KEY_BUTTON  = "button"
 
-        @JvmField val YEAH_FILTER_UP = "year_asc"
-        @JvmField val YEAH_FILTER_DOWN = "year_desc"
         @JvmField val RATING_UP = "rating_asc"
         @JvmField val RATING_DOWN = "rating_desc"
         @JvmField val PRICE_UP = "price_asc"
         @JvmField val PRICE_DOWN = "price_desc"
 
         @JvmField val CAR_INFO_CLICKED = "car_info"
+        
+        @JvmField val YEAH_FILTER_UP   = "year_asc"
+        @JvmField val YEAH_FILTER_DOWN = "year_desc"
+        
+        @JvmField val SORT_YEAR   = "sort_year"
+        @JvmField val SORT_RATING = "sort_rating"
+        @JvmField val SORT_PRICE  = "sort_price"        
     }
 
     @CallSuper
     override fun attachView(view: OffersView) {
         super.attachView(view)
-        /*viewState.setDate(SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
-            .format(transferInteractor.transfer!!.dateToLocal))*/
-        /*viewState.setDate(Utils.getFormatedDate(systemInteractor.locale, transferInteractor.transfer!!.dateToLocal))
-
-        viewState.setTransfer(Mappers.getTransferModel(transferInteractor.transfer!!,
-                                                       systemInteractor.locale,
-                                                       systemInteractor.distanceUnit,
-                                                       systemInteractor.getTransportTypes()))*/
-
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
 
-            transfer = transferInteractor.transfer
-            if(transfer == null) transfer = utils.asyncAwait{ transferInteractor.getTransfer() }
-            offers = offersInteractor.getOffers(transfer!!.id).map { Mappers.getOfferModel(it) }
+            val transfer = utils.asyncAwait{ transferInteractor.getTransfer(transferInteractor.selectedId!!) }
+            val transferModel = Mappers.getTransferModel(transfer,
+                                                         systemInteractor.locale,
+                                                         systemInteractor.distanceUnit,
+                                                         systemInteractor.getTransportTypes())
 
-            viewState.setDate(Utils.getFormatedDate(systemInteractor.locale, transfer!!.dateToLocal))
-
-            viewState.setTransfer(Mappers.getTransferModel(transfer!!,
-                                                           systemInteractor.locale,
-                                                           systemInteractor.distanceUnit,
-                                                           systemInteractor.getTransportTypes()))
+            offers = offerInteractor.getOffers(transfer.id).map { Mappers.getOfferModel(it) }
+            viewState.setDate(transferModel.dateTime)
+            viewState.setTransfer(transferModel)
 
             //viewState.setOffers(offers!!)
-            changeSortType(OffersActivity.SORT_PRICE)
+            changeSortType(SORT_PRICE)
         }, { e -> Timber.e(e)
             viewState.setError(e)
         }, { viewState.blockInterface(false) })
@@ -109,7 +98,8 @@ class OffersPresenter(cc: CoroutineContexts,
     }
 
     fun onSelectOfferClicked(offer: OfferModel) {
-        transferInteractor.selectedOffer = offers?.first { it.id == offer.id }
+        offerInteractor.selectedOfferId = offer.id
+        offerInteractor.transferId = transferInteractor.selectedId
         router.navigateTo(Screens.PAYMENT_SETTINGS)
     }
 
@@ -118,7 +108,7 @@ class OffersPresenter(cc: CoroutineContexts,
     }
 
     fun cancelRequest(isCancel: Boolean) {
-        if (isCancel) {
+        if(isCancel) {
             utils.launchAsyncTryCatchFinally({
                 utils.asyncAwait { transferInteractor.cancelTransfer("") }
                 router.exit()
@@ -136,33 +126,29 @@ class OffersPresenter(cc: CoroutineContexts,
             sortHigherToLower = true
         }
         sortOffers()
-        viewState.setOffers(Mappers.getOfferModels(offers!!))
+        viewState.setOffers(offers)
         viewState.setSortState(sortCategory!!, sortHigherToLower)
     }
 
     private fun sortOffers() {
-        if (offers != null) {
-            var sortType = ""
-            offers = when (sortCategory) {
-                OffersActivity.SORT_YEAR -> {
-                    sortType = if (sortHigherToLower) YEAH_FILTER_DOWN else YEAH_FILTER_UP
-                    offers!!.sortedWith(compareBy { it.vehicle.year })
-                }
-                OffersActivity.SORT_RATING -> {
-                    sortType = if (sortHigherToLower) RATING_DOWN else RATING_UP
-                    offers!!.sortedWith(compareBy { it.carrier.ratings.average })
-                }
-                OffersActivity.SORT_PRICE -> {
-                    sortType = if (sortHigherToLower) PRICE_DOWN else PRICE_UP
-                    offers!!.sortedWith(compareBy { it.price.amount })
-                }
-                else -> {
-                    offers!!
-                }
+        var sortType = ""
+        offers = when(sortCategory) {
+            SORT_YEAR -> {
+                sortType = if(sortHigherToLower) YEAH_FILTER_DOWN else YEAH_FILTER_UP
+                offers.sortedWith(compareBy { it.transportYear })
             }
-            if (sortHigherToLower) offers = offers!!.reversed()
-            logFilterEvent(sortType)
+            SORT_RATING -> {
+                sortType = if(sortHigherToLower) RATING_DOWN else RATING_UP
+                offers.sortedWith(compareBy { it.averageRating })
+            }
+            SORT_PRICE -> {
+                sortType = if(sortHigherToLower) PRICE_DOWN else PRICE_UP
+                offers.sortedWith(compareBy { it.priceAmount })
+            }
+            else -> offers
         }
+        if(sortHigherToLower) offers = offers.reversed()
+        logFilterEvent(sortType)
     }
 
     private fun logFilterEvent(value: String) {

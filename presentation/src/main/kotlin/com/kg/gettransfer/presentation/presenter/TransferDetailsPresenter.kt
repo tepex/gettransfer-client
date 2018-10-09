@@ -11,12 +11,10 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
-import com.kg.gettransfer.domain.interactor.OffersInteractor
+import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
-
-import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -36,58 +34,37 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
                                systemInteractor: SystemInteractor,
                                private val routeInteractor: RouteInteractor,
                                private val transferInteractor: TransferInteractor,
-                               private val offersInteractor: OffersInteractor): BasePresenter<TransferDetailsView>(cc, router, systemInteractor) {
+                               private val offerInteractor: OfferInteractor): BasePresenter<TransferDetailsView>(cc, router, systemInteractor) {
 
-    private var transfer: Transfer? = null
-    private var routeModel: RouteModel? = null
-    private var offerModel: OfferModel? = null
-    //private var transferModel: TransferModel? = null
-
-    override fun onFirstViewAttach() {
-        utils.launchAsyncTryCatchFinally({
-            viewState.blockInterface(true)
-            transfer = utils.asyncAwait { transferInteractor.getTransfer() }
-            viewState.setTransfer(Mappers.getTransferModel(transfer!!,
-                                                           systemInteractor.locale,
-                                                           systemInteractor.distanceUnit,
-                                                           systemInteractor.getTransportTypes()))
-	        Timber.d("offers: ${transfer!!.id} status=${transfer!!.status} checkOffers: ${transfer!!.checkOffers}")
-            if(transfer!!.checkOffers) {
-	            val offers = utils.asyncAwait { offersInteractor.getOffers(transfer!!.id) }
-	            if(transfer!!.offersCount!! >= 1 && offers.size == 1) {
-	                offerModel = Mappers.getOfferModel(offers.first())
-	                viewState.setOffer(offerModel!!)
-	            }
-	        }
-
-            val from = transfer!!.from
-            val to = transfer!!.to!!
-	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point, to.point, true, false) }
-	        routeModel = Mappers.getRouteModel(routeInfo.distance,
-                                               systemInteractor.distanceUnit,
-                                               routeInfo.polyLines,
-                                               from.name,
-                                               to.name,
-                                               //transferModel!!.dateTime)
-                                               Utils.getFormatedDate(systemInteractor.locale, transfer!!.dateToLocal))
-	        
-            //viewState.setRoute(routeModel!!)
-            val polyline = Utils.getPolyline(routeModel!!)
-            viewState.setRoute(polyline, routeModel!!)
-	    }, { e -> Timber.e(e)
-	        viewState.setError(e)
-        }, { viewState.blockInterface(false) })        
-	}
-	
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
-        transfer?.let { viewState.setTransfer(Mappers.getTransferModel(it,
-                                                       systemInteractor.locale,
-                                                       systemInteractor.distanceUnit,
-                                                       systemInteractor.getTransportTypes()))
-        }
-        //routeModel?.let { viewState.setRoute(it) }
-        offerModel?.let { viewState.setOffer(it) }
-    }
+        utils.launchAsyncTryCatchFinally({
+            viewState.blockInterface(true)
+            val transfer = utils.asyncAwait{ transferInteractor.getTransfer(transferInteractor.selectedId!!) } 
+            val transferModel = Mappers.getTransferModel(transfer,
+                                                         systemInteractor.locale,
+                                                         systemInteractor.distanceUnit,
+                                                         systemInteractor.getTransportTypes())
+            viewState.setTransfer(transferModel)
+            
+	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point, transfer.to!!.point, true, false) }
+	        val routeModel = Mappers.getRouteModel(routeInfo.distance,
+                                                   systemInteractor.distanceUnit,
+                                                   routeInfo.polyLines,
+                                                   transfer.from.name,
+                                                   transfer.to!!.name,
+                                                   transferModel.dateTime)
+            val polyline = Utils.getPolyline(routeModel)
+            viewState.setRoute(polyline, routeModel)
+            
+	        //Timber.d("offers: ${transferModel.id} status=${transferModel.status} checkOffers: ${transferModel.checkOffers}")
+            if(transferModel.checkOffers) {
+	            val offers = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
+	            if(offers.size == 1) viewState.setOffer(Mappers.getOfferModel(offers.first()))
+	        }
+	    }, { e -> Timber.e(e)
+	        viewState.setError(e)
+        }, { viewState.blockInterface(false) })        
+	}	
 }
