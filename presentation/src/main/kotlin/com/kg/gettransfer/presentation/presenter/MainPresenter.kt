@@ -136,6 +136,11 @@ class MainPresenter(cc: CoroutineContexts,
         }, { viewState.blockInterface(false) })
     }
 
+    fun setAddressFields(){
+        viewState.setAddressFrom(routeInteractor.from?.address?:"")
+        viewState.setAddressTo(routeInteractor.to?.address?:"")
+    }
+
     fun onSearchClick(addresses: Pair<String, String>) {
         if(routeInteractor.from != null) {
             routeInteractor.from!!.entrance = entrance
