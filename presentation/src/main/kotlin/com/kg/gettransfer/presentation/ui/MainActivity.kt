@@ -197,6 +197,11 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 				}
 			}
 		})
+
+		if(routeInteractor.to != null){
+			searchTo.text = routeInteractor.to?.address!!
+			btnNext.isEnabled = true
+		}
 		
         //(appbar as AppBarLayout).bringToFront()
 		

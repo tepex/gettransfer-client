@@ -34,7 +34,7 @@ class GTAddress(var id: String? = null,
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this == other) return true
+        if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false
         val eq = other as GTAddress
         if (id == null || eq.id == null) return name == eq.name

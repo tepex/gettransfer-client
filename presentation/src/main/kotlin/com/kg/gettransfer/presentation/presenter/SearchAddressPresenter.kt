@@ -59,4 +59,15 @@ class SearchAddressPresenter(cc: CoroutineContexts,
 			viewState.setError(false, R.string.err_address_service_xxx)
 		})
 	}
+
+	fun onClearAddress(isTo: Boolean){
+		if(isTo) routeInteractor.to = null
+		else routeInteractor.from = null
+	}
+	fun returnAddress(isTo: Boolean){
+		if (isTo)
+			viewState.returnLastAddress(routeInteractor.to?.name?:"")
+		else
+			viewState.returnLastAddress(routeInteractor.from?.name?:"")
+	}
 }
