@@ -19,7 +19,7 @@ const val ACCOUNT_GROUPS         = "groups"
 const val ACCOUNT_TERMS_ACCEPTED = "terms_accepted"
 const val ACCOUNT_CARRIER_ID     = "carrier_id"
 
-class AccountWrapperModel(@SerializedName(ACCOUNT) @Expose var account: AccountModel)
+class AccountModelWrapper(@SerializedName(ACCOUNT) @Expose var account: AccountModel)
 
 class AccountModel(@SerializedName(ACCOUNT_EMAIL) @Expose var email: String? = null,
                    @SerializedName(ACCOUNT_PHONE) @Expose var phone: String? = null,
