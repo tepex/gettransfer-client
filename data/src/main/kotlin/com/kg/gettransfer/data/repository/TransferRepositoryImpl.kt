@@ -1,7 +1,7 @@
 package com.kg.gettransfer.data.repository
 
-import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.Profile
 import com.kg.gettransfer.domain.model.Trip
 
 import com.kg.gettransfer.domain.repository.TransferRepository
@@ -17,7 +17,7 @@ class TransferRepositoryImpl(private val apiRepository: ApiRepositoryImpl): Tran
                                         passengerOfferedPrice: Int?,
                                         nameSign: String,
                                         comment: String?,
-                                        account: Account,
+                                        profile: Profile,
                                         promoCode: String?,
                                         paypalOnly: Boolean) = 
         apiRepository.createTransfer(from,
@@ -30,7 +30,7 @@ class TransferRepositoryImpl(private val apiRepository: ApiRepositoryImpl): Tran
                                      passengerOfferedPrice,
                                      nameSign,
                                      comment,
-                                     account,
+                                     profile,
                                      promoCode,
                                      paypalOnly)
     override suspend fun cancelTransfer(id: Long, reason: String) = apiRepository.cancelTransfer(id, reason)

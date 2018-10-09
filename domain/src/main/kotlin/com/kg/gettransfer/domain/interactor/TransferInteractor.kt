@@ -1,15 +1,15 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.Profile
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Trip
 
 import com.kg.gettransfer.domain.repository.TransferRepository
 
 class TransferInteractor(private val repository: TransferRepository) {
-    var selectedId: Long = -1
-    var transfer: Transfer? = null
+    var selectedId: Long? = null
+    private var transfer: Transfer? = null
     
     private var allTransfers: List<Transfer>? = null
     private var activeTransfers: List<Transfer>? = null
@@ -25,7 +25,7 @@ class TransferInteractor(private val repository: TransferRepository) {
                                childSeats: Int?,
                                passengerOfferedPrice: Int?,
                                comment: String?,
-                               account: Account,
+                               profile: Profile,
                                promoCode: String?,
                                paypalOnly: Boolean): Transfer {
         transfer = repository.createTransfer(from,
@@ -36,37 +36,29 @@ class TransferInteractor(private val repository: TransferRepository) {
                                              pax,
                                              childSeats,
                                              passengerOfferedPrice,
-                                             account.user.name!!,
+                                             profile.name!!,
                                              comment,
-                                             account,
+                                             profile,
                                              promoCode,
                                              paypalOnly)
-        if(allTransfers != null){
-            val muttableList = allTransfers!!.toMutableList()
-            muttableList.add(0, transfer!!)
-            allTransfers = muttableList
-        }
-        selectedId = transfer!!.id
+        insertNewTransfer()
+        return transfer!!
+    }
+
+    suspend fun getTransfer(id: Long): Transfer {
+        if(transfer?.id == id) return transfer!!
+        transfer = repository.getTransfer(id)
         return transfer!!
     }
     
-    suspend fun getTransfer() = repository.getTransfer(selectedId)
-    suspend fun cancelTransfer(reason: String){
-        val cancelledTransfer = repository.cancelTransfer(selectedId, reason)
-        if(allTransfers != null){
-            allTransfers!!.map { if(it.id == selectedId) it.status = cancelledTransfer.status }
-        }
+    suspend fun cancelTransfer(reason: String) {
+        val cancelledTransfer = repository.cancelTransfer(transfer!!.id, reason)
+        if(allTransfers != null) allTransfers!!.map { if(it.id == transfer!!.id) it.status = cancelledTransfer.status }
     }
     
     suspend fun getAllTransfers(): List<Transfer> {
         if(allTransfers == null) allTransfers = repository.getAllTransfers()
-        transfer?.let {
-            if(allTransfers!!.firstOrNull()?.id != it.id) {
-                val mutableList = allTransfers!!.toMutableList()
-                mutableList.add(0, it)
-                allTransfers = mutableList
-            }
-        }
+        insertNewTransfer()
         return allTransfers!!
     }
 
@@ -94,5 +86,12 @@ class TransferInteractor(private val repository: TransferRepository) {
                     it.status != Transfer.STATUS_NOT_COMPLETED
         }
         return archivedTransfers!!
+    }
+    
+    private fun insertNewTransfer() {
+        if(allTransfers == null || transfer == null || allTransfers!!.firstOrNull()?.id == transfer!!.id) return
+        val mutableList = allTransfers!!.toMutableList()
+        mutableList.add(0, transfer!!)
+        allTransfers = mutableList
     }
 }

@@ -10,6 +10,7 @@ import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.domain.repository.Preferences
 
 import com.google.gson.GsonBuilder
+import com.google.gson.annotations.SerializedName
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
 
@@ -186,12 +187,22 @@ class ApiRepositoryImpl(private val preferences: Preferences,
                                         passengerOfferedPrice: Int?,
                                         nameSign: String,
                                         comment: String?,
-                                        account: Account,
+                                        profile: Profile,
                                         promoCode: String?,
                                         paypalOnly: Boolean): Transfer {
-        val response: ApiResponse<ApiTransferWrapper> = tryPostTransfer(ApiTransferWrapper(Mappers.mapTransferRequest(
-            from, to, tripTo, tripReturn, transportTypes, pax, childSeats, passengerOfferedPrice, nameSign, comment,
-            account, promoCode/*, paypalOnly*/)))
+        val response: ApiResponse<ApiTransferWrapper> = tryPostTransfer(
+            ApiTransferWrapper(Mappers.mapTransferRequest(from,
+                                                          to,
+                                                          tripTo,
+                                                          tripReturn,
+                                                          transportTypes,
+                                                          pax,
+                                                          childSeats,
+                                                          passengerOfferedPrice,
+                                                          nameSign,
+                                                          comment,
+                                                          profile,
+                                                          promoCode/*, paypalOnly*/)))
         
         return Mappers.mapApiTransfer(response.data?.transfer!!)
     }
@@ -265,6 +276,12 @@ class ApiRepositoryImpl(private val preferences: Preferences,
 
         return Offer(offer.id, offer.status, offer.wifi, offer.refreshments, offer.createdAt,
                 price, ratings, offer.passengerFeedback, carrier, vehicle, driver)
+    }
+
+    suspend fun createPayment(transferId: Long, offerId: Long?, gatewayId: String, percentage: Int): PaymentResult {
+        val response: ApiResponse<ApiPaymentResult> = tryTwice { api.createNewPayment(ApiCreatePaymentEntity(transferId, offerId, gatewayId, percentage)) }
+        val payment: ApiPaymentResult = response.data!!
+        return PaymentResult(payment.type, payment.url)
     }
 
     suspend fun getCarrierTrips(): List<CarrierTrip> {

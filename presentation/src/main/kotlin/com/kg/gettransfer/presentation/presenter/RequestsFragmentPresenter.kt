@@ -32,24 +32,6 @@ class RequestsFragmentPresenter(cc: CoroutineContexts,
     
     private var transfers: List<TransferModel>? = null
                                 
-    /*override fun onFirstViewAttach() {
-        utils.launchAsyncTryCatchFinally({
-            viewState.blockInterface(true)
-            transfers = when(categoryName) {
-                RequestsActivity.CATEGORY_ACTIVE -> transferInteractor.getActiveTransfers()
-                RequestsActivity.CATEGORY_COMPLETED -> transferInteractor.getCompletedTransfers()
-                else -> transferInteractor.getArchivedTransfers()
-            }.map { Mappers.getTransferModel(it,
-                                             systemInteractor.locale,
-                                             systemInteractor.distanceUnit,
-                                             systemInteractor.getTransportTypes()) }
-            viewState.setRequests(transfers!!)
-        }, { e ->
-                if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
-                else viewState.setError(e)
-        }, { viewState.blockInterface(false) }
-    }*/
-        
     @CallSuper
     override fun attachView(view: RequestsFragmentView) {
         super.attachView(view)
@@ -57,17 +39,17 @@ class RequestsFragmentPresenter(cc: CoroutineContexts,
         transfers?.let { viewState.setRequests(it) }
     }
 
-    fun getTransfers(){
+    fun getTransfers() {
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             transfers = when(categoryName) {
-                RequestsActivity.CATEGORY_ACTIVE -> transferInteractor.getActiveTransfers()
+                RequestsActivity.CATEGORY_ACTIVE    -> transferInteractor.getActiveTransfers()
                 RequestsActivity.CATEGORY_COMPLETED -> transferInteractor.getCompletedTransfers()
                 else -> transferInteractor.getArchivedTransfers()
             }.map { Mappers.getTransferModel(it,
-                    systemInteractor.locale,
-                    systemInteractor.distanceUnit,
-                    systemInteractor.getTransportTypes()) }
+                                             systemInteractor.locale,
+                                             systemInteractor.distanceUnit,
+                                             systemInteractor.getTransportTypes()) }
             viewState.setRequests(transfers!!)
         }, { e ->
             if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
@@ -77,7 +59,7 @@ class RequestsFragmentPresenter(cc: CoroutineContexts,
 
     fun openTransferDetails(id: Long, status: String) {
         transferInteractor.selectedId = id
-        when(status){
+        when(status) {
             Transfer.STATUS_NEW -> router.navigateTo(Screens.OFFERS)
             else -> router.navigateTo(Screens.DETAILS)
         }

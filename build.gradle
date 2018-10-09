@@ -8,7 +8,7 @@ buildscript {
 	ext {
 		kotlin_version        = "1.2.71"
 		coroutines_version    = "0.27.0"
-		gradle_version        = "3.3.0-alpha12"
+		gradle_version        = '3.3.0-alpha12'
 		gms_version           = "16.0.0"
 		gs_version            = "4.0.1"
 		hockeyapp_version     = "3.7.6"
