@@ -22,7 +22,7 @@ class CarrierTripRemoteImpl(private val core: ApiCore,
     }
 
     override suspend fun getCarrierTrip(id: Long): CarrierTripEntity {
-        val response: ResponseModel<CarrierTripModelWrapper> = tryTwice(id, { id -> core.api.getCarrierTrip(id) })
+        val response: ResponseModel<CarrierTripModelWrapper> = core.tryTwice(id, { _id -> core.api.getCarrierTrip(_id) })
         val carrierTrip: CarrierTripModel = response.data!!.trip
         return mapper.fromRemote(carrierTrip)
     }

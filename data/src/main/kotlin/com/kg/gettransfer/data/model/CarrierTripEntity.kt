@@ -24,8 +24,3 @@ data class CarrierTripEntity(val id: Long,
 data class PassengerAccountEntity(val profile: ProfileEntity, var lastSeen: String)
 
 data class CarrierTripVehicleEntity(val name: String, val registrationNumber: String)
-
-class PassengerAccountModel(@SerializedName("email") @Expose var email: String,
-                            @SerializedName("phone") @Expose var phone: String,
-                            @SerializedName("full_name") @Expose var fullName: String,
-                            @SerializedName("last_seen") @Expose var lastSeen: String)
