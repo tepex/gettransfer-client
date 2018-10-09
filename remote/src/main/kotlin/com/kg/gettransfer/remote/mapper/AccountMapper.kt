@@ -1,6 +1,7 @@
 package com.kg.gettransfer.remote.mapper
 
 import com.kg.gettransfer.data.model.AccountEntity
+import com.kg.gettransfer.data.model.ProfileEntity
 import com.kg.gettransfer.data.model.UserEntity
 
 import com.kg.gettransfer.remote.model.AccountModel
@@ -10,7 +11,7 @@ import com.kg.gettransfer.remote.model.AccountModel
  */
 open class AccountMapper(): EntityMapper<AccountModel, AccountEntity> {
     override fun fromRemote(type: AccountModel) =
-        AccountEntity(UserEntity(type.fullName, type.email, type.phone, type.termsAccepted),
+        AccountEntity(UserEntity(ProfileEntity(type.fullName, type.email, type.phone), type.termsAccepted),
                       type.locale,
                       type.currency,
                       type.distanceUnit,
@@ -18,12 +19,12 @@ open class AccountMapper(): EntityMapper<AccountModel, AccountEntity> {
                       type.carrierId)
     
     override fun toRemote(type: AccountEntity) = 
-        AccountModel(type.user.email,
-                     type.user.phone,
+        AccountModel(type.user.profile.email,
+                     type.user.profile.phone,
                      type.locale,
                      type.currency,
                      type.distanceUnit,
-                     type.user.name,
+                     type.user.profile.name,
                      type.groups,
                      type.user.termsAccepted,
                      type.carrierId)

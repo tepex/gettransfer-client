@@ -1,12 +1,10 @@
 package com.kg.gettransfer.data.model
 
-import java.util.Date
-
 data class CarrierTripEntity(val id: Long,
                              val transferId: Long,
                              val from: CityPointEntity,
                              var to: CityPointEntity,
-                             val dateLocal: Date,
+                             val dateLocal: String,
                              val duration: Int?,
                              val distance: Int,
                              val time: Int,
@@ -23,6 +21,11 @@ data class CarrierTripEntity(val id: Long,
                              val paidPercentage: Int?,
                              val passengerAccount: PassengerAccountEntity?)
 
-data class PassengerAccountEntity(val user: UserEntity, var lastSeen: Date)
+data class PassengerAccountEntity(val profile: ProfileEntity, var lastSeen: String)
 
 data class CarrierTripVehicleEntity(val name: String, val registrationNumber: String)
+
+class PassengerAccountModel(@SerializedName("email") @Expose var email: String,
+                            @SerializedName("phone") @Expose var phone: String,
+                            @SerializedName("full_name") @Expose var fullName: String,
+                            @SerializedName("last_seen") @Expose var lastSeen: String)

@@ -10,6 +10,6 @@ data class AccountEntity(val user: UserEntity,
                          val groups: Array<String>?,
                          val carrierId: Long?) {
     companion object {
-        val NO_ACCOUNT = AccountEntity(UserEntity(null, null, null), null, null, null, null, null)
+        val NO_ACCOUNT = AccountEntity(UserEntity(ProfileEntity(null, null, null)), null, null, null, null, null)
     }
 }

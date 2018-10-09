@@ -298,18 +298,6 @@ class ApiRepositoryImpl(private val preferences: Preferences,
         val payment: ApiPaymentResult = response.data!!
         return PaymentResult(payment.type, payment.url)
     }
-
-    suspend fun getCarrierTrips(): List<CarrierTrip> {
-        val response: ApiResponse<ApiCarrierTrips> = tryTwice { api.getCarrierTrips() }
-        val carrierTrips: List<ApiCarrierTrip> = response.data!!.trips
-        return carrierTrips.map { carrierTrip -> Mappers.mapApiCarrierTrip(carrierTrip) }
-    }
-
-    suspend fun getCarrierTrip(carrierTripId: Long): CarrierTrip {
-        val response: ApiResponse<ApiCarrierTripWrapper> = tryTwice(carrierTripId, { id -> api.getCarrierTrip(id) })
-        val carrierTrip: ApiCarrierTrip = response.data!!.trip
-        return Mappers.mapApiCarrierTrip(carrierTrip)
-    }
     
     fun apiException(e: Exception): RemoteException {
         if(e is HttpException)
