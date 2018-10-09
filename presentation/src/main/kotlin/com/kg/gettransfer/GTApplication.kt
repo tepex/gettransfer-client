@@ -17,7 +17,7 @@ class GTApplication: MultiDexApplication() {
 	override fun onCreate() {
 		super.onCreate()
 		// Display some logs
-		if(BuildConfig.FLAVOR != "dev") {
+		if(BuildConfig.FLAVOR == "dev") {
 			//Timber.plant(Timber.DebugTree())
 			Timber.plant(FileLoggingTree(applicationContext))
 			System.setProperty("kotlinx.coroutines.debug", "on")
