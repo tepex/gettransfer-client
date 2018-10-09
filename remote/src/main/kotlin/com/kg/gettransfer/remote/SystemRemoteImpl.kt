@@ -11,7 +11,7 @@ import com.kg.gettransfer.remote.mapper.AccountMapper
 import com.kg.gettransfer.remote.mapper.ConfigsMapper
 
 import com.kg.gettransfer.remote.model.AccountModel
-import com.kg.gettransfer.remote.model.AccountWrapperModel
+import com.kg.gettransfer.remote.model.AccountModelWrapper
 import com.kg.gettransfer.remote.model.ConfigsModel
 import com.kg.gettransfer.remote.model.ResponseModel
 
@@ -24,7 +24,7 @@ class SystemRemoteImpl(private val core: ApiCore,
     }
     
     override suspend fun getAccount(): AccountEntity {
-        val response: ResponseModel<AccountWrapperModel> = core.tryTwice { core.api.getAccount() }
+        val response: ResponseModel<AccountModelWrapper> = core.tryTwice { core.api.getAccount() }
         if(response.data?.account == null) return AccountEntity.NO_ACCOUNT
         return accountMapper.fromRemote(response.data?.account!!)
     }
@@ -33,7 +33,7 @@ class SystemRemoteImpl(private val core: ApiCore,
         tryPutAccount(accountMapper.toRemote(accountEntity))
     }
     
-    private suspend fun tryPutAccount(account: AccountModel): ResponseModel<AccountWrapperModel> {
+    private suspend fun tryPutAccount(account: AccountModel): ResponseModel<AccountModelWrapper> {
         return try { core.api.putAccount(account).await() }
         catch(e: Exception) {
             if(e is RemoteException) throw e /* second invocation */
@@ -46,11 +46,11 @@ class SystemRemoteImpl(private val core: ApiCore,
     }
     
     override suspend fun login(email: String, password: String): AccountEntity {
-        val response: ResponseModel<AccountWrapperModel> = tryLogin(email, password)
+        val response: ResponseModel<AccountModelWrapper> = tryLogin(email, password)
         return accountMapper.fromRemote(response.data?.account!!)
     }
     
-    private suspend fun tryLogin(email: String, password: String): ResponseModel<AccountWrapperModel> {
+    private suspend fun tryLogin(email: String, password: String): ResponseModel<AccountModelWrapper> {
         return try { core.api.login(email, password).await() }
         catch(e: Exception) {
             if(e is RemoteException) throw e /* second invocation */

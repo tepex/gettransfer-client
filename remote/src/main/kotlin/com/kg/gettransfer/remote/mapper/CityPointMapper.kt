@@ -10,5 +10,5 @@ import com.kg.gettransfer.remote.model.CityPointModel
 open class CityPointMapper(): EntityMapper<CityPointModel, CityPointEntity> {
 
     override fun fromRemote(type: CityPointModel) = CityPointEntity(type.name, type.point, type.placeId)
-    override fun toRemote(type: CityPointEntity): CityPointModel(type.name, type.point, type.placeId)
+    override fun toRemote(type: CityPointEntity) = CityPointModel(type.name, type.point, type.placeId)
 }

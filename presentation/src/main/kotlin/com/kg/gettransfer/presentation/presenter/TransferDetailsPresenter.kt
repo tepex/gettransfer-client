@@ -44,7 +44,7 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
             val transferModel = Mappers.getTransferModel(transfer,
                                                          systemInteractor.locale,
                                                          systemInteractor.distanceUnit,
-                                                         systemInteractor.getTransportTypes())
+                                                         systemInteractor.transportTypes)
             viewState.setTransfer(transferModel)
             
 	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, true, false) }
