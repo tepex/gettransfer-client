@@ -23,7 +23,7 @@ class SearchAddressPresenter(cc: CoroutineContexts,
 	/* Cache. @TODO */
 	private var lastRequest: String? = null
 	private var lastResult: List<GTAddress>? = null
-	var mBounds: LatLngBounds? = null
+	internal var mBounds: LatLngBounds? = null
 	
 	companion object {
 		@JvmField val ADDRESS_PREDICTION_SIZE = 3
@@ -41,16 +41,15 @@ class SearchAddressPresenter(cc: CoroutineContexts,
 		}
 			
 		Timber.d("------ request list for prediction $prediction")
-		var latLonPair: Pair<Point,Point>? = null
+		var latLonPair: Pair<Point, Point>? = null
 		if(mBounds != null) {
 			val nePoint = Point(mBounds!!.northeast.latitude, mBounds!!.northeast.longitude)
 			val swPoint = Point(mBounds!!.southwest.latitude, mBounds!!.southwest.longitude)
-			latLonPair = Pair(nePoint,swPoint)
+			latLonPair = Pair(nePoint, swPoint)
 		}
 
 		utils.launchAsyncTryCatch({
-
-			lastResult = utils.asyncAwait { routeInteractor.getAutocompletePredictions(prediction,latLonPair) }
+			lastResult = utils.asyncAwait { routeInteractor.getAutocompletePredictions(prediction, latLonPair) }
 			lastRequest = prediction
 			viewState.setAddressList(lastResult!!)
 		}, {e ->
@@ -60,14 +59,13 @@ class SearchAddressPresenter(cc: CoroutineContexts,
 		})
 	}
 
-	fun onClearAddress(isTo: Boolean){
-		if(isTo) routeInteractor.to = null
-		else routeInteractor.from = null
-	}
-	fun returnAddress(isTo: Boolean){
-		if (isTo)
-			viewState.returnLastAddress(routeInteractor.to?.name?:"")
-		else
-			viewState.returnLastAddress(routeInteractor.from?.name?:"")
-	}
+    fun onClearAddress(isTo: Boolean) {
+        if(isTo) routeInteractor.to = null
+        else routeInteractor.from = null
+    }
+
+    fun returnAddress(isTo: Boolean) {
+        if(isTo) viewState.returnLastAddress(routeInteractor.to?.name ?: "")
+        else viewState.returnLastAddress(routeInteractor.from?.name ?: "")
+    }
 }

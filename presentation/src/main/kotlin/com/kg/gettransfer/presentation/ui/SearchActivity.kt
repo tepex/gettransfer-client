@@ -56,7 +56,7 @@ class SearchActivity: BaseActivity(), SearchView {
         @JvmField val FADE_DURATION  = 500L
         @JvmField val SLIDE_DURATION = 500L
         @JvmField val EXTRA_ADDRESS_FROM = "address_from"
-        @JvmField val EXTRA_ADDRESS_TO = "address_to"
+        @JvmField val EXTRA_ADDRESS_TO   = "address_to"
 
         @JvmField val LATLON_BOUNDS = "latlon_map_bounds"
     }

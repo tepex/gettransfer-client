@@ -136,9 +136,9 @@ class MainPresenter(cc: CoroutineContexts,
         }, { viewState.blockInterface(false) })
     }
 
-    fun setAddressFields(){
-        viewState.setAddressFrom(routeInteractor.from?.address?:"")
-        viewState.setAddressTo(routeInteractor.to?.address?:"")
+    fun setAddressFields() {
+        viewState.setAddressFrom(routeInteractor.from?.address ?: "")
+        viewState.setAddressTo(routeInteractor.to?.address ?: "")
     }
 
     fun onSearchClick(addresses: Pair<String, String>) {
@@ -162,7 +162,7 @@ class MainPresenter(cc: CoroutineContexts,
         else router.navigateTo(Screens.LOGIN)
     }
 
-    fun logEvent(value: String){
-        mFBA.logEvent(EVENT_MENU,createSingeBundle(PARAM_KEY_NAME,value))
+    fun logEvent(value: String) {
+        mFBA.logEvent(EVENT_MENU,createSingeBundle(PARAM_KEY_NAME, value))
     }
 }

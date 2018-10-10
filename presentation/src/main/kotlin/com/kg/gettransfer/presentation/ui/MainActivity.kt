@@ -18,7 +18,6 @@ import android.support.v4.widget.DrawerLayout
 
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
-import android.text.TextUtils
 
 import android.transition.Fade
 
@@ -65,7 +64,7 @@ import ru.terrakok.cicerone.commands.Forward
 
 import timber.log.Timber
 
-class MainActivity : BaseGoogleMapActivity(), MainView {
+class MainActivity: BaseGoogleMapActivity(), MainView {
 
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
@@ -82,14 +81,14 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     @ProvidePresenter
     fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
-            router,
-            systemInteractor,
-            routeInteractor)
+                                                             router,
+                                                             systemInteractor,
+                                                             routeInteractor)
 
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
     private val itemsNavigationViewListener = View.OnClickListener { item ->
-        when (item.id) {
+        when(item.id) {
             R.id.navLogin -> presenter.onLoginClick()
             R.id.navAbout -> presenter.onAboutClick()
             R.id.navSettings -> presenter.onSettingsClick()
@@ -100,12 +99,12 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         drawer.closeDrawer(GravityCompat.START)
     }
 
-    protected override var navigator = object : BaseNavigator(this) {
+    protected override var navigator = object: BaseNavigator(this) {
         protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
             val intent = super.createActivityIntent(context, screenKey, data)
-            if (intent != null) return intent
+            if(intent != null) return intent
 
-            when (screenKey) {
+            when(screenKey) {
                 Screens.ABOUT -> return Intent(context, AboutActivity::class.java)
                 Screens.FIND_ADDRESS -> {
                     val searchIntent = Intent(context, SearchActivity::class.java)
@@ -139,23 +138,16 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         }
 
         protected override fun createStartActivityOptions(command: Command, intent: Intent): Bundle? =
-                ActivityOptionsCompat
-                        .makeSceneTransitionAnimation(
-                                this@MainActivity,
-                                search,
-                                getString(R.string.searchTransitionName))
-                        .toBundle()
+            ActivityOptionsCompat
+                .makeSceneTransitionAnimation(this@MainActivity, search, getString(R.string.searchTransitionName))
+                .toBundle()
     }
 
     companion object {
-        @JvmField
-        val MY_LOCATION_BUTTON_INDEX = 2
-        @JvmField
-        val COMPASS_BUTTON_INDEX = 5
-        @JvmField
-        val FADE_DURATION = 500L
-        @JvmField
-        val MAX_INIT_ZOOM = 2.0f
+        @JvmField val MY_LOCATION_BUTTON_INDEX = 2
+        @JvmField val COMPASS_BUTTON_INDEX = 5
+        @JvmField val FADE_DURATION = 500L
+        @JvmField val MAX_INIT_ZOOM = 2.0f
     }
 
     init {
@@ -168,11 +160,9 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-
         setContentView(R.layout.activity_main)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.statusBarColor = Color.TRANSPARENT
         } else {
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -196,18 +186,14 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             @CallSuper
             override fun onDrawerStateChanged(newState: Int) {
                 super.onDrawerStateChanged(newState)
-                if (newState == DrawerLayout.STATE_SETTLING) {
-                    hideKeyboard()
-                }
+                if(newState == DrawerLayout.STATE_SETTLING) hideKeyboard()
             }
         })
 
         presenter.setAddressFields()
 
-
         //(appbar as AppBarLayout).bringToFront()
-
-            initNavigation()
+        initNavigation()
 
         isFirst = savedInstanceState == null
 
@@ -215,7 +201,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         searchFrom.setUneditable()
         searchTo.setUneditable()
         searchFrom.setOnClickListener { presenter.onSearchClick(Pair(searchFrom.text, searchTo.text)) }
-        searchTo.setOnClickListener { presenter.onSearchClick(Pair(searchFrom.text, searchTo.text)) }
+        searchTo.setOnClickListener   { presenter.onSearchClick(Pair(searchFrom.text, searchTo.text)) }
 
         btnEntrance.setOnClickListener {
             showPopupEntrance()
@@ -230,8 +216,10 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     private fun showPopupEntrance() {
         val layoutEntrance = LayoutInflater.from(applicationContext).inflate(R.layout.popup_entrance, layoutEntrance)
 
-        popupEntrance = PopupWindow(layoutEntrance, LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT, true)
+        popupEntrance = PopupWindow(layoutEntrance,
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                                    true)
         popupEntrance.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         popupEntrance.inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
         popupEntrance.isOutsideTouchable = true
@@ -244,7 +232,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         layoutEntrance.etEntrance.setText(presenter.entrance)
         layoutEntrance.etEntrance.setSelection(layoutEntrance.etEntrance.text.length)
 
-        if (!TextUtils.isEmpty(presenter.entrance)) {
+        if(!presenter.entrance.isNullOrEmpty()) {
             layoutEntrance.tvReady.visibility = View.VISIBLE
             layoutEntrance.tvClose.visibility = View.INVISIBLE
         }
@@ -258,7 +246,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             popupEntrance.dismiss()
         }
         layoutEntrance.etEntrance.onTextChanged {
-            if (TextUtils.isEmpty(it)) {
+            if(it.isNullOrEmpty()) {
                 layoutEntrance.tvClose.visibility = View.VISIBLE
                 layoutEntrance.tvReady.visibility = View.INVISIBLE
             } else {
@@ -282,7 +270,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     @CallSuper
     override fun onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START)
+        if(drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START)
         else super.onBackPressed()
     }
 
@@ -331,7 +319,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         super.customizeGoogleMaps()
         googleMap.setMyLocationEnabled(true)
         googleMap.uiSettings.isMyLocationButtonEnabled = false
-        btnMyLocation.setOnClickListener { presenter.updateCurrentLocation() }
+        btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
         googleMap.setOnCameraMoveListener { presenter.onCameraMove(googleMap.getCameraPosition()!!.target) }
         googleMap.setOnCameraIdleListener { presenter.onCameraIdle() }
     }
@@ -339,12 +327,12 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     /* MainView */
     override fun setMapPoint(point: LatLng) {
         val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
-        if (centerMarker != null) {
+        if(centerMarker != null) {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
             moveCenterMarker(point)
         } else {
             /* Грязный хак!!! */
-            if (isFirst || googleMap.cameraPosition.zoom <= MAX_INIT_ZOOM) {
+            if(isFirst || googleMap.cameraPosition.zoom <= MAX_INIT_ZOOM) {
                 val zoom1 = resources.getInteger(R.integer.map_min_zoom).toFloat()
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom1))
                 isFirst = false
@@ -360,22 +348,18 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     override fun blockInterface(block: Boolean) {
-        if (block) searchFrom.text = getString(R.string.search_start)
+        if(block) searchFrom.text = getString(R.string.search_start)
     }
 
     override fun setError(e: Throwable) {
         searchFrom.text = getString(R.string.search_nothing)
     }
 
-    override fun setAddressFrom(address: String) {
-        searchFrom.text = address
-    }
-    override fun setAddressTo(address: String) {
-        searchTo.text = address
-    }
+    override fun setAddressFrom(address: String) { searchFrom.text = address }
+    override fun setAddressTo(address: String)   { searchTo.text = address   }
 
     override fun setUser(user: UserModel) {
-        if (user.email == null) {
+        if(user.email == null) {
             navHeaderName.visibility = View.GONE
             navHeaderEmail.visibility = View.GONE
             navLogin.visibility = View.VISIBLE
@@ -391,10 +375,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     override fun setEntrance(address: String, entrance: String) {
-        if (!TextUtils.isEmpty(entrance)) {
-            searchFrom.text = "$address${getString(R.string.short_entrance)}$entrance"
-        } else {
-            searchFrom.text = address
-        }
+        if(!entrance.isNullOrEmpty()) searchFrom.text = "$address${getString(R.string.short_entrance)}$entrance"
+        else searchFrom.text = address
     }
 }

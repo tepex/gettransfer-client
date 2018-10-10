@@ -56,10 +56,10 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
         /*val addr = list?.firstOrNull()?.thoroughfare + " " + list?.firstOrNull()?.subThoroughfare
         if(addr == null) throw RuntimeException("Address not found") */
 
-        val street = list.firstOrNull()?.thoroughfare
-        val house = list.firstOrNull()?.subThoroughfare
-        val city = list.firstOrNull()?.locality
-        val area = list.firstOrNull()?.adminArea
+        val street  = list.firstOrNull()?.thoroughfare
+        val house   = list.firstOrNull()?.subThoroughfare
+        val city    = list.firstOrNull()?.locality
+        val area    = list.firstOrNull()?.adminArea
         val country = list.firstOrNull()?.countryName
 
         val addr = StringBuilder()
@@ -75,7 +75,7 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
             if(!area.isNullOrEmpty() && area != city) addr.append(area).append(", ")
         }
 
-        val text = getAutocompletePredictions(addr.toString(),null)
+        val text = getAutocompletePredictions(addr.toString(), null)
         val address = if(text.isNotEmpty()) text.get(0).address else addr.toString()
         return GTAddress(placeTypes = listOf(GTAddress.TYPE_STREET_ADDRESS),
                          name = address,

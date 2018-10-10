@@ -21,7 +21,7 @@ import ru.terrakok.cicerone.Router
 class SearchPresenter(cc: CoroutineContexts,
                       router: Router,
                       systemInteractor: SystemInteractor,
-                      private val routeInteractor: RouteInteractor) : BasePresenter<SearchView>(cc, router, systemInteractor) {
+                      private val routeInteractor: RouteInteractor): BasePresenter<SearchView>(cc, router, systemInteractor) {
     var isTo = false
 
     companion object {
@@ -41,10 +41,9 @@ class SearchPresenter(cc: CoroutineContexts,
         viewState.setAddressTo(routeInteractor.to?.name ?: "", false)
     }
 
-
     fun onAddressSelected(selected: GTAddress) {
         val isDoubleClickOnRoute: Boolean
-        if (isTo) {
+        if(isTo) {
             isDoubleClickOnRoute = routeInteractor.to == selected
             routeInteractor.to = selected
         } else {
@@ -53,8 +52,8 @@ class SearchPresenter(cc: CoroutineContexts,
         }
 
         val placeType = checkPlaceType(selected)
-        if (placeType == SUITABLE_TYPE || (placeType == ROUTE_TYPE && isDoubleClickOnRoute)) {
-            if (checkFields()) {
+        if(placeType == SUITABLE_TYPE || (placeType == ROUTE_TYPE && isDoubleClickOnRoute)) {
+            if(checkFields()) {
                 utils.launchAsyncTryCatchFinally({
                     viewState.blockInterface(true)
                     utils.asyncAwait { routeInteractor.updateDestinationPoint() }
@@ -64,26 +63,20 @@ class SearchPresenter(cc: CoroutineContexts,
                 }, { viewState.blockInterface(false) })
             }
         } else {
-
             val sendRequest = selected.needApproximation() /* dirty hack */
-            if (isTo) viewState.setAddressTo(selected.primary ?: selected.name, sendRequest)
+            if(isTo) viewState.setAddressTo(selected.primary ?: selected.name, sendRequest)
             else viewState.setAddressFrom(selected.primary ?: selected.name, sendRequest)
         }
     }
 
     private fun checkPlaceType(address: GTAddress): Int {
         val placeTypes = address.placeTypes
-        if (placeTypes == null || placeTypes.isEmpty()) return NO_TYPE
-        if (placeTypes.contains(ROUTE_TYPE)) return ROUTE_TYPE
+        if(placeTypes == null || placeTypes.isEmpty()) return NO_TYPE
+        if(placeTypes.contains(ROUTE_TYPE)) return ROUTE_TYPE
         return SUITABLE_TYPE
     }
 
-    private fun checkFields(): Boolean {
-        if (routeInteractor.from == null || routeInteractor.to == null || routeInteractor.from == routeInteractor.to)
-            return false
-        return true
-    }
-
+    private fun checkFields() = routeInteractor.from != null && routeInteractor.to != null && routeInteractor.from != routeInteractor.to
 
     @CallSuper
     override fun onBackCommandClick() {
