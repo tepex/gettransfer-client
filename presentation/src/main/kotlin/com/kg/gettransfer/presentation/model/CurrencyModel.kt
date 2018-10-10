@@ -17,5 +17,4 @@ class CurrencyModel(val delegate: Currency): CharSequence {
     override fun toString(): String = name
     override operator fun get(index: Int): Char = name.get(index)
     override fun subSequence(startIndex: Int, endIndex: Int): CharSequence = name.subSequence(startIndex, endIndex)
-    fun getCode():String = code
 }
