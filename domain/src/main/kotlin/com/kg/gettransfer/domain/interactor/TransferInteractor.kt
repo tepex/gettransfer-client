@@ -41,7 +41,7 @@ class TransferInteractor(private val repository: TransferRepository) {
                                              profile,
                                              promoCode,
                                              paypalOnly)
-        insertNewTransfer()
+        //insertNewTransfer()
         return transfer!!
     }
 
@@ -52,14 +52,19 @@ class TransferInteractor(private val repository: TransferRepository) {
     }
     
     suspend fun cancelTransfer(reason: String) {
-        val cancelledTransfer = repository.cancelTransfer(transfer!!.id, reason)
-        if(allTransfers != null) allTransfers!!.map { if(it.id == transfer!!.id) it.status = cancelledTransfer.status }
+        /*val cancelledTransfer = repository.cancelTransfer(transfer!!.id, reason)
+        if(allTransfers != null) allTransfers!!.map { if(it.id == transfer!!.id) it.status = cancelledTransfer.status }*/
+        repository.cancelTransfer(transfer!!.id, reason)
     }
     
     suspend fun getAllTransfers(): List<Transfer> {
         if(allTransfers == null) allTransfers = repository.getAllTransfers()
-        insertNewTransfer()
+        //insertNewTransfer()
         return allTransfers!!
+    }
+
+    fun deleteAllTransfersList(){
+        allTransfers = null
     }
 
     suspend fun getActiveTransfers(): List<Transfer> {
@@ -88,10 +93,10 @@ class TransferInteractor(private val repository: TransferRepository) {
         return archivedTransfers!!
     }
     
-    private fun insertNewTransfer() {
+    /*private fun insertNewTransfer() {
         if(allTransfers == null || transfer == null || allTransfers!!.firstOrNull()?.id == transfer!!.id) return
         val mutableList = allTransfers!!.toMutableList()
         mutableList.add(0, transfer!!)
         allTransfers = mutableList
-    }
+    }*/
 }

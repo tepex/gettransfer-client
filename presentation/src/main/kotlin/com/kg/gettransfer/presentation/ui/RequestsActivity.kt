@@ -17,6 +17,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.presenter.RequestsPresenter
 import com.kg.gettransfer.presentation.view.RequestsView
@@ -30,9 +31,11 @@ class RequestsActivity: BaseActivity(), RequestsView {
 
     @InjectPresenter
     internal lateinit var presenter: RequestsPresenter
+
+    private val transferInteractor: TransferInteractor by inject()
     
     @ProvidePresenter
-    fun createRequestsPresenter() = RequestsPresenter(coroutineContexts, router, systemInteractor)
+    fun createRequestsPresenter() = RequestsPresenter(coroutineContexts, router, systemInteractor, transferInteractor)
 
     protected override var navigator = BaseNavigator(this)
 

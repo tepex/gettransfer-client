@@ -110,6 +110,7 @@ class OffersPresenter(cc: CoroutineContexts,
     fun cancelRequest(isCancel: Boolean) {
         if(isCancel) {
             utils.launchAsyncTryCatchFinally({
+                viewState.blockInterface(true)
                 utils.asyncAwait { transferInteractor.cancelTransfer("") }
                 router.exit()
             }, { e ->

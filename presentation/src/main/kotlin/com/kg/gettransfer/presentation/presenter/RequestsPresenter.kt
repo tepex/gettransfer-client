@@ -1,10 +1,14 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.support.annotation.CallSuper
+import com.kg.gettransfer.R
+
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.view.RequestsView
 
@@ -13,7 +17,8 @@ import ru.terrakok.cicerone.Router
 @InjectViewState
 class RequestsPresenter(cc: CoroutineContexts,
                         router: Router,
-                        systemInteractor: SystemInteractor): BasePresenter<RequestsView>(cc, router, systemInteractor){
+                        systemInteractor: SystemInteractor,
+                        private val transferInteractor: TransferInteractor): BasePresenter<RequestsView>(cc, router, systemInteractor){
 
     companion object {
         @JvmField val EVENT = "transfers"
@@ -21,6 +26,13 @@ class RequestsPresenter(cc: CoroutineContexts,
         @JvmField val PARAM_KEY = "filter"
 
     }
+
+    @CallSuper
+    override fun attachView(view: RequestsView) {
+        super.attachView(view)
+        transferInteractor.deleteAllTransfersList()
+    }
+
     fun logEvent(value: String){
         mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY, value))
     }
