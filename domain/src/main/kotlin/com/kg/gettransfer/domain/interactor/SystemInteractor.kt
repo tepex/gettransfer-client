@@ -52,7 +52,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     fun getLocales()              = configs.availableLocales
     fun getDistanceUnits()        = configs.supportedDistanceUnits
     fun getCurrencies()           = configs.supportedCurrencies
-    fun getEndpoints()            = arrayListOf(Preferences.ENDPOINT_DEMO, Preferences.ENDPOINT_PROD)
+    fun getEndpoints()            = arrayListOf(Preferences.ENDPOINT_PROD, Preferences.ENDPOINT_DEMO)
     fun getCurrentCurrencyIndex() = getCurrencies().indexOf(account.currency)
     fun isLoggedIn()              = account.user.isLoggedIn()
     
@@ -70,4 +70,6 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     fun getLogs()     = logging.getLogs()
     fun clearLogs()   = logging.clearLogs()
     fun getLogsFile() = logging.getLogsFile()
+
+    fun changeEndpoint() = systemRepository.changeEndpoint()
 }

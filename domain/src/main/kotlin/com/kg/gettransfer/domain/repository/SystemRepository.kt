@@ -13,4 +13,5 @@ interface SystemRepository {
     */
     suspend fun login(email: String, password: String): Account
     fun logout()
+    fun changeEndpoint()
 }

@@ -29,22 +29,22 @@ import timber.log.Timber
 
 class ApiRepositoryImpl(private val preferences: Preferences,
                         private val apiKeys: Array<String>,
-                        private val apiUrls: Array<String>,
-                        flavor: String) {
+                        private val apiUrls: Array<String>) {
 
     companion object {
-        @JvmField val DEMO_ENDPOINT_INDEX = 0
-        @JvmField val PROD_ENDPOINT_INDEX = 1
+        @JvmField val DEMO_URLS_COUNT = 2
 
-        @JvmField val FLAVOR_DEV = "dev"
+        @JvmField val PROD_ENDPOINT_INDEX = 0
+        @JvmField val DEMO_ENDPOINT_INDEX = 1
     }
 
     private lateinit var url: String
     private lateinit var apiKey: String
 
     private lateinit var configs: Configs
-    
-    private var api: Api
+
+    private var okHttpClient: OkHttpClient
+    private lateinit var api: Api
     private val gson = GsonBuilder().registerTypeAdapter(ApiTransportTypesWrapper::class.java, TransportTypesDeserializer()).create()
     
 	/**
@@ -65,7 +65,12 @@ class ApiRepositoryImpl(private val preferences: Preferences,
 		
 		builder.cookieJar(CookieJar.NO_COOKIES)
 
-        if(flavor == FLAVOR_DEV){
+        okHttpClient = builder.build()
+        setEndpoint()
+    }
+
+    fun setEndpoint(){
+        if(apiUrls.size == DEMO_URLS_COUNT){
             when(preferences.endpoint){
                 Preferences.ENDPOINT_DEMO -> initUrl(DEMO_ENDPOINT_INDEX)
                 Preferences.ENDPOINT_PROD -> initUrl(PROD_ENDPOINT_INDEX)
@@ -76,16 +81,16 @@ class ApiRepositoryImpl(private val preferences: Preferences,
             }
         } else initUrl(PROD_ENDPOINT_INDEX)
 
-	    api = Retrofit.Builder()
-		        .baseUrl(url)
-		        .client(builder.build())
-		        .addConverterFactory(GsonConverterFactory.create(gson))
+        api = Retrofit.Builder()
+                .baseUrl(url)
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(CoroutineCallAdapterFactory()) // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
                 .build()
                 .create(Api::class.java)
     }
 
-    fun initUrl(urlIndex: Int){
+    private fun initUrl(urlIndex: Int){
         url = apiUrls[urlIndex]
         apiKey = apiKeys[urlIndex]
     }

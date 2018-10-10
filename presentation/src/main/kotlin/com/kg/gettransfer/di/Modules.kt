@@ -51,9 +51,8 @@ val domainModule = module {
 	single {
 	    val context: Context = get()
 	    ApiRepositoryImpl(get(),
-	                      context.resources.getStringArray(R.array.api_keys),
-	                      context.resources.getStringArray(R.array.api_urls),
-						  BuildConfig.FLAVOR)
+                context.resources.getStringArray(R.array.api_keys),
+				context.resources.getStringArray(R.array.api_urls))
 	}
 	single { CarrierTripRepositoryImpl(get()) as CarrierTripRepository }
 	single { GeoRepositoryImpl(get()) as GeoRepository }

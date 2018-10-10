@@ -379,4 +379,6 @@
     <string name="clear">Clear</string>
     <string name="title_starting_session">/////////////////////////////////////////////////////\n//////////////////// NEW SESSION ////////////////////\n/////////////////////////////////////////////////////</string>
 
+    <string name="logs_file_name">Logs.txt</string>
+    <string name="file_provider_authority" translatable="false">com.kg.gettransfer.fileprovider</string>
 </resources>

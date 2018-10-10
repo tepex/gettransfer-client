@@ -98,6 +98,7 @@ class SettingsPresenter(cc: CoroutineContexts,
     fun changeEndpoint(selected: Int) {
         systemInteractor.logout()
         systemInteractor.endpoint = endpoints[selected]
+        systemInteractor.changeEndpoint()
         viewState.restartApp()
     }
 

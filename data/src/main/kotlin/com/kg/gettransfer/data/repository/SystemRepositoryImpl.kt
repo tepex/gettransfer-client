@@ -10,4 +10,5 @@ class SystemRepositoryImpl(private val apiRepository: ApiRepositoryImpl): System
     override suspend fun putAccount(account: Account) = apiRepository.putAccount(account)
     override suspend fun login(email: String, password: String) = apiRepository.login(email, password)
     override fun logout() = apiRepository.logout()
+    override fun changeEndpoint() = apiRepository.setEndpoint()
 }
