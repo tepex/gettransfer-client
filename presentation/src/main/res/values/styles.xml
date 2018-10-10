@@ -139,6 +139,10 @@
         <item name="layout_constraintEnd_toEndOf">parent</item>
         <item name="layout_constraintStart_toStartOf">parent</item>
     </style>
+	
+	<style name="SwitchCompatStyle" parent="Theme.AppCompat.Light">
+		<item name="colorControlActivated">@color/switch_activated</item>
+	</style>
 
     <!--<style name="etField" parent="Base.V7.Widget.AppCompat.EditText">-->
     <!--<item name="android:background">@android:color/transparent</item>-->
