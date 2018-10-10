@@ -94,8 +94,8 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
             ssBuilder.setSpan(colorCarImageSpan, ssBuilder.length - 1, ssBuilder.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             layout.tvVehicleName.text = ssBuilder
 
-            if(item.wifi) layout.bottomLayoutForImage.imgOptionFreeWiFi.visibility = View.VISIBLE
-            if(item.refreshments) layout.bottomLayoutForImage.imgOptionFreeWater.visibility = View.VISIBLE
+            if(item.wifi) layout.imgOptionFreeWiFi.visibility = View.VISIBLE
+            if(item.refreshments) layout.imgOptionFreeWater.visibility = View.VISIBLE
             textViewPax.text = context.getString(R.string.count_persons_and_baggage, item.paxMax)
             textViewBaggage.text = context.getString(R.string.count_persons_and_baggage, item.baggageMax)
         }
