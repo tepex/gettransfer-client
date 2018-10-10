@@ -24,7 +24,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fillViewport="true"
-        android:layout_below="@+id/rvTransferType">
+        android:layout_below="@+id/rvTransferType"
+        android:layout_above="@+id/btnGetOffers">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -621,40 +622,37 @@
                     app:layout_constraintTop_toBottomOf="@+id/tvAgreement1" />
 
             </android.support.constraint.ConstraintLayout>
-
-            <LinearLayout
-                android:id="@+id/btnGetOffers"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="@dimen/get_offers_btn_height"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/btn_get_transfer"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view3">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    app:srcCompat="@drawable/ic_check_circle" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/sf_pro_text_regular"
-                    android:text="@string/get_offers"
-                    android:textAllCaps="true"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/create_transfer_additionals_top_text_size" />
-            </LinearLayout>
-
         </android.support.constraint.ConstraintLayout>
-
     </android.support.v4.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/btnGetOffers"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="@dimen/get_offers_btn_height"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/btn_get_transfer"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:srcCompat="@drawable/ic_check_circle" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:text="@string/get_offers"
+            android:textAllCaps="true"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/create_transfer_additionals_top_text_size" />
+    </LinearLayout>
+
 
 </RelativeLayout>
