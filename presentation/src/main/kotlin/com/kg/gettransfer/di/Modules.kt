@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 
 import android.preference.PreferenceManager
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.kg.gettransfer.BuildConfig
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.data.logging.LoggingImpl
@@ -59,14 +58,14 @@ val domainModule = module {
 	single { OfferRepositoryImpl(get()) as OfferRepository }
 	single { PaymentRepositoryImpl(get()) as PaymentRepository }
 	single { RouteRepositoryImpl(get()) as RouteRepository }
-	single { SystemRepositoryImpl(get()) as SystemRepository }
+	single { SystemRepositoryImpl(get(), get(), get()) as SystemRepository }
 	single { TransferRepositoryImpl(get()) as TransferRepository }
 	
 	single { CarrierTripInteractor(get()) }
 	single { OfferInteractor(get()) }
 	single { PaymentInteractor(get()) }
 	single { RouteInteractor(get(), get()) }
-	single { SystemInteractor(get(), get(), get(), get()) }
+	single { SystemInteractor(get(), get()) }
 	single { TransferInteractor(get()) }
 }
 

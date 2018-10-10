@@ -5,17 +5,13 @@ import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.DistanceUnit
 
 import com.kg.gettransfer.domain.repository.GeoRepository
-import com.kg.gettransfer.domain.repository.Logging
-import com.kg.gettransfer.domain.repository.Preferences
 import com.kg.gettransfer.domain.repository.SystemRepository
 
 import java.util.Currency
 import java.util.Locale
 
 class SystemInteractor(private val systemRepository: SystemRepository,
-                       private val geoRepository: GeoRepository,
-                       private val preferences: Preferences,
-                       private val logging: Logging) {
+                       private val geoRepository: GeoRepository) {
     private lateinit var configs: Configs
     lateinit var account: Account
         private set
@@ -34,12 +30,12 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         set(value) { account.distanceUnit = value }
 
     var lastMode: String
-        get() = preferences.lastMode
-        set(value) { preferences.lastMode = value }
+        get() = systemRepository.getLastMode()
+        set(value) { systemRepository.setLastMode(value) }
 
     var endpoint: String
-        get() = preferences.endpoint
-        set(value) { preferences.endpoint = value}
+        get() = systemRepository.getEndpoint()
+        set(value) { systemRepository.setEndpoint(value) }
 
     suspend fun coldStart() {
         systemRepository.coldStart()
@@ -52,7 +48,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     fun getLocales()              = configs.availableLocales
     fun getDistanceUnits()        = configs.supportedDistanceUnits
     fun getCurrencies()           = configs.supportedCurrencies
-    fun getEndpoints()            = arrayListOf(Preferences.ENDPOINT_PROD, Preferences.ENDPOINT_DEMO)
+    fun getEndpoints()            = systemRepository.getEndpoins()
     fun getCurrentCurrencyIndex() = getCurrencies().indexOf(account.currency)
     fun isLoggedIn()              = account.user.isLoggedIn()
     
@@ -67,9 +63,9 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     
     suspend fun putAccount() { systemRepository.putAccount(account) }
 
-    fun getLogs()     = logging.getLogs()
-    fun clearLogs()   = logging.clearLogs()
-    fun getLogsFile() = logging.getLogsFile()
+    fun getLogs()     = systemRepository.getLogs()
+    fun clearLogs()   = systemRepository.clearLogs()
+    fun getLogsFile() = systemRepository.getLogsFile()
 
     fun changeEndpoint() = systemRepository.changeEndpoint()
 }
