@@ -25,10 +25,23 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import timber.log.Timber
 
 class ApiRepositoryImpl(private val preferences: Preferences,
-                        private val apiKey: String,
-                        url: String) {
+                        private val apiKeys: Array<String>,
+                        private val apiUrls: Array<String>,
+                        flavor: String) {
+
+    companion object {
+        @JvmField val DEMO_ENDPOINT_INDEX = 0
+        @JvmField val PROD_ENDPOINT_INDEX = 1
+
+        @JvmField val FLAVOR_DEV = "dev"
+    }
+
+    private lateinit var url: String
+    private lateinit var apiKey: String
+
     private lateinit var configs: Configs
     
     private var api: Api
@@ -38,7 +51,7 @@ class ApiRepositoryImpl(private val preferences: Preferences,
 	 * @throws ApiException
 	 */
     init {
-        val loggingInterceptor = HttpLoggingInterceptor()
+        val loggingInterceptor = HttpLoggingInterceptor { message -> Timber.d(message) }
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         val builder = OkHttpClient.Builder()
         builder.addInterceptor(loggingInterceptor)
@@ -51,7 +64,18 @@ class ApiRepositoryImpl(private val preferences: Preferences,
 		}
 		
 		builder.cookieJar(CookieJar.NO_COOKIES)
- 
+
+        if(flavor == FLAVOR_DEV){
+            when(preferences.endpoint){
+                Preferences.ENDPOINT_DEMO -> initUrl(DEMO_ENDPOINT_INDEX)
+                Preferences.ENDPOINT_PROD -> initUrl(PROD_ENDPOINT_INDEX)
+                else -> {
+                    preferences.endpoint = Preferences.ENDPOINT_DEMO
+                    initUrl(DEMO_ENDPOINT_INDEX)
+                }
+            }
+        } else initUrl(PROD_ENDPOINT_INDEX)
+
 	    api = Retrofit.Builder()
 		        .baseUrl(url)
 		        .client(builder.build())
@@ -59,6 +83,11 @@ class ApiRepositoryImpl(private val preferences: Preferences,
                 .addCallAdapterFactory(CoroutineCallAdapterFactory()) // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
                 .build()
                 .create(Api::class.java)
+    }
+
+    fun initUrl(urlIndex: Int){
+        url = apiUrls[urlIndex]
+        apiKey = apiKeys[urlIndex]
     }
     
     suspend fun coldStart() {

@@ -244,6 +244,8 @@
     <string name="sign_out">Sign out</string>
     <string name="application_language">Application language</string>
     <string name="distance_units">Distance units</string>
+    <string name="endpoint">Endpoint</string>
+    <string name="logs">Logs</string>
     <string name="carrier_offers">Carrier offers</string>
     <string name="select">Select</string>
 
@@ -349,5 +351,10 @@
     <string name="method_of_payment">METHOD OF PAYMENT</string>
 
     <string name="price_part_1">70%% (%s) later to the driver</string>
+
+    <string name="share_extra_subject">GTR Logs</string>
+    <string name="share">Share</string>
+    <string name="clear">Clear</string>
+    <string name="title_starting_session">/////////////////////////////////////////////////////\n//////////////////// NEW SESSION ////////////////////\n/////////////////////////////////////////////////////</string>
 
 </resources>

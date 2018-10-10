@@ -86,6 +86,8 @@ internal class Utils {
             listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.application_language, items, listener) }
         fun setDistanceUnitsDialogListener(context: Context, view: View, items: List<CharSequence>,
             listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.distance_units, items, listener) }
+        fun setEndpointsDialogListener(context: Context, view: View, items: List<CharSequence>,
+                                       listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.endpoint, items, listener)}
 
         fun setModelsDialogListener(context: Context, view: View, @StringRes titleId: Int, items: List<CharSequence>, 
                                     listener: (Int) -> Unit) {
@@ -219,6 +221,32 @@ internal class Utils {
         fun getColorVehicle(color: String): Int{
             val colorRes = R.color::class.members.find( { it.name == "color_vehicle_$color" } )
             return (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
+        }
+
+        fun formatJsonString(text: String): String {
+
+            val json = StringBuilder()
+            var indentString = ""
+
+            for (i in 0 until text.length) {
+                val letter = text[i]
+                when (letter) {
+                    '{', '[' -> {
+                        json.append("\n" + indentString + letter + "\n")
+                        indentString += "\t"
+                        json.append(indentString)
+                    }
+                    '}', ']' -> {
+                        indentString = indentString.replaceFirst("\t".toRegex(), "")
+                        json.append("\n" + indentString + letter)
+                    }
+                    ',' -> json.append(letter + "\n" + indentString)
+
+                    else -> json.append(letter)
+                }
+            }
+
+            return json.toString()
         }
 	}
 }

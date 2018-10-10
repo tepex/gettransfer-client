@@ -117,6 +117,7 @@ dependencies {
 	implementation project(":domain")
 	implementation project(":data")
 	implementation project(":prefs")
+	implementation project(':logging')
 	implementation libs.kotlin
 	implementation libs.coroutines
 	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"

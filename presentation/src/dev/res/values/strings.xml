@@ -5,4 +5,20 @@
 	<string name="api_url">https://stgtr.org</string>
 	<!--<string name="api_key">127746ae669e195d1e05807aaadb97af</string>
 	<string name="api_url">https://gettransfer.com</string>-->
+
+	<string-array name="api_keys">
+		<item>ccd9a245018bfe4f386f4045ee4a006f</item>
+		<item>127746ae669e195d1e05807aaadb97af</item>
+	</string-array>
+	<string-array name="api_urls">
+		<item>https://stgtr.org</item>
+		<item>https://gettransfer.com</item>
+	</string-array>
+	<string-array name="api_endpoint">
+		<item>Demo</item>
+		<item>Prod</item>
+	</string-array>
+
+	<string name="logs_file_name">Logs.txt</string>
+	<string name="file_provider_authority" translatable="false">com.kg.gettransfer.fileprovider</string>
 </resources>
