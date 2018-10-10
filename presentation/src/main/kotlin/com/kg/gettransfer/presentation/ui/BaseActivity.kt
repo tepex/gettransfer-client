@@ -98,6 +98,7 @@ open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, 
             Screens.LOGIN -> return Intent(context, LoginActivity::class.java)
             Screens.DETAILS -> return Intent(context, TransferDetailsActivity::class.java)
             Screens.OFFERS -> return Intent(context, OffersActivity::class.java)
+            Screens.PAYMENT_SETTINGS -> return context.getPaymentSettingsActivityLaunchIntent()
         }
         return null
     }
