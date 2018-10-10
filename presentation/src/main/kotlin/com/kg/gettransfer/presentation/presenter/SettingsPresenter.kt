@@ -99,7 +99,9 @@ class SettingsPresenter(cc: CoroutineContexts,
         systemInteractor.logout()
         systemInteractor.endpoint = endpoints[selected]
         systemInteractor.changeEndpoint()
-        viewState.restartApp()
+        
+        router.exit() //Without restarting app
+        //viewState.restartApp() //For restart app
     }
 
     fun onLogout() {
