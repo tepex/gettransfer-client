@@ -200,6 +200,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun collapsedOrderSheet() {
         bsOrder.state = BottomSheetBehavior.STATE_COLLAPSED
         bsOrder.isHideable = false
+        scrollContent.fullScroll(View.FOCUS_UP)
     }
 
     private fun toggleSheetOrder() {
