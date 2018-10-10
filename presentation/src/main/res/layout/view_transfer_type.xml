@@ -18,12 +18,11 @@
 
         <CheckBox
             android:id="@+id/cbTransferType"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/cb_transfer_type_selector"
-            android:button="@null"
+            android:button="@drawable/cb_transfer_type_selector"
             android:clickable="false"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -64,12 +63,12 @@
             android:id="@+id/ivTransferType"
             android:layout_width="100dp"
             android:layout_height="35dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTransferType" />
+            app:layout_constraintTop_toBottomOf="@+id/cbTransferType" />
 
         <ImageView
             android:id="@+id/ivPassanger"
