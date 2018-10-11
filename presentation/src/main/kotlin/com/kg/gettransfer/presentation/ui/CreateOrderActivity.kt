@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 
 import android.os.Build
 import android.os.Bundle
@@ -58,6 +59,9 @@ import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.*
+
+import com.kg.gettransfer.extensions.hideKeyboard
+import com.kg.gettransfer.extensions.showKeyboard
 
 import org.koin.android.ext.android.inject
 
@@ -153,7 +157,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         tvComments.setOnClickListener {
             showPopupWindowComment()
             toggleSheetOrder()
-            showKeyboard()
             presenter.logTransferSettingsEvent(CreateOrderPresenter.COMMENT_INPUT)
         }
         tvAgreement1.setOnClickListener { presenter.showLicenceAgreement() }
@@ -203,10 +206,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun toggleSheetOrder() {
         if (bsOrder.state != BottomSheetBehavior.STATE_EXPANDED) {
             bsOrder.state = BottomSheetBehavior.STATE_EXPANDED
-            bsOrder.peekHeight = resources.getInteger(R.integer.max_height_sheet_create_order)
         } else {
             bsOrder.state = BottomSheetBehavior.STATE_COLLAPSED
-            bsOrder.peekHeight = resources.getInteger(R.integer.min_height_sheet_create_order)
         }
     }
 
@@ -226,11 +227,19 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         val screenHeight = getScreenHeight()
 
         val layoutPopup = LayoutInflater.from(applicationContext).inflate(R.layout.layout_popup_comment, layoutPopup)
-        popupWindowComment = PopupWindow(layoutPopup, LinearLayout.LayoutParams.MATCH_PARENT, screenHeight / 3, true)
+        popupWindowComment = PopupWindow(layoutPopup,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                screenHeight / 3,
+                true)
+        popupWindowComment.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        popupWindowComment.inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
+        popupWindowComment.isOutsideTouchable = true
         layoutPopup.etPopupComment.setText(tvComments.text)
         layoutPopup.etPopupComment.setRawInputType(InputType.TYPE_CLASS_TEXT)
         popupWindowComment.showAtLocation(mainLayoutActivityTransfer, Gravity.CENTER, 0, 0)
-        layoutShadow.visibility = View.VISIBLE
+
+        layoutPopup.etPopupComment.popupWindow = popupWindowComment
+        layoutPopup.etPopupComment.showKeyboard()
 
         layoutPopup.btnClearPopupComment.setOnClickListener { layoutPopup.etPopupComment.setText("") }
         layoutPopup.etPopupComment.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
@@ -242,8 +251,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             false
         })
         popupWindowComment.setOnDismissListener {
-            hideKeyboard()
-            layoutShadow.visibility = View.GONE
+            layoutPopup.etPopupComment.hideKeyboard()
             toggleSheetOrder()
         }
         layoutPopup.setOnClickListener { layoutPopup.etPopupComment.requestFocus() }

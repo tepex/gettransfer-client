@@ -78,17 +78,4 @@
     <include
         android:id="@+id/sheetTransport"
         layout="@layout/bottom_sheet_type_transport" />
-
-    <LinearLayout
-        android:id="@+id/layoutShadow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#c8000000"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 </android.support.design.widget.CoordinatorLayout>
