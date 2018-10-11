@@ -24,6 +24,7 @@ import android.view.inputmethod.InputMethodManager
 
 import android.widget.EditText
 import android.widget.RelativeLayout
+import com.google.android.gms.maps.CameraUpdate
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -113,21 +114,38 @@ internal class Utils {
         }
 
         fun getPolyline(routeModel: RouteModel): PolylineModel{
-            val mPoints = arrayListOf<LatLng>()
-            for(item in routeModel.polyLines) mPoints.addAll(PolyUtil.decode(item))
+            var mPoints = arrayListOf<LatLng>()
+            var line: PolylineOptions? = null
+            var track: CameraUpdate
 
-            // Для построения упрощённого маршрута (меньше точек)
-            //val mPoints = PolyUtil.decode(routeInfo.overviewPolyline)
+            if(routeModel.polyLines != null) {
+                for (item in routeModel.polyLines) mPoints.addAll(PolyUtil.decode(item))
 
-            val line = PolylineOptions()
+                // Для построения упрощённого маршрута (меньше точек)
+                //val mPoints = PolyUtil.decode(routeInfo.overviewPolyline)
 
-            val latLngBuilder = LatLngBounds.Builder()
-            for(i in mPoints.indices) {
-                line.add(mPoints.get(i))
-                latLngBuilder.include(mPoints.get(i))
+                line = PolylineOptions()
+
+                val latLngBuilder = LatLngBounds.Builder()
+                for (i in mPoints.indices) {
+                    line.add(mPoints.get(i))
+                    latLngBuilder.include(mPoints.get(i))
+                }
+                track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150)
+            } else {
+                val startPointString = routeModel.fromPoint.substring(1, routeModel.fromPoint.length - 1)
+                val endPointString = routeModel.toPoint.substring(1, routeModel.toPoint.length - 1)
+                val startPointArray = startPointString.split(",")
+                val endPointArray = endPointString.split(",")
+                mPoints.add(LatLng(startPointArray[0].toDouble(), startPointArray[1].toDouble()))
+                mPoints.add(LatLng(endPointArray[0].toDouble(), endPointArray[1].toDouble()))
+
+                val latLngBuilder = LatLngBounds.Builder()
+                for (i in mPoints.indices) {
+                    latLngBuilder.include(mPoints.get(i))
+                }
+                track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150)
             }
-            val track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150)
-
             return PolylineModel(mPoints.get(0), mPoints.get(mPoints.size - 1), line, track)
         }
 

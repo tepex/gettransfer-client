@@ -139,11 +139,13 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
                 .position(polyline.finishPoint)
                 .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
 
-        polyline.line.width(10f).color(ContextCompat.getColor(this, R.color.colorPolyline))
+        if(polyline.line != null){
+            polyline.line.width(10f).color(ContextCompat.getColor(this, R.color.colorPolyline))
+            googleMap.addPolyline(polyline.line)
+        }
 
         googleMap.addMarker(startMakerOptions)
         googleMap.addMarker(endMakerOptions)
-        googleMap.addPolyline(polyline.line)
 
         try {
             googleMap.moveCamera(polyline.track)

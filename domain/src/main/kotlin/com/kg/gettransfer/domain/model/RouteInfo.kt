@@ -5,8 +5,8 @@ data class RouteInfo(val success: Boolean,
                      val duration: Int?,
                      val prices: List<TransportTypePrice>?,
                      val watertaxi: Boolean,
-                     val polyLines: List<String>,
-                     val overviewPolyline: String)
+                     val polyLines: List<String>?,
+                     val overviewPolyline: String?)
 
 data class TransportTypePrice(val tranferId: String,
                               val minFloat: Float,

@@ -6,7 +6,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.presentation.ui.Utils
 
-import java.text.SimpleDateFormat
 import java.util.Currency
 import java.util.Locale
 
@@ -37,10 +36,12 @@ object Mappers {
     
     fun getRouteModel(distance: Int?,
                       distanceUnit: DistanceUnit,
-                      polyLines: List<String>,
+                      polyLines: List<String>?,
                       from: String,
                       to: String,
-                      dateTime: String) = RouteModel(distance, distanceUnit, polyLines, from, to, dateTime)
+                      fromPoint: String,
+                      toPoint: String,
+                      dateTime: String) = RouteModel(distance, distanceUnit, polyLines, from, to, fromPoint, toPoint, dateTime)
     
     fun getTransferModel(transfer: Transfer,
                          locale: Locale,

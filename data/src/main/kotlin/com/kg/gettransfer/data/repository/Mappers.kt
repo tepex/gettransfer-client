@@ -163,13 +163,19 @@ class Mappers {
         }
         
         fun mapApiRouteInfo(apiRouteInfo: ApiRouteInfo): RouteInfo {
+            var polylines: List<String>? = null
+            var overviewPolylines: String? = null
+            if(apiRouteInfo.routes != null) {
+                polylines = apiRouteInfo.routes.first().legs.first().steps.map { it.polyline.points }
+                overviewPolylines = apiRouteInfo.routes?.first().overviewPolyline.points
+            }
             return RouteInfo(apiRouteInfo.success,
                              apiRouteInfo.distance,
                              apiRouteInfo.duration,
                              apiRouteInfo.prices?.map { TransportTypePrice(it.key, it.value.minFloat, it.value.min, it.value.max) },
                              apiRouteInfo.watertaxi,
-                             apiRouteInfo.routes.first().legs.first().steps.map { it.polyline.points },
-                             apiRouteInfo.routes.first().overviewPolyline.points)
+                             polylines,
+                             overviewPolylines)
         }
 
         /**
