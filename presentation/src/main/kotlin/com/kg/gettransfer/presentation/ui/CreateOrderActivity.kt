@@ -171,36 +171,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         sheetOrder.visibility = View.VISIBLE
         bsTransport = BottomSheetBehavior.from(sheetTransport)
         bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
-        setTransportSheetListener()
         btnOk.setOnClickListener { hideSheetTransport() }
-    }
-
-    private fun setTransportSheetListener() {
-        bsTransport.setBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(p0: View, p1: Float) {
-
-            }
-
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when(newState) {
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                        collapsedOrderSheet()
-                    }
-                }
-            }
-
-        })
     }
 
     private fun hideSheetTransport() {
         bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
-        collapsedOrderSheet()
-    }
-
-    private fun collapsedOrderSheet() {
-        bsOrder.state = BottomSheetBehavior.STATE_COLLAPSED
-        bsOrder.isHideable = false
-        scrollContent.fullScroll(View.FOCUS_UP)
     }
 
     private fun toggleSheetOrder() {
@@ -208,6 +183,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             bsOrder.state = BottomSheetBehavior.STATE_EXPANDED
         } else {
             bsOrder.state = BottomSheetBehavior.STATE_COLLAPSED
+            scrollContent.fullScroll(View.FOCUS_UP)
         }
     }
 
@@ -316,10 +292,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {
         if(transportType.checked && transportType.showInfo) {
+            sheetTransport.visibility = View.VISIBLE
             bsTransport.state = BottomSheetBehavior.STATE_EXPANDED
-            bsOrder.isHideable = true
-            bsOrder.state = BottomSheetBehavior.STATE_HIDDEN
-            bsOrder.skipCollapsed = true
             showTransportInfo(transportType)
         }
         presenter.logEventMain(CreateOrderPresenter.CAR_INFO_CLICKED)
@@ -336,7 +310,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     @CallSuper
     override fun onBackPressed() {
         if(bsTransport.state == BottomSheetBehavior.STATE_EXPANDED) hideSheetTransport()
-        else if(bsOrder.state == BottomSheetBehavior.STATE_EXPANDED) collapsedOrderSheet()
+        else if(bsOrder.state == BottomSheetBehavior.STATE_EXPANDED) toggleSheetOrder()
         else super.onBackPressed()
     }
 }

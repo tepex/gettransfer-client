@@ -74,8 +74,15 @@
             android:visibility="gone" />
     </android.support.design.widget.CoordinatorLayout>
 
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/expended_sheet_order_height">
 
-    <include
-        android:id="@+id/sheetTransport"
-        layout="@layout/bottom_sheet_type_transport" />
+        <include
+            android:id="@+id/sheetTransport"
+            layout="@layout/bottom_sheet_type_transport"
+            android:visibility="gone" />
+    </android.support.design.widget.CoordinatorLayout>
+
 </android.support.design.widget.CoordinatorLayout>
