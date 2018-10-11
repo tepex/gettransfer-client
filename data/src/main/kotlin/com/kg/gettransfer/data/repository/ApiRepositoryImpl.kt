@@ -212,18 +212,18 @@ class ApiRepositoryImpl(private val preferences: Preferences,
     }
 
     suspend fun createTransfer(from: GTAddress,
-                                        to: GTAddress,
-                                        tripTo: Trip,
-                                        tripReturn: Trip?,
-                                        transportTypes: List<String>,
-                                        pax: Int,
-                                        childSeats: Int?,
-                                        passengerOfferedPrice: Int?,
-                                        nameSign: String,
-                                        comment: String?,
-                                        profile: Profile,
-                                        promoCode: String?,
-                                        paypalOnly: Boolean): Transfer {
+                               to: GTAddress,
+                               tripTo: Trip,
+                               tripReturn: Trip?,
+                               transportTypes: List<String>,
+                               pax: Int,
+                               childSeats: Int?,
+                               passengerOfferedPrice: Int?,
+                               nameSign: String,
+                               comment: String?,
+                               user: User,
+                               promoCode: String?,
+                               paypalOnly: Boolean): Transfer {
         val response: ApiResponse<ApiTransferWrapper> = tryPostTransfer(
             ApiTransferWrapper(Mappers.mapTransferRequest(from,
                                                           to,
@@ -235,7 +235,7 @@ class ApiRepositoryImpl(private val preferences: Preferences,
                                                           passengerOfferedPrice,
                                                           nameSign,
                                                           comment,
-                                                          profile,
+                                                          user,
                                                           promoCode/*, paypalOnly*/)))
         
         return Mappers.mapApiTransfer(response.data?.transfer!!)

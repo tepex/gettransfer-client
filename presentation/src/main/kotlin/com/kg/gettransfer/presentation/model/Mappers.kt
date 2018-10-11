@@ -19,6 +19,8 @@ object Mappers {
                                                    account.user.termsAccepted)
     
     fun getProfile(userModel: UserModel) = Profile(userModel.name, userModel.email, userModel.phone)
+    
+    fun getUser(userModel: UserModel) = User(getProfile(userModel), userModel.termsAccepted)
 
     fun getTransportTypesModels(transportTypes: List<TransportType>, prices: Map<String, String>?) =
         transportTypes.map {

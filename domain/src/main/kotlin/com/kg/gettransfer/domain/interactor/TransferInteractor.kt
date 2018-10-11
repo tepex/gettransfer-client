@@ -1,7 +1,7 @@
 package com.kg.gettransfer.domain.interactor
 
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Profile
+import com.kg.gettransfer.domain.model.User
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Trip
 
@@ -25,7 +25,7 @@ class TransferInteractor(private val repository: TransferRepository) {
                                childSeats: Int?,
                                passengerOfferedPrice: Int?,
                                comment: String?,
-                               profile: Profile,
+                               user: User,
                                promoCode: String?,
                                paypalOnly: Boolean): Transfer {
         transfer = repository.createTransfer(from,
@@ -36,9 +36,9 @@ class TransferInteractor(private val repository: TransferRepository) {
                                              pax,
                                              childSeats,
                                              passengerOfferedPrice,
-                                             profile.name!!,
+                                             user.profile.name!!,
                                              comment,
-                                             profile,
+                                             user,
                                              promoCode,
                                              paypalOnly)
         //insertNewTransfer()

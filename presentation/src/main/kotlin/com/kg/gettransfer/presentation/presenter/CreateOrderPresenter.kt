@@ -230,7 +230,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                   children,
                                                   cost,
                                                   comment,
-                                                  Mappers.getProfile(user),
+                                                  Mappers.getUser(user),
                                                   null,
                                                   false) }
             Timber.d("new transfer: %s", transfer)

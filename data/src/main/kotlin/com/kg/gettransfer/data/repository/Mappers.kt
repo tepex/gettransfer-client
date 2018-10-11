@@ -59,6 +59,8 @@ class Mappers {
         
         fun mapProfile(profile: Profile) = ApiProfile(profile.email, profile.phone, profile.name)
         
+        fun mapUser(user: User) = ApiUser(user.profile.email, user.profile.phone, user.profile.name, user.termsAccepted)
+        
         /**
          * [ApiTransfer] -> [Transfer]
          */
@@ -127,7 +129,7 @@ class Mappers {
                                passengerOfferedPrice: Int?,
                                nameSign: String,
                                comment: String?,
-                               profile: Profile,
+                               user: User,
                                promoCode: String?/*,
                                 Not used now 
                                paypalOnly: Boolean*/): ApiTransferRequest {
@@ -144,7 +146,7 @@ class Mappers {
                                       passengerOfferedPrice?.toString(),
                                       nameSign,
                                       comment,
-                                      mapProfile(profile),
+                                      mapUser(user),
                                       promoCode)
         }
         
@@ -166,8 +168,8 @@ class Mappers {
             var polylines: List<String>? = null
             var overviewPolylines: String? = null
             if(apiRouteInfo.routes != null) {
-                polylines = apiRouteInfo.routes.first().legs.first().steps.map { it.polyline.points }
-                overviewPolylines = apiRouteInfo.routes?.first().overviewPolyline.points
+                polylines = apiRouteInfo.routes!!.first().legs.first().steps.map { it.polyline.points }
+                overviewPolylines = apiRouteInfo.routes!!.first().overviewPolyline.points
             }
             return RouteInfo(apiRouteInfo.success,
                              apiRouteInfo.distance,
