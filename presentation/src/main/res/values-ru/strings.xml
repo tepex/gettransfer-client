@@ -209,8 +209,6 @@
     <!--activity_transfer_details-->
     <string name="activity_transfer_details_title">Детали заявки</string>
     <string name="luggage">Багаж</string>
-    <string name="entrance">Вход</string>
-    <string name="entrance_no">Вход %1$s</string>
 
     <!--activity_carrier_trips-->
     <string name="activity_carrier_trips_title">Входящие заявки</string>
@@ -225,10 +223,8 @@
     <string name="remains_to_pay">Осталось оплатить</string>
     <string name="driver_will_meet_you">*Водитель встретит вас с табличкой</string>
     <string name="example_flight">Например: BA 2243</string>
-    <string name="number_entrance">Подъезд или номер входа</string>
     <string name="close">Закрыть</string>
     <string name="ready">Готово</string>
-    <string name="short_entrance">, п.</string>
 
     <!--activity_offers-->
     <string name="excellent_price_text_1">Fix an excellent price for your trip now</string>

@@ -256,11 +256,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
         layoutPopup.setOnClickListener { layoutPopup.etPopupComment.requestFocus() }
         layoutPopup.etPopupComment.setSelection(layoutPopup.etPopupComment.text.length)
-        layoutPopup.etPopupComment.onTextChanged {
-            if(!it.equals(routeInteractor.from?.entrance)) {
-                routeInteractor.from!!.entrance = ""
-            }
-        }
     }
 
     private fun getScreenHeight(): Int {
@@ -318,11 +313,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel) { setPolyline(polyline, routeModel) }
 
     override fun centerRoute(cameraUpdate: CameraUpdate) { showTrack(cameraUpdate) }
-
-    override fun setEntrance(entrance: String) {
-        if(TextUtils.isEmpty(entrance)) tvComments.text = ""
-        else tvComments.text = getString(R.string.entrance_no, entrance)
-    }
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {
         if(transportType.checked && transportType.showInfo) {

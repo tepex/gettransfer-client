@@ -33,11 +33,6 @@ class MainPresenter(cc: CoroutineContexts,
 
     private var available: Boolean = false
     private var currentLocation: String = ""
-    internal var entrance: String = ""
-        set(value) {
-            field = value
-            viewState.setEntrance(currentLocation, value)
-        }
 
     override fun onFirstViewAttach() {
         systemInteractor.lastMode = Screens.PASSENGER_MODE
@@ -70,7 +65,6 @@ class MainPresenter(cc: CoroutineContexts,
         //other buttons log params
         @JvmField val MY_PLACE_CLICKED   = "my_place"
 //        @JvmField val SHOW_ROUTE_CLICKED = "show_route"
-        @JvmField val ENTRANCE_CLICKED   = "entrance"
 //        @JvmField val CAR_INFO_CLICKED = "car_info"
 //        @JvmField val BACK_CLICKED = "back"
         @JvmField val POINT_ON_MAP_CLICKED = "point_on_map"
@@ -85,7 +79,6 @@ class MainPresenter(cc: CoroutineContexts,
     override fun attachView(view: MainView) {
         super.attachView(view)
         viewState.setUser(Mappers.getUserModel(systemInteractor.account))
-        routeInteractor.from?.let { entrance = it.entrance }
     }
 
     fun updateCurrentLocation() {
@@ -104,7 +97,6 @@ class MainPresenter(cc: CoroutineContexts,
         viewState.setMapPoint(lastAddressPoint)
         viewState.setAddressFrom(currentAddress.name)
         currentLocation = currentAddress.name
-        entrance = ""
     }
 
     fun onCameraMove(lastPoint: LatLng) {
@@ -127,7 +119,6 @@ class MainPresenter(cc: CoroutineContexts,
             val currentAddress = utils.asyncAwait { routeInteractor.getAddressByLocation(Mappers.latLng2Point(lastPoint!!)) }
             viewState.setAddressFrom(currentAddress.name)
             currentLocation = currentAddress.name
-            entrance = ""
         }, { e -> viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }
@@ -139,7 +130,6 @@ class MainPresenter(cc: CoroutineContexts,
 
     fun onSearchClick(addresses: Pair<String, String>) {
         routeInteractor.from?.let {
-            it.entrance = entrance
             router.navigateTo(Screens.FIND_ADDRESS, addresses)
         }
     }

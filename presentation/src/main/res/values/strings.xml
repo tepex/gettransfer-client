@@ -316,8 +316,6 @@
     <string name="activity_transfer_details_name">Name</string>
     <string name="activity_transfer_details_passenger">Passenger</string>
     <string name="luggage">Luggage</string>
-    <string name="entrance">Entrance</string>
-    <string name="entrance_no">Entrance %1$s</string>
 
     <!--activity_carrier_trips-->
     <string name="activity_carrier_trips_title">Upcoming transfers</string>
@@ -332,10 +330,8 @@
     <string name="remains_to_pay">Remain to pay</string>
     <string name="driver_will_meet_you">*Driver will meet you with a name sign</string>
     <string name="example_flight">Example: BA 2243</string>
-    <string name="number_entrance">Entrance or gate number</string>
     <string name="close">Close</string>
     <string name="ready">Ready</string>
-    <string name="short_entrance">, en.</string>
 
     <!--activity_offers-->
     <string name="excellent_price_text_1">Fix an excellent price for your trip now</string>

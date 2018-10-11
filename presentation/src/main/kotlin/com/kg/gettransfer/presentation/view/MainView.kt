@@ -19,5 +19,4 @@ interface MainView: BaseView {
     fun setAddressFrom(address: String)
     fun setAddressTo(address: String)
     fun setUser(user: UserModel)
-    fun setEntrance(address: String, entrance: String)
 }
