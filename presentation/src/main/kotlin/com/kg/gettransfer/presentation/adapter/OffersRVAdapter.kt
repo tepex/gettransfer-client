@@ -30,7 +30,8 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_offer.view.*
 import kotlinx.android.synthetic.main.view_offer_car_name_and_options.view.*
 
-class OffersRVAdapter(private val offers: List<OfferModel>, private val listener: SelectOfferClickListener):
+class OffersRVAdapter(private val offers: List<OfferModel>,
+                      private val listener: SelectOfferClickListener):
         RecyclerView.Adapter<OffersRVAdapter.ViewHolder>() {
 
     companion object {
@@ -87,7 +88,9 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
                 layoutLanguages.addView(layout)
             }
 
-            setOnClickListener { listener(item) }
+            setOnClickListener { listener(item, false) }
+            btnSelect.setOnClickListener { listener(item, false) }
+            column1.setOnClickListener { listener(item, true) }
         }
 
         fun setTexts(layout: View, textViewPax: TextView, textViewBaggage: TextView, item: OfferModel, context: Context) {
@@ -109,4 +112,4 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
     }
 }
 
-typealias SelectOfferClickListener = (OfferModel) -> Unit
+typealias SelectOfferClickListener = (OfferModel, Boolean) -> Unit

@@ -16,4 +16,5 @@ interface OffersView: BaseLoadingView {
     fun setOffers(offers: List<OfferModel>)
     fun setSortState(sortCategory: String, sortHigherToLower: Boolean)
     fun showAlertCancelRequest()
+    fun showBottomSheetOfferDetails(offer: OfferModel)
 }

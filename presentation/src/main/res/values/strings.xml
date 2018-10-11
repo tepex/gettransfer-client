@@ -104,7 +104,7 @@
 
     <string name="number_symbol">#</string>
 
-    <string name="carrier_number">Carrier #</string>
+    <!--<string name="carrier_number">Carrier #</string>-->
 
     <string name="from">From</string>
     <string name="to">To</string>
@@ -341,6 +341,7 @@
     <string name="alert_yes">Yes</string>
 
     <string name="driver_number">#%1$d</string>
+    <string name="carrier_number">Carrier #%1$d</string>
     <string name="driver_completed_transfers">made %1$d transfers</string>
     <string name="preferred_cost">(%1$s)</string>
     <string name="terms">TERMS</string>

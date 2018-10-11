@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+import android.support.design.widget.BottomSheetBehavior
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
@@ -27,6 +28,7 @@ import com.kg.gettransfer.presentation.presenter.OffersPresenter
 import com.kg.gettransfer.presentation.view.OffersView
 
 import kotlinx.android.synthetic.main.activity_offers.*
+import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
 
@@ -38,6 +40,8 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
 
     private val offerInteractor: OfferInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
+
+    private lateinit var bsOfferDetails: BottomSheetBehavior<View>
     
     @ProvidePresenter
     fun createOffersPresenter(): OffersPresenter = OffersPresenter(coroutineContexts,
@@ -66,14 +70,30 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
         btnCancelRequest.visibility = View.VISIBLE
         rvOffers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-        /*val stars = ratingBarOffer.progressDrawable as LayerDrawable
-        stars.getDrawable(2).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP)*/
+        bsOfferDetails = BottomSheetBehavior.from(sheetOfferDetails)
 
         btnCancelRequest.setOnClickListener { presenter.onCancelRequestClicked() }
         layoutTransferRequestInfo.setOnClickListener { presenter.onRequestInfoClicked() }
         sortYear.setOnClickListener { presenter.changeSortType(OffersPresenter.SORT_YEAR) }
         sortRating.setOnClickListener { presenter.changeSortType(OffersPresenter.SORT_RATING) }
         sortPrice.setOnClickListener { presenter.changeSortType(OffersPresenter.SORT_PRICE) }
+    }
+
+    private fun setOfferDetailsSheetListener(){
+        bsOfferDetails.setBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(p0: View, p1: Float) {
+
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when(newState) {
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+                        //collapsedOrderSheet()
+                    }
+                }
+            }
+
+        })
     }
     
     override fun setTransfer(transferModel: TransferModel) {
@@ -87,7 +107,7 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
     override fun setDate(date: String) { tvOrderDateTime.text = date }
 
     override fun setOffers(offers: List<OfferModel>) {
-        rvOffers.adapter = OffersRVAdapter(offers) { offer -> presenter.onSelectOfferClicked(offer) }
+        rvOffers.adapter = OffersRVAdapter(offers) { offer, isShowingOfferDetails -> presenter.onSelectOfferClicked(offer, isShowingOfferDetails) }
     }
 
     override fun setSortState(sortCategory: String, sortHigherToLower: Boolean) {
@@ -117,5 +137,23 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
 
     override fun showAlertCancelRequest() {
         Utils.showAlertCancelRequest(this) { isCancel -> presenter.cancelRequest(isCancel) }
+    }
+
+    override fun showBottomSheetOfferDetails(offer: OfferModel) {
+        sheetOfferDetails.carrierId.text = getString(R.string.carrier_number, offer.carrierId)
+        //sheetOfferDetails.layoutCarrierLanguages
+        sheetOfferDetails.ratingBarDriver
+        sheetOfferDetails.ratingBarPunctuality
+        sheetOfferDetails.ratingBarVehicle
+        sheetOfferDetails.vehicleName
+        sheetOfferDetails.vehicleType
+        sheetOfferDetails.tvCountPersons
+        sheetOfferDetails.tvCountBaggage
+        sheetOfferDetails.imgFreeWiFi
+        sheetOfferDetails.imgFreeWater
+        sheetOfferDetails.offerPrice
+        sheetOfferDetails.offerPricePreferred
+        sheetOfferDetails.btnBook
+        bsOfferDetails.state = BottomSheetBehavior.STATE_EXPANDED
     }
 }

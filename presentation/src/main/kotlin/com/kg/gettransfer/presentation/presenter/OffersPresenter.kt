@@ -111,10 +111,14 @@ class OffersPresenter(cc: CoroutineContexts,
         router.navigateTo(Screens.DETAILS)
     }
 
-    fun onSelectOfferClicked(offer: OfferModel) {
-        offerInteractor.selectedOfferId = offer.id
-        offerInteractor.transferId = transferInteractor.selectedId
-        router.navigateTo(Screens.PAYMENT_SETTINGS)
+    fun onSelectOfferClicked(offer: OfferModel, isShowingOfferDetails: Boolean) {
+        if(isShowingOfferDetails){
+            viewState.showBottomSheetOfferDetails(offer)
+        } else {
+            offerInteractor.selectedOfferId = offer.id
+            offerInteractor.transferId = transferInteractor.selectedId
+            router.navigateTo(Screens.PAYMENT_SETTINGS)
+        }
     }
 
     fun onCancelRequestClicked() {

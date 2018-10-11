@@ -122,15 +122,14 @@
                         app:srb_numStars="5"
                         app:srb_minimumStars="0"
                         app:srb_rating="2"
-                        app:srb_starWidth="12dp"
-                        app:srb_starHeight="12dp"
-                        app:srb_starPadding="2dp"
+                        app:srb_starHeight="@dimen/rating_bar_stars_height_width"
+                        app:srb_starPadding="@dimen/rating_bar_stars_padding"
+                        app:srb_starWidth="@dimen/rating_bar_stars_height_width"
                         app:srb_stepSize="0.1"
                         app:srb_isIndicator="true"
                         app:srb_clickable="false"
                         app:srb_drawableEmpty="@drawable/ic_star_empty"
-                        app:srb_drawableFilled="@drawable/ic_star_filled">
-                    </com.willy.ratingbar.ScaleRatingBar>
+                        app:srb_drawableFilled="@drawable/ic_star_filled"/>
 
                     <ImageView
                         android:id="@+id/ivLike"

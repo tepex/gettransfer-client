@@ -189,4 +189,8 @@
 
     </android.support.v4.widget.NestedScrollView>
 
+    <include
+        android:id="@+id/sheetOfferDetails"
+        layout="@layout/bottom_sheet_offer_details"/>
+
 </LinearLayout>
