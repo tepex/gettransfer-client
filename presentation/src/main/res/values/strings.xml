@@ -16,10 +16,6 @@
 		<item>Prod</item>
 	</string-array>
 
-	<string name="logs_file_name">Logs.txt</string>
-	<string name="file_provider_authority" translatable="false">com.kg.gettransfer.fileprovider</string>
-
-
     <string name="navigation_drawer_open" translatable="false">Open</string>
     <string name="navigation_drawer_close" translatable="false">Close</string>
     <!-- Navigation -->
@@ -368,11 +364,6 @@
     <string name="method_of_payment">METHOD OF PAYMENT</string>
 
     <string name="price_part_1">70%% (%s) later to the driver</string>
-
-    <string name="share_extra_subject">GTR Logs</string>
-    <string name="share">Share</string>
-    <string name="clear">Clear</string>
-    <string name="title_starting_session">/////////////////////////////////////////////////////\n//////////////////// NEW SESSION ////////////////////\n/////////////////////////////////////////////////////</string>
 
     <string name="share_extra_subject">GTR Logs</string>
     <string name="share">Share</string>
