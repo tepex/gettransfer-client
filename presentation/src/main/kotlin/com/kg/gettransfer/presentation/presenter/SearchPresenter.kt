@@ -25,13 +25,12 @@ class SearchPresenter(cc: CoroutineContexts,
     var isTo = false
 
     companion object {
-        @JvmField
-        val ADDRESS_PREDICTION_SIZE = 3
+        @JvmField val ADDRESS_PREDICTION_SIZE = 3
 
-        const val ROUTE_TYPE = 1020
+        const val ROUTE_TYPE          = 1020
         const val STREET_ADDRESS_TYPE = 1021
-        const val SUITABLE_TYPE = 0
-        const val NO_TYPE = -1
+        const val SUITABLE_TYPE       = 0
+        const val NO_TYPE             = -1
     }
 
     @CallSuper

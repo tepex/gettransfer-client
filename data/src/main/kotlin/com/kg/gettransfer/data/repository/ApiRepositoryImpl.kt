@@ -10,7 +10,6 @@ import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.domain.repository.Preferences
 
 import com.google.gson.GsonBuilder
-import com.google.gson.annotations.SerializedName
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
 
@@ -25,6 +24,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+
 import timber.log.Timber
 
 class ApiRepositoryImpl(private val preferences: Preferences,

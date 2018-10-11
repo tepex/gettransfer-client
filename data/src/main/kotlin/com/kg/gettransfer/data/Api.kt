@@ -14,10 +14,10 @@ interface Api {
         const val API_ROUTE_INFO   = "/api/route_info"
         const val API_LOGIN        = "/api/login"
         const val API_TRANSFERS    = "/api/transfers"
-		const val API_TRANSFERS_ARCHIVE = "/api/transfers/archive"
-		const val API_TRANSFERS_ACTIVE  = "/api/transfers/active"
-		const val API_CARRIER_TRIPS = "/api/trips"
-		const val API_CREATE_NEW_PAYMENT = "/api/payments"
+        const val API_TRANSFERS_ARCHIVE = "/api/transfers/archive"
+        const val API_TRANSFERS_ACTIVE  = "/api/transfers/active"
+        const val API_CARRIER_TRIPS = "/api/trips"
+        const val API_CREATE_NEW_PAYMENT = "/api/payments"
     }
     
 	@GET(API_ACCESS_TOKEN)
@@ -79,5 +79,4 @@ interface Api {
 
 	@GET("$API_CREATE_NEW_PAYMENT/{status}")
 	fun changePaymentStatus(@Path("status") status: String, @Body payment: ApiPayment)
-
 }

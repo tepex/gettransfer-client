@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
-import com.kg.gettransfer.R
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -22,9 +21,7 @@ class RequestsPresenter(cc: CoroutineContexts,
 
     companion object {
         @JvmField val EVENT = "transfers"
-
         @JvmField val PARAM_KEY = "filter"
-
     }
 
     @CallSuper
@@ -33,8 +30,6 @@ class RequestsPresenter(cc: CoroutineContexts,
         transferInteractor.deleteAllTransfersList()
     }
 
-    fun logEvent(value: String){
-        mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY, value))
-    }
+    fun logEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY, value)) }
 }
                         

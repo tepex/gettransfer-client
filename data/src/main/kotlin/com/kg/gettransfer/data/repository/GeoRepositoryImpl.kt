@@ -104,7 +104,7 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
     /**
      * @TODO: Добавить таймаут
      */
-    override fun getAutocompletePredictions(prediction: String, points: Pair<Point,Point>?): List<GTAddress> {
+    override fun getAutocompletePredictions(prediction: String, points: Pair<Point, Point>?): List<GTAddress> {
         var bounds: LatLngBounds? = null
         if(points != null){
             val northEastPoint = LatLng(points.first.latitude,points.first.longitude)

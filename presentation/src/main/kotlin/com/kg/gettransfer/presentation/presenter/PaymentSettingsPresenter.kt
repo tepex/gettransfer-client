@@ -69,19 +69,12 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
                                                        payment,
                                                        price)
             router.navigateTo(Screens.PAYMENT, payment.url)
-        }, { e -> Timber.e(e)
+        }, {
+            e -> Timber.e(e)
             viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }
 
-    fun changePrice(price: Int) {
-        this.price = price
-    }
-
-    fun changePayment(payment: String) {
-        this.payment = payment
-    }
-
-
-
+    fun changePrice(price: Int) { this.price = price }
+    fun changePayment(payment: String) { this.payment = payment }
 }
