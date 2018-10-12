@@ -142,11 +142,22 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
 
     override fun showBottomSheetOfferDetails(offer: OfferModel) {
         sheetOfferDetails.carrierId.text = getString(R.string.carrier_number, offer.carrierId)
-        //sheetOfferDetails.layoutCarrierLanguages
+
+        sheetOfferDetails.layoutCarrierLanguages.removeAllViews()
+        val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        lp.setMargins(8, 0, 8, 0)
+        for (item in offer.carrierLanguages){
+            val ivLanguage = ImageView(this)
+            ivLanguage.setImageResource(Utils.getLanguageImage(item.language))
+            ivLanguage.layoutParams = lp
+            sheetOfferDetails.layoutCarrierLanguages.addView(ivLanguage)
+        }
+
         sheetOfferDetails.ratingBarDriver.rating = offer.ratings.driver!!.toFloat()
         sheetOfferDetails.ratingBarPunctuality.rating = offer.ratings.fair!!.toFloat()
         sheetOfferDetails.ratingBarVehicle.rating = offer.ratings.vehicle!!.toFloat()
-        sheetOfferDetails.vehicleName.text = Utils.getVehicleNameWithColor(this, offer.transportName, offer.vehicleColor)
+        sheetOfferDetails.vehicleName.text = if(offer.vehicleColor == null) offer.transportName
+                                             else Utils.getVehicleNameWithColor(this, offer.transportName, offer.vehicleColor)
         sheetOfferDetails.vehicleType.setText(Utils.getTransportTypeName(offer.transportType))
         sheetOfferDetails.tvCountPersons.text = getString(R.string.count_persons_and_baggage, offer.paxMax)
         sheetOfferDetails.tvCountBaggage.text = getString(R.string.count_persons_and_baggage, offer.baggageMax)
@@ -156,7 +167,7 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
         if(offer.pricePreferred != null){
             sheetOfferDetails.offerPricePreferred.text = getString(R.string.preferred_cost, offer.pricePreferred)
             sheetOfferDetails.offerPricePreferred.visibility = View.VISIBLE
-        }
+        } else sheetOfferDetails.offerPricePreferred.visibility = View.GONE
         sheetOfferDetails.btnBook.setOnClickListener {
             presenter.onSelectOfferClicked(offer, false)
             hideSheetOfferDetails()

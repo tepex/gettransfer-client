@@ -16,7 +16,7 @@ class OfferModel(val id: Long,
                  val pricePercentage30: String,
                  val vehiclePhotos: List<String>,
                  val carrierLanguages: List<Locale>,
-                 val vehicleColor: String)
+                 val vehicleColor: String?)
 
 class RatingsModel(val average: Double?,
                    val vehicle: Double?,

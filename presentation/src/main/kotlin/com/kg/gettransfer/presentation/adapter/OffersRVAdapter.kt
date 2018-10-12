@@ -100,7 +100,8 @@ class OffersRVAdapter(private val offers: List<OfferModel>,
             val ssBuilder = SpannableStringBuilder(item.transportName + " ")
             val colorCarImageSpan = ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE)
             ssBuilder.setSpan(colorCarImageSpan, ssBuilder.length - 1, ssBuilder.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)*/
-            layout.tvVehicleName.text = Utils.getVehicleNameWithColor(context, item.transportName, item.vehicleColor)
+            layout.tvVehicleName.text = if(item.vehicleColor == null) item.transportName
+                                        else Utils.getVehicleNameWithColor(context, item.transportName, item.vehicleColor)
 
             if(item.wifi) layout.imgOptionFreeWiFi.visibility = View.VISIBLE
             if(item.refreshments) layout.imgOptionFreeWater.visibility = View.VISIBLE
