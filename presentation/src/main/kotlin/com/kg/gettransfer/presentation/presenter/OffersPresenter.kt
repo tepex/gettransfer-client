@@ -4,6 +4,8 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
+import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
@@ -158,7 +160,7 @@ class OffersPresenter(cc: CoroutineContexts,
             }
             SORT_RATING -> {
                 sortType = if(sortHigherToLower) RATING_DOWN else RATING_UP
-                offers.sortedWith(compareBy { it.averageRating })
+                offers.sortedWith(compareBy { it.ratings.average })
             }
             SORT_PRICE -> {
                 sortType = if(sortHigherToLower) PRICE_DOWN else PRICE_UP

@@ -58,8 +58,8 @@ class OffersRVAdapter(private val offers: List<OfferModel>,
             }
             if(item.vehicle.photos.isNotEmpty()) {
                 layoutWithCarImage.visibility = View.VISIBLE
-                Glide.with(this).load(context.getString(R.string.api_photo_url, item.vehicle.photos.first())).into(carPhoto)
-                ratingBar.rating = item.averageRating!!.toFloat()
+                Glide.with(this).load(context.getString(R.string.api_photo_url, item.vehiclePhotos[0])).into(carPhoto)
+                ratingBar.rating = item.ratings.average!!.toFloat()
                 setTexts(bottomLayoutForImage, tvCountPersonsOnCarImage, tvCountBaggageOnCarImage, item, context)
             } else {
                 layoutNoCarImage.visibility = View.VISIBLE
@@ -93,21 +93,20 @@ class OffersRVAdapter(private val offers: List<OfferModel>,
             column1.setOnClickListener { listener(item, true) }
         }
 
-        fun setTexts(layout: View, textViewPax: TextView, textViewBaggage: TextView, item: OfferModel, context: Context) {
-            val drawableCompat = ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)
-            drawableCompat!!.setColorFilter(ContextCompat.getColor(context, Utils.getColorVehicle(item.vehicle.color)), PorterDuff.Mode.SRC_IN)
+        fun setTexts(layout: View, textViewPax: TextView, textViewBaggage: TextView, item: OfferModel, context: Context){
+            /*val drawableCompat = ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)
+            drawableCompat!!.setColorFilter(ContextCompat.getColor(context, Utils.getColorVehicle(item.vehicleColor)), PorterDuff.Mode.SRC_IN)
             drawableCompat.setBounds(4, 0, drawableCompat.intrinsicWidth + 4, drawableCompat.intrinsicHeight)
-            
-            val ssBuilder = SpannableStringBuilder(item.vehicle.transportType.id + " ")
+            val ssBuilder = SpannableStringBuilder(item.transportName + " ")
             val colorCarImageSpan = ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE)
-            ssBuilder.setSpan(colorCarImageSpan, ssBuilder.length - 1, ssBuilder.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            layout.tvVehicleName.text = ssBuilder
+            ssBuilder.setSpan(colorCarImageSpan, ssBuilder.length - 1, ssBuilder.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)*/
+            layout.tvVehicleName.text = Utils.getVehicleNameWithColor(context, item.transportName, item.vehicleColor)
 
             if(item.wifi) layout.imgOptionFreeWiFi.visibility = View.VISIBLE
             if(item.refreshments) layout.imgOptionFreeWater.visibility = View.VISIBLE
-            
-            textViewPax.text = context.getString(R.string.count_persons_and_baggage, item.vehicle.transportType.paxMax)
-            textViewBaggage.text = context.getString(R.string.count_persons_and_baggage, item.vehicle.transportType.luggageMax)
+
+            textViewPax.text = context.getString(R.string.count_persons_and_baggage, item.paxMax)
+            textViewBaggage.text = context.getString(R.string.count_persons_and_baggage, item.baggageMax)
         }
     }
 }

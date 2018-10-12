@@ -71,6 +71,7 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
         rvOffers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         bsOfferDetails = BottomSheetBehavior.from(sheetOfferDetails)
+        bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN
 
         btnCancelRequest.setOnClickListener { presenter.onCancelRequestClicked() }
         layoutTransferRequestInfo.setOnClickListener { presenter.onRequestInfoClicked() }
@@ -79,7 +80,7 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
         sortPrice.setOnClickListener { presenter.changeSortType(OffersPresenter.SORT_PRICE) }
     }
 
-    private fun setOfferDetailsSheetListener(){
+    /*private fun setOfferDetailsSheetListener(){
         bsOfferDetails.setBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(p0: View, p1: Float) {
 
@@ -94,7 +95,7 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
             }
 
         })
-    }
+    }*/
     
     override fun setTransfer(transferModel: TransferModel) {
         //tvConnectingCarriers.text = getString(R.string.transfer_connecting_carriers, transferModel.relevantCarriersCount)
@@ -142,18 +143,34 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
     override fun showBottomSheetOfferDetails(offer: OfferModel) {
         sheetOfferDetails.carrierId.text = getString(R.string.carrier_number, offer.carrierId)
         //sheetOfferDetails.layoutCarrierLanguages
-        sheetOfferDetails.ratingBarDriver
-        sheetOfferDetails.ratingBarPunctuality
-        sheetOfferDetails.ratingBarVehicle
-        sheetOfferDetails.vehicleName
-        sheetOfferDetails.vehicleType
-        sheetOfferDetails.tvCountPersons
-        sheetOfferDetails.tvCountBaggage
-        sheetOfferDetails.imgFreeWiFi
-        sheetOfferDetails.imgFreeWater
-        sheetOfferDetails.offerPrice
-        sheetOfferDetails.offerPricePreferred
-        sheetOfferDetails.btnBook
+        sheetOfferDetails.ratingBarDriver.rating = offer.ratings.driver!!.toFloat()
+        sheetOfferDetails.ratingBarPunctuality.rating = offer.ratings.fair!!.toFloat()
+        sheetOfferDetails.ratingBarVehicle.rating = offer.ratings.vehicle!!.toFloat()
+        sheetOfferDetails.vehicleName.text = Utils.getVehicleNameWithColor(this, offer.transportName, offer.vehicleColor)
+        sheetOfferDetails.vehicleType.setText(Utils.getTransportTypeName(offer.transportType))
+        sheetOfferDetails.tvCountPersons.text = getString(R.string.count_persons_and_baggage, offer.paxMax)
+        sheetOfferDetails.tvCountBaggage.text = getString(R.string.count_persons_and_baggage, offer.baggageMax)
+        if(offer.wifi) sheetOfferDetails.imgFreeWiFi.visibility = View.VISIBLE
+        if(offer.refreshments) sheetOfferDetails.imgFreeWater.visibility = View.VISIBLE
+        sheetOfferDetails.offerPrice.text = offer.priceDefault
+        if(offer.pricePreferred != null){
+            sheetOfferDetails.offerPricePreferred.text = getString(R.string.preferred_cost, offer.pricePreferred)
+            sheetOfferDetails.offerPricePreferred.visibility = View.VISIBLE
+        }
+        sheetOfferDetails.btnBook.setOnClickListener {
+            presenter.onSelectOfferClicked(offer, false)
+            hideSheetOfferDetails()
+        }
         bsOfferDetails.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    private fun hideSheetOfferDetails(){
+        bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
+    @CallSuper
+    override fun onBackPressed() {
+        if(bsOfferDetails.state == BottomSheetBehavior.STATE_EXPANDED) hideSheetOfferDetails()
+        else super.onBackPressed()
     }
 }

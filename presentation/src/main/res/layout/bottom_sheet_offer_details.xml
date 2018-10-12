@@ -30,7 +30,7 @@
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view" />
+        app:layout_constraintTop_toBottomOf="@+id/view" />
 
     <LinearLayout
         android:id="@+id/layoutCarrierLanguages"
@@ -38,9 +38,9 @@
         android:layout_height="@dimen/bottom_sheet_offer_details_layout_languages_height"
         android:layout_marginStart="@dimen/bottom_sheet_offer_details_layout_languages_margin_start"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@id/carrierId"
-        app:layout_constraintStart_toEndOf="@id/carrierId"
-        app:layout_constraintTop_toTopOf="@id/carrierId" />
+        app:layout_constraintBottom_toBottomOf="@+id/carrierId"
+        app:layout_constraintStart_toEndOf="@+id/carrierId"
+        app:layout_constraintTop_toTopOf="@+id/carrierId" />
 
     <TextView
         android:id="@+id/ratingDriver"
@@ -53,16 +53,16 @@
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/carrierId" />
+        app:layout_constraintTop_toBottomOf="@+id/carrierId" />
 
     <com.willy.ratingbar.ScaleRatingBar
         android:id="@+id/ratingBarDriver"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/ratingDriver"
-        app:layout_constraintEnd_toEndOf="@id/ratingBarPunctuality"
-        app:layout_constraintStart_toStartOf="@id/ratingBarPunctuality"
-        app:layout_constraintTop_toTopOf="@id/ratingDriver"
+        app:layout_constraintBottom_toBottomOf="@+id/ratingDriver"
+        app:layout_constraintEnd_toEndOf="@+id/ratingBarPunctuality"
+        app:layout_constraintStart_toStartOf="@+id/ratingBarPunctuality"
+        app:layout_constraintTop_toTopOf="@+id/ratingDriver"
         app:srb_clickable="false"
         app:srb_drawableEmpty="@drawable/ic_star_empty"
         app:srb_drawableFilled="@drawable/ic_star_filled"
@@ -80,9 +80,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/bottom_sheet_offer_details_iv_like_margin_start"
-        app:layout_constraintBottom_toBottomOf="@id/ratingDriver"
-        app:layout_constraintStart_toEndOf="@id/ratingBarDriver"
-        app:layout_constraintTop_toTopOf="@id/ratingDriver"
+        app:layout_constraintBottom_toBottomOf="@+id/ratingDriver"
+        app:layout_constraintStart_toEndOf="@+id/ratingBarDriver"
+        app:layout_constraintTop_toTopOf="@+id/ratingDriver"
         app:srcCompat="@drawable/ic_like_button" />
 
     <TextView
@@ -95,16 +95,16 @@
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ratingDriver" />
+        app:layout_constraintTop_toBottomOf="@+id/ratingDriver" />
 
     <com.willy.ratingbar.ScaleRatingBar
         android:id="@+id/ratingBarPunctuality"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/bottom_sheet_offer_details_rating_bar_punctuality_margin_start"
-        app:layout_constraintBottom_toBottomOf="@id/ratingPunctuality"
-        app:layout_constraintStart_toEndOf="@id/ratingPunctuality"
-        app:layout_constraintTop_toTopOf="@id/ratingPunctuality"
+        app:layout_constraintBottom_toBottomOf="@+id/ratingPunctuality"
+        app:layout_constraintStart_toEndOf="@+id/ratingPunctuality"
+        app:layout_constraintTop_toTopOf="@+id/ratingPunctuality"
         app:srb_clickable="false"
         app:srb_drawableEmpty="@drawable/ic_star_empty"
         app:srb_drawableFilled="@drawable/ic_star_filled"
@@ -122,9 +122,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/bottom_sheet_offer_details_iv_like_margin_start"
-        app:layout_constraintBottom_toBottomOf="@id/ratingPunctuality"
-        app:layout_constraintStart_toEndOf="@id/ratingBarPunctuality"
-        app:layout_constraintTop_toTopOf="@id/ratingPunctuality"
+        app:layout_constraintBottom_toBottomOf="@+id/ratingPunctuality"
+        app:layout_constraintStart_toEndOf="@+id/ratingBarPunctuality"
+        app:layout_constraintTop_toTopOf="@+id/ratingPunctuality"
         app:srcCompat="@drawable/ic_like_button" />
 
     <TextView
@@ -137,16 +137,16 @@
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ratingPunctuality" />
+        app:layout_constraintTop_toBottomOf="@+id/ratingPunctuality" />
 
     <com.willy.ratingbar.ScaleRatingBar
         android:id="@+id/ratingBarVehicle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/ratingVehicle"
-        app:layout_constraintEnd_toEndOf="@id/ratingBarPunctuality"
-        app:layout_constraintStart_toStartOf="@id/ratingBarPunctuality"
-        app:layout_constraintTop_toTopOf="@id/ratingVehicle"
+        app:layout_constraintBottom_toBottomOf="@+id/ratingVehicle"
+        app:layout_constraintEnd_toEndOf="@+id/ratingBarPunctuality"
+        app:layout_constraintStart_toStartOf="@+id/ratingBarPunctuality"
+        app:layout_constraintTop_toTopOf="@+id/ratingVehicle"
         app:srb_clickable="false"
         app:srb_drawableEmpty="@drawable/ic_star_empty"
         app:srb_drawableFilled="@drawable/ic_star_filled"
@@ -164,9 +164,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/bottom_sheet_offer_details_iv_like_margin_start"
-        app:layout_constraintBottom_toBottomOf="@id/ratingVehicle"
-        app:layout_constraintStart_toEndOf="@id/ratingBarVehicle"
-        app:layout_constraintTop_toTopOf="@id/ratingVehicle"
+        app:layout_constraintBottom_toBottomOf="@+id/ratingVehicle"
+        app:layout_constraintStart_toEndOf="@+id/ratingBarVehicle"
+        app:layout_constraintTop_toTopOf="@+id/ratingVehicle"
         app:srcCompat="@drawable/ic_like_button" />
 
     <TextView
@@ -180,7 +180,7 @@
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ratingVehicle" />
+        app:layout_constraintTop_toBottomOf="@+id/ratingVehicle" />
 
     <LinearLayout
         android:id="@+id/layoutVehicleInfo"
@@ -191,7 +191,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vehicleName">
+        app:layout_constraintTop_toBottomOf="@+id/vehicleName">
 
         <TextView
             android:id="@+id/vehicleType"
@@ -203,7 +203,7 @@
             android:textColor="@color/colorTextBlack"
             android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ratingPunctuality" />
+            app:layout_constraintTop_toBottomOf="@+id/ratingPunctuality" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -256,31 +256,37 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/offerPrice"
+    <LinearLayout
+        android:id="@+id/layoutPrices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_text_bold"
-        android:textSize="@dimen/bottom_sheet_offer_details_text_size_14sp"
-        android:textColor="@color/colorTextBlack"
-        android:text="€199,00"
-        app:layout_constraintTop_toTopOf="@id/btnBook"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="@+id/btnBook"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btnBook"
-        app:layout_constraintBottom_toTopOf="@id/offerPricePreferred"/>
+        app:layout_constraintEnd_toStartOf="@+id/btnBook"
+        app:layout_constraintBottom_toBottomOf="@+id/btnBook">
 
-    <TextView
-        android:id="@+id/offerPricePreferred"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_text_bold"
-        android:textSize="@dimen/bottom_sheet_offer_details_text_size_14sp"
-        android:textColor="@color/colorTextBlack"
-        android:text="($222,00)"
-        app:layout_constraintTop_toBottomOf="@id/offerPrice"
-        app:layout_constraintStart_toStartOf="@id/offerPrice"
-        app:layout_constraintEnd_toEndOf="@id/offerPrice"
-        app:layout_constraintBottom_toBottomOf="@id/btnBook"/>
+        <TextView
+            android:id="@+id/offerPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf_pro_text_bold"
+            android:textSize="@dimen/bottom_sheet_offer_details_text_size_14sp"
+            android:textColor="@color/colorTextBlack"
+            android:text="€199,00"/>
+
+        <TextView
+            android:id="@+id/offerPricePreferred"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf_pro_text_bold"
+            android:textSize="@dimen/bottom_sheet_offer_details_text_size_14sp"
+            android:textColor="@color/colorTextBlack"
+            android:text="($222,00)"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/btnBook"
@@ -292,9 +298,9 @@
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/bottom_sheet_offer_details_text_size_13sp"
         android:fontFamily="@font/sf_pro_text_regular"
-        app:layout_constraintTop_toBottomOf="@id/layoutVehicleInfo"
+        app:layout_constraintTop_toBottomOf="@+id/layoutVehicleInfo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/offerPrice"
+        app:layout_constraintStart_toEndOf="@+id/layoutPrices"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="@dimen/bottom_sheet_offer_details_btn_book_margin_top"
         android:layout_marginBottom="@dimen/bottom_sheet_offer_details_btn_book_margin_bottom"/>

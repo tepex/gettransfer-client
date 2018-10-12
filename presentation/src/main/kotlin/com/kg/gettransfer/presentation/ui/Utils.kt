@@ -7,6 +7,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.PorterDuff
 
 import android.os.Build
 
@@ -18,7 +19,10 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 
 import android.text.Editable
+import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.text.TextWatcher
+import android.text.style.ImageSpan
 
 import android.view.LayoutInflater
 import android.view.View
@@ -26,8 +30,8 @@ import android.view.inputmethod.InputMethodManager
 
 import android.widget.EditText
 import android.widget.RelativeLayout
-import com.google.android.gms.maps.CameraUpdate
 
+import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
@@ -41,6 +45,7 @@ import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
+
 import kotlinx.android.synthetic.main.activity_create_order.*
 
 import java.util.Locale
@@ -241,8 +246,17 @@ internal class Utils {
             return (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_unknown
         }
 
-        @ColorRes
-        fun getColorVehicle(color: String): Int {
+        fun getVehicleNameWithColor(context: Context, vehicleName: String, vehicleColor: String): SpannableStringBuilder{
+            val drawableCompat = ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)
+            drawableCompat!!.setColorFilter(ContextCompat.getColor(context, Utils.getColorVehicle(vehicleColor)), PorterDuff.Mode.SRC_IN)
+            drawableCompat.setBounds(4, 0, drawableCompat.intrinsicWidth + 4, drawableCompat.intrinsicHeight)
+            val ssBuilder = SpannableStringBuilder("$vehicleName ")
+            val colorCarImageSpan = ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE)
+            ssBuilder.setSpan(colorCarImageSpan, ssBuilder.length - 1, ssBuilder.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            return ssBuilder
+        }
+
+        fun getColorVehicle(color: String): Int{
             val colorRes = R.color::class.members.find( { it.name == "color_vehicle_$color" } )
             return (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
         }

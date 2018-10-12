@@ -111,29 +111,32 @@ object Mappers {
                                                           promoCode,
                                                           paypalOnly)
 
-    fun getOfferModel(offer: Offer): OfferModel { 
+    fun getOfferModel(offer: Offer): OfferModel{
+        var carrierRatings = RatingsModel(offer.carrier.ratings.average,
+                offer.carrier.ratings.vehicle, offer.carrier.ratings.driver, offer.carrier.ratings.fair)
+
         return OfferModel(offer.id,
-                   ProfileModel(offer.driver?.name, offer.driver?.email, offer.driver?.phone),
-                   VehicleModel(VehicleBaseModel(offer.vehicle.vehicleBase.name, offer.vehicle.vehicleBase.registrationNumber),
-                                offer.vehicle.year,
-                                offer.vehicle.color,
-                                TransportTypeModel(offer.vehicle.transportType.id,
-                                                   getTransportTypeName(offer.vehicle.transportType.id),
-                                                   null,
-                                                   offer.vehicle.transportType.paxMax,
-                                                   offer.vehicle.transportType.luggageMax,
-                                                   null),
-                                offer.vehicle.photos),
-                   offer.price.base.default,
-                   offer.price.base.preferred,
-                   offer.carrier.id,
-                   offer.carrier.completedTransfers,
-                   offer.wifi,
-                   offer.refreshments,
-                   offer.carrier.ratings.average,
-                   offer.price.amount,
-                   offer.price.percentage30,
-                   offer.carrier.languages)
+                offer.driver?.fullName,
+                offer.driver?.email,
+                offer.driver?.phone,
+                offer.vehicle.transportTypeId,
+                offer.vehicle.name,
+                offer.vehicle.registrationNumber,
+                offer.price.base.default,
+                offer.price.base.preferred,
+                offer.vehicle.paxMax,
+                offer.vehicle.luggageMax,
+                offer.vehicle.year,
+                offer.carrier.id,
+                offer.carrier.completedTransfers,
+                offer.wifi,
+                offer.refreshments,
+                carrierRatings,
+                offer.price.amount,
+                offer.price.percentage30,
+                offer.vehicle.photos,
+                offer.carrier.languages,
+                offer.vehicle.color)
     }
 
     fun getCarrierTripModel(carrierTrip: CarrierTrip, locale: Locale, distanceUnit: DistanceUnit) = 

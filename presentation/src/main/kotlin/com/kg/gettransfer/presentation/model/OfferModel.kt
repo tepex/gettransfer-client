@@ -11,7 +11,14 @@ class OfferModel(val id: Long,
                  val completedTransfers: Int,
                  val wifi: Boolean,
                  val refreshments: Boolean,
-                 val averageRating: Double?,
+                 val ratings: RatingsModel,
                  val priceAmount: Double,
                  val pricePercentage30: String,
-                 val carrierLanguages: List<Locale>)
+                 val vehiclePhotos: List<String>,
+                 val carrierLanguages: List<Locale>,
+                 val vehicleColor: String)
+
+class RatingsModel(val average: Double?,
+                   val vehicle: Double?,
+                   val driver: Double?,
+                   val fair: Double?)
