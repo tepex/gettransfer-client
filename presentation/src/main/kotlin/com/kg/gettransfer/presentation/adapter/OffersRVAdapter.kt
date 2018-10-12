@@ -1,13 +1,26 @@
 package com.kg.gettransfer.presentation.adapter
 
 import android.content.Context
+
+import android.graphics.PorterDuff
+
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 
+import android.text.style.ImageSpan
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+
+import com.bumptech.glide.Glide
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -15,15 +28,7 @@ import com.kg.gettransfer.presentation.ui.Utils
 
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_offer.view.*
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_offer_car_name_and_options.view.*
-import android.view.Gravity
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.text.style.ImageSpan
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.graphics.PorterDuff
 
 class OffersRVAdapter(private val offers: List<OfferModel>, private val listener: SelectOfferClickListener):
         RecyclerView.Adapter<OffersRVAdapter.ViewHolder>() {
@@ -66,13 +71,13 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
             lp.setMargins(8, 4, 8, 4)
 
             var raws = carrierLanguages.size / 2
-            if (carrierLanguages.size % 2 == 0) raws -= 1
+            if (carrierLanguages.size % 2 == 0) --raws
 
             for(i in 0..raws) {
                 val layout = LinearLayout(context)
                 layout.orientation = LinearLayout.HORIZONTAL
                 layout.gravity = Gravity.CENTER
-                for (j in 0..1){
+                for(j in 0..1) {
                     if(i * 2 + j == carrierLanguages.size) break
                     val ivLanguage = ImageView(context)
                     ivLanguage.setImageResource(Utils.getLanguageImage(carrierLanguages[i * 2 + j].language))
@@ -85,17 +90,19 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
             setOnClickListener { listener(item) }
         }
 
-        fun setTexts(layout: View, textViewPax: TextView, textViewBaggage: TextView, item: OfferModel, context: Context){
+        fun setTexts(layout: View, textViewPax: TextView, textViewBaggage: TextView, item: OfferModel, context: Context) {
             val drawableCompat = ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)
             drawableCompat!!.setColorFilter(ContextCompat.getColor(context, Utils.getColorVehicle(item.vehicleColor)), PorterDuff.Mode.SRC_IN)
             drawableCompat.setBounds(4, 0, drawableCompat.intrinsicWidth + 4, drawableCompat.intrinsicHeight)
+            
             val ssBuilder = SpannableStringBuilder(item.transportName + " ")
             val colorCarImageSpan = ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE)
             ssBuilder.setSpan(colorCarImageSpan, ssBuilder.length - 1, ssBuilder.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             layout.tvVehicleName.text = ssBuilder
 
-            if(item.wifi) layout.bottomLayoutForImage.imgOptionFreeWiFi.visibility = View.VISIBLE
-            if(item.refreshments) layout.bottomLayoutForImage.imgOptionFreeWater.visibility = View.VISIBLE
+            if(item.wifi) layout.imgOptionFreeWiFi.visibility = View.VISIBLE
+            if(item.refreshments) layout.imgOptionFreeWater.visibility = View.VISIBLE
+            
             textViewPax.text = context.getString(R.string.count_persons_and_baggage, item.paxMax)
             textViewBaggage.text = context.getString(R.string.count_persons_and_baggage, item.baggageMax)
         }

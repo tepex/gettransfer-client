@@ -5,9 +5,11 @@ import android.app.TimePickerDialog
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.os.Build
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+
+import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
@@ -31,8 +33,8 @@ import android.widget.TextView
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.google.android.gms.maps.CameraUpdate
 
+import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.MapStyleOptions
 
 import com.kg.gettransfer.R
@@ -42,6 +44,7 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
+
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
@@ -56,6 +59,9 @@ import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.*
+
+import com.kg.gettransfer.extensions.hideKeyboard
+import com.kg.gettransfer.extensions.showKeyboard
 
 import org.koin.android.ext.android.inject
 
@@ -151,15 +157,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         tvComments.setOnClickListener {
             showPopupWindowComment()
             toggleSheetOrder()
-            showKeyboard()
             presenter.logTransferSettingsEvent(CreateOrderPresenter.COMMENT_INPUT)
         }
         tvAgreement1.setOnClickListener { presenter.showLicenceAgreement() }
         tvAgreement2.setOnClickListener { presenter.showLicenceAgreement() }
-        layoutCBAgreement.setOnClickListener {
-            cbAgreement.isChecked = !cbAgreement.isChecked
-            presenter.setAgreeLicence(cbAgreement.isChecked())
-        }
+        switchAgreement.setOnCheckedChangeListener { buttonView, isChecked -> presenter.setAgreeLicence(isChecked) }
 
         btnGetOffers.setOnClickListener   { presenter.onGetTransferClick() }
         btnCenterRoute.setOnClickListener { presenter.onCenterRouteClick() }
@@ -169,44 +171,19 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         sheetOrder.visibility = View.VISIBLE
         bsTransport = BottomSheetBehavior.from(sheetTransport)
         bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
-        setTransportSheetListener()
         btnOk.setOnClickListener { hideSheetTransport() }
-    }
-
-    private fun setTransportSheetListener() {
-        bsTransport.setBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(p0: View, p1: Float) {
-
-            }
-
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when(newState) {
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                        collapsedOrderSheet()
-                    }
-                }
-            }
-
-        })
     }
 
     private fun hideSheetTransport() {
         bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
-        collapsedOrderSheet()
-    }
-
-    private fun collapsedOrderSheet() {
-        bsOrder.state = BottomSheetBehavior.STATE_COLLAPSED
-        bsOrder.isHideable = false
     }
 
     private fun toggleSheetOrder() {
         if (bsOrder.state != BottomSheetBehavior.STATE_EXPANDED) {
             bsOrder.state = BottomSheetBehavior.STATE_EXPANDED
-            bsOrder.peekHeight = resources.getInteger(R.integer.max_height_sheet_create_order)
         } else {
             bsOrder.state = BottomSheetBehavior.STATE_COLLAPSED
-            bsOrder.peekHeight = resources.getInteger(R.integer.min_height_sheet_create_order)
+            scrollContent.fullScroll(View.FOCUS_UP)
         }
     }
 
@@ -226,11 +203,19 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         val screenHeight = getScreenHeight()
 
         val layoutPopup = LayoutInflater.from(applicationContext).inflate(R.layout.layout_popup_comment, layoutPopup)
-        popupWindowComment = PopupWindow(layoutPopup, LinearLayout.LayoutParams.MATCH_PARENT, screenHeight / 3, true)
+        popupWindowComment = PopupWindow(layoutPopup,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                screenHeight / 3,
+                true)
+        popupWindowComment.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        popupWindowComment.inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
+        popupWindowComment.isOutsideTouchable = true
         layoutPopup.etPopupComment.setText(tvComments.text)
         layoutPopup.etPopupComment.setRawInputType(InputType.TYPE_CLASS_TEXT)
         popupWindowComment.showAtLocation(mainLayoutActivityTransfer, Gravity.CENTER, 0, 0)
-        layoutShadow.visibility = View.VISIBLE
+
+        layoutPopup.etPopupComment.popupWindow = popupWindowComment
+        layoutPopup.etPopupComment.showKeyboard()
 
         layoutPopup.btnClearPopupComment.setOnClickListener { layoutPopup.etPopupComment.setText("") }
         layoutPopup.etPopupComment.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
@@ -242,17 +227,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             false
         })
         popupWindowComment.setOnDismissListener {
-            hideKeyboard()
-            layoutShadow.visibility = View.GONE
+            layoutPopup.etPopupComment.hideKeyboard()
             toggleSheetOrder()
         }
         layoutPopup.setOnClickListener { layoutPopup.etPopupComment.requestFocus() }
         layoutPopup.etPopupComment.setSelection(layoutPopup.etPopupComment.text.length)
-        layoutPopup.etPopupComment.onTextChanged {
-            if(!it.equals(routeInteractor.from?.entrance)) {
-                routeInteractor.from!!.entrance = ""
-            }
-        }
     }
 
     private fun getScreenHeight(): Int {
@@ -282,29 +261,14 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         timePickerDialog.show()
     }
 
-    override fun setPassengers(count: Int) {
-        tvCountPerson.text = count.toString()
-    }
-
-    override fun setChildren(count: Int) {
-        tvCountChild.text = count.toString()
-    }
-
-    override fun setCurrency(currency: String) {
-        tvCurrencyType.text = currency
-    }
-
-    override fun setDateTimeTransfer(dateTimeString: String) {
-        tvDateTimeTransfer.text = dateTimeString
-    }
-
-    override fun setComment(comment: String) {
-        tvComments.text = comment
-    }
+    override fun setPassengers(count: Int)                   { tvCountPerson.text = count.toString() }
+    override fun setChildren(count: Int)                     { tvCountChild.text = count.toString() }
+    override fun setCurrency(currency: String)               { tvCurrencyType.text = currency }
+    override fun setComment(comment: String)                 { tvComments.text = comment }
+    override fun setDateTimeTransfer(dateTimeString: String) { tvDateTimeTransfer.text = dateTimeString }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
-        rvTransferType.adapter = TransferTypeAdapter(transportTypes)
-        {
+        rvTransferType.adapter = TransferTypeAdapter(transportTypes) {
             presenter.checkFields()
             transportTypeClicked(it)
         }
@@ -319,33 +283,17 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
     }
 
-    override fun setGetTransferEnabled(enabled: Boolean) {
-        //TODO сделать подсветку не заполненных полей
-    }
+    //TODO сделать подсветку не заполненных полей
+    override fun setGetTransferEnabled(enabled: Boolean) {}
 
-    /*override fun setRoute(routeModel: RouteModel) {
-        Utils.setPins(this, googleMap, routeModel)
-    }*/
+    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel) { setPolyline(polyline, routeModel) }
 
-    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel) {
-        setPolyline(polyline, routeModel)
-    }
-
-    override fun centerRoute(cameraUpdate: CameraUpdate) {
-        showTrack(cameraUpdate)
-    }
-
-    override fun setEntrance(entrance: String) {
-        if(TextUtils.isEmpty(entrance)) tvComments.text = ""
-        else tvComments.text = getString(R.string.entrance_no, entrance)
-    }
+    override fun centerRoute(cameraUpdate: CameraUpdate) { showTrack(cameraUpdate) }
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {
         if(transportType.checked && transportType.showInfo) {
+            sheetTransport.visibility = View.VISIBLE
             bsTransport.state = BottomSheetBehavior.STATE_EXPANDED
-            bsOrder.isHideable = true
-            bsOrder.state = BottomSheetBehavior.STATE_HIDDEN
-            bsOrder.skipCollapsed = true
             showTransportInfo(transportType)
         }
         presenter.logEventMain(CreateOrderPresenter.CAR_INFO_CLICKED)
@@ -362,7 +310,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     @CallSuper
     override fun onBackPressed() {
         if(bsTransport.state == BottomSheetBehavior.STATE_EXPANDED) hideSheetTransport()
-        else if(bsOrder.state == BottomSheetBehavior.STATE_EXPANDED) collapsedOrderSheet()
+        else if(bsOrder.state == BottomSheetBehavior.STATE_EXPANDED) toggleSheetOrder()
         else super.onBackPressed()
     }
 }

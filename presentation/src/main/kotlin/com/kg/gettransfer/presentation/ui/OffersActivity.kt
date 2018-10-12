@@ -51,15 +51,7 @@ class OffersActivity: BaseActivity(), OffersView {
                                                                    transferInteractor,
                                                                    offerInteractor)
     
-    protected override var navigator = object : BaseNavigator(this) {
-        override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
-            return if (screenKey == Screens.PAYMENT_SETTINGS) {
-                context.getPaymentSettingsActivityLaunchIntent()
-            } else {
-                null
-            }
-        }
-    }
+    protected override var navigator = object : BaseNavigator(this){}
     
     override fun getPresenter(): OffersPresenter = presenter
 

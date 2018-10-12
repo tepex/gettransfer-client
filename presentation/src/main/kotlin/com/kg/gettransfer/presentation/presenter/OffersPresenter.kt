@@ -46,13 +46,13 @@ class OffersPresenter(cc: CoroutineContexts,
     companion object {
         @JvmField val EVENT = "offers"
 
-        @JvmField val PARAM_KEY_FILTER = "filter"
+        @JvmField val PARAM_KEY_FILTER  = "filter"
         @JvmField val PARAM_KEY_BUTTON  = "button"
 
-        @JvmField val RATING_UP = "rating_asc"
+        @JvmField val RATING_UP   = "rating_asc"
         @JvmField val RATING_DOWN = "rating_desc"
-        @JvmField val PRICE_UP = "price_asc"
-        @JvmField val PRICE_DOWN = "price_desc"
+        @JvmField val PRICE_UP    = "price_asc"
+        @JvmField val PRICE_DOWN  = "price_desc"
 
         @JvmField val CAR_INFO_CLICKED = "car_info"
         
@@ -110,6 +110,7 @@ class OffersPresenter(cc: CoroutineContexts,
     fun cancelRequest(isCancel: Boolean) {
         if(isCancel) {
             utils.launchAsyncTryCatchFinally({
+                viewState.blockInterface(true)
                 utils.asyncAwait { transferInteractor.cancelTransfer("") }
                 router.exit()
             }, { e ->
@@ -151,11 +152,6 @@ class OffersPresenter(cc: CoroutineContexts,
         logFilterEvent(sortType)
     }
 
-    private fun logFilterEvent(value: String) {
-        mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value))
-    }
-
-    private fun logButtonEvent(value: String) {
-        mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value))
-    }
+    private fun logFilterEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value)) }
+    private fun logButtonEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value)) }
 }

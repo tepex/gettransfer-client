@@ -55,8 +55,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     private var routeModel: RouteModel? = null
     private var track: CameraUpdate? = null
     
-    var cost: Int? = null
-    var date: Date = Date()
+    internal var cost: Int? = null
+    internal var date: Date = Date()
         set(value) {
             field = value
             dateTimeFormat?.let { viewState.setDateTimeTransfer(it.format(date)) }
@@ -71,38 +71,36 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         @JvmField val FUTURE_HOUR       = 6
         @JvmField val FUTURE_MINUTE     = 5
 
- //       см. табл. https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0
+        /** [см. табл.][https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0] */
         @JvmField val EVENT_TRANSFER = "create_transfer"
         @JvmField val EVENT_SETTINGS = "transfer_settings"
         @JvmField val EVENT_MAIN = MainPresenter.EVENT_MAIN
 
-        @JvmField val PARAM_KEY_FIELD = "field"
+        @JvmField val PARAM_KEY_FIELD  = "field"
         @JvmField val PARAM_KEY_RESULT = "result"
-
 
         //TransferSettings Params:
         @JvmField val OFFER_PRICE_FOCUSED = "offer_price"
-        @JvmField val DATE_TIME_CHANGED = "date_time"
-        @JvmField val PASSENGERS_ADDED = "pax"
+        @JvmField val DATE_TIME_CHANGED   = "date_time"
+        @JvmField val PASSENGERS_ADDED    = "pax"
         @JvmField val FLIGHT_NUMBER_ADDED = "flight_number"
-        @JvmField val CHILDREN_ADDED = "children"
-        @JvmField val COMMENT_INPUT = "comment"
+        @JvmField val CHILDREN_ADDED      = "children"
+        @JvmField val COMMENT_INPUT       = "comment"
 
         //CreateTransfer Params:
         @JvmField val NO_TRANSPORT_SELECTED = "no_transport_type"
         @JvmField val NO_EMAIL = "invalid_email"
         @JvmField val NO_PHONE = "invalid_phone"
-        @JvmField val NO_NAME = "invalid_name"
+        @JvmField val NO_NAME  = "invalid_name"
         @JvmField val NO_LICENSE_ACCEPTED = "license_not_accepted"
         @JvmField val SERVER_ERROR = "server_error"
 
         //Main params:
         @JvmField val SHOW_ROUTE_CLICKED = "show_route"
-        @JvmField val CAR_INFO_CLICKED = "car_info"
-        @JvmField val BACK_CLICKED = "back"
+        @JvmField val CAR_INFO_CLICKED   = "car_info"
+        @JvmField val BACK_CLICKED       = "back"
 
-        val userActionsMap = HashMap<String,Any>()
-
+        val userActionsMap = HashMap<String, Any>()
     }
     
     override fun onFirstViewAttach() {
@@ -117,15 +115,16 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             val from = routeInteractor.from!!
             val to = routeInteractor.to!!
 	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point.toString(), to.point.toString(), true, false) }
-	        val prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
-            val entrance = routeInteractor.from!!.entrance
-            viewState.setEntrance(entrance)
+            var prices: Map<String, String>? = null
+            if(routeInfo.prices != null) prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
             transportTypes = Mappers.getTransportTypesModels(systemInteractor.getTransportTypes(), prices)
 	        routeModel = Mappers.getRouteModel(routeInfo.distance,
                                                systemInteractor.distanceUnit,
                                                routeInfo.polyLines,
                                                from.name,
                                                to.name,
+                                               from.point.toString(),
+                                               to.point.toString(),
                                                SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
 
             viewState.setTransportTypes(transportTypes!!)
@@ -139,13 +138,12 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: CreateOrderView) {
         super.attachView(view)
+        dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
         viewState.setCurrencies(currencies)
         val i = systemInteractor.getCurrentCurrencyIndex()
         if(i != -1) changeCurrency(i)
             
         viewState.setUser(user)
-        /*dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
-        viewState.setDateTimeTransfer(dateTimeFormat!!.format(date))*/
         viewState.setDateTimeTransfer(Utils.getFormatedDate(systemInteractor.locale, date))
 	    transportTypes?.let { viewState.setTransportTypes(it) }
 	    //routeModel?.let     { viewState.setRoute(it) }
@@ -231,7 +229,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                   children,
                                                   cost,
                                                   comment,
-                                                  Mappers.getProfile(user),
+                                                  Mappers.getUser(user),
                                                   null,
                                                   false) }
             Timber.d("new transfer: %s", transfer)
@@ -239,16 +237,10 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             logCreateTransfer(RESULT_SUCCESS)
         }, { e ->
                 if(e is ApiException) {
-                    if(e.isNotLoggedIn()) {
-                        login()
-                    }
-                    else {
-                        viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
-                    }
+                    if(e.isNotLoggedIn()) login()
+                    else viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
                 }
-                else {
-                    viewState.setError(e)
-                }
+                else viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }
     
@@ -282,16 +274,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         logEventMain(BACK_CLICKED)
     }
 
-    fun logEventMain(value: String){
-        mFBA.logEvent(EVENT_MAIN,createSingeBundle(PARAM_KEY_NAME,value))
-    }
-
-    fun logTransferSettingsEvent(value: String){
-        mFBA.logEvent(EVENT_SETTINGS,createSingeBundle(PARAM_KEY_FIELD,value))
-    }
-
-    private fun logCreateTransfer(value: String){
-        mFBA.logEvent(EVENT_TRANSFER,createSingeBundle(PARAM_KEY_RESULT,value))
-    }
-
+    fun logEventMain(value: String)              { mFBA.logEvent(EVENT_MAIN, createSingeBundle(PARAM_KEY_NAME, value)) }
+    fun logTransferSettingsEvent(value: String)  { mFBA.logEvent(EVENT_SETTINGS, createSingeBundle(PARAM_KEY_FIELD, value)) }
+    private fun logCreateTransfer(value: String) { mFBA.logEvent(EVENT_TRANSFER, createSingeBundle(PARAM_KEY_RESULT, value)) }
 }

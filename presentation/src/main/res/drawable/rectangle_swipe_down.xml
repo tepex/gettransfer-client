@@ -5,7 +5,7 @@
     <solid android:color="@color/rectangle_swipe_down" />
     <corners android:radius="10dp" />
     <size
-        android:width="110dp"
-        android:height="5dp" />
+        android:width="@dimen/rounded_rectangle_width"
+        android:height="@dimen/rounded_rectangle_height" />
 
 </shape>

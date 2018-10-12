@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -24,7 +23,7 @@ import timber.log.Timber
 @InjectViewState
 class SettingsPresenter(cc: CoroutineContexts,
                         router: Router,
-                        systemInteractor: SystemInteractor) : BasePresenter<SettingsView>(cc, router, systemInteractor) {
+                        systemInteractor: SystemInteractor): BasePresenter<SettingsView>(cc, router, systemInteractor) {
 
     private val currencies = Mappers.getCurrenciesModels(systemInteractor.getCurrencies())
     private val locales = Mappers.getLocalesModels(systemInteractor.getLocales())
@@ -39,21 +38,14 @@ class SettingsPresenter(cc: CoroutineContexts,
     }
 
     companion object {
-
-        @JvmField
-        val EVENT = "settings"
-
-        @JvmField
-        val CURRENCY_PARAM = "currency"
-        @JvmField
-        val UNITS_PARAM = "units"
-        @JvmField
-        val LANGUAGE_PARAM = "language"
-        @JvmField
-        val LOG_OUT_PARAM = "logout"
-
-        @JvmField
-        val EMPTY_VALUE = ""
+        @JvmField val EVENT = "settings"
+        
+        @JvmField val CURRENCY_PARAM = "currency"
+        @JvmField val UNITS_PARAM    = "units"
+        @JvmField val LANGUAGE_PARAM = "language"
+        @JvmField val LOG_OUT_PARAM  = "logout"
+        
+        @JvmField val EMPTY_VALUE = ""
     }
 
     @CallSuper
@@ -103,10 +95,13 @@ class SettingsPresenter(cc: CoroutineContexts,
         logEvent(UNITS_PARAM, distanceUnit.name)
     }
 
-    fun changeEndpoint(selected: Int){
+    fun changeEndpoint(selected: Int) {
         systemInteractor.logout()
         systemInteractor.endpoint = endpoints[selected]
-        viewState.restartApp()
+        systemInteractor.changeEndpoint()
+        
+        router.exit() //Without restarting app
+        //viewState.restartApp() //For restart app
     }
 
     fun onLogout() {
@@ -115,7 +110,7 @@ class SettingsPresenter(cc: CoroutineContexts,
         logEvent(LOG_OUT_PARAM, EMPTY_VALUE)
     }
 
-    fun onLogsClicked(){
+    fun onLogsClicked() {
         router.navigateTo(Screens.SHARE_LOGS)
     }
 
@@ -124,8 +119,8 @@ class SettingsPresenter(cc: CoroutineContexts,
         utils.launchAsyncTryCatchFinally({
             utils.asyncAwait { systemInteractor.putAccount() }
         }, { e ->
-            if (e is ApiException && e.isNotLoggedIn()) {
-            } else viewState.setError(e)
+            if(e is ApiException && e.isNotLoggedIn()) {}
+            else viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }
 

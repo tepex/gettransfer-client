@@ -11,18 +11,19 @@ import org.koin.android.ext.android.startKoin
 import timber.log.Timber
 
 class GTApplication: MultiDexApplication() {
-
-//class GTApplication: Application() {
-	@CallSuper
-	override fun onCreate() {
-		super.onCreate()
-		// Display some logs
-		if(BuildConfig.FLAVOR == "dev") {
-			//Timber.plant(Timber.DebugTree())
-			Timber.plant(FileLoggingTree(applicationContext))
-			System.setProperty("kotlinx.coroutines.debug", "on")
-		}
-		// Start Koin
-		startKoin(this, listOf(appModule, ciceroneModule, domainModule, androidModule))
-	}
+    @CallSuper
+    override fun onCreate() {
+        super.onCreate()
+        // Display some logs
+        if(BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+            System.setProperty("kotlinx.coroutines.debug", "on")
+        }
+        if(BuildConfig.FLAVOR == "dev") {
+            Timber.plant(FileLoggingTree(applicationContext))
+            System.setProperty("kotlinx.coroutines.debug", "on")
+        }
+        // Start Koin
+        startKoin(this, listOf(appModule, ciceroneModule, domainModule, androidModule))
+    }
 }

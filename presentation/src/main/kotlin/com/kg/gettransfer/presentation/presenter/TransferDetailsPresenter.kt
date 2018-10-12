@@ -54,6 +54,8 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
                                                    routeInfo.polyLines,
                                                    transfer.from.name,
                                                    transfer.to!!.name,
+                                                   transfer.from.point,
+                                                   transfer.to!!.point,
                                                    transferModel.dateTime)
             val polyline = Utils.getPolyline(routeModel)
             viewState.setRoute(polyline, routeModel)

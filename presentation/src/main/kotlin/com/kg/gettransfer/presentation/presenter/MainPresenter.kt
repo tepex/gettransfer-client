@@ -33,11 +33,6 @@ class MainPresenter(cc: CoroutineContexts,
 
     private var available: Boolean = false
     private var currentLocation: String = ""
-    var entrance: String = ""
-        set(value) {
-            field = value
-            viewState.setEntrance(currentLocation, value)
-        }
 
     override fun onFirstViewAttach() {
         systemInteractor.lastMode = Screens.PASSENGER_MODE
@@ -57,39 +52,33 @@ class MainPresenter(cc: CoroutineContexts,
         @JvmField val EVENT_MENU = "menu"
         @JvmField val EVENT_MAIN = "main"
 
-
         //navigation drawer log params
-        @JvmField val LOGIN_CLICKED = "login"
-        @JvmField val TRANSFER_CLICKED = "transfers"
-        @JvmField val SETTINGS_CLICKED = "settings"
-        @JvmField val ABOUT_CLICKED = "about"
-        @JvmField val DRIVER_CLICKED = "driver"
-        @JvmField val CUSTOMER_CLICKED = "customer"
+        @JvmField val LOGIN_CLICKED      = "login"
+        @JvmField val TRANSFER_CLICKED   = "transfers"
+        @JvmField val SETTINGS_CLICKED   = "settings"
+        @JvmField val ABOUT_CLICKED      = "about"
+        @JvmField val DRIVER_CLICKED     = "driver"
+        @JvmField val CUSTOMER_CLICKED   = "customer"
         @JvmField val BEST_PRICE_CLICKED = "best_price"
-        @JvmField val SHARE_CLICKED = "share"
+        @JvmField val SHARE_CLICKED      = "share"
 
         //other buttons log params
-        @JvmField val MY_PLACE_CLICKED = "my_place"
+        @JvmField val MY_PLACE_CLICKED   = "my_place"
 //        @JvmField val SHOW_ROUTE_CLICKED = "show_route"
-        @JvmField val ENTRANCE_CLICKED = "entrance"
 //        @JvmField val CAR_INFO_CLICKED = "car_info"
 //        @JvmField val BACK_CLICKED = "back"
         @JvmField val POINT_ON_MAP_CLICKED = "point_on_map"
-        @JvmField val AIRPORT_CLICKED = "predefined_airport"
-        @JvmField val TRAIN_CLICKED = "predefined_train"
-        @JvmField val HOTEL_CLICKED = "predefined_hotel"
-        @JvmField val LAST_PLACE_CLICKED = "last_place"
-        @JvmField val SWAP_CLICKED = "swap"
-
+        @JvmField val AIRPORT_CLICKED      = "predefined_airport"
+        @JvmField val TRAIN_CLICKED        = "predefined_train"
+        @JvmField val HOTEL_CLICKED        = "predefined_hotel"
+        @JvmField val LAST_PLACE_CLICKED   = "last_place"
+        @JvmField val SWAP_CLICKED         = "swap"
     }
 
     @CallSuper
     override fun attachView(view: MainView) {
         super.attachView(view)
         viewState.setUser(Mappers.getUserModel(systemInteractor.account))
-        if (routeInteractor.from != null) {
-            entrance = routeInteractor.from!!.entrance
-        }
     }
 
     fun updateCurrentLocation() {
@@ -108,7 +97,6 @@ class MainPresenter(cc: CoroutineContexts,
         viewState.setMapPoint(lastAddressPoint)
         viewState.setAddressFrom(currentAddress.name)
         currentLocation = currentAddress.name
-        entrance = ""
     }
 
     fun onCameraMove(lastPoint: LatLng) {
@@ -131,23 +119,26 @@ class MainPresenter(cc: CoroutineContexts,
             val currentAddress = utils.asyncAwait { routeInteractor.getAddressByLocation(Mappers.latLng2Point(lastPoint!!)) }
             viewState.setAddressFrom(currentAddress.name)
             currentLocation = currentAddress.name
-            entrance = ""
         }, { e -> viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }
 
+    fun setAddressFields() {
+        viewState.setAddressFrom(routeInteractor.from?.address ?: "")
+        viewState.setAddressTo(routeInteractor.to?.address ?: "")
+    }
+
     fun onSearchClick(addresses: Pair<String, String>) {
-        if(routeInteractor.from != null) {
-            routeInteractor.from!!.entrance = entrance
+        routeInteractor.from?.let {
             router.navigateTo(Screens.FIND_ADDRESS, addresses)
         }
     }
 
-    fun onLoginClick()          { router.navigateTo(Screens.LOGIN) ; logEvent(LOGIN_CLICKED)}
-    fun onAboutClick()          { router.navigateTo(Screens.ABOUT) ; logEvent(ABOUT_CLICKED) }
+    fun onLoginClick()          { router.navigateTo(Screens.LOGIN) ;     logEvent(LOGIN_CLICKED)}
+    fun onAboutClick()          { router.navigateTo(Screens.ABOUT) ;     logEvent(ABOUT_CLICKED) }
     fun readMoreClick()         { router.navigateTo(Screens.READ_MORE) ; logEvent(BEST_PRICE_CLICKED) }
-    fun onSettingsClick()       { router.navigateTo(Screens.SETTINGS) ; logEvent(SETTINGS_CLICKED) }
-    fun onRequestsClick()       { router.navigateTo(Screens.REQUESTS) ; logEvent(TRANSFER_CLICKED) }
+    fun onSettingsClick()       { router.navigateTo(Screens.SETTINGS) ;  logEvent(SETTINGS_CLICKED) }
+    fun onRequestsClick()       { router.navigateTo(Screens.REQUESTS) ;  logEvent(TRANSFER_CLICKED) }
     fun onBecomeACarrierClick() {
         logEvent(DRIVER_CLICKED)
         if(systemInteractor.isLoggedIn()) {
@@ -157,7 +148,7 @@ class MainPresenter(cc: CoroutineContexts,
         else router.navigateTo(Screens.LOGIN)
     }
 
-    fun logEvent(value: String){
-        mFBA.logEvent(EVENT_MENU,createSingeBundle(PARAM_KEY_NAME,value))
+    fun logEvent(value: String) {
+        mFBA.logEvent(EVENT_MENU,createSingeBundle(PARAM_KEY_NAME, value))
     }
 }

@@ -18,6 +18,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.model.LatLngBounds
 
+
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
@@ -56,7 +57,7 @@ class SearchActivity: BaseActivity(), SearchView {
         @JvmField val FADE_DURATION  = 500L
         @JvmField val SLIDE_DURATION = 500L
         @JvmField val EXTRA_ADDRESS_FROM = "address_from"
-        @JvmField val EXTRA_ADDRESS_TO = "address_to"
+        @JvmField val EXTRA_ADDRESS_TO   = "address_to"
 
         @JvmField val LATLON_BOUNDS = "latlon_map_bounds"
     }

@@ -6,7 +6,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.presentation.ui.Utils
 
-import java.text.SimpleDateFormat
 import java.util.Currency
 import java.util.Locale
 
@@ -20,6 +19,8 @@ object Mappers {
                                                    account.user.termsAccepted)
     
     fun getProfile(userModel: UserModel) = Profile(userModel.name, userModel.email, userModel.phone)
+    
+    fun getUser(userModel: UserModel) = User(getProfile(userModel), userModel.termsAccepted)
 
     fun getTransportTypesModels(transportTypes: List<TransportType>, prices: Map<String, String>?) =
         transportTypes.map {
@@ -37,10 +38,12 @@ object Mappers {
     
     fun getRouteModel(distance: Int?,
                       distanceUnit: DistanceUnit,
-                      polyLines: List<String>,
+                      polyLines: List<String>?,
                       from: String,
                       to: String,
-                      dateTime: String) = RouteModel(distance, distanceUnit, polyLines, from, to, dateTime)
+                      fromPoint: String,
+                      toPoint: String,
+                      dateTime: String) = RouteModel(distance, distanceUnit, polyLines, from, to, fromPoint, toPoint, dateTime)
     
     fun getTransferModel(transfer: Transfer,
                          locale: Locale,

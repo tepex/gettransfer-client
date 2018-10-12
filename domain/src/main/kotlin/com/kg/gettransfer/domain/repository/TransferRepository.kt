@@ -1,7 +1,7 @@
 package com.kg.gettransfer.domain.repository
 
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Profile
+import com.kg.gettransfer.domain.model.User
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Trip
 
@@ -20,7 +20,7 @@ interface TransferRepository {
                                passengerOfferedPrice: Int?,
                                nameSign: String,
                                comment: String?,
-                               profile: Profile,
+                               user: User,
                                promoCode: String?,
                                paypalOnly: Boolean): Transfer
     suspend fun cancelTransfer(id: Long, reason: String): Transfer

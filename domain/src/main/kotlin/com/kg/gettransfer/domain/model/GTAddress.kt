@@ -8,8 +8,6 @@ class GTAddress(var id: String? = null,
                 val secondary: String?,
                 var point: Point? = null) {
 
-    var entrance: String = ""
-
     companion object {
         @JvmField
         val TYPE_ADMINISTRATIVE_AREA_LEVEL_1 = 1001
@@ -34,7 +32,7 @@ class GTAddress(var id: String? = null,
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this == other) return true
+        if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false
         val eq = other as GTAddress
         if (id == null || eq.id == null) return name == eq.name

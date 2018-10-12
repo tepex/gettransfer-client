@@ -8,7 +8,7 @@ class ApiRouteInfo(@SerializedName("success") @Expose var success: Boolean,
                    @SerializedName("duration") @Expose var duration: Int?,
                    @SerializedName("prices") @Expose var prices: Map<String, ApiTransportTypePrice>?,
                    @SerializedName("watertaxi") @Expose var watertaxi: Boolean,
-                   @SerializedName("routes") @Expose var routes: List<ApiRoutes>)
+                   @SerializedName("routes") @Expose var routes: List<ApiRoutes>?)
 
 class ApiTransportTypePrice(@SerializedName("min_float") @Expose var minFloat: Float,
                             @SerializedName("min") @Expose var min: String,

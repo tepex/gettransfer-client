@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,14 +9,34 @@
     app:behavior_peekHeight="@dimen/create_order_behaviour_peek_height"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
+    <View
+        android:id="@+id/view"
+        android:layout_width="110dp"
+        android:layout_height="5dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rectangle_swipe_down"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvTransferType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorWhite"
+        android:orientation="horizontal"
+        android:layout_below="@+id/view"/>
+
     <android.support.v4.widget.NestedScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:id="@+id/scrollContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:fillViewport="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_below="@+id/rvTransferType"
+        android:layout_above="@+id/btnGetOffers">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -32,18 +52,6 @@
                 app:layout_constraintStart_toEndOf="@+id/ivTranferDate"
                 app:layout_constraintTop_toTopOf="@+id/ivTranferDate" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvTransferType"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@color/colorWhite"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
             <TextView
                 android:id="@+id/tvRate"
                 android:layout_width="0dp"
@@ -52,8 +60,7 @@
                 android:padding="12dp"
                 android:text="@string/average_rate"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rvTransferType" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/tvCurrencyType"
@@ -152,8 +159,8 @@
                 android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/create_transfer_additionals_view_height"
-                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
                 android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -163,8 +170,8 @@
                     android:id="@+id/tvCountPerson"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                     android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                     android:fontFamily="@font/sf_pro_text_regular"
                     android:text="1"
                     android:textColor="@color/colorTextBlack"
@@ -220,8 +227,8 @@
                 android:id="@+id/constraintLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
                 android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
@@ -230,8 +237,8 @@
                     android:id="@+id/etName"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/height_title_sheet_order"
-                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                     android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                     android:background="@null"
                     android:fontFamily="@font/sf_pro_text_regular"
                     android:hint="@string/your_name"
@@ -270,8 +277,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
-                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
                 android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -281,8 +288,8 @@
                     android:id="@+id/etEmail"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/height_title_sheet_order"
-                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                     android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                     android:background="@null"
                     android:fontFamily="@font/sf_pro_text_regular"
                     android:hint="@string/enter_email"
@@ -331,8 +338,8 @@
                 android:id="@+id/constraintLayout4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
                 android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -342,8 +349,8 @@
                     android:id="@+id/tvPhone"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/height_title_sheet_order"
-                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                     android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                     android:background="@null"
                     android:fontFamily="@font/sf_pro_text_regular"
                     android:hint="@string/enter_phone_number"
@@ -394,8 +401,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
-                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
                 android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -405,8 +412,8 @@
                     android:id="@+id/tvFlightOrTrainNumber"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/height_title_sheet_order"
-                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                     android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                     android:background="@null"
                     android:fontFamily="@font/sf_pro_text_regular"
                     android:hint="@string/example_flight"
@@ -456,8 +463,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/create_transfer_additionals_view_height"
                 android:layout_marginTop="1dp"
-                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
                 android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout5">
@@ -466,8 +473,8 @@
                     android:id="@+id/tvCountChild"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                     android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
                     android:fontFamily="@font/sf_pro_text_regular"
                     android:text="0"
                     android:textColor="@color/colorTextBlack"
@@ -555,12 +562,12 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/create_transfer_additionals_view_height"
                 android:layout_marginTop="1dp"
-                android:drawablePadding="15dp"
                 android:drawableStart="@drawable/ic_comment"
+                android:drawablePadding="15dp"
                 android:hint="@string/type_your_comments"
                 android:padding="8dp"
-                android:paddingEnd="10dp"
                 android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout6" />
@@ -574,37 +581,27 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvComments">
 
-                <LinearLayout
-                    android:id="@+id/layoutCBAgreement"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginBottom="@dimen/create_transfer_cb_agreement_margin"
-                    android:layout_marginEnd="@dimen/create_transfer_cb_agreement_margin"
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/switchAgreement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/create_transfer_cb_agreement_margin"
                     android:layout_marginTop="16dp"
-                    android:gravity="center_horizontal"
+                    android:layout_marginEnd="@dimen/create_transfer_cb_agreement_margin"
+                    android:layout_marginBottom="@dimen/create_transfer_cb_agreement_margin"
                     app:layout_constraintBottom_toBottomOf="@+id/tvAgreement2"
                     app:layout_constraintEnd_toStartOf="@+id/tvAgreement1"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <CheckBox
-                        android:id="@+id/cbAgreement"
-                        android:layout_width="@dimen/create_transfer_cb_size"
-                        android:layout_height="@dimen/create_transfer_cb_size"
-                        android:layout_marginTop="@dimen/create_transfer_cb_agreement_margin"
-                        android:background="@drawable/cb_agreement_selector"
-                        android:button="@null" />
-
-                </LinearLayout>
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:theme="@style/SwitchCompatStyle"/>
 
                 <TextView
                     android:id="@+id/tvAgreement1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/create_transfer_agreement_text_margin_end"
                     android:layout_marginStart="@dimen/create_transfer_agreement_text_margin_start"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="@dimen/create_transfer_agreement_text_margin_end"
                     android:fontFamily="@font/sf_pro_text_regular"
                     android:text="@string/i_read_and_agree"
                     android:textColor="@color/colorTextLightGray"
@@ -626,40 +623,37 @@
                     app:layout_constraintTop_toBottomOf="@+id/tvAgreement1" />
 
             </android.support.constraint.ConstraintLayout>
-
-            <LinearLayout
-                android:id="@+id/btnGetOffers"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="@dimen/get_offers_btn_height"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/btn_get_transfer"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view3">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    app:srcCompat="@drawable/ic_check_circle" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:fontFamily="@font/sf_pro_text_regular"
-                    android:text="@string/get_offers"
-                    android:textAllCaps="true"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/create_transfer_additionals_top_text_size" />
-            </LinearLayout>
-
         </android.support.constraint.ConstraintLayout>
-
     </android.support.v4.widget.NestedScrollView>
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/btnGetOffers"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="@dimen/get_offers_btn_height"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/btn_get_transfer"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:srcCompat="@drawable/ic_check_circle" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:text="@string/get_offers"
+            android:textAllCaps="true"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/create_transfer_additionals_top_text_size" />
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -89,4 +89,5 @@
     <color name="color_vehicle_orange">#FFA500</color>
 
     <color name="bg_point_on_map">#f7f7f7</color>
+    <color name="switch_activated">#98b71b</color>
 </resources>

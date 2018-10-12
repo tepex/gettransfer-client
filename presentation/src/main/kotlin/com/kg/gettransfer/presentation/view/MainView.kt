@@ -17,6 +17,6 @@ interface MainView: BaseView {
     fun setMapPoint(point: LatLng)
     fun moveCenterMarker(point: LatLng)
     fun setAddressFrom(address: String)
+    fun setAddressTo(address: String)
     fun setUser(user: UserModel)
-    fun setEntrance(address: String, entrance: String)
 }

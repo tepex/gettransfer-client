@@ -6,5 +6,5 @@ import com.google.android.gms.maps.model.PolylineOptions
 
 class PolylineModel(val startPoint: LatLng,
                     val finishPoint: LatLng,
-                    val line: PolylineOptions,
+                    val line: PolylineOptions?,
                     val track: CameraUpdate)

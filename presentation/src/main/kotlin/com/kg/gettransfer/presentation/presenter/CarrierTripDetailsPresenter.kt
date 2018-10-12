@@ -47,6 +47,8 @@ class CarrierTripDetailsPresenter(cc: CoroutineContexts,
                     routeInfo.polyLines,
                     trip.from,
                     trip.to,
+                    tripInfo.from.point,
+                    tripInfo.to.point,
                     trip.dateTime)
 
             viewState.setTripInfo(trip)
