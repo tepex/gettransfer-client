@@ -6,9 +6,11 @@ import com.kg.gettransfer.data.SystemRemote
 
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
+import com.kg.gettransfer.data.model.EndpointEntity
 
 import com.kg.gettransfer.remote.mapper.AccountMapper
 import com.kg.gettransfer.remote.mapper.ConfigsMapper
+import com.kg.gettransfer.remote.mapper.EndpointMapper
 
 import com.kg.gettransfer.remote.model.AccountModel
 import com.kg.gettransfer.remote.model.AccountModelWrapper
@@ -17,7 +19,8 @@ import com.kg.gettransfer.remote.model.ResponseModel
 
 class SystemRemoteImpl(private val core: ApiCore,
                        private val configsMapper: ConfigsMapper,
-                       private val accountMapper: AccountMapper): SystemRemote {
+                       private val accountMapper: AccountMapper,
+                       private val endpointMapper: EndpointMapper): SystemRemote {
     override suspend fun getConfigs(): ConfigsEntity {
         val response: ResponseModel<ConfigsModel> = core.tryTwice { core.api.getConfigs() }
 		return configsMapper.fromRemote(response.data!!)
@@ -61,4 +64,6 @@ class SystemRemoteImpl(private val core: ApiCore,
             return try { core.api.login(email, password).await() } catch(e2: Exception) { throw core.remoteException(e2) }
         }
     }
+    
+    override fun changeEndpoint(endpoint: EndpointEntity) = core.changeEndpoint(endpointMapper.toRemote(endpoint))
 }

@@ -117,7 +117,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
 	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
             var prices: Map<String, String>? = null
             if(routeInfo.prices != null) prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
-            transportTypes = Mappers.getTransportTypesModels(systemInteractor.getTransportTypes(), prices)
+            transportTypes = Mappers.getTransportTypesModels(systemInteractor.transportTypes, prices)
 	        routeModel = Mappers.getRouteModel(routeInfo.distance,
                                                systemInteractor.distanceUnit,
                                                routeInfo.polyLines,

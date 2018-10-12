@@ -20,6 +20,7 @@ import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.DistanceUnitModel
+import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
@@ -91,8 +92,8 @@ class SettingsActivity: BaseActivity(), SettingsView {
         }
     }
 
-    override fun setEndpoints(urls: List<String>) {
-        Utils.setEndpointsDialogListener(this, layoutSettingsEndpoint, urls) {
+    override fun setEndpoints(endpoints: List<EndpointModel>) {
+        Utils.setEndpointsDialogListener(this, layoutSettingsEndpoint, endpoints) {
             selected -> presenter.changeEndpoint(selected)
         }
     }

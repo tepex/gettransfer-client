@@ -2,12 +2,12 @@ package com.kg.gettransfer.logging
 
 import android.content.Context
 
-import com.kg.gettransfer.data.LoggingCache
+import com.kg.gettransfer.domain.repository.LoggingRepository
 
 import java.io.File
 import java.io.FileInputStream
 
-class LoggingRepositoryImpl(val context: Context, val logFileName: String): LoggingCache {
+class LoggingRepositoryImpl(val context: Context, val logFileName: String): LoggingRepository {
 
     override fun getLogs(): String {
         val file = File(context.filesDir, logFileName)
