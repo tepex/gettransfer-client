@@ -71,6 +71,31 @@ object Mappers {
                       transfer.relevantCarriersCount,
                       transfer.checkOffers)
     }
+    
+    fun getTransferNew(from: GTAddress,
+                       to: GTAddress,
+                       tripTo: Trip,
+                       tripReturn: Trip?,
+                       transportTypes: List<String>,
+                       pax: Int,
+                       childSeats: Int?,
+                       passengerOfferedPrice: Int?,
+                       comment: String?,
+                       user: User,
+                       promoCode: String?,
+                       paypalOnly: Boolean) = TransferNew(from, 
+                                                          to,
+                                                          tripTo,
+                                                          tripReturn,
+                                                          transportTypes,
+                                                          pax,
+                                                          childSeats,
+                                                          passengerOfferedPrice,
+                                                          comment,
+                                                          user,
+                                                          promoCode,
+                                                          paypalOnly)
+    
 
     fun getOfferModel(offer: Offer) = OfferModel(offer.id,
                                                  offer.driver?.fullName,

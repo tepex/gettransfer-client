@@ -211,32 +211,9 @@ class ApiRepositoryImpl(private val preferences: Preferences,
         preferences.accessToken = response.data!!.token
     }
 
-    suspend fun createTransfer(from: GTAddress,
-                               to: GTAddress,
-                               tripTo: Trip,
-                               tripReturn: Trip?,
-                               transportTypes: List<String>,
-                               pax: Int,
-                               childSeats: Int?,
-                               passengerOfferedPrice: Int?,
-                               nameSign: String,
-                               comment: String?,
-                               user: User,
-                               promoCode: String?,
-                               paypalOnly: Boolean): Transfer {
+    suspend fun createTransfer(transferNew: TransferNew): Transfer {
         val response: ApiResponse<ApiTransferWrapper> = tryPostTransfer(
-            ApiTransferWrapper(Mappers.mapTransferRequest(from,
-                                                          to,
-                                                          tripTo,
-                                                          tripReturn,
-                                                          transportTypes,
-                                                          pax,
-                                                          childSeats,
-                                                          passengerOfferedPrice,
-                                                          nameSign,
-                                                          comment,
-                                                          user,
-                                                          promoCode/*, paypalOnly*/)))
+            ApiTransferWrapper(Mappers.mapTransferRequest(transferNew)))
         
         return Mappers.mapApiTransfer(response.data?.transfer!!)
     }

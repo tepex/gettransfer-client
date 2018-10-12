@@ -117,37 +117,24 @@ class Mappers {
         }
 	
         /**
-         * [TransferRequest] -> [ApiTransferRequest]
+         * [TransferNew] -> [ApiTransferRequest]
          */
-        fun mapTransferRequest(from: GTAddress,
-                               to: GTAddress,
-                               tripTo: Trip,
-                               tripReturn: Trip?,
-                               transportTypes: List<String>,
-                               pax: Int,
-                               childSeats: Int?,
-                               passengerOfferedPrice: Int?,
-                               nameSign: String,
-                               comment: String?,
-                               user: User,
-                               promoCode: String?/*,
-                                Not used now 
-                               paypalOnly: Boolean*/): ApiTransferRequest {
+        fun mapTransferRequest(transferNew: TransferNew): ApiTransferRequest {
             var apiTripReturn: ApiTrip? = null
-            if(tripReturn != null) apiTripReturn = mapTrip(tripReturn)
+            if(transferNew.tripReturn != null) apiTripReturn = mapTrip(transferNew.tripReturn!!)
             
-            return ApiTransferRequest(mapAddress(from),
-                                      mapAddress(to),
-                                      mapTrip(tripTo),
+            return ApiTransferRequest(mapAddress(transferNew.from),
+                                      mapAddress(transferNew.to),
+                                      mapTrip(transferNew.tripTo),
                                       apiTripReturn,
-                                      transportTypes,
-                                      pax,
-                                      childSeats,
-                                      passengerOfferedPrice?.toString(),
-                                      nameSign,
-                                      comment,
-                                      mapUser(user),
-                                      promoCode)
+                                      transferNew.transportTypes,
+                                      transferNew.pax,
+                                      transferNew.childSeats,
+                                      transferNew.passengerOfferedPrice?.toString(),
+                                      transferNew.user.profile.name!!,
+                                      transferNew.comment,
+                                      mapUser(transferNew.user),
+                                      transferNew.promoCode)
         }
         
         /**

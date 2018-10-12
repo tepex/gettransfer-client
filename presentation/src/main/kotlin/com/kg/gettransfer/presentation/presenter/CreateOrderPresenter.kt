@@ -220,18 +220,18 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             val transfer = utils.asyncAwait {
-                transferInteractor.createTransfer(routeInteractor.from!!,
-                                                  routeInteractor.to!!,
-                                                  trip,
-                                                  null,
-                                                  selectedTransportTypes,
-                                                  passengers,
-                                                  children,
-                                                  cost,
-                                                  comment,
-                                                  Mappers.getUser(user),
-                                                  null,
-                                                  false) }
+                transferInteractor.createTransfer(Mappers.getTransferNew(routeInteractor.from!!,
+                                                                         routeInteractor.to!!,
+                                                                         trip,
+                                                                         null,
+                                                                         selectedTransportTypes,
+                                                                         passengers,
+                                                                         children,
+                                                                         cost,
+                                                                         comment,
+                                                                         Mappers.getUser(user),
+                                                                         null,
+                                                                         false)) }
             Timber.d("new transfer: %s", transfer)
             router.navigateTo(Screens.OFFERS)
             logCreateTransfer(RESULT_SUCCESS)
