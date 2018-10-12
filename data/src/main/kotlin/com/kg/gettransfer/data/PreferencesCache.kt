@@ -4,12 +4,9 @@ import com.kg.gettransfer.data.model.AccountEntity
 
 interface PreferencesCache {
     companion object {
-        const val LAST_MODE = "last_mode"
-        const val INVALID_TOKEN = "invalid_token"
-        
-        const val ENDPOINT = "endpoint"
-        const val ENDPOINT_DEMO = "Demo"
-        const val ENDPOINT_PROD = "Prod"
+        const val LAST_MODE     = "last_mode"
+        const val ENDPOINT      = "endpoint"
+        const val INVALID_TOKEN = "invalid_token"        
     }
     
     var accessToken: String

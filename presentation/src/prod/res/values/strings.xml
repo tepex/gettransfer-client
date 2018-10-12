@@ -3,14 +3,4 @@
     <string name="app_name">Get Transfer</string>
 	<string name="api_key">127746ae669e195d1e05807aaadb97af</string>
 	<string name="api_url">https://gettransfer.com</string>
-
-	<string-array name="api_keys">
-		<item>127746ae669e195d1e05807aaadb97af</item>
-	</string-array>
-	<string-array name="api_urls">
-		<item>https://gettransfer.com</item>
-	</string-array>
-	<string-array name="api_endpoint">
-		<item>Prod</item>
-	</string-array>
 </resources>

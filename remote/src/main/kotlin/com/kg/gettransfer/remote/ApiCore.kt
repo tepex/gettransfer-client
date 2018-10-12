@@ -7,6 +7,7 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.Coroutin
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.PreferencesCache
 
+import com.kg.gettransfer.remote.model.EndpointModel
 import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.TokenModel
 import com.kg.gettransfer.remote.model.TransportTypesWrapperModel
@@ -21,12 +22,12 @@ import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class ApiCore(private val preferences: PreferencesCache,
-              private val apiKey: String,
-              url: String) {
+class ApiCore(private val preferences: PreferencesCache) {
 
-    internal val api: Api
+    internal lateinit var api: Api
 
+    private lateinit var apiKey: String
+    private var okHttpClient: OkHttpClient
     private val gson = GsonBuilder().registerTypeAdapter(TransportTypesWrapperModel::class.java, TransportTypesDeserializer()).create()
     
     init {
@@ -44,10 +45,15 @@ class ApiCore(private val preferences: PreferencesCache,
 		
 		builder.cookieJar(CookieJar.NO_COOKIES)
  
-	    api = Retrofit.Builder()
-		        .baseUrl(url)
-		        .client(builder.build())
-		        .addConverterFactory(GsonConverterFactory.create(gson))
+        okHttpClient = builder.build()
+    }
+    
+    fun changeEndpoint(endpoint: EndpointModel) {
+        apiKey = endpoint.key
+        api = Retrofit.Builder()
+                .baseUrl(endpoint.url)
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(CoroutineCallAdapterFactory()) // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
                 .build()
                 .create(Api::class.java)

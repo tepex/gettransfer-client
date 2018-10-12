@@ -3,6 +3,7 @@ package com.kg.gettransfer.domain.interactor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.domain.model.Endpoint
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.LoggingRepository
@@ -18,9 +19,11 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         get() = systemRepository.lastMode
         set(value) { systemRepository.lastMode = value }
         
-    var endpoint: String
+    var endpoint: Endpoint
         get() = systemRepository.endpoint
         set(value) { systemRepository.endpoint = value }
+        
+    val endpoints = systemRepository.endpoints
 
     lateinit var account: Account
         private set
@@ -66,6 +69,4 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     fun getLogs()     = loggingRepository.getLogs()
     fun clearLogs()   = loggingRepository.clearLogs()
     fun getLogsFile() = loggingRepository.getLogsFile()
-
-    fun changeEndpoint() = systemRepository.changeEndpoint()
 }

@@ -27,18 +27,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 import timber.log.Timber
 
-class ApiRepositoryImpl(private val preferences: PreferencesCache,
-                        private val apiKeys: Array<String>,
-                        private val apiUrls: Array<String>) {
+class ApiRepositoryImpl(private val preferences: PreferencesCache) {
 
-    companion object {
-        @JvmField val DEMO_URLS_COUNT = 2
-
-        @JvmField val PROD_ENDPOINT_INDEX = 0
-        @JvmField val DEMO_ENDPOINT_INDEX = 1
-    }
-
-    private lateinit var url: String
     private lateinit var apiKey: String
 
     private lateinit var configs: Configs
@@ -64,25 +54,13 @@ class ApiRepositoryImpl(private val preferences: PreferencesCache,
 		}
 		
 		builder.cookieJar(CookieJar.NO_COOKIES)
-
         okHttpClient = builder.build()
-        setEndpoint()
     }
 
-    fun setEndpoint(){
-        if(apiUrls.size == DEMO_URLS_COUNT){
-            when(preferences.endpoint){
-                PreferencesCache.ENDPOINT_DEMO -> initUrl(DEMO_ENDPOINT_INDEX)
-                PreferencesCache.ENDPOINT_PROD -> initUrl(PROD_ENDPOINT_INDEX)
-                else -> {
-                    preferences.endpoint = PreferencesCache.ENDPOINT_DEMO
-                    initUrl(DEMO_ENDPOINT_INDEX)
-                }
-            }
-        } else initUrl(PROD_ENDPOINT_INDEX)
-
+    fun setEndpoint(endpoint: EndpointEntity) {
+        apiKey = endpoint.key
         api = Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(endpoint.url)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(CoroutineCallAdapterFactory()) // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
@@ -90,11 +68,6 @@ class ApiRepositoryImpl(private val preferences: PreferencesCache,
                 .create(Api::class.java)
     }
 
-    fun initUrl(urlIndex: Int) {
-        url = apiUrls[urlIndex]
-        apiKey = apiKeys[urlIndex]
-    }
-    
     suspend fun coldStart() {
 		val configsResponse: ApiResponse<ApiConfigs> = tryTwice { api.getConfigs() }
 		configs = Mappers.mapApiConfigs(configsResponse.data!!)

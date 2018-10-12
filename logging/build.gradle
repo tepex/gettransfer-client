@@ -60,7 +60,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 dependencies {
     implementation libs.kotlin
     implementation libs.coroutines
-    implementation project(":data")
+    implementation project(":domain")
 
     implementation libs.timber
 
