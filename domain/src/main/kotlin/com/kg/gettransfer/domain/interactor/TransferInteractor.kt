@@ -1,9 +1,7 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.User
 import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.domain.model.Trip
+import com.kg.gettransfer.domain.model.TransferNew
 
 import com.kg.gettransfer.domain.repository.TransferRepository
 
@@ -16,32 +14,8 @@ class TransferInteractor(private val repository: TransferRepository) {
     private var completedTransfers: List<Transfer>? = null
     private var archivedTransfers: List<Transfer>? = null
     
-    suspend fun createTransfer(from: GTAddress,
-                               to: GTAddress,
-                               tripTo: Trip,
-                               tripReturn: Trip?,
-                               transportTypes: List<String>,
-                               pax: Int,
-                               childSeats: Int?,
-                               passengerOfferedPrice: Int?,
-                               comment: String?,
-                               user: User,
-                               promoCode: String?,
-                               paypalOnly: Boolean): Transfer {
-        transfer = repository.createTransfer(from,
-                                             to,
-                                             tripTo,
-                                             tripReturn,
-                                             transportTypes,
-                                             pax,
-                                             childSeats,
-                                             passengerOfferedPrice,
-                                             user.profile.name!!,
-                                             comment,
-                                             user,
-                                             promoCode,
-                                             paypalOnly)
-        //insertNewTransfer()
+    suspend fun createTransfer(transferNew: TransferNew): Transfer {
+        transfer = repository.createTransfer(transferNew)
         selectedId = transfer!!.id
         return transfer!!
     }

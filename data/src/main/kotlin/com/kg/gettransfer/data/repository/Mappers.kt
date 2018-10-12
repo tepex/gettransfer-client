@@ -57,10 +57,8 @@ class Mappers {
                               account.carrierId)
         }
         
-        fun mapProfile(profile: Profile) = ApiProfile(profile.email, profile.phone, profile.name)
-        
+        fun mapProfile(profile: Profile) = ApiProfile(profile.email, profile.phone, profile.name)        
         fun mapUser(user: User) = ApiUser(user.profile.email, user.profile.phone, user.profile.name, user.termsAccepted)
-        
         /**
          * [ApiTransfer] -> [Transfer]
          */
