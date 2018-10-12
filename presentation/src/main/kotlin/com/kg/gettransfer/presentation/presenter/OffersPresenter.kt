@@ -4,19 +4,15 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.CoroutineContexts
-
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.repository.Preferences
 
 import com.kg.gettransfer.presentation.Screens
-
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
-
 import com.kg.gettransfer.presentation.view.OffersView
 
 import io.socket.client.IO
@@ -35,7 +31,8 @@ class OffersPresenter(cc: CoroutineContexts,
                       router: Router,
                       systemInteractor: SystemInteractor,
                       private val transferInteractor: TransferInteractor,
-                      private val offerInteractor: OfferInteractor): BaseLoadingPresenter<OffersView>(cc, router, systemInteractor) {
+                      private val offerInteractor: OfferInteractor,
+                      private val preference: Preferences): BasePresenter<OffersView>(cc, router, systemInteractor) {
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
@@ -101,11 +98,18 @@ class OffersPresenter(cc: CoroutineContexts,
         offersSocket!!.connect()
     }
 
+    fun setUpSocket() {
+        offersSocket = IO.socket("/api/socket")
+        offersSocket!!.on(Manager.EVENT_TRANSPORT, headers)
+        offersSocket!!.on("new offer", onNewOffer)
+        offersSocket!!.connect()
+    }
+
     @CallSuper
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
-//        offersSocket!!.off("new offer", onNewOffer )
-//        offersSocket!!.disconnect()
+        offersSocket!!.off("new offer", onNewOffer )
+        offersSocket!!.disconnect()
         super.onDestroy()
     }
 
@@ -178,14 +182,24 @@ class OffersPresenter(cc: CoroutineContexts,
         }
     }
 
-    private val headers = Emitter.Listener { args ->
-        val transport = args[0] as Transport
-        transport.on(Transport.EVENT_REQUEST_HEADERS) { _args ->
-            var headers = _args[0] as MutableMap<String, List<String>>
-            headers.put("Cookie", listOf("rack.session=${systemInteractor.accessToken}"))
+    private fun logFilterEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value)) }
+    private fun logButtonEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value)) }
+
+    private val onNewOffer = object : Emitter.Listener {
+        override fun call(vararg args: Any?) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }
     }
 
-    private fun logFilterEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value)) }
-    private fun logButtonEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value)) }
+    private val headers = object: Emitter.Listener {
+        override fun call(vararg args: Any?) {
+            val transport = args[0] as Transport
+            transport.on(Transport.EVENT_REQUEST_HEADERS, object : Emitter.Listener {
+                override fun call(vararg args: Any?) {
+                    var headers = args[0] as MutableMap<String, List<String>>
+                    headers.put("Cookie", "rack.session=" + preference.accessToken)
+                }
+            })
+        }
+    }
 }
