@@ -22,6 +22,10 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
         get() = preferencesCache.lastMode
         set(value) { preferencesCache.lastMode = value }
 
+    override var endpoint: String
+        get() = preferencesCache.endpoint
+        set(value) { preferencesCache.endpoint = value }
+
     override suspend fun coldStart() {
         configs = configsMapper.fromEntity(factory.retrieveRemoteDataStore().getConfigs())
         accountMapper.configs = configs
@@ -44,4 +48,7 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
     }
 
     override fun logout() = factory.retrieveCacheDataStore().clearAccount()
+
+    override fun getEndpoins() = arrayListOf(PreferencesCache.ENDPOINT_PROD, PreferencesCache.ENDPOINT_DEMO)
+    override fun changeEndpoint() = factory.retrieveRemoteDataStore().changeEndpoint()
 }
