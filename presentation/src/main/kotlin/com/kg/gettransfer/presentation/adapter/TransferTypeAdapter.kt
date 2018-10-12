@@ -33,13 +33,13 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
             ivTransferType.setImageResource(item.imageId!!)
             cbTransferType.isChecked = item.checked
             setVisibilityIconInfo(item)
-            setVisibilityShadow(item)
+            setVisibilityShadow(context, item)
             setOnClickListener {
                 item.checked = !item.checked
                 cbTransferType.isChecked = item.checked
                 setVisibilityIconInfo(item)
                 item.showInfo = ivTransportInfo.visibility == View.VISIBLE
-                setVisibilityShadow(item)
+                setVisibilityShadow(context, item)
             }
             layoutTransportInfo.setOnClickListener {
                 if (item.checked) {
@@ -48,7 +48,7 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
             }
         }
 
-        private fun View.setVisibilityShadow(item: TransportTypeModel) {
+        private fun setVisibilityShadow(context: Context, item: TransportTypeModel) {
             if (item.checked) {
                 showItemShadowAndCorners(context)
             } else {
