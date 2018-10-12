@@ -16,4 +16,6 @@ class PaymentRepositoryImpl(private val factory: PaymentDataStoreFactory,
                             private val paymentMapper: PaymentMapper): PaymentRepository {
     override suspend fun getPayment(paymentRequest: PaymentRequest) =
         paymentMapper.fromEntity(factory.retrieveRemoteDataStore().createPayment(paymentRequestMapper.toEntity(paymentRequest)))
+    override suspend fun changeStatusPayment(paymentId: Long, pgOrderId: Long, withoutRedirect: Boolean, status: String) =
+            factory.changeStatusPayment(paymentId, pgOrderId, withoutRedirect, status)
 }
