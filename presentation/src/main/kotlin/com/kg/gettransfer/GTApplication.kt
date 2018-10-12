@@ -24,12 +24,12 @@ class GTApplication: MultiDexApplication() {
             System.setProperty("kotlinx.coroutines.debug", "on")
         }
         // Start Koin
-        startKoin(this, listOf(appModule,
-                               ciceroneModule,
+        startKoin(this, listOf(ciceroneModule,
                                geoModule,
                                prefsModule,
-                               systemModule,
-                               domainModule,
+                               loggingModule,
+                               remoteModule,
+                               dataModule,
                                androidModule))
     }
 }

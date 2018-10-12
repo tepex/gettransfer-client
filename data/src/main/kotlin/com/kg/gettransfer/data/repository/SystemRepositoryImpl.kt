@@ -6,27 +6,37 @@ import com.kg.gettransfer.data.ds.SystemDataStoreFactory
 
 import com.kg.gettransfer.data.mapper.AccountMapper
 import com.kg.gettransfer.data.mapper.ConfigsMapper
+import com.kg.gettransfer.data.mapper.EndpointMapper
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
+import com.kg.gettransfer.domain.model.Endpoint
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
 class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
                            private val factory: SystemDataStoreFactory,
                            private val configsMapper: ConfigsMapper,
-                           private val accountMapper: AccountMapper): SystemRepository {
+                           private val accountMapper: AccountMapper,
+                           private val endpointMapper: EndpointMapper,
+                           private val _endpoints: List<Endpoint>): SystemRepository {
     override lateinit var configs: Configs
 
     override var lastMode: String
         get() = preferencesCache.lastMode
         set(value) { preferencesCache.lastMode = value }
 
-    override var endpoint: String
-        get() = preferencesCache.endpoint
-        set(value) { preferencesCache.endpoint = value }
+    override val endpoints = _endpoints
+    
+    override var endpoint: Endpoint
+        get() = endpoints.find { it.name == preferencesCache.endpoint }!!
+        set(value) {
+            preferencesCache.endpoint = value.name
+            factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(value))
+        }
 
     override suspend fun coldStart() {
+        factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
         configs = configsMapper.fromEntity(factory.retrieveRemoteDataStore().getConfigs())
         accountMapper.configs = configs
         val accountEntity = factory.retrieveRemoteDataStore().getAccount()
@@ -48,7 +58,4 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
     }
 
     override fun logout() = factory.retrieveCacheDataStore().clearAccount()
-
-    override fun getEndpoins() = arrayListOf(PreferencesCache.ENDPOINT_PROD, PreferencesCache.ENDPOINT_DEMO)
-    override fun changeEndpoint() = factory.retrieveRemoteDataStore().changeEndpoint()
 }

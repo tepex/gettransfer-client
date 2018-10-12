@@ -2,11 +2,13 @@ package com.kg.gettransfer.domain.repository
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
+import com.kg.gettransfer.domain.model.Endpoint
 
 interface SystemRepository {
     var configs: Configs
     var lastMode: String
-    var endpoint: String
+    var endpoint: Endpoint
+    val endpoints: List<Endpoint>
         
     suspend fun coldStart()
     suspend fun getAccount(): Account
@@ -16,7 +18,4 @@ interface SystemRepository {
     */
     suspend fun login(email: String, password: String): Account
     fun logout()
-    
-    fun changeEndpoint()
-    fun getEndpoins(): ArrayList<String>
 }
