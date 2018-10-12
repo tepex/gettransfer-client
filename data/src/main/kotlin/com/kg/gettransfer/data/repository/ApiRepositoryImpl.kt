@@ -27,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 import timber.log.Timber
 
-class ApiRepositoryImpl(private val preferences: Preferences,
+class ApiRepositoryImpl(private val preferences: PreferencesCache,
                         private val apiKeys: Array<String>,
                         private val apiUrls: Array<String>) {
 
@@ -72,10 +72,10 @@ class ApiRepositoryImpl(private val preferences: Preferences,
     fun setEndpoint(){
         if(apiUrls.size == DEMO_URLS_COUNT){
             when(preferences.endpoint){
-                Preferences.ENDPOINT_DEMO -> initUrl(DEMO_ENDPOINT_INDEX)
-                Preferences.ENDPOINT_PROD -> initUrl(PROD_ENDPOINT_INDEX)
+                PreferencesCache.ENDPOINT_DEMO -> initUrl(DEMO_ENDPOINT_INDEX)
+                PreferencesCache.ENDPOINT_PROD -> initUrl(PROD_ENDPOINT_INDEX)
                 else -> {
-                    preferences.endpoint = Preferences.ENDPOINT_DEMO
+                    preferences.endpoint = PreferencesCache.ENDPOINT_DEMO
                     initUrl(DEMO_ENDPOINT_INDEX)
                 }
             }

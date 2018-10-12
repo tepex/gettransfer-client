@@ -22,4 +22,5 @@ open class SystemRemoteDataStore(private val remote: SystemRemote): SystemDataSt
     override suspend fun setAccount(accountEntity: AccountEntity) = remote.setAccount(accountEntity)
     override fun clearAccount() { throw UnsupportedOperationException() }
     override suspend fun login(email: String, password: String) = remote.login(email, password)
+    fun changeEndpoint() = remote.changeEndpoint()
 }

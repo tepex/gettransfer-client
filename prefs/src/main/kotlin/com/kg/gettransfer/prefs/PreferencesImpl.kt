@@ -9,19 +9,22 @@ import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ProfileEntity
 import com.kg.gettransfer.data.model.UserEntity
 
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.DistanceUnit
-import com.kg.gettransfer.domain.model.Profile
-import com.kg.gettransfer.domain.model.User
-
-import java.util.Currency
-import java.util.Locale
-
-class PreferencesImpl(context: Context): Preferences {
-
+class PreferencesImpl(context: Context): PreferencesCache, SystemCache {
     companion object {
-        @JvmField val LAST_MODE = "last_mode"
-        @JvmField val ENDPOINT  = "endpoint"
+        const val ACCOUNT                = "account"
+        const val CONFIGS                = "configs"
+        const val TOKEN                  = "token"
+
+        const val ACCOUNT_EMAIL          = "email"
+        const val ACCOUNT_PASSWORD       = "password"
+        const val ACCOUNT_PHONE          = "phone"
+        const val ACCOUNT_LOCALE         = "locale"
+        const val ACCOUNT_CURRENCY       = "currency"
+        const val ACCOUNT_DISTANCE_UNIT  = "distance_unit"
+        const val ACCOUNT_FULL_NAME      = "full_name"
+        const val ACCOUNT_GROUPS         = "groups"
+        const val ACCOUNT_CARRIER_ID     = "carrier_id"
+        const val ACCOUNT_TERMS_ACCEPTED = "terms_accepted"
     }
 
     private val configsPrefs = context.getSharedPreferences(CONFIGS, Context.MODE_PRIVATE)
@@ -74,19 +77,11 @@ class PreferencesImpl(context: Context): Preferences {
             editor.apply()
         }
 
-    override var lastMode: String
-        get() = configsPrefs.getString(PreferencesCache.LAST_MODE, "")!!
+    override var endpoint: String
+        get() = configsPrefs.getString(PreferencesCache.ENDPOINT, "")!!
         set(value) {
             val editor = configsPrefs.edit()
-            editor.putString(PreferencesCache.LAST_MODE, value)
-            editor.apply()
-        }
-
-    override var endpoint: String
-        get() = configsPrefs.getString(ENDPOINT, "")!!
-        set(value){
-            val editor = configsPrefs.edit()
-            editor.putString(ENDPOINT, value)
+            editor.putString(PreferencesCache.ENDPOINT, value)
             editor.apply()
         }
         

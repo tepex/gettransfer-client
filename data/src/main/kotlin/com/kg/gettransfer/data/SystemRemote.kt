@@ -8,4 +8,5 @@ interface SystemRemote {
     suspend fun getAccount(): AccountEntity
     suspend fun setAccount(accountEntity: AccountEntity)
     suspend fun login(email: String, password: String): AccountEntity
+    fun changeEndpoint()
 }
