@@ -4,6 +4,7 @@ import android.annotation.TargetApi
 
 import android.content.Context
 import android.content.Intent
+<<<<<<< HEAD
 
 import android.net.Uri
 
@@ -15,6 +16,11 @@ import android.support.annotation.RequiresApi
 
 import android.support.v7.widget.Toolbar
 
+=======
+import android.os.Build
+import android.os.Bundle
+import android.support.annotation.RequiresApi
+>>>>>>> GAA-72. working with payment api
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -26,16 +32,23 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
+<<<<<<< HEAD
 import com.kg.gettransfer.presentation.Screens
+=======
+>>>>>>> GAA-72. working with payment api
 import com.kg.gettransfer.presentation.presenter.PaymentPresenter
 import com.kg.gettransfer.presentation.view.PaymentView
 
 import kotlinx.android.synthetic.main.activity_payment.*
+<<<<<<< HEAD
 import kotlinx.android.synthetic.main.toolbar.view.*
 
 import org.koin.android.ext.android.inject
 
 import timber.log.Timber
+=======
+import org.koin.android.ext.android.inject
+>>>>>>> GAA-72. working with payment api
 
 fun Context.getPaymentActivityLaunchIntent(paymentUrl: String): Intent {
     var intent = Intent(this, PaymentActivity::class.java)
@@ -62,6 +75,7 @@ class PaymentActivity: BaseActivity(), PaymentView {
 
     @ProvidePresenter
     fun createPaymentPresenter(): PaymentPresenter = PaymentPresenter(coroutineContexts, router, systemInteractor, paymentInteractor)
+<<<<<<< HEAD
 
     protected override var navigator = object: BaseNavigator(this) {
         @CallSuper
@@ -77,6 +91,8 @@ class PaymentActivity: BaseActivity(), PaymentView {
             return null
         }
     }
+=======
+>>>>>>> GAA-72. working with payment api
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,11 +109,23 @@ class PaymentActivity: BaseActivity(), PaymentView {
 
         webView.webViewClient = object : WebViewClient() {
 
+<<<<<<< HEAD
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                 if(view != null && view.url != null) {
                     handleUri(request!!.url)
                     return false
+=======
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                if (view != null && view.url != null) {
+                    val uri = request?.url
+                    val path = uri?.path
+                    if (path.equals("/api/payments/successful")) {
+                        val orderId = uri?.getQueryParameter("pg_order_id")!!.toLong()
+                        presenter.changeStatusPayment(orderId, "successful")
+                    }
+>>>>>>> GAA-72. working with payment api
                 }
                 return true
             }

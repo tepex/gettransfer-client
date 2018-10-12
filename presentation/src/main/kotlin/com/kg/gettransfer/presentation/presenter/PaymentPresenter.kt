@@ -7,6 +7,8 @@ import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.presentation.Screens
+
+import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
 import com.kg.gettransfer.presentation.view.PaymentView
@@ -19,7 +21,6 @@ class PaymentPresenter(cc: CoroutineContexts,
                        router: Router,
                        systemInteractor: SystemInteractor,
                        private val paymentInteractor: PaymentInteractor): BasePresenter<PaymentView>(cc, router, systemInteractor) {
-
     companion object {
         private const val SUCCESS = "success"
     }
