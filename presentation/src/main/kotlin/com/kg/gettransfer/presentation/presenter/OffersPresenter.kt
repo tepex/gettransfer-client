@@ -1,31 +1,22 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
-
 import com.arellomobile.mvp.InjectViewState
-
-import com.kg.gettransfer.R
-
-import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
-
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
-
+import com.kg.gettransfer.domain.repository.Preferences
 import com.kg.gettransfer.presentation.Screens
-
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
-
 import com.kg.gettransfer.presentation.view.OffersView
-
-import com.kg.gettransfer.presentation.ui.Utils
-
-import java.text.SimpleDateFormat
-
+import io.socket.client.IO
+import io.socket.client.Manager
+import io.socket.client.Socket
+import io.socket.emitter.Emitter
+import io.socket.engineio.client.Transport
 import ru.terrakok.cicerone.Router
-
 import timber.log.Timber
 
 @InjectViewState
@@ -33,7 +24,8 @@ class OffersPresenter(cc: CoroutineContexts,
                       router: Router,
                       systemInteractor: SystemInteractor,
                       private val transferInteractor: TransferInteractor,
-                      private val offerInteractor: OfferInteractor): BasePresenter<OffersView>(cc, router, systemInteractor) {
+                      private val offerInteractor: OfferInteractor,
+                      private val preference: Preferences): BasePresenter<OffersView>(cc, router, systemInteractor) {
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
@@ -42,6 +34,7 @@ class OffersPresenter(cc: CoroutineContexts,
 
     private var sortCategory: String? = null
     private var sortHigherToLower = true
+    private var offersSocket: Socket? = null
 
     companion object {
         @JvmField val EVENT = "offers"
@@ -87,9 +80,18 @@ class OffersPresenter(cc: CoroutineContexts,
         }, { viewState.blockInterface(false) })
     }
 
+    fun setUpSocket() {
+        offersSocket = IO.socket("/api/socket")
+        offersSocket!!.on(Manager.EVENT_TRANSPORT, headers)
+        offersSocket!!.on("new offer", onNewOffer)
+        offersSocket!!.connect()
+    }
+
     @CallSuper
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
+        offersSocket!!.off("new offer", onNewOffer )
+        offersSocket!!.disconnect()
         super.onDestroy()
     }
 

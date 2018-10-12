@@ -16,9 +16,11 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.data.prefs.PreferencesImpl
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.repository.Preferences
 
 import com.kg.gettransfer.presentation.Screens
 
@@ -40,7 +42,8 @@ import org.koin.android.ext.android.inject
 class OffersActivity: BaseActivity(), OffersView {
     @InjectPresenter
     internal lateinit var presenter: OffersPresenter
-    
+
+    private val preference: Preferences by inject()
     private val offerInteractor: OfferInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
     
