@@ -42,3 +42,8 @@ class GTAddress(var id: String? = null,
     override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()
     override fun toString(): String = "$name {$placeTypes}"
 }
+/*
+class ApiCityPoint(@SerializedName("name") @Expose var name: String,
+                   @SerializedName("point") @Expose var point: String,
+                   @SerializedName("place_id") @Expose var placeId: String?)
+*/

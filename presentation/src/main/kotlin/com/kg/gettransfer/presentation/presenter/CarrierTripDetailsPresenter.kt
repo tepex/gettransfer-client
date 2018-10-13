@@ -37,9 +37,7 @@ class CarrierTripDetailsPresenter(cc: CoroutineContexts,
             viewState.blockInterface(true)
             selectedTripId = carrierTripInteractor.selectedTripId
             val tripInfo = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(selectedTripId!!) }
-            trip = Mappers.getCarrierTripModel(tripInfo,
-                    systemInteractor.locale,
-                    systemInteractor.distanceUnit)
+            trip = Mappers.getCarrierTripModel(tripInfo, systemInteractor.locale, systemInteractor.distanceUnit)
 
             val routeInfo = routeInteractor.getRouteInfo(tripInfo.from.point, tripInfo.to.point, false, false)
             routeModel = Mappers.getRouteModel(routeInfo.distance,

@@ -36,6 +36,6 @@ class RouteInteractor(private val geoRepository: GeoRepository,
         if(to!!.point == null) to!!.point = geoRepository.getLatLngByPlaceId(to!!.id!!)
     }
 
-    suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean) = 
+    suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean) = 
         routeRepository.getRouteInfo(from, to, withPrices, returnWay)
 }

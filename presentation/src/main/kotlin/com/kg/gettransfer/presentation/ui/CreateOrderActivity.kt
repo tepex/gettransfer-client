@@ -161,7 +161,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
         tvAgreement1.setOnClickListener { presenter.showLicenceAgreement() }
         tvAgreement2.setOnClickListener { presenter.showLicenceAgreement() }
-        switchAgreement.setOnCheckedChangeListener { buttonView, isChecked -> presenter.setAgreeLicence(isChecked) }
+        switchAgreement.setOnCheckedChangeListener { _, isChecked -> presenter.setAgreeLicence(isChecked) }
 
         btnGetOffers.setOnClickListener   { presenter.onGetTransferClick() }
         btnCenterRoute.setOnClickListener { presenter.onCenterRouteClick() }

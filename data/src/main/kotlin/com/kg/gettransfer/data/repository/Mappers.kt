@@ -16,6 +16,7 @@ class Mappers {
         private val SERVER_DATE_FORMAT = SimpleDateFormat("yyyy/MM/dd", Locale.US)
         private val SERVER_TIME_FORMAT = SimpleDateFormat("HH:mm", Locale.US)
         private val ISO_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+        private val POINT_REGEX = "\\(([\\d\\.\\-]+)\\,([\\d\\.\\-]+)\\)".toRegex()
         
         fun mapApiConfigs(apiConfigs: ApiConfigs): Configs {
             val locales = apiConfigs.availableLocales.map { Locale(it.code) }
@@ -66,7 +67,7 @@ class Mappers {
          */
         fun mapApiTransfer(apiTransfer: ApiTransfer): Transfer {
             var to: CityPoint? = null
-            if(apiTransfer.to != null) to = CityPoint(apiTransfer.to!!.name, apiTransfer.to!!.point, apiTransfer.to!!.placeId)
+            if(apiTransfer.to != null) to = mapApiCityPoint(apiTransfer.to!!)
             var paidSum: Money? = null
             if(apiTransfer.paidSum != null) paidSum = Money(apiTransfer.paidSum!!.default, apiTransfer.paidSum!!.preferred)
             var remainsToPay: Money? = null
@@ -85,7 +86,7 @@ class Mappers {
                             apiTransfer.duration,
                             apiTransfer.distance,
                             apiTransfer.status!!,
-                            CityPoint(apiTransfer.from.name, apiTransfer.from.point, apiTransfer.from.placeId),
+                            mapApiCityPoint(apiTransfer.from),
                             to,
                             ISO_FORMAT.parse(apiTransfer.dateToLocal!!),
                             dateReturnLocal,
@@ -147,6 +148,25 @@ class Mappers {
             return ApiCityPoint(address.name, address.point!!.toString(), address.id)
         }
         
+        /**
+         * [ApiCityPont] -> [CityPoint]
+         */
+        fun mapApiCityPoint(apiCityPoint: ApiCityPoint): CityPoint {
+            val latLng = POINT_REGEX.find(apiCityPoint.point)!!.groupValues
+            val point = Point(latLng.get(1).toDouble(), latLng.get(2).toDouble())
+            return CityPoint(apiCityPoint.name, point, apiCityPoint.placeId)
+        }
+        
+        /**
+         * [ApiCityPoint] -> [GTAddress]
+         */
+         /*
+        fun mapCityPoint(cityPoint: ApiCityPoint): GTAddress {
+            
+            return GTAddress(cityPoint.placeId, null, cityPoint.name, null, null, nullmapPoint(cityPoint.point))
+        }
+        */
+        
         fun mapTrip(trip: Trip): ApiTrip {
             return ApiTrip(SERVER_DATE_FORMAT.format(trip.dateTime), SERVER_TIME_FORMAT.format(trip.dateTime), trip.flightNumber)
         }
@@ -177,8 +197,8 @@ class Mappers {
             }
             return CarrierTrip(apiCarrierTrip.id,
                                apiCarrierTrip.transferId,
-                               CityPoint(apiCarrierTrip.from.name, apiCarrierTrip.from.point, apiCarrierTrip.from.placeId),
-                               CityPoint(apiCarrierTrip.to.name, apiCarrierTrip.to.point, apiCarrierTrip.to.placeId),
+                               mapApiCityPoint(apiCarrierTrip.from),
+                               mapApiCityPoint(apiCarrierTrip.to),
                                ISO_FORMAT.parse(apiCarrierTrip.dateLocal),
                                apiCarrierTrip.duration,
                                apiCarrierTrip.distance,

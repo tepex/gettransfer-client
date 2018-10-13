@@ -154,8 +154,8 @@ class ApiRepositoryImpl(private val preferences: Preferences,
         preferences.cleanAccount()
     }
     
-    suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean): RouteInfo {
-        val response: ApiResponse<ApiRouteInfo> = tryGetRouteInfo(arrayOf(from, to), withPrices, returnWay)
+    suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean): RouteInfo {
+        val response: ApiResponse<ApiRouteInfo> = tryGetRouteInfo(arrayOf(from.toString(), to.toString()), withPrices, returnWay)
         return Mappers.mapApiRouteInfo(response.data!!)
     }
     
