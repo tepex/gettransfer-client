@@ -13,6 +13,5 @@ data class Configs(val transportTypes: List<TransportType>,
                    val officePhone: String,
                    val baseUrl: String)
 
-data class TransportType(val id: String, val paxMax: Int, val luggageMax: Int)
 data class PaypalCredentials(val id: String, val env: String)
 data class CardGateways(val default: String, var countryCode: String?)

@@ -3,35 +3,30 @@ package com.kg.gettransfer.remote.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class CarrierTripModelWrapper(@SerializedName("trip") @Expose var trip: CarrierTripModel)
+class CarrierTripModelWrapper(@SerializedName("trip") @Expose val trip: CarrierTripModel)
 
-class CarrierTripsModel(@SerializedName("trips") @Expose var trips: List<CarrierTripModel>)
+class CarrierTripsModel(@SerializedName("trips") @Expose val trips: List<CarrierTripModel>)
 
-class CarrierTripModel(@SerializedName("id") @Expose var id: Long,
-                       @SerializedName("transfer_id") @Expose var transferId: Long,
-                       @SerializedName("from") @Expose var from: CityPointModel,
-                       @SerializedName("to") @Expose var to: CityPointModel,
-                       @SerializedName("date_local") @Expose var dateLocal: String,
-                       @SerializedName("duration") @Expose var duration: Int?,
-                       @SerializedName("distance") @Expose var distance: Int,
-                       @SerializedName("time") @Expose var time: Int,
-                       @SerializedName("child_seats") @Expose var childSeats: Int,
-                       @SerializedName("comment") @Expose var comment: String?,
-                       @SerializedName("water_taxi") @Expose var waterTaxi: Boolean,
-                       @SerializedName("price") @Expose var price: String,
-                       @SerializedName("vehicle") @Expose var vehicle: CarrierTripVehicleModel,
-                       @SerializedName("pax") @Expose var pax: Int?,
-                       @SerializedName("name_sign") @Expose var nameSign: String?,
-                       @SerializedName("flight_number") @Expose var flightNumber: String?,
-                       @SerializedName("paid_sum") @Expose var paidSum: String?,
-                       @SerializedName("remains_to_pay") @Expose var remainToPay: String?,
-                       @SerializedName("paid_percentage") @Expose var paidPercentage: Int?,
-                       @SerializedName("passenger_account") @Expose var passengerAccount: PassengerAccountModel?)
+class CarrierTripModel(@SerializedName("id") @Expose val id: Long,
+                       @SerializedName("transfer_id") @Expose val transferId: Long,
+                       @SerializedName("from") @Expose val from: CityPointModel,
+                       @SerializedName("to") @Expose val to: CityPointModel,
+                       @SerializedName("date_local") @Expose val dateLocal: String,
+                       @SerializedName("duration") @Expose val duration: Int?,
+                       @SerializedName("distance") @Expose val distance: Int,
+                       @SerializedName("time") @Expose val time: Int,
+                       @SerializedName("child_seats") @Expose val childSeats: Int,
+                       @SerializedName("comment") @Expose val comment: String?,
+                       @SerializedName("water_taxi") @Expose val waterTaxi: Boolean,
+                       @SerializedName("price") @Expose val price: String,
+                       @SerializedName("vehicle") @Expose val vehicle: VehicleBaseModel,
+                       @SerializedName("pax") @Expose val pax: Int?,
+                       @SerializedName("name_sign") @Expose val nameSign: String?,
+                       @SerializedName("flight_number") @Expose val flightNumber: String?,
+                       @SerializedName("paid_sum") @Expose val paidSum: String?,
+                       @SerializedName("remains_to_pay") @Expose val remainToPay: String?,
+                       @SerializedName("paid_percentage") @Expose val paidPercentage: Int?,
+                       @SerializedName("passenger_account") @Expose val passengerAccount: PassengerAccountModel?)
 
-class PassengerAccountModel(@SerializedName("email") @Expose var email: String,
-                            @SerializedName("phone") @Expose var phone: String,
-                            @SerializedName("full_name") @Expose var fullName: String,
-                            @SerializedName("last_seen") @Expose var lastSeen: String)
-
-class CarrierTripVehicleModel(@SerializedName("name") @Expose var name: String,
-                              @SerializedName("registration_number") @Expose var registrationNumber: String)
+class PassengerAccountModel(fullName: String, email: String, phone: String,
+                            @SerializedName("last_seen") @Expose val lastSeen: String): ProfileModel(fullName, email, phone)

@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.domain.model.Account
 
-import com.kg.gettransfer.presentation.model.UserModel
+import com.kg.gettransfer.presentation.model.ProfileModel
 
 //import com.google.android.gms.maps.GoogleMap.OnCameraMoveListener
 
@@ -18,5 +18,5 @@ interface MainView: BaseView {
     fun moveCenterMarker(point: LatLng)
     fun setAddressFrom(address: String)
     fun setAddressTo(address: String)
-    fun setUser(user: UserModel)
+    fun setProfile(profile: ProfileModel)
 }

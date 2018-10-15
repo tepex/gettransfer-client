@@ -1,18 +1,19 @@
 package com.kg.gettransfer.domain.model
 
+import java.util.Date
 import java.util.Locale
 
 data class Offer(val id: Long,
                  val status: String,
                  val wifi: Boolean,
                  val refreshments: Boolean,
-                 val createdAt: String,
+                 val createdAt: Date,
                  val price: Price,
                  val ratings: Ratings?,
                  val passengerFeedback: String?,
                  val carrier: Carrier,
                  val vehicle: Vehicle,
-                 val driver: Driver?)
+                 val driver: Profile?)
 
 data class Price(val base: Money,
                  val percentage30: String,
@@ -24,25 +25,10 @@ data class Ratings(val average: Double?,
                    val driver: Double?,
                    val fair: Double?)
 
-data class Carrier(val title: String?,
-                   val email: String?,
-                   val phone: String?,
-                   val id: Long,
+data class Carrier(val id: Long,
+                   val profile: Profile,
                    val approved: Boolean,
                    val completedTransfers: Int,
                    val languages: List<Locale>,
                    val ratings: Ratings,
                    val canUpdateOffers: Boolean?)
-
-data class Vehicle(val name: String,
-                   val registrationNumber: String,
-                   val year: Int,
-                   val color: String,
-                   val transportTypeId: String,
-                   val paxMax: Int,
-                   val luggageMax: Int,
-                   val photos: List<String>)
-
-data class Driver(val fullName: String,
-                  val phone: String,
-                  val email: String)

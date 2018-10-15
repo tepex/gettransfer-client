@@ -12,7 +12,7 @@ data class CarrierTripEntity(val id: Long,
                              val comment: String?,
                              var waterTaxi: Boolean,
                              val price: String, /* formatted, i.e "$10.00" */
-                             val vehicle: CarrierTripVehicleEntity,
+                             val vehicleBase: VehicleBaseEntity,
                              val pax: Int?, /* passengers count */
                              val nameSign: String?,
                              val flightNumber: String?,
@@ -22,5 +22,3 @@ data class CarrierTripEntity(val id: Long,
                              val passengerAccount: PassengerAccountEntity?)
 
 data class PassengerAccountEntity(val profile: ProfileEntity, var lastSeen: String)
-
-data class CarrierTripVehicleEntity(val name: String, val registrationNumber: String)

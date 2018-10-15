@@ -213,12 +213,7 @@ class ApiRepositoryImpl(private val preferences: PreferencesCache) {
         return transfers.map {transfer -> Mappers.mapApiTransfer(transfer) }
     }
 
-    suspend fun getOffers(transferId: Long): List<Offer> {
-        val response: ApiResponse<ApiOffers> = tryTwice(transferId, { id -> api.getOffers(id) })
-        val transfers: List<ApiOffer> = response.data!!.offers
-        return transfers.map {offer -> setOfferData(offer) }
-    }
-
+    /*
     fun setOfferData(offer: ApiOffer): Offer {
         val price = Price(Money(offer.price.base.default, offer.price.base.preferred), offer.price.percentage30,
                 offer.price.percentage70, offer.price.amount)
@@ -230,18 +225,19 @@ class ApiRepositoryImpl(private val preferences: PreferencesCache) {
         val carrierLanguages = offer.carrier.languages.map { Locale(it.code) }
         val carrierRatings = Ratings(offer.carrier.ratings.average, offer.carrier.ratings.vehicle,
                 offer.carrier.ratings.driver, offer.carrier.ratings.fair)
-        val carrier = Carrier(offer.carrier.title, offer.carrier.email, offer.carrier.phone, offer.carrier.id,
+        val carrier = Carrier(offer.carrier.id, Profile(offer.carrier.title, offer.carrier.email, offer.carrier.phone),
                 offer.carrier.approved, offer.carrier.completedTransfers, carrierLanguages, carrierRatings, offer.carrier.canUpdateOffers)
 
-        val vehicle = Vehicle(offer.vehicle.name, offer.vehicle.registrationNumber, offer.vehicle.year, offer.vehicle.color,
-                offer.vehicle.transportTypeId, offer.vehicle.paxMax, offer.vehicle.luggageMax, offer.vehicle.photos)
+        val vehicle = Vehicle(VehicleBase(offer.vehicle.name, offer.vehicle.registrationNumber), offer.vehicle.year, offer.vehicle.color,
+                TransportType(offer.vehicle.transportTypeId, offer.vehicle.paxMax, offer.vehicle.luggageMax), offer.vehicle.photos)
 
-        val driver = if(offer.driver != null) Driver(offer.driver!!.fullName, offer.driver!!.phone, offer.driver!!.email)
+        val driver = if(offer.driver != null) Profile(offer.driver!!.fullName, offer.driver!!.phone, offer.driver!!.email)
                      else null
 
-        return Offer(offer.id, offer.status, offer.wifi, offer.refreshments, offer.createdAt,
+        return Offer(offer.id, offer.status, offer.wifi, offer.refreshments, Mappers.ISO_FORMAT.parse(offer.createdAt),
                 price, ratings, offer.passengerFeedback, carrier, vehicle, driver)
     }
+    */
 
     suspend fun createPayment(transferId: Long, offerId: Long?, gatewayId: String, percentage: Int): PaymentResult {
         val response: ApiResponse<ApiPaymentResult> = tryTwice { api.createNewPayment(ApiCreatePaymentEntity(transferId, offerId, gatewayId, percentage)) }
