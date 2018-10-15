@@ -16,6 +16,7 @@ interface Api {
         const val API_LOGIN         = "/api/login"
         const val API_ROUTE_INFO    = "/api/route_info"
         const val API_CARRIER_TRIPS = "/api/trips"
+        const val API_TRANSFERS    = "/api/transfers"
     }
     
 	@GET(API_ACCESS_TOKEN)
@@ -37,8 +38,8 @@ interface Api {
 	
 	@POST(API_LOGIN)
 	@FormUrlEncoded
-	fun login(@Field(ACCOUNT_EMAIL) email: String,
-			  @Field(ACCOUNT_PASSWORD) password: String): Deferred<ResponseModel<AccountModelWrapper>>
+	fun login(@Field("email") email: String,
+			  @Field("password") password: String): Deferred<ResponseModel<AccountModelWrapper>>
 	
 	@GET(API_ROUTE_INFO)
 	fun getRouteInfo(@Query("points[]") points: Array<String>,
@@ -50,4 +51,7 @@ interface Api {
 
 	@GET("$API_CARRIER_TRIPS/{id}")
 	fun getCarrierTrip(@Path("id") id: Long): Deferred<ResponseModel<CarrierTripModelWrapper>>
+	
+	@GET("$API_TRANSFERS/{id}/offers")
+	fun getOffers(@Path("id") id: Long): Deferred<ResponseModel<OffersModel>>	
 }

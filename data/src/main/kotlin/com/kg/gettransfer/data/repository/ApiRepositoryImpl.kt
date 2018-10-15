@@ -213,12 +213,7 @@ class ApiRepositoryImpl(private val preferences: PreferencesCache) {
         return transfers.map {transfer -> Mappers.mapApiTransfer(transfer) }
     }
 
-    suspend fun getOffers(transferId: Long): List<Offer> {
-        val response: ApiResponse<ApiOffers> = tryTwice(transferId, { id -> api.getOffers(id) })
-        val transfers: List<ApiOffer> = response.data!!.offers
-        return transfers.map {offer -> setOfferData(offer) }
-    }
-
+    /*
     fun setOfferData(offer: ApiOffer): Offer {
         val price = Price(Money(offer.price.base.default, offer.price.base.preferred), offer.price.percentage30,
                 offer.price.percentage70, offer.price.amount)
@@ -242,6 +237,7 @@ class ApiRepositoryImpl(private val preferences: PreferencesCache) {
         return Offer(offer.id, offer.status, offer.wifi, offer.refreshments, Mappers.ISO_FORMAT.parse(offer.createdAt),
                 price, ratings, offer.passengerFeedback, carrier, vehicle, driver)
     }
+    */
 
     suspend fun createPayment(transferId: Long, offerId: Long?, gatewayId: String, percentage: Int): PaymentResult {
         val response: ApiResponse<ApiPaymentResult> = tryTwice { api.createNewPayment(ApiCreatePaymentEntity(transferId, offerId, gatewayId, percentage)) }

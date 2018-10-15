@@ -14,7 +14,7 @@ open class CarrierTripMapper(private val cityPointMapper: CityPointMapper,
 
     override fun fromRemote(type: CarrierTripModel): CarrierTripEntity {
         var passengerAccountEntity: PassengerAccountEntity? = null
-        if(type.passengerAccount != null) passengerAccountEntity = passengerAccountMapper.fromRemote(type.passengerAccount!!)
+        if(type.passengerAccount != null) passengerAccountEntity = passengerAccountMapper.fromRemote(type.passengerAccount)
         return CarrierTripEntity(type.id,
                                  type.transferId,
                                  cityPointMapper.fromRemote(type.from),
