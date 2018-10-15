@@ -285,7 +285,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         googleMap.setMyLocationEnabled(true)
         googleMap.uiSettings.isMyLocationButtonEnabled = false
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
-        googleMap.setOnCameraMoveListener { presenter.onCameraMove(googleMap.getCameraPosition()!!.target) }
+        googleMap.setOnCameraMoveListener { presenter.onCameraMove(googleMap.getCameraPosition()!!.target, true);  }
         googleMap.setOnCameraIdleListener { presenter.onCameraIdle() }
     }
 
@@ -306,6 +306,17 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
             //else googleMap.moveCamera(CameraUpdateFactory.newLatLng(point))
             else googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
         }
+    }
+
+    override fun setMarkerElevation(up: Boolean, elevation: Float) {
+        mMarker.animate()
+                .withStartAction { presenter.setMarkerAnimating(true) }
+                .withEndAction { presenter.setMarkerAnimating(false)
+                    if(!up) markerShadow.setImageDrawable(getDrawable(R.drawable.default_position_shadow))}
+                .translationYBy(-elevation)
+                .start()
+
+        if(up) markerShadow.setImageDrawable(getDrawable(R.drawable.lifted_marker_shadow))
     }
 
     override fun moveCenterMarker(point: LatLng) {
