@@ -303,8 +303,12 @@
 	<dimen name="bottom_sheet_offer_details_options_img_margin_start">17dp</dimen>
 	<dimen name="bottom_sheet_offer_details_btn_book_width">100dp</dimen>
 	<dimen name="bottom_sheet_offer_details_btn_book_height">32dp</dimen>
-	<dimen name="bottom_sheet_offer_details_btn_book_margin_top">16dp</dimen>
+	<dimen name="bottom_sheet_offer_details_btn_book_and_view_pager_margin_top">16dp</dimen>
 	<dimen name="bottom_sheet_offer_details_btn_book_margin_bottom">18dp</dimen>
+	<dimen name="bottom_sheet_offer_details_view_pager_height">216dp</dimen>
+	<dimen name="bottom_sheet_offer_details_chevron_margin">18dp</dimen>
+	<dimen name="bottom_sheet_offer_details_text_number_of_photo_margin_start">18dp</dimen>
+	<dimen name="bottom_sheet_offer_details_text_number_of_photo_margin_bottom">8dp</dimen>
 
 	<!--rating_bar_stars-->
 	<dimen name="rating_bar_stars_height_width">12dp</dimen>

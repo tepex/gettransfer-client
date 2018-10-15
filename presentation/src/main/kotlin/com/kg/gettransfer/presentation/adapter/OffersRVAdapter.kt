@@ -1,15 +1,7 @@
 package com.kg.gettransfer.presentation.adapter
 
 import android.content.Context
-
-import android.graphics.PorterDuff
-
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
-
-import android.text.style.ImageSpan
-import android.text.SpannableStringBuilder
-import android.text.Spanned
 
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -59,6 +51,7 @@ class OffersRVAdapter(private val offers: List<OfferModel>,
             if(item.vehicle.photos.isNotEmpty()) {
                 layoutWithCarImage.visibility = View.VISIBLE
                 Glide.with(this).load(context.getString(R.string.api_photo_url, item.vehiclePhotos[0])).into(carPhoto)
+                ivManyPhotos.visibility = View.VISIBLE
                 ratingBar.rating = item.ratings.average!!.toFloat()
                 setTexts(bottomLayoutForImage, tvCountPersonsOnCarImage, tvCountBaggageOnCarImage, item, context)
             } else {

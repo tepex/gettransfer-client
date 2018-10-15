@@ -14,7 +14,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/column1"
         android:layout_width="@dimen/view_offer_column1_width"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -88,12 +88,14 @@
                 </LinearLayout>
                 
                 <ImageView
+                    android:id="@+id/ivManyPhotos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_gallery_small_white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:visibility="gone"/>
 
             </android.support.constraint.ConstraintLayout>
 

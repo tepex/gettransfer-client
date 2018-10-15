@@ -4,6 +4,7 @@ import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.view.ViewPager
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
@@ -22,12 +23,15 @@ import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.adapter.OffersRVAdapter
+import com.kg.gettransfer.presentation.adapter.VehiclePhotosVPAdapter
+
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
 import com.kg.gettransfer.presentation.view.OffersView
 
 import kotlinx.android.synthetic.main.activity_offers.*
+import kotlinx.android.synthetic.main.bottom_sheet_offer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
@@ -78,9 +82,11 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
         sortYear.setOnClickListener { presenter.changeSortType(OffersPresenter.SORT_YEAR) }
         sortRating.setOnClickListener { presenter.changeSortType(OffersPresenter.SORT_RATING) }
         sortPrice.setOnClickListener { presenter.changeSortType(OffersPresenter.SORT_PRICE) }
+
+        setOfferDetailsSheetListener()
     }
 
-    /*private fun setOfferDetailsSheetListener(){
+    private fun setOfferDetailsSheetListener(){
         bsOfferDetails.setBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(p0: View, p1: Float) {
 
@@ -88,14 +94,17 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when(newState) {
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                        //collapsedOrderSheet()
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        for(frag in supportFragmentManager.fragments){
+                            vpVehiclePhotos.currentItem = 0
+                            supportFragmentManager.beginTransaction().remove(frag).commit()
+                        }
                     }
                 }
             }
 
         })
-    }*/
+    }
     
     override fun setTransfer(transferModel: TransferModel) {
         //tvConnectingCarriers.text = getString(R.string.transfer_connecting_carriers, transferModel.relevantCarriersCount)
@@ -141,38 +150,73 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
     }
 
     override fun showBottomSheetOfferDetails(offer: OfferModel) {
-        sheetOfferDetails.carrierId.text = getString(R.string.carrier_number, offer.carrierId)
+        carrierId.text = getString(R.string.carrier_number, offer.carrierId)
 
-        sheetOfferDetails.layoutCarrierLanguages.removeAllViews()
+        layoutCarrierLanguages.removeAllViews()
         val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         lp.setMargins(8, 0, 8, 0)
         for (item in offer.carrierLanguages){
             val ivLanguage = ImageView(this)
             ivLanguage.setImageResource(Utils.getLanguageImage(item.language))
             ivLanguage.layoutParams = lp
-            sheetOfferDetails.layoutCarrierLanguages.addView(ivLanguage)
+            layoutCarrierLanguages.addView(ivLanguage)
         }
 
-        sheetOfferDetails.ratingBarDriver.rating = offer.ratings.driver!!.toFloat()
-        sheetOfferDetails.ratingBarPunctuality.rating = offer.ratings.fair!!.toFloat()
-        sheetOfferDetails.ratingBarVehicle.rating = offer.ratings.vehicle!!.toFloat()
-        sheetOfferDetails.vehicleName.text = if(offer.vehicleColor == null) offer.transportName
+        ratingBarDriver.rating = offer.ratings.driver!!.toFloat()
+        ratingBarPunctuality.rating = offer.ratings.fair!!.toFloat()
+        ratingBarVehicle.rating = offer.ratings.vehicle!!.toFloat()
+
+        vehicleName.text = if(offer.vehicleColor == null) offer.transportName
                                              else Utils.getVehicleNameWithColor(this, offer.transportName, offer.vehicleColor)
-        sheetOfferDetails.vehicleType.setText(Utils.getTransportTypeName(offer.transportType))
+        vehicleType.setText(Utils.getTransportTypeName(offer.transportType))
         sheetOfferDetails.tvCountPersons.text = getString(R.string.count_persons_and_baggage, offer.paxMax)
         sheetOfferDetails.tvCountBaggage.text = getString(R.string.count_persons_and_baggage, offer.baggageMax)
-        if(offer.wifi) sheetOfferDetails.imgFreeWiFi.visibility = View.VISIBLE
-        if(offer.refreshments) sheetOfferDetails.imgFreeWater.visibility = View.VISIBLE
-        sheetOfferDetails.offerPrice.text = offer.priceDefault
+
+        if(offer.wifi) imgFreeWiFi.visibility = View.VISIBLE
+        if(offer.refreshments) imgFreeWater.visibility = View.VISIBLE
+
+        offerPrice.text = offer.priceDefault
         if(offer.pricePreferred != null){
-            sheetOfferDetails.offerPricePreferred.text = getString(R.string.preferred_cost, offer.pricePreferred)
-            sheetOfferDetails.offerPricePreferred.visibility = View.VISIBLE
-        } else sheetOfferDetails.offerPricePreferred.visibility = View.GONE
-        sheetOfferDetails.btnBook.setOnClickListener {
+            offerPricePreferred.text = getString(R.string.preferred_cost, offer.pricePreferred)
+            offerPricePreferred.visibility = View.VISIBLE
+        } else offerPricePreferred.visibility = View.GONE
+
+        btnBook.setOnClickListener {
             presenter.onSelectOfferClicked(offer, false)
             hideSheetOfferDetails()
         }
+
+        if(offer.vehiclePhotos.isEmpty()) vpVehiclePhotos.visibility = View.GONE
+        else {
+            vpVehiclePhotos.adapter = VehiclePhotosVPAdapter(supportFragmentManager, offer.vehiclePhotos)
+            checkNumberOfPhoto(0, offer.vehiclePhotos.size)
+
+            if(offer.vehiclePhotos.size > 1) {
+                previousImageButton.setOnClickListener { vpVehiclePhotos.currentItem = vpVehiclePhotos.currentItem - 1 }
+                nextImageButton.setOnClickListener { vpVehiclePhotos.currentItem = vpVehiclePhotos.currentItem + 1 }
+                vpVehiclePhotos.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                    override fun onPageScrollStateChanged(p0: Int) {}
+                    override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
+                    override fun onPageSelected(p0: Int) {
+                        checkNumberOfPhoto(p0, offer.vehiclePhotos.size)
+                    }
+                })
+            }
+        }
+
         bsOfferDetails.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    private fun checkNumberOfPhoto(currentPos: Int, size: Int){
+        if(size == 1) numberOfPhoto.visibility = View.GONE
+
+        if(currentPos == 0) previousImageButton.visibility = View.GONE
+        else previousImageButton.visibility = View.VISIBLE
+
+        if(currentPos == size - 1) nextImageButton.visibility = View.GONE
+        else nextImageButton.visibility = View.VISIBLE
+
+        numberOfPhoto.text = getString(R.string.number_of_photos, currentPos + 1, size)
     }
 
     private fun hideSheetOfferDetails(){
