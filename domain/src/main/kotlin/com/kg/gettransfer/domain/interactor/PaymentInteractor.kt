@@ -8,5 +8,5 @@ class PaymentInteractor(private val repository: PaymentRepository) {
     suspend fun changeStatusPayment(paymentId: Long,
                                     pgOrderId: Long,
                                     withoutRedirect: Boolean,
-                                    status: String) = repository.changeStatusPayment(paymentId, pgOrderId, withoutRedirect, status)
+                                    status: String) = repository.changeStatusPayment(pgOrderId, withoutRedirect, status)
 }

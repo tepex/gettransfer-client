@@ -22,11 +22,13 @@ class PaymentPresenter(cc: CoroutineContexts,
      fun changeStatusPayment(orderId: Long, status: String) {
          utils.launchAsyncTryCatchFinally({
              viewState.blockInterface(true)
-             paymentInteractor.changeStatusPayment(0L, orderId, true, status)
-             router.navigateTo(Screens.DETAILS)
+             paymentInteractor.changeStatusPayment(orderId, true, status)
+             router.navigateTo(Screens.PASSENGER_MODE)
+             viewState.showMessage()
          }, {
              e -> Timber.e(e)
              viewState.setError(e)
+             router.navigateTo(Screens.PASSENGER_MODE)
          }, { viewState.blockInterface(false) })
 
      }
