@@ -3,9 +3,7 @@ package com.kg.gettransfer.presentation.model
 import java.util.Locale
 
 class OfferModel(val id: Long,
-                 val driverName: String?,
-                 val driverEmail: String?,
-                 val driverPhone: String?,
+                 val driver: ProfileModel?,
                  val transportType: String,
                  val transportName: String,
                  val transportNumber: String,

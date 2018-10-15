@@ -6,6 +6,7 @@ data class Money(val default: String, val preferred: String?)
 data class Trip(val dateTime: Date, val flightNumber: String?)
 
 
+
 /* Align to line:10 */
 data class Transfer(val id: Long,
                     val createdAt: Date,

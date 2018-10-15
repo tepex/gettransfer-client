@@ -159,17 +159,17 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
     
     fun setName(name: String) {
-        user.name = name
+        user.profile.name = name
         checkFields()
     }
     
     fun setEmail(email: String) {
-        user.email = email
+        user.profile.email = email
         checkFields()
     }
     
     fun setPhone(phone: String) {
-        user.phone = phone
+        user.profile.phone = phone
         checkFields()
     }
 
@@ -249,11 +249,11 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         if(transportTypes == null) return
         val typesHasSelected = transportTypes!!.filter { it.checked }.size > 0
         val actionEnabled = typesHasSelected &&
-                            !user.name.isNullOrBlank() &&
-                            !user.email.isNullOrBlank() &&
-                            !user.email.isNullOrBlank() &&
-                            Patterns.EMAIL_ADDRESS.matcher(user.email!!).matches() &&
-                            Utils.checkPhone(user.phone) &&
+                            !user.profile.name.isNullOrBlank() &&
+                            !user.profile.email.isNullOrBlank() &&
+                            !user.profile.email.isNullOrBlank() &&
+                            Patterns.EMAIL_ADDRESS.matcher(user.profile.email!!).matches() &&
+                            Utils.checkPhone(user.profile.phone) &&
                             user.termsAccepted
         viewState.setGetTransferEnabled(actionEnabled)
     }

@@ -275,10 +275,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun setUser(user: UserModel) {
-        etName.setText(user.name ?: "")
-        tvPhone.setText(user.phone ?: "")
-        if(user.email != null) {
-            etEmail.setText(user.email)
+        etName.setText(user.profile.name ?: "")
+        tvPhone.setText(user.profile.phone ?: "")
+        if(user.profile.email != null) {
+            etEmail.setText(user.profile.email)
             etEmail.isEnabled = false
         }
     }
