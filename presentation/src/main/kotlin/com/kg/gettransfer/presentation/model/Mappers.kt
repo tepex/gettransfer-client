@@ -59,8 +59,8 @@ object Mappers {
         val selected = transportTypes.filter { transfer.transportTypeIds.contains(it.id) }
         return TransferModel(transfer.id,
                       transfer.status,
-                      transfer.from.name,
-                      transfer.to!!.name,
+                      transfer.from.name!!,
+                      transfer.to!!.name!!,
                       //SimpleDateFormat(Utils.DATE_TIME_PATTERN, locale).format(transfer.dateToLocal),
                       Utils.getFormatedDate(locale, transfer.dateToLocal),
                       transfer.distance,
@@ -79,8 +79,8 @@ object Mappers {
                       transfer.checkOffers)
     }
     
-    fun getTransferNew(from: GTAddress,
-                       to: GTAddress,
+    fun getTransferNew(from: CityPoint,
+                       to: CityPoint,
                        tripTo: Trip,
                        tripReturn: Trip?,
                        transportTypes: List<String>,
@@ -130,8 +130,8 @@ object Mappers {
     fun getCarrierTripModel(carrierTrip: CarrierTrip, locale: Locale, distanceUnit: DistanceUnit) = 
         CarrierTripModel(carrierTrip.id,
                          carrierTrip.transferId,
-                         carrierTrip.from.name,
-                         carrierTrip.to.name,
+                         carrierTrip.from.name!!,
+                         carrierTrip.to.name!!,
                          //SimpleDateFormat(Utils.DATE_TIME_PATTERN, locale).format(carrierTrip.dateLocal),
                          Utils.getFormatedDate(locale, carrierTrip.dateLocal),
                          carrierTrip.distance,

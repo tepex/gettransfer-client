@@ -124,8 +124,8 @@ class Mappers {
             var apiTripReturn: ApiTrip? = null
             if(transferNew.tripReturn != null) apiTripReturn = mapTrip(transferNew.tripReturn!!)
             
-            return ApiTransferRequest(mapAddress(transferNew.from),
-                                      mapAddress(transferNew.to),
+            return ApiTransferRequest(mapCityPoint(transferNew.from),
+                                      mapCityPoint(transferNew.to),
                                       mapTrip(transferNew.tripTo),
                                       apiTripReturn,
                                       transferNew.transportTypes,
@@ -141,12 +141,15 @@ class Mappers {
         /**
          * [GTAddress] -> [ApiCityPoint]
          */
+        /*
         fun mapAddress(address: GTAddress): ApiCityPoint {
             Timber.d("address.name: %s", address.name)
             Timber.d("address.point: %s", address.point)
             Timber.d("address.id: %s", address.id)
             return ApiCityPoint(address.name, address.point!!.toString(), address.id)
         }
+        */
+        fun mapCityPoint(cityPoint: CityPoint) = ApiCityPoint(cityPoint.name!!, cityPoint.point!!.toString(), cityPoint.placeId)
         
         /**
          * [ApiCityPont] -> [CityPoint]
@@ -161,9 +164,11 @@ class Mappers {
          * [ApiCityPoint] -> [GTAddress]
          */
          /*
-        fun mapCityPoint(cityPoint: ApiCityPoint): GTAddress {
-            
-            return GTAddress(cityPoint.placeId, null, cityPoint.name, null, null, nullmapPoint(cityPoint.point))
+        fun mapApiCityPoint(apiCityPoint: ApiCityPoint): GTAddress {
+            val latLng = POINT_REGEX.find(apiCityPoint.point)!!.groupValues
+            val point = Point(latLng.get(1).toDouble(), latLng.get(2).toDouble())
+            val cityPoint = CityPoint(apiCityPoint.name, point, apiCityPoint.placeId) 
+            return GTAddress(cityPoint, null, null, null, null)
         }
         */
         

@@ -112,8 +112,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
 
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
-            val from = routeInteractor.from!!
-            val to = routeInteractor.to!!
+            val from = routeInteractor.from!!.cityPoint
+            val to = routeInteractor.to!!.cityPoint
 	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
             var prices: Map<String, String>? = null
             if(routeInfo.prices != null) prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
@@ -121,8 +121,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
 	        routeModel = Mappers.getRouteModel(routeInfo.distance,
                                                systemInteractor.distanceUnit,
                                                routeInfo.polyLines,
-                                               from.name,
-                                               to.name,
+                                               from.name!!,
+                                               to.name!!,
                                                from.point!!,
                                                to.point!!,
                                                SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
@@ -220,8 +220,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             val transfer = utils.asyncAwait {
-                transferInteractor.createTransfer(Mappers.getTransferNew(routeInteractor.from!!,
-                                                                         routeInteractor.to!!,
+                transferInteractor.createTransfer(Mappers.getTransferNew(routeInteractor.from!!.cityPoint,
+                                                                         routeInteractor.to!!.cityPoint,
                                                                          trip,
                                                                          null,
                                                                          selectedTransportTypes,

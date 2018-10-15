@@ -33,7 +33,7 @@ class RouteInteractor(private val geoRepository: GeoRepository,
         geoRepository.getAutocompletePredictions(prediction, pointsPair)
 
     fun updateDestinationPoint() {
-        if(to!!.point == null) to!!.point = geoRepository.getLatLngByPlaceId(to!!.id!!)
+        if(to!!.cityPoint.point == null) to!!.cityPoint.point = geoRepository.getLatLngByPlaceId(to!!.cityPoint.placeId!!)
     }
 
     suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean) = 

@@ -91,12 +91,12 @@ class MainPresenter(cc: CoroutineContexts,
     private suspend fun updateCurrentLocationAsync() {
         viewState.blockInterface(true)
         val currentAddress = utils.asyncAwait { routeInteractor.getCurrentAddress() }
-        lastAddressPoint = Mappers.point2LatLng(currentAddress.point!!)
+        lastAddressPoint = Mappers.point2LatLng(currentAddress.cityPoint.point!!)
 
         onCameraMove(lastAddressPoint)
         viewState.setMapPoint(lastAddressPoint)
-        viewState.setAddressFrom(currentAddress.name)
-        currentLocation = currentAddress.name
+        viewState.setAddressFrom(currentAddress.cityPoint.name!!)
+        currentLocation = currentAddress.cityPoint.name!!
     }
 
     fun onCameraMove(lastPoint: LatLng) {
@@ -117,8 +117,8 @@ class MainPresenter(cc: CoroutineContexts,
         lastAddressPoint = lastPoint!!
         utils.launchAsyncTryCatchFinally({
             val currentAddress = utils.asyncAwait { routeInteractor.getAddressByLocation(Mappers.latLng2Point(lastPoint!!)) }
-            viewState.setAddressFrom(currentAddress.name)
-            currentLocation = currentAddress.name
+            viewState.setAddressFrom(currentAddress.cityPoint.name!!)
+            currentLocation = currentAddress.cityPoint.name!!
         }, { e -> viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }
