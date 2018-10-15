@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.model
 
+import android.support.annotation.StringRes
+
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
@@ -26,12 +28,16 @@ object Mappers {
     fun getTransportTypesModels(transportTypes: List<TransportType>, prices: Map<String, String>?) =
         transportTypes.map {
             val id = it.id
-            val nameRes = R.string::class.members.find( { it.name == "transport_type_$id" } )
-            val nameId = (nameRes?.call() as Int?) ?: R.string.transport_type_unknown
             val imageRes = R.drawable::class.members.find( { it.name == "ic_transport_type_$id" } )
             val imageId = (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_unknown
-            TransportTypeModel(id, nameId, imageId, it.paxMax, it.luggageMax, prices?.get(id))
+            TransportTypeModel(id, getTransportTypeName(id), imageId, it.paxMax, it.luggageMax, prices?.get(id))
         }
+
+    @StringRes
+    fun getTransportTypeName(id: String): Int {
+        val nameRes = R.string::class.members.find( { it.name == "transport_type_$id" } )
+        return (nameRes?.call() as Int?) ?: R.string.transport_type_unknown
+    }
     
     fun getCurrenciesModels(currencies: List<Currency>) = currencies.map { CurrencyModel(it) }
     fun getLocalesModels(locales: List<Locale>) = locales.map { LocaleModel(it) }
@@ -71,7 +77,7 @@ object Mappers {
                       transfer.childSeats ?: 0,
                       transfer.flightNumber,
                       transfer.comment,
-                      selected.map { TransportTypeModel(it.id, null, null, it.paxMax, it.luggageMax, null) },
+                      selected.map { TransportTypeModel(it.id, getTransportTypeName(it.id), null, it.paxMax, it.luggageMax, null) },
                       transfer.paidSum!!.default,
                       transfer.paidPercentage!!,
                       transfer.remainsToPay!!.default,
@@ -104,26 +110,30 @@ object Mappers {
                                                           promoCode,
                                                           paypalOnly)
 
-    fun getOfferModel(offer: Offer) = OfferModel(offer.id,
-                                                 ProfileModel(offer.driver?.name, offer.driver?.email, offer.driver?.phone),
-                                                 offer.vehicle.transportTypeId,
-                                                 offer.vehicle.name,
-                                                 offer.vehicle.registrationNumber,
-                                                 offer.price.base.default,
-                                                 offer.price.base.preferred,
-                                                 offer.vehicle.paxMax,
-                                                 offer.vehicle.luggageMax,
-                                                 offer.vehicle.year,
-                                                 offer.carrier.id,
-                                                 offer.carrier.completedTransfers,
-                                                 offer.wifi,
-                                                 offer.refreshments,
-                                                 offer.carrier.ratings.average,
-                                                 offer.price.amount,
-                                                 offer.price.percentage30,
-                                                 offer.vehicle.photos,
-                                                 offer.carrier.languages,
-                                                 offer.vehicle.color)
+    fun getOfferModel(offer: Offer): OfferModel { 
+        return OfferModel(offer.id,
+                   ProfileModel(offer.driver?.name, offer.driver?.email, offer.driver?.phone),
+                   VehicleModel(VehicleBaseModel(offer.vehicle.vehicleBase.name, offer.vehicle.vehicleBase.registrationNumber),
+                                offer.vehicle.year,
+                                offer.vehicle.color,
+                                TransportTypeModel(offer.vehicle.transportType.id,
+                                                   getTransportTypeName(offer.vehicle.transportType.id),
+                                                   null,
+                                                   offer.vehicle.transportType.paxMax,
+                                                   offer.vehicle.transportType.luggageMax,
+                                                   null),
+                                offer.vehicle.photos),
+                   offer.price.base.default,
+                   offer.price.base.preferred,
+                   offer.carrier.id,
+                   offer.carrier.completedTransfers,
+                   offer.wifi,
+                   offer.refreshments,
+                   offer.carrier.ratings.average,
+                   offer.price.amount,
+                   offer.price.percentage30,
+                   offer.carrier.languages)
+    }
 
     fun getCarrierTripModel(carrierTrip: CarrierTrip, locale: Locale, distanceUnit: DistanceUnit) = 
         CarrierTripModel(carrierTrip.id,

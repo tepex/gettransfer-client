@@ -20,10 +20,6 @@ class ApiConfigs(@SerializedName("transport_types") @Expose var transportTypes: 
  */
 class ApiTransportTypesWrapper: ArrayList<ApiTransportType>()
 
-class ApiTransportType(@SerializedName("id") @Expose val id: String,
-                       @SerializedName("pax_max") @Expose val paxMax: Int,
-                       @SerializedName("luggage_max") @Expose val luggageMax: Int)
-
 class ApiPaypalCredentials(@SerializedName("id") @Expose val id: String,
                            @SerializedName("env") @Expose val env: String)
 

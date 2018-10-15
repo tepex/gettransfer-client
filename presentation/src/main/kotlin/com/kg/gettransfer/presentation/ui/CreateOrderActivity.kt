@@ -13,6 +13,7 @@ import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+
 import android.support.design.widget.BottomSheetBehavior
 
 import android.support.v7.widget.LinearLayoutManager
