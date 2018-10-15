@@ -58,6 +58,8 @@ class SearchActivity: BaseActivity(), SearchView {
         @JvmField val SLIDE_DURATION = 500L
         @JvmField val EXTRA_ADDRESS_FROM = "address_from"
         @JvmField val EXTRA_ADDRESS_TO   = "address_to"
+        @JvmField val EXTRA_FROM_CLICK = "from_click"
+        @JvmField val EXTRA_TO_CLICK = "to_click"
 
         @JvmField val LATLON_BOUNDS = "latlon_map_bounds"
     }
@@ -97,6 +99,15 @@ class SearchActivity: BaseActivity(), SearchView {
         searchFrom.text = intent.getStringExtra(EXTRA_ADDRESS_FROM)
         searchTo.initWidget(this, true)
         searchTo.text = intent.getStringExtra(EXTRA_ADDRESS_TO)
+        changeFocusForSearch()
+    }
+
+    private fun changeFocusForSearch() {
+        if (intent.getBooleanExtra(EXTRA_FROM_CLICK, false)) {
+            searchFrom.changeFocus()
+        } else if (intent.getBooleanExtra(EXTRA_TO_CLICK, false)) {
+            searchTo.changeFocus()
+        }
     }
 
     private fun setupToolbar() {

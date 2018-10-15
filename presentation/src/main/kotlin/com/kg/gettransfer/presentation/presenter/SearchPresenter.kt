@@ -36,8 +36,8 @@ class SearchPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: SearchView) {
         super.attachView(view)
-        viewState.setAddressFrom(routeInteractor.from!!.name, false)
-        viewState.setAddressTo(routeInteractor.to?.name ?: "", false)
+        viewState.setAddressFrom(routeInteractor.from!!.cityPoint.name!!, false)
+        viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false)
     }
 
     fun onAddressSelected(selected: GTAddress) {
@@ -63,8 +63,8 @@ class SearchPresenter(cc: CoroutineContexts,
             }
         } else {
             val sendRequest = selected.needApproximation() /* dirty hack */
-            if(isTo) viewState.setAddressTo(selected.primary ?: selected.name, sendRequest)
-            else viewState.setAddressFrom(selected.primary ?: selected.name, sendRequest)
+            if(isTo) viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, sendRequest)
+            else viewState.setAddressFrom(selected.primary ?: selected.cityPoint.name!!, sendRequest)
         }
     }
 

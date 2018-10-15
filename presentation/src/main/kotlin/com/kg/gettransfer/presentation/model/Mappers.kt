@@ -13,14 +13,15 @@ object Mappers {
     fun point2LatLng(point: Point) = LatLng(point.latitude, point.longitude)
     fun latLng2Point(latLng: LatLng) = Point(latLng.latitude, latLng.longitude)
     
-    fun getUserModel(account: Account) = UserModel(account.user.profile.name,
-                                                   account.user.profile.email,
-                                                   account.user.profile.phone,
-                                                   account.user.termsAccepted)
+    fun getUserModel(account: Account) = UserModel(getProfileModel(account), account.user.termsAccepted)
     
-    fun getProfile(userModel: UserModel) = Profile(userModel.name, userModel.email, userModel.phone)
+    fun getProfileModel(account: Account) = ProfileModel(account.user.profile.name,
+                                                         account.user.profile.email,
+                                                         account.user.profile.phone)
+
+    fun getProfile(profileModel: ProfileModel) = Profile(profileModel.name, profileModel.email, profileModel.phone)
     
-    fun getUser(userModel: UserModel) = User(getProfile(userModel), userModel.termsAccepted)
+    fun getUser(userModel: UserModel) = User(getProfile(userModel.profile), userModel.termsAccepted)
 
     fun getTransportTypesModels(transportTypes: List<TransportType>, prices: Map<String, String>?) =
         transportTypes.map {
@@ -41,9 +42,16 @@ object Mappers {
                       polyLines: List<String>?,
                       from: String,
                       to: String,
-                      fromPoint: String,
-                      toPoint: String,
-                      dateTime: String) = RouteModel(distance, distanceUnit, polyLines, from, to, fromPoint, toPoint, dateTime)
+                      fromPoint: Point,
+                      toPoint: Point,
+                      dateTime: String) = RouteModel(distance,
+                                                     distanceUnit,
+                                                     polyLines,
+                                                     from.toString(),
+                                                     to.toString(),
+                                                     fromPoint.toString(),
+                                                     toPoint.toString(),
+                                                     dateTime)
     
     fun getTransferModel(transfer: Transfer,
                          locale: Locale,
@@ -52,8 +60,8 @@ object Mappers {
         val selected = transportTypes.filter { transfer.transportTypeIds.contains(it.id) }
         return TransferModel(transfer.id,
                       transfer.status,
-                      transfer.from.name,
-                      transfer.to!!.name,
+                      transfer.from.name!!,
+                      transfer.to!!.name!!,
                       //SimpleDateFormat(Utils.DATE_TIME_PATTERN, locale).format(transfer.dateToLocal),
                       Utils.getFormatedDate(locale, transfer.dateToLocal),
                       transfer.distance,
@@ -71,11 +79,33 @@ object Mappers {
                       transfer.relevantCarriersCount,
                       transfer.checkOffers)
     }
+    
+    fun getTransferNew(from: CityPoint,
+                       to: CityPoint,
+                       tripTo: Trip,
+                       tripReturn: Trip?,
+                       transportTypes: List<String>,
+                       pax: Int,
+                       childSeats: Int?,
+                       passengerOfferedPrice: Int?,
+                       comment: String?,
+                       user: User,
+                       promoCode: String?,
+                       paypalOnly: Boolean) = TransferNew(from, 
+                                                          to,
+                                                          tripTo,
+                                                          tripReturn,
+                                                          transportTypes,
+                                                          pax,
+                                                          childSeats,
+                                                          passengerOfferedPrice,
+                                                          comment,
+                                                          user,
+                                                          promoCode,
+                                                          paypalOnly)
 
     fun getOfferModel(offer: Offer) = OfferModel(offer.id,
-                                                 offer.driver?.fullName,
-                                                 offer.driver?.email,
-                                                 offer.driver?.phone,
+                                                 ProfileModel(offer.driver?.name, offer.driver?.email, offer.driver?.phone),
                                                  offer.vehicle.transportTypeId,
                                                  offer.vehicle.name,
                                                  offer.vehicle.registrationNumber,
@@ -95,22 +125,21 @@ object Mappers {
                                                  offer.carrier.languages,
                                                  offer.vehicle.color)
 
-    fun getCarrierTripModel(carrierTrip: CarrierTrip,
-                            locale: Locale,
-                            distanceUnit: DistanceUnit) = CarrierTripModel(carrierTrip.id,
-                                                                           carrierTrip.transferId,
-                                                                           carrierTrip.from.name,
-                                                                           carrierTrip.to.name,
-                                                                           //SimpleDateFormat(Utils.DATE_TIME_PATTERN, locale).format(carrierTrip.dateLocal),
-                                                                           Utils.getFormatedDate(locale, carrierTrip.dateLocal),
-                                                                           carrierTrip.distance,
-                                                                           distanceUnit,
-                                                                           carrierTrip.childSeats,
-                                                                           carrierTrip.comment,
-                                                                           carrierTrip.price,
-                                                                           carrierTrip.vehicle.name,
-                                                                           carrierTrip.pax,
-                                                                           carrierTrip.nameSign,
-                                                                           carrierTrip.flightNumber,
-                                                                           carrierTrip.remainToPay)
+    fun getCarrierTripModel(carrierTrip: CarrierTrip, locale: Locale, distanceUnit: DistanceUnit) = 
+        CarrierTripModel(carrierTrip.id,
+                         carrierTrip.transferId,
+                         carrierTrip.from.name!!,
+                         carrierTrip.to.name!!,
+                         //SimpleDateFormat(Utils.DATE_TIME_PATTERN, locale).format(carrierTrip.dateLocal),
+                         Utils.getFormatedDate(locale, carrierTrip.dateLocal),
+                         carrierTrip.distance,
+                         distanceUnit,
+                         carrierTrip.childSeats,
+                         carrierTrip.comment,
+                         carrierTrip.price,
+                         carrierTrip.vehicle.name,
+                         carrierTrip.pax,
+                         carrierTrip.nameSign,
+                         carrierTrip.flightNumber,
+                         carrierTrip.remainToPay)
 }

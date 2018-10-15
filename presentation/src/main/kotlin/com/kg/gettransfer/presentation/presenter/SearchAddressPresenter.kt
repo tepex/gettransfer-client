@@ -65,7 +65,7 @@ class SearchAddressPresenter(cc: CoroutineContexts,
     }
 
     fun returnAddress(isTo: Boolean) {
-        if(isTo) viewState.returnLastAddress(routeInteractor.to?.name ?: "")
-        else viewState.returnLastAddress(routeInteractor.from?.name ?: "")
+        if(isTo) viewState.returnLastAddress(routeInteractor.to?.cityPoint?.name ?: "")
+        else viewState.returnLastAddress(routeInteractor.from?.cityPoint?.name ?: "")
     }
 }

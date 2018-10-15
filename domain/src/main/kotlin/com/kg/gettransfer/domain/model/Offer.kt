@@ -12,7 +12,7 @@ data class Offer(val id: Long,
                  val passengerFeedback: String?,
                  val carrier: Carrier,
                  val vehicle: Vehicle,
-                 val driver: Driver?)
+                 val driver: Profile?)
 
 data class Price(val base: Money,
                  val percentage30: String,
@@ -24,9 +24,7 @@ data class Ratings(val average: Double?,
                    val driver: Double?,
                    val fair: Double?)
 
-data class Carrier(val title: String?,
-                   val email: String?,
-                   val phone: String?,
+data class Carrier(val profile: Profile,
                    val id: Long,
                    val approved: Boolean,
                    val completedTransfers: Int,
@@ -42,7 +40,3 @@ data class Vehicle(val name: String,
                    val paxMax: Int,
                    val luggageMax: Int,
                    val photos: List<String>)
-
-data class Driver(val fullName: String,
-                  val phone: String,
-                  val email: String)

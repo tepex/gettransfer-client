@@ -1,12 +1,10 @@
 package com.kg.gettransfer.domain.model
 
-class GTAddress(var id: String? = null,
-                val placeTypes: List<Int>? = null,
-                val name: String,
-                val address: String,
-                val primary: String?,
-                val secondary: String?,
-                var point: Point? = null) {
+data class GTAddress(val cityPoint: CityPoint,
+                     val placeTypes: List<Int>?,
+                     val address: String?,
+                     val primary: String?,
+                     val secondary: String?) {
 
     companion object {
         @JvmField
@@ -21,24 +19,25 @@ class GTAddress(var id: String? = null,
      * Check for concrete address type.
      * [Types][com.google.android.gms.location.places.Place]
      */
+     
     fun isConcreteObject(): Boolean {
-        if (placeTypes == null || placeTypes.isEmpty()) return false
+        if(placeTypes == null || placeTypes.isEmpty()) return false
         return placeTypes.any { (it > 0 && it < 1000) || it == TYPE_STREET_ADDRESS }
     }
 
     fun needApproximation(): Boolean {
-        if (placeTypes == null || placeTypes.isEmpty()) return false
+        if(placeTypes == null || placeTypes.isEmpty()) return false
         return placeTypes.any { it == TYPE_ADMINISTRATIVE_AREA_LEVEL_1 || it == TYPE_LOCALITY }
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || javaClass != other.javaClass) return false
+        if(this === other) return true
+        if(other == null || javaClass != other.javaClass) return false
         val eq = other as GTAddress
-        if (id == null || eq.id == null) return name == eq.name
-        return id == eq.id
+        if(cityPoint.placeId == null || eq.cityPoint.placeId == null) return cityPoint.name == eq.cityPoint.name
+        return cityPoint.placeId == eq.cityPoint.placeId
     }
 
-    override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()
-    override fun toString(): String = "$name {$placeTypes}"
+    override fun hashCode(): Int = cityPoint.placeId?.hashCode() ?: cityPoint.name!!.hashCode()
+    override fun toString(): String = "$cityPoint.name {$placeTypes}"
 }

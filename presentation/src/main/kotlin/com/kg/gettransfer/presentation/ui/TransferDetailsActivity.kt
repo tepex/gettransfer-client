@@ -149,9 +149,9 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
     }
 
     override fun setOffer(offerModel: OfferModel) {
-        offerDriverInfoEmail.text = offerModel.driverEmail
-        offerDriverInfoPhone.text = offerModel.driverPhone
-        offerDriverInfoName.text = offerModel.driverName
+        offerDriverInfoEmail.text = offerModel.driver?.email
+        offerDriverInfoPhone.text = offerModel.driver?.phone
+        offerDriverInfoName.text = offerModel.driver?.name
         layoutOfferDriverInfo.visibility = View.VISIBLE
 
         offerTransportInfoCarType.text = offerModel.transportType

@@ -112,19 +112,19 @@ class CreateOrderPresenter(cc: CoroutineContexts,
 
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
-            val from = routeInteractor.from!!
-            val to = routeInteractor.to!!
-	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point.toString(), to.point.toString(), true, false) }
+            val from = routeInteractor.from!!.cityPoint
+            val to = routeInteractor.to!!.cityPoint
+	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
             var prices: Map<String, String>? = null
             if(routeInfo.prices != null) prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
             transportTypes = Mappers.getTransportTypesModels(systemInteractor.getTransportTypes(), prices)
 	        routeModel = Mappers.getRouteModel(routeInfo.distance,
                                                systemInteractor.distanceUnit,
                                                routeInfo.polyLines,
-                                               from.name,
-                                               to.name,
-                                               from.point.toString(),
-                                               to.point.toString(),
+                                               from.name!!,
+                                               to.name!!,
+                                               from.point!!,
+                                               to.point!!,
                                                SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
 
             viewState.setTransportTypes(transportTypes!!)
@@ -159,17 +159,17 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
     
     fun setName(name: String) {
-        user.name = name
+        user.profile.name = name
         checkFields()
     }
     
     fun setEmail(email: String) {
-        user.email = email
+        user.profile.email = email
         checkFields()
     }
     
     fun setPhone(phone: String) {
-        user.phone = phone
+        user.profile.phone = phone
         checkFields()
     }
 
@@ -220,18 +220,18 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             val transfer = utils.asyncAwait {
-                transferInteractor.createTransfer(routeInteractor.from!!,
-                                                  routeInteractor.to!!,
-                                                  trip,
-                                                  null,
-                                                  selectedTransportTypes,
-                                                  passengers,
-                                                  children,
-                                                  cost,
-                                                  comment,
-                                                  Mappers.getUser(user),
-                                                  null,
-                                                  false) }
+                transferInteractor.createTransfer(Mappers.getTransferNew(routeInteractor.from!!.cityPoint,
+                                                                         routeInteractor.to!!.cityPoint,
+                                                                         trip,
+                                                                         null,
+                                                                         selectedTransportTypes,
+                                                                         passengers,
+                                                                         children,
+                                                                         cost,
+                                                                         comment,
+                                                                         Mappers.getUser(user),
+                                                                         null,
+                                                                         false)) }
             Timber.d("new transfer: %s", transfer)
             router.navigateTo(Screens.OFFERS)
             logCreateTransfer(RESULT_SUCCESS)
@@ -249,11 +249,11 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         if(transportTypes == null) return
         val typesHasSelected = transportTypes!!.filter { it.checked }.size > 0
         val actionEnabled = typesHasSelected &&
-                            !user.name.isNullOrBlank() &&
-                            !user.email.isNullOrBlank() &&
-                            !user.email.isNullOrBlank() &&
-                            Patterns.EMAIL_ADDRESS.matcher(user.email!!).matches() &&
-                            Utils.checkPhone(user.phone) &&
+                            !user.profile.name.isNullOrBlank() &&
+                            !user.profile.email.isNullOrBlank() &&
+                            !user.profile.email.isNullOrBlank() &&
+                            Patterns.EMAIL_ADDRESS.matcher(user.profile.email!!).matches() &&
+                            Utils.checkPhone(user.profile.phone) &&
                             user.termsAccepted
         viewState.setGetTransferEnabled(actionEnabled)
     }

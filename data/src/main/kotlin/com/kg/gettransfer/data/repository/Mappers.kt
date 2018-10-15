@@ -16,6 +16,7 @@ class Mappers {
         private val SERVER_DATE_FORMAT = SimpleDateFormat("yyyy/MM/dd", Locale.US)
         private val SERVER_TIME_FORMAT = SimpleDateFormat("HH:mm", Locale.US)
         private val ISO_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+        private val POINT_REGEX = "\\(([\\d\\.\\-]+)\\,([\\d\\.\\-]+)\\)".toRegex()
         
         fun mapApiConfigs(apiConfigs: ApiConfigs): Configs {
             val locales = apiConfigs.availableLocales.map { Locale(it.code) }
@@ -66,7 +67,7 @@ class Mappers {
          */
         fun mapApiTransfer(apiTransfer: ApiTransfer): Transfer {
             var to: CityPoint? = null
-            if(apiTransfer.to != null) to = CityPoint(apiTransfer.to!!.name, apiTransfer.to!!.point, apiTransfer.to!!.placeId)
+            if(apiTransfer.to != null) to = mapApiCityPoint(apiTransfer.to!!)
             var paidSum: Money? = null
             if(apiTransfer.paidSum != null) paidSum = Money(apiTransfer.paidSum!!.default, apiTransfer.paidSum!!.preferred)
             var remainsToPay: Money? = null
@@ -85,7 +86,7 @@ class Mappers {
                             apiTransfer.duration,
                             apiTransfer.distance,
                             apiTransfer.status!!,
-                            CityPoint(apiTransfer.from.name, apiTransfer.from.point, apiTransfer.from.placeId),
+                            mapApiCityPoint(apiTransfer.from),
                             to,
                             ISO_FORMAT.parse(apiTransfer.dateToLocal!!),
                             dateReturnLocal,
@@ -117,48 +118,59 @@ class Mappers {
         }
 	
         /**
-         * [TransferRequest] -> [ApiTransferRequest]
+         * [TransferNew] -> [ApiTransferRequest]
          */
-        fun mapTransferRequest(from: GTAddress,
-                               to: GTAddress,
-                               tripTo: Trip,
-                               tripReturn: Trip?,
-                               transportTypes: List<String>,
-                               pax: Int,
-                               childSeats: Int?,
-                               passengerOfferedPrice: Int?,
-                               nameSign: String,
-                               comment: String?,
-                               user: User,
-                               promoCode: String?/*,
-                                Not used now 
-                               paypalOnly: Boolean*/): ApiTransferRequest {
+        fun mapTransferRequest(transferNew: TransferNew): ApiTransferRequest {
             var apiTripReturn: ApiTrip? = null
-            if(tripReturn != null) apiTripReturn = mapTrip(tripReturn)
+            if(transferNew.tripReturn != null) apiTripReturn = mapTrip(transferNew.tripReturn!!)
             
-            return ApiTransferRequest(mapAddress(from),
-                                      mapAddress(to),
-                                      mapTrip(tripTo),
+            return ApiTransferRequest(mapCityPoint(transferNew.from),
+                                      mapCityPoint(transferNew.to),
+                                      mapTrip(transferNew.tripTo),
                                       apiTripReturn,
-                                      transportTypes,
-                                      pax,
-                                      childSeats,
-                                      passengerOfferedPrice?.toString(),
-                                      nameSign,
-                                      comment,
-                                      mapUser(user),
-                                      promoCode)
+                                      transferNew.transportTypes,
+                                      transferNew.pax,
+                                      transferNew.childSeats,
+                                      transferNew.passengerOfferedPrice?.toString(),
+                                      transferNew.user.profile.name!!,
+                                      transferNew.comment,
+                                      mapUser(transferNew.user),
+                                      transferNew.promoCode)
         }
         
         /**
          * [GTAddress] -> [ApiCityPoint]
          */
+        /*
         fun mapAddress(address: GTAddress): ApiCityPoint {
             Timber.d("address.name: %s", address.name)
             Timber.d("address.point: %s", address.point)
             Timber.d("address.id: %s", address.id)
             return ApiCityPoint(address.name, address.point!!.toString(), address.id)
         }
+        */
+        fun mapCityPoint(cityPoint: CityPoint) = ApiCityPoint(cityPoint.name!!, cityPoint.point!!.toString(), cityPoint.placeId)
+        
+        /**
+         * [ApiCityPont] -> [CityPoint]
+         */
+        fun mapApiCityPoint(apiCityPoint: ApiCityPoint): CityPoint {
+            val latLng = POINT_REGEX.find(apiCityPoint.point)!!.groupValues
+            val point = Point(latLng.get(1).toDouble(), latLng.get(2).toDouble())
+            return CityPoint(apiCityPoint.name, point, apiCityPoint.placeId)
+        }
+        
+        /**
+         * [ApiCityPoint] -> [GTAddress]
+         */
+         /*
+        fun mapApiCityPoint(apiCityPoint: ApiCityPoint): GTAddress {
+            val latLng = POINT_REGEX.find(apiCityPoint.point)!!.groupValues
+            val point = Point(latLng.get(1).toDouble(), latLng.get(2).toDouble())
+            val cityPoint = CityPoint(apiCityPoint.name, point, apiCityPoint.placeId) 
+            return GTAddress(cityPoint, null, null, null, null)
+        }
+        */
         
         fun mapTrip(trip: Trip): ApiTrip {
             return ApiTrip(SERVER_DATE_FORMAT.format(trip.dateTime), SERVER_TIME_FORMAT.format(trip.dateTime), trip.flightNumber)
@@ -190,8 +202,8 @@ class Mappers {
             }
             return CarrierTrip(apiCarrierTrip.id,
                                apiCarrierTrip.transferId,
-                               CityPoint(apiCarrierTrip.from.name, apiCarrierTrip.from.point, apiCarrierTrip.from.placeId),
-                               CityPoint(apiCarrierTrip.to.name, apiCarrierTrip.to.point, apiCarrierTrip.to.placeId),
+                               mapApiCityPoint(apiCarrierTrip.from),
+                               mapApiCityPoint(apiCarrierTrip.to),
                                ISO_FORMAT.parse(apiCarrierTrip.dateLocal),
                                apiCarrierTrip.duration,
                                apiCarrierTrip.distance,

@@ -110,7 +110,6 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
         presenter.mBounds = parent.mBounds
 
-        if(isTo) addressField.requestFocus()
         checkClearButtonVisibility()
     }
 
@@ -186,5 +185,9 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     private fun checkClearButtonVisibility() {
         if(text.isBlank()) clearBtn.visibility = View.INVISIBLE
         else if(hasFocus) clearBtn.visibility = View.VISIBLE
+    }
+
+    fun changeFocus() {
+        addressField.requestFocus()
     }
 }
