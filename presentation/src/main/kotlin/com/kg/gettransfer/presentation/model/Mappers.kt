@@ -49,29 +49,28 @@ object Mappers {
                       polyLines: List<String>?,
                       from: String,
                       to: String,
-                      fromPoint: Point,
-                      toPoint: Point,
-                      dateTime: String) = RouteModel(distance,
-                                                     distanceUnit,
-                                                     polyLines,
-                                                     from.toString(),
-                                                     to.toString(),
-                                                     fromPoint.toString(),
-                                                     toPoint.toString(),
-                                                     dateTime)
+                      fromPoint: String,
+                      toPoint: String,
+                      dateTime: String): RouteModel{
+        val dist = checkDistance(distance, fromPoint, toPoint)
+        return RouteModel(dist, distanceUnit, polyLines, from, to, fromPoint, toPoint, dateTime)
+    }
     
     fun getTransferModel(transfer: Transfer,
                          locale: Locale,
                          distanceUnit: DistanceUnit,
                          transportTypes: List<TransportType>): TransferModel {
         val selected = transportTypes.filter { transfer.transportTypeIds.contains(it.id) }
+
+        val distance = checkDistance(transfer.distance, transfer.from.point, transfer.to!!.point)
+        
         return TransferModel(transfer.id,
                       transfer.status,
                       transfer.from.name!!,
                       transfer.to!!.name!!,
                       //SimpleDateFormat(Utils.DATE_TIME_PATTERN, locale).format(transfer.dateToLocal),
                       Utils.getFormatedDate(locale, transfer.dateToLocal),
-                      transfer.distance,
+                      distance,
                       distanceUnit,
                       transfer.pax,
                       transfer.nameSign,
@@ -139,24 +138,32 @@ object Mappers {
                 offer.vehicle.color)
     }
 
-    fun getCarrierTripModel(carrierTrip: CarrierTrip, locale: Locale, distanceUnit: DistanceUnit) = 
-        CarrierTripModel(carrierTrip.id,
-                         carrierTrip.transferId,
-                         carrierTrip.from.name!!,
-                         carrierTrip.to.name!!,
-                         //SimpleDateFormat(Utils.DATE_TIME_PATTERN, locale).format(carrierTrip.dateLocal),
-                         Utils.getFormatedDate(locale, carrierTrip.dateLocal),
-                         carrierTrip.distance,
-                         distanceUnit,
-                         carrierTrip.childSeats,
-                         carrierTrip.comment,
-                         carrierTrip.price,
-                         carrierTrip.vehicle.name,
-                         carrierTrip.pax,
-                         carrierTrip.nameSign,
-                         carrierTrip.flightNumber,
-                         carrierTrip.remainToPay)
-        
-    fun getPaymentRequest(model: PaymentRequestModel) = 
-        PaymentRequest(model.transferId, model.offerId, model.gatewayId, model.percentage)
+    fun getCarrierTripModel(carrierTrip: CarrierTrip,
+                            locale: Locale,
+                            distanceUnit: DistanceUnit): CarrierTripModel{
+
+        val distance = checkDistance(carrierTrip.distance, carrierTrip.from.point, carrierTrip.to.point)
+
+        return CarrierTripModel(carrierTrip.id,
+                carrierTrip.transferId,
+                carrierTrip.from.name,
+                carrierTrip.to.name,
+                //SimpleDateFormat(Utils.DATE_TIME_PATTERN, locale).format(carrierTrip.dateLocal),
+                Utils.getFormatedDate(locale, carrierTrip.dateLocal),
+                distance,
+                distanceUnit,
+                carrierTrip.childSeats,
+                carrierTrip.comment,
+                carrierTrip.price,
+                carrierTrip.vehicle.name,
+                carrierTrip.pax,
+                carrierTrip.nameSign,
+                carrierTrip.flightNumber,
+                carrierTrip.remainToPay)
+    }
+
+    private fun checkDistance(distance: Int?, fromPoint: String, toPoint: String): Int{
+        return distance ?: Utils.getDistanceBetweenTwoCoordinates(Utils.getPointsArrayFromString(fromPoint).map { it.toDouble() },
+                Utils.getPointsArrayFromString(toPoint).map { it.toDouble() })
+    }
 }

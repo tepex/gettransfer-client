@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.location.Location
 
 import android.os.Build
 
@@ -123,6 +124,7 @@ internal class Utils {
         fun getPolyline(routeModel: RouteModel): PolylineModel{
             var mPoints = arrayListOf<LatLng>()
             var line: PolylineOptions? = null
+            val latLngBuilder = LatLngBounds.Builder()
             var track: CameraUpdate
 
             if(routeModel.polyLines != null) {
@@ -133,28 +135,25 @@ internal class Utils {
 
                 line = PolylineOptions()
 
-                val latLngBuilder = LatLngBounds.Builder()
                 for (i in mPoints.indices) {
                     line.add(mPoints.get(i))
                     latLngBuilder.include(mPoints.get(i))
                 }
-                track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150)
             } else {
-                val startPointString = routeModel.fromPoint.substring(1, routeModel.fromPoint.length - 1)
-                val endPointString = routeModel.toPoint.substring(1, routeModel.toPoint.length - 1)
-                val startPointArray = startPointString.split(",")
-                val endPointArray = endPointString.split(",")
+                val startPointArray = getPointsArrayFromString(routeModel.fromPoint)
+                val endPointArray = getPointsArrayFromString(routeModel.toPoint)
                 mPoints.add(LatLng(startPointArray[0].toDouble(), startPointArray[1].toDouble()))
                 mPoints.add(LatLng(endPointArray[0].toDouble(), endPointArray[1].toDouble()))
 
-                val latLngBuilder = LatLngBounds.Builder()
                 for (i in mPoints.indices) {
                     latLngBuilder.include(mPoints.get(i))
                 }
-                track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150)
             }
+            track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150)
             return PolylineModel(mPoints.get(0), mPoints.get(mPoints.size - 1), line, track)
         }
+
+        fun getPointsArrayFromString(pointsString: String) = pointsString.substring(1, pointsString.length - 1).split(",")
 
         fun getFormatedDate(locale: Locale, dateToLocal: Date) = SimpleDateFormat(DATE_TIME_PATTERN, locale).format(dateToLocal)
         
@@ -285,6 +284,18 @@ internal class Utils {
             }
 
             return json.toString()
+        }
+
+        fun getDistanceBetweenTwoCoordinates(fromPoint: List<Double>, toPoint: List<Double>): Int{
+            val fromLocation = Location("")
+            fromLocation.latitude = fromPoint[0]
+            fromLocation.longitude = fromPoint[1]
+
+            val toLocation = Location("")
+            toLocation.latitude = toPoint[0]
+            toLocation.longitude = toPoint[1]
+
+            return (fromLocation.distanceTo(toLocation) / 1000).toInt()
         }
 	}
 }
