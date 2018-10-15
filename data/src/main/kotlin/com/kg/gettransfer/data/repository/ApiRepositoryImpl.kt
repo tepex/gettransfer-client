@@ -239,7 +239,7 @@ class ApiRepositoryImpl(private val preferences: PreferencesCache) {
         val driver = if(offer.driver != null) Profile(offer.driver!!.fullName, offer.driver!!.phone, offer.driver!!.email)
                      else null
 
-        return Offer(offer.id, offer.status, offer.wifi, offer.refreshments, offer.createdAt,
+        return Offer(offer.id, offer.status, offer.wifi, offer.refreshments, Mappers.ISO_FORMAT.parse(offer.createdAt),
                 price, ratings, offer.passengerFeedback, carrier, vehicle, driver)
     }
 

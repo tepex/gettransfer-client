@@ -9,6 +9,8 @@ import com.kg.gettransfer.data.mapper.VehicleMapper
 import com.kg.gettransfer.data.model.OfferEntity
 
 import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.Profile
+import com.kg.gettransfer.domain.model.Ratings
 
 /**
  * Map a [OfferEntity] to and from a [Offer] instance when data is moving between this later and the Domain layer.
@@ -21,18 +23,23 @@ open class OfferMapper(private val priceMapper: PriceMapper,
     /**
      * Map a [OfferEntity] instance to a [Offer] instance.
      */
-    override fun fromEntity(type: OfferEntity) = 
-        Offer(type.id,
+    override fun fromEntity(type: OfferEntity): Offer {
+        var ratings: Ratings? = null
+        if(type.ratings != null) ratings = ratingsMapper.fromEntity(type.ratings)
+        var driver: Profile? = null
+        if(type.driver != null) driver = profileMapper.fromEntity(type.driver)
+        return Offer(type.id,
               type.status,
               type.wifi,
               type.refreshments,
               Mapper.ISO_FORMAT.parse(type.createdAt),
               priceMapper.fromEntity(type.price),
-              ratingsMapper.fromEntity(type.ratings),
+              ratings,
               type.passengerFeedback,
               carrierMapper.fromEntity(type.carrier),
               vehicleMapper.fromEntity(type.vehicle),
-              profileMapper.fromEntity(type.driver))
+              driver)
+    }
 
     /**
      * Map a [Offer] instance to a [OfferEntity] instance.

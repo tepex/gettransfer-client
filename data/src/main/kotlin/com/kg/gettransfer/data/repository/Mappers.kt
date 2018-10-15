@@ -15,7 +15,7 @@ class Mappers {
     companion object {
         private val SERVER_DATE_FORMAT = SimpleDateFormat("yyyy/MM/dd", Locale.US)
         private val SERVER_TIME_FORMAT = SimpleDateFormat("HH:mm", Locale.US)
-        private val ISO_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+        val ISO_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
         private val POINT_REGEX = "\\(([\\d\\.\\-]+)\\,([\\d\\.\\-]+)\\)".toRegex()
         
         fun mapApiConfigs(apiConfigs: ApiConfigs): Configs {

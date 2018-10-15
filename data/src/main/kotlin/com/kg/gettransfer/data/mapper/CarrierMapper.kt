@@ -5,28 +5,24 @@ import com.kg.gettransfer.data.model.CarrierEntity
 import com.kg.gettransfer.domain.model.Carrier
 
 /**
- * Map a [CarrierEntity] to and from a [Carrier] instance when data is moving between
- * this later and the Domain layer.
+ * Map a [CarrierEntity] to and from a [Carrier] instance when data is moving between this later and the Domain layer.
  */
-open class CarrierMapper(): Mapper<CarrierEntity, Carrier> {
+open class CarrierMapper(private val profileMapper: ProfileMapper,
+                         private val localeMapper: LocaleMapper,
+                         private val ratingsMapper: RatingsMapper): Mapper<CarrierEntity, Carrier> {
     /**
      * Map a [CarrierEntity] instance to a [Carrier] instance.
      */
-    override fun fromEntity(type: CarrierEntity) = 
-        Carrier(type.title,
-                type.)
+    override fun fromEntity(type: CarrierEntity) =
+        Carrier(profileMapper.fromEntity(type.profile),
+                type.id,
+                type.approved,
+                type.completedTransfers,
+                type.languages.map { localeMapper.fromEntity(it) },
+                ratingsMapper.fromEntity(type.ratings),
+                type.canUpdateOffers)
     /**
      * Map a [Carrier] instance to a [CarrierEntity] instance.
      */
-    override fun toEntity(type: Carrier) = CarrierEntity(type.average, type.vehicle, type.driver, type.fair)
+    override fun toEntity(type: Carrier): CarrierEntity { throw UnsupportedOperationException() }
 }
-
-data class Carrier(val title: String?,
-                   val email: String?,
-                   val phone: String?,
-                   val id: Long,
-                   val approved: Boolean,
-                   val completedTransfers: Int,
-                   val languages: List<Locale>,
-                   val ratings: Ratings,
-                   val canUpdateOffers: Boolean?)

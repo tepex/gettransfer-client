@@ -28,7 +28,7 @@ data class CarrierEntity(val id: Long,
                          val profile: ProfileEntity,
                          val approved: Boolean,
                          val completedTransfers: Int,
-                         val languages: List<Locale>,
+                         val languages: List<LocaleEntity>,
                          val ratings: RatingsEntity,
                          val canUpdateOffers: Boolean?)
 
