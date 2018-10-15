@@ -100,12 +100,13 @@ val dataModule = module {
 	single { SystemInteractor(get(), get(), get()) }
 	
 	single { RouteInfoMapper() }
+	single { PointMapper() }
     single { RouteRemoteDataStore(get()) }
     single { RouteDataStoreFactory(get()) }
-	single { RouteRepositoryImpl(get(), get()) as RouteRepository }
+	single { RouteRepositoryImpl(get(), get(), get()) as RouteRepository }
 	single { RouteInteractor(get(), get()) }
     
-	single { CityPointMapper() }
+	single { CityPointMapper(get()) }
 	single { CarrierVehicleMapper() }
 	single { PassengerAccountMapper(get()) }
 	single { CarrierTripMapper(get(), get(), get()) }
