@@ -173,7 +173,9 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
         sheetOfferDetails.tvCountBaggage.text = getString(R.string.count_persons_and_baggage, offer.baggageMax)
 
         if(offer.wifi) imgFreeWiFi.visibility = View.VISIBLE
+        else imgFreeWiFi.visibility = View.GONE
         if(offer.refreshments) imgFreeWater.visibility = View.VISIBLE
+        else imgFreeWater.visibility = View.GONE
 
         offerPrice.text = offer.priceDefault
         if(offer.pricePreferred != null){

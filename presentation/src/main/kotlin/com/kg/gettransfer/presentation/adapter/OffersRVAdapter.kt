@@ -11,12 +11,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-
 import com.bumptech.glide.Glide
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.ui.Utils
+import com.kg.gettransfer.presentation.ui.UtilsImage
 
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_offer.view.*
@@ -50,8 +50,8 @@ class OffersRVAdapter(private val offers: List<OfferModel>,
             }
             if(item.vehicle.photos.isNotEmpty()) {
                 layoutWithCarImage.visibility = View.VISIBLE
-                Glide.with(this).load(context.getString(R.string.api_photo_url, item.vehiclePhotos[0])).into(carPhoto)
-                ivManyPhotos.visibility = View.VISIBLE
+                UtilsImage.loadImage(this, item.vehiclePhotos[0], carPhoto)
+                if(item.vehiclePhotos.size > 1) ivManyPhotos.visibility = View.VISIBLE
                 ratingBar.rating = item.ratings.average!!.toFloat()
                 setTexts(bottomLayoutForImage, tvCountPersonsOnCarImage, tvCountBaggageOnCarImage, item, context)
             } else {

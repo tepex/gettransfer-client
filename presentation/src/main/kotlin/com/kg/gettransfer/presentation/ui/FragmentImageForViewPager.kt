@@ -42,6 +42,6 @@ class FragmentImageForViewPager : Fragment() {
     }
 
     private fun loadImage() {
-        ImageUtil.loadImage(activity, imageUrl, imageForViewPager)
+        UtilsImage.loadImage(activity!!, imageUrl, imageForViewPager)
     }
 }
