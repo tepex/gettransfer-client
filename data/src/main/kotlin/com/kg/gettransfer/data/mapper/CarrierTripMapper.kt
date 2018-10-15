@@ -10,7 +10,7 @@ import com.kg.gettransfer.domain.model.PassengerAccount
  * this later and the Domain layer.
  */
 open class CarrierTripMapper(private val cityPointMapper: CityPointMapper,
-                             private val carrierVehicleMapper: CarrierVehicleMapper,
+                             private val vehicleBaseMapper: VehicleBaseMapper,
                              private val passengerAccountMapper: PassengerAccountMapper): Mapper<CarrierTripEntity, CarrierTrip> {
     /**
      * Map a [CarrierTripEntity] instance to a [CarrierTrip] instance.
@@ -30,7 +30,7 @@ open class CarrierTripMapper(private val cityPointMapper: CityPointMapper,
                            type.comment,
                            type.waterTaxi,
                            type.price,
-                           carrierVehicleMapper.fromEntity(type.vehicle),
+                           vehicleBaseMapper.fromEntity(type.vehicleBase),
                            type.pax,
                            type.nameSign,
                            type.flightNumber,

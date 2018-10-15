@@ -14,8 +14,8 @@ open class CarrierMapper(private val profileMapper: ProfileMapper,
      * Map a [CarrierEntity] instance to a [Carrier] instance.
      */
     override fun fromEntity(type: CarrierEntity) =
-        Carrier(profileMapper.fromEntity(type.profile),
-                type.id,
+        Carrier(type.id,
+                profileMapper.fromEntity(type.profile),
                 type.approved,
                 type.completedTransfers,
                 type.languages.map { localeMapper.fromEntity(it) },

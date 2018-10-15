@@ -19,7 +19,7 @@ class CarrierTripModel(@SerializedName("id") @Expose var id: Long,
                        @SerializedName("comment") @Expose var comment: String?,
                        @SerializedName("water_taxi") @Expose var waterTaxi: Boolean,
                        @SerializedName("price") @Expose var price: String,
-                       @SerializedName("vehicle") @Expose var vehicle: CarrierTripVehicleModel,
+                       @SerializedName("vehicle") @Expose var vehicle: VehicleBaseModel,
                        @SerializedName("pax") @Expose var pax: Int?,
                        @SerializedName("name_sign") @Expose var nameSign: String?,
                        @SerializedName("flight_number") @Expose var flightNumber: String?,
@@ -32,6 +32,3 @@ class PassengerAccountModel(@SerializedName("email") @Expose var email: String,
                             @SerializedName("phone") @Expose var phone: String,
                             @SerializedName("full_name") @Expose var fullName: String,
                             @SerializedName("last_seen") @Expose var lastSeen: String)
-
-class CarrierTripVehicleModel(@SerializedName("name") @Expose var name: String,
-                              @SerializedName("registration_number") @Expose var registrationNumber: String)

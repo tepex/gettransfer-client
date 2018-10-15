@@ -29,16 +29,16 @@ open class OfferMapper(private val priceMapper: PriceMapper,
         var driver: Profile? = null
         if(type.driver != null) driver = profileMapper.fromEntity(type.driver)
         return Offer(type.id,
-              type.status,
-              type.wifi,
-              type.refreshments,
-              Mapper.ISO_FORMAT.parse(type.createdAt),
-              priceMapper.fromEntity(type.price),
-              ratings,
-              type.passengerFeedback,
-              carrierMapper.fromEntity(type.carrier),
-              vehicleMapper.fromEntity(type.vehicle),
-              driver)
+                     type.status,
+                     type.wifi,
+                     type.refreshments,
+                     Mapper.ISO_FORMAT.parse(type.createdAt),
+                     priceMapper.fromEntity(type.price),
+                     ratings,
+                     type.passengerFeedback,
+                     carrierMapper.fromEntity(type.carrier),
+                     vehicleMapper.fromEntity(type.vehicle),
+                     driver)
     }
 
     /**
