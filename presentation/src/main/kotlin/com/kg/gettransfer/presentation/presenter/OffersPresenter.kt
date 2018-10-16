@@ -81,7 +81,7 @@ class OffersPresenter(cc: CoroutineContexts,
             viewState.setError(e)
         }, {
             viewState.blockInterface(false)
- //           viewState.hideLoading()
+            viewState.hideLoading()
         })
     }
 
