@@ -69,7 +69,16 @@ val dataModule = module {
     single { ApiRepositoryImpl(get()) }
     
     single { ProfileMapper() }
+    single { LocaleMapper() }
+    single { RatingsMapper() }
+    single { MoneyMapper() }
+    single { VehicleBaseMapper() }
+    single { TransportTypeMapper() }
+    single { CarrierMapper(get(), get(), get()) }
+    single { PriceMapper(get()) }
+    single { VehicleMapper(get(), get()) }
     single { OfferMapper(get(), get(), get(), get(), get()) }
+    single { OfferRemoteDataStore(get()) }
     single { OfferDataStoreFactory(get()) }
 	single { OfferRepositoryImpl(get(), get()) as OfferRepository }
 	single { OfferInteractor(get()) }
@@ -77,12 +86,7 @@ val dataModule = module {
 	single { PaymentRepositoryImpl(get()) as PaymentRepository }
 	single { PaymentInteractor(get()) }
 	
-	single { TransferRepositoryImpl(get()) as TransferRepository }
-	single { TransferInteractor(get()) }
-	
-	single { TransportTypeMapper() }
 	single { PaypalCredentialsMapper() }
-	single { LocaleMapper() }
 	single { CurrencyMapper() }
 	single { CardGatewaysMapper() }
 	single { EndpointMapper() }
@@ -109,11 +113,19 @@ val dataModule = module {
 	single { RouteInteractor(get(), get()) }
     
 	single { CityPointMapper(get()) }
-	single { VehicleBaseMapper() }
 	single { PassengerAccountMapper(get()) }
 	single { CarrierTripMapper(get(), get(), get()) }
 	single { CarrierTripRepositoryImpl(get(), get()) as CarrierTripRepository }
     single { CarrierTripInteractor(get()) }
+    
+    single { TripMapper() }
+	single { TransferMapper(get(), get()) }
+	single { TransferNewMapper(get(), get(), get(), get()) }
+	single { TransferCacheDataStore() }
+	single { TransferRemoteDataStore(get()) }
+	single { TransferDataStoreFactory(get(), get()) }
+	single { TransferRepositoryImpl(get(), get(), get()) as TransferRepository }
+	single { TransferInteractor(get()) }
 }
 
 val androidModule = module {

@@ -3,7 +3,7 @@ package com.kg.gettransfer.domain.model
 import java.util.Date
 
 data class Money(val default: String, val preferred: String?)
-data class Trip(val dateTime: Date, val flightNumber: String?)
+
 
 
 
@@ -24,16 +24,16 @@ data class Transfer(val id: Long,
                     val malinaCard: String?,
                     val flightNumber: String?,
                     val flightNumberReturn: String?,
-                    val pax: Int?,
-                    val childSeats: Int?,
-                    val offersCount: Int?,
-                    val relevantCarriersCount: Int?,
+                    val pax: Int,
+                    val childSeats: Int,
+                    val offersCount: Int,
+                    val relevantCarriersCount: Int,
                     val offersUpdatedAt: Date?,
                     
-                    val time: Int?,
-                    val paidSum: Money?,
-                    val remainsToPay: Money?,
-                    val paidPercentage: Int?,
+                    val time: Int,
+                    val paidSum: Money,
+                    val remainsToPay: Money,
+                    val paidPercentage: Int,
                     val pendingPaymentId: Int?,
                     val bookNow: Boolean,
                     val bookNowExpiration: String?,

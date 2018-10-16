@@ -15,7 +15,7 @@ class TransferRepositoryImpl(private val factory: TransferDataStoreFactory,
                              private val transferMapper: TransferMapper): TransferRepository {
     override suspend fun createTransfer(transferNew: TransferNew): Transfer {
         val transferEntity = factory.retrieveRemoteDataStore().createTransfer(transferNewMapper.toEntity(transferNew))
-        factory.retrieveCacheDataStore().addTransfer(transferEntity)
+        //factory.retrieveCacheDataStore().addTransfer(transferEntity)
         return transferMapper.fromEntity(transferEntity)
     }
     

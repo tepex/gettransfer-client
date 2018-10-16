@@ -63,6 +63,7 @@ class Mappers {
         /**
          * [ApiTransfer] -> [Transfer]
          */
+         /*
         fun mapApiTransfer(apiTransfer: ApiTransfer): Transfer {
             var to: CityPoint? = null
             if(apiTransfer.to != null) to = mapApiCityPoint(apiTransfer.to!!)
@@ -78,7 +79,7 @@ class Mappers {
             if(apiTransfer.dateRefund != null) dateRefund = ISO_FORMAT.parse(apiTransfer.dateRefund) 
             var offersUpdatedAt: Date? = null
             if(apiTransfer.offersUpdatedAt != null) offersUpdatedAt = ISO_FORMAT.parse(apiTransfer.offersUpdatedAt)
-            /* Align to line:80 */
+
             return Transfer(apiTransfer.id!!,
                             ISO_FORMAT.parse(apiTransfer.createdAt!!),
                             apiTransfer.duration,
@@ -114,10 +115,12 @@ class Mappers {
                             
                             apiTransfer.editableFields!!)
         }
+        */
 	
         /**
          * [TransferNew] -> [ApiTransferRequest]
          */
+         /*
         fun mapTransferRequest(transferNew: TransferNew): ApiTransferRequest {
             var apiTripReturn: ApiTrip? = null
             if(transferNew.tripReturn != null) apiTripReturn = mapTrip(transferNew.tripReturn!!)
@@ -135,6 +138,7 @@ class Mappers {
                                       mapUser(transferNew.user),
                                       transferNew.promoCode)
         }
+        */
         
         /**
          * [GTAddress] -> [ApiCityPoint]
@@ -168,11 +172,12 @@ class Mappers {
             val cityPoint = CityPoint(apiCityPoint.name, point, apiCityPoint.placeId) 
             return GTAddress(cityPoint, null, null, null, null)
         }
-        */
+        
         
         fun mapTrip(trip: Trip): ApiTrip {
             return ApiTrip(SERVER_DATE_FORMAT.format(trip.dateTime), SERVER_TIME_FORMAT.format(trip.dateTime), trip.flightNumber)
         }
+        */
         
         fun mapApiRouteInfo(apiRouteInfo: ApiRouteInfo): RouteInfo {
             var polylines: List<String>? = null

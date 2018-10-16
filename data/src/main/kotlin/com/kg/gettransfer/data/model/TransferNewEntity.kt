@@ -7,10 +7,10 @@ open class TransferNewEntity(val from: CityPointEntity,
                              val transportTypeIds: List<String>,
                              val pax: Int,
                              val childSeats: Int?,
-                             val passengerOfferedPrice: String?,
-                             val nameSign: String,
+                             val passengerOfferedPrice: Int?, // x 100 (in cents)
+                             val nameSign: String?,
                              val comment: String?,
-                             val profile: ProfileEntity,
+                             val user: UserEntity,
                              val promoCode: String?)
 /* В данный момент не используется
                              val paypalOnly: Boolean) */

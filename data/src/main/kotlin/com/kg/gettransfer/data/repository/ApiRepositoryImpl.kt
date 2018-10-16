@@ -165,6 +165,7 @@ class ApiRepositoryImpl(private val preferences: PreferencesCache) {
         */  
     }
 
+    /*
     suspend fun createTransfer(transferNew: TransferNew): Transfer {
         val response: ApiResponse<ApiTransferWrapper> = tryPostTransfer(
             ApiTransferWrapper(Mappers.mapTransferRequest(transferNew)))
@@ -180,7 +181,7 @@ class ApiRepositoryImpl(private val preferences: PreferencesCache) {
     private suspend fun tryPostTransfer(apiTransfer: ApiTransferWrapper): ApiResponse<ApiTransferWrapper> {
         return try { api.postTransfer(apiTransfer).await() }
         catch(e: Exception) {
-            if(e is RemoteException) throw e /* second invocation */
+            if(e is RemoteException) throw e
             val ae = apiException(e)
             if(!ae.isInvalidToken()) throw ae
 
@@ -212,6 +213,7 @@ class ApiRepositoryImpl(private val preferences: PreferencesCache) {
         val transfers: List<ApiTransfer> = response.data!!.transfers
         return transfers.map {transfer -> Mappers.mapApiTransfer(transfer) }
     }
+    */
 
     /*
     fun setOfferData(offer: ApiOffer): Offer {

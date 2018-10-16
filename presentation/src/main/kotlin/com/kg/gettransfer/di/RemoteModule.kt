@@ -5,13 +5,17 @@ import android.content.Context
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.data.CarrierTripRemote
+import com.kg.gettransfer.data.OfferRemote
 import com.kg.gettransfer.data.RouteRemote
 import com.kg.gettransfer.data.SystemRemote
+import com.kg.gettransfer.data.TransferRemote
 
 import com.kg.gettransfer.remote.ApiCore
 import com.kg.gettransfer.remote.CarrierTripRemoteImpl
+import com.kg.gettransfer.remote.OfferRemoteImpl
 import com.kg.gettransfer.remote.RouteRemoteImpl
 import com.kg.gettransfer.remote.SystemRemoteImpl
+import com.kg.gettransfer.remote.TransferRemoteImpl
 
 import com.kg.gettransfer.remote.mapper.*
 
@@ -37,4 +41,19 @@ val remoteModule = module {
     single { PassengerAccountMapper() }
     single { CarrierTripMapper(get(), get(), get()) }
     single { CarrierTripRemoteImpl(get(), get()) as CarrierTripRemote }
+    
+    single { TripMapper() }
+    single { MoneyMapper() }
+    single { UserMapper() }
+    single { TransferMapper(get(), get()) }
+    single { TransferNewMapper(get(), get(), get(), get()) }
+    single { TransferRemoteImpl(get(), get(), get()) as TransferRemote }
+    
+    single { ProfileMapper() }
+    single { VehicleMapper() }
+    single { RatingsMapper() }
+    single { CarrierMapper(get(), get()) }
+    single { PriceMapper(get()) }
+    single { OfferMapper(get(), get(), get(), get(), get()) }
+    single { OfferRemoteImpl(get(), get()) as OfferRemote }
 }

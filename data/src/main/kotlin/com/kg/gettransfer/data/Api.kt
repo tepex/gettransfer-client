@@ -42,6 +42,7 @@ interface Api {
 	fun login(@Field(ACCOUNT_EMAIL) email: String,
 			  @Field(ACCOUNT_PASSWORD) password: String): Deferred<ApiResponse<ApiAccountWrapper>>
 	
+	/*
 	@GET(API_TRANSFERS)
 	fun getAllTransfers(): Deferred<ApiResponse<ApiTransfers>>
 
@@ -59,6 +60,7 @@ interface Api {
 	
 	@POST("$API_TRANSFERS/{id}/cancel")
 	fun cancelTransfer(@Path("id") id: Long, @Body reason: ApiReason): Deferred<ApiResponse<ApiTransferWrapper>>
+	*/
 
 	@GET(API_CARRIER_TRIPS)
 	fun getCarrierTrips(): Deferred<ApiResponse<ApiCarrierTrips>>
