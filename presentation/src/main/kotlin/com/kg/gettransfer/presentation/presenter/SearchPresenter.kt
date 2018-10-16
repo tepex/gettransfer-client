@@ -79,7 +79,6 @@ class SearchPresenter(cc: CoroutineContexts,
 
     @CallSuper
     override fun onBackCommandClick() {
-        routeInteractor.to = null
         super.onBackCommandClick()
     }
 }

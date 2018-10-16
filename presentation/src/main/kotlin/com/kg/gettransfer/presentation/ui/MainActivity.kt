@@ -212,6 +212,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
             fromClick = false
             presenter.onSearchClick(Pair(searchFrom.text, searchTo.text))
         }
+        btnNext.setOnClickListener { presenter.onNextClick(Pair(searchFrom.text, searchTo.text)) }
+        enableBtnNext()
 
         val fade = Fade()
         fade.duration = FADE_DURATION
@@ -239,6 +241,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     @CallSuper
     protected override fun onStop() {
         searchTo.text = ""
+        enableBtnNext()
         super.onStop()
     }
 
@@ -317,8 +320,18 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         searchFrom.text = getString(R.string.search_nothing)
     }
 
-    override fun setAddressFrom(address: String) { searchFrom.text = address }
-    override fun setAddressTo(address: String)   { searchTo.text = address   }
+    override fun setAddressFrom(address: String) {
+        searchFrom.text = address
+        enableBtnNext()
+    }
+    override fun setAddressTo(address: String)   {
+        searchTo.text = address
+        enableBtnNext()
+    }
+
+    private fun enableBtnNext() {
+        btnNext.isEnabled = searchFrom.text.isNotEmpty() && searchTo.text.isNotEmpty()
+    }
 
     override fun setProfile(profile: ProfileModel) {
         if(!profile.isLoggedIn()) {
