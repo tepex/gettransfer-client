@@ -124,6 +124,22 @@ class PaymentActivity: BaseActivity(), PaymentView {
         presenter.changePaymentStatus(orderId, success)
     }
 
+    private fun handleUri(uri: Uri?) {
+        val path = uri?.path
+        if (path.equals(PAYMENT_RESULT_SUCCESSFUL)) {
+            changePaymentStatus(uri, SUCCESSFUL)
+        } else {
+            if (path.equals(PAYMENT_RESULT_FAILED)) {
+                changePaymentStatus(uri, FAILED)
+            }
+        }
+    }
+
+    private fun changePaymentStatus(uri: Uri?, status: String) {
+        val orderId = uri?.getQueryParameter(PG_ORDER_ID)!!.toLong()
+        presenter.changePaymentStatus(orderId, status)
+    }
+
     override fun setError(e: Throwable) {
         Timber.e(e)
         Utils.showError(this, true, getString(R.string.err_server, e.message))
