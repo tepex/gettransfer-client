@@ -32,7 +32,7 @@ class OffersPresenter(cc: CoroutineContexts,
                       systemInteractor: SystemInteractor,
                       private val transferInteractor: TransferInteractor,
                       private val offerInteractor: OfferInteractor,
-                      private val preference: Preferences): BasePresenter<OffersView>(cc, router, systemInteractor) {
+                      private val preference: Preferences): BaseLoadingPresenter<OffersView>(cc, router, systemInteractor) {
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
@@ -108,8 +108,8 @@ class OffersPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
-        offersSocket!!.off("new offer", onNewOffer )
-        offersSocket!!.disconnect()
+//        offersSocket!!.off("new offer", onNewOffer )
+//        offersSocket!!.disconnect()
         super.onDestroy()
     }
 
