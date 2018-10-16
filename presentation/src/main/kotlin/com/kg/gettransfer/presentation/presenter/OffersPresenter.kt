@@ -18,6 +18,7 @@ import io.socket.emitter.Emitter
 import io.socket.engineio.client.Transport
 import ru.terrakok.cicerone.Router
 import timber.log.Timber
+import java.util.*
 
 @InjectViewState
 class OffersPresenter(cc: CoroutineContexts,
@@ -25,7 +26,7 @@ class OffersPresenter(cc: CoroutineContexts,
                       systemInteractor: SystemInteractor,
                       private val transferInteractor: TransferInteractor,
                       private val offerInteractor: OfferInteractor,
-                      private val preference: Preferences): BasePresenter<OffersView>(cc, router, systemInteractor) {
+                      private val preference: Preferences): BaseLoadingPresenter<OffersView>(cc, router, systemInteractor) {
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
@@ -61,6 +62,7 @@ class OffersPresenter(cc: CoroutineContexts,
     override fun attachView(view: OffersView) {
         super.attachView(view)
         utils.launchAsyncTryCatchFinally({
+            viewState.showLoading()
             viewState.blockInterface(true)
 
             val transfer = utils.asyncAwait{ transferInteractor.getTransfer(transferInteractor.selectedId!!) }
@@ -77,7 +79,10 @@ class OffersPresenter(cc: CoroutineContexts,
             changeSortType(SORT_PRICE)
         }, { e -> Timber.e(e)
             viewState.setError(e)
-        }, { viewState.blockInterface(false) })
+        }, {
+            viewState.blockInterface(false)
+ //           viewState.hideLoading()
+        })
     }
 
     fun setUpSocket() {
@@ -90,8 +95,8 @@ class OffersPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
-        offersSocket!!.off("new offer", onNewOffer )
-        offersSocket!!.disconnect()
+//        offersSocket!!.off("new offer", onNewOffer )
+//        offersSocket!!.disconnect()
         super.onDestroy()
     }
 

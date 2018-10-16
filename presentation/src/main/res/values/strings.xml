@@ -360,4 +360,5 @@
 
     <string name="logs_file_name">Logs.txt</string>
     <string name="file_provider_authority" translatable="false">com.kg.gettransfer.fileprovider</string>
+    <string name="please_wait">Please, wait, connection to carries...</string>
 </resources>
