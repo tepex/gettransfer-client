@@ -5,5 +5,6 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface PaymentView: BaseView {
-    fun showMessage()
+    fun showSuccessfulMessage()
+    fun showErrorMessage()
 }

@@ -1,7 +1,9 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.CallSuper
@@ -20,7 +22,6 @@ import com.kg.gettransfer.presentation.view.PaymentView
 import kotlinx.android.synthetic.main.activity_payment.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
-import kotlin.reflect.jvm.internal.impl.renderer.ClassifierNamePolicy
 
 fun Context.getPaymentActivityLaunchIntent(paymentUrl: String): Intent {
     var intent = Intent(this, PaymentActivity::class.java)
@@ -30,8 +31,13 @@ fun Context.getPaymentActivityLaunchIntent(paymentUrl: String): Intent {
 
 class PaymentActivity: BaseActivity(), PaymentView {
 
-    private val PAYMENT_RESULT = "payment_result"
-    private val SUCCESS = "success"
+    companion object{
+        private const val PAYMENT_RESULT_SUCCESSFUL = "/api/payments/successful"
+        private const val PAYMENT_RESULT_FAILED = "/api/payments/failed"
+        private const val SUCCESSFUL = "successful"
+        private const val FAILED = "failed"
+        private const val PG_ORDER_ID = "pg_order_id"
+    }
 
     @InjectPresenter
     internal lateinit var presenter: PaymentPresenter
@@ -50,7 +56,7 @@ class PaymentActivity: BaseActivity(), PaymentView {
             if(intent != null) return intent
 
             when(screenKey) {
-                Screens.PASSENGER_MODE -> return Intent(context, RequestsActivity::class.java)
+                Screens.PASSENGER_MODE -> return Intent(context, MainActivity::class.java)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             }
@@ -67,21 +73,41 @@ class PaymentActivity: BaseActivity(), PaymentView {
 
         webView.webViewClient = object : WebViewClient() {
 
-            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                 if (view != null && view.url != null) {
-                    val uri = request?.url
-                    val path = uri?.path
-                    if (path.equals("/api/payments/successful")) {
-                        val orderId = uri?.getQueryParameter("pg_order_id")!!.toLong()
-                        presenter.changeStatusPayment(orderId, "successful")
-                    }
+                    handleUri(request!!.url)
+                    return false
                 }
-                return super.shouldOverrideUrlLoading(view, request)
+                return true
+            }
+
+            // for pre-lollipop
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                if (view != null && url != null) {
+                    handleUri(Uri.parse(url))
+                    return false
+                }
+                return true
             }
         }
-
         webView.loadUrl(intent.getStringExtra("url"))
+    }
+
+    private fun handleUri(uri: Uri?) {
+        val path = uri?.path
+        if (path.equals(PAYMENT_RESULT_SUCCESSFUL)) {
+            changePaymentStatus(uri, SUCCESSFUL)
+        } else {
+            if (path.equals(PAYMENT_RESULT_FAILED)) {
+                changePaymentStatus(uri, FAILED)
+            }
+        }
+    }
+
+    private fun changePaymentStatus(uri: Uri?, status: String) {
+        val orderId = uri?.getQueryParameter(PG_ORDER_ID)!!.toLong()
+        presenter.changePaymentStatus(orderId, status)
     }
 
     override fun setError(e: Throwable) {
@@ -89,7 +115,11 @@ class PaymentActivity: BaseActivity(), PaymentView {
         Utils.showError(this, true, getString(R.string.err_server, e.message))
     }
 
-    override fun showMessage() {
-        Toast.makeText(this, "Payment successful", Toast.LENGTH_SHORT).show()
+    override fun showSuccessfulMessage() {
+        Utils.showShortToast(this, getString(R.string.payment_successful))
+    }
+
+    override fun showErrorMessage() {
+        Utils.showShortToast(this,getString(R.string.payment_failed))
     }
 }

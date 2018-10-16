@@ -32,6 +32,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.RelativeLayout
 
+import android.widget.Toast
+
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -281,7 +283,10 @@ internal class Utils {
         fun formatPersons(context: Context, persons: Int) = context.getString(R.string.count_persons_and_baggage, persons)
         fun formatLuggage(context: Context, luggage: Int) = context.getString(R.string.count_persons_and_baggage, luggage)
         fun formatPrice(context: Context, price: String)  = context.getString(R.string.preferred_cost, price) 
-	}
+
+        fun showShortToast(context: Context, text: CharSequence) { Toast.makeText(context, text, Toast.LENGTH_SHORT).show() }
+        fun showLongToast(context: Context, text: CharSequence)  { Toast.makeText(context, text, Toast.LENGTH_LONG).show() }
+    }
 }
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {

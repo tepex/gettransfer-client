@@ -19,17 +19,24 @@ class PaymentPresenter(cc: CoroutineContexts,
                        systemInteractor: SystemInteractor,
                        private val paymentInteractor: PaymentInteractor): BasePresenter<PaymentView>(cc, router, systemInteractor) {
 
-     fun changeStatusPayment(orderId: Long, status: String) {
-         utils.launchAsyncTryCatchFinally({
-             viewState.blockInterface(true)
-             paymentInteractor.changeStatusPayment(orderId, true, status)
-             router.navigateTo(Screens.PASSENGER_MODE)
-             viewState.showMessage()
-         }, {
-             e -> Timber.e(e)
-             viewState.setError(e)
-             router.navigateTo(Screens.PASSENGER_MODE)
-         }, { viewState.blockInterface(false) })
+    companion object {
+        private const val SUCCESS = "success"
+    }
 
-     }
-}
+    fun changePaymentStatus(orderId: Long, status: String) {
+        utils.launchAsyncTryCatchFinally({
+            viewState.blockInterface(true)
+            val payment = paymentInteractor.changeStatusPayment(orderId, true, status)
+            if (SUCCESS.equals(payment.status)) {
+                router.navigateTo(Screens.PASSENGER_MODE)
+                viewState.showSuccessfulMessage()
+            } else {
+                router.exit()
+                viewState.showErrorMessage()
+            }
+        }, {
+            e -> Timber.e(e)
+            viewState.setError(e)
+            router.exit()
+        }, { viewState.blockInterface(false) })
+    }}
