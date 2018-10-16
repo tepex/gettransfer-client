@@ -24,19 +24,10 @@ data class Ratings(val average: Double?,
                    val driver: Double?,
                    val fair: Double?)
 
-data class Carrier(val profile: Profile,
-                   val id: Long,
+data class Carrier(val id: Long,
+                   val profile: Profile,
                    val approved: Boolean,
                    val completedTransfers: Int,
                    val languages: List<Locale>,
                    val ratings: Ratings,
                    val canUpdateOffers: Boolean?)
-
-data class Vehicle(val name: String,
-                   val registrationNumber: String,
-                   val year: Int,
-                   val color: String,
-                   val transportTypeId: String,
-                   val paxMax: Int,
-                   val luggageMax: Int,
-                   val photos: List<String>)

@@ -276,11 +276,11 @@ class ApiRepositoryImpl(private val preferences: Preferences,
         val carrierLanguages = offer.carrier.languages.map { Locale(it.code) }
         val carrierRatings = Ratings(offer.carrier.ratings.average, offer.carrier.ratings.vehicle,
                 offer.carrier.ratings.driver, offer.carrier.ratings.fair)
-        val carrier = Carrier(Profile(offer.carrier.title, offer.carrier.email, offer.carrier.phone), offer.carrier.id,
+        val carrier = Carrier(offer.carrier.id, Profile(offer.carrier.title, offer.carrier.email, offer.carrier.phone),
                 offer.carrier.approved, offer.carrier.completedTransfers, carrierLanguages, carrierRatings, offer.carrier.canUpdateOffers)
 
-        val vehicle = Vehicle(offer.vehicle.name, offer.vehicle.registrationNumber, offer.vehicle.year, offer.vehicle.color,
-                offer.vehicle.transportTypeId, offer.vehicle.paxMax, offer.vehicle.luggageMax, offer.vehicle.photos)
+        val vehicle = Vehicle(VehicleBase(offer.vehicle.name, offer.vehicle.registrationNumber), offer.vehicle.year, offer.vehicle.color,
+                TransportType(offer.vehicle.transportTypeId, offer.vehicle.paxMax, offer.vehicle.luggageMax), offer.vehicle.photos)
 
         val driver = if(offer.driver != null) Profile(offer.driver!!.fullName, offer.driver!!.phone, offer.driver!!.email)
                      else null

@@ -212,7 +212,7 @@ class Mappers {
                                apiCarrierTrip.comment,
                                apiCarrierTrip.waterTaxi,
                                apiCarrierTrip.price,
-                               CarrierTripVehicle(apiCarrierTrip.vehicle.name, apiCarrierTrip.vehicle.registrationNumber),
+                               VehicleBase(apiCarrierTrip.vehicle.name, apiCarrierTrip.vehicle.registrationNumber),
                                apiCarrierTrip.pax,
                                apiCarrierTrip.nameSign,
                                apiCarrierTrip.flightNumber,

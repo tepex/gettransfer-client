@@ -14,7 +14,7 @@ data class CarrierTrip(val id: Long,
                        val comment: String?,
                        val waterTaxi: Boolean,
                        val price: String,
-                       val vehicle: CarrierTripVehicle,
+                       val vehicle: VehicleBase,
                        val pax: Int?,
                        val nameSign: String?,
                        val flightNumber: String?,
@@ -23,8 +23,4 @@ data class CarrierTrip(val id: Long,
                        val paidPercentage: Int?,
                        val passengerAccount: PassengerAccount?)
 
-data class PassengerAccount(val profile: Profile,
-                            val lastSeen: Date)
-
-data class CarrierTripVehicle(val name: String,
-                              val registrationNumber: String)
+data class PassengerAccount(val profile: Profile, val lastSeen: Date)

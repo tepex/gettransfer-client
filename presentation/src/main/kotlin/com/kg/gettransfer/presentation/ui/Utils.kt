@@ -10,6 +10,8 @@ import android.graphics.Color
 
 import android.os.Build
 
+import android.support.annotation.DrawableRes
+import android.support.annotation.ColorRes
 import android.support.annotation.StringRes
 
 import android.support.v4.content.ContextCompat
@@ -226,17 +228,21 @@ internal class Utils {
             return bitmap
         }*/
 
+        /*
         fun getTransportTypeName(id: String): Int{
             val nameRes = R.string::class.members.find( { it.name == "transport_type_$id" } )
             return (nameRes?.call() as Int?) ?: R.string.transport_type_unknown
         }
+        */
 
-        fun getLanguageImage(code: String): Int{
+        @DrawableRes
+        fun getLanguageImage(code: String): Int {
             val imageRes = R.drawable::class.members.find( { it.name == "ic_language_$code" } )
             return (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_unknown
         }
 
-        fun getColorVehicle(color: String): Int{
+        @ColorRes
+        fun getColorVehicle(color: String): Int {
             val colorRes = R.color::class.members.find( { it.name == "color_vehicle_$color" } )
             return (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
         }
