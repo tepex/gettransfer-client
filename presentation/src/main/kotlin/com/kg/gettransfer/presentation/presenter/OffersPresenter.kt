@@ -136,7 +136,7 @@ class OffersPresenter(cc: CoroutineContexts,
         offers = when(sortCategory) {
             SORT_YEAR -> {
                 sortType = if(sortHigherToLower) YEAH_FILTER_DOWN else YEAH_FILTER_UP
-                offers.sortedWith(compareBy { it.transportYear })
+                offers.sortedWith(compareBy { it.vehicle.year })
             }
             SORT_RATING -> {
                 sortType = if(sortHigherToLower) RATING_DOWN else RATING_UP

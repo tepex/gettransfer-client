@@ -59,10 +59,6 @@ class ApiTransferRequest(from: ApiCityPoint, to: ApiCityPoint,
 class ApiMoney(@SerializedName("default") @Expose var default: String,
                @SerializedName("preferred") @Expose var preferred: String?)
 
-class ApiCityPoint(@SerializedName("name") @Expose var name: String,
-                   @SerializedName("point") @Expose var point: String,
-                   @SerializedName("place_id") @Expose var placeId: String?)
-
 class ApiTrip(@SerializedName("date") @Expose val date: String,
               @SerializedName("time") @Expose val time: String,
               @SerializedName("flight_number") @Expose val flight: String?)

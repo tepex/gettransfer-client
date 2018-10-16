@@ -33,7 +33,7 @@ val remoteModule = module {
     single { SystemRemoteImpl(get(), get(), get(), get()) as SystemRemote }
     
     single { CityPointMapper() }
-    single { CarrierTripVehicleMapper() }
+    single { VehicleBaseMapper() }
     single { PassengerAccountMapper() }
     single { CarrierTripMapper(get(), get(), get()) }
     single { CarrierTripRemoteImpl(get(), get()) as CarrierTripRemote }

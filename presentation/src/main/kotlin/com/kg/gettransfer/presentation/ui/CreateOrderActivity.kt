@@ -13,6 +13,7 @@ import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+
 import android.support.design.widget.BottomSheetBehavior
 
 import android.support.v7.widget.LinearLayoutManager
@@ -161,7 +162,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
         tvAgreement1.setOnClickListener { presenter.showLicenceAgreement() }
         tvAgreement2.setOnClickListener { presenter.showLicenceAgreement() }
-        switchAgreement.setOnCheckedChangeListener { buttonView, isChecked -> presenter.setAgreeLicence(isChecked) }
+        switchAgreement.setOnCheckedChangeListener { _, isChecked -> presenter.setAgreeLicence(isChecked) }
 
         btnGetOffers.setOnClickListener   { presenter.onGetTransferClick() }
         btnCenterRoute.setOnClickListener { presenter.onCenterRouteClick() }
@@ -275,10 +276,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun setUser(user: UserModel) {
-        etName.setText(user.name ?: "")
-        tvPhone.setText(user.phone ?: "")
-        if(user.email != null) {
-            etEmail.setText(user.email)
+        etName.setText(user.profile.name ?: "")
+        tvPhone.setText(user.profile.phone ?: "")
+        if(user.profile.email != null) {
+            etEmail.setText(user.profile.email)
             etEmail.isEnabled = false
         }
     }

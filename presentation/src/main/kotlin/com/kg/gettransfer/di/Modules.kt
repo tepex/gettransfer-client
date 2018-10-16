@@ -68,7 +68,10 @@ val loggingModule = module {
 val dataModule = module {
     single { ApiRepositoryImpl(get()) }
     
-	single { OfferRepositoryImpl(get()) as OfferRepository }
+    single { ProfileMapper() }
+    single { OfferMapper(get(), get(), get(), get(), get()) }
+    single { OfferDataStoreFactory(get()) }
+	single { OfferRepositoryImpl(get(), get()) as OfferRepository }
 	single { OfferInteractor(get()) }
 	
 	single { PaymentRepositoryImpl(get()) as PaymentRepository }
@@ -82,7 +85,6 @@ val dataModule = module {
 	single { LocaleMapper() }
 	single { CurrencyMapper() }
 	single { CardGatewaysMapper() }
-	single { ProfileMapper() }
 	single { EndpointMapper() }
     single { UserMapper(get()) }
     single { AccountMapper(get()) }
@@ -100,13 +102,14 @@ val dataModule = module {
 	single { SystemInteractor(get(), get(), get()) }
 	
 	single { RouteInfoMapper() }
+	single { PointMapper() }
     single { RouteRemoteDataStore(get()) }
     single { RouteDataStoreFactory(get()) }
-	single { RouteRepositoryImpl(get(), get()) as RouteRepository }
+	single { RouteRepositoryImpl(get(), get(), get()) as RouteRepository }
 	single { RouteInteractor(get(), get()) }
     
-	single { CityPointMapper() }
-	single { CarrierVehicleMapper() }
+	single { CityPointMapper(get()) }
+	single { VehicleBaseMapper() }
 	single { PassengerAccountMapper(get()) }
 	single { CarrierTripMapper(get(), get(), get()) }
 	single { CarrierTripRepositoryImpl(get(), get()) as CarrierTripRepository }

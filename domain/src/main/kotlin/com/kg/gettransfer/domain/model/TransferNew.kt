@@ -1,7 +1,7 @@
 package com.kg.gettransfer.domain.model
 
-data class TransferNew(val from: GTAddress,
-                       val to: GTAddress,
+data class TransferNew(val from: CityPoint,
+                       val to: CityPoint,
                        val tripTo: Trip,
                        val tripReturn: Trip?,
                        val transportTypes: List<String>,

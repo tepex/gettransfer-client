@@ -9,12 +9,12 @@ import com.kg.gettransfer.remote.model.CarrierTripModel
  * Map a [CarrierTripModel] from a [CarrierTripEntity] instance when data is moving between this later and the Data layer.
  */
 open class CarrierTripMapper(private val cityPointMapper: CityPointMapper,
-                             private val carrierTripVehicleMapper: CarrierTripVehicleMapper,
+                             private val vehicleBaseMapper: VehicleBaseMapper,
                              private val passengerAccountMapper: PassengerAccountMapper): EntityMapper<CarrierTripModel, CarrierTripEntity> {
 
     override fun fromRemote(type: CarrierTripModel): CarrierTripEntity {
         var passengerAccountEntity: PassengerAccountEntity? = null
-        if(type.passengerAccount != null) passengerAccountEntity = passengerAccountMapper.fromRemote(type.passengerAccount!!)
+        if(type.passengerAccount != null) passengerAccountEntity = passengerAccountMapper.fromRemote(type.passengerAccount)
         return CarrierTripEntity(type.id,
                                  type.transferId,
                                  cityPointMapper.fromRemote(type.from),
@@ -27,7 +27,7 @@ open class CarrierTripMapper(private val cityPointMapper: CityPointMapper,
                                  type.comment,
                                  type.waterTaxi,
                                  type.price,
-                                 carrierTripVehicleMapper.fromRemote(type.vehicle),
+                                 vehicleBaseMapper.fromRemote(type.vehicle),
                                  type.pax,
                                  type.nameSign,
                                  type.flightNumber,

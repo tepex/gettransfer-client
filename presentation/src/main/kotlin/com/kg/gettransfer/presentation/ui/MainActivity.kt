@@ -47,7 +47,7 @@ import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
 
 import com.kg.gettransfer.presentation.Screens
-import com.kg.gettransfer.presentation.model.UserModel
+import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
 
@@ -318,8 +318,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     override fun setAddressFrom(address: String) { searchFrom.text = address }
     override fun setAddressTo(address: String)   { searchTo.text = address   }
 
-    override fun setUser(user: UserModel) {
-        if(user.email == null) {
+    override fun setProfile(profile: ProfileModel) {
+        if(!profile.isLoggedIn()) {
             navHeaderName.visibility = View.GONE
             navHeaderEmail.visibility = View.GONE
             navLogin.visibility = View.VISIBLE
@@ -327,8 +327,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         } else {
             navHeaderName.visibility = View.VISIBLE
             navHeaderEmail.visibility = View.VISIBLE
-            navHeaderName.text = user.name
-            navHeaderEmail.text = user.email
+            navHeaderName.text = profile.name
+            navHeaderEmail.text = profile.email
             navLogin.visibility = View.GONE
             navRequests.visibility = View.VISIBLE
         }

@@ -19,7 +19,7 @@ class ApiCarrierTrip(@SerializedName("id") @Expose var id: Long,
                      @SerializedName("comment") @Expose var comment: String?,
                      @SerializedName("water_taxi") @Expose var waterTaxi: Boolean,
                      @SerializedName("price") @Expose var price: String,
-                     @SerializedName("vehicle") @Expose var vehicle: ApiCarrierTripVehicle,
+                     @SerializedName("vehicle") @Expose var vehicle: ApiVehicleBase,
                      @SerializedName("pax") @Expose var pax: Int?,
                      @SerializedName("name_sign") @Expose var nameSign: String?,
                      @SerializedName("flight_number") @Expose var flightNumber: String?,
@@ -33,5 +33,5 @@ class ApiPassengerAccount(@SerializedName("email") @Expose var email: String,
                           @SerializedName("full_name") @Expose var fullName: String,
                           @SerializedName("last_seen") @Expose var lastSeen: String)
 
-class ApiCarrierTripVehicle(@SerializedName("name") @Expose var name: String,
-                            @SerializedName("registration_number") @Expose var registrationNumber: String)
+class ApiVehicleBase(@SerializedName("name") @Expose var name: String,
+                     @SerializedName("registration_number") @Expose var registrationNumber: String)

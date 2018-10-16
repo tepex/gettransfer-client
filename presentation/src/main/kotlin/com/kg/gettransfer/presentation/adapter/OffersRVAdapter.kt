@@ -55,14 +55,14 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
                 tvCostPreferred.text = context.getString(R.string.preferred_cost, item.pricePreferred)
                 tvCostPreferred.visibility = View.VISIBLE
             }
-            if(item.vehiclePhotos.isNotEmpty()) {
+            if(item.vehicle.photos.isNotEmpty()) {
                 layoutWithCarImage.visibility = View.VISIBLE
-                Glide.with(this).load(context.getString(R.string.api_photo_url, item.vehiclePhotos[0])).into(carPhoto)
+                Glide.with(this).load(context.getString(R.string.api_photo_url, item.vehicle.photos.first())).into(carPhoto)
                 ratingBar.rating = item.averageRating!!.toFloat()
                 setTexts(bottomLayoutForImage, tvCountPersonsOnCarImage, tvCountBaggageOnCarImage, item, context)
             } else {
                 layoutNoCarImage.visibility = View.VISIBLE
-                tvVehicleType.setText(Utils.getTransportTypeName(item.transportType))
+                tvVehicleType.setText(item.vehicle.transportType.nameId!!)
                 setTexts(bottomLayoutNoImage, tvCountPersons, tvCountBaggage, item, context)
             }
             val carrierLanguages = item.carrierLanguages
@@ -92,10 +92,10 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
 
         fun setTexts(layout: View, textViewPax: TextView, textViewBaggage: TextView, item: OfferModel, context: Context) {
             val drawableCompat = ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)
-            drawableCompat!!.setColorFilter(ContextCompat.getColor(context, Utils.getColorVehicle(item.vehicleColor)), PorterDuff.Mode.SRC_IN)
+            drawableCompat!!.setColorFilter(ContextCompat.getColor(context, Utils.getColorVehicle(item.vehicle.color)), PorterDuff.Mode.SRC_IN)
             drawableCompat.setBounds(4, 0, drawableCompat.intrinsicWidth + 4, drawableCompat.intrinsicHeight)
             
-            val ssBuilder = SpannableStringBuilder(item.transportName + " ")
+            val ssBuilder = SpannableStringBuilder(item.vehicle.transportType.id + " ")
             val colorCarImageSpan = ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE)
             ssBuilder.setSpan(colorCarImageSpan, ssBuilder.length - 1, ssBuilder.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             layout.tvVehicleName.text = ssBuilder
@@ -103,8 +103,8 @@ class OffersRVAdapter(private val offers: List<OfferModel>, private val listener
             if(item.wifi) layout.imgOptionFreeWiFi.visibility = View.VISIBLE
             if(item.refreshments) layout.imgOptionFreeWater.visibility = View.VISIBLE
             
-            textViewPax.text = context.getString(R.string.count_persons_and_baggage, item.paxMax)
-            textViewBaggage.text = context.getString(R.string.count_persons_and_baggage, item.baggageMax)
+            textViewPax.text = context.getString(R.string.count_persons_and_baggage, item.vehicle.transportType.paxMax)
+            textViewBaggage.text = context.getString(R.string.count_persons_and_baggage, item.vehicle.transportType.luggageMax)
         }
     }
 }

@@ -28,15 +28,12 @@ data class CarrierEntity(val id: Long,
                          val profile: ProfileEntity,
                          val approved: Boolean,
                          val completedTransfers: Int,
-                         val languages: List<Locale>,
+                         val languages: List<LocaleEntity>,
                          val ratings: RatingsEntity,
                          val canUpdateOffers: Boolean?)
 
-data class VehicleEntity(val name: String,
-                         val registrationNumber: String,
+data class VehicleEntity(val vehicleBase: VehicleBaseEntity,
                          val year: Int,
                          val color: String,
-                         val transportTypeId: String,
-                         val paxMax: Int,
-                         val luggageMax: Int,
+                         val transportType: TransportTypeEntity,
                          val photos: List<String>)

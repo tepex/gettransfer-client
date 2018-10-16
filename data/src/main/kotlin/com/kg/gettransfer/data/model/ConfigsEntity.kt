@@ -13,7 +13,6 @@ data class ConfigsEntity(val transportTypes: List<TransportTypeEntity>,
                          val officePhone: String,
                          val baseUrl: String)
 
-data class TransportTypeEntity(val id: String, val paxMax: Int, val luggageMax: Int)
 data class PaypalCredentialsEntity(val id: String, val env: String)
 data class CardGatewaysEntity(val default: String, val countryCode: String?)
 data class LocaleEntity(val code: String, val title: String)

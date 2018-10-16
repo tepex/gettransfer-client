@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 
 import com.google.android.gms.tasks.Tasks
 
+import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.model.Result
@@ -73,12 +74,11 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
 
         val text = getAutocompletePredictions(addr.toString(), null)
         val address = if(text.isNotEmpty()) text.get(0).address else addr.toString()
-        return GTAddress(placeTypes = listOf(GTAddress.TYPE_STREET_ADDRESS),
-                         name = address,
-                         address = address,
-                         primary = null,
-                         secondary = null,
-                         point = point)
+        return GTAddress(CityPoint(address, point, null),
+                         listOf(GTAddress.TYPE_STREET_ADDRESS),
+                         address,
+                         null,
+                         null)
     }
 
     override fun getCurrentAddress(): GTAddress {
@@ -88,13 +88,12 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
         if(list.isEmpty()) throw RuntimeException("Address not found")
 
         val place = list.first().place
-        return GTAddress(place.id,
+        val cityPoint = CityPoint(place.name.toString(), Point(place.latLng.latitude, place.latLng.longitude), place.id)
+        return GTAddress(cityPoint,
                          place.placeTypes,
-                         place.name.toString(),
                          place.address.toString(),
                          null,
-                         null,
-                         Point(place.latLng.latitude, place.latLng.longitude))
+                         null)
     }
 
     /**
@@ -111,13 +110,11 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
         Tasks.await(results)
         val list = DataBufferUtils.freezeAndClose(results.getResult())
         return list.map {
-            GTAddress(it.placeId,
+            GTAddress(CityPoint(it.getPrimaryText(null).toString(), null, it.placeId),
                       it.placeTypes,
-                      it.getPrimaryText(null).toString(),
                       it.getFullText(null).toString(),
                       it.getPrimaryText(null).toString(),
-                      it.getSecondaryText(null).toString(),
-                      null)
+                      it.getSecondaryText(null).toString())
         }
     }
 

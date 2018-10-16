@@ -31,7 +31,7 @@ import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TripsRVAdapter
 
 import com.kg.gettransfer.presentation.model.CarrierTripModel
-import com.kg.gettransfer.presentation.model.UserModel
+import com.kg.gettransfer.presentation.model.ProfileModel
 
 import com.kg.gettransfer.presentation.presenter.CarrierTripsPresenter
 import com.kg.gettransfer.presentation.view.CarrierTripsView
@@ -166,11 +166,11 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView{
         rvTrips.adapter = TripsRVAdapter(presenter, trips)
     }
 
-    override fun initNavigation(user: UserModel) {
+    override fun initNavigation(profile: ProfileModel) {
         navHeaderName.visibility = View.VISIBLE
         navHeaderEmail.visibility = View.VISIBLE
-        navHeaderName.text = user.name
-        navHeaderEmail.text = user.email
+        navHeaderName.text = profile.name
+        navHeaderEmail.text = profile.email
 
         navLogin.visibility = View.GONE
         navCarrierTrips.visibility = View.VISIBLE

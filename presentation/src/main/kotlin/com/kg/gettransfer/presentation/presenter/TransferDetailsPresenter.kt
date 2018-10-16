@@ -47,14 +47,14 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
                                                          systemInteractor.transportTypes)
             viewState.setTransfer(transferModel)
             
-	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point, transfer.to!!.point, true, false) }
+	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, true, false) }
 	        val routeModel = Mappers.getRouteModel(routeInfo.distance,
                                                    systemInteractor.distanceUnit,
                                                    routeInfo.polyLines,
-                                                   transfer.from.name,
-                                                   transfer.to!!.name,
-                                                   transfer.from.point,
-                                                   transfer.to!!.point,
+                                                   transfer.from.name!!,
+                                                   transfer.to!!.name!!,
+                                                   transfer.from.point!!,
+                                                   transfer.to!!.point!!,
                                                    transferModel.dateTime)
             val polyline = Utils.getPolyline(routeModel)
             viewState.setRoute(polyline, routeModel)

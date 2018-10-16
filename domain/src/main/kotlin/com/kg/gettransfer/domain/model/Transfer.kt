@@ -3,8 +3,8 @@ package com.kg.gettransfer.domain.model
 import java.util.Date
 
 data class Money(val default: String, val preferred: String?)
-data class CityPoint(val name: String, val point: String, val placeId: String?)
 data class Trip(val dateTime: Date, val flightNumber: String?)
+
 
 
 /* Align to line:10 */

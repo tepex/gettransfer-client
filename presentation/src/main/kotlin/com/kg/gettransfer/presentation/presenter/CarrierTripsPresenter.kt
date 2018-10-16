@@ -37,7 +37,7 @@ class CarrierTripsPresenter(cc: CoroutineContexts,
             viewState.blockInterface(true)
             trips = carrierTripInteractor.getCarrierTrips().map {
                 Mappers.getCarrierTripModel(it, systemInteractor.locale, systemInteractor.distanceUnit) }
-                viewState.initNavigation(Mappers.getUserModel(systemInteractor.account))
+                viewState.initNavigation(Mappers.getProfileModel(systemInteractor.account))
             viewState.setTrips(trips!!)
         }, { e ->
             if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)

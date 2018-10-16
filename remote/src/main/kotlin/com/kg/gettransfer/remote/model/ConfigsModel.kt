@@ -5,16 +5,15 @@ import com.google.gson.annotations.SerializedName
 
 const val CONFIGS = "configs"
 
-class ConfigsModel(@SerializedName("transport_types") @Expose var transportTypes: TransportTypesWrapperModel,
-                   @SerializedName("paypal_credentials") @Expose var paypalCredentials: PaypalCredentialsModel,
-                   @SerializedName("available_locales") @Expose var availableLocales: List<LocaleModel>,
-                   @SerializedName("preferred_locale") @Expose var preferredLocale: String,
-                   @SerializedName("supported_currencies") @Expose var supportedCurrencies: List<CurrencyModel>,
-                   @SerializedName("supported_distance_units") @Expose var supportedDistanceUnits: List<String>,
-                   @SerializedName("card_gateways") @Expose var cardGateways: CardGatewaysModel,
-                   @SerializedName("office_phone") @Expose var officePhone: String,
-                   @SerializedName("base_url") @Expose var baseUrl: String) 
-
+class ConfigsModel(@SerializedName("transport_types") @Expose val transportTypes: TransportTypesWrapperModel,
+                   @SerializedName("paypal_credentials") @Expose val paypalCredentials: PaypalCredentialsModel,
+                   @SerializedName("available_locales") @Expose val availableLocales: List<LocaleModel>,
+                   @SerializedName("preferred_locale") @Expose val preferredLocale: String,
+                   @SerializedName("supported_currencies") @Expose val supportedCurrencies: List<CurrencyModel>,
+                   @SerializedName("supported_distance_units") @Expose val supportedDistanceUnits: List<String>,
+                   @SerializedName("card_gateways") @Expose val cardGateways: CardGatewaysModel,
+                   @SerializedName("office_phone") @Expose val officePhone: String,
+                   @SerializedName("base_url") @Expose val baseUrl: String) 
 /**
  * Wrapper is used to intercept API `transport_types` and convert it into List<TransportTypeModel> with origin order.
  */
@@ -27,11 +26,8 @@ class TransportTypeModel(@SerializedName("id") @Expose val id: String,
 class PaypalCredentialsModel(@SerializedName("id") @Expose val id: String,
                              @SerializedName("env") @Expose val env: String)
 
-class LocaleModel(@SerializedName("code") @Expose val code: String,
-                  @SerializedName("title") @Expose val title: String)
-
 class CurrencyModel(@SerializedName("iso_code") @Expose val code: String,
                     @SerializedName("symbol") @Expose val symbol: String)
 
 class CardGatewaysModel(@SerializedName("default") @Expose val default: String,
-                        @SerializedName("iso_country_code") @Expose var countryCode: String?)
+                        @SerializedName("iso_country_code") @Expose val countryCode: String?)
