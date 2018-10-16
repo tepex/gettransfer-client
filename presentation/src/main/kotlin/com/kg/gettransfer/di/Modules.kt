@@ -66,8 +66,6 @@ val loggingModule = module {
 }
 
 val dataModule = module {
-    single { ApiRepositoryImpl(get()) }
-    
     single { ProfileMapper() }
     single { LocaleMapper() }
     single { RatingsMapper() }
@@ -83,7 +81,10 @@ val dataModule = module {
 	single { OfferRepositoryImpl(get(), get()) as OfferRepository }
 	single { OfferInteractor(get()) }
 	
-	single { PaymentRepositoryImpl(get()) as PaymentRepository }
+	single { PaymentMapper() }
+	single { PaymentRemoteDataStore(get()) }
+	single { PaymentDataStoreFactory(get()) }
+	single { PaymentRepositoryImpl(get(), get()) as PaymentRepository }
 	single { PaymentInteractor(get()) }
 	
 	single { PaypalCredentialsMapper() }

@@ -75,6 +75,6 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
         }, { viewState.blockInterface(false) })
     }
 
-    fun changePrice(price: Int) { this.price = price }
+    fun changePrice(price: Int)        { this.price = price }
     fun changePayment(payment: String) { this.payment = payment }
 }

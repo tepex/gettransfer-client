@@ -241,11 +241,6 @@ class ApiRepositoryImpl(private val preferences: PreferencesCache) {
     }
     */
 
-    suspend fun createPayment(transferId: Long, offerId: Long?, gatewayId: String, percentage: Int): PaymentResult {
-        val response: ApiResponse<ApiPaymentResult> = tryTwice { api.createNewPayment(ApiCreatePaymentEntity(transferId, offerId, gatewayId, percentage)) }
-        val payment: ApiPaymentResult = response.data!!
-        return PaymentResult(payment.type, payment.url)
-    }
     
     fun apiException(e: Exception): RemoteException {
         if(e is HttpException)

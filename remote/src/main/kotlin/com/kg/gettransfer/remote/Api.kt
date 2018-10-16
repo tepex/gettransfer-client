@@ -10,13 +10,14 @@ interface Api {
     companion object {
         const val HEADER_TOKEN = "X-ACCESS-TOKEN"
         
-        const val API_ACCESS_TOKEN  = "/api/access_token"
-        const val API_CONFIGS       = "/api/configs"
-        const val API_ACCOUNT       = "/api/account"
-        const val API_LOGIN         = "/api/login"
-        const val API_ROUTE_INFO    = "/api/route_info"
-        const val API_CARRIER_TRIPS = "/api/trips"
-        const val API_TRANSFERS    = "/api/transfers"
+        const val API_ACCESS_TOKEN       = "/api/access_token"
+        const val API_CONFIGS            = "/api/configs"
+        const val API_ACCOUNT            = "/api/account"
+        const val API_LOGIN              = "/api/login"
+        const val API_ROUTE_INFO         = "/api/route_info"
+        const val API_CARRIER_TRIPS      = "/api/trips"
+        const val API_TRANSFERS          = "/api/transfers"
+        const val API_CREATE_NEW_PAYMENT = "/api/payments"
     }
 
     @GET(API_ACCESS_TOKEN)
@@ -72,4 +73,12 @@ interface Api {
 	
 	@POST("$API_TRANSFERS/{id}/cancel")
 	fun cancelTransfer(@Path("id") id: Long, @Body reason: ReasonModel): Deferred<ResponseModel<TransferWrapperModel>>
+
+	@POST(API_CREATE_NEW_PAYMENT)
+	fun createNewPayment(@Body createPayment: PaymentRequestModel): Deferred<ResponseModel<PaymentModel>>
+
+	/*
+	@GET("$API_CREATE_NEW_PAYMENT/{status}")
+	fun changePaymentStatus(@Path("status") status: String, @Body payment: ApiPayment)
+	*/
 }

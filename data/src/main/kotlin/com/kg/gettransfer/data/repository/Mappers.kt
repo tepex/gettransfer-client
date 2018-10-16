@@ -225,8 +225,8 @@ class Mappers {
                                passengerAccount)
         }
 
-        fun mapPaymentResult(paymentResult: ApiPaymentResult): PaymentResult {
-            return PaymentResult(paymentResult.type, paymentResult.url)
+        fun mapPaymentResult(payment: ApiPaymentResult): Payment {
+            return Payment(payment.type, payment.url)
         }
     }
 }
