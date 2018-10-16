@@ -29,6 +29,7 @@ import com.kg.gettransfer.presentation.presenter.PaymentPresenter
 import com.kg.gettransfer.presentation.view.PaymentView
 
 import kotlinx.android.synthetic.main.activity_payment.*
+import kotlinx.android.synthetic.main.toolbar.view.*
 
 import org.koin.android.ext.android.inject
 
@@ -78,6 +79,12 @@ class PaymentActivity: BaseActivity(), PaymentView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment)
+
+        setSupportActionBar(toolbar as Toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 
         webView.settings.javaScriptEnabled = true
 
