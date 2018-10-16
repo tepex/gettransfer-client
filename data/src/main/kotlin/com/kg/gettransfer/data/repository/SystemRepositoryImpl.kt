@@ -1,5 +1,6 @@
 package com.kg.gettransfer.data.repository
 
+import com.kg.gettransfer.data.JsonParser
 import com.kg.gettransfer.data.PreferencesCache
 
 import com.kg.gettransfer.data.ds.SystemDataStoreFactory
@@ -7,10 +8,7 @@ import com.kg.gettransfer.data.ds.SystemDataStoreFactory
 import com.kg.gettransfer.data.mapper.AccountMapper
 import com.kg.gettransfer.data.mapper.ConfigsMapper
 import com.kg.gettransfer.data.mapper.EndpointMapper
-
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.Configs
-import com.kg.gettransfer.domain.model.Endpoint
+import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
@@ -59,6 +57,27 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
         factory.retrieveCacheDataStore().setAccount(accountEntity)
         return accountMapper.fromEntity(accountEntity)
     }
+    override fun getHistory(): List<GTAddress> {
+        val parser = JsonParser()
+        val entityList = parser.getFromJson(preferences.lastAddresses)
+        val result = ArrayList<GTAddress>()
+        if(entityList != null && entityList.isNotEmpty()) {
+            for (i in 0 until entityList.size){
+                result.add(GTAddress(CityPoint(null, Point(entityList[i].lat, entityList[i].lat), null),null, entityList[i].address, null, null))
+            }
+        }
+
+        return result
+    }
+    override fun setHistory(history: List<GTAddress>) {
+        val result = ArrayList<GTAddressEntity>()
+        for (i in 0 until history.size){
+            result.add(GTAddressEntity(history.get(i).cityPoint.point!!.latitude,history.get(i).cityPoint.point!!.latitude, history.get(i).address!!))
+        }
+        preferences.lastAddresses = JsonParser().writeToJson(result)
+    }
+
 
     override fun logout() = factory.retrieveCacheDataStore().clearAccount()
+
 }

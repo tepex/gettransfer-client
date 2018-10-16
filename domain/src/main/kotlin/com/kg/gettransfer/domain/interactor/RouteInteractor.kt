@@ -12,7 +12,7 @@ import com.kg.gettransfer.domain.repository.RouteRepository
 class RouteInteractor(private val geoRepository: GeoRepository,
                       private val routeRepository: RouteRepository) {
     var from: GTAddress? = null
-    var to: GTAddress? = null 
+    var to: GTAddress? = null
 
     suspend fun getCurrentLocation(utils: AsyncUtils): Point {
         val result = utils.asyncAwait { geoRepository.getCurrentLocation() }

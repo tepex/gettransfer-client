@@ -30,6 +30,8 @@ import com.kg.gettransfer.extensions.hideKeyboard
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.AddressAdapter
+import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
+import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
 
@@ -85,11 +87,13 @@ class SearchActivity: BaseActivity(), SearchView {
         setupToolbar()
 
         addressList.layoutManager = LinearLayoutManager(this)
+        rv_popularPlaces.layoutManager = LinearLayoutManager(this)
 
         mBounds = intent.getParcelableExtra(LATLON_BOUNDS)
 
         initSearchFields()
         changeFocusForSearch()
+        setPopularPlaces()
         ivInverseWay.setOnClickListener {presenter.inverseWay()}
     }
 
@@ -98,6 +102,7 @@ class SearchActivity: BaseActivity(), SearchView {
         searchFrom.text = intent.getStringExtra(EXTRA_ADDRESS_FROM)
         searchTo.initWidget(this, true)
         searchTo.text = intent.getStringExtra(EXTRA_ADDRESS_TO)
+
     }
 
     private fun setupAnimation() {
@@ -108,6 +113,8 @@ class SearchActivity: BaseActivity(), SearchView {
         val slide = Slide()
         slide.duration = SLIDE_DURATION
         window.returnTransition = slide
+
+        changeFocusForSearch()
     }
 
     private fun changeFocusForSearch() {
@@ -127,8 +134,24 @@ class SearchActivity: BaseActivity(), SearchView {
         presenter.onBackCommandClick()
     }
 
+    private fun setPopularPlaces(){
+        presenter.popularPlaceTitles = ArrayList<Int>()
+        presenter.popularPlaceTitles!!.add(R.string.airport)
+        presenter.popularPlaceTitles!!.add(R.string.railway)
+        presenter.popularPlaceTitles!!.add(R.string.hotel)
+
+        presenter.popularPlaceIcons = ArrayList<Int>()
+        presenter.popularPlaceIcons!!.add(R.drawable.popular_place_airport)
+        presenter.popularPlaceIcons!!.add(R.drawable.popular_place_railway)
+        presenter.popularPlaceIcons!!.add(R.drawable.popular_place_hotel)
+
+    }
+
+    /* SearchView */
     override fun blockInterface(block: Boolean) {}
     override fun setAddressFrom(address: String, sendRequest: Boolean) { searchFrom.initText(address, sendRequest) }
     override fun setAddressTo(address: String, sendRequest: Boolean)   { searchTo.initText(address, sendRequest) }
     override fun setAddressList(list: List<GTAddress>) { addressList.adapter = AddressAdapter(presenter, list) }
+    override fun setPopularList(list: List<PopularPlace>) {rv_popularPlaces.adapter = PopularAddressAdapter(presenter, list)}
+    override fun setLastAddresses(list: List<GTAddress>) {addressList.adapter = AddressAdapter(presenter, list); Log.i("Find", "" + list.size)}
 }

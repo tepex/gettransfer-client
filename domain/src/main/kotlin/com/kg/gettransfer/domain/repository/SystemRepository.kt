@@ -2,7 +2,10 @@ package com.kg.gettransfer.domain.repository
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
+
 import com.kg.gettransfer.domain.model.Endpoint
+import com.kg.gettransfer.domain.model.GTAddress
+
 
 interface SystemRepository {
     val accessToken: String
@@ -19,4 +22,6 @@ interface SystemRepository {
     */
     suspend fun login(email: String, password: String): Account
     fun logout()
+    fun getHistory(): List<GTAddress>
+    fun setHistory(history: List<GTAddress>)
 }

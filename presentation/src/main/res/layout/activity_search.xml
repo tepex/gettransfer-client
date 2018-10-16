@@ -19,9 +19,16 @@
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/addressList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
 		android:layout_below="@+id/searchForm"
-		android:layout_above="@+id/pointOnMap"/>
+/>
+
+	<android.support.v7.widget.RecyclerView
+		android:id="@+id/rv_popularPlaces"
+		android:layout_below="@id/addressList"
+		android:layout_above="@+id/pointOnMap"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"/>
 
 	<include layout="@layout/point_on_map"
 		android:id="@+id/pointOnMap"

@@ -1,5 +1,6 @@
 package com.kg.gettransfer.data
 
+
 import com.kg.gettransfer.data.model.AccountEntity
 
 interface PreferencesCache {
@@ -15,4 +16,8 @@ interface PreferencesCache {
     var endpoint: String
     
     fun clearAccount()
+
+    fun getHistoryFromJson()
+    fun saveHistoryToJson(data: String)
 }
+
