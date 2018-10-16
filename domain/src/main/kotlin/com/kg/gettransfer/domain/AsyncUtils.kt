@@ -31,7 +31,8 @@ class AsyncUtils(private val cc: CoroutineContexts, root: Job): CoroutineScope {
             var caughtThrowable: Throwable? = null
 
             try { tryBlock() }
-            catch(e: Throwable) { if(e !is CancellationException) catchBlock(e) else caughtThrowable = e }
+            catch(e: ApiException) { catchBlock(e) }
+            catch(e: CancellationException) { caughtThrowable = e }
             finally { if(caughtThrowable is CancellationException) throw caughtThrowable else finallyBlock() }
         }
     }
