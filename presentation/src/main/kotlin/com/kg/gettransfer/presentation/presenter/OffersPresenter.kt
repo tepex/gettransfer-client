@@ -88,11 +88,12 @@ class OffersPresenter(cc: CoroutineContexts,
         }, {
             viewState.blockInterface(false)
             viewState.hideLoading()
+//            setUpSocket()
         })
     }
 
     fun setUpSocket() {
-        offersSocket = IO.socket("/api/socket")
+        offersSocket = IO.socket("https://stgtr.org/api/socket")
         offersSocket!!.on(Manager.EVENT_TRANSPORT, headers)
         offersSocket!!.on("new offer", onNewOffer)
         offersSocket!!.connect()
@@ -108,8 +109,9 @@ class OffersPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
-//        offersSocket!!.off("new offer", onNewOffer )
-//        offersSocket!!.disconnect()
+        offersSocket!!.off("new offer", onNewOffer )
+        offersSocket!!.off(Manager.EVENT_TRANSPORT, headers)
+        offersSocket!!.disconnect()
         super.onDestroy()
     }
 
@@ -187,7 +189,7 @@ class OffersPresenter(cc: CoroutineContexts,
 
     private val onNewOffer = object : Emitter.Listener {
         override fun call(vararg args: Any?) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            val offer = args[0] as JSONObject
         }
     }
 
