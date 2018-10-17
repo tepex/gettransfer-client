@@ -5,6 +5,7 @@ import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.Endpoint
 
 interface SystemRepository {
+    val accessToken: String
     var configs: Configs
     var lastMode: String
     var endpoint: Endpoint

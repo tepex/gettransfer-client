@@ -15,6 +15,7 @@ import java.util.Locale
 class SystemInteractor(private val systemRepository: SystemRepository,
                        private val loggingRepository: LoggingRepository,
                        private val geoRepository: GeoRepository) {
+    val accessToken = systemRepository.accessToken
     var lastMode: String
         get() = systemRepository.lastMode
         set(value) { systemRepository.lastMode = value }

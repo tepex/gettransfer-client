@@ -19,7 +19,6 @@ class LoginPresenter(cc: CoroutineContexts,
                      router: Router,
                      systemInteractor: SystemInteractor): BaseLoadingPresenter<LoginView>(cc, router, systemInteractor) {
 
-
     companion object {
         @JvmField val RESULT_CODE = 33
         @JvmField val RESULT_OK = 1

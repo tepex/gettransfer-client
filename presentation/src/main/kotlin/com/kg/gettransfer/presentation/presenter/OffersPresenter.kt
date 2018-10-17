@@ -1,32 +1,39 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.domain.CoroutineContexts
+
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
-import com.kg.gettransfer.domain.repository.Preferences
+
 import com.kg.gettransfer.presentation.Screens
+
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
+
 import com.kg.gettransfer.presentation.view.OffersView
+
 import io.socket.client.IO
 import io.socket.client.Manager
 import io.socket.client.Socket
+
 import io.socket.emitter.Emitter
 import io.socket.engineio.client.Transport
+
 import ru.terrakok.cicerone.Router
+
 import timber.log.Timber
-import java.util.*
 
 @InjectViewState
 class OffersPresenter(cc: CoroutineContexts,
                       router: Router,
                       systemInteractor: SystemInteractor,
                       private val transferInteractor: TransferInteractor,
-                      private val offerInteractor: OfferInteractor,
-                      private val preference: Preferences): BaseLoadingPresenter<OffersView>(cc, router, systemInteractor) {
+                      private val offerInteractor: OfferInteractor): BaseLoadingPresenter<OffersView>(cc, router, systemInteractor) {
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
@@ -157,6 +164,20 @@ class OffersPresenter(cc: CoroutineContexts,
         }
         if(sortHigherToLower) offers = offers.reversed()
         logFilterEvent(sortType)
+    }
+
+    private val onNewOffer = object: Emitter.Listener {
+        override fun call(vararg args: Any?) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+    }
+
+    private val headers = Emitter.Listener { args ->
+        val transport = args[0] as Transport
+        transport.on(Transport.EVENT_REQUEST_HEADERS) { _args ->
+            var headers = _args[0] as MutableMap<String, List<String>>
+            headers.put("Cookie", listOf("rack.session=${systemInteractor.accessToken}"))
+        }
     }
 
     private fun logFilterEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value)) }
