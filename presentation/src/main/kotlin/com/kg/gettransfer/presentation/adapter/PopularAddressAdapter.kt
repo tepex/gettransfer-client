@@ -26,8 +26,8 @@ class PopularAddressAdapter(private val presenter: SearchPresenter, private val 
 
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer{
         fun bind(place: PopularPlace){
-            popular_title.text = containerView.context.getString(place.title)
-            popular_icon.setImageDrawable(containerView.context.getDrawable(place.icon))
+//            popular_title.text = containerView.context.getString(place.title)
+//            popular_icon.setImageDrawable(containerView.context.getDrawable(place.icon))
         }
     }
 }

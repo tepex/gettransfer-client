@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -25,7 +26,7 @@ class SearchPresenter(cc: CoroutineContexts,
                       private val routeInteractor: RouteInteractor): BasePresenter<SearchView>(cc, router, systemInteractor) {
     var isTo = false
     var popularPlaceIcons: ArrayList<Int>? = null
-    var popularPlaceTitles: ArrayList<Int>? = null
+    var popularPlaceTitles: ArrayList<String>? = null
     val popularSize = 3
 
     companion object {
@@ -42,8 +43,12 @@ class SearchPresenter(cc: CoroutineContexts,
         super.attachView(view)
         viewState.setAddressFrom(routeInteractor.from!!.cityPoint.name!!, false)
         viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false)
-        viewState.setPopularList(createPopularList())
-        viewState.setAddressList(getLastAddressesList())
+        val ll = (getLastAddressesList() as List<Any>).plus(createPopularList())
+        viewState.setAddressList(ll)
+    }
+
+    fun onPopularSelected(selected: PopularPlace){
+        viewState.onFindPopularPlace(isTo, selected.title)
     }
 
     fun onAddressSelected(selected: GTAddress) {
@@ -62,6 +67,7 @@ class SearchPresenter(cc: CoroutineContexts,
                 utils.launchAsyncTryCatchFinally({
                     viewState.blockInterface(true)
                     utils.asyncAwait { routeInteractor.updateDestinationPoint() }
+                    systemInteractor.setAddressHistory(List(2){routeInteractor.to!!;routeInteractor.from!!})
                     router.navigateTo(Screens.CREATE_ORDER)
                 }, { e ->
                     viewState.setError(e)

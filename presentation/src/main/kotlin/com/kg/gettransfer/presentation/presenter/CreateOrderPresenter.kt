@@ -130,8 +130,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             viewState.setTransportTypes(transportTypes!!)
             val polyline = Utils.getPolyline(routeModel!!)
             track = polyline.track
-
-            systemInteractor.setAddressHistory(List(2){routeInteractor.to!!;routeInteractor.from!!})
             viewState.setRoute(polyline, routeModel!!)
 	    }, { e -> viewState.setError(e)
         }, { viewState.blockInterface(false) })

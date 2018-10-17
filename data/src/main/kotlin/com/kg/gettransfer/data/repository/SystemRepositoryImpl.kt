@@ -75,6 +75,8 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
             result.add(GTAddressEntity(history.get(i).cityPoint.point!!.latitude,history.get(i).cityPoint.point!!.latitude, history.get(i).address!!))
         }
         preferences.lastAddresses = JsonParser().writeToJson(result)
+ //       Log.i("FindPredAdd", preferences.lastAddresses)
+
     }
 
 
