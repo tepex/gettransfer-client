@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
 import android.content.Intent
+import android.location.Location
 
 import android.os.Bundle
 
@@ -80,6 +81,7 @@ class SearchActivity: BaseActivity(), SearchView {
         protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
             when(screenKey) {
                 Screens.CREATE_ORDER -> return Intent(context, CreateOrderActivity::class.java)
+                Screens.SELECT_FINISH -> return Intent(context, SelectFinishPointActivity::class.java)
             }
             return null
         }

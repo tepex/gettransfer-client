@@ -15,6 +15,7 @@ object Screens {
 	@JvmField val CREATE_ORDER     = "create_order"
 	@JvmField val CARRIER_MODE     = "carrier_mode"
 	@JvmField val PASSENGER_MODE   = "passenger_mode"
+	@JvmField val SELECT_FINISH    = "select_finish_on_map"
 
 	@JvmField val TRIP_DETAILS     = "carrier_trip_details"
 

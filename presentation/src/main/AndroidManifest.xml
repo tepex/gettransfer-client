@@ -80,6 +80,11 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".presentation.ui.PaymentSettingsActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.ui.SelectFinishPointActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeTransparentStatusBar" />
 
         <service android:name=".service.SocketIOService">
             <intent-filter>

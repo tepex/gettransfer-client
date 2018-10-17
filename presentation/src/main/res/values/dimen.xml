@@ -10,7 +10,7 @@
 	<dimen name="search_form_margin_X">16dp</dimen>
 
 	<dimen name="status_bar_height">24dp</dimen>
-	<dimen name="activity_main_buttons_size">42dp</dimen>
+	<dimen name="activity_main_buttons_size">48dp</dimen>
 	<dimen name="activity_main_buttons_margin_top">14dp</dimen>
 	<dimen name="activity_main_buttons_margin_start_end">8dp</dimen>
 	<dimen name="activity_main_gradient_layout_height">48dp</dimen>
