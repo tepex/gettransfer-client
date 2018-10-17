@@ -46,7 +46,7 @@ class AddressAdapter(private val presenter: SearchPresenter,
 		fun bind(item: GTAddress, listener: ClickHandler) = with(containerView) {
 			addressItem.text = item.primary
 			addressSecondaryItem.text = item.secondary
-			setSelected(selected == adapterPosition)
+			isSelected = selected == adapterPosition
 			setOnClickListener {
 				selected = adapterPosition
 				listener(item) 
