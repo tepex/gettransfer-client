@@ -1,12 +1,13 @@
 package com.kg.gettransfer.domain.model
 
+import java.util.Date
 import java.util.Locale
 
 data class Offer(val id: Long,
                  val status: String,
                  val wifi: Boolean,
                  val refreshments: Boolean,
-                 val createdAt: String,
+                 val createdAt: Date,
                  val price: Price,
                  val ratings: Ratings?,
                  val passengerFeedback: String?,

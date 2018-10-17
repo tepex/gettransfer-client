@@ -25,10 +25,10 @@ class SettingsPresenter(cc: CoroutineContexts,
                         router: Router,
                         systemInteractor: SystemInteractor): BasePresenter<SettingsView>(cc, router, systemInteractor) {
 
-    private val currencies = Mappers.getCurrenciesModels(systemInteractor.getCurrencies())
-    private val locales = Mappers.getLocalesModels(systemInteractor.getLocales())
-    private val distanceUnits = Mappers.getDistanceUnitsModels(systemInteractor.getDistanceUnits())
-    private val endpoints = systemInteractor.getEndpoints()
+    private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
+    private val locales = Mappers.getLocalesModels(systemInteractor.locales)
+    private val distanceUnits = Mappers.getDistanceUnitsModels(systemInteractor.distanceUnits)
+    private val endpoints = Mappers.getEndpointsModels(systemInteractor.endpoints)
 
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ ->
@@ -66,8 +66,7 @@ class SettingsPresenter(cc: CoroutineContexts,
         viewState.setCurrency(currencyModel?.name ?: "")
         viewState.setDistanceUnit(systemInteractor.distanceUnit.name)
 
-        viewState.setEndpoint(systemInteractor.endpoint)
-
+        viewState.setEndpoint(systemInteractor.endpoint.name)
         viewState.setLogoutButtonEnabled(systemInteractor.isLoggedIn())
     }
 
@@ -97,9 +96,9 @@ class SettingsPresenter(cc: CoroutineContexts,
 
     fun changeEndpoint(selected: Int) {
         systemInteractor.logout()
-        systemInteractor.endpoint = endpoints[selected]
-        systemInteractor.changeEndpoint()
-        
+        val endpoint = endpoints.get(selected)
+        systemInteractor.endpoint = endpoint.delegate
+        viewState.setEndpoint(endpoint.name)
         router.exit() //Without restarting app
         //viewState.restartApp() //For restart app
     }

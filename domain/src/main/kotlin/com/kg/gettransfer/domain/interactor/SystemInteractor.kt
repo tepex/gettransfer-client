@@ -3,16 +3,29 @@ package com.kg.gettransfer.domain.interactor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.domain.model.Endpoint
 
 import com.kg.gettransfer.domain.repository.GeoRepository
+import com.kg.gettransfer.domain.repository.LoggingRepository
 import com.kg.gettransfer.domain.repository.SystemRepository
 
 import java.util.Currency
 import java.util.Locale
 
 class SystemInteractor(private val systemRepository: SystemRepository,
+                       private val loggingRepository: LoggingRepository,
                        private val geoRepository: GeoRepository) {
-    private lateinit var configs: Configs
+    val accessToken = systemRepository.accessToken
+    var lastMode: String
+        get() = systemRepository.lastMode
+        set(value) { systemRepository.lastMode = value }
+        
+    var endpoint: Endpoint
+        get() = systemRepository.endpoint
+        set(value) { systemRepository.endpoint = value }
+        
+    val endpoints = systemRepository.endpoints
+
     lateinit var account: Account
         private set
 
@@ -26,46 +39,35 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         get() = account.currency ?: Currency.getInstance("USD")
         set(value) { account.currency = value }
     var distanceUnit: DistanceUnit
-        get() = account.distanceUnit ?: DistanceUnit.Km
+        get() = account.distanceUnit!!
         set(value) { account.distanceUnit = value }
 
-    var lastMode: String
-        get() = systemRepository.getLastMode()
-        set(value) { systemRepository.setLastMode(value) }
-
-    var endpoint: String
-        get() = systemRepository.getEndpoint()
-        set(value) { systemRepository.setEndpoint(value) }
+    val transportTypes by lazy { systemRepository.configs.transportTypes }
+    val locales        by lazy { systemRepository.configs.availableLocales }
+    val distanceUnits  by lazy { systemRepository.configs.supportedDistanceUnits }
+    val currencies     by lazy { systemRepository.configs.supportedCurrencies }
+    
+    fun isLoggedIn() = account.user.isLoggedIn()
+    fun getCurrentCurrencyIndex() = currencies.indexOf(currency)
 
     suspend fun coldStart() {
         systemRepository.coldStart()
-        configs = systemRepository.getConfigs()
         account = systemRepository.getAccount()
         geoRepository.initGeocoder(locale)
     }
-    
-    fun getTransportTypes()       = configs.transportTypes
-    fun getLocales()              = configs.availableLocales
-    fun getDistanceUnits()        = configs.supportedDistanceUnits
-    fun getCurrencies()           = configs.supportedCurrencies
-    fun getEndpoints()            = systemRepository.getEndpoins()
-    fun getCurrentCurrencyIndex() = getCurrencies().indexOf(account.currency)
-    fun isLoggedIn()              = account.user.isLoggedIn()
-    
+
     fun logout() {
         systemRepository.logout()
-        account = systemRepository.getAccount()
+        account = Account.NO_ACCOUNT
     }
-    
+
     suspend fun login(email: String, password: String) {
         account = systemRepository.login(email, password)
     }
-    
+
     suspend fun putAccount() { systemRepository.putAccount(account) }
 
-    fun getLogs()     = systemRepository.getLogs()
-    fun clearLogs()   = systemRepository.clearLogs()
-    fun getLogsFile() = systemRepository.getLogsFile()
-
-    fun changeEndpoint() = systemRepository.changeEndpoint()
+    fun getLogs()     = loggingRepository.getLogs()
+    fun clearLogs()   = loggingRepository.clearLogs()
+    fun getLogsFile() = loggingRepository.getLogsFile()
 }

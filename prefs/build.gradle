@@ -61,7 +61,6 @@ dependencies {
 	implementation libs.kotlin
 	implementation libs.coroutines
 	implementation project(":data")
-	implementation project(":domain")
 
     implementation libs.timber
     

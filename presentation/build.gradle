@@ -116,8 +116,10 @@ hockeyapp {
 dependencies {
 	implementation project(":domain")
 	implementation project(":data")
+	implementation project(":geo")
 	implementation project(":prefs")
 	implementation project(':logging')
+	implementation project(":remote")
 	implementation libs.kotlin
 	implementation libs.coroutines
 	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
@@ -165,6 +167,9 @@ dependencies {
 
 	//RatingBar with vector images
 	implementation "com.github.ome450901:SimpleRatingBar:$simple_rating_bar_version"
+
+	//socket
+	implementation "io.socket:socket.io-client:1.0.0"
     
 	testImplementation libs.junit
 	testImplementation libs.hamcrest
@@ -186,4 +191,3 @@ def generateChangeLog() {
 }
 
 apply plugin: 'com.google.gms.google-services'
-

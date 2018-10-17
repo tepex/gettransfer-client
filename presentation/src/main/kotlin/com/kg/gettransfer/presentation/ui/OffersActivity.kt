@@ -1,14 +1,14 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+
 import android.view.View
+
 import android.widget.ImageView
 import android.widget.LinearLayout
 
@@ -20,15 +20,10 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
-import com.kg.gettransfer.presentation.Screens
-
 import com.kg.gettransfer.presentation.adapter.OffersRVAdapter
-
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
-
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
-
 import com.kg.gettransfer.presentation.view.OffersView
 
 import kotlinx.android.synthetic.main.activity_offers.*
@@ -37,10 +32,10 @@ import kotlinx.android.synthetic.main.view_transfer_request_info.*
 
 import org.koin.android.ext.android.inject
 
-class OffersActivity: BaseActivity(), OffersView {
+class OffersActivity: BaseLoadingActivity(), OffersView {
     @InjectPresenter
     internal lateinit var presenter: OffersPresenter
-    
+
     private val offerInteractor: OfferInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
     
@@ -51,7 +46,7 @@ class OffersActivity: BaseActivity(), OffersView {
                                                                    transferInteractor,
                                                                    offerInteractor)
     
-    protected override var navigator = object : BaseNavigator(this){}
+    protected override var navigator = object: BaseNavigator(this) {}
     
     override fun getPresenter(): OffersPresenter = presenter
 
@@ -121,8 +116,6 @@ class OffersActivity: BaseActivity(), OffersView {
     }
 
     override fun showAlertCancelRequest() {
-        Utils.showAlertCancelRequest(this){
-            isCancel -> presenter.cancelRequest(isCancel)
-        }
+        Utils.showAlertCancelRequest(this) { isCancel -> presenter.cancelRequest(isCancel) }
     }
 }

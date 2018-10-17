@@ -16,7 +16,6 @@ class TransferInteractor(private val repository: TransferRepository) {
     
     suspend fun createTransfer(transferNew: TransferNew): Transfer {
         transfer = repository.createTransfer(transferNew)
-        //insertNewTransfer()
         selectedId = transfer!!.id
         return transfer!!
     }

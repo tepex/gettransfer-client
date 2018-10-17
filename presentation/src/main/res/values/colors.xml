@@ -90,4 +90,5 @@
 
     <color name="bg_point_on_map">#f7f7f7</color>
     <color name="switch_activated">#98b71b</color>
+    <color name="black_50">#80000000</color>
 </resources>

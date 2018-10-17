@@ -47,7 +47,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                            private val transferInteractor: TransferInteractor): BasePresenter<CreateOrderView>(cc, router, systemInteractor) {
 
     private var user: UserModel = Mappers.getUserModel(systemInteractor.account)
-    private val currencies = Mappers.getCurrenciesModels(systemInteractor.getCurrencies())
+    private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
     private var passengers: Int = MIN_PASSENGERS
     private var children: Int = MIN_CHILDREN
     private var dateTimeFormat: Format? = null
@@ -117,7 +117,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
 	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
             var prices: Map<String, String>? = null
             if(routeInfo.prices != null) prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
-            transportTypes = Mappers.getTransportTypesModels(systemInteractor.getTransportTypes(), prices)
+            transportTypes = Mappers.getTransportTypesModels(systemInteractor.transportTypes, prices)
 	        routeModel = Mappers.getRouteModel(routeInfo.distance,
                                                systemInteractor.distanceUnit,
                                                routeInfo.polyLines,
@@ -207,12 +207,10 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         Timber.d("to: %s", routeInteractor.to!!)
         Timber.d("trip: %s", trip)
         Timber.d("transport types: %s", selectedTransportTypes)
-        Timber.d("===========")
         Timber.d("user: $user")
         Timber.d("passenger price: $cost")
         Timber.d("date: $date")
         Timber.d("passengers: $passengers")
-        Timber.d("===========")
         Timber.d("children: $children")
         Timber.d("flightNumber: $flightNumber")
         Timber.d("comment: $comment")

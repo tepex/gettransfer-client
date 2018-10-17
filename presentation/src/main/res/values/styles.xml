@@ -37,6 +37,10 @@
 	</style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+	<style name="ProgressBar" parent="ThemeOverlay.AppCompat.Light">
+		<item name="colorAccent">@color/colorWhite</item>
+	</style>
 	
 	<style name="sf_font">
 		<item name="android:textColor">@android:color/black</item>

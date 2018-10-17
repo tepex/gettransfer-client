@@ -17,6 +17,7 @@ import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
 import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter
 
@@ -42,11 +43,7 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
 
     @ProvidePresenter
     fun createPaymentSettingsPresenter(): PaymentSettingsPresenter = 
-        PaymentSettingsPresenter(coroutineContexts,
-                                 router,
-                                 systemInteractor,
-                                 offerInteractor,
-                                 paymentInteractor)
+        PaymentSettingsPresenter(coroutineContexts, router, systemInteractor, offerInteractor, paymentInteractor)
 
     protected override var navigator = object : BaseNavigator(this) {
         override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
@@ -72,14 +69,13 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
             R.id.payFullPriceButton -> {
                 fullPriceCheckIcon.visibility = View.VISIBLE
                 thirdOfPriceCheckIcon.visibility = View.GONE
-                presenter.changePrice(PaymentSettingsPresenter.FULL_PRICE)
+                presenter.changePrice(PaymentRequestModel.FULL_PRICE)
             }
             R.id.payThirdOfPriceButton -> {
                 thirdOfPriceCheckIcon.visibility = View.VISIBLE
                 fullPriceCheckIcon.visibility = View.GONE
-                presenter.changePrice(PaymentSettingsPresenter.PRICE_30)
+                presenter.changePrice(PaymentRequestModel.PRICE_30)
             }
         }
     }
-
 }

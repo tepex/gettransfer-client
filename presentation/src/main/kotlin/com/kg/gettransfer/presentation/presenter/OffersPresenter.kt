@@ -4,9 +4,6 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.R
-
-import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
@@ -20,9 +17,12 @@ import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.view.OffersView
 
-import com.kg.gettransfer.presentation.ui.Utils
+import io.socket.client.IO
+import io.socket.client.Manager
+import io.socket.client.Socket
 
-import java.text.SimpleDateFormat
+import io.socket.emitter.Emitter
+import io.socket.engineio.client.Transport
 
 import ru.terrakok.cicerone.Router
 
@@ -33,7 +33,7 @@ class OffersPresenter(cc: CoroutineContexts,
                       router: Router,
                       systemInteractor: SystemInteractor,
                       private val transferInteractor: TransferInteractor,
-                      private val offerInteractor: OfferInteractor): BasePresenter<OffersView>(cc, router, systemInteractor) {
+                      private val offerInteractor: OfferInteractor): BaseLoadingPresenter<OffersView>(cc, router, systemInteractor) {
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
@@ -42,6 +42,7 @@ class OffersPresenter(cc: CoroutineContexts,
 
     private var sortCategory: String? = null
     private var sortHigherToLower = true
+    private var offersSocket: Socket? = null
 
     companion object {
         @JvmField val EVENT = "offers"
@@ -68,13 +69,14 @@ class OffersPresenter(cc: CoroutineContexts,
     override fun attachView(view: OffersView) {
         super.attachView(view)
         utils.launchAsyncTryCatchFinally({
+            viewState.showLoading()
             viewState.blockInterface(true)
 
             val transfer = utils.asyncAwait{ transferInteractor.getTransfer(transferInteractor.selectedId!!) }
             val transferModel = Mappers.getTransferModel(transfer,
                                                          systemInteractor.locale,
                                                          systemInteractor.distanceUnit,
-                                                         systemInteractor.getTransportTypes())
+                                                         systemInteractor.transportTypes)
 
             offers = offerInteractor.getOffers(transfer.id).map { Mappers.getOfferModel(it) }
             viewState.setDate(transferModel.dateTime)
@@ -84,12 +86,24 @@ class OffersPresenter(cc: CoroutineContexts,
             changeSortType(SORT_PRICE)
         }, { e -> Timber.e(e)
             viewState.setError(e)
-        }, { viewState.blockInterface(false) })
+        }, {
+            viewState.blockInterface(false)
+            viewState.hideLoading()
+        })
+    }
+
+    fun setUpSocket() {
+        offersSocket = IO.socket("/api/socket")
+        offersSocket!!.on(Manager.EVENT_TRANSPORT, headers)
+        offersSocket!!.on("new offer", onNewOffer)
+        offersSocket!!.connect()
     }
 
     @CallSuper
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
+//        offersSocket!!.off("new offer", onNewOffer )
+//        offersSocket!!.disconnect()
         super.onDestroy()
     }
 
@@ -150,6 +164,20 @@ class OffersPresenter(cc: CoroutineContexts,
         }
         if(sortHigherToLower) offers = offers.reversed()
         logFilterEvent(sortType)
+    }
+
+    private val onNewOffer = object: Emitter.Listener {
+        override fun call(vararg args: Any?) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+    }
+
+    private val headers = Emitter.Listener { args ->
+        val transport = args[0] as Transport
+        transport.on(Transport.EVENT_REQUEST_HEADERS) { _args ->
+            var headers = _args[0] as MutableMap<String, List<String>>
+            headers.put("Cookie", listOf("rack.session=${systemInteractor.accessToken}"))
+        }
     }
 
     private fun logFilterEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value)) }

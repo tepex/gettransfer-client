@@ -17,8 +17,7 @@ import ru.terrakok.cicerone.Router
 @InjectViewState
 class LoginPresenter(cc: CoroutineContexts,
                      router: Router,
-                     systemInteractor: SystemInteractor): BasePresenter<LoginView>(cc, router, systemInteractor) {
-
+                     systemInteractor: SystemInteractor): BaseLoadingPresenter<LoginView>(cc, router, systemInteractor) {
 
     companion object {
         @JvmField val RESULT_CODE = 33
@@ -33,13 +32,14 @@ class LoginPresenter(cc: CoroutineContexts,
 
     fun onLoginClick() {
         viewState.blockInterface(false)
-        utils.launchAsyncTryCatch({
+        utils.launchAsyncTryCatchFinally({
+            viewState.showLoading()
             utils.asyncAwait { systemInteractor.login(email!!, password!!) }
             router.exitWithResult(RESULT_CODE, RESULT_OK)
             mFBA.logEvent(EVENT,createSingeBundle(PARAM_KEY, RESULT_SUCCESS))
         }, { e -> viewState.setError(e)
             mFBA.logEvent(EVENT,createSingeBundle(PARAM_KEY, RESULT_FAIL))
-        })
+        }, { viewState.hideLoading() })
     }
 
     fun setEmail(email: String) {

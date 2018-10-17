@@ -4,22 +4,36 @@ import android.content.Context
 import android.content.SharedPreferences
 
 import android.preference.PreferenceManager
+
 import com.google.firebase.analytics.FirebaseAnalytics
 
+import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
-import com.kg.gettransfer.data.logging.LoggingImpl
 
-import com.kg.gettransfer.data.prefs.PreferencesImpl
+import com.kg.gettransfer.logging.LoggingRepositoryImpl
 
+import com.kg.gettransfer.data.CarrierTripRemote
+import com.kg.gettransfer.data.PreferencesCache
+import com.kg.gettransfer.data.RouteRemote
+import com.kg.gettransfer.data.SystemCache
+import com.kg.gettransfer.data.SystemRemote
+
+import com.kg.gettransfer.data.ds.*
+import com.kg.gettransfer.data.mapper.*
 import com.kg.gettransfer.data.repository.*
 
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.*
+import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.repository.*
+
+import com.kg.gettransfer.geo.GeoRepositoryImpl
+import com.kg.gettransfer.prefs.PreferencesImpl
 
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.IO
 import kotlinx.coroutines.experimental.android.Main
+
 import org.koin.android.ext.koin.androidApplication
 
 import org.koin.dsl.module.module
@@ -30,42 +44,89 @@ import ru.terrakok.cicerone.Router
 /**
  * Koin main module
  */
-val appModule = module {
-	// Util
-	single { PreferenceManager.getDefaultSharedPreferences(get()) as SharedPreferences }
-}
-
 val ciceroneModule = module {
-	single { Cicerone.create() as Cicerone<Router> }
-	single { get<Cicerone<Router>>().router }
-	single { get<Cicerone<Router>>().navigatorHolder }
+    single { Cicerone.create() as Cicerone<Router> }
+    single { get<Cicerone<Router>>().router }
+    single { get<Cicerone<Router>>().navigatorHolder }
 }
 
-val domainModule = module {
-    single { PreferencesImpl(get()) as Preferences }
-	single {
-		val context: Context = get()
-		LoggingImpl(get(),
-				context.getString(R.string.logs_file_name)) as Logging}
+val geoModule = module {
+    single { GeoRepositoryImpl(get()) as GeoRepository }
+}
+
+val prefsModule = module {
+    single { PreferencesImpl(get()) } bind PreferencesCache::class bind SystemCache::class
+}
+
+val loggingModule = module {
+    single {
+        val context: Context = get()
+        LoggingRepositoryImpl(get(), context.getString(R.string.logs_file_name)) as LoggingRepository
+    }
+}
+
+val dataModule = module {
+    single { ProfileMapper() }
+    single { LocaleMapper() }
+    single { RatingsMapper() }
+    single { MoneyMapper() }
+    single { VehicleBaseMapper() }
+    single { TransportTypeMapper() }
+    single { CarrierMapper(get(), get(), get()) }
+    single { PriceMapper(get()) }
+    single { VehicleMapper(get(), get()) }
+    single { OfferMapper(get(), get(), get(), get(), get()) }
+    single { OfferRemoteDataStore(get()) }
+    single { OfferDataStoreFactory(get()) }
+	single { OfferRepositoryImpl(get(), get()) as OfferRepository }
+	single { OfferInteractor(get()) }
+	
+	single { PaymentMapper() }
+	single { PaymentRequestMapper() }
+	single { PaymentRemoteDataStore(get()) }
+	single { PaymentDataStoreFactory(get()) }
+	single { PaymentRepositoryImpl(get(), get(), get()) as PaymentRepository }
+	single { PaymentInteractor(get()) }
+	
+	single { PaypalCredentialsMapper() }
+	single { CurrencyMapper() }
+	single { CardGatewaysMapper() }
+	single { EndpointMapper() }
+    single { UserMapper(get()) }
+    single { AccountMapper(get()) }
+    single { ConfigsMapper(get(), get(), get(), get(), get()) }
+    single { SystemCacheDataStore(get()) }
+    single { SystemRemoteDataStore(get()) }
+    single { SystemDataStoreFactory(get(), get()) }
 	single {
 	    val context: Context = get()
-	    ApiRepositoryImpl(get(),
-                context.resources.getStringArray(R.array.api_keys),
-				context.resources.getStringArray(R.array.api_urls))
+	    val endpoints = arrayListOf(
+	        Endpoint("Demo", context.resources.getString(R.string.api_key_demo), context.resources.getString(R.string.api_url_demo), true),
+	        Endpoint("Prod", context.resources.getString(R.string.api_key_prod), context.resources.getString(R.string.api_url_prod)))
+	    SystemRepositoryImpl(get(), get(), get(), get(), get(), endpoints) as SystemRepository
 	}
-	single { CarrierTripRepositoryImpl(get()) as CarrierTripRepository }
-	single { GeoRepositoryImpl(get()) as GeoRepository }
-	single { OfferRepositoryImpl(get()) as OfferRepository }
-	single { PaymentRepositoryImpl(get()) as PaymentRepository }
-	single { RouteRepositoryImpl(get()) as RouteRepository }
-	single { SystemRepositoryImpl(get(), get(), get()) as SystemRepository }
-	single { TransferRepositoryImpl(get()) as TransferRepository }
+	single { SystemInteractor(get(), get(), get()) }
 	
-	single { CarrierTripInteractor(get()) }
-	single { OfferInteractor(get()) }
-	single { PaymentInteractor(get()) }
+	single { RouteInfoMapper() }
+	single { PointMapper() }
+    single { RouteRemoteDataStore(get()) }
+    single { RouteDataStoreFactory(get()) }
+	single { RouteRepositoryImpl(get(), get(), get()) as RouteRepository }
 	single { RouteInteractor(get(), get()) }
-	single { SystemInteractor(get(), get()) }
+    
+	single { CityPointMapper(get()) }
+	single { PassengerAccountMapper(get()) }
+	single { CarrierTripMapper(get(), get(), get()) }
+	single { CarrierTripRepositoryImpl(get(), get()) as CarrierTripRepository }
+    single { CarrierTripInteractor(get()) }
+    
+    single { TripMapper() }
+	single { TransferMapper(get(), get()) }
+	single { TransferNewMapper(get(), get(), get(), get()) }
+	single { TransferCacheDataStore() }
+	single { TransferRemoteDataStore(get()) }
+	single { TransferDataStoreFactory(get(), get()) }
+	single { TransferRepositoryImpl(get(), get(), get()) as TransferRepository }
 	single { TransferInteractor(get()) }
 }
 

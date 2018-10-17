@@ -42,6 +42,7 @@ object Mappers {
     fun getCurrenciesModels(currencies: List<Currency>) = currencies.map { CurrencyModel(it) }
     fun getLocalesModels(locales: List<Locale>) = locales.map { LocaleModel(it) }
     fun getDistanceUnitsModels(distanceUnits: List<DistanceUnit>) = distanceUnits.map { DistanceUnitModel(it) }
+    fun getEndpointsModels(endpoints: List<Endpoint>) = endpoints.map { EndpointModel(it) }
     
     fun getRouteModel(distance: Int?,
                       distanceUnit: DistanceUnit,
@@ -72,15 +73,15 @@ object Mappers {
                       Utils.getFormatedDate(locale, transfer.dateToLocal),
                       transfer.distance,
                       distanceUnit,
-                      transfer.pax!!,
+                      transfer.pax,
                       transfer.nameSign,
-                      transfer.childSeats ?: 0,
+                      transfer.childSeats,
                       transfer.flightNumber,
                       transfer.comment,
                       selected.map { TransportTypeModel(it.id, getTransportTypeName(it.id), null, it.paxMax, it.luggageMax, null) },
-                      transfer.paidSum!!.default,
-                      transfer.paidPercentage!!,
-                      transfer.remainsToPay!!.default,
+                      transfer.paidSum.default,
+                      transfer.paidPercentage,
+                      transfer.remainsToPay.default,
                       transfer.price?.default,
                       transfer.relevantCarriersCount,
                       transfer.checkOffers)
@@ -152,4 +153,7 @@ object Mappers {
                          carrierTrip.nameSign,
                          carrierTrip.flightNumber,
                          carrierTrip.remainToPay)
+        
+    fun getPaymentRequest(model: PaymentRequestModel) = 
+        PaymentRequest(model.transferId, model.offerId, model.gatewayId, model.percentage)
 }

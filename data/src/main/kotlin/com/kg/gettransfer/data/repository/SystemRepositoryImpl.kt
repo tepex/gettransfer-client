@@ -1,33 +1,64 @@
 package com.kg.gettransfer.data.repository
 
+import com.kg.gettransfer.data.PreferencesCache
+
+import com.kg.gettransfer.data.ds.SystemDataStoreFactory
+
+import com.kg.gettransfer.data.mapper.AccountMapper
+import com.kg.gettransfer.data.mapper.ConfigsMapper
+import com.kg.gettransfer.data.mapper.EndpointMapper
+
 import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.repository.Logging
-import com.kg.gettransfer.domain.repository.Preferences
+import com.kg.gettransfer.domain.model.Configs
+import com.kg.gettransfer.domain.model.Endpoint
+
 import com.kg.gettransfer.domain.repository.SystemRepository
 
-class SystemRepositoryImpl(private val apiRepository: ApiRepositoryImpl,
-                           private val preferences: Preferences,
-                           private val logging: Logging): SystemRepository {
-    override suspend fun coldStart() = apiRepository.coldStart()
-	override fun getConfigs() = apiRepository.getConfigs()
-    override fun getAccount() = apiRepository.getAccount()
-    override suspend fun putAccount(account: Account) = apiRepository.putAccount(account)
-    override suspend fun login(email: String, password: String) = apiRepository.login(email, password)
-    override fun logout() = apiRepository.logout()
-    override fun changeEndpoint() = apiRepository.setEndpoint()
+class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
+                           private val factory: SystemDataStoreFactory,
+                           private val configsMapper: ConfigsMapper,
+                           private val accountMapper: AccountMapper,
+                           private val endpointMapper: EndpointMapper,
+                           private val _endpoints: List<Endpoint>): SystemRepository {
 
-    override fun getLastMode() = preferences.lastMode
-    override fun setLastMode(value: String){
-        preferences.lastMode = value
+    override val accessToken = preferencesCache.accessToken
+
+    override lateinit var configs: Configs
+
+    override var lastMode: String
+        get() = preferencesCache.lastMode
+        set(value) { preferencesCache.lastMode = value }
+
+    override val endpoints = _endpoints
+    
+    override var endpoint: Endpoint
+        get() = endpoints.find { it.name == preferencesCache.endpoint }!!
+        set(value) {
+            preferencesCache.endpoint = value.name
+            factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(value))
+        }
+
+    override suspend fun coldStart() {
+        factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
+        configs = configsMapper.fromEntity(factory.retrieveRemoteDataStore().getConfigs())
+        accountMapper.configs = configs
+        val accountEntity = factory.retrieveRemoteDataStore().getAccount()
+        factory.retrieveCacheDataStore().setAccount(accountEntity)
+    }
+    
+    override suspend fun getAccount() = accountMapper.fromEntity(factory.retrieveCacheDataStore().getAccount())
+
+    override suspend fun putAccount(account: Account) {
+        val accountEntity = accountMapper.toEntity(account)
+        factory.retrieveCacheDataStore().setAccount(accountEntity)
+        factory.retrieveRemoteDataStore().setAccount(accountEntity)
     }
 
-    override fun getEndpoins() = arrayListOf(Preferences.ENDPOINT_PROD, Preferences.ENDPOINT_DEMO)
-    override fun getEndpoint() = preferences.endpoint
-    override fun setEndpoint(value: String){
-        preferences.endpoint = value
+    override suspend fun login(email: String, password: String): Account {
+        val accountEntity = factory.retrieveRemoteDataStore().login(email, password)
+        factory.retrieveCacheDataStore().setAccount(accountEntity)
+        return accountMapper.fromEntity(accountEntity)
     }
 
-    override fun getLogs() = logging.getLogs()
-    override fun clearLogs() = logging.clearLogs()
-    override fun getLogsFile() = logging.getLogsFile()
+    override fun logout() = factory.retrieveCacheDataStore().clearAccount()
 }

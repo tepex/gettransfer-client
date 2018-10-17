@@ -8,7 +8,6 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
@@ -45,7 +44,7 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
             val transferModel = Mappers.getTransferModel(transfer,
                                                          systemInteractor.locale,
                                                          systemInteractor.distanceUnit,
-                                                         systemInteractor.getTransportTypes())
+                                                         systemInteractor.transportTypes)
             viewState.setTransfer(transferModel)
             
 	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, true, false) }
@@ -68,5 +67,5 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
 	    }, { e -> Timber.e(e)
 	        viewState.setError(e)
         }, { viewState.blockInterface(false) })        
-	}	
+	}
 }
