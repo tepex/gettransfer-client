@@ -20,20 +20,17 @@ open class TransferNewMapper(private val cityPointMapper: CityPointMapper,
     /**
      * Map a [TransferNew] instance to a [TransferNewEntity] instance.
      */
-    override fun toEntity(type: TransferNew): TransferNewEntity {
-        var tripReturn: TripEntity? = null
-        if(type.tripReturn != null) tripReturn = tripMapper.toEntity(type.tripReturn!!)
-        return TransferNewEntity(cityPointMapper.toEntity(type.from),
-                                 cityPointMapper.toEntity(type.to),
-                                 tripMapper.toEntity(type.tripTo),
-                                 tripReturn,
-                                 type.transportTypeIds,
-                                 type.pax,
-                                 type.childSeats,
-                                 type.passengerOfferedPrice,
-                                 type.user.profile.name,
-                                 type.comment,
-                                 userMapper.toEntity(type.user),
-                                 type.promoCode)
-    }
+    override fun toEntity(type: TransferNew) =
+        TransferNewEntity(cityPointMapper.toEntity(type.from),
+                          cityPointMapper.toEntity(type.to),
+                          tripMapper.toEntity(type.tripTo),
+                          type.tripReturn?.let { tripMapper.toEntity(it) },
+                          type.transportTypeIds,
+                          type.pax,
+                          type.childSeats,
+                          type.passengerOfferedPrice,
+                          type.user.profile.name,
+                          type.comment,
+                          userMapper.toEntity(type.user),
+                          type.promoCode)
 }

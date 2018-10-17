@@ -2,7 +2,7 @@ package com.kg.gettransfer.domain.model
 
 import java.util.Date
 
-data class Money(val default: String, val preferred: String?)
+
 
 
 

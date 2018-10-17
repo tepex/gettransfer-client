@@ -129,8 +129,8 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         transferModel.transportTypes.forEach {
             var viewTransportType = layoutInflater.inflate(R.layout.view_transport_type_transfer_details, null, false)
             viewTransportType.tvNameTransportType.setText(it.nameId!!)
-            viewTransportType.tvCountPersons.text = getString(R.string.count_persons_and_baggage, it.paxMax)
-            viewTransportType.tvCountBaggage.text = getString(R.string.count_persons_and_baggage, it.luggageMax)
+            viewTransportType.tvCountPersons.text = Utils.formatPersons(this, it.paxMax)
+            viewTransportType.tvCountBaggage.text = Utils.formatLuggage(this, it.luggageMax)
             layoutTransportTypesList.addView(viewTransportType)
         }
 
@@ -157,7 +157,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         offerTransportInfoCarType.text = getString(offerModel.vehicle.transportType.nameId!!)
         offerTransportInfoCarName.text = offerModel.vehicle.vehicleBase.name
         offerTransportInfoCarNumber.text = offerModel.vehicle.vehicleBase.registrationNumber
-        offerTransportInfoPrice.text = offerModel.priceDefault
+        offerTransportInfoPrice.text = offerModel.price.base.default
         layoutOfferTransportInfo.visibility = View.VISIBLE
     }
 

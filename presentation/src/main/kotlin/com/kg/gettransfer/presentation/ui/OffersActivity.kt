@@ -150,36 +150,35 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
     }
 
     override fun showBottomSheetOfferDetails(offer: OfferModel) {
-        carrierId.text = getString(R.string.carrier_number, offer.carrierId)
+        carrierId.text = getString(R.string.carrier_number, offer.carrier.id)
 
         layoutCarrierLanguages.removeAllViews()
         val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         lp.setMargins(8, 0, 8, 0)
-        for (item in offer.carrierLanguages){
+        for(item in offer.carrier.languages) {
             val ivLanguage = ImageView(this)
-            ivLanguage.setImageResource(Utils.getLanguageImage(item.language))
+            ivLanguage.setImageResource(Utils.getLanguageImage(item.delegate.language))
             ivLanguage.layoutParams = lp
             layoutCarrierLanguages.addView(ivLanguage)
         }
 
-        ratingBarDriver.rating = offer.ratings.driver!!.toFloat()
-        ratingBarPunctuality.rating = offer.ratings.fair!!.toFloat()
-        ratingBarVehicle.rating = offer.ratings.vehicle!!.toFloat()
+        offer.ratings?.driver?.let  { ratingBarDriver.rating = it }
+        offer.ratings?.fair?.let    { ratingBarPunctuality.rating = it }
+        offer.ratings?.vehicle?.let { ratingBarVehicle.rating = it }
 
-        vehicleName.text = if(offer.vehicleColor == null) offer.transportName
-                                             else Utils.getVehicleNameWithColor(this, offer.transportName, offer.vehicleColor)
-        vehicleType.setText(Utils.getTransportTypeName(offer.transportType))
-        sheetOfferDetails.tvCountPersons.text = getString(R.string.count_persons_and_baggage, offer.paxMax)
-        sheetOfferDetails.tvCountBaggage.text = getString(R.string.count_persons_and_baggage, offer.baggageMax)
+        vehicleName.text = Utils.getVehicleNameWithColor(this, offer.vehicle.vehicleBase.name, offer.vehicle.color)
+        vehicleType.text = getString(offer.vehicle.transportType.nameId!!)
+        sheetOfferDetails.tvCountPersons.text = Utils.formatPersons(this, offer.vehicle.transportType.paxMax)
+        sheetOfferDetails.tvCountBaggage.text = Utils.formatLuggage(this, offer.vehicle.transportType.luggageMax)
 
         if(offer.wifi) imgFreeWiFi.visibility = View.VISIBLE
         else imgFreeWiFi.visibility = View.GONE
         if(offer.refreshments) imgFreeWater.visibility = View.VISIBLE
         else imgFreeWater.visibility = View.GONE
 
-        offerPrice.text = offer.priceDefault
-        if(offer.pricePreferred != null){
-            offerPricePreferred.text = getString(R.string.preferred_cost, offer.pricePreferred)
+        offerPrice.text = offer.price.base.default
+        if(offer.price.base.preferred != null) {
+            offerPricePreferred.text = Utils.formatPrice(this, offer.price.base.preferred)
             offerPricePreferred.visibility = View.VISIBLE
         } else offerPricePreferred.visibility = View.GONE
 
@@ -188,20 +187,18 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
             hideSheetOfferDetails()
         }
 
-        if(offer.vehiclePhotos.isEmpty()) vpVehiclePhotos.visibility = View.GONE
+        if(offer.vehicle.photos.isEmpty()) vpVehiclePhotos.visibility = View.GONE
         else {
-            vpVehiclePhotos.adapter = VehiclePhotosVPAdapter(supportFragmentManager, offer.vehiclePhotos)
-            checkNumberOfPhoto(0, offer.vehiclePhotos.size)
+            vpVehiclePhotos.adapter = VehiclePhotosVPAdapter(supportFragmentManager, offer.vehicle.photos)
+            checkNumberOfPhoto(0, offer.vehicle.photos.size)
 
-            if(offer.vehiclePhotos.size > 1) {
+            if(offer.vehicle.photos.size > 1) {
                 previousImageButton.setOnClickListener { vpVehiclePhotos.currentItem = vpVehiclePhotos.currentItem - 1 }
                 nextImageButton.setOnClickListener { vpVehiclePhotos.currentItem = vpVehiclePhotos.currentItem + 1 }
                 vpVehiclePhotos.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
                     override fun onPageScrollStateChanged(p0: Int) {}
                     override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
-                    override fun onPageSelected(p0: Int) {
-                        checkNumberOfPhoto(p0, offer.vehiclePhotos.size)
-                    }
+                    override fun onPageSelected(p0: Int) { checkNumberOfPhoto(p0, offer.vehicle.photos.size) }
                 })
             }
         }
@@ -209,7 +206,7 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
         bsOfferDetails.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    private fun checkNumberOfPhoto(currentPos: Int, size: Int){
+    private fun checkNumberOfPhoto(currentPos: Int, size: Int) {
         if(size == 1) numberOfPhoto.visibility = View.GONE
 
         if(currentPos == 0) previousImageButton.visibility = View.GONE
@@ -221,9 +218,7 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
         numberOfPhoto.text = getString(R.string.number_of_photos, currentPos + 1, size)
     }
 
-    private fun hideSheetOfferDetails(){
-        bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN
-    }
+    private fun hideSheetOfferDetails() { bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN }
 
     @CallSuper
     override fun onBackPressed() {

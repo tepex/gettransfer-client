@@ -78,7 +78,7 @@ class MainPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: MainView) {
         super.attachView(view)
-        viewState.setProfile(Mappers.getProfileModel(systemInteractor.account))
+        viewState.setProfile(Mappers.getProfileModel(systemInteractor.account.user.profile))
     }
 
     fun updateCurrentLocation() {

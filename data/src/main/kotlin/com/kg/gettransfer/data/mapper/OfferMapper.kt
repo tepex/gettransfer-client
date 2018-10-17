@@ -23,28 +23,21 @@ open class OfferMapper(private val priceMapper: PriceMapper,
     /**
      * Map a [OfferEntity] instance to a [Offer] instance.
      */
-    override fun fromEntity(type: OfferEntity): Offer {
-        var ratings: Ratings? = null
-        if(type.ratings != null) ratings = ratingsMapper.fromEntity(type.ratings)
-        var driver: Profile? = null
-        if(type.driver != null) driver = profileMapper.fromEntity(type.driver)
-        return Offer(type.id,
-                     type.status,
-                     type.wifi,
-                     type.refreshments,
-                     Mapper.ISO_FORMAT.parse(type.createdAt),
-                     priceMapper.fromEntity(type.price),
-                     ratings,
-                     type.passengerFeedback,
-                     carrierMapper.fromEntity(type.carrier),
-                     vehicleMapper.fromEntity(type.vehicle),
-                     driver)
-    }
+    override fun fromEntity(type: OfferEntity) =
+        Offer(type.id,
+              type.status,
+              type.wifi,
+              type.refreshments,
+              Mapper.ISO_FORMAT.parse(type.createdAt),
+              priceMapper.fromEntity(type.price),
+              type.ratings?.let { ratingsMapper.fromEntity(it) },
+              type.passengerFeedback,
+              carrierMapper.fromEntity(type.carrier),
+              vehicleMapper.fromEntity(type.vehicle),
+              type.driver?.let { profileMapper.fromEntity(it) })
 
     /**
      * Map a [Offer] instance to a [OfferEntity] instance.
      */
-    override fun toEntity(type: Offer): OfferEntity {
-        throw UnsupportedOperationException()
-    }
+    override fun toEntity(type: Offer): OfferEntity { throw UnsupportedOperationException() }
 }

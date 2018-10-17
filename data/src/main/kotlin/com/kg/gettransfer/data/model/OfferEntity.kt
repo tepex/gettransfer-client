@@ -19,10 +19,10 @@ data class PriceEntity(val base: MoneyEntity,
                        val percentage70: String,
                        val amount: Double)
 
-data class RatingsEntity(val average: Double?,
-                         val vehicle: Double?,
-                         val driver: Double?,
-                         val fair: Double?)
+data class RatingsEntity(val average: Float?,
+                         val vehicle: Float?,
+                         val driver: Float?,
+                         val fair: Float?)
 
 data class CarrierEntity(val id: Long,
                          val profile: ProfileEntity,

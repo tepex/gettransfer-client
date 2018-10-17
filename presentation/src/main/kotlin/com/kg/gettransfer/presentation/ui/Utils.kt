@@ -44,6 +44,7 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.DistanceUnit
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
+import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 
@@ -121,41 +122,35 @@ internal class Utils {
             return context.getString(R.string.distance, d, distanceUnit.name)
         }
 
-        fun getPolyline(routeModel: RouteModel): PolylineModel{
+        fun getPolyline(routeModel: RouteModel): PolylineModel {
             var mPoints = arrayListOf<LatLng>()
             var line: PolylineOptions? = null
             val latLngBuilder = LatLngBounds.Builder()
             var track: CameraUpdate
 
             if(routeModel.polyLines != null) {
-                for (item in routeModel.polyLines) mPoints.addAll(PolyUtil.decode(item))
+                for(item in routeModel.polyLines) mPoints.addAll(PolyUtil.decode(item))
 
                 // Для построения упрощённого маршрута (меньше точек)
                 //val mPoints = PolyUtil.decode(routeInfo.overviewPolyline)
 
                 line = PolylineOptions()
 
-                for (i in mPoints.indices) {
+                for(i in mPoints.indices) {
                     line.add(mPoints.get(i))
                     latLngBuilder.include(mPoints.get(i))
                 }
             } else {
-                val startPointArray = getPointsArrayFromString(routeModel.fromPoint)
-                val endPointArray = getPointsArrayFromString(routeModel.toPoint)
-                mPoints.add(LatLng(startPointArray[0].toDouble(), startPointArray[1].toDouble()))
-                mPoints.add(LatLng(endPointArray[0].toDouble(), endPointArray[1].toDouble()))
+                mPoints.add(Mappers.point2LatLng(routeModel.fromPoint))
+                mPoints.add(Mappers.point2LatLng(routeModel.toPoint))
 
-                for (i in mPoints.indices) {
-                    latLngBuilder.include(mPoints.get(i))
-                }
+                for(i in mPoints.indices) latLngBuilder.include(mPoints.get(i))
             }
             track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150)
             return PolylineModel(mPoints.get(0), mPoints.get(mPoints.size - 1), line, track)
         }
 
-        fun getPointsArrayFromString(pointsString: String) = pointsString.substring(1, pointsString.length - 1).split(",")
-
-        fun getFormatedDate(locale: Locale, dateToLocal: Date) = SimpleDateFormat(DATE_TIME_PATTERN, locale).format(dateToLocal)
+        fun getFormattedDate(locale: Locale, dateToLocal: Date) = SimpleDateFormat(DATE_TIME_PATTERN, locale).format(dateToLocal)
         
         /*fun setPins(activity: Activity, googleMap: GoogleMap, routeModel: RouteModel) {
             //Создание пинов с информацией
@@ -245,29 +240,26 @@ internal class Utils {
             return (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_unknown
         }
 
-        fun getVehicleNameWithColor(context: Context, vehicleName: String, vehicleColor: String): SpannableStringBuilder{
+        fun getVehicleNameWithColor(context: Context, name: String, color: String): SpannableStringBuilder {
+            val colorRes = R.color::class.members.find( { it.name == "color_vehicle_$color" } )
+            val colorId = (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
+            
             val drawableCompat = ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)
-            drawableCompat!!.setColorFilter(ContextCompat.getColor(context, Utils.getColorVehicle(vehicleColor)), PorterDuff.Mode.SRC_IN)
+            drawableCompat!!.setColorFilter(ContextCompat.getColor(context, colorId), PorterDuff.Mode.SRC_IN)
             drawableCompat.setBounds(4, 0, drawableCompat.intrinsicWidth + 4, drawableCompat.intrinsicHeight)
-            val ssBuilder = SpannableStringBuilder("$vehicleName ")
+            val ssBuilder = SpannableStringBuilder("$name ")
             val colorCarImageSpan = ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE)
             ssBuilder.setSpan(colorCarImageSpan, ssBuilder.length - 1, ssBuilder.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             return ssBuilder
         }
 
-        fun getColorVehicle(color: String): Int{
-            val colorRes = R.color::class.members.find( { it.name == "color_vehicle_$color" } )
-            return (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
-        }
-
         fun formatJsonString(text: String): String {
-
             val json = StringBuilder()
             var indentString = ""
 
-            for (i in 0 until text.length) {
+            for(i in 0 until text.length) {
                 val letter = text[i]
-                when (letter) {
+                when(letter) {
                     '{', '[' -> {
                         json.append("\n" + indentString + letter + "\n")
                         indentString += "\t"
@@ -285,18 +277,10 @@ internal class Utils {
 
             return json.toString()
         }
-
-        fun getDistanceBetweenTwoCoordinates(fromPoint: List<Double>, toPoint: List<Double>): Int{
-            val fromLocation = Location("")
-            fromLocation.latitude = fromPoint[0]
-            fromLocation.longitude = fromPoint[1]
-
-            val toLocation = Location("")
-            toLocation.latitude = toPoint[0]
-            toLocation.longitude = toPoint[1]
-
-            return (fromLocation.distanceTo(toLocation) / 1000).toInt()
-        }
+        
+        fun formatPersons(context: Context, persons: Int) = context.getString(R.string.count_persons_and_baggage, persons)
+        fun formatLuggage(context: Context, luggage: Int) = context.getString(R.string.count_persons_and_baggage, luggage)
+        fun formatPrice(context: Context, price: String)  = context.getString(R.string.preferred_cost, price) 
 	}
 }
 

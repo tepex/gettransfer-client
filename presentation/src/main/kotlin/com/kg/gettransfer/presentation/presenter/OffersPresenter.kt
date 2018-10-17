@@ -80,7 +80,7 @@ class OffersPresenter(cc: CoroutineContexts,
                                                          systemInteractor.distanceUnit,
                                                          systemInteractor.transportTypes)
 
-            offers = offerInteractor.getOffers(transfer.id).map { Mappers.getOfferModel(it) }
+            offers = offerInteractor.getOffers(transfer.id).map { Mappers.getOfferModel(it, systemInteractor.locale) }
             viewState.setDate(transferModel.dateTime)
             viewState.setTransfer(transferModel)
 
@@ -160,11 +160,11 @@ class OffersPresenter(cc: CoroutineContexts,
             }
             SORT_RATING -> {
                 sortType = if(sortHigherToLower) RATING_DOWN else RATING_UP
-                offers.sortedWith(compareBy { it.ratings.average })
+                offers.sortedWith(compareBy { it.ratings?.average })
             }
             SORT_PRICE -> {
                 sortType = if(sortHigherToLower) PRICE_DOWN else PRICE_UP
-                offers.sortedWith(compareBy { it.priceAmount })
+                offers.sortedWith(compareBy { it.price.amount })
             }
             else -> offers
         }

@@ -12,15 +12,14 @@ open class RouteInfoMapper(): Mapper<RouteInfoEntity, RouteInfo> {
     /**
      * Map a [AccountEntity] instance to a [Account] instance
      */
-    override fun fromEntity(type: RouteInfoEntity): RouteInfo {
-        return RouteInfo(type.success,
-                         type.distance,
-                         type.duration,
-                         type.prices?.map { TransportTypePrice(it.transferId, it.minFloat, it.min, it.max) },
-                         type.watertaxi,
-                         type.polyLines,
-                         type.overviewPolyline)
-    }
+    override fun fromEntity(type: RouteInfoEntity) =
+        RouteInfo(type.success,
+                  type.distance,
+                  type.duration,
+                  type.prices?.map { TransportTypePrice(it.transferId, it.minFloat, it.min, it.max) },
+                  type.watertaxi,
+                  type.polyLines,
+                  type.overviewPolyline)
 
     /**
      * Map a [RouteInfo] instance to a [RouteInfoEntity] instance.

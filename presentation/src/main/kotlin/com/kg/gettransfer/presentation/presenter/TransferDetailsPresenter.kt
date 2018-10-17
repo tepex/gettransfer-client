@@ -62,7 +62,7 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
 	        //Timber.d("offers: ${transferModel.id} status=${transferModel.status} checkOffers: ${transferModel.checkOffers}")
             if(transferModel.checkOffers) {
 	            val offers = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
-	            if(offers.size == 1) viewState.setOffer(Mappers.getOfferModel(offers.first()))
+	            if(offers.size == 1) viewState.setOffer(Mappers.getOfferModel(offers.first(), systemInteractor.locale))
 	        }
 	    }, { e -> Timber.e(e)
 	        viewState.setError(e)

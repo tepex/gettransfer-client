@@ -41,66 +41,57 @@ class OffersRVAdapter(private val offers: List<OfferModel>,
 
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(item: OfferModel, listener: SelectOfferClickListener) = with(containerView) {
-            tvCarrierId.text = context.getString(R.string.driver_number, item.carrierId)
-            tvCompletedTransfers.text = context.getString(R.string.driver_completed_transfers, item.completedTransfers)
-            tvCostDefault.text = item.priceDefault
-            if(item.pricePreferred != null) {
-                tvCostPreferred.text = context.getString(R.string.preferred_cost, item.pricePreferred)
+            tvCarrierId.text = context.getString(R.string.driver_number, item.carrier.id)
+            tvCompletedTransfers.text = context.getString(R.string.driver_completed_transfers, item.carrier.completedTransfers)
+            tvCostDefault.text = item.price.base.default
+            if(item.price.base.preferred != null) {
+                tvCostPreferred.text = Utils.formatPrice(context, item.price.base.preferred)
                 tvCostPreferred.visibility = View.VISIBLE
             }
             if(item.vehicle.photos.isNotEmpty()) {
                 layoutWithCarImage.visibility = View.VISIBLE
-                UtilsImage.loadImage(this, item.vehiclePhotos[0], carPhoto)
-                if(item.vehiclePhotos.size > 1) ivManyPhotos.visibility = View.VISIBLE
-                ratingBar.rating = item.ratings.average!!.toFloat()
-                setTexts(bottomLayoutForImage, tvCountPersonsOnCarImage, tvCountBaggageOnCarImage, item, context)
+                UtilsImage.loadImage(this, item.vehicle.photos.first(), carPhoto)
+                if(item.vehicle.photos.size > 1) ivManyPhotos.visibility = View.VISIBLE
+                ratingBar.rating = item.ratings!!.average!!.toFloat()
+                setTexts(bottomLayoutForImage, tvCountPersonsOnCarImage, tvCountBaggageOnCarImage, item)
             } else {
                 layoutNoCarImage.visibility = View.VISIBLE
                 tvVehicleType.setText(item.vehicle.transportType.nameId!!)
-                setTexts(bottomLayoutNoImage, tvCountPersons, tvCountBaggage, item, context)
+                setTexts(bottomLayoutNoImage, tvCountPersons, tvCountBaggage, item)
             }
-            val carrierLanguages = item.carrierLanguages
-
+            
             val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             lp.setMargins(8, 4, 8, 4)
 
-            var raws = carrierLanguages.size / 2
-            if (carrierLanguages.size % 2 == 0) --raws
+            var raws = item.carrier.languages.size / 2
+            if(item.carrier.languages.size % 2 == 0) --raws
 
             for(i in 0..raws) {
                 val layout = LinearLayout(context)
                 layout.orientation = LinearLayout.HORIZONTAL
                 layout.gravity = Gravity.CENTER
                 for(j in 0..1) {
-                    if(i * 2 + j == carrierLanguages.size) break
+                    if(i * 2 + j == item.carrier.languages.size) break
                     val ivLanguage = ImageView(context)
-                    ivLanguage.setImageResource(Utils.getLanguageImage(carrierLanguages[i * 2 + j].language))
+                    ivLanguage.setImageResource(Utils.getLanguageImage(item.carrier.languages[i * 2 + j].delegate.language))
                     ivLanguage.layoutParams = lp
                     layout.addView(ivLanguage)
                 }
                 layoutLanguages.addView(layout)
             }
 
-            setOnClickListener { listener(item, false) }
+            setOnClickListener           { listener(item, false) }
             btnSelect.setOnClickListener { listener(item, false) }
-            column1.setOnClickListener { listener(item, true) }
+            column1.setOnClickListener   { listener(item, true) }
         }
 
-        fun setTexts(layout: View, textViewPax: TextView, textViewBaggage: TextView, item: OfferModel, context: Context){
-            /*val drawableCompat = ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)
-            drawableCompat!!.setColorFilter(ContextCompat.getColor(context, Utils.getColorVehicle(item.vehicleColor)), PorterDuff.Mode.SRC_IN)
-            drawableCompat.setBounds(4, 0, drawableCompat.intrinsicWidth + 4, drawableCompat.intrinsicHeight)
-            val ssBuilder = SpannableStringBuilder(item.transportName + " ")
-            val colorCarImageSpan = ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE)
-            ssBuilder.setSpan(colorCarImageSpan, ssBuilder.length - 1, ssBuilder.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)*/
-            layout.tvVehicleName.text = if(item.vehicleColor == null) item.transportName
-                                        else Utils.getVehicleNameWithColor(context, item.transportName, item.vehicleColor)
+        fun setTexts(layout: View, textViewPax: TextView, textViewBaggage: TextView, item: OfferModel) {
+            layout.tvVehicleName.text = Utils.getVehicleNameWithColor(layout.context, item.vehicle.vehicleBase.name, item.vehicle.color)
+            if(item.wifi) layout.imgOptionFreeWiFi.visibility = View.VISIBLE else layout.imgOptionFreeWiFi.visibility = View.GONE
+            if(item.refreshments) layout.imgOptionFreeWater.visibility = View.VISIBLE else layout.imgOptionFreeWater.visibility = View.GONE
 
-            if(item.wifi) layout.imgOptionFreeWiFi.visibility = View.VISIBLE
-            if(item.refreshments) layout.imgOptionFreeWater.visibility = View.VISIBLE
-
-            textViewPax.text = context.getString(R.string.count_persons_and_baggage, item.paxMax)
-            textViewBaggage.text = context.getString(R.string.count_persons_and_baggage, item.baggageMax)
+            textViewPax.text = Utils.formatPersons(layout.context, item.vehicle.transportType.paxMax)
+            textViewBaggage.text = Utils.formatLuggage(layout.context, item.vehicle.transportType.luggageMax)
         }
     }
 }
