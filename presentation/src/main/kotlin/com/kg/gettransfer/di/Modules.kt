@@ -82,9 +82,10 @@ val dataModule = module {
 	single { OfferInteractor(get()) }
 	
 	single { PaymentMapper() }
+	single { PaymentRequestMapper() }
 	single { PaymentRemoteDataStore(get()) }
 	single { PaymentDataStoreFactory(get()) }
-	single { PaymentRepositoryImpl(get(), get()) as PaymentRepository }
+	single { PaymentRepositoryImpl(get(), get(), get()) as PaymentRepository }
 	single { PaymentInteractor(get()) }
 	
 	single { PaypalCredentialsMapper() }

@@ -6,6 +6,7 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.data.CarrierTripRemote
 import com.kg.gettransfer.data.OfferRemote
+import com.kg.gettransfer.data.PaymentRemote
 import com.kg.gettransfer.data.RouteRemote
 import com.kg.gettransfer.data.SystemRemote
 import com.kg.gettransfer.data.TransferRemote
@@ -13,6 +14,7 @@ import com.kg.gettransfer.data.TransferRemote
 import com.kg.gettransfer.remote.ApiCore
 import com.kg.gettransfer.remote.CarrierTripRemoteImpl
 import com.kg.gettransfer.remote.OfferRemoteImpl
+import com.kg.gettransfer.remote.PaymentRemoteImpl
 import com.kg.gettransfer.remote.RouteRemoteImpl
 import com.kg.gettransfer.remote.SystemRemoteImpl
 import com.kg.gettransfer.remote.TransferRemoteImpl
@@ -56,4 +58,8 @@ val remoteModule = module {
     single { PriceMapper(get()) }
     single { OfferMapper(get(), get(), get(), get(), get()) }
     single { OfferRemoteImpl(get(), get()) as OfferRemote }
+    
+    single { PaymentMapper() }
+    single { PaymentRequestMapper() }
+    single { PaymentRemoteImpl(get(), get(), get()) as PaymentRemote }
 }

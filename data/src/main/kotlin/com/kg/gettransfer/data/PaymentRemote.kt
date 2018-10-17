@@ -1,7 +1,8 @@
 package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.model.PaymentEntity
+import com.kg.gettransfer.data.model.PaymentRequestEntity
 
 interface PaymentRemote {
-    suspend fun createPayment(transferId: Long, offerId: Long?, gatewayId: String, percentage: Int): PaymentEntity
+    suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity
 }

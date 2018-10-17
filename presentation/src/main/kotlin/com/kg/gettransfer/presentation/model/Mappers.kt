@@ -153,4 +153,7 @@ object Mappers {
                          carrierTrip.nameSign,
                          carrierTrip.flightNumber,
                          carrierTrip.remainToPay)
+        
+    fun getPaymentRequest(model: PaymentRequestModel) = 
+        PaymentRequest(model.transferId, model.offerId, model.gatewayId, model.percentage)
 }

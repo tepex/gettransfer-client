@@ -15,6 +15,8 @@ import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.model.Mappers
+import com.kg.gettransfer.presentation.model.PaymentRequestModel
+
 import com.kg.gettransfer.presentation.view.PaymentSettingsView
 
 import ru.terrakok.cicerone.Router
@@ -32,17 +34,8 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
 
-    companion object {
-        const val FULL_PRICE = 100
-        const val PRICE_30   = 30
-        
-        const val PLATRON = "platron"
-        const val PAYPAL  = "paypal"
-    }
+    private val paymentRequest = PaymentRequestModel(offerInteractor.transferId!!, offerInteractor.selectedOfferId!!)
 
-    private var price   = FULL_PRICE
-    private var payment = PLATRON
-    
     private var offer: Offer? = null
     
     override fun onFirstViewAttach() {
@@ -64,10 +57,7 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
     fun getPayment() {
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
-            val payment = paymentInteractor.getPayment(offerInteractor.transferId!!,
-                                                       offerInteractor.selectedOfferId!!,
-                                                       payment,
-                                                       price)
+            val payment = paymentInteractor.getPayment(Mappers.getPaymentRequest(paymentRequest))
             router.navigateTo(Screens.PAYMENT, payment.url)
         }, {
             e -> Timber.e(e)
@@ -75,6 +65,6 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
         }, { viewState.blockInterface(false) })
     }
 
-    fun changePrice(price: Int)        { this.price = price }
-    fun changePayment(payment: String) { this.payment = payment }
+    fun changePrice(price: Int)        { paymentRequest.percentage = price }
+    fun changePayment(payment: String) { paymentRequest.gatewayId  = payment }
 }
