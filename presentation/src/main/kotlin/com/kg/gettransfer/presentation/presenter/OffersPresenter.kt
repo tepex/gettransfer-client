@@ -8,7 +8,6 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
-import com.kg.gettransfer.domain.repository.Preferences
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
@@ -22,6 +21,8 @@ import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import io.socket.engineio.client.Transport
 
+import org.json.JSONObject
+
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
@@ -32,7 +33,7 @@ class OffersPresenter(cc: CoroutineContexts,
                       systemInteractor: SystemInteractor,
                       private val transferInteractor: TransferInteractor,
                       private val offerInteractor: OfferInteractor,
-                      private val preference: Preferences): BaseLoadingPresenter<OffersView>(cc, router, systemInteractor) {
+                      private val preference: PreferencesImpl): BaseLoadingPresenter<OffersView>(cc, router, systemInteractor) {
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
@@ -67,6 +68,12 @@ class OffersPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: OffersView) {
         super.attachView(view)
+        utils.launchAsyncTryCatch({
+            val options = IO.Options()
+            options.path = "/api/socket"
+            options.forceNew = true
+            offersSocket = IO.socket("https://stgtr.org", options)
+        }, { e -> Timber.e(e) })
         utils.launchAsyncTryCatchFinally({
             viewState.showLoading()
             viewState.blockInterface(true)
@@ -88,15 +95,18 @@ class OffersPresenter(cc: CoroutineContexts,
         }, {
             viewState.blockInterface(false)
             viewState.hideLoading()
-//            setUpSocket()
+            setUpSocket()
         })
     }
 
     fun setUpSocket() {
-        offersSocket = IO.socket("https://stgtr.org/api/socket")
-        offersSocket!!.on(Manager.EVENT_TRANSPORT, headers)
-        offersSocket!!.on("new offer", onNewOffer)
-        offersSocket!!.connect()
+        if (offersSocket != null) {
+            offersSocket?.connect()
+            if (offersSocket?.connected()!!) {
+                offersSocket?.on(Manager.EVENT_TRANSPORT, headers)
+                offersSocket?.on("newOffer/" + transferInteractor.selectedId, onNewOffer)
+            }
+        }
     }
 
     fun setUpSocket() {
@@ -109,8 +119,7 @@ class OffersPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
-        offersSocket!!.off("new offer", onNewOffer )
-        offersSocket!!.off(Manager.EVENT_TRANSPORT, headers)
+        offersSocket!!.off("newOffer/" + transferInteractor.selectedId, onNewOffer )
         offersSocket!!.disconnect()
         super.onDestroy()
     }
@@ -178,30 +187,20 @@ class OffersPresenter(cc: CoroutineContexts,
         logFilterEvent(sortType)
     }
 
-    private val onNewOffer = object: Emitter.Listener {
-        override fun call(vararg args: Any?) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-    }
-
     private fun logFilterEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value)) }
     private fun logButtonEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value)) }
 
-    private val onNewOffer = object : Emitter.Listener {
-        override fun call(vararg args: Any?) {
-            val offer = args[0] as JSONObject
-        }
+    private val onNewOffer = Emitter.Listener { args ->
+        val offer = args[0] as JSONObject
+        Timber.d("NEW OFFER")
     }
 
-    private val headers = object: Emitter.Listener {
-        override fun call(vararg args: Any?) {
-            val transport = args[0] as Transport
-            transport.on(Transport.EVENT_REQUEST_HEADERS, object : Emitter.Listener {
-                override fun call(vararg args: Any?) {
-                    var headers = args[0] as MutableMap<String, List<String>>
-                    headers.put("Cookie", "rack.session=" + preference.accessToken)
-                }
-            })
+    private val headers = Emitter.Listener { args ->
+        val transport = args[0] as Transport
+        transport.on(Transport.EVENT_REQUEST_HEADERS) { args ->
+            Timber.d("SET HEADERS")
+            var headers = args[0] as MutableMap<String, List<String>>
+            headers.put("Cookie", Arrays.asList("rack.session=" + systemInteractor.accessToken))
         }
     }
 }

@@ -19,7 +19,11 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+<<<<<<< HEAD
 
+=======
+import com.kg.gettransfer.prefs.PreferencesImpl
+>>>>>>> add new set up for socket
 import com.kg.gettransfer.presentation.adapter.OffersRVAdapter
 import com.kg.gettransfer.presentation.adapter.VehiclePhotosVPAdapter
 
@@ -40,6 +44,10 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
     @InjectPresenter
     internal lateinit var presenter: OffersPresenter
 
+<<<<<<< HEAD
+=======
+    private val preference: PreferencesImpl by inject()
+>>>>>>> add new set up for socket
     private val offerInteractor: OfferInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
 
