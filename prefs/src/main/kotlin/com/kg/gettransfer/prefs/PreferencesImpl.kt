@@ -56,7 +56,7 @@ class PreferencesImpl(context: Context) : PreferencesCache, SystemCache {
             editor.putString(PreferencesCache.LAST_MODE, value)
             editor.apply()
         }
-    
+
        
     override var account: AccountEntity 
         get() {

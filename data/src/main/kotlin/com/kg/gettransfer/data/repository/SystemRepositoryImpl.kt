@@ -60,8 +60,11 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
 
         val result = ArrayList<GTAddress>()
         val entities = preferencesCache.lastAddresses
-        for(i in 0 until entities!!.size)
-            result.add(addressMapper.fromEntity(entities[i]))
+        if(entities != null){
+            for(i in 0 until entities.size)
+                result.add(addressMapper.fromEntity(entities[i]))
+        }
+
         return result
     }
     override fun setHistory(history: List<GTAddress>) {

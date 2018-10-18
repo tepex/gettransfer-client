@@ -67,7 +67,9 @@ class SearchPresenter(cc: CoroutineContexts,
                 utils.launchAsyncTryCatchFinally({
                     viewState.blockInterface(true)
                     utils.asyncAwait { routeInteractor.updateDestinationPoint() }
-                    systemInteractor.setAddressHistory(List(2){routeInteractor.to!!;routeInteractor.from!!})
+                    utils.asyncAwait { routeInteractor.updateStartPoint() }
+                    systemInteractor.setAddressHistory(arrayListOf(routeInteractor.from!!,routeInteractor.to!!))
+
                     router.navigateTo(Screens.CREATE_ORDER)
                 }, { e ->
                     viewState.setError(e)

@@ -10,6 +10,10 @@ class JsonParser {
 
     fun writeToJson(obj: List<Any>): String = gson.toJson(obj)
 
-    fun getFromJson(data: String): List<GTAddressEntity>? = gson.fromJson(data, object : TypeToken<List<GTAddressEntity>>(){}.type)
+    fun getFromJson(data: String?): List<GTAddressEntity>? {
+        if(data != null)
+            return gson.fromJson(data, object : TypeToken<List<GTAddressEntity>>(){}.type)
+        return null
+    }
 
 }

@@ -7,9 +7,18 @@ import com.kg.gettransfer.domain.model.Point
 
 class AddressMapper(): Mapper<GTAddressEntity, GTAddress> {
     override fun fromEntity(type: GTAddressEntity): GTAddress =
-            GTAddress(CityPoint(type.address, Point(type.lat, type.lon), null ), null, null, null, null)
+            GTAddress(CityPoint(type.address,
+                    Point(type.lat, type.lon),
+                    null ),
+                    null,
+                    type.address,
+                    type.primary,
+                    type.secondary)
 
     override fun toEntity(type: GTAddress): GTAddressEntity =
-            GTAddressEntity(type.cityPoint.point!!.latitude, type.cityPoint.point!!.longitude, type.address!!)
+            GTAddressEntity(type.cityPoint.point!!.latitude, type.cityPoint.point!!.longitude,
+                    type.address!!,
+                    type.primary,
+                    type.secondary)
 
 }
