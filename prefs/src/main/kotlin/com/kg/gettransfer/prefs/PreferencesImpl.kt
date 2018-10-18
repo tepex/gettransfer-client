@@ -53,15 +53,19 @@ class PreferencesImpl(context: Context): PreferencesCache, SystemCache {
 
        
     override var account: AccountEntity 
-        get() = AccountEntity(UserEntity(ProfileEntity(accountPrefs.getString(ACCOUNT_FULL_NAME, null),
-                                                       accountPrefs.getString(ACCOUNT_EMAIL, null),
-                                                       accountPrefs.getString(ACCOUNT_PHONE, null)),
-                                         accountPrefs.getBoolean(ACCOUNT_TERMS_ACCEPTED, false)),
-                              accountPrefs.getString(ACCOUNT_LOCALE, null),
-                              accountPrefs.getString(ACCOUNT_CURRENCY, null),
-                              accountPrefs.getString(ACCOUNT_DISTANCE_UNIT, null),
-                              accountPrefs.getStringSet(ACCOUNT_GROUPS, null)?.toTypedArray(),
-                              accountPrefs.getLong(ACCOUNT_CARRIER_ID, -1))
+        get() {
+            val email = accountPrefs.getString(ACCOUNT_EMAIL, null)
+            if(email == null) return AccountEntity.NO_ACCOUNT
+            else return AccountEntity(UserEntity(ProfileEntity(accountPrefs.getString(ACCOUNT_FULL_NAME, null),
+                                                               email,
+                                                               accountPrefs.getString(ACCOUNT_PHONE, null)),
+                                                               accountPrefs.getBoolean(ACCOUNT_TERMS_ACCEPTED, false)),
+                                      accountPrefs.getString(ACCOUNT_LOCALE, null),
+                                      accountPrefs.getString(ACCOUNT_CURRENCY, null),
+                                      accountPrefs.getString(ACCOUNT_DISTANCE_UNIT, null),
+                                      accountPrefs.getStringSet(ACCOUNT_GROUPS, null)?.toTypedArray(),
+                                      accountPrefs.getLong(ACCOUNT_CARRIER_ID, -1))
+        }
         set(value) {
             val editor = accountPrefs.edit()
             editor.putString(ACCOUNT_EMAIL, value.user.profile.email)
@@ -78,7 +82,7 @@ class PreferencesImpl(context: Context): PreferencesCache, SystemCache {
         }
 
     override var endpoint: String
-        get() = configsPrefs.getString(PreferencesCache.ENDPOINT, "")!!
+        get() = configsPrefs.getString(PreferencesCache.ENDPOINT, "Demo")!!
         set(value) {
             val editor = configsPrefs.edit()
             editor.putString(PreferencesCache.ENDPOINT, value)
