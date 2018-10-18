@@ -246,8 +246,8 @@ internal class Utils {
             val colorRes = R.color::class.members.find( { it.name == "color_vehicle_$color" } )
             val colorId = (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
             
-            val drawableCompat = ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)
-            drawableCompat!!.setColorFilter(ContextCompat.getColor(context, colorId), PorterDuff.Mode.SRC_IN)
+            val drawableCompat = ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)!!.constantState!!.newDrawable().mutate()
+            drawableCompat.setColorFilter(ContextCompat.getColor(context, colorId), PorterDuff.Mode.SRC_IN)
             drawableCompat.setBounds(4, 0, drawableCompat.intrinsicWidth + 4, drawableCompat.intrinsicHeight)
             val ssBuilder = SpannableStringBuilder("$name ")
             val colorCarImageSpan = ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE)
