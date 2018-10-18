@@ -1,39 +1,45 @@
 package com.kg.gettransfer.prefs
 
 import android.content.Context
+import com.kg.gettransfer.JsonParser
 
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.SystemCache
 
 import com.kg.gettransfer.data.model.AccountEntity
+import com.kg.gettransfer.data.model.GTAddressEntity
 import com.kg.gettransfer.data.model.ProfileEntity
 import com.kg.gettransfer.data.model.UserEntity
 
-class PreferencesImpl(context: Context): PreferencesCache, SystemCache {
-    companion object {
-        const val ACCOUNT                = "account"
-        const val CONFIGS                = "configs"
-        const val TOKEN                  = "token"
+class PreferencesImpl(context: Context) : PreferencesCache, SystemCache {
 
-        const val ACCOUNT_EMAIL          = "email"
-        const val ACCOUNT_PASSWORD       = "password"
-        const val ACCOUNT_PHONE          = "phone"
-        const val ACCOUNT_LOCALE         = "locale"
-        const val ACCOUNT_CURRENCY       = "currency"
-        const val ACCOUNT_DISTANCE_UNIT  = "distance_unit"
-        const val ACCOUNT_FULL_NAME      = "full_name"
-        const val ACCOUNT_GROUPS         = "groups"
-        const val ACCOUNT_CARRIER_ID     = "carrier_id"
+
+    companion object {
+        const val ACCOUNT = "account"
+        const val CONFIGS = "configs"
+        const val TOKEN = "token"
+
+        const val ACCOUNT_EMAIL = "email"
+        const val ACCOUNT_PASSWORD = "password"
+        const val ACCOUNT_PHONE = "phone"
+        const val ACCOUNT_LOCALE = "locale"
+        const val ACCOUNT_CURRENCY = "currency"
+        const val ACCOUNT_DISTANCE_UNIT = "distance_unit"
+        const val ACCOUNT_FULL_NAME = "full_name"
+        const val ACCOUNT_GROUPS = "groups"
+        const val ACCOUNT_CARRIER_ID = "carrier_id"
         const val ACCOUNT_TERMS_ACCEPTED = "terms_accepted"
+
+        const val ACCOUNT_ADDRESS_HISTORY = "history"
     }
 
     private val configsPrefs = context.getSharedPreferences(CONFIGS, Context.MODE_PRIVATE)
     private val accountPrefs = context.getSharedPreferences(ACCOUNT, Context.MODE_PRIVATE)
     private var _accessToken = SystemCache.INVALID_TOKEN
-    
+
     override var accessToken: String
         get() {
-            if(_accessToken == SystemCache.INVALID_TOKEN) _accessToken = configsPrefs.getString(TOKEN, SystemCache.INVALID_TOKEN)!!
+            if (_accessToken == SystemCache.INVALID_TOKEN) _accessToken = configsPrefs.getString(TOKEN, SystemCache.INVALID_TOKEN)!!
             return _accessToken
         }
         set(value) {
@@ -42,7 +48,7 @@ class PreferencesImpl(context: Context): PreferencesCache, SystemCache {
             editor.putString(TOKEN, value)
             editor.apply()
         }
-        
+
     override var lastMode: String
         get() = configsPrefs.getString(PreferencesCache.LAST_MODE, "")!!
         set(value) {
@@ -50,7 +56,7 @@ class PreferencesImpl(context: Context): PreferencesCache, SystemCache {
             editor.putString(PreferencesCache.LAST_MODE, value)
             editor.apply()
         }
-
+    
        
     override var account: AccountEntity 
         get() {
@@ -66,6 +72,7 @@ class PreferencesImpl(context: Context): PreferencesCache, SystemCache {
                                       accountPrefs.getStringSet(ACCOUNT_GROUPS, null)?.toTypedArray(),
                                       accountPrefs.getLong(ACCOUNT_CARRIER_ID, -1))
         }
+
         set(value) {
             val editor = accountPrefs.edit()
             editor.putString(ACCOUNT_EMAIL, value.user.profile.email)
@@ -76,7 +83,7 @@ class PreferencesImpl(context: Context): PreferencesCache, SystemCache {
             editor.putString(ACCOUNT_FULL_NAME, value.user.profile.name)
             editor.putStringSet(ACCOUNT_GROUPS, value.groups?.toSet())
             editor.putBoolean(ACCOUNT_TERMS_ACCEPTED, value.user.termsAccepted)
-            if(value.carrierId == null) editor.remove(ACCOUNT_CARRIER_ID)
+            if (value.carrierId == null) editor.remove(ACCOUNT_CARRIER_ID)
             else editor.putLong(ACCOUNT_CARRIER_ID, value.carrierId!!)
             editor.apply()
         }
@@ -88,7 +95,7 @@ class PreferencesImpl(context: Context): PreferencesCache, SystemCache {
             editor.putString(PreferencesCache.ENDPOINT, value)
             editor.apply()
         }
-        
+
     override fun clearAccount() {
         val editor = accountPrefs.edit()
         editor.remove(ACCOUNT_EMAIL)
@@ -102,4 +109,12 @@ class PreferencesImpl(context: Context): PreferencesCache, SystemCache {
         editor.remove(ACCOUNT_CARRIER_ID)
         editor.apply()
     }
+
+    override var lastAddresses: List<GTAddressEntity>?
+        get() = JsonParser().getFromJson(accountPrefs.getString(ACCOUNT_ADDRESS_HISTORY, null))
+        set(value) {
+            accountPrefs.edit()
+                    .putString(ACCOUNT_ADDRESS_HISTORY, JsonParser().writeToJson(value!!))
+                    .apply()
+        }
 }

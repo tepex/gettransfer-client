@@ -1,13 +1,11 @@
 package com.kg.gettransfer.data.repository
 
-import com.kg.gettransfer.data.JsonParser
 import com.kg.gettransfer.data.PreferencesCache
 
 import com.kg.gettransfer.data.ds.SystemDataStoreFactory
+import com.kg.gettransfer.data.mapper.*
 
-import com.kg.gettransfer.data.mapper.AccountMapper
-import com.kg.gettransfer.data.mapper.ConfigsMapper
-import com.kg.gettransfer.data.mapper.EndpointMapper
+import com.kg.gettransfer.data.model.GTAddressEntity
 import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.SystemRepository
@@ -17,6 +15,7 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
                            private val configsMapper: ConfigsMapper,
                            private val accountMapper: AccountMapper,
                            private val endpointMapper: EndpointMapper,
+                           private val addressMapper: AddressMapper,
                            private val _endpoints: List<Endpoint>): SystemRepository {
 
     override val accessToken = preferencesCache.accessToken
@@ -43,7 +42,7 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
         val accountEntity = factory.retrieveRemoteDataStore().getAccount()
         factory.retrieveCacheDataStore().setAccount(accountEntity)
     }
-    
+
     override suspend fun getAccount() = accountMapper.fromEntity(factory.retrieveCacheDataStore().getAccount())
 
     override suspend fun putAccount(account: Account) {
@@ -58,28 +57,18 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
         return accountMapper.fromEntity(accountEntity)
     }
     override fun getHistory(): List<GTAddress> {
-        val parser = JsonParser()
-        val entityList = parser.getFromJson(preferences.lastAddresses)
-        val result = ArrayList<GTAddress>()
-        if(entityList != null && entityList.isNotEmpty()) {
-            for (i in 0 until entityList.size){
-                result.add(GTAddress(CityPoint(null, Point(entityList[i].lat, entityList[i].lat), null),null, entityList[i].address, null, null))
-            }
-        }
 
+        val result = ArrayList<GTAddress>()
+        val entities = preferencesCache.lastAddresses
+        for(i in 0 until entities!!.size)
+            result.add(addressMapper.fromEntity(entities[i]))
         return result
     }
     override fun setHistory(history: List<GTAddress>) {
         val result = ArrayList<GTAddressEntity>()
-        for (i in 0 until history.size){
-            result.add(GTAddressEntity(history.get(i).cityPoint.point!!.latitude,history.get(i).cityPoint.point!!.latitude, history.get(i).address!!))
-        }
-        preferences.lastAddresses = JsonParser().writeToJson(result)
- //       Log.i("FindPredAdd", preferences.lastAddresses)
-
+        for (i in 0 until history.size) result.add(addressMapper.toEntity(history[i]))
+        preferencesCache.lastAddresses = result
     }
 
-
     override fun logout() = factory.retrieveCacheDataStore().clearAccount()
-
 }

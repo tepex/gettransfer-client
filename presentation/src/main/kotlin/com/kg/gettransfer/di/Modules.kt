@@ -66,6 +66,7 @@ val loggingModule = module {
 }
 
 val dataModule = module {
+	single { AddressMapper() }
     single { ProfileMapper() }
     single { LocaleMapper() }
     single { RatingsMapper() }
@@ -103,7 +104,7 @@ val dataModule = module {
 	    val endpoints = arrayListOf(
 	        Endpoint("Demo", context.resources.getString(R.string.api_key_demo), context.resources.getString(R.string.api_url_demo), true),
 	        Endpoint("Prod", context.resources.getString(R.string.api_key_prod), context.resources.getString(R.string.api_url_prod)))
-	    SystemRepositoryImpl(get(), get(), get(), get(), get(), endpoints) as SystemRepository
+	    SystemRepositoryImpl(get(), get(), get(), get(), get(), get(), endpoints) as SystemRepository
 	}
 	single { SystemInteractor(get(), get(), get()) }
 	

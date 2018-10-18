@@ -20,6 +20,7 @@ buildscript {
 		junit_version         = "4.12"
 		hamcrest_version      = "2.0.0.0"
 		mockito_version       = "2.22.0"
+		gson_version          =  "2.8.2"
 		
 		libs = [
 			kotlin          : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
@@ -35,7 +36,8 @@ buildscript {
 			jsr250          : ("javax.annotation:jsr250-api:$jsr250_version"),
 			junit           : ("junit:junit:$junit_version"),
 			hamcrest        : ("org.hamcrest:java-hamcrest:$hamcrest_version"),
-			mockito         : ("org.mockito:mockito-core:$mockito_version")
+			mockito         : ("org.mockito:mockito-core:$mockito_version"),
+			gson            : ("com.google.code.gson:gson:$gson_version")
 		]
 	}
     

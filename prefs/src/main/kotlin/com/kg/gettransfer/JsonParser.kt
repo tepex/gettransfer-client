@@ -1,4 +1,5 @@
-package com.kg.gettransfer.data
+package com.kg.gettransfer
+
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
