@@ -77,8 +77,6 @@ interface Api {
 	@POST(API_CREATE_NEW_PAYMENT)
 	fun createNewPayment(@Body createPayment: PaymentRequestModel): Deferred<ResponseModel<PaymentModel>>
 
-	/*
 	@GET("$API_CREATE_NEW_PAYMENT/{status}")
-	fun changePaymentStatus(@Path("status") status: String, @Body payment: ApiPayment)
-	*/
+	fun changePaymentStatus(@Path("status") status: String, @Body payment: PaymentStatusRequestModel): Deferred<ResponseModel<PaymentStatusWrapperModel>>
 }

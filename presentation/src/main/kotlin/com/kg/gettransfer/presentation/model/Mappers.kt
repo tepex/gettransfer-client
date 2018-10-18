@@ -179,5 +179,8 @@ object Mappers {
     fun getPaymentRequest(model: PaymentRequestModel) =
         PaymentRequest(model.transferId, model.offerId, model.gatewayId, model.percentage)
 
+    fun getPaymentStatusRequest(model: PaymentStatusRequestModel) =
+        PaymentStatusRequest(model.paymentId, model.pgOrderId, model.withoutRedirect, model.success)
+        
     private fun checkDistance(from: Point, to: Point) = (point2Location(from).distanceTo(point2Location(to)) / 1000).toInt()
 }

@@ -1,26 +1,37 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.annotation.TargetApi
+
 import android.content.Context
 import android.content.Intent
+
 import android.net.Uri
+
 import android.os.Build
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
 import android.support.annotation.RequiresApi
+
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+
 import android.widget.Toast
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.PaymentPresenter
 import com.kg.gettransfer.presentation.view.PaymentView
+
 import kotlinx.android.synthetic.main.activity_payment.*
+
 import org.koin.android.ext.android.inject
+
 import timber.log.Timber
 
 fun Context.getPaymentActivityLaunchIntent(paymentUrl: String): Intent {
@@ -30,7 +41,6 @@ fun Context.getPaymentActivityLaunchIntent(paymentUrl: String): Intent {
 }
 
 class PaymentActivity: BaseActivity(), PaymentView {
-
     companion object{
         private const val PAYMENT_RESULT_SUCCESSFUL = "/api/payments/successful"
         private const val PAYMENT_RESULT_FAILED = "/api/payments/failed"
@@ -96,18 +106,13 @@ class PaymentActivity: BaseActivity(), PaymentView {
 
     private fun handleUri(uri: Uri?) {
         val path = uri?.path
-        if (path.equals(PAYMENT_RESULT_SUCCESSFUL)) {
-            changePaymentStatus(uri, SUCCESSFUL)
-        } else {
-            if (path.equals(PAYMENT_RESULT_FAILED)) {
-                changePaymentStatus(uri, FAILED)
-            }
-        }
+        if(path.equals(PAYMENT_RESULT_SUCCESSFUL)) changePaymentStatus(uri, true)
+        else if(path.equals(PAYMENT_RESULT_FAILED)) changePaymentStatus(uri, false)
     }
 
-    private fun changePaymentStatus(uri: Uri?, status: String) {
+    private fun changePaymentStatus(uri: Uri?, success: Boolean) {
         val orderId = uri?.getQueryParameter(PG_ORDER_ID)!!.toLong()
-        presenter.changePaymentStatus(orderId, status)
+        presenter.changePaymentStatus(orderId, success)
     }
 
     override fun setError(e: Throwable) {

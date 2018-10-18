@@ -1,6 +1,9 @@
-package com.kg.gettransfer.data.model
+package com.kg.gettransfer.remote.model
 
+import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class PaymentPureEntity(@SerializedName("id") val id: Long,
-                             @SerializedName("status") val status: String)
+class PaymentStatusWrapperModel(@SerializedName("payment") @Expose val payment: PaymentStatusModel)
+
+class PaymentStatusModel(@SerializedName("id") @Expose val id: Long,
+                         @SerializedName("status") @Expose val status: String)
