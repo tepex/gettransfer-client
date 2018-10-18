@@ -8,11 +8,7 @@ import com.kg.gettransfer.domain.model.PaymentRequest
  * Map a [PaymentRequestEntity] to and from a [PaymentRequest] instance when data is moving between this later and the Domain layer.
  */
 open class PaymentRequestMapper(): Mapper<PaymentRequestEntity, PaymentRequest> {
-    /**
-     * Map a [PaymentRequestEntity] instance to a [PaymentRequest] instance.
-     */
-    override fun fromEntity(type: PaymentRequestEntity) =
-        PaymentRequest(type.transferId, type.offerId, type.gatewayId, type.percentage)
+    override fun fromEntity(type: PaymentRequestEntity): PaymentRequest { throw UnsupportedOperationException() }
     /**
      * Map a [PaymentRequest] instance to a [PaymentRequestEntity] instance.
      */
