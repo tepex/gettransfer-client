@@ -1,22 +1,27 @@
 {
   "project_info": {
-    "project_number": "215265777280",
-    "firebase_url": "https://get-transfer-mobile.firebaseio.com",
-    "project_id": "get-transfer-mobile",
-    "storage_bucket": "get-transfer-mobile.appspot.com"
+    "project_number": "200820403845",
+    "firebase_url": "https://totemic-splicer-142808.firebaseio.com",
+    "project_id": "totemic-splicer-142808",
+    "storage_bucket": "totemic-splicer-142808.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:215265777280:android:6102b6945a841ae4",
+        "mobilesdk_app_id": "1:200820403845:android:6102b6945a841ae4",
         "android_client_info": {
           "package_name": "com.kg.gettransfer"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "200820403845-fsrd0gvurovbc496h9ftaj8unt6qj36i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDJr7vDNzW1tZqZYCwDa8wybpp3Fz1QNeo"
+          "current_key": "AIzaSyC7bTslXGNtk8jZJd2r11trkPopsfdqfMk"
         }
       ],
       "services": {
