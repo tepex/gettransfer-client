@@ -32,8 +32,7 @@ class OffersPresenter(cc: CoroutineContexts,
                       router: Router,
                       systemInteractor: SystemInteractor,
                       private val transferInteractor: TransferInteractor,
-                      private val offerInteractor: OfferInteractor,
-                      private val preference: PreferencesImpl): BaseLoadingPresenter<OffersView>(cc, router, systemInteractor) {
+                      private val offerInteractor: OfferInteractor): BaseLoadingPresenter<OffersView>(cc, router, systemInteractor) {
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
@@ -107,13 +106,6 @@ class OffersPresenter(cc: CoroutineContexts,
                 offersSocket?.on("newOffer/" + transferInteractor.selectedId, onNewOffer)
             }
         }
-    }
-
-    fun setUpSocket() {
-        offersSocket = IO.socket("/api/socket")
-        offersSocket!!.on(Manager.EVENT_TRANSPORT, headers)
-        offersSocket!!.on("new offer", onNewOffer)
-        offersSocket!!.connect()
     }
 
     @CallSuper
@@ -200,7 +192,7 @@ class OffersPresenter(cc: CoroutineContexts,
         transport.on(Transport.EVENT_REQUEST_HEADERS) { args ->
             Timber.d("SET HEADERS")
             var headers = args[0] as MutableMap<String, List<String>>
-            headers.put("Cookie", Arrays.asList("rack.session=" + systemInteractor.accessToken))
+            headers.put("Cookie", listOf("rack.session=${systemInteractor.accessToken}"))
         }
     }
 }
