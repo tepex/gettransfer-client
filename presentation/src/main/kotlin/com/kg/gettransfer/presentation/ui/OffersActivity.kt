@@ -159,9 +159,9 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
             layoutCarrierLanguages.addView(ivLanguage)
         }
 
-        offer.ratings?.driver?.let  { ratingBarDriver.rating = it }
-        offer.ratings?.fair?.let    { ratingBarPunctuality.rating = it }
-        offer.ratings?.vehicle?.let { ratingBarVehicle.rating = it }
+        offer.carrier.ratings.driver?.let  { ratingBarDriver.rating = it }
+        offer.carrier.ratings.fair?.let    { ratingBarPunctuality.rating = it }
+        offer.carrier.ratings.vehicle?.let { ratingBarVehicle.rating = it }
 
         vehicleName.text = Utils.getVehicleNameWithColor(this, offer.vehicle.vehicleBase.name, offer.vehicle.color)
         vehicleType.text = getString(offer.vehicle.transportType.nameId!!)

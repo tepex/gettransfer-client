@@ -25,6 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ApiCore(private val preferences: PreferencesCache) {
 
     internal lateinit var api: Api
+    lateinit var apiUrl: String
 
     private lateinit var apiKey: String
     private var okHttpClient: OkHttpClient
@@ -50,6 +51,7 @@ class ApiCore(private val preferences: PreferencesCache) {
     
     fun changeEndpoint(endpoint: EndpointModel) {
         apiKey = endpoint.key
+        apiUrl = endpoint.url
         api = Retrofit.Builder()
                 .baseUrl(endpoint.url)
                 .client(okHttpClient)

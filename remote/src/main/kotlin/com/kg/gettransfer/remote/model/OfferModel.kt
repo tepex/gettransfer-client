@@ -43,4 +43,4 @@ class VehicleModel(name: String, regNumber: String,
                    @SerializedName("transport_type_id") @Expose val transportTypeId: String,
                    @SerializedName("pax_max") @Expose val paxMax: Int,
                    @SerializedName("luggage_max") @Expose val luggageMax: Int,
-                   @SerializedName("photos") @Expose val photos: List<String>): VehicleBaseModel(name, regNumber)
+                   @SerializedName("photos") @Expose var photos: List<String>): VehicleBaseModel(name, regNumber)
