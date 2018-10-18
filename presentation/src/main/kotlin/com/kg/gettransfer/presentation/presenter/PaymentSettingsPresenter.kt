@@ -45,7 +45,7 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: PaymentSettingsView?) {
         super.attachView(view)
-        if(offer != null) viewState.setOffer(Mappers.getOfferModel(offer!!))
+        if(offer != null) viewState.setOffer(Mappers.getOfferModel(offer!!, systemInteractor.locale))
     }
 
     @CallSuper

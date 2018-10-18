@@ -20,7 +20,7 @@ open class CarrierMapper(private val profileMapper: ProfileMapper,
                 type.completedTransfers,
                 type.languages.map { localeMapper.fromEntity(it) },
                 ratingsMapper.fromEntity(type.ratings),
-                type.canUpdateOffers)
+                type.canUpdateOffers ?: false)
     /**
      * Map a [Carrier] instance to a [CarrierEntity] instance.
      */

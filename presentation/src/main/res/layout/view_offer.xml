@@ -14,7 +14,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/column1"
         android:layout_width="@dimen/view_offer_column1_width"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -88,12 +88,14 @@
                 </LinearLayout>
                 
                 <ImageView
+                    android:id="@+id/ivManyPhotos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_gallery_small_white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:visibility="gone"/>
 
             </android.support.constraint.ConstraintLayout>
 
@@ -122,15 +124,14 @@
                         app:srb_numStars="5"
                         app:srb_minimumStars="0"
                         app:srb_rating="2"
-                        app:srb_starWidth="12dp"
-                        app:srb_starHeight="12dp"
-                        app:srb_starPadding="2dp"
+                        app:srb_starHeight="@dimen/rating_bar_stars_height_width"
+                        app:srb_starPadding="@dimen/rating_bar_stars_padding"
+                        app:srb_starWidth="@dimen/rating_bar_stars_height_width"
                         app:srb_stepSize="0.1"
                         app:srb_isIndicator="true"
                         app:srb_clickable="false"
                         app:srb_drawableEmpty="@drawable/ic_star_empty"
-                        app:srb_drawableFilled="@drawable/ic_star_filled">
-                    </com.willy.ratingbar.ScaleRatingBar>
+                        app:srb_drawableFilled="@drawable/ic_star_filled"/>
 
                     <ImageView
                         android:id="@+id/ivLike"

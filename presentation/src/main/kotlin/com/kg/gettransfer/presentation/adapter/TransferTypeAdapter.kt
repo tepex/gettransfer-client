@@ -1,13 +1,19 @@
 package com.kg.gettransfer.presentation.adapter
 
 import android.content.Context
+
 import android.support.v7.widget.RecyclerView
+
 import android.util.TypedValue
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.ui.Utils
+
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_transfer_type.*
 import kotlinx.android.synthetic.main.view_transfer_type.view.*
@@ -25,8 +31,8 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(item: TransportTypeModel, listener: ChangeListener) = with(containerView) {
             tvTransferType.setText(item.nameId!!)
-            tvNumberPersonsTransfer.text = context.getString(R.string.count_persons_and_baggage, item.paxMax)
-            tvCountBaggage.text = context.getString(R.string.count_persons_and_baggage, item.luggageMax)
+            tvNumberPersonsTransfer.text = Utils.formatPersons(context, item.paxMax)
+            tvCountBaggage.text = Utils.formatLuggage(context, item.luggageMax)
             if (item.price == null) tvPriceFrom.visibility = View.GONE
             else tvPriceFrom.text = context.getString(R.string.price_from, item.price)
 

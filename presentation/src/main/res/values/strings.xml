@@ -104,7 +104,7 @@
 
     <string name="number_symbol">#</string>
 
-    <string name="carrier_number">Carrier #</string>
+    <!--<string name="carrier_number">Carrier #</string>-->
 
     <string name="from">From</string>
     <string name="to">To</string>
@@ -331,7 +331,6 @@
     <string name="sorted_year_made_text">Year made</string>
     <string name="sorted_rating_text">Rating</string>
     <string name="sorted_price_text">Price</string>
-    <string name="api_photo_url">https://gettransfer.com%1$s</string>
 
     <!--view_transfer_request_info-->
     <string name="cancel_request_underlined"><u>Cancel request</u></string>
@@ -341,6 +340,7 @@
     <string name="alert_yes">Yes</string>
 
     <string name="driver_number">#%1$d</string>
+    <string name="carrier_number">Carrier #%1$d</string>
     <string name="driver_completed_transfers">made %1$d transfers</string>
     <string name="preferred_cost">(%1$s)</string>
     <string name="terms">TERMS</string>
@@ -361,4 +361,6 @@
     <string name="logs_file_name">Logs.txt</string>
     <string name="file_provider_authority" translatable="false">com.kg.gettransfer.fileprovider</string>
     <string name="please_wait">Please, wait, connection to carries...</string>
+
+    <string name="number_of_photos">%1$d/%2$d</string>
 </resources>

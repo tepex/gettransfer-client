@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.model
 
+import android.location.Location
+
 import android.support.annotation.StringRes
 
 import com.google.android.gms.maps.model.LatLng
@@ -13,36 +15,45 @@ import java.util.Locale
 
 object Mappers {
     fun point2LatLng(point: Point) = LatLng(point.latitude, point.longitude)
+    
+    fun point2Location(point: Point): Location {
+        val ret = Location("")
+        ret.latitude = point.latitude
+        ret.longitude = point.longitude
+        return ret
+    }
+    
     fun latLng2Point(latLng: LatLng) = Point(latLng.latitude, latLng.longitude)
     
-    fun getUserModel(account: Account) = UserModel(getProfileModel(account), account.user.termsAccepted)
+    fun getUserModel(type: Account) = UserModel(getProfileModel(type.user.profile), type.user.termsAccepted)
     
-    fun getProfileModel(account: Account) = ProfileModel(account.user.profile.name,
-                                                         account.user.profile.email,
-                                                         account.user.profile.phone)
+    fun getProfileModel(type: Profile) = ProfileModel(type.name, type.email, type.phone)
 
-    fun getProfile(profileModel: ProfileModel) = Profile(profileModel.name, profileModel.email, profileModel.phone)
+    fun getProfile(model: ProfileModel) = Profile(model.name, model.email, model.phone)
     
-    fun getUser(userModel: UserModel) = User(getProfile(userModel.profile), userModel.termsAccepted)
+    fun getUser(model: UserModel) = User(getProfile(model.profile), model.termsAccepted)
 
-    fun getTransportTypesModels(transportTypes: List<TransportType>, prices: Map<String, String>?) =
-        transportTypes.map {
-            val id = it.id
-            val imageRes = R.drawable::class.members.find( { it.name == "ic_transport_type_$id" } )
-            val imageId = (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_unknown
-            TransportTypeModel(id, getTransportTypeName(id), imageId, it.paxMax, it.luggageMax, prices?.get(id))
-        }
-
+    fun getTransportTypeModel(type: TransportType, prices: Map<String, String>?): TransportTypeModel {
+        val imageRes = R.drawable::class.members.find( { it.name == "ic_transport_type_${type.id}" } )
+        val imageId = (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_unknown
+        return TransportTypeModel(type.id,
+                                  getTransportTypeName(type.id),
+                                  imageId,
+                                  type.paxMax,
+                                  type.luggageMax,
+                                  prices?.get(type.id))
+    }
+        
     @StringRes
     fun getTransportTypeName(id: String): Int {
         val nameRes = R.string::class.members.find( { it.name == "transport_type_$id" } )
         return (nameRes?.call() as Int?) ?: R.string.transport_type_unknown
     }
     
-    fun getCurrenciesModels(currencies: List<Currency>) = currencies.map { CurrencyModel(it) }
-    fun getLocalesModels(locales: List<Locale>) = locales.map { LocaleModel(it) }
-    fun getDistanceUnitsModels(distanceUnits: List<DistanceUnit>) = distanceUnits.map { DistanceUnitModel(it) }
-    fun getEndpointsModels(endpoints: List<Endpoint>) = endpoints.map { EndpointModel(it) }
+    fun getCurrenciesModels(types: List<Currency>)        = types.map { CurrencyModel(it) }
+    fun getLocalesModels(types: List<Locale>)             = types.map { LocaleModel(it) }
+    fun getDistanceUnitsModels(types: List<DistanceUnit>) = types.map { DistanceUnitModel(it) }
+    fun getEndpointsModels(types: List<Endpoint>)         = types.map { EndpointModel(it) }
     
     fun getRouteModel(distance: Int?,
                       distanceUnit: DistanceUnit,
@@ -51,40 +62,40 @@ object Mappers {
                       to: String,
                       fromPoint: Point,
                       toPoint: Point,
-                      dateTime: String) = RouteModel(distance,
+                      dateTime: String) = RouteModel(distance ?: checkDistance(fromPoint, toPoint),
                                                      distanceUnit,
                                                      polyLines,
-                                                     from.toString(),
-                                                     to.toString(),
-                                                     fromPoint.toString(),
-                                                     toPoint.toString(),
+                                                     from,
+                                                     to,
+                                                     fromPoint,
+                                                     toPoint,
                                                      dateTime)
     
-    fun getTransferModel(transfer: Transfer,
+    fun getTransferModel(type: Transfer,
                          locale: Locale,
                          distanceUnit: DistanceUnit,
                          transportTypes: List<TransportType>): TransferModel {
-        val selected = transportTypes.filter { transfer.transportTypeIds.contains(it.id) }
-        return TransferModel(transfer.id,
-                      transfer.status,
-                      transfer.from.name!!,
-                      transfer.to!!.name!!,
-                      //SimpleDateFormat(Utils.DATE_TIME_PATTERN, locale).format(transfer.dateToLocal),
-                      Utils.getFormatedDate(locale, transfer.dateToLocal),
-                      transfer.distance,
-                      distanceUnit,
-                      transfer.pax,
-                      transfer.nameSign,
-                      transfer.childSeats,
-                      transfer.flightNumber,
-                      transfer.comment,
-                      selected.map { TransportTypeModel(it.id, getTransportTypeName(it.id), null, it.paxMax, it.luggageMax, null) },
-                      transfer.paidSum.default,
-                      transfer.paidPercentage,
-                      transfer.remainsToPay.default,
-                      transfer.price?.default,
-                      transfer.relevantCarriersCount,
-                      transfer.checkOffers)
+        val selected = transportTypes.filter { type.transportTypeIds.contains(it.id) }
+        
+        return TransferModel(type.id,
+                             type.status,
+                             type.from.name!!,
+                             type.to!!.name!!,
+                             Utils.getFormattedDate(locale, type.dateToLocal),
+                             type.distance ?: checkDistance(type.from.point!!, type.to!!.point!!),
+                             distanceUnit,
+                             type.pax,
+                             type.nameSign,
+                             type.childSeats,
+                             type.flightNumber,
+                             type.comment,
+                             selected.map { getTransportTypeModel(it, null) },
+                             type.paidSum.default,
+                             type.paidPercentage,
+                             type.remainsToPay.default,
+                             type.price?.default,
+                             type.relevantCarriersCount,
+                             type.checkOffers)
     }
     
     fun getTransferNew(from: CityPoint,
@@ -111,49 +122,62 @@ object Mappers {
                                                           promoCode,
                                                           paypalOnly)
 
-    fun getOfferModel(offer: Offer): OfferModel { 
-        return OfferModel(offer.id,
-                   ProfileModel(offer.driver?.name, offer.driver?.email, offer.driver?.phone),
-                   VehicleModel(VehicleBaseModel(offer.vehicle.vehicleBase.name, offer.vehicle.vehicleBase.registrationNumber),
-                                offer.vehicle.year,
-                                offer.vehicle.color,
-                                TransportTypeModel(offer.vehicle.transportType.id,
-                                                   getTransportTypeName(offer.vehicle.transportType.id),
-                                                   null,
-                                                   offer.vehicle.transportType.paxMax,
-                                                   offer.vehicle.transportType.luggageMax,
-                                                   null),
-                                offer.vehicle.photos),
-                   offer.price.base.default,
-                   offer.price.base.preferred,
-                   offer.carrier.id,
-                   offer.carrier.completedTransfers,
-                   offer.wifi,
-                   offer.refreshments,
-                   offer.carrier.ratings.average,
-                   offer.price.amount,
-                   offer.price.percentage30,
-                   offer.carrier.languages)
-    }
+    fun getOfferModel(type: Offer, locale: Locale) = 
+        OfferModel(type.id,
+                   type.status,
+                   type.wifi,
+                   type.refreshments,
+                   Utils.getFormattedDate(locale, type.createdAt),
+                   getPriceModel(type.price),
+                   type.ratings?.let { getRatingsModel(it) },
+                   type.passengerFeedback,
+                   getCarrierModel(type.carrier),
+                   getVehicleModel(type.vehicle),
+                   type.driver?.let { getProfileModel(it) })
 
-    fun getCarrierTripModel(carrierTrip: CarrierTrip, locale: Locale, distanceUnit: DistanceUnit) = 
-        CarrierTripModel(carrierTrip.id,
-                         carrierTrip.transferId,
-                         carrierTrip.from.name!!,
-                         carrierTrip.to.name!!,
-                         //SimpleDateFormat(Utils.DATE_TIME_PATTERN, locale).format(carrierTrip.dateLocal),
-                         Utils.getFormatedDate(locale, carrierTrip.dateLocal),
-                         carrierTrip.distance,
+    fun getCarrierTripModel(type: CarrierTrip, locale: Locale, distanceUnit: DistanceUnit) =
+        CarrierTripModel(type.id,
+                         type.transferId,
+                         type.from.name!!,
+                         type.to.name!!,
+                         Utils.getFormattedDate(locale, type.dateLocal),
+                         type.distance ?: checkDistance(type.from.point!!, type.to.point!!),
                          distanceUnit,
-                         carrierTrip.childSeats,
-                         carrierTrip.comment,
-                         carrierTrip.price,
-                         carrierTrip.vehicle.name,
-                         carrierTrip.pax,
-                         carrierTrip.nameSign,
-                         carrierTrip.flightNumber,
-                         carrierTrip.remainToPay)
+                         type.childSeats,
+                         type.comment,
+                         type.price,
+                         type.vehicle.name,
+                         type.pax,
+                         type.nameSign,
+                         type.flightNumber,
+                         type.remainToPay)
+    
+    fun getRatingsModel(type: Ratings) = RatingsModel(type.average, type.vehicle, type.driver, type.fair)
+    
+    fun getMoneyModel(type: Money) = MoneyModel(type.default, type.preferred)
+    
+    fun getPriceModel(type: Price) = PriceModel(getMoneyModel(type.base),
+                                                 type.percentage30,
+                                                 type.percentage70,
+                                                 "%.2f".format(type.amount))
+    
+    fun getCarrierModel(type: Carrier) = CarrierModel(type.id,
+                                                         getProfileModel(type.profile),
+                                                         type.approved,
+                                                         type.completedTransfers,
+                                                         getLocalesModels(type.languages),
+                                                         getRatingsModel(type.ratings),
+                                                         type.canUpdateOffers)
+    
+    fun getVehicleModel(type: Vehicle) =
+        VehicleModel(VehicleBaseModel(type.vehicleBase.name, type.vehicleBase.registrationNumber),
+                     type.year,
+                     type.color,
+                     getTransportTypeModel(type.transportType, null),
+                     type.photos)
         
-    fun getPaymentRequest(model: PaymentRequestModel) = 
+    fun getPaymentRequest(model: PaymentRequestModel) =
         PaymentRequest(model.transferId, model.offerId, model.gatewayId, model.percentage)
+
+    private fun checkDistance(from: Point, to: Point) = (point2Location(from).distanceTo(point2Location(to)) / 1000).toInt()
 }

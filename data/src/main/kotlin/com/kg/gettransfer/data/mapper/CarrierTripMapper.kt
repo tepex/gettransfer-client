@@ -15,35 +15,30 @@ open class CarrierTripMapper(private val cityPointMapper: CityPointMapper,
     /**
      * Map a [CarrierTripEntity] instance to a [CarrierTrip] instance.
      */
-    override fun fromEntity(type: CarrierTripEntity): CarrierTrip {
-        var passengerAccount: PassengerAccount? = null
-        if(type.passengerAccount != null) passengerAccount = passengerAccountMapper.fromEntity(type.passengerAccount)
-        return CarrierTrip(type.id,
-                           type.transferId,
-                           cityPointMapper.fromEntity(type.from),
-                           cityPointMapper.fromEntity(type.to),
-                           Mapper.ISO_FORMAT.parse(type.dateLocal),
-                           type.duration,
-                           type.distance,
-                           type.time,
-                           type.childSeats,
-                           type.comment,
-                           type.waterTaxi,
-                           type.price,
-                           vehicleBaseMapper.fromEntity(type.vehicleBase),
-                           type.pax,
-                           type.nameSign,
-                           type.flightNumber,
-                           type.paidSum,
-                           type.remainToPay,
-                           type.paidPercentage,
-                           passengerAccount)
-    }
+    override fun fromEntity(type: CarrierTripEntity) =
+        CarrierTrip(type.id,
+                    type.transferId,
+                    cityPointMapper.fromEntity(type.from),
+                    cityPointMapper.fromEntity(type.to),
+                    Mapper.ISO_FORMAT.parse(type.dateLocal),
+                    type.duration,
+                    type.distance,
+                    type.time,
+                    type.childSeats,
+                    type.comment,
+                    type.waterTaxi,
+                    type.price,
+                    vehicleBaseMapper.fromEntity(type.vehicleBase),
+                    type.pax,
+                    type.nameSign,
+                    type.flightNumber,
+                    type.paidSum,
+                    type.remainToPay,
+                    type.paidPercentage,
+                    type.passengerAccount?.let { passengerAccountMapper.fromEntity(it) })
 
     /**
      * Map a [CarrierTrip] instance to a [CarrierTripEntity] instance.
      */
-    override fun toEntity(type: CarrierTrip): CarrierTripEntity {
-        throw UnsupportedOperationException()
-    }
+    override fun toEntity(type: CarrierTrip): CarrierTripEntity { throw UnsupportedOperationException() }
 }

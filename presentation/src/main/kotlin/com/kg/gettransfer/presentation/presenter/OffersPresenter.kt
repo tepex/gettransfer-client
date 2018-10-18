@@ -4,6 +4,8 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
+import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
@@ -78,7 +80,7 @@ class OffersPresenter(cc: CoroutineContexts,
                                                          systemInteractor.distanceUnit,
                                                          systemInteractor.transportTypes)
 
-            offers = offerInteractor.getOffers(transfer.id).map { Mappers.getOfferModel(it) }
+            offers = offerInteractor.getOffers(transfer.id).map { Mappers.getOfferModel(it, systemInteractor.locale) }
             viewState.setDate(transferModel.dateTime)
             viewState.setTransfer(transferModel)
 
@@ -111,10 +113,14 @@ class OffersPresenter(cc: CoroutineContexts,
         router.navigateTo(Screens.DETAILS)
     }
 
-    fun onSelectOfferClicked(offer: OfferModel) {
-        offerInteractor.selectedOfferId = offer.id
-        offerInteractor.transferId = transferInteractor.selectedId
-        router.navigateTo(Screens.PAYMENT_SETTINGS)
+    fun onSelectOfferClicked(offer: OfferModel, isShowingOfferDetails: Boolean) {
+        if(isShowingOfferDetails){
+            viewState.showBottomSheetOfferDetails(offer)
+        } else {
+            offerInteractor.selectedOfferId = offer.id
+            offerInteractor.transferId = transferInteractor.selectedId
+            router.navigateTo(Screens.PAYMENT_SETTINGS)
+        }
     }
 
     fun onCancelRequestClicked() {
@@ -154,11 +160,11 @@ class OffersPresenter(cc: CoroutineContexts,
             }
             SORT_RATING -> {
                 sortType = if(sortHigherToLower) RATING_DOWN else RATING_UP
-                offers.sortedWith(compareBy { it.averageRating })
+                offers.sortedWith(compareBy { it.ratings?.average })
             }
             SORT_PRICE -> {
                 sortType = if(sortHigherToLower) PRICE_DOWN else PRICE_UP
-                offers.sortedWith(compareBy { it.priceAmount })
+                offers.sortedWith(compareBy { it.price.amount })
             }
             else -> offers
         }

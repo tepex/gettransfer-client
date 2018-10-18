@@ -22,10 +22,10 @@ class PriceModel(@SerializedName("base") @Expose val base: MoneyModel,
                  @SerializedName("percentage_70") @Expose val percentage70: String,
                  @SerializedName("amount") @Expose val amount: Double)
 
-class RatingsModel(@SerializedName("average") @Expose val average: Double?,
-                   @SerializedName("vehicle") @Expose val vehicle: Double?,
-                   @SerializedName("driver") @Expose val driver: Double?,
-                   @SerializedName("fair") @Expose val fair: Double?)
+class RatingsModel(@SerializedName("average") @Expose val average: Float?,
+                   @SerializedName("vehicle") @Expose val vehicle: Float?,
+                   @SerializedName("driver") @Expose val driver: Float?,
+                   @SerializedName("fair") @Expose val fair: Float?)
 
 class CarrierModel(@SerializedName("title") @Expose val title: String?,
                    @SerializedName("email") @Expose val email: String?,
