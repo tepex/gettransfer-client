@@ -13,6 +13,8 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.RequiresApi
 
+import android.support.v7.widget.Toolbar
+
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
