@@ -57,32 +57,32 @@ interface Api {
     @GET("$API_TRANSFERS/{id}/offers")
     fun getOffers(@Path("id") id: Long): Deferred<ResponseModel<OffersModel>>
 
-	@GET(API_TRANSFERS)
-	fun getAllTransfers(): Deferred<ResponseModel<TransfersModel>>
+    @GET(API_TRANSFERS)
+    fun getAllTransfers(): Deferred<ResponseModel<TransfersModel>>
 
-	@GET("$API_TRANSFERS/archive")
-	fun getTransfersArchive(): Deferred<ResponseModel<TransfersModel>>
+    @GET("$API_TRANSFERS/archive")
+    fun getTransfersArchive(): Deferred<ResponseModel<TransfersModel>>
 
-	@GET("$API_TRANSFERS/active")
-	fun getTransfersActive(): Deferred<ResponseModel<TransfersModel>>
+    @GET("$API_TRANSFERS/active")
+    fun getTransfersActive(): Deferred<ResponseModel<TransfersModel>>
 
-	@POST(API_TRANSFERS)
-	fun postTransfer(@Body transfer: TransferNewWrapperModel): Deferred<ResponseModel<TransferWrapperModel>>
-	
-	@GET("$API_TRANSFERS/{id}")
-	fun getTransfer(@Path("id") id: Long): Deferred<ResponseModel<TransferWrapperModel>>
-	
-	@POST("$API_TRANSFERS/{id}/cancel")
-	fun cancelTransfer(@Path("id") id: Long, @Body reason: ReasonModel): Deferred<ResponseModel<TransferWrapperModel>>
+    @POST(API_TRANSFERS)
+    fun postTransfer(@Body transfer: TransferNewWrapperModel): Deferred<ResponseModel<TransferWrapperModel>>
 
-	@POST(API_CREATE_NEW_PAYMENT)
-	fun createNewPayment(@Body createPayment: PaymentRequestModel): Deferred<ResponseModel<PaymentModel>>
-    
+    @GET("$API_TRANSFERS/{id}")
+    fun getTransfer(@Path("id") id: Long): Deferred<ResponseModel<TransferWrapperModel>>
+
+    @POST("$API_TRANSFERS/{id}/cancel")
+    fun cancelTransfer(@Path("id") id: Long, @Body reason: ReasonModel): Deferred<ResponseModel<TransferWrapperModel>>
+
+    @POST(API_CREATE_NEW_PAYMENT)
+    fun createNewPayment(@Body createPayment: PaymentRequestModel): Deferred<ResponseModel<PaymentModel>>
+
     @GET(API_PROMO)
     fun getDiscount(@Query("value") code: String): Deferred<ResponseModel<String>>
 
-	@GET("$API_CREATE_NEW_PAYMENT/{status}")
-	fun changePaymentStatus(@Path("status") status: String,
+    @GET("$API_CREATE_NEW_PAYMENT/{status}")
+    fun changePaymentStatus(@Path("status") status: String,
                             @Query("pg_order_id") pgOrderId: Long,
                             @Query("without_redirect") withoutRedirect: Boolean): Deferred<ResponseModel<PaymentStatusWrapperModel>>
 }
