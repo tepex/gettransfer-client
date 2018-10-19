@@ -525,6 +525,68 @@
                     app:srcCompat="@drawable/ic_circle_plus" />
 
             </android.support.constraint.ConstraintLayout>
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout_promo"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_additionals_view_height"
+                android:layout_marginTop="1dp"
+                android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout6">
+
+                <EditText
+                    android:id="@+id/etPromo"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/create_transfer_editText_22"
+                    android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
+                    android:background="@null"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:hint="@string/transfer_promo_hint"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorTextBlack"
+                    android:textSize="@dimen/create_transfer_additionals_top_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+                <TextView
+                    android:id="@+id/tvPromoResult"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/create_transfer_textView_20"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/transfer_promo_result_default"
+                    android:textColor="@color/colorTextLightGray"
+                    android:textSize="@dimen/create_transfer_additionals_bottom_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/etPromo"
+                    app:layout_constraintTop_toBottomOf="@+id/etPromo"/>
+                <ImageView
+                    android:id="@+id/img_promo"
+                    android:padding="4dp"
+                    app:layout_constraintEnd_toStartOf="@+id/etPromo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:srcCompat="@drawable/sale_icon"
+                    android:layout_width="31dp"
+                    android:layout_height="29dp" />
+
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:id="@+id/view14"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:layout_marginTop="1dp"
+                android:background="@color/colorDividerGray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout_promo" />
+
 
             <View
                 android:id="@+id/view7"
@@ -534,7 +596,7 @@
                 android:background="@color/colorDividerGray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout6" />
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout_promo" />
 
             <View
                 android:id="@+id/view12"
@@ -570,7 +632,7 @@
                 android:paddingEnd="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout6" />
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout_promo" />
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/layoutAgreement"

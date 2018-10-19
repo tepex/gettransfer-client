@@ -71,6 +71,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         @JvmField val FUTURE_HOUR       = 6
         @JvmField val FUTURE_MINUTE     = 5
 
+        const val INVALID_PROMO         =  -1
+
         /** [см. табл.][https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0] */
         @JvmField val EVENT_TRANSFER = "create_transfer"
         @JvmField val EVENT_SETTINGS = "transfer_settings"
@@ -100,7 +102,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         @JvmField val CAR_INFO_CLICKED   = "car_info"
         @JvmField val BACK_CLICKED       = "back"
 
-        val userActionsMap = HashMap<String, Any>()
     }
     
     override fun onFirstViewAttach() {
@@ -187,6 +188,15 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     fun setFlightNumber(flightNumber: String) {
         if(flightNumber.isEmpty()) this.flightNumber = null else this.flightNumber = flightNumber
         logTransferSettingsEvent(FLIGHT_NUMBER_ADDED)
+    }
+
+    fun setPromo(code: String){
+        utils.launchAsyncTryCatch({
+            val discount = routeInteractor.getDiscount(code)
+            viewState.setPromoResult(discount)
+        },{
+            e -> viewState.setPromoResult(INVALID_PROMO)
+        })
     }
 
     fun setComment(comment: String) {

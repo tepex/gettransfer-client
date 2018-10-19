@@ -95,6 +95,8 @@
 	<dimen name="create_transfer_additionals_top_text_size">17sp</dimen>
 	<dimen name="create_transfer_additionals_bottom_text_size">15sp</dimen>
 	<dimen name="height_title_sheet_order">35dp</dimen>
+	<dimen name="create_transfer_editText_22">22dp</dimen>
+	<dimen name="create_transfer_textView_20">20dp</dimen>
 
 	<dimen name="create_order_behaviour_peek_height">250dp</dimen>
 	<dimen name="get_offers_btn_height">300dp</dimen>

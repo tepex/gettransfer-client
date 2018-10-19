@@ -296,6 +296,17 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     override fun centerRoute(cameraUpdate: CameraUpdate) { showTrack(cameraUpdate) }
 
+    override fun setPromoResult(discountValue: Int) {
+        if(discountValue == CreateOrderPresenter.INVALID_PROMO) {
+            etPromo.setTextColor(R.color.color_error)
+            tvPromoResult.text = getString(R.string.transfer_promo_result_fail)
+        }
+        else {
+            etPromo.setTextColor(R.color.promo_valid)
+            tvPromoResult.text = getString(R.string.transfer_promo_result_success)
+        }
+    }
+
     private fun transportTypeClicked(transportType: TransportTypeModel) {
         if(transportType.checked && transportType.showInfo) {
             sheetTransport.visibility = View.VISIBLE
