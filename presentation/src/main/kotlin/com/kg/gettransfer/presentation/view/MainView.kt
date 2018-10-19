@@ -19,4 +19,6 @@ interface MainView: BaseView {
     fun setAddressFrom(address: String)
     fun setAddressTo(address: String)
     fun setProfile(profile: ProfileModel)
+    fun setMarkerElevation(up: Boolean, elevation: Float)
+
 }

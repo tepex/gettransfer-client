@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.view.ViewPager
@@ -18,7 +17,6 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
@@ -86,7 +84,7 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
         setOfferDetailsSheetListener()
     }
 
-    private fun setOfferDetailsSheetListener(){
+    private fun setOfferDetailsSheetListener() {
         bsOfferDetails.setBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(p0: View, p1: Float) {
 
@@ -95,14 +93,13 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when(newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
-                        for(frag in supportFragmentManager.fragments){
+                        for(frag in supportFragmentManager.fragments) {
                             vpVehiclePhotos.currentItem = 0
                             supportFragmentManager.beginTransaction().remove(frag).commit()
                         }
                     }
                 }
             }
-
         })
     }
     
@@ -162,9 +159,9 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
             layoutCarrierLanguages.addView(ivLanguage)
         }
 
-        offer.ratings?.driver?.let  { ratingBarDriver.rating = it }
-        offer.ratings?.fair?.let    { ratingBarPunctuality.rating = it }
-        offer.ratings?.vehicle?.let { ratingBarVehicle.rating = it }
+        offer.carrier.ratings.driver?.let  { ratingBarDriver.rating = it }
+        offer.carrier.ratings.fair?.let    { ratingBarPunctuality.rating = it }
+        offer.carrier.ratings.vehicle?.let { ratingBarVehicle.rating = it }
 
         vehicleName.text = Utils.getVehicleNameWithColor(this, offer.vehicle.vehicleBase.name, offer.vehicle.color)
         vehicleType.text = getString(offer.vehicle.transportType.nameId!!)

@@ -350,6 +350,8 @@
     <string name="pay_pal">Pay Pal</string>
     <string name="soon">Soon</string>
     <string name="method_of_payment">METHOD OF PAYMENT</string>
+    <string name="payment_successful">Payment successful</string>
+    <string name="payment_failed">Payment failed</string>
 
     <string name="price_part_1">70%% (%s) later to the driver</string>
 

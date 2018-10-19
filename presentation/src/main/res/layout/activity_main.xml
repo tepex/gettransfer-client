@@ -34,7 +34,8 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">
 
-			<com.google.android.gms.maps.MapView android:id="@+id/mapView"
+			<com.google.android.gms.maps.MapView
+				android:id="@+id/mapView"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent" />
 
@@ -72,11 +73,19 @@
 				android:elevation="2dp"/>
 
 			<ImageView
+				android:id="@+id/mMarker"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_gravity="center"
-				android:layout_marginBottom="22dp"
+				android:layout_marginBottom="21dp"
 				app:srcCompat="@drawable/ic_map_label_empty"/>
+
+			<ImageView
+				android:id="@+id/markerShadow"
+				android:layout_width="31dp"
+				android:layout_height="4dp"
+				android:layout_gravity="center"
+				android:src="@drawable/default_position_shadow"/>
 
 			<include layout="@layout/search_form_main"
 				android:layout_width="match_parent"

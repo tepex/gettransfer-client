@@ -34,13 +34,18 @@ class MainPresenter(cc: CoroutineContexts,
     private var available: Boolean = false
     private var currentLocation: String = ""
 
+    private val MARKER_ELEVATION = 25f
+    private var markerStateLifted = false
+    private var isMarkerAnimating = true
+
     override fun onFirstViewAttach() {
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         utils.launchAsyncTryCatch( {
             // @TODO выкинуть эту порнографию в …
             //if(GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable() == ConnectionResult.SUCCESS)
 
-                updateCurrentLocationAsync()
+            updateCurrentLocationAsync()
+            isMarkerAnimating = false
             //else viewState.setError(true, R.string.err_location_service_not_available)
         }, { e -> Timber.e(e) } )
 
@@ -93,19 +98,30 @@ class MainPresenter(cc: CoroutineContexts,
         val currentAddress = utils.asyncAwait { routeInteractor.getCurrentAddress() }
         lastAddressPoint = Mappers.point2LatLng(currentAddress.cityPoint.point!!)
 
-        onCameraMove(lastAddressPoint)
+        onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
         viewState.setMapPoint(lastAddressPoint)
         viewState.setAddressFrom(currentAddress.cityPoint.name!!)
         currentLocation = currentAddress.cityPoint.name!!
     }
 
-    fun onCameraMove(lastPoint: LatLng) {
+
+    fun onCameraMove(lastPoint: LatLng, animateMarker: Boolean) {
+//        Log.i("CheckPoints" , "LastAddress - " + lastAddressPoint + "this lastPoint - " + this.lastPoint + " local point - " + lastPoint)
+        if(!markerStateLifted && !isMarkerAnimating && animateMarker){
+            viewState.setMarkerElevation(true, MARKER_ELEVATION)
+            markerStateLifted = true
+        }
         this.lastPoint = lastPoint
         viewState.moveCenterMarker(lastPoint)
         viewState.blockInterface(true)
+
     }
 
     fun onCameraIdle() {
+        if(markerStateLifted && !isMarkerAnimating) {
+            viewState.setMarkerElevation(false, -MARKER_ELEVATION)
+            markerStateLifted = false
+        }
         if(lastPoint == null) return
 		/* Не запрашивать адрес, если перемещение составило менее minDistance
         val distance = FloatArray(2)
@@ -123,16 +139,30 @@ class MainPresenter(cc: CoroutineContexts,
         }, { viewState.blockInterface(false) })
     }
 
+    fun setMarkerAnimating(animating: Boolean){
+        isMarkerAnimating = animating
+    }
+
     fun setAddressFields() {
         viewState.setAddressFrom(routeInteractor.from?.address ?: "")
         viewState.setAddressTo(routeInteractor.to?.address ?: "")
     }
 
     fun onSearchClick(addresses: Pair<String, String>) {
+        navigateToFindAddress(addresses)
+    }
+
+    fun onNextClick(addresses: Pair<String, String>) {
+        navigateToFindAddress(addresses)
+    }
+
+    private fun navigateToFindAddress(addresses: Pair<String, String>) {
         routeInteractor.from?.let {
             router.navigateTo(Screens.FIND_ADDRESS, addresses)
         }
     }
+
+
 
     fun onLoginClick()          { router.navigateTo(Screens.LOGIN) ;     logEvent(LOGIN_CLICKED)}
     fun onAboutClick()          { router.navigateTo(Screens.ABOUT) ;     logEvent(ABOUT_CLICKED) }
@@ -146,6 +176,17 @@ class MainPresenter(cc: CoroutineContexts,
             else router.navigateTo(Screens.REG_CARRIER)
         }
         else router.navigateTo(Screens.LOGIN)
+    }
+
+    private fun comparePointsWithRounding(point1: LatLng?, point2: LatLng?): Boolean {
+        if(point2 == null || point1 == null) return false
+        val criteria = 0.000_001
+
+        var latDiff = point1.latitude - point1.latitude
+        if(latDiff < 0) latDiff *= -1
+        var lngDiff = point2.longitude - point2.longitude
+        if(lngDiff < 0) lngDiff *= -1
+        return latDiff < criteria && lngDiff < criteria
     }
 
     fun logEvent(value: String) {

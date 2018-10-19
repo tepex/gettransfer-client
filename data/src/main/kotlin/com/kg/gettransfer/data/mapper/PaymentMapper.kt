@@ -11,9 +11,6 @@ open class PaymentMapper(): Mapper<PaymentEntity, Payment> {
     /**
      * Map a [PaymentEntity] instance to a [Payment] instance.
      */
-    override fun fromEntity(type: PaymentEntity) = Payment(type.type, type.url)
-    /**
-     * Map a [Payment] instance to a [PaymentEntity] instance.
-     */
-    override fun toEntity(type: Payment) = PaymentEntity(type.type, type.url)
+    override fun fromEntity(type: PaymentEntity) = Payment(type.type, type.url, type.id)
+    override fun toEntity(type: Payment): PaymentEntity { throw UnsupportedOperationException() }
 }

@@ -256,4 +256,7 @@
     <string name="point_on_the_map">Указать на карте</string>
     <string name="search">Поиск</string>
 
+    <string name="payment_successful">Успешная оплата</string>
+    <string name="payment_failed">Ошибка оплаты</string>
+
 </resources>

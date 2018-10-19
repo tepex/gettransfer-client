@@ -52,7 +52,7 @@ class OffersRVAdapter(private val offers: List<OfferModel>,
                 layoutWithCarImage.visibility = View.VISIBLE
                 UtilsImage.loadImage(this, item.vehicle.photos.first(), carPhoto)
                 if(item.vehicle.photos.size > 1) ivManyPhotos.visibility = View.VISIBLE
-                ratingBar.rating = item.ratings!!.average!!.toFloat()
+                ratingBar.rating = item.carrier.ratings.average!!.toFloat()
                 setTexts(bottomLayoutForImage, tvCountPersonsOnCarImage, tvCountBaggageOnCarImage, item)
             } else {
                 layoutNoCarImage.visibility = View.VISIBLE

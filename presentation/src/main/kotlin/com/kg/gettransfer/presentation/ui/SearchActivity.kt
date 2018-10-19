@@ -56,10 +56,11 @@ class SearchActivity: BaseActivity(), SearchView {
     companion object {
         @JvmField val FADE_DURATION  = 500L
         @JvmField val SLIDE_DURATION = 500L
+        
         @JvmField val EXTRA_ADDRESS_FROM = "address_from"
         @JvmField val EXTRA_ADDRESS_TO   = "address_to"
-        @JvmField val EXTRA_FROM_CLICK = "from_click"
-        @JvmField val EXTRA_TO_CLICK = "to_click"
+        @JvmField val EXTRA_FROM_CLICK   = "from_click"
+        @JvmField val EXTRA_TO_CLICK     = "to_click"
 
         @JvmField val LATLON_BOUNDS = "latlon_map_bounds"
     }
@@ -78,7 +79,27 @@ class SearchActivity: BaseActivity(), SearchView {
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /* Animation */
+        setupAnimation()
+        setContentView(R.layout.activity_search)
+        setupToolbar()
+
+        addressList.layoutManager = LinearLayoutManager(this)
+
+        mBounds = intent.getParcelableExtra(LATLON_BOUNDS)
+
+        initSearchFields()
+        changeFocusForSearch()
+        ivInverseWay.setOnClickListener {presenter.inverseWay()}
+    }
+
+    private fun initSearchFields() {
+        searchFrom.initWidget(this, false)
+        searchFrom.text = intent.getStringExtra(EXTRA_ADDRESS_FROM)
+        searchTo.initWidget(this, true)
+        searchTo.text = intent.getStringExtra(EXTRA_ADDRESS_TO)
+    }
+
+    private fun setupAnimation() {
         val fade = Fade()
         fade.duration = FADE_DURATION
         window.enterTransition = fade
@@ -86,28 +107,11 @@ class SearchActivity: BaseActivity(), SearchView {
         val slide = Slide()
         slide.duration = SLIDE_DURATION
         window.returnTransition = slide
-
-        setContentView(R.layout.activity_search)
-
-        setupToolbar()
-
-        addressList.layoutManager = LinearLayoutManager(this)
-
-        mBounds = intent.getParcelableExtra(LATLON_BOUNDS)
-
-        searchFrom.initWidget(this, false)
-        searchFrom.text = intent.getStringExtra(EXTRA_ADDRESS_FROM)
-        searchTo.initWidget(this, true)
-        searchTo.text = intent.getStringExtra(EXTRA_ADDRESS_TO)
-        changeFocusForSearch()
     }
 
     private fun changeFocusForSearch() {
-        if (intent.getBooleanExtra(EXTRA_FROM_CLICK, false)) {
-            searchFrom.changeFocus()
-        } else if (intent.getBooleanExtra(EXTRA_TO_CLICK, false)) {
-            searchTo.changeFocus()
-        }
+        if(intent.getBooleanExtra(EXTRA_FROM_CLICK, false)) searchFrom.changeFocus()
+        else if(intent.getBooleanExtra(EXTRA_TO_CLICK, false)) searchTo.changeFocus()
     }
 
     private fun setupToolbar() {
@@ -122,9 +126,8 @@ class SearchActivity: BaseActivity(), SearchView {
         presenter.onBackCommandClick()
     }
 
-    /* SearchView */
     override fun blockInterface(block: Boolean) {}
     override fun setAddressFrom(address: String, sendRequest: Boolean) { searchFrom.initText(address, sendRequest) }
-    override fun setAddressTo(address: String, sendRequest: Boolean) { searchTo.initText(address, sendRequest) }
+    override fun setAddressTo(address: String, sendRequest: Boolean)   { searchTo.initText(address, sendRequest) }
     override fun setAddressList(list: List<GTAddress>) { addressList.adapter = AddressAdapter(presenter, list) }
 }

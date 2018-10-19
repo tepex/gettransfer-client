@@ -4,19 +4,14 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.CoroutineContexts
-
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.Screens
-
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
-
 import com.kg.gettransfer.presentation.view.OffersView
 
 import io.socket.client.IO
@@ -25,6 +20,8 @@ import io.socket.client.Socket
 
 import io.socket.emitter.Emitter
 import io.socket.engineio.client.Transport
+
+import org.json.JSONObject
 
 import ru.terrakok.cicerone.Router
 
@@ -70,6 +67,12 @@ class OffersPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: OffersView) {
         super.attachView(view)
+        utils.launchAsyncTryCatch({
+            val options = IO.Options()
+            options.path = "/api/socket"
+            options.forceNew = true
+            offersSocket = IO.socket("https://stgtr.org", options)
+        }, { e -> Timber.e(e) })
         utils.launchAsyncTryCatchFinally({
             viewState.showLoading()
             viewState.blockInterface(true)
@@ -91,21 +94,25 @@ class OffersPresenter(cc: CoroutineContexts,
         }, {
             viewState.blockInterface(false)
             viewState.hideLoading()
+            setUpSocket()
         })
     }
 
     fun setUpSocket() {
-        offersSocket = IO.socket("/api/socket")
-        offersSocket!!.on(Manager.EVENT_TRANSPORT, headers)
-        offersSocket!!.on("new offer", onNewOffer)
-        offersSocket!!.connect()
+        if (offersSocket != null) {
+            offersSocket?.connect()
+            if (offersSocket?.connected()!!) {
+                offersSocket?.on(Manager.EVENT_TRANSPORT, headers)
+                offersSocket?.on("newOffer/" + transferInteractor.selectedId, onNewOffer)
+            }
+        }
     }
 
     @CallSuper
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
-//        offersSocket!!.off("new offer", onNewOffer )
-//        offersSocket!!.disconnect()
+        offersSocket!!.off("newOffer/" + transferInteractor.selectedId, onNewOffer )
+        offersSocket!!.disconnect()
         super.onDestroy()
     }
 
@@ -172,20 +179,20 @@ class OffersPresenter(cc: CoroutineContexts,
         logFilterEvent(sortType)
     }
 
-    private val onNewOffer = object: Emitter.Listener {
-        override fun call(vararg args: Any?) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
+    private fun logFilterEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value)) }
+    private fun logButtonEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value)) }
+
+    private val onNewOffer = Emitter.Listener { args ->
+        val offer = args[0] as JSONObject
+        Timber.d("NEW OFFER")
     }
 
     private val headers = Emitter.Listener { args ->
         val transport = args[0] as Transport
-        transport.on(Transport.EVENT_REQUEST_HEADERS) { _args ->
-            var headers = _args[0] as MutableMap<String, List<String>>
+        transport.on(Transport.EVENT_REQUEST_HEADERS) { args ->
+            Timber.d("SET HEADERS")
+            var headers = args[0] as MutableMap<String, List<String>>
             headers.put("Cookie", listOf("rack.session=${systemInteractor.accessToken}"))
         }
     }
-
-    private fun logFilterEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value)) }
-    private fun logButtonEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value)) }
 }
