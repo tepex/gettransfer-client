@@ -7,4 +7,6 @@ data class PaymentStatus(val id: Long, val status: String) {
         const val STATUS_SUCCESS = "success"
         const val STATUS_FAILED  = "failed"
     }
+    
+    val success = status == STATUS_SUCCESS
 }

@@ -1,8 +1,12 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.os.Bundle
+
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
+
+import com.google.firebase.analytics.FirebaseAnalytics
 
 import com.kg.gettransfer.domain.CoroutineContexts
 
@@ -11,10 +15,12 @@ import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.Payment
 
 import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.model.Mappers
+import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
 import com.kg.gettransfer.presentation.view.PaymentSettingsView
@@ -29,6 +35,11 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
                                systemInteractor: SystemInteractor,
                                private val offerInteractor: OfferInteractor,
                                private val paymentInteractor: PaymentInteractor): BasePresenter<PaymentSettingsView>(cc, router, systemInteractor) {
+    companion object {
+        @JvmField val PARAM_SHARE      = "share"
+        @JvmField val BUNDLE_KEY_URL   = "url"
+        @JvmField val BUNDLE_KEY_PRICE = "price"
+    }
 
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
@@ -45,7 +56,7 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: PaymentSettingsView?) {
         super.attachView(view)
-        if(offer != null) viewState.setOffer(Mappers.getOfferModel(offer!!, systemInteractor.locale))
+        offer?.let { viewState.setOffer(Mappers.getOfferModel(it, systemInteractor.locale)) }
     }
 
     @CallSuper
@@ -58,11 +69,32 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             val payment = paymentInteractor.getPayment(Mappers.getPaymentRequest(paymentRequest))
-            router.navigateTo(Screens.PAYMENT, payment.url)
+            logEventBeginCheckout()
+            navigateToPayment(payment)
         }, {
             e -> Timber.e(e)
             viewState.setError(e)
         }, { viewState.blockInterface(false) })
+    }
+    
+    private fun navigateToPayment(payment: Payment) {
+        val bundle = Bundle()
+        bundle.putString(BUNDLE_KEY_URL, payment.url)
+        bundle.putInt(BUNDLE_KEY_PRICE, paymentRequest.percentage)
+        router.navigateTo(Screens.PAYMENT, bundle)
+    }
+
+    private fun logEventBeginCheckout() {
+        val params = HashMap<String, Any>()
+        params[FirebaseAnalytics.Param.CURRENCY] = systemInteractor.currency.currencyCode
+        if(offer != null) {
+            when(paymentRequest.percentage) {
+                OfferModel.FULL_PRICE -> params[FirebaseAnalytics.Param.VALUE] = offer!!.price.amount
+                OfferModel.PRICE_30 -> params[FirebaseAnalytics.Param.VALUE] = offer!!.price.percentage30
+            }
+        }
+        params[PARAM_SHARE] = paymentRequest.percentage
+        mFBA.logEvent(FirebaseAnalytics.Event.BEGIN_CHECKOUT, createMultipleBundle(params))
     }
 
     fun changePrice(price: Int)        { paymentRequest.percentage = price }

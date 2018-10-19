@@ -8,3 +8,4 @@ import com.kg.gettransfer.domain.model.PaymentStatusRequest
 interface PaymentRepository {
     suspend fun getPayment(paymentRequest: PaymentRequest): Payment
     suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequest): PaymentStatus
+}

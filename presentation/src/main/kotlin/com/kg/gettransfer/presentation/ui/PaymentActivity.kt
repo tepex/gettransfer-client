@@ -27,8 +27,10 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.PaymentPresenter
+import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter
 import com.kg.gettransfer.presentation.view.PaymentView
 
 import kotlinx.android.synthetic.main.activity_payment.*
@@ -59,6 +61,9 @@ class PaymentActivity: BaseActivity(), PaymentView {
 
     private val paymentInteractor: PaymentInteractor by inject()
     private val offerInteractor: OfferInteractor by inject()
+
+    private lateinit var url: String
+    private var price: Int = 0
 
     override fun getPresenter(): PaymentPresenter = presenter
 
@@ -91,9 +96,8 @@ class PaymentActivity: BaseActivity(), PaymentView {
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 
         webView.settings.javaScriptEnabled = true
-
-        webView.webViewClient = object : WebViewClient() {
-
+        getBundleValues()
+        webView.webViewClient = object: WebViewClient() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                 if(view != null && view.url != null) {
@@ -115,31 +119,28 @@ class PaymentActivity: BaseActivity(), PaymentView {
         webView.loadUrl(intent.getStringExtra(PARAM_URL))
     }
 
+    private fun getBundleValues() {
+        val bundle = intent.extras
+        url = bundle.getString(PaymentSettingsPresenter.BUNDLE_KEY_URL)
+        price = bundle.getInt(PaymentSettingsPresenter.BUNDLE_KEY_PRICE)
+    }
+
     private fun handleUri(uri: Uri?) {
         val path = uri?.path
-        if(path.equals(PAYMENT_RESULT_SUCCESSFUL)) changePaymentStatus(uri, true)
+        if(path.equals(PAYMENT_RESULT_SUCCESSFUL)) {
+            initDataForAnalytics()
+            changePaymentStatus(uri, true)
+        }
         else if(path.equals(PAYMENT_RESULT_FAILED)) changePaymentStatus(uri, false)
+    }
+
+    private fun initDataForAnalytics() {
+        presenter.price = price
     }
 
     private fun changePaymentStatus(uri: Uri?, success: Boolean) {
         val orderId = uri?.getQueryParameter(PG_ORDER_ID)!!.toLong()
         presenter.changePaymentStatus(orderId, success)
-    }
-
-    private fun handleUri(uri: Uri?) {
-        val path = uri?.path
-        if (path.equals(PAYMENT_RESULT_SUCCESSFUL)) {
-            changePaymentStatus(uri, SUCCESSFUL)
-        } else {
-            if (path.equals(PAYMENT_RESULT_FAILED)) {
-                changePaymentStatus(uri, FAILED)
-            }
-        }
-    }
-
-    private fun changePaymentStatus(uri: Uri?, status: String) {
-        val orderId = uri?.getQueryParameter(PG_ORDER_ID)!!.toLong()
-        presenter.changePaymentStatus(orderId, status)
     }
 
     override fun setError(e: Throwable) {
