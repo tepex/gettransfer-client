@@ -5,6 +5,7 @@ import android.support.multidex.MultiDexApplication
 
 import com.kg.gettransfer.di.*
 import com.kg.gettransfer.presentation.FileLoggingTree
+
 import net.hockeyapp.android.CrashManager
 
 import org.koin.android.ext.android.startKoin
@@ -23,6 +24,7 @@ class GTApplication: MultiDexApplication() {
         if(BuildConfig.FLAVOR == "dev") {
             Timber.plant(FileLoggingTree(applicationContext))
             System.setProperty("kotlinx.coroutines.debug", "on")
+            CrashManager.register(this)
         }
         // Start Koin
         startKoin(this, listOf(ciceroneModule,

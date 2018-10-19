@@ -36,7 +36,8 @@ class RouteInteractor(private val geoRepository: GeoRepository,
         if(from!!.cityPoint.point == null) from!!.cityPoint.point = geoRepository.getLatLngByPlaceId(from!!.cityPoint.placeId!!)
         if(to!!.cityPoint.point == null) to!!.cityPoint.point = geoRepository.getLatLngByPlaceId(to!!.cityPoint.placeId!!)
     }
-    fun updateStartPoint(){
+
+    fun updateStartPoint() {
         if(from!!.cityPoint.point == null) from!!.cityPoint.point = geoRepository.getLatLngByPlaceId(from!!.cityPoint.placeId!!)
     }
 

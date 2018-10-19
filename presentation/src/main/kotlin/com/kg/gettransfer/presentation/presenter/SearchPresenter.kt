@@ -95,7 +95,7 @@ class SearchPresenter(cc: CoroutineContexts,
     override fun onBackCommandClick() {
         super.onBackCommandClick()
     }
-    
+
     fun inverseWay() {
         val copyTo = routeInteractor.to
         routeInteractor.to = routeInteractor.from

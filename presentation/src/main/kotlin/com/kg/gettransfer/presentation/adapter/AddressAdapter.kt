@@ -16,12 +16,12 @@ import kotlinx.android.synthetic.main.address_list_item.*
 import kotlinx.android.synthetic.main.popular_address_list_item.*
 
 class AddressAdapter(private val presenter: SearchPresenter,
-                     private var list: List<Any>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                     private var list: List<Any>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private var selected = RecyclerView.NO_POSITION
 
-        const val GOOGLE_ADDRESS = 1
+        const val GOOGLE_ADDRESS  = 1
         const val POPULAR_ADDRESS = 2
     }
 
@@ -42,13 +42,10 @@ class AddressAdapter(private val presenter: SearchPresenter,
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) {
-        (holder as UpdateViewHolder).bindViews(list[pos])
-        {
+        (holder as UpdateViewHolder).bindViews(list[pos]) {
             notifyDataSetChanged()
-            if(holder is AddressViewHolder)
-                presenter.onAddressSelected(it as GTAddress)
-            else if(holder is PopularPlaceViewHolder)
-                presenter.onPopularSelected(it as PopularPlace)
+            if(holder is AddressViewHolder) presenter.onAddressSelected(it as GTAddress)
+            else if(holder is PopularPlaceViewHolder) presenter.onPopularSelected(it as PopularPlace)
         }
     }
 
@@ -66,7 +63,7 @@ class AddressAdapter(private val presenter: SearchPresenter,
         }
     }
 
-    class PopularPlaceViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView),
+    class PopularPlaceViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView),
             LayoutContainer, UpdateViewHolder {
 
         override fun bindViews(address: Any, listener: ClickHandler) = with(containerView) {
@@ -81,10 +78,10 @@ class AddressAdapter(private val presenter: SearchPresenter,
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (list[position] is GTAddress) GOOGLE_ADDRESS else POPULAR_ADDRESS
+        return if(list[position] is GTAddress) GOOGLE_ADDRESS else POPULAR_ADDRESS
     }
 
-    fun updateList(list: List<Any>){
+    fun updateList(list: List<Any>) {
         this.list = list
         notifyDataSetChanged()
     }

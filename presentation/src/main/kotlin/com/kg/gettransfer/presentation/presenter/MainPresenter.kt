@@ -149,6 +149,14 @@ class MainPresenter(cc: CoroutineContexts,
     }
 
     fun onSearchClick(addresses: Pair<String, String>) {
+        navigateToFindAddress(addresses)
+    }
+
+    fun onNextClick(addresses: Pair<String, String>) {
+        navigateToFindAddress(addresses)
+    }
+
+    private fun navigateToFindAddress(addresses: Pair<String, String>) {
         routeInteractor.from?.let {
             router.navigateTo(Screens.FIND_ADDRESS, addresses)
         }
