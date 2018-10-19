@@ -86,8 +86,9 @@ class OffersRVAdapter(private val offers: List<OfferModel>,
         }
 
         fun setTexts(layout: View, textViewPax: TextView, textViewBaggage: TextView, item: OfferModel) {
-            layout.tvVehicleName.text = if (item.vehicle.color == null) item.vehicle.vehicleBase.name
-            else Utils.getVehicleNameWithColor(layout.context, item.vehicle.vehicleBase.name, item.vehicle.color)
+            layout.tvVehicleName.text = 
+                if(item.vehicle.color == null) item.vehicle.vehicleBase.name
+                else Utils.getVehicleNameWithColor(layout.context, item.vehicle.vehicleBase.name, item.vehicle.color)
             if(item.wifi) layout.imgOptionFreeWiFi.visibility = View.VISIBLE else layout.imgOptionFreeWiFi.visibility = View.GONE
             if(item.refreshments) layout.imgOptionFreeWater.visibility = View.VISIBLE else layout.imgOptionFreeWater.visibility = View.GONE
 

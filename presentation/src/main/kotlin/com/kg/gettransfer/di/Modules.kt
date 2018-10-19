@@ -90,7 +90,7 @@ val dataModule = module {
 	single { PaymentInteractor(get()) }
 	
 	single { PaypalCredentialsMapper() }
-	single { PaymentStatusRequestMapper()}
+	single { PaymentStatusRequestMapper() }
 	single { PaymentStatusMapper() }
 	single { CurrencyMapper() }
 	single { CardGatewaysMapper() }
