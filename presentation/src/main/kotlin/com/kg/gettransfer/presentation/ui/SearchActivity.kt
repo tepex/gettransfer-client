@@ -13,11 +13,11 @@ import android.support.v7.widget.Toolbar
 
 import android.transition.Fade
 import android.transition.Slide
+
 import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.google.android.gms.maps.model.LatLngBounds
 
 import com.google.android.gms.maps.model.LatLngBounds
 
