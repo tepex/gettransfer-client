@@ -16,7 +16,6 @@ import android.transition.Slide
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.google.android.gms.maps.model.LatLngBounds
 
 import com.google.android.gms.maps.model.LatLngBounds
 
@@ -92,7 +91,7 @@ class SearchActivity: BaseActivity(), SearchView {
         initSearchFields()
         changeFocusForSearch()
         setPopularPlaces()
-        ivInverseWay.setOnClickListener {presenter.inverseWay()}
+        ivInverseWay.setOnClickListener { presenter.inverseWay() }
     }
 
     private fun initSearchFields() {
@@ -131,7 +130,7 @@ class SearchActivity: BaseActivity(), SearchView {
         presenter.onBackCommandClick()
     }
 
-    private fun setPopularPlaces(){
+    private fun setPopularPlaces() {
         presenter.popularPlaceTitles = ArrayList<String>()
         presenter.popularPlaceTitles!!.add(resources.getString(R.string.airport))
         presenter.popularPlaceTitles!!.add(resources.getString(R.string.railway))

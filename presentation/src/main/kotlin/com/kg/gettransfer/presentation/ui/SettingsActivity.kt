@@ -68,7 +68,7 @@ class SettingsActivity: BaseActivity(), SettingsView {
         layoutSettingsLogs.setOnClickListener { presenter.onLogsClicked() }
 
         //Not showing some layouts in release
-        if(BuildConfig.FLAVOR != "dev"){
+        if(BuildConfig.FLAVOR != "dev") {
             layoutSettingsEndpoint.visibility = View.GONE
             layoutSettingsLogs.visibility = View.GONE
         }

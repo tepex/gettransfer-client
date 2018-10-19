@@ -45,9 +45,12 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     fun createPaymentSettingsPresenter(): PaymentSettingsPresenter = 
         PaymentSettingsPresenter(coroutineContexts, router, systemInteractor, offerInteractor, paymentInteractor)
 
-    protected override var navigator = object : BaseNavigator(this) {
+    protected override var navigator = object: BaseNavigator(this) {
         override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
-            return if(screenKey == Screens.PAYMENT) context.getPaymentActivityLaunchIntent(data as String) else null
+            when(screenKey) {
+                Screens.PAYMENT -> return context.getPaymentActivityLaunchIntent(data as String)
+            }
+            return null
         }
     }
 

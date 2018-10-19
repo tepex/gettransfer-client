@@ -39,17 +39,18 @@ import timber.log.Timber
 
 fun Context.getPaymentActivityLaunchIntent(paymentUrl: String): Intent {
     var intent = Intent(this, PaymentActivity::class.java)
-    intent.putExtra("url", paymentUrl)
+    intent.putExtra(PaymentActivity.PARAM_URL, paymentUrl)
     return intent
 }
 
 class PaymentActivity: BaseActivity(), PaymentView {
-    companion object{
+    companion object {
         private const val PAYMENT_RESULT_SUCCESSFUL = "/api/payments/successful"
         private const val PAYMENT_RESULT_FAILED = "/api/payments/failed"
         private const val SUCCESSFUL = "successful"
         private const val FAILED = "failed"
         private const val PG_ORDER_ID = "pg_order_id"
+        internal const val PARAM_URL = "url"
     }
 
     @InjectPresenter
@@ -94,7 +95,7 @@ class PaymentActivity: BaseActivity(), PaymentView {
 
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                if (view != null && view.url != null) {
+                if(view != null && view.url != null) {
                     handleUri(request!!.url)
                     return false
                 }
@@ -103,14 +104,14 @@ class PaymentActivity: BaseActivity(), PaymentView {
 
             // for pre-lollipop
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                if (view != null && url != null) {
+                if(view != null && url != null) {
                     handleUri(Uri.parse(url))
                     return false
                 }
                 return true
             }
         }
-        webView.loadUrl(intent.getStringExtra("url"))
+        webView.loadUrl(intent.getStringExtra(PARAM_URL))
     }
 
     private fun handleUri(uri: Uri?) {
@@ -134,6 +135,6 @@ class PaymentActivity: BaseActivity(), PaymentView {
     }
 
     override fun showErrorMessage() {
-        Utils.showShortToast(this,getString(R.string.payment_failed))
+        Utils.showShortToast(this, getString(R.string.payment_failed))
     }
 }
