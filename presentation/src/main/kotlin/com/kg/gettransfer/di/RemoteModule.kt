@@ -3,21 +3,13 @@ package com.kg.gettransfer.di
 import android.content.Context
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.data.*
 
-import com.kg.gettransfer.data.CarrierTripRemote
-import com.kg.gettransfer.data.OfferRemote
-import com.kg.gettransfer.data.PaymentRemote
-import com.kg.gettransfer.data.RouteRemote
-import com.kg.gettransfer.data.SystemRemote
-import com.kg.gettransfer.data.TransferRemote
-
-import com.kg.gettransfer.remote.ApiCore
-import com.kg.gettransfer.remote.CarrierTripRemoteImpl
-import com.kg.gettransfer.remote.OfferRemoteImpl
-import com.kg.gettransfer.remote.PaymentRemoteImpl
-import com.kg.gettransfer.remote.RouteRemoteImpl
-import com.kg.gettransfer.remote.SystemRemoteImpl
-import com.kg.gettransfer.remote.TransferRemoteImpl
+import com.kg.gettransfer.data.mapper.PromoDiscountMapper
+import com.kg.gettransfer.data.repository.PromoRepositoryImpl
+import com.kg.gettransfer.domain.interactor.PromoInteractor
+import com.kg.gettransfer.domain.repository.PromoRepository
+import com.kg.gettransfer.remote.*
 
 import com.kg.gettransfer.remote.mapper.*
 
@@ -26,6 +18,7 @@ import org.koin.dsl.module.module
 
 val remoteModule = module {
     single { ApiCore(get()) }
+    single { PromoMapper() }
     single { RouteInfoMapper() }
     single { RouteRemoteImpl(get(), get()) as RouteRemote }
     single { AccountMapper() }
@@ -43,7 +36,8 @@ val remoteModule = module {
     single { PassengerAccountMapper() }
     single { CarrierTripMapper(get(), get(), get()) }
     single { CarrierTripRemoteImpl(get(), get()) as CarrierTripRemote }
-    
+
+    single { PromoDiscountMapper() }
     single { TripMapper() }
     single { MoneyMapper() }
     single { UserMapper() }
@@ -61,7 +55,9 @@ val remoteModule = module {
     
     single { PaymentMapper() }
     single { PaymentRequestMapper() }
+
     single { PaymentStatusMapper() }
     single { PaymentStatusRequestMapper() }
     single { PaymentRemoteImpl(get(), get(), get(), get(), get()) as PaymentRemote }
+    single { PromoRemoteImpl(get(), get()) as PromoRemote }
 }

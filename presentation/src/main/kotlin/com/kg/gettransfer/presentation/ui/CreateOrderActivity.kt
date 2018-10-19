@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.inputmethodservice.Keyboard
 
 import android.os.Build
 import android.os.Bundle
@@ -19,14 +19,13 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.widget.LinearLayoutManager
 
 import android.text.InputType
-import android.text.TextUtils
+import android.text.TextWatcher
+import android.text.method.KeyListener
 import android.util.DisplayMetrics
+import android.view.*
 
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 
 import android.widget.LinearLayout
 import android.widget.PopupWindow
@@ -39,6 +38,7 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.MapStyleOptions
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.interactor.PromoInteractor
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
@@ -54,7 +54,6 @@ import com.kg.gettransfer.presentation.model.UserModel
 
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.view.CreateOrderView
-
 import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
@@ -64,16 +63,19 @@ import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
 
+
 import org.koin.android.ext.android.inject
 
 import java.util.Calendar
 
 class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
+
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
 
     private val routeInteractor: RouteInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
+    private val promoInteractor: PromoInteractor by inject()
     private val calendar = Calendar.getInstance()
     private lateinit var bsOrder: BottomSheetBehavior<View>
     private lateinit var bsTransport: BottomSheetBehavior<View>
@@ -84,7 +86,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
                                                                                   router,
                                                                                   systemInteractor,
                                                                                   routeInteractor,
-                                                                                  transferInteractor)
+                                                                                  transferInteractor,
+                                                                                  promoInteractor)
 
     protected override var navigator = object: BaseNavigator(this) {
         @CallSuper
@@ -154,6 +157,9 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         ivChildCounterDown.setOnClickListener { presenter.changeChildren(-1) }
         ivChildCounterUp.setOnClickListener   { presenter.changeChildren(1) }
         tvFlightOrTrainNumber.onTextChanged   { presenter.setFlightNumber(it.trim()) }
+
+        etPromo.onTextChanged { presenter.setPromo(it.length) }
+        btnOkPromo.setOnClickListener { presenter.usePromoForDiscount(etPromo.text.toString().trim()) }
 
         tvComments.setOnClickListener {
             showPopupWindowComment()
@@ -296,15 +302,14 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     override fun centerRoute(cameraUpdate: CameraUpdate) { showTrack(cameraUpdate) }
 
-    override fun setPromoResult(discountValue: Int) {
-        if(discountValue == CreateOrderPresenter.INVALID_PROMO) {
-            etPromo.setTextColor(R.color.color_error)
-            tvPromoResult.text = getString(R.string.transfer_promo_result_fail)
-        }
-        else {
-            etPromo.setTextColor(R.color.promo_valid)
-            tvPromoResult.text = getString(R.string.transfer_promo_result_success)
-        }
+    override fun showPromoButton(show: Boolean) {
+        btnOkPromo.visibility = if(show) View.VISIBLE else View.INVISIBLE
+    }
+
+    override fun setPromoResult(discountInfo: String?) {
+        tvPromoResult.text = discountInfo ?: getString(R.string.transfer_promo_result_fail)
+        val colorRes = if(discountInfo != null) R.color.promo_valid else R.color.color_error
+        tvPromoResult.setTextColor(getColor(colorRes))
     }
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {

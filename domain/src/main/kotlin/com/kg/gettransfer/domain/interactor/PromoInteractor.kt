@@ -1,5 +1,7 @@
 package com.kg.gettransfer.domain.interactor
 
-class PromoInteractor {
+import com.kg.gettransfer.domain.repository.PromoRepository
 
+class PromoInteractor(val repository: PromoRepository) {
+    suspend fun getDiscountByPromo(promoCode: String) = repository.getDiscount(promoCode)
 }

@@ -12,6 +12,7 @@ import com.kg.gettransfer.R.string.from
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.interactor.PromoInteractor
 
 import com.kg.gettransfer.domain.model.Trip
 
@@ -44,7 +45,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                            router: Router,
                            systemInteractor: SystemInteractor,
                            private val routeInteractor: RouteInteractor,
-                           private val transferInteractor: TransferInteractor): BasePresenter<CreateOrderView>(cc, router, systemInteractor) {
+                           private val transferInteractor: TransferInteractor,
+                           private val promoInteractor: PromoInteractor): BasePresenter<CreateOrderView>(cc, router, systemInteractor) {
 
     private var user: UserModel = Mappers.getUserModel(systemInteractor.account)
     private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
@@ -71,7 +73,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         @JvmField val FUTURE_HOUR       = 6
         @JvmField val FUTURE_MINUTE     = 5
 
-        const val INVALID_PROMO         =  -1
 
         /** [см. табл.][https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0] */
         @JvmField val EVENT_TRANSFER = "create_transfer"
@@ -190,12 +191,16 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         logTransferSettingsEvent(FLIGHT_NUMBER_ADDED)
     }
 
-    fun setPromo(code: String){
+    fun setPromo(charsCount: Int){
+        viewState.showPromoButton(charsCount > 0)
+    }
+
+    fun usePromoForDiscount(code: String){
         utils.launchAsyncTryCatch({
-            val discount = routeInteractor.getDiscount(code)
-            viewState.setPromoResult(discount)
+            val mDiscount = promoInteractor.getDiscountByPromo(code)
+            viewState.setPromoResult(mDiscount.discount)
         },{
-            e -> viewState.setPromoResult(INVALID_PROMO)
+            e -> viewState.setPromoResult(null)
         })
     }
 

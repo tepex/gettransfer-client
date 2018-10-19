@@ -30,5 +30,6 @@ interface CreateOrderView: BaseView {
     fun setDateTimeTransfer(dateTimeString: String)
     fun setComment(comment: String)
     fun setGetTransferEnabled(enabled: Boolean)
-    fun setPromoResult(discountValue: Int)
+    fun setPromoResult(discountInfo: String?)
+    fun showPromoButton(show: Boolean)
 }

@@ -79,7 +79,7 @@ interface Api {
 	fun createNewPayment(@Body createPayment: PaymentRequestModel): Deferred<ResponseModel<PaymentModel>>
     
     @GET(API_PROMO)
-    fun getDiscount(@Header("value") code: String): Deferred<PromoModel>
+    fun getDiscount(@Header("value") code: String): Deferred<ResponseModel<PromoModel>>
 
 	/*
 	@GET("$API_CREATE_NEW_PAYMENT/{status}")
