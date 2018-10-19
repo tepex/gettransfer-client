@@ -3,10 +3,13 @@ package com.kg.gettransfer.presentation.presenter
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.presentation.Screens
+import com.kg.gettransfer.presentation.model.Mappers
+import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers

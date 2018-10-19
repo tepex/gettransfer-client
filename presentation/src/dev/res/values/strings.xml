@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+<<<<<<< HEAD
     <string name="app_name">Get Transfer (dev)</string>
 	<string name="api_key">ccd9a245018bfe4f386f4045ee4a006f</string>
 	<string name="api_url">https://stgtr.org</string>
+=======
+    <string name="app_name" translatable="false">Get Transfer (dev)</string>
+	<string name="api_key" translatable="false">ccd9a245018bfe4f386f4045ee4a006f</string>
+	<string name="api_url" translatable="false">https://stgtr.org</string>
+	<string name="google_app_id" translatable="false">1:215265777280:android:6102b6945a841ae4</string>
+	<!--<string name="api_key">127746ae669e195d1e05807aaadb97af</string>
+	<string name="api_url">https://gettransfer.com</string>-->
+
+	<string-array name="api_keys">
+		<item>127746ae669e195d1e05807aaadb97af</item>
+		<item>ccd9a245018bfe4f386f4045ee4a006f</item>
+	</string-array>
+	<string-array name="api_urls">
+		<item>https://gettransfer.com</item>
+		<item>https://stgtr.org</item>
+	</string-array>
+	<string-array name="api_endpoint">
+		<item>Prod</item>
+		<item>Demo</item>
+	</string-array>
+>>>>>>> GAA-127. added analytics for ecommerce event
 </resources>

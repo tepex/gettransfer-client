@@ -25,6 +25,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.PaymentPresenter
@@ -57,11 +58,12 @@ class PaymentActivity: BaseActivity(), PaymentView {
     internal lateinit var presenter: PaymentPresenter
 
     private val paymentInteractor: PaymentInteractor by inject()
+    private val offerInteractor: OfferInteractor by inject()
 
     override fun getPresenter(): PaymentPresenter = presenter
 
     @ProvidePresenter
-    fun createPaymentPresenter(): PaymentPresenter = PaymentPresenter(coroutineContexts, router, systemInteractor, paymentInteractor)
+    fun createPaymentPresenter(): PaymentPresenter = PaymentPresenter(coroutineContexts, router, systemInteractor, paymentInteractor, offerInteractor)
 
     protected override var navigator = object: BaseNavigator(this) {
         @CallSuper
