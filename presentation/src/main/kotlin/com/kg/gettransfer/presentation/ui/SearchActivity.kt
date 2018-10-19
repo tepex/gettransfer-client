@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar
 
 import android.transition.Fade
 import android.transition.Slide
+import android.view.View
 
 import android.view.View
 
@@ -57,7 +58,7 @@ class SearchActivity: BaseActivity(), SearchView {
     private lateinit var current: SearchAddress
 
     var mBounds: LatLngBounds? = null
-    
+
     private lateinit var predefinedPopularPlaces: List<PopularPlace>
 
     @ProvidePresenter
@@ -68,7 +69,7 @@ class SearchActivity: BaseActivity(), SearchView {
     companion object {
         @JvmField val FADE_DURATION  = 500L
         @JvmField val SLIDE_DURATION = 500L
-        
+
         @JvmField val EXTRA_ADDRESS_FROM = "address_from"
         @JvmField val EXTRA_ADDRESS_TO   = "address_to"
         @JvmField val EXTRA_FROM_CLICK   = "from_click"
@@ -105,6 +106,7 @@ class SearchActivity: BaseActivity(), SearchView {
 //        changeFocusForSearch()
         predefinedPopularPlaces = initPredefinedPopularPlaces()
         ivInverseWay.setOnClickListener { presenter.inverseWay() }
+        pointOnMap.setOnClickListener { presenter.selectFinishPointOnMap() }
     }
 
     private fun initSearchFields() {
@@ -160,7 +162,7 @@ class SearchActivity: BaseActivity(), SearchView {
     private fun initPredefinedPopularPlaces() = listOf(
         PopularPlace(getString(R.string.LNG_SEARCH_POPULAR_AIRPORT), R.drawable.popular_place_airport),
         PopularPlace(getString(R.string.LNG_SEARCH_POPULAR_STATION), R.drawable.popular_place_railway),
-        PopularPlace(getString(R.string.LNG_SEARCH_POPULAR_HOTEL), R.drawable.popular_place_hotel))        
+        PopularPlace(getString(R.string.LNG_SEARCH_POPULAR_HOTEL), R.drawable.popular_place_hotel))
 
     /* SearchView */
     override fun setAddressFrom(address: String, sendRequest: Boolean, isEditing: Boolean) {
@@ -192,7 +194,7 @@ class SearchActivity: BaseActivity(), SearchView {
         rv_popularList.adapter = PopularAddressAdapter(presenter, predefinedPopularPlaces)
         val addressAdapter = AddressAdapter(presenter, addressesList)
         addressAdapter.isLastAddresses = true
-        
+
         rv_addressList.adapter = addressAdapter
         if(addressesList.isEmpty()) address_title.visibility = View.GONE
         else address_title.visibility = View.VISIBLE

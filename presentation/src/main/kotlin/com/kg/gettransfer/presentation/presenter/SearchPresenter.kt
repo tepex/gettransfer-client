@@ -24,7 +24,7 @@ class SearchPresenter(cc: CoroutineContexts,
                       systemInteractor: SystemInteractor,
                       private val routeInteractor: RouteInteractor): BasePresenter<SearchView>(cc, router, systemInteractor) {
     var isTo = false
-    
+
     companion object {
         @JvmField val ADDRESS_PREDICTION_SIZE = 3
 
@@ -49,7 +49,7 @@ class SearchPresenter(cc: CoroutineContexts,
     fun onPopularSelected(selected: PopularPlace) {
         viewState.onFindPopularPlace(isTo, selected.title)
     }
-    
+
     fun onAddressSelected(selected: GTAddress) {
         val isDoubleClickOnRoute: Boolean
         if(isTo) {
@@ -90,8 +90,16 @@ class SearchPresenter(cc: CoroutineContexts,
             systemInteractor.setAddressHistory(arrayListOf(routeInteractor.from!!, routeInteractor.to!!))
 
             router.navigateTo(Screens.CREATE_ORDER)
-        }, { e -> viewState.setError(e)
+        }, { e ->
+            viewState.setError(e)
         }, { viewState.blockInterface(false) })
+    }
+
+        fun selectFinishPointOnMap(){ router.navigateTo(Screens.SELECT_FINISH) }
+
+    @CallSuper
+    override fun onBackCommandClick() {
+        super.onBackCommandClick()
     }
 
     fun inverseWay() {
