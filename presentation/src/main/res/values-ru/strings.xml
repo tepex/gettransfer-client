@@ -257,10 +257,5 @@
     <string name="search">Поиск</string>
 
     <string name="payment_successful">Успешная оплата</string>
-<<<<<<< HEAD
     <string name="payment_failed">Ошибка оплаты</string>-->
-=======
-    <string name="payment_failed">Ошибка оплаты</string>
->>>>>>> sync
-
 </resources>
