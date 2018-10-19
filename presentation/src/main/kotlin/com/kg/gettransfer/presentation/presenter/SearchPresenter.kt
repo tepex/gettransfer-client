@@ -43,8 +43,7 @@ class SearchPresenter(cc: CoroutineContexts,
         super.attachView(view)
         viewState.setAddressFrom(routeInteractor.from!!.cityPoint.name!!, false)
         viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false)
-        val ll = (getLastAddressesList() as List<Any>).plus(createPopularList())
-        viewState.setAddressList(ll)
+        viewState.setSuggestedAddresses(getLastAddressesList(), createPopularList())
     }
 
     fun onPopularSelected(selected: PopularPlace){

@@ -35,7 +35,7 @@ class MainPresenter(cc: CoroutineContexts,
     private var currentLocation: String = ""
 
     private val MARKER_ELEVATION = 25f
-    private var markerStateLifted = false
+    private var markerStateLifted = true
     private var isMarkerAnimating = true
 
     override fun onFirstViewAttach() {
@@ -46,6 +46,7 @@ class MainPresenter(cc: CoroutineContexts,
 
             updateCurrentLocationAsync()
             isMarkerAnimating = false
+            markerStateLifted = false
             //else viewState.setError(true, R.string.err_location_service_not_available)
         }, { e -> Timber.e(e) } )
 

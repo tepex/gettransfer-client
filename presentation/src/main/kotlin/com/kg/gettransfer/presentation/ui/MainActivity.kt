@@ -296,6 +296,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
                     presenter.setMarkerAnimating(false)
                     if(!up) markerShadow.setImageDrawable(getDrawable(R.drawable.default_position_shadow))
                 }
+                .setDuration(150L)
                 .translationYBy(-elevation)
                 .start()
 
@@ -318,7 +319,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         searchFrom.text = address
         enableBtnNext()
     }
-    
+
     override fun setAddressTo(address: String)   {
         searchTo.text = address
         enableBtnNext()

@@ -8,8 +8,9 @@ import com.kg.gettransfer.presentation.model.PopularPlace
 @StateStrategyType(OneExecutionStateStrategy::class)
 //interface MainView: MvpView, OnCameraMoveListener
 interface SearchView: BaseView {
-	fun setAddressList(list: List<Any>)
+    fun setAddressListByAutoComplete(list: List<GTAddress>)
 	fun onFindPopularPlace(isTo: Boolean, place: String)
 	fun setAddressFrom(address: String, sendRequest: Boolean)
 	fun setAddressTo(address: String, sendRequest: Boolean)
+	fun setSuggestedAddresses(addressesList: List<GTAddress>, popularList: List<PopularPlace>)
 }

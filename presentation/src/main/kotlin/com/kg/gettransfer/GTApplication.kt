@@ -8,6 +8,8 @@ import com.kg.gettransfer.presentation.FileLoggingTree
 
 import net.hockeyapp.android.CrashManager
 
+import net.hockeyapp.android.CrashManager
+
 import org.koin.android.ext.android.startKoin
 
 import timber.log.Timber
@@ -24,6 +26,7 @@ class GTApplication: MultiDexApplication() {
         if(BuildConfig.FLAVOR == "dev") {
             Timber.plant(FileLoggingTree(applicationContext))
             System.setProperty("kotlinx.coroutines.debug", "on")
+            CrashManager.register(this)
         }
         // Start Koin
         startKoin(this, listOf(ciceroneModule,
