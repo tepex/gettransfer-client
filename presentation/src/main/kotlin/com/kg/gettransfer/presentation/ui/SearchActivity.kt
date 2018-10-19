@@ -101,6 +101,7 @@ class SearchActivity: BaseActivity(), SearchView {
         searchTo.initWidget(this, true)
         searchTo.text = intent.getStringExtra(EXTRA_ADDRESS_TO)
 
+        changeFocusForSearch()
     }
 
     private fun setupAnimation() {
@@ -111,8 +112,6 @@ class SearchActivity: BaseActivity(), SearchView {
         val slide = Slide()
         slide.duration = SLIDE_DURATION
         window.returnTransition = slide
-
-        changeFocusForSearch()
     }
 
     private fun changeFocusForSearch() {
@@ -148,12 +147,6 @@ class SearchActivity: BaseActivity(), SearchView {
     /* SearchView */
     override fun blockInterface(block: Boolean) {}
     override fun setAddressFrom(address: String, sendRequest: Boolean) { searchFrom.initText(address, sendRequest) }
-//<<<<<<< HEAD
-//    override fun setAddressTo(address: String, sendRequest: Boolean)   { searchTo.initText(address, sendRequest) }
-//    override fun setAddressList(list: List<GTAddress>) { addressList.adapter = AddressAdapter(presenter, list) }
-//    override fun setPopularList(list: List<PopularPlace>) {rv_popularPlaces.adapter = PopularAddressAdapter(presenter, list)}
-//    override fun setLastAddresses(list: List<GTAddress>) {addressList.adapter = AddressAdapter(presenter, list); Log.i("Find", "" + list.size)}
-//=======
     override fun setAddressTo(address: String, sendRequest: Boolean) { searchTo.initText(address, sendRequest) }
     override fun setAddressList(list: List<Any>) {
         if(addressList.adapter != null) (addressList.adapter as AddressAdapter).updateList(list)
