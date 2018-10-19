@@ -109,29 +109,31 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         calendar.add(Calendar.HOUR_OF_DAY, FUTURE_HOUR)
         calendar.add(Calendar.MINUTE, FUTURE_MINUTE)
         date = calendar.getTime()
+    }
 
+    fun initMapAndPrices(){
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             val from = routeInteractor.from!!.cityPoint
             val to = routeInteractor.to!!.cityPoint
-	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
+            val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
             var prices: Map<String, String>? = null
             if(routeInfo.prices != null) prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
             transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
-	        routeModel = Mappers.getRouteModel(routeInfo.distance,
-                                               systemInteractor.distanceUnit,
-                                               routeInfo.polyLines,
-                                               from.name!!,
-                                               to.name!!,
-                                               from.point!!,
-                                               to.point!!,
-                                               SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
+            routeModel = Mappers.getRouteModel(routeInfo.distance,
+                    systemInteractor.distanceUnit,
+                    routeInfo.polyLines,
+                    from.name!!,
+                    to.name!!,
+                    from.point!!,
+                    to.point!!,
+                    SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
 
             viewState.setTransportTypes(transportTypes!!)
             val polyline = Utils.getPolyline(routeModel!!)
             track = polyline.track
             viewState.setRoute(polyline, routeModel!!)
-	    }, { e -> viewState.setError(e)
+        }, { e -> viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }
     

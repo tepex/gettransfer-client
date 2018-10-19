@@ -194,6 +194,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
     }
 
+    protected override fun initMap(){
+        super.initMap()
+        presenter.initMapAndPrices()
+    }
+
     override fun setCurrencies(currencies: List<CurrencyModel>) {
         Utils.setCurrenciesDialogListener(this, ivChangeCurrency, currencies) { selected ->
             presenter.changeCurrency(selected)

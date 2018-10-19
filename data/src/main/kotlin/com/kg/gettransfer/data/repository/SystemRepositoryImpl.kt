@@ -3,14 +3,10 @@ package com.kg.gettransfer.data.repository
 import com.kg.gettransfer.data.PreferencesCache
 
 import com.kg.gettransfer.data.ds.SystemDataStoreFactory
+import com.kg.gettransfer.data.mapper.*
 
-import com.kg.gettransfer.data.mapper.AccountMapper
-import com.kg.gettransfer.data.mapper.ConfigsMapper
-import com.kg.gettransfer.data.mapper.EndpointMapper
-
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.Configs
-import com.kg.gettransfer.domain.model.Endpoint
+import com.kg.gettransfer.data.model.GTAddressEntity
+import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
@@ -19,6 +15,7 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
                            private val configsMapper: ConfigsMapper,
                            private val accountMapper: AccountMapper,
                            private val endpointMapper: EndpointMapper,
+                           private val addressMapper: AddressMapper,
                            private val _endpoints: List<Endpoint>): SystemRepository {
 
     override val accessToken = preferencesCache.accessToken
@@ -45,7 +42,7 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
         val accountEntity = factory.retrieveRemoteDataStore().getAccount()
         factory.retrieveCacheDataStore().setAccount(accountEntity)
     }
-    
+
     override suspend fun getAccount() = accountMapper.fromEntity(factory.retrieveCacheDataStore().getAccount())
 
     override suspend fun putAccount(account: Account) {
@@ -58,6 +55,22 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
         val accountEntity = factory.retrieveRemoteDataStore().login(email, password)
         factory.retrieveCacheDataStore().setAccount(accountEntity)
         return accountMapper.fromEntity(accountEntity)
+    }
+    override fun getHistory(): List<GTAddress> {
+
+        val result = ArrayList<GTAddress>()
+        val entities = preferencesCache.lastAddresses
+        if(entities != null){
+            for(i in 0 until entities.size)
+                result.add(addressMapper.fromEntity(entities[i]))
+        }
+
+        return result
+    }
+    override fun setHistory(history: List<GTAddress>) {
+        val result = ArrayList<GTAddressEntity>()
+        for (i in 0 until history.size) result.add(addressMapper.toEntity(history[i]))
+        preferencesCache.lastAddresses = result
     }
 
     override fun logout() = factory.retrieveCacheDataStore().clearAccount()

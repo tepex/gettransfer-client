@@ -31,10 +31,7 @@ class SettingsPresenter(cc: CoroutineContexts,
     private val endpoints = Mappers.getEndpointsModels(systemInteractor.endpoints)
 
     init {
-        router.setResultListener(LoginPresenter.RESULT_CODE, { _ ->
-            Timber.d("result from login")
-            saveAccount()
-        })
+        router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> saveAccount() })
     }
 
     companion object {

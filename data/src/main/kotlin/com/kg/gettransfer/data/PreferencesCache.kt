@@ -1,6 +1,8 @@
 package com.kg.gettransfer.data
 
+
 import com.kg.gettransfer.data.model.AccountEntity
+import com.kg.gettransfer.data.model.GTAddressEntity
 
 interface PreferencesCache {
     companion object {
@@ -15,4 +17,7 @@ interface PreferencesCache {
     var endpoint: String
     
     fun clearAccount()
+
+    var lastAddresses: List<GTAddressEntity>?
 }
+

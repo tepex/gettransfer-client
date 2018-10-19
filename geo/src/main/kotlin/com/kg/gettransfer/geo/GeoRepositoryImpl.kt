@@ -61,7 +61,7 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
 
         val addr = StringBuilder()
 
-        if(street == null && list.firstOrNull()?.getAddressLine(0)!!.isNotEmpty()) {
+        if(street == null && !list.isEmpty() && list.firstOrNull()?.getAddressLine(0)!!.isNotEmpty()) {
             addr.append(list.firstOrNull()?.getAddressLine(0))
         }
         else {

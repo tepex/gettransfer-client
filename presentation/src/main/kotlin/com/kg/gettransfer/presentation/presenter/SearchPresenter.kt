@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -13,6 +14,7 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 
 import com.kg.gettransfer.presentation.Screens
+import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.view.SearchView
 
 import ru.terrakok.cicerone.Router
@@ -23,6 +25,9 @@ class SearchPresenter(cc: CoroutineContexts,
                       systemInteractor: SystemInteractor,
                       private val routeInteractor: RouteInteractor): BasePresenter<SearchView>(cc, router, systemInteractor) {
     var isTo = false
+    var popularPlaceIcons: ArrayList<Int>? = null
+    var popularPlaceTitles: ArrayList<String>? = null
+    val popularSize = 3
 
     companion object {
         @JvmField val ADDRESS_PREDICTION_SIZE = 3
@@ -38,6 +43,12 @@ class SearchPresenter(cc: CoroutineContexts,
         super.attachView(view)
         viewState.setAddressFrom(routeInteractor.from!!.cityPoint.name!!, false)
         viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false)
+        val ll = (getLastAddressesList() as List<Any>).plus(createPopularList())
+        viewState.setAddressList(ll)
+    }
+
+    fun onPopularSelected(selected: PopularPlace){
+        viewState.onFindPopularPlace(isTo, selected.title)
     }
 
     fun onAddressSelected(selected: GTAddress) {
@@ -56,6 +67,9 @@ class SearchPresenter(cc: CoroutineContexts,
                 utils.launchAsyncTryCatchFinally({
                     viewState.blockInterface(true)
                     utils.asyncAwait { routeInteractor.updateDestinationPoint() }
+                    utils.asyncAwait { routeInteractor.updateStartPoint() }
+                    systemInteractor.setAddressHistory(arrayListOf(routeInteractor.from!!,routeInteractor.to!!))
+
                     router.navigateTo(Screens.CREATE_ORDER)
                 }, { e ->
                     viewState.setError(e)
@@ -81,7 +95,7 @@ class SearchPresenter(cc: CoroutineContexts,
     override fun onBackCommandClick() {
         super.onBackCommandClick()
     }
-
+    
     fun inverseWay() {
         val copyTo = routeInteractor.to
         routeInteractor.to = routeInteractor.from
@@ -89,4 +103,12 @@ class SearchPresenter(cc: CoroutineContexts,
         viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false)
         viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false)
     }
+
+    private fun createPopularList():List<PopularPlace>{
+        val list = ArrayList<PopularPlace>()
+        for (i in 0 until popularSize) list.add(PopularPlace(popularPlaceTitles!![i], popularPlaceIcons!![i]))
+        return list
+    }
+
+    private fun getLastAddressesList() = systemInteractor.getAddressHistory()
 }

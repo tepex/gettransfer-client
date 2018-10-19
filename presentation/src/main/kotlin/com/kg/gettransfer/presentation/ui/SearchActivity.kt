@@ -29,6 +29,7 @@ import com.kg.gettransfer.extensions.hideKeyboard
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.AddressAdapter
+import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
 
@@ -89,7 +90,8 @@ class SearchActivity: BaseActivity(), SearchView {
 
         initSearchFields()
         changeFocusForSearch()
-        ivInverseWay.setOnClickListener {presenter.inverseWay()}
+        setPopularPlaces()
+        ivInverseWay.setOnClickListener { presenter.inverseWay() }
     }
 
     private fun initSearchFields() {
@@ -97,6 +99,8 @@ class SearchActivity: BaseActivity(), SearchView {
         searchFrom.text = intent.getStringExtra(EXTRA_ADDRESS_FROM)
         searchTo.initWidget(this, true)
         searchTo.text = intent.getStringExtra(EXTRA_ADDRESS_TO)
+
+        changeFocusForSearch()
     }
 
     private fun setupAnimation() {
@@ -126,8 +130,28 @@ class SearchActivity: BaseActivity(), SearchView {
         presenter.onBackCommandClick()
     }
 
+    private fun setPopularPlaces() {
+        presenter.popularPlaceTitles = ArrayList<String>()
+        presenter.popularPlaceTitles!!.add(resources.getString(R.string.airport))
+        presenter.popularPlaceTitles!!.add(resources.getString(R.string.railway))
+        presenter.popularPlaceTitles!!.add(resources.getString(R.string.hotel))
+
+        presenter.popularPlaceIcons = ArrayList<Int>()
+        presenter.popularPlaceIcons!!.add(R.drawable.popular_place_airport)
+        presenter.popularPlaceIcons!!.add(R.drawable.popular_place_railway)
+        presenter.popularPlaceIcons!!.add(R.drawable.popular_place_hotel)
+
+    }
+
+    /* SearchView */
     override fun blockInterface(block: Boolean) {}
     override fun setAddressFrom(address: String, sendRequest: Boolean) { searchFrom.initText(address, sendRequest) }
-    override fun setAddressTo(address: String, sendRequest: Boolean)   { searchTo.initText(address, sendRequest) }
-    override fun setAddressList(list: List<GTAddress>) { addressList.adapter = AddressAdapter(presenter, list) }
+    override fun setAddressTo(address: String, sendRequest: Boolean) { searchTo.initText(address, sendRequest) }
+    override fun setAddressList(list: List<Any>) {
+        if(addressList.adapter != null) (addressList.adapter as AddressAdapter).updateList(list)
+        else addressList.adapter = AddressAdapter(presenter, list)}
+    override fun onFindPopularPlace(isTo: Boolean, place: String) {
+        val search = if(isTo) searchTo else searchFrom
+        search.presenter.requestAddressListByPrediction(place)
+    }
 }
