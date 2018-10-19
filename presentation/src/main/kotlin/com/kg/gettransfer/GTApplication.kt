@@ -19,7 +19,6 @@ class GTApplication: MultiDexApplication() {
         if(BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
             System.setProperty("kotlinx.coroutines.debug", "on")
-            CrashManager.register(this)
         }
         if(BuildConfig.FLAVOR == "dev") {
             Timber.plant(FileLoggingTree(applicationContext))
