@@ -54,6 +54,8 @@ class SearchActivity: BaseActivity(), SearchView {
     private lateinit var current: SearchAddress
 
     var mBounds: LatLngBounds? = null
+    
+    private lateinit var predefinedPopularPlaces: List<PopularPlace>
 
     @ProvidePresenter
     fun createSearchPresenter(): SearchPresenter = SearchPresenter(coroutineContexts,
@@ -97,7 +99,7 @@ class SearchActivity: BaseActivity(), SearchView {
 
         initSearchFields()
 //        changeFocusForSearch()
-        setPopularPlaces()
+        predefinedPopularPlaces = initPredefinedPopularPlaces()
         ivInverseWay.setOnClickListener { presenter.inverseWay() }
     }
 
@@ -139,18 +141,10 @@ class SearchActivity: BaseActivity(), SearchView {
         presenter.onBackCommandClick()
     }
 
-    private fun setPopularPlaces() {
-        presenter.popularPlaceTitles = ArrayList<String>()
-        presenter.popularPlaceTitles!!.add(resources.getString(R.string.airport))
-        presenter.popularPlaceTitles!!.add(resources.getString(R.string.railway))
-        presenter.popularPlaceTitles!!.add(resources.getString(R.string.hotel))
-
-        presenter.popularPlaceIcons = ArrayList<Int>()
-        presenter.popularPlaceIcons!!.add(R.drawable.popular_place_airport)
-        presenter.popularPlaceIcons!!.add(R.drawable.popular_place_railway)
-        presenter.popularPlaceIcons!!.add(R.drawable.popular_place_hotel)
-
-    }
+    private fun initPredefinedPopularPlaces() = listOf(
+        PopularPlace(getString(R.string.airport), R.drawable.popular_place_airport),
+        PopularPlace(getString(R.string.railway), R.drawable.popular_place_railway),
+        PopularPlace(getString(R.string.hotel),   R.drawable.popular_place_hotel))        
 
     /* SearchView */
     override fun setAddressFrom(address: String, sendRequest: Boolean, isEditing: Boolean) { searchFrom.initText(address, sendRequest, isEditing) }
@@ -159,7 +153,7 @@ class SearchActivity: BaseActivity(), SearchView {
     override fun setAddressListByAutoComplete(list: List<GTAddress>) {
         ll_popular.visibility = View.GONE
         address_title.visibility = View.GONE
-        if(rv_addressList.adapter != null){
+        if(rv_addressList.adapter != null) {
             (rv_addressList.adapter as AddressAdapter).isLastAddresses = false
             (rv_addressList.adapter as AddressAdapter).updateList(list)
         }
@@ -170,11 +164,12 @@ class SearchActivity: BaseActivity(), SearchView {
         searchField.initText(place, true, true)
     }
 
-    override fun setSuggestedAddresses(addressesList: List<GTAddress>, popularList: List<PopularPlace>) {
+    override fun setSuggestedAddresses(addressesList: List<GTAddress>) {
         ll_popular.visibility = View.VISIBLE
-        rv_popularList.adapter = PopularAddressAdapter(presenter, popularList)
+        rv_popularList.adapter = PopularAddressAdapter(presenter, predefinedPopularPlaces)
         val addressAdapter = AddressAdapter(presenter, addressesList)
         addressAdapter.isLastAddresses = true
+        
         rv_addressList.adapter = addressAdapter
         if(addressesList.isEmpty()) address_title.visibility = View.GONE
         else address_title.visibility = View.VISIBLE

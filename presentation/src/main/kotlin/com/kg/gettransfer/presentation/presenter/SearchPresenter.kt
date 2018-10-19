@@ -25,10 +25,7 @@ class SearchPresenter(cc: CoroutineContexts,
                       systemInteractor: SystemInteractor,
                       private val routeInteractor: RouteInteractor): BasePresenter<SearchView>(cc, router, systemInteractor) {
     var isTo = false
-    var popularPlaceIcons: ArrayList<Int>? = null
-    var popularPlaceTitles: ArrayList<String>? = null
-    val popularSize = 3
-
+    
     companion object {
         @JvmField val ADDRESS_PREDICTION_SIZE = 3
 
@@ -46,10 +43,6 @@ class SearchPresenter(cc: CoroutineContexts,
         showSuggestions()
     }
 
-    fun onPopularSelected(selected: PopularPlace){
-        viewState.onFindPopularPlace(isTo, selected.title)
-    }
-
     fun onSearchFieldEmpty() = showSuggestions()
 
     private fun showSuggestions() {
@@ -58,6 +51,10 @@ class SearchPresenter(cc: CoroutineContexts,
         viewState.setSuggestedAddresses(lastPlaces, popularPlaces)
     }
 
+    fun onPopularSelected(selected: PopularPlace) {
+        viewState.onFindPopularPlace(isTo, selected.title)
+    }
+    
     fun onAddressSelected(selected: GTAddress) {
         val isDoubleClickOnRoute: Boolean
         if(isTo) {
@@ -96,12 +93,7 @@ class SearchPresenter(cc: CoroutineContexts,
         return SUITABLE_TYPE
     }
 
-    private fun checkFields() = routeInteractor.from != null && routeInteractor.to != null && routeInteractor.from != routeInteractor.to
-
-    @CallSuper
-    override fun onBackCommandClick() {
-        super.onBackCommandClick()
-    }
+    private fun checkFields() = routeInteractor.let { it.from != null && it.to != null && it.from != it.to }
 
     fun inverseWay() {
         val copyTo = routeInteractor.to
@@ -109,12 +101,6 @@ class SearchPresenter(cc: CoroutineContexts,
         routeInteractor.from = copyTo
         viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false, false)
         viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false, false)
-    }
-
-    private fun createPopularList():List<PopularPlace>{
-        val list = ArrayList<PopularPlace>()
-        for (i in 0 until popularSize) list.add(PopularPlace(popularPlaceTitles!![i], popularPlaceIcons!![i]))
-        return list
     }
 
     private fun getLastAddressesList() = systemInteractor.getAddressHistory()

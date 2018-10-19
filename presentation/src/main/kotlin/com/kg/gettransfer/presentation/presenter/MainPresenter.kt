@@ -107,7 +107,7 @@ class MainPresenter(cc: CoroutineContexts,
 
 
     fun onCameraMove(lastPoint: LatLng, animateMarker: Boolean) {
-        if(!markerStateLifted && !isMarkerAnimating && animateMarker){
+        if(!markerStateLifted && !isMarkerAnimating && animateMarker) {
             viewState.setMarkerElevation(true, MARKER_ELEVATION)
             markerStateLifted = true
         }
@@ -166,10 +166,7 @@ class MainPresenter(cc: CoroutineContexts,
         }
     }
 
-    fun onNextClick() {
-        router.navigateTo(Screens.CREATE_ORDER)
-    }
-
+    fun onNextClick()           { router.navigateTo(Screens.CREATE_ORDER) }
     fun onLoginClick()          { router.navigateTo(Screens.LOGIN) ;     logEvent(LOGIN_CLICKED) }
     fun onAboutClick()          { router.navigateTo(Screens.ABOUT) ;     logEvent(ABOUT_CLICKED) }
     fun readMoreClick()         { router.navigateTo(Screens.READ_MORE) ; logEvent(BEST_PRICE_CLICKED) }
