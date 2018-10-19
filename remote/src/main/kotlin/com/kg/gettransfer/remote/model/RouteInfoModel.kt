@@ -8,7 +8,7 @@ class RouteInfoModel(@SerializedName("success") @Expose val success: Boolean,
                      @SerializedName("duration") @Expose val duration: Int?,
                      @SerializedName("prices") @Expose val prices: Map<String, TransportTypePriceModel>?,
                      @SerializedName("watertaxi") @Expose val watertaxi: Boolean,
-                     @SerializedName("routes") @Expose val routes: List<RoutesModel>)
+                     @SerializedName("routes") @Expose val routes: List<RoutesModel>?)
 
 class TransportTypePriceModel(@SerializedName("min_float") @Expose val minFloat: Float,
                               @SerializedName("min") @Expose val min: String,
