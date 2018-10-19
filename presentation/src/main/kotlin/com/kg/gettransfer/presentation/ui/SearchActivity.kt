@@ -18,7 +18,6 @@ import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.google.android.gms.maps.model.LatLngBounds
 
 import com.google.android.gms.maps.model.LatLngBounds
 
@@ -48,7 +47,7 @@ import kotlinx.android.synthetic.main.toolbar_search_address.view.*
 
 import org.koin.android.ext.android.inject
 
-class SearchActivity : BaseActivity(), SearchView {
+class SearchActivity: BaseActivity(), SearchView {
     @InjectPresenter
     internal lateinit var presenter: SearchPresenter
 
@@ -195,13 +194,7 @@ class SearchActivity : BaseActivity(), SearchView {
     }
 
     override fun updateIcon(isTo: Boolean) {
-        var iconRes: Int
-        if (isTo){
-            iconRes = R.drawable.b_point_filled
-            searchForm.icons_container.b_point.setImageDrawable(getDrawable(iconRes))
-        } else {
-            iconRes = R.drawable.a_point_filled
-            searchForm.icons_container.a_point.setImageDrawable(getDrawable(iconRes))
-        }
+        if(isTo) searchForm.icons_container.b_point.setImageDrawable(getDrawable(R.drawable.b_point_filled))
+        else searchForm.icons_container.a_point.setImageDrawable(getDrawable(R.drawable.a_point_filled))
     }
 }

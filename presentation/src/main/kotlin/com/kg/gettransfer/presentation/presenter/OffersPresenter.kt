@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation.presenter
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
-import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.OfferInteractor
@@ -64,7 +63,6 @@ class OffersPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: OffersView) {
         super.attachView(view)
-
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true, true)
             
