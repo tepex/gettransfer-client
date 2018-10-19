@@ -50,15 +50,14 @@ import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 
 import kotlinx.android.synthetic.main.activity_create_order.*
-
-import java.util.Locale
-import java.util.regex.Pattern
-
 import kotlinx.android.synthetic.main.view_maps_pin.view.*
 
-import timber.log.Timber
-import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
+import java.text.SimpleDateFormat
+import java.util.regex.Pattern
+
+import timber.log.Timber
 
 internal class Utils {
     companion object {
