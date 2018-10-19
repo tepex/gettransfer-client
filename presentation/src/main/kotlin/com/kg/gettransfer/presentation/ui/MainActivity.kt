@@ -167,7 +167,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
         btnShowDrawerLayout.setOnClickListener { drawer.openDrawer(Gravity.START) }
         drawer = drawerLayout as DrawerLayout
-        drawer.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+        drawer.addDrawerListener(object: DrawerLayout.SimpleDrawerListener() {
             @CallSuper
             override fun onDrawerStateChanged(newState: Int) {
                 super.onDrawerStateChanged(newState)

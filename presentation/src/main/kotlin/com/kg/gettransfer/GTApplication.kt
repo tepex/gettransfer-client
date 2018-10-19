@@ -5,6 +5,7 @@ import android.support.multidex.MultiDexApplication
 
 import com.kg.gettransfer.di.*
 import com.kg.gettransfer.presentation.FileLoggingTree
+import net.hockeyapp.android.CrashManager
 
 import net.hockeyapp.android.CrashManager
 

@@ -38,20 +38,16 @@ class MainPresenter(cc: CoroutineContexts,
     private var available: Boolean = false
     private var currentLocation: String = ""
 
-    private val MARKER_ELEVATION = 5f
-    private var markerStateLifted = true
+    private val MARKER_ELEVATION = 25f
+    private var markerStateLifted = false
     private var isMarkerAnimating = true
 
     override fun onFirstViewAttach() {
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         utils.launchAsyncTryCatch( {
-            // @TODO выкинуть эту порнографию в …
-            //if(GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable() == ConnectionResult.SUCCESS)
-
             updateCurrentLocationAsync()
             isMarkerAnimating = false
             markerStateLifted = false
-            //else viewState.setError(true, R.string.err_location_service_not_available)
         }, { e -> Timber.e(e) } )
 
         // Создать листенер для обновления текущей локации
@@ -174,7 +170,7 @@ class MainPresenter(cc: CoroutineContexts,
         router.navigateTo(Screens.CREATE_ORDER)
     }
 
-    fun onLoginClick()          { router.navigateTo(Screens.LOGIN) ;     logEvent(LOGIN_CLICKED)}
+    fun onLoginClick()          { router.navigateTo(Screens.LOGIN) ;     logEvent(LOGIN_CLICKED) }
     fun onAboutClick()          { router.navigateTo(Screens.ABOUT) ;     logEvent(ABOUT_CLICKED) }
     fun readMoreClick()         { router.navigateTo(Screens.READ_MORE) ; logEvent(BEST_PRICE_CLICKED) }
     fun onSettingsClick()       { router.navigateTo(Screens.SETTINGS) ;  logEvent(SETTINGS_CLICKED) }
