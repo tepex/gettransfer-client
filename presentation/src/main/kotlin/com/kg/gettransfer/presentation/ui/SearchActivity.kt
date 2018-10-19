@@ -67,7 +67,7 @@ class SearchActivity : BaseActivity(), SearchView {
     companion object {
         @JvmField val FADE_DURATION  = 500L
         @JvmField val SLIDE_DURATION = 500L
-
+        
         @JvmField val EXTRA_ADDRESS_FROM = "address_from"
         @JvmField val EXTRA_ADDRESS_TO   = "address_to"
         @JvmField val EXTRA_FROM_CLICK   = "from_click"

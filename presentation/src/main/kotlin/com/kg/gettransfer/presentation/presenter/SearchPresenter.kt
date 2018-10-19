@@ -103,4 +103,12 @@ class SearchPresenter(cc: CoroutineContexts,
         viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false, false)
         viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false, false)
     }
+
+    fun inverseWay() {
+        val copyTo = routeInteractor.to
+        routeInteractor.to = routeInteractor.from
+        routeInteractor.from = copyTo
+        viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false)
+        viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false)
+    }
 }
