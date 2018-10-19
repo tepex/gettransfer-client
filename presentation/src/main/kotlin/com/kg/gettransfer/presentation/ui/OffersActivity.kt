@@ -185,8 +185,9 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
             hideSheetOfferDetails()
         }
 
-        if(offer.vehicle.photos.isEmpty()) vpVehiclePhotos.visibility = View.GONE
+        if(offer.vehicle.photos.isEmpty()) layoutPhotos.visibility = View.GONE
         else {
+            layoutPhotos.visibility = View.VISIBLE
             vpVehiclePhotos.adapter = VehiclePhotosVPAdapter(supportFragmentManager, offer.vehicle.photos)
             checkNumberOfPhoto(0, offer.vehicle.photos.size)
 
