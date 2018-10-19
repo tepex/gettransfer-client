@@ -7,6 +7,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.InternetNotAvailableException
+
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
@@ -65,6 +66,12 @@ class OffersPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: OffersView) {
         super.attachView(view)
+        utils.launchAsyncTryCatch({
+            val options = IO.Options()
+            options.path = "/api/socket"
+            options.forceNew = true
+            offersSocket = IO.socket("https://stgtr.org", options)
+        }, { e -> Timber.e(e) })
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true, true)
 
@@ -83,7 +90,6 @@ class OffersPresenter(cc: CoroutineContexts,
             if(e is ApiException && e.code == ApiException.NOT_LOGGED_IN) viewState.redirectView()
             else if(e !is InternetNotAvailableException) viewState.setError(e)
         }, { viewState.blockInterface(false) })
-
     }
 
     @CallSuper
