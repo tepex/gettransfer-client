@@ -62,6 +62,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     protected override fun onStart() {
         super.onStart()
         _mapView.onStart()
+        initMap()
     }
 
     @CallSuper
@@ -75,6 +76,8 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         _mapView.onPause()
         super.onPause()
     }
+
+    protected open fun initMap(){}
 
     @CallSuper
     protected override fun onStop() {
