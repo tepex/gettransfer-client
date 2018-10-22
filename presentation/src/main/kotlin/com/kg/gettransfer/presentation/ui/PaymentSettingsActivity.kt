@@ -48,7 +48,7 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     protected override var navigator = object: BaseNavigator(this) {
         override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
             when(screenKey) {
-                Screens.PAYMENT -> return context.getPaymentActivityLaunchIntent(data as String)
+                Screens.PAYMENT -> return context.getPaymentActivityLaunchIntent(data as Bundle)
             }
             return null
         }

@@ -40,9 +40,9 @@ import org.koin.android.ext.android.inject
 
 import timber.log.Timber
 
-fun Context.getPaymentActivityLaunchIntent(paymentUrl: String): Intent {
+fun Context.getPaymentActivityLaunchIntent(paymentUrl: Bundle): Intent {
     var intent = Intent(this, PaymentActivity::class.java)
-    intent.putExtra(PaymentActivity.PARAM_URL, paymentUrl)
+    intent.putExtra(PaymentActivity.PARAM_URL, paymentUrl.getString(PaymentSettingsPresenter.BUNDLE_KEY_URL))
     return intent
 }
 
