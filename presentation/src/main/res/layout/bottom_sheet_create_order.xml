@@ -545,6 +545,7 @@
                     android:background="@null"
                     android:fontFamily="@font/sf_pro_text_regular"
                     android:hint="@string/transfer_promo_hint"
+                    android:inputType="text"
                     android:textAllCaps="true"
                     android:textColor="@color/colorTextBlack"
                     android:textSize="@dimen/create_transfer_additionals_top_text_size"
@@ -597,7 +598,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout_promo" />
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout6" />
 
 
             <View
@@ -614,6 +615,7 @@
                 android:id="@+id/view12"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/create_transfer_divider_height"
+
                 android:background="@color/colorDividerGray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

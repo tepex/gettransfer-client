@@ -3,8 +3,8 @@ package com.kg.gettransfer.remote.mapper
 import com.kg.gettransfer.data.model.PromoEntity
 import com.kg.gettransfer.remote.model.PromoModel
 
-class PromoMapper(): EntityMapper<PromoModel?, PromoEntity> {
-    override fun fromRemote(type: PromoModel?): PromoEntity = PromoEntity(type!!.data)
+class PromoMapper(): EntityMapper<String?, PromoEntity> {
+    override fun fromRemote(type: String?): PromoEntity = PromoEntity(type!!)
 
-    override fun toRemote(type: PromoEntity): PromoModel? = null
+    override fun toRemote(type: PromoEntity): String? = null
 }

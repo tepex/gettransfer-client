@@ -18,7 +18,7 @@ interface Api {
         const val API_CARRIER_TRIPS      = "/api/trips"
         const val API_TRANSFERS          = "/api/transfers"
         const val API_CREATE_NEW_PAYMENT = "/api/payments"
-        const val API_PROMO = "/api/promo_codes"
+        const val API_PROMO              = "/api/promo_codes/search"
     }
 
     @GET(API_ACCESS_TOKEN)
@@ -79,9 +79,8 @@ interface Api {
 	fun createNewPayment(@Body createPayment: PaymentRequestModel): Deferred<ResponseModel<PaymentModel>>
     
     @GET(API_PROMO)
-    fun getDiscount(@Header("value") code: String): Deferred<ResponseModel<PromoModel>>
+    fun getDiscount(@Query("value") code: String): Deferred<ResponseModel<String>>
 
-	/*
 	@GET("$API_CREATE_NEW_PAYMENT/{status}")
 	fun changePaymentStatus(@Path("status") status: String, @Body payment: PaymentStatusRequestModel): Deferred<ResponseModel<PaymentStatusWrapperModel>>
 }

@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import android.util.Patterns
 
@@ -56,6 +57,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     private var transportTypes: List<TransportTypeModel>? = null
     private var routeModel: RouteModel? = null
     private var track: CameraUpdate? = null
+    private var promoCode: String? = null
     
     internal var cost: Int? = null
     internal var date: Date = Date()
@@ -192,12 +194,14 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
 
     fun setPromo(charsCount: Int){
+        Log.i("FindMethod", "length " + charsCount)
         viewState.showPromoButton(charsCount > 0)
     }
 
     fun usePromoForDiscount(code: String){
         utils.launchAsyncTryCatch({
             val mDiscount = promoInteractor.getDiscountByPromo(code)
+            promoCode = code
             viewState.setPromoResult(mDiscount.discount)
         },{
             e -> viewState.setPromoResult(null)
@@ -247,7 +251,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                                          cost,
                                                                          comment,
                                                                          Mappers.getUser(user),
-                                                                         null,
+                                                                         promoCode,
                                                                          false)) }
             Timber.d("new transfer: %s", transfer)
             router.navigateTo(Screens.OFFERS)

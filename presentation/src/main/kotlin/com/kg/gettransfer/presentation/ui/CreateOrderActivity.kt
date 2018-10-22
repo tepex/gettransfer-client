@@ -22,6 +22,7 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.text.method.KeyListener
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.*
 
 import android.view.inputmethod.EditorInfo
@@ -80,6 +81,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private lateinit var bsOrder: BottomSheetBehavior<View>
     private lateinit var bsTransport: BottomSheetBehavior<View>
     private lateinit var popupWindowComment: PopupWindow
+
+    private var defaultPromoText: String? = null
 
     @ProvidePresenter
     fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(coroutineContexts,
@@ -158,8 +161,9 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         ivChildCounterUp.setOnClickListener   { presenter.changeChildren(1) }
         tvFlightOrTrainNumber.onTextChanged   { presenter.setFlightNumber(it.trim()) }
 
-        etPromo.onTextChanged { presenter.setPromo(it.length) }
+        etPromo.onTextChanged { presenter.setPromo(etPromo.text.length) }
         btnOkPromo.setOnClickListener { presenter.usePromoForDiscount(etPromo.text.toString().trim()) }
+        defaultPromoText = tvPromoResult.text.toString()
 
         tvComments.setOnClickListener {
             showPopupWindowComment()
@@ -304,12 +308,18 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     override fun showPromoButton(show: Boolean) {
         btnOkPromo.visibility = if(show) View.VISIBLE else View.INVISIBLE
+        if(!show) resetPromoView()
     }
 
     override fun setPromoResult(discountInfo: String?) {
         tvPromoResult.text = discountInfo ?: getString(R.string.transfer_promo_result_fail)
         val colorRes = if(discountInfo != null) R.color.promo_valid else R.color.color_error
         tvPromoResult.setTextColor(getColor(colorRes))
+    }
+
+    override fun resetPromoView(){
+        tvPromoResult.text = defaultPromoText
+ //       tvPromoResult.setTextColor(getColor(R.color))
     }
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {
@@ -335,4 +345,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         else if(bsOrder.state == BottomSheetBehavior.STATE_EXPANDED) toggleSheetOrder()
         else super.onBackPressed()
     }
+
+    //MYPROMO1
 }

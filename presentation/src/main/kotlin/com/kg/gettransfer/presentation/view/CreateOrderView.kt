@@ -32,4 +32,5 @@ interface CreateOrderView: BaseView {
     fun setGetTransferEnabled(enabled: Boolean)
     fun setPromoResult(discountInfo: String?)
     fun showPromoButton(show: Boolean)
+    fun resetPromoView()
 }

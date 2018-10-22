@@ -11,14 +11,12 @@ import com.kg.gettransfer.remote.model.ResponseModel
 class PromoRemoteImpl(val core: ApiCore,
                       val mapper: PromoMapper): PromoRemote {
     override suspend fun getDiscount(code: String): PromoEntity {
-        Log.i("FindPromo", code)
-        val response: ResponseModel<PromoModel> = tryGetDiscount(code)
-        Log.i("FindPromo", response.data.toString())
+        val response: ResponseModel<String> = tryGetDiscount(code)
         return mapper.fromRemote(response.data)
 
     }
 
-    private suspend fun tryGetDiscount(code: String): ResponseModel<PromoModel> {
+    private suspend fun tryGetDiscount(code: String): ResponseModel<String> {
         return try {
             core.api.getDiscount(code).await()
         }
