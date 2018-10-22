@@ -111,7 +111,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         date = calendar.getTime()
     }
 
-    fun initMapAndPrices(){
+    fun initMapAndPrices() {
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             val from = routeInteractor.from!!.cityPoint
@@ -119,7 +119,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
             var prices: Map<String, String>? = null
             if(routeInfo.prices != null) prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
-            if (transportTypes == null) {
+            if(transportTypes == null) {
                 transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
             }
             routeModel = Mappers.getRouteModel(routeInfo.distance,
