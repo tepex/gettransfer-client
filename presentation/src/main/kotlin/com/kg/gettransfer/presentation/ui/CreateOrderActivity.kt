@@ -124,7 +124,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
 
         _mapView = mapView
-        initGoogleMap(savedInstanceState)
+        initMapView(savedInstanceState)
 
         /*setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -188,7 +188,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
     }
 
-    protected override fun customizeGoogleMaps() {
+    protected suspend override fun customizeGoogleMaps() {
         super.customizeGoogleMaps()
         googleMap.uiSettings.setRotateGesturesEnabled(false)
         googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))

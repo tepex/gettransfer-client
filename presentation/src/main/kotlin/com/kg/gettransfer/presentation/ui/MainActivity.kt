@@ -81,10 +81,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     private var toClick = false
 
     @ProvidePresenter
-    fun createMainPresenter(): MainPresenter = MainPresenter(coroutineContexts,
-                                                             router,
-                                                             systemInteractor,
-                                                             routeInteractor)
+    fun createMainPresenter(): MainPresenter =
+        MainPresenter(coroutineContexts, router, systemInteractor, routeInteractor)
 
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
@@ -172,7 +170,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         }
 
         _mapView = mapView
-        initGoogleMap(savedInstanceState)
+        initMapView(savedInstanceState)
 
         /*val tb = this.toolbar as Toolbar
 
@@ -280,7 +278,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
 
-    protected override fun customizeGoogleMaps() {
+    protected suspend override fun customizeGoogleMaps() {
         super.customizeGoogleMaps()
         googleMap.setMyLocationEnabled(true)
         googleMap.uiSettings.isMyLocationButtonEnabled = false
@@ -292,27 +290,31 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     /* MainView */
     override fun setMapPoint(point: LatLng) {
         val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
-        if(centerMarker != null) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
-            moveCenterMarker(point)
-        } else {
-            /* Грязный хак!!! */
-            if(isFirst || googleMap.cameraPosition.zoom <= MAX_INIT_ZOOM) {
-                val zoom1 = resources.getInteger(R.integer.map_min_zoom).toFloat()
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom1))
-                isFirst = false
-                //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+        processGoogleMap {
+            if(centerMarker != null) {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+                moveCenterMarker(point)
+            } else {
+                /* Грязный хак!!! */
+                if(isFirst || googleMap.cameraPosition.zoom <= MAX_INIT_ZOOM) {
+                    val zoom1 = resources.getInteger(R.integer.map_min_zoom).toFloat()
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom1))
+                    isFirst = false
+                    //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+                }
+                //else googleMap.moveCamera(CameraUpdateFactory.newLatLng(point))
+                else googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
             }
-            //else googleMap.moveCamera(CameraUpdateFactory.newLatLng(point))
-            else googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
         }
     }
 
     override fun setMarkerElevation(up: Boolean, elevation: Float) {
         mMarker.animate()
                 .withStartAction { presenter.setMarkerAnimating(true) }
-                .withEndAction { presenter.setMarkerAnimating(false)
-                    if(!up) markerShadow.setImageDrawable(getDrawable(R.drawable.default_position_shadow))}
+                .withEndAction {
+                    presenter.setMarkerAnimating(false)
+                    if(!up) markerShadow.setImageDrawable(getDrawable(R.drawable.default_position_shadow))
+                }
                 .translationYBy(-elevation)
                 .start()
 
@@ -335,6 +337,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         searchFrom.text = address
         enableBtnNext()
     }
+    
     override fun setAddressTo(address: String)   {
         searchTo.text = address
         enableBtnNext()

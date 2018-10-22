@@ -11,6 +11,8 @@ import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
+import com.google.android.gms.maps.GoogleMap
+
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
@@ -30,7 +32,7 @@ import kotlinx.android.synthetic.main.view_transfer_request_info.view.*
 
 import org.koin.android.ext.android.inject
 
-class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsView{
+class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsView {
     @InjectPresenter
     internal lateinit var presenter: CarrierTripDetailsPresenter
 
@@ -38,15 +40,12 @@ class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsVie
     private val routeInteractor: RouteInteractor by inject()
 
     @ProvidePresenter
-    fun createCarrierTripDetailsPresenter(): CarrierTripDetailsPresenter = CarrierTripDetailsPresenter(coroutineContexts,
-                                                                                                       router,
-                                                                                                       systemInteractor,
-                                                                                                       carrierTripInteractor,
-                                                                                                       routeInteractor)
+    fun createCarrierTripDetailsPresenter(): CarrierTripDetailsPresenter
+        = CarrierTripDetailsPresenter(coroutineContexts, router, systemInteractor, carrierTripInteractor, routeInteractor)
 
     override fun getPresenter(): CarrierTripDetailsPresenter = presenter
 
-    protected override var navigator = object: BaseNavigator(this){}
+    protected override var navigator = object: BaseNavigator(this) {}
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +53,7 @@ class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsVie
 
         setContentView(R.layout.activity_carrier_transfer_details)
         _mapView = mapView
-        initGoogleMap(savedInstanceState)
+        initMapView(savedInstanceState)
 
         setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -69,7 +68,7 @@ class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsVie
         btnCall.setOnClickListener { presenter.onCallClick() }
     }
 
-    protected override fun customizeGoogleMaps() {
+    protected suspend override fun customizeGoogleMaps() {
         super.customizeGoogleMaps()
         // https://stackoverflow.com/questions/16974983/google-maps-api-v2-supportmapfragment-inside-scrollview-users-cannot-scroll-th
         transparentImage.setOnTouchListener(View.OnTouchListener { _, motionEvent ->
@@ -106,10 +105,11 @@ class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsVie
         layoutTransferInfo.tvOrderDateTime.text = getString(R.string.transfer_date_local, trip.dateTime)
         layoutTransferInfo.tvDistance.text = Utils.formatDistance(this, trip.distance, trip.distanceUnit)
         tvCountPassengers.text = trip.countPassengers.toString()
-        if (trip.nameSign != null) tvPassengerName.text = trip.nameSign else layoutName.visibility = View.GONE
-        if (trip.countChild > 0) tvCountChildSeats.text = trip.countChild.toString() else layoutChildSeat.visibility = View.GONE
-        if (trip.flightNumber != null) tvFlightOrTrainNumber.text = trip.flightNumber else layoutFlightNumber.visibility = View.GONE
-        if (trip.comment != null) tvComment.text = trip.comment else layoutComment.visibility = View.GONE
-        if (trip.remainsToPay != null) tvPay.text = trip.remainsToPay else layoutRemainsToPay.visibility = View.GONE
+        
+        if(trip.nameSign != null) tvPassengerName.text = trip.nameSign else layoutName.visibility = View.GONE
+        if(trip.countChild > 0) tvCountChildSeats.text = trip.countChild.toString() else layoutChildSeat.visibility = View.GONE
+        if(trip.flightNumber != null) tvFlightOrTrainNumber.text = trip.flightNumber else layoutFlightNumber.visibility = View.GONE
+        if(trip.comment != null) tvComment.text = trip.comment else layoutComment.visibility = View.GONE
+        if(trip.remainsToPay != null) tvPay.text = trip.remainsToPay else layoutRemainsToPay.visibility = View.GONE
     }
 }

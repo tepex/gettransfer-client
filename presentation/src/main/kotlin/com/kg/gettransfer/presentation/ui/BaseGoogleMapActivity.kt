@@ -41,12 +41,12 @@ import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 
 abstract class BaseGoogleMapActivity: BaseActivity() {
-    private var _googleMap: GoogleMap? = null
+    private lateinit var googleMapJob: Job
     protected lateinit var _mapView: MapView
+    protected lateinit var googleMap: GoogleMap
 
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
-    private lateinit var googleMapJob: Job
 
     companion object {
         @JvmField val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
@@ -95,6 +95,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     protected override fun onDestroy() {
         _mapView.onDestroy()
         compositeDisposable.cancel()
+        googleMapJob.cancel()
         super.onDestroy()
     }
 
@@ -107,25 +108,24 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     protected fun initMapView(savedInstanceState: Bundle?) {
         val mapViewBundle = savedInstanceState?.getBundle(MAP_VIEW_BUNDLE_KEY)
         _mapView.onCreate(mapViewBundle)
+        googleMapJob = utils.launch {
+            googleMap = suspendCoroutine { cont -> _mapView.getMapAsync { cont.resume(it) } }
+            customizeGoogleMaps()
+        }
     }
 
-    protected suspend open fun customizeGoogleMaps(googleMap: GoogleMap) {
+    protected suspend open fun customizeGoogleMaps() {
         googleMap.uiSettings.setRotateGesturesEnabled(false)
         googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
     }
     
-    protected suspend fun getGoogleMap(): GoogleMap {
-        if(_googleMap != null) return _googleMap!!
-        Timber.d("GoogleMap start delay")
-        delay(5000)
-        googleMapJob = utils.launch {
-            _googleMap = suspendCoroutine { cont -> _mapView.getMapAsync { cont.resume(it) } }
-            customizeGoogleMaps(_googleMap)
+    protected fun processGoogleMap(block: () -> Unit) {
+        utils.launch {
+            if(!googleMapJob.isCompleted) googleMapJob.join()
+            block()
         }
-        Timber.d("GoogleMap end delay")
-        return _googleMap!!
     }
-
+    
     protected fun setPolyline(polyline: PolylineModel, routeModel: RouteModel) {
         val pinLayout = layoutInflater.inflate(R.layout.view_maps_pin, null)
 
@@ -151,25 +151,21 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
                 .position(polyline.finishPoint)
                 .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
 
-        utils.asyncAwait {
-            if(!googleMapJob.isCompleted) {
-                Timber.d("wait for GoogleMap initialization")
-                googleMapJob.join()
-            }
-        
+        processGoogleMap {
             if(polyline.line != null) {
-                polyline.line.width(10f).color(ContextCompat.getColor(this, R.color.colorPolyline))
+                polyline.line.width(10f).color(ContextCompat.getColor(this@BaseGoogleMapActivity, R.color.colorPolyline))
                 googleMap.addPolyline(polyline.line)
             }
 
-            getGoogleMap.addMarker(startMakerOptions)
-        googleMap.addMarker(endMakerOptions)
+            googleMap.addMarker(startMakerOptions)
+            googleMap.addMarker(endMakerOptions)
 
-        try {
-            googleMap.moveCamera(polyline.track)
-            //showTrack(polyline.track)
+            try {
+                googleMap.moveCamera(polyline.track)
+                //showTrack(polyline.track)
+            }
+            catch(e: Exception) { Timber.e(e) }
         }
-        catch(e: Exception) { Timber.e(e) }
     }
 
     protected fun showTrack (track: CameraUpdate){
