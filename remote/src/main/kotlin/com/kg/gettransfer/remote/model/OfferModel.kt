@@ -39,7 +39,7 @@ class CarrierModel(@SerializedName("title") @Expose val title: String?,
 
 class VehicleModel(name: String, regNumber: String,
                    @SerializedName("year") @Expose val year: Int,
-                   @SerializedName("color") @Expose val color: String,
+                   @SerializedName("color") @Expose val color: String?,
                    @SerializedName("transport_type_id") @Expose val transportTypeId: String,
                    @SerializedName("pax_max") @Expose val paxMax: Int,
                    @SerializedName("luggage_max") @Expose val luggageMax: Int,

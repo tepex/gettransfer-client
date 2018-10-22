@@ -34,6 +34,6 @@ data class CarrierEntity(val id: Long,
 
 data class VehicleEntity(val vehicleBase: VehicleBaseEntity,
                          val year: Int,
-                         val color: String,
+                         val color: String?,
                          val transportType: TransportTypeEntity,
                          val photos: List<String>)

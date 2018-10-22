@@ -12,7 +12,12 @@ class OfferModel(val id: Long,
                  val passengerFeedback: String?,
                  val carrier: CarrierModel,
                  val vehicle: VehicleModel,
-                 val driver: ProfileModel?)
+                 val driver: ProfileModel?) {
+    companion object {
+        const val FULL_PRICE = 100
+        const val PRICE_30   = 30
+    }
+}
 
 class PriceModel(val base: MoneyModel, val percentage30: String, val percentage70: String, val amount: String)
 

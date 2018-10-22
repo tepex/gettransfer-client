@@ -163,7 +163,8 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
         offer.carrier.ratings.fair?.let    { ratingBarPunctuality.rating = it }
         offer.carrier.ratings.vehicle?.let { ratingBarVehicle.rating = it }
 
-        vehicleName.text = Utils.getVehicleNameWithColor(this, offer.vehicle.vehicleBase.name, offer.vehicle.color)
+        vehicleName.text = if(offer.vehicle.color == null) offer.vehicle.vehicleBase.name
+        else Utils.getVehicleNameWithColor(this, offer.vehicle.vehicleBase.name, offer.vehicle.color)
         vehicleType.text = getString(offer.vehicle.transportType.nameId!!)
         sheetOfferDetails.tvCountPersons.text = Utils.formatPersons(this, offer.vehicle.transportType.paxMax)
         sheetOfferDetails.tvCountBaggage.text = Utils.formatLuggage(this, offer.vehicle.transportType.luggageMax)
@@ -184,8 +185,9 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
             hideSheetOfferDetails()
         }
 
-        if(offer.vehicle.photos.isEmpty()) vpVehiclePhotos.visibility = View.GONE
+        if(offer.vehicle.photos.isEmpty()) layoutPhotos.visibility = View.GONE
         else {
+            layoutPhotos.visibility = View.VISIBLE
             vpVehiclePhotos.adapter = VehiclePhotosVPAdapter(supportFragmentManager, offer.vehicle.photos)
             checkNumberOfPhoto(0, offer.vehicle.photos.size)
 
