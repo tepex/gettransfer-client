@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 
 import android.graphics.Color
-import android.inputmethodservice.Keyboard
 
 import android.os.Build
 import android.os.Bundle
@@ -17,16 +16,13 @@ import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
 
 import android.support.v7.widget.LinearLayoutManager
+import android.text.InputFilter
 
 import android.text.InputType
-import android.text.TextWatcher
-import android.text.method.KeyListener
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.*
 
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
 
 import android.widget.LinearLayout
 import android.widget.PopupWindow
@@ -63,7 +59,6 @@ import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
-
 
 import org.koin.android.ext.android.inject
 
@@ -161,9 +156,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         ivChildCounterUp.setOnClickListener   { presenter.changeChildren(1) }
         tvFlightOrTrainNumber.onTextChanged   { presenter.setFlightNumber(it.trim()) }
 
-        etPromo.onTextChanged { presenter.setPromo(etPromo.text.length) }
-        btnOkPromo.setOnClickListener { presenter.usePromoForDiscount(etPromo.text.toString().trim()) }
-        defaultPromoText = tvPromoResult.text.toString()
+        initPromoSection()
+
 
         tvComments.setOnClickListener {
             showPopupWindowComment()
@@ -306,9 +300,9 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     override fun centerRoute(cameraUpdate: CameraUpdate) { showTrack(cameraUpdate) }
 
-    override fun showPromoButton(show: Boolean) {
-        btnOkPromo.visibility = if(show) View.VISIBLE else View.INVISIBLE
-        if(!show) resetPromoView()
+    override fun setPromoUiElements(hasText: Boolean) {
+        btnOkPromo.visibility = if(hasText) View.VISIBLE else View.INVISIBLE
+        if(!hasText) resetPromoView()
     }
 
     override fun setPromoResult(discountInfo: String?) {
@@ -317,9 +311,9 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         tvPromoResult.setTextColor(getColor(colorRes))
     }
 
-    override fun resetPromoView(){
+    private fun resetPromoView() {
         tvPromoResult.text = defaultPromoText
- //       tvPromoResult.setTextColor(getColor(R.color))
+        tvPromoResult.setTextColor(getColor(R.color.colorTextLightGray))
     }
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {
@@ -345,6 +339,4 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         else if(bsOrder.state == BottomSheetBehavior.STATE_EXPANDED) toggleSheetOrder()
         else super.onBackPressed()
     }
-
-    //MYPROMO1
 }

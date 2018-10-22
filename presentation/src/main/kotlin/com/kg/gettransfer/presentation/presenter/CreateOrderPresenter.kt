@@ -193,15 +193,14 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         logTransferSettingsEvent(FLIGHT_NUMBER_ADDED)
     }
 
-    fun setPromo(charsCount: Int){
-        Log.i("FindMethod", "length " + charsCount)
-        viewState.showPromoButton(charsCount > 0)
+    fun setPromo(codeText: String){
+        promoCode = codeText
+        viewState.setPromoUiElements(codeText.isNotEmpty())
     }
 
-    fun usePromoForDiscount(code: String){
+    fun usePromoForDiscount(){
         utils.launchAsyncTryCatch({
-            val mDiscount = promoInteractor.getDiscountByPromo(code)
-            promoCode = code
+            val mDiscount = promoInteractor.getDiscountByPromo(promoCode!!)
             viewState.setPromoResult(mDiscount.discount)
         },{
             e -> viewState.setPromoResult(null)
