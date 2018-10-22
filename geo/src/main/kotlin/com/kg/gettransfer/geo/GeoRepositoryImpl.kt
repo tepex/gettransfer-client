@@ -59,21 +59,21 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
         val area    = list.firstOrNull()?.adminArea
         val country = list.firstOrNull()?.countryName
 
-        val addr = StringBuilder()
-
-        if(street == null && !list.isEmpty() && list.firstOrNull()?.getAddressLine(0)!!.isNotEmpty()) {
-            addr.append(list.firstOrNull()?.getAddressLine(0))
+        val addr = with(StringBuilder()) {
+            if(street == null && !list.isEmpty() && list.firstOrNull()?.getAddressLine(0)!!.isNotEmpty()) {
+                append(list.firstOrNull()?.getAddressLine(0))
+            }
+            else {
+                if(!street.isNullOrEmpty())  append(street).append(", ")
+                if(!house.isNullOrEmpty())   append(house).append(", ")
+                if(!city.isNullOrEmpty())    append(city).append(", ")
+                if(!country.isNullOrEmpty()) append(country)
+                if(!area.isNullOrEmpty() && area != city) append(area).append(", ")
+            }
+            toString()
         }
-        else {
-            if(!street.isNullOrEmpty())  addr.append(street).append(", ")
-            if(!house.isNullOrEmpty())   addr.append(house).append(", ")
-            if(!city.isNullOrEmpty())    addr.append(city).append(", ")
-            if(!country.isNullOrEmpty()) addr.append(country)
-            if(!area.isNullOrEmpty() && area != city) addr.append(area).append(", ")
-        }
-
-        val text = getAutocompletePredictions(addr.toString(), null)
-        val address = if(text.isNotEmpty()) text.get(0).address else addr.toString()
+        val text = getAutocompletePredictions(addr, null)
+        val address = if(text.isNotEmpty()) text.get(0).address else addr
         return GTAddress(CityPoint(address, point, null),
                          listOf(GTAddress.TYPE_STREET_ADDRESS),
                          address,
