@@ -191,7 +191,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
     }
 
-    private fun initPromoSection() {
+    private fun initPromoSection(){
         etPromo.filters = arrayOf(InputFilter.AllCaps())
         etPromo.onTextChanged { presenter.setPromo(etPromo.text.toString()) }
         btnOkPromo.setOnClickListener { presenter.usePromoForDiscount() }
