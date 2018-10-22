@@ -18,9 +18,23 @@ open class SystemRemoteDataStore(private val remote: SystemRemote): SystemDataSt
         try { return remote.getConfigs() }
         catch(e: RemoteException) { throw ExceptionMapper.map(e) }
     }
-    override suspend fun getAccount() = remote.getAccount()
-    override suspend fun setAccount(accountEntity: AccountEntity) = remote.setAccount(accountEntity)
+    
+    override suspend fun getAccount(): AccountEntity {
+        try { return remote.getAccount() }
+        catch(e: RemoteException) { throw ExceptionMapper.map(e) }
+    }
+    
+    override suspend fun setAccount(accountEntity: AccountEntity) {
+        try { return remote.setAccount(accountEntity) }
+        catch(e: RemoteException) { throw ExceptionMapper.map(e) }
+    }
+    
     override fun clearAccount() { throw UnsupportedOperationException() }
-    override suspend fun login(email: String, password: String) = remote.login(email, password)
+    
+    override suspend fun login(email: String, password: String): AccountEntity {
+        try { return remote.login(email, password) }
+        catch(e: RemoteException) { throw ExceptionMapper.map(e) }
+    }
+    
     fun changeEndpoint(endpoint: EndpointEntity) = remote.changeEndpoint(endpoint)
 }
