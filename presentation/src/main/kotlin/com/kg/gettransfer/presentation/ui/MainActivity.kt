@@ -5,8 +5,6 @@ import android.content.Intent
 import android.content.res.Configuration
 
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.net.Uri
 
 import android.os.Build
 import android.os.Bundle
@@ -21,16 +19,12 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
 
 import android.transition.Fade
-import android.util.Log
 
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 
-import android.widget.LinearLayout
-import android.widget.PopupWindow
 import android.widget.TextView
 
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -45,8 +39,6 @@ import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.extensions.hideKeyboard
-import com.kg.gettransfer.extensions.showKeyboard
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.ProfileModel
@@ -210,7 +202,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
             fromClick = false
             presenter.onSearchClick(Pair(searchFrom.text, searchTo.text))
         }
-        btnNext.setOnClickListener { presenter.onNextClick(Pair(searchFrom.text, searchTo.text)) }
+        btnNext.setOnClickListener { presenter.onNextClick() }
         enableBtnNext()
 
         val fade = Fade()
@@ -238,7 +230,6 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
     @CallSuper
     protected override fun onStop() {
-        searchTo.text = ""
         enableBtnNext()
         super.onStop()
     }
