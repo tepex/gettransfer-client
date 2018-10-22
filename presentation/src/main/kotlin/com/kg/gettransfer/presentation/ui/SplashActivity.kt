@@ -27,7 +27,12 @@ import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.presentation.Screens
 
+import kotlin.concurrent.thread
+import kotlin.coroutines.experimental.Continuation
+import kotlin.coroutines.experimental.suspendCoroutine
+
 import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.launch
 
 import org.koin.android.ext.android.inject
 
@@ -44,6 +49,10 @@ class SplashActivity: AppCompatActivity() {
 	private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
 	private val systemInteractor: SystemInteractor by inject()
 	
+	private val qqq = QQQ()
+	private var gm: GM? = null
+	private lateinit var gmJob: Job
+	
 	@CallSuper
 	protected override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -55,15 +64,33 @@ class SplashActivity: AppCompatActivity() {
 			Timber.d("Splash screen")
 			return
 		}
+		
+		Timber.i("start qqq")
+		gmJob = utils.launch {
+		    gm = suspendCoroutine { cont -> 
+		        qqq.initAsync(object: OnReadyCallback {
+		                override fun ready(gm: GM) = cont.resume(gm)
+		        })
+		    }
+		}
+		Timber.i("end qqq: $gm")
 
 		Timber.d(getString(R.string.title_starting_session))
 		Timber.d("Permissions granted!")
 		utils.launchAsyncTryCatchFinally({
 		    utils.asyncAwait { systemInteractor.coldStart() }
-			when(systemInteractor.lastMode){
+		    /*
+			when(systemInteractor.lastMode) {
 				Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsActivity::class.java))
 				Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 				else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+			}
+			*/
+			Timber.i("cold start finished. jmJob.isCompleted: ${gmJob.isCompleted} gm: $gm")
+			if(!gmJob.isCompleted) {
+			    Timber.i("Start join")
+			    gmJob.join()
+			    Timber.i("end join: $gm")
 			}
 			//startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 		}, { e -> Timber.e(e); Utils.showError(this@SplashActivity, false, getString(R.string.err_server, e.message))
@@ -87,4 +114,23 @@ class SplashActivity: AppCompatActivity() {
 			grantResults[1] == PackageManager.PERMISSION_GRANTED) recreate()
 		else finish()
 	}
+}
+
+class QQQ() {
+    fun initAsync(callback: OnReadyCallback) {
+        thread(name = "QQQ Thread") {
+            Timber.i("Start QQQ initialization")
+            Thread.sleep(5000)
+            Timber.i("End QQQ initialization")
+            callback.ready(GM())
+        }
+    }
+}
+
+class GM {
+    override fun toString() = "I\'m GM!"
+}
+
+interface OnReadyCallback {
+    fun ready(gm: GM)
 }
