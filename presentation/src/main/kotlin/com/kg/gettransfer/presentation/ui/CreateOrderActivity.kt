@@ -158,7 +158,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
         initPromoSection()
 
-
         tvComments.setOnClickListener {
             showPopupWindowComment()
             toggleSheetOrder()
@@ -184,12 +183,19 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     private fun toggleSheetOrder() {
-        if (bsOrder.state != BottomSheetBehavior.STATE_EXPANDED) {
+        if(bsOrder.state != BottomSheetBehavior.STATE_EXPANDED) {
             bsOrder.state = BottomSheetBehavior.STATE_EXPANDED
         } else {
             bsOrder.state = BottomSheetBehavior.STATE_COLLAPSED
             scrollContent.fullScroll(View.FOCUS_UP)
         }
+    }
+
+    private fun initPromoSection() {
+        etPromo.filters = arrayOf(InputFilter.AllCaps())
+        etPromo.onTextChanged { presenter.setPromo(etPromo.text.toString()) }
+        btnOkPromo.setOnClickListener { presenter.usePromoForDiscount() }
+        defaultPromoText = tvPromoResult.text.toString()
     }
 
     protected suspend override fun customizeGoogleMaps() {

@@ -96,7 +96,7 @@ class PaymentActivity: BaseActivity(), PaymentView {
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 
         webView.settings.javaScriptEnabled = true
-        getBundleValues()
+        getBundleValues(intent.extras!!)
         webView.webViewClient = object: WebViewClient() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
@@ -119,9 +119,8 @@ class PaymentActivity: BaseActivity(), PaymentView {
         webView.loadUrl(intent.getStringExtra(PARAM_URL))
     }
 
-    private fun getBundleValues() {
-        val bundle = intent.extras
-        url = bundle.getString(PaymentSettingsPresenter.BUNDLE_KEY_URL)
+    private fun getBundleValues(bundle: Bundle) {
+        url = bundle.getString(PaymentSettingsPresenter.BUNDLE_KEY_URL)!!
         price = bundle.getInt(PaymentSettingsPresenter.BUNDLE_KEY_PRICE)
     }
 
