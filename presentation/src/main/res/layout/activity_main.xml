@@ -50,7 +50,7 @@
 					android:layout_width="match_parent"
 					android:layout_height="@dimen/activity_main_gradient_layout_height"
 					android:background="@drawable/back_status_bar_gradient"
-					android:layout_gravity="top"/>
+					android:layout_gravity="top" />
 
 				<ImageView
 					android:id="@+id/btnShowDrawerLayout"
@@ -63,7 +63,7 @@
 					android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end"
 					android:clickable="true"
 					android:focusable="true"
-					android:elevation="2dp"/>
+					android:elevation="2dp" />
 
 				<ImageView
 					android:id="@+id/btnMyLocation"
@@ -76,7 +76,7 @@
 					android:layout_marginEnd="@dimen/activity_main_buttons_margin_start_end"
 					android:clickable="true"
 					android:focusable="true"
-					android:elevation="2dp"/>
+					android:elevation="2dp" />
 
 				<ImageView
 					android:id="@+id/mMarker"
@@ -84,14 +84,14 @@
 					android:layout_height="wrap_content"
 					android:layout_gravity="center"
 					android:layout_marginBottom="21dp"
-					app:srcCompat="@drawable/ic_map_label_empty"/>
+					app:srcCompat="@drawable/ic_map_label_empty" />
 
 				<ImageView
 					android:id="@+id/markerShadow"
 					android:layout_width="31dp"
 					android:layout_height="4dp"
 					android:layout_gravity="center"
-					android:src="@drawable/default_position_shadow"/>
+					android:src="@drawable/default_position_shadow" />
 
 			</FrameLayout>
 
@@ -99,7 +99,7 @@
 				layout="@layout/search_form_main"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				app:layout_constraintBottom_toBottomOf="parent"/>
+				app:layout_constraintBottom_toBottomOf="parent" />
 
 		</android.support.constraint.ConstraintLayout>
 
