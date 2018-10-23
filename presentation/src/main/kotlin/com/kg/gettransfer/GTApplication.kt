@@ -24,7 +24,6 @@ class GTApplication: MultiDexApplication() {
         if(BuildConfig.FLAVOR == "dev") {
             Timber.plant(FileLoggingTree(applicationContext))
             System.setProperty("kotlinx.coroutines.debug", "on")
-            CrashManager.register(this)
         }
         // Start Koin
         startKoin(this, listOf(ciceroneModule,
