@@ -51,14 +51,20 @@ class PaymentRemoteImpl(private val core: ApiCore,
     
     private suspend fun tryChangeStatusPayment(success: Boolean, paymentStatusRequest: PaymentStatusRequestModel): ResponseModel<PaymentStatusWrapperModel> {
         val status = if(success) PaymentStatusRequestModel.STATUS_SUCCESSFUL else PaymentStatusRequestModel.STATUS_FAILED
-        return try { core.api.changePaymentStatus(status, paymentStatusRequest).await() }
+        return try {
+            core.api.changePaymentStatus(status,
+                    paymentStatusRequest.pgOrderId!!,
+                    paymentStatusRequest.withoutRedirect!!).await()
+        }
         catch(e: Exception) {
             if(e is RemoteException) throw e /* second invocation */
             val ae = core.remoteException(e)
             if(!ae.isInvalidToken()) throw ae
 
             try { core.updateAccessToken() } catch(e1: Exception) { throw core.remoteException(e1) }
-            return try { core.api.changePaymentStatus(status, paymentStatusRequest).await() } catch(e2: Exception) { throw core.remoteException(e2) }
+            return try { core.api.changePaymentStatus(status,
+                    paymentStatusRequest.pgOrderId!!,
+                    paymentStatusRequest.withoutRedirect!!).await() } catch(e2: Exception) { throw core.remoteException(e2) }
         }
     }
 }
