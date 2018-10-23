@@ -82,5 +82,7 @@ interface Api {
     fun getDiscount(@Query("value") code: String): Deferred<ResponseModel<String>>
 
 	@GET("$API_CREATE_NEW_PAYMENT/{status}")
-	fun changePaymentStatus(@Path("status") status: String, @Body payment: PaymentStatusRequestModel): Deferred<ResponseModel<PaymentStatusWrapperModel>>
+	fun changePaymentStatus(@Path("status") status: String,
+                            @Query("pg_order_id") pgOrderId: Long,
+                            @Query("without_redirect") withoutRedirect: Boolean): Deferred<ResponseModel<PaymentStatusWrapperModel>>
 }

@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -35,7 +36,7 @@ class MainPresenter(cc: CoroutineContexts,
     private var currentLocation: String = ""
 
     private val MARKER_ELEVATION = 25f
-    private var markerStateLifted = false
+    private var markerStateLifted = true
     private var isMarkerAnimating = true
 
     override fun onFirstViewAttach() {
@@ -46,6 +47,7 @@ class MainPresenter(cc: CoroutineContexts,
 
             updateCurrentLocationAsync()
             isMarkerAnimating = false
+            markerStateLifted = false
             //else viewState.setError(true, R.string.err_location_service_not_available)
         }, { e -> Timber.e(e) } )
 
@@ -106,7 +108,6 @@ class MainPresenter(cc: CoroutineContexts,
 
 
     fun onCameraMove(lastPoint: LatLng, animateMarker: Boolean) {
-//        Log.i("CheckPoints" , "LastAddress - " + lastAddressPoint + "this lastPoint - " + this.lastPoint + " local point - " + lastPoint)
         if(!markerStateLifted && !isMarkerAnimating && animateMarker){
             viewState.setMarkerElevation(true, MARKER_ELEVATION)
             markerStateLifted = true

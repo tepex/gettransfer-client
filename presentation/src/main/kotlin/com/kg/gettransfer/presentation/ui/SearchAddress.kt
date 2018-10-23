@@ -99,7 +99,6 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
             } else {
                 checkClearButtonVisibility()
                 parent.presenter.isTo = isTo
-                presenter.requestAddressListByPrediction(text.trim())
             }
         }
         addressField.addTextChangedListener(this)
@@ -150,7 +149,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     override fun setAddressList(list: List<GTAddress>) {
-        if(addressField.isFocused) parent.setAddressList(list)
+        if(addressField.isFocused) parent.setAddressListByAutoComplete(list)
     }
 
     override fun returnLastAddress(addressName: String) {

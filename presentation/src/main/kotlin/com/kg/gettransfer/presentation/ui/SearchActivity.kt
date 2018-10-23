@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar
 
 import android.transition.Fade
 import android.transition.Slide
+import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -28,7 +29,10 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.extensions.hideKeyboard
 
 import com.kg.gettransfer.presentation.Screens
+
 import com.kg.gettransfer.presentation.adapter.AddressAdapter
+import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
+
 import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
@@ -84,7 +88,8 @@ class SearchActivity: BaseActivity(), SearchView {
         setContentView(R.layout.activity_search)
         setupToolbar()
 
-        addressList.layoutManager = LinearLayoutManager(this)
+        rv_addressList.layoutManager = LinearLayoutManager(this)
+        rv_popularList.layoutManager = LinearLayoutManager(this)
 
         mBounds = intent.getParcelableExtra(LATLON_BOUNDS)
 
@@ -147,11 +152,23 @@ class SearchActivity: BaseActivity(), SearchView {
     override fun blockInterface(block: Boolean) {}
     override fun setAddressFrom(address: String, sendRequest: Boolean) { searchFrom.initText(address, sendRequest) }
     override fun setAddressTo(address: String, sendRequest: Boolean) { searchTo.initText(address, sendRequest) }
-    override fun setAddressList(list: List<Any>) {
-        if(addressList.adapter != null) (addressList.adapter as AddressAdapter).updateList(list)
-        else addressList.adapter = AddressAdapter(presenter, list)}
+    
+    override fun setAddressListByAutoComplete(list: List<GTAddress>) {
+        ll_popular.visibility = View.GONE
+        address_title.visibility = View.GONE
+        (rv_addressList.adapter as AddressAdapter).isLastAddresses = false
+        (rv_addressList.adapter as AddressAdapter).updateList(list)
+    }
+    
     override fun onFindPopularPlace(isTo: Boolean, place: String) {
-        val search = if(isTo) searchTo else searchFrom
-        search.presenter.requestAddressListByPrediction(place)
+        val searchField = if(isTo) searchTo else searchFrom
+        searchField.initText(place, true)
+    }
+
+    override fun setSuggestedAddresses(addressesList: List<GTAddress>, popularList: List<PopularPlace>) {
+        rv_popularList.adapter = PopularAddressAdapter(presenter, popularList)
+        val addressAdapter = AddressAdapter(presenter, addressesList)
+        addressAdapter.isLastAddresses = true
+        rv_addressList.adapter = addressAdapter
     }
 }
