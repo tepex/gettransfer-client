@@ -10,7 +10,7 @@ ext {
 	koin_version              = "1.0.1"
 	moxy_version              = "1.5.5"
 	cicerone_version          = "3.0.0"
-	circle_indicator_version  = "2.1.0"
+	circle_indicator_version  = "1.2.2"
 	hockey_version            = "5.1.1"
 	firebase_version          = "16.0.4"
 	glide_version			  = "4.8.0"
