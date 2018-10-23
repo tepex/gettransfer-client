@@ -165,16 +165,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         _mapView = mapView
         initMapView(savedInstanceState)
 
-        /*val tb = this.toolbar as Toolbar
-
-        setSupportActionBar(tb)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        supportActionBar?.setDisplayShowHomeEnabled(false)*/
-
         btnShowDrawerLayout.setOnClickListener { drawer.openDrawer(Gravity.START) }
         drawer = drawerLayout as DrawerLayout
-        //toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
             @CallSuper
             override fun onDrawerStateChanged(newState: Int) {
@@ -185,11 +177,18 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
         presenter.setAddressFields()
 
-        //(appbar as AppBarLayout).bringToFront()
         initNavigation()
 
         isFirst = savedInstanceState == null
 
+        val fade = Fade()
+        fade.duration = FADE_DURATION
+        window.setExitTransition(fade)
+    }
+
+    @CallSuper
+    protected override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
         search.elevation = resources.getDimension(R.dimen.search_elevation)
         searchFrom.setUneditable()
         searchTo.setUneditable()
@@ -205,16 +204,6 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         }
         btnNext.setOnClickListener { presenter.onNextClick() }
         enableBtnNext()
-
-        val fade = Fade()
-        fade.duration = FADE_DURATION
-        window.setExitTransition(fade)
-    }
-
-    @CallSuper
-    protected override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        //toggle.syncState()
     }
 
     @CallSuper
