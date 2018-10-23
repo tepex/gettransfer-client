@@ -171,5 +171,6 @@ class SearchActivity: BaseActivity(), SearchView {
         val addressAdapter = AddressAdapter(presenter, addressesList)
         addressAdapter.isLastAddresses = true
         rv_addressList.adapter = addressAdapter
+        if(addressesList.isEmpty()) address_title.visibility = View.GONE
     }
 }

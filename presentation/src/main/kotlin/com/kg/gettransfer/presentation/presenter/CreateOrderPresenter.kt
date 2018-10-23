@@ -197,15 +197,13 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         if(codeText.isEmpty()) viewState.resetPromoView()
     }
 
-    fun onKeyBoardClosed(height: Int, isFocused: Boolean) {
-        if(height < 200 && isFocused) usePromoForDiscount()
-    }
-
-    private fun usePromoForDiscount() {
-        utils.launchAsyncTryCatch({
-            val mDiscount = promoInteractor.getDiscountByPromo(promoCode!!)
-            viewState.setPromoResult(mDiscount.discount)
-        }, { _ -> viewState.setPromoResult(null) })
+    fun checkPromoCode() {
+        if(promoCode!!.isNotEmpty()){
+            utils.launchAsyncTryCatch({
+                val mDiscount = promoInteractor.getDiscountByPromo(promoCode!!)
+                viewState.setPromoResult(mDiscount.discount)
+            }, { _ -> viewState.setPromoResult(null) })
+        }
     }
 
     fun setComment(comment: String) {

@@ -118,6 +118,8 @@
 	<dimen name="address_item_icon_margin_default">8dp</dimen>
 	<dimen name="address_item_icon_margin_height_width">30dp</dimen>
 	<dimen name="title_text_size">12sp</dimen>
+	<dimen name="minHeight_toDraw_AllPopularPlaces">138dp</dimen>
+
 
 	<!-- Settings -->
 	<dimen name="settings_activity_height_layouts">44dp</dimen>

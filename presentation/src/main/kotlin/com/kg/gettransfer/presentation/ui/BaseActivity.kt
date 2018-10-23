@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 
 import android.os.Bundle
 
@@ -43,6 +44,9 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     internal val coroutineContexts: CoroutineContexts by inject()
     internal val router: Router by inject()
     protected val navigatorHolder: NavigatorHolder by inject()
+
+    private var rootView: View? = null
+    private var rootViewHeight: Int? = null
     
     protected open lateinit var navigator: BaseNavigator
     
@@ -91,6 +95,28 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         val view = currentFocus
         view?.hideKeyboard()
         view?.clearFocus()
+    }
+
+
+    //здесь лучше ничего не трогать
+    private fun countDifference(): Boolean {
+        if(rootViewHeight == null) rootViewHeight = rootView!!.height
+
+        val visibleRect = getRect()
+        return (visibleRect.bottom - rootViewHeight!!)  == visibleRect.top
+    }
+
+    private fun getRect(): Rect{
+        val rect = Rect()
+        rootView!!.getWindowVisibleDisplayFrame(rect)
+        return rect
+    }
+
+    fun addKeyBoardDismissListener(checkKeyBoardState: (Boolean) -> Unit) {
+        rootView = findViewById(android.R.id.content)
+        rootView!!.viewTreeObserver.addOnGlobalLayoutListener {
+            checkKeyBoardState(countDifference())
+        }
     }
 }
 
