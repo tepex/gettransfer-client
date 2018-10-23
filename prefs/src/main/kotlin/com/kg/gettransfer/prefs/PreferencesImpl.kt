@@ -1,6 +1,7 @@
 package com.kg.gettransfer.prefs
 
 import android.content.Context
+
 import com.kg.gettransfer.JsonParser
 
 import com.kg.gettransfer.data.PreferencesCache
@@ -39,7 +40,7 @@ class PreferencesImpl(context: Context) : PreferencesCache, SystemCache {
 
     override var accessToken: String
         get() {
-            if (_accessToken == SystemCache.INVALID_TOKEN) _accessToken = configsPrefs.getString(TOKEN, SystemCache.INVALID_TOKEN)!!
+            if(_accessToken == SystemCache.INVALID_TOKEN) _accessToken = configsPrefs.getString(TOKEN, SystemCache.INVALID_TOKEN)!!
             return _accessToken
         }
         set(value) {
@@ -97,7 +98,7 @@ class PreferencesImpl(context: Context) : PreferencesCache, SystemCache {
         }
 
     override fun clearAccount() {
-        val editor = accountPrefs.edit()
+        var editor = accountPrefs.edit()
         editor.remove(ACCOUNT_EMAIL)
         editor.remove(ACCOUNT_PHONE)
         editor.remove(ACCOUNT_LOCALE)
@@ -108,6 +109,11 @@ class PreferencesImpl(context: Context) : PreferencesCache, SystemCache {
         editor.remove(ACCOUNT_TERMS_ACCEPTED)
         editor.remove(ACCOUNT_CARRIER_ID)
         editor.apply()
+        
+        editor = configsPrefs.edit()
+        editor.remove(TOKEN)
+        editor.apply()
+        _accessToken = SystemCache.INVALID_TOKEN
     }
 
     override var lastAddresses: List<GTAddressEntity>?

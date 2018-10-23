@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.support.v4.app.Fragment
+
 import com.kg.gettransfer.presentation.presenter.BaseLoadingPresenter
 import com.kg.gettransfer.presentation.view.BaseLoadingView
 

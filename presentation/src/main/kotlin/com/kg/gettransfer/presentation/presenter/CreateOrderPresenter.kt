@@ -79,7 +79,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         /** [см. табл.][https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0] */
         @JvmField val EVENT_TRANSFER = "create_transfer"
         @JvmField val EVENT_SETTINGS = "transfer_settings"
-        @JvmField val EVENT_MAIN = MainPresenter.EVENT_MAIN
 
         @JvmField val PARAM_KEY_FIELD  = "field"
         @JvmField val PARAM_KEY_RESULT = "result"
@@ -292,7 +291,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         logEventMain(BACK_CLICKED)
     }
 
-    fun logEventMain(value: String)              { mFBA.logEvent(EVENT_MAIN, createSingeBundle(PARAM_KEY_NAME, value)) }
+    fun logEventMain(value: String)              { mFBA.logEvent(MainPresenter.EVENT_MAIN, createSingeBundle(PARAM_KEY_NAME, value)) }
     fun logTransferSettingsEvent(value: String)  { mFBA.logEvent(EVENT_SETTINGS, createSingeBundle(PARAM_KEY_FIELD, value)) }
     private fun logCreateTransfer(value: String) { mFBA.logEvent(EVENT_TRANSFER, createSingeBundle(PARAM_KEY_RESULT, value)) }
 }

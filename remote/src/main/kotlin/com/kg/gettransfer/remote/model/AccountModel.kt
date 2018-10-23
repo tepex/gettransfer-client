@@ -18,7 +18,7 @@ const val ACCOUNT_CARRIER_ID     = "carrier_id"
 
 class AccountModelWrapper(@SerializedName(ACCOUNT) @Expose val account: AccountModel)
 
-class AccountModel(fullName: String, email: String?, phone: String,
+class AccountModel(fullName: String?, email: String?, phone: String?,
                    @SerializedName(ACCOUNT_LOCALE) @Expose val locale: String? = null,
                    @SerializedName(ACCOUNT_CURRENCY) @Expose val currency: String? = null,
                    @SerializedName(ACCOUNT_DISTANCE_UNIT) @Expose val distanceUnit: String? = null,
