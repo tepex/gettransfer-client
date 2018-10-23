@@ -197,7 +197,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         if(codeText.isEmpty()) viewState.resetPromoView()
     }
 
-
     fun checkPromoCode() {
         if(promoCode!!.isNotEmpty()){
             utils.launchAsyncTryCatch({
@@ -205,7 +204,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                 viewState.setPromoResult(mDiscount.discount)
             }, { _ -> viewState.setPromoResult(null) })
         }
-
 
     fun setComment(comment: String) {
         if(comment.isEmpty()) this.comment = null else this.comment = comment
