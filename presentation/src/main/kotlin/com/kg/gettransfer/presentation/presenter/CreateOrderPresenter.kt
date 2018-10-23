@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import android.util.Patterns
 
@@ -12,6 +13,7 @@ import com.kg.gettransfer.R.string.from
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.interactor.PromoInteractor
 
 import com.kg.gettransfer.domain.model.Trip
 
@@ -44,7 +46,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                            router: Router,
                            systemInteractor: SystemInteractor,
                            private val routeInteractor: RouteInteractor,
-                           private val transferInteractor: TransferInteractor): BasePresenter<CreateOrderView>(cc, router, systemInteractor) {
+                           private val transferInteractor: TransferInteractor,
+                           private val promoInteractor: PromoInteractor): BasePresenter<CreateOrderView>(cc, router, systemInteractor) {
 
     private var user: UserModel = Mappers.getUserModel(systemInteractor.account)
     private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
@@ -54,6 +57,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     private var transportTypes: List<TransportTypeModel>? = null
     private var routeModel: RouteModel? = null
     private var track: CameraUpdate? = null
+    private var promoCode: String? = null
     
     internal var cost: Int? = null
     internal var date: Date = Date()
@@ -70,6 +74,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         /* Пока сервевер не присылает минимальный временной промежуток до заказа */
         @JvmField val FUTURE_HOUR       = 6
         @JvmField val FUTURE_MINUTE     = 5
+
 
         /** [см. табл.][https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0] */
         @JvmField val EVENT_TRANSFER = "create_transfer"
@@ -100,7 +105,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         @JvmField val CAR_INFO_CLICKED   = "car_info"
         @JvmField val BACK_CLICKED       = "back"
 
-        val userActionsMap = HashMap<String, Any>()
     }
     
     override fun onFirstViewAttach() {
@@ -111,7 +115,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         date = calendar.getTime()
     }
 
-    fun initMapAndPrices(){
+    fun initMapAndPrices() {
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             val from = routeInteractor.from!!.cityPoint
@@ -119,7 +123,9 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
             var prices: Map<String, String>? = null
             if(routeInfo.prices != null) prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
-            transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
+            if(transportTypes == null) {
+                transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
+            }
             routeModel = Mappers.getRouteModel(routeInfo.distance,
                     systemInteractor.distanceUnit,
                     routeInfo.polyLines,
@@ -187,6 +193,18 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         logTransferSettingsEvent(FLIGHT_NUMBER_ADDED)
     }
 
+    fun setPromo(codeText: String) {
+        promoCode = codeText
+        viewState.setPromoUiElements(codeText.isNotEmpty())
+    }
+
+    fun usePromoForDiscount() {
+        utils.launchAsyncTryCatch({
+            val mDiscount = promoInteractor.getDiscountByPromo(promoCode!!)
+            viewState.setPromoResult(mDiscount.discount)
+        }, { _ -> viewState.setPromoResult(null) })
+    }
+
     fun setComment(comment: String) {
         if(comment.isEmpty()) this.comment = null else this.comment = comment
         viewState.setComment(comment)
@@ -230,7 +248,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                                          cost,
                                                                          comment,
                                                                          Mappers.getUser(user),
-                                                                         null,
+                                                                         promoCode,
                                                                          false)) }
             Timber.d("new transfer: %s", transfer)
             router.navigateTo(Screens.OFFERS)

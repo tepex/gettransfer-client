@@ -189,7 +189,7 @@ class OffersPresenter(cc: CoroutineContexts,
 
     private val onNewOffer = Emitter.Listener { args ->
         val offer = args.first() as JSONObject
-        Timber.d("NEW OFFER")
+        Timber.d("NEW OFFER: $offer")
     }
 
     private val headers = Emitter.Listener { args ->

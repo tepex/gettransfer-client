@@ -59,6 +59,10 @@
     <string name="transfer_start_sign">A</string>
     <string name="transfer_end_sign">B</string>
     <string name="transfer_date_local">%1$s (местное)</string>
+    <string name="transfer_promo_hint">Enter promocode</string>
+    <string name="transfer_promo_result_default">I have got a promo code</string>
+    <string name="transfer_promo_result_success">%1$s discount</string>
+    <string name="transfer_promo_result_fail">Invalid promo code</string>
     <!-- Transport types -->
     <string name="transport_type_economy">Economy</string>
     <string name="transport_type_business">Business</string>

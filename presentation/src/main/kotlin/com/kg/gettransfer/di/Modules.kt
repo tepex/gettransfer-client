@@ -131,6 +131,14 @@ val dataModule = module {
 	single { TransferDataStoreFactory(get(), get()) }
 	single { TransferRepositoryImpl(get(), get(), get()) as TransferRepository }
 	single { TransferInteractor(get()) }
+
+	single { PromoRemoteDataStore(get()) }
+	single { PromoDataStoreFactory(get()) }
+	single { PromoRepositoryImpl(get(), get()) as PromoRepository }
+	single { PromoInteractor(get()) }
+
+
+
 }
 
 val androidModule = module {

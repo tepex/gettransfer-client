@@ -10,7 +10,7 @@ class AddressMapper(): Mapper<GTAddressEntity, GTAddress> {
             GTAddress(CityPoint(type.address,
                     Point(type.lat, type.lon),
                     null ),
-                    null,
+                    type.placeTypes,
                     type.address,
                     type.primary,
                     type.secondary)
@@ -18,6 +18,7 @@ class AddressMapper(): Mapper<GTAddressEntity, GTAddress> {
     override fun toEntity(type: GTAddress): GTAddressEntity =
             GTAddressEntity(type.cityPoint.point!!.latitude, type.cityPoint.point!!.longitude,
                     type.address!!,
+                    type.placeTypes,
                     type.primary,
                     type.secondary)
 

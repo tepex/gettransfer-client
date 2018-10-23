@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 
 import android.os.Build
 import android.os.Bundle
@@ -17,15 +16,12 @@ import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
 
 import android.support.v7.widget.LinearLayoutManager
+import android.text.InputFilter
 
 import android.text.InputType
-import android.text.TextUtils
 import android.util.DisplayMetrics
+import android.view.*
 
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 
 import android.widget.LinearLayout
@@ -39,6 +35,7 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.MapStyleOptions
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.interactor.PromoInteractor
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
@@ -54,7 +51,6 @@ import com.kg.gettransfer.presentation.model.UserModel
 
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.view.CreateOrderView
-
 import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
@@ -69,22 +65,27 @@ import org.koin.android.ext.android.inject
 import java.util.Calendar
 
 class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
+
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
 
     private val routeInteractor: RouteInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
+    private val promoInteractor: PromoInteractor by inject()
     private val calendar = Calendar.getInstance()
     private lateinit var bsOrder: BottomSheetBehavior<View>
     private lateinit var bsTransport: BottomSheetBehavior<View>
     private lateinit var popupWindowComment: PopupWindow
+
+    private var defaultPromoText: String? = null
 
     @ProvidePresenter
     fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(coroutineContexts,
                                                                                   router,
                                                                                   systemInteractor,
                                                                                   routeInteractor,
-                                                                                  transferInteractor)
+                                                                                  transferInteractor,
+                                                                                  promoInteractor)
 
     protected override var navigator = object: BaseNavigator(this) {
         @CallSuper
@@ -124,7 +125,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
 
         _mapView = mapView
-        initGoogleMap(savedInstanceState)
+        initMapView(savedInstanceState)
 
         /*setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -155,6 +156,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         ivChildCounterUp.setOnClickListener   { presenter.changeChildren(1) }
         tvFlightOrTrainNumber.onTextChanged   { presenter.setFlightNumber(it.trim()) }
 
+        initPromoSection()
+
         tvComments.setOnClickListener {
             showPopupWindowComment()
             toggleSheetOrder()
@@ -180,7 +183,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     private fun toggleSheetOrder() {
-        if (bsOrder.state != BottomSheetBehavior.STATE_EXPANDED) {
+        if(bsOrder.state != BottomSheetBehavior.STATE_EXPANDED) {
             bsOrder.state = BottomSheetBehavior.STATE_EXPANDED
         } else {
             bsOrder.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -188,13 +191,20 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
     }
 
-    protected override fun customizeGoogleMaps() {
+    private fun initPromoSection() {
+        etPromo.filters = arrayOf(InputFilter.AllCaps())
+        etPromo.onTextChanged { presenter.setPromo(etPromo.text.toString()) }
+        btnOkPromo.setOnClickListener { presenter.usePromoForDiscount() }
+        defaultPromoText = tvPromoResult.text.toString()
+    }
+
+    protected suspend override fun customizeGoogleMaps() {
         super.customizeGoogleMaps()
         googleMap.uiSettings.setRotateGesturesEnabled(false)
         googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
     }
 
-    protected override fun initMap(){
+    protected override fun initMap() {
         super.initMap()
         presenter.initMapAndPrices()
     }
@@ -295,6 +305,22 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel) { setPolyline(polyline, routeModel) }
 
     override fun centerRoute(cameraUpdate: CameraUpdate) { showTrack(cameraUpdate) }
+
+    override fun setPromoUiElements(hasText: Boolean) {
+        btnOkPromo.visibility = if(hasText) View.VISIBLE else View.INVISIBLE
+        if(!hasText) resetPromoView()
+    }
+
+    override fun setPromoResult(discountInfo: String?) {
+        tvPromoResult.text = discountInfo ?: getString(R.string.transfer_promo_result_fail)
+        val colorRes = if(discountInfo != null) R.color.promo_valid else R.color.color_error
+        tvPromoResult.setTextColor(getColor(colorRes))
+    }
+
+    private fun resetPromoView() {
+        tvPromoResult.text = defaultPromoText
+        tvPromoResult.setTextColor(getColor(R.color.colorTextLightGray))
+    }
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {
         if(transportType.checked && transportType.showInfo) {

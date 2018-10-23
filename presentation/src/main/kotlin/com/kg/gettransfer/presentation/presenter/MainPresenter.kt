@@ -162,7 +162,9 @@ class MainPresenter(cc: CoroutineContexts,
         }
     }
 
-
+    fun onNextClick() {
+        router.navigateTo(Screens.CREATE_ORDER)
+    }
 
     fun onLoginClick()          { router.navigateTo(Screens.LOGIN) ;     logEvent(LOGIN_CLICKED)}
     fun onAboutClick()          { router.navigateTo(Screens.ABOUT) ;     logEvent(ABOUT_CLICKED) }

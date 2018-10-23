@@ -74,10 +74,10 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         layoutTransferInfo.chevron.visibility = View.GONE
 
         _mapView = mapView
-        initGoogleMap(savedInstanceState)
+        initMapView(savedInstanceState)
     }
     
-    protected override fun customizeGoogleMaps() {
+    protected suspend override fun customizeGoogleMaps() {
         super.customizeGoogleMaps()
 
         // https://stackoverflow.com/questions/16974983/google-maps-api-v2-supportmapfragment-inside-scrollview-users-cannot-scroll-th

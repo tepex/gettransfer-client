@@ -55,16 +55,17 @@ class SplashActivity: AppCompatActivity() {
 			Timber.d("Splash screen")
 			return
 		}
-
+		
 		Timber.d(getString(R.string.title_starting_session))
 		Timber.d("Permissions granted!")
 		utils.launchAsyncTryCatchFinally({
 		    utils.asyncAwait { systemInteractor.coldStart() }
-			when(systemInteractor.lastMode){
+			when(systemInteractor.lastMode) {
 				Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsActivity::class.java))
 				Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 				else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 			}
+		    finish()
 			//startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 		}, { e -> Timber.e(e); Utils.showError(this@SplashActivity, false, getString(R.string.err_server, e.message))
 			// @TODO: Показать ошибку. Учесть 401 — протухший ключ

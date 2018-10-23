@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.res.Configuration
+
 import android.graphics.Bitmap
 import android.graphics.Canvas
 
@@ -10,10 +11,11 @@ import android.os.LocaleList
 
 import android.support.annotation.CallSuper
 import android.support.v4.content.ContextCompat
+
 import android.view.View
 import android.widget.RelativeLayout
-import com.google.android.gms.maps.CameraUpdate
 
+import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -22,22 +24,26 @@ import com.google.android.gms.maps.model.MarkerOptions
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
+
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
-import kotlinx.android.synthetic.main.view_maps_pin.view.*
 
 import java.util.Locale
-
+ 
 import kotlin.coroutines.experimental.suspendCoroutine
 
+import kotlinx.android.synthetic.main.view_maps_pin.view.*
+
 import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 
 import timber.log.Timber
 
 abstract class BaseGoogleMapActivity: BaseActivity() {
-    protected lateinit var googleMap: GoogleMap
+    private lateinit var googleMapJob: Job
     protected lateinit var _mapView: MapView
+    protected lateinit var googleMap: GoogleMap
 
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
@@ -55,7 +61,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         @Suppress("DEPRECATION")
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N) config.locale = locale
         else config.setLocales(LocaleList(locale))
-        createConfigurationContext(config) 
+        createConfigurationContext(config)
     }
 
     @CallSuper
@@ -77,7 +83,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         super.onPause()
     }
 
-    protected open fun initMap(){}
+    protected open fun initMap() {}
 
     @CallSuper
     protected override fun onStop() {
@@ -89,6 +95,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     protected override fun onDestroy() {
         _mapView.onDestroy()
         compositeDisposable.cancel()
+        googleMapJob.cancel()
         super.onDestroy()
     }
 
@@ -98,26 +105,28 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         super.onLowMemory()
     }
 
-    protected fun initGoogleMap(savedInstanceState: Bundle?) {
+    protected fun initMapView(savedInstanceState: Bundle?) {
         val mapViewBundle = savedInstanceState?.getBundle(MAP_VIEW_BUNDLE_KEY)
         _mapView.onCreate(mapViewBundle)
-
-        utils.launch {
-            googleMap = getGoogleMapAsync()
+        googleMapJob = utils.launch {
+            googleMap = suspendCoroutine { cont -> _mapView.getMapAsync { cont.resume(it) } }
             customizeGoogleMaps()
         }
     }
 
-    private suspend fun getGoogleMapAsync(): GoogleMap = suspendCoroutine { cont ->
-        _mapView.getMapAsync { cont.resume(it) }
-    }
-
-    protected open fun customizeGoogleMaps() {
+    protected suspend open fun customizeGoogleMaps() {
         googleMap.uiSettings.setRotateGesturesEnabled(false)
         googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
     }
-
-    protected fun setPolyline(polyline: PolylineModel, routeModel: RouteModel){
+    
+    protected fun processGoogleMap(block: () -> Unit) {
+        utils.launch {
+            if(!googleMapJob.isCompleted) googleMapJob.join()
+            block()
+        }
+    }
+    
+    protected fun setPolyline(polyline: PolylineModel, routeModel: RouteModel) {
         val pinLayout = layoutInflater.inflate(R.layout.view_maps_pin, null)
 
         pinLayout.tvPlace.text = routeModel.from
@@ -142,19 +151,21 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
                 .position(polyline.finishPoint)
                 .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
 
-        if(polyline.line != null){
-            polyline.line.width(10f).color(ContextCompat.getColor(this, R.color.colorPolyline))
-            googleMap.addPolyline(polyline.line)
-        }
+        processGoogleMap {
+            if(polyline.line != null) {
+                polyline.line.width(10f).color(ContextCompat.getColor(this@BaseGoogleMapActivity, R.color.colorPolyline))
+                googleMap.addPolyline(polyline.line)
+            }
 
-        googleMap.addMarker(startMakerOptions)
-        googleMap.addMarker(endMakerOptions)
+            googleMap.addMarker(startMakerOptions)
+            googleMap.addMarker(endMakerOptions)
 
-        try {
-            googleMap.moveCamera(polyline.track)
-            //showTrack(polyline.track)
+            try {
+                googleMap.moveCamera(polyline.track)
+                //showTrack(polyline.track)
+            }
+            catch(e: Exception) { Timber.e(e) }
         }
-        catch(e: Exception) { Timber.e(e) }
     }
 
     protected fun showTrack (track: CameraUpdate){
