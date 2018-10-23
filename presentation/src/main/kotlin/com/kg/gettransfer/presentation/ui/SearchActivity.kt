@@ -172,11 +172,4 @@ class SearchActivity: BaseActivity(), SearchView {
         addressAdapter.isLastAddresses = true
         rv_addressList.adapter = addressAdapter
     }
-
-    override fun setSuggestedAddresses(addressesList: List<GTAddress>, popularList: List<PopularPlace>) {
-        rv_popularList.adapter = PopularAddressAdapter(presenter, popularList)
-        val addressAdapter = AddressAdapter(presenter, addressesList)
-        addressAdapter.isLastAddresses = true
-        rv_addressList.adapter = addressAdapter
-    }
 }
