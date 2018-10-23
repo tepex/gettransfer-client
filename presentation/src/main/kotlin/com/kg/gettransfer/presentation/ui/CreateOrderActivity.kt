@@ -196,12 +196,14 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
     }
 
-    private fun initPromoSection(){
+    private fun initPromoSection() {
         etPromo.filters = arrayOf(InputFilter.AllCaps())
         etPromo.onTextChanged { presenter.setPromo(etPromo.text.toString()) }
         defaultPromoText = tvPromoResult.text.toString()
+        constraintLayout_promo.setOnClickListener { etPromo.requestFocus() }
     }
-    private fun initKeyBoardListener(){
+    
+    private fun initKeyBoardListener() {
         addKeyBoardDismissListener { closed: Boolean -> if (closed && etPromo.isFocused) presenter.checkPromoCode() }
     }
 
