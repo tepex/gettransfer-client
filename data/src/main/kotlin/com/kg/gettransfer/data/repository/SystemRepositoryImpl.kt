@@ -6,6 +6,7 @@ import com.kg.gettransfer.data.ds.SystemDataStoreFactory
 import com.kg.gettransfer.data.mapper.*
 
 import com.kg.gettransfer.data.model.GTAddressEntity
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.SystemRepository
@@ -34,10 +35,22 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
 
     override suspend fun coldStart() {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
+
+        try {
+            val remoteAccount = factory.retrieveRemoteDataStore().getAccount()
+            val remoteConfigs = factory.retrieveRemoteDataStore().getConfigs()
+
+            if(remoteConfigs.officePhone != null) factory.retrieveCacheDataStore().setConfigs(remoteConfigs)
+            if(remoteAccount.user.profile.email != null) factory.retrieveCacheDataStore().setAccount(remoteAccount)
+        } catch (e: ApiException){ }
+        configs = configsMapper.fromEntity(factory.retrieveCacheDataStore().getConfigs())
+        accountMapper.configs = configs
+
+        /*factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
         configs = configsMapper.fromEntity(factory.retrieveRemoteDataStore().getConfigs())
         accountMapper.configs = configs!!
         val accountEntity = factory.retrieveRemoteDataStore().getAccount()
-        factory.retrieveCacheDataStore().setAccount(accountEntity)
+        factory.retrieveCacheDataStore().setAccount(accountEntity)*/
     }
 
     override suspend fun getAccount() = accountMapper.fromEntity(factory.retrieveCacheDataStore().getAccount())

@@ -18,6 +18,8 @@ open class SystemRemoteDataStore(private val remote: SystemRemote): SystemDataSt
         try { return remote.getConfigs() }
         catch(e: RemoteException) { throw ExceptionMapper.map(e) }
     }
+
+    override suspend fun setConfigs(configsEntity: ConfigsEntity) { throw UnsupportedOperationException() }
     
     override suspend fun getAccount(): AccountEntity {
         try { return remote.getAccount() }
