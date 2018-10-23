@@ -1,33 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:orientation="vertical"
-	tools:context=".presentation.ui.SearchActivity">
-	
-	<include layout="@layout/toolbar_search_address"
-		android:id="@+id/toolbarLayout"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.ui.SearchActivity">
 
-	<include layout="@layout/search_form"
-		android:id="@+id/searchForm"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@+id/toolbarLayout"/>
+    <include
+        android:id="@+id/toolbarLayout"
+        layout="@layout/toolbar_search_address" />
 
-	<android.support.v7.widget.RecyclerView
-		android:id="@+id/addressList"
+    <include
+        android:id="@+id/searchForm"
+        layout="@layout/search_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-		android:layout_below="@+id/searchForm"
-		android:layout_above="@+id/pointOnMap"
-/>
+        android:layout_below="@+id/toolbarLayout" />
 
-	<include layout="@layout/point_on_map"
-		android:id="@+id/pointOnMap"
-		android:layout_width="match_parent"
-		android:layout_height="@dimen/point_map_height"
-		android:layout_alignParentBottom="true" />
+    <ScrollView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/pointOnMap"
+        android:layout_below="@+id/searchForm">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_addresses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/address_title"
+                    style="@style/list_title"
+                    android:text="@string/title_latest" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_addressList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_popular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/popular_title"
+                    style="@style/list_title"
+                    android:text="@string/title_popular" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_popularList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="138dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+        
+    </ScrollView>
+
+
+    <include
+        android:id="@+id/pointOnMap"
+        layout="@layout/point_on_map"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

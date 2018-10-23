@@ -124,6 +124,15 @@
 		<item name="android:textSize">@dimen/address_secondary_item_size</item>
 		<item name="android:paddingStart">@dimen/address_item_padding_start</item>
 	</style>
+	<style name="list_title" parent="sf_font">
+		<item name="android:layout_marginStart">@dimen/left_margin_title</item>
+		<item name="android:textSize">@dimen/title_text_size</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:paddingTop">8dp</item>
+		<item name="android:paddingBottom">8dp</item>
+		<item name="android:textColor">@color/search_list_title</item>
+	</style>
 
     <style name="etField">
         <item name="android:background">@android:color/transparent</item>
@@ -147,6 +156,7 @@
 	<style name="SwitchCompatStyle" parent="Theme.AppCompat.Light">
 		<item name="colorControlActivated">@color/switch_activated</item>
 	</style>
+
 
     <!--<style name="etField" parent="Base.V7.Widget.AppCompat.EditText">-->
     <!--<item name="android:background">@android:color/transparent</item>-->

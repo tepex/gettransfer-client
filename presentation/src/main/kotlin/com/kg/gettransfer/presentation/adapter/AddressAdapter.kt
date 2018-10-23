@@ -16,42 +16,54 @@ import kotlinx.android.synthetic.main.address_list_item.*
 import kotlinx.android.synthetic.main.popular_address_list_item.*
 
 class AddressAdapter(private val presenter: SearchPresenter,
-	                 private var list: List<GTAddress>): RecyclerView.Adapter<AddressAdapter.ViewHolder>() {
-	                 
-	companion object {
-		private var selected = RecyclerView.NO_POSITION
-	}
-	
-	init {
-		selected = RecyclerView.NO_POSITION
-	}
-	                 
-	override fun getItemCount(): Int {
-		return list.size
-	}
-	
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = 
-		ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.address_list_item, parent, false))
-	
-	override fun onBindViewHolder(holder: ViewHolder, pos: Int) {
-		holder.bind(list.get(pos)) {
-			notifyDataSetChanged()
-			presenter.onAddressSelected(it)
-		}
-	}
+                     private var list: List<GTAddress>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-	class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
-		fun bind(item: GTAddress, listener: ClickHandler) = with(containerView) {
-			addressItem.text = item.primary
-			addressSecondaryItem.text = item.secondary
-			isSelected = selected == adapterPosition
-			setOnClickListener {
-				selected = adapterPosition
-				listener(item) 
-			}
-		}
-	}
+    var isLastAddresses: Boolean = true
+
+    companion object {
+        private var selected = RecyclerView.NO_POSITION
+
+    }
+
+    init {
+        selected = RecyclerView.NO_POSITION
+    }
+
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder
+            = AddressViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.address_list_item, parent, false))
+
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) {
+        (holder as AddressViewHolder).bindViews(list[pos], isLastAddresses)
+        {
+            notifyDataSetChanged()
+            presenter.onAddressSelected(it)
+        }
+    }
+
+    class AddressViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView),
+            LayoutContainer {
+        fun bindViews(address: GTAddress, isLastAddress: Boolean, listener: ClickHandler) = with(containerView) {
+            addressItem.text = address.address
+            addressSecondaryItem.text = address.secondary
+            setSelected(selected == adapterPosition)
+            icon_for_last_place.visibility = if(!isLastAddress) View.GONE else View.VISIBLE
+            setOnClickListener {
+                selected = adapterPosition
+                listener(address)
+            }
+        }
+    }
+
+    fun updateList(list: List<GTAddress>) {
+        this.list = list
+        notifyDataSetChanged()
+    }
 }
 
 // Just for test
-typealias ClickHandler = (Any) -> Unit
+typealias ClickHandler = (GTAddress) -> Unit

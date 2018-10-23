@@ -243,12 +243,6 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         navFooterStamp.setOnClickListener(readMoreListener)
         navFooterReadMore.setOnClickListener(readMoreListener)
 
-        /*headerView = navView.getHeaderView(0)
-        val shareBtn: ImageView = headerView.findViewById(R.id.nav_header_share) as ImageView
-        shareBtn.setOnClickListener {
-            Timber.d("Share action")
-        }*/
-
         navHeaderShare.setOnClickListener { Timber.d("Share action") }
         navLogin.setOnClickListener(itemsNavigationViewListener)
         navRequests.setOnClickListener(itemsNavigationViewListener)

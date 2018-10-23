@@ -30,6 +30,9 @@
     <string name="point_on_the_map">Point on the map</string>
     <string name="search">Search</string>
 
+    <string name="title_latest">Недавние места</string>
+    <string name="title_popular">Популярные места</string>
+
     <string name="airport">Аэропорт</string>
     <string name="railway">Вокзал</string>
     <string name="hotel">Отель</string>

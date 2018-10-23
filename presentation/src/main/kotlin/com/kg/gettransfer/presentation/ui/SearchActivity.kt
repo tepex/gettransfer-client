@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar
 
 import android.transition.Fade
 import android.transition.Slide
+import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -153,9 +154,23 @@ class SearchActivity: BaseActivity(), SearchView {
     override fun setAddressFrom(address: String, sendRequest: Boolean) { searchFrom.initText(address, sendRequest) }
     override fun setAddressTo(address: String, sendRequest: Boolean) { searchTo.initText(address, sendRequest) }
     
+    override fun setAddressListByAutoComplete(list: List<GTAddress>) {
+        ll_popular.visibility = View.GONE
+        address_title.visibility = View.GONE
+        (rv_addressList.adapter as AddressAdapter).isLastAddresses = false
+        (rv_addressList.adapter as AddressAdapter).updateList(list)
+    }
+    
     override fun onFindPopularPlace(isTo: Boolean, place: String) {
         val searchField = if(isTo) searchTo else searchFrom
         searchField.initText(place, true)
+    }
+
+    override fun setSuggestedAddresses(addressesList: List<GTAddress>, popularList: List<PopularPlace>) {
+        rv_popularList.adapter = PopularAddressAdapter(presenter, popularList)
+        val addressAdapter = AddressAdapter(presenter, addressesList)
+        addressAdapter.isLastAddresses = true
+        rv_addressList.adapter = addressAdapter
     }
 
     override fun setSuggestedAddresses(addressesList: List<GTAddress>, popularList: List<PopularPlace>) {

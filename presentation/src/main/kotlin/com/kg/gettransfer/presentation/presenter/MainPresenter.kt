@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -107,7 +108,6 @@ class MainPresenter(cc: CoroutineContexts,
 
 
     fun onCameraMove(lastPoint: LatLng, animateMarker: Boolean) {
-//        Log.i("CheckPoints" , "LastAddress - " + lastAddressPoint + "this lastPoint - " + this.lastPoint + " local point - " + lastPoint)
         if(!markerStateLifted && !isMarkerAnimating && animateMarker){
             viewState.setMarkerElevation(true, MARKER_ELEVATION)
             markerStateLifted = true
