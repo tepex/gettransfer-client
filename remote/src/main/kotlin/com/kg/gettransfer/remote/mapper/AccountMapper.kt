@@ -19,9 +19,9 @@ open class AccountMapper(): EntityMapper<AccountModel, AccountEntity> {
                       type.carrierId)
     
     override fun toRemote(type: AccountEntity) = 
-        AccountModel(type.user.profile.name!!,
+        AccountModel(type.user.profile.name,
                      type.user.profile.email,
-                     type.user.profile.phone!!,
+                     type.user.profile.phone,
                      type.locale,
                      type.currency,
                      type.distanceUnit,
