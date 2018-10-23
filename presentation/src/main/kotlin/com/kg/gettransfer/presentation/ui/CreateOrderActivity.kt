@@ -20,6 +20,7 @@ import android.text.InputFilter
 
 import android.text.InputType
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.*
 
 import android.view.inputmethod.EditorInfo
@@ -126,6 +127,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
         _mapView = mapView
         initMapView(savedInstanceState)
+
+        val v = findViewById<View>(android.R.id.content)
+        Utils.addKeyBoardDismissListener(v){ h -> if(etPromo.isFocused) presenter.setPromo(etPromo.text.toString()); Log.i("FindHeight", "" + h)}
+
 
         /*setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -298,6 +303,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             etEmail.isEnabled = false
         }
     }
+
+
 
     //TODO сделать подсветку не заполненных полей
     override fun setGetTransferEnabled(enabled: Boolean) {}
