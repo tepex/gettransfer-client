@@ -56,10 +56,6 @@ import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
-import kotlinx.android.synthetic.main.layout_popup_comment.view.*
-
-import com.kg.gettransfer.extensions.hideKeyboard
-import com.kg.gettransfer.extensions.showKeyboard
 
 import org.koin.android.ext.android.inject
 
@@ -128,9 +124,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         _mapView = mapView
         initMapView(savedInstanceState)
 
-        val v = findViewById<View>(android.R.id.content)
-        Utils.addKeyBoardDismissListener(v){ h -> if(etPromo.isFocused) presenter.setPromo(etPromo.text.toString()); Log.i("FindHeight", "" + h)}
-
 
         /*setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -162,6 +155,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         tvFlightOrTrainNumber.onTextChanged   { presenter.setFlightNumber(it.trim()) }
 
         initPromoSection()
+        initKeyBoardListener()
 
         tvComments.setOnClickListener {
             showPopupWindowComment()
@@ -199,8 +193,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun initPromoSection(){
         etPromo.filters = arrayOf(InputFilter.AllCaps())
         etPromo.onTextChanged { presenter.setPromo(etPromo.text.toString()) }
-        btnOkPromo.setOnClickListener { presenter.usePromoForDiscount() }
         defaultPromoText = tvPromoResult.text.toString()
+    }
+    private fun initKeyBoardListener(){
+        val v = findViewById<View>(android.R.id.content)
+        Utils.addKeyBoardDismissListener(v) { onKeyBoardClosed }
     }
 
     protected suspend override fun customizeGoogleMaps() {
@@ -313,18 +310,25 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     override fun centerRoute(cameraUpdate: CameraUpdate) { showTrack(cameraUpdate) }
 
-    override fun setPromoUiElements(hasText: Boolean) {
-        btnOkPromo.visibility = if(hasText) View.VISIBLE else View.INVISIBLE
-        if(!hasText) resetPromoView()
-    }
-
     override fun setPromoResult(discountInfo: String?) {
-        tvPromoResult.text = discountInfo ?: getString(R.string.transfer_promo_result_fail)
-        val colorRes = if(discountInfo != null) R.color.promo_valid else R.color.color_error
+        val colorRes: Int
+        val text: String
+        val visibility: Int
+        if(discountInfo != null){
+            colorRes = R.color.promo_valid
+            text = discountInfo
+            visibility = View.VISIBLE
+        } else {
+            colorRes = R.color.color_error
+            text = getString(R.string.transfer_promo_result_fail)
+            visibility = View.INVISIBLE
+        }
         tvPromoResult.setTextColor(getColor(colorRes))
+        tvPromoResult.text = text
+        img_okResult.visibility = visibility
     }
 
-    private fun resetPromoView() {
+    override fun resetPromoView() {
         tvPromoResult.text = defaultPromoText
         tvPromoResult.setTextColor(getColor(R.color.colorTextLightGray))
     }
@@ -351,5 +355,9 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         if(bsTransport.state == BottomSheetBehavior.STATE_EXPANDED) hideSheetTransport()
         else if(bsOrder.state == BottomSheetBehavior.STATE_EXPANDED) toggleSheetOrder()
         else super.onBackPressed()
+    }
+
+    private val onKeyBoardClosed = { h: Int ->
+        presenter.onKeyBoardClosed(h, etPromo.isFocused)
     }
 }

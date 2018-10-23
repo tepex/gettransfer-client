@@ -194,10 +194,14 @@ class CreateOrderPresenter(cc: CoroutineContexts,
 
     fun setPromo(codeText: String){
         promoCode = codeText
-        viewState.setPromoUiElements(codeText.isNotEmpty())
+        if(codeText.isEmpty()) viewState.resetPromoView()
     }
 
-    fun usePromoForDiscount(){
+    fun onKeyBoardClosed(height: Int, isFocused: Boolean) {
+        if(height < 200 && isFocused) usePromoForDiscount()
+    }
+
+    private fun usePromoForDiscount() {
         utils.launchAsyncTryCatch({
             val mDiscount = promoInteractor.getDiscountByPromo(promoCode!!)
             viewState.setPromoResult(mDiscount.discount)

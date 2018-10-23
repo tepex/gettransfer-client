@@ -285,16 +285,11 @@ internal class Utils {
         fun showShortToast(context: Context, text: CharSequence) { Toast.makeText(context, text, Toast.LENGTH_SHORT).show() }
         fun showLongToast(context: Context, text: CharSequence)  { Toast.makeText(context, text, Toast.LENGTH_LONG).show() }
 
-        fun addKeyBoardDismissListener(rootView: View, res: (Int) -> Unit) {
+        fun addKeyBoardDismissListener(rootView: View, countDifference: (Int) -> Unit) {
             rootView.viewTreeObserver.addOnGlobalLayoutListener {
                 val rect = Rect()
                 rootView.getWindowVisibleDisplayFrame(rect)
-                val keyBoardheight = rootView.rootView.height - (rect.bottom - rect.top)
-                res(keyBoardheight)
-                if(keyBoardheight > 0)
-                    Log.i("FindKey", "is opened")
-                else
-                    Log.i("FindKey", "is closed")
+                countDifference(rootView.rootView.height - (rect.bottom - rect.top))
             }
         }
     }
