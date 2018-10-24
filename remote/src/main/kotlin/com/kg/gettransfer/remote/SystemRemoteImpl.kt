@@ -1,6 +1,5 @@
 package com.kg.gettransfer.remote
 
-import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.SystemRemote
 
@@ -66,4 +65,6 @@ class SystemRemoteImpl(private val core: ApiCore,
     }
     
     override fun changeEndpoint(endpoint: EndpointEntity) = core.changeEndpoint(endpointMapper.toRemote(endpoint))
+
+    override fun changeNetworkAvailability(isNetworkConnected: Boolean) = core.changeNetworkConnectionAvailability(isNetworkConnected)
 }

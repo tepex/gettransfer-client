@@ -22,4 +22,6 @@ interface SystemRepository {
     fun logout()
     fun getHistory(): List<GTAddress>
     fun setHistory(history: List<GTAddress>)
+
+    fun changeNetworkAvailability(isNetworkConnected: Boolean)
 }

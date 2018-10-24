@@ -84,4 +84,6 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
     }
 
     override fun logout() = factory.retrieveCacheDataStore().clearAccount()
+
+    override fun changeNetworkAvailability(isNetworkConnected: Boolean) = factory.retrieveRemoteDataStore().changeNetworkAvailability(isNetworkConnected)
 }

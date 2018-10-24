@@ -4,16 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 
-import android.os.Bundle
-
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
-import android.support.design.widget.Snackbar
 
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatDelegate
-
-import android.view.View
 
 import com.arellomobile.mvp.MvpAppCompatActivity
 
@@ -31,13 +26,19 @@ import com.kg.gettransfer.presentation.view.BaseView
 
 import org.koin.android.ext.android.inject
 
-import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
 import timber.log.Timber
 import java.util.*
+import android.content.BroadcastReceiver
+import com.kg.gettransfer.presentation.NetworkStateChangeReceiver
+import android.content.IntentFilter
+import android.support.v4.content.LocalBroadcastManager
+import android.view.View
+import com.kg.gettransfer.presentation.NetworkStateChangeReceiver.Companion.IS_NETWORK_AVAILABLE
+
 
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     internal val systemInteractor: SystemInteractor by inject()
@@ -48,7 +49,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
 
     private var rootView: View? = null
     private var rootViewHeight: Int? = null
-    
+
     protected open lateinit var navigator: BaseNavigator
     
     /** [https://stackoverflow.com/questions/37615470/support-library-vectordrawable-resourcesnotfoundexception] */
@@ -62,6 +63,15 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     protected override fun onResume() {
         super.onResume()
         navigatorHolder.setNavigator(navigator)
+
+        val intentFilter = IntentFilter(NetworkStateChangeReceiver.NETWORK_AVAILABLE_ACTION)
+        LocalBroadcastManager.getInstance(this).registerReceiver(object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val isNetworkAvailable = intent.getBooleanExtra(IS_NETWORK_AVAILABLE, false)
+                //val networkStatus = if (isNetworkAvailable) "connected" else "disconnected"
+                getPresenter().changeNetworkState(isNetworkAvailable)
+            }
+        }, intentFilter)
     }
     
     @CallSuper
@@ -131,6 +141,8 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         router.navigateTo(screen)
 
     }
+
+    fun showViewNetworkNotAvailable(isNetworkAvailable: Boolean){}
 }
 
 open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, Screens.NOT_USED) {

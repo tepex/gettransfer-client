@@ -70,4 +70,5 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     fun getLogsFile() = loggingRepository.getLogsFile()
     fun getAddressHistory() = systemRepository.getHistory()
     fun setAddressHistory(list: List<GTAddress>) = systemRepository.setHistory(list)
+    fun changeNetworkAvailability(isNetworkConneted: Boolean) = systemRepository.changeNetworkAvailability(isNetworkConneted)
 }

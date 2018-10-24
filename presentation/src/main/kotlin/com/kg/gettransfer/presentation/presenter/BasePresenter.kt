@@ -57,4 +57,8 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
         map.forEach { (k,v) -> bundle.putString(k, v.toString()) }
         return bundle
     }
+
+    fun changeNetworkState(isNetworkAvailable: Boolean){
+        systemInteractor.changeNetworkAvailability(isNetworkAvailable)
+    }
 }

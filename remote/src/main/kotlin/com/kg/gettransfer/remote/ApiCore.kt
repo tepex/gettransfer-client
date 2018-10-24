@@ -32,14 +32,15 @@ class ApiCore(private val preferences: PreferencesCache,
         @JvmField val TAG = "GTR-remote"
         private val ERROR_PATTERN = Regex("^\\<h1\\>(.+)\\<\\/h1\\>$")
     }
-    
+
     private val log = LoggerFactory.getLogger(TAG)
-    
+
     internal lateinit var api: Api
     lateinit var apiUrl: String
 
     private lateinit var apiKey: String
     private val gson = GsonBuilder().registerTypeAdapter(TransportTypesWrapperModel::class.java, TransportTypesDeserializer()).create()
+    private var isInternetAvailable: Boolean? = null
     private var okHttpClient = OkHttpClient.Builder().apply {
         addInterceptor(HttpLoggingInterceptor(log))
         addInterceptor { chain ->
@@ -64,7 +65,11 @@ class ApiCore(private val preferences: PreferencesCache,
                 .create(Api::class.java)
         hostListener.onEndpointChanged(endpoint, preferences.accessToken)
     }
-    
+
+    fun changeNetworkConnectionAvailability(isNetworkConnected: Boolean){
+        isInternetAvailable = isNetworkConnected
+    }
+
     /**
      * 1. Try to call [apiCall] first time.
      * 2. If response code is 401 (token expired) — try to call [apiCall] second time.

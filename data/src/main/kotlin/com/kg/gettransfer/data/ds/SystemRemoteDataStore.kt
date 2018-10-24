@@ -39,4 +39,6 @@ open class SystemRemoteDataStore(private val remote: SystemRemote): SystemDataSt
     }
     
     fun changeEndpoint(endpoint: EndpointEntity) = remote.changeEndpoint(endpoint)
+
+    fun changeNetworkAvailability(isNetworkConnected: Boolean) = remote.changeNetworkAvailability(isNetworkConnected)
 }
