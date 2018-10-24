@@ -200,7 +200,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         etPromo.filters = arrayOf(InputFilter.AllCaps())
         etPromo.onTextChanged { presenter.setPromo(etPromo.text.toString()) }
         defaultPromoText = tvPromoResult.text.toString()
-        constraintLayout_promo.setOnClickListener { etPromo.requestFocus() }
+        constraintLayout_promo.setOnClickListener { showKeyboard(); etPromo.requestFocusFromTouch()}
     }
     
     private fun initKeyBoardListener() {
