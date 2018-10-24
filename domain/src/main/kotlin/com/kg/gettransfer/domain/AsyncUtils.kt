@@ -1,6 +1,6 @@
 package com.kg.gettransfer.domain
 
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.*
 
 /**
  * https://medium.com/@andrea.bresolin/playing-with-kotlin-in-android-coroutines-and-how-to-get-rid-of-the-callback-hell-a96e817c108b

@@ -2,7 +2,7 @@ package com.kg.gettransfer.remote
 
 import com.google.gson.GsonBuilder
 
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.PreferencesCache
@@ -12,7 +12,7 @@ import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.TokenModel
 import com.kg.gettransfer.remote.model.TransportTypesWrapperModel
 
-import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.Deferred
 
 import okhttp3.CookieJar
 import okhttp3.OkHttpClient

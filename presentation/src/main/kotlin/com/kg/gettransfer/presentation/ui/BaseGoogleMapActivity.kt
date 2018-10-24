@@ -29,14 +29,15 @@ import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 
 import java.util.Locale
- 
-import kotlin.coroutines.experimental.suspendCoroutine
+
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 import kotlinx.android.synthetic.main.view_maps_pin.view.*
 
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 import timber.log.Timber
 

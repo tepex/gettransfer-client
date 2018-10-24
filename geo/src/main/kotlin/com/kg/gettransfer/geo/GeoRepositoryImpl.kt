@@ -24,7 +24,9 @@ import com.kg.gettransfer.domain.repository.GeoRepository
 
 import java.util.Locale
 
-import kotlin.coroutines.experimental.suspendCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 import timber.log.Timber
 
