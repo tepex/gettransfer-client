@@ -18,18 +18,24 @@ import okhttp3.CookieJar
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
+import org.slf4j.LoggerFactory
+
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiCore(private val preferences: PreferencesCache) {
-
     internal lateinit var api: Api
     lateinit var apiUrl: String
 
     private lateinit var apiKey: String
     private var okHttpClient: OkHttpClient
     private val gson = GsonBuilder().registerTypeAdapter(TransportTypesWrapperModel::class.java, TransportTypesDeserializer()).create()
+    private val log = LoggerFactory.getLogger(TAG)
+    
+    companion object {
+        @JvmField val TAG = "GTR-remote"
+    }
     
     init {
         val loggingInterceptor = HttpLoggingInterceptor()
@@ -47,6 +53,8 @@ class ApiCore(private val preferences: PreferencesCache) {
 		builder.cookieJar(CookieJar.NO_COOKIES)
  
         okHttpClient = builder.build()
+        
+        log.info("test logging")
     }
     
     fun changeEndpoint(endpoint: EndpointModel) {

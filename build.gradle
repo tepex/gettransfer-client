@@ -8,28 +8,30 @@ buildscript {
 	ext {
 		kotlin_version        = "1.3.0-rc-198"
 		coroutines_version    = "1.0.0-RC1"
-		gradle_version        = "3.4.0-alpha01"
+		gradle_version        = "3.4.0-alpha02"
 		gms_version           = "16.0.0"
 		gs_version            = "4.1.0"
 		hockeyapp_version     = "3.7.6"
 		jsr250_version        = "1.0"
 		timber_version        = "4.7.1"
+		slf4j_version         = "1.7.25"
 		junit_version         = "4.12"
 		hamcrest_version      = "2.0.0.0"
 		mockito_version       = "2.23.0"
 		gson_version          = "2.8.5"
 		
 		libs = [
-			kotlin          : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
-			coroutines      : ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"),
-    		psLocation      : ("com.google.android.gms:play-services-location:$gms_version"),
-    		psPlaces        : ("com.google.android.gms:play-services-places:$gms_version"),
-			timber          : ("com.jakewharton.timber:timber:$timber_version"),
-			jsr250          : ("javax.annotation:jsr250-api:$jsr250_version"),
-			junit           : ("junit:junit:$junit_version"),
-			hamcrest        : ("org.hamcrest:java-hamcrest:$hamcrest_version"),
-			mockito         : ("org.mockito:mockito-core:$mockito_version"),
-			gson            : ("com.google.code.gson:gson:$gson_version")
+			kotlin     : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
+			coroutines : ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"),
+    		psLocation : ("com.google.android.gms:play-services-location:$gms_version"),
+    		psPlaces   : ("com.google.android.gms:play-services-places:$gms_version"),
+    		gson       : ("com.google.code.gson:gson:$gson_version"),
+			timber     : ("com.jakewharton.timber:timber:$timber_version"),
+			slf4j      : ("org.slf4j:slf4j-api:$slf4j_version"),
+			jsr250     : ("javax.annotation:jsr250-api:$jsr250_version"),
+			junit      : ("junit:junit:$junit_version"),
+			hamcrest   : ("org.hamcrest:java-hamcrest:$hamcrest_version"),
+			mockito    : ("org.mockito:mockito-core:$mockito_version"),
 		]
 	}
     

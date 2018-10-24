@@ -2,9 +2,9 @@ apply plugin: 'java-library'
 apply plugin: 'kotlin'
 
 ext {
-    retrofit_version      = "2.4.0"
-    r2_k_c_a_version      = "0.9.2"
-    okhttp3_version       = "3.11.0"
+    retrofit_version = "2.4.0"
+    r2_k_c_a_version = "0.9.2"
+    okhttp3_version  = "3.11.0"
 }
 
 compileKotlin {
@@ -36,6 +36,7 @@ dependencies {
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$r2_k_c_a_version"
     implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
+    implementation libs.slf4j
 
 	testImplementation libs.junit
 	testImplementation libs.hamcrest
