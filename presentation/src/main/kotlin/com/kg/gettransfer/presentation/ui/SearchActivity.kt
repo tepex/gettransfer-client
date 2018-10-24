@@ -103,9 +103,9 @@ class SearchActivity: BaseActivity(), SearchView {
 
     private fun initSearchFields() {
         searchFrom.initWidget(this, false)
-        searchFrom.text = intent.getStringExtra(EXTRA_ADDRESS_FROM)
+//        searchFrom.text = intent.getStringExtra(EXTRA_ADDRESS_FROM)
         searchTo.initWidget(this, true)
-        searchTo.text = intent.getStringExtra(EXTRA_ADDRESS_TO)
+  //      searchTo.text = intent.getStringExtra(EXTRA_ADDRESS_TO)
 
         changeFocusForSearch()
     }
@@ -158,8 +158,10 @@ class SearchActivity: BaseActivity(), SearchView {
     override fun setAddressListByAutoComplete(list: List<GTAddress>) {
         ll_popular.visibility = View.GONE
         address_title.visibility = View.GONE
-        (rv_addressList.adapter as AddressAdapter).isLastAddresses = false
-        (rv_addressList.adapter as AddressAdapter).updateList(list)
+        if(rv_addressList.adapter != null){
+            (rv_addressList.adapter as AddressAdapter).isLastAddresses = false
+            (rv_addressList.adapter as AddressAdapter).updateList(list)
+        }
     }
     
     override fun onFindPopularPlace(isTo: Boolean, place: String) {

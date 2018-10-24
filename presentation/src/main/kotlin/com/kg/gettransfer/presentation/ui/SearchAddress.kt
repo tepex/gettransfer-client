@@ -99,7 +99,6 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 			else {
 				checkClearButtonVisibility()
 				parent.presenter.isTo = isTo
-				presenter.requestAddressListByPrediction(text.trim())
 			}
 		}
 		addressField.addTextChangedListener(this)
@@ -118,7 +117,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	fun initText(text: String, sendRequest: Boolean) {
 		blockRequest = true
 		this.text = text + " "
-		//addressField.setSelection(addressField.text.length)
+		addressField.setSelection(addressField.text.length)
 		blockRequest = false
 		if(sendRequest) presenter.requestAddressListByPrediction(text.trim())
 	}
