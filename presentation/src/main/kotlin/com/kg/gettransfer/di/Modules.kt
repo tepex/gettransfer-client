@@ -118,6 +118,8 @@ val dataModule = module {
 	single { CityPointMapper(get()) }
 	single { PassengerAccountMapper(get()) }
 	single { CarrierTripMapper(get(), get(), get()) }
+	single { CarrierTripRemoteDataStore(get()) }
+	single { CarrierTripDataStoreFactory(get()) }
 	single { CarrierTripRepositoryImpl(get(), get()) as CarrierTripRepository }
     single { CarrierTripInteractor(get()) }
     
@@ -134,9 +136,6 @@ val dataModule = module {
 	single { PromoDataStoreFactory(get()) }
 	single { PromoRepositoryImpl(get(), get()) as PromoRepository }
 	single { PromoInteractor(get()) }
-
-
-
 }
 
 val androidModule = module {
