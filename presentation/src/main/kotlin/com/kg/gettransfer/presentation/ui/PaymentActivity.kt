@@ -50,8 +50,6 @@ class PaymentActivity: BaseActivity(), PaymentView {
     companion object {
         private const val PAYMENT_RESULT_SUCCESSFUL = "/api/payments/successful"
         private const val PAYMENT_RESULT_FAILED = "/api/payments/failed"
-        private const val SUCCESSFUL = "successful"
-        private const val FAILED = "failed"
         private const val PG_ORDER_ID = "pg_order_id"
         internal const val PARAM_URL = "url"
     }
@@ -63,7 +61,6 @@ class PaymentActivity: BaseActivity(), PaymentView {
     private val offerInteractor: OfferInteractor by inject()
 
     private lateinit var url: String
-    private var price: Int = 0
 
     override fun getPresenter(): PaymentPresenter = presenter
 
@@ -121,20 +118,14 @@ class PaymentActivity: BaseActivity(), PaymentView {
 
     private fun getBundleValues(bundle: Bundle) {
         url = bundle.getString(PaymentSettingsPresenter.BUNDLE_KEY_URL)!!
-        price = bundle.getInt(PaymentSettingsPresenter.BUNDLE_KEY_PRICE)
     }
 
     private fun handleUri(uri: Uri?) {
         val path = uri?.path
         if(path.equals(PAYMENT_RESULT_SUCCESSFUL)) {
-            initDataForAnalytics()
             changePaymentStatus(uri, true)
         }
         else if(path.equals(PAYMENT_RESULT_FAILED)) changePaymentStatus(uri, false)
-    }
-
-    private fun initDataForAnalytics() {
-        presenter.price = price
     }
 
     private fun changePaymentStatus(uri: Uri?, success: Boolean) {

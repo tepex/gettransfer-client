@@ -31,7 +31,6 @@ class PaymentPresenter(cc: CoroutineContexts,
                        systemInteractor: SystemInteractor,
                        private val paymentInteractor: PaymentInteractor,
                        private val offerInteractor: OfferInteractor): BasePresenter<PaymentView>(cc, router, systemInteractor) {
-    internal var price: Int = 0
     private lateinit var offer: Offer
     
     companion object {

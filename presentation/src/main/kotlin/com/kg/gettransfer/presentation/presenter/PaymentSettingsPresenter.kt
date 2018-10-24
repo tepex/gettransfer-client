@@ -38,7 +38,6 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
     companion object {
         @JvmField val PARAM_SHARE      = "share"
         @JvmField val BUNDLE_KEY_URL   = "url"
-        @JvmField val BUNDLE_KEY_PRICE = "price"
     }
 
     init {
@@ -80,7 +79,6 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
     private fun navigateToPayment(payment: Payment) {
         val bundle = Bundle()
         bundle.putString(BUNDLE_KEY_URL, payment.url)
-        bundle.putInt(BUNDLE_KEY_PRICE, paymentRequest.percentage)
         router.navigateTo(Screens.PAYMENT, bundle)
     }
 
