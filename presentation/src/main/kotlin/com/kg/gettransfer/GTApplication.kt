@@ -9,8 +9,6 @@ import net.hockeyapp.android.CrashManager
 
 import net.hockeyapp.android.CrashManager
 
-import net.hockeyapp.android.CrashManager
-
 import org.koin.android.ext.android.startKoin
 
 import timber.log.Timber
