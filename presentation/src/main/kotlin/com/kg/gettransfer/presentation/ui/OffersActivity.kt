@@ -230,6 +230,11 @@ class OffersActivity: BaseActivity(), OffersView {
 
     private fun hideSheetOfferDetails() { bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN }
 
+    override fun redirectView() =
+        Utils.showScreenRedirectingAlert(this,getString(R.string.log_in_requirement_error_title),
+                getString(R.string.log_in_to_see_transfers_and_offers)) { presenter.openLoginView() }
+
+
     @CallSuper
     override fun onBackPressed() {
         if(bsOfferDetails.state == BottomSheetBehavior.STATE_EXPANDED) hideSheetOfferDetails()

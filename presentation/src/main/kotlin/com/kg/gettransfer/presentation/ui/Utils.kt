@@ -91,6 +91,17 @@ internal class Utils {
                     .setNegativeButton(R.string.alert_no)  { _, _ -> listener(false) }
                     .show()
         }
+
+        fun showScreenRedirectingAlert(context: Context, title: String, message: String, navigate: () -> Unit){
+            getAlertDialogBuilder(context)
+                    .setTitle(title)
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.ok){ dialog, _ ->
+                        dialog.dismiss()
+                        navigate()
+                    }
+                    .show()
+        }
         
         fun setCurrenciesDialogListener(context: Context, view: View, items: List<CharSequence>,
             listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.currency, items, listener) }

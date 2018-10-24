@@ -126,6 +126,11 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
             checkKeyBoardState(countDifference())
         }
     }
+
+    protected fun openScreen(screen: String){
+        router.navigateTo(screen)
+
+    }
 }
 
 open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, Screens.NOT_USED) {

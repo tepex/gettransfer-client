@@ -258,6 +258,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             router.navigateTo(Screens.OFFERS)
             logCreateTransfer(RESULT_SUCCESS)
         }, { e ->
+            Log.i("FindError", e.message)
                 if(e is ApiException) {
                     if(e.isNotLoggedIn()) login()
                     else viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
