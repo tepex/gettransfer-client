@@ -12,8 +12,6 @@ import com.google.gson.JsonParseException
 import com.kg.gettransfer.remote.model.TransportTypeModel
 import com.kg.gettransfer.remote.model.TransportTypesWrapperModel
 
-import timber.log.Timber
-
 class TransportTypesDeserializer: JsonDeserializer<TransportTypesWrapperModel> {
 	@Throws(JsonParseException::class)
 	override fun deserialize(jsonTransportTypes: JsonElement,
