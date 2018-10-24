@@ -27,7 +27,7 @@ import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.presentation.Screens
 
-import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.Job
 
 import org.koin.android.ext.android.inject
 

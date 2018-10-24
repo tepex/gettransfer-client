@@ -2,7 +2,7 @@ package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.remote.model.*
 
-import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.Deferred
 
 import retrofit2.http.*
 

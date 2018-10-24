@@ -18,7 +18,7 @@ import com.kg.gettransfer.extensions.inject
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.BaseView
 
-import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.Job
 
 import ru.terrakok.cicerone.Router
 

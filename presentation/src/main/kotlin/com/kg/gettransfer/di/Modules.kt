@@ -30,9 +30,7 @@ import com.kg.gettransfer.domain.repository.*
 import com.kg.gettransfer.geo.GeoRepositoryImpl
 import com.kg.gettransfer.prefs.PreferencesImpl
 
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.IO
-import kotlinx.coroutines.experimental.android.Main
+import kotlinx.coroutines.Dispatchers
 
 import org.koin.android.ext.koin.androidApplication
 
