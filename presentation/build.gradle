@@ -169,9 +169,6 @@ dependencies {
 
 	//RatingBar with vector images
 	implementation "com.github.ome450901:SimpleRatingBar:$simple_rating_bar_version"
-
-	//socket
-	implementation "io.socket:socket.io-client:1.0.0"
     
 	testImplementation libs.junit
 	testImplementation libs.hamcrest
