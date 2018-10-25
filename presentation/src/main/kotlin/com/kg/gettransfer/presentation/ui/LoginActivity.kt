@@ -1,13 +1,18 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
+import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.markAsNotImplemented
+import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.LoginPresenter
 import com.kg.gettransfer.presentation.view.LoginView
 import kotlinx.android.synthetic.main.activity_login.*
@@ -19,7 +24,19 @@ class LoginActivity: BaseActivity(), LoginView {
     @ProvidePresenter
     fun createLoginPresenter(): LoginPresenter = LoginPresenter(coroutineContexts, router, systemInteractor)
     
-    protected override var navigator = BaseNavigator(this)
+    protected override var navigator = object: BaseNavigator(this) {
+        override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
+            val intent = super.createActivityIntent(context, screenKey, data)
+            Log.i("FindData", (data as String))
+            if(intent != null) return intent
+            Log.i("FindData", ("should open offers"))
+            if(data is String && data == Screens.OFFERS) {
+                presenter.screenForReturn = data
+                return Intent(context, OffersActivity::class.java)
+            }
+            return null
+        }
+    }
     
     override fun getPresenter(): LoginPresenter = presenter
 

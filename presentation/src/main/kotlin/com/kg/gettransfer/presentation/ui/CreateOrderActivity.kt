@@ -36,6 +36,7 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.MapStyleOptions
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PromoInteractor
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
@@ -75,6 +76,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private val routeInteractor: RouteInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
     private val promoInteractor: PromoInteractor by inject()
+    private val offerInteractor: OfferInteractor by inject()
     private val calendar = Calendar.getInstance()
     private lateinit var bsOrder: BottomSheetBehavior<View>
     private lateinit var bsTransport: BottomSheetBehavior<View>
@@ -88,7 +90,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
                                                                                   systemInteractor,
                                                                                   routeInteractor,
                                                                                   transferInteractor,
-                                                                                  promoInteractor)
+                                                                                  promoInteractor,
+                                                                                  offerInteractor)
 
     protected override var navigator = object: BaseNavigator(this) {
         @CallSuper

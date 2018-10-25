@@ -13,13 +13,9 @@ import com.kg.gettransfer.R.string.from
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.PromoInteractor
+import com.kg.gettransfer.domain.interactor.*
 
 import com.kg.gettransfer.domain.model.Trip
-
-import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.Screens
 
@@ -47,7 +43,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                            systemInteractor: SystemInteractor,
                            private val routeInteractor: RouteInteractor,
                            private val transferInteractor: TransferInteractor,
-                           private val promoInteractor: PromoInteractor): BasePresenter<CreateOrderView>(cc, router, systemInteractor) {
+                           private val promoInteractor: PromoInteractor,
+                           private val offersInteractor: OfferInteractor): BasePresenter<CreateOrderView>(cc, router, systemInteractor) {
 
     private var user: UserModel = Mappers.getUserModel(systemInteractor.account)
     private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies!!)
@@ -119,6 +116,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             viewState.blockInterface(true)
             val from = routeInteractor.from!!.cityPoint
             val to = routeInteractor.to!!.cityPoint
+
             val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
             routeInfo?.let {
                 var prices: Map<String, String>? = null
@@ -254,11 +252,11 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                                          Mappers.getUser(user),
                                                                          promoCode,
                                                                          false)) }
+            utils.asyncAwait{ offersInteractor.getOffers(transfer.id) }
             Timber.d("new transfer: %s", transfer)
             router.navigateTo(Screens.OFFERS)
             logCreateTransfer(RESULT_SUCCESS)
         }, { e ->
-            Log.i("FindError", e.message)
                 if(e is ApiException) {
                     if(e.isNotLoggedIn()) login()
                     else viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)

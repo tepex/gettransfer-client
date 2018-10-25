@@ -32,12 +32,19 @@ class LoginPresenter(cc: CoroutineContexts,
     private var email: String? = null
     private var password: String? = null
 
+    var screenForReturn: String? = null
+
     fun onLoginClick() {
         if(checkFields()) {
             utils.launchAsyncTryCatchFinally({
                 viewState.blockInterface(true, true)
                 utils.asyncAwait { systemInteractor.login(email!!, password!!) }
-                router.exitWithResult(RESULT_CODE, RESULT_OK)
+                if(screenForReturn != null) {
+                    val screen = screenForReturn
+                    screenForReturn = null
+                    router.navigateTo(screen)
+                } else
+                    router.exitWithResult(RESULT_CODE, RESULT_OK)
                 mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY, RESULT_SUCCESS))
             }, { e ->
                 viewState.setError(e)
