@@ -12,31 +12,25 @@ import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.TokenModel
 import com.kg.gettransfer.remote.model.TransportTypesWrapperModel
 
+import devcsrj.okhttp3.logging.HttpLoggingInterceptor
+
 import kotlinx.coroutines.Deferred
 
 import okhttp3.CookieJar
 import okhttp3.OkHttpClient
-import devcsrj.okhttp3.logging.HttpLoggingInterceptor
-
-import org.slf4j.LoggerFactory
 
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiCore(private val preferences: PreferencesCache) {
-    companion object {
-        @JvmField val TAG = "GTR-remote"
-        val LOG = LoggerFactory.getLogger(TAG)
-    }
-
     internal lateinit var api: Api
     lateinit var apiUrl: String
 
     private lateinit var apiKey: String
     private val gson = GsonBuilder().registerTypeAdapter(TransportTypesWrapperModel::class.java, TransportTypesDeserializer()).create()
     private var okHttpClient = OkHttpClient.Builder().apply {
-        addInterceptor(HttpLoggingInterceptor(LOG))
+        addInterceptor(HttpLoggingInterceptor(Log.logger))
         addInterceptor { chain ->
             var request = chain.request()
             if(request.url().encodedPath() != Api.API_ACCESS_TOKEN) request = request.newBuilder()
@@ -45,7 +39,7 @@ class ApiCore(private val preferences: PreferencesCache) {
 	        chain.proceed(request)
 	    }
 	    .cookieJar(CookieJar.NO_COOKIES)
-    }.build()      
+    }.build()
 
     fun changeEndpoint(endpoint: EndpointModel) {
         apiKey = endpoint.key
