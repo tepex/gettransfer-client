@@ -4,9 +4,8 @@ import com.arellomobile.mvp.MvpView
 
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.presentation.model.OfferModel
 
+import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
@@ -17,4 +16,5 @@ interface OffersView: BaseLoadingView {
     fun setSortState(sortCategory: String, sortHigherToLower: Boolean)
     fun showAlertCancelRequest()
     fun showBottomSheetOfferDetails(offer: OfferModel)
+    fun addNewOffer(offer: OfferModel)
 }

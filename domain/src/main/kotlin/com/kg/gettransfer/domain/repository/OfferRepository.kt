@@ -1,8 +1,7 @@
 package com.kg.gettransfer.domain.repository
 
-import com.kg.gettransfer.domain.OfferListener
-
 import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.OfferListener
 
 interface OfferRepository {
     suspend fun getOffers(id: Long): List<Offer>

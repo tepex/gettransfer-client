@@ -19,18 +19,27 @@ import kotlinx.coroutines.Deferred
 import okhttp3.CookieJar
 import okhttp3.OkHttpClient
 
+import org.slf4j.LoggerFactory
+
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class ApiCore(private val preferences: PreferencesCache) {
+class ApiCore(private val preferences: PreferencesCache,
+              private val accessTokenListener: AccessTokenListener) {
+    companion object {
+        @JvmField val TAG = "GTR-remote"
+    }
+    
+    private val log = LoggerFactory.getLogger(TAG)
+    
     internal lateinit var api: Api
     lateinit var apiUrl: String
 
     private lateinit var apiKey: String
     private val gson = GsonBuilder().registerTypeAdapter(TransportTypesWrapperModel::class.java, TransportTypesDeserializer()).create()
     private var okHttpClient = OkHttpClient.Builder().apply {
-        addInterceptor(HttpLoggingInterceptor(Log.logger))
+        addInterceptor(HttpLoggingInterceptor(log))
         addInterceptor { chain ->
             var request = chain.request()
             if(request.url().encodedPath() != Api.API_ACCESS_TOKEN) request = request.newBuilder()
@@ -89,7 +98,9 @@ class ApiCore(private val preferences: PreferencesCache) {
 
     internal suspend fun updateAccessToken() {
         val response: ResponseModel<TokenModel> = api.accessToken(apiKey).await()
-        preferences.accessToken = response.data!!.token
+        val accessToken = response.data!!.token
+        preferences.accessToken = accessToken
+        accessTokenListener.onAccessTokenChanged(accessToken)
     }
     
     internal fun remoteException(e: Exception): RemoteException {

@@ -22,7 +22,7 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_offer.view.*
 import kotlinx.android.synthetic.main.view_offer_car_name_and_options.view.*
 
-class OffersRVAdapter(private val offers: List<OfferModel>,
+class OffersRVAdapter(private val offers: MutableList<OfferModel>,
                       private val listener: SelectOfferClickListener):
         RecyclerView.Adapter<OffersRVAdapter.ViewHolder>() {
 
@@ -31,12 +31,17 @@ class OffersRVAdapter(private val offers: List<OfferModel>,
     }
 
     override fun getItemCount(): Int = offers.size
-
+    
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             OffersRVAdapter.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_offer, parent, false))
 
     override fun onBindViewHolder(holder: OffersRVAdapter.ViewHolder, pos: Int) {
         holder.bind(offers.get(pos), listener)
+    }
+
+    fun add(offer: OfferModel) {
+        offers.add(offer)
+        notifyDataSetChanged()
     }
 
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {

@@ -76,7 +76,8 @@ val dataModule = module {
     single { VehicleMapper(get(), get()) }
     single { OfferMapper(get(), get(), get(), get(), get()) }
     single { OfferRemoteDataStore(get()) }
-    single { OfferDataStoreFactory(get()) }
+    single { OfferSocketDataStore(get()) }
+    single { OfferDataStoreFactory(get(), get()) }
 	single { OfferRepositoryImpl(get(), get()) as OfferRepository }
 	single { OfferInteractor(get()) }
 	

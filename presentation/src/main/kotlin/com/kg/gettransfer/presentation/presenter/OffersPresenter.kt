@@ -4,36 +4,21 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
-<<<<<<< Updated upstream
-=======
-import com.google.gson.Gson
-import com.google.gson.JsonObject
-
->>>>>>> Stashed changes
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.OfferListener
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.OfferListener
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.view.OffersView
 
-<<<<<<< Updated upstream
-import io.socket.client.IO
-import io.socket.client.Manager
-import io.socket.client.Socket
-
-import io.socket.emitter.Emitter
-import io.socket.engineio.client.Transport
-
-import org.json.JSONObject
-
-=======
->>>>>>> Stashed changes
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
@@ -43,13 +28,9 @@ class OffersPresenter(cc: CoroutineContexts,
                       router: Router,
                       systemInteractor: SystemInteractor,
                       private val transferInteractor: TransferInteractor,
-<<<<<<< Updated upstream
-                      private val offerInteractor: OfferInteractor): BaseLoadingPresenter<OffersView>(cc, router, systemInteractor) {
-=======
                       private val offerInteractor: OfferInteractor):
     BaseLoadingPresenter<OffersView>(cc, router, systemInteractor), OfferListener {
 
->>>>>>> Stashed changes
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
@@ -77,28 +58,12 @@ class OffersPresenter(cc: CoroutineContexts,
         
         @JvmField val SORT_YEAR   = "sort_year"
         @JvmField val SORT_RATING = "sort_rating"
-<<<<<<< Updated upstream
-        @JvmField val SORT_PRICE  = "sort_price"
-        
-        @JvmField val SOCKET_OPTIONS_PATH = "/api/socket"
-        @JvmField val SOCKET_EVENT        = "newOffer"
-        
-        @JvmField val COOKIE         = "Cookie"
-        @JvmField val COOKIE_SESSION = "rack.session"
-=======
         @JvmField val SORT_PRICE  = "sort_price"        
->>>>>>> Stashed changes
     }
 
     @CallSuper
     override fun attachView(view: OffersView) {
         super.attachView(view)
-        utils.launchAsyncTryCatch({
-            val options = IO.Options()
-            options.path = SOCKET_OPTIONS_PATH
-            options.forceNew = true
-            offersSocket = IO.socket(systemInteractor.endpoint.url, options)
-        }, { e -> Timber.e(e) })
         utils.launchAsyncTryCatchFinally({
             viewState.showLoading()
             viewState.blockInterface(true)
@@ -113,7 +78,7 @@ class OffersPresenter(cc: CoroutineContexts,
             viewState.setDate(transferModel.dateTime)
             viewState.setTransfer(transferModel)
             changeSortType(SORT_PRICE)
-            offerInteracotr.setListener(this, systemInteractor.accessToken)
+            offerInteractor.setListener(this@OffersPresenter)
         }, { e -> Timber.e(e)
             viewState.setError(e)
         }, {
@@ -122,28 +87,10 @@ class OffersPresenter(cc: CoroutineContexts,
         })
     }
 
-<<<<<<< Updated upstream
-    fun setUpSocket() {
-        if(offersSocket != null) {
-            offersSocket?.connect()
-            if(offersSocket?.connected()!!) {
-                offersSocket?.on(Manager.EVENT_TRANSPORT, headers)
-                offersSocket?.on("$SOCKET_EVENT/${transferInteractor.selectedId}", onNewOffer)
-            }
-        }
-    }
-
-    @CallSuper
-    override fun onDestroy() {
-        router.removeResultListener(LoginPresenter.RESULT_CODE)
-        offersSocket!!.off("$SOCKET_EVENT/${transferInteractor.selectedId}", onNewOffer)
-        offersSocket!!.disconnect()
-=======
     @CallSuper
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
         offerInteractor.removeListener(this)
->>>>>>> Stashed changes
         super.onDestroy()
     }
 
@@ -211,42 +158,10 @@ class OffersPresenter(cc: CoroutineContexts,
 
     private fun logFilterEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value)) }
     private fun logButtonEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value)) }
-<<<<<<< Updated upstream
-=======
     
     override fun onNewOffer(offer: Offer) {
-        viewState.addNewOffer(Mappers.getOfferModel(offer), systemInteractor.locale)
+        viewState.addNewOffer(Mappers.getOfferModel(offer, systemInteractor.locale))
     }
     
-    override fun onError(e: Exception) { Timber.e(e) }
-    
-    /*
-    
-    private val onConnectEvent = Emitter.Listener { args -> Timber.d("connect error") }
-    private val onOpenEvent    = Emitter.Listener { args -> Timber.d("connect") }
-    private val onErrorEvent   = Emitter.Listener { args -> Timber.e(args.first() as Exception) }
->>>>>>> Stashed changes
-
-    private val onNewOffer = Emitter.Listener { args ->
-        val offer = args.first() as JSONObject
-        Timber.d("NEW OFFER: $offer")
-    }
-
-    private val headers = Emitter.Listener { args ->
-        val transport = args.first() as Transport
-        transport.on(Transport.EVENT_REQUEST_HEADERS) { _headers ->
-            Timber.d("SET HEADERS")
-<<<<<<< Updated upstream
-            var headers = _headers.first() as MutableMap<String, List<String>>
-            headers.put("Cookie", listOf("$COOKIE_SESSION=${systemInteractor.accessToken}"))
-=======
-            var __headers = _headers.first() as MutableMap<String, List<String>>
-            __headers.put(COOKIE, listOf("$COOKIE_SESSION=${systemInteractor.accessToken}"))
-        }
-        transport.on(Transport.EVENT_RESPONSE_HEADERS) { _headers ->
-            var __headers = _headers.first() as Map<String, List<String>>
->>>>>>> Stashed changes
-        }
-    }
-    */
+    override fun onError(e: ApiException) { Timber.e(e) }
 }
