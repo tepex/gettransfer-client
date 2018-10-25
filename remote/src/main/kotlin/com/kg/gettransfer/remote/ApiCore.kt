@@ -26,7 +26,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiCore(private val preferences: PreferencesCache,
-              private val accessTokenListener: AccessTokenListener) {
+              private val hostListener: HostListener) {
     companion object {
         @JvmField val TAG = "GTR-remote"
     }
@@ -60,6 +60,7 @@ class ApiCore(private val preferences: PreferencesCache,
                 .addCallAdapterFactory(CoroutineCallAdapterFactory()) // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
                 .build()
                 .create(Api::class.java)
+        hostListener.onEndpointChanged(endpoint, preferences.accessToken)
     }
     
     /**
@@ -100,7 +101,7 @@ class ApiCore(private val preferences: PreferencesCache,
         val response: ResponseModel<TokenModel> = api.accessToken(apiKey).await()
         val accessToken = response.data!!.token
         preferences.accessToken = accessToken
-        accessTokenListener.onAccessTokenChanged(accessToken)
+        hostListener.onAccessTokenChanged(accessToken)
     }
     
     internal fun remoteException(e: Exception): RemoteException {

@@ -18,10 +18,7 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module.module
 
 val remoteModule = module {
-    single {
-        val preferences: PreferencesCache = get()
-        OfferSocketImpl(preferences.accessToken, "https://gettransfer.com")
-    } bind AccessTokenListener::class bind OfferSocket::class
+    single { OfferSocketImpl() } bind HostListener::class bind OfferSocket::class
     
     single { ApiCore(get(), get()) }
     single { PromoMapper() }

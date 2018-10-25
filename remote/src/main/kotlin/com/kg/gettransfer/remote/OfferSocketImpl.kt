@@ -10,6 +10,7 @@ import com.kg.gettransfer.data.model.OfferEntityListener
 
 //import com.kg.gettransfer.remote.mapper.OfferMapper
 
+import com.kg.gettransfer.remote.model.EndpointModel
 import com.kg.gettransfer.remote.model.OfferModel
 
 import io.socket.client.IO
@@ -25,22 +26,24 @@ import org.slf4j.LoggerFactory
  * host = "https://gettransfer.com"
  * logging: https://proandroiddev.com/managing-logging-in-a-multi-module-android-application-eb966fb7fedc
  */
-class OfferSocketImpl(private var accessToken: String,
-                      private val host: String): OfferSocket, AccessTokenListener {
+class OfferSocketImpl(): OfferSocket, HostListener {
     private val log = LoggerFactory.getLogger("GTR-socket")
     private val gson = GsonBuilder().create()
     
     private var listener: OfferEntityListener? = null
     private var socket: Socket? = null
+    private var endpoint: EndpointModel? = null
+    private var accessToken: String? = null
     
     companion object {
         @JvmField val PATH  = "/api/socket"
-        @JvmField val EVENT = "newOffer"
+        @JvmField val EVENT_NEW_OFFER = "newOffer"
     }
     
     override fun setListener(listener: OfferEntityListener) {
         this.listener = listener
-        socket?.also { reconnect() }
+        log.debug("set listener")
+        if(socket == null) connect()
     }
     
     override fun removeListener(listener: OfferEntityListener) {
@@ -50,18 +53,31 @@ class OfferSocketImpl(private var accessToken: String,
     
     override fun onAccessTokenChanged(accessToken: String) {
         this.accessToken = accessToken
-        reconnect()
+        socket?.let { reconnect() }
+    }
+    
+    override fun onEndpointChanged(endpoint: EndpointModel, accessToken: String) {
+        this.endpoint = endpoint
+        this.accessToken = accessToken
+        socket?.let { reconnect() }
     }
     
     private fun connect() {
+        if(endpoint == null || accessToken == null) {
+            log.error("endpoint or accessToken are not initialized!")
+            return
+        }
+        
+        log.debug("start connect to ${endpoint!!.url}. token: $accessToken")
         val options = IO.Options().apply {
             path = PATH
             forceNew = true
-            transports
         }
-        socket = IO.socket(host, options)
+        log.debug("options: ${options.path}")
+        socket = IO.socket(endpoint!!.url, options)
         with(socket!!.io()) {
             on(Manager.EVENT_TRANSPORT) { args ->
+                log.debug("event transport. cookie: $accessToken")
                 val transport = args.first() as Transport
                 transport.on(Transport.EVENT_REQUEST_HEADERS) { _args ->
                     var headers = _args.first() as MutableMap<String, List<String>>
@@ -69,22 +85,22 @@ class OfferSocketImpl(private var accessToken: String,
                 }
             }
             
-            /*
-            on(Manager.EVENT_CONNECT_ERROR, onConnectEvent)
-            on(Manager.EVENT_OPEN, onOpenEvent)
-            on(Manager.EVENT_CLOSE) { args -> Timber.d("close") }
-            on(Manager.EVENT_RECONNECTING) { args -> Timber.d("EVENT_RECONNECTING") }
-            on(Socket.EVENT_MESSAGE, onNewOffer)
-            */
+            on(Manager.EVENT_CONNECT_ERROR) { args -> log.error("socket connect error: $args") }
+            on(Manager.EVENT_OPEN) { _ -> log.debug("socket open") }
+            on(Manager.EVENT_CLOSE) { _ -> log.debug("socket close") }
+            on(Manager.EVENT_RECONNECTING) { _ -> log.debug("EVENT_RECONNECTING") }
+            on(Socket.EVENT_MESSAGE) { args -> log.debug("EVENT ${Socket.EVENT_MESSAGE}: $args") }
             
             on(Manager.EVENT_CONNECT_TIMEOUT) { _ ->
-                listener?.let { it.onError(RemoteException(RemoteException.CONNECTION_TIMED_OUT, "Socket $host timeout")) }
+                log.warn("socket timeout")
+                listener?.let { it.onError(RemoteException(RemoteException.CONNECTION_TIMED_OUT, "Socket ${endpoint!!.url} timeout")) }
             }
             on(Manager.EVENT_ERROR) { args ->
                 val msg = if(args.first() is Exception) (args.first() as Exception).message else args.first().toString()
+                log.error("socket error: $msg")
                 listener?.let { it.onError(RemoteException(RemoteException.INTERNAL_SERVER_ERROR, msg!!)) }
             }
-            on(EVENT) { args ->
+            on(EVENT_NEW_OFFER) { args ->
                 /*
                 if(args.first() !is JSONObject) listener.onError(SocketException(SocketException.INTERNAL_SERVER_ERROR))
                 else {
@@ -93,7 +109,7 @@ class OfferSocketImpl(private var accessToken: String,
                 }
                 */
                 val arg = args.first()
-                log.debug("type: ${arg::class.qualifiedName}")
+                //log.debug("type: ${arg::class.qualifiedName}")
                 log.debug("new offer: $arg")
             }
         }
@@ -102,7 +118,7 @@ class OfferSocketImpl(private var accessToken: String,
     
     private fun disconnect() {
         socket?.apply {
-            off(EVENT)
+            off(EVENT_NEW_OFFER)
             disconnect()
         }
         socket = null
