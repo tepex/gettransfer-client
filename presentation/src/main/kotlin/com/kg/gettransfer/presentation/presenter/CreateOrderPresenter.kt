@@ -251,8 +251,9 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                                          comment,
                                                                          Mappers.getUser(user),
                                                                          promoCode,
-                                                                         false)) }
-            utils.asyncAwait{ offersInteractor.getOffers(transfer.id) }
+                                                                         false))
+            }
+            offersInteractor.getOffers(transfer.id)
             Timber.d("new transfer: %s", transfer)
             router.navigateTo(Screens.OFFERS)
             logCreateTransfer(RESULT_SUCCESS)

@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+import android.util.Log
 
 import android.view.View
 
@@ -59,7 +60,7 @@ class OffersActivity: BaseActivity(), OffersView {
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Log.i("FindError", "offersActivity")
         setContentView(R.layout.activity_offers)
 
         setSupportActionBar(toolbar as Toolbar)
