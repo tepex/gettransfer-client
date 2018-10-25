@@ -16,6 +16,7 @@ import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
 
 import com.kg.gettransfer.presentation.view.PaymentView
@@ -30,12 +31,13 @@ class PaymentPresenter(cc: CoroutineContexts,
                        systemInteractor: SystemInteractor,
                        private val paymentInteractor: PaymentInteractor,
                        private val offerInteractor: OfferInteractor): BasePresenter<PaymentView>(cc, router, systemInteractor) {
-    internal var price: Int = 0
     private lateinit var offer: Offer
     
     companion object {
         @JvmField val PARAM_TRANSACTION_ID = "transaction_id"
     }
+
+    private val paymentRequest = PaymentRequestModel(offerInteractor.transferId!!, offerInteractor.selectedOfferId!!)
     
     fun changePaymentStatus(orderId: Long, success: Boolean) {
         utils.launchAsyncTryCatchFinally({
@@ -61,7 +63,7 @@ class PaymentPresenter(cc: CoroutineContexts,
     private fun logEventEcommercePurchase(orderId: Long) {
         val params = HashMap<String, Any>()
         params[FirebaseAnalytics.Param.CURRENCY] = systemInteractor.currency.currencyCode
-        when(price) {
+        when(paymentRequest.percentage) {
             OfferModel.FULL_PRICE -> params[FirebaseAnalytics.Param.VALUE] = offer.price.amount
             OfferModel.PRICE_30 -> params[FirebaseAnalytics.Param.VALUE] = offer.price.percentage30
         }

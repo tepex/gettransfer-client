@@ -20,6 +20,7 @@ import android.text.InputFilter
 
 import android.text.InputType
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.*
 
 import android.view.inputmethod.EditorInfo
@@ -59,6 +60,8 @@ import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
+
+
 
 import org.koin.android.ext.android.inject
 
@@ -127,6 +130,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         _mapView = mapView
         initMapView(savedInstanceState)
 
+
         /*setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -157,6 +161,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         tvFlightOrTrainNumber.onTextChanged   { presenter.setFlightNumber(it.trim()) }
 
         initPromoSection()
+        initKeyBoardListener()
 
         tvComments.setOnClickListener {
             showPopupWindowComment()
@@ -194,8 +199,12 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun initPromoSection() {
         etPromo.filters = arrayOf(InputFilter.AllCaps())
         etPromo.onTextChanged { presenter.setPromo(etPromo.text.toString()) }
-        btnOkPromo.setOnClickListener { presenter.usePromoForDiscount() }
         defaultPromoText = tvPromoResult.text.toString()
+        constraintLayout_promo.setOnClickListener { showKeyboard(); etPromo.requestFocusFromTouch()}
+    }
+    
+    private fun initKeyBoardListener() {
+        addKeyBoardDismissListener { closed: Boolean -> if (closed && etPromo.isFocused) presenter.checkPromoCode() }
     }
 
     protected suspend override fun customizeGoogleMaps() {
@@ -299,6 +308,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
     }
 
+
+
     //TODO сделать подсветку не заполненных полей
     override fun setGetTransferEnabled(enabled: Boolean) {}
 
@@ -306,20 +317,28 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     override fun centerRoute(cameraUpdate: CameraUpdate) { showTrack(cameraUpdate) }
 
-    override fun setPromoUiElements(hasText: Boolean) {
-        btnOkPromo.visibility = if(hasText) View.VISIBLE else View.INVISIBLE
-        if(!hasText) resetPromoView()
-    }
-
     override fun setPromoResult(discountInfo: String?) {
-        tvPromoResult.text = discountInfo ?: getString(R.string.transfer_promo_result_fail)
-        val colorRes = if(discountInfo != null) R.color.promo_valid else R.color.color_error
+        val colorRes: Int
+        val text: String
+        val visibility: Int
+        if(discountInfo != null){
+            colorRes = R.color.promo_valid
+            text = discountInfo
+            visibility = View.VISIBLE
+        } else {
+            colorRes = R.color.color_error
+            text = getString(R.string.transfer_promo_result_fail)
+            visibility = View.INVISIBLE
+        }
         tvPromoResult.setTextColor(getColor(colorRes))
+        tvPromoResult.text = text
+        img_okResult.visibility = visibility
     }
 
-    private fun resetPromoView() {
+    override fun resetPromoView() {
         tvPromoResult.text = defaultPromoText
         tvPromoResult.setTextColor(getColor(R.color.colorTextLightGray))
+        img_okResult.visibility = View.INVISIBLE
     }
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {

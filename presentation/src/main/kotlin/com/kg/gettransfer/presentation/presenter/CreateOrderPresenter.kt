@@ -194,14 +194,16 @@ class CreateOrderPresenter(cc: CoroutineContexts,
 
     fun setPromo(codeText: String) {
         promoCode = codeText
-        viewState.setPromoUiElements(codeText.isNotEmpty())
+        if(codeText.isEmpty()) viewState.resetPromoView()
     }
 
-    fun usePromoForDiscount() {
-        utils.launchAsyncTryCatch({
-            val mDiscount = promoInteractor.getDiscountByPromo(promoCode!!)
-            viewState.setPromoResult(mDiscount.discount)
-        }, { _ -> viewState.setPromoResult(null) })
+    fun checkPromoCode() {
+        if(!promoCode.isNullOrEmpty()) {
+            utils.launchAsyncTryCatch({
+                val mDiscount = promoInteractor.getDiscountByPromo(promoCode!!)
+                viewState.setPromoResult(mDiscount.discount)
+            }, { _ -> viewState.setPromoResult(null) })
+        }
     }
 
     fun setComment(comment: String) {
@@ -285,6 +287,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         router.navigateTo(Screens.PASSENGER_MODE)
         logEventMain(BACK_CLICKED)
     }
+
+
 
     override fun onBackCommandClick() {
         router.navigateTo(Screens.PASSENGER_MODE)

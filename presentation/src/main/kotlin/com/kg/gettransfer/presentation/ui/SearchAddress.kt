@@ -48,79 +48,79 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     lateinit var presenter: SearchAddressPresenter
     private lateinit var parent: SearchActivity
 
-    override val containerView: View
-    /** From/To address flag */
-    var isTo = false
-        private set
+	override val containerView: View
+	/** From/To address flag */
+	var isTo = false
+		private set
 
-    var text: String
-        get() = addressField.text.toString()
-        set(value) { addressField.setText(value) }
-        
-    private var parentDelegate: MvpDelegate<Any>? = null
-    private val mvpDelegate by lazy {
-        val ret = MvpDelegate<SearchAddress>(this)
-        ret.setParentDelegate(parentDelegate!!, id.toString())
-        ret
-    }
-    private var blockRequest = false
-    private var hasFocus = false
+	var text: String
+		get() { return addressField.text.toString() }
+		set(value) {
+			addressField.setText(value)
+		}
+	private var parentDelegate: MvpDelegate<Any>? = null
+	private val mvpDelegate by lazy {
+		val ret = MvpDelegate<SearchAddress>(this)
+		ret.setParentDelegate(parentDelegate!!, id.toString())
+		ret
+	}
+	private var blockRequest = false
+	private var hasFocus: Boolean = false
+	
+	init {
+		containerView = LayoutInflater.from(context).inflate(R.layout.search_address, this, true)
+		if(attrs != null) {
+			val ta = context.obtainStyledAttributes(attrs, R.styleable.SearchAddress)
+			addressField.hint = ta.getString(R.styleable.SearchAddress_hint)
+			ta.recycle()
+		}
+		
+		clearBtn.setOnClickListener { 
+			text = ""
+			addressField.requestFocus()
+		}
+	}
 
-    init {
-        containerView = LayoutInflater.from(context).inflate(R.layout.search_address, this, true)
-        if(attrs != null) {
-            val ta = context.obtainStyledAttributes(attrs, R.styleable.SearchAddress)
-            addressField.hint = ta.getString(R.styleable.SearchAddress_hint)
-            ta.recycle()
-        }
+	@ProvidePresenter
+	fun createSearchAddressPresenter(): 
+		SearchAddressPresenter = SearchAddressPresenter(parent.coroutineContexts,
+		                                                parent.router,
+		                                                parent.systemInteractor,
+			                                            parent.routeInteractor)
 
-        clearBtn.setOnClickListener {
-            text = ""
-            presenter.onClearAddress(isTo)
-            addressField.requestFocus()
-        }
-    }
+	fun initWidget(parent: SearchActivity, isTo: Boolean) {
+		this.parent = parent
+		this.isTo = isTo
+		addressField.setOnFocusChangeListener { _, hasFocus ->
+			this.hasFocus = hasFocus
+			if(!hasFocus){
+				clearBtn.visibility = View.GONE
+			}
+			else {
+				checkClearButtonVisibility()
+				parent.presenter.isTo = isTo
+			}
+		}
+		addressField.addTextChangedListener(this)
+		
+		parentDelegate = parent.mvpDelegate
+		mvpDelegate.onCreate()
+		mvpDelegate.onAttach()
 
-    @ProvidePresenter
-    fun createSearchAddressPresenter(): SearchAddressPresenter = SearchAddressPresenter(parent.coroutineContexts,
-                                                                                        parent.router,
-                                                                                        parent.systemInteractor,
-                                                                                        parent.routeInteractor)
-
-    fun initWidget(parent: SearchActivity, isTo: Boolean) {
-        this.parent = parent
-        this.isTo = isTo
-        addressField.setOnFocusChangeListener { _, hasFocus ->
-            this.hasFocus = hasFocus
-            if(!hasFocus) {
-                clearBtn.visibility = View.INVISIBLE
-                presenter.returnAddress(isTo)
-
-            } else {
-                checkClearButtonVisibility()
-                parent.presenter.isTo = isTo
-            }
-        }
-        addressField.addTextChangedListener(this)
-
-        parentDelegate = parent.mvpDelegate
-        mvpDelegate.onCreate()
-        mvpDelegate.onAttach()
-
-        presenter.mBounds = parent.mBounds
-
-        checkClearButtonVisibility()
-    }
-
-    /** Set address text without request */
-    fun initText(text: String, sendRequest: Boolean) {
-        blockRequest = true
-        this.text = text + " "
-        if(addressField.hasFocus())
-            addressField.setSelection(addressField.text.length)
-        blockRequest = false
-        if(sendRequest) presenter.requestAddressListByPrediction(text.trim())
-    }
+		presenter.mBounds = parent.mBounds
+		
+		if(isTo) addressField.requestFocus()
+		checkClearButtonVisibility()
+	}
+	
+	/** Set address text without request */
+	fun initText(text: String, sendRequest: Boolean) {
+		blockRequest = true
+		this.text = text + " "
+		addressField.setSelection(addressField.text.length)
+		blockRequest = false
+		if(sendRequest) presenter.requestAddressListByPrediction(text.trim())
+	}
 
     fun setUneditable() {
         addressField.keyListener = null

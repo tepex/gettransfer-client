@@ -7,10 +7,11 @@ import com.kg.gettransfer.data.*
 
 import com.kg.gettransfer.data.mapper.PromoDiscountMapper
 import com.kg.gettransfer.data.repository.PromoRepositoryImpl
+
 import com.kg.gettransfer.domain.interactor.PromoInteractor
 import com.kg.gettransfer.domain.repository.PromoRepository
-import com.kg.gettransfer.remote.*
 
+import com.kg.gettransfer.remote.*
 import com.kg.gettransfer.remote.mapper.*
 
 import org.koin.android.ext.koin.androidApplication

@@ -3,11 +3,8 @@ package com.kg.gettransfer.presentation.ui
 import android.app.Activity
 
 import android.content.Context
+import android.graphics.*
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.PorterDuff
 import android.location.Location
 
 import android.os.Build
@@ -24,6 +21,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextWatcher
 import android.text.style.ImageSpan
+import android.util.Log
 
 import android.view.LayoutInflater
 import android.view.View
@@ -288,6 +286,7 @@ internal class Utils {
         fun showLongToast(context: Context, text: CharSequence)  { Toast.makeText(context, text, Toast.LENGTH_LONG).show() }
     }
 }
+
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {
     this.addTextChangedListener(object: TextWatcher {

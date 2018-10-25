@@ -16,39 +16,37 @@ import kotlinx.coroutines.Deferred
 
 import okhttp3.CookieJar
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
+import devcsrj.okhttp3.logging.HttpLoggingInterceptor
+
+import org.slf4j.LoggerFactory
 
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiCore(private val preferences: PreferencesCache) {
+    companion object {
+        @JvmField val TAG = "GTR-remote"
+        val LOG = LoggerFactory.getLogger(TAG)
+    }
 
     internal lateinit var api: Api
     lateinit var apiUrl: String
 
     private lateinit var apiKey: String
-    private var okHttpClient: OkHttpClient
     private val gson = GsonBuilder().registerTypeAdapter(TransportTypesWrapperModel::class.java, TransportTypesDeserializer()).create()
-    
-    init {
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        val builder = OkHttpClient.Builder()
-        builder.addInterceptor(loggingInterceptor)
-        builder.addInterceptor { chain ->
+    private var okHttpClient = OkHttpClient.Builder().apply {
+        addInterceptor(HttpLoggingInterceptor(LOG))
+        addInterceptor { chain ->
             var request = chain.request()
             if(request.url().encodedPath() != Api.API_ACCESS_TOKEN) request = request.newBuilder()
-	                .addHeader(Api.HEADER_TOKEN, preferences.accessToken)
-	                .build()
-		    chain.proceed(request)
-		}
-		
-		builder.cookieJar(CookieJar.NO_COOKIES)
- 
-        okHttpClient = builder.build()
-    }
-    
+	            .addHeader(Api.HEADER_TOKEN, preferences.accessToken)
+	            .build()
+	        chain.proceed(request)
+	    }
+	    .cookieJar(CookieJar.NO_COOKIES)
+    }.build()      
+
     fun changeEndpoint(endpoint: EndpointModel) {
         apiKey = endpoint.key
         apiUrl = endpoint.url

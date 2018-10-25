@@ -31,5 +31,5 @@ interface CreateOrderView: BaseView {
     fun setComment(comment: String)
     fun setGetTransferEnabled(enabled: Boolean)
     fun setPromoResult(discountInfo: String?)
-    fun setPromoUiElements(hasText: Boolean)
+    fun resetPromoView()
 }

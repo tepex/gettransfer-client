@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.address_list_item.*
 import kotlinx.android.synthetic.main.popular_address_list_item.*
 
 class AddressAdapter(private val presenter: SearchPresenter,
-                     private var list: List<GTAddress>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                     private var list: List<GTAddress>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var isLastAddresses: Boolean = true
 
@@ -29,9 +29,7 @@ class AddressAdapter(private val presenter: SearchPresenter,
         selected = RecyclerView.NO_POSITION
     }
 
-    override fun getItemCount(): Int {
-        return list.size
-    }
+    override fun getItemCount() = list.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder
             = AddressViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.address_list_item, parent, false))
