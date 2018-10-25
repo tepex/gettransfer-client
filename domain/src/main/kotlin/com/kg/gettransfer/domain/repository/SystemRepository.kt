@@ -11,6 +11,7 @@ interface SystemRepository {
     var lastMode: String
     var endpoint: Endpoint
     val endpoints: List<Endpoint>
+    var isInternetAvailable: Boolean
         
     suspend fun coldStart()
     suspend fun getAccount(): Account
@@ -22,6 +23,4 @@ interface SystemRepository {
     fun logout()
     fun getHistory(): List<GTAddress>
     fun setHistory(history: List<GTAddress>)
-
-    fun changeNetworkAvailability(isNetworkConnected: Boolean)
 }

@@ -20,6 +20,7 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.InternetNotAvailableException
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
@@ -55,6 +56,8 @@ class SplashActivity: AppCompatActivity() {
             Timber.d("Splash screen")
             return
         }
+
+        systemInteractor.isInternetAvailable = Utils.isConnectedToInternet(this)
 
         if (checkIsTaskRoot()) return
 

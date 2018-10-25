@@ -166,6 +166,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         _mapView = mapView
         initMapView(savedInstanceState)
 
+        viewNetworkNotAvailable = textNetworkNotAvailable
+
         btnShowDrawerLayout.setOnClickListener { drawer.openDrawer(Gravity.START) }
         drawer = drawerLayout as DrawerLayout
         drawer.addDrawerListener(object: DrawerLayout.SimpleDrawerListener() {

@@ -39,6 +39,7 @@ import timber.log.Timber
  * @TODO: Выделить BaseFragment
  */
 class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
+
     @InjectPresenter
     internal lateinit var presenter: RequestsFragmentPresenter
 
@@ -92,5 +93,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     override fun setError(e: Throwable) {
         Timber.e(e)
         Utils.showError(context!!, false, getString(R.string.err_server, e.message))
-    }    
+    }
+
+    override fun showViewNetworkNotAvailable(isNetworkAvailable: Boolean) {}
 }

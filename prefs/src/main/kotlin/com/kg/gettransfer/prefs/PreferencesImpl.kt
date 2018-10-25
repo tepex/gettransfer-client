@@ -135,6 +135,14 @@ class PreferencesImpl(context: Context) : PreferencesCache, SystemCache {
             editor.apply()
         }
 
+    override var isInternetAvailable: Boolean
+        get() = configsPrefs.getBoolean(PreferencesCache.INTERNET, true)
+        set(value) {
+            val editor = configsPrefs.edit()
+            editor.putBoolean(PreferencesCache.INTERNET, value)
+            editor.apply()
+        }
+
     override fun clearAccount() {
         var editor = accountPrefs.edit()
         editor.remove(ACCOUNT_EMAIL)

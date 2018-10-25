@@ -7,9 +7,11 @@ import com.kg.gettransfer.data.mapper.*
 
 import com.kg.gettransfer.data.model.GTAddressEntity
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.InternetNotAvailableException
 import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.SystemRepository
+import java.lang.Exception
 
 class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
                            private val factory: SystemDataStoreFactory,
@@ -33,6 +35,13 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
             factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(value))
         }
 
+    override var isInternetAvailable: Boolean
+        get() = preferencesCache.isInternetAvailable
+        set(value) {
+            preferencesCache.isInternetAvailable = value
+            factory.retrieveRemoteDataStore().changeNetworkAvailability(value)
+        }
+
     override suspend fun coldStart() {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
 
@@ -40,11 +49,17 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
             val remoteAccount = factory.retrieveRemoteDataStore().getAccount()
             val remoteConfigs = factory.retrieveRemoteDataStore().getConfigs()
 
-            if(remoteConfigs.officePhone != null) factory.retrieveCacheDataStore().setConfigs(remoteConfigs)
-            if(remoteAccount.user.profile.email != null) factory.retrieveCacheDataStore().setAccount(remoteAccount)
-        } catch (e: ApiException){ }
-        configs = configsMapper.fromEntity(factory.retrieveCacheDataStore().getConfigs())
-        accountMapper.configs = configs
+            factory.retrieveCacheDataStore().setConfigs(remoteConfigs)
+            factory.retrieveCacheDataStore().setAccount(remoteAccount)
+
+            configs = configsMapper.fromEntity(factory.retrieveCacheDataStore().getConfigs())
+            accountMapper.configs = configs
+        } catch (e: Exception) {
+            if (e is InternetNotAvailableException || e is ApiException) {
+                configs = configsMapper.fromEntity(factory.retrieveCacheDataStore().getConfigs())
+                accountMapper.configs = configs
+            } else throw e
+        }
 
         /*factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
         configs = configsMapper.fromEntity(factory.retrieveRemoteDataStore().getConfigs())
@@ -84,6 +99,4 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
     }
 
     override fun logout() = factory.retrieveCacheDataStore().clearAccount()
-
-    override fun changeNetworkAvailability(isNetworkConnected: Boolean) = factory.retrieveRemoteDataStore().changeNetworkAvailability(isNetworkConnected)
 }

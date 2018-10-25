@@ -97,4 +97,6 @@
     <color name="promo_valid">#98b71b</color>
 
     <color name="colorDivider">#bcbbc1</color>
+
+    <color name="colorBackNetworkNotAvailable">#ff3b30</color>
 </resources>

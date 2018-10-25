@@ -42,6 +42,7 @@ class MainPresenter(cc: CoroutineContexts,
     private var isMarkerAnimating = true
 
     override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         utils.launchAsyncTryCatch( {
             updateCurrentLocationAsync()

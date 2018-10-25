@@ -33,7 +33,6 @@ class GTApplication: MultiDexApplication() {
         val intentFilter = IntentFilter()
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
         intentFilter.addAction("android.net.wifi.WIFI_STATE_CHANGED")
-        //LocalBroadcastManager.getInstance(applicationContext).registerReceiver(NetworkStateChangeReceiver(), intentFilter)
         registerReceiver(NetworkStateChangeReceiver(), intentFilter)
         // Start Koin
         startKoin(this, listOf(ciceroneModule,

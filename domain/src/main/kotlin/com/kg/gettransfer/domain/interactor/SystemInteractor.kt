@@ -23,6 +23,10 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         
     val endpoints = systemRepository.endpoints
 
+    var isInternetAvailable: Boolean
+        get() = systemRepository.isInternetAvailable
+        set(value) { systemRepository.isInternetAvailable = value }
+
     var account: Account = Account.NO_ACCOUNT
         private set
 
@@ -70,5 +74,4 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     fun getLogsFile() = loggingRepository.getLogsFile()
     fun getAddressHistory() = systemRepository.getHistory()
     fun setAddressHistory(list: List<GTAddress>) = systemRepository.setHistory(list)
-    fun changeNetworkAvailability(isNetworkConneted: Boolean) = systemRepository.changeNetworkAvailability(isNetworkConneted)
 }

@@ -51,7 +51,9 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     private var rootViewHeight: Int? = null
 
     protected open lateinit var navigator: BaseNavigator
-    
+
+    protected var viewNetworkNotAvailable: View? = null
+
     /** [https://stackoverflow.com/questions/37615470/support-library-vectordrawable-resourcesnotfoundexception] */
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -68,7 +70,6 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         LocalBroadcastManager.getInstance(this).registerReceiver(object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 val isNetworkAvailable = intent.getBooleanExtra(IS_NETWORK_AVAILABLE, false)
-                //val networkStatus = if (isNetworkAvailable) "connected" else "disconnected"
                 getPresenter().changeNetworkState(isNetworkAvailable)
             }
         }, intentFilter)
@@ -115,6 +116,12 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         view?.clearFocus()
     }
 
+    override fun showViewNetworkNotAvailable(isNetworkAvailable: Boolean) {
+        if(viewNetworkNotAvailable != null){
+            if(isNetworkAvailable) viewNetworkNotAvailable!!.visibility = View.GONE
+            else viewNetworkNotAvailable!!.visibility = View.VISIBLE
+        }
+    }
 
     //здесь лучше ничего не трогать
     private fun countDifference(): Boolean {
@@ -141,8 +148,6 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         router.navigateTo(screen)
 
     }
-
-    fun showViewNetworkNotAvailable(isNetworkAvailable: Boolean){}
 }
 
 open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, Screens.NOT_USED) {

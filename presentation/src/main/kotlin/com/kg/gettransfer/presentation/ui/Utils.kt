@@ -8,6 +8,7 @@ import android.graphics.*
 import android.graphics.drawable.Drawable
 
 import android.location.Location
+import android.net.ConnectivityManager
 
 import android.os.Build
 
@@ -107,7 +108,7 @@ internal class Utils {
                     }
                     .show()
         }
-        
+
         fun setCurrenciesDialogListener(context: Context, view: View, items: List<CharSequence>,
             listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.LNG_CURRENCY, items, listener) }
         fun setLocalesDialogListener(context: Context, view: View, items: List<CharSequence>,
@@ -333,6 +334,19 @@ internal class Utils {
             val renderer = HtmlRenderer.builder().build()
             val htmlString = renderer.render(document)
             return htmlString
+        }
+
+        fun isConnectedToInternet(context: Context?): Boolean {
+            try {
+                if (context != null) {
+                    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                    val networkInfo = connectivityManager.activeNetworkInfo
+                    return networkInfo != null && networkInfo.isConnected
+                }
+                return false
+            } catch (e: Exception) {
+                return false
+            }
         }
     }
 }
