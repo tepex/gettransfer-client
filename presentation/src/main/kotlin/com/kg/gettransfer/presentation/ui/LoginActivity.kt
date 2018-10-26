@@ -31,7 +31,7 @@ import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
-class LoginActivity: BaseLoadingActivity(), LoginView {
+class LoginActivity: BaseActivity(), LoginView {
     @InjectPresenter
     internal lateinit var presenter: LoginPresenter
     

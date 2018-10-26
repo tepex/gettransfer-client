@@ -9,7 +9,7 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface OffersView: BaseLoadingView {
+interface OffersView: BaseView {
     fun setTransfer(transferModel: TransferModel)
     fun setDate(date: String)
     fun setOffers(offers: List<OfferModel>)

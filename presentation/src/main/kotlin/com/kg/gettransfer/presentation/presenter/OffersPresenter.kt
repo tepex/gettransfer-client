@@ -29,7 +29,7 @@ class OffersPresenter(cc: CoroutineContexts,
                       systemInteractor: SystemInteractor,
                       private val transferInteractor: TransferInteractor,
                       private val offerInteractor: OfferInteractor):
-    BaseLoadingPresenter<OffersView>(cc, router, systemInteractor), OfferListener {
+    BasePresenter<OffersView>(cc, router, systemInteractor), OfferListener {
 
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
@@ -65,9 +65,8 @@ class OffersPresenter(cc: CoroutineContexts,
     override fun attachView(view: OffersView) {
         super.attachView(view)
         utils.launchAsyncTryCatchFinally({
-            viewState.showLoading()
             viewState.blockInterface(true)
-
+            
             val transfer = utils.asyncAwait{ transferInteractor.getTransfer(transferInteractor.selectedId!!) }
             val transferModel = Mappers.getTransferModel(transfer,
                                                          systemInteractor.locale,
@@ -81,10 +80,7 @@ class OffersPresenter(cc: CoroutineContexts,
             offerInteractor.setListener(this@OffersPresenter)
         }, { e -> Timber.e(e)
             viewState.setError(e)
-        }, {
-            viewState.blockInterface(false)
-            viewState.hideLoading()
-        })
+        }, { viewState.blockInterface(false) })
     }
 
     @CallSuper

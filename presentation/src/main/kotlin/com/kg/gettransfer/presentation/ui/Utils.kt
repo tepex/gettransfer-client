@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.app.Activity
 
 import android.content.Context
+
 import android.graphics.*
 
 import android.location.Location
@@ -21,7 +22,6 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextWatcher
 import android.text.style.ImageSpan
-import android.util.Log
 
 import android.view.LayoutInflater
 import android.view.View

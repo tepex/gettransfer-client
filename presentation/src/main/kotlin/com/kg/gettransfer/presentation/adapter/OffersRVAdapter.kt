@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.adapter
 
 import android.content.Context
+
 import android.support.v7.widget.RecyclerView
 
 import android.view.Gravity
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+
 import com.bumptech.glide.Glide
 
 import com.kg.gettransfer.R
