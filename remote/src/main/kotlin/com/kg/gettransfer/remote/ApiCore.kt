@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeoutException
 
 class ApiCore(private val preferences: PreferencesCache,
               private val hostListener: HostListener) {
@@ -78,9 +79,9 @@ class ApiCore(private val preferences: PreferencesCache,
      */
     internal suspend fun <R> tryTwice(apiCall: () -> Deferred<R>): R {
         if(isInternetAvailable) {
-            return try {
-                apiCall().await()
-            } catch (e: Exception) {
+            return try { apiCall().await() }
+            catch (e: TimeoutException){ throw e }
+            catch (e: Exception) {
                 if (e is RemoteException) throw e /* second invocation */
                 val ae = remoteException(e)
                 if (!ae.isInvalidToken()) throw ae
@@ -94,6 +95,7 @@ class ApiCore(private val preferences: PreferencesCache,
     internal suspend fun <R> tryTwice(id: Long, apiCall: (Long) -> Deferred<R>): R {
         if(isInternetAvailable) {
             return try { apiCall(id).await() }
+            catch (e: TimeoutException){ throw e }
             catch(e: Exception) {
                if(e is RemoteException) throw e /* second invocation */
                val ae = remoteException(e)

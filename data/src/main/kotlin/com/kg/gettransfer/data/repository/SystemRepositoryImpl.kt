@@ -12,6 +12,7 @@ import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 import java.lang.Exception
+import java.util.concurrent.TimeoutException
 
 class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
                            private val factory: SystemDataStoreFactory,
@@ -55,7 +56,7 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
             configs = configsMapper.fromEntity(factory.retrieveCacheDataStore().getConfigs())
             accountMapper.configs = configs
         } catch (e: Exception) {
-            if (e is InternetNotAvailableException || e is ApiException) {
+            if (e is InternetNotAvailableException || e is ApiException || e is TimeoutException) {
                 configs = configsMapper.fromEntity(factory.retrieveCacheDataStore().getConfigs())
                 accountMapper.configs = configs
             } else throw e

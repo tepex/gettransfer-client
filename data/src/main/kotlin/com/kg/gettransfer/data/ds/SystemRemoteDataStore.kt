@@ -10,6 +10,7 @@ import com.kg.gettransfer.data.mapper.ExceptionMapper
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
+import java.util.concurrent.TimeoutException
 
 /**
  * Implementation of the [SystemDataStore] interface to provide a means of communicating with the remote data source
@@ -19,6 +20,7 @@ open class SystemRemoteDataStore(private val remote: SystemRemote): SystemDataSt
         try { return remote.getConfigs() }
         catch(e: RemoteException) { throw ExceptionMapper.map(e) }
         catch(e: NetworkNotAvailableException) { throw ExceptionMapper.map(e)}
+        catch(e: TimeoutException) { throw e }
     }
 
     override suspend fun setConfigs(configsEntity: ConfigsEntity) { throw UnsupportedOperationException() }
@@ -27,12 +29,14 @@ open class SystemRemoteDataStore(private val remote: SystemRemote): SystemDataSt
         try { return remote.getAccount() }
         catch(e: RemoteException) { throw ExceptionMapper.map(e) }
         catch(e: NetworkNotAvailableException) { throw ExceptionMapper.map(e) }
+        catch(e: TimeoutException) { throw e }
     }
     
     override suspend fun setAccount(accountEntity: AccountEntity) {
         try { return remote.setAccount(accountEntity) }
         catch(e: RemoteException) { throw ExceptionMapper.map(e) }
         catch(e: NetworkNotAvailableException) { throw ExceptionMapper.map(e)}
+        catch(e: TimeoutException) { throw e }
     }
     
     override fun clearAccount() { throw UnsupportedOperationException() }
@@ -41,6 +45,7 @@ open class SystemRemoteDataStore(private val remote: SystemRemote): SystemDataSt
         try { return remote.login(email, password) }
         catch(e: RemoteException) { throw ExceptionMapper.map(e) }
         catch(e: NetworkNotAvailableException) { throw ExceptionMapper.map(e)}
+        catch(e: TimeoutException) { throw e }
     }
     
     fun changeEndpoint(endpoint: EndpointEntity) = remote.changeEndpoint(endpoint)

@@ -31,6 +31,7 @@ class AsyncUtils(private val cc: CoroutineContexts, root: Job): CoroutineScope {
             var caughtThrowable: Throwable? = null
 
             try { tryBlock() }
+            catch(e: TimeoutException) { catchBlock(e) }
             catch(e: InternetNotAvailableException) { catchBlock(e) }
             catch(e: ApiException) { catchBlock(e) }
             catch(e: CancellationException) { caughtThrowable = e }
