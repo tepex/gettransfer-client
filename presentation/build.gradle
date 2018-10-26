@@ -51,7 +51,7 @@ android {
 			shrinkResources false
 			minifyEnabled false
 			useProguard true
-			debuggable false
+			debuggable true
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 			signingConfig signingConfigs.config
 		}

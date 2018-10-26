@@ -154,6 +154,14 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (!isTaskRoot
+                && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
+                && intent.action != null
+                && intent.action.equals(Intent.ACTION_MAIN)) {
+            finish()
+            return
+        }
+
         setContentView(R.layout.activity_main)
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) window.statusBarColor = Color.TRANSPARENT
