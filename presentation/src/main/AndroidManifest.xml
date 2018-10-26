@@ -41,7 +41,8 @@
             android:name=".presentation.ui.MainActivity"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeTransparentStatusBar" />
+            android:theme="@style/AppThemeTransparentStatusBar"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".presentation.ui.AboutActivity"
             android:screenOrientation="portrait" />
