@@ -32,7 +32,7 @@ class LoginPresenter(cc: CoroutineContexts,
 
     fun onLoginClick() {
         utils.launchAsyncTryCatchFinally({
-            viewState.blockInterface(true)
+            viewState.blockInterface(true, true)
             utils.asyncAwait { systemInteractor.login(email!!, password!!) }
             router.exitWithResult(RESULT_CODE, RESULT_OK)
             mFBA.logEvent(EVENT,createSingeBundle(PARAM_KEY, RESULT_SUCCESS))

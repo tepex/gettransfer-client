@@ -69,7 +69,7 @@ class LoginActivity: BaseActivity(), LoginView {
         btnLogin.isEnabled = enable
     }
 
-    override fun blockInterface(block: Boolean) {
+    override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         tvLoginError.visibility = View.INVISIBLE
     }
     

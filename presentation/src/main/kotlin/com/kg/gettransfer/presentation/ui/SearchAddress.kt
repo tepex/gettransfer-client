@@ -156,8 +156,8 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         text = addressName
     }
 
-    override fun blockInterface(block: Boolean) {
-        parent.blockInterface(block)
+    override fun blockInterface(block: Boolean, useSpinner: Boolean) {
+        parent.blockInterface(block, useSpinner)
     }
 
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {

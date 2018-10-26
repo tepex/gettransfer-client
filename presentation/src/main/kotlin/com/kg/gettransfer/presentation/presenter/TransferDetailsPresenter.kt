@@ -39,7 +39,7 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
         utils.launchAsyncTryCatchFinally({
-            viewState.blockInterface(true)
+            viewState.blockInterface(true, true)
             val transfer = utils.asyncAwait{ transferInteractor.getTransfer(transferInteractor.selectedId!!) } 
             val transferModel = Mappers.getTransferModel(transfer,
                                                          systemInteractor.locale,

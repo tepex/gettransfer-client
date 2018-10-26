@@ -65,7 +65,7 @@ class OffersPresenter(cc: CoroutineContexts,
     override fun attachView(view: OffersView) {
         super.attachView(view)
         utils.launchAsyncTryCatchFinally({
-            viewState.blockInterface(true)
+            viewState.blockInterface(true, true)
             
             val transfer = utils.asyncAwait{ transferInteractor.getTransfer(transferInteractor.selectedId!!) }
             val transferModel = Mappers.getTransferModel(transfer,
@@ -110,7 +110,7 @@ class OffersPresenter(cc: CoroutineContexts,
     fun cancelRequest(isCancel: Boolean) {
         if(isCancel) {
             utils.launchAsyncTryCatchFinally({
-                viewState.blockInterface(true)
+                viewState.blockInterface(true, true)
                 utils.asyncAwait { transferInteractor.cancelTransfer("") }
                 router.exit()
             }, { e ->

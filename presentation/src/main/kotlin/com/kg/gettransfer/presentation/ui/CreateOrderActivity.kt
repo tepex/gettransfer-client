@@ -204,7 +204,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
     
     private fun initKeyBoardListener() {
-        addKeyBoardDismissListener { closed: Boolean -> if (closed && etPromo.isFocused) presenter.checkPromoCode() }
+        addKeyBoardDismissListener { closed -> if(closed && etPromo.isFocused) presenter.checkPromoCode() }
     }
 
     protected suspend override fun customizeGoogleMaps() {
