@@ -56,13 +56,7 @@ class SplashActivity: AppCompatActivity() {
 			return
 		}
 
-		if (!isTaskRoot
-				&& intent.hasCategory(Intent.CATEGORY_LAUNCHER)
-				&& intent.action != null
-				&& intent.action.equals(Intent.ACTION_MAIN)) {
-			finish()
-			return
-		}
+		if (checkIsTaskRoot()) return
 
 		Timber.d(getString(R.string.title_starting_session))
 		Timber.d("Permissions granted!")
@@ -79,7 +73,18 @@ class SplashActivity: AppCompatActivity() {
 			// @TODO: Показать ошибку. Учесть 401 — протухший ключ
 		}, { /*finish()*/ })
 	}
-	
+
+	private fun checkIsTaskRoot(): Boolean {
+		if (!isTaskRoot
+				&& intent.hasCategory(Intent.CATEGORY_LAUNCHER)
+				&& intent.action != null
+				&& intent.action.equals(Intent.ACTION_MAIN)) {
+			finish()
+			return true
+		}
+		return false
+	}
+
 	@CallSuper
 	protected override fun onDestroy() {
 		compositeDisposable.cancel()
