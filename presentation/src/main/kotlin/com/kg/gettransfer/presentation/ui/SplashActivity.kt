@@ -55,7 +55,15 @@ class SplashActivity: AppCompatActivity() {
 			Timber.d("Splash screen")
 			return
 		}
-		
+
+		if (!isTaskRoot
+				&& intent.hasCategory(Intent.CATEGORY_LAUNCHER)
+				&& intent.action != null
+				&& intent.action.equals(Intent.ACTION_MAIN)) {
+			finish()
+			return
+		}
+
 		Timber.d(getString(R.string.title_starting_session))
 		Timber.d("Permissions granted!")
 		utils.launchAsyncTryCatchFinally({

@@ -29,7 +29,8 @@
 
         <activity
             android:name=".presentation.ui.SplashActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,8 +42,7 @@
             android:name=".presentation.ui.MainActivity"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeTransparentStatusBar"
-            android:launchMode="singleTop"/>
+            android:theme="@style/AppThemeTransparentStatusBar" />
         <activity
             android:name=".presentation.ui.AboutActivity"
             android:screenOrientation="portrait" />
