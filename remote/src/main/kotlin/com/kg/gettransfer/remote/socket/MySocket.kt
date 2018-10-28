@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory
 
 class MySocket(val myIo: MyManager, nsp: String, val opts: Manager.Options): Socket(myIo, nsp, opts) {
     companion object {
-        private val log = LoggerFactory.getLogger("GTR-socket")        
+        private val log = LoggerFactory.getLogger("GTR-socket")
     }
     
     /**
@@ -21,8 +21,8 @@ class MySocket(val myIo: MyManager, nsp: String, val opts: Manager.Options): Soc
      * @return a reference to this object.
      */
     override fun emit(event: String, vararg args: Any?): Emitter {
-        log.debug("emit: $event")
-        log.debug("args: $args")
+        log.debug("emit: $event ${args.firstOrNull()}")
+        log.debug("from emit", Exception())
         return super@MySocket.emit(event, args)
     }
 }

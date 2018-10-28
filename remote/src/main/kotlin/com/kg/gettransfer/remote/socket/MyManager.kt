@@ -2,6 +2,8 @@ package io.socket.client
 
 import com.kg.gettransfer.remote.socket.MySocket
 
+import io.socket.parser.Packet
+
 import java.net.URI
 
 import org.slf4j.LoggerFactory
@@ -27,7 +29,7 @@ class MyManager(uri: URI, opts: Options): Manager(uri, opts) {
         var socket: Socket? = nsps[nsp]
         if(socket == null) {
             socket = MySocket(this, nsp, opts)
-            val _socket = (nsps as MutableMap<String, MySocket>).putIfAbsent(nsp, socket)
+            val _socket = nsps.putIfAbsent(nsp, socket)
             if(_socket != null) socket = _socket
             else {
                 socket.on(Socket.EVENT_CONNECTING) { _ -> _connecting.add(socket) }
@@ -35,6 +37,11 @@ class MyManager(uri: URI, opts: Options): Manager(uri, opts) {
             }
         }
         return socket
+    }
+    
+    override internal fun packet(packet: Packet<*>) {
+        log.debug("packet: $packet")
+        super.packet(packet)
     }
 
     override internal fun destroy(socket: Socket) {

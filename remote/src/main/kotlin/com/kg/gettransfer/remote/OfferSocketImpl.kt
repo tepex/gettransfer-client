@@ -15,6 +15,7 @@ import com.kg.gettransfer.remote.model.OfferModel
 
 import com.kg.gettransfer.remote.socket.MySocket
 
+import io.socket.client.IO
 import io.socket.client.Manager
 import io.socket.client.MyManager
 import io.socket.client.Socket
@@ -73,8 +74,9 @@ class OfferSocketImpl(): OfferSocket, HostListener {
         }
         
         log.debug("start connect to ${endpoint!!.url}. token: $accessToken")
-        val options = Manager.Options().apply {
+        val options = IO.Options().apply {
             path = PATH
+            forceNew = true
         }
         log.debug("options: ${options.path}")
         
@@ -119,6 +121,10 @@ class OfferSocketImpl(): OfferSocket, HostListener {
                 //log.debug("type: ${arg::class.qualifiedName}")
                 log.debug("new offer: $arg")
             }
+            on(Socket.EVENT_MESSAGE) { args ->
+                log.debug("Message: $args")
+            }
+            on("newOffer/1598") { args -> log.debug("offer 1598") }
         }
         socket!!.connect()
     }

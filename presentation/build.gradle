@@ -171,8 +171,6 @@ dependencies {
 	//RatingBar with vector images
 	implementation "com.github.ome450901:SimpleRatingBar:$simple_rating_bar_version"
 	
-	implementation "io.socket:socket.io-client:1.0.0"
-
 	//Facebook
 //	implementation "com.facebook.android:facebook-android-sdk:$facebook_version"
     
