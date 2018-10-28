@@ -94,4 +94,6 @@
     <color name="black_50">#80000000</color>
 
     <color name="promo_valid">#98b71b</color>
+
+    <color name="colorDivider">#bcbbc1</color>
 </resources>
