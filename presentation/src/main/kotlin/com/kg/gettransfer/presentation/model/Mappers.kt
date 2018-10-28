@@ -92,7 +92,7 @@ object Mappers {
                              selected.map { getTransportTypeModel(it, null) },
                              type.paidSum.default,
                              type.paidPercentage,
-                             type.remainsToPay.default,
+                             type.remainsToPay?.default,
                              type.price?.default,
                              type.relevantCarriersCount,
                              type.checkOffers)

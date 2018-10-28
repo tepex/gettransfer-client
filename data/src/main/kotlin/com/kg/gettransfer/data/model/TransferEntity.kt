@@ -25,7 +25,7 @@ open class TransferEntity(val id: Long,
                           
                           val time: Int,
                           val paidSum: MoneyEntity,
-                          val remainsToPay: MoneyEntity,
+                          val remainsToPay: MoneyEntity?,
                           val paidPercentage: Int,
                           val pendingPaymentId: Int?,
                           val bookNow: Boolean,

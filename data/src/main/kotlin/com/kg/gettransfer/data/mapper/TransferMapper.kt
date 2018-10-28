@@ -39,7 +39,7 @@ open class TransferMapper(private val cityPointMapper: CityPointMapper,
                         
                  type.time,
                  moneyMapper.fromEntity(type.paidSum),
-                 moneyMapper.fromEntity(type.remainsToPay),
+                 type.remainsToPay?.let { moneyMapper.fromEntity(it) },
                  type.paidPercentage,
                  type.pendingPaymentId,
                  type.bookNow,

@@ -31,7 +31,7 @@ class TransferModel(@SerializedName("id") val id: Long,
                        
                     @SerializedName("time") val time: Int,
                     @SerializedName("paid_sum") val paidSum: MoneyModel,
-                    @SerializedName("remains_to_pay") val remainsToPay: MoneyModel,
+                    @SerializedName("remains_to_pay") val remainsToPay: MoneyModel?,
                     @SerializedName("paid_percentage") val paidPercentage: Int,
                     @SerializedName("pending_payment_id") val pendingPaymentId: Int?,
                     @SerializedName("book_now") val bookNow: Boolean,

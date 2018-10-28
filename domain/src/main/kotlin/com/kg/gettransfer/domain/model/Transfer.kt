@@ -32,7 +32,7 @@ data class Transfer(val id: Long,
                     
                     val time: Int,
                     val paidSum: Money,
-                    val remainsToPay: Money,
+                    val remainsToPay: Money?,
                     val paidPercentage: Int,
                     val pendingPaymentId: Int?,
                     val bookNow: Boolean,
