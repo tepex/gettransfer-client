@@ -13,12 +13,16 @@ import com.kg.gettransfer.data.model.OfferEntityListener
 import com.kg.gettransfer.remote.model.EndpointModel
 import com.kg.gettransfer.remote.model.OfferModel
 
-import io.socket.client.IO
-import io.socket.client.Manager
-import io.socket.client.Socket
+import com.kg.gettransfer.remote.socket.MySocket
 
-import io.socket.emitter.Emitter
+import io.socket.client.Manager
+import io.socket.client.MyManager
+import io.socket.client.Socket
+import io.socket.client.Url
+
 import io.socket.engineio.client.Transport
+
+import java.net.URI
 
 import org.slf4j.LoggerFactory
 
@@ -31,13 +35,13 @@ class OfferSocketImpl(): OfferSocket, HostListener {
     private val gson = GsonBuilder().create()
     
     private var listener: OfferEntityListener? = null
-    private var socket: Socket? = null
+    private var socket: MySocket? = null
     private var endpoint: EndpointModel? = null
     private var accessToken: String? = null
     
     companion object {
         @JvmField val PATH  = "/api/socket"
-        @JvmField val EVENT_NEW_OFFER = "newOffer"
+        @JvmField val EVENT_NEW_OFFER  = "newOffer"
     }
     
     override fun setListener(listener: OfferEntityListener) {
@@ -69,13 +73,17 @@ class OfferSocketImpl(): OfferSocket, HostListener {
         }
         
         log.debug("start connect to ${endpoint!!.url}. token: $accessToken")
-        val options = IO.Options().apply {
+        val options = Manager.Options().apply {
             path = PATH
-            forceNew = true
         }
         log.debug("options: ${options.path}")
-        socket = IO.socket(endpoint!!.url, options)
-        with(socket!!.io()) {
+        
+        val uri = URI(endpoint!!.url)
+        val parsed = Url.parse(uri)
+        val io = MyManager(uri, options)
+        socket = io.socket(parsed.path, options) as MySocket
+        
+        with(socket!!.myIo) {
             on(Manager.EVENT_TRANSPORT) { args ->
                 log.debug("event transport. cookie: $accessToken")
                 val transport = args.first() as Transport
@@ -89,7 +97,6 @@ class OfferSocketImpl(): OfferSocket, HostListener {
             on(Manager.EVENT_OPEN) { _ -> log.debug("socket open") }
             on(Manager.EVENT_CLOSE) { _ -> log.debug("socket close") }
             on(Manager.EVENT_RECONNECTING) { _ -> log.debug("EVENT_RECONNECTING") }
-            on(Socket.EVENT_MESSAGE) { args -> log.debug("EVENT ${Socket.EVENT_MESSAGE}: $args") }
             
             on(Manager.EVENT_CONNECT_TIMEOUT) { _ ->
                 log.warn("socket timeout")
