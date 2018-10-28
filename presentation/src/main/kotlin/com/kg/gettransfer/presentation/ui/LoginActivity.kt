@@ -31,7 +31,7 @@ import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
-class LoginActivity: BaseLoadingActivity(), LoginView {
+class LoginActivity: BaseActivity(), LoginView {
     @InjectPresenter
     internal lateinit var presenter: LoginPresenter
     
@@ -69,7 +69,7 @@ class LoginActivity: BaseLoadingActivity(), LoginView {
         btnLogin.isEnabled = enable
     }
 
-    override fun blockInterface(block: Boolean) {
+    override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         tvLoginError.visibility = View.INVISIBLE
     }
     

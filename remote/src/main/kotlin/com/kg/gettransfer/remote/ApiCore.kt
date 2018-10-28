@@ -12,11 +12,12 @@ import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.TokenModel
 import com.kg.gettransfer.remote.model.TransportTypesWrapperModel
 
+import devcsrj.okhttp3.logging.HttpLoggingInterceptor
+
 import kotlinx.coroutines.Deferred
 
 import okhttp3.CookieJar
 import okhttp3.OkHttpClient
-import devcsrj.okhttp3.logging.HttpLoggingInterceptor
 
 import org.slf4j.LoggerFactory
 
@@ -24,19 +25,21 @@ import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class ApiCore(private val preferences: PreferencesCache) {
+class ApiCore(private val preferences: PreferencesCache,
+              private val hostListener: HostListener) {
     companion object {
         @JvmField val TAG = "GTR-remote"
-        val LOG = LoggerFactory.getLogger(TAG)
     }
-
+    
+    private val log = LoggerFactory.getLogger(TAG)
+    
     internal lateinit var api: Api
     lateinit var apiUrl: String
 
     private lateinit var apiKey: String
     private val gson = GsonBuilder().registerTypeAdapter(TransportTypesWrapperModel::class.java, TransportTypesDeserializer()).create()
     private var okHttpClient = OkHttpClient.Builder().apply {
-        addInterceptor(HttpLoggingInterceptor(LOG))
+        addInterceptor(HttpLoggingInterceptor(log))
         addInterceptor { chain ->
             var request = chain.request()
             if(request.url().encodedPath() != Api.API_ACCESS_TOKEN) request = request.newBuilder()
@@ -45,7 +48,7 @@ class ApiCore(private val preferences: PreferencesCache) {
 	        chain.proceed(request)
 	    }
 	    .cookieJar(CookieJar.NO_COOKIES)
-    }.build()      
+    }.build()
 
     fun changeEndpoint(endpoint: EndpointModel) {
         apiKey = endpoint.key
@@ -57,6 +60,7 @@ class ApiCore(private val preferences: PreferencesCache) {
                 .addCallAdapterFactory(CoroutineCallAdapterFactory()) // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
                 .build()
                 .create(Api::class.java)
+        hostListener.onEndpointChanged(endpoint, preferences.accessToken)
     }
     
     /**
@@ -95,7 +99,9 @@ class ApiCore(private val preferences: PreferencesCache) {
 
     internal suspend fun updateAccessToken() {
         val response: ResponseModel<TokenModel> = api.accessToken(apiKey).await()
-        preferences.accessToken = response.data!!.token
+        val accessToken = response.data!!.token
+        preferences.accessToken = accessToken
+        hostListener.onAccessTokenChanged(accessToken)
     }
     
     internal fun remoteException(e: Exception): RemoteException {

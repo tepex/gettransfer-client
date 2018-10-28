@@ -73,7 +73,14 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
 	    getPresenter().onBackCommandClick()
 	}
     
-    override fun blockInterface(block: Boolean) {}
+    override fun blockInterface(block: Boolean, useSpinner: Boolean) {
+        if(block) {
+            if(useSpinner) LoadingFragment.showLoading(supportFragmentManager)
+        }
+        else {
+            LoadingFragment.hideLoading(supportFragmentManager)
+        }
+    }
     
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
         var errMessage = getString(errId, *args)

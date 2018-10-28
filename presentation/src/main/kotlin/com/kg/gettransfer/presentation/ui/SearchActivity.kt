@@ -149,9 +149,8 @@ class SearchActivity: BaseActivity(), SearchView {
     }
 
     /* SearchView */
-    override fun blockInterface(block: Boolean) {}
     override fun setAddressFrom(address: String, sendRequest: Boolean) { searchFrom.initText(address, sendRequest) }
-    override fun setAddressTo(address: String, sendRequest: Boolean) { searchTo.initText(address, sendRequest) }
+    override fun setAddressTo(address: String, sendRequest: Boolean)   { searchTo.initText(address, sendRequest) }
     
     override fun setAddressListByAutoComplete(list: List<GTAddress>) {
         ll_popular.visibility = View.GONE

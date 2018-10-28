@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.view.ViewPager
@@ -36,7 +37,7 @@ import kotlinx.android.synthetic.main.view_transfer_request_info.*
 
 import org.koin.android.ext.android.inject
 
-class OffersActivity: BaseLoadingActivity(), OffersView {
+class OffersActivity: BaseActivity(), OffersView {
     @InjectPresenter
     internal lateinit var presenter: OffersPresenter
 
@@ -114,7 +115,7 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
     override fun setDate(date: String) { tvOrderDateTime.text = date }
 
     override fun setOffers(offers: List<OfferModel>) {
-        rvOffers.adapter = OffersRVAdapter(offers) { offer, isShowingOfferDetails -> presenter.onSelectOfferClicked(offer, isShowingOfferDetails) }
+        rvOffers.adapter = OffersRVAdapter(offers.toMutableList()) { offer, isShowingOfferDetails -> presenter.onSelectOfferClicked(offer, isShowingOfferDetails) }
     }
 
     override fun setSortState(sortCategory: String, sortHigherToLower: Boolean) {
@@ -224,4 +225,6 @@ class OffersActivity: BaseLoadingActivity(), OffersView {
         if(bsOfferDetails.state == BottomSheetBehavior.STATE_EXPANDED) hideSheetOfferDetails()
         else super.onBackPressed()
     }
+
+    override fun addNewOffer(offer: OfferModel) { (rvOffers.adapter as OffersRVAdapter).add(offer) }
 }

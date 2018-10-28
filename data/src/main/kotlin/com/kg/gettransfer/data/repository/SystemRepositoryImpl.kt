@@ -17,9 +17,6 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
                            private val endpointMapper: EndpointMapper,
                            private val addressMapper: AddressMapper,
                            private val _endpoints: List<Endpoint>): SystemRepository {
-
-    override val accessToken = preferencesCache.accessToken
-
     override lateinit var configs: Configs
 
     override var lastMode: String

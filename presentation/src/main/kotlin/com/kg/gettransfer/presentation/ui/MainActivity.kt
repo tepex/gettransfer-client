@@ -301,7 +301,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         centerMarker?.let { it.setPosition(point) }
     }
 
-    override fun blockInterface(block: Boolean) {
+    override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         if(block) searchFrom.text = getString(R.string.search_start)
     }
 

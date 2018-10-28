@@ -126,13 +126,13 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                 transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
             }
             routeModel = Mappers.getRouteModel(routeInfo.distance,
-                    systemInteractor.distanceUnit,
-                    routeInfo.polyLines,
-                    from.name!!,
-                    to.name!!,
-                    from.point!!,
-                    to.point!!,
-                    SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
+                                               systemInteractor.distanceUnit,
+                                               routeInfo.polyLines,
+                                               from.name!!,
+                                               to.name!!,
+                                               from.point!!,
+                                               to.point!!,
+                                               SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
 
             viewState.setTransportTypes(transportTypes!!)
             val polyline = Utils.getPolyline(routeModel!!)
@@ -199,10 +199,12 @@ class CreateOrderPresenter(cc: CoroutineContexts,
 
     fun checkPromoCode() {
         if(!promoCode.isNullOrEmpty()) {
-            utils.launchAsyncTryCatch({
+            utils.launchAsyncTryCatchFinally({
+                viewState.blockInterface(true)
                 val mDiscount = promoInteractor.getDiscountByPromo(promoCode!!)
                 viewState.setPromoResult(mDiscount.discount)
-            }, { _ -> viewState.setPromoResult(null) })
+            }, { _ -> viewState.setPromoResult(null)
+            }, { viewState.blockInterface(false) })
         }
     }
 
@@ -219,7 +221,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     fun showLicenceAgreement() { router.navigateTo(Screens.LICENCE_AGREE) }
 
     fun onGetTransferClick() {
-        viewState.blockInterface(true)
         val trip = Trip(date, flightNumber)
         /* filter */
         val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
@@ -237,7 +238,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         Timber.d("comment: $comment")
 
         utils.launchAsyncTryCatchFinally({
-            viewState.blockInterface(true)
+            viewState.blockInterface(true, true)
             val transfer = utils.asyncAwait {
                 transferInteractor.createTransfer(Mappers.getTransferNew(routeInteractor.from!!.cityPoint,
                                                                          routeInteractor.to!!.cityPoint,
@@ -287,8 +288,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         router.navigateTo(Screens.PASSENGER_MODE)
         logEventMain(BACK_CLICKED)
     }
-
-
 
     override fun onBackCommandClick() {
         router.navigateTo(Screens.PASSENGER_MODE)

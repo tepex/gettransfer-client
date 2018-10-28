@@ -4,24 +4,20 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
+
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.OfferListener
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.view.OffersView
-
-import io.socket.client.IO
-import io.socket.client.Manager
-import io.socket.client.Socket
-
-import io.socket.emitter.Emitter
-import io.socket.engineio.client.Transport
-
-import org.json.JSONObject
 
 import ru.terrakok.cicerone.Router
 
@@ -32,7 +28,9 @@ class OffersPresenter(cc: CoroutineContexts,
                       router: Router,
                       systemInteractor: SystemInteractor,
                       private val transferInteractor: TransferInteractor,
-                      private val offerInteractor: OfferInteractor): BaseLoadingPresenter<OffersView>(cc, router, systemInteractor) {
+                      private val offerInteractor: OfferInteractor):
+    BasePresenter<OffersView>(cc, router, systemInteractor), OfferListener {
+
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
@@ -41,7 +39,6 @@ class OffersPresenter(cc: CoroutineContexts,
 
     private var sortCategory: String? = null
     private var sortHigherToLower = true
-    private var offersSocket: Socket? = null
 
     companion object {
         @JvmField val EVENT = "offers"
@@ -61,28 +58,15 @@ class OffersPresenter(cc: CoroutineContexts,
         
         @JvmField val SORT_YEAR   = "sort_year"
         @JvmField val SORT_RATING = "sort_rating"
-        @JvmField val SORT_PRICE  = "sort_price"
-        
-        @JvmField val SOCKET_OPTIONS_PATH = "/api/socket"
-        @JvmField val SOCKET_EVENT        = "newOffer"
-        
-        @JvmField val COOKIE         = "Cookie"
-        @JvmField val COOKIE_SESSION = "rack.session"
+        @JvmField val SORT_PRICE  = "sort_price"        
     }
 
     @CallSuper
     override fun attachView(view: OffersView) {
         super.attachView(view)
-        utils.launchAsyncTryCatch({
-            val options = IO.Options()
-            options.path = SOCKET_OPTIONS_PATH
-            options.forceNew = true
-            offersSocket = IO.socket(systemInteractor.endpoint.url, options)
-        }, { e -> Timber.e(e) })
         utils.launchAsyncTryCatchFinally({
-            viewState.showLoading()
-            viewState.blockInterface(true)
-
+            viewState.blockInterface(true, true)
+            
             val transfer = utils.asyncAwait{ transferInteractor.getTransfer(transferInteractor.selectedId!!) }
             val transferModel = Mappers.getTransferModel(transfer,
                                                          systemInteractor.locale,
@@ -92,33 +76,17 @@ class OffersPresenter(cc: CoroutineContexts,
             offers = offerInteractor.getOffers(transfer.id).map { Mappers.getOfferModel(it, systemInteractor.locale) }
             viewState.setDate(transferModel.dateTime)
             viewState.setTransfer(transferModel)
-
-            //viewState.setOffers(offers!!)
             changeSortType(SORT_PRICE)
+            offerInteractor.setListener(this@OffersPresenter)
         }, { e -> Timber.e(e)
             viewState.setError(e)
-        }, {
-            viewState.blockInterface(false)
-            viewState.hideLoading()
-            setUpSocket()
-        })
-    }
-
-    fun setUpSocket() {
-        if(offersSocket != null) {
-            offersSocket?.connect()
-            if(offersSocket?.connected()!!) {
-                offersSocket?.on(Manager.EVENT_TRANSPORT, headers)
-                offersSocket?.on("$SOCKET_EVENT/${transferInteractor.selectedId}", onNewOffer)
-            }
-        }
+        }, { viewState.blockInterface(false) })
     }
 
     @CallSuper
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
-        offersSocket!!.off("$SOCKET_EVENT/${transferInteractor.selectedId}", onNewOffer)
-        offersSocket!!.disconnect()
+        offerInteractor.removeListener(this)
         super.onDestroy()
     }
 
@@ -142,7 +110,7 @@ class OffersPresenter(cc: CoroutineContexts,
     fun cancelRequest(isCancel: Boolean) {
         if(isCancel) {
             utils.launchAsyncTryCatchFinally({
-                viewState.blockInterface(true)
+                viewState.blockInterface(true, true)
                 utils.asyncAwait { transferInteractor.cancelTransfer("") }
                 router.exit()
             }, { e ->
@@ -186,18 +154,10 @@ class OffersPresenter(cc: CoroutineContexts,
 
     private fun logFilterEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value)) }
     private fun logButtonEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value)) }
-
-    private val onNewOffer = Emitter.Listener { args ->
-        val offer = args.first() as JSONObject
-        Timber.d("NEW OFFER: $offer")
+    
+    override fun onNewOffer(offer: Offer) {
+        viewState.addNewOffer(Mappers.getOfferModel(offer, systemInteractor.locale))
     }
-
-    private val headers = Emitter.Listener { args ->
-        val transport = args.first() as Transport
-        transport.on(Transport.EVENT_REQUEST_HEADERS) { _headers ->
-            Timber.d("SET HEADERS")
-            var headers = _headers.first() as MutableMap<String, List<String>>
-            headers.put("Cookie", listOf("$COOKIE_SESSION=${systemInteractor.accessToken}"))
-        }
-    }
+    
+    override fun onError(e: ApiException) { Timber.e(e) }
 }

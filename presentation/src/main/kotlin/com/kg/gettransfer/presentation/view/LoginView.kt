@@ -2,6 +2,6 @@ package com.kg.gettransfer.presentation.view
 
 import com.arellomobile.mvp.MvpView
 
-interface LoginView: BaseLoadingView {
+interface LoginView: BaseView {
     fun enableBtnLogin(enable: Boolean)
 }

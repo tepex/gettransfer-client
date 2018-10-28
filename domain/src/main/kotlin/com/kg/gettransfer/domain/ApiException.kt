@@ -6,6 +6,9 @@ class ApiException(val code: Int, val details: String): RuntimeException(details
         @JvmField val NOT_LOGGED_IN = 403
         @JvmField val NOT_FOUND     = 404
         @JvmField val UNPROCESSABLE = 422
+        
+        @JvmField val INTERNAL_SERVER_ERROR = 500
+        @JvmField val CONNECTION_TIMEOUT    = 522
     }
     
     fun isNoUser() = code == NO_USER
