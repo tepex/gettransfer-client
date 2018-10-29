@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.content.Context
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState

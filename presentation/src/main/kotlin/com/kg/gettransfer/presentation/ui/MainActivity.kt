@@ -19,7 +19,6 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
 
 import android.transition.Fade
-import android.util.Log
 
 import android.view.Gravity
 import android.view.MenuItem
@@ -60,7 +59,6 @@ import ru.terrakok.cicerone.commands.Forward
 import timber.log.Timber
 
 class MainActivity: BaseGoogleMapActivity(), MainView {
-
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
 
@@ -294,7 +292,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
                     if(!up) markerShadow.setImageDrawable(getDrawable(R.drawable.default_position_shadow))
                 }
                 .setDuration(150L)
-                .translationYBy(px)
+                .translationYBy(-Utils.convertDpToPixels(this, elevation))
                 .start()
 
         if(up) markerShadow.setImageDrawable(getDrawable(R.drawable.lifted_marker_shadow))
