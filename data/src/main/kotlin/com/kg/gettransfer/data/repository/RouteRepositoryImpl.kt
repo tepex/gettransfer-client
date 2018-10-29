@@ -16,12 +16,11 @@ import com.kg.gettransfer.domain.repository.RouteRepository
 class RouteRepositoryImpl(private val factory: RouteDataStoreFactory,
                           private val routeInfoMapper: RouteInfoMapper,
                           private val pointMapper: PointMapper): RouteRepository {
-
-
-    override suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean): RouteInfo {
+    override suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean): RouteInfo? {
         val fromString = pointMapper.toEntity(from)
         val toString = pointMapper.toEntity(to)
-        return routeInfoMapper.fromEntity(factory.retrieveRemoteDataStore().getRouteInfo(fromString, toString, withPrices, returnWay))
+        factory.retrieveRemoteDataStore()
+            .getRouteInfo(fromString, toString, withPrices, returnWay)?.let { return routeInfoMapper.fromEntity(it) }
+        return null
     }
-
 }

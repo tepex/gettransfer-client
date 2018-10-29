@@ -306,6 +306,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             etEmail.setText(user.profile.email)
             etEmail.isEnabled = false
         }
+        switchAgreement.setChecked(user.termsAccepted)
     }
 
 

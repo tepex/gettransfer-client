@@ -38,28 +38,25 @@ class CarrierTripDetailsPresenter(cc: CoroutineContexts,
             selectedTripId = carrierTripInteractor.selectedTripId
             val tripInfo = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(selectedTripId!!) }
             trip = Mappers.getCarrierTripModel(tripInfo, systemInteractor.locale, systemInteractor.distanceUnit)
-
-            val routeInfo = routeInteractor.getRouteInfo(tripInfo.from.point!!, tripInfo.to.point!!, false, false)
-            routeModel = Mappers.getRouteModel(routeInfo.distance,
-                    systemInteractor.distanceUnit,
-                    routeInfo.polyLines,
-                    trip.from,
-                    trip.to,
-                    tripInfo.from.point!!,
-                    tripInfo.to.point!!,
-                    trip.dateTime)
-
             viewState.setTripInfo(trip)
-            //viewState.setRoute(routeModel!!)
-            val polyline = Utils.getPolyline(routeModel!!)
-            viewState.setRoute(polyline, routeModel!!)
+            
+            val routeInfo = routeInteractor.getRouteInfo(tripInfo.from.point!!, tripInfo.to.point!!, false, false)
+            routeInfo?.let {
+                routeModel = Mappers.getRouteModel(it.distance,
+                                                   systemInteractor.distanceUnit,
+                                                   it.polyLines,
+                                                   trip.from,
+                                                   trip.to,
+                                                   tripInfo.from.point!!,
+                                                   tripInfo.to.point!!,
+                                                   trip.dateTime)
+            }
+            routeModel?.let { viewState.setRoute(Utils.getPolyline(it), it) }
         }, { e ->
             if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
             else viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }
 
-    fun onCallClick() {
-
-    }
+    fun onCallClick() {}
 }

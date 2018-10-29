@@ -120,24 +120,26 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             val from = routeInteractor.from!!.cityPoint
             val to = routeInteractor.to!!.cityPoint
             val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
-            var prices: Map<String, String>? = null
-            if(routeInfo.prices != null) prices = routeInfo.prices!!.map { it.tranferId to it.min }.toMap()
-            if(transportTypes == null) {
-                transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
+            routeInfo?.let {
+                var prices: Map<String, String>? = null
+                if(it.prices != null) prices = it.prices!!.map { it.tranferId to it.min }.toMap()
+                if(transportTypes == null) transportTypes =
+                    systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
+                routeModel = Mappers.getRouteModel(it.distance,
+                                                   systemInteractor.distanceUnit,
+                                                   it.polyLines,
+                                                   from.name!!,
+                                                   to.name!!,
+                                                   from.point!!,
+                                                   to.point!!,
+                                                   SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
             }
-            routeModel = Mappers.getRouteModel(routeInfo.distance,
-                                               systemInteractor.distanceUnit,
-                                               routeInfo.polyLines,
-                                               from.name!!,
-                                               to.name!!,
-                                               from.point!!,
-                                               to.point!!,
-                                               SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
-
-            viewState.setTransportTypes(transportTypes!!)
-            val polyline = Utils.getPolyline(routeModel!!)
-            track = polyline.track
-            viewState.setRoute(polyline, routeModel!!)
+            routeModel?.let {
+                viewState.setTransportTypes(transportTypes!!)
+                val polyline = Utils.getPolyline(it)
+                track = polyline.track
+                viewState.setRoute(polyline, it)
+            }
         }, { e -> viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }

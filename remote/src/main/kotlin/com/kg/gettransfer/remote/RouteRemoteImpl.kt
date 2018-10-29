@@ -12,9 +12,10 @@ import com.kg.gettransfer.remote.model.RouteInfoModel
 
 class RouteRemoteImpl(private val core: ApiCore,
                       private val mapper: RouteInfoMapper): RouteRemote {
-    override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean): RouteInfoEntity {
+    override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean): RouteInfoEntity? {
         val response: ResponseModel<RouteInfoModel> = tryGetRouteInfo(arrayOf(from, to), withPrices, returnWay)
-        return mapper.fromRemote(response.data!!)
+        response.data?.let { return mapper.fromRemote(it) }
+        return null
     }
     
     private suspend fun tryGetRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean):

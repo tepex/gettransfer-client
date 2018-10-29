@@ -41,7 +41,7 @@ class SearchPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: SearchView) {
         super.attachView(view)
-        viewState.setAddressFrom(routeInteractor.from!!.cityPoint.name!!, false)
+        viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false)
         viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false)
         viewState.setSuggestedAddresses(getLastAddressesList(), createPopularList())
     }
