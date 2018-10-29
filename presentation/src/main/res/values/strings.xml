@@ -93,9 +93,9 @@
     <!-- Errors & messages -->
     <string name="err_title">Ошибка</string>
     <string name="err_location_service_not_available">Cервис геолокации недоступен!</string>
-    <string name="err_address_service_xxx">Ошибка определения адреса!</string>
-    <string name="err_server">Ошибка: %1$s</string>
-    <string name="err_server_code">Ошибка сервера %1$s! %2$s</string>
+    <string name="err_address_service_xxx">Ошибка определения адреса!</string> <!-- нет в iOS-->
+    <string name="err_server">Ошибка: %1$s</string> <!-- нет в iOS-->
+    <string name="err_server_code">Ошибка сервера %1$s! %2$s</string> <!-- нет в iOS-->
     <string name="error_login">Incorrect login or password</string>
 
 
@@ -556,8 +556,8 @@
     <string name="LNG_RIDE_COMPLETED">Completed transfers: %@</string>
     <string name="LNG_RIDE_CREATION_SPINNER">Please wait, connecting...</string>
     <string name="LNG_RIDE_CHOOSE_TRANSPORT">Please select transport type</string>
-    <string name="LNG_RIDE_OFFERT">I aggree with $$License aggrement$$</string>
-    <string name="LNG_RIDE_OFFERT_TITLE">License aggrement</string>
+    <string name="LNG_RIDE_OFFERT">I aggree with $$License aggrement$$</string> <!-- ошибка в слове-->
+    <string name="LNG_RIDE_OFFERT_TITLE">License aggrement</string> <!-- ошибка в слове-->
     <string name="LNG_RIDE_OFFERT_ERROR">You should aggree with License</string>
     <string name="LNG_RIDE_FAIR_PRICE_FORMAT">Average rate on route %@ (ETA ~%@)</string>
     <string name="LNG_RIDE_FAIR_PRICE_EMPTY">Please, pick transport type to get a fair price</string>
