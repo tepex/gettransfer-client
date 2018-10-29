@@ -21,7 +21,7 @@ class LoginPresenter(cc: CoroutineContexts,
 
     companion object {
         @JvmField val RESULT_CODE = 33
-        @JvmField val RESULT_OK = 1
+        @JvmField val RESULT_OK   = 1
 
         @JvmField val EVENT = "login"
         @JvmField val PARAM_KEY = "status"
@@ -31,14 +31,18 @@ class LoginPresenter(cc: CoroutineContexts,
     private var password: String? = null
 
     fun onLoginClick() {
-        utils.launchAsyncTryCatchFinally({
-            viewState.blockInterface(true, true)
-            utils.asyncAwait { systemInteractor.login(email!!, password!!) }
-            router.exitWithResult(RESULT_CODE, RESULT_OK)
-            mFBA.logEvent(EVENT,createSingeBundle(PARAM_KEY, RESULT_SUCCESS))
-        }, { e -> viewState.setError(e)
-            mFBA.logEvent(EVENT,createSingeBundle(PARAM_KEY, RESULT_FAIL))
-        }, { viewState.blockInterface(false) })
+        if(checkFields()) {
+            viewState.blockInterface(false)
+            utils.launchAsyncTryCatchFinally({
+                viewState.blockInterface(true, true)
+                utils.asyncAwait { systemInteractor.login(email!!, password!!) }
+                router.exitWithResult(RESULT_CODE, RESULT_OK)
+                mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY, RESULT_SUCCESS))
+            }, { e ->
+                viewState.setError(e)
+                mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY, RESULT_FAIL))
+            }, { viewState.blockInterface(false) })
+        }
     }
 
     fun setEmail(email: String) {
@@ -51,9 +55,10 @@ class LoginPresenter(cc: CoroutineContexts,
         checkFields()
     }
 
-    private fun checkFields() {
+    private fun checkFields(): Boolean {
         val checkEmail = email != null && Patterns.EMAIL_ADDRESS.matcher(email!!).matches()
         val checkPassword = password != null && password!!.length >= 6
-        viewState.enableBtnLogin(checkEmail && checkPassword)
+        viewState.showError(!(checkEmail && checkPassword))
+        return checkEmail && checkPassword
     }
 }

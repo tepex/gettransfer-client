@@ -169,6 +169,9 @@ dependencies {
 
 	//RatingBar with vector images
 	implementation "com.github.ome450901:SimpleRatingBar:$simple_rating_bar_version"
+
+	//Facebook
+	implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
     
 	testImplementation libs.junit
 	testImplementation libs.hamcrest

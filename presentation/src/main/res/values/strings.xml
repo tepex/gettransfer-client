@@ -248,7 +248,7 @@
     <string name="type_your_comments">Type here your comments, requirements, or driver tasks</string>
     <string name="flight_or_train_number">Flight or train number</string>
     <string name="enter_phone_number">Enter phone number</string>
-    <string name="enter_email">Enter email</string>
+    <string name="enter_email">Email or phone number</string>
     <string name="your_name">Your name</string>
     <string name="additional">Additional</string>
     <string name="number_of_passengers">Number of passengers</string>
@@ -377,4 +377,5 @@
     <string name="please_wait">Please, wait, connection to carries...</string>
 
     <string name="number_of_photos">%1$d/%2$d</string>
+    <string name="forgot_your_password"><u>Forgot your password?</u></string>
 </resources>
