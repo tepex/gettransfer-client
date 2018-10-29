@@ -315,7 +315,7 @@
             android:textSize="@dimen/view_offer_text_sizes"
             android:fontFamily="@font/helvetica_neue"
             android:textAllCaps="true"
-            android:text="@string/book"
+            android:text="@string/LNG_BOOK"
             android:layout_marginTop="@dimen/view_offer_btn_select_margin_top"
             android:stateListAnimator="@null" />
 

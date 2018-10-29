@@ -13,11 +13,11 @@
 
 	<TextView android:id="@+id/title2"
 		style="@style/about_title"
-		android:text="@string/about_title_item2" />
+		android:text="@string/LNG_ABOUNT_TITLE_1" />
 	
 	<TextView android:id="@+id/content2"
 		style="@style/about_content"
-		android:text="@string/about_content_item2" />
+		android:text="@string/LNG_ABOUNT_DESC_1" />
 
 	<ImageView
 		android:layout_width="@dimen/about_image_width"

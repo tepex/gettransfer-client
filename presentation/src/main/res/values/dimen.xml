@@ -34,7 +34,7 @@
 	<dimen name="nav_item_subtitle_size">14sp</dimen>
 
 	<dimen name="nav_footer_version_size">10sp</dimen>
-	<dimen name="nav_footer_version_start">50dp</dimen>
+	<dimen name="nav_footer_version_start">16dp</dimen>
 	<dimen name="nav_footer_version_bottom">5dp</dimen>
 	<dimen name="nav_footer_read_more_bottom">8dp</dimen>
 	<dimen name="nav_footer_stamp_bottom">6dp</dimen>

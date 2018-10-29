@@ -336,7 +336,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             visibility = View.VISIBLE
         } else {
             colorRes = R.color.color_error
-            text = getString(R.string.transfer_promo_result_fail)
+            text = getString(R.string.LNG_RIDE_PROMOCODE_INVALID)
             visibility = View.INVISIBLE
         }
         tvPromoResult.setTextColor(getColor(colorRes))
