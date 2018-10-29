@@ -28,7 +28,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/currency"
+                android:text="@string/LNG_CURRENCY"
                 android:textSize="@dimen/settings_activity_text_size"
                 android:fontFamily="@font/sf_pro_text_regular"
                 android:textColor="@color/colorTextBlack"
@@ -74,7 +74,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/application_language"
+                android:text="@string/LNG_LANGUAGE"
                 android:textSize="@dimen/settings_activity_text_size"
                 android:fontFamily="@font/sf_pro_text_regular"
                 android:textColor="@color/colorTextBlack"
@@ -120,7 +120,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/distance_units"
+                android:text="@string/LNG_DISTANCE_UNIT"
                 android:textSize="@dimen/settings_activity_text_size"
                 android:fontFamily="@font/sf_pro_text_regular"
                 android:textColor="@color/colorTextBlack"

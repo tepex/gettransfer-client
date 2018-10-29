@@ -61,7 +61,7 @@ class SettingsActivity: BaseActivity(), SettingsView {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        (toolbar as Toolbar).toolbar_title.setText(R.string.nav_settings_title)
+        (toolbar as Toolbar).toolbar_title.setText(R.string.LNG_MENU_TITLE_SETTINGS)
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
         
         btnSignOut.setOnClickListener { presenter.onLogout() }
