@@ -22,7 +22,6 @@ import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
 import com.kg.gettransfer.presentation.view.PaymentView
 
 import ru.terrakok.cicerone.Router
-import timber.log.Timber
 
 import timber.log.Timber
 
