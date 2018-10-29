@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorWhite"
@@ -37,11 +36,11 @@
         android:id="@+id/layoutCarrierLanguages"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/bottom_sheet_offer_details_layout_languages_height"
-        android:layout_marginEnd="@dimen/bottom_sheet_offer_details_layout_languages_margin_start"
+        android:layout_marginStart="@dimen/bottom_sheet_offer_details_layout_languages_margin_start"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="@+id/carrierId"
-        app:layout_constraintTop_toTopOf="@+id/carrierId"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintStart_toEndOf="@+id/carrierId"
+        app:layout_constraintTop_toTopOf="@+id/carrierId" />
 
     <TextView
         android:id="@+id/ratingDriver"
@@ -56,18 +55,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/carrierId" />
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/layoutAllRatings"
-        android:layout_width="match_parent"
+    <com.willy.ratingbar.ScaleRatingBar
+        android:id="@+id/ratingBarDriver"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/bottom_sheet_offer_details_elements_padding_start_end"
-        android:paddingEnd="@dimen/bottom_sheet_offer_details_elements_padding_start_end"
-        app:layout_constraintTop_toBottomOf="@+id/divider1">
-        
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/layoutRatingAverage"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/bottom_sheet_offer_details_layouts_height">
+        app:layout_constraintBottom_toBottomOf="@+id/ratingDriver"
+        app:layout_constraintEnd_toEndOf="@+id/ratingBarPunctuality"
+        app:layout_constraintStart_toStartOf="@+id/ratingBarPunctuality"
+        app:layout_constraintTop_toTopOf="@+id/ratingDriver"
+        app:srb_clickable="false"
+        app:srb_drawableEmpty="@drawable/ic_star_empty"
+        app:srb_drawableFilled="@drawable/ic_star_filled"
+        app:srb_isIndicator="true"
+        app:srb_minimumStars="0"
+        app:srb_numStars="5"
+        app:srb_rating="2"
+        app:srb_starHeight="@dimen/rating_bar_stars_height_width"
+        app:srb_starPadding="@dimen/rating_bar_stars_padding"
+        app:srb_starWidth="@dimen/rating_bar_stars_height_width"
+        app:srb_stepSize="0.1" />
+
+    <ImageView
+        android:id="@+id/ivLikeDriver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/bottom_sheet_offer_details_iv_like_margin_start"
+        app:layout_constraintBottom_toBottomOf="@+id/ratingDriver"
+        app:layout_constraintStart_toEndOf="@+id/ratingBarDriver"
+        app:layout_constraintTop_toTopOf="@+id/ratingDriver"
+        app:srcCompat="@drawable/ic_like_button" />
 
     <TextView
         android:id="@+id/ratingPunctuality"
@@ -81,44 +97,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ratingDriver" />
 
-            <com.willy.ratingbar.ScaleRatingBar
-                android:id="@+id/ratingBarAverage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@+id/ratingAverage"
-                app:layout_constraintBottom_toBottomOf="@+id/ratingAverage"
-                app:layout_constraintEnd_toStartOf="@+id/ivLikeDriver"
-                android:layout_marginEnd="@dimen/bottom_sheet_offer_details_iv_like_margin_start"
-                app:srb_clickable="false"
-                app:srb_drawableEmpty="@drawable/ic_star_empty"
-                app:srb_drawableFilled="@drawable/ic_star_filled"
-                app:srb_isIndicator="true"
-                app:srb_minimumStars="0"
-                app:srb_numStars="5"
-                app:srb_rating="2"
-                app:srb_starHeight="@dimen/rating_bar_stars_height_width"
-                app:srb_starPadding="@dimen/rating_bar_stars_padding"
-                app:srb_starWidth="@dimen/rating_bar_stars_height_width"
-                app:srb_stepSize="0.1" />
+    <com.willy.ratingbar.ScaleRatingBar
+        android:id="@+id/ratingBarPunctuality"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/bottom_sheet_offer_details_rating_bar_punctuality_margin_start"
+        app:layout_constraintBottom_toBottomOf="@+id/ratingPunctuality"
+        app:layout_constraintStart_toEndOf="@+id/ratingPunctuality"
+        app:layout_constraintTop_toTopOf="@+id/ratingPunctuality"
+        app:srb_clickable="false"
+        app:srb_drawableEmpty="@drawable/ic_star_empty"
+        app:srb_drawableFilled="@drawable/ic_star_filled"
+        app:srb_isIndicator="true"
+        app:srb_minimumStars="0"
+        app:srb_numStars="5"
+        app:srb_rating="2"
+        app:srb_starHeight="@dimen/rating_bar_stars_height_width"
+        app:srb_starPadding="@dimen/rating_bar_stars_padding"
+        app:srb_starWidth="@dimen/rating_bar_stars_height_width"
+        app:srb_stepSize="0.1" />
 
-            <ImageView
-                android:id="@+id/ivLikeDriver"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/bottom_sheet_offer_details_iv_like_margin_end"
-                app:layout_constraintTop_toTopOf="@+id/ratingAverage"
-                app:layout_constraintBottom_toBottomOf="@+id/ratingAverage"
-                app:layout_constraintEnd_toStartOf="@+id/ivRatingBarAverage"
-                app:srcCompat="@drawable/ic_like_button" />
-
-            <ImageView
-                android:id="@+id/ivRatingBarAverage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@+id/ratingAverage"
-                app:layout_constraintBottom_toBottomOf="@+id/ratingAverage"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/ic_chevron_down"/>
+    <ImageView
+        android:id="@+id/ivLikePunctuality"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/bottom_sheet_offer_details_iv_like_margin_start"
+        app:layout_constraintBottom_toBottomOf="@+id/ratingPunctuality"
+        app:layout_constraintStart_toEndOf="@+id/ratingBarPunctuality"
+        app:layout_constraintTop_toTopOf="@+id/ratingPunctuality"
+        app:srcCompat="@drawable/ic_like_button" />
 
     <TextView
         android:id="@+id/ratingVehicle"
@@ -132,242 +139,122 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ratingPunctuality" />
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/layoutSomeRatings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/bottom_sheet_offer_details_layouts_ratings_padding_bottom"
-            app:layout_constraintTop_toBottomOf="@+id/layoutRatingAverage">
+    <com.willy.ratingbar.ScaleRatingBar
+        android:id="@+id/ratingBarVehicle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/ratingVehicle"
+        app:layout_constraintEnd_toEndOf="@+id/ratingBarPunctuality"
+        app:layout_constraintStart_toStartOf="@+id/ratingBarPunctuality"
+        app:layout_constraintTop_toTopOf="@+id/ratingVehicle"
+        app:srb_clickable="false"
+        app:srb_drawableEmpty="@drawable/ic_star_empty"
+        app:srb_drawableFilled="@drawable/ic_star_filled"
+        app:srb_isIndicator="true"
+        app:srb_minimumStars="0"
+        app:srb_numStars="5"
+        app:srb_rating="2"
+        app:srb_starHeight="@dimen/rating_bar_stars_height_width"
+        app:srb_starPadding="@dimen/rating_bar_stars_padding"
+        app:srb_starWidth="@dimen/rating_bar_stars_height_width"
+        app:srb_stepSize="0.1" />
 
-            <TextView
-                android:id="@+id/ratingDriver"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/sf_pro_text_regular"
-                android:text="Driver:"
-                android:textColor="@color/colorTextBlack"
-                android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/ivLikeVehicle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/bottom_sheet_offer_details_iv_like_margin_start"
+        app:layout_constraintBottom_toBottomOf="@+id/ratingVehicle"
+        app:layout_constraintStart_toEndOf="@+id/ratingBarVehicle"
+        app:layout_constraintTop_toTopOf="@+id/ratingVehicle"
+        app:srcCompat="@drawable/ic_like_button" />
 
-            <com.willy.ratingbar.ScaleRatingBar
-                android:id="@+id/ratingBarDriver"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/ratingDriver"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/ratingDriver"
-                app:srb_clickable="false"
-                app:srb_drawableEmpty="@drawable/ic_star_empty"
-                app:srb_drawableFilled="@drawable/ic_star_filled"
-                app:srb_isIndicator="true"
-                app:srb_minimumStars="0"
-                app:srb_numStars="5"
-                app:srb_rating="2"
-                app:srb_starHeight="@dimen/rating_bar_stars_height_width"
-                app:srb_starPadding="@dimen/rating_bar_stars_padding"
-                app:srb_starWidth="@dimen/rating_bar_stars_height_width"
-                app:srb_stepSize="0.1" />
+    <TextView
+        android:id="@+id/vehicleName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/bottom_sheet_offer_details_elements_margin_start"
+        android:layout_marginTop="@dimen/bottom_sheet_offer_details_vehicle_name_margin_top"
+        android:fontFamily="@font/sf_pro_text_bold"
+        android:text="Mercedes-Benz S-Class, 2013"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ratingVehicle" />
 
-            <TextView
-                android:id="@+id/ratingPunctuality"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/bottom_sheet_offer_details_ratings_texts_margin_top"
-                android:fontFamily="@font/sf_pro_text_regular"
-                android:text="Punctuality:"
-                android:textColor="@color/colorTextBlack"
-                android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ratingDriver" />
-
-            <com.willy.ratingbar.ScaleRatingBar
-                android:id="@+id/ratingBarPunctuality"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/bottom_sheet_offer_details_rating_bar_punctuality_margin_start"
-                app:layout_constraintBottom_toBottomOf="@+id/ratingPunctuality"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/ratingPunctuality"
-                app:srb_clickable="false"
-                app:srb_drawableEmpty="@drawable/ic_star_empty"
-                app:srb_drawableFilled="@drawable/ic_star_filled"
-                app:srb_isIndicator="true"
-                app:srb_minimumStars="0"
-                app:srb_numStars="5"
-                app:srb_rating="2"
-                app:srb_starHeight="@dimen/rating_bar_stars_height_width"
-                app:srb_starPadding="@dimen/rating_bar_stars_padding"
-                app:srb_starWidth="@dimen/rating_bar_stars_height_width"
-                app:srb_stepSize="0.1" />
-
-            <TextView
-                android:id="@+id/ratingVehicle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/bottom_sheet_offer_details_ratings_texts_margin_top"
-                android:fontFamily="@font/sf_pro_text_regular"
-                android:text="Vehicle:"
-                android:textColor="@color/colorTextBlack"
-                android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ratingPunctuality" />
-
-            <com.willy.ratingbar.ScaleRatingBar
-                android:id="@+id/ratingBarVehicle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/ratingVehicle"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/ratingVehicle"
-                app:srb_clickable="false"
-                app:srb_drawableEmpty="@drawable/ic_star_empty"
-                app:srb_drawableFilled="@drawable/ic_star_filled"
-                app:srb_isIndicator="true"
-                app:srb_minimumStars="0"
-                app:srb_numStars="5"
-                app:srb_rating="2"
-                app:srb_starHeight="@dimen/rating_bar_stars_height_width"
-                app:srb_starPadding="@dimen/rating_bar_stars_padding"
-                app:srb_starWidth="@dimen/rating_bar_stars_height_width"
-                app:srb_stepSize="0.1" />
-
-        </android.support.constraint.ConstraintLayout>
-
-    </android.support.constraint.ConstraintLayout>
-
-    <View
-        android:id="@+id/divider2"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/view_transfer_info_divider_height"
-        android:background="@color/colorDivider"
-        app:layout_constraintTop_toBottomOf="@+id/layoutAllRatings"/>
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/layoutVehicleName"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/bottom_sheet_offer_details_layouts_height"
-        android:paddingStart="@dimen/bottom_sheet_offer_details_elements_padding_start_end"
-        android:paddingEnd="@dimen/bottom_sheet_offer_details_elements_padding_start_end"
-        app:layout_constraintTop_toBottomOf="@+id/divider2">
-
-        <TextView
-            android:id="@+id/vehicleName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/sf_pro_text_bold"
-            android:text="Mercedes-Benz S-Class, 2013"
-            android:textColor="@color/colorTextBlack"
-            android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/colorVehicle"/>
-
-        <ImageView
-            android:id="@+id/colorVehicle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_circle_car_color_indicator"/>
-
-    </android.support.constraint.ConstraintLayout>
-
-    <View
-        android:id="@+id/divider3"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/view_transfer_info_divider_height"
-        android:background="@color/colorDivider"
-        app:layout_constraintTop_toBottomOf="@+id/layoutVehicleName"/>
-
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:id="@+id/layoutVehicleInfo"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/bottom_sheet_offer_details_layouts_height"
-        android:paddingStart="@dimen/bottom_sheet_offer_details_elements_padding_start_end"
-        android:paddingEnd="@dimen/bottom_sheet_offer_details_elements_padding_start_end"
-        app:layout_constraintTop_toBottomOf="@+id/divider3">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/bottom_sheet_offer_details_layout_vehicle_info_margin_top"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vehicleName">
 
         <TextView
             android:id="@+id/vehicleType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/bottom_sheet_offer_details_elements_margin_start"
             android:fontFamily="@font/sf_pro_text_regular"
             android:text="Business:"
             android:textColor="@color/colorTextBlack"
             android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@+id/ratingPunctuality" />
 
-        <LinearLayout
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_passenger" />
+
+        <TextView
+            android:id="@+id/tvCountPersons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf_pro_text_regular"
             android:gravity="center"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            android:text="x 3"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_passenger"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/bottom_sheet_offer_details_iv_baggage_margin_start"
+            app:srcCompat="@drawable/ic_baggage" />
 
-            <TextView
-                android:id="@+id/tvCountPersons"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/sf_pro_text_regular"
-                android:gravity="center"
-                android:text="x 3"
-                android:textColor="@color/colorTextBlack"
-                android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"/>
+        <TextView
+            android:id="@+id/tvCountBaggage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/bottom_sheet_offer_details_tv_count_baggage_margin_start"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:gravity="center"
+            android:text="x 3"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/bottom_sheet_offer_details_iv_baggage_margin_start"
-                app:srcCompat="@drawable/ic_baggage"/>
+        <ImageView
+            android:id="@+id/imgFreeWiFi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/bottom_sheet_offer_details_options_img_margin_start"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_wifi" />
 
-            <TextView
-                android:id="@+id/tvCountBaggage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/bottom_sheet_offer_details_tv_count_baggage_margin_start"
-                android:fontFamily="@font/sf_pro_text_regular"
-                android:gravity="center"
-                android:text="x 3"
-                android:textColor="@color/colorTextBlack"
-                android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"/>
+        <ImageView
+            android:id="@+id/imgFreeWater"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/bottom_sheet_offer_details_options_img_margin_start"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_free_water" />
 
-            <ImageView
-                android:id="@+id/imgFreeWiFi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/bottom_sheet_offer_details_options_img_margin_start"
-                android:visibility="gone"
-                app:srcCompat="@drawable/ic_wifi"/>
-
-            <ImageView
-                android:id="@+id/imgFreeWater"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/bottom_sheet_offer_details_options_img_margin_start"
-                android:visibility="gone"
-                app:srcCompat="@drawable/ic_free_water"/>
-
-        </LinearLayout>
-
-    </android.support.constraint.ConstraintLayout>
-
-    <View
-        android:id="@+id/divider4"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/view_transfer_info_divider_height"
-        android:background="@color/colorDivider"
-        app:layout_constraintTop_toBottomOf="@+id/layoutVehicleInfo"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layoutPhotos"
@@ -377,7 +264,8 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/bottom_sheet_offer_details_btn_book_and_view_pager_margin_top">
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/vpVehiclePhotos"
@@ -394,7 +282,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="@dimen/bottom_sheet_offer_details_chevron_margin"/>
+                android:layout_marginStart="@dimen/bottom_sheet_offer_details_chevron_margin" />
 
             <ImageButton
                 android:id="@+id/nextImageButton"
@@ -404,7 +292,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="@dimen/bottom_sheet_offer_details_chevron_margin"/>
+                android:layout_marginEnd="@dimen/bottom_sheet_offer_details_chevron_margin" />
 
             <TextView
                 android:id="@+id/numberOfPhoto"
@@ -417,7 +305,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginStart="@dimen/bottom_sheet_offer_details_text_number_of_photo_margin_start"
                 android:layout_marginBottom="@dimen/bottom_sheet_offer_details_text_number_of_photo_margin_bottom"
-                android:text="1/7"/>
+                android:text="1/7" />
 
         </android.support.constraint.ConstraintLayout>
 
@@ -427,7 +315,7 @@
         android:id="@+id/layoutPrices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:gravity="center"
         app:layout_constraintTop_toTopOf="@+id/btnBook"
         app:layout_constraintStart_toStartOf="parent"
@@ -441,18 +329,17 @@
             android:fontFamily="@font/sf_pro_text_bold"
             android:textSize="@dimen/bottom_sheet_offer_details_text_size_14sp"
             android:textColor="@color/colorTextBlack"
-            android:text="€199,00"/>
+            android:text="€199,00" />
 
         <TextView
             android:id="@+id/offerPricePreferred"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/sf_pro_text_regular"
+            android:fontFamily="@font/sf_pro_text_bold"
             android:textSize="@dimen/bottom_sheet_offer_details_text_size_14sp"
             android:textColor="@color/colorTextBlack"
             android:text="($222,00)"
-            android:visibility="gone"
-            android:layout_marginStart="@dimen/bottom_sheet_offer_details_prices_margin"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 
@@ -471,6 +358,6 @@
         app:layout_constraintStart_toEndOf="@+id/layoutPrices"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="@dimen/bottom_sheet_offer_details_btn_book_and_view_pager_margin_top"
-        android:layout_marginBottom="@dimen/bottom_sheet_offer_details_btn_book_margin_bottom"/>
+        android:layout_marginBottom="@dimen/bottom_sheet_offer_details_btn_book_margin_bottom" />
 
 </android.support.constraint.ConstraintLayout>
