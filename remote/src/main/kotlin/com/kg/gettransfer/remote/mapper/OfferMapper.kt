@@ -17,23 +17,18 @@ open class OfferMapper(private val priceMapper: PriceMapper,
     /**
      * Map a [OfferModel] instance to a [OfferEntity] instance.
      */
-    override fun fromRemote(type: OfferModel): OfferEntity {
-        var ratings: RatingsEntity? = null
-        if(type.ratings != null) ratings = ratingsMapper.fromRemote(type.ratings)
-        var driver: ProfileEntity? = null
-        if(type.driver != null) driver = profileMapper.fromRemote(type.driver)
-        return OfferEntity(type.id,
-                           type.status,
-                           type.wifi,
-                           type.refreshments,
-                           type.createdAt,
-                           priceMapper.fromRemote(type.price),
-                           ratings,
-                           type.passengerFeedback,
-                           carrierMapper.fromRemote(type.carrier),
-                           vehicleMapper.fromRemote(type.vehicle),
-                           driver)
-    }
+    override fun fromRemote(type: OfferModel) =
+        OfferEntity(type.id,
+                    type.status,
+                    type.wifi,
+                    type.refreshments,
+                    type.createdAt,
+                    priceMapper.fromRemote(type.price),
+                    type.ratings?.let { ratingsMapper.fromRemote(it) },
+                    type.passengerFeedback,
+                    carrierMapper.fromRemote(type.carrier),
+                    vehicleMapper.fromRemote(type.vehicle),
+                    type.driver?.let { profileMapper.fromRemote(it) })
 
     /**
      * Map a [OfferEntity] instance to a [OfferModel] instance.
