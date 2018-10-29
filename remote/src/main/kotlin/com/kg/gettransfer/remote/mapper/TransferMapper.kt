@@ -17,18 +17,13 @@ open class TransferMapper(private val cityPointMapper: CityPointMapper,
      * Map a [TransferModel] instance to a [TransferEntity] instance.
      */
     override fun fromRemote(type: TransferModel): TransferEntity {
-        var to: CityPointEntity? = null
-        if(type.to != null) to = cityPointMapper.fromRemote(type.to)
-        var price: MoneyEntity? = null
-        if(type.price != null) price = moneyMapper.fromRemote(type.price)
-            
         return TransferEntity(type.id,
                               type.createdAt,
                               type.duration,
                               type.distance,
                               type.status,
                               cityPointMapper.fromRemote(type.from),
-                              to,
+                              type.to?.let { cityPointMapper.fromRemote(it) },
                               type.dateToLocal,
                               type.dateReturnLocal,
                               type.dateRefund,
@@ -46,14 +41,14 @@ open class TransferMapper(private val cityPointMapper: CityPointMapper,
                         
                               type.time,
                               moneyMapper.fromRemote(type.paidSum),
-                              moneyMapper.fromRemote(type.remainsToPay),
+                              type.remainsToPay?.let { moneyMapper.fromRemote(it) },
                               type.paidPercentage,
                               type.pendingPaymentId,
                               type.bookNow,
                               type.bookNowExpiration,
                               type.transportTypeIds,
                               type.passengerOfferedPrice,
-                              price,
+                              type.price?.let { moneyMapper.fromRemote(it) },
                             
                               type.editableFields)
     }
