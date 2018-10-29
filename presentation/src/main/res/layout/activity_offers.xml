@@ -62,18 +62,18 @@
                         android:fontFamily="@font/sf_pro_text_bold"
                         android:textSize="@dimen/activity_offers_excellent_price_text_size"
                         android:gravity="center"
-                        android:text="@string/excellent_price_text_1"
+                        android:text="@string/LNG_OFFERS_PROMO_MESSAGE"
                         android:textColor="@color/colorWhite" />
 
-                    <TextView
-                        android:id="@+id/tvExcellentPrice2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/sf_pro_text_regular"
-                        android:textSize="@dimen/activity_offers_excellent_price_text_size"
-                        android:gravity="center"
-                        android:text="@string/excellent_price_text_2"
-                        android:textColor="@color/colorWhite" />
+                    <!--<TextView-->
+                        <!--android:id="@+id/tvExcellentPrice2"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:fontFamily="@font/sf_pro_text_regular"-->
+                        <!--android:textSize="@dimen/activity_offers_excellent_price_text_size"-->
+                        <!--android:gravity="center"-->
+                        <!--android:text="@string/excellent_price_text_2"-->
+                        <!--android:textColor="@color/colorWhite" />-->
 
                 </LinearLayout>
 
@@ -105,7 +105,7 @@
                         android:fontFamily="@font/helvetica_neue"
                         android:textSize="@dimen/activity_offers_sorted_layout_texts_size"
                         android:textColor="@color/colorTextBlack"
-                        android:text="@string/sorted_year_made_text"/>
+                        android:text="@string/LNG_FILTER_YEAR"/>
 
                     <ImageView
                         android:id="@+id/triangleYear"
@@ -134,7 +134,7 @@
                         android:fontFamily="@font/helvetica_neue"
                         android:textSize="@dimen/activity_offers_sorted_layout_texts_size"
                         android:textColor="@color/colorTextBlack"
-                        android:text="@string/sorted_rating_text"/>
+                        android:text="@string/LNG_FILTER_RATING"/>
 
                     <ImageView
                         android:id="@+id/triangleRating"
@@ -162,7 +162,7 @@
                         android:fontFamily="@font/helvetica_neue"
                         android:textSize="@dimen/activity_offers_sorted_layout_texts_size"
                         android:textColor="@color/colorTextBlack"
-                        android:text="@string/sorted_price_text"/>
+                        android:text="@string/LNG_FILTER_PRICE"/>
 
                     <ImageView
                         android:id="@+id/trianglePrice"

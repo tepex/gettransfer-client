@@ -19,15 +19,14 @@
     <string name="nav_settings_subtitle">Language and regional preferences</string>
     <string name="nav_about_title">About</string>
     <string name="nav_about_subtitle">Advantages of GetTransport</string>
-    <string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
+    <string name="nav_footer_version">Version %1$s\nBuild %2$s</string> <!-- нет в iOS -->
     <string name="nav_footer_read_more">Read more</string>
     <!-- Search form -->
     <string name="search_from_hint">From</string>
     <string name="search_from_hint_new">Where from?</string>
     <string name="search_to_hint">To</string>
-    <string name="search_to_hint_new">Where to?</string>
-    <string name="search_start">Loading…</string>
-    <string name="search_nothing"></string>
+    <string name="search_start">Loading…</string> <!-- нет в iOS -->
+    <string name="search_nothing"></string> <!-- нет в iOS -->
     <string name="searchTransitionName">SEARCH_FORM</string>
     <string name="point_on_the_map">Point on the map</string>
     <string name="search">Search</string>
@@ -60,7 +59,7 @@
     <string name="distance_time">Distance: %1$s\nExpected travel time: %2$s</string>
     <string name="distance">Distance: %1$d %2$s</string>
     <string name="transfer_connecting_carriers">Соединяем с ближайшими %1$d перевозчиками</string>
-    <string name="transfer_order">Заявка на трансфер №%1$d</string>
+    <string name="transfer_order">Заявка на трансфер №%1$d</string> <!-- динамические значения -->
     <string name="transfer_start_sign">A</string> <!-- нет в iOS -->
     <string name="transfer_end_sign">B</string> <!-- нет в iOS -->
     <string name="transfer_date_local">%1$s (местное)</string>
@@ -379,7 +378,7 @@
     <string name="file_provider_authority" translatable="false">com.kg.gettransfer.fileprovider</string>
     <string name="please_wait">Please, wait, connection to carries...</string>
 
-    <string name="number_of_photos">%1$d/%2$d</string>
+    <string name="number_of_photos">%1$d/%2$d</string> <!-- динамические значения -->
 
 
     <string name="forgot_your_password"><u>Forgot your password?</u></string>

@@ -43,13 +43,18 @@
         app:layout_constraintTop_toTopOf="@+id/carrierId"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <View
-        android:id="@+id/divider1"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/view_transfer_info_divider_height"
-        android:background="@color/colorDivider"
-        app:layout_constraintTop_toBottomOf="@+id/carrierId"
-        android:layout_marginTop="@dimen/bottom_sheet_offer_details_dimen1_margin_top"/>
+    <TextView
+        android:id="@+id/ratingDriver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/bottom_sheet_offer_details_elements_margin_start"
+        android:layout_marginTop="@dimen/bottom_sheet_offer_details_rating_driver_margin_top"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:text="@string/LNG_DRIVER"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/carrierId" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/layoutAllRatings"
@@ -64,17 +69,17 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/bottom_sheet_offer_details_layouts_height">
 
-            <TextView
-                android:id="@+id/ratingAverage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/sf_pro_text_bold"
-                android:text="Rating"
-                android:textColor="@color/colorTextBlack"
-                android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/ratingPunctuality"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/bottom_sheet_offer_details_elements_margin_start"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:text="@string/LNG_PUNCTUALITY"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ratingDriver" />
 
             <com.willy.ratingbar.ScaleRatingBar
                 android:id="@+id/ratingBarAverage"
@@ -115,7 +120,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:srcCompat="@drawable/ic_chevron_down"/>
 
-        </android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/ratingVehicle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/bottom_sheet_offer_details_elements_margin_start"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:text="@string/LNG_VEHICLE"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ratingPunctuality" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/layoutSomeRatings"
@@ -446,7 +461,7 @@
         android:layout_width="@dimen/bottom_sheet_offer_details_btn_book_width"
         android:layout_height="@dimen/bottom_sheet_offer_details_btn_book_height"
         android:background="@drawable/btn_get_transfer"
-        android:text="Book"
+        android:text="@string/LNG_BOOK"
         android:textAllCaps="true"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/bottom_sheet_offer_details_text_size_13sp"

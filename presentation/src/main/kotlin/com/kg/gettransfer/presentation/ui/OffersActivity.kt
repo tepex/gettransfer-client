@@ -67,7 +67,7 @@ class OffersActivity: BaseActivity(), OffersView {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        (toolbar as Toolbar).toolbar_title.setText(R.string.carrier_offers)
+        (toolbar as Toolbar).toolbar_title.setText(R.string.LNG_RIDE_CARRIERS)
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 
         btnCancelRequest.visibility = View.VISIBLE
@@ -146,7 +146,7 @@ class OffersActivity: BaseActivity(), OffersView {
     }
 
     override fun showBottomSheetOfferDetails(offer: OfferModel) {
-        carrierId.text = getString(R.string.carrier_number, offer.carrier.id)
+        carrierId.text = getString(R.string.LNG_CARRIER, offer.carrier.id)
 
         layoutCarrierLanguages.removeAllViews()
         val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)

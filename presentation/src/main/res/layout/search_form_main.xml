@@ -11,42 +11,27 @@
     android:orientation="vertical"
     android:transitionName="@string/searchTransitionName">
 
-
-    <LinearLayout
+    <com.kg.gettransfer.presentation.ui.SearchAddress
+        android:id="@+id/searchFrom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:hint="@string/LNG_FIELD_SOURCE"
-        android:padding="8dp" />
+        android:padding="8dp"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.kg.gettransfer.presentation.ui.SearchAddress
-                android:id="@+id/searchFrom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/search_from_hint_new" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/create_transfer_divider_height"
-                android:background="@color/colorDividerGray" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/create_transfer_divider_height"
+        android:background="@color/colorDividerGray" />
 
 
-            <com.kg.gettransfer.presentation.ui.SearchAddress
-                android:id="@+id/searchTo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/search_to_hint_new">
+    <com.kg.gettransfer.presentation.ui.SearchAddress
+        android:id="@+id/searchTo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        app:hint="@string/LNG_FIELD_DESTINATION">
 
-            </com.kg.gettransfer.presentation.ui.SearchAddress>
-
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </com.kg.gettransfer.presentation.ui.SearchAddress>
 
     <View
         android:layout_width="match_parent"
@@ -65,7 +50,7 @@
         android:layout_margin="@dimen/btn_next_main_margin_16dp"
         android:background="@drawable/btn_bg_rounded"
         android:enabled="false"
-        android:text="@string/next"
+        android:text="@string/LNG_NEXT"
         android:textColor="@color/colorWhite" />
 
 </LinearLayout>
