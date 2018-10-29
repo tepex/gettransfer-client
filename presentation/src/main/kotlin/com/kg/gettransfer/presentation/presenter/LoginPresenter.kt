@@ -20,6 +20,8 @@ class LoginPresenter(cc: CoroutineContexts,
                      systemInteractor: SystemInteractor): BasePresenter<LoginView>(cc, router, systemInteractor) {
 
     companion object {
+        @JvmField val MIN_PASSWORD_LENGTH = 6
+        
         @JvmField val RESULT_CODE = 33
         @JvmField val RESULT_OK   = 1
 
@@ -32,7 +34,6 @@ class LoginPresenter(cc: CoroutineContexts,
 
     fun onLoginClick() {
         if(checkFields()) {
-            viewState.blockInterface(false)
             utils.launchAsyncTryCatchFinally({
                 viewState.blockInterface(true, true)
                 utils.asyncAwait { systemInteractor.login(email!!, password!!) }
@@ -57,7 +58,7 @@ class LoginPresenter(cc: CoroutineContexts,
 
     private fun checkFields(): Boolean {
         val checkEmail = email != null && Patterns.EMAIL_ADDRESS.matcher(email!!).matches()
-        val checkPassword = password != null && password!!.length >= 6
+        val checkPassword = password != null && password!!.length >= MIN_PASSWORD_LENGTH
         viewState.showError(!(checkEmail && checkPassword))
         return checkEmail && checkPassword
     }
