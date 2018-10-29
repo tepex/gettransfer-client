@@ -305,17 +305,12 @@ internal class Utils {
         fun convertDpToPixels(context: Context, dp: Float): Float{
             val res = context.resources
             val metrics = res.displayMetrics
-<<<<<<< HEAD
-            return dp * metrics.density
-        }
-=======
             return dp * ((metrics.densityDpi.toFloat()) / DisplayMetrics.DENSITY_DEFAULT)
         }
 
 //        fun convertPixelsToDp(context: Context, pixels: Float): Float{
 //
 //        }
->>>>>>> pin elevation fix
     }
 }
 
