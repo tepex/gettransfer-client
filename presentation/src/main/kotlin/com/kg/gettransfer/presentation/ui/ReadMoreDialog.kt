@@ -11,7 +11,7 @@ class ReadMoreDialog(context: Context): AppCompatDialog(context, R.style.ReadMor
 		fun newInstance(context: Context): ReadMoreDialog {
 			val dialog = ReadMoreDialog(context)
 			dialog.setContentView(R.layout.dialog_read_more)
-			dialog.setTitle(R.string.read_more_title)
+			dialog.setTitle(R.string.LNG_BESTPRICE_TITLE)
 			val closeBtn: View? = dialog.findViewById(R.id.closeBtn)
 			closeBtn?.setOnClickListener { dialog.dismiss() }
 			return dialog

@@ -513,7 +513,7 @@
     <string name="LNG_BESTPRICE_YELLOW_TEXT1"> • identical to our transfer</string>
     <string name="LNG_BESTPRICE_YELLOW_TEXT2"> • designated on the relevant dates</string>
     <string name="LNG_BESTPRICE_YELLOW_TEXT3"> • does not participate in the action</string>
-    <string name="LNG_BESTPRICE_YELLOW_TEXT4">   from the carrier and does not have a discount</string>
+    <string name="LNG_BESTPRICE_YELLOW_TEXT4">   from the carrier and does not have a discount</string> <!--добавить \u0020 (один или 2 подряд) перед текстом, актуально для обеих платформ -->
     <string name="LNG_BESTPRICE_YELLOW_TEXT5"> • is provided by a legal entity</string>
     <string name="LNG_RIDE_FIND_TRIPS">Find requests</string>
     <string name="LNG_TRIP_PICKUP">Confirm pickup</string>

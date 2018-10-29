@@ -15,7 +15,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" 
 		android:layout_marginTop="@dimen/read_more_content_margin"
-		android:text="@string/read_more_content1"
+		android:text="@string/LNG_BESTPRICE_TEXT1"
 		android:textColor="@android:color/black"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
@@ -24,7 +24,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" 
 		android:layout_marginTop="@dimen/read_more_content_margin"
-		android:text="@string/read_more_content2"
+		android:text="@string/LNG_BESTPRICE_TEXT2"
 		android:textColor="@android:color/black"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
@@ -41,15 +41,17 @@
 		app:layout_constraintTop_toBottomOf="@id/content2">
 		<TextView style="@style/read_more_title"
 			android:layout_marginBottom="@dimen/read_more_content3_padding"
-			android:text="@string/read_more_title1" />
+			android:text="@string/LNG_BESTPRICE_YELLOW_TITLE" />
 		<TextView style="@style/read_more_item"
-			android:text="@string/read_more_item1" />
+			android:text="@string/LNG_BESTPRICE_YELLOW_TEXT1" />
 		<TextView style="@style/read_more_item"
-			android:text="@string/read_more_item2" />
+			android:text="@string/LNG_BESTPRICE_YELLOW_TEXT2" />
 		<TextView style="@style/read_more_item"
-			android:text="@string/read_more_item3" />
+			android:text="@string/LNG_BESTPRICE_YELLOW_TEXT3" />
 		<TextView style="@style/read_more_item"
-			android:text="@string/read_more_item4" />
+			android:text="@string/LNG_BESTPRICE_YELLOW_TEXT4" />
+		<TextView style="@style/read_more_item"
+			android:text="@string/LNG_BESTPRICE_YELLOW_TEXT5" />
 	</LinearLayout>
 
 	<Button
@@ -58,7 +60,7 @@
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/read_more_close_margin"
 		android:background="?android:attr/selectableItemBackground"
-		android:text="@string/read_more_close_button"
+		android:text="@string/LNG_CLOSE"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/content3" />
