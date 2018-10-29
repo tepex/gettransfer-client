@@ -1,45 +1,32 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.res.Configuration
-
 import android.graphics.Bitmap
 import android.graphics.Canvas
-
 import android.os.Build
 import android.os.Bundle
 import android.os.LocaleList
-
 import android.support.annotation.CallSuper
 import android.support.v4.content.ContextCompat
-
 import android.view.View
 import android.widget.RelativeLayout
-
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
-
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
-
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
-
-import java.util.Locale
-
+import kotlinx.android.synthetic.main.view_maps_pin.view.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-
-import kotlinx.android.synthetic.main.view_maps_pin.view.*
-
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-
-import timber.log.Timber
 
 abstract class BaseGoogleMapActivity: BaseActivity() {
     private lateinit var googleMapJob: Job

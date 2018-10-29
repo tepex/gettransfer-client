@@ -1,28 +1,17 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.os.Build
 import android.os.Bundle
-
 import android.support.annotation.CallSuper
-
 import com.arellomobile.mvp.MvpPresenter
-
 import com.google.firebase.analytics.FirebaseAnalytics
-
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
-
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.extensions.inject
-
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.BaseView
-
-import kotlinx.coroutines.Job
-
 import ru.terrakok.cicerone.Router
-
-import timber.log.Timber
+import kotlinx.coroutines.Job
 
 open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
                                        protected val router: Router,

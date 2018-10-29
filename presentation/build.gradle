@@ -16,6 +16,7 @@ ext {
 	glide_version			  = "4.8.0"
 	simple_rating_bar_version = "1.4.2"
 	slf4j_timber_version      = "1.0.1"
+	facebook_version          = "4.38.0"
 }
 
 android {
@@ -51,7 +52,7 @@ android {
 			shrinkResources false
 			minifyEnabled false
 			useProguard true
-			debuggable false
+			debuggable true
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 			signingConfig signingConfigs.config
 		}
@@ -169,6 +170,11 @@ dependencies {
 
 	//RatingBar with vector images
 	implementation "com.github.ome450901:SimpleRatingBar:$simple_rating_bar_version"
+	
+	implementation "io.socket:socket.io-client:1.0.0"
+
+	//Facebook
+	implementation "com.facebook.android:facebook-android-sdk:$facebook_version"
     
 	testImplementation libs.junit
 	testImplementation libs.hamcrest

@@ -123,7 +123,6 @@
                         android:layout_height="wrap_content"
                         app:srb_numStars="5"
                         app:srb_minimumStars="0"
-                        app:srb_rating="2"
                         app:srb_starHeight="@dimen/rating_bar_stars_height_width"
                         app:srb_starPadding="@dimen/rating_bar_stars_padding"
                         app:srb_starWidth="@dimen/rating_bar_stars_height_width"

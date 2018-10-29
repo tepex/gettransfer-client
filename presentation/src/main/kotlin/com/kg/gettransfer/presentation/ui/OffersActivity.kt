@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.view.ViewPager
@@ -160,12 +159,13 @@ class OffersActivity: BaseActivity(), OffersView {
             layoutCarrierLanguages.addView(ivLanguage)
         }
 
+        offer.carrier.ratings.average?.let { ratingBarAverage.rating = it }
         offer.carrier.ratings.driver?.let  { ratingBarDriver.rating = it }
         offer.carrier.ratings.fair?.let    { ratingBarPunctuality.rating = it }
         offer.carrier.ratings.vehicle?.let { ratingBarVehicle.rating = it }
 
-        vehicleName.text = if(offer.vehicle.color == null) offer.vehicle.vehicleBase.name
-        else Utils.getVehicleNameWithColor(this, offer.vehicle.vehicleBase.name, offer.vehicle.color)
+        vehicleName.text = offer.vehicle.vehicleBase.name
+        if(offer.vehicle.color != null) colorVehicle.setImageDrawable(Utils.getVehicleColorFormRes(this, offer.vehicle.color))
         vehicleType.text = getString(offer.vehicle.transportType.nameId!!)
         sheetOfferDetails.tvCountPersons.text = Utils.formatPersons(this, offer.vehicle.transportType.paxMax)
         sheetOfferDetails.tvCountBaggage.text = Utils.formatLuggage(this, offer.vehicle.transportType.luggageMax)
@@ -203,6 +203,16 @@ class OffersActivity: BaseActivity(), OffersView {
             }
         }
 
+        layoutSomeRatings.visibility = View.GONE
+        layoutRatingAverage.setOnClickListener {
+            if(layoutSomeRatings.visibility == View.VISIBLE) {
+                layoutSomeRatings.visibility = View.GONE
+                ratingBarAverage.visibility = View.VISIBLE
+            } else {
+                layoutSomeRatings.visibility = View.VISIBLE
+                ratingBarAverage.visibility = View.GONE
+            }
+        }
         bsOfferDetails.state = BottomSheetBehavior.STATE_EXPANDED
     }
 

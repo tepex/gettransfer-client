@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 
 import android.graphics.*
+import android.graphics.drawable.Drawable
 
 import android.location.Location
 
@@ -241,16 +242,20 @@ internal class Utils {
         }
 
         fun getVehicleNameWithColor(context: Context, name: String, color: String): SpannableStringBuilder {
-            val colorRes = R.color::class.members.find( { it.name == "color_vehicle_$color" } )
-            val colorId = (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
-            
-            val drawableCompat = ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)!!.constantState!!.newDrawable().mutate()
-            drawableCompat.setColorFilter(ContextCompat.getColor(context, colorId), PorterDuff.Mode.SRC_IN)
+            val drawableCompat = getVehicleColorFormRes(context, color)
             drawableCompat.setBounds(4, 0, drawableCompat.intrinsicWidth + 4, drawableCompat.intrinsicHeight)
             val ssBuilder = SpannableStringBuilder("$name ")
             val colorCarImageSpan = ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE)
             ssBuilder.setSpan(colorCarImageSpan, ssBuilder.length - 1, ssBuilder.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             return ssBuilder
+        }
+
+        fun getVehicleColorFormRes(context: Context, color: String): Drawable{
+            val colorRes = R.color::class.members.find( { it.name == "color_vehicle_$color" } )
+            val colorId = (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
+            val drawableCompat = ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)!!.constantState!!.newDrawable().mutate()
+            drawableCompat.setColorFilter(ContextCompat.getColor(context, colorId), PorterDuff.Mode.SRC_IN)
+            return drawableCompat
         }
 
         fun formatJsonString(text: String): String {

@@ -8,7 +8,6 @@ import java.io.File
 import java.io.FileInputStream
 
 class LoggingRepositoryImpl(val context: Context, val logFileName: String): LoggingRepository {
-
     override fun getLogs(): String {
         val file = File(context.filesDir, logFileName)
         return FileInputStream(file).bufferedReader().use { it.readText() }

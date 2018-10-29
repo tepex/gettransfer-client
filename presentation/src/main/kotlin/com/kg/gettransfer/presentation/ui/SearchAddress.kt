@@ -74,11 +74,13 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 			addressField.hint = ta.getString(R.styleable.SearchAddress_hint)
 			ta.recycle()
 		}
-		
-		clearBtn.setOnClickListener { 
+
+		val clearListener = View.OnClickListener {
 			text = ""
 			addressField.requestFocus()
 		}
+		fl_clearBtn.setOnClickListener(clearListener)
+		im_clearBtn.setOnClickListener(clearListener)
 	}
 
 	@ProvidePresenter
@@ -94,7 +96,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		addressField.setOnFocusChangeListener { _, hasFocus ->
 			this.hasFocus = hasFocus
 			if(!hasFocus){
-				clearBtn.visibility = View.GONE
+				fl_clearBtn.visibility = View.GONE
 			}
 			else {
 				checkClearButtonVisibility()
@@ -117,7 +119,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	fun initText(text: String, sendRequest: Boolean) {
 		blockRequest = true
 		this.text = text + " "
-		addressField.setSelection(addressField.text.length)
+		//addressField.setSelection(addressField.text.length)
 		blockRequest = false
 		if(sendRequest) presenter.requestAddressListByPrediction(text.trim())
 	}
@@ -182,8 +184,8 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     private fun checkClearButtonVisibility() {
-        if(text.isBlank()) clearBtn.visibility = View.INVISIBLE
-        else if(hasFocus) clearBtn.visibility = View.VISIBLE
+        if(text.isBlank()) fl_clearBtn.visibility = View.INVISIBLE
+        else if(hasFocus) fl_clearBtn.visibility = View.VISIBLE
     }
 
     fun changeFocus() {

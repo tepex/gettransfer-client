@@ -21,22 +21,17 @@ open class TransferNewMapper(private val cityPointMapper: CityPointMapper,
     /**
      * Map a [TransferNewEntity] instance to a [TransferNewModel] instance.
      */
-    override fun toRemote(type: TransferNewEntity): TransferNewModel {
-        var tripReturn: TripModel? = null
-        if(type.tripReturn != null) tripReturn = tripMapper.toRemote(type.tripReturn!!)
-        var poPrice: String? = null
-        if(type.passengerOfferedPrice != null) poPrice = "%.2f".format(type.passengerOfferedPrice!!.toFloat() / 100)
-        return TransferNewModel(cityPointMapper.toRemote(type.from),
-                                cityPointMapper.toRemote(type.to),
-                                tripMapper.toRemote(type.tripTo),
-                                tripReturn,
-                                type.transportTypeIds,
-                                type.pax,
-                                type.childSeats,
-                                poPrice,
-                                type.nameSign,
-                                type.comment,
-                                userMapper.toRemote(type.user),
-                                type.promoCode)
-    }
+    override fun toRemote(type: TransferNewEntity) =
+        TransferNewModel(cityPointMapper.toRemote(type.from),
+                         cityPointMapper.toRemote(type.to),
+                         tripMapper.toRemote(type.tripTo),
+                         type.tripReturn?.let { tripMapper.toRemote(it) },
+                         type.transportTypeIds,
+                         type.pax,
+                         type.childSeats,
+                         type.passengerOfferedPrice?.let { "%.2f".format(it.toFloat() / 100) },
+                         type.nameSign,
+                         type.comment,
+                         userMapper.toRemote(type.user),
+                         type.promoCode)
 }

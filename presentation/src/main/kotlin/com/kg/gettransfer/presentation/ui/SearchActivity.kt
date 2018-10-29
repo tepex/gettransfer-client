@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar
 
 import android.transition.Fade
 import android.transition.Slide
+
 import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter

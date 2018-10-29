@@ -16,42 +16,41 @@ open class TransferMapper(private val cityPointMapper: CityPointMapper,
     /**
      * Map a [TransferModel] instance to a [TransferEntity] instance.
      */
-    override fun fromRemote(type: TransferModel): TransferEntity {
-        return TransferEntity(type.id,
-                              type.createdAt,
-                              type.duration,
-                              type.distance,
-                              type.status,
-                              cityPointMapper.fromRemote(type.from),
-                              type.to?.let { cityPointMapper.fromRemote(it) },
-                              type.dateToLocal,
-                              type.dateReturnLocal,
-                              type.dateRefund,
-                        
-                              type.nameSign,
-                              type.comment,
-                              type.malinaCard,
-                              type.flightNumber,
-                              type.flightNumberReturn,
-                              type.pax,
-                              type.childSeats,
-                              type.offersCount,
-                              type.relevantCarriersCount,
-                              type.offersUpdatedAt,
-                        
-                              type.time,
-                              moneyMapper.fromRemote(type.paidSum),
-                              type.remainsToPay?.let { moneyMapper.fromRemote(it) },
-                              type.paidPercentage,
-                              type.pendingPaymentId,
-                              type.bookNow,
-                              type.bookNowExpiration,
-                              type.transportTypeIds,
-                              type.passengerOfferedPrice,
-                              type.price?.let { moneyMapper.fromRemote(it) },
-                            
-                              type.editableFields)
-    }
+    override fun fromRemote(type: TransferModel) =
+        TransferEntity(type.id,
+                       type.createdAt,
+                       type.duration,
+                       type.distance,
+                       type.status,
+                       cityPointMapper.fromRemote(type.from),
+                       type.to?.let { cityPointMapper.fromRemote(it) },
+                       type.dateToLocal,
+                       type.dateReturnLocal,
+                       type.dateRefund,
+
+                       type.nameSign,
+                       type.comment,
+                       type.malinaCard,
+                       type.flightNumber,
+                       type.flightNumberReturn,
+                       type.pax,
+                       type.childSeats,
+                       type.offersCount,
+                       type.relevantCarriersCount,
+                       type.offersUpdatedAt,
+
+                       type.time,
+                       moneyMapper.fromRemote(type.paidSum),
+                       type.remainsToPay?.let { moneyMapper.fromRemote(it) },
+                       type.paidPercentage,
+                       type.pendingPaymentId,
+                       type.bookNow,
+                       type.bookNowExpiration,
+                       type.transportTypeIds,
+                       type.passengerOfferedPrice,
+                       type.price?.let { moneyMapper.fromRemote(it) },
+
+                       type.editableFields)
 
     /**
      * Map a [TransferEntity] instance to a [TransferModel] instance.
