@@ -139,10 +139,10 @@ class PaymentActivity: BaseActivity(), PaymentView {
     }
 
     override fun showSuccessfulMessage() {
-        Utils.showShortToast(this, getString(R.string.payment_successful))
+        Utils.showShortToast(this, getString(R.string.LNG_TRANSFER_PAID_SUCCESSFULLY))
     }
 
     override fun showErrorMessage() {
-        Utils.showShortToast(this, getString(R.string.payment_failed))
+        Utils.showShortToast(this, getString(R.string.LNG_PAYMENT_DECLINED))
     }
 }
