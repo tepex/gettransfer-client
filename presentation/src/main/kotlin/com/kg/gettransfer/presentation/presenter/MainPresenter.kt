@@ -193,8 +193,6 @@ class MainPresenter(cc: CoroutineContexts,
         return latDiff < criteria && lngDiff < criteria
     }
 
-    fun getPixelsByDp(context: Context, dp: Float) = Utils.convertDpToPixels(context, dp)
-
     fun logEvent(value: String) {
         mFBA.logEvent(EVENT_MENU,createSingeBundle(PARAM_KEY_NAME, value))
     }

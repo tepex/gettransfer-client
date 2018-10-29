@@ -293,12 +293,8 @@ internal class Utils {
         fun convertDpToPixels(context: Context, dp: Float): Float{
             val res = context.resources
             val metrics = res.displayMetrics
-            return dp * ((metrics.densityDpi.toFloat()) / DisplayMetrics.DENSITY_DEFAULT)
+            return dp * metrics.density
         }
-
-//        fun convertPixelsToDp(context: Context, pixels: Float): Float{
-//
-//        }
     }
 }
 
