@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.content.Context
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
@@ -15,6 +16,7 @@ import com.kg.gettransfer.domain.model.Account
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
+import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.MainView
 
 import ru.terrakok.cicerone.Router
@@ -34,7 +36,7 @@ class MainPresenter(cc: CoroutineContexts,
     private var available: Boolean = false
     private var currentLocation: String = ""
 
-    private val MARKER_ELEVATION = 25f
+    private val MARKER_ELEVATION = 5f
     private var markerStateLifted = true
     private var isMarkerAnimating = true
 
@@ -190,6 +192,8 @@ class MainPresenter(cc: CoroutineContexts,
         if(lngDiff < 0) lngDiff *= -1
         return latDiff < criteria && lngDiff < criteria
     }
+
+    fun getPixelsByDp(context: Context, dp: Float) = Utils.convertDpToPixels(context, dp)
 
     fun logEvent(value: String) {
         mFBA.logEvent(EVENT_MENU,createSingeBundle(PARAM_KEY_NAME, value))

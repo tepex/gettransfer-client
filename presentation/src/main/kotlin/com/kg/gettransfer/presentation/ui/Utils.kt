@@ -23,6 +23,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextWatcher
 import android.text.style.ImageSpan
+import android.util.DisplayMetrics
 
 import android.view.LayoutInflater
 import android.view.View
@@ -288,6 +289,16 @@ internal class Utils {
 
         fun showShortToast(context: Context, text: CharSequence) { Toast.makeText(context, text, Toast.LENGTH_SHORT).show() }
         fun showLongToast(context: Context, text: CharSequence)  { Toast.makeText(context, text, Toast.LENGTH_LONG).show() }
+
+        fun convertDpToPixels(context: Context, dp: Float): Float{
+            val res = context.resources
+            val metrics = res.displayMetrics
+            return dp * ((metrics.densityDpi.toFloat()) / DisplayMetrics.DENSITY_DEFAULT)
+        }
+
+//        fun convertPixelsToDp(context: Context, pixels: Float): Float{
+//
+//        }
     }
 }
 

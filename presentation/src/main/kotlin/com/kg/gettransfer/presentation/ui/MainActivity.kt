@@ -291,7 +291,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
                     if(!up) markerShadow.setImageDrawable(getDrawable(R.drawable.default_position_shadow))
                 }
                 .setDuration(150L)
-                .translationYBy(-elevation)
+                .translationYBy(-presenter.getPixelsByDp(this, elevation))
                 .start()
 
         if(up) markerShadow.setImageDrawable(getDrawable(R.drawable.lifted_marker_shadow))
