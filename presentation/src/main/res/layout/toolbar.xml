@@ -32,7 +32,7 @@
 			android:id="@+id/btnClear"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:text="@string/clear"
+			android:text="@string/LNG_CLEAR"
 			android:textSize="@dimen/toolbar_buttons_text_size"
 			android:fontFamily="@font/sf_pro_text_regular"
 			android:textColor="@android:color/black"
