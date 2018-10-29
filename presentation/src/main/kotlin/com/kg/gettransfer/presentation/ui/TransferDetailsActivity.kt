@@ -69,7 +69,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
-        (toolbar as Toolbar).toolbar_title.text = resources.getString(R.string.activity_transfer_details_title)
+        (toolbar as Toolbar).toolbar_title.text = resources.getString(R.string.LNG_RIDE_DETAILS)
 
         layoutTransferInfo.chevron.visibility = View.GONE
 

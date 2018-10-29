@@ -23,7 +23,7 @@
         android:id="@+id/btnCancelRequest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/cancel_request_underlined"
+        android:text="@string/LNG_CANCEL_REQUEST"
         android:fontFamily="@font/helvetica_neue"
         android:textColor="@color/colorRedText"
         android:layout_marginTop="@dimen/view_transfer_info_request_number_margin_top"

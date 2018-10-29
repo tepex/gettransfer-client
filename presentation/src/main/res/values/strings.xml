@@ -61,8 +61,8 @@
     <string name="distance">Distance: %1$d %2$s</string>
     <string name="transfer_connecting_carriers">Соединяем с ближайшими %1$d перевозчиками</string>
     <string name="transfer_order">Заявка на трансфер №%1$d</string>
-    <string name="transfer_start_sign">A</string>
-    <string name="transfer_end_sign">B</string>
+    <string name="transfer_start_sign">A</string> <!-- нет в iOS -->
+    <string name="transfer_end_sign">B</string> <!-- нет в iOS -->
     <string name="transfer_date_local">%1$s (местное)</string>
     <string name="transfer_promo_hint">Enter promocode</string>
     <string name="transfer_promo_result_default">I have got a promo code</string>
@@ -298,7 +298,7 @@
     <string name="become_carrier">Become a ccarrier</string>
 
     <!--view_transfer_request_info-->
-    <string name="transfer_request_num">Transfer request № %1$s</string>
+    <string name="transfer_request_num">Transfer request № %1$s</string> <!-- динамические значения -->
     <string name="next">Next</string>
     <string name="done">Done</string>
     <string name="average_rate">average rate on route</string>
@@ -307,7 +307,7 @@
 
     <!--activity_transfer_details-->
     <string name="activity_transfer_details_title">Request details</string>
-    <string name="activity_transfer_details_paid_sum">%1$s (%2$s\%%)</string>
+    <string name="activity_transfer_details_paid_sum">%1$s (%2$s\%%)</string> <!-- динамические значения -->
     <string name="activity_transfer_details_btn_cancel">Cancel</string>
     <string name="activity_transfer_details_languages">Languges</string>
     <string name="activity_transfer_details_price">Price</string>

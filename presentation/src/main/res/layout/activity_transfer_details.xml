@@ -67,7 +67,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/activity_transfer_details_tv_to_right_of_img_margin_start"
-                        android:text="@string/activity_transfer_details_passenger"
+                        android:text="@string/LNG_RIDE_SETTINGS_OPTIONAL_PERSON"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"/>
@@ -110,7 +110,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/activity_transfer_details_tv_to_right_of_img_margin_start"
-                        android:text="@string/activity_transfer_details_name"
+                        android:text="@string/LNG_RIDE_NAME"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"/>
@@ -153,7 +153,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/activity_transfer_details_tv_to_right_of_img_margin_start"
-                        android:text="@string/activity_transfer_details_child_seats"
+                        android:text="@string/LNG_RIDE_SETTINGS_OPTIONAL_CHILD"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"/>
@@ -196,7 +196,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/activity_transfer_details_tv_to_right_of_img_margin_start"
-                        android:text="@string/activity_transfer_details_flight_or_train_number"
+                        android:text="@string/LNG_RIDE_FLIGHT_PLACEHOLDER"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"/>
@@ -258,7 +258,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/activity_transfer_details_tv_transport_types_margin_start"
-                        android:text="@string/activity_transfer_details_transport_type"
+                        android:text="@string/LNG_RIDE_TRANSPORT_TYPE"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"/>
@@ -302,7 +302,7 @@
                     android:gravity="center_vertical"
                     android:paddingStart="@dimen/activity_transfer_details_elements_padding_start_end"
                     android:paddingEnd="@dimen/activity_transfer_details_elements_padding_start_end"
-                    android:text="@string/activity_transfer_details_paid_details"/>
+                    android:text="@string/LNG_PAYMENT_SETTINGS"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -323,7 +323,7 @@
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
                         android:layout_marginStart="@dimen/activity_transfer_details_text_in_fields_margin_start_end"
-                        android:text="@string/activity_transfer_details_paid"/>
+                        android:text="@string/LNG_RIDE_PAYMENT_PAID"/>
 
                     <TextView
                         android:id="@+id/paymentInfoPaid"
@@ -358,7 +358,7 @@
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
                         android:layout_marginStart="@dimen/activity_transfer_details_text_in_fields_margin_start_end"
-                        android:text="@string/activity_transfer_details_pay"/>
+                        android:text="@string/LNG_PAYMENT_PAY"/>
 
                     <TextView
                         android:id="@+id/paymentInfoPay"
@@ -393,7 +393,7 @@
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
                         android:layout_marginStart="@dimen/activity_transfer_details_text_in_fields_margin_start_end"
-                        android:text="@string/activity_transfer_details_price"/>
+                        android:text="@string/LNG_RIDE_PAYMENT_COST"/>
 
                     <TextView
                         android:id="@+id/paymentInfoSum"
@@ -434,7 +434,7 @@
                     android:gravity="center_vertical"
                     android:paddingStart="@dimen/activity_transfer_details_elements_padding_start_end"
                     android:paddingEnd="@dimen/activity_transfer_details_elements_padding_start_end"
-                    android:text="@string/activity_transfer_details_choosen_offer"/>
+                    android:text="@string/LNG_RIDE_OFFER"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -517,7 +517,7 @@
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
                         android:layout_marginStart="@dimen/activity_transfer_details_text_in_fields_margin_start_end"
-                        android:text="@string/activity_transfer_details_transport_type"/>
+                        android:text="@string/LNG_RIDE_TRANSPORT_TYPE"/>
 
                     <TextView
                         android:id="@+id/offerTransportInfoCarType"
@@ -552,7 +552,7 @@
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
                         android:layout_marginStart="@dimen/activity_transfer_details_text_in_fields_margin_start_end"
-                        android:text="@string/activity_transfer_details_car_name"/>
+                        android:text="@string/LNG_RIDE_TRANSPORT"/>
 
                     <TextView
                         android:id="@+id/offerTransportInfoCarName"
@@ -587,7 +587,7 @@
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
                         android:layout_marginStart="@dimen/activity_transfer_details_text_in_fields_margin_start_end"
-                        android:text="@string/activity_transfer_details_car_number"/>
+                        android:text="@string/LNG_RIDE_TRANSPORT_NUMBER"/>
 
                     <TextView
                         android:id="@+id/offerTransportInfoCarNumber"
@@ -622,7 +622,7 @@
                         android:textColor="@color/colorTextBlack"
                         android:layout_alignParentStart="true"
                         android:layout_marginStart="@dimen/activity_transfer_details_text_in_fields_margin_start_end"
-                        android:text="@string/activity_transfer_details_price"/>
+                        android:text="@string/LNG_RIDE_PAYMENT_COST"/>
 
                     <TextView
                         android:id="@+id/offerTransportInfoPrice"
@@ -683,7 +683,7 @@
                 android:layout_height="@dimen/activity_transfer_details_button_height"
                 android:background="@drawable/btn_sign_out"
                 android:layout_margin="@dimen/activity_transfer_details_button_margin"
-                android:text="@string/activity_transfer_details_btn_cancel"
+                android:text="@string/LNG_CANCEL"
                 android:textAllCaps="true"
                 android:textSize="@dimen/activity_transfer_details_text_size"
                 android:textColor="@color/colorWhite"
