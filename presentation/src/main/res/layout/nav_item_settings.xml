@@ -15,12 +15,12 @@
 	<TextView
 		android:id="@+id/title"
 		style="@style/nav_item_title"
-		android:text="@string/text_nav_settings_title"
+		android:text="@string/LNG_MENU_TITLE_SETTINGS"
 		android:layout_toEndOf="@+id/imgSettings"/>
 
 	<TextView
 		style="@style/nav_item_subtitle"
-		android:text="@string/text_nav_settings_subtitle"
+		android:text="@string/LNG_MENU_SUBTITLE_SETTINGS"
 		android:layout_below="@+id/title"
 		android:layout_toEndOf="@+id/imgSettings"/>
 </RelativeLayout>

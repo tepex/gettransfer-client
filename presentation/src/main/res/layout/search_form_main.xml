@@ -15,14 +15,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <include
-            android:id="@+id/icons_container"
-            layout="@layout/a_b_view"
-            android:layout_gravity="bottom"
-            android:layout_width="@dimen/search_marginStart"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"/>
+        app:hint="@string/LNG_FIELD_SOURCE"
+        android:padding="8dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -53,8 +47,6 @@
         </LinearLayout>
 
     </LinearLayout>
-
-
 
     <View
         android:layout_width="match_parent"
