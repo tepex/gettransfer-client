@@ -359,8 +359,8 @@
     <string name="driver_completed_transfers">made %1$d transfers</string>
     <string name="preferred_cost">(%1$s)</string>
     <string name="terms">TERMS</string>
-    <string name="pay_full_price">Pay 100% now</string>
-    <string name="pay_third_of_price">Pay 30% now</string>
+    <string name="pay_full_price">Pay 100% now</string> <!-- динамические значения -->
+    <string name="pay_third_of_price">Pay 30% now</string> <!-- динамические значения -->
     <string name="credit_card">Credit Card</string>
     <string name="pay_pal">Pay Pal</string>
     <string name="soon">Soon</string>
@@ -368,7 +368,7 @@
     <string name="payment_successful">Payment successful</string>
     <string name="payment_failed">Payment failed</string>
 
-    <string name="price_part_1">70%% (%s) later to the driver</string>
+    <string name="price_part_1">70%% (%s) later to the driver</string> <!-- динамические значения -->
 
     <string name="share_extra_subject">GTR Logs</string>
     <string name="share">Share</string> <!-- нет в iOS -->
