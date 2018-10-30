@@ -10,17 +10,25 @@
 	android:layout_gravity="center_horizontal|top"
 	android:orientation="vertical"
 	android:background="@android:color/white">
+	<FrameLayout
+		android:id="@+id/icons_container"
+		android:layout_width="@dimen/search_marginStart"
+		android:layout_height="88.5dp">
+
+	</FrameLayout>
 		
 	<com.kg.gettransfer.presentation.ui.SearchAddress
 		android:id="@+id/searchFrom"
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/search_form_height"
+		android:layout_marginStart="@dimen/search_marginStart"
 		android:paddingEnd="@dimen/search_form_clear_padding_end"
 		android:paddingStart="0dp"
 		app:hint="@string/search_from_hint" />
 
 	<View
 		android:id="@+id/separator"
+		android:layout_marginStart="@dimen/divider_marginStart"
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/search_divider_height"
 		android:background="@color/colorDividerGray"
@@ -30,6 +38,7 @@
 		android:id="@+id/searchTo"
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/search_form_height"
+		android:layout_marginStart="@dimen/search_marginStart"
 		android:paddingStart="0dp"
 		android:paddingEnd="@dimen/search_form_clear_padding_end"
 		app:hint="@string/search_to_hint"

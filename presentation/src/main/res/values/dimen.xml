@@ -119,6 +119,8 @@
 	<dimen name="address_item_icon_margin_height_width">30dp</dimen>
 	<dimen name="title_text_size">12sp</dimen>
 	<dimen name="minHeight_toDraw_AllPopularPlaces">138dp</dimen>
+	<dimen name="divider_marginStart">56dp</dimen>
+	<dimen name="search_marginStart">56dp</dimen>
 
 
 	<!-- Settings -->

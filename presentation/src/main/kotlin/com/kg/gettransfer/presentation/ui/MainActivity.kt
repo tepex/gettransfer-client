@@ -52,6 +52,7 @@ import kotlinx.android.synthetic.main.view_navigation.*
 
 import org.koin.android.ext.android.inject
 
+
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.cicerone.commands.Forward
 
