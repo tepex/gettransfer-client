@@ -108,15 +108,13 @@ class ApiCore(private val preferences: PreferencesCache,
     
     internal fun remoteException(e: Exception): RemoteException {
         if(e is HttpException) {
-            var msg: String? = null
             val errorBody = e.response().errorBody()?.string()
-            try {
-                msg = gson.fromJson(errorBody, ResponseModel::class.java).error?.details?.toString()
-            }
-            catch(je: JsonSyntaxException) {
+            val msg = try {
+                gson.fromJson(errorBody, ResponseModel::class.java).error?.details?.toString()
+            } catch(je: JsonSyntaxException) {
                 val matchResult = errorBody?.let { ERROR_PATTERN.find(it)?.let { it.groupValues } }
-                msg = matchResult?.getOrNull(1)
-                log.warn("${e.message} matchResult: $msg", je)
+                log.warn("${e.message} matchResult: $matchResult", je)
+                matchResult?.getOrNull(1)
             }
             return RemoteException(e.code(), msg ?: e.message!!)
         }

@@ -12,6 +12,9 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.presentation.Screens
 
+import com.kg.gettransfer.presentation.model.CurrencyModel
+import com.kg.gettransfer.presentation.model.DistanceUnitModel
+import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.view.SettingsView
@@ -25,9 +28,9 @@ class SettingsPresenter(cc: CoroutineContexts,
                         router: Router,
                         systemInteractor: SystemInteractor): BasePresenter<SettingsView>(cc, router, systemInteractor) {
 
-    private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
-    private val locales = Mappers.getLocalesModels(systemInteractor.locales)
-    private val distanceUnits = Mappers.getDistanceUnitsModels(systemInteractor.distanceUnits)
+    private val currencies = systemInteractor.currencies?.let { Mappers.getCurrenciesModels(it) } ?: emptyList<CurrencyModel>()
+    private val locales = systemInteractor.locales?.let { Mappers.getLocalesModels(it) } ?: emptyList<LocaleModel>()
+    private val distanceUnits = systemInteractor.distanceUnits?.let { Mappers.getDistanceUnitsModels(it) } ?: emptyList<DistanceUnitModel>()
     private val endpoints = Mappers.getEndpointsModels(systemInteractor.endpoints)
 
     init {
