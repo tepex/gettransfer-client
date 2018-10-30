@@ -41,8 +41,8 @@ class SearchPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: SearchView) {
         super.attachView(view)
-        viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false)
-        viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false)
+        viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false, !isTo)
+        viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false, isTo)
         showSuggestions()
     }
 
@@ -84,8 +84,8 @@ class SearchPresenter(cc: CoroutineContexts,
             }
         } else {
             val sendRequest = selected.needApproximation() /* dirty hack */
-            if(isTo) viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, sendRequest)
-            else viewState.setAddressFrom(selected.primary ?: selected.cityPoint.name!!, sendRequest)
+            if(isTo) viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, sendRequest, true)
+            else viewState.setAddressFrom(selected.primary ?: selected.cityPoint.name!!, sendRequest, true)
         }
     }
 
@@ -107,8 +107,8 @@ class SearchPresenter(cc: CoroutineContexts,
         val copyTo = routeInteractor.to
         routeInteractor.to = routeInteractor.from
         routeInteractor.from = copyTo
-        viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false)
-        viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false)
+        viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false, false)
+        viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false, false)
     }
 
     private fun createPopularList():List<PopularPlace>{

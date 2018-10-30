@@ -109,15 +109,15 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
 		presenter.mBounds = parent.mBounds
 		
-		if(isTo) addressField.requestFocus()
+//		if(isTo) addressField.requestFocus()
 		setClearButtonVisibility()
 	}
 	
 	/** Set address text without request */
-	fun initText(text: String, sendRequest: Boolean) {
+	fun initText(text: String, sendRequest: Boolean, cursorOnEnd: Boolean) {
 		blockRequest = true
 		this.text = text + " "
-		addressField.setSelection(addressField.text.length)
+		if(cursorOnEnd) addressField.setSelection(addressField.text.length)
 		blockRequest = false
 		if(sendRequest) presenter.requestAddressListByPrediction(text.trim())
 	}
@@ -172,7 +172,10 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     override fun afterTextChanged(s: Editable?) {
         setClearButtonVisibility()
         if(!blockRequest) presenter.requestAddressListByPrediction(text.trim())
-		if(s.toString().trim().isEmpty() && addressField.hasFocus()) parent.onSearchFieldEmpty()
+		if(s.toString().trim().isEmpty() && addressField.hasFocus()) {
+			parent.onSearchFieldEmpty()
+			presenter.onClearAddress(isTo)
+		}
     }
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -189,5 +192,6 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
     fun changeFocus() {
         addressField.requestFocus()
+		addressField.setSelection(addressField.text.length)
     }
 }

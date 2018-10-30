@@ -95,7 +95,7 @@ class SearchActivity: BaseActivity(), SearchView {
         mBounds = intent.getParcelableExtra(LATLON_BOUNDS)
 
         initSearchFields()
-        changeFocusForSearch()
+//        changeFocusForSearch()
         setPopularPlaces()
         ivInverseWay.setOnClickListener { presenter.inverseWay() }
     }
@@ -152,8 +152,8 @@ class SearchActivity: BaseActivity(), SearchView {
     }
 
     /* SearchView */
-    override fun setAddressFrom(address: String, sendRequest: Boolean) { searchFrom.initText(address, sendRequest) }
-    override fun setAddressTo(address: String, sendRequest: Boolean)   { searchTo.initText(address, sendRequest) }
+    override fun setAddressFrom(address: String, sendRequest: Boolean, isEditing: Boolean) { searchFrom.initText(address, sendRequest, isEditing) }
+    override fun setAddressTo(address: String, sendRequest: Boolean, isEditing: Boolean)   { searchTo.initText(address, sendRequest, isEditing) }
     
     override fun setAddressListByAutoComplete(list: List<GTAddress>) {
         ll_popular.visibility = View.GONE
@@ -166,14 +166,16 @@ class SearchActivity: BaseActivity(), SearchView {
     
     override fun onFindPopularPlace(isTo: Boolean, place: String) {
         val searchField = if(isTo) searchTo else searchFrom
-        searchField.initText(place, true)
+        searchField.initText(place, true, true)
     }
 
     override fun setSuggestedAddresses(addressesList: List<GTAddress>, popularList: List<PopularPlace>) {
+        ll_popular.visibility = View.VISIBLE
         rv_popularList.adapter = PopularAddressAdapter(presenter, popularList)
         val addressAdapter = AddressAdapter(presenter, addressesList)
         addressAdapter.isLastAddresses = true
         rv_addressList.adapter = addressAdapter
         if(addressesList.isEmpty()) address_title.visibility = View.GONE
+        else address_title.visibility = View.VISIBLE
     }
 }
