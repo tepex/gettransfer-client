@@ -50,7 +50,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                            private val promoInteractor: PromoInteractor): BasePresenter<CreateOrderView>(cc, router, systemInteractor) {
 
     private var user: UserModel = Mappers.getUserModel(systemInteractor.account)
-    private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
+    private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies!!)
     private var passengers: Int = MIN_PASSENGERS
     private var children: Int = MIN_CHILDREN
     private var dateTimeFormat: Format? = null
@@ -124,7 +124,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                 var prices: Map<String, String>? = null
                 if(it.prices != null) prices = it.prices!!.map { it.tranferId to it.min }.toMap()
                 if(transportTypes == null) transportTypes =
-                    systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
+                    systemInteractor.transportTypes!!.map { Mappers.getTransportTypeModel(it, prices) }
                 routeModel = Mappers.getRouteModel(it.distance,
                                                    systemInteractor.distanceUnit,
                                                    it.polyLines,

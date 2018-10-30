@@ -23,7 +23,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         
     val endpoints = systemRepository.endpoints
 
-    lateinit var account: Account
+    var account: Account = Account.NO_ACCOUNT
         private set
 
     var locale: Locale
@@ -39,13 +39,13 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         get() = account.distanceUnit ?: DistanceUnit.Km
         set(value) { account.distanceUnit = value }
 
-    val transportTypes by lazy { systemRepository.configs.transportTypes }
-    val locales        by lazy { systemRepository.configs.availableLocales }
-    val distanceUnits  by lazy { systemRepository.configs.supportedDistanceUnits }
-    val currencies     by lazy { systemRepository.configs.supportedCurrencies }
+    val transportTypes by lazy { systemRepository.configs?.transportTypes }
+    val locales        by lazy { systemRepository.configs?.availableLocales }
+    val distanceUnits  by lazy { systemRepository.configs?.supportedDistanceUnits }
+    val currencies     by lazy { systemRepository.configs?.supportedCurrencies }
     
     fun isLoggedIn() = account.user.isLoggedIn()
-    fun getCurrentCurrencyIndex() = currencies.indexOf(currency)
+    fun getCurrentCurrencyIndex() = currencies!!.indexOf(currency)
 
     suspend fun coldStart() {
         systemRepository.coldStart()

@@ -44,7 +44,7 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
             val transferModel = Mappers.getTransferModel(transfer,
                                                          systemInteractor.locale,
                                                          systemInteractor.distanceUnit,
-                                                         systemInteractor.transportTypes)
+                                                         systemInteractor.transportTypes!!)
             viewState.setTransfer(transferModel)
             if(transferModel.checkOffers) {
 	            val offers = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }

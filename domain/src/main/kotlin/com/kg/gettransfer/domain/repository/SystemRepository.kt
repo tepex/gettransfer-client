@@ -7,7 +7,7 @@ import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
 
 interface SystemRepository {
-    var configs: Configs
+    var configs: Configs?
     var lastMode: String
     var endpoint: Endpoint
     val endpoints: List<Endpoint>

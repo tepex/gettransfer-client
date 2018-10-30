@@ -71,13 +71,14 @@ internal class Utils {
             else AlertDialog.Builder(context)
         }
         
-        fun showError(context: Context, finish: Boolean, message: String) {
+        fun showError(context: Context, finish: Boolean, message: String, onClose: (() -> Unit)? = null) {
             getAlertDialogBuilder(context)
                 .setTitle(R.string.err_title)
                 .setMessage(message)
                 .setPositiveButton(android.R.string.ok, { dialog, _ ->
                    dialog.dismiss()
                    if(finish) (context as Activity).finish()
+                   onClose?.invoke()
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show()

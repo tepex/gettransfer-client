@@ -17,7 +17,7 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
                            private val endpointMapper: EndpointMapper,
                            private val addressMapper: AddressMapper,
                            private val _endpoints: List<Endpoint>): SystemRepository {
-    override lateinit var configs: Configs
+    override var configs: Configs? = null
 
     override var lastMode: String
         get() = preferencesCache.lastMode
@@ -35,7 +35,7 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
     override suspend fun coldStart() {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
         configs = configsMapper.fromEntity(factory.retrieveRemoteDataStore().getConfigs())
-        accountMapper.configs = configs
+        accountMapper.configs = configs!!
         val accountEntity = factory.retrieveRemoteDataStore().getAccount()
         factory.retrieveCacheDataStore().setAccount(accountEntity)
     }

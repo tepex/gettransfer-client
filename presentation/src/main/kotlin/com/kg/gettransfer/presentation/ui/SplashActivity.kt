@@ -60,7 +60,7 @@ class SplashActivity: AppCompatActivity() {
 
         Timber.d(getString(R.string.title_starting_session))
         Timber.d("Permissions granted!")
-        utils.launchAsyncTryCatchFinally({
+        utils.launchAsyncTryCatch({
             utils.asyncAwait { systemInteractor.coldStart() }
             when(systemInteractor.lastMode) {
                 Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsActivity::class.java))
@@ -68,10 +68,12 @@ class SplashActivity: AppCompatActivity() {
                 else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             }
             finish()
-            //startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-        }, { e -> Timber.e(e); Utils.showError(this@SplashActivity, false, getString(R.string.err_server, e.message))
+        }, { e ->
+            Utils.showError(this@SplashActivity, true, getString(R.string.err_server, e.message)) {
+                startActivity(Intent(this@SplashActivity, SettingsActivity::class.java))
+            }
             // @TODO: Показать ошибку. Учесть 401 — протухший ключ
-        }, { /*finish()*/ })
+        })
     }
 
     private fun checkIsTaskRoot(): Boolean {
