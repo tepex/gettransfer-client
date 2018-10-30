@@ -213,6 +213,6 @@ class MainPresenter(cc: CoroutineContexts,
     }
 
     fun logEvent(value: String) {
-        mFBA.logEvent(EVENT_MENU,createSingeBundle(PARAM_KEY_NAME, value))
+        mFBA.logEvent(EVENT_MENU, createSingeBundle(PARAM_KEY_NAME, value))
     }
 }
