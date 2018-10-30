@@ -25,7 +25,7 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
         mFBA.logEvent(MainPresenter.EVENT_MAIN, createSingeBundle(PARAM_KEY_NAME, SYSTEM_BACK_CLICKED))
     }
 
-    protected fun login() = router.navigateTo(Screens.LOGIN, Screens.OFFERS)
+    protected fun login() = router.navigateTo(Screens.LOGIN)
 
     @CallSuper
     override fun onDestroy() {

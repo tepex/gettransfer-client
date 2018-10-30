@@ -108,6 +108,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
                 Screens.LOGIN -> {
                     val loginIntent = Intent(context, LoginActivity::class.java)
                     loginIntent.putExtra(IntentKeys.SCREEN_FOR_RETURN, Screens.OFFERS )
+                    return loginIntent
                 }
             }
             return null

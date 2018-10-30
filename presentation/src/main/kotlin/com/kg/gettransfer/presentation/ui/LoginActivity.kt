@@ -23,17 +23,7 @@ class LoginActivity: BaseActivity(), LoginView {
     @ProvidePresenter
     fun createLoginPresenter(): LoginPresenter = LoginPresenter(coroutineContexts, router, systemInteractor)
     
-    protected override var navigator = object: BaseNavigator(this) {
-        override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
-            val intent = super.createActivityIntent(context, screenKey, data)
-            if(intent != null) return intent
-            if(data is String && data == Screens.OFFERS) {
-                presenter.screenForReturn = data
-                return Intent(context, OffersActivity::class.java)
-            }
-            return null
-        }
-    }
+    protected override var navigator = object: BaseNavigator(this) {}
     
     override fun getPresenter(): LoginPresenter = presenter
 
