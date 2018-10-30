@@ -19,7 +19,6 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
 
 import android.transition.Fade
-import android.util.Log
 
 import android.view.Gravity
 import android.view.MenuItem
@@ -45,15 +44,14 @@ import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
-import kotlinx.android.synthetic.main.a_b_view.view.*
 
+import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_navigation.*
 
 import org.koin.android.ext.android.inject
-
 
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.cicerone.commands.Forward
