@@ -130,6 +130,8 @@ class SearchActivity: BaseActivity(), SearchView {
         toolbar.ivBack.setOnClickListener { presenter.onBackCommandClick() }
     }
 
+    fun onSearchFieldEmpty() = presenter.onSearchFieldEmpty()
+
     override fun onBackPressed() {
         searchTo.clearFocusOnExit()
         searchFrom.clearFocusOnExit()

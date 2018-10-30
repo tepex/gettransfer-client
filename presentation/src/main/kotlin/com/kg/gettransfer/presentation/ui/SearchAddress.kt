@@ -21,9 +21,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.GTAddress
 
-import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
-
 import com.kg.gettransfer.presentation.presenter.SearchAddressPresenter
 import com.kg.gettransfer.presentation.view.SearchAddressView
 
@@ -78,6 +75,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		val clearListener = View.OnClickListener {
 			text = ""
 			addressField.requestFocus()
+			parent.onSearchFieldEmpty()
 		}
 		fl_clearBtn.setOnClickListener(clearListener)
 		im_clearBtn.setOnClickListener(clearListener)
@@ -99,7 +97,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 				fl_clearBtn.visibility = View.GONE
 			}
 			else {
-				checkClearButtonVisibility()
+				setClearButtonVisibility()
 				parent.presenter.isTo = isTo
 			}
 		}
@@ -112,14 +110,14 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		presenter.mBounds = parent.mBounds
 		
 		if(isTo) addressField.requestFocus()
-		checkClearButtonVisibility()
+		setClearButtonVisibility()
 	}
 	
 	/** Set address text without request */
 	fun initText(text: String, sendRequest: Boolean) {
 		blockRequest = true
 		this.text = text + " "
-		//addressField.setSelection(addressField.text.length)
+		addressField.setSelection(addressField.text.length)
 		blockRequest = false
 		if(sendRequest) presenter.requestAddressListByPrediction(text.trim())
 	}
@@ -172,8 +170,9 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     override fun afterTextChanged(s: Editable?) {
-        checkClearButtonVisibility()
+        setClearButtonVisibility()
         if(!blockRequest) presenter.requestAddressListByPrediction(text.trim())
+		if(s.toString().trim().isEmpty() && addressField.hasFocus()) parent.onSearchFieldEmpty()
     }
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -183,7 +182,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         addressField.onFocusChangeListener = listener
     }
 
-    private fun checkClearButtonVisibility() {
+    private fun setClearButtonVisibility() {
         if(text.isBlank()) fl_clearBtn.visibility = View.INVISIBLE
         else if(hasFocus) fl_clearBtn.visibility = View.VISIBLE
     }
