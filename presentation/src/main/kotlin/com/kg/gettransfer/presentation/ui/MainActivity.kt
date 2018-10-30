@@ -284,6 +284,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
     override fun setMarkerElevation(up: Boolean, elevation: Float) {
+        val px = -1 * Utils.convertDpToPixels(this, elevation)
         mMarker.animate()
                 .withStartAction { presenter.setMarkerAnimating(true) }
                 .withEndAction {
@@ -291,7 +292,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
                     if(!up) markerShadow.setImageDrawable(getDrawable(R.drawable.default_position_shadow))
                 }
                 .setDuration(150L)
-                .translationYBy(-elevation)
+                .translationYBy(px)
                 .start()
 
         if(up) markerShadow.setImageDrawable(getDrawable(R.drawable.lifted_marker_shadow))

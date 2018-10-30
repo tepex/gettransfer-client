@@ -23,6 +23,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextWatcher
 import android.text.style.ImageSpan
+import android.util.DisplayMetrics
 
 import android.view.LayoutInflater
 import android.view.View
@@ -50,15 +51,14 @@ import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 
 import kotlinx.android.synthetic.main.activity_create_order.*
-
-import java.util.Locale
-import java.util.regex.Pattern
-
 import kotlinx.android.synthetic.main.view_maps_pin.view.*
 
-import timber.log.Timber
-import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
+import java.text.SimpleDateFormat
+import java.util.regex.Pattern
+
+import timber.log.Timber
 
 internal class Utils {
     companion object {
@@ -289,6 +289,12 @@ internal class Utils {
 
         fun showShortToast(context: Context, text: CharSequence) { Toast.makeText(context, text, Toast.LENGTH_SHORT).show() }
         fun showLongToast(context: Context, text: CharSequence)  { Toast.makeText(context, text, Toast.LENGTH_LONG).show() }
+
+        fun convertDpToPixels(context: Context, dp: Float): Float{
+            val res = context.resources
+            val metrics = res.displayMetrics
+            return dp * metrics.density
+        }
     }
 }
 

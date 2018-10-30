@@ -1,6 +1,7 @@
 package com.kg.gettransfer.remote
 
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonSyntaxException
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 
@@ -29,6 +30,7 @@ class ApiCore(private val preferences: PreferencesCache,
               private val hostListener: HostListener) {
     companion object {
         @JvmField val TAG = "GTR-remote"
+        private val ERROR_PATTERN = Regex("^\\<h1\\>(.+)\\<\\/h1\\>$")
     }
     
     private val log = LoggerFactory.getLogger(TAG)
@@ -105,9 +107,19 @@ class ApiCore(private val preferences: PreferencesCache,
     }
     
     internal fun remoteException(e: Exception): RemoteException {
-        if(e is HttpException)
-            return RemoteException(e.code(), gson.fromJson(e.response().errorBody()?.string(), ResponseModel::class.java).
-                error?.details?.toString() ?: e.message!!)
+        if(e is HttpException) {
+            var msg: String? = null
+            val errorBody = e.response().errorBody()?.string()
+            try {
+                msg = gson.fromJson(errorBody, ResponseModel::class.java).error?.details?.toString()
+            }
+            catch(je: JsonSyntaxException) {
+                val matchResult = errorBody?.let { ERROR_PATTERN.find(it)?.let { it.groupValues } }
+                msg = matchResult?.getOrNull(1)
+                log.warn("${e.message} matchResult: $msg", je)
+            }
+            return RemoteException(e.code(), msg ?: e.message!!)
+        }
         else return RemoteException(RemoteException.NOT_HTTP, e.message!!)
     }
 }

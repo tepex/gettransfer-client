@@ -46,24 +46,24 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
                                                          systemInteractor.distanceUnit,
                                                          systemInteractor.transportTypes)
             viewState.setTransfer(transferModel)
-            
-	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, true, false) }
-	        val routeModel = Mappers.getRouteModel(routeInfo.distance,
-                                                   systemInteractor.distanceUnit,
-                                                   routeInfo.polyLines,
-                                                   transfer.from.name!!,
-                                                   transfer.to!!.name!!,
-                                                   transfer.from.point!!,
-                                                   transfer.to!!.point!!,
-                                                   transferModel.dateTime)
-            val polyline = Utils.getPolyline(routeModel)
-            viewState.setRoute(polyline, routeModel)
-            
-	        //Timber.d("offers: ${transferModel.id} status=${transferModel.status} checkOffers: ${transferModel.checkOffers}")
             if(transferModel.checkOffers) {
 	            val offers = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
 	            if(offers.size == 1) viewState.setOffer(Mappers.getOfferModel(offers.first(), systemInteractor.locale))
 	        }
+            
+	        val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, true, false) }
+	        routeInfo?.let {
+	            val routeModel = Mappers.getRouteModel(it.distance,
+                                                       systemInteractor.distanceUnit,
+                                                       it.polyLines,
+                                                       transfer.from.name!!,
+                                                       transfer.to!!.name!!,
+                                                       transfer.from.point!!,
+                                                       transfer.to!!.point!!,
+                                                       transferModel.dateTime)
+                val polyline = Utils.getPolyline(routeModel)
+                viewState.setRoute(polyline, routeModel)
+            }
 	    }, { e -> Timber.e(e)
 	        viewState.setError(e)
         }, { viewState.blockInterface(false) })        
