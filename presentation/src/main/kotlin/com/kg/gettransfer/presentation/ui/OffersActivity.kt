@@ -52,13 +52,13 @@ class OffersActivity: BaseActivity(), OffersView {
                                                                    systemInteractor,
                                                                    transferInteractor,
                                                                    offerInteractor)
-    
-    protected override var navigator = object: BaseNavigator(this) {}
+
+    override var navigator = object: BaseNavigator(this) {}
     
     override fun getPresenter(): OffersPresenter = presenter
 
     @CallSuper
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.i("FindError", "offersActivity")
         setContentView(R.layout.activity_offers)
@@ -104,7 +104,7 @@ class OffersActivity: BaseActivity(), OffersView {
     
     override fun setTransfer(transferModel: TransferModel) {
         //tvConnectingCarriers.text = getString(R.string.transfer_connecting_carriers, transferModel.relevantCarriersCount)
-        tvTransferRequestNumber.text = getString(R.string.transfer_order, transferModel.id)
+        tvTransferRequestNumber.text = getString(R.string.LNG_RIDE_NUMBER).plus(transferModel.id)
         tvFrom.text = transferModel.from
         tvTo.text = transferModel.to
         tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
@@ -146,7 +146,7 @@ class OffersActivity: BaseActivity(), OffersView {
     }
 
     override fun showBottomSheetOfferDetails(offer: OfferModel) {
-        carrierId.text = getString(R.string.LNG_CARRIER, offer.carrier.id)
+        carrierId.text = getString(R.string.LNG_CARRIER).plus(" ").plus(offer.carrier.id)
 
         layoutCarrierLanguages.removeAllViews()
         val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -224,7 +224,7 @@ class OffersActivity: BaseActivity(), OffersView {
         if(currentPos == size - 1) nextImageButton.visibility = View.GONE
         else nextImageButton.visibility = View.VISIBLE
 
-        numberOfPhoto.text = getString(R.string.number_of_photos, currentPos + 1, size)
+        numberOfPhoto.text = "${currentPos + 1}/$size"
     }
 
     private fun hideSheetOfferDetails() { bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN }

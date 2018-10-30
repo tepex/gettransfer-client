@@ -8,7 +8,6 @@ import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.maps.CameraUpdate
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.R.string.from
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts

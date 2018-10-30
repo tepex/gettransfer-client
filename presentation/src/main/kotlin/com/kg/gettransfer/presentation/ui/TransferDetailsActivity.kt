@@ -101,7 +101,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
     }
 
     override fun setTransfer(transferModel: TransferModel) {
-        layoutTransferInfo.tvTransferRequestNumber.text = getString(R.string.transfer_request_num, transferModel.id)
+        layoutTransferInfo.tvTransferRequestNumber.text = getString(R.string.LNG_RIDE_NUMBER).plus(transferModel.id)
         layoutTransferInfo.tvFrom.text = transferModel.from
         layoutTransferInfo.tvTo.text = transferModel.to
         layoutTransferInfo.tvOrderDateTime.text = transferModel.dateTime

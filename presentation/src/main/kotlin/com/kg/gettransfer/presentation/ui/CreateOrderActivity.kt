@@ -362,7 +362,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun showTransportInfo(transportType: TransportTypeModel) {
         tvTypeTransfer.text = transportType.id
         ivTypeTransfer.setImageResource(transportType.imageId!!)
-        tvPrice.text = getString(R.string.price_from, transportType.price)
+        tvPrice.text = transportType.price
         tvCountPassengers.text = transportType.paxMax.toString()
         tvCountLuggage.text = transportType.luggageMax.toString()
     }

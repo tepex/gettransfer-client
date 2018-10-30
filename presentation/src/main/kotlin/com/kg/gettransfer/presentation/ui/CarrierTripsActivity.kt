@@ -114,7 +114,7 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView{
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        (toolbar as Toolbar).toolbar_title.setText(R.string.activity_carrier_trips_title)
+        (toolbar as Toolbar).toolbar_title.setText(R.string.LNG_MENU_TITLE_TRIPS)
 
         drawer = drawerLayout as DrawerLayout
         toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close)

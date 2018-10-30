@@ -31,10 +31,11 @@ class TripsRVAdapter(private val presenter: CarrierTripsPresenter,
 
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(item: CarrierTripModel, listener: ClickOnCarrierTripHandler) = with(containerView) {
-            tvTransferRequestNumber.text = context.getString(R.string.transfer_request_num, item.transferId)
+            tvTransferRequestNumber.text = context.getString(R.string.LNG_RIDE_NUMBER).plus(item.transferId)
             tvFrom.text = item.from
             tvTo.text = item.to
-            tvOrderDateTime.text = context.getString(R.string.transfer_date_local, item.dateTime)
+            //tvOrderDateTime.text = context.getString(R.string.transfer_date_local, item.dateTime)
+            tvOrderDateTime.text = item.dateTime
             tvDistance.text = Utils.formatDistance(context, item.distance, item.distanceUnit)
             tvPrice.text = item.pay
             tvVehicle.text = item.vehicleName

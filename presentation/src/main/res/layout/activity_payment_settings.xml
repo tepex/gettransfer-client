@@ -48,8 +48,7 @@
             android:textColor="@color/colorTextBlack"
             android:textSize="@dimen/create_transfer_additionals_top_text_size"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="@string/pay_full_price" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/fullPrice"
@@ -105,8 +104,7 @@
             android:textColor="@color/colorTextBlack"
             android:textSize="@dimen/create_transfer_additionals_top_text_size"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="@string/pay_third_of_price" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/thirdOfPrice"
@@ -221,7 +219,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginEnd="16dp"
             android:textSize="@dimen/create_transfer_additionals_top_text_size"
-            android:text="@string/soon"/>
+            android:text="@string/LNG_SOON"/>
 
     </android.support.constraint.ConstraintLayout>
 

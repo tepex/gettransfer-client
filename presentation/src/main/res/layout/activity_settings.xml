@@ -165,7 +165,7 @@
             android:layout_marginStart="@dimen/settings_activity_button_sign_out_start_end_margins"
             android:layout_marginEnd="@dimen/settings_activity_button_sign_out_start_end_margins"
             android:visibility="gone"
-            android:text="@string/sign_out"
+            android:text="@string/LNG_UNLOGIN"
             android:textAllCaps="true"
             android:textSize="@dimen/settings_activity_text_size"
             android:textColor="@color/colorWhite"

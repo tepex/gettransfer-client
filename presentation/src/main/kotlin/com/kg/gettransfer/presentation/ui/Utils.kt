@@ -73,7 +73,7 @@ internal class Utils {
         
         fun showError(context: Context, finish: Boolean, message: String, onClose: (() -> Unit)? = null) {
             getAlertDialogBuilder(context)
-                .setTitle(R.string.err_title)
+                .setTitle(R.string.LNG_ERROR)
                 .setMessage(message)
                 .setPositiveButton(android.R.string.ok, { dialog, _ ->
                    dialog.dismiss()
@@ -87,8 +87,8 @@ internal class Utils {
         fun showAlertCancelRequest(context: Context, listener: (Boolean) -> Unit){
             getAlertDialogBuilder(context)
                     .setTitle(R.string.alert_cancel_transfer_text)
-                    .setPositiveButton(R.string.alert_yes) { _, _ -> listener(true) }
-                    .setNegativeButton(R.string.alert_no)  { _, _ -> listener(false) }
+                    .setPositiveButton(android.R.string.yes) { _, _ -> listener(true) }
+                    .setNegativeButton(android.R.string.no)  { _, _ -> listener(false) }
                     .show()
         }
 

@@ -35,8 +35,15 @@ class LoginActivity: BaseActivity(), LoginView {
         etEmail.onTextChanged       { presenter.setEmail(it.trim()) }
         etPassword.onTextChanged    { presenter.setPassword(it.trim()) }
         btnLogin.setOnClickListener { presenter.onLoginClick() }
-        btnForgotPassword.markAsNotImplemented()
-        presenter.screenForReturn = intent.getStringExtra(IntentKeys.SCREEN_FOR_RETURN)
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(toolbar as Toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        (toolbar as Toolbar).toolbar_title.setText(R.string.LNG_MENU_TITLE_LOGIN)
+        (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
     }
 
     override fun enableBtnLogin(enable: Boolean) {

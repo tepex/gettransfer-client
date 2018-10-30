@@ -62,21 +62,13 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_settings)
-        setButton()
-        setCommission()
-    }
-
-    private fun setButton() {
-        val image = ImageSpan(this, R.drawable.credit_card)
-        val string = SpannableString(getString(R.string.pay))
-        var title = SpannableString(" $string")
-        title.setSpan(image, 0, 1, 0)
-        btnGetPayment.text = title
+        payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, 100)
+        payThirdOfPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, 30)
     }
 
     override fun setOffer(offer: OfferModel) {
         fullPrice.text = offer.price.base.default
-        thirdOfPrice.text = getString(R.string.price_part_1, offer.price.percentage30)
+        thirdOfPrice.text = getString(R.string.LNG_PAYMENT_TERM_LATER, OfferModel.PRICE_70, offer.price.percentage30)
         payFullPriceButton.setOnClickListener { view ->  changePaymentSettings(view) }
         payThirdOfPriceButton.setOnClickListener { view ->  changePaymentSettings(view) }
         btnGetPayment.setOnClickListener { presenter.getPayment() }

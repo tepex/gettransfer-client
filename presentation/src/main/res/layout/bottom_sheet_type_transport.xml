@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/passengers"
+        android:text="@string/LNG_RIDE_PASSENGERS"
         app:layout_constraintStart_toEndOf="@+id/imageView4"
         app:layout_constraintTop_toBottomOf="@+id/tvPrice" />
 
@@ -99,7 +99,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/luggage"
+        android:text="@string/LNG_RIDE_lUGGAGE"
         app:layout_constraintStart_toStartOf="@+id/tvPassengers"
         app:layout_constraintTop_toBottomOf="@+id/tvPassengers" />
 

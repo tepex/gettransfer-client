@@ -34,10 +34,11 @@ class RequestsRVAdapter(private val transfers: List<TransferModel>, private val 
 
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(item: TransferModel, listener: ItemClickListener) = with(containerView) {
-            tvTransferRequestNumber.text = context.getString(R.string.transfer_request_num, item.id)
+            tvTransferRequestNumber.text = context.getString(R.string.LNG_RIDE_NUMBER).plus(item.id)
             tvFrom.text = item.from
             tvTo.text = item.to
-            tvOrderDateTime.text = context.getString(R.string.transfer_date_local, item.dateTime)
+            //tvOrderDateTime.text = context.getString(R.string.transfer_date_local, item.dateTime)
+            tvOrderDateTime.text = item.dateTime
             tvDistance.text = Utils.formatDistance(context, item.distance, item.distanceUnit)
             setOnClickListener { listener(item) }
         }

@@ -48,8 +48,8 @@ class OffersRVAdapter(private val offers: MutableList<OfferModel>,
 
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(item: OfferModel, listener: SelectOfferClickListener) = with(containerView) {
-            tvCarrierId.text = context.getString(R.string.driver_number, item.carrier.id)
-            tvCompletedTransfers.text = context.getString(R.string.driver_completed_transfers, item.carrier.completedTransfers)
+            tvCarrierId.text = "#".plus(item.carrier.id)
+            tvCompletedTransfers.text = context.getString(R.string.LNG_MADE).plus(" ${item.carrier.completedTransfers} ").plus(context.getString(R.string.LNG_RIDES))
             tvCostDefault.text = item.price.base.default
             if(item.price.base.preferred != null) {
                 tvCostPreferred.text = Utils.formatPrice(context, item.price.base.preferred)
