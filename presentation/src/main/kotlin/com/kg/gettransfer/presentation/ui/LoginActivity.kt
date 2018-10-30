@@ -5,13 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
-import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.markAsNotImplemented
+import com.kg.gettransfer.presentation.IntentKeys
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.LoginPresenter
 import com.kg.gettransfer.presentation.view.LoginView
@@ -27,9 +26,7 @@ class LoginActivity: BaseActivity(), LoginView {
     protected override var navigator = object: BaseNavigator(this) {
         override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
             val intent = super.createActivityIntent(context, screenKey, data)
-            Log.i("FindData", (data as String))
             if(intent != null) return intent
-            Log.i("FindData", ("should open offers"))
             if(data is String && data == Screens.OFFERS) {
                 presenter.screenForReturn = data
                 return Intent(context, OffersActivity::class.java)
@@ -49,6 +46,7 @@ class LoginActivity: BaseActivity(), LoginView {
         etPassword.onTextChanged    { presenter.setPassword(it.trim()) }
         btnLogin.setOnClickListener { presenter.onLoginClick() }
         btnForgotPassword.markAsNotImplemented()
+        presenter.screenForReturn = intent.getStringExtra(IntentKeys.SCREEN_FOR_RETURN)
     }
 
     override fun enableBtnLogin(enable: Boolean) {

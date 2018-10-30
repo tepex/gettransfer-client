@@ -20,7 +20,6 @@ import android.text.InputFilter
 
 import android.text.InputType
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.*
 
 import android.view.inputmethod.EditorInfo
@@ -57,11 +56,8 @@ import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
-import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 
-import com.kg.gettransfer.extensions.hideKeyboard
-import com.kg.gettransfer.extensions.showKeyboard
-
+import com.kg.gettransfer.presentation.IntentKeys
 
 
 import org.koin.android.ext.android.inject
@@ -109,6 +105,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
                 Screens.PASSENGER_MODE -> return Intent(context, MainActivity::class.java)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                Screens.LOGIN -> {
+                    val loginIntent = Intent(context, LoginActivity::class.java)
+                    loginIntent.putExtra(IntentKeys.SCREEN_FOR_RETURN, Screens.OFFERS )
+                }
             }
             return null
         }
