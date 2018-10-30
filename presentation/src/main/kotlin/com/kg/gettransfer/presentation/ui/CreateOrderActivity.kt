@@ -56,6 +56,10 @@ import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
+import kotlinx.android.synthetic.main.layout_popup_comment.view.*
+
+import com.kg.gettransfer.extensions.hideKeyboard
+import com.kg.gettransfer.extensions.showKeyboard
 
 import com.kg.gettransfer.presentation.IntentKeys
 
