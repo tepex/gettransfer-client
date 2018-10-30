@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="56dp"
+    android:gravity="center_horizontal"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/a_point"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/a_point_filled"/>
+    <ImageView
+        android:id="@+id/link_line"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_width="2dp"
+        android:layout_height="18dp"
+        android:src="@drawable/a_b_group"/>
+    <ImageView
+        android:id="@+id/b_point"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/b_point_empty"/>
+
+</LinearLayout>

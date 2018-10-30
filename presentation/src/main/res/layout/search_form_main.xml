@@ -11,10 +11,13 @@
     android:orientation="vertical"
     android:transitionName="@string/searchTransitionName">
 
+
+
     <com.kg.gettransfer.presentation.ui.SearchAddress
         android:id="@+id/searchFrom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/divider_marginStart"
         app:hint="@string/search_from_hint"
         android:padding="8dp"/>
 
@@ -29,6 +32,7 @@
         android:id="@+id/searchTo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/divider_marginStart"
         android:padding="8dp"
         app:hint="@string/search_to_hint">
 

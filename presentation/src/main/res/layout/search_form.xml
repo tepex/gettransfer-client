@@ -1,70 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:id="@+id/search"
-	android:transitionName="@string/searchTransitionName"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:descendantFocusability="beforeDescendants"
-	android:focusableInTouchMode="true"
-	android:layout_gravity="center_horizontal|top"
-	android:orientation="vertical"
-	android:background="@android:color/white">
-	<FrameLayout
-		android:id="@+id/icons_container"
-		android:layout_width="@dimen/search_marginStart"
-		android:layout_height="88.5dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/search"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal|top"
+    android:background="@android:color/white"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:transitionName="@string/searchTransitionName">
 
-	</FrameLayout>
-		
-	<com.kg.gettransfer.presentation.ui.SearchAddress
-		android:id="@+id/searchFrom"
-		android:layout_width="match_parent"
-		android:layout_height="@dimen/search_form_height"
-		android:layout_marginStart="@dimen/search_marginStart"
-		android:paddingEnd="@dimen/search_form_clear_padding_end"
-		android:paddingStart="0dp"
-		app:hint="@string/search_from_hint" />
+    <include
+        android:id="@+id/icons_container"
+        layout="@layout/a_b_view"
+        android:layout_width="@dimen/search_marginStart"
+        android:layout_height="74dp"
+        android:layout_centerVertical="true"/>
 
-	<View
-		android:id="@+id/separator"
-		android:layout_marginStart="@dimen/divider_marginStart"
-		android:layout_width="match_parent"
-		android:layout_height="@dimen/search_divider_height"
-		android:background="@color/colorDividerGray"
-		android:layout_below="@+id/searchFrom" />
+    <com.kg.gettransfer.presentation.ui.SearchAddress
+        android:id="@+id/searchFrom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/search_marginStart"
+        android:paddingEnd="@dimen/search_form_clear_padding_end"
+        android:paddingStart="0dp"
+        app:hint="@string/search_from_hint" />
 
-	<com.kg.gettransfer.presentation.ui.SearchAddress
-		android:id="@+id/searchTo"
-		android:layout_width="match_parent"
-		android:layout_height="@dimen/search_form_height"
-		android:layout_marginStart="@dimen/search_marginStart"
-		android:paddingStart="0dp"
-		android:paddingEnd="@dimen/search_form_clear_padding_end"
-		app:hint="@string/search_to_hint"
-		android:layout_below="@+id/separator"/>
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/search_divider_height"
+        android:layout_below="@+id/searchFrom"
+        android:layout_marginStart="@dimen/divider_marginStart"
+        android:background="@color/colorDividerGray" />
 
-	<View
-		android:id="@+id/bottom_separator"
-		android:layout_width="match_parent"
-		android:layout_height="@dimen/search_divider_height"
-		android:background="@color/colorDividerGray"
-		android:layout_below="@+id/searchTo" />
+    <com.kg.gettransfer.presentation.ui.SearchAddress
+        android:id="@+id/searchTo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/separator"
+        android:layout_marginStart="@dimen/search_marginStart"
+        android:paddingEnd="@dimen/search_form_clear_padding_end"
+        android:paddingStart="0dp"
+        app:hint="@string/search_to_hint" />
 
-	<FrameLayout
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentEnd="true"
-		android:layout_centerVertical="true"
-		android:layout_marginEnd="@dimen/inverse_btn_margin_end">
+    <View
+        android:id="@+id/bottom_separator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/search_divider_height"
+        android:layout_below="@+id/searchTo"
+        android:background="@color/colorDividerGray" />
 
-		<ImageView
-			android:id="@+id/ivInverseWay"
-			android:layout_width="@dimen/image_inverse_size"
-			android:layout_height="@dimen/image_inverse_size"
-			app:srcCompat="@drawable/ic_inverse"
-			android:background="?attr/selectableItemBackgroundBorderless"
-			android:clickable="true"/>
-	</FrameLayout>
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/inverse_btn_margin_end">
+
+        <ImageView
+            android:id="@+id/ivInverseWay"
+            android:layout_width="@dimen/image_inverse_size"
+            android:layout_height="@dimen/image_inverse_size"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            app:srcCompat="@drawable/ic_inverse" />
+    </FrameLayout>
 
 </RelativeLayout>

@@ -37,7 +37,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/guide_left"
         app:layout_constraintRight_toRightOf="@id/guide_right"
-        android:src="@drawable/group"/>
+        android:src="@drawable/a_b_group"/>
 
     <EditText
         android:id="@+id/etEmail"

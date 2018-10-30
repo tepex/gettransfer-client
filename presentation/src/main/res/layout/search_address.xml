@@ -1,37 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
+	android:layout_height="@dimen/search_section_height"
 	tools:context=".presentation.ui.SearchAddress">
 
-	<ImageView android:id="@+id/array"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/search_form_array_margin"
-		android:background="@drawable/ic_dark_arrow"
-		android:layout_marginTop="@dimen/search_form_vertical_padding"
-		android:layout_marginBottom="@dimen/search_form_vertical_padding"
+	<FrameLayout
+		android:layout_width="37dp"
+		android:layout_height="44dp"
 		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent" >
 
-	<EditText android:id="@+id/addressField"
+		<ImageView
+			android:id="@+id/array"
+			android:layout_gravity="center"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:background="@drawable/ic_dark_arrow"
+			android:visibility="visible" />
+
+	</FrameLayout>
+
+
+
+	<TextView
+		android:id="@+id/sub_title"
+		android:layout_width="0dp"
+		android:text="Pickup location"
+		app:layout_constraintTop_toTopOf="parent"
+		android:layout_marginTop="8dp"
+		android:fontFamily="@font/sf_pro_text_regular"
+		android:layout_height="@dimen/search_sub_title_height"
+		android:textSize="@dimen/search_sub_title_textSize"/>
+
+	<EditText
+		android:id="@+id/addressField"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="@dimen/search_form_address_margin"
-		android:layout_marginStart="@dimen/search_form_array_margin"
 		android:background="@null"
+		android:letterSpacing="-0.02"
+		android:fontFamily="@font/sf_pro_text_bold"
+		android:lineSpacingExtra="5sp"
 		android:singleLine="true"
-		android:paddingTop="@dimen/search_form_vertical_padding"
-		android:paddingBottom="@dimen/search_form_vertical_padding"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
+		android:textColor="@color/colorTextBlack"
+		android:textSize="@dimen/search_main_textSize"
+		android:text="Tverskaya, 21, Moscow, Russia"
+
 		app:layout_constraintEnd_toStartOf="@+id/fl_clearBtn"
-		app:layout_constraintStart_toEndOf="@id/array"
-		app:layout_constraintTop_toTopOf="parent" />
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/sub_title" />
 
 	<FrameLayout
 		android:id="@+id/fl_clearBtn"
@@ -41,6 +61,7 @@
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toTopOf="parent">
+
 		<ImageButton
 			android:id="@+id/im_clearBtn"
 			android:layout_width="wrap_content"

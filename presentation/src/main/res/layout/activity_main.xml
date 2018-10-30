@@ -113,8 +113,8 @@
 
 	</android.support.design.widget.CoordinatorLayout>
 
-	<!--<include-->
-		<!--android:id="@+id/navView"-->
-		<!--layout="@layout/view_navigation" />-->
+	<include
+		android:id="@+id/navView"
+		layout="@layout/view_navigation" />
 
 </android.support.v4.widget.DrawerLayout>

@@ -55,6 +55,11 @@
 	<dimen name="image_inverse_size">40dp</dimen>
 	<dimen name="back_circle_size">40.3dp</dimen>
 	<dimen name="left_margin_title">12dp</dimen>
+	<dimen name="search_section_height">60dp</dimen>
+	<dimen name="search_sub_title_textSize">12sp</dimen>
+	<dimen name="search_sub_title_height">20dp</dimen>
+	<dimen name="search_main_textSize">17sp</dimen>
+	<dimen name="search_main_height">22dp</dimen>
 
 	<!-- About items -->
 	<dimen name="about_item_top">100dp</dimen>
