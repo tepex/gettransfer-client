@@ -127,8 +127,7 @@ class MainPresenter(cc: CoroutineContexts,
         if(lastPoint == null) return
 		/* Не запрашивать адрес, если перемещение составило менее minDistance
         val distance = FloatArray(2)
-        Location.distanceBetween(lastPoint!!.latitude, lastPoint!!.longitude,
-                                 lastAddressPoint.latitude, lastAddressPoint.longitude, distance)
+        Location.distanceBetween(lastPoint!!.latitude, lastPoint!!.longitude, lastAddressPoint.latitude, lastAddressPoint.longitude, distance)
         //if(distance.get(0) < minDistance) return
         */
 
