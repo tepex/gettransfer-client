@@ -69,7 +69,6 @@ class OffersPresenter(cc: CoroutineContexts,
         super.attachView(view)
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true, true)
-
             val transfer = utils.asyncAwait{ transferInteractor.getTransfer(transferInteractor.selectedId!!) }
             transferModel = Mappers.getTransferModel(transfer,
                                                          systemInteractor.locale,
@@ -80,8 +79,9 @@ class OffersPresenter(cc: CoroutineContexts,
             viewState.setDate(transferModel.dateTime)
             viewState.setTransfer(transferModel)
             changeSortType(SORT_PRICE)
-            offerInteractor.setListener(this@OffersPresenter)
-        }, { e -> Timber.e(e)
+            //offerInteractor.setListener(this@OffersPresenter)
+        }, { e ->
+            Timber.e(e)
             if(e is ApiException && e.code == ApiException.NOT_LOGGED_IN) viewState.redirectView()
             else if(e !is InternetNotAvailableException) viewState.setError(e)
         }, { viewState.blockInterface(false) })
