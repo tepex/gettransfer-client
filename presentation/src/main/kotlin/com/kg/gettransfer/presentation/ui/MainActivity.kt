@@ -259,7 +259,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         googleMap.uiSettings.isMyLocationButtonEnabled = false
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
         googleMap.setOnCameraMoveListener { presenter.onCameraMove(googleMap.getCameraPosition()!!.target, true);  }
-        googleMap.setOnCameraIdleListener { presenter.onCameraIdle() }
+        googleMap.setOnCameraIdleListener { presenter.onCameraIdle(googleMap.projection.visibleRegion.latLngBounds) }
     }
 
     /* MainView */

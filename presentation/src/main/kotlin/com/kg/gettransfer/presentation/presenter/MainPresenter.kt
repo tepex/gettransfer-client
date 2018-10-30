@@ -6,6 +6,7 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.R
 
@@ -13,6 +14,7 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
@@ -119,7 +121,7 @@ class MainPresenter(cc: CoroutineContexts,
 
     }
 
-    fun onCameraIdle() {
+    fun onCameraIdle(latLngBounds: LatLngBounds) {
         if(markerStateLifted && !isMarkerAnimating) {
             viewState.setMarkerElevation(false, -MARKER_ELEVATION)
             markerStateLifted = false
@@ -133,8 +135,12 @@ class MainPresenter(cc: CoroutineContexts,
         */
 
         lastAddressPoint = lastPoint!!
+        val latLonPair: Pair<Point, Point>
+        val nePoint = Point(latLngBounds.northeast.latitude, latLngBounds.northeast.longitude)
+        val swPoint = Point(latLngBounds.southwest.latitude, latLngBounds.southwest.longitude)
+        latLonPair = Pair(nePoint, swPoint)
         utils.launchAsyncTryCatchFinally({
-            val currentAddress = utils.asyncAwait { routeInteractor.getAddressByLocation(Mappers.latLng2Point(lastPoint!!)) }
+            val currentAddress = utils.asyncAwait { routeInteractor.getAddressByLocation(Mappers.latLng2Point(lastPoint!!), latLonPair) }
             viewState.setAddressFrom(currentAddress.cityPoint.name!!)
             currentLocation = currentAddress.cityPoint.name!!
         }, { e -> viewState.setError(e)
