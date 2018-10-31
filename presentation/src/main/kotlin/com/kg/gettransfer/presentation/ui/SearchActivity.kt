@@ -38,9 +38,11 @@ import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
 import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
+import kotlinx.android.synthetic.main.a_b_view.view.*
 
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.search_form.*
+import kotlinx.android.synthetic.main.search_form.view.*
 import kotlinx.android.synthetic.main.toolbar_search_address.*
 import kotlinx.android.synthetic.main.toolbar_search_address.view.*
 
@@ -133,7 +135,17 @@ class SearchActivity: BaseActivity(), SearchView {
         toolbar.ivBack.setOnClickListener { presenter.onBackCommandClick() }
     }
 
-    fun onSearchFieldEmpty() = presenter.onSearchFieldEmpty()
+    fun onSearchFieldEmpty(isTo: Boolean) {
+        presenter.onSearchFieldEmpty()
+        var iconRes: Int
+        if (isTo){
+            iconRes = R.drawable.b_point_empty
+            searchForm.icons_container.b_point.setImageDrawable(getDrawable(iconRes))
+        } else {
+            iconRes = R.drawable.a_point_empty
+            searchForm.icons_container.a_point.setImageDrawable(getDrawable(iconRes))
+        }
+    }
 
     override fun onBackPressed() {
         searchTo.clearFocusOnExit()
@@ -147,8 +159,14 @@ class SearchActivity: BaseActivity(), SearchView {
         PopularPlace(getString(R.string.hotel),   R.drawable.popular_place_hotel))        
 
     /* SearchView */
-    override fun setAddressFrom(address: String, sendRequest: Boolean, isEditing: Boolean) { searchFrom.initText(address, sendRequest, isEditing) }
-    override fun setAddressTo(address: String, sendRequest: Boolean, isEditing: Boolean)   { searchTo.initText(address, sendRequest, isEditing) }
+    override fun setAddressFrom(address: String, sendRequest: Boolean, isEditing: Boolean) {
+        searchFrom.initText(address, sendRequest, isEditing)
+        updateIcon(false)
+    }
+    override fun setAddressTo(address: String, sendRequest: Boolean, isEditing: Boolean)   {
+        searchTo.initText(address, sendRequest, isEditing)
+        updateIcon(true)
+    }
     
     override fun setAddressListByAutoComplete(list: List<GTAddress>) {
         ll_popular.visibility = View.GONE
@@ -173,5 +191,16 @@ class SearchActivity: BaseActivity(), SearchView {
         rv_addressList.adapter = addressAdapter
         if(addressesList.isEmpty()) address_title.visibility = View.GONE
         else address_title.visibility = View.VISIBLE
+    }
+
+    override fun updateIcon(isTo: Boolean) {
+        var iconRes: Int
+        if (isTo){
+            iconRes = R.drawable.b_point_filled
+            searchForm.icons_container.b_point.setImageDrawable(getDrawable(iconRes))
+        } else {
+            iconRes = R.drawable.a_point_filled
+            searchForm.icons_container.a_point.setImageDrawable(getDrawable(iconRes))
+        }
     }
 }

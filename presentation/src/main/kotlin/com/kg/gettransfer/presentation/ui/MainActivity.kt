@@ -45,8 +45,10 @@ import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
+import kotlinx.android.synthetic.main.a_b_view.view.*
 
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_navigation.*
 
@@ -311,14 +313,29 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         searchFrom.text = getString(R.string.search_nothing)
     }
 
+    override fun initSearchForm() {
+        //TODO replace hardcode when string resources for localization will be updated
+        searchFrom.sub_title.text = "Pickup location"
+        searchTo.sub_title.text = "To: airport, trainstation, city, hotel, other place"
+    }
+
     override fun setAddressFrom(address: String) {
         searchFrom.text = address
         enableBtnNext()
+        var iconRes: Int
+        if(address.isNotEmpty()) iconRes = R.drawable.a_point_filled
+        else iconRes = R.drawable.a_point_empty
+        icons_container.a_point.setImageDrawable(getDrawable(iconRes))
+
     }
 
     override fun setAddressTo(address: String)   {
         searchTo.text = address
         enableBtnNext()
+        var iconRes: Int
+        if(address.isNotEmpty()) iconRes = R.drawable.b_point_filled
+        else iconRes = R.drawable.b_point_empty
+        icons_container.b_point.setImageDrawable(getDrawable(iconRes))
     }
 
     private fun enableBtnNext() {

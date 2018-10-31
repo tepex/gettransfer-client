@@ -4,12 +4,12 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:paddingBottom="8dp"
+	android:paddingBottom="0dp"
 	tools:context=".presentation.ui.SearchAddress">
 
 	<FrameLayout
-		android:layout_width="37dp"
-		android:layout_height="44dp"
+		android:layout_width="@dimen/arrow_fl_width"
+		android:layout_height="@dimen/arrow_fl_height"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toTopOf="parent" >
@@ -31,7 +31,7 @@
 		android:layout_width="0dp"
 		android:text="Pickup location"
 		app:layout_constraintTop_toTopOf="parent"
-		android:layout_marginTop="8dp"
+		android:layout_marginTop="@dimen/search_sub_title_marginTop"
 		android:fontFamily="@font/sf_pro_text_regular"
 		android:layout_height="@dimen/search_sub_title_height"
 		android:textSize="@dimen/search_sub_title_textSize"/>
@@ -49,6 +49,8 @@
 		android:textColor="@color/colorTextBlack"
 		android:textSize="@dimen/search_main_textSize"
 		android:text="Tverskaya, 21, Moscow, Russia"
+		android:ellipsize="end"
+		android:paddingBottom="@dimen/search_main_paddingBottom"
 
 		app:layout_constraintEnd_toStartOf="@+id/fl_clearBtn"
 		app:layout_constraintStart_toStartOf="parent"
@@ -56,8 +58,8 @@
 
 	<FrameLayout
 		android:id="@+id/fl_clearBtn"
-		android:layout_width="25dp"
-		android:layout_height="25dp"
+		android:layout_width="@dimen/clear_fl_width"
+		android:layout_height="@dimen/clear_fl_height"
 		android:visibility="invisible"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"

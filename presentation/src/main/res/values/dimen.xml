@@ -58,8 +58,15 @@
 	<dimen name="search_section_height">60dp</dimen>
 	<dimen name="search_sub_title_textSize">12sp</dimen>
 	<dimen name="search_sub_title_height">20dp</dimen>
+	<dimen name="search_sub_title_marginTop">8dp</dimen>
 	<dimen name="search_main_textSize">17sp</dimen>
 	<dimen name="search_main_height">22dp</dimen>
+	<dimen name="search_main_paddingBottom">8dp</dimen>
+
+	<dimen name="arrow_fl_width">37dp</dimen>
+	<dimen name="arrow_fl_height">44dp</dimen>
+	<dimen name="clear_fl_width">25dp</dimen>
+	<dimen name="clear_fl_height">55dp</dimen>
 
 	<dimen name="a_b_point_iconSize">24dp</dimen>
 	<dimen name="link_line_margin">5dp</dimen>

@@ -67,18 +67,8 @@ class SearchPresenter(cc: CoroutineContexts,
 
         val placeType = checkPlaceType(selected)
         if(placeType == SUITABLE_TYPE || (placeType == ROUTE_TYPE && isDoubleClickOnRoute)) {
-            if(checkFields()) {
-                utils.launchAsyncTryCatchFinally({
-                    viewState.blockInterface(true)
-                    utils.asyncAwait { routeInteractor.updateDestinationPoint() }
-                    utils.asyncAwait { routeInteractor.updateStartPoint() }
-                    systemInteractor.setAddressHistory(arrayListOf(routeInteractor.from!!,routeInteractor.to!!))
-
-                    router.navigateTo(Screens.CREATE_ORDER)
-                }, { e ->
-                    viewState.setError(e)
-                }, { viewState.blockInterface(false) })
-            }
+            viewState.updateIcon(isTo)
+            if(checkFields()) createRouteForOrder()
         } else {
             val sendRequest = selected.needApproximation() /* dirty hack */
             if(isTo) viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, sendRequest, true)

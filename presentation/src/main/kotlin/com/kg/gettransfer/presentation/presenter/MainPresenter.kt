@@ -38,7 +38,7 @@ class MainPresenter(cc: CoroutineContexts,
     private var available: Boolean = false
     private var currentLocation: String = ""
 
-    private val MARKER_ELEVATION = 25f
+    private val MARKER_ELEVATION = 5f
     private var markerStateLifted = false
     private var isMarkerAnimating = true
 
@@ -150,6 +150,7 @@ class MainPresenter(cc: CoroutineContexts,
     fun setAddressFields() {
         viewState.setAddressFrom(routeInteractor.from?.address ?: "")
         viewState.setAddressTo(routeInteractor.to?.address ?: "")
+        viewState.initSearchForm()
     }
 
     fun onSearchClick(addresses: Pair<String, String>) {

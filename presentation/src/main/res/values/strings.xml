@@ -23,7 +23,9 @@
     <string name="nav_footer_read_more">Read more</string>
     <!-- Search form -->
     <string name="search_from_hint">From</string>
+    <string name="search_from_hint_new">Where from?</string>
     <string name="search_to_hint">To</string>
+    <string name="search_to_hint_new">Where to?</string>
     <string name="search_start">Loading…</string>
     <string name="search_nothing"></string>
     <string name="searchTransitionName">SEARCH_FORM</string>

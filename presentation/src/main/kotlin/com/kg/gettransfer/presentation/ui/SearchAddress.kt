@@ -75,7 +75,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		val clearListener = View.OnClickListener {
 			text = ""
 			addressField.requestFocus()
-			parent.onSearchFieldEmpty()
+			parent.onSearchFieldEmpty(isTo)
 		}
 		fl_clearBtn.setOnClickListener(clearListener)
 		im_clearBtn.setOnClickListener(clearListener)
@@ -108,7 +108,6 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 		mvpDelegate.onAttach()
 
 		presenter.mBounds = parent.mBounds
-		
 //		if(isTo) addressField.requestFocus()
 		setClearButtonVisibility()
 	}
@@ -116,7 +115,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 	/** Set address text without request */
 	fun initText(text: String, sendRequest: Boolean, cursorOnEnd: Boolean) {
 		blockRequest = true
-		this.text = text + " "
+		this.text = if(text.isNotEmpty()) text + " " else ""
 		if(cursorOnEnd) addressField.setSelection(addressField.text.length)
 		blockRequest = false
 		if(sendRequest) presenter.requestAddressListByPrediction(text.trim())
