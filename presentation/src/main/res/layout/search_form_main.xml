@@ -12,31 +12,49 @@
     android:transitionName="@string/searchTransitionName">
 
 
-
-    <com.kg.gettransfer.presentation.ui.SearchAddress
-        android:id="@+id/searchFrom"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/divider_marginStart"
-        app:hint="@string/search_from_hint"
-        android:padding="8dp"/>
+        android:orientation="horizontal">
+        <include
+            android:id="@+id/icons_container"
+            layout="@layout/a_b_view"
+            android:layout_gravity="bottom"
+            android:layout_width="@dimen/search_marginStart"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/create_transfer_divider_height"
-        android:layout_marginStart="@dimen/divider_marginStart"
-        android:background="@color/colorDividerGray" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.kg.gettransfer.presentation.ui.SearchAddress
+                android:id="@+id/searchFrom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hint="@string/search_from_hint" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:background="@color/colorDividerGray" />
 
 
-    <com.kg.gettransfer.presentation.ui.SearchAddress
-        android:id="@+id/searchTo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/divider_marginStart"
-        android:padding="8dp"
-        app:hint="@string/search_to_hint">
+            <com.kg.gettransfer.presentation.ui.SearchAddress
+                android:id="@+id/searchTo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hint="@string/search_to_hint">
 
-    </com.kg.gettransfer.presentation.ui.SearchAddress>
+            </com.kg.gettransfer.presentation.ui.SearchAddress>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
 
     <View
         android:layout_width="match_parent"

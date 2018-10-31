@@ -61,6 +61,11 @@
 	<dimen name="search_main_textSize">17sp</dimen>
 	<dimen name="search_main_height">22dp</dimen>
 
+	<dimen name="a_b_point_iconSize">24dp</dimen>
+	<dimen name="link_line_margin">5dp</dimen>
+	<dimen name="link_line_width">2dp</dimen>
+	<dimen name="link_line_height">18dp</dimen>
+
 	<!-- About items -->
 	<dimen name="about_item_top">100dp</dimen>
 	<dimen name="about_item_bottom">50dp</dimen>

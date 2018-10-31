@@ -3,7 +3,8 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="@dimen/search_section_height"
+	android:layout_height="wrap_content"
+	android:paddingBottom="8dp"
 	tools:context=".presentation.ui.SearchAddress">
 
 	<FrameLayout
@@ -19,7 +20,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:background="@drawable/ic_dark_arrow"
-			android:visibility="visible" />
+			android:visibility="gone" />
 
 	</FrameLayout>
 
@@ -42,7 +43,7 @@
 		android:layout_marginEnd="@dimen/search_form_address_margin"
 		android:background="@null"
 		android:letterSpacing="-0.02"
-		android:fontFamily="@font/sf_pro_text_bold"
+		android:fontFamily="@font/sf_pro_text_semibold"
 		android:lineSpacingExtra="5sp"
 		android:singleLine="true"
 		android:textColor="@color/colorTextBlack"

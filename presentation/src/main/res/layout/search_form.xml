@@ -15,8 +15,9 @@
         android:id="@+id/icons_container"
         layout="@layout/a_b_view"
         android:layout_width="@dimen/search_marginStart"
-        android:layout_height="74dp"
-        android:layout_centerVertical="true"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"/>
 
     <com.kg.gettransfer.presentation.ui.SearchAddress
         android:id="@+id/searchFrom"
