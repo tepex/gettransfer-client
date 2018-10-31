@@ -52,7 +52,7 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
         else Result(error = RuntimeException("Location not found"))
     }
 
-    override fun getAddressByLocation(point: Point): GTAddress {
+    override fun getAddressByLocation(point: Point, pair: Pair<Point, Point>): GTAddress {
         val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
 
         val street  = list.firstOrNull()?.thoroughfare
@@ -74,7 +74,7 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
             }
             toString()
         }
-        val text = getAutocompletePredictions(addr, null)
+        val text = getAutocompletePredictions(addr, pair)
         val address = if(text.isNotEmpty()) text.get(0).address else addr
         return GTAddress(CityPoint(address, point, null),
                          listOf(GTAddress.TYPE_STREET_ADDRESS),
