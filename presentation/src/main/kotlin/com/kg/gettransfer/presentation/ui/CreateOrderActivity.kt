@@ -177,7 +177,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             presenter.logTransferSettingsEvent(CreateOrderPresenter.COMMENT_INPUT)
         }
         tvAgreement1.setOnClickListener { presenter.showLicenceAgreement() }
-        tvAgreement2.setOnClickListener { presenter.showLicenceAgreement() }
         switchAgreement.setOnCheckedChangeListener { _, isChecked -> presenter.setAgreeLicence(isChecked) }
 
         btnGetOffers.setOnClickListener   { presenter.onGetTransferClick() }

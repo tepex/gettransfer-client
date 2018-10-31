@@ -31,6 +31,7 @@ import android.view.inputmethod.InputMethodManager
 
 import android.widget.EditText
 import android.widget.RelativeLayout
+import android.widget.TextView
 
 import android.widget.Toast
 
@@ -58,6 +59,14 @@ import java.util.Locale
 import java.text.SimpleDateFormat
 import java.util.regex.Pattern
 
+<<<<<<< HEAD
+=======
+import kotlinx.android.synthetic.main.view_maps_pin.view.*
+import org.commonmark.node.Node
+import org.commonmark.parser.Parser
+import org.commonmark.renderer.html.HtmlRenderer
+
+>>>>>>> Localization complited
 import timber.log.Timber
 
 internal class Utils {
@@ -86,7 +95,7 @@ internal class Utils {
 
         fun showAlertCancelRequest(context: Context, listener: (Boolean) -> Unit){
             getAlertDialogBuilder(context)
-                    .setTitle(R.string.alert_cancel_transfer_text)
+                    .setTitle(R.string.LNG_CANCEL_CONFIRM)
                     .setPositiveButton(android.R.string.yes) { _, _ -> listener(true) }
                     .setNegativeButton(android.R.string.no)  { _, _ -> listener(false) }
                     .show()
@@ -104,11 +113,11 @@ internal class Utils {
         }
         
         fun setCurrenciesDialogListener(context: Context, view: View, items: List<CharSequence>,
-            listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.currency, items, listener) }
+            listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.LNG_CURRENCY, items, listener) }
         fun setLocalesDialogListener(context: Context, view: View, items: List<CharSequence>,
-            listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.application_language, items, listener) }
+            listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.LNG_LANGUAGE, items, listener) }
         fun setDistanceUnitsDialogListener(context: Context, view: View, items: List<CharSequence>,
-            listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.distance_units, items, listener) }
+            listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.LNG_DISTANCE_UNIT, items, listener) }
         fun setEndpointsDialogListener(context: Context, view: View, items: List<CharSequence>,
                                        listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.endpoint, items, listener)}
 
@@ -132,7 +141,7 @@ internal class Utils {
             if(distance == null) return ""
             var d = distance
             if(distanceUnit == DistanceUnit.Mi) d = DistanceUnit.km2Mi(distance)
-            return context.getString(R.string.distance, d, distanceUnit.name)
+            return context.getString(R.string.LNG_RIDE_DISTANCE).plus(": $d ").plus(distanceUnit.name)
         }
 
         fun getPolyline(routeModel: RouteModel): PolylineModel {
@@ -297,7 +306,7 @@ internal class Utils {
         
         fun formatPersons(context: Context, persons: Int) = context.getString(R.string.count_persons_and_baggage, persons)
         fun formatLuggage(context: Context, luggage: Int) = context.getString(R.string.count_persons_and_baggage, luggage)
-        fun formatPrice(context: Context, price: String)  = context.getString(R.string.preferred_cost, price) 
+        fun formatPrice(context: Context, price: String)  = "($price)"
 
         fun showShortToast(context: Context, text: CharSequence) { Toast.makeText(context, text, Toast.LENGTH_SHORT).show() }
         fun showLongToast(context: Context, text: CharSequence)  { Toast.makeText(context, text, Toast.LENGTH_LONG).show() }
@@ -308,9 +317,25 @@ internal class Utils {
             return dp * ((metrics.densityDpi.toFloat()) / DisplayMetrics.DENSITY_DEFAULT)
         }
 
-//        fun convertPixelsToDp(context: Context, pixels: Float): Float{
+//      fun convertPixelsToDp(context: Context, pixels: Float): Float{
 //
-//        }
+//      }
+
+        fun convertMarkdownToHtml(markdownString: String): String{
+            val parser = Parser.builder().build()
+            val document = parser.parse(markdownString)
+            val renderer = HtmlRenderer.builder().build()
+            val htmlString = renderer.render(document)
+            return htmlString
+        }
+
+        fun convertMarkdownToHtml(markdownString: String, textView: TextView): String{
+            val parser = Parser.builder().build()
+            val document = parser.parse(markdownString)
+            val renderer = HtmlRenderer.builder().build()
+            val htmlString = renderer.render(document)
+            return htmlString
+        }
     }
 }
 

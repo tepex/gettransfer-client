@@ -17,6 +17,7 @@ import android.support.v4.widget.DrawerLayout
 
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
+import android.text.Html
 
 import android.transition.Fade
 
@@ -240,6 +241,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         val versionCode = BuildConfig.VERSION_CODE
         (navFooterVersion as TextView).text =
                 String.format(getString(R.string.nav_footer_version), versionName, versionCode)
+        //navFooterReadMore.text = Html.fromHtml(Utils.convertMarkdownToHtml(getString(R.string.LNG_READMORE)))
         navFooterStamp.setOnClickListener(readMoreListener)
         navFooterReadMore.setOnClickListener(readMoreListener)
 

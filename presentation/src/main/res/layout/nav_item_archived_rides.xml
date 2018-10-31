@@ -4,8 +4,8 @@
 	style="@style/nav_item">
 	<TextView 
 		style="@style/nav_item_title"
-		android:text="@string/nav_archived_rides_title" />
+		android:text="@string/LNG_MENU_TITLE_LAST_RIDES" />
 	<TextView 
 		style="@style/nav_item_subtitle"
-		android:text="@string/nav_archived_rides_subtitle" />
+		android:text="@string/LNG_MENU_SUBTITLE_LAST_RIDES" />
 </LinearLayout>

@@ -67,7 +67,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/activity_transfer_details_tv_to_right_of_img_margin_start"
-                        android:text="@string/LNG_RIDE_SETTINGS_OPTIONAL_PERSON"
+                        android:text="@string/LNG_RIDE_PASSENGERS"
                         android:textColor="@color/colorTextBlack"
                         android:textSize="@dimen/activity_transfer_details_text_size"
                         android:fontFamily="@font/sf_pro_text_regular"/>

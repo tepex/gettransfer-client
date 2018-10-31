@@ -5,18 +5,18 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'de.felixschulze.gradle.hockeyapp'
 
 ext {
-	support_version           = "28.0.0"
-	constraint_layout_version = "2.0.0-alpha2"
-	koin_version              = "1.0.1"
-	moxy_version              = "1.5.5"
-	cicerone_version          = "3.0.0"
-	circle_indicator_version  = "1.2.2"
-	hockey_version            = "5.1.1"
-	firebase_version          = "16.0.4"
-	glide_version			  = "4.8.0"
-	simple_rating_bar_version = "1.4.2"
-	slf4j_timber_version      = "1.0.1"
-	facebook_version          = "4.38.0"
+    support_version           = "28.0.0"
+    constraint_layout_version = "2.0.0-alpha2"
+    koin_version              = "1.0.1"
+    moxy_version              = "1.5.5"
+    cicerone_version          = "3.0.0"
+    circle_indicator_version  = "1.2.2"
+    hockey_version            = "5.1.1"
+    firebase_version          = "16.0.4"
+    glide_version             = "4.8.0"
+    simple_rating_bar_version = "1.4.2"
+    slf4j_timber_version      = "1.0.1"
+    markwon_version           = "2.0.0"
 }
 
 android {
@@ -171,6 +171,9 @@ dependencies {
 	//RatingBar with vector images
 	implementation "com.github.ome450901:SimpleRatingBar:$simple_rating_bar_version"
 
+	//For markdown
+	implementation "ru.noties:markwon:$markwon_version"
+    
 	testImplementation libs.junit
 	testImplementation libs.hamcrest
 	testImplementation libs.mockito
