@@ -95,7 +95,8 @@ object Mappers {
                              type.remainsToPay?.default,
                              type.price?.default,
                              type.relevantCarriersCount,
-                             type.checkOffers)
+                             type.checkOffers,
+                             type.dateRefund)
     }
     
     fun getTransferNew(from: CityPoint,

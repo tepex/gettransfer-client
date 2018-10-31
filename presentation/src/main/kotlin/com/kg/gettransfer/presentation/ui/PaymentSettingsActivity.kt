@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ImageSpan
 import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -13,11 +15,13 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
+import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter
 
@@ -36,6 +40,7 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     @InjectPresenter
     internal lateinit var presenter: PaymentSettingsPresenter
 
+    private val transferInteractor: TransferInteractor by inject()
     private val offerInteractor: OfferInteractor by inject()
     private val paymentInteractor: PaymentInteractor by inject()
 
@@ -43,7 +48,7 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
 
     @ProvidePresenter
     fun createPaymentSettingsPresenter(): PaymentSettingsPresenter = 
-        PaymentSettingsPresenter(coroutineContexts, router, systemInteractor, offerInteractor, paymentInteractor)
+        PaymentSettingsPresenter(coroutineContexts, router, systemInteractor, transferInteractor, offerInteractor, paymentInteractor)
 
     protected override var navigator = object: BaseNavigator(this) {
         override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
@@ -57,6 +62,11 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_settings)
+        val image = ImageSpan(this, R.drawable.credit_card)
+        val string = SpannableString(getString(R.string.pay))
+        var title = SpannableString(" $string")
+        title.setSpan(image, 0, 1, 0)
+        btnGetPayment.text = title
     }
 
     override fun setOffer(offer: OfferModel) {
@@ -65,6 +75,12 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
         payFullPriceButton.setOnClickListener { view ->  changePaymentSettings(view) }
         payThirdOfPriceButton.setOnClickListener { view ->  changePaymentSettings(view) }
         btnGetPayment.setOnClickListener { presenter.getPayment() }
+    }
+
+    override fun setCommission(transfer: TransferModel) {
+        if (transfer.refund_date != null) {
+            commission.text = getString(R.string.commission, Utils.getFormattedDate(systemInteractor.locale, transfer.refund_date))
+        }
     }
 
     private fun changePaymentSettings(view: View?) {

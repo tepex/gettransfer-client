@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.model
 
 import com.kg.gettransfer.domain.model.DistanceUnit
+import java.util.*
 
 class TransferModel(val id: Long,
                     val status: String,
@@ -20,4 +21,5 @@ class TransferModel(val id: Long,
                     val remainToPay: String?,
                     val price: String?,
                     val relevantCarriersCount: Int?,
-                    val checkOffers: Boolean)
+                    val checkOffers: Boolean,
+                    val refund_date: Date?)

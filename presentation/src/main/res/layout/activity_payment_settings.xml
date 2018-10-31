@@ -225,6 +225,13 @@
 
     </android.support.constraint.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/commission"
+        android:paddingStart="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"
+        android:paddingEnd="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <Button
         android:id="@+id/btnGetPayment"
         android:layout_width="match_parent"
