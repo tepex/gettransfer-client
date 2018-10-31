@@ -6,7 +6,6 @@ ext {
     r2_k_c_a_version  = "0.9.2"
     okhttp3_version   = "3.11.0"
     s_o_l_i_version   = "1.0.1"
-    socket_io_version = "1.0.0"
 }
 
 compileKotlin {
@@ -37,7 +36,6 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$r2_k_c_a_version"
     implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
-    implementation "io.socket:socket.io-client:$socket_io_version"
     implementation "com.github.devcsrj:slf4j-okhttp3-logging-interceptor:$s_o_l_i_version"
     implementation libs.slf4j
 

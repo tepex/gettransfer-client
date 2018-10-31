@@ -1,8 +1,8 @@
 package com.kg.gettransfer.data
 
-import com.kg.gettransfer.data.model.OfferEntityListener
+import com.kg.gettransfer.data.model.OfferEntity
 
 interface OfferSocket {
-    fun setListener(listener: OfferEntityListener)
-    fun removeListener(listener: OfferEntityListener)
+    fun onNewOffer(offer: OfferEntity)
+    fun onError(e: RemoteException)
 }
