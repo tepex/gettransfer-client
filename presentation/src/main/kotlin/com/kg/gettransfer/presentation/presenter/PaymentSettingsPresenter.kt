@@ -49,20 +49,9 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
 
     private val paymentRequest = PaymentRequestModel(offerInteractor.transferId!!, offerInteractor.selectedOfferId!!)
 
-    private var transfer: Transfer? = null
     private var offer: Offer? = null
     
     override fun onFirstViewAttach() {
-        utils.launchAsyncTryCatch({
-            val transfer = utils.asyncAwait{ transferInteractor.getTransfer(transferInteractor.selectedId!!) }
-            val transferModel = Mappers.getTransferModel(transfer,
-                    systemInteractor.locale,
-                    systemInteractor.distanceUnit,
-                    systemInteractor.transportTypes!!)
-            viewState.setCommission(transferModel)
-        }, { e -> Timber.e(e)
-            viewState.setError(e)
-        })
         offerInteractor.selectedOfferId?.let { offer = offerInteractor.getOffer(it) }
     }
 

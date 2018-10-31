@@ -2,37 +2,29 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
 import android.content.Intent
-
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ImageSpan
 import android.view.View
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-
 import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
-
 import com.kg.gettransfer.presentation.Screens
-
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
-import com.kg.gettransfer.presentation.model.TransferModel
-
 import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter
-
 import com.kg.gettransfer.presentation.view.PaymentSettingsView
-
 import kotlinx.android.synthetic.main.activity_payment_settings.*
-
 import org.koin.android.ext.android.inject
+import java.util.*
 
-fun Context.getPaymentSettingsActivityLaunchIntent(): Intent {
-    return Intent(this, PaymentSettingsActivity::class.java)
+fun Context.getPaymentSettingsActivityLaunchIntent(date: Date): Intent {
+    val intent = Intent(this, PaymentSettingsActivity::class.java)
+    intent.putExtra("date", date)
+    return intent
 }
 
 class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
@@ -62,6 +54,11 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_settings)
+        setButton()
+        setCommission()
+    }
+
+    private fun setButton() {
         val image = ImageSpan(this, R.drawable.credit_card)
         val string = SpannableString(getString(R.string.pay))
         var title = SpannableString(" $string")
@@ -77,9 +74,10 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
         btnGetPayment.setOnClickListener { presenter.getPayment() }
     }
 
-    override fun setCommission(transfer: TransferModel) {
-        if (transfer.refund_date != null) {
-            commission.text = getString(R.string.commission, Utils.getFormattedDate(systemInteractor.locale, transfer.refund_date))
+    private fun setCommission() {
+        val date = intent?.extras?.getSerializable("date") as Date?
+        if (date != null) {
+            commission.text = getString(R.string.commission, Utils.getFormattedDate(systemInteractor.locale, date))
         }
     }
 

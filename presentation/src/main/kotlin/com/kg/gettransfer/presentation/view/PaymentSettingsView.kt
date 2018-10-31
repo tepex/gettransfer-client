@@ -8,5 +8,4 @@ import com.kg.gettransfer.presentation.model.TransferModel
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface PaymentSettingsView: BaseView {
     fun setOffer(offer: OfferModel)
-    fun setCommission(transfer: TransferModel)
 }
