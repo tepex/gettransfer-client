@@ -48,10 +48,10 @@ import kotlinx.android.synthetic.main.toolbar_search_address.view.*
 
 import org.koin.android.ext.android.inject
 
-class SearchActivity: BaseActivity(), SearchView {
+class SearchActivity : BaseActivity(), SearchView {
     @InjectPresenter
     internal lateinit var presenter: SearchPresenter
-    
+
     internal val routeInteractor: RouteInteractor by inject()
     private lateinit var current: SearchAddress
 
@@ -67,7 +67,7 @@ class SearchActivity: BaseActivity(), SearchView {
     companion object {
         @JvmField val FADE_DURATION  = 500L
         @JvmField val SLIDE_DURATION = 500L
-        
+
         @JvmField val EXTRA_ADDRESS_FROM = "address_from"
         @JvmField val EXTRA_ADDRESS_TO   = "address_to"
         @JvmField val EXTRA_FROM_CLICK   = "from_click"
@@ -75,7 +75,7 @@ class SearchActivity: BaseActivity(), SearchView {
 
         @JvmField val LATLON_BOUNDS = "latlon_map_bounds"
     }
-    
+
     protected override var navigator = object: BaseNavigator(this) {
         protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
             when(screenKey) {
@@ -84,9 +84,9 @@ class SearchActivity: BaseActivity(), SearchView {
             return null
         }
     }
-    
+
     override fun getPresenter(): SearchPresenter = presenter
-    
+
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -161,13 +161,14 @@ class SearchActivity: BaseActivity(), SearchView {
     /* SearchView */
     override fun setAddressFrom(address: String, sendRequest: Boolean, isEditing: Boolean) {
         searchFrom.initText(address, sendRequest, isEditing)
-        updateIcon(false)
+        if(address.isNotEmpty()) updateIcon(false)
     }
-    override fun setAddressTo(address: String, sendRequest: Boolean, isEditing: Boolean)   {
+
+    override fun setAddressTo(address: String, sendRequest: Boolean, isEditing: Boolean) {
         searchTo.initText(address, sendRequest, isEditing)
-        updateIcon(true)
+        if(address.isNotEmpty()) updateIcon(false)
     }
-    
+
     override fun setAddressListByAutoComplete(list: List<GTAddress>) {
         ll_popular.visibility = View.GONE
         address_title.visibility = View.GONE
@@ -176,7 +177,7 @@ class SearchActivity: BaseActivity(), SearchView {
             (rv_addressList.adapter as AddressAdapter).updateList(list)
         }
     }
-    
+
     override fun onFindPopularPlace(isTo: Boolean, place: String) {
         val searchField = if(isTo) searchTo else searchFrom
         searchField.initText(place, true, true)

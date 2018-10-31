@@ -58,9 +58,11 @@ class SearchPresenter(cc: CoroutineContexts,
     fun onAddressSelected(selected: GTAddress) {
         val isDoubleClickOnRoute: Boolean
         if(isTo) {
+            viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, false, true)
             isDoubleClickOnRoute = routeInteractor.to == selected
             routeInteractor.to = selected
         } else {
+            viewState.setAddressFrom(selected.primary ?: selected.cityPoint.name!!, false, true)
             isDoubleClickOnRoute = routeInteractor.from == selected
             routeInteractor.from = selected
         }
