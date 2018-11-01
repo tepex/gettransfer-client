@@ -7,11 +7,7 @@ import com.kg.gettransfer.JsonParser
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.SystemCache
 import com.google.gson.Gson
-
-import com.kg.gettransfer.data.model.AccountEntity
-import com.kg.gettransfer.data.model.GTAddressEntity
-import com.kg.gettransfer.data.model.ProfileEntity
-import com.kg.gettransfer.data.model.UserEntity
+import com.kg.gettransfer.data.model.*
 
 class PreferencesImpl(context: Context) : PreferencesCache, SystemCache {
 

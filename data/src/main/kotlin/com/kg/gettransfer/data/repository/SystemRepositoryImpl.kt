@@ -54,11 +54,11 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
             factory.retrieveCacheDataStore().setAccount(remoteAccount)
 
             configs = configsMapper.fromEntity(factory.retrieveCacheDataStore().getConfigs())
-            accountMapper.configs = configs
+            accountMapper.configs = configs as Configs
         } catch (e: Exception) {
             if (e is InternetNotAvailableException || e is ApiException || e is TimeoutException) {
                 configs = configsMapper.fromEntity(factory.retrieveCacheDataStore().getConfigs())
-                accountMapper.configs = configs
+                accountMapper.configs = configs as Configs
             } else throw e
         }
 
