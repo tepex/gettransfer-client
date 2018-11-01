@@ -40,7 +40,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="12dp"
-                    android:text="@string/network_not_available_offers_and_transfer_activities"
+                    android:text="@string/LNG_OFFLINE_MESSAGE_CACHE"
                     android:visibility="gone"/>
 
             </LinearLayout>
