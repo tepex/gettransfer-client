@@ -13,7 +13,6 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.domain.model.OfferListener
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
@@ -31,7 +30,7 @@ class OffersPresenter(cc: CoroutineContexts,
                       systemInteractor: SystemInteractor,
                       private val transferInteractor: TransferInteractor,
                       private val offerInteractor: OfferInteractor):
-    BasePresenter<OffersView>(cc, router, systemInteractor), OfferListener {
+    BasePresenter<OffersView>(cc, router, systemInteractor) {
 
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
@@ -79,7 +78,6 @@ class OffersPresenter(cc: CoroutineContexts,
             viewState.setDate(transferModel.dateTime)
             viewState.setTransfer(transferModel)
             changeSortType(SORT_PRICE)
-            //offerInteractor.setListener(this@OffersPresenter)
         }, { e ->
             Timber.e(e)
             if(e is ApiException && e.code == ApiException.NOT_LOGGED_IN) viewState.redirectView()
@@ -90,7 +88,6 @@ class OffersPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
-        offerInteractor.removeListener(this)
         super.onDestroy()
     }
 
@@ -162,10 +159,12 @@ class OffersPresenter(cc: CoroutineContexts,
 
     private fun logFilterEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value)) }
     private fun logButtonEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value)) }
-
+    
+    /*
     override fun onNewOffer(offer: Offer) {
         viewState.addNewOffer(Mappers.getOfferModel(offer, systemInteractor.locale))
     }
 
     override fun onError(e: ApiException) { Timber.e(e) }
+    */
 }

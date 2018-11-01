@@ -1,7 +1,6 @@
 package com.kg.gettransfer.domain.interactor
 
 import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.domain.model.OfferListener
 
 import com.kg.gettransfer.domain.repository.OfferRepository
 
@@ -19,7 +18,4 @@ class OfferInteractor(private val repository: OfferRepository) {
     }
     
     fun getOffer(id: Long) = offers.find { it.id == id }
-    
-    fun setListener(listener: OfferListener)    { repository.setListener(listener) }
-    fun removeListener(listener: OfferListener) { repository.removeListener(listener) }
 }

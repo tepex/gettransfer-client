@@ -7,8 +7,6 @@ import com.kg.gettransfer.remote.mapper.*
 import org.koin.dsl.module.module
 
 val remoteModule = module {
-    single { OfferSocketImpl() } bind HostListener::class bind OfferSocket::class
-    
     single { ApiCore(get(), get()) }
     single { PromoMapper() }
     single { RouteInfoMapper() }

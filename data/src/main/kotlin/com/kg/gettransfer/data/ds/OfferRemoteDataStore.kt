@@ -7,14 +7,10 @@ import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.mapper.ExceptionMapper
 
 import com.kg.gettransfer.data.model.OfferEntity
-import com.kg.gettransfer.data.model.OfferEntityListener
 
 open class OfferRemoteDataStore(private val remote: OfferRemote): OfferDataStore {
     override suspend fun getOffers(id: Long): List<OfferEntity> {
         try { return remote.getOffers(id) }
         catch(e: RemoteException) { throw ExceptionMapper.map(e) }
     }
-    
-    override fun setListener(listener: OfferEntityListener)    { throw UnsupportedOperationException() }
-    override fun removeListener(listener: OfferEntityListener) { throw UnsupportedOperationException() }
 }

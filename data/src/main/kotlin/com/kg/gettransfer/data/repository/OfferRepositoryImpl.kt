@@ -1,39 +1,34 @@
 package com.kg.gettransfer.data.repository
 
+import com.kg.gettransfer.data.OfferSocket
 import com.kg.gettransfer.data.RemoteException
+
 import com.kg.gettransfer.data.ds.OfferDataStoreFactory
 
 import com.kg.gettransfer.data.mapper.ExceptionMapper
 import com.kg.gettransfer.data.mapper.OfferMapper
 
 import com.kg.gettransfer.data.model.OfferEntity
-import com.kg.gettransfer.data.model.OfferEntityListener
 
-import com.kg.gettransfer.domain.model.OfferListener
 import com.kg.gettransfer.domain.repository.OfferRepository
 
-class OfferRepositoryImpl(private val factory: OfferDataStoreFactory,
-                          private val mapper: OfferMapper): OfferRepository, OfferEntityListener {
-    private var listener: OfferListener? = null
+import org.slf4j.LoggerFactory
 
+class OfferRepositoryImpl(private val factory: OfferDataStoreFactory,
+                          private val mapper: OfferMapper): OfferRepository, OfferSocket {
+    companion object {
+        @JvmField val TAG = "GTR-data"
+        private val log = LoggerFactory.getLogger(TAG)
+    }
+    
     override suspend fun getOffers(id: Long) = 
         factory.retrieveRemoteDataStore().getOffers(id).map { mapper.fromEntity(it) }
-
-    override fun setListener(listener: OfferListener) {
-        this.listener = listener
-        factory.retrieveSocketDataStore().setListener(this) 
-    }
-    
-    override fun removeListener(listener: OfferListener) {
-        this.listener = null
-        factory.retrieveSocketDataStore().removeListener(this)
-    }
     
     override fun onNewOffer(offer: OfferEntity) {
-        listener?.let { it.onNewOffer(mapper.fromEntity(offer)) }
+        log.debug("onNewOffer: $offer")
     }
     
     override fun onError(e: RemoteException) {
-        listener?.let { it.onError(ExceptionMapper.map(e)) }
+        log.error("WebSocket error", e)
     }
 }
