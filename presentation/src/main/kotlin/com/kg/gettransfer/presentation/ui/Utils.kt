@@ -59,14 +59,10 @@ import java.util.Locale
 import java.text.SimpleDateFormat
 import java.util.regex.Pattern
 
-<<<<<<< HEAD
-=======
-import kotlinx.android.synthetic.main.view_maps_pin.view.*
 import org.commonmark.node.Node
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
 
->>>>>>> Localization complited
 import timber.log.Timber
 
 internal class Utils {
@@ -306,6 +302,7 @@ internal class Utils {
         
         fun formatPersons(context: Context, persons: Int) = context.getString(R.string.count_persons_and_baggage, persons)
         fun formatLuggage(context: Context, luggage: Int) = context.getString(R.string.count_persons_and_baggage, luggage)
+        @Suppress("UNUSED_PARAMETER")
         fun formatPrice(context: Context, price: String)  = "($price)"
 
         fun showShortToast(context: Context, text: CharSequence) { Toast.makeText(context, text, Toast.LENGTH_SHORT).show() }
@@ -321,7 +318,7 @@ internal class Utils {
 //
 //      }
 
-        fun convertMarkdownToHtml(markdownString: String): String{
+        fun convertMarkdownToHtml(markdownString: String): String {
             val parser = Parser.builder().build()
             val document = parser.parse(markdownString)
             val renderer = HtmlRenderer.builder().build()
@@ -329,7 +326,8 @@ internal class Utils {
             return htmlString
         }
 
-        fun convertMarkdownToHtml(markdownString: String, textView: TextView): String{
+        @Suppress("UNUSED_PARAMETER")
+        fun convertMarkdownToHtml(markdownString: String, textView: TextView): String {
             val parser = Parser.builder().build()
             val document = parser.parse(markdownString)
             val renderer = HtmlRenderer.builder().build()

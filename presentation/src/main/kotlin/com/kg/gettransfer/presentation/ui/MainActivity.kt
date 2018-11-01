@@ -294,7 +294,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
                     if(!up) markerShadow.setImageDrawable(getDrawable(R.drawable.default_position_shadow))
                 }
                 .setDuration(150L)
-                .translationYBy(-Utils.convertDpToPixels(this, elevation))
+                .translationYBy(px)
                 .start()
 
         if(up) markerShadow.setImageDrawable(getDrawable(R.drawable.lifted_marker_shadow))
@@ -325,7 +325,6 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         if(address.isNotEmpty()) iconRes = R.drawable.a_point_filled
         else iconRes = R.drawable.a_point_empty
         icons_container.a_point.setImageDrawable(getDrawable(iconRes))
-
     }
 
     override fun setAddressTo(address: String)   {

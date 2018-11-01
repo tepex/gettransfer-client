@@ -37,6 +37,8 @@ import kotlinx.android.synthetic.main.view_transfer_request_info.*
 
 import org.koin.android.ext.android.inject
 
+import timber.log.Timber 
+
 class OffersActivity: BaseActivity(), OffersView {
     @InjectPresenter
     internal lateinit var presenter: OffersPresenter
@@ -60,7 +62,6 @@ class OffersActivity: BaseActivity(), OffersView {
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.i("FindError", "offersActivity")
         setContentView(R.layout.activity_offers)
 
         setSupportActionBar(toolbar as Toolbar)
@@ -230,7 +231,7 @@ class OffersActivity: BaseActivity(), OffersView {
     private fun hideSheetOfferDetails() { bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN }
 
     override fun redirectView() =
-        Utils.showScreenRedirectingAlert(this,getString(R.string.log_in_requirement_error_title),
+        Utils.showScreenRedirectingAlert(this, getString(R.string.log_in_requirement_error_title),
                 getString(R.string.log_in_to_see_transfers_and_offers)) { presenter.openLoginView() }
 
 

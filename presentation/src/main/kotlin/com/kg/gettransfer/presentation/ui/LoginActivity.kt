@@ -31,19 +31,13 @@ class LoginActivity: BaseActivity(), LoginView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
+        
         etEmail.onTextChanged       { presenter.setEmail(it.trim()) }
         etPassword.onTextChanged    { presenter.setPassword(it.trim()) }
         btnLogin.setOnClickListener { presenter.onLoginClick() }
-    }
-
-    private fun setupToolbar() {
-        setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        (toolbar as Toolbar).toolbar_title.setText(R.string.LNG_MENU_TITLE_LOGIN)
-        (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
+        
+        btnForgotPassword.markAsNotImplemented()
+        presenter.screenForReturn = intent.getStringExtra(IntentKeys.SCREEN_FOR_RETURN)
     }
 
     override fun enableBtnLogin(enable: Boolean) {

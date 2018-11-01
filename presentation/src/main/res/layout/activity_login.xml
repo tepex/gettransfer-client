@@ -16,11 +16,28 @@
         android:id="@+id/guide_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/LNG_LOGIN_EMAIL_SECTION"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="30dp" />
+
+    <ImageView
+        android:id="@+id/homeButton"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="24dp"
+        app:srcCompat="@drawable/chevron_left"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="144dp"
+        android:layout_height="120dp"
+        android:layout_centerHorizontal="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/guide_left"
+        app:layout_constraintRight_toRightOf="@id/guide_right"
+        android:src="@drawable/a_b_group"/>
 
     <EditText
         android:id="@+id/etEmail"
@@ -38,32 +55,33 @@
         android:drawablePadding="8dp"
         app:layout_constraintTop_toBottomOf="@+id/icon"
         app:layout_constraintLeft_toLeftOf="@id/guide_left"
-        app:layout_constraintRight_toRightOf="@id/guide_right" />
+        app:layout_constraintRight_toRightOf="@id/guide_right"/>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/passwordLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/LNG_LOGIN_PASSWORD_SECTION"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+        android:layout_marginTop="16dp"
+        app:passwordToggleEnabled="true"
+        app:hintEnabled="false"
+        app:layout_constraintLeft_toLeftOf="@id/guide_left"
+        app:layout_constraintRight_toRightOf="@id/guide_right"
+        app:layout_constraintTop_toBottomOf="@+id/etEmail">
 
-    <EditText
-        android:id="@+id/etPassword"
-        android:layout_width="0dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="8dp"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:background="@color/colorWhite"
-        android:ems="10"
-        android:hint="@string/LNG_LOGIN_PASSWORD"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvPassword" />
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="12dp"
+            android:background="@drawable/rounded_background"
+            android:ems="10"
+            android:hint="@string/LNG_LOGIN_PASSWORD"
+            android:inputType="textPassword"
+            android:drawableStart="@drawable/lock"
+            android:drawablePadding="8dp"/>
+
+    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/btnLogin"
@@ -71,29 +89,29 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/general_button_height"
         android:background="@drawable/btn_bg_rounded"
-        android:enabled="false"
+        android:layout_marginTop="16dp"
         android:text="@string/LNG_LOGIN_BUTTON"
         android:textColor="@color/colorWhite"
         app:layout_constraintTop_toBottomOf="@+id/passwordLayout"
         app:layout_constraintLeft_toLeftOf="@id/guide_left"
-        app:layout_constraintRight_toRightOf="@id/guide_right" />
+        app:layout_constraintRight_toRightOf="@id/guide_right"/>
 
     <TextView
         android:id="@+id/btnForgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/forgot_your_password"
+        android:text="@string/LNG_LOGIN_FORGOT_PASSWORD"
         android:textColor="@android:color/black"
         app:layout_constraintTop_toBottomOf="@+id/btnLogin"
-        app:layout_constraintLeft_toLeftOf="@id/guide_left" />
+        app:layout_constraintLeft_toLeftOf="@id/guide_left"/>
 
     <TextView
         android:id="@+id/tvLoginError"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/LNG_BAD_CREDENTIALS_ERROR"
         android:textColor="@color/color_error"
         android:textSize="12sp"

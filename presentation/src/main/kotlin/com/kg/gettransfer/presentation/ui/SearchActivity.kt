@@ -153,9 +153,9 @@ class SearchActivity: BaseActivity(), SearchView {
     }
 
     private fun initPredefinedPopularPlaces() = listOf(
-        PopularPlace(getString(R.string.airport), R.drawable.popular_place_airport),
-        PopularPlace(getString(R.string.railway), R.drawable.popular_place_railway),
-        PopularPlace(getString(R.string.hotel),   R.drawable.popular_place_hotel))        
+        PopularPlace(getString(R.string.LNG_SEARCH_POPULAR_AIRPORT), R.drawable.popular_place_airport),
+        PopularPlace(getString(R.string.LNG_SEARCH_POPULAR_STATION), R.drawable.popular_place_railway),
+        PopularPlace(getString(R.string.LNG_SEARCH_POPULAR_HOTEL), R.drawable.popular_place_hotel))        
 
     /* SearchView */
     override fun setAddressFrom(address: String, sendRequest: Boolean, isEditing: Boolean) {

@@ -10,7 +10,15 @@
 	android:layout_gravity="center_horizontal|top"
 	android:orientation="vertical"
 	android:background="@android:color/white">
-		
+
+    <include
+        android:id="@+id/icons_container"
+        layout="@layout/a_b_view"
+        android:layout_width="@dimen/search_marginStart"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp" />
+
 	<com.kg.gettransfer.presentation.ui.SearchAddress
 		android:id="@+id/searchFrom"
 		android:layout_width="match_parent"
@@ -33,7 +41,7 @@
 		android:paddingStart="0dp"
 		android:paddingEnd="@dimen/search_form_clear_padding_end"
 		app:hint="@string/LNG_FIELD_DESTINATION"
-		android:layout_below="@+id/separator"/>
+		android:layout_below="@+id/separator" />
 
 	<View
 		android:id="@+id/bottom_separator"
@@ -55,7 +63,7 @@
 			android:layout_height="@dimen/image_inverse_size"
 			app:srcCompat="@drawable/ic_inverse"
 			android:background="?attr/selectableItemBackgroundBorderless"
-			android:clickable="true"/>
+			android:clickable="true" />
 	</FrameLayout>
 
 </RelativeLayout>

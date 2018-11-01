@@ -4,6 +4,7 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
@@ -77,9 +78,9 @@ class OffersPresenter(cc: CoroutineContexts,
             viewState.setTransfer(transferModel)
             changeSortType(SORT_PRICE)
             offerInteractor.setListener(this@OffersPresenter)
-        }, { e -> Timber.e(e)
-            if(e is ApiException && e.code == ApiException.NOT_LOGGED_IN)
-                viewState.redirectView()
+        }, { e ->
+            Timber.e(e)
+            if(e is ApiException && e.code == ApiException.NOT_LOGGED_IN) viewState.redirectView()
             else viewState.setError(e)
         }, { viewState.blockInterface(false) })
 

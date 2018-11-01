@@ -43,8 +43,6 @@
     <string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
     <string name="activity_carrier_transfer_details_title">Trip details</string> <!-- Title, which not used in new design -->
 
-
-
     <!-- old locales -->
 
     <!--&lt;!&ndash; Navigation &ndash;&gt;
@@ -59,7 +57,6 @@
     <string name="nav_footer_read_more">Read more</string>
     &lt;!&ndash; Search form &ndash;&gt;
     <string name="search_from_hint">From</string>
-    <string name="search_from_hint_new">Where from?</string>
     <string name="search_to_hint">To</string>
     <string name="point_on_the_map">Point on the map</string>
     <string name="search">Search</string>
@@ -92,10 +89,8 @@
     <string name="distance_time">Distance: %1$s\nExpected travel time: %2$s</string>
     <string name="distance">Distance: %1$d %2$s</string>
     <string name="transfer_connecting_carriers">Соединяем с ближайшими %1$d перевозчиками</string>
-    <string name="transfer_order">Заявка на трансфер №%1$d</string>
-    <string name="transfer_start_sign">A</string> <!-- Not used in iOS -->
-    <string name="transfer_end_sign">B</string> <!-- Not used in iOS -->
-    <string name="transfer_date_local">%1$s (местное)</string> <!-- Formated string -->
+    <string name="transfer_date_local">%1$s (местное)</string> &lt;!&ndash; Formated string &ndash;&gt;
+    <string name="transfer_order">Заявка на трансфер №%1$d</string> &lt;!&ndash; динамические значения &ndash;&gt;
     <string name="transfer_promo_hint">Enter promocode</string>
     <string name="transfer_promo_result_default">I have got a promo code</string>
     <string name="transfer_promo_result_success">%1$s discount</string>
@@ -138,7 +133,6 @@
     <string name="restore_password"><a href="https://gettransfer.com/en/forgot_password">Restore password</a></string>
     <string name="no_net_info">No internet</string>
     <string name="log_in_to_see_transfers_and_offers">Log in to see transfers and offers</string>
-    <string name="log_in_requirement_error_title">You are not logged in</string>
     <string name="create_new_transfer">Create new transfer</string>
     <string name="no_transfers">You have not уet requested any transfers</string>
     <string name="book">Book</string>
@@ -283,7 +277,7 @@
     <string name="type_your_comments">Type here your comments, requirements, or driver tasks</string>
     <string name="flight_or_train_number">Flight or train number</string>
     <string name="enter_phone_number">Enter phone number</string>
-    <string name="enter_email">Email or phone number</string>
+    <string name="enter_email">Enter email</string>
     <string name="your_name">Your name</string>
     <string name="additional">Additional</string>
     <string name="number_of_passengers">Number of passengers</string>
@@ -411,11 +405,12 @@
     <string name="become_carrier">Become a carrier</string>-->
 
 
-    <string name="forgot_your_password"><u>Forgot your password?</u></string>
-    <string name="commission">Commission 3%%. Refund is available before %s</string>
-
+    <string name="log_in_to_see_transfers_and_offers">Log in to see transfers and offers</string>
+    <string name="log_in_requirement_error_title">You are not logged in</string>
 
     <!-- new locales -->
+
+
 
     <string name="LNG_MISKO">TEST</string>
     <string name="LNG_OK">OK</string>

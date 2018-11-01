@@ -77,7 +77,7 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     private fun setCommission() {
         val date = intent?.extras?.getSerializable("date") as Date?
         if (date != null) {
-            commission.text = getString(R.string.commission, Utils.getFormattedDate(systemInteractor.locale, date))
+            commission.text = getString(R.string.LNG_PAYMENT_COMISSION, Utils.getFormattedDate(systemInteractor.locale, date))
         }
     }
 
