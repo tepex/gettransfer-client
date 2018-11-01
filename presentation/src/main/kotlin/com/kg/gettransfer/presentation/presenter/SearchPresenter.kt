@@ -40,15 +40,11 @@ class SearchPresenter(cc: CoroutineContexts,
         super.attachView(view)
         viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false, !isTo)
         viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false, isTo)
-        showSuggestions()
+        onSearchFieldEmpty()
     }
 
-    fun onSearchFieldEmpty() = showSuggestions()
-
-    private fun showSuggestions() {
-        val lastPlaces = getLastAddressesList()
-        val popularPlaces = createPopularList()
-        viewState.setSuggestedAddresses(lastPlaces, popularPlaces)
+    fun onSearchFieldEmpty() {
+        viewState.setSuggestedAddresses(systemInteractor.getAddressHistory())
     }
 
     fun onPopularSelected(selected: PopularPlace) {
@@ -87,6 +83,19 @@ class SearchPresenter(cc: CoroutineContexts,
 
     private fun checkFields() = routeInteractor.let { it.from != null && it.to != null && it.from != it.to }
 
+    private fun createRouteForOrder() {
+        utils.launchAsyncTryCatchFinally({
+            viewState.blockInterface(true)
+            utils.asyncAwait { routeInteractor.updateDestinationPoint() }
+            utils.asyncAwait { routeInteractor.updateStartPoint() }
+            systemInteractor.setAddressHistory(arrayListOf(routeInteractor.from!!,routeInteractor.to!!))
+
+            router.navigateTo(Screens.CREATE_ORDER)
+        }, { e ->
+            viewState.setError(e)
+        }, { viewState.blockInterface(false) })
+    }
+
     fun inverseWay() {
         val copyTo = routeInteractor.to
         routeInteractor.to = routeInteractor.from
@@ -94,6 +103,4 @@ class SearchPresenter(cc: CoroutineContexts,
         viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false, false)
         viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false, false)
     }
-
-    private fun getLastAddressesList() = systemInteractor.getAddressHistory()
 }

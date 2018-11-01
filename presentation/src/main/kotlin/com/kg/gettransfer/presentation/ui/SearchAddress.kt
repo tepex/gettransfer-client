@@ -172,7 +172,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         setClearButtonVisibility()
         if(!blockRequest) presenter.requestAddressListByPrediction(text.trim())
 		if(s.isNullOrBlank() && addressField.hasFocus()) {
-			parent.onSearchFieldEmpty()
+			parent.onSearchFieldEmpty(isTo)
 			presenter.onClearAddress(isTo)
 		}
     }
