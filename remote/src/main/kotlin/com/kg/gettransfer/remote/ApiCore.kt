@@ -28,8 +28,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeoutException
 
-class ApiCore(private val preferences: PreferencesCache,
-              private val hostListener: HostListener) {
+class ApiCore(private val preferences: PreferencesCache) {
     companion object {
         @JvmField val TAG = "GTR-remote"
         private val ERROR_PATTERN = Regex("^\\<h1\\>(.+)\\<\\/h1\\>$")
@@ -66,7 +65,6 @@ class ApiCore(private val preferences: PreferencesCache,
                 .addCallAdapterFactory(CoroutineCallAdapterFactory()) // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
                 .build()
                 .create(Api::class.java)
-        hostListener.onEndpointChanged(endpoint, preferences.accessToken)
     }
 
     fun changeNetworkConnectionAvailability(isNetworkConnected: Boolean){
@@ -117,7 +115,6 @@ class ApiCore(private val preferences: PreferencesCache,
         val response: ResponseModel<TokenModel> = api.accessToken(apiKey).await()
         val accessToken = response.data!!.token
         preferences.accessToken = accessToken
-        hostListener.onAccessTokenChanged(accessToken)
     }
     
     internal fun remoteException(e: Exception): RemoteException {

@@ -13,9 +13,10 @@ import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.kg.gettransfer.BuildConfig
 
+import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
@@ -28,6 +29,8 @@ import com.kg.gettransfer.presentation.view.SettingsView
 
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+
+import org.koin.android.ext.android.inject
 
 class SettingsActivity: BaseActivity(), SettingsView {
     @InjectPresenter
@@ -51,6 +54,8 @@ class SettingsActivity: BaseActivity(), SettingsView {
 	
 	override fun getPresenter(): SettingsPresenter = presenter
 	
+	private val offerServiceConnection: OfferServiceConnection by inject()
+	
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +78,20 @@ class SettingsActivity: BaseActivity(), SettingsView {
             layoutSettingsLogs.visibility = View.GONE
         }
     }
+    
+    @CallSuper
+    protected override fun onStrart() {
+        super.onStart()
+        offerServiceConnection.connect { newOffer ->
+            Timber.d("new Offer: $newOffer")
+        }
+    }
+    
+    @CallSuper
+    protected override fun onStop() {
+        offerServiceConnection.disconnect()
+        super.onStop()
+    }
 
     override fun setCurrencies(currencies: List<CurrencyModel>) {
         Utils.setCurrenciesDialogListener(this, layoutSettingsCurrency, currencies) { 
@@ -93,24 +112,28 @@ class SettingsActivity: BaseActivity(), SettingsView {
     }
 
     override fun setEndpoints(endpoints: List<EndpointModel>) {
-        Utils.setEndpointsDialogListener(this, layoutSettingsEndpoint, endpoints) {
-            selected -> presenter.changeEndpoint(selected)
+        Utils.setEndpointsDialogListener(this, layoutSettingsEndpoint, endpoints) { selected ->
+            presenter.changeEndpoint(selected)
         }
     }
     
     override fun setCurrency(currency: String)         { tvSelectedCurrency.text = currency }
     override fun setLocale(locale: String)             { tvSelectedLanguage.text = locale }
     override fun setDistanceUnit(distanceUnit: String) { tvSelectedDistanceUnits.text = distanceUnit }
-    override fun setEndpoint(endpoint: String)         { tvSelectedEndpoint.text = endpoint }
+    override fun setEndpoint(endpoint: String) {
+        tvSelectedEndpoint.text = endpoint.name
+        offerServiceConnection.connectSocket(endpoint.delegate.url, accessToken)
+    }
     
     override fun setLogoutButtonEnabled(enabled: Boolean) {
         if(enabled) btnSignOut.visibility = View.VISIBLE else btnSignOut.visibility = View.GONE
     }
 
     override fun restartApp() {
+        baseContext.packageManager.getLaunchIntentForPackage(baseContext.packageName)?.let {
+            it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(it)
+        }
         finish()
-        val intent = baseContext.packageManager.getLaunchIntentForPackage( baseContext.packageName);
-        intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        startActivity(intent)
     }
 }

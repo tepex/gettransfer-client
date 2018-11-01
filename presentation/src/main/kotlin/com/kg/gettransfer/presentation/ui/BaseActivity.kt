@@ -1,14 +1,20 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+
 import android.graphics.Rect
 
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
 
 import android.support.v4.app.Fragment
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatDelegate
+
+import android.view.View
 
 import com.arellomobile.mvp.MvpAppCompatActivity
 
@@ -20,9 +26,13 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
 
+import com.kg.gettransfer.presentation.NetworkStateChangeReceiver
+import com.kg.gettransfer.presentation.NetworkStateChangeReceiver.Companion.IS_NETWORK_AVAILABLE
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.view.BaseView
+
+import java.util.Date
 
 import org.koin.android.ext.android.inject
 
@@ -31,14 +41,6 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
 import timber.log.Timber
-import java.util.*
-import android.content.BroadcastReceiver
-import com.kg.gettransfer.presentation.NetworkStateChangeReceiver
-import android.content.IntentFilter
-import android.support.v4.content.LocalBroadcastManager
-import android.view.View
-import com.kg.gettransfer.presentation.NetworkStateChangeReceiver.Companion.IS_NETWORK_AVAILABLE
-
 
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     internal val systemInteractor: SystemInteractor by inject()
@@ -131,7 +133,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         return (rootViewHeight!! - visibleRect.bottom) < rootViewHeight!! * 0.15
     }
 
-    private fun getRect(): Rect{
+    private fun getRect(): Rect {
         val rect = Rect()
         rootView!!.getWindowVisibleDisplayFrame(rect)
         return rect
@@ -139,15 +141,10 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
 
     fun addKeyBoardDismissListener(checkKeyBoardState: (Boolean) -> Unit) {
         rootView = findViewById(android.R.id.content)
-        rootView!!.viewTreeObserver.addOnGlobalLayoutListener {
-            checkKeyBoardState(countDifference())
-        }
+        rootView!!.viewTreeObserver.addOnGlobalLayoutListener { checkKeyBoardState(countDifference()) }
     }
 
-    protected fun openScreen(screen: String){
-        router.navigateTo(screen)
-
-    }
+    protected fun openScreen(screen: String) { router.navigateTo(screen) }
 }
 
 open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, Screens.NOT_USED) {

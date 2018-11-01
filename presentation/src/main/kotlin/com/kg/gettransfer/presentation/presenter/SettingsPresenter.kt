@@ -98,7 +98,7 @@ class SettingsPresenter(cc: CoroutineContexts,
         systemInteractor.logout()
         val endpoint = endpoints.get(selected)
         systemInteractor.endpoint = endpoint.delegate
-        viewState.setEndpoint(endpoint.name)
+        viewState.setEndpoint(endpoint)
         router.exit() //Without restarting app
         //viewState.restartApp() //For restart app
     }

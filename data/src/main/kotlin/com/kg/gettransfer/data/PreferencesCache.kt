@@ -26,4 +26,3 @@ interface PreferencesCache {
     fun addListener(listener: PreferencesListener)
     fun removeListener(listener: PreferencesListener)
 }
-

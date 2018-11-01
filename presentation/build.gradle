@@ -17,6 +17,7 @@ ext {
     simple_rating_bar_version = "1.4.2"
     slf4j_timber_version      = "1.0.1"
     markwon_version           = "2.0.0"
+    socket_io_version         = "1.0.0"
 }
 
 android {
@@ -170,6 +171,9 @@ dependencies {
 
 	//For markdown
 	implementation "ru.noties:markwon:$markwon_version"
+	
+	// Socket.IO
+	implementation "io.socket:socket.io-client:$socket_io_version"
     
 	testImplementation libs.junit
 	testImplementation libs.hamcrest

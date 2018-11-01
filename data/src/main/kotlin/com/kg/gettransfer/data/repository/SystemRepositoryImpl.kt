@@ -49,6 +49,8 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
             val endpointEntity = endpointMapper.toEntity(value)
             preferencesCache.endpoint = endpointEntity
         }
+        
+    override val accessToken = preferencesCache.accessToken
 
     override var isInternetAvailable: Boolean
         get() = preferencesCache.isInternetAvailable

@@ -1,5 +1,7 @@
 package com.kg.gettransfer.domain.repository
 
+import com.kg.gettransfer.domain.SystemListener
+
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 
@@ -24,4 +26,7 @@ interface SystemRepository {
     fun logout()
     fun getHistory(): List<GTAddress>
     fun setHistory(history: List<GTAddress>)
+    
+    fun addListener(listener: SystemListener)
+    fun removeListener(listener: SystemListener)
 }

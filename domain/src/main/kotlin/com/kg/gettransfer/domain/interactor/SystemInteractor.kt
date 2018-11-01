@@ -1,6 +1,11 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.SystemListener
+
+import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.domain.model.Endpoint
+import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.LoggingRepository
@@ -20,6 +25,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         get() = systemRepository.endpoint
         set(value) { systemRepository.endpoint = value }
         
+    val accessToken = systemRepository.accessToken
     val endpoints = systemRepository.endpoints
 
     var isInternetAvailable: Boolean
@@ -72,4 +78,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     fun getLogsFile() = loggingRepository.getLogsFile()
     fun getAddressHistory() = systemRepository.getHistory()
     fun setAddressHistory(list: List<GTAddress>) = systemRepository.setHistory(list)
+    
+    fun addListener(listener: SystemListener)    { repository.addListener(listener) }
+    fun removeListener(listener: SystemListener) { repository.removeListener(listener) }
 }

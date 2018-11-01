@@ -1,4 +1,4 @@
-package com.kg.gettransfer.offer
+package com.kg.gettransfer.service
 
 import android.app.Service
 
@@ -9,22 +9,15 @@ import android.os.IBinder
 
 import android.support.annotation.CallSuper
 
-import com.kg.gettransfer.data.model.OfferEntity
-
-import com.kg.gettransfer.offer.mapper.OfferMapper
-
-import com.kg.gettransfer.remote.HostListener
-import com.kg.gettransfer.remote.model.EndpointModel
-
 import timber.log.Timber
 
 /**
 https://github.com/Mahabali/Socket.io-Android-Chat
 */
-class SocketIOService(private val mapper: OfferMapper): Service(), OfferSocket, HostListener {
+class SocketIOService(/*private val mapper: OfferMapper*/): Service(), OfferSocket {
     private var socket: Socket? = null
-    private lateinit var endpoint: EndpointModel
-    private lateinit var accessToken: String
+    internal var endpoint: EndpointModel? = null
+    internal var accessToken: String? = null
     
     private val binder = LocalBinder()
     
@@ -36,40 +29,38 @@ class SocketIOService(private val mapper: OfferMapper): Service(), OfferSocket, 
         private val NEW_OFFER_RE = Regex("^newOffer/(\\d+)$")
     }
     
+    override fun onAccessTokenChanged(accessToken: String) {
+        this.accessToken = accessToken
+        socket?.let { restartSocket() }
+    }
+    
+    override fun onEndpointChanged(endpoint: EndpointModel, accessToken: String) {
+        this.endpoint = endpoint
+        this.accessToken = accessToken
+        socket?.let { restartSocket() }
+    }
+    
     override fun onBind(intent: Intent): IBinder = binder
 
     @CallSuper
-    override fun onCreate() {
-        super.onCreate()
-        initializeSocket()
-        addSocketHandlers()
-    }
-
-    @CallSuper
     override fun onDestroy() {
-        super.onDestroy()
         closeSocketSession()
+        super.onDestroy()
     }
 
     override fun onUnbind(intent: Intent) = serviceBinded
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int) = START_STICKY
     
-    private fun initializeSocket() {
-        val options = IO.Options().apply {
-            path = PATH
-            forceNew = true
-        }
-        Timber.d("options: ${options.path}")
-        socket = IO.socket(endpoint.url, options)
-    }
-
     private fun closeSocketSession() {
-        socket.disconnect()
-        socket.off()
+        Timber.d("closeSocketSession")
+        socket?.let {
+            it.disconnect()
+            it.off()
+        }
     }
 
     private fun addSocketHandlers() {
-        with(socket.io()) {
+        with(socket!!.io()) {
             on(Manager.EVENT_TRANSPORT) { args ->
                 Timber.d("event transport. cookie: $accessToken")
                 val transport = args.first() as Transport
@@ -122,22 +113,32 @@ class SocketIOService(private val mapper: OfferMapper): Service(), OfferSocket, 
                 
                 */
             }
+            on(Socket.EVENT_PING) { _    -> Timber.d("ping") }
+            on(Socket.EVENT_PONG) { args -> Timber.d("pong ${args.first()}") }
         }
-        socket.connect()
+        socket!!.connect()
     }
     
     fun connect() {
-        socket.connect()
+        val options = IO.Options().apply {
+            path = PATH
+            forceNew = true
+        }
+        Timber.d("Connecting... options: ${options.path}")
+        socket = IO.socket(endpoint.url, options)
+        addSocketHandlers()
     }
 
     fun disconnect() {
-        socket.disconnect()
+        socket?.let { it.disconnect() }
     }
 
     fun restartSocket() {
-        socket.off()
-        socket.disconnect()
-        addSocketHandlers()
+        socket?.let {
+            it.off()
+            it.disconnect()
+        }
+        connect()
     }
     
     /*
@@ -172,5 +173,6 @@ class SocketIOService(private val mapper: OfferMapper): Service(), OfferSocket, 
     
     inner class LocalBinder: Binder() {
         val service = this@SocketIOService
+            private set
     }
 }
