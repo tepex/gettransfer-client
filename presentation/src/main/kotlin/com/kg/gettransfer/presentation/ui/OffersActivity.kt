@@ -1,13 +1,14 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
+
 import android.support.v4.view.ViewPager
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
-import android.util.Log
 
 import android.view.View
 
@@ -60,7 +61,7 @@ class OffersActivity: BaseActivity(), OffersView {
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i("FindError", "offersActivity")
+        Timber.i("FindError", "offersActivity")
         setContentView(R.layout.activity_offers)
 
         setSupportActionBar(toolbar as Toolbar)
@@ -87,9 +88,7 @@ class OffersActivity: BaseActivity(), OffersView {
 
     private fun setOfferDetailsSheetListener() {
         bsOfferDetails.setBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(p0: View, p1: Float) {
-
-            }
+            override fun onSlide(p0: View, p1: Float) {}
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when(newState) {

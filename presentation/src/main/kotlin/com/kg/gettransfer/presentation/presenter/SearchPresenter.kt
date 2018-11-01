@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -88,11 +87,10 @@ class SearchPresenter(cc: CoroutineContexts,
             viewState.blockInterface(true)
             utils.asyncAwait { routeInteractor.updateDestinationPoint() }
             utils.asyncAwait { routeInteractor.updateStartPoint() }
-            systemInteractor.setAddressHistory(arrayListOf(routeInteractor.from!!,routeInteractor.to!!))
+            systemInteractor.setAddressHistory(arrayListOf(routeInteractor.from!!, routeInteractor.to!!))
 
             router.navigateTo(Screens.CREATE_ORDER)
-        }, { e ->
-            viewState.setError(e)
+        }, { e -> viewState.setError(e)
         }, { viewState.blockInterface(false) })
     }
 
@@ -102,13 +100,5 @@ class SearchPresenter(cc: CoroutineContexts,
         routeInteractor.from = copyTo
         viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false, false)
         viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false, false)
-    }
-
-    fun inverseWay() {
-        val copyTo = routeInteractor.to
-        routeInteractor.to = routeInteractor.from
-        routeInteractor.from = copyTo
-        viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false)
-        viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false)
     }
 }

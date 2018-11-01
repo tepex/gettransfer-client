@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.ApiException

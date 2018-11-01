@@ -18,7 +18,6 @@ import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.google.android.gms.maps.model.LatLngBounds
 
 import com.google.android.gms.maps.model.LatLngBounds
 
@@ -38,8 +37,8 @@ import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
 import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
-import kotlinx.android.synthetic.main.a_b_view.view.*
 
+import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.android.synthetic.main.search_form.view.*
