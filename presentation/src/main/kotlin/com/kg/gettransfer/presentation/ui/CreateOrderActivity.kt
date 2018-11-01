@@ -100,20 +100,14 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             if(intent != null) return intent
                 
             when(screenKey) {
-                Screens.LICENCE_AGREE -> {
-                    val intentLicense = Intent(context, WebPageActivity()::class.java)
-                    intentLicense.putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_LICENSE)
-                    return intentLicense
-                }
+                Screens.LICENCE_AGREE -> return Intent(context, WebPageActivity()::class.java)
+                        .putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_LICENSE)
                 Screens.OFFERS -> return Intent(context, OffersActivity::class.java)
                 Screens.PASSENGER_MODE -> return Intent(context, MainActivity::class.java)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                Screens.LOGIN -> {
-                    val loginIntent = Intent(context, LoginActivity::class.java)
-                    loginIntent.putExtra(IntentKeys.SCREEN_FOR_RETURN, Screens.OFFERS )
-                    return loginIntent
-                }
+                Screens.LOGIN -> return Intent(context, LoginActivity::class.java)
+                        .putExtra(IntentKeys.SCREEN_FOR_RETURN, Screens.OFFERS )
             }
             return null
         }

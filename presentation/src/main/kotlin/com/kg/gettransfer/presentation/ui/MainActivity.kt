@@ -40,6 +40,7 @@ import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.presentation.IntentKeys
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.ProfileModel
@@ -120,6 +121,9 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 Screens.REG_CARRIER -> return Intent(context, WebPageActivity()::class.java)
                         .putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_REG_CARRIER)
+                Screens.LOGIN -> return Intent(context, LoginActivity::class.java)
+                        .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                        .putExtra(IntentKeys.SCREEN_FOR_RETURN, presenter.screenForReturnAfterLogin)
             }
             return null
         }

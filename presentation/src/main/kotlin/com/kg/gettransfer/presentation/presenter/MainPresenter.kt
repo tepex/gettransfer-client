@@ -41,6 +41,8 @@ class MainPresenter(cc: CoroutineContexts,
     private var markerStateLifted = false
     private var isMarkerAnimating = true
 
+    var screenForReturnAfterLogin: String? = null
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         systemInteractor.lastMode = Screens.PASSENGER_MODE
@@ -168,18 +170,26 @@ class MainPresenter(cc: CoroutineContexts,
     }
 
     fun onNextClick()           { router.navigateTo(Screens.CREATE_ORDER) }
-    fun onLoginClick()          { router.navigateTo(Screens.LOGIN) ;     logEvent(LOGIN_CLICKED) }
     fun onAboutClick()          { router.navigateTo(Screens.ABOUT) ;     logEvent(ABOUT_CLICKED) }
     fun readMoreClick()         { router.navigateTo(Screens.READ_MORE) ; logEvent(BEST_PRICE_CLICKED) }
     fun onSettingsClick()       { router.navigateTo(Screens.SETTINGS) ;  logEvent(SETTINGS_CLICKED) }
     fun onRequestsClick()       { router.navigateTo(Screens.REQUESTS) ;  logEvent(TRANSFER_CLICKED) }
+    fun onLoginClick() {
+        screenForReturnAfterLogin = Screens.REQUESTS
+        router.navigateTo(Screens.LOGIN)
+        logEvent(LOGIN_CLICKED)
+    }
+
     fun onBecomeACarrierClick() {
         logEvent(DRIVER_CLICKED)
         if(systemInteractor.isLoggedIn()) {
             if(systemInteractor.account.groups!!.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) router.navigateTo(Screens.CARRIER_MODE)
             else router.navigateTo(Screens.REG_CARRIER)
         }
-        else router.navigateTo(Screens.LOGIN)
+        else {
+            screenForReturnAfterLogin = Screens.CARRIER_MODE
+            router.navigateTo(Screens.LOGIN)
+        }
     }
 
     private fun comparePointsWithRounding(point1: LatLng?, point2: LatLng?): Boolean {

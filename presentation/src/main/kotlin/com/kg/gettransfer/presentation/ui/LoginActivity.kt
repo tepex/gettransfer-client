@@ -19,8 +19,23 @@ class LoginActivity: BaseActivity(), LoginView {
     
     @ProvidePresenter
     fun createLoginPresenter(): LoginPresenter = LoginPresenter(coroutineContexts, router, systemInteractor)
-    
-    protected override var navigator = object: BaseNavigator(this) {}
+
+    protected override var navigator = object: BaseNavigator(this) {
+        protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
+            val intent = super.createActivityIntent(context, screenKey, data)
+            if (intent != null) return intent
+
+            when (screenKey) {
+                Screens.REQUESTS -> return Intent(context, RequestsActivity::class.java)
+                Screens.CARRIER_MODE -> return Intent(context, CarrierTripsActivity::class.java)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                Screens.REG_CARRIER -> return Intent(context, WebPageActivity()::class.java)
+                        .putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_REG_CARRIER)
+            }
+            return null
+        }
+    }
     
     override fun getPresenter(): LoginPresenter = presenter
 

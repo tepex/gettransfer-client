@@ -9,6 +9,8 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.view.LoginView
 
@@ -40,7 +42,10 @@ class LoginPresenter(cc: CoroutineContexts,
                 viewState.blockInterface(true, true)
                 utils.asyncAwait { systemInteractor.login(email!!, password!!) }
                 if(screenForReturn != null) {
-                    val screen = screenForReturn
+                    val screen = if(screenForReturn == Screens.CARRIER_MODE){
+                        if(systemInteractor.account.groups!!.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) Screens.CARRIER_MODE
+                        else Screens.REG_CARRIER
+                    } else screenForReturn
                     screenForReturn = null
                     router.navigateTo(screen)
                 } else
