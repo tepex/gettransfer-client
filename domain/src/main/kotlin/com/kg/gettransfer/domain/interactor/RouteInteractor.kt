@@ -8,6 +8,7 @@ import com.kg.gettransfer.domain.model.RouteInfo
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.RouteRepository
+
 import java.io.IOException
 
 class RouteInteractor(private val geoRepository: GeoRepository,
@@ -24,10 +25,10 @@ class RouteInteractor(private val geoRepository: GeoRepository,
     fun getCurrentAddress() = geoRepository.getCurrentAddress()
 
     fun getAddressByLocation(point: Point, pair: Pair<Point, Point>): GTAddress {
-        try {
-            from = geoRepository.getAddressByLocation(point, pair)
-            return from!!
-        } catch (e: IOException) { throw e }
+        from = try {
+            geoRepository.getAddressByLocation(point, pair)
+        } catch(e: IOException) { throw e }
+        return from!!
     }
 
     fun isConcreteObjects() = from?.isConcreteObject() ?: false && to?.isConcreteObject() ?: false
