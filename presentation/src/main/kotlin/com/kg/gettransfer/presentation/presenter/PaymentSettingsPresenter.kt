@@ -13,11 +13,9 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Payment
-import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.Screens
 
@@ -35,7 +33,6 @@ import timber.log.Timber
 class PaymentSettingsPresenter(cc: CoroutineContexts,
                                router: Router,
                                systemInteractor: SystemInteractor,
-                               private val transferInteractor: TransferInteractor,
                                private val offerInteractor: OfferInteractor,
                                private val paymentInteractor: PaymentInteractor): BasePresenter<PaymentSettingsView>(cc, router, systemInteractor) {
     companion object {

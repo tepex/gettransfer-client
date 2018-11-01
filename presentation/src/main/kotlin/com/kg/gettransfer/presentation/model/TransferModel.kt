@@ -1,7 +1,8 @@
 package com.kg.gettransfer.presentation.model
 
 import com.kg.gettransfer.domain.model.DistanceUnit
-import java.util.*
+
+import java.util.Date
 
 class TransferModel(val id: Long,
                     val status: String,
