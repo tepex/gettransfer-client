@@ -128,7 +128,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         if(rootViewHeight == null) rootViewHeight = rootView!!.height
 
         val visibleRect = getRect()
-        return (visibleRect.bottom - rootViewHeight!!)  == visibleRect.top
+        return (visibleRect.bottom - rootViewHeight!!) == visibleRect.top
     }
 
     private fun getRect(): Rect{
