@@ -158,8 +158,8 @@ class PreferencesImpl(context: Context) : PreferencesCache, SystemCache {
         _accessToken = SystemCache.INVALID_TOKEN
     }
 
-    override var lastAddresses: List<GTAddressEntity>?
-        get() = JsonParser().getFromJson(accountPrefs.getString(ACCOUNT_ADDRESS_HISTORY, null))
+    override var lastAddresses: List<GTAddressEntity>
+        get() = JsonParser().getFromJson(accountPrefs.getString(ACCOUNT_ADDRESS_HISTORY, null)) ?: emptyList<GTAddressEntity>()
         set(value) {
             accountPrefs.edit()
                     .putString(ACCOUNT_ADDRESS_HISTORY, JsonParser().writeToJson(value!!))

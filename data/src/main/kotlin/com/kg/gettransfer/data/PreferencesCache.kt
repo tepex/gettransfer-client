@@ -20,6 +20,6 @@ interface PreferencesCache {
     
     fun clearAccount()
 
-    var lastAddresses: List<GTAddressEntity>?
+    var lastAddresses: List<GTAddressEntity>
 }
 

@@ -82,8 +82,8 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
         factory.retrieveCacheDataStore().setAccount(accountEntity)
         return accountMapper.fromEntity(accountEntity)
     }
-    override fun getHistory(): List<GTAddress> =
-            preferencesCache.lastAddresses!!.map { addressMapper.fromEntity(it) }
+    override fun getHistory() =
+            preferencesCache.lastAddresses.map { addressMapper.fromEntity(it) }
 
     override fun setHistory(history: List<GTAddress>) {
         preferencesCache.lastAddresses = history.map { addressMapper.toEntity(it) }
