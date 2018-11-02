@@ -319,9 +319,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
     override fun initSearchForm() {
-        //TODO replace hardcode when string resources for localization will be updated
-        searchFrom.sub_title.text = "Pickup location"
-        searchTo.sub_title.text = "To: airport, trainstation, city, hotel, other place"
+        searchFrom.sub_title.text = getString(R.string.LNG_FIELD_SOURCE_PICKUP)
+        searchTo.sub_title.text = getString(R.string.LNG_FIELD_DESTINATION)
     }
 
     override fun setAddressFrom(address: String) {
