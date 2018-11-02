@@ -174,24 +174,13 @@ class PreferencesImpl(context: Context): PreferencesCache, SystemCache, SystemLi
     override var lastAddresses: List<GTAddressEntity>
         get() {
             val json = accountPrefs.getString(ACCOUNT_ADDRESS_HISTORY, null)
-            Timber.d("lastAddresses: $json")
-            var ret: List<GTAddressEntity> = emptyList<GTAddressEntity>()
-            if(json != null) {
-                try {
-                    ret = JSON.parse(GTAddressEntity.serializer().list, json)
-                }
-                catch(e: Exception) {
-                    Timber.e(e)
-                }
-            }
-            return ret 
+            return if(json != null) JSON.parse(GTAddressEntity.serializer().list, json) else emptyList<GTAddressEntity>()
         }
         set(value) {
             with(accountPrefs.edit()) {
                 putString(ACCOUNT_ADDRESS_HISTORY, JSON.stringify(GTAddressEntity.serializer().list, value))
                 apply()
             }            
-            Timber.d("save lastAddresses: $value")
         }
 
     fun <T> setList(editor: SharedPreferences.Editor, key: String, list: List<T>) {
