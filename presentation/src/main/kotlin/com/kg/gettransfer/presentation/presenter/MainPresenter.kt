@@ -127,7 +127,8 @@ class MainPresenter(cc: CoroutineContexts,
         if(lastPoint == null) return
 		/* Не запрашивать адрес, если перемещение составило менее minDistance
         val distance = FloatArray(2)
-        Location.distanceBetween(lastPoint!!.latitude, lastPoint!!.longitude, lastAddressPoint.latitude, lastAddressPoint.longitude, distance)
+        Location.distanceBetween(lastPoint!!.latitude, lastPoint!!.longitude,
+                                 lastAddressPoint.latitude, lastAddressPoint.longitude, distance)
         //if(distance.get(0) < minDistance) return
         */
 
@@ -163,9 +164,7 @@ class MainPresenter(cc: CoroutineContexts,
     }
 
     private fun navigateToFindAddress(addresses: Pair<String, String>) {
-        routeInteractor.from.let {
-            router.navigateTo(Screens.FIND_ADDRESS, addresses)
-        }
+        routeInteractor.from?.let { router.navigateTo(Screens.FIND_ADDRESS, addresses) }
     }
 
     fun onNextClick()           { router.navigateTo(Screens.CREATE_ORDER) }
@@ -189,17 +188,6 @@ class MainPresenter(cc: CoroutineContexts,
             screenForReturnAfterLogin = Screens.CARRIER_MODE
             router.navigateTo(Screens.LOGIN)
         }
-    }
-
-    private fun comparePointsWithRounding(point1: LatLng?, point2: LatLng?): Boolean {
-        if(point2 == null || point1 == null) return false
-        val criteria = 0.000_001
-
-        var latDiff = point1.latitude - point1.latitude
-        if(latDiff < 0) latDiff *= -1
-        var lngDiff = point2.longitude - point2.longitude
-        if(lngDiff < 0) lngDiff *= -1
-        return latDiff < criteria && lngDiff < criteria
     }
 
     private fun comparePointsWithRounding(point1: LatLng?, point2: LatLng?): Boolean {

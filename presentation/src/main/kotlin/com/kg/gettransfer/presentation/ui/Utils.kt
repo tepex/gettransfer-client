@@ -36,8 +36,6 @@ import android.widget.TextView
 
 import android.widget.Toast
 
-import android.widget.Toast
-
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
