@@ -41,6 +41,7 @@ import com.kg.gettransfer.presentation.view.SearchView
 
 import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_search.*
+import kotlinx.android.synthetic.main.search_address.*
 import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.android.synthetic.main.search_form.view.*
 import kotlinx.android.synthetic.main.toolbar_search_address.*
@@ -107,8 +108,10 @@ class SearchActivity: BaseActivity(), SearchView {
 
     private fun initSearchFields() {
         searchFrom.initWidget(this, false)
+        searchFrom.sub_title.text = getString(R.string.LNG_FIELD_SOURCE_PICKUP)
 //        searchFrom.text = intent.getStringExtra(EXTRA_ADDRESS_FROM)
         searchTo.initWidget(this, true)
+        searchTo.sub_title.text = getString(R.string.LNG_FIELD_DESTINATION)
   //      searchTo.text = intent.getStringExtra(EXTRA_ADDRESS_TO)
 
         changeFocusForSearch()
