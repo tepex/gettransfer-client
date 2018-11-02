@@ -32,7 +32,6 @@ import com.kg.gettransfer.domain.repository.*
 import com.kg.gettransfer.geo.GeoRepositoryImpl
 
 import com.kg.gettransfer.prefs.PreferencesImpl
-import com.kg.gettransfer.prefs.mapper.GTAddressMapper
 
 import kotlinx.coroutines.Dispatchers
 
@@ -57,9 +56,7 @@ val geoModule = module {
 }
 
 val prefsModule = module {
-    single { Gson() }
-    single { GTAddressMapper(get()) }
-    single { PreferencesImpl(get(), get()) } bind PreferencesCache::class bind SystemCache::class
+    single { PreferencesImpl(get()) } bind PreferencesCache::class bind SystemCache::class
 }
 
 val loggingModule = module {

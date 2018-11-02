@@ -11,12 +11,13 @@ import com.kg.gettransfer.data.model.*
 import com.kg.gettransfer.domain.SystemListener
 import com.kg.gettransfer.domain.SystemListenerManager
 
-import com.kg.gettransfer.prefs.mapper.GTAddressMapper
-
 
 import com.google.gson.Gson
 
-class PreferencesImpl(context: Context, private val addressMapper: GTAddressMapper): PreferencesCache, SystemCache, SystemListenerManager {
+import kotlinx.serialization.list
+import kotlinx.serialization.json.JSON
+
+class PreferencesImpl(context: Context): PreferencesCache, SystemCache, SystemListenerManager {
     companion object {
         const val ACCOUNT = "account"
         const val CONFIGS = "configs"
@@ -108,6 +109,7 @@ class PreferencesImpl(context: Context, private val addressMapper: GTAddressMapp
     override var configs: ConfigsEntity
         get() {
             val gson = Gson()
+            
             return ConfigsEntity(gson.fromJson(configsPrefs.getString(CONFIGS_TRANSPORT_TYPES, null), Array<TransportTypeEntity>::class.java).toList(),
                     gson.fromJson(configsPrefs.getString(CONFIGS_PAYPAL_CREDITIALS, null), PaypalCredentialsEntity::class.java),
                     gson.fromJson(configsPrefs.getString(CONFIGS_AVAILABLE_LOCALES, null), Array<LocaleEntity>::class.java).toList(),
@@ -170,11 +172,11 @@ class PreferencesImpl(context: Context, private val addressMapper: GTAddressMapp
     override var lastAddresses: List<GTAddressEntity>
         get() {
             val json = accountPrefs.getString(ACCOUNT_ADDRESS_HISTORY, null)
-            return if(json != null) addressMapper.fromJson(json) else emptyList<GTAddressEntity>()
+            return if(json != null) JSON.parse(GTAddressEntity.serializer().list, json) else emptyList<GTAddressEntity>()
         }
         set(value) {
             with(accountPrefs.edit()) {
-                putString(ACCOUNT_ADDRESS_HISTORY, addressMapper.toJson(value))
+                putString(ACCOUNT_ADDRESS_HISTORY, JSON.stringify(GTAddressEntity.serializer().list, value))
                 apply()
             }
         }
