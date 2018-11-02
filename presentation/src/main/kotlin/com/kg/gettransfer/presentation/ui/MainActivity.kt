@@ -17,9 +17,9 @@ import android.support.v4.widget.DrawerLayout
 
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
+import android.text.Html
 
 import android.transition.Fade
-import android.util.Log
 
 import android.view.Gravity
 import android.view.MenuItem
@@ -46,7 +46,9 @@ import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
 
+import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_navigation.*
 
@@ -58,7 +60,6 @@ import ru.terrakok.cicerone.commands.Forward
 import timber.log.Timber
 
 class MainActivity: BaseGoogleMapActivity(), MainView {
-
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
 
@@ -240,6 +241,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         val versionCode = BuildConfig.VERSION_CODE
         (navFooterVersion as TextView).text =
                 String.format(getString(R.string.nav_footer_version), versionName, versionCode)
+        //navFooterReadMore.text = Html.fromHtml(Utils.convertMarkdownToHtml(getString(R.string.LNG_READMORE)))
         navFooterStamp.setOnClickListener(readMoreListener)
         navFooterReadMore.setOnClickListener(readMoreListener)
 
@@ -310,14 +312,28 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         searchFrom.text = getString(R.string.search_nothing)
     }
 
+    override fun initSearchForm() {
+        //TODO replace hardcode when string resources for localization will be updated
+        searchFrom.sub_title.text = "Pickup location"
+        searchTo.sub_title.text = "To: airport, trainstation, city, hotel, other place"
+    }
+
     override fun setAddressFrom(address: String) {
         searchFrom.text = address
         enableBtnNext()
+        var iconRes: Int
+        if(address.isNotEmpty()) iconRes = R.drawable.a_point_filled
+        else iconRes = R.drawable.a_point_empty
+        icons_container.a_point.setImageDrawable(getDrawable(iconRes))
     }
 
     override fun setAddressTo(address: String)   {
         searchTo.text = address
         enableBtnNext()
+        var iconRes: Int
+        if(address.isNotEmpty()) iconRes = R.drawable.b_point_filled
+        else iconRes = R.drawable.b_point_empty
+        icons_container.b_point.setImageDrawable(getDrawable(iconRes))
     }
 
     private fun enableBtnNext() {

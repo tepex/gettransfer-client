@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import android.util.Patterns
 
@@ -9,17 +8,12 @@ import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.maps.CameraUpdate
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.R.string.from
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.PromoInteractor
+import com.kg.gettransfer.domain.interactor.*
 
 import com.kg.gettransfer.domain.model.Trip
-
-import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.Screens
 
@@ -47,7 +41,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                            systemInteractor: SystemInteractor,
                            private val routeInteractor: RouteInteractor,
                            private val transferInteractor: TransferInteractor,
-                           private val promoInteractor: PromoInteractor): BasePresenter<CreateOrderView>(cc, router, systemInteractor) {
+                           private val promoInteractor: PromoInteractor,
+                           private val offersInteractor: OfferInteractor): BasePresenter<CreateOrderView>(cc, router, systemInteractor) {
 
     private var user: UserModel = Mappers.getUserModel(systemInteractor.account)
     private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies!!)
@@ -119,6 +114,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             viewState.blockInterface(true)
             val from = routeInteractor.from!!.cityPoint
             val to = routeInteractor.to!!.cityPoint
+
             val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
             routeInfo?.let {
                 var prices: Map<String, String>? = null
@@ -253,7 +249,9 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                                          comment,
                                                                          Mappers.getUser(user),
                                                                          promoCode,
-                                                                         false)) }
+                                                                         false))
+            }
+            offersInteractor.getOffers(transfer.id)
             Timber.d("new transfer: %s", transfer)
             router.navigateTo(Screens.OFFERS)
             logCreateTransfer(RESULT_SUCCESS)

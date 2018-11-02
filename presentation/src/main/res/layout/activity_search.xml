@@ -38,7 +38,7 @@
                 <TextView
                     android:id="@+id/address_title"
                     style="@style/list_title"
-                    android:text="@string/title_latest" />
+                    android:text="@string/LNG_SEARCH_RECENT_PLACES" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_addressList"
@@ -56,7 +56,7 @@
                 <TextView
                     android:id="@+id/popular_title"
                     style="@style/list_title"
-                    android:text="@string/title_popular" />
+                    android:text="@string/LNG_SEARCH_POPULAR_PLACES" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_popularList"

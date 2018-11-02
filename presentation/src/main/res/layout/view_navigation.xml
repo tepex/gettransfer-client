@@ -134,7 +134,7 @@
                 android:layout_above="@+id/navFooterVersion"
                 android:layout_marginBottom="@dimen/nav_footer_read_more_bottom"
                 android:gravity="center_horizontal"
-                android:text="@string/nav_footer_read_more" />
+                android:text="@string/LNG_READMORE" />
 
             <TextView
                 android:id="@+id/navFooterVersion"

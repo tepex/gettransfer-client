@@ -38,8 +38,10 @@ import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
 
+import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.search_form.*
+import kotlinx.android.synthetic.main.search_form.view.*
 import kotlinx.android.synthetic.main.toolbar_search_address.*
 import kotlinx.android.synthetic.main.toolbar_search_address.view.*
 
@@ -48,11 +50,13 @@ import org.koin.android.ext.android.inject
 class SearchActivity: BaseActivity(), SearchView {
     @InjectPresenter
     internal lateinit var presenter: SearchPresenter
-    
+
     internal val routeInteractor: RouteInteractor by inject()
     private lateinit var current: SearchAddress
 
     var mBounds: LatLngBounds? = null
+    
+    private lateinit var predefinedPopularPlaces: List<PopularPlace>
 
     @ProvidePresenter
     fun createSearchPresenter(): SearchPresenter = SearchPresenter(coroutineContexts,
@@ -70,7 +74,7 @@ class SearchActivity: BaseActivity(), SearchView {
 
         @JvmField val LATLON_BOUNDS = "latlon_map_bounds"
     }
-    
+
     protected override var navigator = object: BaseNavigator(this) {
         protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
             when(screenKey) {
@@ -79,9 +83,9 @@ class SearchActivity: BaseActivity(), SearchView {
             return null
         }
     }
-    
+
     override fun getPresenter(): SearchPresenter = presenter
-    
+
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,7 +100,7 @@ class SearchActivity: BaseActivity(), SearchView {
 
         initSearchFields()
 //        changeFocusForSearch()
-        setPopularPlaces()
+        predefinedPopularPlaces = initPredefinedPopularPlaces()
         ivInverseWay.setOnClickListener { presenter.inverseWay() }
     }
 
@@ -130,7 +134,17 @@ class SearchActivity: BaseActivity(), SearchView {
         toolbar.ivBack.setOnClickListener { presenter.onBackCommandClick() }
     }
 
-    fun onSearchFieldEmpty() = presenter.onSearchFieldEmpty()
+    fun onSearchFieldEmpty(isTo: Boolean) {
+        presenter.onSearchFieldEmpty()
+        var iconRes: Int
+        if (isTo){
+            iconRes = R.drawable.b_point_empty
+            searchForm.icons_container.b_point.setImageDrawable(getDrawable(iconRes))
+        } else {
+            iconRes = R.drawable.a_point_empty
+            searchForm.icons_container.a_point.setImageDrawable(getDrawable(iconRes))
+        }
+    }
 
     override fun onBackPressed() {
         searchTo.clearFocusOnExit()
@@ -138,44 +152,49 @@ class SearchActivity: BaseActivity(), SearchView {
         presenter.onBackCommandClick()
     }
 
-    private fun setPopularPlaces() {
-        presenter.popularPlaceTitles = ArrayList<String>()
-        presenter.popularPlaceTitles!!.add(resources.getString(R.string.airport))
-        presenter.popularPlaceTitles!!.add(resources.getString(R.string.railway))
-        presenter.popularPlaceTitles!!.add(resources.getString(R.string.hotel))
-
-        presenter.popularPlaceIcons = ArrayList<Int>()
-        presenter.popularPlaceIcons!!.add(R.drawable.popular_place_airport)
-        presenter.popularPlaceIcons!!.add(R.drawable.popular_place_railway)
-        presenter.popularPlaceIcons!!.add(R.drawable.popular_place_hotel)
-
-    }
+    private fun initPredefinedPopularPlaces() = listOf(
+        PopularPlace(getString(R.string.LNG_SEARCH_POPULAR_AIRPORT), R.drawable.popular_place_airport),
+        PopularPlace(getString(R.string.LNG_SEARCH_POPULAR_STATION), R.drawable.popular_place_railway),
+        PopularPlace(getString(R.string.LNG_SEARCH_POPULAR_HOTEL), R.drawable.popular_place_hotel))        
 
     /* SearchView */
-    override fun setAddressFrom(address: String, sendRequest: Boolean, isEditing: Boolean) { searchFrom.initText(address, sendRequest, isEditing) }
-    override fun setAddressTo(address: String, sendRequest: Boolean, isEditing: Boolean)   { searchTo.initText(address, sendRequest, isEditing) }
-    
+    override fun setAddressFrom(address: String, sendRequest: Boolean, isEditing: Boolean) {
+        searchFrom.initText(address, sendRequest, isEditing)
+        if(address.isNotEmpty()) updateIcon(false)
+    }
+
+    override fun setAddressTo(address: String, sendRequest: Boolean, isEditing: Boolean) {
+        searchTo.initText(address, sendRequest, isEditing)
+        if(address.isNotEmpty()) updateIcon(false)
+    }
+
     override fun setAddressListByAutoComplete(list: List<GTAddress>) {
         ll_popular.visibility = View.GONE
         address_title.visibility = View.GONE
-        if(rv_addressList.adapter != null){
+        if(rv_addressList.adapter != null) {
             (rv_addressList.adapter as AddressAdapter).isLastAddresses = false
             (rv_addressList.adapter as AddressAdapter).updateList(list)
         }
     }
-    
+
     override fun onFindPopularPlace(isTo: Boolean, place: String) {
         val searchField = if(isTo) searchTo else searchFrom
         searchField.initText(place, true, true)
     }
 
-    override fun setSuggestedAddresses(addressesList: List<GTAddress>, popularList: List<PopularPlace>) {
+    override fun setSuggestedAddresses(addressesList: List<GTAddress>) {
         ll_popular.visibility = View.VISIBLE
-        rv_popularList.adapter = PopularAddressAdapter(presenter, popularList)
+        rv_popularList.adapter = PopularAddressAdapter(presenter, predefinedPopularPlaces)
         val addressAdapter = AddressAdapter(presenter, addressesList)
         addressAdapter.isLastAddresses = true
+        
         rv_addressList.adapter = addressAdapter
         if(addressesList.isEmpty()) address_title.visibility = View.GONE
         else address_title.visibility = View.VISIBLE
+    }
+
+    override fun updateIcon(isTo: Boolean) {
+        if(isTo) searchForm.icons_container.b_point.setImageDrawable(getDrawable(R.drawable.b_point_filled))
+        else searchForm.icons_container.a_point.setImageDrawable(getDrawable(R.drawable.a_point_filled))
     }
 }

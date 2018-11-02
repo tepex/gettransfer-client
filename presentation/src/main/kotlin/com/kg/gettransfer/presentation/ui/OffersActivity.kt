@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
+
 import android.support.v4.view.ViewPager
 
 import android.support.v7.widget.LinearLayoutManager
@@ -36,6 +37,8 @@ import kotlinx.android.synthetic.main.view_transfer_request_info.*
 
 import org.koin.android.ext.android.inject
 
+import timber.log.Timber 
+
 class OffersActivity: BaseActivity(), OffersView {
     @InjectPresenter
     internal lateinit var presenter: OffersPresenter
@@ -51,22 +54,21 @@ class OffersActivity: BaseActivity(), OffersView {
                                                                    systemInteractor,
                                                                    transferInteractor,
                                                                    offerInteractor)
-    
-    protected override var navigator = object: BaseNavigator(this) {}
+
+    override var navigator = object: BaseNavigator(this) {}
     
     override fun getPresenter(): OffersPresenter = presenter
 
     @CallSuper
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_offers)
 
         setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        (toolbar as Toolbar).toolbar_title.setText(R.string.carrier_offers)
+        (toolbar as Toolbar).toolbar_title.setText(R.string.LNG_RIDE_CARRIERS)
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 
         btnCancelRequest.visibility = View.VISIBLE
@@ -86,9 +88,7 @@ class OffersActivity: BaseActivity(), OffersView {
 
     private fun setOfferDetailsSheetListener() {
         bsOfferDetails.setBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(p0: View, p1: Float) {
-
-            }
+            override fun onSlide(p0: View, p1: Float) {}
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when(newState) {
@@ -105,7 +105,7 @@ class OffersActivity: BaseActivity(), OffersView {
     
     override fun setTransfer(transferModel: TransferModel) {
         //tvConnectingCarriers.text = getString(R.string.transfer_connecting_carriers, transferModel.relevantCarriersCount)
-        tvTransferRequestNumber.text = getString(R.string.transfer_order, transferModel.id)
+        tvTransferRequestNumber.text = getString(R.string.LNG_RIDE_NUMBER).plus(transferModel.id)
         tvFrom.text = transferModel.from
         tvTo.text = transferModel.to
         tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
@@ -147,7 +147,7 @@ class OffersActivity: BaseActivity(), OffersView {
     }
 
     override fun showBottomSheetOfferDetails(offer: OfferModel) {
-        carrierId.text = getString(R.string.carrier_number, offer.carrier.id)
+        carrierId.text = getString(R.string.LNG_CARRIER).plus(" ").plus(offer.carrier.id)
 
         layoutCarrierLanguages.removeAllViews()
         val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -225,10 +225,15 @@ class OffersActivity: BaseActivity(), OffersView {
         if(currentPos == size - 1) nextImageButton.visibility = View.GONE
         else nextImageButton.visibility = View.VISIBLE
 
-        numberOfPhoto.text = getString(R.string.number_of_photos, currentPos + 1, size)
+        numberOfPhoto.text = "${currentPos + 1}/$size"
     }
 
     private fun hideSheetOfferDetails() { bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN }
+
+    override fun redirectView() =
+        Utils.showScreenRedirectingAlert(this, getString(R.string.log_in_requirement_error_title),
+                getString(R.string.log_in_to_see_transfers_and_offers)) { presenter.openLoginView() }
+
 
     @CallSuper
     override fun onBackPressed() {

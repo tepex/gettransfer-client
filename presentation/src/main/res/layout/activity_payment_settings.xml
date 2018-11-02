@@ -17,7 +17,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/activity_carrier_transfer_details_header_text_field_height"
-        android:text="@string/terms"
+        android:text="@string/LNG_PAYMENT_TERMS"
         android:textAllCaps="true"
         android:textColor="@color/colorTextLightGray"
         android:textSize="@dimen/activity_carrier_transfer_details_header_text_size"
@@ -48,15 +48,14 @@
             android:textColor="@color/colorTextBlack"
             android:textSize="@dimen/create_transfer_additionals_top_text_size"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="@string/pay_full_price" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/fullPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/sf_pro_text_regular"
-            android:text="@string/passengers"
+            android:text="@string/LNG_RIDE_PASSENGERS"
             android:textColor="@color/colorTextLightGray"
             android:textSize="@dimen/create_transfer_additionals_bottom_text_size"
             app:layout_constraintStart_toStartOf="@+id/payFullPriceTitle"
@@ -105,15 +104,14 @@
             android:textColor="@color/colorTextBlack"
             android:textSize="@dimen/create_transfer_additionals_top_text_size"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="@string/pay_third_of_price" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/thirdOfPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/sf_pro_text_regular"
-            android:text="@string/passengers"
+            android:text="@string/LNG_RIDE_PASSENGER"
             android:textColor="@color/colorTextLightGray"
             android:textSize="@dimen/create_transfer_additionals_bottom_text_size"
             app:layout_constraintStart_toStartOf="@+id/payThirdOfPriceTitle"
@@ -136,7 +134,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/activity_carrier_transfer_details_header_text_field_height"
-        android:text="@string/method_of_payment"
+        android:text="@string/LNG_PAYMENT_METHOD"
         android:textAllCaps="true"
         android:textColor="@color/colorTextLightGray"
         android:textSize="@dimen/activity_carrier_transfer_details_header_text_size"
@@ -168,7 +166,7 @@
             android:textSize="@dimen/create_transfer_additionals_top_text_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="@string/credit_card" />
+            android:text="@string/LNG_PAYMENT_METHOD_CARD" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -212,7 +210,7 @@
             android:textSize="@dimen/create_transfer_additionals_top_text_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="@string/pay_pal" />
+            android:text="@string/LNG_PAYMENT_METHOD_PAYPAL" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -221,9 +219,16 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginEnd="16dp"
             android:textSize="@dimen/create_transfer_additionals_top_text_size"
-            android:text="@string/soon"/>
+            android:text="@string/LNG_SOON"/>
 
     </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/commission"
+        android:paddingStart="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"
+        android:paddingEnd="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btnGetPayment"
@@ -235,7 +240,7 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/btn_get_transfer"
         android:fontFamily="@font/sf_pro_text_regular"
-        android:text="@string/pay"
+        android:text="@string/LNG_PAYMENT_PAY"
         android:textAllCaps="true"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/create_transfer_additionals_top_text_size"/>

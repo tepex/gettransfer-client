@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -25,10 +24,7 @@ class SearchPresenter(cc: CoroutineContexts,
                       systemInteractor: SystemInteractor,
                       private val routeInteractor: RouteInteractor): BasePresenter<SearchView>(cc, router, systemInteractor) {
     var isTo = false
-    var popularPlaceIcons: ArrayList<Int>? = null
-    var popularPlaceTitles: ArrayList<String>? = null
-    val popularSize = 3
-
+    
     companion object {
         @JvmField val ADDRESS_PREDICTION_SIZE = 3
 
@@ -43,45 +39,33 @@ class SearchPresenter(cc: CoroutineContexts,
         super.attachView(view)
         viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false, !isTo)
         viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false, isTo)
-        showSuggestions()
+        onSearchFieldEmpty()
     }
 
-    fun onPopularSelected(selected: PopularPlace){
+    fun onSearchFieldEmpty() {
+        viewState.setSuggestedAddresses(systemInteractor.getAddressHistory())
+    }
+
+    fun onPopularSelected(selected: PopularPlace) {
         viewState.onFindPopularPlace(isTo, selected.title)
     }
-
-    fun onSearchFieldEmpty() = showSuggestions()
-
-    private fun showSuggestions() {
-        val lastPlaces = getLastAddressesList()
-        val popularPlaces = createPopularList()
-        viewState.setSuggestedAddresses(lastPlaces, popularPlaces)
-    }
-
+    
     fun onAddressSelected(selected: GTAddress) {
         val isDoubleClickOnRoute: Boolean
         if(isTo) {
+            viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, false, true)
             isDoubleClickOnRoute = routeInteractor.to == selected
             routeInteractor.to = selected
         } else {
+            viewState.setAddressFrom(selected.primary ?: selected.cityPoint.name!!, false, true)
             isDoubleClickOnRoute = routeInteractor.from == selected
             routeInteractor.from = selected
         }
 
         val placeType = checkPlaceType(selected)
         if(placeType == SUITABLE_TYPE || (placeType == ROUTE_TYPE && isDoubleClickOnRoute)) {
-            if(checkFields()) {
-                utils.launchAsyncTryCatchFinally({
-                    viewState.blockInterface(true)
-                    utils.asyncAwait { routeInteractor.updateDestinationPoint() }
-                    utils.asyncAwait { routeInteractor.updateStartPoint() }
-                    systemInteractor.setAddressHistory(arrayListOf(routeInteractor.from!!,routeInteractor.to!!))
-
-                    router.navigateTo(Screens.CREATE_ORDER)
-                }, { e ->
-                    viewState.setError(e)
-                }, { viewState.blockInterface(false) })
-            }
+            viewState.updateIcon(isTo)
+            if(checkFields()) createRouteForOrder()
         } else {
             val sendRequest = selected.needApproximation() /* dirty hack */
             if(isTo) viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, sendRequest, true)
@@ -96,11 +80,18 @@ class SearchPresenter(cc: CoroutineContexts,
         return SUITABLE_TYPE
     }
 
-    private fun checkFields() = routeInteractor.from != null && routeInteractor.to != null && routeInteractor.from != routeInteractor.to
+    private fun checkFields() = routeInteractor.let { it.from != null && it.to != null && it.from != it.to }
 
-    @CallSuper
-    override fun onBackCommandClick() {
-        super.onBackCommandClick()
+    private fun createRouteForOrder() {
+        utils.launchAsyncTryCatchFinally({
+            viewState.blockInterface(true)
+            utils.asyncAwait { routeInteractor.updateDestinationPoint() }
+            utils.asyncAwait { routeInteractor.updateStartPoint() }
+            systemInteractor.setAddressHistory(arrayListOf(routeInteractor.from!!, routeInteractor.to!!))
+
+            router.navigateTo(Screens.CREATE_ORDER)
+        }, { e -> viewState.setError(e)
+        }, { viewState.blockInterface(false) })
     }
 
     fun inverseWay() {
@@ -110,12 +101,4 @@ class SearchPresenter(cc: CoroutineContexts,
         viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false, false)
         viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false, false)
     }
-
-    private fun createPopularList():List<PopularPlace>{
-        val list = ArrayList<PopularPlace>()
-        for (i in 0 until popularSize) list.add(PopularPlace(popularPlaceTitles!![i], popularPlaceIcons!![i]))
-        return list
-    }
-
-    private fun getLastAddressesList() = systemInteractor.getAddressHistory()
 }

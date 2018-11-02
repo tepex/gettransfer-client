@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.content.Context
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
@@ -38,7 +37,7 @@ class MainPresenter(cc: CoroutineContexts,
     private var available: Boolean = false
     private var currentLocation: String = ""
 
-    private val MARKER_ELEVATION = 25f
+    private val MARKER_ELEVATION = 5f
     private var markerStateLifted = false
     private var isMarkerAnimating = true
 
@@ -107,7 +106,7 @@ class MainPresenter(cc: CoroutineContexts,
 
 
     fun onCameraMove(lastPoint: LatLng, animateMarker: Boolean) {
-        if(!markerStateLifted && !isMarkerAnimating && animateMarker){
+        if(!markerStateLifted && !isMarkerAnimating && animateMarker) {
             viewState.setMarkerElevation(true, MARKER_ELEVATION)
             markerStateLifted = true
         }
@@ -150,6 +149,7 @@ class MainPresenter(cc: CoroutineContexts,
     fun setAddressFields() {
         viewState.setAddressFrom(routeInteractor.from?.address ?: "")
         viewState.setAddressTo(routeInteractor.to?.address ?: "")
+        viewState.initSearchForm()
     }
 
     fun onSearchClick(addresses: Pair<String, String>) {
@@ -161,15 +161,10 @@ class MainPresenter(cc: CoroutineContexts,
     }
 
     private fun navigateToFindAddress(addresses: Pair<String, String>) {
-        routeInteractor.from?.let {
-            router.navigateTo(Screens.FIND_ADDRESS, addresses)
-        }
+        routeInteractor.from?.let { router.navigateTo(Screens.FIND_ADDRESS, addresses) }
     }
 
-    fun onNextClick() {
-        router.navigateTo(Screens.CREATE_ORDER)
-    }
-
+    fun onNextClick()           { router.navigateTo(Screens.CREATE_ORDER) }
     fun onLoginClick()          { router.navigateTo(Screens.LOGIN) ;     logEvent(LOGIN_CLICKED) }
     fun onAboutClick()          { router.navigateTo(Screens.ABOUT) ;     logEvent(ABOUT_CLICKED) }
     fun readMoreClick()         { router.navigateTo(Screens.READ_MORE) ; logEvent(BEST_PRICE_CLICKED) }

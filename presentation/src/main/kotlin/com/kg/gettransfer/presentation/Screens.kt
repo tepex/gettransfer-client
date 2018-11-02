@@ -28,4 +28,5 @@ object Screens {
 	@JvmField val PAYMENT          = "payment"
 	
 	@JvmField val NOT_USED = -1
+
 }

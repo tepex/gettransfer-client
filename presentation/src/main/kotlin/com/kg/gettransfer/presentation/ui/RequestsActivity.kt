@@ -57,7 +57,7 @@ class RequestsActivity: BaseActivity(), RequestsView {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        (toolbar as Toolbar).toolbar_title.setText(R.string.text_nav_requests_title)
+        (toolbar as Toolbar).toolbar_title.setText(R.string.LNG_MENU_TITLE_RIDES)
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 
         val requestsVPAdapter = RequestsViewPagerAdapter(supportFragmentManager)

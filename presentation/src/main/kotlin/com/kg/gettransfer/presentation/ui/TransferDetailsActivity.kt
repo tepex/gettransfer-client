@@ -69,7 +69,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
-        (toolbar as Toolbar).toolbar_title.text = resources.getString(R.string.activity_transfer_details_title)
+        (toolbar as Toolbar).toolbar_title.text = resources.getString(R.string.LNG_RIDE_DETAILS)
 
         layoutTransferInfo.chevron.visibility = View.GONE
 
@@ -101,7 +101,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
     }
 
     override fun setTransfer(transferModel: TransferModel) {
-        layoutTransferInfo.tvTransferRequestNumber.text = getString(R.string.transfer_request_num, transferModel.id)
+        layoutTransferInfo.tvTransferRequestNumber.text = getString(R.string.LNG_RIDE_NUMBER).plus(transferModel.id)
         layoutTransferInfo.tvFrom.text = transferModel.from
         layoutTransferInfo.tvTo.text = transferModel.to
         layoutTransferInfo.tvOrderDateTime.text = transferModel.dateTime

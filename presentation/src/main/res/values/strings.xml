@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- urls and keys -->
     <string name="licence_agreement_url">https://gettransfer.com/en/terms_of_use</string>
     <string name="registration_carrier_url">https://stgtr.org/carrier/new</string>
 
@@ -8,9 +10,42 @@
     <string name="api_key_prod">127746ae669e195d1e05807aaadb97af</string>
     <string name="api_url_prod">https://gettransfer.com</string>
 
+    <!-- logs -->
+    <string name="logs_file_name">Logs.txt</string>
+    <string name="file_provider_authority" translatable="false">com.kg.gettransfer.fileprovider</string>
+    <string name="share_extra_subject">GTR Logs</string>
+    <string name="title_starting_session">/////////////////////////////////////////////////////\n//////////////////// NEW SESSION ////////////////////\n/////////////////////////////////////////////////////</string>
+
+    <!-- Not used in iOS -->
+    <string name="err_address_service_xxx">Ошибка определения адреса!</string>
+    <string name="err_server">Ошибка: %1$s</string>
+    <string name="err_server_code">Ошибка сервера %1$s! %2$s</string>
+
     <string name="navigation_drawer_open" translatable="false">Open</string>
     <string name="navigation_drawer_close" translatable="false">Close</string>
-    <!-- Navigation -->
+
+    <string name="search_start">Loading…</string>
+    <string name="search_nothing"></string>
+    <string name="searchTransitionName">SEARCH_FORM</string>
+
+    <string name="transfer_start_sign">A</string>
+    <string name="transfer_end_sign">B</string>
+    <string name="rub">₽</string>
+
+    <string name="count_persons_and_baggage"> X %1$d</string>
+    <string name="activity_transfer_details_paid_sum">%1$s (%2$s\%%)</string>
+
+    <string name="share">Share</string>
+    <string name="endpoint">Endpoint</string>
+    <string name="logs">Logs</string>
+    <string name="search">Search</string>
+
+    <string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
+    <string name="activity_carrier_transfer_details_title">Trip details</string> <!-- Title, which not used in new design -->
+
+    <!-- old locales -->
+
+    <!--&lt;!&ndash; Navigation &ndash;&gt;
     <string name="nav_active_rides_title">Active rides</string>
     <string name="nav_active_rides_subtitle">Current transfers</string>
     <string name="nav_archived_rides_title">Archived rides</string>
@@ -19,14 +54,10 @@
     <string name="nav_settings_subtitle">Language and regional preferences</string>
     <string name="nav_about_title">About</string>
     <string name="nav_about_subtitle">Advantages of GetTransport</string>
-    <string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
     <string name="nav_footer_read_more">Read more</string>
-    <!-- Search form -->
+    &lt;!&ndash; Search form &ndash;&gt;
     <string name="search_from_hint">From</string>
     <string name="search_to_hint">To</string>
-    <string name="search_start">Loading…</string>
-    <string name="search_nothing"></string>
-    <string name="searchTransitionName">SEARCH_FORM</string>
     <string name="point_on_the_map">Point on the map</string>
     <string name="search">Search</string>
 
@@ -37,14 +68,14 @@
     <string name="railway">Вокзал</string>
     <string name="hotel">Отель</string>
 
-    <!-- About -->
+    &lt;!&ndash; About &ndash;&gt;
     <string name="about_title_item1">ЛУЧШИЕ ЦЕНЫ</string>
     <string name="about_content_item1">Выберите цену перевозки из множества предложений.</string>
     <string name="about_title_item2">ЛУЧШИЕ УСЛОВИЯ</string>
     <string name="about_content_item2">Широкий выбор классов и типов машин. Все включено. Время ожидания до 45 минут — бесплатно.</string>
     <string name="about_title_item3">БЕЗОПАСНЫЕ ПЕРЕВОЗКИ</string>
     <string name="about_content_item3">Вы всегда заранее знаете, кто вас везет. Все перевозчики аккредитованы и проверены.</string>
-    <!-- Read more -->
+    &lt;!&ndash; Read more &ndash;&gt;
     <string name="read_more_title">We return the difference in price</string>
     <string name="read_more_content1">You can claim a refund of the difference in price, if you find a similar offer on another site at a lower price.</string>
     <string name="read_more_content2">Just remember to contact us after booking with us and at least 48 hours before your check-in date. You\'ll need to provide us with the link to the other offer and it must be online and available when we check.</string>
@@ -54,19 +85,17 @@
     <string name="read_more_item3">• does not participate in the action from the carrier and does not have a discount</string>
     <string name="read_more_item4">• is provided by a legal entity</string>
     <string name="read_more_close_button">Close</string>
-    <!-- Transfer -->
+    &lt;!&ndash; Transfer &ndash;&gt;
     <string name="distance_time">Distance: %1$s\nExpected travel time: %2$s</string>
     <string name="distance">Distance: %1$d %2$s</string>
     <string name="transfer_connecting_carriers">Соединяем с ближайшими %1$d перевозчиками</string>
-    <string name="transfer_order">Заявка на трансфер №%1$d</string>
-    <string name="transfer_start_sign">A</string>
-    <string name="transfer_end_sign">B</string>
-    <string name="transfer_date_local">%1$s (местное)</string>
+    <string name="transfer_date_local">%1$s (местное)</string> &lt;!&ndash; Formated string &ndash;&gt;
+    <string name="transfer_order">Заявка на трансфер №%1$d</string> &lt;!&ndash; динамические значения &ndash;&gt;
     <string name="transfer_promo_hint">Enter promocode</string>
     <string name="transfer_promo_result_default">I have got a promo code</string>
     <string name="transfer_promo_result_success">%1$s discount</string>
     <string name="transfer_promo_result_fail">Invalid promo code</string>
-    <!-- Transport types -->
+    &lt;!&ndash; Transport types &ndash;&gt;
     <string name="transport_type_economy">Economy</string>
     <string name="transport_type_business">Business</string>
     <string name="transport_type_premium">Premium</string>
@@ -78,22 +107,22 @@
     <string name="transport_type_unknown">Unknown</string>
     <string name="count_persons_and_baggage"> X %1$d</string>
 
-    <!-- Login -->
+    &lt;!&ndash; Login &ndash;&gt;
     <string name="email_address">Email address</string>
     <string name="enter_password">Enter password</string>
     <string name="login_subtitle">Вход для клиентов и водителей</string>
 
-    <!--
+    &lt;!&ndash;
 	<string name=""></string>
-	-->
+	&ndash;&gt;
 
 
-    <!-- Errors & messages -->
+    &lt;!&ndash; Errors & messages &ndash;&gt;
     <string name="err_title">Ошибка</string>
     <string name="err_location_service_not_available">Cервис геолокации недоступен!</string>
-    <string name="err_address_service_xxx">Ошибка определения адреса!</string>
-    <string name="err_server">Ошибка: %1$s</string>
-    <string name="err_server_code">Ошибка сервера %1$s! %2$s</string>
+    <string name="err_address_service_xxx">Ошибка определения адреса!</string> &lt;!&ndash; нет в iOS&ndash;&gt;
+    <string name="err_server">Ошибка: %1$s</string> &lt;!&ndash; нет в iOS&ndash;&gt;
+    <string name="err_server_code">Ошибка сервера %1$s! %2$s</string> &lt;!&ndash; нет в iOS&ndash;&gt;
     <string name="error_login">Incorrect login or password</string>
 
 
@@ -116,7 +145,7 @@
 
     <string name="number_symbol">#</string>
 
-    <!--<string name="carrier_number">Carrier #</string>-->
+    &lt;!&ndash;<string name="carrier_number">Carrier #</string>&ndash;&gt;
 
     <string name="from">From</string>
     <string name="to">To</string>
@@ -248,7 +277,7 @@
     <string name="type_your_comments">Type here your comments, requirements, or driver tasks</string>
     <string name="flight_or_train_number">Flight or train number</string>
     <string name="enter_phone_number">Enter phone number</string>
-    <string name="enter_email">Email or phone number</string>
+    <string name="enter_email">Enter email</string>
     <string name="your_name">Your name</string>
     <string name="additional">Additional</string>
     <string name="number_of_passengers">Number of passengers</string>
@@ -261,14 +290,14 @@
     <string name="sign_out">Sign out</string>
     <string name="application_language">Application language</string>
     <string name="distance_units">Distance units</string>
-    <string name="endpoint">Endpoint</string>
-    <string name="logs">Logs</string>
+    <string name="endpoint">Endpoint</string> &lt;!&ndash; нет в iOS&ndash;&gt;
+    <string name="logs">Logs</string> &lt;!&ndash; нет в iOS&ndash;&gt;
     <string name="carrier_offers">Carrier offers</string>
     <string name="select">Select</string>
 
-    <string name="price_from">from %1$s</string>
+    <string name="price_from">from %1$s</string> &lt;!&ndash; Formated string. Изменить на LNG_RIDE_FROM при изменении дизайна &ndash;&gt;
 
-    <!--NavigationView-->
+    &lt;!&ndash;NavigationView&ndash;&gt;
     <string name="text_nav_login_title">Sign up</string>
     <string name="text_nav_login_subtitle">Client and drivers login</string>
 
@@ -290,21 +319,20 @@
     <string name="text_nav_passenger_mode_title">Passenger mode</string>
     <string name="text_nav_passenger_mode_subtitle">Passenger mode</string>
 
-    <!--Title text-->
+    &lt;!&ndash;Title text&ndash;&gt;
     <string name="requests">Requests</string>
-    <string name="become_carrier">Become a ccarrier</string>
 
-    <!--view_transfer_request_info-->
-    <string name="transfer_request_num">Transfer request № %1$s</string>
+    &lt;!&ndash;view_transfer_request_info&ndash;&gt;
+    <string name="transfer_request_num">Transfer request № %1$s</string> &lt;!&ndash; Formated string &ndash;&gt;
     <string name="next">Next</string>
     <string name="done">Done</string>
-    <string name="average_rate">average rate on route</string>
-    <string name="rub">₽</string>
+    <string name="average_rate">average rate on route</string> &lt;!&ndash; Иначе на iOS &ndash;&gt;
+    <string name="rub">₽</string> &lt;!&ndash; Нет на iOS &ndash;&gt;
     <string name="comment_options">Comment and options</string>
 
-    <!--activity_transfer_details-->
+    &lt;!&ndash;activity_transfer_details&ndash;&gt;
     <string name="activity_transfer_details_title">Request details</string>
-    <string name="activity_transfer_details_paid_sum">%1$s (%2$s\%%)</string>
+    <string name="activity_transfer_details_paid_sum">%1$s (%2$s\%%)</string> &lt;!&ndash; динамические значения &ndash;&gt;
     <string name="activity_transfer_details_btn_cancel">Cancel</string>
     <string name="activity_transfer_details_languages">Languges</string>
     <string name="activity_transfer_details_price">Price</string>
@@ -321,11 +349,10 @@
     <string name="activity_transfer_details_passenger">Passenger</string>
     <string name="luggage">Luggage</string>
 
-    <!--activity_carrier_trips-->
+    &lt;!&ndash;activity_carrier_trips&ndash;&gt;
     <string name="activity_carrier_trips_title">Upcoming transfers</string>
 
-    <!--activity_carrier_transfer_details-->
-    <string name="activity_carrier_transfer_details_title">Trip details</string>
+    &lt;!&ndash;activity_carrier_transfer_details&ndash;&gt;
     <string name="call">Call</string>
     <string name="chat">Chat</string>
     <string name="btn_confirm_appointment">Confirm appointment</string>
@@ -337,27 +364,27 @@
     <string name="close">Close</string>
     <string name="ready">Ready</string>
 
-    <!--activity_offers-->
+    &lt;!&ndash;activity_offers&ndash;&gt;
     <string name="excellent_price_text_1">Fix an excellent price for your trip now</string>
     <string name="excellent_price_text_2">Prices can grow, book now to guarantee best price</string>
     <string name="sorted_year_made_text">Year made</string>
     <string name="sorted_rating_text">Rating</string>
     <string name="sorted_price_text">Price</string>
 
-    <!--view_transfer_request_info-->
+    &lt;!&ndash;view_transfer_request_info&ndash;&gt;
     <string name="cancel_request_underlined"><u>Cancel request</u></string>
 
     <string name="alert_cancel_transfer_text">Are you shure cancel transfer?</string>
     <string name="alert_no">No</string>
     <string name="alert_yes">Yes</string>
 
-    <string name="driver_number">#%1$d</string>
+    <string name="driver_number">#%1$d</string> &lt;!&ndash; Formated string &ndash;&gt;
     <string name="carrier_number">Carrier #%1$d</string>
-    <string name="driver_completed_transfers">made %1$d transfers</string>
+    <string name="driver_completed_transfers">made %1$d transfers</string> &lt;!&ndash; Formated string &ndash;&gt;
     <string name="preferred_cost">(%1$s)</string>
     <string name="terms">TERMS</string>
-    <string name="pay_full_price">Pay 100% now</string>
-    <string name="pay_third_of_price">Pay 30% now</string>
+    <string name="pay_full_price">Pay 100% now</string> &lt;!&ndash; динамические значения &ndash;&gt;
+    <string name="pay_third_of_price">Pay 30% now</string> &lt;!&ndash; динамические значения &ndash;&gt;
     <string name="credit_card">Credit Card</string>
     <string name="pay_pal">Pay Pal</string>
     <string name="soon">Soon</string>
@@ -365,17 +392,310 @@
     <string name="payment_successful">Payment successful</string>
     <string name="payment_failed">Payment failed</string>
 
-    <string name="price_part_1">70%% (%s) later to the driver</string>
+    <string name="price_part_1">70%% (%s) later to the driver</string> &lt;!&ndash; динамические значения &ndash;&gt;
 
-    <string name="share_extra_subject">GTR Logs</string>
-    <string name="share">Share</string>
     <string name="clear">Clear</string>
     <string name="title_starting_session">/////////////////////////////////////////////////////\n//////////////////// NEW SESSION ////////////////////\n/////////////////////////////////////////////////////</string>
 
-    <string name="logs_file_name">Logs.txt</string>
-    <string name="file_provider_authority" translatable="false">com.kg.gettransfer.fileprovider</string>
     <string name="please_wait">Please, wait, connection to carries...</string>
 
-    <string name="number_of_photos">%1$d/%2$d</string>
-    <string name="forgot_your_password"><u>Forgot your password?</u></string>
+    <string name="number_of_photos">%1$d/%2$d</string> &lt;!&ndash; динамические значения &ndash;&gt;
+
+    <string name="license_agreement"><u>Лицензионное соглашение</u></string>
+    <string name="become_carrier">Become a carrier</string>-->
+
+
+    <string name="log_in_to_see_transfers_and_offers">Log in to see transfers and offers</string>
+    <string name="log_in_requirement_error_title">You are not logged in</string>
+
+    <!-- new locales -->
+
+
+
+    <string name="LNG_MISKO">TEST</string>
+    <string name="LNG_OK">OK</string>
+    <string name="LNG_CANCEL">Cancel</string>
+    <string name="LNG_CLOSE">Close</string>
+    <string name="LNG_CHOOSE">Select</string>
+    <string name="LNG_BOOK">Book</string>
+    <string name="LNG_CLEAR">Clear</string>
+    <string name="LNG_DONE">Done</string>
+    <string name="LNG_OPEN">Open</string>
+    <string name="LNG_COPY">Copy</string>
+    <string name="LNG_NEXT">Next</string>
+    <string name="LNG_ERROR">Error</string>
+    <string name="LNG_SUCCESS">Success</string>
+    <string name="LNG_ACCOUNT">Account</string>
+    <string name="LNG_NOT_FOUND">not found</string>
+    <string name="LNG_ERROR_EMAIL">Invalid email</string>
+    <string name="LNG_UNEXPECTED_ERROR">Unexpected error</string>
+    <string name="LNG_BAD_CREDENTIALS_ERROR">Login failed</string>
+    <string name="LNG_NO_ACCOUNT_ERROR">Account didn\'t created</string>
+    <string name="LNG_UNAUTHORIZED_ERROR">Not logged in</string>
+    <string name="LNG_NETWORK_ERROR">Check your Internet connection</string>
+    <string name="LNG_UNPROCESSABLE_ERROR">Unprocessable</string>
+    <string name="LNG_PHONE_TAKEN_ERROR">Phone number already taken</string>
+    <string name="LNG_DATE_EARLY_ERROR">Date is too early</string>
+    <string name="LNG_KM">km</string>
+    <string name="LNG_M">m</string>
+    <string name="LNG_MI">miles</string>
+    <string name="LNG_D">d</string>
+    <string name="LNG_H">h</string>
+    <string name="LNG_MIN">min</string>
+    <string name="LNG_HOUR">hour</string>
+    <string name="LNG_HOURS">hours</string>
+    <string name="LNG_HOUR_FEW">hours</string>
+    <string name="LNG_USD">US Dollar</string>
+    <string name="LNG_EUR">Euro</string>
+    <string name="LNG_GBP">Pound Sterling</string>
+    <string name="LNG_RUB">Russian Ruble</string>
+    <string name="LNG_THB">Baht</string>
+    <string name="LNG_JPY">Yen</string>
+    <string name="LNG_CNY">Renminbi</string>
+    <string name="LNG_MENU_TITLE_LOGIN">Log in</string>
+    <string name="LNG_MENU_SUBTITLE_LOGIN">Passenger log in and sign up</string>
+    <string name="LNG_MENU_TITLE_RIDES">Requests</string>
+    <string name="LNG_MENU_SUBTITLE_RIDES">Active and archived rides</string>
+    <string name="LNG_MENU_TITLE_LAST_RIDES">Archived rides</string>
+    <string name="LNG_MENU_SUBTITLE_LAST_RIDES">Last rides</string>
+    <string name="LNG_MENU_TITLE_PAYMENTS">Payments</string>
+    <string name="LNG_MENU_SUBTITLE_PAYMENTS">Add/change payment methods</string>
+    <string name="LNG_MENU_TITLE_PROMO">Promo code</string>
+    <string name="LNG_MENU_SUBTITLE_PROMO">Get the sale</string>
+    <string name="LNG_MENU_TITLE_COUNT">Business account</string>
+    <string name="LNG_MENU_SUBTITLE_COUNT">Your company pay for your transfer</string>
+    <string name="LNG_MENU_TITLE_SETTINGS">Settings</string>
+    <string name="LNG_MENU_SUBTITLE_SETTINGS">Language and payment settings</string>
+    <string name="LNG_MENU_TITLE_SUPPORT">Support</string>
+    <string name="LNG_MENU_SUBTITLE_SUPPORT">Get the help</string>
+    <string name="LNG_MENU_TITLE_ABOUT">About us</string>
+    <string name="LNG_MENU_SUBTITLE_ABOUT">Our features</string>
+    <string name="LNG_MENU_TITLE_DRIVE">Driver mode</string>
+    <string name="LNG_MENU_SUBTITLE_DRIVE">Switch to driver mode</string>
+    <string name="LNG_MENU_TITLE_PASSENGER">Passenger mode</string>
+    <string name="LNG_MENU_SUBTITLE_PASSENGER">Passenger mode</string>
+    <string name="LNG_MENU_TITLE_TRIPS">Upcoming transfers</string>
+    <string name="LNG_MENU_SUBTITLE_TRIPS">Upcoming transfers</string>
+    <string name="LNG_READMORE"><u>Read more</u></string>
+    <string name="LNG_BESTPRICES">Best prices for transfers\nbetween airports and cities\nworldwide</string>
+    <string name="LNG_LANGUAGE">Application language</string>
+    <string name="LNG_CURRENCY">Currency</string>
+    <string name="LNG_SYSTEM_LANGUAGE">System language</string>
+    <string name="LNG_DISTANCE_UNIT">Distance unit</string>
+    <string name="LNG_DISTANCE_UNIT_KM">Kilometers</string>
+    <string name="LNG_DISTANCE_UNIT_MI">Miles</string>
+    <string name="LNG_UNLOGIN">Sign out</string>
+    <string name="LNG_LOGIN_EMAIL_SECTION">E-mail or phone number</string>
+    <string name="LNG_LOGIN_PASSWORD_SECTION">Password</string>
+    <string name="LNG_LOGIN_BUTTON">Login</string>
+    <string name="LNG_LOGIN_EMAIL">Enter email</string>
+    <string name="LNG_LOGIN_PASSWORD">Enter password</string>
+    <string name="LNG_LOGIN_REQUIRED">Please login to continue</string>
+    <string name="LNG_LOGIN_FORGOT_PASSWORD">Forgot your password?</string>
+    <string name="LNG_LOGIN_RECOVERY_PASSWORD">Password recovery</string>
+    <string name="LNG_LOGIN_RECOVERY_PASSWORD_CHECK_INBOX">Check your inbox</string>
+    <string name="LNG_LOGIN_RECOVERY_PASSWORD_SUCCESFUL_MESSAGE">A link to change your password has been sent to your email</string>
+    <string name="LNG_OPEN_LOGIN">Open login window?</string>
+    <string name="LNG_ABOUNT_TITLE_0">Best price</string>
+    <string name="LNG_ABOUNT_TITLE_1">Best service</string>
+    <string name="LNG_ABOUNT_TITLE_2">Safe transfers</string>
+    <string name="LNG_ABOUNT_DESC_0">Choose a transfer price\nfrom a wide selection of offers.</string>
+    <string name="LNG_ABOUNT_DESC_1">We have a wide\nselection of vehicle types.\nTaxes and tips are included\nin the original fee.\nWe allow a free waiting time\nof 45 minutes.</string>
+    <string name="LNG_ABOUNT_DESC_2">You always know your carrier.\nAll carriers are carefully selected.</string>
+    <string name="LNG_PRESENTATION_TITLE_0">Best price guarantee</string>
+    <string name="LNG_PRESENTATION_TITLE_1">No hidden costs</string>
+    <string name="LNG_PRESENTATION_TITLE_2">Free waiting time</string>
+    <string name="LNG_PRESENTATION_TITLE_3">Safe transfers</string>
+    <string name="LNG_PRESENTATION_DESC_0">We return the difference in price</string>
+    <string name="LNG_PRESENTATION_DESC_1">Taxes, tolls and gratuity included</string>
+    <string name="LNG_PRESENTATION_DESC_2">We allow free waiting time of 60 minutes at airports, all other locations include a free 15 minutes waiting time.</string>
+    <string name="LNG_PRESENTATION_DESC_3">You always know your carrier.\nAll carriers are carefully selected.</string>
+    <string name="LNG_PRESENTATION_FINAL_BUTTON">START</string>
+    <string name="LNG_SEARCH_POPULAR_PLACES">Popular places</string>
+    <string name="LNG_SEARCH_RECENT_PLACES">Recent Places</string>
+    <string name="LNG_SEARCH_POPULAR_AIRPORT">Airport</string>
+    <string name="LNG_SEARCH_POPULAR_STATION">Station</string>
+    <string name="LNG_SEARCH_POPULAR_HOTEL">Hotel</string>
+    <string name="LNG_FIELD_SOURCE">From: airport, train station, city, hotel, other place</string>
+    <string name="LNG_FIELD_SOURCE_PICKUP">Pickup location</string>
+    <string name="LNG_FIELD_SOURCE_WHERE">Where from?</string>
+    <string name="LNG_FIELD_SOURCE_ENTRANCE">Entrance</string>
+    <string name="LNG_FIELD_SOURCE_ENTRANCE_GATE_NUMBER">Entrance or gate number</string>
+    <string name="LNG_FIELD_DESTINATION">To: airport, train station, city, hotel, other place</string>
+    <string name="LNG_FIELD_DESTINATION_WHERE">Where to?</string>
+    <string name="LNG_FIELD_DESTINATION_SELECT_POINT_MAP">Select a point on the map</string>
+    <string name="LNG_FIELD_ERROR_MATCH_ADDRESSES">Too close, choose another location</string>
+    <string name="LNG_SHARE_TEXT">Check this app! %s</string>
+    <string name="LNG_OFFLINE_MESSAGE">No Internet connection.\nTransfers information available in the menu.</string>
+    <string name="LNG_OFFLINE_MESSAGE_CACHE">No Internet connection.\nShown last available data.</string>
+    <string name="LNG_BESTPRICE_TITLE">We return the difference in price</string>
+    <string name="LNG_BESTPRICE_TEXT1">You can claim a refund of the difference in price, if you find a similar offer on another site at a lower price.</string>
+    <string name="LNG_BESTPRICE_TEXT2">Just remember to contact us after booking with us and at least 48 hours before your check-in date. You\'ll need to provide us with the link to the other offer and it must be online and available when we check.</string>
+    <string name="LNG_BESTPRICE_YELLOW_TITLE">We will refund you the difference provided that the other offer:</string>
+    <string name="LNG_BESTPRICE_YELLOW_TEXT1"> • identical to our transfer</string>
+    <string name="LNG_BESTPRICE_YELLOW_TEXT2"> • designated on the relevant dates</string>
+    <string name="LNG_BESTPRICE_YELLOW_TEXT3"> • does not participate in the action</string>
+    <string name="LNG_BESTPRICE_YELLOW_TEXT4">   from the carrier and does not have a discount</string> <!--добавить \u0020 (один или 2 подряд) перед текстом, актуально для обеих платформ -->
+    <string name="LNG_BESTPRICE_YELLOW_TEXT5"> • is provided by a legal entity</string>
+    <string name="LNG_RIDE_FIND_TRIPS">Find requests</string>
+    <string name="LNG_TRIP_PICKUP">Confirm pickup</string>
+    <string name="LNG_RIDE_CREATE_CARRIER">Become carrier</string>
+    <string name="LNG_RIDE_LOGIN_CARRIER">Sign in for сarrier</string>
+    <string name="LNG_NEW_OFFER_MESSAGE">You got new offer on your request.</string>
+    <string name="LNG_NEW_OFFER_TITLE">New offer</string>
+    <string name="LNG_RIDE_SETTINGS_OPTIONAL_CHILD">children</string>
+    <string name="LNG_RIDE_SETTINGS_OPTIONAL_PERSON">persons</string>
+    <string name="LNG_RIDE_SETTINGS_OPTIONAL_COMMENT">comment</string>
+    <string name="LNG_RIDE_SETTINGS_OPTIONAL">Additional</string>
+    <string name="LNG_RIDE_DISTANCE">Distance</string>
+    <string name="LNG_RIDE_DURATION">Duration</string>
+    <string name="LNG_RIDE_TIME">Time</string>
+    <string name="LNG_RIDE_PRICE">Offer your price</string>
+    <string name="LNG_RIDE_PRICE_YOUR">Your price</string>
+    <string name="LNG_RIDE_DATE">Transfer date and time</string>
+    <string name="LNG_RIDE_PASSENGERS">Passengers</string>
+    <string name="LNG_RIDE_lUGGAGE">Luggage</string>
+    <string name="LNG_RIDE_NAME">Your name</string>
+    <string name="LNG_RIDE_NAME_PLACEHOLDER">*Driver will meet you with a name sign</string>
+    <string name="LNG_RIDE_EMAIL">Enter email</string>
+    <string name="LNG_RIDE_EMAIL_PLACEHOLDER">*Email</string>
+    <string name="LNG_RIDE_PHONE">Enter phone number</string>
+    <string name="LNG_RIDE_PHONE_PLACEHOLDER">*Phone</string>
+    <string name="LNG_RIDE_CHILDREN">Child seats</string>
+    <string name="LNG_RIDE_FLIGHT">Example: BA 2243</string>
+    <string name="LNG_RIDE_FLIGHT_PLACEHOLDER">Flight number or train</string>
+    <string name="LNG_RIDE_PROMOCODE">Enter promocode</string>
+    <string name="LNG_RIDE_PROMOCODE_PLACEHOLDER">I have a promocode</string>
+    <string name="LNG_RIDE_PROMOCODE_INVALID">Invalid promocode</string>
+    <string name="LNG_RIDE_COMMENT">Your comments or suggestions</string>
+    <string name="LNG_COMMENT_PLACEHOLDER">Type here your comments, requirements, or driver task.</string>
+    <string name="LNG_RIDE_CREATE">Get offers</string>
+    <string name="LNG_RIDE_OFFERS">Show offers</string>
+    <string name="LNG_RIDE_REPEAT">Repeat</string>
+    <string name="LNG_RIDE_PAYMENT">Payment in progress</string>
+    <string name="LNG_RIDE_CONNECT_CARRIERS">Connecting to nearest %s carriers</string>
+    <string name="LNG_RIDE_CARRIERS">Carrier\'s offers</string>
+    <string name="LNG_RIDE_COMPLETED">Completed transfers: %s</string>
+    <string name="LNG_RIDE_CREATION_SPINNER">Please wait, connecting...</string>
+    <string name="LNG_RIDE_CHOOSE_TRANSPORT">Please select transport type</string>
+    <string name="LNG_RIDE_OFFERT">I aggree with \n<a href = '#'>License agreement</a></string>
+    <string name="LNG_RIDE_OFFERT_TITLE">License agreement</string>
+    <string name="LNG_RIDE_OFFERT_ERROR">You should aggree with License</string>
+    <string name="LNG_RIDE_FAIR_PRICE_FORMAT">Average rate on route %s (ETA ~%s)</string>
+    <string name="LNG_RIDE_FAIR_PRICE_EMPTY">Please, pick transport type to get a fair price</string>
+    <string name="LNG_RIDE_SORT_INFO">Offers sorting</string>
+    <string name="LNG_RIDE_SORT_EXPENSIVE_FIRST">Expensive first</string>
+    <string name="LNG_RIDE_SORT_CHEAP_FIRST">Cheapest first</string>
+    <string name="LNG_DATE_NOW">Now</string>
+    <string name="LNG_DATE_IN_HOURS">In</string>
+    <string name="LNG_RIDE_FROM">from:</string>
+    <string name="LNG_PAYMENT_SETTINGS">Payment options</string>
+    <string name="LNG_PAYMENT_TERMS">Terms</string>
+    <string name="LNG_PAYMENT_TERM_NOW">Pay %s%% now</string>
+    <string name="LNG_PAYMENT_TERM_LATER">%s%% (%s) later to the driver</string>
+    <string name="LNG_PAYMENT_METHOD">Method of payment</string>
+    <string name="LNG_PAYMENT_METHOD_CARD">Credit Card</string>
+    <string name="LNG_PAYMENT_METHOD_PAYPAL">Pay Pal</string>
+    <string name="LNG_SOON">Soon</string>
+    <string name="LNG_PAYMENT_COMISSION">Commission 3%%.\nRefund is available before %s</string>
+    <string name="LNG_PAYMENT_PAY">Pay</string>
+    <string name="LNG_RIDE_CANT_CREATE">Can\'t create transfer</string>
+    <string name="LNG_RIDES_ACTIVE">Active</string>
+    <string name="LNG_RIDES_ALL">All</string>
+    <string name="LNG_RIDES_COMPLETED">Completed</string>
+    <string name="LNG_TIME_RIDE">Hourly transfer</string>
+    <string name="LNG_WAIT_FOR_OFFERS">Please wait for offers</string>
+    <string name="LNG_BOOK_OFFER">Please book car and driver</string>
+    <string name="LNG_TRANSFER_WAS">Transfer was</string>
+    <string name="LNG_TRANSFER_WILL_START">Transfer will start in</string>
+    <string name="LNG_PENDING_PAYMENT">Transfer payment pending</string>
+    <string name="LNG_RIDE_NUMBER">Transfer request #</string>
+    <string name="LNG_TRANSPORT_ECONOMY">Economy</string>
+    <string name="LNG_TRANSPORT_PREMIUM">Premium</string>
+    <string name="LNG_TRANSPORT_MINIBUS">Minibus</string>
+    <string name="LNG_TRANSPORT_BUS">Bus</string>
+    <string name="LNG_TRANSPORT_HELICOPTER">Helicopter</string>
+    <string name="LNG_TRANSPORT_LIMOUSINE">Limousine</string>
+    <string name="LNG_TRANSPORT_BUSINESS">Business</string>
+    <string name="LNG_TRANSPORT_VAN">Van</string>
+    <string name="LNG_TRANSPORT_EXAMPLES_ECONOMY"><b>Ford Focus, VW Jetta, Kia Rio, Hyundai Solaris, Chevrolet Cruze, LADA Granta, Honda Civic, Skoda rapid, Opel Astra and BMW 1-series.</b>\nFor a comfortable trip in any city of the world at the best price.\n- Personal driver \n- Fixed price\n- Without extra payment for luggage</string>
+    <string name="LNG_TRANSPORT_EXAMPLES_PREMIUM"><b>Mercedes V-class, Viano, Vito, Opel Vivaro, Renault Traffic and others.</b>\n- Dress-code for the driver\n- Fixed price\n- Without extra payment for luggage</string>
+    <string name="LNG_TRANSPORT_EXAMPLES_MINIBUS"><b>Volkswagen Transporter, Nissan Elgrand, Mercedes-Benz V-Class, Ford Transit</b>\nFor meeting corporate clients and tourist groups.\n- Conditioner\n- Spacious luggage compartment</string>
+    <string name="LNG_TRANSPORT_EXAMPLES_BUS"><b>Mercedes-Benz Travego, Volvo 9700, Iveco FBI 83 LR, Toyota Coaster, Mercedes-Benz Intouro</b>\nFor safe transferring of big groups of people to events, conferences and weddings, as well as for taking people from airports and railway stations.\n- Conditioner\n- Spacious luggage compartment</string>
+    <string name="LNG_TRANSPORT_EXAMPLES_HELICOPTER"><b>Robinson R44, Eurocopter EC130 T2</b>\nFor business meetings and rapid flights from Moscow and Moscow regions, among airports and hotels with landing areas.\n- Safe flights \n- Tested technology\n- High speed</string>
+    <string name="LNG_TRANSPORT_EXAMPLES_LIMOUSINE"><b>Hummer H2, Lincoln Town Car, Cadillac Escalade</b>\nFor taking people from any airport or railway station to hotels or other places of destination, for romantic trips, all kinds of celebrations.\n- Beverages on request\n- Spacious cabin\n- Audio system</string>
+    <string name="LNG_TRANSPORT_EXAMPLES_BUSINESS"><b>BMW 3-series, Honda Accord, Lexus IS, Hyundai Equus Toyota Camry, Mercedes E-class, Audi a6, BMW 5-series</b> \nFor transferring passengers to events, business meetings and appointments.\n- Dress-code for the driver\n- Fixed price\n- Without extra payment for luggage</string>
+    <string name="LNG_TRANSPORT_EXAMPLES_VAN"><b>Toyota Alphard, Ford S-MAX, Chrysler Voyager, Honda Stream, Volkswagen Sharan, Mercedes Vito, Mercedes V-class, Volkswagen Transporter</b>\nFor long-time excursions around the city, transferring foreign colleagues to conferences and seminars.\n- Conditioner \n- Comfortable cabin</string>
+    <string name="LNG_TRANSPORT_1">Passenger car</string>
+    <string name="LNG_TRANSPORT_2">Minivan</string>
+    <string name="LNG_TRANSPORT_3">Porter</string>
+    <string name="LNG_TRANSPORT_4">Transit</string>
+    <string name="LNG_TRANSPORT_5">Hauler</string>
+    <string name="LNG_TRANSPORT_6">Carrier</string>
+    <string name="LNG_TRANSPORT_7">5-ton truck</string>
+    <string name="LNG_TRANSPORT_8">20-ton truck</string>
+    <string name="LNG_TRANSPORT_9">Container</string>
+    <string name="LNG_DIRECTION">Direction</string>
+    <string name="LNG_MADE">made</string>
+    <string name="LNG_RIDES">transfers</string>
+    <string name="LNG_CARRIER">Carrier</string>
+    <string name="LNG_RATING">Rating</string>
+    <string name="LNG_VEHICLE_RATING">Vehicle</string>
+    <string name="LNG_DRIVE_RATING">Drive</string>
+    <string name="LNG_FAIR_RATING">Fair</string>
+    <string name="LNG_RIDE_PAYMENT_DETAILS">Payment Details</string>
+    <string name="LNG_RIDE_PAYMENT_PAID">Payed</string>
+    <string name="LNG_RIDE_PAYMENT_REMAINS">Remains to pay</string>
+    <string name="LNG_RIDE_PAYMENT_SUMM">Price</string>
+    <string name="LNG_RIDE_PAYMENT_COST">Price</string>
+    <string name="LNG_RIDE_DETAILS">Transfer details</string>
+    <string name="LNG_RIDE_OFFER">Chosen offer</string>
+    <string name="LNG_RIDE_TRANSPORT">Transport</string>
+    <string name="LNG_RIDE_TRANSPORT_NUMBER">Number</string>
+    <string name="LNG_PAYMENT">Pay for the transfer</string>
+    <string name="LNG_RIDE_PASSENGER">Passengers</string>
+    <string name="LNG_RIDE_SIGN">Sign name</string>
+    <string name="LNG_RIDE_TRANSPORT_TYPE">Transport types</string>
+    <string name="LNG_RIDE_OFFER_RATING">ratings</string>
+    <string name="LNG_CANCEL_CONFIRM">Are you sure to cancel your transfer?</string>
+    <string name="LNG_CANCEL_RIDE">Cancel transfer</string>
+    <string name="LNG_CANCEL_REQUEST"><u>Cancel request</u></string>
+    <string name="LNG_OFFERS_PROMO_MESSAGE"><b>Fix an excellent price for your trip now</b>\nPrices can grow, book now to guarantee best price</string>
+    <string name="LNG_FILTER_YEAR">Year made</string>
+    <string name="LNG_FILTER_RATING">Rating</string>
+    <string name="LNG_FILTER_PRICE">Price</string>
+    <string name="LNG_DRIVER">Driver</string>
+    <string name="LNG_PUNCTUALITY">Punctuality</string>
+    <string name="LNG_VEHICLE">Vehicle</string>
+    <string name="LNG_RIDE_STATUS_NEW">New</string>
+    <string name="LNG_RIDE_STATUS_PERFORMED">Performed</string>
+    <string name="LNG_RIDE_STATUS_COMPLETED">Completed</string>
+    <string name="LNG_RIDE_STATUS_CANCELED">Canceled</string>
+    <string name="LNG_RIDE_STATUS_NOTCOMPLETED">Not completed</string>
+    <string name="LNG_RIDE_STATUS_REJECTED">Rejected</string>
+    <string name="LNG_RIDE_STATUS_DRAFT">Draft</string>
+    <string name="LNG_RIDE_STATUS_PENDING">Pending</string>
+    <string name="LNG_RIDE_STATUS_OUTDATED">Outdated</string>
+    <string name="LNG_RIDE_OFFER_NEW">New</string>
+    <string name="LNG_RIDE_OFFER_PERFORMED">Performed</string>
+    <string name="LNG_RIDE_OFFER_OUTDATED">Outdated</string>
+    <string name="LNG_RIDE_OFFER_UNAPPROVER">Unapproved</string>
+    <string name="LNG_RIDE_OFFER_REJECTED">Rejected</string>
+    <string name="LNG_RIDE_OFFER_BLOCKED">Blocked</string>
+    <string name="LNG_RIDE_OFFER_CANCELED">Canceled</string>
+    <string name="LNG_TRANSFER_NOT_PAID">Transfer is not paid</string>
+    <string name="LNG_BOOKING_NUMBER">Booking number</string>
+    <string name="LNG_PAYMENT_DECLINED">Payment declined</string>
+    <string name="LNG_PAYMENT_DECLINE_INFO">Try to pay again or use another bank card</string>
+    <string name="LNG_PAYMENT_TRY_AGAIN">Try again</string>
+    <string name="LNG_CUSTOMER_SUPPORT">Customer support</string>
+    <string name="LNG_PAYMENT_DETAILS">Details</string>
+    <string name="LNG_TRANSFER_PAID_SUCCESSFULLY">Transfer paid successfully</string>
+    <string name="LNG_DOWNLOAD_BOOKING_VOUCHER">Download booking voucher</string>
+    <string name="LNG_PAYMENT_CALL">Call</string>
+    <string name="LNG_PAYMENT_CHAT">Chat</string>
+    <string name="LNG_PAYMENT_EMAIL_TITLE">Transfer support</string>
+    <string name="LNG_PAYMENT_TRANSFER_NUMBER">Transfer number</string>
+    <string name="LNG_TRANSFER_TITLE">Transfer paid</string>
+
 </resources>

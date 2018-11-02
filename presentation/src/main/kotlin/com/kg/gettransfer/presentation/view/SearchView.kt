@@ -12,5 +12,6 @@ interface SearchView: BaseView {
 	fun onFindPopularPlace(isTo: Boolean, place: String)
 	fun setAddressFrom(address: String, sendRequest: Boolean, isEditing: Boolean)
 	fun setAddressTo(address: String, sendRequest: Boolean, isEditing: Boolean)
-	fun setSuggestedAddresses(addressesList: List<GTAddress>, popularList: List<PopularPlace>)
+	fun setSuggestedAddresses(addressesList: List<GTAddress>)
+	fun updateIcon(isTo: Boolean)
 }

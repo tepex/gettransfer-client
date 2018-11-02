@@ -37,6 +37,7 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
 import timber.log.Timber
+import java.util.*
 
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     internal val systemInteractor: SystemInteractor by inject()
@@ -125,15 +126,19 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
             checkKeyBoardState(countDifference())
         }
     }
+
+    protected fun openScreen(screen: String){
+        router.navigateTo(screen)
+
+    }
 }
 
 open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, Screens.NOT_USED) {
     protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
         when(screenKey) {
-            Screens.LOGIN -> return Intent(context, LoginActivity::class.java)
             Screens.DETAILS -> return Intent(context, TransferDetailsActivity::class.java)
             Screens.OFFERS -> return Intent(context, OffersActivity::class.java)
-            Screens.PAYMENT_SETTINGS -> return context.getPaymentSettingsActivityLaunchIntent()
+            Screens.PAYMENT_SETTINGS -> return context.getPaymentSettingsActivityLaunchIntent(data as Date)
         }
         return null
     }

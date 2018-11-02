@@ -16,6 +16,7 @@ class OfferModel(val id: Long,
     companion object {
         const val FULL_PRICE = 100
         const val PRICE_30   = 30
+        const val PRICE_70   = 70
     }
 }
 

@@ -20,7 +20,6 @@ import android.text.InputFilter
 
 import android.text.InputType
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.*
 
 import android.view.inputmethod.EditorInfo
@@ -36,6 +35,7 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.MapStyleOptions
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PromoInteractor
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
@@ -61,6 +61,7 @@ import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
 
+import com.kg.gettransfer.presentation.IntentKeys
 
 
 import org.koin.android.ext.android.inject
@@ -75,6 +76,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private val routeInteractor: RouteInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
     private val promoInteractor: PromoInteractor by inject()
+    private val offerInteractor: OfferInteractor by inject()
     private val calendar = Calendar.getInstance()
     private lateinit var bsOrder: BottomSheetBehavior<View>
     private lateinit var bsTransport: BottomSheetBehavior<View>
@@ -88,7 +90,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
                                                                                   systemInteractor,
                                                                                   routeInteractor,
                                                                                   transferInteractor,
-                                                                                  promoInteractor)
+                                                                                  promoInteractor,
+                                                                                  offerInteractor)
 
     protected override var navigator = object: BaseNavigator(this) {
         @CallSuper
@@ -106,6 +109,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
                 Screens.PASSENGER_MODE -> return Intent(context, MainActivity::class.java)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                Screens.LOGIN -> {
+                    val loginIntent = Intent(context, LoginActivity::class.java)
+                    loginIntent.putExtra(IntentKeys.SCREEN_FOR_RETURN, Screens.OFFERS )
+                    return loginIntent
+                }
             }
             return null
         }
@@ -169,7 +177,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             presenter.logTransferSettingsEvent(CreateOrderPresenter.COMMENT_INPUT)
         }
         tvAgreement1.setOnClickListener { presenter.showLicenceAgreement() }
-        tvAgreement2.setOnClickListener { presenter.showLicenceAgreement() }
         switchAgreement.setOnCheckedChangeListener { _, isChecked -> presenter.setAgreeLicence(isChecked) }
 
         btnGetOffers.setOnClickListener   { presenter.onGetTransferClick() }
@@ -328,7 +335,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             visibility = View.VISIBLE
         } else {
             colorRes = R.color.color_error
-            text = getString(R.string.transfer_promo_result_fail)
+            text = getString(R.string.LNG_RIDE_PROMOCODE_INVALID)
             visibility = View.INVISIBLE
         }
         tvPromoResult.setTextColor(getColor(colorRes))
@@ -354,7 +361,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun showTransportInfo(transportType: TransportTypeModel) {
         tvTypeTransfer.text = transportType.id
         ivTypeTransfer.setImageResource(transportType.imageId!!)
-        tvPrice.text = getString(R.string.price_from, transportType.price)
+        tvPrice.text = transportType.price
         tvCountPassengers.text = transportType.paxMax.toString()
         tvCountLuggage.text = transportType.luggageMax.toString()
     }

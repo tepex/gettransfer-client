@@ -4,6 +4,10 @@ import android.content.Context
 import android.content.Intent
 
 import android.os.Bundle
+
+import android.text.SpannableString
+import android.text.style.ImageSpan
+
 import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -15,20 +19,21 @@ import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 
 import com.kg.gettransfer.presentation.Screens
-
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
-
 import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter
-
 import com.kg.gettransfer.presentation.view.PaymentSettingsView
 
 import kotlinx.android.synthetic.main.activity_payment_settings.*
 
 import org.koin.android.ext.android.inject
 
-fun Context.getPaymentSettingsActivityLaunchIntent(): Intent {
-    return Intent(this, PaymentSettingsActivity::class.java)
+import java.util.Date
+
+fun Context.getPaymentSettingsActivityLaunchIntent(date: Date): Intent {
+    val intent = Intent(this, PaymentSettingsActivity::class.java)
+    intent.putExtra("date", date)
+    return intent
 }
 
 class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
@@ -57,14 +62,23 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_settings)
+        payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, 100)
+        payThirdOfPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, 30)
     }
 
     override fun setOffer(offer: OfferModel) {
         fullPrice.text = offer.price.base.default
-        thirdOfPrice.text = getString(R.string.price_part_1, offer.price.percentage30)
+        thirdOfPrice.text = getString(R.string.LNG_PAYMENT_TERM_LATER, OfferModel.PRICE_70, offer.price.percentage30)
         payFullPriceButton.setOnClickListener { view ->  changePaymentSettings(view) }
         payThirdOfPriceButton.setOnClickListener { view ->  changePaymentSettings(view) }
         btnGetPayment.setOnClickListener { presenter.getPayment() }
+    }
+
+    private fun setCommission() {
+        val date = intent?.extras?.getSerializable("date") as Date?
+        if (date != null) {
+            commission.text = getString(R.string.LNG_PAYMENT_COMISSION, Utils.getFormattedDate(systemInteractor.locale, date))
+        }
     }
 
     private fun changePaymentSettings(view: View?) {

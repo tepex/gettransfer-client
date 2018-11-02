@@ -28,8 +28,6 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-import timber.log.Timber
-
 class GeoRepositoryImpl(private val context: Context): GeoRepository {
     private lateinit var geocoder: Geocoder
     private val locationProviderClient = LocationServices.getFusedLocationProviderClient(context)

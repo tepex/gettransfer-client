@@ -16,6 +16,7 @@ import com.kg.gettransfer.domain.model.OfferListener
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.OffersView
 
 import ru.terrakok.cicerone.Router
@@ -77,9 +78,12 @@ class OffersPresenter(cc: CoroutineContexts,
             viewState.setTransfer(transferModel)
             changeSortType(SORT_PRICE)
             offerInteractor.setListener(this@OffersPresenter)
-        }, { e -> Timber.e(e)
-            viewState.setError(e)
+        }, { e ->
+            Timber.e(e)
+            if(e is ApiException && e.code == ApiException.NOT_LOGGED_IN) viewState.redirectView()
+            else viewState.setError(e)
         }, { viewState.blockInterface(false) })
+
     }
 
     @CallSuper
@@ -104,6 +108,10 @@ class OffersPresenter(cc: CoroutineContexts,
 
     fun onCancelRequestClicked() {
         viewState.showAlertCancelRequest()
+    }
+
+    fun openLoginView(){
+        login()
     }
 
     fun cancelRequest(isCancel: Boolean) {

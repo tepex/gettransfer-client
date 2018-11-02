@@ -10,17 +10,17 @@
         android:layout_marginStart="@dimen/nav_icons_margin_start_end"
         android:layout_marginEnd="@dimen/nav_icons_margin_start_end"
         android:layout_centerVertical="true"
-        app:srcCompat="@drawable/ic_menu_switch_off"/>
+        app:srcCompat="@drawable/ic_menu_switch_off" />
 
     <TextView
         android:id="@+id/title"
         style="@style/nav_item_title"
-        android:text="@string/text_nav_become_a_carrier_title"
-        android:layout_toEndOf="@+id/imgBecomeACarrier"/>
+        android:text="@string/LNG_MENU_TITLE_DRIVE"
+        android:layout_toEndOf="@+id/imgBecomeACarrier" />
 
     <TextView
         style="@style/nav_item_subtitle"
-        android:text="@string/text_nav_become_a_carrier_subtitle"
+        android:text="@string/LNG_MENU_SUBTITLE_DRIVE"
         android:layout_below="@+id/title"
-        android:layout_toEndOf="@+id/imgBecomeACarrier"/>
+        android:layout_toEndOf="@+id/imgBecomeACarrier" />
 </RelativeLayout>

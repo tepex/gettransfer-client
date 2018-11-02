@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="login">Войти</string>
+    <!--<string name="login">Войти</string>
     <string name="email">Email</string>
     <string name="email_">*Email</string>
     <string name="password">Пароль</string>
@@ -18,7 +18,7 @@
 
     <string name="number_symbol">№</string>
 
-    <!--<string name="carrier_number">Перевозчик №</string>-->
+    &lt;!&ndash;<string name="carrier_number">Перевозчик №</string>&ndash;&gt;
     <string name="carrier_number">Перевозчик #%1$d</string>
 
     <string name="from">Откуда</string>
@@ -173,7 +173,7 @@
     <string name="login_subtitle">Вход для клиентов и водителей</string>
 
 
-    <!--NavigationView-->
+    &lt;!&ndash;NavigationView&ndash;&gt;
     <string name="text_nav_login_title">Войти</string>
     <string name="text_nav_login_subtitle">Вход для клиентов и водителей</string>
 
@@ -195,11 +195,11 @@
     <string name="text_nav_passenger_mode_title">Пассажирский режим</string>
     <string name="text_nav_passenger_mode_subtitle">Пассажирский режим</string>
 
-    <!--Title text-->
+    &lt;!&ndash;Title text&ndash;&gt;
     <string name="requests">Поездки</string>
     <string name="become_carrier">Стать перевозчиком</string>
 
-    <!--view_transfer_request_info-->
+    &lt;!&ndash;view_transfer_request_info&ndash;&gt;
     <string name="transfer_request_num">Заявка на трансфер № %1$s</string>
     <string name="next">Далее</string>
     <string name="done">Сделано</string>
@@ -207,14 +207,14 @@
     <string name="rub">₽</string>
     <string name="comment_options">омментарий и опции</string>
 
-    <!--activity_transfer_details-->
+    &lt;!&ndash;activity_transfer_details&ndash;&gt;
     <string name="activity_transfer_details_title">Детали заявки</string>
     <string name="luggage">Багаж</string>
 
-    <!--activity_carrier_trips-->
+    &lt;!&ndash;activity_carrier_trips&ndash;&gt;
     <string name="activity_carrier_trips_title">Входящие заявки</string>
 
-    <!--activity_carrier_transfer_details-->
+    &lt;!&ndash;activity_carrier_transfer_details&ndash;&gt;
     <string name="activity_carrier_transfer_details_title">Детали заявки</string>
     <string name="call">Call</string>
     <string name="chat">Chat</string>
@@ -227,7 +227,7 @@
     <string name="close">Закрыть</string>
     <string name="ready">Готово</string>
 
-    <!--activity_offers-->
+    &lt;!&ndash;activity_offers&ndash;&gt;
     <string name="excellent_price_text_1">Fix an excellent price for your trip now</string>
     <string name="excellent_price_text_2">Prices can grow, book now to guarantee best price</string>
     <string name="sorted_year_made_text">Год выпуска</string>
@@ -242,7 +242,7 @@
     <string name="driver_completed_transfers">сделал %1$d поездок</string>
     <string name="preferred_cost">(%1$s)</string>
 
-    <!-- Transport types -->
+    &lt;!&ndash; Transport types &ndash;&gt;
     <string name="transport_type_economy">Эконом</string>
     <string name="transport_type_business">Бизнес</string>
     <string name="transport_type_premium">Премиум</string>
@@ -257,6 +257,6 @@
     <string name="search">Поиск</string>
 
     <string name="payment_successful">Успешная оплата</string>
-    <string name="payment_failed">Ошибка оплаты</string>
+    <string name="payment_failed">Ошибка оплаты</string>-->
 
 </resources>

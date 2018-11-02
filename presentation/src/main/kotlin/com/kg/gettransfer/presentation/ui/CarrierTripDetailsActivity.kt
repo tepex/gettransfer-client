@@ -99,10 +99,11 @@ class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsVie
     }
 
     override fun setTripInfo(trip: CarrierTripModel) {
-        layoutTransferInfo.tvTransferRequestNumber.text = getString(R.string.transfer_request_num, trip.transferId)
+        layoutTransferInfo.tvTransferRequestNumber.text = getString(R.string.LNG_RIDE_NUMBER).plus(trip.transferId)
         layoutTransferInfo.tvFrom.text = trip.from
         layoutTransferInfo.tvTo.text = trip.to
-        layoutTransferInfo.tvOrderDateTime.text = getString(R.string.transfer_date_local, trip.dateTime)
+        //layoutTransferInfo.tvOrderDateTime.text = getString(R.string.transfer_date_local, trip.dateTime)
+        layoutTransferInfo.tvOrderDateTime.text = trip.dateTime
         layoutTransferInfo.tvDistance.text = Utils.formatDistance(this, trip.distance, trip.distanceUnit)
         tvCountPassengers.text = trip.countPassengers.toString()
         

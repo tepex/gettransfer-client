@@ -17,4 +17,5 @@ interface OffersView: BaseView {
     fun showAlertCancelRequest()
     fun showBottomSheetOfferDetails(offer: OfferModel)
     fun addNewOffer(offer: OfferModel)
+    fun redirectView()
 }

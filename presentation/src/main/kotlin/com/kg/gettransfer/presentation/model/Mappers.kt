@@ -46,8 +46,8 @@ object Mappers {
         
     @StringRes
     fun getTransportTypeName(id: String): Int {
-        val nameRes = R.string::class.members.find( { it.name == "transport_type_$id" } )
-        return (nameRes?.call() as Int?) ?: R.string.transport_type_unknown
+        val nameRes = R.string::class.members.find( { it.name == "LNG_TRANSPORT_${id.toUpperCase()}" } )
+        return (nameRes?.call() as Int?) ?: R.string.LNG_TRANSPORT_ECONOMY
     }
     
     fun getCurrenciesModels(types: List<Currency>)        = types.map { CurrencyModel(it) }
@@ -95,7 +95,8 @@ object Mappers {
                              type.remainsToPay?.default,
                              type.price?.default,
                              type.relevantCarriersCount,
-                             type.checkOffers)
+                             type.checkOffers,
+                             type.dateRefund)
     }
     
     fun getTransferNew(from: CityPoint,

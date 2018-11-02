@@ -13,7 +13,7 @@
         android:layout_marginTop="10dp"
         android:background="@null"
         android:fontFamily="@font/sf_pro_text_regular"
-        android:hint="@string/type_your_comments"
+        android:hint="@string/LNG_COMMENT_PLACEHOLDER"
         android:imeOptions="actionDone"
         android:inputType="textMultiLine"
         android:paddingStart="0dp"

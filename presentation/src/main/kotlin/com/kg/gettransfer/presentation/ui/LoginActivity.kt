@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
@@ -8,6 +10,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.markAsNotImplemented
+import com.kg.gettransfer.presentation.IntentKeys
+import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.LoginPresenter
 import com.kg.gettransfer.presentation.view.LoginView
 import kotlinx.android.synthetic.main.activity_login.*
@@ -19,7 +23,7 @@ class LoginActivity: BaseActivity(), LoginView {
     @ProvidePresenter
     fun createLoginPresenter(): LoginPresenter = LoginPresenter(coroutineContexts, router, systemInteractor)
     
-    protected override var navigator = BaseNavigator(this)
+    protected override var navigator = object: BaseNavigator(this) {}
     
     override fun getPresenter(): LoginPresenter = presenter
 
@@ -27,11 +31,13 @@ class LoginActivity: BaseActivity(), LoginView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
+        
         etEmail.onTextChanged       { presenter.setEmail(it.trim()) }
         etPassword.onTextChanged    { presenter.setPassword(it.trim()) }
         btnLogin.setOnClickListener { presenter.onLoginClick() }
+        
         btnForgotPassword.markAsNotImplemented()
+        presenter.screenForReturn = intent.getStringExtra(IntentKeys.SCREEN_FOR_RETURN)
     }
 
     override fun enableBtnLogin(enable: Boolean) {
