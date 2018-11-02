@@ -1,6 +1,7 @@
 package com.kg.gettransfer.domain
 
 import kotlinx.coroutines.*
+import java.io.IOException
 import java.util.concurrent.TimeoutException
 
 /**
@@ -33,6 +34,7 @@ class AsyncUtils(private val cc: CoroutineContexts, root: Job): CoroutineScope {
 
             try { tryBlock() }
             catch(e: TimeoutException) { catchBlock(e) }
+            catch(e: IOException) { catchBlock(e) }
             catch(e: InternetNotAvailableException) { catchBlock(e) }
             catch(e: ApiException) { catchBlock(e) }
             catch(e: CancellationException) { caughtThrowable = e }

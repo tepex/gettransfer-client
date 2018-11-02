@@ -21,6 +21,7 @@ import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.domain.repository.GeoRepository
+import java.io.IOException
 
 import java.util.Locale
 
@@ -51,34 +52,37 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
     }
 
     override fun getAddressByLocation(point: Point, pair: Pair<Point, Point>): GTAddress {
-        val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
+        try {
+            val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
 
-        val street  = list.firstOrNull()?.thoroughfare
-        val house   = list.firstOrNull()?.subThoroughfare
-        val city    = list.firstOrNull()?.locality
-        val area    = list.firstOrNull()?.adminArea
-        val country = list.firstOrNull()?.countryName
+            val street = list.firstOrNull()?.thoroughfare
+            val house = list.firstOrNull()?.subThoroughfare
+            val city = list.firstOrNull()?.locality
+            val area = list.firstOrNull()?.adminArea
+            val country = list.firstOrNull()?.countryName
 
-        val addr = with(StringBuilder()) {
-            if(street == null && !list.isEmpty() && list.firstOrNull()?.getAddressLine(0)!!.isNotEmpty()) {
-                append(list.firstOrNull()?.getAddressLine(0))
+            val addr = with(StringBuilder()) {
+                if (street == null && !list.isEmpty() && list.firstOrNull()?.getAddressLine(0)!!.isNotEmpty()) {
+                    append(list.firstOrNull()?.getAddressLine(0))
+                } else {
+                    if (!street.isNullOrEmpty()) append(street).append(", ")
+                    if (!house.isNullOrEmpty()) append(house).append(", ")
+                    if (!city.isNullOrEmpty()) append(city).append(", ")
+                    if (!country.isNullOrEmpty()) append(country)
+                    if (!area.isNullOrEmpty() && area != city) append(area).append(", ")
+                }
+                toString()
             }
-            else {
-                if(!street.isNullOrEmpty())  append(street).append(", ")
-                if(!house.isNullOrEmpty())   append(house).append(", ")
-                if(!city.isNullOrEmpty())    append(city).append(", ")
-                if(!country.isNullOrEmpty()) append(country)
-                if(!area.isNullOrEmpty() && area != city) append(area).append(", ")
-            }
-            toString()
+            val text = getAutocompletePredictions(addr, pair)
+            val address = if (text.isNotEmpty()) text.get(0).address else addr
+            return GTAddress(CityPoint(address, point, null),
+                    listOf(GTAddress.TYPE_STREET_ADDRESS),
+                    address,
+                    null,
+                    null)
+        } catch (e: IOException) {
+            throw e
         }
-        val text = getAutocompletePredictions(addr, pair)
-        val address = if(text.isNotEmpty()) text.get(0).address else addr
-        return GTAddress(CityPoint(address, point, null),
-                         listOf(GTAddress.TYPE_STREET_ADDRESS),
-                         address,
-                         null,
-                         null)
     }
 
     override fun getCurrentAddress(): GTAddress {
