@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
@@ -11,7 +9,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.markAsNotImplemented
 import com.kg.gettransfer.presentation.IntentKeys
-import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.LoginPresenter
 import com.kg.gettransfer.presentation.view.LoginView
 import kotlinx.android.synthetic.main.activity_login.*

@@ -18,8 +18,8 @@
 
         <CheckBox
             android:id="@+id/cbTransferType"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:button="@drawable/cb_transfer_type_selector"
@@ -32,31 +32,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:fontFamily="@font/sf_pro_text_regular"
             android:textSize="@dimen/transfer_types_text_size"
             app:layout_constraintBottom_toBottomOf="@+id/cbTransferType"
-            app:layout_constraintEnd_toStartOf="@+id/layoutTransportInfo"
             app:layout_constraintStart_toEndOf="@+id/cbTransferType"
             app:layout_constraintTop_toTopOf="@+id/cbTransferType"
             tools:text="Economy" />
-
-        <FrameLayout
-            android:id="@+id/layoutTransportInfo"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/tvTransferType"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tvTransferType">
-
-            <ImageView
-                android:id="@+id/ivTransportInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="invisible"
-                app:srcCompat="@drawable/ic_info_cars_type" />
-        </FrameLayout>
 
 
         <ImageView
@@ -74,7 +56,6 @@
             android:id="@+id/ivPassanger"
             android:layout_width="15dp"
             android:layout_height="15dp"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="3dp"
             app:layout_constraintStart_toStartOf="@+id/ivTransferType"
             app:layout_constraintTop_toBottomOf="@+id/ivTransferType"
@@ -84,7 +65,6 @@
             android:id="@+id/tvNumberPersonsTransfer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
             android:fontFamily="@font/sf_pro_text_regular"
             android:textSize="@dimen/transfer_types_text_size"
             app:layout_constraintBottom_toBottomOf="@+id/ivPassanger"
@@ -96,9 +76,8 @@
             android:id="@+id/ivLuggage"
             android:layout_width="20dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
             app:layout_constraintBottom_toBottomOf="@+id/tvNumberPersonsTransfer"
-            app:layout_constraintEnd_toStartOf="@+id/tvCountBaggage"
+            app:layout_constraintStart_toEndOf="@+id/tvNumberPersonsTransfer"
             app:layout_constraintTop_toTopOf="@+id/tvNumberPersonsTransfer"
             app:srcCompat="@drawable/ic_luggage" />
 
@@ -110,9 +89,38 @@
             android:fontFamily="@font/sf_pro_text_regular"
             android:textSize="@dimen/transfer_types_text_size"
             app:layout_constraintBottom_toBottomOf="@+id/ivLuggage"
-            app:layout_constraintEnd_toEndOf="@+id/ivTransferType"
             app:layout_constraintTop_toTopOf="@+id/ivLuggage"
+            app:layout_constraintStart_toEndOf="@+id/ivLuggage"
             tools:text="x3" />
+
+        <FrameLayout
+            android:id="@+id/layoutTransportInfo"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvCountBaggage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvCountBaggage">
+
+            <ImageView
+                android:id="@+id/ivTransportInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/ic_info_cars_type" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/transfer_types_text_size"
+            android:text="@string/from_price"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="2dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvNumberPersonsTransfer"/>
 
         <TextView
             android:id="@+id/tvPriceFrom"
@@ -122,9 +130,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="2dp"
             android:fontFamily="@font/sf_pro_text_regular"
-            android:textSize="@dimen/transfer_types_text_size"
+            android:textSize="13sp"
+            android:textColor="@color/sfproTextSemibold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvNumberPersonsTransfer"
             tools:text="from $1" />
     </android.support.constraint.ConstraintLayout>

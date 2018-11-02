@@ -697,5 +697,6 @@
     <string name="LNG_PAYMENT_EMAIL_TITLE">Transfer support</string>
     <string name="LNG_PAYMENT_TRANSFER_NUMBER">Transfer number</string>
     <string name="LNG_TRANSFER_TITLE">Transfer paid</string>
+    <string name="from_price">from:</string>
 
 </resources>

@@ -161,7 +161,7 @@ class MainPresenter(cc: CoroutineContexts,
     }
 
     private fun navigateToFindAddress(addresses: Pair<String, String>) {
-        routeInteractor.from?.let {
+        routeInteractor.from.let {
             router.navigateTo(Screens.FIND_ADDRESS, addresses)
         }
     }
