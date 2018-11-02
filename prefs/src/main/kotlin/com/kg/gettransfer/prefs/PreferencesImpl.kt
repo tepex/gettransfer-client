@@ -11,9 +11,6 @@ import com.kg.gettransfer.data.model.*
 import com.kg.gettransfer.domain.SystemListener
 import com.kg.gettransfer.domain.SystemListenerManager
 
-
-import com.google.gson.Gson
-
 import kotlinx.serialization.list
 import kotlinx.serialization.json.JSON
 
@@ -38,19 +35,10 @@ class PreferencesImpl(context: Context): PreferencesCache, SystemCache, SystemLi
 
         const val ACCOUNT_ADDRESS_HISTORY = "history"
 
-        const val CONFIGS_TRANSPORT_TYPES = "configs_transport_types"
-        const val CONFIGS_PAYPAL_CREDITIALS = "configs_paypal_creditials"
-        const val CONFIGS_AVAILABLE_LOCALES = "configs_available_locales"
-        const val CONFIGS_PREFERRED_LOCALE = "configs_preferred_locale"
-        const val CONFIGS_SUPPORTED_CURRENCIES = "configs_supported_currencies"
-        const val CONFIGS_SUPPORTED_DISTANCE = "configs_supported_distance"
-        const val CONFIGS_CARD_GATEWAYS = "configs_card_gateways"
-        const val CONFIGS_OFFICE_PHONE = "configs_office_phone"
-        const val CONFIGS_BASE_URL = "configs_base_url"
+        const val CONFIGS_JSON = "json"
     }
     
     private val listeners = mutableSetOf<SystemListener>()
-    private val gson = Gson()
 
     private val configsPrefs = context.getSharedPreferences(CONFIGS, Context.MODE_PRIVATE)
     private val accountPrefs = context.getSharedPreferences(ACCOUNT, Context.MODE_PRIVATE)
@@ -110,30 +98,23 @@ class PreferencesImpl(context: Context): PreferencesCache, SystemCache, SystemLi
 
     override var configs: ConfigsEntity
         get() {
-            val gson = Gson()
-            
-            return ConfigsEntity(gson.fromJson(configsPrefs.getString(CONFIGS_TRANSPORT_TYPES, null), Array<TransportTypeEntity>::class.java).toList(),
-                    gson.fromJson(configsPrefs.getString(CONFIGS_PAYPAL_CREDITIALS, null), PaypalCredentialsEntity::class.java),
-                    gson.fromJson(configsPrefs.getString(CONFIGS_AVAILABLE_LOCALES, null), Array<LocaleEntity>::class.java).toList(),
-                    configsPrefs.getString(CONFIGS_PREFERRED_LOCALE, null),
-                    gson.fromJson(configsPrefs.getString(CONFIGS_SUPPORTED_CURRENCIES, null), Array<CurrencyEntity>::class.java).toList(),
-                    configsPrefs.getStringSet(CONFIGS_SUPPORTED_DISTANCE, null)?.toTypedArray()!!.toList(),
-                    gson.fromJson(configsPrefs.getString(CONFIGS_CARD_GATEWAYS, null), CardGatewaysEntity::class.java),
-                    configsPrefs.getString(CONFIGS_OFFICE_PHONE, null),
-                    configsPrefs.getString(CONFIGS_BASE_URL, null))
+            val json = configsPrefs.getString(CONFIGS_JSON, null)
+            if(json != null) return JSON.parse(ConfigsEntity.serializer(), json)
+            return ConfigsEntity(emptyList<TransportTypeEntity>(),
+                                 PaypalCredentialsEntity("", ""),
+                                 emptyList<LocaleEntity>(),
+                                 "en",
+                                 emptyList<CurrencyEntity>(),
+                                 emptyList<String>(),
+                                 CardGatewaysEntity("", ""),
+                                 "",
+                                 "")
         }
         set(value) {
-            val editor = configsPrefs.edit()
-            setList(editor, CONFIGS_TRANSPORT_TYPES, value.transportTypes)
-            setObject(editor, CONFIGS_PAYPAL_CREDITIALS, value.paypalCredentials)
-            setList(editor, CONFIGS_AVAILABLE_LOCALES, value.availableLocales)
-            editor.putString(CONFIGS_PREFERRED_LOCALE, value.preferredLocale)
-            setList(editor, CONFIGS_SUPPORTED_CURRENCIES, value.supportedCurrencies)
-            editor.putStringSet(CONFIGS_SUPPORTED_DISTANCE, value.supportedDistanceUnits.toSet())
-            setObject(editor, CONFIGS_CARD_GATEWAYS, value.cardGateways)
-            editor.putString(CONFIGS_OFFICE_PHONE, value.officePhone)
-            editor.putString(CONFIGS_BASE_URL, value.baseUrl)
-            editor.apply()
+            with(configsPrefs.edit()) {
+                putString(CONFIGS_JSON, JSON.stringify(ConfigsEntity.serializer(), value))
+                apply()
+            }
         }
 
     override var endpoint: String
@@ -183,25 +164,6 @@ class PreferencesImpl(context: Context): PreferencesCache, SystemCache, SystemLi
             }            
         }
 
-    fun <T> setList(editor: SharedPreferences.Editor, key: String, list: List<T>) {
-        val gson = Gson()
-        val json = gson.toJson(list)
-        editor.putString(key, json)
-    }
-
-    fun <T> setObject(editor: SharedPreferences.Editor, key:String, obj: T){
-        val gson = Gson()
-        val json = gson.toJson(obj)
-        editor.putString(key, json)
-    }
-
-    /*fun <T> getList(preferences: SharedPreferences, key: String, qwerty: T): List<T> {
-        val gson = Gson()
-        val erewrw = Activ
-        if(qwerty is TransportTypeEntity){}
-        return gson.fromJson(preferences.getString(key, ""), Array< qwerty::class.objectInstance>::class.java).toList()
-    }*/
-    
     override fun addListener(listener: SystemListener)    { listeners.add(listener) }
     override fun removeListener(listener: SystemListener) { listeners.remove(listener) }
 }
