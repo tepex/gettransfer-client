@@ -82,21 +82,11 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
         factory.retrieveCacheDataStore().setAccount(accountEntity)
         return accountMapper.fromEntity(accountEntity)
     }
-    override fun getHistory(): List<GTAddress> {
+    override fun getHistory(): List<GTAddress> =
+            preferencesCache.lastAddresses!!.map { addressMapper.fromEntity(it) }
 
-        val result = ArrayList<GTAddress>()
-        val entities = preferencesCache.lastAddresses
-        if(entities != null){
-            for(i in 0 until entities.size)
-                result.add(addressMapper.fromEntity(entities[i]))
-        }
-
-        return result
-    }
     override fun setHistory(history: List<GTAddress>) {
-        val result = ArrayList<GTAddressEntity>()
-        for (i in 0 until history.size) result.add(addressMapper.toEntity(history[i]))
-        preferencesCache.lastAddresses = result
+        preferencesCache.lastAddresses = history.map { addressMapper.toEntity(it) }
     }
 
     override fun logout() = factory.retrieveCacheDataStore().clearAccount()

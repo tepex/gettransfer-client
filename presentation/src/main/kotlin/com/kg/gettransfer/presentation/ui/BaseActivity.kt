@@ -125,10 +125,10 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
 
     //здесь лучше ничего не трогать
     private fun countDifference(): Boolean {
-        if(rootViewHeight == null) rootViewHeight = rootView!!.height
+        if(rootViewHeight == null) rootViewHeight = rootView!!.rootView.height
 
         val visibleRect = getRect()
-        return (visibleRect.bottom - rootViewHeight!!) == visibleRect.top
+        return (rootViewHeight!! - visibleRect.bottom) < rootViewHeight!! * 0.15
     }
 
     private fun getRect(): Rect{

@@ -48,8 +48,6 @@ class MainPresenter(cc: CoroutineContexts,
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         utils.launchAsyncTryCatch( {
             updateCurrentLocationAsync()
-            isMarkerAnimating = false
-            markerStateLifted = false
         }, { e -> Timber.e(e) } )
 
         // Создать листенер для обновления текущей локации
@@ -147,6 +145,10 @@ class MainPresenter(cc: CoroutineContexts,
 
     fun setMarkerAnimating(animating: Boolean){
         isMarkerAnimating = animating
+    }
+
+    fun enablePinAnimation(){
+        isMarkerAnimating = false
     }
 
     fun setAddressFields() {

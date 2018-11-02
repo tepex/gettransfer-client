@@ -166,7 +166,7 @@ class SearchActivity: BaseActivity(), SearchView {
 
     override fun setAddressTo(address: String, sendRequest: Boolean, isEditing: Boolean) {
         searchTo.initText(address, sendRequest, isEditing)
-        if(address.isNotEmpty()) updateIcon(false)
+        if(address.isNotEmpty()) updateIcon(true)
     }
 
     override fun setAddressListByAutoComplete(list: List<GTAddress>) {

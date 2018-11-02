@@ -33,6 +33,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
@@ -269,6 +270,11 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
         googleMap.setOnCameraMoveListener { presenter.onCameraMove(googleMap.getCameraPosition()!!.target, true);  }
         googleMap.setOnCameraIdleListener { presenter.onCameraIdle(googleMap.projection.visibleRegion.latLngBounds) }
+        googleMap.setOnCameraMoveStartedListener { r ->
+            if(r == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+                presenter.enablePinAnimation()
+                googleMap.setOnCameraMoveStartedListener(null)
+            } }
     }
 
     /* MainView */
