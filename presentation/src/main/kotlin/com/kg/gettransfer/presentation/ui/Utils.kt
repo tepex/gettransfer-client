@@ -8,6 +8,7 @@ import android.graphics.*
 import android.graphics.drawable.Drawable
 
 import android.location.Location
+
 import android.net.ConnectivityManager
 
 import android.os.Build
@@ -24,6 +25,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextWatcher
 import android.text.style.ImageSpan
+
 import android.util.DisplayMetrics
 
 import android.view.LayoutInflater
@@ -33,8 +35,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.TextView
-
-import android.widget.Toast
 
 import android.widget.Toast
 
