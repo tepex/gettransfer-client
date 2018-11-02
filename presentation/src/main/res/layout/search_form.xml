@@ -32,6 +32,7 @@
 		android:id="@+id/separator"
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/search_divider_height"
+		android:layout_marginStart="@dimen/divider_marginStart"
 		android:background="@color/colorDividerGray"
 		android:layout_below="@+id/searchFrom" />
 
