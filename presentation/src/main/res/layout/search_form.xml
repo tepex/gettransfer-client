@@ -22,7 +22,8 @@
 	<com.kg.gettransfer.presentation.ui.SearchAddress
 		android:id="@+id/searchFrom"
 		android:layout_width="match_parent"
-		android:layout_height="@dimen/search_form_height"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/search_marginStart"
 		android:paddingEnd="@dimen/search_form_clear_padding_end"
 		android:paddingStart="0dp"
 		app:hint="@string/LNG_FIELD_SOURCE" />
@@ -31,13 +32,15 @@
 		android:id="@+id/separator"
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/search_divider_height"
+		android:layout_marginStart="@dimen/divider_marginStart"
 		android:background="@color/colorDividerGray"
 		android:layout_below="@+id/searchFrom" />
 
 	<com.kg.gettransfer.presentation.ui.SearchAddress
 		android:id="@+id/searchTo"
 		android:layout_width="match_parent"
-		android:layout_height="@dimen/search_form_height"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/search_marginStart"
 		android:paddingStart="0dp"
 		android:paddingEnd="@dimen/search_form_clear_padding_end"
 		app:hint="@string/LNG_FIELD_DESTINATION"
