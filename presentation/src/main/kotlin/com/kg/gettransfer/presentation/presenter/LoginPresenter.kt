@@ -58,6 +58,8 @@ class LoginPresenter(cc: CoroutineContexts,
         }
     }
 
+    fun onHomeClick() = router.exit()
+
     fun setEmail(email: String) {
         if(email.isEmpty()) this.email = null else this.email = email
         checkFields()
