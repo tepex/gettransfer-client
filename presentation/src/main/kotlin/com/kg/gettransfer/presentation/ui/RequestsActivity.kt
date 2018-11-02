@@ -62,6 +62,8 @@ class RequestsActivity: BaseActivity(), RequestsView {
 
         val requestsVPAdapter = RequestsViewPagerAdapter(supportFragmentManager)
 
+        viewNetworkNotAvailable = textNetworkNotAvailable
+
         val fragmentRequestsActive = RequestsFragment.newInstance(CATEGORY_ACTIVE)
         requestsVPAdapter.addFragment(fragmentRequestsActive, CATEGORY_ACTIVE)
         val fragmentRequestsAll = RequestsFragment.newInstance(CATEGORY_ALL)

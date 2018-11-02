@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.kg.gettransfer.data.NetworkNotAvailableException
 
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.PreferencesCache
@@ -25,6 +26,7 @@ import org.slf4j.LoggerFactory
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeoutException
 
 class ApiCore(private val preferences: PreferencesCache,
               private val hostListener: HostListener) {
@@ -32,14 +34,16 @@ class ApiCore(private val preferences: PreferencesCache,
         @JvmField val TAG = "GTR-remote"
         private val ERROR_PATTERN = Regex("^\\<h1\\>(.+)\\<\\/h1\\>$")
     }
-    
+
     private val log = LoggerFactory.getLogger(TAG)
-    
+
     internal lateinit var api: Api
     lateinit var apiUrl: String
 
     private lateinit var apiKey: String
     private val gson = GsonBuilder().registerTypeAdapter(TransportTypesWrapperModel::class.java, TransportTypesDeserializer()).create()
+    private var isInternetAvailable = true
+
     private var okHttpClient = OkHttpClient.Builder().apply {
         addInterceptor(HttpLoggingInterceptor(log))
         addInterceptor { chain ->
@@ -64,33 +68,43 @@ class ApiCore(private val preferences: PreferencesCache,
                 .create(Api::class.java)
         hostListener.onEndpointChanged(endpoint, preferences.accessToken)
     }
-    
+
+    fun changeNetworkConnectionAvailability(isNetworkConnected: Boolean){
+        isInternetAvailable = isNetworkConnected
+    }
+
     /**
      * 1. Try to call [apiCall] first time.
      * 2. If response code is 401 (token expired) — try to call [apiCall] second time.
      */
     internal suspend fun <R> tryTwice(apiCall: () -> Deferred<R>): R {
-        return try { apiCall().await() }
-        catch(e: Exception) {
-            if(e is RemoteException) throw e /* second invocation */
-            val ae = remoteException(e)
-            if(!ae.isInvalidToken()) throw ae
+        if(isInternetAvailable) {
+            return try { apiCall().await() }
+            catch (e: TimeoutException){ throw e }
+            catch (e: Exception) {
+                if (e is RemoteException) throw e /* second invocation */
+                val ae = remoteException(e)
+                if (!ae.isInvalidToken()) throw ae
 
-            try { updateAccessToken() } catch(e1: Exception) { throw remoteException(e1) }
-            return try { apiCall().await() } catch(e2: Exception) { throw remoteException(e2) }
-        }
+                try { updateAccessToken() } catch (e1: Exception) { throw remoteException(e1) }
+                return try { apiCall().await() } catch (e2: Exception) { throw remoteException(e2) }
+            }
+        } else throw NetworkNotAvailableException()
     }
     
     internal suspend fun <R> tryTwice(id: Long, apiCall: (Long) -> Deferred<R>): R {
-        return try { apiCall(id).await() }
-        catch(e: Exception) {
-            if(e is RemoteException) throw e /* second invocation */
-            val ae = remoteException(e)
-            if(!ae.isInvalidToken()) throw ae
+        if(isInternetAvailable) {
+            return try { apiCall(id).await() }
+            catch (e: TimeoutException){ throw e }
+            catch(e: Exception) {
+               if(e is RemoteException) throw e /* second invocation */
+               val ae = remoteException(e)
+               if(!ae.isInvalidToken()) throw ae
 
-            try { updateAccessToken() } catch(e1: Exception) { throw remoteException(e1) }
-            return try { apiCall(id).await() } catch(e2: Exception) { throw remoteException(e2) }
-        }
+               try { updateAccessToken() } catch(e1: Exception) { throw remoteException(e1) }
+               return try { apiCall(id).await() } catch(e2: Exception) { throw remoteException(e2) }
+            }
+        } else throw NetworkNotAvailableException()
     }
     
     /*

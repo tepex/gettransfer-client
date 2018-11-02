@@ -11,6 +11,7 @@ interface SystemRepository {
     var lastMode: String
     var endpoint: Endpoint
     val endpoints: List<Endpoint>
+    var isInternetAvailable: Boolean
         
     suspend fun coldStart()
     suspend fun getAccount(): Account

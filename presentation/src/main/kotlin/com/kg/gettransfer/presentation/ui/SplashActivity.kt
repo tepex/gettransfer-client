@@ -20,6 +20,7 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.InternetNotAvailableException
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
@@ -47,14 +48,16 @@ class SplashActivity: AppCompatActivity() {
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && 
-            (!check(Manifest.permission.ACCESS_FINE_LOCATION) || 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            (!check(Manifest.permission.ACCESS_FINE_LOCATION) ||
              !check(Manifest.permission.ACCESS_COARSE_LOCATION))) {
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_REQUEST)
             // show splash
             Timber.d("Splash screen")
             return
         }
+
+        systemInteractor.isInternetAvailable = Utils.isConnectedToInternet(this)
 
         if (checkIsTaskRoot()) return
 
@@ -95,7 +98,7 @@ class SplashActivity: AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if(requestCode != PERMISSION_REQUEST) return
-        if(grantResults.size == 2 && 
+        if(grantResults.size == 2 &&
             grantResults[0] == PackageManager.PERMISSION_GRANTED &&
             grantResults[1] == PackageManager.PERMISSION_GRANTED) recreate()
         else finish()

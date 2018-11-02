@@ -1,6 +1,7 @@
 package com.kg.gettransfer.domain
 
 import kotlinx.coroutines.*
+import java.util.concurrent.TimeoutException
 
 /**
  * https://medium.com/@andrea.bresolin/playing-with-kotlin-in-android-coroutines-and-how-to-get-rid-of-the-callback-hell-a96e817c108b
@@ -31,6 +32,8 @@ class AsyncUtils(private val cc: CoroutineContexts, root: Job): CoroutineScope {
             var caughtThrowable: Throwable? = null
 
             try { tryBlock() }
+            catch(e: TimeoutException) { catchBlock(e) }
+            catch(e: InternetNotAvailableException) { catchBlock(e) }
             catch(e: ApiException) { catchBlock(e) }
             catch(e: CancellationException) { caughtThrowable = e }
             finally { if(caughtThrowable is CancellationException) throw caughtThrowable else finallyBlock() }

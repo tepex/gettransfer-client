@@ -77,6 +77,8 @@ class OffersActivity: BaseActivity(), OffersView {
         bsOfferDetails = BottomSheetBehavior.from(sheetOfferDetails)
         bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN
 
+        viewNetworkNotAvailable = textNetworkNotAvailable
+
         btnCancelRequest.setOnClickListener { presenter.onCancelRequestClicked() }
         layoutTransferRequestInfo.setOnClickListener { presenter.onRequestInfoClicked() }
         sortYear.setOnClickListener { presenter.changeSortType(OffersPresenter.SORT_YEAR) }

@@ -52,31 +52,64 @@
 					android:background="@drawable/back_status_bar_gradient"
 					android:layout_gravity="top" />
 
-				<ImageView
-					android:id="@+id/btnShowDrawerLayout"
-					android:layout_width="@dimen/activity_main_buttons_size"
-					android:layout_height="@dimen/activity_main_buttons_size"
-					app:srcCompat="@drawable/ic_menu"
-					android:background="@drawable/back_circle_white_buttons"
-					android:layout_gravity="top|start"
-					android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
-					android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end"
-					android:clickable="true"
-					android:focusable="true"
-					android:elevation="2dp" />
+				<android.support.constraint.ConstraintLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="top">
 
-				<ImageView
-					android:id="@+id/btnMyLocation"
-					android:layout_width="@dimen/activity_main_buttons_size"
-					android:layout_height="@dimen/activity_main_buttons_size"
-					app:srcCompat="@drawable/ic_my_location"
-					android:background="@drawable/back_circle_white_buttons"
-					android:layout_gravity="top|end"
-					android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
-					android:layout_marginEnd="@dimen/activity_main_buttons_margin_start_end"
-					android:clickable="true"
-					android:focusable="true"
-					android:elevation="2dp" />
+					<LinearLayout
+						android:id="@+id/layoutTextNetworkNotAvailable"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						app:layout_constraintTop_toTopOf="parent"
+						android:background="@color/colorBtnRed">
+
+						<TextView
+							android:id="@+id/textNetworkNotAvailable"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:textColor="@color/colorWhite"
+							android:textSize="12sp"
+							android:fontFamily="@font/sf_pro_text_regular"
+							android:gravity="center"
+							android:layout_marginStart="8dp"
+							android:layout_marginEnd="8dp"
+							android:layout_marginTop="12dp"
+							android:layout_marginBottom="12dp"
+							android:text="@string/LNG_OFFLINE_MESSAGE"
+							android:visibility="gone"/>
+
+					</LinearLayout>
+
+					<ImageView
+						android:id="@+id/btnShowDrawerLayout"
+						android:layout_width="@dimen/activity_main_buttons_size"
+						android:layout_height="@dimen/activity_main_buttons_size"
+						app:srcCompat="@drawable/ic_menu"
+						android:background="@drawable/back_circle_white_buttons"
+						app:layout_constraintTop_toBottomOf="@+id/layoutTextNetworkNotAvailable"
+						app:layout_constraintStart_toStartOf="parent"
+						android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
+						android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end"
+						android:clickable="true"
+						android:focusable="true"
+						android:elevation="2dp"/>
+
+					<ImageView
+						android:id="@+id/btnMyLocation"
+						android:layout_width="@dimen/activity_main_buttons_size"
+						android:layout_height="@dimen/activity_main_buttons_size"
+						app:srcCompat="@drawable/ic_my_location"
+						android:background="@drawable/back_circle_white_buttons"
+						app:layout_constraintTop_toBottomOf="@+id/layoutTextNetworkNotAvailable"
+						app:layout_constraintEnd_toEndOf="parent"
+						android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
+						android:layout_marginEnd="@dimen/activity_main_buttons_margin_start_end"
+						android:clickable="true"
+						android:focusable="true"
+						android:elevation="2dp"/>
+
+				</android.support.constraint.ConstraintLayout>
 
 				<ImageView
 					android:id="@+id/mMarker"

@@ -6,6 +6,7 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.InternetNotAvailableException
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
@@ -58,7 +59,7 @@ class OffersPresenter(cc: CoroutineContexts,
         
         @JvmField val SORT_YEAR   = "sort_year"
         @JvmField val SORT_RATING = "sort_rating"
-        @JvmField val SORT_PRICE  = "sort_price"        
+        @JvmField val SORT_PRICE  = "sort_price"
     }
 
     @CallSuper
@@ -66,7 +67,7 @@ class OffersPresenter(cc: CoroutineContexts,
         super.attachView(view)
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true, true)
-            
+
             val transfer = utils.asyncAwait{ transferInteractor.getTransfer(transferInteractor.selectedId!!) }
             val transferModel = Mappers.getTransferModel(transfer,
                                                          systemInteractor.locale,
@@ -78,10 +79,9 @@ class OffersPresenter(cc: CoroutineContexts,
             viewState.setTransfer(transferModel)
             changeSortType(SORT_PRICE)
             offerInteractor.setListener(this@OffersPresenter)
-        }, { e ->
-            Timber.e(e)
+        }, { e -> Timber.e(e)
             if(e is ApiException && e.code == ApiException.NOT_LOGGED_IN) viewState.redirectView()
-            else viewState.setError(e)
+            else if(e !is InternetNotAvailableException) viewState.setError(e)
         }, { viewState.blockInterface(false) })
 
     }
@@ -161,10 +161,10 @@ class OffersPresenter(cc: CoroutineContexts,
 
     private fun logFilterEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value)) }
     private fun logButtonEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value)) }
-    
+
     override fun onNewOffer(offer: Offer) {
         viewState.addNewOffer(Mappers.getOfferModel(offer, systemInteractor.locale))
     }
-    
+
     override fun onError(e: ApiException) { Timber.e(e) }
 }

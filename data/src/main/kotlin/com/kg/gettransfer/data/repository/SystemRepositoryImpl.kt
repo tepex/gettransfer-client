@@ -6,9 +6,13 @@ import com.kg.gettransfer.data.ds.SystemDataStoreFactory
 import com.kg.gettransfer.data.mapper.*
 
 import com.kg.gettransfer.data.model.GTAddressEntity
+import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.InternetNotAvailableException
 import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.SystemRepository
+import java.lang.Exception
+import java.util.concurrent.TimeoutException
 
 class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
                            private val factory: SystemDataStoreFactory,
@@ -32,12 +36,37 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
             factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(value))
         }
 
+    override var isInternetAvailable: Boolean
+        get() = preferencesCache.isInternetAvailable
+        set(value) {
+            preferencesCache.isInternetAvailable = value
+            factory.retrieveRemoteDataStore().changeNetworkAvailability(value)
+        }
+
     override suspend fun coldStart() {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
+
+        try {
+            val remoteAccount = factory.retrieveRemoteDataStore().getAccount()
+            val remoteConfigs = factory.retrieveRemoteDataStore().getConfigs()
+
+            factory.retrieveCacheDataStore().setConfigs(remoteConfigs)
+            factory.retrieveCacheDataStore().setAccount(remoteAccount)
+
+            configs = configsMapper.fromEntity(factory.retrieveCacheDataStore().getConfigs())
+            accountMapper.configs = configs as Configs
+        } catch (e: Exception) {
+            if (e is InternetNotAvailableException || e is ApiException || e is TimeoutException) {
+                configs = configsMapper.fromEntity(factory.retrieveCacheDataStore().getConfigs())
+                accountMapper.configs = configs as Configs
+            } else throw e
+        }
+
+        /*factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
         configs = configsMapper.fromEntity(factory.retrieveRemoteDataStore().getConfigs())
         accountMapper.configs = configs!!
         val accountEntity = factory.retrieveRemoteDataStore().getAccount()
-        factory.retrieveCacheDataStore().setAccount(accountEntity)
+        factory.retrieveCacheDataStore().setAccount(accountEntity)*/
     }
 
     override suspend fun getAccount() = accountMapper.fromEntity(factory.retrieveCacheDataStore().getAccount())

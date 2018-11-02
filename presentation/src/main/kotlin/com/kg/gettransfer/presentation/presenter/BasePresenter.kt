@@ -20,6 +20,11 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
     protected val utils = AsyncUtils(cc, compositeDisposable)
     protected val mFBA: FirebaseAnalytics by inject()
 
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        viewState.showViewNetworkNotAvailable(systemInteractor.isInternetAvailable)
+    }
+
     open fun onBackCommandClick() {
         router.exit()
         mFBA.logEvent(MainPresenter.EVENT_MAIN, createSingeBundle(PARAM_KEY_NAME, SYSTEM_BACK_CLICKED))
@@ -56,5 +61,10 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
         val bundle = Bundle()
         map.forEach { (k,v) -> bundle.putString(k, v.toString()) }
         return bundle
+    }
+
+    fun changeNetworkState(isNetworkAvailable: Boolean){
+        systemInteractor.isInternetAvailable = isNetworkAvailable
+        viewState.showViewNetworkNotAvailable(isNetworkAvailable)
     }
 }
