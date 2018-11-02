@@ -121,7 +121,7 @@
                 android:id="@+id/navFooterStamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/navFooterReadMore"
+                android:layout_above="@+id/navMessage"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/nav_footer_stamp_bottom"
                 android:background="@null"
@@ -129,11 +129,26 @@
                 android:src="@drawable/ic_best_price" />
 
             <TextView
-                android:id="@+id/navFooterReadMore"
+                android:id="@+id/navMessage"
                 style="@style/nav_item_title"
                 android:layout_above="@+id/navFooterVersion"
                 android:layout_marginBottom="@dimen/nav_footer_read_more_bottom"
+                android:layout_marginStart="22dp"
+                android:layout_marginEnd="22dp"
                 android:gravity="center_horizontal"
+                android:text="@string/nav_message" />
+
+            <TextView
+                android:id="@+id/navFooterReadMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/navFooterVersion"
+                android:gravity="center_horizontal"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="@dimen/nav_footer_version_bottom"
+                android:layout_marginEnd="@dimen/nav_footer_version_start"
                 android:text="@string/LNG_READMORE" />
 
             <TextView
