@@ -190,8 +190,7 @@ class PreferencesImpl(context: Context): PreferencesCache, SystemCache, SystemLi
             with(accountPrefs.edit()) {
                 putString(ACCOUNT_ADDRESS_HISTORY, JSON.stringify(GTAddressEntity.serializer().list, value))
                 apply()
-            }
-            
+            }            
             Timber.d("save lastAddresses: $value")
         }
 
