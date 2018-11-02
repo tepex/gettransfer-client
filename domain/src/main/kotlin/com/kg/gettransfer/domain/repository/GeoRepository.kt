@@ -12,6 +12,8 @@ interface GeoRepository {
     suspend fun getCurrentLocation(): Result<Point>
     fun getAddressByLocation(point: Point, pair: Pair<Point, Point>): GTAddress
     fun getCurrentAddress(): GTAddress
+
     fun getAutocompletePredictions(prediction: String, points: Pair<Point, Point>?): List<GTAddress>
+
     fun getLatLngByPlaceId(placeId: String): Point
 }
