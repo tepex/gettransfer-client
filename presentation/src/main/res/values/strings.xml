@@ -698,5 +698,6 @@
     <string name="LNG_PAYMENT_TRANSFER_NUMBER">Transfer number</string>
     <string name="LNG_TRANSFER_TITLE">Transfer paid</string>
     <string name="from_price">from:</string>
+    <string name="nav_message">Best prices for transfers between airports and cities worldwide</string>
 
 </resources>
