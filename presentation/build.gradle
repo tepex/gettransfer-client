@@ -135,16 +135,13 @@ dependencies {
     implementation libs.psPlaces
     implementation "com.google.android.gms:play-services-maps:$gms_version"
 	implementation 'com.google.maps.android:android-maps-utils:0.5'
-    /*
-    implementation "com.google.android.gms:play-services-places:$gms_version"
-    implementation "com.google.android.gms:play-services-drive:$gms_version"
-    implementation 'com.google.maps.android:android-maps-utils:0.5'
-    implementation 'com.google.maps:google-maps-services:0.2.9'
-    */
+    // Gson
+    implementation libs.gson    
     // Moxy
 	implementation "com.arello-mobile:moxy:$moxy_version"
 	implementation "com.arello-mobile:moxy-app-compat:$moxy_version"
 	kapt "com.arello-mobile:moxy-compiler:$moxy_version"
+	
 	// Cicerone
 	implementation "ru.terrakok.cicerone:cicerone:$cicerone_version"
     

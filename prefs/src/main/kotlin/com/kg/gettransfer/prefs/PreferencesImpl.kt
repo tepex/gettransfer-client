@@ -2,16 +2,21 @@ package com.kg.gettransfer.prefs
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.kg.gettransfer.JsonParser
 
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.SystemCache
-import com.google.gson.Gson
+
 import com.kg.gettransfer.data.model.*
 
-class PreferencesImpl(context: Context) : PreferencesCache, SystemCache {
+import com.kg.gettransfer.domain.SystemListener
+import com.kg.gettransfer.domain.SystemListenerManager
+
+import com.kg.gettransfer.prefs.mapper.GTAddressMapper
 
 
+import com.google.gson.Gson
+
+class PreferencesImpl(context: Context, private val addressMapper: GTAddressMapper): PreferencesCache, SystemCache, SystemListenerManager {
     companion object {
         const val ACCOUNT = "account"
         const val CONFIGS = "configs"
@@ -40,6 +45,9 @@ class PreferencesImpl(context: Context) : PreferencesCache, SystemCache {
         const val CONFIGS_OFFICE_PHONE = "configs_office_phone"
         const val CONFIGS_BASE_URL = "configs_base_url"
     }
+    
+    private val listeners = mutableSetOf<SystemListener>()
+    private val gson = Gson()
 
     private val configsPrefs = context.getSharedPreferences(CONFIGS, Context.MODE_PRIVATE)
     private val accountPrefs = context.getSharedPreferences(ACCOUNT, Context.MODE_PRIVATE)
@@ -55,6 +63,7 @@ class PreferencesImpl(context: Context) : PreferencesCache, SystemCache {
             val editor = configsPrefs.edit()
             editor.putString(TOKEN, value)
             editor.apply()
+            listeners.forEach { it.accessTokenChanged(value) }
         }
 
     override var lastMode: String
@@ -97,7 +106,7 @@ class PreferencesImpl(context: Context) : PreferencesCache, SystemCache {
         }
 
     override var configs: ConfigsEntity
-        get(){
+        get() {
             val gson = Gson()
             return ConfigsEntity(gson.fromJson(configsPrefs.getString(CONFIGS_TRANSPORT_TYPES, null), Array<TransportTypeEntity>::class.java).toList(),
                     gson.fromJson(configsPrefs.getString(CONFIGS_PAYPAL_CREDITIALS, null), PaypalCredentialsEntity::class.java),
@@ -159,11 +168,15 @@ class PreferencesImpl(context: Context) : PreferencesCache, SystemCache {
     }
 
     override var lastAddresses: List<GTAddressEntity>
-        get() = JsonParser().getFromJson(accountPrefs.getString(ACCOUNT_ADDRESS_HISTORY, null)) ?: emptyList<GTAddressEntity>()
+        get() {
+            val json = accountPrefs.getString(ACCOUNT_ADDRESS_HISTORY, null)
+            return if(json != null) addressMapper.fromJson(json) else emptyList<GTAddressEntity>()
+        }
         set(value) {
-            accountPrefs.edit()
-                    .putString(ACCOUNT_ADDRESS_HISTORY, JsonParser().writeToJson(value!!))
-                    .apply()
+            with(accountPrefs.edit()) {
+                putString(ACCOUNT_ADDRESS_HISTORY, addressMapper.toJson(value))
+                apply()
+            }
         }
 
     fun <T> setList(editor: SharedPreferences.Editor, key: String, list: List<T>) {
@@ -184,4 +197,7 @@ class PreferencesImpl(context: Context) : PreferencesCache, SystemCache {
         if(qwerty is TransportTypeEntity){}
         return gson.fromJson(preferences.getString(key, ""), Array< qwerty::class.objectInstance>::class.java).toList()
     }*/
+    
+    override fun addListener(listener: SystemListener)    { listeners.add(listener) }
+    override fun removeListener(listener: SystemListener) { listeners.remove(listener) }
 }

@@ -7,6 +7,8 @@ import android.preference.PreferenceManager
 
 import com.google.firebase.analytics.FirebaseAnalytics
 
+import com.google.gson.Gson
+
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
@@ -28,7 +30,9 @@ import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.repository.*
 
 import com.kg.gettransfer.geo.GeoRepositoryImpl
+
 import com.kg.gettransfer.prefs.PreferencesImpl
+import com.kg.gettransfer.prefs.mapper.GTAddressMapper
 
 import kotlinx.coroutines.Dispatchers
 
@@ -53,7 +57,9 @@ val geoModule = module {
 }
 
 val prefsModule = module {
-    single { PreferencesImpl(get()) } bind PreferencesCache::class bind SystemCache::class
+    single { Gson() }
+    single { GTAddressMapper(get()) }
+    single { PreferencesImpl(get(), get()) } bind PreferencesCache::class bind SystemCache::class
 }
 
 val loggingModule = module {
