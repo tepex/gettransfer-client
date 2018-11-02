@@ -17,6 +17,8 @@ import com.google.gson.Gson
 import kotlinx.serialization.list
 import kotlinx.serialization.json.JSON
 
+import timber.log.Timber
+
 class PreferencesImpl(context: Context): PreferencesCache, SystemCache, SystemListenerManager {
     companion object {
         const val ACCOUNT = "account"
@@ -172,13 +174,25 @@ class PreferencesImpl(context: Context): PreferencesCache, SystemCache, SystemLi
     override var lastAddresses: List<GTAddressEntity>
         get() {
             val json = accountPrefs.getString(ACCOUNT_ADDRESS_HISTORY, null)
-            return if(json != null) JSON.parse(GTAddressEntity.serializer().list, json) else emptyList<GTAddressEntity>()
+            Timber.d("lastAddresses: $json")
+            var ret: List<GTAddressEntity> = emptyList<GTAddressEntity>()
+            if(json != null) {
+                try {
+                    ret = JSON.parse(GTAddressEntity.serializer().list, json)
+                }
+                catch(e: Exception) {
+                    Timber.e(e)
+                }
+            }
+            return ret 
         }
         set(value) {
             with(accountPrefs.edit()) {
                 putString(ACCOUNT_ADDRESS_HISTORY, JSON.stringify(GTAddressEntity.serializer().list, value))
                 apply()
             }
+            
+            Timber.d("save lastAddresses: $value")
         }
 
     fun <T> setList(editor: SharedPreferences.Editor, key: String, list: List<T>) {
