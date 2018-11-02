@@ -48,7 +48,11 @@ class MainPresenter(cc: CoroutineContexts,
         super.onFirstViewAttach()
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         utils.launchAsyncTryCatch( {
-            updateCurrentLocationAsync()
+            if(routeInteractor.from != null) setLastLocation()
+            else updateCurrentLocationAsync()
+            isMarkerAnimating = false
+            markerStateLifted = false
+
         }, { e -> Timber.e(e) } )
 
         // Создать листенер для обновления текущей локации
