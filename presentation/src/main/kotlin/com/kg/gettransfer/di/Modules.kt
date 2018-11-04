@@ -22,11 +22,11 @@ import com.kg.gettransfer.data.SystemRemote
 
 import com.kg.gettransfer.data.ds.*
 import com.kg.gettransfer.data.mapper.*
+import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.repository.*
 
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.*
-import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.repository.*
 
 import com.kg.gettransfer.geo.GeoRepositoryImpl
@@ -56,7 +56,11 @@ val geoModule = module {
 }
 
 val prefsModule = module {
-    single { PreferencesImpl(get()) } bind PreferencesCache::class bind SystemCache::class
+	    val context: Context = get()
+	    val endpoints = listOf(
+	        EndpointEntity("Demo", context.resources.getString(R.string.api_key_demo), context.resources.getString(R.string.api_url_demo), true),
+	        EndpointEntity("Prod", context.resources.getString(R.string.api_key_prod), context.resources.getString(R.string.api_url_prod)))
+    single { PreferencesImpl(get(), endpoints) } bind PreferencesCache::class bind SystemCache::class
 }
 
 val loggingModule = module {
@@ -103,13 +107,7 @@ val dataModule = module {
     single { SystemCacheDataStore(get()) }
     single { SystemRemoteDataStore(get()) }
     single { SystemDataStoreFactory(get(), get()) }
-	single {
-	    val context: Context = get()
-	    val endpoints = arrayListOf(
-	        Endpoint("Demo", context.resources.getString(R.string.api_key_demo), context.resources.getString(R.string.api_url_demo), true),
-	        Endpoint("Prod", context.resources.getString(R.string.api_key_prod), context.resources.getString(R.string.api_url_prod)))
-	    SystemRepositoryImpl(get(), get(), get(), get(), get(), get(), endpoints) as SystemRepository
-	}
+	single { SystemRepositoryImpl(get(), get(), get(), get(), get(), get()) as SystemRepository }
 	single { SystemInteractor(get(), get(), get()) }
 	
 	single { RouteInfoMapper() }

@@ -1,7 +1,7 @@
 package com.kg.gettransfer.data
 
-
 import com.kg.gettransfer.data.model.AccountEntity
+import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.GTAddressEntity
 
 interface PreferencesCache {
@@ -15,11 +15,15 @@ interface PreferencesCache {
     var accessToken: String
     var account: AccountEntity
     var lastMode: String
-    var endpoint: String
+    var endpoint: EndpointEntity
     var isInternetAvailable: Boolean
     
     fun clearAccount()
 
+    val endpoints: List<EndpointEntity>
     var lastAddresses: List<GTAddressEntity>
+    
+    fun addListener(listener: PreferencesListener)
+    fun removeListener(listener: PreferencesListener)
 }
 

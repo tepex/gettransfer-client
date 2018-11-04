@@ -2,7 +2,6 @@ package com.kg.gettransfer.domain.interactor
 
 import com.kg.gettransfer.domain.model.*
 
-
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.LoggingRepository
 import com.kg.gettransfer.domain.repository.SystemRepository

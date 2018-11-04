@@ -4,45 +4,45 @@ import android.content.Context
 import android.content.SharedPreferences
 
 import com.kg.gettransfer.data.PreferencesCache
+import com.kg.gettransfer.data.PreferencesListener
 import com.kg.gettransfer.data.SystemCache
 
 import com.kg.gettransfer.data.model.*
-
-import com.kg.gettransfer.domain.SystemListener
-import com.kg.gettransfer.domain.SystemListenerManager
 
 import kotlinx.serialization.list
 import kotlinx.serialization.json.JSON
 
 import timber.log.Timber
 
-class PreferencesImpl(context: Context): PreferencesCache, SystemCache, SystemListenerManager {
+class PreferencesImpl(context: Context,
+                      override val endpoints: List<EndpointEntity>): PreferencesCache, SystemCache {
     companion object {
-        const val ACCOUNT = "account"
-        const val CONFIGS = "configs"
-        const val TOKEN = "token"
+        @JvmField val ACCOUNT = "account"
+        @JvmField val CONFIGS = "configs"
+        @JvmField val TOKEN   = "token"
 
-        const val ACCOUNT_EMAIL = "email"
-        const val ACCOUNT_PASSWORD = "password"
-        const val ACCOUNT_PHONE = "phone"
-        const val ACCOUNT_LOCALE = "locale"
-        const val ACCOUNT_CURRENCY = "currency"
-        const val ACCOUNT_DISTANCE_UNIT = "distance_unit"
-        const val ACCOUNT_FULL_NAME = "full_name"
-        const val ACCOUNT_GROUPS = "groups"
-        const val ACCOUNT_CARRIER_ID = "carrier_id"
-        const val ACCOUNT_TERMS_ACCEPTED = "terms_accepted"
+        @JvmField val ACCOUNT_EMAIL = "email"
+        @JvmField val ACCOUNT_PASSWORD = "password"
+        @JvmField val ACCOUNT_PHONE = "phone"
+        @JvmField val ACCOUNT_LOCALE = "locale"
+        @JvmField val ACCOUNT_CURRENCY = "currency"
+        @JvmField val ACCOUNT_DISTANCE_UNIT = "distance_unit"
+        @JvmField val ACCOUNT_FULL_NAME = "full_name"
+        @JvmField val ACCOUNT_GROUPS = "groups"
+        @JvmField val ACCOUNT_CARRIER_ID = "carrier_id"
+        @JvmField val ACCOUNT_TERMS_ACCEPTED = "terms_accepted"
 
-        const val ACCOUNT_ADDRESS_HISTORY = "history"
+        @JvmField val ACCOUNT_ADDRESS_HISTORY = "history"
 
-        const val CONFIGS_JSON = "json"
+        @JvmField val CONFIGS_JSON = "json"
     }
     
-    private val listeners = mutableSetOf<SystemListener>()
-
+    private val listeners = mutableSetOf<PreferencesListener>()
+    
     private val configsPrefs = context.getSharedPreferences(CONFIGS, Context.MODE_PRIVATE)
     private val accountPrefs = context.getSharedPreferences(ACCOUNT, Context.MODE_PRIVATE)
     private var _accessToken = SystemCache.INVALID_TOKEN
+    private var _endpoint: EndpointEntity? = null
 
     override var accessToken: String
         get() {
@@ -117,12 +117,20 @@ class PreferencesImpl(context: Context): PreferencesCache, SystemCache, SystemLi
             }
         }
 
-    override var endpoint: String
-        get() = configsPrefs.getString(PreferencesCache.ENDPOINT, "Demo")!!
+    override var endpoint: EndpointEntity
+        get() {
+            if(_endpoint == null) {
+                val name = configsPrefs.getString(PreferencesCache.ENDPOINT, null)
+                _endpoint = if(name == null) endpoints.find { it.isDemo }!! else endpoints.find { it.name == name }!!
+            }
+            return _endpoint!!
+        }
         set(value) {
+            _endpoint = value
             val editor = configsPrefs.edit()
-            editor.putString(PreferencesCache.ENDPOINT, value)
+            editor.putString(PreferencesCache.ENDPOINT, value.name)
             editor.apply()
+            listeners.forEach { it.endpointChanged(value) }
         }
 
     override var isInternetAvailable: Boolean
@@ -163,7 +171,7 @@ class PreferencesImpl(context: Context): PreferencesCache, SystemCache, SystemLi
                 apply()
             }            
         }
-
-    override fun addListener(listener: SystemListener)    { listeners.add(listener) }
-    override fun removeListener(listener: SystemListener) { listeners.remove(listener) }
+        
+    override fun addListener(listener: PreferencesListener)    { listeners.add(listener) }
+    override fun removeListener(listener: PreferencesListener) { listeners.remove(listener) }
 }
