@@ -222,19 +222,14 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     @CallSuper
     protected override fun onStart() {
         super.onStart()
+        hideKeyboard()
         systemInteractor.addListener(offerServiceConnection)
         offerServiceConnection.connectionChanged(systemInteractor.endpoint, systemInteractor.accessToken)
-        offerServiceConnection.connect { newOffer ->
+        offerServiceConnection.connect(this) { newOffer ->
             Timber.d("new Offer: $newOffer")
         }
     }
     
-    @CallSuper
-    protected override fun onResume() {
-        super.onResume()
-        hideKeyboard()
-    }
-
     @CallSuper
     override fun onBackPressed() {
         if(drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START)
@@ -244,8 +239,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     @CallSuper
     protected override fun onStop() {
         enableBtnNext()
-        offerServiceConnection.disconnect()
         systemInteractor.removeListener(offerServiceConnection)
+        offerServiceConnection.disconnect(this)
         super.onStop()
     }
 

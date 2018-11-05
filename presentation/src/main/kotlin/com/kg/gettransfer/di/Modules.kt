@@ -144,7 +144,7 @@ val dataModule = module {
 }
 
 val androidModule = module {
-    single { OfferServiceConnection(get()) }
+    factory { OfferServiceConnection() } 
 	single { CoroutineContexts(Dispatchers.Main, Dispatchers.IO) }
 	single { FirebaseAnalytics.getInstance(androidApplication().applicationContext)  }
 }

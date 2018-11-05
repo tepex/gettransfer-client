@@ -19,21 +19,27 @@ import com.kg.gettransfer.presentation.model.OfferModel
 
 import timber.log.Timber
 
-class OfferServiceConnection(private val context: Context): BroadcastReceiver(), ServiceConnection, SystemListener {
-    private var socketService: SocketIOService? = null
+class OfferServiceConnection: BroadcastReceiver(), ServiceConnection, SystemListener {
+    companion object {
+        @JvmField val MESSAGE_OFFER = "offer"
+    }
+    
     private lateinit var url: String
     private lateinit var accessToken: String
     
-    private lateinit var handler: OfferModelHandler
+    private var socketService: SocketIOService? = null
+    private var handler: OfferModelHandler? = null
     
-    fun connect(handler: OfferModelHandler) {
+    fun connect(context: Context, handler: OfferModelHandler) {
         this.handler = handler
+        Timber.d("Binding service ${context::class.qualifiedName}")
         context.bindService(Intent(context, SocketIOService::class.java), this, Context.BIND_AUTO_CREATE)
-        LocalBroadcastManager.getInstance(context).registerReceiver(this, IntentFilter(SocketIOService.MESSAGE_OFFER))
+        LocalBroadcastManager.getInstance(context).registerReceiver(this, IntentFilter(MESSAGE_OFFER))
     }
     
-    fun disconnect() {
-        Timber.d("Disconnect from service") 
+    fun disconnect(context: Context) {
+        Timber.d("Unbinding from service ${context::class.qualifiedName}")
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(this)
         context.unbindService(this)
     }
     
@@ -52,12 +58,17 @@ class OfferServiceConnection(private val context: Context): BroadcastReceiver(),
     
     override fun onServiceDisconnected(name: ComponentName) {
         socketService!!.serviceBinded = false
+        socketService = null
+        Timber.d("OSC.onServiceDisconnected")
     }
     
     override fun onReceive(context: Context, intent: Intent) {
-        Timber.d("onReceive: ${intent.getStringExtra(SocketIOService.MESSAGE_OFFER)}")
+        val msg = intent.getStringExtra("pong")
+        Timber.d("onReceive: $msg")
+        handler?.invoke(msg)
         //intent.getStringExtra(SocketIOService.MESSAGE_OFFER)?.let { handler(Mappers.getNewOfferModel(it)) }
     }
 }
 
-typealias OfferModelHandler = (OfferModel) -> Unit
+//typealias OfferModelHandler = (OfferModel) -> Unit
+typealias OfferModelHandler = (String) -> Unit

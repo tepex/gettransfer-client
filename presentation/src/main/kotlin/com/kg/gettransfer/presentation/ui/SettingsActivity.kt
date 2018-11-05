@@ -88,14 +88,15 @@ class SettingsActivity: BaseActivity(), SettingsView {
         super.onStart()
         systemInteractor.addListener(offerServiceConnection)
         offerServiceConnection.connectionChanged(systemInteractor.endpoint, systemInteractor.accessToken)
-        offerServiceConnection.connect { newOffer ->
+        offerServiceConnection.connect(this) { newOffer ->
             Timber.d("new Offer: $newOffer")
+            Utils.showShortToast(this@SettingsActivity, "new Offer: $newOffer")
         }
     }
     
     @CallSuper
     protected override fun onStop() {
-        offerServiceConnection.disconnect()
+        offerServiceConnection.disconnect(this)
         systemInteractor.removeListener(offerServiceConnection)
         super.onStop()
     }

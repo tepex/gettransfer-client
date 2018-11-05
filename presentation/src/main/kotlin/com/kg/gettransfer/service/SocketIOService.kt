@@ -9,6 +9,7 @@ import android.os.Binder
 import android.os.IBinder
 
 import android.support.annotation.CallSuper
+import android.support.v4.content.LocalBroadcastManager
 
 import io.socket.client.IO
 import io.socket.client.Manager
@@ -38,8 +39,6 @@ class SocketIOService(/*private val mapper: OfferMapper*/): Service() {
     internal var serviceBinded = false
     
     companion object {
-        @JvmField val MESSAGE_OFFER = "offer"
-        
         private val NEW_OFFER_RE = Regex("^newOffer/(\\d+)$")
     }
     
@@ -127,7 +126,11 @@ class SocketIOService(/*private val mapper: OfferMapper*/): Service() {
                 */
             }
             on(Socket.EVENT_PING) { _    -> Timber.d("ping [${socket!!.id()}]") }
-            on(Socket.EVENT_PONG) { args -> Timber.d("pong ${args.first()}") }
+            on(Socket.EVENT_PONG) { args ->
+                val intent = Intent(OfferServiceConnection.MESSAGE_OFFER)
+                intent.putExtra("pong", args.first()!!.toString())
+                LocalBroadcastManager.getInstance(this@SocketIOService).sendBroadcast(intent)
+            }
         }
     }
             
