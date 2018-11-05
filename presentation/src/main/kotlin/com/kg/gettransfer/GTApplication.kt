@@ -3,16 +3,11 @@ package com.kg.gettransfer
 import android.content.IntentFilter
 import android.support.annotation.CallSuper
 import android.support.multidex.MultiDexApplication
-import android.support.v4.content.LocalBroadcastManager
-
 import com.kg.gettransfer.di.*
 import com.kg.gettransfer.presentation.FileLoggingTree
 import com.kg.gettransfer.presentation.NetworkStateChangeReceiver
-
 import net.hockeyapp.android.CrashManager
-
 import org.koin.android.ext.android.startKoin
-
 import timber.log.Timber
 
 class GTApplication: MultiDexApplication() {

@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.model
 
-import java.util.Locale
-
 class OfferModel(val id: Long,
                  val status: String,
                  val wifi: Boolean,

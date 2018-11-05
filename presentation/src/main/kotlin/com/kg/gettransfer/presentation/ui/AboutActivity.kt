@@ -1,36 +1,21 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
-
 import android.os.Bundle
-
 import android.support.annotation.CallSuper
-
 import android.support.v4.view.PagerAdapter
-import android.support.v4.view.ViewPager
-
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
-
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
-import android.widget.TextView
-
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
-
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.AboutPresenter
 import com.kg.gettransfer.presentation.view.AboutView
-
-import kotlinx.android.synthetic.main.activity_about.*
 import kotlinx.android.synthetic.main.about_item1.*
 import kotlinx.android.synthetic.main.about_item2.*
 import kotlinx.android.synthetic.main.about_item3.*
-
-import timber.log.Timber
+import kotlinx.android.synthetic.main.activity_about.*
 
 class AboutActivity: MvpAppCompatActivity(), AboutView {
 	@InjectPresenter

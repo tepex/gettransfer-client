@@ -1,11 +1,6 @@
 package com.kg.gettransfer.remote.mapper
 
-import com.kg.gettransfer.data.model.CityPointEntity
-import com.kg.gettransfer.data.model.MoneyEntity
 import com.kg.gettransfer.data.model.TransferEntity
-
-import com.kg.gettransfer.remote.model.CityPointModel
-import com.kg.gettransfer.remote.model.MoneyModel
 import com.kg.gettransfer.remote.model.TransferModel
 
 /**

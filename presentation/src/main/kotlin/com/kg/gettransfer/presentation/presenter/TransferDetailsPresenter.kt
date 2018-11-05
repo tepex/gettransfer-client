@@ -1,30 +1,16 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.content.Context
-
 import android.support.annotation.CallSuper
-
 import com.arellomobile.mvp.InjectViewState
-
-import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.CoroutineContexts
-
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
-
 import com.kg.gettransfer.presentation.model.Mappers
-import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransferModel
-
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.TransferDetailsView
-
 import ru.terrakok.cicerone.Router
-
 import timber.log.Timber
 
 @InjectViewState

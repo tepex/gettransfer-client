@@ -1,70 +1,38 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.app.Activity
-
 import android.content.Context
-
-import android.graphics.*
+import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
-
-import android.location.Location
 import android.net.ConnectivityManager
-
 import android.os.Build
-
 import android.support.annotation.DrawableRes
-import android.support.annotation.ColorRes
 import android.support.annotation.StringRes
-
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
-
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextWatcher
 import android.text.style.ImageSpan
 import android.util.DisplayMetrics
-
-import android.view.LayoutInflater
 import android.view.View
-import android.view.inputmethod.InputMethodManager
-
 import android.widget.EditText
-import android.widget.RelativeLayout
-import android.widget.TextView
-
 import android.widget.Toast
-
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.*
-
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.PolyUtil
-
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.DistanceUnit
-
-import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
-
-import kotlinx.android.synthetic.main.activity_create_order.*
-import kotlinx.android.synthetic.main.view_maps_pin.view.*
-
-import java.util.Date
-import java.util.Locale
 import java.text.SimpleDateFormat
+import java.util.*
 import java.util.regex.Pattern
-
-import org.commonmark.node.Node
-import org.commonmark.parser.Parser
-import org.commonmark.renderer.html.HtmlRenderer
-
-import timber.log.Timber
 
 internal class Utils {
     companion object {
@@ -318,23 +286,6 @@ internal class Utils {
 //      fun convertPixelsToDp(context: Context, pixels: Float): Float{
 //
 //      }
-
-        fun convertMarkdownToHtml(markdownString: String): String {
-            val parser = Parser.builder().build()
-            val document = parser.parse(markdownString)
-            val renderer = HtmlRenderer.builder().build()
-            val htmlString = renderer.render(document)
-            return htmlString
-        }
-
-        @Suppress("UNUSED_PARAMETER")
-        fun convertMarkdownToHtml(markdownString: String, textView: TextView): String {
-            val parser = Parser.builder().build()
-            val document = parser.parse(markdownString)
-            val renderer = HtmlRenderer.builder().build()
-            val htmlString = renderer.render(document)
-            return htmlString
-        }
 
         fun isConnectedToInternet(context: Context?): Boolean {
             try {

@@ -1,6 +1,5 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.model.CarrierTrip
 import com.kg.gettransfer.domain.repository.CarrierTripRepository
 
 class CarrierTripInteractor(private val repository: CarrierTripRepository) {

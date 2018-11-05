@@ -1,20 +1,9 @@
 package com.kg.gettransfer.presentation.view
 
-import android.widget.TextView
-
-import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.google.android.gms.maps.CameraUpdate
-
-import com.kg.gettransfer.presentation.model.CurrencyModel
-import com.kg.gettransfer.presentation.model.PolylineModel
-import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransportTypeModel
-import com.kg.gettransfer.presentation.model.UserModel
-
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.presentation.model.*
 
 @StateStrategyType (OneExecutionStateStrategy::class)
 interface CreateOrderView: BaseView {

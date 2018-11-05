@@ -1,25 +1,17 @@
 package com.kg.gettransfer.presentation.adapter
 
-import android.content.Context
-
 import android.support.v7.widget.RecyclerView
-
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-
-import com.bumptech.glide.Glide
-
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.UtilsImage
-
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_offer.view.*
 import kotlinx.android.synthetic.main.view_offer_car_name_and_options.view.*

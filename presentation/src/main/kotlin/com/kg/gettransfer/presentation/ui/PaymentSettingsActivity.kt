@@ -2,33 +2,21 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
 import android.content.Intent
-
 import android.os.Bundle
-
-import android.text.SpannableString
-import android.text.style.ImageSpan
-
 import android.view.View
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-
 import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
-
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter
 import com.kg.gettransfer.presentation.view.PaymentSettingsView
-
 import kotlinx.android.synthetic.main.activity_payment_settings.*
-
 import org.koin.android.ext.android.inject
-
-import java.util.Date
+import java.util.*
 
 fun Context.getPaymentSettingsActivityLaunchIntent(date: Date): Intent {
     val intent = Intent(this, PaymentSettingsActivity::class.java)

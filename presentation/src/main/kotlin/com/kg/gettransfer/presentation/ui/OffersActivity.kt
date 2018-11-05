@@ -3,41 +3,29 @@ package com.kg.gettransfer.presentation.ui
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
-
 import android.support.v4.view.ViewPager
-
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
-
 import android.view.View
-
 import android.widget.ImageView
 import android.widget.LinearLayout
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
-
 import com.kg.gettransfer.presentation.adapter.OffersRVAdapter
 import com.kg.gettransfer.presentation.adapter.VehiclePhotosVPAdapter
-
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
 import com.kg.gettransfer.presentation.view.OffersView
-
 import kotlinx.android.synthetic.main.activity_offers.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
-
 import org.koin.android.ext.android.inject
-
-import timber.log.Timber 
 
 class OffersActivity: BaseActivity(), OffersView {
     @InjectPresenter
