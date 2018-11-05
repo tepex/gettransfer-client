@@ -17,6 +17,7 @@ import com.kg.gettransfer.domain.model.OfferListener
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.OffersView
 
@@ -36,6 +37,7 @@ class OffersPresenter(cc: CoroutineContexts,
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
 
+    private lateinit var transferModel: TransferModel
     private lateinit var offers: List<OfferModel>
 
     private var sortCategory: String? = null
@@ -69,7 +71,7 @@ class OffersPresenter(cc: CoroutineContexts,
             viewState.blockInterface(true, true)
 
             val transfer = utils.asyncAwait{ transferInteractor.getTransfer(transferInteractor.selectedId!!) }
-            val transferModel = Mappers.getTransferModel(transfer,
+            transferModel = Mappers.getTransferModel(transfer,
                                                          systemInteractor.locale,
                                                          systemInteractor.distanceUnit,
                                                          systemInteractor.transportTypes!!)
@@ -102,7 +104,7 @@ class OffersPresenter(cc: CoroutineContexts,
         else {
             offerInteractor.selectedOfferId = offer.id
             offerInteractor.transferId = transferInteractor.selectedId
-            router.navigateTo(Screens.PAYMENT_SETTINGS)
+            router.navigateTo(Screens.PAYMENT_SETTINGS, transferModel.refund_date)
         }
     }
 
