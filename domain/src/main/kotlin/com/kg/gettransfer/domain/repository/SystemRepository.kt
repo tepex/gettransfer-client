@@ -10,6 +10,7 @@ interface SystemRepository {
     var configs: Configs?
     var lastMode: String
     var endpoint: Endpoint
+    val accessToken: String
     val endpoints: List<Endpoint>
     var isInternetAvailable: Boolean
         

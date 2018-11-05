@@ -68,7 +68,6 @@ class SystemInteractor(private val systemRepository: SystemRepository,
 
     suspend fun putAccount() { systemRepository.putAccount(account) }
 
-
     fun getLogs()     = loggingRepository.getLogs()
     fun clearLogs()   = loggingRepository.clearLogs()
     fun getLogsFile() = loggingRepository.getLogsFile()

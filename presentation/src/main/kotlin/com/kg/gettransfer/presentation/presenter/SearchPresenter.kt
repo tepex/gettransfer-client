@@ -80,7 +80,7 @@ class SearchPresenter(cc: CoroutineContexts,
         return SUITABLE_TYPE
     }
 
-    private fun checkFields() = routeInteractor.let { it.from != null && it.to != null && it.from != it.to }
+    private fun checkFields() = routeInteractor.let { it.addressFieldsNotNull() }
 
     private fun createRouteForOrder() {
         utils.launchAsyncTryCatchFinally({

@@ -7,6 +7,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.InternetNotAvailableException
+
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
@@ -85,7 +86,6 @@ class OffersPresenter(cc: CoroutineContexts,
             if(e is ApiException && e.code == ApiException.NOT_LOGGED_IN) viewState.redirectView()
             else if(e !is InternetNotAvailableException) viewState.setError(e)
         }, { viewState.blockInterface(false) })
-
     }
 
     @CallSuper

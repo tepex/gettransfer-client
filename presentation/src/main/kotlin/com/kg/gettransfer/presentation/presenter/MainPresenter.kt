@@ -13,6 +13,7 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.Screens
@@ -47,9 +48,11 @@ class MainPresenter(cc: CoroutineContexts,
         super.onFirstViewAttach()
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         utils.launchAsyncTryCatch( {
-            updateCurrentLocationAsync()
+            if(routeInteractor.from != null) setLastLocation()
+            else updateCurrentLocationAsync()
             isMarkerAnimating = false
             markerStateLifted = false
+
         }, { e -> Timber.e(e) } )
 
         // Создать листенер для обновления текущей локации
@@ -96,15 +99,25 @@ class MainPresenter(cc: CoroutineContexts,
         logEvent(MY_PLACE_CLICKED)
     }
 
+    private fun setLastLocation(){
+        viewState.blockInterface(true)
+        val currentAddress = routeInteractor.from
+        setPointAndrAddress(currentAddress!!)
+    }
+
     private suspend fun updateCurrentLocationAsync() {
         viewState.blockInterface(true)
         val currentAddress = utils.asyncAwait { routeInteractor.getCurrentAddress() }
-        lastAddressPoint = Mappers.point2LatLng(currentAddress.cityPoint.point!!)
+        setPointAndrAddress(currentAddress)
+    }
 
+    private fun setPointAndrAddress(currentAddress: GTAddress){
+        lastAddressPoint = Mappers.point2LatLng(currentAddress.cityPoint.point!!)
         onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
         viewState.setMapPoint(lastAddressPoint)
         viewState.setAddressFrom(currentAddress.cityPoint.name!!)
-        currentLocation = currentAddress.cityPoint.name!!
+
+        lastAddressPoint = Mappers.point2LatLng(currentAddress.cityPoint.point!!)
     }
 
 
@@ -147,6 +160,10 @@ class MainPresenter(cc: CoroutineContexts,
 
     fun setMarkerAnimating(animating: Boolean){
         isMarkerAnimating = animating
+    }
+
+    fun enablePinAnimation(){
+        isMarkerAnimating = false
     }
 
     fun setAddressFields() {
@@ -202,6 +219,6 @@ class MainPresenter(cc: CoroutineContexts,
     }
 
     fun logEvent(value: String) {
-        mFBA.logEvent(EVENT_MENU,createSingeBundle(PARAM_KEY_NAME, value))
+        mFBA.logEvent(EVENT_MENU, createSingeBundle(PARAM_KEY_NAME, value))
     }
 }

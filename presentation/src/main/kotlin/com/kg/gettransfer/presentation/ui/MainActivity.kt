@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatDelegate
 import android.text.Html
 
 import android.transition.Fade
+import android.util.Log
 
 import android.view.Gravity
 import android.view.MenuItem
@@ -32,6 +33,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
@@ -268,6 +270,11 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
         googleMap.setOnCameraMoveListener { presenter.onCameraMove(googleMap.getCameraPosition()!!.target, true);  }
         googleMap.setOnCameraIdleListener { presenter.onCameraIdle(googleMap.projection.visibleRegion.latLngBounds) }
+        googleMap.setOnCameraMoveStartedListener { r ->
+            if(r == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+                presenter.enablePinAnimation()
+                googleMap.setOnCameraMoveStartedListener(null)
+            } }
     }
 
     /* MainView */
@@ -319,9 +326,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
     override fun initSearchForm() {
-        //TODO replace hardcode when string resources for localization will be updated
-        searchFrom.sub_title.text = "Pickup location"
-        searchTo.sub_title.text = "To: airport, trainstation, city, hotel, other place"
+        searchFrom.sub_title.text = getString(R.string.LNG_FIELD_SOURCE_PICKUP)
+        searchTo.sub_title.text = getString(R.string.LNG_FIELD_DESTINATION)
     }
 
     override fun setAddressFrom(address: String) {

@@ -9,6 +9,8 @@ import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.RouteRepository
 
+import java.io.IOException
+
 class RouteInteractor(private val geoRepository: GeoRepository,
                       private val routeRepository: RouteRepository) {
     var from: GTAddress? = null
@@ -23,7 +25,9 @@ class RouteInteractor(private val geoRepository: GeoRepository,
     fun getCurrentAddress() = geoRepository.getCurrentAddress()
 
     fun getAddressByLocation(point: Point, pair: Pair<Point, Point>): GTAddress {
-        from = geoRepository.getAddressByLocation(point, pair)
+        from = try {
+            geoRepository.getAddressByLocation(point, pair)
+        } catch(e: IOException) { throw e }
         return from!!
     }
 
@@ -43,4 +47,6 @@ class RouteInteractor(private val geoRepository: GeoRepository,
 
     suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean) = 
         routeRepository.getRouteInfo(from, to, withPrices, returnWay)
+
+    fun addressFieldsNotNull(): Boolean = (from != null && to != null && from != to)
 }

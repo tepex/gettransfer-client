@@ -102,7 +102,7 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
     override fun getAutocompletePredictions(prediction: String, points: Pair<Point, Point>?): List<GTAddress> {
 
         var bounds: LatLngBounds? = null
-        if(points != null){
+        if(points != null) {
             val northEastPoint = LatLng(points.first.latitude,points.first.longitude)
             val southWestPoint = LatLng(points.second.latitude,points.second.longitude)
             bounds = LatLngBounds(southWestPoint,northEastPoint)

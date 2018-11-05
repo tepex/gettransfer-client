@@ -26,7 +26,7 @@
 		android:layout_marginStart="@dimen/search_marginStart"
 		android:paddingEnd="@dimen/search_form_clear_padding_end"
 		android:paddingStart="0dp"
-		app:hint="@string/LNG_FIELD_SOURCE" />
+		app:hint="@string/LNG_FIELD_SOURCE_WHERE" />
 
 	<View
 		android:id="@+id/separator"
@@ -43,7 +43,7 @@
 		android:layout_marginStart="@dimen/search_marginStart"
 		android:paddingStart="0dp"
 		android:paddingEnd="@dimen/search_form_clear_padding_end"
-		app:hint="@string/LNG_FIELD_DESTINATION"
+		app:hint="@string/LNG_FIELD_DESTINATION_WHERE"
 		android:layout_below="@+id/separator" />
 
 	<View

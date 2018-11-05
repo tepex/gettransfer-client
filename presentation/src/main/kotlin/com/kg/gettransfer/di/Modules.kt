@@ -7,6 +7,8 @@ import android.preference.PreferenceManager
 
 import com.google.firebase.analytics.FirebaseAnalytics
 
+import com.google.gson.Gson
+
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
@@ -28,6 +30,7 @@ import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.repository.*
 
 import com.kg.gettransfer.geo.GeoRepositoryImpl
+
 import com.kg.gettransfer.prefs.PreferencesImpl
 
 import kotlinx.coroutines.Dispatchers

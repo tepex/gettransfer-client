@@ -54,10 +54,10 @@ class LoginActivity: BaseActivity(), LoginView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         
-        etEmail.onTextChanged       { presenter.setEmail(it.trim()) }
-        etPassword.onTextChanged    { presenter.setPassword(it.trim()) }
-        btnLogin.setOnClickListener { presenter.onLoginClick() }
-        
+        etEmail.onTextChanged         { presenter.setEmail(it.trim()) }
+        etPassword.onTextChanged      { presenter.setPassword(it.trim()) }
+        btnLogin.setOnClickListener   { presenter.onLoginClick() }
+        homeButton.setOnClickListener { presenter.onHomeClick() }
         btnForgotPassword.markAsNotImplemented()
         presenter.screenForReturn = intent.getStringExtra(IntentKeys.SCREEN_FOR_RETURN)
     }

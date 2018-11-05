@@ -1,88 +1,91 @@
 buildscript {
-	repositories {
-		google()
-		jcenter()
-		mavenCentral()
-	}
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+    }
 
-	ext {
-		kotlin_version        = "1.3.0"
-		coroutines_version    = "1.0.0"
-		gradle_version        = "3.4.0-alpha02"
-		gms_version           = "16.0.0"
-		gs_version            = "4.2.0"
-		hockeyapp_version     = "3.7.6"
-		jsr250_version        = "1.0"
-		timber_version        = "4.7.1"
-		slf4j_version         = "1.7.25"
-		junit_version         = "4.12"
-		hamcrest_version      = "2.0.0.0"
-		mockito_version       = "2.23.0"
-		gson_version          = "2.8.5"
-		
-		libs = [
-			kotlin     : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
-			coroutines : ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"),
-    		psLocation : ("com.google.android.gms:play-services-location:$gms_version"),
-    		psPlaces   : ("com.google.android.gms:play-services-places:$gms_version"),
-    		gson       : ("com.google.code.gson:gson:$gson_version"),
-			timber     : ("com.jakewharton.timber:timber:$timber_version"),
-			slf4j      : ("org.slf4j:slf4j-api:$slf4j_version"),
-			jsr250     : ("javax.annotation:jsr250-api:$jsr250_version"),
-			junit      : ("junit:junit:$junit_version"),
-			hamcrest   : ("org.hamcrest:java-hamcrest:$hamcrest_version"),
-			mockito    : ("org.mockito:mockito-core:$mockito_version"),
-		]
-	}
-    
-	dependencies {
-		classpath "com.android.tools.build:gradle:$gradle_version"
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-		classpath "com.github.3mph4515:gradle-hockeyapp-plugin:$hockeyapp_version"
-		classpath "com.google.gms:google-services:$gs_version"
-//		classpath "io.realm:realm-gradle-plugin:$realm_version"
-	}
+    ext {
+        kotlin_version        = "1.3.0"
+        coroutines_version    = "1.0.0"
+        serialization_version = "0.9.0"
+        gradle_version        = "3.4.0-alpha02"
+        gms_version           = "16.0.0"
+        gs_version            = "4.2.0"
+        hockeyapp_version     = "3.7.6"
+        jsr250_version        = "1.0"
+        timber_version        = "4.7.1"
+        slf4j_version         = "1.7.25"
+        junit_version         = "4.12"
+        hamcrest_version      = "2.0.0.0"
+        mockito_version       = "2.23.0"
+        gson_version          = "2.8.5"
+
+        libs = [
+            kotlin        : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
+            coroutines    : ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"),
+            serialization : ("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"),
+            psLocation    : ("com.google.android.gms:play-services-location:$gms_version"),
+            psPlaces      : ("com.google.android.gms:play-services-places:$gms_version"),
+            gson          : ("com.google.code.gson:gson:$gson_version"),
+            timber        : ("com.jakewharton.timber:timber:$timber_version"),
+            slf4j         : ("org.slf4j:slf4j-api:$slf4j_version"),
+            jsr250        : ("javax.annotation:jsr250-api:$jsr250_version"),
+            junit         : ("junit:junit:$junit_version"),
+            hamcrest      : ("org.hamcrest:java-hamcrest:$hamcrest_version"),
+            mockito       : ("org.mockito:mockito-core:$mockito_version"),
+        ]
+    }
+
+    dependencies {
+        classpath "com.android.tools.build:gradle:$gradle_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+        classpath "com.github.3mph4515:gradle-hockeyapp-plugin:$hockeyapp_version"
+        classpath "com.google.gms:google-services:$gs_version"
+    }
 }
 
 plugins {
-	/* Годный плагин для Gradle. Проверяет наличие последних версий зависимостей.
-	https://github.com/ben-manes/gradle-versions-plugin
-	$./gradlew dependencyUpdates
-	*/
-	id 'com.github.ben-manes.versions' version '0.20.0'
-	id 'com.gladed.androidgitversion'  version '0.4.5'
+    /* Годный плагин для Gradle. Проверяет наличие последних версий зависимостей.
+    https://github.com/ben-manes/gradle-versions-plugin
+    $./gradlew dependencyUpdates
+    */
+    id 'com.github.ben-manes.versions' version '0.20.0'
+    id 'com.gladed.androidgitversion'  version '0.4.5'
 }
 
 allprojects {
-	repositories {
-		google()
-		jcenter()
-		maven { url "https://jitpack.io" }
-	}
-	gradle.projectsEvaluated {
-		tasks.withType(JavaCompile) {
-			options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-		}
-		tasks.withType(Test) {
-			testLogging.events = ["failed", "passed", "skipped"]
-			testLogging.showStandardStreams = true
-		}
-	}
+    repositories {
+        google()
+        jcenter()
+        maven { url "https://jitpack.io" }
+        maven { url "https://kotlin.bintray.com/kotlinx" }
+    }
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+        tasks.withType(Test) {
+            testLogging.events = ["failed", "passed", "skipped"]
+            testLogging.showStandardStreams = true
+        }
+    }
 }
 
 task clean(type: Delete) {
-	delete rootProject.buildDir
+    delete rootProject.buildDir
 }
 
 task incrementVersionCode {
-	doLast {
-		def versionName = androidGitVersion.name()
-		def splitted = versionName.split("\\-")[0].split("\\.")
-		++splitted[2]
-		def newTag = splitted.join(".")
-		println 'new version: '+newTag
-		def p1 = "git tag ${newTag}".execute()
-		p1.waitFor()
-		println p1.text.trim()
-	}
+    doLast {
+        def versionName = androidGitVersion.name()
+        def splitted = versionName.split("\\-")[0].split("\\.")
+        ++splitted[2]
+        def newTag = splitted.join(".")
+        println 'new version: '+newTag
+        def p1 = "git tag ${newTag}".execute()
+        p1.waitFor()
+        println p1.text.trim()
+    }
 }

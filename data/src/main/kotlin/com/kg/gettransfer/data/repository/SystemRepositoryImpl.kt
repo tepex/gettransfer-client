@@ -6,12 +6,13 @@ import com.kg.gettransfer.data.ds.SystemDataStoreFactory
 import com.kg.gettransfer.data.mapper.*
 
 import com.kg.gettransfer.data.model.GTAddressEntity
+
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.InternetNotAvailableException
 import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.SystemRepository
-import java.lang.Exception
+
 import java.util.concurrent.TimeoutException
 
 class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
@@ -27,8 +28,9 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
         get() = preferencesCache.lastMode
         set(value) { preferencesCache.lastMode = value }
 
+    override val accessToken = preferencesCache.accessToken
     override val endpoints = _endpoints
-    
+
     override var endpoint: Endpoint
         get() = endpoints.find { it.name == preferencesCache.endpoint }!!
         set(value) {
@@ -82,22 +84,12 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
         factory.retrieveCacheDataStore().setAccount(accountEntity)
         return accountMapper.fromEntity(accountEntity)
     }
-    override fun getHistory(): List<GTAddress> {
 
-        val result = ArrayList<GTAddress>()
-        val entities = preferencesCache.lastAddresses
-        if(entities != null){
-            for(i in 0 until entities.size)
-                result.add(addressMapper.fromEntity(entities[i]))
-        }
+    override fun getHistory() = preferencesCache.lastAddresses.map { addressMapper.fromEntity(it) }
 
-        return result
-    }
     override fun setHistory(history: List<GTAddress>) {
-        val result = ArrayList<GTAddressEntity>()
-        for (i in 0 until history.size) result.add(addressMapper.toEntity(history[i]))
-        preferencesCache.lastAddresses = result
+        preferencesCache.lastAddresses = history.map { addressMapper.toEntity(it) }
     }
 
-    override fun logout() = factory.retrieveCacheDataStore().clearAccount()
+    override fun logout() = factory.retrieveCacheDataStore().clearAccount()    
 }

@@ -10,6 +10,7 @@ import android.graphics.Color
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 
 import android.support.annotation.CallSuper
 
@@ -83,6 +84,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private lateinit var popupWindowComment: PopupWindow
 
     private var defaultPromoText: String? = null
+    private var isKeyBoardOpened = false
 
     @ProvidePresenter
     fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(coroutineContexts,
@@ -205,7 +207,22 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
     
     private fun initKeyBoardListener() {
-        addKeyBoardDismissListener { closed -> if(closed && etPromo.isFocused) presenter.checkPromoCode() }
+        addKeyBoardDismissListener { closed ->
+
+
+            if (!closed && !isKeyBoardOpened) {
+                isKeyBoardOpened = true
+                btnGetOffers.visibility = View.GONE
+            }
+            else if (closed && isKeyBoardOpened) {
+                isKeyBoardOpened = false
+                Handler().postDelayed({   // postDelayed нужен, чтобы кнопка не морагала посередине экрана
+                    btnGetOffers.visibility = View.VISIBLE
+                }, 100)
+
+                if(etPromo.isFocused) presenter.checkPromoCode()
+            }
+        }
     }
 
     protected suspend override fun customizeGoogleMaps() {
@@ -366,4 +383,9 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         else if(bsOrder.state == BottomSheetBehavior.STATE_EXPANDED) toggleSheetOrder()
         else super.onBackPressed()
     }
+
+//    inline fun Timer.schedule(
+//            delay: Long,
+//            crossinline action: TimerTask.() -> Unit
+//    ): TimerTask
 }

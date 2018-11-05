@@ -15,6 +15,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextWatcher
 import android.text.style.ImageSpan
+
 import android.util.DisplayMetrics
 import android.view.View
 import android.widget.EditText
