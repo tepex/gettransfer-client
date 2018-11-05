@@ -27,10 +27,14 @@ import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.view.SettingsView
 
+import com.kg.gettransfer.service.OfferServiceConnection
+
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
 import org.koin.android.ext.android.inject
+
+import timber.log.Timber
 
 class SettingsActivity: BaseActivity(), SettingsView {
     @InjectPresenter
@@ -80,8 +84,10 @@ class SettingsActivity: BaseActivity(), SettingsView {
     }
     
     @CallSuper
-    protected override fun onStrart() {
+    protected override fun onStart() {
         super.onStart()
+        systemInteractor.addListener(offerServiceConnection)
+        offerServiceConnection.connectionChanged(systemInteractor.endpoint, systemInteractor.accessToken)
         offerServiceConnection.connect { newOffer ->
             Timber.d("new Offer: $newOffer")
         }
@@ -90,6 +96,7 @@ class SettingsActivity: BaseActivity(), SettingsView {
     @CallSuper
     protected override fun onStop() {
         offerServiceConnection.disconnect()
+        systemInteractor.removeListener(offerServiceConnection)
         super.onStop()
     }
 
@@ -120,10 +127,7 @@ class SettingsActivity: BaseActivity(), SettingsView {
     override fun setCurrency(currency: String)         { tvSelectedCurrency.text = currency }
     override fun setLocale(locale: String)             { tvSelectedLanguage.text = locale }
     override fun setDistanceUnit(distanceUnit: String) { tvSelectedDistanceUnits.text = distanceUnit }
-    override fun setEndpoint(endpoint: String) {
-        tvSelectedEndpoint.text = endpoint.name
-        offerServiceConnection.connectSocket(endpoint.delegate.url, accessToken)
-    }
+    override fun setEndpoint(endpoint: EndpointModel)  { tvSelectedEndpoint.text = endpoint.name }
     
     override fun setLogoutButtonEnabled(enabled: Boolean) {
         if(enabled) btnSignOut.visibility = View.VISIBLE else btnSignOut.visibility = View.GONE

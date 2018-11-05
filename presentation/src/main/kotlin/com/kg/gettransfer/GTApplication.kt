@@ -1,13 +1,17 @@
 package com.kg.gettransfer
 
+import android.content.Intent
 import android.content.IntentFilter
 
 import android.support.annotation.CallSuper
 import android.support.multidex.MultiDexApplication
 
 import com.kg.gettransfer.di.*
+
 import com.kg.gettransfer.presentation.FileLoggingTree
 import com.kg.gettransfer.presentation.NetworkStateChangeReceiver
+
+import com.kg.gettransfer.service.SocketIOService
 
 import net.hockeyapp.android.CrashManager
 
@@ -42,5 +46,7 @@ class GTApplication: MultiDexApplication() {
                                remoteModule,
                                dataModule,
                                androidModule))
+
+        startService(Intent(this, SocketIOService::class.java))
     }
 }

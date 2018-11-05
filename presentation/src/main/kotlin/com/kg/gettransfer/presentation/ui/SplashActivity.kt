@@ -72,7 +72,8 @@ class SplashActivity: AppCompatActivity() {
             }
             finish()
         }, { e ->
-            Utils.showError(this@SplashActivity, true, getString(R.string.err_server, e.message)) {
+            val msg = if(e is InternetNotAvailableException) getString(R.string.LNG_NETWORK_ERROR) else getString(R.string.err_server, e.message)
+            Utils.showError(this@SplashActivity, true, msg) {
                 startActivity(Intent(this@SplashActivity, SettingsActivity::class.java))
             }
             // @TODO: Показать ошибку. Учесть 401 — протухший ключ

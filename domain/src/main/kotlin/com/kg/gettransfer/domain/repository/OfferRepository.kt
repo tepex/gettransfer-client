@@ -4,4 +4,5 @@ import com.kg.gettransfer.domain.model.Offer
 
 interface OfferRepository {
     suspend fun getOffers(id: Long): List<Offer>
+    fun newOffer(offer: Offer)
 }

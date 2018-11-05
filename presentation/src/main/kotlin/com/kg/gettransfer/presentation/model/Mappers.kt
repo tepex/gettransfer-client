@@ -53,7 +53,8 @@ object Mappers {
     fun getCurrenciesModels(types: List<Currency>)        = types.map { CurrencyModel(it) }
     fun getLocalesModels(types: List<Locale>)             = types.map { LocaleModel(it) }
     fun getDistanceUnitsModels(types: List<DistanceUnit>) = types.map { DistanceUnitModel(it) }
-    fun getEndpointsModels(types: List<Endpoint>)         = types.map { EndpointModel(it) }
+    
+    fun getEndpointModel(endpoint: Endpoint) = EndpointModel(endpoint)
     
     fun getRouteModel(distance: Int?,
                       distanceUnit: DistanceUnit,

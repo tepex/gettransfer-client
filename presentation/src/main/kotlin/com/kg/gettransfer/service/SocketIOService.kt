@@ -1,5 +1,6 @@
 package com.kg.gettransfer.service
 
+import android.app.ActivityManager
 import android.app.Service
 
 import android.content.Intent
@@ -9,56 +10,72 @@ import android.os.IBinder
 
 import android.support.annotation.CallSuper
 
+import io.socket.client.IO
+import io.socket.client.Manager
+import io.socket.client.Socket
+
+import io.socket.engineio.client.Socket as EngineSocket
+import io.socket.engineio.client.Transport
+import io.socket.parser.Packet
+
+import org.json.JSONArray
+
 import timber.log.Timber
 
 /**
 https://github.com/Mahabali/Socket.io-Android-Chat
 */
-class SocketIOService(/*private val mapper: OfferMapper*/): Service(), OfferSocket {
+class SocketIOService(/*private val mapper: OfferMapper*/): Service() {
+    private val options = IO.Options().apply {
+        path = "/api/socket"
+        forceNew = true
+    }
     private var socket: Socket? = null
-    internal var endpoint: EndpointModel? = null
-    internal var accessToken: String? = null
     
+    private var url: String? = null
+    private var accessToken: String? = null
     private val binder = LocalBinder()
-    
-    var serviceBinded = false
-        private get
+    internal var serviceBinded = false
     
     companion object {
-        @JvmField val PATH  = "/api/socket"
+        @JvmField val MESSAGE_OFFER = "offer"
+        
         private val NEW_OFFER_RE = Regex("^newOffer/(\\d+)$")
-    }
-    
-    override fun onAccessTokenChanged(accessToken: String) {
-        this.accessToken = accessToken
-        socket?.let { restartSocket() }
-    }
-    
-    override fun onEndpointChanged(endpoint: EndpointModel, accessToken: String) {
-        this.endpoint = endpoint
-        this.accessToken = accessToken
-        socket?.let { restartSocket() }
     }
     
     override fun onBind(intent: Intent): IBinder = binder
 
     @CallSuper
     override fun onDestroy() {
-        closeSocketSession()
+        Timber.d("closeSocketSession [${socket!!.id()}]")
+        socket!!.off()
+        socket!!.close()
         super.onDestroy()
     }
 
     override fun onUnbind(intent: Intent) = serviceBinded
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int) = START_STICKY
     
-    private fun closeSocketSession() {
-        Timber.d("closeSocketSession")
-        socket?.let {
-            it.disconnect()
-            it.off()
+    fun connect(url: String, accessToken: String) {
+        /* Reconnect iff URL or token changed. */
+        val reconnect = (this.url != url || this.accessToken != accessToken)
+        Timber.d("Connecting... options: ${options.path}. Reconect: $reconnect")
+        this.url = url
+        this.accessToken = accessToken
+        if(reconnect) {
+            Timber.d("closing previous socket [${socket?.id()}]")
+            socket?.off()
+            socket?.close()
+            socket = null
+        }
+        if(socket == null) {
+            Timber.d("Create socket $url")
+            socket = IO.socket(url, options)
+            addSocketHandlers()
+            socket!!.connect()
         }
     }
-
+    
     private fun addSocketHandlers() {
         with(socket!!.io()) {
             on(Manager.EVENT_TRANSPORT) { args ->
@@ -71,27 +88,23 @@ class SocketIOService(/*private val mapper: OfferMapper*/): Service(), OfferSock
             }
             
             on(Manager.EVENT_CONNECT_ERROR) { args -> Timber.e("socket connect error: $args") }
-            on(Manager.EVENT_OPEN) { _ -> Timber.d("socket open") }
-            on(Manager.EVENT_CLOSE) { _ -> Timber.d("socket close") }
-            on(Manager.EVENT_RECONNECTING) { _ -> Timber.d("EVENT_RECONNECTING") }
+            on(Manager.EVENT_OPEN) { _ -> Timber.d("socket open [${socket?.id()}]") }
+            on(Manager.EVENT_CLOSE) { _ -> Timber.d("socket close [${socket?.id()}]") }
+            on(Manager.EVENT_RECONNECTING) { _ -> Timber.d("EVENT_RECONNECTING [${socket?.id()}]") }
             
-            on(Manager.EVENT_CONNECT_TIMEOUT) { _ ->
-                Timber.w("socket timeout")
-                listener?.let { it.onError(RemoteException(RemoteException.CONNECTION_TIMED_OUT, "Socket ${endpoint!!.url} timeout")) }
-            }
+            on(Manager.EVENT_CONNECT_TIMEOUT) { _ -> Timber.w("socket timeout") }
             on(Manager.EVENT_ERROR) { args ->
                 val msg = if(args.first() is Exception) (args.first() as Exception).message else args.first().toString()
-                log.error("socket error: $msg")
-                listener?.let { it.onError(RemoteException(RemoteException.INTERNAL_SERVER_ERROR, msg!!)) }
+                Timber.e("socket error: $msg")
             }
             on(EngineSocket.EVENT_PACKET) { args ->
-                val packet = args.first() as Packet<JSONArray>
-                if(packet.data != null && packet.data.length() > 1 && packet.data.get(0) is String) {
-                    val event = packet.data.get(0) as String
+                val packet = retrievePacket(args.first())
+                if(packet != null && packet.length() > 1 && packet.get(0) is String) {
+                    val event = packet.get(0) as String
                     if(NEW_OFFER_RE.matches(event)) {
                         val offerId = NEW_OFFER_RE.find(event)!!.groupValues.get(1)
-                        val item = packet.data.get(1)
-                        log.debug("OfferSocketImpl.Data: ${item::class.qualifiedName} $item")
+                        val item = packet.get(1)
+                        Timber.d("OfferSocketImpl.Data: ${item::class.qualifiedName} $item")
                     }
                 }
                 /*
@@ -113,34 +126,11 @@ class SocketIOService(/*private val mapper: OfferMapper*/): Service(), OfferSock
                 
                 */
             }
-            on(Socket.EVENT_PING) { _    -> Timber.d("ping") }
+            on(Socket.EVENT_PING) { _    -> Timber.d("ping [${socket!!.id()}]") }
             on(Socket.EVENT_PONG) { args -> Timber.d("pong ${args.first()}") }
         }
-        socket!!.connect()
     }
-    
-    fun connect() {
-        val options = IO.Options().apply {
-            path = PATH
-            forceNew = true
-        }
-        Timber.d("Connecting... options: ${options.path}")
-        socket = IO.socket(endpoint.url, options)
-        addSocketHandlers()
-    }
-
-    fun disconnect() {
-        socket?.let { it.disconnect() }
-    }
-
-    fun restartSocket() {
-        socket?.let {
-            it.off()
-            it.disconnect()
-        }
-        connect()
-    }
-    
+            
     /*
     fun showNotificaitons(username: String, message: String) {
         val toLaunch = Intent(getApplicationContext(), MainActivity::class.java)
@@ -173,6 +163,13 @@ class SocketIOService(/*private val mapper: OfferMapper*/): Service(), OfferSock
     
     inner class LocalBinder: Binder() {
         val service = this@SocketIOService
-            private set
+    }
+    
+    private fun retrievePacket(someTrash: Any): JSONArray? {
+        Timber.d("someTrash type: ${someTrash::class.qualifiedName}")
+        if(someTrash !is Packet<*>) return null
+        val packetData: Any? = someTrash.data
+        if(packetData == null || packetData !is JSONArray) return null
+        return packetData 
     }
 }

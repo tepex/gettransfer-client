@@ -33,6 +33,8 @@ import com.kg.gettransfer.geo.GeoRepositoryImpl
 
 import com.kg.gettransfer.prefs.PreferencesImpl
 
+import com.kg.gettransfer.service.OfferServiceConnection
+
 import kotlinx.coroutines.Dispatchers
 
 import org.koin.android.ext.koin.androidApplication
@@ -56,17 +58,19 @@ val geoModule = module {
 }
 
 val prefsModule = module {
-	    val context: Context = get()
-	    val endpoints = listOf(
-	        EndpointEntity("Demo", context.resources.getString(R.string.api_key_demo), context.resources.getString(R.string.api_url_demo), true),
-	        EndpointEntity("Prod", context.resources.getString(R.string.api_key_prod), context.resources.getString(R.string.api_url_prod)))
-    single { PreferencesImpl(get(), endpoints) } bind PreferencesCache::class bind SystemCache::class
+    single {
+        val context: Context = get()
+        val endpoints = listOf(
+            EndpointEntity("Demo", context.resources.getString(R.string.api_key_demo), context.resources.getString(R.string.api_url_demo), true),
+            EndpointEntity("Prod", context.resources.getString(R.string.api_key_prod), context.resources.getString(R.string.api_url_prod)))
+        PreferencesImpl(context, endpoints)
+    } bind PreferencesCache::class bind SystemCache::class
 }
 
 val loggingModule = module {
     single {
         val context: Context = get()
-        LoggingRepositoryImpl(get(), context.getString(R.string.logs_file_name)) as LoggingRepository
+        LoggingRepositoryImpl(context, context.getString(R.string.logs_file_name)) as LoggingRepository
     }
 }
 
@@ -140,6 +144,7 @@ val dataModule = module {
 }
 
 val androidModule = module {
+    single { OfferServiceConnection(get()) }
 	single { CoroutineContexts(Dispatchers.Main, Dispatchers.IO) }
 	single { FirebaseAnalytics.getInstance(androidApplication().applicationContext)  }
 }

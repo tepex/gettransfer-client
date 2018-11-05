@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+
 import com.kg.gettransfer.data.NetworkNotAvailableException
 
 import com.kg.gettransfer.data.RemoteException
@@ -16,6 +17,8 @@ import com.kg.gettransfer.remote.model.TransportTypesWrapperModel
 
 import devcsrj.okhttp3.logging.HttpLoggingInterceptor
 
+import java.util.concurrent.TimeoutException
+
 import kotlinx.coroutines.Deferred
 
 import okhttp3.CookieJar
@@ -26,7 +29,6 @@ import org.slf4j.LoggerFactory
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeoutException
 
 class ApiCore(private val preferences: PreferencesCache) {
     companion object {

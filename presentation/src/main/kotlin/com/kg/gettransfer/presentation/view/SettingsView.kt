@@ -17,7 +17,7 @@ interface SettingsView: BaseView {
     fun setCurrency(currency: String)
     fun setLocale(locale: String)
     fun setDistanceUnit(distanceUnit: String)
-    fun setEndpoint(endpoint: String)
+    fun setEndpoint(endpoint: EndpointModel)
     fun setLogoutButtonEnabled(enabled: Boolean)
 
     fun restartApp()

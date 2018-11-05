@@ -4,7 +4,11 @@ import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.PreferencesListener
 
 import com.kg.gettransfer.data.ds.SystemDataStoreFactory
-import com.kg.gettransfer.data.mapper.*
+
+import com.kg.gettransfer.data.mapper.AccountMapper
+import com.kg.gettransfer.data.mapper.AddressMapper
+import com.kg.gettransfer.data.mapper.ConfigsMapper
+import com.kg.gettransfer.data.mapper.EndpointMapper
 
 import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.GTAddressEntity
@@ -12,9 +16,11 @@ import com.kg.gettransfer.data.model.GTAddressEntity
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.InternetNotAvailableException
 import com.kg.gettransfer.domain.SystemListener
-import com.kg.gettransfer.domain.SystemListenerManager
 
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.Configs
+import com.kg.gettransfer.domain.model.Endpoint
+import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
@@ -25,9 +31,7 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
                            private val configsMapper: ConfigsMapper,
                            private val accountMapper: AccountMapper,
                            private val endpointMapper: EndpointMapper,
-                           private val addressMapper: AddressMapper): SystemRepository,
-                                                                      SystemListenerManager,
-                                                                      PreferencesListener {
+                           private val addressMapper: AddressMapper): SystemRepository, PreferencesListener {
 
     private val listeners = mutableSetOf<SystemListener>()
     
@@ -50,8 +54,6 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
             preferencesCache.endpoint = endpointEntity
         }
         
-    override val accessToken = preferencesCache.accessToken
-
     override var isInternetAvailable: Boolean
         get() = preferencesCache.isInternetAvailable
         set(value) {
@@ -63,18 +65,18 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
 
         try {
-            val remoteAccount = factory.retrieveRemoteDataStore().getAccount()
             val remoteConfigs = factory.retrieveRemoteDataStore().getConfigs()
+            val remoteAccount = factory.retrieveRemoteDataStore().getAccount()
 
             factory.retrieveCacheDataStore().setConfigs(remoteConfigs)
             factory.retrieveCacheDataStore().setAccount(remoteAccount)
 
             configs = configsMapper.fromEntity(factory.retrieveCacheDataStore().getConfigs())
-            accountMapper.configs = configs as Configs
-        } catch (e: Exception) {
-            if (e is InternetNotAvailableException || e is ApiException || e is TimeoutException) {
+            accountMapper.configs = configs!!
+        } catch(e: Exception) {
+            if(e is InternetNotAvailableException || e is ApiException || e is TimeoutException) {
                 configs = configsMapper.fromEntity(factory.retrieveCacheDataStore().getConfigs())
-                accountMapper.configs = configs as Configs
+                accountMapper.configs = configs!!
             } else throw e
         }
 
@@ -116,6 +118,6 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
         listeners.forEach { it.connectionChanged(endpoint, accessToken) }
     }
     
-    override fun addSystemListener(listener: SystemListener)    { listeners.add(listener) }
-    override fun removeSystemListener(listener: SystemListener) { listeners.add(listener) }
+    override fun addListener(listener: SystemListener)    { listeners.add(listener) }
+    override fun removeListener(listener: SystemListener) { listeners.add(listener) }
 }

@@ -79,6 +79,6 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     fun getAddressHistory() = systemRepository.getHistory()
     fun setAddressHistory(list: List<GTAddress>) = systemRepository.setHistory(list)
     
-    fun addListener(listener: SystemListener)    { repository.addListener(listener) }
-    fun removeListener(listener: SystemListener) { repository.removeListener(listener) }
+    fun addListener(listener: SystemListener)    { systemRepository.addListener(listener) }
+    fun removeListener(listener: SystemListener) { systemRepository.removeListener(listener) }
 }

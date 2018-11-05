@@ -9,12 +9,7 @@ import com.kg.gettransfer.remote.mapper.*
 import org.koin.dsl.module.module
 
 val remoteModule = module {
-    single {
-        ApiCore(get(), object: HostListener {
-            override fun onAccessTokenChanged(accessToken: String) {}
-            override fun onEndpointChanged(endpoint: EndpointModel, accessToken: String) {}
-        })
-    }
+    single { ApiCore(get()) }
     single { PromoMapper() }
     single { RouteInfoMapper() }
     single { RouteRemoteImpl(get(), get()) as RouteRemote }

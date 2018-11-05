@@ -31,7 +31,7 @@ class SettingsPresenter(cc: CoroutineContexts,
     private val currencies = systemInteractor.currencies?.let { Mappers.getCurrenciesModels(it) } ?: emptyList<CurrencyModel>()
     private val locales = systemInteractor.locales?.let { Mappers.getLocalesModels(it) } ?: emptyList<LocaleModel>()
     private val distanceUnits = systemInteractor.distanceUnits?.let { Mappers.getDistanceUnitsModels(it) } ?: emptyList<DistanceUnitModel>()
-    private val endpoints = Mappers.getEndpointsModels(systemInteractor.endpoints)
+    private val endpoints = systemInteractor.endpoints.map { Mappers.getEndpointModel(it) }
 
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> saveAccount() })
@@ -66,7 +66,7 @@ class SettingsPresenter(cc: CoroutineContexts,
         viewState.setCurrency(currencyModel?.name ?: "")
         viewState.setDistanceUnit(systemInteractor.distanceUnit.name)
 
-        viewState.setEndpoint(systemInteractor.endpoint.name)
+        viewState.setEndpoint(Mappers.getEndpointModel(systemInteractor.endpoint))
         viewState.setLogoutButtonEnabled(systemInteractor.isLoggedIn())
     }
 
