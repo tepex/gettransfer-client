@@ -15,9 +15,12 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.presentation.Screens
+
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
+
+import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.OffersView
 
 import ru.terrakok.cicerone.Router
@@ -70,9 +73,9 @@ class OffersPresenter(cc: CoroutineContexts,
             viewState.blockInterface(true, true)
             val transfer = utils.asyncAwait{ transferInteractor.getTransfer(transferInteractor.selectedId!!) }
             transferModel = Mappers.getTransferModel(transfer,
-                                                         systemInteractor.locale,
-                                                         systemInteractor.distanceUnit,
-                                                         systemInteractor.transportTypes!!)
+                                                     systemInteractor.locale,
+                                                     systemInteractor.distanceUnit,
+                                                     systemInteractor.transportTypes!!)
 
             offers = offerInteractor.getOffers(transfer.id).map { Mappers.getOfferModel(it, systemInteractor.locale) }
             viewState.setDate(transferModel.dateTime)
@@ -89,6 +92,12 @@ class OffersPresenter(cc: CoroutineContexts,
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
         super.onDestroy()
+    }
+    
+    fun onNewOffer(offer: Offer) {
+        offerInteractor.newOffer(offer)
+        offers = offers.toMutableList().apply { add(Mappers.getOfferModel(offer, systemInteractor.locale)) }
+        setOffers()
     }
 
     fun onRequestInfoClicked() {
@@ -108,7 +117,7 @@ class OffersPresenter(cc: CoroutineContexts,
         viewState.showAlertCancelRequest()
     }
 
-    fun openLoginView(){
+    fun openLoginView() {
         login()
     }
 
@@ -131,6 +140,10 @@ class OffersPresenter(cc: CoroutineContexts,
             sortCategory = sortType
             sortHigherToLower = true
         }
+        setOffers()
+    }
+    
+    private fun setOffers() {
         sortOffers()
         viewState.setOffers(offers)
         viewState.setSortState(sortCategory!!, sortHigherToLower)
@@ -158,13 +171,5 @@ class OffersPresenter(cc: CoroutineContexts,
     }
 
     private fun logFilterEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value)) }
-    private fun logButtonEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value)) }
-    
-    /*
-    override fun onNewOffer(offer: Offer) {
-        viewState.addNewOffer(Mappers.getOfferModel(offer, systemInteractor.locale))
-    }
-
-    override fun onError(e: ApiException) { Timber.e(e) }
-    */
+    private fun logButtonEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value)) }    
 }

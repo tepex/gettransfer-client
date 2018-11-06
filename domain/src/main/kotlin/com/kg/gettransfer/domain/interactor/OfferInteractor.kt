@@ -11,11 +11,13 @@ class OfferInteractor(private val repository: OfferRepository) {
 
 
     suspend fun getOffers(transferId: Long): List<Offer> {
-        if (transferId == this.transferId) return offers
+        if(transferId == this.transferId) return offers
         offers = repository.getOffers(transferId)
         this.transferId = transferId
         return offers
     }
     
     fun getOffer(id: Long) = offers.find { it.id == id }
+    
+    fun newOffer(offer: Offer) { repository.newOffer(offer) }
 }

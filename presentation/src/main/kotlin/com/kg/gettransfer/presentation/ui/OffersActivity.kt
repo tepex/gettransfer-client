@@ -95,10 +95,7 @@ class OffersActivity: BaseActivity(), OffersView {
         super.onStart()
         systemInteractor.addListener(offerServiceConnection)
         offerServiceConnection.connectionChanged(systemInteractor.endpoint, systemInteractor.accessToken)
-        offerServiceConnection.connect(this) { newOffer ->
-            Timber.d("new Offer: $newOffer")
-            Utils.showShortToast(this@OffersActivity, "new Offer")
-        }
+        offerServiceConnection.connect(this) { newOffer -> presenter.onNewOffer(newOffer) }
     }
     
     @CallSuper

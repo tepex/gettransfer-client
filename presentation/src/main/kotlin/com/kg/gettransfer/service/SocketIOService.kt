@@ -40,41 +40,6 @@ class SocketIOService: Service() {
     
     companion object {
         private val NEW_OFFER_RE = Regex("^newOffer/(\\d+)$")
-        
-        const val item = """
-{
-    "id":818,
-    "status":"new",
-    "vehicle":{
-        "name":"MINI Cooper Coupe, 2018",
-        "transport_type_id":"economy",
-        "year":2018,
-        "color":"red",
-        "registration_number":"A777AA",
-        "pax_max":10,
-        "luggage_max":10,
-        "photos":[]
-    },
-    "wifi":true,
-    "refreshments":true,
-    "created_at":"2018-11-06T12:39:58+0300",
-    "price":{
-        "base":{"default":"$1.00","preferred":"฿31.21"},
-        "percentage_30":"$0.30",
-        "percentage_70":"$0.70",
-        "amount":31.21
-    },
-    "updated_at":null,
-    "ratings":null,
-    "carrier":{
-        "id":83,
-        "approved":false,
-        "completed_transfers":0,
-        "ratings":{"average":0,"vehicle":0,"driver":0,"fair":0},
-        "languages":[{"code":"ru","title":"Русский"}]
-    }
-}
-        """
     }
     
     override fun onBind(intent: Intent): IBinder = binder
@@ -145,10 +110,12 @@ class SocketIOService: Service() {
                 }
             }
             on(Socket.EVENT_PING) { _    -> Timber.d("ping [${socket!!.id()}]") }
-            on(Socket.EVENT_PONG) { _ ->
+            on(Socket.EVENT_PONG) { args -> Timber.d("pong ${args.first()}")
+                /*
                 val intent = Intent(OfferServiceConnection.INTENT_OFFER)
                 intent.putExtra(OfferServiceConnection.MESSAGE_OFFER, item)
                 LocalBroadcastManager.getInstance(this@SocketIOService).sendBroadcast(intent)
+                */
             }
         }
     }

@@ -25,6 +25,6 @@ class OfferRepositoryImpl(private val factory: OfferDataStoreFactory,
         factory.retrieveRemoteDataStore().getOffers(id).map { mapper.fromEntity(it) }
     
     override fun newOffer(offer: Offer) {
-        log.debug("onNewOffer: $offer")
+        log.debug("OfferRepository.newOffer: $offer")
     }
 }
