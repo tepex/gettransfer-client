@@ -12,7 +12,7 @@ ext {
     cicerone_version          = "3.0.0"
     circle_indicator_version  = "1.2.2"
     hockey_version            = "5.1.1"
-    firebase_version          = "16.0.4"
+    firebase_version          = "16.0.5"
     glide_version             = "4.8.0"
     simple_rating_bar_version = "1.4.2"
     slf4j_timber_version      = "1.0.1"
@@ -125,6 +125,7 @@ dependencies {
 	implementation project(":remote")
 	implementation libs.kotlin
 	implementation libs.coroutines
+	implementation libs.serialization
 	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 	implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation "com.android.support:appcompat-v7:$support_version"

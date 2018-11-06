@@ -1,7 +1,6 @@
 package com.kg.gettransfer.remote.mapper
 
 import com.kg.gettransfer.data.model.CarrierEntity
-import com.kg.gettransfer.data.model.ProfileEntity
 
 import com.kg.gettransfer.remote.model.CarrierModel
 
@@ -12,7 +11,9 @@ open class CarrierMapper(private val localeMapper: LocaleMapper,
                          private val ratingsMapper: RatingsMapper): EntityMapper<CarrierModel, CarrierEntity> {
     override fun fromRemote(type: CarrierModel) =
         CarrierEntity(type.id,
-                      ProfileEntity(type.title, type.email, type.phone),
+                      type.title,
+                      type.email,
+                      type.phone,
                       type.approved,
                       type.completedTransfers,
                       type.languages.map { localeMapper.fromRemote(it) },

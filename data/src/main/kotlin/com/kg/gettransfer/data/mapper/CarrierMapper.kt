@@ -3,21 +3,21 @@ package com.kg.gettransfer.data.mapper
 import com.kg.gettransfer.data.model.CarrierEntity
 
 import com.kg.gettransfer.domain.model.Carrier
+import com.kg.gettransfer.domain.model.Profile
 
 /**
  * Map a [CarrierEntity] to and from a [Carrier] instance when data is moving between this later and the Domain layer.
  */
-open class CarrierMapper(private val profileMapper: ProfileMapper,
-                         private val localeMapper: LocaleMapper,
+open class CarrierMapper(private val localeMapper: LocaleMapper,
                          private val ratingsMapper: RatingsMapper): Mapper<CarrierEntity, Carrier> {
     /**
      * Map a [CarrierEntity] instance to a [Carrier] instance.
      */
     override fun fromEntity(type: CarrierEntity) =
         Carrier(type.id,
-                profileMapper.fromEntity(type.profile),
+                Profile(type.title, type.email, type.phone),
                 type.approved,
-                type.completedTransfers,
+                type.completed_transfers,
                 type.languages.map { localeMapper.fromEntity(it) },
                 ratingsMapper.fromEntity(type.ratings),
                 type.canUpdateOffers ?: false)

@@ -1,30 +1,43 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+
 import android.view.View
+
 import android.widget.ImageView
 import android.widget.LinearLayout
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+
 import com.kg.gettransfer.presentation.adapter.OffersRVAdapter
 import com.kg.gettransfer.presentation.adapter.VehiclePhotosVPAdapter
+
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
+
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
 import com.kg.gettransfer.presentation.view.OffersView
+
+import com.kg.gettransfer.service.OfferServiceConnection
+
 import kotlinx.android.synthetic.main.activity_offers.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
+
 import org.koin.android.ext.android.inject
 
 class OffersActivity: BaseActivity(), OffersView {
@@ -33,6 +46,7 @@ class OffersActivity: BaseActivity(), OffersView {
 
     private val offerInteractor: OfferInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
+    private val offerServiceConnection: OfferServiceConnection by inject()
 
     private lateinit var bsOfferDetails: BottomSheetBehavior<View>
     
@@ -69,13 +83,31 @@ class OffersActivity: BaseActivity(), OffersView {
 
         btnCancelRequest.setOnClickListener { presenter.onCancelRequestClicked() }
         layoutTransferRequestInfo.setOnClickListener { presenter.onRequestInfoClicked() }
-        sortYear.setOnClickListener { presenter.changeSortType(OffersPresenter.SORT_YEAR) }
+        sortYear.setOnClickListener   { presenter.changeSortType(OffersPresenter.SORT_YEAR) }
         sortRating.setOnClickListener { presenter.changeSortType(OffersPresenter.SORT_RATING) }
-        sortPrice.setOnClickListener { presenter.changeSortType(OffersPresenter.SORT_PRICE) }
+        sortPrice.setOnClickListener  { presenter.changeSortType(OffersPresenter.SORT_PRICE) }
 
         setOfferDetailsSheetListener()
     }
 
+    @CallSuper
+    protected override fun onStart() {
+        super.onStart()
+        systemInteractor.addListener(offerServiceConnection)
+        offerServiceConnection.connectionChanged(systemInteractor.endpoint, systemInteractor.accessToken)
+        offerServiceConnection.connect(this) { newOffer ->
+            Timber.d("new Offer: $newOffer")
+            Utils.showShortToast(this@OffersActivity, "new Offer")
+        }
+    }
+    
+    @CallSuper
+    protected override fun onStop() {
+        offerServiceConnection.disconnect(this)
+        systemInteractor.removeListener(offerServiceConnection)
+        super.onStop()
+    }
+    
     private fun setOfferDetailsSheetListener() {
         bsOfferDetails.setBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(p0: View, p1: Float) {}

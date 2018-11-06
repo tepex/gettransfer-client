@@ -24,9 +24,9 @@ import org.json.JSONArray
 import timber.log.Timber
 
 /**
-https://github.com/Mahabali/Socket.io-Android-Chat
-*/
-class SocketIOService(/*private val mapper: OfferMapper*/): Service() {
+ * 
+ */
+class SocketIOService: Service() {
     private val options = IO.Options().apply {
         path = "/api/socket"
         forceNew = true
@@ -40,6 +40,41 @@ class SocketIOService(/*private val mapper: OfferMapper*/): Service() {
     
     companion object {
         private val NEW_OFFER_RE = Regex("^newOffer/(\\d+)$")
+        
+        const val item = """
+{
+    "id":818,
+    "status":"new",
+    "vehicle":{
+        "name":"MINI Cooper Coupe, 2018",
+        "transport_type_id":"economy",
+        "year":2018,
+        "color":"red",
+        "registration_number":"A777AA",
+        "pax_max":10,
+        "luggage_max":10,
+        "photos":[]
+    },
+    "wifi":true,
+    "refreshments":true,
+    "created_at":"2018-11-06T12:39:58+0300",
+    "price":{
+        "base":{"default":"$1.00","preferred":"฿31.21"},
+        "percentage_30":"$0.30",
+        "percentage_70":"$0.70",
+        "amount":31.21
+    },
+    "updated_at":null,
+    "ratings":null,
+    "carrier":{
+        "id":83,
+        "approved":false,
+        "completed_transfers":0,
+        "ratings":{"average":0,"vehicle":0,"driver":0,"fair":0},
+        "languages":[{"code":"ru","title":"Русский"}]
+    }
+}
+        """
     }
     
     override fun onBind(intent: Intent): IBinder = binder
@@ -53,7 +88,7 @@ class SocketIOService(/*private val mapper: OfferMapper*/): Service() {
     }
 
     override fun onUnbind(intent: Intent) = serviceBinded
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int) = START_STICKY
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int) = START_STICKY
     
     fun connect(url: String, accessToken: String) {
         /* Reconnect iff URL or token changed. */
@@ -102,33 +137,17 @@ class SocketIOService(/*private val mapper: OfferMapper*/): Service() {
                     val event = packet.get(0) as String
                     if(NEW_OFFER_RE.matches(event)) {
                         val offerId = NEW_OFFER_RE.find(event)!!.groupValues.get(1)
-                        val item = packet.get(1)
-                        Timber.d("OfferSocketImpl.Data: ${item::class.qualifiedName} $item")
+                        val item = packet.get(1).toString()
+                        val intent = Intent(OfferServiceConnection.INTENT_OFFER)
+                        intent.putExtra(OfferServiceConnection.MESSAGE_OFFER, item)
+                        LocalBroadcastManager.getInstance(this@SocketIOService).sendBroadcast(intent)
                     }
                 }
-                /*
-                if(args.first() !is JSONObject) listener.onError(SocketException(SocketException.INTERNAL_SERVER_ERROR))
-                else {
-                    val offerModel = gson.fromJson(args.first() as JSONObject, OfferModel::class.java)
-                    listener.onNewOffer(mapper.fromRemote(offerModel))
-                }
-                
-                if (isForeground("com.example.mahabali.socketiochat")) {
-                    val intent = Intent(SocketEventConstants.newMessage)
-                    intent.putExtra("username", username)
-                    intent.putExtra("message", message)
-                    LocalBroadcastManager.getInstance(this@SocketIOService).sendBroadcast(intent)
-                } else {
-                    showNotificaitons(username, message)
-                }
-                
-                
-                */
             }
             on(Socket.EVENT_PING) { _    -> Timber.d("ping [${socket!!.id()}]") }
-            on(Socket.EVENT_PONG) { args ->
-                val intent = Intent(OfferServiceConnection.MESSAGE_OFFER)
-                intent.putExtra("pong", args.first()!!.toString())
+            on(Socket.EVENT_PONG) { _ ->
+                val intent = Intent(OfferServiceConnection.INTENT_OFFER)
+                intent.putExtra(OfferServiceConnection.MESSAGE_OFFER, item)
                 LocalBroadcastManager.getInstance(this@SocketIOService).sendBroadcast(intent)
             }
         }
@@ -155,7 +174,7 @@ class SocketIOService(/*private val mapper: OfferMapper*/): Service() {
         notificationManager.cancelAll()
         notificationManager.notify(0, n)
     }
-    */
+
 
     fun isForeground(myPackage: String): Boolean {
         val manager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
@@ -163,6 +182,7 @@ class SocketIOService(/*private val mapper: OfferMapper*/): Service() {
         val componentInfo = runningTaskInfo.get(0).topActivity
         return componentInfo.getPackageName().equals("com.kg.gettransfer.presentation.ui")
     }
+    */
     
     inner class LocalBinder: Binder() {
         val service = this@SocketIOService

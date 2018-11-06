@@ -13,7 +13,7 @@ open class PriceMapper(private val moneyMapper: MoneyMapper): Mapper<PriceEntity
      * Map a [PriceEntity] instance to a [Price] instance.
      */
     override fun fromEntity(type: PriceEntity) = 
-        Price(moneyMapper.fromEntity(type.base), type.percentage30, type.percentage70, type.amount)
+        Price(moneyMapper.fromEntity(type.base), type.percentage_30, type.percentage_70, type.amount)
     /**
      * Map a [Price] instance to a [PriceEntity] instance.
      */

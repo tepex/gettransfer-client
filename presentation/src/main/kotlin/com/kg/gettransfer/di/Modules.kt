@@ -82,9 +82,9 @@ val dataModule = module {
     single { MoneyMapper() }
     single { VehicleBaseMapper() }
     single { TransportTypeMapper() }
-    single { CarrierMapper(get(), get(), get()) }
+    single { CarrierMapper(get(), get()) }
     single { PriceMapper(get()) }
-    single { VehicleMapper(get(), get()) }
+    single { VehicleMapper() }
     single { OfferMapper(get(), get(), get(), get(), get()) }
     single { OfferRemoteDataStore(get()) }
     single { OfferDataStoreFactory(get()) }
@@ -144,7 +144,7 @@ val dataModule = module {
 }
 
 val androidModule = module {
-    factory { OfferServiceConnection() } 
+    factory { OfferServiceConnection(get()) } 
 	single { CoroutineContexts(Dispatchers.Main, Dispatchers.IO) }
 	single { FirebaseAnalytics.getInstance(androidApplication().applicationContext)  }
 }

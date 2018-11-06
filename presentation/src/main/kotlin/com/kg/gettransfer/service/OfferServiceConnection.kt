@@ -11,17 +11,21 @@ import android.os.IBinder
 
 import android.support.v4.content.LocalBroadcastManager
 
+import com.kg.gettransfer.data.mapper.OfferMapper
+import com.kg.gettransfer.data.model.OfferEntity
+
 import com.kg.gettransfer.domain.SystemListener
 import com.kg.gettransfer.domain.model.Endpoint
+import com.kg.gettransfer.domain.model.Offer
 
-import com.kg.gettransfer.presentation.model.Mappers
-import com.kg.gettransfer.presentation.model.OfferModel
+import kotlinx.serialization.json.JSON
 
 import timber.log.Timber
 
-class OfferServiceConnection: BroadcastReceiver(), ServiceConnection, SystemListener {
+class OfferServiceConnection(private val offerMapper: OfferMapper): BroadcastReceiver(), ServiceConnection, SystemListener {
     companion object {
-        @JvmField val MESSAGE_OFFER = "offer"
+        @JvmField val INTENT_OFFER  = "offer"
+        @JvmField val MESSAGE_OFFER = "new_offer"
     }
     
     private lateinit var url: String
@@ -34,7 +38,7 @@ class OfferServiceConnection: BroadcastReceiver(), ServiceConnection, SystemList
         this.handler = handler
         Timber.d("Binding service ${context::class.qualifiedName}")
         context.bindService(Intent(context, SocketIOService::class.java), this, Context.BIND_AUTO_CREATE)
-        LocalBroadcastManager.getInstance(context).registerReceiver(this, IntentFilter(MESSAGE_OFFER))
+        LocalBroadcastManager.getInstance(context).registerReceiver(this, IntentFilter(INTENT_OFFER))
     }
     
     fun disconnect(context: Context) {
@@ -59,16 +63,18 @@ class OfferServiceConnection: BroadcastReceiver(), ServiceConnection, SystemList
     override fun onServiceDisconnected(name: ComponentName) {
         socketService!!.serviceBinded = false
         socketService = null
+        handler = null
         Timber.d("OSC.onServiceDisconnected")
     }
     
     override fun onReceive(context: Context, intent: Intent) {
-        val msg = intent.getStringExtra("pong")
-        Timber.d("onReceive: $msg")
-        handler?.invoke(msg)
-        //intent.getStringExtra(SocketIOService.MESSAGE_OFFER)?.let { handler(Mappers.getNewOfferModel(it)) }
+        val offerEntity = intent.getStringExtra(MESSAGE_OFFER)
+        Timber.d("onReceive: $offerEntity")
+        try {
+            val offer = offerMapper.fromEntity(JSON.parse(OfferEntity.serializer(), offerEntity))
+            handler?.invoke(offer)
+        } catch(e: Exception) { Timber.e(e) }
     }
 }
 
-//typealias OfferModelHandler = (OfferModel) -> Unit
-typealias OfferModelHandler = (String) -> Unit
+typealias OfferModelHandler = (Offer) -> Unit

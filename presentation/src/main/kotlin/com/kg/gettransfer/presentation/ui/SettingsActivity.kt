@@ -27,8 +27,6 @@ import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.view.SettingsView
 
-import com.kg.gettransfer.service.OfferServiceConnection
-
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
@@ -58,8 +56,6 @@ class SettingsActivity: BaseActivity(), SettingsView {
 	
 	override fun getPresenter(): SettingsPresenter = presenter
 	
-	private val offerServiceConnection: OfferServiceConnection by inject()
-	
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,24 +77,6 @@ class SettingsActivity: BaseActivity(), SettingsView {
             layoutSettingsEndpoint.visibility = View.GONE
             layoutSettingsLogs.visibility = View.GONE
         }
-    }
-    
-    @CallSuper
-    protected override fun onStart() {
-        super.onStart()
-        systemInteractor.addListener(offerServiceConnection)
-        offerServiceConnection.connectionChanged(systemInteractor.endpoint, systemInteractor.accessToken)
-        offerServiceConnection.connect(this) { newOffer ->
-            Timber.d("new Offer: $newOffer")
-            Utils.showShortToast(this@SettingsActivity, "new Offer: $newOffer")
-        }
-    }
-    
-    @CallSuper
-    protected override fun onStop() {
-        offerServiceConnection.disconnect(this)
-        systemInteractor.removeListener(offerServiceConnection)
-        super.onStop()
     }
 
     override fun setCurrencies(currencies: List<CurrencyModel>) {
