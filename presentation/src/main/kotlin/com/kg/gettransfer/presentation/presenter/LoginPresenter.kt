@@ -62,12 +62,10 @@ class LoginPresenter(cc: CoroutineContexts,
 
     fun setEmail(email: String) {
         if(email.isEmpty()) this.email = null else this.email = email
-        checkFields()
     }
 
     fun setPassword(password: String) {
         if(password.isEmpty()) this.password = null else this.password = password
-        checkFields()
     }
 
     private fun checkFields(): Boolean {

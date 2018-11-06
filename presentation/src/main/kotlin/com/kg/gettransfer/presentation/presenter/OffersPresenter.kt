@@ -19,7 +19,6 @@ import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
-import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.OffersView
 
 import ru.terrakok.cicerone.Router
