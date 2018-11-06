@@ -44,6 +44,7 @@ class GTApplication: MultiDexApplication() {
                                prefsModule,
                                loggingModule,
                                remoteModule,
+                               cacheModule,
                                dataModule,
                                androidModule))
 
