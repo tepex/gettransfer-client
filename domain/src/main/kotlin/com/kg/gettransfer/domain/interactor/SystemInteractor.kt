@@ -20,6 +20,10 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     var lastMode: String
         get() = systemRepository.lastMode
         set(value) { systemRepository.lastMode = value }
+
+    var selectedField: String
+        get() = systemRepository.selectedField
+        set(value) { systemRepository.selectedField = value }
         
     var endpoint: Endpoint
         get() = systemRepository.endpoint

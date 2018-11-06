@@ -11,6 +11,7 @@ import com.kg.gettransfer.domain.model.GTAddress
 interface SystemRepository {
     var configs: Configs?
     var lastMode: String
+    var selectedField: String
     var endpoint: Endpoint
     val accessToken: String
     val endpoints: List<Endpoint>

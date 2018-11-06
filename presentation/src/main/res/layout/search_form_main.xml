@@ -40,12 +40,26 @@
                 android:layout_height="@dimen/create_transfer_divider_height"
                 android:background="@color/colorDividerGray" />
 
-
-            <com.kg.gettransfer.presentation.ui.SearchAddress
-                android:id="@+id/searchTo"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/LNG_FIELD_DESTINATION_WHERE" />
+                android:layout_height="wrap_content">
+
+                <com.kg.gettransfer.presentation.ui.SearchAddress
+                    android:id="@+id/searchTo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/LNG_FIELD_DESTINATION_WHERE" />
+
+                <ImageView
+                    android:id="@+id/ivSelectFieldTo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@drawable/ic_dark_arrow"/>
+
+            </RelativeLayout>
+
         </LinearLayout>
     </LinearLayout>
 

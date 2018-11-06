@@ -7,6 +7,7 @@ import com.kg.gettransfer.data.model.GTAddressEntity
 interface PreferencesCache {
     companion object {
         const val LAST_MODE     = "last_mode"
+        const val SELECT_FIELD  = "selected_field"
         const val ENDPOINT      = "endpoint"
         const val INVALID_TOKEN = "invalid_token"
         const val INTERNET      = "internet_available"
@@ -16,13 +17,14 @@ interface PreferencesCache {
     var account: AccountEntity
     var lastMode: String
     var endpoint: EndpointEntity
+    var selectedField: String
     var isInternetAvailable: Boolean
     
     fun clearAccount()
 
     val endpoints: List<EndpointEntity>
     var lastAddresses: List<GTAddressEntity>
-    
+
     fun addListener(listener: PreferencesListener)
     fun removeListener(listener: PreferencesListener)
 }

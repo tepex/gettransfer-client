@@ -16,8 +16,6 @@ import android.transition.Fade
 import android.transition.Slide
 import android.view.View
 
-import android.view.View
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.model.LatLngBounds
@@ -82,7 +80,7 @@ class SearchActivity: BaseActivity(), SearchView {
         protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
             when(screenKey) {
                 Screens.CREATE_ORDER -> return Intent(context, CreateOrderActivity::class.java)
-                Screens.SELECT_FINISH -> return Intent(context, SelectFinishPointActivity::class.java)
+                //Screens.SELECT_FINISH -> return Intent(context, SelectFinishPointActivity::class.java)
             }
             return null
         }

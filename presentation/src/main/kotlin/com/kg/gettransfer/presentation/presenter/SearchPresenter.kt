@@ -95,7 +95,11 @@ class SearchPresenter(cc: CoroutineContexts,
         }, { viewState.blockInterface(false) })
     }
 
-        fun selectFinishPointOnMap(){ router.navigateTo(Screens.SELECT_FINISH) }
+        fun selectFinishPointOnMap(){
+            //router.navigateTo(Screens.SELECT_FINISH)
+            systemInteractor.selectedField = MainPresenter.FIELD_TO
+            router.exit()
+        }
 
     @CallSuper
     override fun onBackCommandClick() {

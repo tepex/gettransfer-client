@@ -5,13 +5,15 @@ import android.content.Intent
 import android.content.res.Configuration
 
 import android.graphics.Color
-
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
 
 import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 
@@ -141,9 +143,9 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         }
 
         protected override fun createStartActivityOptions(command: Command, intent: Intent): Bundle? =
-            ActivityOptionsCompat
-                .makeSceneTransitionAnimation(this@MainActivity, search, getString(R.string.searchTransitionName))
-                .toBundle()
+                ActivityOptionsCompat
+                        .makeSceneTransitionAnimation(this@MainActivity, search, getString(R.string.searchTransitionName))
+                        .toBundle()
     }
 
     companion object {
@@ -152,7 +154,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         @JvmField val FADE_DURATION = 500L
         @JvmField val MAX_INIT_ZOOM = 2.0f
     }
-    
+
     private val offerServiceConnection: OfferServiceConnection by inject()
 
     init {
@@ -179,6 +181,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         viewNetworkNotAvailable = textNetworkNotAvailable
 
         btnShowDrawerLayout.setOnClickListener { drawer.openDrawer(Gravity.START) }
+        btnBack.setOnClickListener { presenter.changeUsedField(MainPresenter.FIELD_FROM) }
+        ivSelectFieldTo.setOnClickListener { presenter.changeUsedField(MainPresenter.FIELD_TO) }
         drawer = drawerLayout as DrawerLayout
         drawer.addDrawerListener(object: DrawerLayout.SimpleDrawerListener() {
             @CallSuper
@@ -229,7 +233,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
             Timber.d("new Offer: $newOffer")
         }
     }
-    
+
     @CallSuper
     override fun onBackPressed() {
         if(drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START)
@@ -274,7 +278,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
 
-    protected suspend override fun customizeGoogleMaps() {
+    protected override suspend fun customizeGoogleMaps() {
         super.customizeGoogleMaps()
         googleMap.setMyLocationEnabled(true)
         googleMap.uiSettings.isMyLocationButtonEnabled = false
@@ -332,6 +336,15 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         if(block) searchFrom.text = getString(R.string.search_start)
     }
 
+    override fun loadingField(block: Boolean, field: String) {
+        if(block){
+            when(field){
+                MainPresenter.FIELD_FROM -> searchFrom.text = getString(R.string.search_start)
+                MainPresenter.FIELD_TO -> searchTo.text = getString(R.string.search_start)
+            }
+        }
+    }
+
     override fun setError(e: Throwable) {
         searchFrom.text = getString(R.string.search_nothing)
     }
@@ -376,6 +389,27 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
             navHeaderEmail.text = profile.email
             navLogin.visibility = View.GONE
             navRequests.visibility = View.VISIBLE
+        }
+    }
+
+    override fun changeUsedField(field: String, point: LatLng?) {
+        when(field){
+            MainPresenter.FIELD_FROM -> {
+                mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_map_label_empty))
+                btnShowDrawerLayout.visibility = View.VISIBLE
+                btnBack.visibility = View.GONE
+                searchFrom.addressField.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
+                ivSelectFieldTo.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(this, R.color.colorTextBlack), PorterDuff.Mode.SRC_IN)
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.START)
+            }
+            MainPresenter.FIELD_TO -> {
+                mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_map_label_b))
+                btnShowDrawerLayout.visibility = View.GONE
+                btnBack.visibility = View.VISIBLE
+                searchFrom.addressField.setTextColor(ContextCompat.getColor(this, R.color.colorTextLightGray))
+                ivSelectFieldTo.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(this, R.color.colorBtnGreen), PorterDuff.Mode.SRC_IN)
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END)
+            }
         }
     }
 }

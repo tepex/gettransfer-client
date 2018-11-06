@@ -8,6 +8,7 @@ import com.kg.gettransfer.domain.model.RouteInfo
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.RouteRepository
+import com.sun.org.apache.xpath.internal.operations.Bool
 
 import java.io.IOException
 
@@ -24,11 +25,12 @@ class RouteInteractor(private val geoRepository: GeoRepository,
 
     fun getCurrentAddress() = geoRepository.getCurrentAddress()
 
-    fun getAddressByLocation(point: Point, pair: Pair<Point, Point>): GTAddress {
-        from = try {
+    fun getAddressByLocation(isFrom: Boolean, point: Point, pair: Pair<Point, Point>): GTAddress {
+        val address = try {
             geoRepository.getAddressByLocation(point, pair)
         } catch(e: IOException) { throw e }
-        return from!!
+        if(isFrom) from = address else to = address
+        return address
     }
 
     fun isConcreteObjects() = from?.isConcreteObject() ?: false && to?.isConcreteObject() ?: false

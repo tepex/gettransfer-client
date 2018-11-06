@@ -18,7 +18,6 @@ import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.view.CarrierTripsView
-import com.kg.gettransfer.presentation.view.MainView
 
 import ru.terrakok.cicerone.Router
 

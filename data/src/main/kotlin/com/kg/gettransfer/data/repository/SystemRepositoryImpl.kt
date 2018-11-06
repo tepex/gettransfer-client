@@ -44,6 +44,10 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
         get() = preferencesCache.lastMode
         set(value) { preferencesCache.lastMode = value }
 
+    override var selectedField: String
+        get() = preferencesCache.selectedField
+        set(value) { preferencesCache.selectedField = value }
+
     override val accessToken = preferencesCache.accessToken
     override val endpoints = preferencesCache.endpoints.map { endpointMapper.fromEntity(it) }
 

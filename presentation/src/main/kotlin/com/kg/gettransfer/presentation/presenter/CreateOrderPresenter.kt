@@ -12,8 +12,11 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.*
+import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.Profile
 
 import com.kg.gettransfer.domain.model.Trip
+import com.kg.gettransfer.domain.model.User
 
 import com.kg.gettransfer.presentation.Screens
 
@@ -251,6 +254,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                                          promoCode,
                                                                          false))
             }
+            //systemInteractor.account = Mappers.getAccount(Mappers.getUser(user), null, null, null, null, null)
             offersInteractor.getOffers(transfer.id)
             Timber.d("new transfer: %s", transfer)
             router.navigateTo(Screens.OFFERS)

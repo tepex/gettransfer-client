@@ -5,8 +5,6 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.presentation.model.ProfileModel
 
-//import com.google.android.gms.maps.GoogleMap.OnCameraMoveListener
-
 @StateStrategyType(OneExecutionStateStrategy::class)
 //interface MainView: MvpView, OnCameraMoveListener
 interface MainView: BaseView {
@@ -17,5 +15,6 @@ interface MainView: BaseView {
     fun setAddressTo(address: String)
     fun setProfile(profile: ProfileModel)
     fun setMarkerElevation(up: Boolean, elevation: Float)
-
+    fun changeUsedField(field: String, point: LatLng?)
+    fun loadingField(block: Boolean, field: String)
 }

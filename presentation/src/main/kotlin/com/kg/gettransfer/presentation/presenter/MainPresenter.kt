@@ -1,28 +1,19 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
-
 import com.arellomobile.mvp.InjectViewState
-
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-
-import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
-
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
-import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.MainView
-
 import ru.terrakok.cicerone.Router
-
 import timber.log.Timber
 
 @InjectViewState
@@ -47,6 +38,7 @@ class MainPresenter(cc: CoroutineContexts,
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         systemInteractor.lastMode = Screens.PASSENGER_MODE
+        systemInteractor.selectedField = FIELD_FROM
         utils.launchAsyncTryCatch( {
             if(routeInteractor.from != null) setLastLocation()
             else updateCurrentLocationAsync()
@@ -75,7 +67,7 @@ class MainPresenter(cc: CoroutineContexts,
 
         //other buttons log params
         @JvmField val MY_PLACE_CLICKED   = "my_place"
-//        @JvmField val SHOW_ROUTE_CLICKED = "show_route"
+        //        @JvmField val SHOW_ROUTE_CLICKED = "show_route"
 //        @JvmField val CAR_INFO_CLICKED = "car_info"
 //        @JvmField val BACK_CLICKED = "back"
         @JvmField val POINT_ON_MAP_CLICKED = "point_on_map"
@@ -84,34 +76,51 @@ class MainPresenter(cc: CoroutineContexts,
         @JvmField val HOTEL_CLICKED        = "predefined_hotel"
         @JvmField val LAST_PLACE_CLICKED   = "last_place"
         @JvmField val SWAP_CLICKED         = "swap"
+
+        @JvmField val FIELD_FROM = "field_from"
+        @JvmField val FIELD_TO   = "field_to"
     }
 
     @CallSuper
     override fun attachView(view: MainView) {
         super.attachView(view)
         viewState.setProfile(Mappers.getProfileModel(systemInteractor.account.user.profile))
+        changeUsedField(systemInteractor.selectedField)
+    }
+
+    fun changeUsedField(field: String){
+        systemInteractor.selectedField = field
+
+        val pointSelectedField: Point? = when(field){
+            FIELD_FROM -> routeInteractor.from?.cityPoint?.point
+            FIELD_TO -> routeInteractor.to?.cityPoint?.point
+            else -> null
+        }
+        var latLngPointSelectedField: LatLng? = null
+        if (pointSelectedField != null) latLngPointSelectedField = LatLng(pointSelectedField.latitude, pointSelectedField.longitude)
+        viewState.changeUsedField(field, latLngPointSelectedField)
     }
 
     fun updateCurrentLocation() {
         utils.launchAsyncTryCatch(
-            { updateCurrentLocationAsync() },
-            { e -> viewState.setError(e) })
+                { updateCurrentLocationAsync() },
+                { e -> viewState.setError(e) })
         logEvent(MY_PLACE_CLICKED)
     }
 
     private fun setLastLocation(){
         viewState.blockInterface(true)
         val currentAddress = routeInteractor.from
-        setPointAndrAddress(currentAddress!!)
+        setPointAddress(currentAddress!!)
     }
 
     private suspend fun updateCurrentLocationAsync() {
         viewState.blockInterface(true)
         val currentAddress = utils.asyncAwait { routeInteractor.getCurrentAddress() }
-        setPointAndrAddress(currentAddress)
+        setPointAddress(currentAddress)
     }
 
-    private fun setPointAndrAddress(currentAddress: GTAddress){
+    private fun setPointAddress(currentAddress: GTAddress){
         lastAddressPoint = Mappers.point2LatLng(currentAddress.cityPoint.point!!)
         onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
         viewState.setMapPoint(lastAddressPoint)
@@ -120,7 +129,6 @@ class MainPresenter(cc: CoroutineContexts,
         lastAddressPoint = Mappers.point2LatLng(currentAddress.cityPoint.point!!)
     }
 
-
     fun onCameraMove(lastPoint: LatLng, animateMarker: Boolean) {
         if(!markerStateLifted && !isMarkerAnimating && animateMarker) {
             viewState.setMarkerElevation(true, MARKER_ELEVATION)
@@ -128,8 +136,8 @@ class MainPresenter(cc: CoroutineContexts,
         }
         this.lastPoint = lastPoint
         viewState.moveCenterMarker(lastPoint)
-        viewState.blockInterface(true)
-
+        //viewState.blockInterface(true)
+        viewState.loadingField(true, systemInteractor.selectedField)
     }
 
     fun onCameraIdle(latLngBounds: LatLngBounds) {
@@ -138,7 +146,7 @@ class MainPresenter(cc: CoroutineContexts,
             markerStateLifted = false
         }
         if(lastPoint == null) return
-		/* Не запрашивать адрес, если перемещение составило менее minDistance
+        /* Не запрашивать адрес, если перемещение составило менее minDistance
         val distance = FloatArray(2)
         Location.distanceBetween(lastPoint!!.latitude, lastPoint!!.longitude,
                                  lastAddressPoint.latitude, lastAddressPoint.longitude, distance)
@@ -151,11 +159,19 @@ class MainPresenter(cc: CoroutineContexts,
         val swPoint = Point(latLngBounds.southwest.latitude, latLngBounds.southwest.longitude)
         latLonPair = Pair(nePoint, swPoint)
         utils.launchAsyncTryCatchFinally({
-            val currentAddress = utils.asyncAwait { routeInteractor.getAddressByLocation(Mappers.latLng2Point(lastPoint!!), latLonPair) }
-            viewState.setAddressFrom(currentAddress.cityPoint.name!!)
+            val currentAddress = utils.asyncAwait { routeInteractor.getAddressByLocation(
+                    systemInteractor.selectedField == FIELD_FROM, Mappers.latLng2Point(lastPoint!!), latLonPair) }
+            setAddressInSelectedField(currentAddress.cityPoint.name!!)
             currentLocation = currentAddress.cityPoint.name!!
         }, { e -> viewState.setError(e)
         }, { viewState.blockInterface(false) })
+    }
+
+    fun setAddressInSelectedField(address: String){
+        when(systemInteractor.selectedField){
+            FIELD_FROM -> viewState.setAddressFrom(address)
+            FIELD_TO -> viewState.setAddressTo(address)
+        }
     }
 
     fun setMarkerAnimating(animating: Boolean){

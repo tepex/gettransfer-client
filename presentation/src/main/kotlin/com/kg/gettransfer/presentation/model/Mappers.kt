@@ -33,6 +33,13 @@ object Mappers {
     
     fun getUser(model: UserModel) = User(getProfile(model.profile), model.termsAccepted)
 
+    fun getAccount(model: User,
+                   locale: Locale?,
+                   currency: Currency?,
+                   distanceUnit: DistanceUnit?,
+                   groups: Array<String>?,
+                   carrierId: Long?) = Account(model, locale, currency, distanceUnit, groups, carrierId)
+
     fun getTransportTypeModel(type: TransportType, prices: Map<String, String>?): TransportTypeModel {
         val imageRes = R.drawable::class.members.find( { it.name == "ic_transport_type_${type.id}" } )
         val imageId = (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_unknown

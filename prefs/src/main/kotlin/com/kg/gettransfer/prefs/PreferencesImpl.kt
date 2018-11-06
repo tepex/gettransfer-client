@@ -65,6 +65,14 @@ class PreferencesImpl(context: Context,
             editor.apply()
         }
 
+    override var selectedField: String
+        get() = configsPrefs.getString(PreferencesCache.SELECT_FIELD, "")!!
+        set(value) {
+            val editor = configsPrefs.edit()
+            editor.putString(PreferencesCache.SELECT_FIELD, value)
+            editor.apply()
+        }
+
        
     override var account: AccountEntity 
         get() {
