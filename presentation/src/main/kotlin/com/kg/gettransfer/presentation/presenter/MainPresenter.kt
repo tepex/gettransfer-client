@@ -31,7 +31,7 @@ class MainPresenter(cc: CoroutineContexts,
 
     private val MARKER_ELEVATION = 5f
     private var markerStateLifted = false
-    private var isMarkerAnimating = true
+    var isMarkerAnimating = true
 
     var screenForReturnAfterLogin: String? = null
 
@@ -44,9 +44,6 @@ class MainPresenter(cc: CoroutineContexts,
         utils.launchAsyncTryCatch( {
             if(routeInteractor.from != null) setLastLocation()
             else updateCurrentLocationAsync()
-            isMarkerAnimating = false
-            markerStateLifted = false
-
         }, { e -> Timber.e(e) } )
 
         // Создать листенер для обновления текущей локации
@@ -197,10 +194,6 @@ class MainPresenter(cc: CoroutineContexts,
             FIELD_FROM -> viewState.setAddressFrom(address)
             FIELD_TO -> viewState.setAddressTo(address)
         }
-    }
-
-    fun setMarkerAnimating(animating: Boolean){
-        isMarkerAnimating = animating
     }
 
     fun enablePinAnimation(){

@@ -22,6 +22,7 @@ import com.kg.gettransfer.presentation.view.SettingsView
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
+import java.util.*
 
 @InjectViewState
 class SettingsPresenter(cc: CoroutineContexts,
@@ -29,7 +30,7 @@ class SettingsPresenter(cc: CoroutineContexts,
                         systemInteractor: SystemInteractor): BasePresenter<SettingsView>(cc, router, systemInteractor) {
 
     private val currencies = systemInteractor.currencies?.let { Mappers.getCurrenciesModels(it) } ?: emptyList<CurrencyModel>()
-    private val locales = systemInteractor.locales?.let { Mappers.getLocalesModels(it) } ?: emptyList<LocaleModel>()
+    private val locales = (systemInteractor.locales?.let { Mappers.getLocalesModels(it) } ?: emptyList<LocaleModel>()).filter { it.locale == "EN" || it.locale == "RU" }
     private val distanceUnits = systemInteractor.distanceUnits?.let { Mappers.getDistanceUnitsModels(it) } ?: emptyList<DistanceUnitModel>()
     private val endpoints = systemInteractor.endpoints.map { Mappers.getEndpointModel(it) }
 
@@ -78,12 +79,13 @@ class SettingsPresenter(cc: CoroutineContexts,
         logEvent(CURRENCY_PARAM, currencyModel.code)
     }
 
-    fun changeLocale(selected: Int) {
+    fun changeLocale(selected: Int): Locale {
         val localeModel = locales.get(selected)
         systemInteractor.locale = localeModel.delegate
         viewState.setLocale(localeModel.name)
-        saveAccount()
+        if (systemInteractor.isLoggedIn()) saveAccount()
         logEvent(LANGUAGE_PARAM, localeModel.name)
+        return systemInteractor.locale
     }
 
     fun changeDistanceUnit(selected: Int) {

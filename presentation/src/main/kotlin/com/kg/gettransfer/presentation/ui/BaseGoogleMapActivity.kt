@@ -43,13 +43,16 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val locale = systemInteractor.locale
-        Locale.setDefault(locale)
-        var config = Configuration()
-        @Suppress("DEPRECATION")
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N) config.locale = locale
-        else config.setLocales(LocaleList(locale))
-        createConfigurationContext(config)
+//        val locale = systemInteractor.locale
+//        Log.i("findLocale", locale.language)
+//        Locale.setDefault(locale)
+//
+//        var res = resources
+//        var config = Configuration(res.configuration)
+//        @Suppress("DEPRECATION")
+//        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N) config.locale = locale
+//        else config.setLocales(LocaleList(locale))
+//        createConfigurationContext(config)
     }
 
     @CallSuper

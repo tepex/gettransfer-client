@@ -11,6 +11,7 @@ import com.google.gson.Gson
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
+import com.kg.gettransfer.utilities.LocaleManager
 
 import com.kg.gettransfer.logging.LoggingRepositoryImpl
 
@@ -147,6 +148,7 @@ val androidModule = module {
     factory { OfferServiceConnection(get()) } 
 	single { CoroutineContexts(Dispatchers.Main, Dispatchers.IO) }
 	single { FirebaseAnalytics.getInstance(androidApplication().applicationContext)  }
+	single { LocaleManager() }
 }
 
 val testModule = module {

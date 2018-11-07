@@ -42,12 +42,16 @@ import ru.terrakok.cicerone.android.SupportAppNavigator
 
 import timber.log.Timber
 
+import com.kg.gettransfer.utilities.LocaleManager
+
+
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     internal val systemInteractor: SystemInteractor by inject()
     
     internal val coroutineContexts: CoroutineContexts by inject()
     internal val router: Router by inject()
     protected val navigatorHolder: NavigatorHolder by inject()
+    internal val localeManager: LocaleManager by inject()
 
     private var rootView: View? = null
     private var rootViewHeight: Int? = null
@@ -82,7 +86,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         navigatorHolder.removeNavigator()
         super.onPause()
     }
-    
+
 	override fun onBackPressed() {
 	    getPresenter().onBackCommandClick()
 	}
@@ -145,6 +149,12 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     }
 
     protected fun openScreen(screen: String) { router.navigateTo(screen) }
+
+
+    override fun attachBaseContext(newBase: Context?) {
+        if(newBase != null) super.attachBaseContext(localeManager.updateResources(newBase, systemInteractor.locale))
+        else super.attachBaseContext(null)
+    }
 }
 
 open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, Screens.NOT_USED) {

@@ -81,13 +81,13 @@ class SettingsActivity: BaseActivity(), SettingsView {
 
     override fun setCurrencies(currencies: List<CurrencyModel>) {
         Utils.setCurrenciesDialogListener(this, layoutSettingsCurrency, currencies) { 
-            selected -> presenter.changeCurrency(selected) 
+            selected -> presenter.changeCurrency(selected)
         }
     }
     
     override fun setLocales(locales: List<LocaleModel>) {
         Utils.setLocalesDialogListener(this, layoutSettingsLanguage, locales) { 
-            selected -> presenter.changeLocale(selected) 
+            selected -> presenter.changeLocale(selected)
         }
     }
     
