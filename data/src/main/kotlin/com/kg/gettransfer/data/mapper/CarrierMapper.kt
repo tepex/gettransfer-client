@@ -17,7 +17,7 @@ open class CarrierMapper(private val localeMapper: LocaleMapper,
         Carrier(type.id,
                 Profile(type.title, type.email, type.phone),
                 type.approved,
-                type.completed_transfers,
+                type.completedTransfers,
                 type.languages.map { localeMapper.fromEntity(it) },
                 ratingsMapper.fromEntity(type.ratings),
                 type.canUpdateOffers ?: false)

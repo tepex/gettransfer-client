@@ -11,5 +11,5 @@ open class PriceMapper(private val moneyMapper: MoneyMapper): EntityMapper<Price
     override fun fromRemote(type: PriceModel) =
         PriceEntity(moneyMapper.fromRemote(type.base), type.percentage30, type.percentage70, type.amount) 
     override fun toRemote(type: PriceEntity) = 
-        PriceModel(moneyMapper.toRemote(type.base), type.percentage_30, type.percentage_70, type.amount)
+        PriceModel(moneyMapper.toRemote(type.base), type.percentage30, type.percentage70, type.amount)
 }

@@ -14,10 +14,10 @@ open class VehicleMapper(): Mapper<VehicleEntity, Vehicle> {
      * Map a [VehicleEntity] instance to a [Vehicle] instance.
      */
     override fun fromEntity(type: VehicleEntity) = 
-        Vehicle(VehicleBase(type.name, type.registration_number),
+        Vehicle(VehicleBase(type.name, type.registrationNumber),
                 type.year,
                 type.color,
-                TransportType(type.transport_type_id, type.pax_max, type.luggage_max),
+                TransportType(type.transportTypeId, type.paxMax, type.luggageMax),
                 type.photos)
     /**
      * Map a [Vehicle] instance to a [VehicleEntity] instance.
