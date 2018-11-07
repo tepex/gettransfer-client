@@ -35,6 +35,8 @@ class MainPresenter(cc: CoroutineContexts,
 
     var screenForReturnAfterLogin: String? = null
 
+    private var idleAndMoveCamera = true
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         systemInteractor.lastMode = Screens.PASSENGER_MODE
@@ -88,6 +90,13 @@ class MainPresenter(cc: CoroutineContexts,
         changeUsedField(systemInteractor.selectedField)
     }
 
+    fun switchUsedField(){
+        when(systemInteractor.selectedField){
+            FIELD_FROM -> changeUsedField(FIELD_TO)
+            FIELD_TO -> changeUsedField(FIELD_FROM)
+        }
+    }
+
     fun changeUsedField(field: String){
         systemInteractor.selectedField = field
 
@@ -98,7 +107,14 @@ class MainPresenter(cc: CoroutineContexts,
         }
         var latLngPointSelectedField: LatLng? = null
         if (pointSelectedField != null) latLngPointSelectedField = LatLng(pointSelectedField.latitude, pointSelectedField.longitude)
-        viewState.changeUsedField(field, latLngPointSelectedField)
+        when(systemInteractor.selectedField){
+            FIELD_FROM -> viewState.selectFieldFrom()
+            FIELD_TO -> viewState.setFieldTo()
+        }
+        if (latLngPointSelectedField != null) {
+            idleAndMoveCamera = false
+            viewState.setMapPoint(latLngPointSelectedField, false)
+        }
     }
 
     fun updateCurrentLocation() {
@@ -115,7 +131,8 @@ class MainPresenter(cc: CoroutineContexts,
     }
 
     private suspend fun updateCurrentLocationAsync() {
-        viewState.blockInterface(true)
+        //viewState.blockInterface(true)
+        viewState.blockSelectedField(true, systemInteractor.selectedField)
         val currentAddress = utils.asyncAwait { routeInteractor.getCurrentAddress() }
         setPointAddress(currentAddress)
     }
@@ -123,51 +140,59 @@ class MainPresenter(cc: CoroutineContexts,
     private fun setPointAddress(currentAddress: GTAddress){
         lastAddressPoint = Mappers.point2LatLng(currentAddress.cityPoint.point!!)
         onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
-        viewState.setMapPoint(lastAddressPoint)
-        viewState.setAddressFrom(currentAddress.cityPoint.name!!)
+        viewState.setMapPoint(lastAddressPoint, true)
+        //viewState.setAddressFrom(currentAddress.cityPoint.name!!)
+        setAddressInSelectedField(currentAddress.cityPoint.name!!)
 
         lastAddressPoint = Mappers.point2LatLng(currentAddress.cityPoint.point!!)
     }
 
     fun onCameraMove(lastPoint: LatLng, animateMarker: Boolean) {
-        if(!markerStateLifted && !isMarkerAnimating && animateMarker) {
-            viewState.setMarkerElevation(true, MARKER_ELEVATION)
-            markerStateLifted = true
+        if(idleAndMoveCamera) {
+            if (!markerStateLifted && !isMarkerAnimating && animateMarker) {
+                viewState.setMarkerElevation(true, MARKER_ELEVATION)
+                markerStateLifted = true
+            }
+            this.lastPoint = lastPoint
+            viewState.moveCenterMarker(lastPoint)
+            //viewState.blockInterface(true)
+            viewState.blockSelectedField(true, systemInteractor.selectedField)
         }
-        this.lastPoint = lastPoint
-        viewState.moveCenterMarker(lastPoint)
-        //viewState.blockInterface(true)
-        viewState.loadingField(true, systemInteractor.selectedField)
     }
 
     fun onCameraIdle(latLngBounds: LatLngBounds) {
-        if(markerStateLifted && !isMarkerAnimating) {
-            viewState.setMarkerElevation(false, -MARKER_ELEVATION)
-            markerStateLifted = false
-        }
-        if(lastPoint == null) return
-        /* Не запрашивать адрес, если перемещение составило менее minDistance
-        val distance = FloatArray(2)
-        Location.distanceBetween(lastPoint!!.latitude, lastPoint!!.longitude,
-                                 lastAddressPoint.latitude, lastAddressPoint.longitude, distance)
-        //if(distance.get(0) < minDistance) return
-        */
+        if(idleAndMoveCamera) {
+            if (markerStateLifted && !isMarkerAnimating) {
+                viewState.setMarkerElevation(false, -MARKER_ELEVATION)
+                markerStateLifted = false
+            }
+            if (lastPoint == null) return
+            /* Не запрашивать адрес, если перемещение составило менее minDistance
+            val distance = FloatArray(2)
+            Location.distanceBetween(lastPoint!!.latitude, lastPoint!!.longitude,
+                                    lastAddressPoint.latitude, lastAddressPoint.longitude, distance)
+            //if(distance.get(0) < minDistance) return
+            */
 
-        lastAddressPoint = lastPoint!!
-        val latLonPair: Pair<Point, Point>
-        val nePoint = Point(latLngBounds.northeast.latitude, latLngBounds.northeast.longitude)
-        val swPoint = Point(latLngBounds.southwest.latitude, latLngBounds.southwest.longitude)
-        latLonPair = Pair(nePoint, swPoint)
-        utils.launchAsyncTryCatchFinally({
-            val currentAddress = utils.asyncAwait { routeInteractor.getAddressByLocation(
-                    systemInteractor.selectedField == FIELD_FROM, Mappers.latLng2Point(lastPoint!!), latLonPair) }
-            setAddressInSelectedField(currentAddress.cityPoint.name!!)
-            currentLocation = currentAddress.cityPoint.name!!
-        }, { e -> viewState.setError(e)
-        }, { viewState.blockInterface(false) })
+            lastAddressPoint = lastPoint!!
+            val latLonPair: Pair<Point, Point>
+            val nePoint = Point(latLngBounds.northeast.latitude, latLngBounds.northeast.longitude)
+            val swPoint = Point(latLngBounds.southwest.latitude, latLngBounds.southwest.longitude)
+            latLonPair = Pair(nePoint, swPoint)
+            utils.launchAsyncTryCatchFinally({
+                val currentAddress = utils.asyncAwait {
+                    routeInteractor.getAddressByLocation(
+                            systemInteractor.selectedField == FIELD_FROM, Mappers.latLng2Point(lastPoint!!), latLonPair)
+                }
+                setAddressInSelectedField(currentAddress.cityPoint.name!!)
+                currentLocation = currentAddress.cityPoint.name!!
+            }, { e ->
+                viewState.setError(e)
+            }, { viewState.blockInterface(false) })
+        } else idleAndMoveCamera = true
     }
 
-    fun setAddressInSelectedField(address: String){
+    private fun setAddressInSelectedField(address: String){
         when(systemInteractor.selectedField){
             FIELD_FROM -> viewState.setAddressFrom(address)
             FIELD_TO -> viewState.setAddressTo(address)
@@ -236,5 +261,10 @@ class MainPresenter(cc: CoroutineContexts,
 
     fun logEvent(value: String) {
         mFBA.logEvent(EVENT_MENU, createSingeBundle(PARAM_KEY_NAME, value))
+    }
+
+    fun onBackClick(){
+        if(systemInteractor.selectedField == FIELD_TO) switchUsedField()
+        else viewState.onBackClick()
     }
 }

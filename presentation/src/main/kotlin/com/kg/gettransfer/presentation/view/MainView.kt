@@ -8,13 +8,16 @@ import com.kg.gettransfer.presentation.model.ProfileModel
 @StateStrategyType(OneExecutionStateStrategy::class)
 //interface MainView: MvpView, OnCameraMoveListener
 interface MainView: BaseView {
-    fun setMapPoint(point: LatLng)
+    fun setMapPoint(point: LatLng, withAnimation: Boolean)
     fun moveCenterMarker(point: LatLng)
     fun initSearchForm()
     fun setAddressFrom(address: String)
     fun setAddressTo(address: String)
     fun setProfile(profile: ProfileModel)
     fun setMarkerElevation(up: Boolean, elevation: Float)
-    fun changeUsedField(field: String, point: LatLng?)
-    fun loadingField(block: Boolean, field: String)
+
+    fun blockSelectedField(block: Boolean, field: String)
+    fun selectFieldFrom()
+    fun setFieldTo()
+    fun onBackClick()
 }
