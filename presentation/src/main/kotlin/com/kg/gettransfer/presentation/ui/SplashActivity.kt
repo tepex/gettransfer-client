@@ -72,6 +72,7 @@ class SplashActivity: AppCompatActivity() {
             }
             finish()
         }, { e ->
+            Timber.e(e)
             val msg = if(e is InternetNotAvailableException) getString(R.string.LNG_NETWORK_ERROR) else getString(R.string.err_server, e.message)
             Utils.showError(this@SplashActivity, true, msg) {
                 startActivity(Intent(this@SplashActivity, SettingsActivity::class.java))

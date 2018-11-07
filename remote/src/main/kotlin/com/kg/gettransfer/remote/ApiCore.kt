@@ -80,14 +80,17 @@ class ApiCore(private val preferences: PreferencesCache) {
     internal suspend fun <R> tryTwice(apiCall: () -> Deferred<R>): R {
         if(isInternetAvailable) {
             return try { apiCall().await() }
-            catch (e: TimeoutException){ throw e }
-            catch (e: Exception) {
-                if (e is RemoteException) throw e /* second invocation */
+            catch(e: TimeoutException){ throw e }
+            catch(e: Exception) {
+                if(e is RemoteException) throw e /* second invocation */
                 val ae = remoteException(e)
-                if (!ae.isInvalidToken()) throw ae
+                if(!ae.isInvalidToken()) {
+                    log.error("${apiCall::class.qualifiedName}", e)
+                    throw ae
+                }
 
-                try { updateAccessToken() } catch (e1: Exception) { throw remoteException(e1) }
-                return try { apiCall().await() } catch (e2: Exception) { throw remoteException(e2) }
+                try { updateAccessToken() } catch(e1: Exception) { throw remoteException(e1) }
+                return try { apiCall().await() } catch(e2: Exception) { throw remoteException(e2) }
             }
         } else throw NetworkNotAvailableException()
     }

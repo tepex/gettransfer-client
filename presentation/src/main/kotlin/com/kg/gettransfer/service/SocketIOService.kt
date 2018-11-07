@@ -81,6 +81,7 @@ class SocketIOService: Service() {
                 Timber.d("event transport. cookie: $accessToken")
                 val transport = args.first() as Transport
                 transport.on(Transport.EVENT_REQUEST_HEADERS) { _args ->
+                    @Suppress("UNCHECKED_CAST")
                     var headers = _args.first() as MutableMap<String, List<String>>
                     headers.put("Cookie", listOf("rack.session=$accessToken"))
                 }
@@ -101,7 +102,7 @@ class SocketIOService: Service() {
                 if(packet != null && packet.length() > 1 && packet.get(0) is String) {
                     val event = packet.get(0) as String
                     if(NEW_OFFER_RE.matches(event)) {
-                        val offerId = NEW_OFFER_RE.find(event)!!.groupValues.get(1)
+                        //val offerId = NEW_OFFER_RE.find(event)!!.groupValues.get(1)
                         val item = packet.get(1).toString()
                         val intent = Intent(OfferServiceConnection.INTENT_OFFER)
                         intent.putExtra(OfferServiceConnection.MESSAGE_OFFER, item)

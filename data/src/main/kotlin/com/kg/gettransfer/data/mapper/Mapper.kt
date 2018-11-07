@@ -1,7 +1,10 @@
 package com.kg.gettransfer.data.mapper
 
 import java.text.SimpleDateFormat
+
 import java.util.Locale
+
+import org.slf4j.LoggerFactory
 
 /**
  * Interface for model mappers. It provides helper methods that facilitate
@@ -16,6 +19,8 @@ interface Mapper<E, D> {
         val SERVER_DATE_FORMAT = SimpleDateFormat("yyyy/MM/dd", Locale.US)
         val SERVER_TIME_FORMAT = SimpleDateFormat("HH:mm", Locale.US)
         val ISO_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+        
+        val log = LoggerFactory.getLogger("GTR-data")
     }
     
     fun fromEntity(type: E): D

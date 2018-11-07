@@ -31,7 +31,7 @@ class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
                            private val configsMapper: ConfigsMapper,
                            private val accountMapper: AccountMapper,
                            private val endpointMapper: EndpointMapper,
-                           private val addressMapper: AddressMapper): SystemRepository, PreferencesListener {
+                           private val addressMapper: AddressMapper): BaseRepository(), SystemRepository, PreferencesListener {
 
     private val listeners = mutableSetOf<SystemListener>()
     
