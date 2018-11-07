@@ -24,7 +24,7 @@ open class TransferEntity(val id: Long,
                           val offersUpdatedAt: String?,
                           
                           val time: Int,
-                          val paidSum: MoneyEntity,
+                          val paidSum: MoneyEntity?,
                           val remainsToPay: MoneyEntity?,
                           val paidPercentage: Int,
                           val pendingPaymentId: Int?,

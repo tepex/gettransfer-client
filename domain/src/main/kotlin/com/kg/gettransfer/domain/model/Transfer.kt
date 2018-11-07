@@ -31,7 +31,7 @@ data class Transfer(val id: Long,
                     val offersUpdatedAt: Date?,
                     
                     val time: Int,
-                    val paidSum: Money,
+                    val paidSum: Money?,
                     val remainsToPay: Money?,
                     val paidPercentage: Int,
                     val pendingPaymentId: Int?,
