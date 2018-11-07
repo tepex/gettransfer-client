@@ -7,10 +7,10 @@ data class AccountEntity(val user: UserEntity,
                          val locale: String?,
                          val currency: String?,
                          val distanceUnit: String?,
-                         val groups: Array<String>?,
+                         val groups: List<String>?,
                          val carrierId: Long?) {
     companion object {
-        const val PASSWORD       = "password"
+        const val ENTITY_NAME    = "account"
         const val LOCALE         = "locale"
         const val CURRENCY       = "currency"
         const val DISTANCE_UNIT  = "distance_unit"

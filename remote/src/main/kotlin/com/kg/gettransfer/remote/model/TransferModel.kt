@@ -30,7 +30,7 @@ class TransferModel(@SerializedName(TransferEntity.ID) val id: Long,
                     @SerializedName(TransferEntity.OFFERS_UPDATED_AT) val offersUpdatedAt: String? = null,
                        
                     @SerializedName(TransferEntity.TIME) val time: Int,
-                    @SerializedName(TransferEntity.PAID_SUM) val paidSum: MoneyModel,
+                    @SerializedName(TransferEntity.PAID_SUM) val paidSum: MoneyModel?,
                     @SerializedName(TransferEntity.REMAINS_TO_PAY) val remainsToPay: MoneyModel?,
                     @SerializedName(TransferEntity.PAID_PERCENTAGE) val paidPercentage: Int,
                     @SerializedName(TransferEntity.PENDING_PAYMENT_ID) val pendingPaymentId: Int?,

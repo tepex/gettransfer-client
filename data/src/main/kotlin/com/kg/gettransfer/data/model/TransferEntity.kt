@@ -30,7 +30,7 @@ open class TransferEntity(@SerialName(ID) val id: Long,
                           @SerialName(OFFERS_UPDATED_AT) val offersUpdatedAt: String?,
                           
                           @SerialName(TIME) val time: Int,
-                          @SerialName(PAID_SUM) val paidSum: MoneyEntity,
+                          @SerialName(PAID_SUM) val paidSum: MoneyEntity?,
                           @SerialName(REMAINS_TO_PAY) val remainsToPay: MoneyEntity?,
                           @SerialName(PAID_PERCENTAGE) val paidPercentage: Int,
                           @SerialName(PENDING_PAYMENT_ID) val pendingPaymentId: Int?,

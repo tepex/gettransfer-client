@@ -35,7 +35,7 @@ open class TransferMapper(private val cityPointMapper: CityPointMapper,
                        type.offersUpdatedAt,
 
                        type.time,
-                       moneyMapper.fromRemote(type.paidSum),
+                       type.paidSum?.let { moneyMapper.fromRemote(it) },
                        type.remainsToPay?.let { moneyMapper.fromRemote(it) },
                        type.paidPercentage,
                        type.pendingPaymentId,
