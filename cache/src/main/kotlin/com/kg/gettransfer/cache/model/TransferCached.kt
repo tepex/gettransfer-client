@@ -14,9 +14,9 @@ const val TABLE_TRANSFER = "Transfer"
 @TypeConverters(StringListConverter::class)
 data class TransferCached(@PrimaryKey var id: Long = 0,
                           @ColumnInfo(name = TransferEntity.CREATED_AT) var createdAt: String = "",
-                          var duration: Int? = 0,
-                          var distance: Int? = 0,
-                          var status: String = "",
+                          @ColumnInfo(name = TransferEntity.DURATION) var duration: Int? = 0,
+                          @ColumnInfo(name = TransferEntity.DISTANCE) var distance: Int? = 0,
+                          @ColumnInfo(name = TransferEntity.STATUS) var status: String = "",
                           @Embedded(prefix = TransferEntity.FROM)
                           var from: CityPointCached,
                           @Embedded(prefix = TransferEntity.TO)
@@ -27,17 +27,17 @@ data class TransferCached(@PrimaryKey var id: Long = 0,
 
         /* Имя на табличке, которую держит встречающий (сейчас поле full_name) */
                           @ColumnInfo(name = TransferEntity.NAME_SIGN) var nameSign: String? = "",
-                          var comment: String? = "",
+                          @ColumnInfo(name = TransferEntity.COMMENT) var comment: String? = "",
                           @ColumnInfo(name = TransferEntity.MALINA_CARD) var malinaCard: String? = "",
                           @ColumnInfo(name = TransferEntity.FLIGHT_NUMBER) var flightNumber: String? = "",
                           @ColumnInfo(name = TransferEntity.FLIGHT_NUMBER_RETURN) var flightNumberReturn: String? = "",
-                          var pax: Int = 0,
+                          @ColumnInfo(name = TransferEntity.PAX) var pax: Int = 0,
                           @ColumnInfo(name = TransferEntity.CHILD_SEATS) var childSeats: Int = 0,
                           @ColumnInfo(name = TransferEntity.OFFERS_COUNT) var offersCount: Int = 0,
                           @ColumnInfo(name = TransferEntity.RELEVANT_CARRIERS_COUNT) var relevantCarriersCount: Int = 0,
-                          @ColumnInfo(name = TransferEntity.OFFERS_UPDATE_AT) var offersUpdatedAt: String? = "",
+                          @ColumnInfo(name = TransferEntity.OFFERS_UPDATED_AT) var offersUpdatedAt: String? = "",
 
-                          var time: Int = 0,
+                          @ColumnInfo(name = TransferEntity.TIME) var time: Int = 0,
                           @Embedded(prefix = TransferEntity.PAID_SUM)
                           var paidSum: MoneyCached?,
                           @Embedded(prefix = TransferEntity.REMAINS_TO_PAY)
