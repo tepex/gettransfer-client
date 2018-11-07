@@ -88,7 +88,7 @@ class PreferencesImpl(context: Context,
             editor.putString(ACCOUNT_LOCALE, value.locale)
             editor.putString(ACCOUNT_CURRENCY, value.currency)
             editor.putString(ACCOUNT_DISTANCE_UNIT, value.distanceUnit)
-            editor.putString(ACCOUNT_FULL_NAME, value.user.profile.name)
+            editor.putString(ACCOUNT_FULL_NAME, value.user.profile.fullName)
             editor.putStringSet(ACCOUNT_GROUPS, value.groups?.toSet())
             editor.putBoolean(ACCOUNT_TERMS_ACCEPTED, value.user.termsAccepted)
             if (value.carrierId == null) editor.remove(ACCOUNT_CARRIER_ID)

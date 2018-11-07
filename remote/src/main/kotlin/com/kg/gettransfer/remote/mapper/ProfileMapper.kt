@@ -9,5 +9,5 @@ import com.kg.gettransfer.remote.model.ProfileModel
  */
 open class ProfileMapper(): EntityMapper<ProfileModel, ProfileEntity> {
     override fun fromRemote(type: ProfileModel) = ProfileEntity(type.fullName, type.email, type.phone)  
-    override fun toRemote(type: ProfileEntity) = ProfileModel(type.name, type.email, type.phone)
+    override fun toRemote(type: ProfileEntity) = ProfileModel(type.fullName, type.email, type.phone)
 }

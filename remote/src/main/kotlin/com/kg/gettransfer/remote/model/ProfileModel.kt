@@ -3,6 +3,8 @@ package com.kg.gettransfer.remote.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-open class ProfileModel(@SerializedName("full_name") @Expose val fullName: String?,
-                        @SerializedName("email") @Expose val email: String?,
-                        @SerializedName("phone") @Expose val phone: String?)
+import com.kg.gettransfer.data.model.ProfileEntity
+
+open class ProfileModel(@SerializedName(ProfileEntity.FULL_NAME) @Expose var fullName: String?,
+                        @SerializedName(ProfileEntity.EMAIL) @Expose var email: String?,
+                        @SerializedName(ProfileEntity.PHONE) @Expose var phone: String?)

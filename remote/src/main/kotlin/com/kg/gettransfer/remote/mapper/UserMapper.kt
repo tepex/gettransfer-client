@@ -17,5 +17,5 @@ open class UserMapper(): EntityMapper<UserModel, UserEntity> {
      * Map a [UserEntity] instance to a [UserModel] instance.
      */
     override fun toRemote(type: UserEntity) = 
-        UserModel(type.profile.name!!, type.profile.email, type.profile.phone!!, type.termsAccepted)
+        UserModel(type.profile.fullName!!, type.profile.email, type.profile.phone!!, type.termsAccepted)
 }

@@ -27,7 +27,7 @@ object Mappers {
     
     fun getUserModel(type: Account) = UserModel(getProfileModel(type.user.profile), type.user.termsAccepted)
     
-    fun getProfileModel(type: Profile) = ProfileModel(type.name, type.email, type.phone)
+    fun getProfileModel(type: Profile) = ProfileModel(type.fullName, type.email, type.phone)
 
     fun getProfile(model: ProfileModel) = Profile(model.name, model.email, model.phone)
     

@@ -12,9 +12,9 @@ open class ProfileMapper(): Mapper<ProfileEntity, Profile> {
     /**
      * Map a [ProfileEntity] instance to a [Profile] instance.
      */
-    override fun fromEntity(type: ProfileEntity) = Profile(type.name, type.email, type.phone)
+    override fun fromEntity(type: ProfileEntity) = Profile(type.fullName, type.email, type.phone)
     /**
      * Map a [Profile] instance to a [ProfileEntity] instance.
      */
-    override fun toEntity(type: Profile) = ProfileEntity(type.name, type.email, type.phone)
+    override fun toEntity(type: Profile) = ProfileEntity(type.fullName, type.email, type.phone)
 }

@@ -29,7 +29,7 @@ open class TransferNewMapper(private val cityPointMapper: CityPointMapper,
                           type.pax,
                           type.childSeats,
                           type.passengerOfferedPrice,
-                          type.user.profile.name,
+                          type.user.profile.fullName,
                           type.comment,
                           userMapper.toEntity(type.user),
                           type.promoCode)

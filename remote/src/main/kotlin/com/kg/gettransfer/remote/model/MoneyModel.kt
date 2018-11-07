@@ -3,5 +3,7 @@ package com.kg.gettransfer.remote.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class MoneyModel(@SerializedName("default") @Expose val default: String,
-                 @SerializedName("preferred") @Expose val preferred: String?)
+import com.kg.gettransfer.data.model.MoneyEntity
+
+class MoneyModel(@SerializedName(MoneyEntity.DEFAULT) @Expose val default: String,
+                 @SerializedName(MoneyEntity.PREFERRED) @Expose val preferred: String?)
