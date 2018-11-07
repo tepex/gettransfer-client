@@ -5,11 +5,12 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 
-import com.kg.gettransfer.cache.model.OfferCached
-import com.kg.gettransfer.cache.model.TABLE_OFFER
+//import com.kg.gettransfer.cache.model.OfferCached
+//import com.kg.gettransfer.cache.model.TABLE_OFFER
 
 @Dao
 interface OfferCachedDao {
+    /*
     @Query("SELECT * FROM $TABLE_OFFER WHERE id = :id")
     fun getOffer(id: Long): OfferCached
 
@@ -18,4 +19,5 @@ interface OfferCachedDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOffer(offer: OfferCached)
+    */
 }

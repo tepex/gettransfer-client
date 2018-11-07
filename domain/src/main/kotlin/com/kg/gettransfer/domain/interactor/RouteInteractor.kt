@@ -8,7 +8,6 @@ import com.kg.gettransfer.domain.model.RouteInfo
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.RouteRepository
-import com.sun.org.apache.xpath.internal.operations.Bool
 
 import java.io.IOException
 

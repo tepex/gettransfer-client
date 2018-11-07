@@ -37,7 +37,7 @@ object Mappers {
                    locale: Locale?,
                    currency: Currency?,
                    distanceUnit: DistanceUnit?,
-                   groups: Array<String>?,
+                   groups: List<String>?,
                    carrierId: Long?) = Account(model, locale, currency, distanceUnit, groups, carrierId)
 
     fun getTransportTypeModel(type: TransportType, prices: Map<String, String>?): TransportTypeModel {
@@ -98,7 +98,7 @@ object Mappers {
                              type.flightNumber,
                              type.comment,
                              selected.map { getTransportTypeModel(it, null) },
-                             type.paidSum.default,
+                             type.paidSum?.default,
                              type.paidPercentage,
                              type.remainsToPay?.default,
                              type.price?.default,

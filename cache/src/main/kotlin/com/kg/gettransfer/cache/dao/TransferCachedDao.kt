@@ -4,11 +4,13 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
-import com.kg.gettransfer.cache.model.TABLE_TRANSFER
-import com.kg.gettransfer.cache.model.TransferCached
+
+//import com.kg.gettransfer.cache.model.TABLE_TRANSFER
+//import com.kg.gettransfer.cache.model.TransferCached
 
 @Dao
 interface TransferCachedDao {
+    /*
     @Query("SELECT * FROM $TABLE_TRANSFER WHERE id = :id")
     fun getTransfer(id: Long): TransferCached
 
@@ -23,4 +25,5 @@ interface TransferCachedDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(transfers: List<TransferCached>)
+    */
 }
