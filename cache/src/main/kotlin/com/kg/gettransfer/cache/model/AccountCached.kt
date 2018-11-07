@@ -19,7 +19,3 @@ data class AccountCached(@Embedded val user: UserCached,
 
 data class UserCached(@Embedded val profile: ProfileCached,
                       @ColumnInfo(name = UserEntity.TERMS_ACCEPTED) val termsAccepted: Boolean = true)
-
-data class ProfileCached(@ColumnInfo(name = ProfileEntity.FULL_NAME) val name: String?,
-                         @ColumnInfo(name = ProfileEntity.EMAIL) val email: String?,
-                         @ColumnInfo(name = ProfileEntity.PHONE) val phone: String?)
