@@ -1,18 +1,22 @@
 package com.kg.gettransfer.cache.dao
 
-import android.arch.persistence.room.*
+import android.arch.persistence.room.Dao
+import android.arch.persistence.room.Query
+
 import com.kg.gettransfer.cache.model.AccountCached
-import com.kg.gettransfer.cache.model.TABLE_ACCOUNT
 
 @Dao
 interface AccountCachedDao {
-
+    /*
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAccount(account: AccountCached)
+    */
 
-    @Query("SELECT * FROM $TABLE_ACCOUNT WHERE carrierId = :id")
-    fun getAccount(id: Long): AccountCached
+    @Query("SELECT * FROM account")
+    fun getAccount(): AccountCached
 
+    /*
     @Update
     fun updateAccount(account: AccountCached)
+    */
 }

@@ -85,7 +85,7 @@ class ApiCore(private val preferences: PreferencesCache) {
                 if(e is RemoteException) throw e /* second invocation */
                 val ae = remoteException(e)
                 if(!ae.isInvalidToken()) {
-                    log.error("${apiCall::class.qualifiedName}", e)
+                    log.error("apiCall", e)
                     throw ae
                 }
 

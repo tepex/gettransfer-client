@@ -77,7 +77,7 @@ class PreferencesImpl(context: Context,
                                       accountPrefs.getString(ACCOUNT_LOCALE, null),
                                       accountPrefs.getString(ACCOUNT_CURRENCY, null),
                                       accountPrefs.getString(ACCOUNT_DISTANCE_UNIT, null),
-                                      accountPrefs.getStringSet(ACCOUNT_GROUPS, null)?.toTypedArray(),
+                                      accountPrefs.getStringSet(ACCOUNT_GROUPS, null)?.toList(),
                                       accountPrefs.getLong(ACCOUNT_CARRIER_ID, -1))
         }
 

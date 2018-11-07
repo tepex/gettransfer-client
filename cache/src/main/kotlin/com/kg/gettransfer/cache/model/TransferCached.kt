@@ -5,13 +5,12 @@ import android.arch.persistence.room.TypeConverters
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Embedded
-import com.kg.gettransfer.cache.StringListConverter
+
 import com.kg.gettransfer.data.model.TransferEntity
 
 const val TABLE_TRANSFER = "Transfer"
 
 @Entity(tableName = TABLE_TRANSFER)
-@TypeConverters(StringListConverter::class)
 data class TransferCached(@PrimaryKey var id: Long = 0,
                           @ColumnInfo(name = TransferEntity.CREATED_AT) var createdAt: String = "",
                           @ColumnInfo(name = TransferEntity.DURATION) var duration: Int? = 0,
