@@ -86,8 +86,9 @@ class SettingsActivity: BaseActivity(), SettingsView {
     }
     
     override fun setLocales(locales: List<LocaleModel>) {
-        Utils.setLocalesDialogListener(this, layoutSettingsLanguage, locales) { 
-            selected -> presenter.changeLocale(selected)
+        Utils.setLocalesDialogListener(this, layoutSettingsLanguage, locales) {
+            selected -> localeManager.updateResources(this, presenter.changeLocale(selected))
+            recreate()
         }
     }
     
