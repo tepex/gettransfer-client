@@ -19,10 +19,8 @@ import android.support.v4.widget.DrawerLayout
 
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
-import android.text.Html
 
 import android.transition.Fade
-import android.util.Log
 
 import android.view.Gravity
 import android.view.MenuItem
