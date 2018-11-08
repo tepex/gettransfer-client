@@ -186,7 +186,10 @@ class MainPresenter(cc: CoroutineContexts,
             }, { e ->
                 viewState.setError(e)
             }, { viewState.blockInterface(false) })
-        } else idleAndMoveCamera = true
+        } else {
+            idleAndMoveCamera = true
+            setAddressFields()
+        }
     }
 
     private fun setAddressInSelectedField(address: String){
@@ -218,11 +221,11 @@ class MainPresenter(cc: CoroutineContexts,
         routeInteractor.from?.let { router.navigateTo(Screens.FIND_ADDRESS, addresses) }
     }
 
-    fun onNextClick()           { router.navigateTo(Screens.CREATE_ORDER) }
-    fun onAboutClick()          { router.navigateTo(Screens.ABOUT) ;     logEvent(ABOUT_CLICKED) }
-    fun readMoreClick()         { router.navigateTo(Screens.READ_MORE) ; logEvent(BEST_PRICE_CLICKED) }
-    fun onSettingsClick()       { router.navigateTo(Screens.SETTINGS) ;  logEvent(SETTINGS_CLICKED) }
-    fun onRequestsClick()       { router.navigateTo(Screens.REQUESTS) ;  logEvent(TRANSFER_CLICKED) }
+    fun onNextClick()     { if(routeInteractor.from?.cityPoint != null && routeInteractor.to?.cityPoint != null) router.navigateTo(Screens.CREATE_ORDER) }
+    fun onAboutClick()    { router.navigateTo(Screens.ABOUT) ;     logEvent(ABOUT_CLICKED) }
+    fun readMoreClick()   { router.navigateTo(Screens.READ_MORE) ; logEvent(BEST_PRICE_CLICKED) }
+    fun onSettingsClick() { router.navigateTo(Screens.SETTINGS) ;  logEvent(SETTINGS_CLICKED) }
+    fun onRequestsClick() { router.navigateTo(Screens.REQUESTS) ;  logEvent(TRANSFER_CLICKED) }
     fun onLoginClick() {
         screenForReturnAfterLogin = Screens.REQUESTS
         router.navigateTo(Screens.LOGIN)
