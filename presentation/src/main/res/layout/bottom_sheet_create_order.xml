@@ -88,7 +88,7 @@
                 android:layout_marginStart="16dp"
                 android:background="@null"
                 android:hint="@string/LNG_RIDE_PRICE"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:singleLine="true"
                 app:layout_constraintBottom_toBottomOf="@+id/tvCurrencyType"
                 app:layout_constraintStart_toEndOf="@+id/ivChangeCurrency"
