@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardTransferType"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="110dp"
+    android:layout_height="138dp"
     android:layout_margin="3dp"
     card_view:cardCornerRadius="@dimen/card_transfer_type_corner_radius_default"
     card_view:cardElevation="@dimen/card_transfer_type_elevation_default">
@@ -13,7 +13,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground">
 
         <CheckBox
@@ -33,8 +33,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:fontFamily="@font/sf_pro_text_regular"
+            android:fontFamily="@font/sf_pro_text_bold"
             android:textSize="@dimen/transfer_types_text_size"
+            android:textColor="@color/hockeyapp_text_black"
             app:layout_constraintBottom_toBottomOf="@+id/cbTransferType"
             app:layout_constraintStart_toEndOf="@+id/cbTransferType"
             app:layout_constraintTop_toTopOf="@+id/cbTransferType"
@@ -107,9 +108,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:visibility="invisible"
                 app:srcCompat="@drawable/ic_info_cars_type" />
         </FrameLayout>
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="94dp"
+            android:layout_height="1dp"
+            android:background="@color/separator_color"
+            android:layout_margin="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvNumberPersonsTransfer"/>
 
         <TextView
             android:id="@+id/from"
@@ -118,9 +128,9 @@
             android:textSize="@dimen/transfer_types_text_size"
             android:text="@string/from_price"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvNumberPersonsTransfer"/>
+            app:layout_constraintTop_toBottomOf="@+id/separator"/>
 
         <TextView
             android:id="@+id/tvPriceFrom"
@@ -128,12 +138,12 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/sf_pro_text_regular"
             android:textSize="13sp"
             android:textColor="@color/sfproTextSemibold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvNumberPersonsTransfer"
+            app:layout_constraintTop_toBottomOf="@+id/separator"
             tools:text="from $1" />
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

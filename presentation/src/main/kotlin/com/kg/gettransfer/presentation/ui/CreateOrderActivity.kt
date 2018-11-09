@@ -361,11 +361,9 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {
-        if(transportType.checked && transportType.showInfo) {
-            sheetTransport.visibility = View.VISIBLE
-            bsTransport.state = BottomSheetBehavior.STATE_EXPANDED
-            showTransportInfo(transportType)
-        }
+        sheetTransport.visibility = View.VISIBLE
+        bsTransport.state = BottomSheetBehavior.STATE_EXPANDED
+        showTransportInfo(transportType)
         presenter.logEventMain(CreateOrderPresenter.CAR_INFO_CLICKED)
     }
 

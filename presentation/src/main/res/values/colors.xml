@@ -99,4 +99,5 @@
     <color name="colorDivider">#bcbbc1</color>
 
     <color name="colorBackNetworkNotAvailable">#ff3b30</color>
+    <color name="separator_color">#d8d8d8</color>
 </resources>
