@@ -144,7 +144,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         rvTransferType.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvTransferType.isNestedScrollingEnabled = false
 
-        etYourPrice.onTextChanged { presenter.cost = it.toIntOrNull() }
+        etYourPrice.onTextChanged { presenter.cost = it.toDoubleOrNull() }
         etYourPrice.setOnFocusChangeListener { _, hasFocus ->
             if(hasFocus) presenter.logTransferSettingsEvent(CreateOrderPresenter.OFFER_PRICE_FOCUSED)
         }

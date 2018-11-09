@@ -101,6 +101,7 @@ class SocketIOService: Service() {
                 val packet = retrievePacket(args.first())
                 if(packet != null && packet.length() > 1 && packet.get(0) is String) {
                     val event = packet.get(0) as String
+                    Timber.d("packet: ${packet.get(1)}")
                     if(NEW_OFFER_RE.matches(event)) {
                         //val offerId = NEW_OFFER_RE.find(event)!!.groupValues.get(1)
                         val item = packet.get(1).toString()

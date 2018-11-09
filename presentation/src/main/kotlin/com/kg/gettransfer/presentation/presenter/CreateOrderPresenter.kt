@@ -57,7 +57,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     private var track: CameraUpdate? = null
     private var promoCode: String? = null
     
-    internal var cost: Int? = null
+    internal var cost: Double? = null
     internal var date: Date = Date()
         set(value) {
             field = value
