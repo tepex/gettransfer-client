@@ -25,6 +25,7 @@ import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.UserModel
+import com.kg.gettransfer.presentation.model.PolylineModel
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
@@ -72,7 +73,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         @JvmField val MIN_PASSENGERS    = 1
         @JvmField val MIN_CHILDREN      = 0
         /* Пока сервевер не присылает минимальный временной промежуток до заказа */
-        @JvmField val FUTURE_HOUR       = 6
+        @JvmField val FUTURE_HOUR       = 4
         @JvmField val FUTURE_MINUTE     = 5
 
         const val EMAIL_FIELD           = "email"
@@ -115,7 +116,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         /* Server must send current locale time */
         calendar.add(Calendar.HOUR_OF_DAY, FUTURE_HOUR)
         calendar.add(Calendar.MINUTE, FUTURE_MINUTE)
-        date = calendar.getTime()
+        date = calendar.time
     }
 
     fun initMapAndPrices() {
