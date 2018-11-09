@@ -59,6 +59,14 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     protected open lateinit var navigator: BaseNavigator
 
     protected var viewNetworkNotAvailable: View? = null
+    
+    private val inetReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val available = intent.getBooleanExtra(IS_NETWORK_AVAILABLE, false)
+            systemInteractor.setInternetAvailable(available)
+            viewNetworkNotAvailable?.let { if(available) it.visibility = View.GONE else it.visibility = View.VISIBLE }
+        }
+    }
 
     /** [https://stackoverflow.com/questions/37615470/support-library-vectordrawable-resourcesnotfoundexception] */
     init {
@@ -68,17 +76,16 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     abstract fun getPresenter(): BasePresenter<*>
 	
     @CallSuper
+    protected override fun onStart() {
+        super.onStart()
+        LocalBroadcastManager.getInstance(this)
+            .registerReceiver(inetReceiver, IntentFilter(NetworkStateChangeReceiver.NETWORK_AVAILABLE_ACTION))  
+    }
+
+    @CallSuper
     protected override fun onResume() {
         super.onResume()
         navigatorHolder.setNavigator(navigator)
-
-        val intentFilter = IntentFilter(NetworkStateChangeReceiver.NETWORK_AVAILABLE_ACTION)
-        LocalBroadcastManager.getInstance(this).registerReceiver(object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                val isNetworkAvailable = intent.getBooleanExtra(IS_NETWORK_AVAILABLE, false)
-                getPresenter().changeNetworkState(isNetworkAvailable)
-            }
-        }, intentFilter)
     }
     
     @CallSuper
@@ -87,10 +94,12 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         super.onPause()
     }
 
-	override fun onBackPressed() {
-	    getPresenter().onBackCommandClick()
+    @CallSuper
+    protected override fun onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(inetReceiver)
+        super.onStop()
 	}
-    
+
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         if(block) {
             if(useSpinner) LoadingFragment.showLoading(supportFragmentManager)
@@ -120,13 +129,6 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         val view = currentFocus
         view?.hideKeyboard()
         view?.clearFocus()
-    }
-
-    override fun showViewNetworkNotAvailable(isNetworkAvailable: Boolean) {
-        if(viewNetworkNotAvailable != null){
-            if(isNetworkAvailable) viewNetworkNotAvailable!!.visibility = View.GONE
-            else viewNetworkNotAvailable!!.visibility = View.VISIBLE
-        }
     }
 
     //здесь лучше ничего не трогать

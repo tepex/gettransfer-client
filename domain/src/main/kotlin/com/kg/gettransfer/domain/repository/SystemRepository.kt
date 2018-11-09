@@ -13,20 +13,18 @@ interface SystemRepository {
     var lastMode: String
     var selectedField: String
     var endpoint: Endpoint
+    var history: List<GTAddress>
+    
     val accessToken: String
     val endpoints: List<Endpoint>
-    var isInternetAvailable: Boolean
         
     suspend fun coldStart()
     suspend fun getAccount(): Account
     suspend fun putAccount(account: Account)
-    /* Not used
-    suspend fun createAccount(account: Account)
-    */
     suspend fun login(email: String, password: String): Account
     fun logout()
-    fun getHistory(): List<GTAddress>
-    fun setHistory(history: List<GTAddress>)
+    
+    fun setInternetAvailable(available: Boolean)
     
     fun addListener(listener: SystemListener)
     fun removeListener(listener: SystemListener)

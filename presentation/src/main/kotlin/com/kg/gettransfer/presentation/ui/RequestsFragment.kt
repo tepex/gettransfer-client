@@ -94,6 +94,4 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         Timber.e(e)
         Utils.showError(context!!, false, getString(R.string.err_server, e.message))
     }
-
-    override fun showViewNetworkNotAvailable(isNetworkAvailable: Boolean) {}
 }

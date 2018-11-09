@@ -2,15 +2,22 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
+
 import com.arellomobile.mvp.MvpPresenter
+
 import com.google.firebase.analytics.FirebaseAnalytics
+
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+
 import com.kg.gettransfer.extensions.inject
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.BaseView
+
 import ru.terrakok.cicerone.Router
+
 import kotlinx.coroutines.Job
 
 open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
@@ -19,11 +26,6 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
     protected val compositeDisposable = Job()
     protected val utils = AsyncUtils(cc, compositeDisposable)
     protected val mFBA: FirebaseAnalytics by inject()
-
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-        viewState.showViewNetworkNotAvailable(systemInteractor.isInternetAvailable)
-    }
 
     open fun onBackCommandClick() {
         router.exit()
@@ -61,10 +63,5 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
         val bundle = Bundle()
         map.forEach { (k,v) -> bundle.putString(k, v.toString()) }
         return bundle
-    }
-
-    fun changeNetworkState(isNetworkAvailable: Boolean){
-        systemInteractor.isInternetAvailable = isNetworkAvailable
-        viewState.showViewNetworkNotAvailable(isNetworkAvailable)
     }
 }

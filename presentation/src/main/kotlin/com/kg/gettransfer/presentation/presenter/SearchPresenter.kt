@@ -43,7 +43,7 @@ class SearchPresenter(cc: CoroutineContexts,
     }
 
     fun onSearchFieldEmpty() {
-        viewState.setSuggestedAddresses(systemInteractor.getAddressHistory())
+        viewState.setSuggestedAddresses(systemInteractor.addressHistory)
     }
 
     fun onPopularSelected(selected: PopularPlace) {
@@ -87,7 +87,7 @@ class SearchPresenter(cc: CoroutineContexts,
             viewState.blockInterface(true)
             utils.asyncAwait { routeInteractor.updateDestinationPoint() }
             utils.asyncAwait { routeInteractor.updateStartPoint() }
-            systemInteractor.setAddressHistory(arrayListOf(routeInteractor.from!!, routeInteractor.to!!))
+            systemInteractor.addressHistory = listOf(routeInteractor.from!!, routeInteractor.to!!)
 
             router.navigateTo(Screens.CREATE_ORDER)
         }, { e ->

@@ -134,16 +134,16 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
         @CallSuper
         protected override fun forward(command: Forward) {
-            if (command.screenKey == Screens.READ_MORE) {
+            if(command.screenKey == Screens.READ_MORE) {
                 drawer.closeDrawer(GravityCompat.START)
                 ReadMoreDialog.newInstance(this@MainActivity).show()
             } else super.forward(command)
         }
 
         protected override fun createStartActivityOptions(command: Command, intent: Intent): Bundle? =
-                ActivityOptionsCompat
-                        .makeSceneTransitionAnimation(this@MainActivity, search, getString(R.string.searchTransitionName))
-                        .toBundle()
+            ActivityOptionsCompat
+                .makeSceneTransitionAnimation(this@MainActivity, search, getString(R.string.searchTransitionName))
+                .toBundle()
     }
 
     companion object {

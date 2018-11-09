@@ -57,7 +57,7 @@ class SplashActivity: AppCompatActivity() {
             return
         }
 
-        systemInteractor.isInternetAvailable = Utils.isConnectedToInternet(this)
+        systemInteractor.setInternetAvailable(Utils.isConnectedToInternet(this))
 
         if (checkIsTaskRoot()) return
 

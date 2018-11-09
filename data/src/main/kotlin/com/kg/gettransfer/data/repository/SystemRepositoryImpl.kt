@@ -61,12 +61,13 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
             preferencesCache.endpoint = endpointEntity
         }
         
-    override var isInternetAvailable: Boolean
-        get() = preferencesCache.isInternetAvailable
+    override var history: List<GTAddress>
+        get() = preferencesCache.lastAddresses.map { addressMapper.fromEntity(it) }
         set(value) {
-            preferencesCache.isInternetAvailable = value
-            factory.retrieveRemoteDataStore().changeNetworkAvailability(value)
+            preferencesCache.lastAddresses = value.map { addressMapper.toEntity(it) }
         }
+        
+    private var internetAvailable = false
 
     override suspend fun coldStart() {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
@@ -108,12 +109,6 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         return accountMapper.fromEntity(accountEntity)
     }
 
-    override fun getHistory() = preferencesCache.lastAddresses.map { addressMapper.fromEntity(it) }
-
-    override fun setHistory(history: List<GTAddress>) {
-        preferencesCache.lastAddresses = history.map { addressMapper.toEntity(it) }
-    }
-
     override fun logout() = factory.retrieveCacheDataStore().clearAccount()
     
     override fun accessTokenChanged(accessToken: String) {
@@ -123,6 +118,11 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
     override fun endpointChanged(endpointEntity: EndpointEntity) {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointEntity)
         listeners.forEach { it.connectionChanged(endpoint, accessToken) }
+    }
+    
+    override fun setInternetAvailable(available: Boolean) {
+        internetAvailable = available
+        factory.retrieveRemoteDataStore().changeNetworkAvailability(available)
     }
     
     override fun addListener(listener: SystemListener)    { listeners.add(listener) }

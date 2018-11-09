@@ -29,12 +29,12 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         get() = systemRepository.endpoint
         set(value) { systemRepository.endpoint = value }
         
+    var addressHistory: List<GTAddress>
+        get() = systemRepository.history
+        set(value) { systemRepository.history = value }
+        
     val accessToken = systemRepository.accessToken
     val endpoints = systemRepository.endpoints
-
-    var isInternetAvailable: Boolean
-        get() = systemRepository.isInternetAvailable
-        set(value) { systemRepository.isInternetAvailable = value }
 
     var account: Account = Account.NO_ACCOUNT
         private set
@@ -51,6 +51,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     var distanceUnit: DistanceUnit
         get() = account.distanceUnit ?: DistanceUnit.Km
         set(value) { account.distanceUnit = value }
+        
 
     val transportTypes by lazy { systemRepository.configs?.transportTypes }
     val locales        by lazy { systemRepository.configs?.availableLocales }
@@ -80,8 +81,8 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     fun getLogs()     = loggingRepository.getLogs()
     fun clearLogs()   = loggingRepository.clearLogs()
     fun getLogsFile() = loggingRepository.getLogsFile()
-    fun getAddressHistory() = systemRepository.getHistory()
-    fun setAddressHistory(list: List<GTAddress>) = systemRepository.setHistory(list)
+    
+    fun setInternetAvailable(available: Boolean) { systemRepository.setInternetAvailable(available) }
     
     fun addListener(listener: SystemListener)    { systemRepository.addListener(listener) }
     fun removeListener(listener: SystemListener) { systemRepository.removeListener(listener) }
