@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 
 import android.os.Build
 import android.os.Bundle
@@ -63,6 +64,7 @@ import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
 
 import com.kg.gettransfer.presentation.IntentKeys
+import kotlinx.android.synthetic.main.amu_info_window.view.*
 
 
 import org.koin.android.ext.android.inject
@@ -85,6 +87,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     private var defaultPromoText: String? = null
     private var isKeyBoardOpened = false
+
+    companion object {
+        const val DIM_AMOUNT = 0.5f
+    }
 
     @ProvidePresenter
     fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(coroutineContexts,
@@ -202,6 +208,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun initPromoSection() {
         etPromo.filters = arrayOf(InputFilter.AllCaps())
         etPromo.onTextChanged { presenter.setPromo(etPromo.text.toString()) }
+        etPromo.setOnFocusChangeListener { _, hasFocus -> if(!hasFocus) presenter.checkPromoCode()}
         defaultPromoText = tvPromoResult.text.toString()
         constraintLayout_promo.setOnClickListener { showKeyboard(); etPromo.requestFocusFromTouch()}
     }
@@ -246,6 +253,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         val screenHeight = getScreenHeight()
 
         val layoutPopup = LayoutInflater.from(applicationContext).inflate(R.layout.layout_popup_comment, layoutPopup)
+        applyDim(window.decorView.rootView as  ViewGroup, DIM_AMOUNT)
         popupWindowComment = PopupWindow(layoutPopup,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 screenHeight / 3,
@@ -272,6 +280,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         popupWindowComment.setOnDismissListener {
             layoutPopup.etPopupComment.hideKeyboard()
             toggleSheetOrder()
+            clearDim(window.decorView.rootView as  ViewGroup)
         }
         layoutPopup.setOnClickListener { layoutPopup.etPopupComment.requestFocus() }
         layoutPopup.etPopupComment.setSelection(layoutPopup.etPopupComment.text.length)
@@ -382,8 +391,17 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         else super.onBackPressed()
     }
 
-//    inline fun Timer.schedule(
-//            delay: Long,
-//            crossinline action: TimerTask.() -> Unit
-//    ): TimerTask
+    private fun applyDim(parent: ViewGroup, dimAmount: Float){
+        val dim = ColorDrawable(Color.BLACK)
+        dim.setBounds(0, 0, parent.width, parent.height)
+        dim.alpha = (dimAmount * 255).toInt()
+
+        val overLay = parent.overlay
+        overLay.add(dim)
+    }
+
+    private fun clearDim(parent: ViewGroup) {
+        val overLay = parent.overlay
+        overLay.clear()
+    }
 }
