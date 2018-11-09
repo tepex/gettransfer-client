@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import android.util.Patterns
 
@@ -267,8 +268,11 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             logCreateTransfer(RESULT_SUCCESS)
         }, { e ->
                 if(e is ApiException) {
-                    if(e.isNotLoggedIn()) login()
-                    else viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
+                    when {
+                        e.isNotLoggedIn() -> login()
+                        e.details == "{phone=[taken]}" -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
+                        else -> viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
+                    }
                 }
                 else viewState.setError(e)
         }, { viewState.blockInterface(false) })
