@@ -21,4 +21,5 @@ interface CreateOrderView: BaseView {
     fun setGetTransferEnabled(enabled: Boolean)
     fun setPromoResult(discountInfo: String?)
     fun resetPromoView()
+    fun showEmptyFieldError(invalidField: String)
 }

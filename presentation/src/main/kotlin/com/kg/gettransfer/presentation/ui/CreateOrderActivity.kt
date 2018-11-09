@@ -369,6 +369,17 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         img_okResult.visibility = View.INVISIBLE
     }
 
+    override fun showEmptyFieldError(invalidField: String) {
+        var messageRes = R.string.LNG_RIDE_CANT_CREATE
+        when (invalidField) {
+            CreateOrderPresenter.TRANSPORT_FIELD -> messageRes = R.string.LNG_RIDE_CHOOSE_TRANSPORT
+            CreateOrderPresenter.EMAIL_FIELD -> messageRes = R.string.LNG_ERROR_EMAIL
+            CreateOrderPresenter.PHONE_FIELD -> messageRes = R.string.LNG_RIDE_PHONE
+        }
+
+        Utils.showEmptyFieldsForTransferRequest(this, getString(messageRes))
+    }
+
     private fun transportTypeClicked(transportType: TransportTypeModel) {
         sheetTransport.visibility = View.VISIBLE
         bsTransport.state = BottomSheetBehavior.STATE_EXPANDED

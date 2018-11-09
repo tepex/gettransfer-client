@@ -73,6 +73,10 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         @JvmField val FUTURE_HOUR       = 6
         @JvmField val FUTURE_MINUTE     = 5
 
+        const val EMAIL_FIELD           = "email"
+        const val PHONE_FIELD           = "phone"
+        const val TRANSPORT_FIELD       = "transport"
+
 
         /** [см. табл.][https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0] */
         @JvmField val EVENT_TRANSFER = "create_transfer"
@@ -222,6 +226,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     fun showLicenceAgreement() { router.navigateTo(Screens.LICENCE_AGREE) }
 
     fun onGetTransferClick() {
+
+        if(!checkFieldsForRequest()) return
         val trip = Trip(date, flightNumber)
         /* filter */
         val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
@@ -266,6 +272,21 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                 }
                 else viewState.setError(e)
         }, { viewState.blockInterface(false) })
+    }
+
+    private fun checkFieldsForRequest(): Boolean {
+        var errorFiled = ""
+        if (transportTypes != null && !transportTypes!!.any { it.checked })
+            errorFiled = TRANSPORT_FIELD
+        else if (!Utils.checkEmail(user.profile.email))
+            errorFiled = EMAIL_FIELD
+        else if (!Utils.checkPhone(user.profile.phone))
+            errorFiled = PHONE_FIELD
+
+        if(errorFiled.isEmpty()) return true
+        else viewState.showEmptyFieldError(errorFiled)
+        return false
+
     }
     
     /* @TODO: Добавить реакцию на некорректное значение в поле. Отображать, где и что введено некорректно. */

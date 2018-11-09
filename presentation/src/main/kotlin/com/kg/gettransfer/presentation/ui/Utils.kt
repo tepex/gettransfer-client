@@ -23,6 +23,7 @@ import android.text.TextWatcher
 import android.text.style.ImageSpan
 
 import android.util.DisplayMetrics
+import android.util.Patterns
 
 import android.view.View
 
@@ -54,6 +55,7 @@ import java.util.regex.Pattern
 internal class Utils {
     companion object {
         private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11}$")
+        private val EMAIL_PATTERN = Patterns.EMAIL_ADDRESS
         @JvmField val DATE_TIME_PATTERN = "dd MMMM yyyy, HH:mm"
         
         fun getAlertDialogBuilder(context: Context): AlertDialog.Builder {
@@ -94,6 +96,16 @@ internal class Utils {
                     .show()
         }
 
+        fun showEmptyFieldsForTransferRequest(context: Context, message: String){
+            getAlertDialogBuilder(context)
+                    .setTitle(context.resources.getString(R.string.LNG_RIDE_CANT_CREATE))
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.ok){ dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+        }
+
         fun setCurrenciesDialogListener(context: Context, view: View, items: List<CharSequence>,
             listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.LNG_CURRENCY, items, listener) }
         fun setLocalesDialogListener(context: Context, view: View, items: List<CharSequence>,
@@ -112,6 +124,11 @@ internal class Utils {
                     .setNegativeButton(android.R.string.cancel, null)
                     .show()
             }
+        }
+
+        fun checkEmail(email: String?): Boolean {
+            if (email.isNullOrBlank()) return false
+            return EMAIL_PATTERN.matcher(email).matches()
         }
         
         fun checkPhone(phone: String?): Boolean {
