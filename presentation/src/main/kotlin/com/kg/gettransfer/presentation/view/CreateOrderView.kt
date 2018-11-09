@@ -10,7 +10,7 @@ interface CreateOrderView: BaseView {
     fun setTransportTypes(transportTypes: List<TransportTypeModel>)
     fun setCurrencies(currencies: List<CurrencyModel>)
     //fun setRoute(routeModel: RouteModel)
-    fun setRoute(polyline: PolylineModel, routeModel: RouteModel)
+    fun setRoute(isDateChanged: Boolean, polyline: PolylineModel, routeModel: RouteModel)
     fun centerRoute(cameraUpdate: CameraUpdate)
     fun setUser(user: UserModel)
     fun setPassengers(count: Int)

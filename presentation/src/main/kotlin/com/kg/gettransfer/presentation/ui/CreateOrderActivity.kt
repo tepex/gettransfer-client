@@ -293,10 +293,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     private fun showDatePickerDialog() {
-        calendar.setTime(presenter.date)
+        calendar.time = presenter.date
         val datePickerDialog = DatePickerDialog(this, { _, year, monthOfYear, dayOfMonth ->
             calendar.set(year, monthOfYear, dayOfMonth)
-            presenter.date = calendar.getTime()
+            presenter.date = calendar.time
             showTimePickerDialog()
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
 
@@ -308,7 +308,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         val timePickerDialog = TimePickerDialog(this, { _, hour, minute ->
             calendar.set(Calendar.HOUR_OF_DAY, hour)
             calendar.set(Calendar.MINUTE, minute)
-            presenter.date = calendar.getTime()
+            presenter.changeDate(calendar.time)
         }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true)
         timePickerDialog.show()
     }
@@ -333,7 +333,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             etEmail.setText(user.profile.email)
             etEmail.isEnabled = false
         }
-        switchAgreement.setChecked(user.termsAccepted)
+        switchAgreement.isChecked = user.termsAccepted
     }
 
 
@@ -341,7 +341,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     //TODO сделать подсветку не заполненных полей
     override fun setGetTransferEnabled(enabled: Boolean) {}
 
-    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel) { setPolyline(polyline, routeModel) }
+    override fun setRoute(isDateChanged: Boolean, polyline: PolylineModel, routeModel: RouteModel) {
+        if(isDateChanged) clearMarkersAndPolylines()
+        setPolyline(polyline, routeModel)
+    }
 
     override fun centerRoute(cameraUpdate: CameraUpdate) { showTrack(cameraUpdate) }
 

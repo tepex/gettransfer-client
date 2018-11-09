@@ -10,4 +10,4 @@ class RouteModel(val distance: Int?,
                  val to: String,
                  val fromPoint: Point,
                  val toPoint: Point,
-                 val dateTime: String)
+                 var dateTime: String)

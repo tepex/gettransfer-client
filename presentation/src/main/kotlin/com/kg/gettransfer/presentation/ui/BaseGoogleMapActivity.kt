@@ -177,4 +177,6 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         v.draw(Canvas(bitmap))
         return bitmap
     }
+
+    protected fun clearMarkersAndPolylines(){ googleMap.clear() }
 }

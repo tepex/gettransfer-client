@@ -55,6 +55,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     private var dateTimeFormat: Format? = null
     private var transportTypes: List<TransportTypeModel>? = null
     private var routeModel: RouteModel? = null
+    private var polyline: PolylineModel? = null
     private var track: CameraUpdate? = null
     private var promoCode: String? = null
     
@@ -140,12 +141,20 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             }
             routeModel?.let {
                 viewState.setTransportTypes(transportTypes!!)
-                val polyline = Utils.getPolyline(it)
-                track = polyline.track
-                viewState.setRoute(polyline, it)
+                polyline = Utils.getPolyline(it)
+                track = polyline?.track
+                viewState.setRoute(false, polyline!!, it)
             }
         }, { e -> viewState.setError(e)
         }, { viewState.blockInterface(false) })
+    }
+
+    fun changeDate(newDate: Date){
+        date = newDate
+        if(routeModel != null){
+            routeModel!!.dateTime = SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date)
+            viewState.setRoute(true, polyline!!, routeModel!!)
+        }
     }
     
     @CallSuper
