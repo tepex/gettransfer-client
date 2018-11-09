@@ -41,8 +41,9 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
     init {
         preferencesCache.addListener(this)
     }
+    
+    override val configs by lazy { initConfigs() } 
 
-    override var configs: Configs? = null
     override var lastMode: String
         get() = preferencesCache.lastMode
         set(value) { preferencesCache.lastMode = value }
@@ -92,7 +93,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         val accountEntity = factory.retrieveRemoteDataStore().getAccount()
         factory.retrieveCacheDataStore().setAccount(accountEntity)
     }
-
+    
     override suspend fun getAccount() = accountMapper.fromEntity(factory.retrieveCacheDataStore().getAccount())
 
     override suspend fun putAccount(account: Account) {
@@ -120,4 +121,8 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         
     override fun addListener(listener: SystemListener)    { listeners.add(listener) }
     override fun removeListener(listener: SystemListener) { listeners.add(listener) }
+    
+    private fun initConfigs(): Configs {
+        
+    }
 }
