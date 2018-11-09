@@ -161,7 +161,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         super.attachView(view)
         dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
         viewState.setCurrencies(currencies)
-        val i = systemInteractor.getCurrentCurrencyIndex()
+        val i = systemInteractor.currentCurrencyIndex
         if(i != -1) changeCurrency(i)
 
         if(!isLoggedIn && systemInteractor.isLoggedIn()) {
@@ -273,7 +273,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                                          promoCode,
                                                                          false))
             }
-            //systemInteractor.account = Mappers.getAccount(Mappers.getUser(user), null, null, null, null, null)
             offersInteractor.getOffers(transfer.id)
             Timber.d("new transfer: %s", transfer)
             router.navigateTo(Screens.OFFERS)

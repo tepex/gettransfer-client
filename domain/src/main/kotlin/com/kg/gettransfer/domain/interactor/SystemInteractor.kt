@@ -13,10 +13,38 @@ import com.kg.gettransfer.domain.repository.SystemRepository
 
 import java.util.Currency
 import java.util.Locale
-
+/**
+ * Nothing cache properties here!
+ */
 class SystemInteractor(private val systemRepository: SystemRepository,
                        private val loggingRepository: LoggingRepository,
                        private val geoRepository: GeoRepository) {
+
+    /* Cached properties */
+
+    val endpoints      by lazy { systemRepository.endpoints }
+    val transportTypes by lazy { systemRepository.configs.transportTypes }
+    val locales        by lazy { systemRepository.configs.availableLocales }
+    val distanceUnits  by lazy { systemRepository.configs.supportedDistanceUnits }
+    val currencies     by lazy { systemRepository.configs.supportedCurrencies }
+    val logsFile       by lazy { loggingRepository.file }
+
+    /* Read only properties */
+
+    val accessToken: String
+        get() = systemRepository.accessToken
+
+    val account: Account
+        get() = systemRepository.account
+
+    val currentCurrencyIndex
+        get() = currencies.indexOf(currency)
+
+    val logs: String
+        get() = loggingRepository.logs
+
+    /* Read-write properties */
+    
     var lastMode: String
         get() = systemRepository.lastMode
         set(value) { systemRepository.lastMode = value }
@@ -24,63 +52,41 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     var selectedField: String
         get() = systemRepository.selectedField
         set(value) { systemRepository.selectedField = value }
-        
+
     var endpoint: Endpoint
         get() = systemRepository.endpoint
         set(value) { systemRepository.endpoint = value }
-        
-    var addressHistory: List<GTAddress>
-        get() = systemRepository.history
-        set(value) { systemRepository.history = value }
-        
-    val accessToken = systemRepository.accessToken
-    val endpoints = systemRepository.endpoints
 
-    var account: Account = Account.NO_ACCOUNT
-        private set
+    var addressHistory: List<GTAddress>
+        get() = systemRepository.addressHistory
+        set(value) { systemRepository.addressHistory = value }
 
     var locale: Locale
-        get() = account.locale ?: Locale.getDefault()
+        get() = account.locale
         set(value) {
             account.locale = value
             geoRepository.initGeocoder(value)
         }
+
     var currency: Currency
-        get() = account.currency ?: Currency.getInstance("USD")
+        get() = account.currency
         set(value) { account.currency = value }
+
     var distanceUnit: DistanceUnit
-        get() = account.distanceUnit ?: DistanceUnit.Km
+        get() = account.distanceUnit
         set(value) { account.distanceUnit = value }
-        
 
-    val transportTypes by lazy { systemRepository.configs?.transportTypes }
-    val locales        by lazy { systemRepository.configs?.availableLocales }
-    val distanceUnits  by lazy { systemRepository.configs?.supportedDistanceUnits }
-    val currencies     by lazy { systemRepository.configs?.supportedCurrencies }
     
-    fun isLoggedIn() = account.user.isLoggedIn()
-    fun getCurrentCurrencyIndex() = currencies!!.indexOf(currency)
-
     suspend fun coldStart() {
         systemRepository.coldStart()
-        account = systemRepository.getAccount()
         geoRepository.initGeocoder(locale)
     }
 
-    fun logout() {
-        systemRepository.logout()
-        account = Account.NO_ACCOUNT
-    }
-
-    suspend fun login(email: String, password: String) {
-        account = systemRepository.login(email, password)
-    }
-
-    suspend fun putAccount() { systemRepository.putAccount(account) }
-
-    fun getLogs()     = loggingRepository.getLogs()
-    fun clearLogs()   = loggingRepository.clearLogs()
-    fun getLogsFile() = loggingRepository.getLogsFile()
+    fun logout() = systemRepository.logout()
+    suspend fun login(email: String, password: String) = systemRepository.login(email, password)
+    suspend fun putAccount() = systemRepository.putAccount(account)
+    
+    fun clearLogs() = loggingRepository.clearLogs()
     
     fun addListener(listener: SystemListener)    { systemRepository.addListener(listener) }
     fun removeListener(listener: SystemListener) { systemRepository.removeListener(listener) }

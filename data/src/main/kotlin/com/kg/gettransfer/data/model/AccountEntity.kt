@@ -17,7 +17,5 @@ data class AccountEntity(val user: UserEntity,
         const val GROUPS         = "groups"
         const val TERMS_ACCEPTED = "terms_accepted"
         const val CARRIER_ID     = "carrier_id"
-        
-        val NO_ACCOUNT = AccountEntity(UserEntity(ProfileEntity(null, null, null)), null, null, null, null, null)
     }
 }

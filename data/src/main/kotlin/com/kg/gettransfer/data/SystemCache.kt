@@ -4,12 +4,10 @@ import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 
 interface SystemCache {
-    companion object {
-        const val INVALID_TOKEN = "invalid_token"
-    }
-
-    var account: AccountEntity
-    var configs: ConfigsEntity
+    fun getConfigs(): ConfigsEntity?
+    fun setConfigs(configs: ConfigsEntity)
     
+    fun getAccount(): AccountEntity?
+    fun setAccount(account: AccountEntity)
     fun clearAccount()
 }

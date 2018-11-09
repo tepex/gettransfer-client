@@ -10,16 +10,16 @@ import com.kg.gettransfer.domain.model.GTAddress
 
 interface SystemRepository {
     val configs: Configs
+    val account: Account
+    val accessToken: String
+    val endpoints: List<Endpoint>
+    
     var lastMode: String
     var selectedField: String
     var endpoint: Endpoint
-    var history: List<GTAddress>
-    
-    val accessToken: String
-    val endpoints: List<Endpoint>
+    var addressHistory: List<GTAddress>    
         
     suspend fun coldStart()
-    suspend fun getAccount(): Account
     suspend fun putAccount(account: Account)
     suspend fun login(email: String, password: String): Account
     fun logout()

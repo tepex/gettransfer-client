@@ -11,7 +11,19 @@ data class Configs(val transportTypes: List<TransportType>,
                    val supportedDistanceUnits: List<DistanceUnit>,
                    val cardGateways: CardGateways,
                    val officePhone: String,
-                   val baseUrl: String)
+                   val baseUrl: String) {
+    companion object {
+        val DEFAULT = Configs(emptyList<TransportType>(),
+                              PaypalCredentials("", ""),
+                              emptyList<Locale>(),
+                              Locale.getDefault(),
+                              emptyList<Currency>(),
+                              emptyList<DistanceUnit>(),
+                              CardGateways(""),
+                              "",
+                              "")
+    }
+}
 
 data class PaypalCredentials(val id: String, val env: String)
-data class CardGateways(val default: String, var countryCode: String?)
+data class CardGateways(val default: String, var countryCode: String? = null)

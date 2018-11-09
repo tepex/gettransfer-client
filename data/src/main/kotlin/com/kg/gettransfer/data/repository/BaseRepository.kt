@@ -7,5 +7,8 @@ open class BaseRepository() {
         @JvmField val TAG = "GTR-repository"
     }
     
-    protected val log = LoggerFactory.getLogger(TAG)
+    protected suspend fun <E> tryRetrieveEntity(getEntity: suspend () -> E?, error: (ApiException) -> E?): E? {
+        return try { getEntity() }
+        catch(ae: ApiException) { error(ae) }
+    }
 }

@@ -22,6 +22,7 @@ import com.arellomobile.mvp.MvpAppCompatActivity
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
@@ -38,6 +39,9 @@ import com.kg.gettransfer.utilities.LocaleManager
 
 import java.util.Date
 
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+
 import org.koin.android.ext.android.inject
 
 import ru.terrakok.cicerone.NavigatorHolder
@@ -52,7 +56,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     internal val coroutineContexts: CoroutineContexts by inject()
     internal val router: Router by inject()
     protected val navigatorHolder: NavigatorHolder by inject()
-    internal val localeManager: LocaleManager by inject()
+    protected val localeManager: LocaleManager by inject()
 
     private var rootView: View? = null
     private var rootViewHeight: Int? = null
@@ -60,6 +64,9 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     protected open lateinit var navigator: BaseNavigator
 
     protected var viewNetworkNotAvailable: View? = null
+    
+    private val compositeDisposable = Job()
+    private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
     
     private val inetReceiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) = setNetworkAvailability(context)

@@ -6,7 +6,7 @@ import com.kg.gettransfer.data.model.EndpointEntity
 
 interface SystemRemote {
     suspend fun getConfigs(): ConfigsEntity
-    suspend fun getAccount(): AccountEntity
+    suspend fun getAccount(): AccountEntity?
     suspend fun setAccount(accountEntity: AccountEntity)
     suspend fun login(email: String, password: String): AccountEntity
     fun changeEndpoint(endpoint: EndpointEntity)

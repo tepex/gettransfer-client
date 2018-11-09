@@ -3,7 +3,8 @@ package com.kg.gettransfer.domain.repository
 import java.io.File
 
 interface LoggingRepository {
-    fun getLogs(): String
+    val file: File
+    val logs: String
+    
     fun clearLogs()
-    fun getLogsFile(): File
 }

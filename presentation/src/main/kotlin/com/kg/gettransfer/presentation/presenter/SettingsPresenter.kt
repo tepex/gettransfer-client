@@ -73,7 +73,7 @@ class SettingsPresenter(cc: CoroutineContexts,
         viewState.setDistanceUnit(systemInteractor.distanceUnit.name)
 
         viewState.setEndpoint(Mappers.getEndpointModel(systemInteractor.endpoint))
-        viewState.setLogoutButtonEnabled(systemInteractor.isLoggedIn())
+        viewState.setLogoutButtonEnabled(systemInteractor.account.user.loggedIn)
     }
 
     fun changeCurrency(selected: Int) {
@@ -89,7 +89,7 @@ class SettingsPresenter(cc: CoroutineContexts,
         val localeModel = locales.get(selected)
         systemInteractor.locale = localeModel.delegate
         viewState.setLocale(localeModel.name)
-        if (systemInteractor.isLoggedIn()) saveAccount()
+        if(systemInteractor.account.user.loggedIn) saveAccount()
         logEvent(LANGUAGE_PARAM, localeModel.name)
         return systemInteractor.locale
     }

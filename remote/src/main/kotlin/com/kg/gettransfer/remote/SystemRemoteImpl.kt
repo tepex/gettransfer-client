@@ -25,10 +25,10 @@ class SystemRemoteImpl(private val core: ApiCore,
 		return configsMapper.fromRemote(response.data!!)
     }
     
-    override suspend fun getAccount(): AccountEntity {
+    override suspend fun getAccount(): AccountEntity? {
         val response: ResponseModel<AccountModelWrapper> = core.tryTwice { core.api.getAccount() }
-        if(response.data?.account == null) return AccountEntity.NO_ACCOUNT
-        return accountMapper.fromRemote(response.data?.account!!)
+        response.data?.account?.let { return accountMapper.fromRemote(it) }
+        return null
     }
     
     override suspend fun setAccount(accountEntity: AccountEntity) {

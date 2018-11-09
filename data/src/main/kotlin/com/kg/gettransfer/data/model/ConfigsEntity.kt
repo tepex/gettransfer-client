@@ -17,6 +17,7 @@ data class ConfigsEntity(@SerialName(TRANSPORT_TYPES) val transportTypes: List<T
                          @SerialName(OFFICE_PHONE) val officePhone: String,
                          @SerialName(BASE_URL) val baseUrl: String) {
     companion object {
+        const val ENTITY_NAME              = "configs"
         const val TRANSPORT_TYPES          = "transport_types"
         const val PAYPAL_CREDENTIALS       = "paypal_credentials"
         const val AVAILABLE_LOCALES        = "available_locales"

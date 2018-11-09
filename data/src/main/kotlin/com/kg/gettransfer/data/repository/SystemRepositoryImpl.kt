@@ -12,7 +12,9 @@ import com.kg.gettransfer.data.mapper.AccountMapper
 import com.kg.gettransfer.data.mapper.AddressMapper
 import com.kg.gettransfer.data.mapper.ConfigsMapper
 import com.kg.gettransfer.data.mapper.EndpointMapper
+import com.kg.gettransfer.data.mapper.ExceptionMapper
 
+import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.GTAddressEntity
 
@@ -42,7 +44,10 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         preferencesCache.addListener(this)
     }
     
-    override val configs by lazy { initConfigs() } 
+    override var configs = Configs.DEFAULT
+        private set
+    override var account = Account.NO_ACCOUNT
+        private set
 
     override var lastMode: String
         get() = preferencesCache.lastMode
@@ -62,41 +67,24 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
             preferencesCache.endpoint = endpointEntity
         }
         
-    override var history: List<GTAddress>
-        get() = preferencesCache.lastAddresses.map { addressMapper.fromEntity(it) }
-        set(value) {
-            preferencesCache.lastAddresses = value.map { addressMapper.toEntity(it) }
-        }
+    override var addressHistory: List<GTAddress>
+        get() = preferencesCache.addressHistory.map { addressMapper.fromEntity(it) }
+        set(value) { preferencesCache.addressHistory = value.map { addressMapper.toEntity(it) } }
         
     override suspend fun coldStart() {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
-
-        try {
-            val remoteConfigs = factory.retrieveRemoteDataStore().getConfigs()
-            val remoteAccount = factory.retrieveRemoteDataStore().getAccount()
-
-            factory.retrieveCacheDataStore().setConfigs(remoteConfigs)
-            factory.retrieveCacheDataStore().setAccount(remoteAccount)
-
-            configs = configsMapper.fromEntity(factory.retrieveCacheDataStore().getConfigs())
-            accountMapper.configs = configs!!
-        } catch(e: Exception) {
-            if(e is InternetNotAvailableException || e is ApiException || e is TimeoutException) {
-                configs = configsMapper.fromEntity(factory.retrieveCacheDataStore().getConfigs())
-                accountMapper.configs = configs!!
-            } else throw e
-        }
-
+        initSystemEntities()
+        /*
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
         configs = configsMapper.fromEntity(factory.retrieveRemoteDataStore().getConfigs())
         accountMapper.configs = configs!!
         val accountEntity = factory.retrieveRemoteDataStore().getAccount()
         factory.retrieveCacheDataStore().setAccount(accountEntity)
+        */
     }
     
-    override suspend fun getAccount() = accountMapper.fromEntity(factory.retrieveCacheDataStore().getAccount())
-
     override suspend fun putAccount(account: Account) {
+        this.account = account
         val accountEntity = accountMapper.toEntity(account)
         factory.retrieveCacheDataStore().setAccount(accountEntity)
         factory.retrieveRemoteDataStore().setAccount(accountEntity)
@@ -118,11 +106,40 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         factory.retrieveRemoteDataStore().changeEndpoint(endpointEntity)
         listeners.forEach { it.connectionChanged(endpoint, accessToken) }
     }
-        
+    
     override fun addListener(listener: SystemListener)    { listeners.add(listener) }
     override fun removeListener(listener: SystemListener) { listeners.add(listener) }
     
-    private fun initConfigs(): Configs {
-        
+    
+    private suspend fun initSystemEntities() {
+        if(configs === Configs.DEFAULT) {
+        val configsEntity = tryRetrieveEntity(
+            { retrieveConfigsEntity() },
+            { e ->
+                log.error("Configs initialization error", e)
+                null
+            })?.let { configs = configsMapper.fromEntity(it) }
+        }
+        /*
+        if(account === Account.NO_ACCOUNT) {
+            val accountEntity = try { retrieveAccountEntity() }
+            catch(e: ApiException) { log.error("Configs initialization error", e) }               
+            accountEntity?.let { configs = configsMapper.fromEntity(it) }
+        }
+        */
+    }
+    
+    // TODO: convert to FP
+    
+    private suspend fun retrieveConfigsEntity(): ConfigsEntity? {
+        return try { factory.retrieveDataStore(internetAvailable).getConfigs() }
+        catch(e1: RemoteException) {
+            if(internetAvailable) {
+                internetAvailable = false
+                return try { factory.retrieveDataStore(internetAvailable).getConfigs() }
+                catch(e2: RemoteException) { throw ExceptionMapper.map(e2) }
+            }
+            throw ExceptionMapper.map(e1)
+        }
     }
 }

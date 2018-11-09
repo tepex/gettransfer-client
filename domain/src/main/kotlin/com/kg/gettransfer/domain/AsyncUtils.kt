@@ -1,6 +1,7 @@
 package com.kg.gettransfer.domain
 
 import kotlinx.coroutines.*
+
 import java.io.IOException
 import java.util.concurrent.TimeoutException
 
@@ -41,12 +42,12 @@ class AsyncUtils(private val cc: CoroutineContexts, root: Job): CoroutineScope {
             finally { if(caughtThrowable is CancellationException) throw caughtThrowable else finallyBlock() }
         }
     }
-    
+
     override val coroutineContext = cc.ui + root
-    
+
     @Synchronized
     fun launchAsyncTryCatch(tryBlock: Task, catchBlock: TaskThrowable) = launch { tryCatch(tryBlock, catchBlock) }
-    
+
     @Synchronized
     fun launchAsyncTryCatchFinally(tryBlock: Task,
                                    catchBlock: TaskThrowable,
@@ -54,7 +55,7 @@ class AsyncUtils(private val cc: CoroutineContexts, root: Job): CoroutineScope {
 
     @Synchronized
     suspend fun <T> asyncAwait(bl: TaskGeneric<T>): T = coroutineScope { async(context = cc.bg, block = bl).await() }
-    
+
     @Synchronized
     suspend fun <T> async(block: TaskGeneric<T>): Deferred<T> = coroutineScope { async(cc.bg) { block() } }
 }

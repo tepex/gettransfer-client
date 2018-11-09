@@ -26,7 +26,7 @@ open class SystemDataStoreRemote(private val remote: SystemRemote): SystemDataSt
 
     override suspend fun setConfigs(configsEntity: ConfigsEntity) { throw UnsupportedOperationException() }
     
-    override suspend fun getAccount(): AccountEntity {
+    override suspend fun getAccount(): AccountEntity? {
         try { return remote.getAccount() }
         catch(e: RemoteException) { throw ExceptionMapper.map(e) }
         catch(e: NetworkNotAvailableException) { throw ExceptionMapper.map(e) }
@@ -49,7 +49,5 @@ open class SystemDataStoreRemote(private val remote: SystemRemote): SystemDataSt
         catch(e: TimeoutException) { throw e }
     }
     
-    fun changeEndpoint(endpoint: EndpointEntity) = remote.changeEndpoint(endpoint)
-
-    fun changeNetworkAvailability(isNetworkConnected: Boolean) = remote.changeNetworkAvailability(isNetworkConnected)
+    override fun changeEndpoint(endpoint: EndpointEntity) = remote.changeEndpoint(endpoint)
 }

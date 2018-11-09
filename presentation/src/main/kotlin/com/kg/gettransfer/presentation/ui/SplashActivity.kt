@@ -58,7 +58,7 @@ class SplashActivity: AppCompatActivity() {
             return
         }
 
-        if (checkIsTaskRoot()) return
+        if(checkIsTaskRoot()) return
 
         Timber.d(getString(R.string.title_starting_session))
         Timber.d("Permissions granted!")
