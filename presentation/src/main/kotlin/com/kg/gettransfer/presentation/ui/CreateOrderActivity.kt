@@ -244,7 +244,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun setCurrencies(currencies: List<CurrencyModel>) {
-        Utils.setCurrenciesDialogListener(this, ivChangeCurrency, currencies) { selected ->
+        Utils.setCurrenciesDialogListener(this, layoutCurrencyType, currencies) { selected ->
             presenter.changeCurrency(selected)
         }
     }

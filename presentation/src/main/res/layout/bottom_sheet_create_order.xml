@@ -44,13 +44,15 @@
 
             <TextView
                 android:id="@+id/tvDateTimeTransfer"
-                android:layout_width="wrap_content"
-                android:layout_height="18dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_marginStart="16dp"
                 android:text="@string/LNG_RIDE_DATE"
-                app:layout_constraintBottom_toBottomOf="@+id/ivTranferDate"
-                app:layout_constraintStart_toEndOf="@+id/ivTranferDate"
-                app:layout_constraintTop_toTopOf="@+id/ivTranferDate" />
+                android:gravity="center_vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ivTransferDate"
+                app:layout_constraintTop_toBottomOf="@+id/view9"
+                app:layout_constraintBottom_toTopOf="@+id/view2"/>
 
             <TextView
                 android:id="@+id/tvRate"
@@ -62,47 +64,60 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <TextView
-                android:id="@+id/tvCurrencyType"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layoutCurrencyType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/rub"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view13" />
+                app:layout_constraintTop_toBottomOf="@+id/view13">
 
-            <ImageView
-                android:id="@+id/ivChangeCurrency"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="3dp"
-                app:layout_constraintStart_toEndOf="@+id/tvCurrencyType"
-                app:layout_constraintTop_toTopOf="@+id/tvCurrencyType"
-                app:srcCompat="@drawable/ic_triangle" />
+                <TextView
+                    android:id="@+id/tvCurrencyType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/rub"
+                    android:textColor="@color/colorTextBlack"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <ImageView
+                    android:id="@+id/ivChangeCurrency"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginStart="3dp"
+                    app:layout_constraintStart_toEndOf="@+id/tvCurrencyType"
+                    app:layout_constraintTop_toTopOf="@+id/tvCurrencyType"
+                    app:srcCompat="@drawable/ic_triangle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="16dp"/>
+
+            </android.support.constraint.ConstraintLayout>
 
             <EditText
                 android:id="@+id/etYourPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:background="@null"
                 android:hint="@string/LNG_RIDE_PRICE"
                 android:inputType="numberDecimal"
                 android:singleLine="true"
-                app:layout_constraintBottom_toBottomOf="@+id/tvCurrencyType"
-                app:layout_constraintStart_toEndOf="@+id/ivChangeCurrency"
-                app:layout_constraintTop_toTopOf="@+id/tvCurrencyType" />
+                app:layout_constraintStart_toEndOf="@+id/layoutCurrencyType"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/layoutCurrencyType"
+                app:layout_constraintBottom_toBottomOf="@+id/layoutCurrencyType"/>
 
             <View
                 android:id="@+id/view9"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/create_transfer_divider_height"
-                android:layout_marginTop="16dp"
                 android:background="@color/colorDividerGray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etYourPrice" />
+                app:layout_constraintTop_toBottomOf="@+id/layoutCurrencyType" />
 
             <View
                 android:id="@+id/view13"
@@ -122,7 +137,7 @@
                 android:background="@color/colorDividerGray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvDateTimeTransfer" />
+                app:layout_constraintTop_toBottomOf="@+id/ivTransferDate" />
 
             <View
                 android:id="@+id/view8"
@@ -146,7 +161,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
 
             <ImageView
-                android:id="@+id/ivTranferDate"
+                android:id="@+id/ivTransferDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -158,7 +173,7 @@
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/create_transfer_additionals_view_height"
+                android:layout_height="64dp"
                 android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding"
                 android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -637,7 +652,6 @@
                 android:id="@+id/tvComments"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/create_transfer_additionals_view_height"
-                android:layout_marginTop="1dp"
                 android:drawableStart="@drawable/ic_comment"
                 android:drawablePadding="15dp"
                 android:hint="@string/LNG_COMMENT_PLACEHOLDER"
@@ -663,6 +677,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/create_transfer_cb_agreement_margin"
                     android:layout_marginEnd="@dimen/create_transfer_cb_agreement_margin"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
                     app:layout_constraintBottom_toBottomOf="@+id/tvAgreement1"
                     app:layout_constraintEnd_toStartOf="@+id/tvAgreement1"
                     app:layout_constraintStart_toStartOf="parent"
