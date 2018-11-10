@@ -14,7 +14,7 @@ import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
 /**
  * Implementation of the [PaymentDataStore] interface to provide a means of communicating with the cache data source.
  */
-open class PaymentDataStoreCache(/*private val cache: PaymentCache*/): PaymentDataStore {
+open class PaymentDataStoreCache(/* private val cache: PaymentCache*/): PaymentDataStore {
     override suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity {
         throw UnsupportedOperationException()
     }
