@@ -43,7 +43,7 @@ class LoginPresenter(cc: CoroutineContexts,
                 utils.asyncAwait { systemInteractor.login(email!!, password!!) }
                 if(screenForReturn != null) {
                     val screen = if(screenForReturn == Screens.CARRIER_MODE){
-                        if(systemInteractor.account.groups!!.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) Screens.CARRIER_MODE
+                        if(systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) Screens.CARRIER_MODE
                         else Screens.REG_CARRIER
                     } else screenForReturn
                     screenForReturn = null

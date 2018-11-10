@@ -75,7 +75,7 @@ class OffersPresenter(cc: CoroutineContexts,
             transferModel = Mappers.getTransferModel(transfer,
                                                      systemInteractor.locale,
                                                      systemInteractor.distanceUnit,
-                                                     systemInteractor.transportTypes!!)
+                                                     systemInteractor.transportTypes)
 
             offers = offerInteractor.getOffers(transfer.id).map { Mappers.getOfferModel(it, systemInteractor.locale) }
             viewState.setDate(transferModel.dateTime)

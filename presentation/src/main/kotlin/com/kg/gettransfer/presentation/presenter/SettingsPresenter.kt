@@ -19,11 +19,11 @@ import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.view.SettingsView
 
+import java.util.Locale
+
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
-
-import java.util.Locale
 
 @InjectViewState
 class SettingsPresenter(cc: CoroutineContexts,

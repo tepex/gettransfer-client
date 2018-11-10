@@ -49,7 +49,7 @@ class RequestsFragmentPresenter(cc: CoroutineContexts,
             }.map { Mappers.getTransferModel(it,
                                              systemInteractor.locale,
                                              systemInteractor.distanceUnit,
-                                             systemInteractor.transportTypes!!) }
+                                             systemInteractor.transportTypes) }
             viewState.setRequests(transfers!!)
         }, { e ->
             if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)

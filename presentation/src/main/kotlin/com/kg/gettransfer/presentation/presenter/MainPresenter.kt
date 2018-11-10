@@ -235,7 +235,7 @@ class MainPresenter(cc: CoroutineContexts,
     fun onBecomeACarrierClick() {
         logEvent(DRIVER_CLICKED)
         if(systemInteractor.account.user.loggedIn) {
-            if(systemInteractor.account.groups!!.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) router.navigateTo(Screens.CARRIER_MODE)
+            if(systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) router.navigateTo(Screens.CARRIER_MODE)
             else router.navigateTo(Screens.REG_CARRIER)
         }
         else {

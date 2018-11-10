@@ -1,19 +1,27 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+
 import com.arellomobile.mvp.InjectViewState
+
 import com.google.android.gms.maps.model.LatLng
+
 import com.kg.gettransfer.domain.CoroutineContexts
+
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+
 import com.kg.gettransfer.domain.model.Transfer
+
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.TransferDetailsView
+
 import ru.terrakok.cicerone.Router
+
 import timber.log.Timber
 
 @InjectViewState
@@ -36,7 +44,7 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
             transferModel = Mappers.getTransferModel(transfer,
                                                          systemInteractor.locale,
                                                          systemInteractor.distanceUnit,
-                                                         systemInteractor.transportTypes!!)
+                                                         systemInteractor.transportTypes)
             viewState.setTransfer(transferModel)
             if(transferModel.checkOffers) {
 	            val offers = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
@@ -57,7 +65,7 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
                     val polyline = Utils.getPolyline(routeModel)
                     viewState.setRoute(polyline, routeModel)
                 }
-            } else if(transfer.duration != null){
+            } else if(transfer.duration != null) {
                 viewState.setPinHourlyTransfer(transferModel.from, transferModel.dateTime, LatLng(transfer.from.point!!.latitude, transfer.from.point!!.longitude))
             }
 	    }, { e -> Timber.e(e)
