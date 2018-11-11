@@ -6,10 +6,10 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:name=".GTApplication"
@@ -36,7 +36,6 @@
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -52,32 +51,32 @@
         <activity
             android:name=".presentation.ui.SearchActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeTransparentStatusBar"/>
+            android:theme="@style/AppThemeTransparentStatusBar" />
         <activity android:name=".presentation.ui.CreateOrderActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".presentation.ui.WebPageActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity android:name=".presentation.ui.SettingsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity android:name=".presentation.ui.OffersActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity android:name=".presentation.ui.RequestsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity android:name=".presentation.ui.TransferDetailsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity android:name=".presentation.ui.CarrierTripsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity android:name=".presentation.ui.CarrierTripDetailsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity android:name=".presentation.ui.LogsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateUnchanged|adjustResize" />
         <activity android:name=".presentation.ui.PaymentActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity android:name=".presentation.ui.PaymentSettingsActivity"
             android:screenOrientation="portrait" />
 
@@ -96,12 +95,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_provider_path" />
         </provider>
-<!--
-        <activity
-            android:name="presentation.ui.TransferActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateUnchanged" />
--->
     </application>
 
 </manifest>

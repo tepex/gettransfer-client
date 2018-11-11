@@ -82,8 +82,6 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     fun clearLogs()   = loggingRepository.clearLogs()
     fun getLogsFile() = loggingRepository.getLogsFile()
     
-    fun setInternetAvailable(available: Boolean) { systemRepository.setInternetAvailable(available) }
-    
     fun addListener(listener: SystemListener)    { systemRepository.addListener(listener) }
     fun removeListener(listener: SystemListener) { systemRepository.removeListener(listener) }
 }

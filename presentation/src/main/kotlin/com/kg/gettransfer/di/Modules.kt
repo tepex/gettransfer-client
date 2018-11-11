@@ -114,7 +114,8 @@ val dataModule = module {
     single { ConfigsMapper(get(), get(), get(), get(), get()) }
     single { SystemDataStoreCache(get()) }
     single { SystemDataStoreRemote(get()) }
-	single { SystemRepositoryImpl(DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>(get(), get()), get(), get(), get(), get(), get()) as SystemRepository }
+	single { SystemRepositoryImpl(DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>(get(), get()),
+	                              get(), get(), get(), get(), get()) as SystemRepository }
 	single { SystemInteractor(get(), get(), get()) }
 	
 	single { RouteInfoMapper() }

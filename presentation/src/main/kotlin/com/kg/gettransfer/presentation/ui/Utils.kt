@@ -1,15 +1,21 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.app.Activity
+
 import android.content.Context
+
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
+
 import android.net.ConnectivityManager
+
 import android.os.Build
+
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
+
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -17,22 +23,32 @@ import android.text.TextWatcher
 import android.text.style.ImageSpan
 
 import android.util.DisplayMetrics
+
 import android.view.View
+
 import android.widget.EditText
 import android.widget.Toast
+
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.PolylineOptions
+
 import com.google.maps.android.PolyUtil
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.model.DistanceUnit
+
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
+
 import java.text.SimpleDateFormat
-import java.util.*
+
+import java.util.Date
+import java.util.Locale
 import java.util.regex.Pattern
 
 internal class Utils {
@@ -284,10 +300,7 @@ internal class Utils {
             return dp * ((metrics.densityDpi.toFloat()) / DisplayMetrics.DENSITY_DEFAULT)
         }
 
-//      fun convertPixelsToDp(context: Context, pixels: Float): Float{
-//
-//      }
-
+/*
         fun isConnectedToInternet(context: Context?): Boolean {
             try {
                 if (context != null) {
@@ -300,6 +313,7 @@ internal class Utils {
                 return false
             }
         }
+        */
     }
 }
 

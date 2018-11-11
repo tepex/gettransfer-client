@@ -67,8 +67,6 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
             preferencesCache.lastAddresses = value.map { addressMapper.toEntity(it) }
         }
         
-    private var internetAvailable = false
-
     override suspend fun coldStart() {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
 
@@ -119,12 +117,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         factory.retrieveRemoteDataStore().changeEndpoint(endpointEntity)
         listeners.forEach { it.connectionChanged(endpoint, accessToken) }
     }
-    
-    override fun setInternetAvailable(available: Boolean) {
-        internetAvailable = available
-        factory.retrieveRemoteDataStore().changeNetworkAvailability(available)
-    }
-    
+        
     override fun addListener(listener: SystemListener)    { listeners.add(listener) }
     override fun removeListener(listener: SystemListener) { listeners.add(listener) }
 }

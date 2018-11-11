@@ -7,6 +7,8 @@ import android.content.IntentFilter
 
 import android.graphics.Rect
 
+import android.net.ConnectivityManager
+
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
 
@@ -23,14 +25,15 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
 
-import com.kg.gettransfer.presentation.NetworkStateChangeReceiver
-import com.kg.gettransfer.presentation.NetworkStateChangeReceiver.Companion.IS_NETWORK_AVAILABLE
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.view.BaseView
+
+import com.kg.gettransfer.utilities.LocaleManager
 
 import java.util.Date
 
@@ -41,9 +44,6 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
 import timber.log.Timber
-
-import com.kg.gettransfer.utilities.LocaleManager
-
 
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     internal val systemInteractor: SystemInteractor by inject()
@@ -61,13 +61,15 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     protected var viewNetworkNotAvailable: View? = null
     
     private val inetReceiver = object: BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            val available = intent.getBooleanExtra(IS_NETWORK_AVAILABLE, false)
-            systemInteractor.setInternetAvailable(available)
+        override fun onReceive(context: Context, intent: Intent) = setNetworkAvailability(context)
+        
+        fun setNetworkAvailability(context: Context) {
+            val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val available = cm.activeNetworkInfo?.let { it.isConnected() } ?: false
             viewNetworkNotAvailable?.let { if(available) it.visibility = View.GONE else it.visibility = View.VISIBLE }
         }
     }
-
+    
     /** [https://stackoverflow.com/questions/37615470/support-library-vectordrawable-resourcesnotfoundexception] */
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -78,8 +80,8 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     @CallSuper
     protected override fun onStart() {
         super.onStart()
-        LocalBroadcastManager.getInstance(this)
-            .registerReceiver(inetReceiver, IntentFilter(NetworkStateChangeReceiver.NETWORK_AVAILABLE_ACTION))  
+        registerReceiver(inetReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        inetReceiver.setNetworkAvailability(this) 
     }
 
     @CallSuper
@@ -96,7 +98,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
 
     @CallSuper
     protected override fun onStop() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(inetReceiver)
+        unregisterReceiver(inetReceiver)
         super.onStop()
 	}
 
