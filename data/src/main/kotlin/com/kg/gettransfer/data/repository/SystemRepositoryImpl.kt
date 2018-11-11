@@ -2,8 +2,11 @@ package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.PreferencesListener
+import com.kg.gettransfer.data.SystemDataStore
 
-import com.kg.gettransfer.data.ds.SystemDataStoreFactory
+import com.kg.gettransfer.data.ds.DataStoreFactory
+import com.kg.gettransfer.data.ds.SystemDataStoreCache
+import com.kg.gettransfer.data.ds.SystemDataStoreRemote
 
 import com.kg.gettransfer.data.mapper.AccountMapper
 import com.kg.gettransfer.data.mapper.AddressMapper
@@ -26,8 +29,8 @@ import com.kg.gettransfer.domain.repository.SystemRepository
 
 import java.util.concurrent.TimeoutException
 
-class SystemRepositoryImpl(private val preferencesCache: PreferencesCache,
-                           private val factory: SystemDataStoreFactory,
+class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>,
+                           private val preferencesCache: PreferencesCache,
                            private val configsMapper: ConfigsMapper,
                            private val accountMapper: AccountMapper,
                            private val endpointMapper: EndpointMapper,

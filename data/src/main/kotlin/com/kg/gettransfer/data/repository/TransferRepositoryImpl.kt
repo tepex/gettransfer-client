@@ -1,6 +1,10 @@
 package com.kg.gettransfer.data.repository
 
-import com.kg.gettransfer.data.ds.TransferDataStoreFactory
+import com.kg.gettransfer.data.TransferDataStore
+
+import com.kg.gettransfer.data.ds.DataStoreFactory
+import com.kg.gettransfer.data.ds.TransferDataStoreCache
+import com.kg.gettransfer.data.ds.TransferDataStoreRemote
 
 import com.kg.gettransfer.data.mapper.TransferMapper
 import com.kg.gettransfer.data.mapper.TransferNewMapper
@@ -10,9 +14,9 @@ import com.kg.gettransfer.domain.model.TransferNew
 
 import com.kg.gettransfer.domain.repository.TransferRepository
 
-class TransferRepositoryImpl(private val factory: TransferDataStoreFactory,
+class TransferRepositoryImpl(private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>,
                              private val transferNewMapper: TransferNewMapper,
-                             private val transferMapper: TransferMapper): TransferRepository {
+                             private val transferMapper: TransferMapper): BaseRepository(), TransferRepository {
     override suspend fun createTransfer(transferNew: TransferNew): Transfer {
         val transferEntity = factory.retrieveRemoteDataStore().createTransfer(transferNewMapper.toEntity(transferNew))
         //factory.retrieveCacheDataStore().addTransfer(transferEntity)

@@ -8,7 +8,7 @@ import com.kg.gettransfer.data.mapper.ExceptionMapper
 
 import com.kg.gettransfer.data.model.OfferEntity
 
-open class OfferRemoteDataStore(private val remote: OfferRemote): OfferDataStore {
+open class OfferDataStoreRemote(private val remote: OfferRemote): OfferDataStore {
     override suspend fun getOffers(id: Long): List<OfferEntity> {
         try { return remote.getOffers(id) }
         catch(e: RemoteException) { throw ExceptionMapper.map(e) }

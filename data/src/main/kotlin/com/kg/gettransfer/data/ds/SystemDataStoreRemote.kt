@@ -10,12 +10,13 @@ import com.kg.gettransfer.data.mapper.ExceptionMapper
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
+
 import java.util.concurrent.TimeoutException
 
 /**
  * Implementation of the [SystemDataStore] interface to provide a means of communicating with the remote data source
  */
-open class SystemRemoteDataStore(private val remote: SystemRemote): SystemDataStore {
+open class SystemDataStoreRemote(private val remote: SystemRemote): SystemDataStore {
     override suspend fun getConfigs(): ConfigsEntity {
         try { return remote.getConfigs() }
         catch(e: RemoteException) { throw ExceptionMapper.map(e) }

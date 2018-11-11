@@ -12,7 +12,7 @@ import com.kg.gettransfer.data.model.TransferNewEntity
 /**
  * Implementation of the [TransferDataStore] interface to provide a means of communicating with the remote data source.
  */
-open class TransferRemoteDataStore(private val remote: TransferRemote): TransferDataStore {
+open class TransferDataStoreRemote(private val remote: TransferRemote): TransferDataStore {
     override suspend fun createTransfer(transferNew: TransferNewEntity): TransferEntity {
         try { return remote.createTransfer(transferNew) }
         catch(e: RemoteException) { throw ExceptionMapper.map(e) }

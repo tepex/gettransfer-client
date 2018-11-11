@@ -8,7 +8,7 @@ import com.kg.gettransfer.data.model.CarrierTripEntity
 /**
  * Implementation of the [CarrierTripDataStore] interface to provide a means of communicating with the local data source.
  */
-open class CarrierTripCacheDataStore(/*private val cache: CarrierTripCache*/): CarrierTripDataStore {
+open class CarrierTripDataStoreCache(/*private val cache: CarrierTripCache*/): CarrierTripDataStore {
     override suspend fun getCarrierTrips(): List<CarrierTripEntity> {
         /*= cache.getCarrierTrips()*/
         throw UnsupportedOperationException()

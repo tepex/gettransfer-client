@@ -11,7 +11,7 @@ import com.kg.gettransfer.data.model.CarrierTripEntity
 /**
  * Implementation of the [CarrierTripDataStore] interface to provide a means of communicating with the remote data source.
  */
-open class CarrierTripRemoteDataStore(private val remote: CarrierTripRemote): CarrierTripDataStore {
+open class CarrierTripDataStoreRemote(private val remote: CarrierTripRemote): CarrierTripDataStore {
     override suspend fun getCarrierTrips(): List<CarrierTripEntity> {
         try { return remote.getCarrierTrips() }
         catch(e: RemoteException) { throw ExceptionMapper.map(e) }

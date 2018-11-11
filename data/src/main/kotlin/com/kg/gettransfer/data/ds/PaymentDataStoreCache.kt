@@ -1,6 +1,6 @@
 package com.kg.gettransfer.data.ds
 
-import com.kg.gettransfer.data.PaymentRemote
+import com.kg.gettransfer.data.PaymentCache
 import com.kg.gettransfer.data.PaymentDataStore
 import com.kg.gettransfer.data.RemoteException
 
@@ -12,16 +12,14 @@ import com.kg.gettransfer.data.model.PaymentStatusEntity
 import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
 
 /**
- * Implementation of the [RemoteDataStore] interface to provide a means of communicating with the remote data source.
+ * Implementation of the [PaymentDataStore] interface to provide a means of communicating with the cache data source.
  */
-open class PaymentRemoteDataStore(private val remote: PaymentRemote): PaymentDataStore {
+open class PaymentDataStoreCache(/*private val cache: PaymentCache*/): PaymentDataStore {
     override suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity {
-        try { return remote.createPayment(paymentRequest) }
-        catch(e: RemoteException) { throw ExceptionMapper.map(e) }
+        throw UnsupportedOperationException()
     }
     
     override suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequestEntity): PaymentStatusEntity {
-        try { return remote.changeStatusPayment(paymentStatusRequest) }
-        catch(e: RemoteException) { throw ExceptionMapper.map(e) }
+        throw UnsupportedOperationException()
     }
 }

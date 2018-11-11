@@ -15,11 +15,15 @@ import com.kg.gettransfer.utilities.LocaleManager
 
 import com.kg.gettransfer.logging.LoggingRepositoryImpl
 
-import com.kg.gettransfer.data.CarrierTripRemote
+import com.kg.gettransfer.data.CarrierTripDataStore
+import com.kg.gettransfer.data.OfferDataStore
+import com.kg.gettransfer.data.PaymentDataStore
+import com.kg.gettransfer.data.PromoDataStore
 import com.kg.gettransfer.data.PreferencesCache
-import com.kg.gettransfer.data.RouteRemote
+import com.kg.gettransfer.data.RouteDataStore
 import com.kg.gettransfer.data.SystemCache
-import com.kg.gettransfer.data.SystemRemote
+import com.kg.gettransfer.data.SystemDataStore
+import com.kg.gettransfer.data.TransferDataStore
 
 import com.kg.gettransfer.data.ds.*
 import com.kg.gettransfer.data.mapper.*
@@ -87,16 +91,16 @@ val dataModule = module {
     single { PriceMapper(get()) }
     single { VehicleMapper() }
     single { OfferMapper(get(), get(), get(), get(), get()) }
-    single { OfferRemoteDataStore(get()) }
-    single { OfferDataStoreFactory(get()) }
-	single { OfferRepositoryImpl(get(), get()) as OfferRepository }
+    single { OfferDataStoreCache(/*get()*/) }
+    single { OfferDataStoreRemote(get()) }
+	single { OfferRepositoryImpl(DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>(get(), get()), get()) as OfferRepository }
 	single { OfferInteractor(get()) }
 	
 	single { PaymentMapper() }
 	single { PaymentRequestMapper() }
-	single { PaymentRemoteDataStore(get()) }
-	single { PaymentDataStoreFactory(get()) }
-	single { PaymentRepositoryImpl(get(), get(), get(), get(), get()) as PaymentRepository }
+	single { PaymentDataStoreCache(/*get()*/) }
+	single { PaymentDataStoreRemote(get()) }
+	single { PaymentRepositoryImpl(DataStoreFactory<PaymentDataStore, PaymentDataStoreCache, PaymentDataStoreRemote>(get(), get()), get(), get(), get(), get()) as PaymentRepository }
 	single { PaymentInteractor(get()) }
 	
 	single { PaypalCredentialsMapper() }
@@ -108,39 +112,37 @@ val dataModule = module {
     single { UserMapper(get()) }
     single { AccountMapper(get()) }
     single { ConfigsMapper(get(), get(), get(), get(), get()) }
-    single { SystemCacheDataStore(get()) }
-    single { SystemRemoteDataStore(get()) }
-    single { SystemDataStoreFactory(get(), get()) }
-	single { SystemRepositoryImpl(get(), get(), get(), get(), get(), get()) as SystemRepository }
+    single { SystemDataStoreCache(get()) }
+    single { SystemDataStoreRemote(get()) }
+	single { SystemRepositoryImpl(DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>(get(), get()), get(), get(), get(), get(), get()) as SystemRepository }
 	single { SystemInteractor(get(), get(), get()) }
 	
 	single { RouteInfoMapper() }
 	single { PointMapper() }
-    single { RouteRemoteDataStore(get()) }
-    single { RouteDataStoreFactory(get()) }
-	single { RouteRepositoryImpl(get(), get(), get()) as RouteRepository }
+	single { RouteDataStoreCache(/*get()*/) }
+    single { RouteDataStoreRemote(get()) }
+	single { RouteRepositoryImpl(DataStoreFactory<RouteDataStore, RouteDataStoreCache, RouteDataStoreRemote>(get(), get()), get(), get()) as RouteRepository }
 	single { RouteInteractor(get(), get()) }
     
 	single { CityPointMapper(get()) }
 	single { PassengerAccountMapper(get()) }
 	single { CarrierTripMapper(get(), get(), get()) }
-	single { CarrierTripRemoteDataStore(get()) }
-	single { CarrierTripDataStoreFactory(get()) }
-	single { CarrierTripRepositoryImpl(get(), get()) as CarrierTripRepository }
+	single { CarrierTripDataStoreCache(/*get()*/) }
+	single { CarrierTripDataStoreRemote(get()) }
+	single { CarrierTripRepositoryImpl(DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>(get(), get()), get()) as CarrierTripRepository }
     single { CarrierTripInteractor(get()) }
     
     single { TripMapper() }
 	single { TransferMapper(get(), get()) }
 	single { TransferNewMapper(get(), get(), get(), get()) }
-	single { TransferCacheDataStore() }
-	single { TransferRemoteDataStore(get()) }
-	single { TransferDataStoreFactory(get(), get()) }
-	single { TransferRepositoryImpl(get(), get(), get()) as TransferRepository }
+	single { TransferDataStoreCache(/*get()*/) }
+	single { TransferDataStoreRemote(get()) }
+	single { TransferRepositoryImpl(DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>(get(), get()), get(), get()) as TransferRepository }
 	single { TransferInteractor(get()) }
 
-	single { PromoRemoteDataStore(get()) }
-	single { PromoDataStoreFactory(get()) }
-	single { PromoRepositoryImpl(get(), get()) as PromoRepository }
+	single { PromoDataStoreCache(/*get()*/) }
+	single { PromoDataStoreRemote(get()) }
+	single { PromoRepositoryImpl(DataStoreFactory<PromoDataStore, PromoDataStoreCache, PromoDataStoreRemote>(get(), get()), get()) as PromoRepository }
 	single { PromoInteractor(get()) }
 }
 
