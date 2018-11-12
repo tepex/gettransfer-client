@@ -69,7 +69,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     internal lateinit var presenter: MainPresenter
 
     private lateinit var drawer: DrawerLayout
-    private lateinit var toggle: ActionBarDrawerToggle
+    //private lateinit var toggle: ActionBarDrawerToggle
 
     private val routeInteractor: RouteInteractor by inject()
 
@@ -247,15 +247,15 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         super.onStop()
     }
 
-    /** @see {@link android.support.v7.app.ActionBarDrawerToggle} */
+    /** @see {@link android.support.v7.app.ActionBarDrawerToggle} *//*
     @CallSuper
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         toggle.onConfigurationChanged(newConfig)
     }
 
-    /** @see {@link android.support.v7.app.ActionBarDrawerToggle} */
-    override fun onOptionsItemSelected(item: MenuItem) = toggle.onOptionsItemSelected(item)
+    *//** @see {@link android.support.v7.app.ActionBarDrawerToggle} *//*
+    override fun onOptionsItemSelected(item: MenuItem) = toggle.onOptionsItemSelected(item)*/
 
     private fun initNavigation() {
         //val versionName = packageManager.getPackageInfo(packageName, 0).versionName
