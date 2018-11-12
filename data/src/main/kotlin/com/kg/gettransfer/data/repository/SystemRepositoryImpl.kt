@@ -17,6 +17,7 @@ import com.kg.gettransfer.data.mapper.ExceptionMapper
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.GTAddressEntity
+import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.SystemListener
@@ -71,15 +72,17 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         get() = preferencesCache.addressHistory.map { addressMapper.fromEntity(it) }
         set(value) { preferencesCache.addressHistory = value.map { addressMapper.toEntity(it) } }
         
-    override suspend fun coldStart(): Result<Account?> {
+    override suspend fun coldStart(): Result<Account> {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
 
         if(configs === Configs.DEFAULT) {
-            val result: ResultEntity<ConfigsEntity> = retrieveEntity { fromRemote ->
+            val result: ResultEntity<ConfigsEntity?> = retrieveEntity { fromRemote ->
                 factory.retrieveDataStore(fromRemote).getConfigs() }
             result.entity?.let { configs = configsMapper.fromEntity(it) }
-            result.error?.let { return Result(null, ExceptionMapper.map(it)) }
+            result.error?.let { return Result(error = ExceptionMapper.map(it)) }
         }
+        
+        return Result(account)
         
         
         /*

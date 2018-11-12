@@ -12,14 +12,14 @@ open class BaseRepository() {
     
     protected val log = LoggerFactory.getLogger(TAG)
     
-    protected suspend fun ResultEntity<E> retrieveEntity(getEntity: suspend (Boolean) -> E?): ResultEntity<E> {
+    protected suspend fun <E> retrieveEntity(getEntity: suspend (Boolean) -> E?): ResultEntity<E?> {
         var error: RemoteException? = null
         /* First, try retrieve from remote */
         val entity = try { getEntity(true) }
         catch(e: RemoteException) {
-            /* If false, get from cache */
-            entity = getEntity(false)
             error = e
+            /* If false, get from cache */
+            getEntity(false)
         }
         return ResultEntity(entity, error)
     }

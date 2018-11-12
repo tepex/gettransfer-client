@@ -1,6 +1,5 @@
 package com.kg.gettransfer.data.ds
 
-import com.kg.gettransfer.data.NetworkNotAvailableException
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.SystemRemote
 import com.kg.gettransfer.data.SystemDataStore
@@ -20,7 +19,7 @@ open class SystemDataStoreRemote(private val remote: SystemRemote): SystemDataSt
     override suspend fun getConfigs(): ConfigsEntity {
         try { return remote.getConfigs() }
         catch(e: RemoteException) { throw ExceptionMapper.map(e) }
-        catch(e: NetworkNotAvailableException) { throw ExceptionMapper.map(e)}
+//        catch(e: NetworkNotAvailableException) { throw ExceptionMapper.map(e)}
         catch(e: TimeoutException) { throw e }
     }
 
@@ -29,14 +28,14 @@ open class SystemDataStoreRemote(private val remote: SystemRemote): SystemDataSt
     override suspend fun getAccount(): AccountEntity? {
         try { return remote.getAccount() }
         catch(e: RemoteException) { throw ExceptionMapper.map(e) }
-        catch(e: NetworkNotAvailableException) { throw ExceptionMapper.map(e) }
+//        catch(e: NetworkNotAvailableException) { throw ExceptionMapper.map(e) }
         catch(e: TimeoutException) { throw e }
     }
     
     override suspend fun setAccount(accountEntity: AccountEntity) {
         try { return remote.setAccount(accountEntity) }
         catch(e: RemoteException) { throw ExceptionMapper.map(e) }
-        catch(e: NetworkNotAvailableException) { throw ExceptionMapper.map(e)}
+//        catch(e: NetworkNotAvailableException) { throw ExceptionMapper.map(e)}
         catch(e: TimeoutException) { throw e }
     }
     
@@ -45,7 +44,7 @@ open class SystemDataStoreRemote(private val remote: SystemRemote): SystemDataSt
     override suspend fun login(email: String, password: String): AccountEntity {
         try { return remote.login(email, password) }
         catch(e: RemoteException) { throw ExceptionMapper.map(e) }
-        catch(e: NetworkNotAvailableException) { throw ExceptionMapper.map(e)}
+//        catch(e: NetworkNotAvailableException) { throw ExceptionMapper.map(e)}
         catch(e: TimeoutException) { throw e }
     }
     
