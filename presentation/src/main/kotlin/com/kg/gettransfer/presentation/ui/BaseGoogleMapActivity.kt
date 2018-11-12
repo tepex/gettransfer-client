@@ -147,7 +147,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         }
     }
 
-    protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng){
+    protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng) {
         val bmPinA = getPinBitmap(placeName, info, R.drawable.ic_map_label_a)
         val startMakerOptions = MarkerOptions()
                 .position(point)

@@ -108,7 +108,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         if(transferModel.to != null) {
             layoutTransferInfo.tvTo.text = transferModel.to
             layoutTransferInfo.tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
-        } else if(transferModel.duration != null){
+        } else if(transferModel.duration != null) {
             layoutTransferInfo.tvTo.text = getString(R.string.LNG_TIME_RIDE)
             layoutTransferInfo.tvDistance.text = Utils.formatDuration(this, transferModel.duration)
         }

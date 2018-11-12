@@ -39,7 +39,7 @@ class RequestsRVAdapter(private val transfers: List<TransferModel>, private val 
             if(item.to != null) {
                 tvTo.text = item.to
                 tvDistance.text = Utils.formatDistance(context, item.distance, item.distanceUnit)
-            } else if(item.duration != null){
+            } else if(item.duration != null) {
                 tvTo.text = context.getString(R.string.LNG_TIME_RIDE)
                 tvDistance.text = Utils.formatDuration(context, item.duration)
             }
