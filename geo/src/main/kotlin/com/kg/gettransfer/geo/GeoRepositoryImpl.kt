@@ -59,9 +59,8 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
         val country = list.firstOrNull()?.countryName
 
         val addr = buildString {
-            if(street == null && !list.isEmpty() && list.firstOrNull()?.getAddressLine(0)!!.isNotEmpty()) {
+            if(street == null && !list.isEmpty() && list.firstOrNull()?.getAddressLine(0)!!.isNotEmpty())
                 append(list.firstOrNull()?.getAddressLine(0))
-            }
             else {
                 if(!street.isNullOrEmpty())  append(street).append(", ")
                 if(!house.isNullOrEmpty())   append(house).append(", ")
