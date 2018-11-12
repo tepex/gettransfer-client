@@ -316,12 +316,13 @@ class CreateOrderPresenter(cc: CoroutineContexts,
 
     fun onTransportChosen(){
         checkFields()
-        val tripTime = String.format("%d:%d", duration!! / 60, duration!! % 60)
-        val checkedTransport = transportTypes?.filter { it.checked }
-        if(!checkedTransport.isNullOrEmpty())
-            viewState.setFairPrice(checkedTransport.minBy { it.price!!.unitPrice }?.price!!.min, tripTime)
-        else viewState.setFairPrice(null, null)
-
+        try {
+            val tripTime = String.format("%d:%d", duration!! / 60, duration!! % 60)
+            val checkedTransport = transportTypes?.filter { it.checked }
+            if (!checkedTransport.isNullOrEmpty())
+                viewState.setFairPrice(checkedTransport.minBy { it.price!!.unitPrice }?.price!!.min, tripTime)
+            else viewState.setFairPrice(null, null)
+        } catch (e: KotlinNullPointerException){ viewState.setFairPrice(null, null) }
     }
 
     fun onCenterRouteClick() {
