@@ -10,4 +10,5 @@ class RemoteException(val code: Int, val details: String): RuntimeException(deta
     }
     
     fun isInvalidToken() = code == INVALID_TOKEN
+    fun isConnectionError() = (code == NOT_HTTP || code == CONNECTION_TIMED_OUT)
 }

@@ -10,5 +10,4 @@ interface SystemRemote {
     suspend fun setAccount(accountEntity: AccountEntity)
     suspend fun login(email: String, password: String): AccountEntity
     fun changeEndpoint(endpoint: EndpointEntity)
-    fun changeNetworkAvailability(isNetworkConnected: Boolean)
 }

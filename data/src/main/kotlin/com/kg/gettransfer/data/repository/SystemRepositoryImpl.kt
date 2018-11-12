@@ -114,7 +114,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
     private suspend fun initSystemEntities() {
         if(configs === Configs.DEFAULT) {
         val configsEntity = tryRetrieveEntity(
-            { retrieveEntity { b -> factory.retrieveDataStore(b).getConfigs() } },
+            { retrieveEntity { fromRemote -> factory.retrieveDataStore(fromRemote).getConfigs() } },
             { e ->
                 log.error("Configs initialization error", e)
                 null
@@ -129,16 +129,18 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         */
     }
     
-    private suspend fun getConfigs(b: Boolean) = 
-    
     // TODO: convert to FP
     
-    private suspend fun <E> retrieveEntity(block: (Boolean) -> E?): E? {
-        return try { block(internetAvailable) }
+    private suspend fun <E> retrieveEntity(getEntity: suspend (Boolean) -> E?): E? {
+        return try { getEntity(true) }
         catch(e1: RemoteException) {
-            if(internetAvailable) {
-                internetAvailable = false
-                return try { block(internetAvailable) }
+            
+            
+            if(e1.code 
+            
+                
+                
+                return try { getEntity(false) }
                 catch(e2: RemoteException) { throw ExceptionMapper.map(e2) }
             }
             throw ExceptionMapper.map(e1)

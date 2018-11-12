@@ -65,6 +65,4 @@ class SystemRemoteImpl(private val core: ApiCore,
     }
     
     override fun changeEndpoint(endpoint: EndpointEntity) = core.changeEndpoint(endpointMapper.toRemote(endpoint))
-
-    override fun changeNetworkAvailability(isNetworkConnected: Boolean) = core.changeNetworkConnectionAvailability(isNetworkConnected)
 }

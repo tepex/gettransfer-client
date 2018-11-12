@@ -5,8 +5,6 @@ import com.google.gson.JsonSyntaxException
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 
-import com.kg.gettransfer.data.NetworkNotAvailableException
-
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.PreferencesCache
 
@@ -78,36 +76,30 @@ class ApiCore(private val preferences: PreferencesCache) {
      * 2. If response code is 401 (token expired) — try to call [apiCall] second time.
      */
     internal suspend fun <R> tryTwice(apiCall: () -> Deferred<R>): R {
-        if(isInternetAvailable) {
-            return try { apiCall().await() }
-            catch(e: TimeoutException){ throw e }
-            catch(e: Exception) {
-                if(e is RemoteException) throw e /* second invocation */
-                val ae = remoteException(e)
-                if(!ae.isInvalidToken()) {
-                    log.error("apiCall", e)
-                    throw ae
-                }
-
-                try { updateAccessToken() } catch(e1: Exception) { throw remoteException(e1) }
-                return try { apiCall().await() } catch(e2: Exception) { throw remoteException(e2) }
+        return try { apiCall().await() }
+        catch(e: Exception) {
+            if(e is RemoteException) throw e /* second invocation */
+            val ae = remoteException(e)
+            if(!ae.isInvalidToken()) {
+                log.error("apiCall", e)
+                throw ae
             }
-        } else throw NetworkNotAvailableException()
+
+            try { updateAccessToken() } catch(e1: Exception) { throw remoteException(e1) }
+            return try { apiCall().await() } catch(e2: Exception) { throw remoteException(e2) }
+        }
     }
     
     internal suspend fun <R> tryTwice(id: Long, apiCall: (Long) -> Deferred<R>): R {
-        if(isInternetAvailable) {
-            return try { apiCall(id).await() }
-            catch (e: TimeoutException){ throw e }
-            catch(e: Exception) {
-               if(e is RemoteException) throw e /* second invocation */
-               val ae = remoteException(e)
-               if(!ae.isInvalidToken()) throw ae
+        return try { apiCall(id).await() }
+        catch(e: Exception) {
+           if(e is RemoteException) throw e /* second invocation */
+           val ae = remoteException(e)
+           if(!ae.isInvalidToken()) throw ae
 
-               try { updateAccessToken() } catch(e1: Exception) { throw remoteException(e1) }
-               return try { apiCall(id).await() } catch(e2: Exception) { throw remoteException(e2) }
-            }
-        } else throw NetworkNotAvailableException()
+           try { updateAccessToken() } catch(e1: Exception) { throw remoteException(e1) }
+           return try { apiCall(id).await() } catch(e2: Exception) { throw remoteException(e2) }
+        }
     }
     
     /*
@@ -123,17 +115,19 @@ class ApiCore(private val preferences: PreferencesCache) {
     }
     
     internal fun remoteException(e: Exception): RemoteException {
-        if(e is HttpException) {
-            val errorBody = e.response().errorBody()?.string()
-            val msg = try {
-                gson.fromJson(errorBody, ResponseModel::class.java).error?.details?.toString()
-            } catch(je: JsonSyntaxException) {
-                val matchResult = errorBody?.let { ERROR_PATTERN.find(it)?.let { it.groupValues } }
-                log.warn("${e.message} matchResult: $matchResult", je)
-                matchResult?.getOrNull(1)
+        return when(e) {
+            is HttpException -> {
+                val errorBody = e.response().errorBody()?.string()
+                val msg = try {
+                    gson.fromJson(errorBody, ResponseModel::class.java).error?.details?.toString()
+                } catch(je: JsonSyntaxException) {
+                    val matchResult = errorBody?.let { ERROR_PATTERN.find(it)?.let { it.groupValues } }
+                    log.warn("${e.message} matchResult: $matchResult", je)
+                    matchResult?.getOrNull(1)
+                }
+                RemoteException(e.code(), msg ?: e.message!!)
             }
-            return RemoteException(e.code(), msg ?: e.message!!)
+            else -> RemoteException(RemoteException.NOT_HTTP, e.message!!)
         }
-        else return RemoteException(RemoteException.NOT_HTTP, e.message!!)
     }
 }
