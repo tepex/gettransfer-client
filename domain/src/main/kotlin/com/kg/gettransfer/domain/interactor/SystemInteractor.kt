@@ -1,5 +1,6 @@
 package com.kg.gettransfer.domain.interactor
 
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.SystemListener
 
 import com.kg.gettransfer.domain.model.Account
@@ -76,11 +77,8 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         get() = account.distanceUnit
         set(value) { account.distanceUnit = value }
 
-    
-    suspend fun coldStart() {
-        systemRepository.coldStart()
-        geoRepository.initGeocoder(locale)
-    }
+    /** Init geo with account.locale if retrieved from remote */
+    suspend fun coldStart() = systemRepository.coldStart().apply { model?.let { geoRepository.initGeocoder(it.locale) } }
 
     fun logout() = systemRepository.logout()
     suspend fun login(email: String, password: String) = systemRepository.login(email, password)

@@ -19,13 +19,13 @@ import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.GTAddressEntity
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.InternetNotAvailableException
 import com.kg.gettransfer.domain.SystemListener
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
@@ -71,9 +71,17 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         get() = preferencesCache.addressHistory.map { addressMapper.fromEntity(it) }
         set(value) { preferencesCache.addressHistory = value.map { addressMapper.toEntity(it) } }
         
-    override suspend fun coldStart() {
+    override suspend fun coldStart(): Result<Account?> {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
-        initSystemEntities()
+
+        if(configs === Configs.DEFAULT) {
+            val result: ResultEntity<ConfigsEntity> = retrieveEntity { fromRemote ->
+                factory.retrieveDataStore(fromRemote).getConfigs() }
+            result.entity?.let { configs = configsMapper.fromEntity(it) }
+            result.error?.let { return Result(null, ExceptionMapper.map(it)) }
+        }
+        
+        
         /*
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
         configs = configsMapper.fromEntity(factory.retrieveRemoteDataStore().getConfigs())
@@ -112,6 +120,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
     
     
     private suspend fun initSystemEntities() {
+        /*
         if(configs === Configs.DEFAULT) {
         val configsEntity = tryRetrieveEntity(
             { retrieveEntity { fromRemote -> factory.retrieveDataStore(fromRemote).getConfigs() } },
@@ -120,6 +129,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
                 null
             })?.let { configs = configsMapper.fromEntity(it) }
         }
+        */
         /*
         if(account === Account.NO_ACCOUNT) {
             val accountEntity = try { retrieveAccountEntity() }
@@ -129,21 +139,5 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         */
     }
     
-    // TODO: convert to FP
-    
-    private suspend fun <E> retrieveEntity(getEntity: suspend (Boolean) -> E?): E? {
-        return try { getEntity(true) }
-        catch(e1: RemoteException) {
-            
-            
-            if(e1.code 
-            
-                
-                
-                return try { getEntity(false) }
-                catch(e2: RemoteException) { throw ExceptionMapper.map(e2) }
-            }
-            throw ExceptionMapper.map(e1)
-        }
-    }
+    // TODO: convert to FP    
 }

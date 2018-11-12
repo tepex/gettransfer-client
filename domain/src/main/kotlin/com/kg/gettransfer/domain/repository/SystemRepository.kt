@@ -1,12 +1,13 @@
 package com.kg.gettransfer.domain.repository
 
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.SystemListener
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
-
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.Result
 
 interface SystemRepository {
     val configs: Configs
@@ -19,7 +20,7 @@ interface SystemRepository {
     var endpoint: Endpoint
     var addressHistory: List<GTAddress>    
         
-    suspend fun coldStart()
+    suspend fun coldStart(): Result<Account>
     suspend fun putAccount(account: Account)
     suspend fun login(email: String, password: String): Account
     fun logout()
