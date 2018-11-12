@@ -319,11 +319,18 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     override fun setComment(comment: String)                 { tvComments.text = comment }
     override fun setDateTimeTransfer(dateTimeString: String) { tvDateTimeTransfer.text = dateTimeString }
 
-    override fun setTransportTypes(transportTypes: List<TransportTypeModel>, fairPrice: String) {
-        rvTransferType.adapter = TransferTypeAdapter(transportTypes) {
-            presenter.checkFields()
+    override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
+        rvTransferType.adapter = TransferTypeAdapter(presenter, transportTypes) {
+            presenter.onTransportChosen()
             transportTypeClicked(it)
         }
+    }
+
+    override fun setFairPrice(price: String?, time: String?) {
+        if (price == null || time == null) {
+            tvRate.text = ""
+        } else
+        tvRate.text = String.format(getString(R.string.LNG_RIDE_FAIR_PRICE_FORMAT), price, time)
     }
 
     override fun setUser(user: UserModel) {
@@ -393,7 +400,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun showTransportInfo(transportType: TransportTypeModel) {
         tvTypeTransfer.text = transportType.id
         ivTypeTransfer.setImageResource(transportType.imageId!!)
-        tvPrice.text = transportType.price
+        tvPrice.text = transportType.price?.min
         tvCountPassengers.text = transportType.paxMax.toString()
         tvCountLuggage.text = transportType.luggageMax.toString()
     }

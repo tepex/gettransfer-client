@@ -8,6 +8,6 @@ class TransportTypeModel(val id: String,
                          @DrawableRes val imageId: Int?,
                          val paxMax: Int,
                          val luggageMax: Int,
-                         val price: String?,
+                         val price: TransportPrice?,
                          var checked: Boolean = false) {
 }

@@ -7,7 +7,8 @@ import com.kg.gettransfer.presentation.model.*
 
 @StateStrategyType (OneExecutionStateStrategy::class)
 interface CreateOrderView: BaseView {
-    fun setTransportTypes(transportTypes: List<TransportTypeModel>, fairPrice: String)
+    fun setTransportTypes(transportTypes: List<TransportTypeModel>)
+    fun setFairPrice(price: String?, time: String?)
     fun setCurrencies(currencies: List<CurrencyModel>)
     //fun setRoute(routeModel: RouteModel)
     fun setRoute(isDateChanged: Boolean, polyline: PolylineModel, routeModel: RouteModel)

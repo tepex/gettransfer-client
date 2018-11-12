@@ -12,13 +12,15 @@ import android.view.ViewGroup
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.ui.Utils
 
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_transfer_type.*
 import kotlinx.android.synthetic.main.view_transfer_type.view.*
 
-class TransferTypeAdapter(private var list: List<TransportTypeModel>,
+class TransferTypeAdapter(private val presenter: CreateOrderPresenter,
+                          private var list: List<TransportTypeModel>,
                           private val listener: ChangeListener): RecyclerView.Adapter<TransferTypeAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = list.size
@@ -26,15 +28,15 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_transfer_type, parent, false))
 
-    override fun onBindViewHolder(holder: ViewHolder, pos: Int) { holder.bind(list.get(pos), listener) }
+    override fun onBindViewHolder(holder: ViewHolder, pos: Int) { holder.bind(list.get(pos),presenter, listener) }
 
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(item: TransportTypeModel, listener: ChangeListener) = with(containerView) {
+        fun bind(item: TransportTypeModel, presenter: CreateOrderPresenter, listener: ChangeListener) = with(containerView) {
             tvTransferType.setText(item.nameId!!)
             tvNumberPersonsTransfer.text = Utils.formatPersons(context, item.paxMax)
             tvCountBaggage.text = Utils.formatLuggage(context, item.luggageMax)
             if (item.price == null) tvPriceFrom.visibility = View.GONE
-            else tvPriceFrom.text = item.price
+            else tvPriceFrom.text = item.price.min
 
             ivTransferType.setImageResource(item.imageId!!)
             cbTransferType.isChecked = item.checked
@@ -43,6 +45,7 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
                 item.checked = !item.checked
                 cbTransferType.isChecked = item.checked
                 setVisibilityShadow(context, item)
+                presenter.onTransportChosen()
             }
             layoutTransportInfo.setOnClickListener {
                 listener(item)

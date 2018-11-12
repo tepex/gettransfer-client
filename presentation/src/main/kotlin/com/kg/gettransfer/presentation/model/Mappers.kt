@@ -40,7 +40,7 @@ object Mappers {
                    groups: List<String>?,
                    carrierId: Long?) = Account(model, locale, currency, distanceUnit, groups, carrierId)
 
-    fun getTransportTypeModel(type: TransportType, prices: Map<String, String>?): TransportTypeModel {
+    fun getTransportTypeModel(type: TransportType, prices: Map<String, TransportPrice>?): TransportTypeModel {
         val imageRes = R.drawable::class.members.find( { it.name == "ic_transport_type_${type.id}" } )
         val imageId = (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_unknown
         return TransportTypeModel(type.id,

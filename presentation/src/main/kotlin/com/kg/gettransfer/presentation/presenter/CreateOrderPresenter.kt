@@ -20,12 +20,7 @@ import com.kg.gettransfer.domain.model.Trip
 import com.kg.gettransfer.domain.model.User
 
 import com.kg.gettransfer.presentation.Screens
-
-import com.kg.gettransfer.presentation.model.Mappers
-import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransportTypeModel
-import com.kg.gettransfer.presentation.model.UserModel
-import com.kg.gettransfer.presentation.model.PolylineModel
+import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
@@ -51,6 +46,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
 
     private var user: UserModel = Mappers.getUserModel(systemInteractor.account)
     private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies!!)
+    private var duration: Int? = null
     private var passengers: Int = MIN_PASSENGERS
     private var children: Int = MIN_CHILDREN
     private var dateTimeFormat: Format? = null
@@ -120,7 +116,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
 
     fun initMapAndPrices() {
-        Log.i("FindFirst", "initMap")
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             val from = routeInteractor.from!!.cityPoint
@@ -128,8 +123,9 @@ class CreateOrderPresenter(cc: CoroutineContexts,
 
             val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
             routeInfo?.let {
-                var prices: Map<String, String>? = null
-                if(it.prices != null) prices = it.prices!!.map { it.tranferId to it.min }.toMap()
+                duration = it.duration
+                var prices: Map<String, TransportPrice>? = null
+                if(it.prices != null) prices = it.prices!!.map { p -> p.tranferId to TransportPrice(p.min, p.max, p.minFloat) }.toMap()
                 if(transportTypes == null) transportTypes =
                     systemInteractor.transportTypes!!.map { Mappers.getTransportTypeModel(it, prices) }
                 routeModel = Mappers.getRouteModel(it.distance,
@@ -142,8 +138,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                    SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
             }
             routeModel?.let {
-                val fairPrice = transportTypes!!.minBy { it.price!! }!!.price
-                viewState.setTransportTypes(transportTypes!!, fairPrice ?: "")
+                viewState.setTransportTypes(transportTypes!!)
                 polyline = Utils.getPolyline(it)
                 track = polyline?.track
                 viewState.setRoute(false, polyline!!, it)
@@ -163,7 +158,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: CreateOrderView) {
         super.attachView(view)
-        Log.i("FindFirst", "attach")
         dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
         viewState.setCurrencies(currencies)
         val i = systemInteractor.getCurrentCurrencyIndex()
@@ -171,7 +165,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             
         viewState.setUser(user)
         viewState.setDateTimeTransfer(Utils.getFormattedDate(systemInteractor.locale, date))
-	    transportTypes?.let { viewState.setTransportTypes(it, "") }
+	    transportTypes?.let { viewState.setTransportTypes(it) }
 	    //routeModel?.let     { viewState.setRoute(it) }
     }
 
@@ -318,6 +312,16 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                             Utils.checkPhone(user.profile.phone) &&
                             user.termsAccepted
         viewState.setGetTransferEnabled(actionEnabled)
+    }
+
+    fun onTransportChosen(){
+        checkFields()
+        val tripTime = String.format("%d:%d", duration!! / 60, duration!! % 60)
+        val checkedTransport = transportTypes?.filter { it.checked }
+        if(!checkedTransport.isNullOrEmpty())
+            viewState.setFairPrice(checkedTransport.minBy { it.price!!.unitPrice }?.price!!.min, tripTime)
+        else viewState.setFairPrice(null, null)
+
     }
 
     fun onCenterRouteClick() {
