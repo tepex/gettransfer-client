@@ -228,7 +228,7 @@ class MainPresenter(cc: CoroutineContexts,
     fun onRequestsClick() { router.navigateTo(Screens.REQUESTS) ;  logEvent(TRANSFER_CLICKED) }
     fun onLoginClick() {
         screenForReturnAfterLogin = Screens.REQUESTS
-        router.navigateTo(Screens.LOGIN)
+        login()
         logEvent(LOGIN_CLICKED)
     }
 
@@ -240,7 +240,7 @@ class MainPresenter(cc: CoroutineContexts,
         }
         else {
             screenForReturnAfterLogin = Screens.CARRIER_MODE
-            router.navigateTo(Screens.LOGIN)
+            login()
         }
     }
 

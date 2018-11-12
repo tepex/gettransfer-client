@@ -28,6 +28,7 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
+import com.kg.gettransfer.presentation.IntentKeys
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.BasePresenter
@@ -164,7 +165,9 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
 open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, Screens.NOT_USED) {
     protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
         when(screenKey) {
-            //Screens.LOGIN -> return Intent(context, LoginActivity::class.java)
+            Screens.LOGIN -> return Intent(context, LoginActivity::class.java)
+                    .putExtra(IntentKeys.SCREEN_FOR_RETURN, Screens.OFFERS )
+                    .putExtra(IntentKeys.EMAIL_TO_LOGIN, data as String)
             Screens.DETAILS -> return Intent(context, TransferDetailsActivity::class.java)
             Screens.OFFERS -> return Intent(context, OffersActivity::class.java)
             Screens.PAYMENT_SETTINGS -> return context.getPaymentSettingsActivityLaunchIntent(data as Date)

@@ -276,7 +276,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         }, { e ->
                 if(e is ApiException) {
                     when {
-                        e.isNotLoggedIn() -> login()
+                        e.isNotLoggedIn() -> router.navigateTo(Screens.LOGIN, user.profile.email)
                         e.details == "{phone=[taken]}" -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
                         else -> viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
                     }

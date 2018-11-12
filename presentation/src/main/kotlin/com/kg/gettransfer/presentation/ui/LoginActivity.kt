@@ -62,6 +62,7 @@ class LoginActivity: BaseActivity(), LoginView {
         homeButton.setOnClickListener { presenter.onHomeClick() }
         btnForgotPassword.markAsNotImplemented()
         presenter.screenForReturn = intent.getStringExtra(IntentKeys.SCREEN_FOR_RETURN)
+        etEmail.setText(intent.getStringExtra(IntentKeys.EMAIL_TO_LOGIN))
     }
 
     override fun enableBtnLogin(enable: Boolean) {

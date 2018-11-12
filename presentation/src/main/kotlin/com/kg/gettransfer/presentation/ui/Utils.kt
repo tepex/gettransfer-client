@@ -130,8 +130,9 @@ internal class Utils {
         }
         
         fun checkPhone(phone: String?): Boolean {
-            if(phone == null) return false
-            return PHONE_PATTERN.matcher(phone.trim()).matches()
+            /*if(phone == null) return false
+            return PHONE_PATTERN.matcher(phone.trim()).matches()*/
+            return phone != null
         }
         
         fun formatDistance(context: Context, distance: Int?, distanceUnit: DistanceUnit): String {

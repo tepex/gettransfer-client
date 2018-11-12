@@ -116,6 +116,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 Screens.LOGIN -> return Intent(context, LoginActivity::class.java)
                         .putExtra(IntentKeys.SCREEN_FOR_RETURN, Screens.OFFERS )
+                        .putExtra(IntentKeys.EMAIL_TO_LOGIN, data as String)
             }
             return null
         }
