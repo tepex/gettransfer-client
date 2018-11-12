@@ -319,7 +319,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     override fun setComment(comment: String)                 { tvComments.text = comment }
     override fun setDateTimeTransfer(dateTimeString: String) { tvDateTimeTransfer.text = dateTimeString }
 
-    override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
+    override fun setTransportTypes(transportTypes: List<TransportTypeModel>, fairPrice: String) {
         rvTransferType.adapter = TransferTypeAdapter(transportTypes) {
             presenter.checkFields()
             transportTypeClicked(it)

@@ -120,6 +120,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
 
     fun initMapAndPrices() {
+        Log.i("FindFirst", "initMap")
         utils.launchAsyncTryCatchFinally({
             viewState.blockInterface(true)
             val from = routeInteractor.from!!.cityPoint
@@ -141,7 +142,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                    SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
             }
             routeModel?.let {
-                viewState.setTransportTypes(transportTypes!!)
+                val fairPrice = transportTypes!!.minBy { it.price!! }!!.price
+                viewState.setTransportTypes(transportTypes!!, fairPrice ?: "")
                 polyline = Utils.getPolyline(it)
                 track = polyline?.track
                 viewState.setRoute(false, polyline!!, it)
@@ -161,6 +163,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: CreateOrderView) {
         super.attachView(view)
+        Log.i("FindFirst", "attach")
         dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
         viewState.setCurrencies(currencies)
         val i = systemInteractor.getCurrentCurrencyIndex()
@@ -168,7 +171,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             
         viewState.setUser(user)
         viewState.setDateTimeTransfer(Utils.getFormattedDate(systemInteractor.locale, date))
-	    transportTypes?.let { viewState.setTransportTypes(it) }
+	    transportTypes?.let { viewState.setTransportTypes(it, "") }
 	    //routeModel?.let     { viewState.setRoute(it) }
     }
 
