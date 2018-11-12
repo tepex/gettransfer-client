@@ -15,6 +15,8 @@ import com.google.android.gms.maps.model.LatLngBounds
 
 import com.google.android.gms.tasks.Tasks
 
+import com.kg.gettransfer.domain.ApiException
+
 import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
@@ -28,6 +30,8 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
+import timber.log.Timber
+
 class GeoRepositoryImpl(private val context: Context): GeoRepository {
     private lateinit var geocoder: Geocoder
     private val locationProviderClient = LocationServices.getFusedLocationProviderClient(context)
@@ -38,16 +42,10 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
         geocoder = Geocoder(context, locale)
     }
     
-    override suspend fun getCurrentLocation(): Result<Point> {
-        val location: Location? = try {
-            suspendCoroutine { cont ->
-                locationProviderClient.lastLocation
-                    .addOnSuccessListener { location: Location? -> cont.resume(location) }
-                    .addOnFailureListener { cont.resumeWithException(it) }
-            }
-        } catch(e: Exception) { return Result(error = e) }
-        return if(location != null) Result(Point(location.latitude, location.longitude))
-        else Result(error = RuntimeException("Location not found"))
+    override suspend fun getCurrentLocation(): Result<Point?> = suspendCoroutine { cont ->
+        locationProviderClient.lastLocation
+            .addOnSuccessListener { l: Location -> cont.resume(Result<Point?>(model = Point(l.latitude, l.longitude))) }
+            .addOnFailureListener { cont.resume(Result(error = ApiException(ApiException.NOT_FOUND, it.message!!))) }
     }
 
     override fun getAddressByLocation(point: Point, pair: Pair<Point, Point>): GTAddress {

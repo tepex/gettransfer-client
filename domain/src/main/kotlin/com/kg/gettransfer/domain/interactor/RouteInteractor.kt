@@ -1,7 +1,5 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.AsyncUtils
-
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.model.RouteInfo
@@ -16,11 +14,7 @@ class RouteInteractor(private val geoRepository: GeoRepository,
     var from: GTAddress? = null
     var to: GTAddress? = null
 
-    suspend fun getCurrentLocation(utils: AsyncUtils): Point {
-        val result = utils.asyncAwait { geoRepository.getCurrentLocation() }
-        if(result.error != null) throw result.error
-        return result.result as Point
-    }
+    //suspend fun getCurrentLocation() = geoRepository.getCurrentLocation()
 
     fun getCurrentAddress() = geoRepository.getCurrentAddress()
 

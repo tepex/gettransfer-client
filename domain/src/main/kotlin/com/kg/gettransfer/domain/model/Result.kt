@@ -1,3 +1,5 @@
 package com.kg.gettransfer.domain.model
 
-class Result<T>(val result: T? = null, val error: Throwable? = null)
+import com.kg.gettransfer.domain.ApiException
+
+class Result<M>(val model: M? = null, val error: ApiException? = null)
