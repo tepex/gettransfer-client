@@ -36,6 +36,7 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
         @JvmField val SCREEN             = "screen"
         @JvmField val SCREEN_LICENSE     = "license_agreement"
         @JvmField val SCREEN_REG_CARRIER = "registration_carrier"
+        @JvmField val SCREEN_CARRIER     = "carrier_mode"
     }
 
     @SuppressLint("SetJavaScriptEnabled")

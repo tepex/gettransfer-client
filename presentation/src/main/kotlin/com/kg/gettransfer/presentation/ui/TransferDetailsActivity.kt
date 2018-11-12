@@ -14,6 +14,7 @@ import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
 
@@ -103,9 +104,16 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
     override fun setTransfer(transferModel: TransferModel) {
         layoutTransferInfo.tvTransferRequestNumber.text = getString(R.string.LNG_RIDE_NUMBER).plus(transferModel.id)
         layoutTransferInfo.tvFrom.text = transferModel.from
-        layoutTransferInfo.tvTo.text = transferModel.to
         layoutTransferInfo.tvOrderDateTime.text = transferModel.dateTime
-        layoutTransferInfo.tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
+        if(transferModel.to != null) {
+            layoutTransferInfo.tvTo.text = transferModel.to
+            layoutTransferInfo.tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
+        } else if(transferModel.duration != null){
+            layoutTransferInfo.tvTo.text = getString(R.string.LNG_TIME_RIDE)
+            layoutTransferInfo.tvDistance.text = Utils.formatDuration(this, transferModel.duration)
+        }
+        //layoutTransferInfo.tvTo.text = transferModel.to
+        //layoutTransferInfo.tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
 
         tvCountPassengers.text = transferModel.countPassengers.toString()
         if(transferModel.nameSign != null) {
@@ -167,5 +175,9 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
 
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel) {
         setPolyline(polyline, routeModel)
+    }
+
+    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng) {
+        processGoogleMap { setPinForHourlyTransfer(placeName, info, point) }
     }
 }

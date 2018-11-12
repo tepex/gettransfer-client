@@ -37,9 +37,11 @@ class LoginActivity: BaseActivity(), LoginView {
 
             when (screenKey) {
                 Screens.REQUESTS -> return Intent(context, RequestsActivity::class.java)
-                Screens.CARRIER_MODE -> return Intent(context, CarrierTripsActivity::class.java)
+                /*Screens.CARRIER_MODE -> return Intent(context, CarrierTripsActivity::class.java)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)*/
+                Screens.CARRIER_MODE -> return Intent(context, WebPageActivity()::class.java)
+                        .putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_CARRIER)
                 Screens.REG_CARRIER -> return Intent(context, WebPageActivity()::class.java)
                         .putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_REG_CARRIER)
             }

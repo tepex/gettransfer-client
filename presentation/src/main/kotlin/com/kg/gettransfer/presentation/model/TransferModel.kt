@@ -7,7 +7,7 @@ import java.util.Date
 class TransferModel(val id: Long,
                     val status: String,
                     val from: String,
-                    val to: String,
+                    val to: String?,
                     val dateTime: String,
                     val distance: Int?,
                     val distanceUnit: DistanceUnit,
@@ -23,4 +23,5 @@ class TransferModel(val id: Long,
                     val price: String?,
                     val relevantCarriersCount: Int?,
                     val checkOffers: Boolean,
-                    val refund_date: Date?)
+                    val refund_date: Date?,
+                    val duration: Int?)

@@ -7,8 +7,6 @@ import android.content.Context
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 
-import android.net.ConnectivityManager
-
 import android.os.Build
 
 import android.support.annotation.DrawableRes
@@ -141,6 +139,10 @@ internal class Utils {
             var d = distance
             if(distanceUnit == DistanceUnit.Mi) d = DistanceUnit.km2Mi(distance)
             return context.getString(R.string.LNG_RIDE_DISTANCE).plus(": $d ").plus(distanceUnit.name)
+        }
+
+        fun formatDuration(context: Context, duration: Int): String{
+            return context.getString(R.string.LNG_RIDE_DURATION).plus(": $duration ").plus(context.getString(R.string.LNG_H))
         }
 
         fun getPolyline(routeModel: RouteModel): PolylineModel {

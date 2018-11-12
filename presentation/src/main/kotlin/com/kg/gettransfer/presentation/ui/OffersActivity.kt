@@ -126,8 +126,15 @@ class OffersActivity: BaseActivity(), OffersView {
         //tvConnectingCarriers.text = getString(R.string.transfer_connecting_carriers, transferModel.relevantCarriersCount)
         tvTransferRequestNumber.text = getString(R.string.LNG_RIDE_NUMBER).plus(transferModel.id)
         tvFrom.text = transferModel.from
-        tvTo.text = transferModel.to
-        tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
+        if(transferModel.to != null) {
+            tvTo.text = transferModel.to
+            tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
+        } else if(transferModel.duration != null){
+            tvTo.text = getString(R.string.LNG_TIME_RIDE)
+            tvDistance.text = Utils.formatDuration(this, transferModel.duration)
+        }
+        //tvTo.text = transferModel.to
+        //tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
     }
     
     override fun setDate(date: String) { tvOrderDateTime.text = date }

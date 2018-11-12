@@ -36,10 +36,15 @@ class RequestsRVAdapter(private val transfers: List<TransferModel>, private val 
         fun bind(item: TransferModel, listener: ItemClickListener) = with(containerView) {
             tvTransferRequestNumber.text = context.getString(R.string.LNG_RIDE_NUMBER).plus(item.id)
             tvFrom.text = item.from
-            tvTo.text = item.to
+            if(item.to != null) {
+                tvTo.text = item.to
+                tvDistance.text = Utils.formatDistance(context, item.distance, item.distanceUnit)
+            } else if(item.duration != null){
+                tvTo.text = context.getString(R.string.LNG_TIME_RIDE)
+                tvDistance.text = Utils.formatDuration(context, item.duration)
+            }
             //tvOrderDateTime.text = context.getString(R.string.transfer_date_local, item.dateTime)
             tvOrderDateTime.text = item.dateTime
-            tvDistance.text = Utils.formatDistance(context, item.distance, item.distanceUnit)
             setOnClickListener { listener(item) }
         }
     }

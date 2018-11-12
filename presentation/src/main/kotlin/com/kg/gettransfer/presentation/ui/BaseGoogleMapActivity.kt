@@ -11,9 +11,11 @@ import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.RelativeLayout
 import com.google.android.gms.maps.CameraUpdate
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.kg.gettransfer.R
@@ -118,22 +120,8 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     }
     
     protected fun setPolyline(polyline: PolylineModel, routeModel: RouteModel) {
-        val pinLayout = layoutInflater.inflate(R.layout.view_maps_pin, null)
-
-        pinLayout.tvPlace.text = routeModel.from
-        pinLayout.tvInfo.text = routeModel.dateTime
-        pinLayout.tvPlaceMirror.text = routeModel.from
-        pinLayout.tvInfoMirror.text = routeModel.dateTime
-        pinLayout.imgPin.setImageResource(R.drawable.ic_map_label_a)
-        val bmPinA = createBitmapFromView(pinLayout)
-
-        val distance = Utils.formatDistance(this, routeModel.distance, routeModel.distanceUnit)
-        pinLayout.tvPlace.text = routeModel.to
-        pinLayout.tvInfo.text = distance
-        pinLayout.tvPlaceMirror.text = routeModel.to
-        pinLayout.tvInfoMirror.text = distance
-        pinLayout.imgPin.setImageResource(R.drawable.ic_map_label_b)
-        val bmPinB = createBitmapFromView(pinLayout)
+        val bmPinA = getPinBitmap(routeModel.from, routeModel.dateTime, R.drawable.ic_map_label_a)
+        val bmPinB = getPinBitmap(routeModel.to, Utils.formatDistance(this, routeModel.distance, routeModel.distanceUnit), R.drawable.ic_map_label_b)
 
         val startMakerOptions = MarkerOptions()
                 .position(polyline.startPoint)
@@ -157,6 +145,26 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
             }
             catch(e: Exception) { Timber.e(e) }
         }
+    }
+
+    protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng){
+        val bmPinA = getPinBitmap(placeName, info, R.drawable.ic_map_label_a)
+        val startMakerOptions = MarkerOptions()
+                .position(point)
+                .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
+        googleMap.addMarker(startMakerOptions)
+        val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+    }
+
+    private fun getPinBitmap(placeName: String, info: String, drawable: Int): Bitmap{
+        val pinLayout = layoutInflater.inflate(R.layout.view_maps_pin, null)
+        pinLayout.tvPlace.text = placeName
+        pinLayout.tvInfo.text = info
+        pinLayout.tvPlaceMirror.text = placeName
+        pinLayout.tvInfoMirror.text = info
+        pinLayout.imgPin.setImageResource(drawable)
+        return createBitmapFromView(pinLayout)
     }
 
     protected fun showTrack (track: CameraUpdate){

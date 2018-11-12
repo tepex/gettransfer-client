@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.view
 
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
@@ -15,4 +16,5 @@ interface TransferDetailsView: BaseView {
     //fun setRoute(routeModel: RouteModel)
     fun setRoute(polyline: PolylineModel, routeModel: RouteModel)
     fun setButtonCancelVisible(visible: Boolean)
+    fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng)
 }

@@ -84,13 +84,15 @@ object Mappers {
                          distanceUnit: DistanceUnit,
                          transportTypes: List<TransportType>): TransferModel {
         val selected = transportTypes.filter { type.transportTypeIds.contains(it.id) }
+        var distance: Int? = null
+        if(type.to != null) distance = type.distance ?: checkDistance(type.from.point!!, type.to!!.point!!)
         
         return TransferModel(type.id,
                              type.status,
                              type.from.name!!,
-                             type.to!!.name!!,
+                             type.to?.name,
                              Utils.getFormattedDate(locale, type.dateToLocal),
-                             type.distance ?: checkDistance(type.from.point!!, type.to!!.point!!),
+                             distance,
                              distanceUnit,
                              type.pax,
                              type.nameSign,
@@ -104,7 +106,8 @@ object Mappers {
                              type.price?.default,
                              type.relevantCarriersCount,
                              type.checkOffers,
-                             type.dateRefund)
+                             type.dateRefund,
+                             type.duration)
     }
     
     fun getTransferNew(from: CityPoint,
