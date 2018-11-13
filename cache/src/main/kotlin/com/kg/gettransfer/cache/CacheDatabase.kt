@@ -20,6 +20,6 @@ abstract class CacheDatabase: RoomDatabase() {
 //    abstract fun offerCachedDao(): OfferCachedDao
 //    abstract fun transferCachedDao(): TransferCachedDao
 
-    abstract fun accountCachedDao(): ConfigsCachedDao
+    abstract fun configsCachedDao(): ConfigsCachedDao
     abstract fun accountCachedDao(): AccountCachedDao
 }

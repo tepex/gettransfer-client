@@ -20,6 +20,7 @@ data class OfferEntity(@SerialName(ID) val id: Long,
                        @SerialName(VEHICLE) val vehicle: VehicleEntity,
                        @Optional @SerialName(DRIVER) val driver: ProfileEntity? = null) {
     companion object {
+        const val ENTITY_NAME        = "offer"
         const val ID                 = "id"
         const val STATUS             = "status"
         const val WIFI               = "wifi"
@@ -72,6 +73,7 @@ data class CarrierEntity(@SerialName(ID) val id: Long,
                          @SerialName(RATINGS) val ratings: RatingsEntity,
                          @Optional @SerialName(CAN_UPDATE_OFFERS) val canUpdateOffers: Boolean? = false) {
     companion object {
+        const val ENTITY_NAME         = "carrier"
         const val ID                  = "id"
         const val TITLE               = "title"
         const val EMAIL               = "email"

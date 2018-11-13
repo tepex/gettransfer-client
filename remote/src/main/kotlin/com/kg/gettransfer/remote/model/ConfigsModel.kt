@@ -8,8 +8,6 @@ import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.CurrencyEntity
 import com.kg.gettransfer.data.model.PaypalCredentialsEntity
 
-const val CONFIGS = "configs"
-
 class ConfigsModel(@SerializedName(ConfigsEntity.TRANSPORT_TYPES) @Expose val transportTypes: TransportTypesWrapperModel,
                    @SerializedName(ConfigsEntity.PAYPAL_CREDENTIALS) @Expose val paypalCredentials: PaypalCredentialsModel,
                    @SerializedName(ConfigsEntity.AVAILABLE_LOCALES) @Expose val availableLocales: List<LocaleModel>,
