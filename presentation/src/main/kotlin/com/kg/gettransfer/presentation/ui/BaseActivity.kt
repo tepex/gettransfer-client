@@ -126,9 +126,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         if(block) {
             if(useSpinner) LoadingFragment.showLoading(supportFragmentManager)
         }
-        else {
-            LoadingFragment.hideLoading(supportFragmentManager)
-        }
+        else  LoadingFragment.hideLoading(supportFragmentManager)
     }
     
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
