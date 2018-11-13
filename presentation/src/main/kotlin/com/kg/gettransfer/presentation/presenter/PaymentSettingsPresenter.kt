@@ -50,12 +50,6 @@ class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
     
     private lateinit var paymentRequest: PaymentRequestModel
     
-    /*
-    init {
-        router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
-    }
-    */
-    
     @CallSuper
     override fun attachView(view: PaymentSettingsView?) {
         super.attachView(view)
