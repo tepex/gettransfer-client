@@ -403,7 +403,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         val colorRes: Int
         val text: String
         val visibility: Int
-        if(discountInfo != null){
+        if(discountInfo != null) {
             colorRes = R.color.promo_valid
             text = discountInfo
             visibility = View.VISIBLE
