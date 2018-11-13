@@ -387,8 +387,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         switchAgreement.isChecked = user.termsAccepted
     }
 
-
-
     //TODO сделать подсветку не заполненных полей
     override fun setGetTransferEnabled(enabled: Boolean) {}
 
