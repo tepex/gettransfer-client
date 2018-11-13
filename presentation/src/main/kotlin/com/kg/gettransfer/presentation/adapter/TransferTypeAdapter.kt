@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.view_transfer_type.*
 import kotlinx.android.synthetic.main.view_transfer_type.view.*
 
 class TransferTypeAdapter(private var list: List<TransportTypeModel>,
-                          private val transportClick: () -> Unit,
                           private val listener: ChangeListener): RecyclerView.Adapter<TransferTypeAdapter.ViewHolder>() {
 
     override fun getItemCount() = list.size
@@ -30,10 +29,10 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_transfer_type, parent, false))
 
-    override fun onBindViewHolder(holder: ViewHolder, pos: Int) { holder.bind(list.get(pos), transportClick, listener) }
+    override fun onBindViewHolder(holder: ViewHolder, pos: Int) { holder.bind(list.get(pos), listener) }
 
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(item: TransportTypeModel, transportClick: () -> Unit, listener: ChangeListener) = with(containerView) {
+        fun bind(item: TransportTypeModel, listener: ChangeListener) = with(containerView) {
             tvTransferType.setText(item.nameId!!)
             tvNumberPersonsTransfer.text = Utils.formatPersons(context, item.paxMax)
             tvCountBaggage.text = Utils.formatLuggage(context, item.luggageMax)
