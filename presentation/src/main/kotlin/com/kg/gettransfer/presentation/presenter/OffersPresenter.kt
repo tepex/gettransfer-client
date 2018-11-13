@@ -95,14 +95,6 @@ class OffersPresenter: BasePresenter<OffersView>() {
         }
     }
 
-    /*
-    @CallSuper
-    override fun onDestroy() {
-        router.removeResultListener(LoginPresenter.RESULT_CODE)
-        super.onDestroy()
-    }
-    */
-    
     fun onNewOffer(offer: Offer) {
         offerInteractor.newOffer(offer)
         offers = offers.toMutableList().apply { add(Mappers.getOfferModel(offer, systemInteractor.locale)) }
