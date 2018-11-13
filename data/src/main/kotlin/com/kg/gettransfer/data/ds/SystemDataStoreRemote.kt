@@ -10,43 +10,17 @@ import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
 
-import java.util.concurrent.TimeoutException
-
 /**
  * Implementation of the [SystemDataStore] interface to provide a means of communicating with the remote data source
  */
 open class SystemDataStoreRemote(private val remote: SystemRemote): SystemDataStore {
-    override suspend fun getConfigs(): ConfigsEntity {
-        try { return remote.getConfigs() }
-        catch(e: RemoteException) { throw ExceptionMapper.map(e) }
-//        catch(e: NetworkNotAvailableException) { throw ExceptionMapper.map(e)}
-        catch(e: TimeoutException) { throw e }
-    }
-
+    override suspend fun getConfigs() = remote.getConfigs()
     override suspend fun setConfigs(configsEntity: ConfigsEntity) { throw UnsupportedOperationException() }
-    
-    override suspend fun getAccount(): AccountEntity? {
-        try { return remote.getAccount() }
-        catch(e: RemoteException) { throw ExceptionMapper.map(e) }
-//        catch(e: NetworkNotAvailableException) { throw ExceptionMapper.map(e) }
-        catch(e: TimeoutException) { throw e }
-    }
-    
-    override suspend fun setAccount(accountEntity: AccountEntity) {
-        try { return remote.setAccount(accountEntity) }
-        catch(e: RemoteException) { throw ExceptionMapper.map(e) }
-//        catch(e: NetworkNotAvailableException) { throw ExceptionMapper.map(e)}
-        catch(e: TimeoutException) { throw e }
-    }
-    
+
+    override suspend fun getAccount() = remote.getAccount()
+    override suspend fun setAccount(accountEntity: AccountEntity) = remote.setAccount(accountEntity)    
+    override suspend fun login(email: String, password: String) = remote.login(email, password)
     override fun clearAccount() { throw UnsupportedOperationException() }
-    
-    override suspend fun login(email: String, password: String): AccountEntity {
-        try { return remote.login(email, password) }
-        catch(e: RemoteException) { throw ExceptionMapper.map(e) }
-//        catch(e: NetworkNotAvailableException) { throw ExceptionMapper.map(e)}
-        catch(e: TimeoutException) { throw e }
-    }
-    
+
     override fun changeEndpoint(endpoint: EndpointEntity) = remote.changeEndpoint(endpoint)
 }

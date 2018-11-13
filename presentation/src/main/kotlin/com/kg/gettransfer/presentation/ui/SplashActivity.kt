@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.InternetNotAvailableException
@@ -30,6 +31,7 @@ import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.presentation.Screens
 
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 import org.koin.android.ext.android.inject
 
@@ -62,23 +64,27 @@ class SplashActivity: AppCompatActivity() {
 
         Timber.d(getString(R.string.title_starting_session))
         Timber.d("Permissions granted!")
-        utils.launchAsyncTryCatch({
-            utils.asyncAwait { systemInteractor.coldStart() }
+        utils.launchSuspend {
+            val result = utils.asyncAwait { systemInteractor.coldStart() }
             /*when(systemInteractor.lastMode) {
                 Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsActivity::class.java))
                 Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             }*/
-            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-            finish()
-        }, { e ->
-            Timber.e(e)
-            val msg = if(e is InternetNotAvailableException) getString(R.string.LNG_NETWORK_ERROR) else getString(R.string.err_server, e.message)
-            Utils.showError(this@SplashActivity, true, msg) {
-                startActivity(Intent(this@SplashActivity, SettingsActivity::class.java))
+            
+            if(result.error != null) {
+                Timber.e(result.error!!)
+                val msg = if(result.error!!.code == ApiException.NETWORK_ERROR)
+                    getString(R.string.LNG_NETWORK_ERROR) else getString(R.string.err_server, result.error!!.details)
+                Utils.showError(this@SplashActivity, true, msg) {
+                    startActivity(Intent(this@SplashActivity, SettingsActivity::class.java))
+                }
             }
-            // @TODO: Показать ошибку. Учесть 401 — протухший ключ
-        })
+            else {
+                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                finish()
+            }
+        }
     }
 
     private fun checkIsTaskRoot(): Boolean {
@@ -101,8 +107,8 @@ class SplashActivity: AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if(requestCode != PERMISSION_REQUEST) return
         if(grantResults.size == 2 &&
-            grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-            grantResults[1] == PackageManager.PERMISSION_GRANTED) recreate()
+           grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+           grantResults[1] == PackageManager.PERMISSION_GRANTED) recreate()
         else finish()
     }
 }

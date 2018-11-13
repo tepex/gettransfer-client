@@ -44,7 +44,10 @@ class AsyncUtils(private val cc: CoroutineContexts, root: Job): CoroutineScope {
     }
 
     override val coroutineContext = cc.ui + root
-
+    
+    @Synchronized
+    fun launchSuspend(tryBlock: Task) = launch { tryBlock() }
+    
     @Synchronized
     fun launchAsyncTryCatch(tryBlock: Task, catchBlock: TaskThrowable) = launch { tryCatch(tryBlock, catchBlock) }
 

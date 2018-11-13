@@ -68,8 +68,8 @@ val prefsModule = module {
         val endpoints = listOf(
             EndpointEntity("Demo", context.resources.getString(R.string.api_key_demo), context.resources.getString(R.string.api_url_demo), true),
             EndpointEntity("Prod", context.resources.getString(R.string.api_key_prod), context.resources.getString(R.string.api_url_prod)))
-        PreferencesImpl(context, endpoints)
-    } bind PreferencesCache::class bind SystemCache::class
+        PreferencesImpl(context, endpoints) as PreferencesCache
+    }
 }
 
 val loggingModule = module {

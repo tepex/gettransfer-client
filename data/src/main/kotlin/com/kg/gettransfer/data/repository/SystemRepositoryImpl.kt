@@ -14,6 +14,7 @@ import com.kg.gettransfer.data.mapper.ConfigsMapper
 import com.kg.gettransfer.data.mapper.EndpointMapper
 import com.kg.gettransfer.data.mapper.ExceptionMapper
 
+import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.GTAddressEntity
@@ -67,11 +68,11 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
             val endpointEntity = endpointMapper.toEntity(value)
             preferencesCache.endpoint = endpointEntity
         }
-        
+
     override var addressHistory: List<GTAddress>
         get() = preferencesCache.addressHistory.map { addressMapper.fromEntity(it) }
         set(value) { preferencesCache.addressHistory = value.map { addressMapper.toEntity(it) } }
-        
+
     override suspend fun coldStart(): Result<Account> {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
 
@@ -79,21 +80,23 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
             val result: ResultEntity<ConfigsEntity?> = retrieveEntity { fromRemote ->
                 factory.retrieveDataStore(fromRemote).getConfigs() }
             result.entity?.let { configs = configsMapper.fromEntity(it) }
-            result.error?.let { return Result(error = ExceptionMapper.map(it)) }
+            if(result.error != null) return Result(error = ExceptionMapper.map(result.error))
         }
-        
-        return Result(account)
-        
-        
-        /*
-        factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
-        configs = configsMapper.fromEntity(factory.retrieveRemoteDataStore().getConfigs())
-        accountMapper.configs = configs!!
-        val accountEntity = factory.retrieveRemoteDataStore().getAccount()
-        factory.retrieveCacheDataStore().setAccount(accountEntity)
-        */
+
+        var error: ApiException? = null
+        if(account === Account.NO_ACCOUNT) {
+            val result: ResultEntity<AccountEntity?> = retrieveEntity { fromRemote ->
+                factory.retrieveDataStore(fromRemote).getAccount() }
+            result.entity?.also {
+                account = accountMapper.fromEntity(it)
+            }?.also {
+                factory.retrieveCacheDataStore().setAccount(it)
+            }
+            result.error?.let { error = ExceptionMapper.map(it) }
+        }
+        return Result(account, error)
     }
-    
+
     override suspend fun putAccount(account: Account) {
         this.account = account
         val accountEntity = accountMapper.toEntity(account)
@@ -108,39 +111,16 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
     }
 
     override fun logout() = factory.retrieveCacheDataStore().clearAccount()
-    
+
     override fun accessTokenChanged(accessToken: String) {
         listeners.forEach { it.connectionChanged(endpoint, accessToken) }
     }
-    
+
     override fun endpointChanged(endpointEntity: EndpointEntity) {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointEntity)
         listeners.forEach { it.connectionChanged(endpoint, accessToken) }
     }
-    
+
     override fun addListener(listener: SystemListener)    { listeners.add(listener) }
-    override fun removeListener(listener: SystemListener) { listeners.add(listener) }
-    
-    
-    private suspend fun initSystemEntities() {
-        /*
-        if(configs === Configs.DEFAULT) {
-        val configsEntity = tryRetrieveEntity(
-            { retrieveEntity { fromRemote -> factory.retrieveDataStore(fromRemote).getConfigs() } },
-            { e ->
-                log.error("Configs initialization error", e)
-                null
-            })?.let { configs = configsMapper.fromEntity(it) }
-        }
-        */
-        /*
-        if(account === Account.NO_ACCOUNT) {
-            val accountEntity = try { retrieveAccountEntity() }
-            catch(e: ApiException) { log.error("Configs initialization error", e) }               
-            accountEntity?.let { configs = configsMapper.fromEntity(it) }
-        }
-        */
-    }
-    
-    // TODO: convert to FP    
+    override fun removeListener(listener: SystemListener) { listeners.add(listener) }    
 }
