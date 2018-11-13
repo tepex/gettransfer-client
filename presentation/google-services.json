@@ -8,37 +8,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:200820403845:android:d6dca06060ccee69",
-        "android_client_info": {
-          "package_name": "com.gettransfer"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "200820403845-fsrd0gvurovbc496h9ftaj8unt6qj36i.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyC7bTslXGNtk8jZJd2r11trkPopsfdqfMk"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:200820403845:android:6102b6945a841ae4",
         "android_client_info": {
           "package_name": "com.kg.gettransfer"

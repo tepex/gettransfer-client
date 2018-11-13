@@ -25,7 +25,8 @@ android {
 	buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 	
 	defaultConfig {
-		applicationId "com.gettransfer"
+		//applicationId "com.gettransfer"
+		applicationId "com.kg.gettransfer"
 		minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION
 		targetSdkVersion project.ANDROID_BUILD_SDK_VERSION
 		testInstrumentationRunner project.ANDROID_TEST_INSTRUMENTATION_RUNNER
@@ -58,7 +59,7 @@ android {
 			signingConfig signingConfigs.config
 		}
 		debug {
-			applicationIdSuffix ".debug"
+			//applicationIdSuffix ".debug"
 			minifyEnabled false
 			debuggable true
 			shrinkResources false
