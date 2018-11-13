@@ -81,7 +81,7 @@ android {
 			signingConfig signingConfigs.config
 		}
 		debug {
-			applicationIdSuffix ".debug"
+			//applicationIdSuffix ".debug"
 			minifyEnabled false
 			debuggable true
 			shrinkResources false
