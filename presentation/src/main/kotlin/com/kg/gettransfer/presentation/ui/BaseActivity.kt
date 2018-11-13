@@ -60,7 +60,6 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         const val TOOLBAR_NO_TITLE = 0
     }
     
-    
     internal val systemInteractor: SystemInteractor by inject()
     
     internal val router: Router by inject()
