@@ -42,8 +42,8 @@ class OffersPresenter(cc: CoroutineContexts,
     private lateinit var transferModel: TransferModel
     private lateinit var offers: List<OfferModel>
 
-    private var sortCategory: String? = null
-    private var sortHigherToLower = true
+    private var sortCategory: String = SORT_PRICE
+    private var sortHigherToLower = false
 
     companion object {
         @JvmField val EVENT = "offers"
@@ -80,7 +80,8 @@ class OffersPresenter(cc: CoroutineContexts,
             offers = offerInteractor.getOffers(transfer.id).map { Mappers.getOfferModel(it, systemInteractor.locale) }
             viewState.setDate(transferModel.dateTime)
             viewState.setTransfer(transferModel)
-            changeSortType(SORT_PRICE)
+            //changeSortType(SORT_PRICE)
+            setOffers()
         }, { e ->
             Timber.e(e)
             if(e is ApiException && e.code == ApiException.NOT_LOGGED_IN) viewState.redirectView()
@@ -138,7 +139,11 @@ class OffersPresenter(cc: CoroutineContexts,
         if(sortCategory == sortType) sortHigherToLower = !sortHigherToLower
         else {
             sortCategory = sortType
-            sortHigherToLower = true
+            when(sortType){
+                SORT_YEAR -> sortHigherToLower = true
+                SORT_RATING -> sortHigherToLower = true
+                SORT_PRICE -> sortHigherToLower = false
+            }
         }
         setOffers()
     }
@@ -146,7 +151,7 @@ class OffersPresenter(cc: CoroutineContexts,
     private fun setOffers() {
         sortOffers()
         viewState.setOffers(offers)
-        viewState.setSortState(sortCategory!!, sortHigherToLower)
+        viewState.setSortState(sortCategory, sortHigherToLower)
     }
 
     private fun sortOffers() {
