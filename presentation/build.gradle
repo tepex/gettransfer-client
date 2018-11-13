@@ -18,9 +18,13 @@ ext {
     slf4j_timber_version      = "1.0.1"
     markwon_version           = "2.0.0"
     socket_io_version         = "1.0.0"
+<<<<<<< HEAD
     libphonenumber_version    = "8.9.14"
 	appmetrica_version        = "3.4.0"
 	facebook_version          = "4.38.1"
+=======
+	libphonenumber_version 	  = "8.9.14"
+>>>>>>> GAA-246 (Autofilling and formatting  phone in CreateOrderActivity)
 }
 
 android {
@@ -195,6 +199,7 @@ dependencies {
 	/*
 	implementation libs.room
 	kapt libs.kapt_room
+<<<<<<< HEAD
 	*/
 
     // Phone number code
@@ -206,6 +211,12 @@ dependencies {
 	//Facebook
 	implementation "com.facebook.android:facebook-core:$facebook_version"
 
+=======
+
+	// Phone number code
+	implementation "io.michaelrocks:libphonenumber-android:$libphonenumber_version"
+    
+>>>>>>> GAA-246 (Autofilling and formatting  phone in CreateOrderActivity)
 	testImplementation libs.junit
 	testImplementation libs.hamcrest
 	testImplementation libs.mockito
