@@ -271,7 +271,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         layoutPopupView.etPopupComment.setText(tvComments.text)
         layoutPopupView.etPopupComment.setRawInputType(InputType.TYPE_CLASS_TEXT)
         layoutPopupView.etPopupComment.popupWindow = popupWindowComment
-        if (!isKeyBoardOpened) layoutPopupView.etPopupComment.showKeyboard()
+        if(!isKeyBoardOpened) layoutPopupView.etPopupComment.showKeyboard()
 
         Handler().postDelayed({
             popupWindowComment.showAtLocation(mainLayoutActivityTransfer, Gravity.CENTER, 0, 0)
@@ -361,9 +361,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
-        rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
-            presenter.onTransportChosen()
-            if(showInfo) transportTypeClicked(transportType)
+        rvTransferType.adapter = TransferTypeAdapter( transportTypes, { presenter.onTransportChosen() }) {
+            transportTypeClicked(it)
         }
     }
 
