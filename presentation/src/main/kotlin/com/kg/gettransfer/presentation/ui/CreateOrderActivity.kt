@@ -16,6 +16,7 @@ import android.os.Handler
 import android.support.annotation.CallSuper
 
 import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.content.ContextCompat
 
 import android.support.v7.widget.LinearLayoutManager
 import android.text.InputFilter
@@ -322,9 +323,9 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     override fun setDateTimeTransfer(dateTimeString: String) { tvDateTimeTransfer.text = dateTimeString }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
-        rvTransferType.adapter = TransferTypeAdapter(presenter, transportTypes) {
+        rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
             presenter.onTransportChosen()
-            transportTypeClicked(it)
+            if(showInfo) transportTypeClicked(transportType)
         }
     }
 
@@ -368,14 +369,14 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             text = getString(R.string.LNG_RIDE_PROMOCODE_INVALID)
             visibility = View.INVISIBLE
         }
-        tvPromoResult.setTextColor(getColor(colorRes))
+        tvPromoResult.setTextColor(ContextCompat.getColor(this, colorRes))
         tvPromoResult.text = text
         img_okResult.visibility = visibility
     }
 
     override fun resetPromoView() {
         tvPromoResult.text = defaultPromoText
-        tvPromoResult.setTextColor(getColor(R.color.colorTextLightGray))
+        tvPromoResult.setTextColor(ContextCompat.getColor(this, R.color.colorTextLightGray))
         img_okResult.visibility = View.INVISIBLE
     }
 
@@ -398,7 +399,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     private fun showTransportInfo(transportType: TransportTypeModel) {
-        tvTypeTransfer.text = transportType.id
+        tvTypeTransfer.setText(transportType.nameId!!)
         ivTypeTransfer.setImageResource(transportType.imageId!!)
         tvPrice.text = transportType.price?.min
         tvCountPassengers.text = transportType.paxMax.toString()
