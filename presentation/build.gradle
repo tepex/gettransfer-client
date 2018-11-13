@@ -9,7 +9,6 @@ ext {
     support_version           = "28.0.0"
     constraint_layout_version = "2.0.0-alpha2"
     moxy_version              = "1.5.5"
-    //cicerone_version          = "3.0.0"
     cicerone_version          = "4.0.2"
     circle_indicator_version  = "1.2.2"
     hockey_version            = "5.1.1"
@@ -30,7 +29,6 @@ android {
 	
 	defaultConfig {
 		applicationId "com.gettransfer"
-		//applicationId "com.kg.gettransfer"
 		minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION
 		targetSdkVersion project.ANDROID_BUILD_SDK_VERSION
 		testInstrumentationRunner project.ANDROID_TEST_INSTRUMENTATION_RUNNER
@@ -69,7 +67,7 @@ android {
 			signingConfig signingConfigs.config
 		}
 		debug {
-			//applicationIdSuffix ".debug"
+			applicationIdSuffix ".debug"
 			minifyEnabled false
 			debuggable true
 			shrinkResources false
@@ -214,6 +212,10 @@ dependencies {
 
 def getBuildNumber() {
 	return System.getenv("BUILD_NUMBER") ?: "1"
+}
+
+def getVersionName() {
+	return System.getenv("VERSION_NAME") ?: "1.0"
 }
 
 def generateChangeLog() {
