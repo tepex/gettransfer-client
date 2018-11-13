@@ -115,6 +115,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 Screens.LOGIN -> return Intent(context, LoginActivity::class.java)
+                        .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
                         .putExtra(IntentKeys.SCREEN_FOR_RETURN, Screens.OFFERS )
                         .putExtra(IntentKeys.EMAIL_TO_LOGIN, data as String)
             }
@@ -334,13 +335,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         tvRate.text = String.format(getString(R.string.LNG_RIDE_FAIR_PRICE_FORMAT), price, time)
     }
 
-    override fun setUser(user: UserModel) {
+    override fun setUser(user: UserModel, isLoggedIn: Boolean) {
         etName.setText(user.profile.name ?: "")
         tvPhone.setText(user.profile.phone ?: "")
-        if(user.profile.email != null) {
-            etEmail.setText(user.profile.email)
-            etEmail.isEnabled = false
-        }
+        etEmail.setText(user.profile.email ?: "")
+        if(isLoggedIn) etEmail.isEnabled = false
         switchAgreement.isChecked = user.termsAccepted
     }
 

@@ -45,6 +45,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                            private val offersInteractor: OfferInteractor): BasePresenter<CreateOrderView>(cc, router, systemInteractor) {
 
     private var user: UserModel = Mappers.getUserModel(systemInteractor.account)
+    private var isLoggedIn: Boolean = systemInteractor.isLoggedIn()
     private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies!!)
     private var duration: Int? = null
     private var passengers: Int = MIN_PASSENGERS
@@ -162,8 +163,12 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         viewState.setCurrencies(currencies)
         val i = systemInteractor.getCurrentCurrencyIndex()
         if(i != -1) changeCurrency(i)
-            
-        viewState.setUser(user)
+
+        if(!isLoggedIn && systemInteractor.isLoggedIn()) {
+            user = Mappers.getUserModel(systemInteractor.account)
+            isLoggedIn = true
+        }
+        viewState.setUser(user, isLoggedIn)
         viewState.setDateTimeTransfer(Utils.getFormattedDate(systemInteractor.locale, date))
 	    transportTypes?.let { viewState.setTransportTypes(it) }
 	    //routeModel?.let     { viewState.setRoute(it) }

@@ -13,7 +13,7 @@ interface CreateOrderView: BaseView {
     //fun setRoute(routeModel: RouteModel)
     fun setRoute(isDateChanged: Boolean, polyline: PolylineModel, routeModel: RouteModel)
     fun centerRoute(cameraUpdate: CameraUpdate)
-    fun setUser(user: UserModel)
+    fun setUser(user: UserModel, isLoggedIn: Boolean)
     fun setPassengers(count: Int)
     fun setChildren(count: Int)
     fun setCurrency(currency: String)
