@@ -271,8 +271,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         popupWindowComment.isOutsideTouchable = true
         layoutPopupView.etPopupComment.setText(tvComments.text)
         layoutPopupView.etPopupComment.setRawInputType(InputType.TYPE_CLASS_TEXT)
-
-
         layoutPopupView.etPopupComment.popupWindow = popupWindowComment
         layoutPopupView.etPopupComment.showKeyboard()
 
