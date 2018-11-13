@@ -297,9 +297,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     override fun setComment(comment: String)   { comment_field.field_input.setText(comment) }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
-        rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
-            presenter.onTransportChosen()
-            if(showInfo) transportTypeClicked(transportType)
+        rvTransferType.adapter = TransferTypeAdapter( transportTypes, { presenter.onTransportChosen() }) {
+            transportTypeClicked(it)
         }
     }
 
