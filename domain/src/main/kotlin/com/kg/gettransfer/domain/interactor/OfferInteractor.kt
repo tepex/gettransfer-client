@@ -11,7 +11,6 @@ class OfferInteractor(private val repository: OfferRepository) {
 
 
     suspend fun getOffers(transferId: Long): List<Offer> {
-        if(transferId == this.transferId) return offers
         offers = repository.getOffers(transferId)
         this.transferId = transferId
         return offers
