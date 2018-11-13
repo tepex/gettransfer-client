@@ -25,7 +25,7 @@ android {
 	buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 	
 	defaultConfig {
-		applicationId "com.kg.gettransfer"
+		applicationId "com.gettransfer"
 		minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION
 		targetSdkVersion project.ANDROID_BUILD_SDK_VERSION
 		testInstrumentationRunner project.ANDROID_TEST_INSTRUMENTATION_RUNNER
@@ -58,6 +58,7 @@ android {
 			signingConfig signingConfigs.config
 		}
 		debug {
+			applicationIdSuffix ".debug"
 			minifyEnabled false
 			debuggable true
 			shrinkResources false
@@ -84,10 +85,10 @@ android {
 			signingConfig signingConfigs.config
 
 			versionCode getBuildNumber() as Integer
-			versionName "1.0"
+			versionName getVersionName() as String
 
 			manifestPlaceholders = [
-					hockeyAppId   : "1f061f58b7bd42c387ecd8681d30df48",
+					hockeyAppId   : "4fc68a7aeddd46559967981ea4612091",
 			]
 
 			dimension "type"
@@ -188,6 +189,10 @@ dependencies {
 
 def getBuildNumber() {
 	return System.getenv("BUILD_NUMBER") ?: "1"
+}
+
+def getVersionName() {
+	return System.getenv("VERSION_NAME") ?: "1.0"
 }
 
 def generateChangeLog() {
