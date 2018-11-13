@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.os.Bundle
 import com.arellomobile.mvp.InjectViewState
 
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -44,11 +45,12 @@ class PaymentPresenter(cc: CoroutineContexts,
             viewState.blockInterface(true)
             val model = PaymentStatusRequestModel(null, orderId, true, success)
             val paymentStatus = paymentInteractor.changeStatusPayment(Mappers.getPaymentStatusRequest(model))
+            logEventEcommercePurchase()
             if(paymentStatus.success) {
                 router.navigateTo(Screens.PASSENGER_MODE)
                 viewState.showSuccessfulMessage()
                 offer = offerInteractor.getOffer(offerInteractor.selectedOfferId!!)!!
-                logEventEcommercePurchase(orderId)
+                logEventEcommercePurchase()
             } else {
                 router.exit()
                 viewState.showErrorMessage()
@@ -60,14 +62,15 @@ class PaymentPresenter(cc: CoroutineContexts,
         }, { viewState.blockInterface(false) })
     }
     
-    private fun logEventEcommercePurchase(orderId: Long) {
-        val params = HashMap<String, Any>()
-        params[FirebaseAnalytics.Param.CURRENCY] = systemInteractor.currency.currencyCode
+    private fun logEventEcommercePurchase() {
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.CURRENCY, "USD")
         when(paymentRequest.percentage) {
-            OfferModel.FULL_PRICE -> params[FirebaseAnalytics.Param.VALUE] = offer.price.amount
-            OfferModel.PRICE_30 -> params[FirebaseAnalytics.Param.VALUE] = offer.price.percentage30
+//            OfferModel.FULL_PRICE -> params[FirebaseAnalytics.Param.VALUE] = offer.price.amount
+            OfferModel.FULL_PRICE -> bundle.putDouble(FirebaseAnalytics.Param.VALUE, 300.0)
+//            OfferModel.PRICE_30 -> bundle.putDouble(FirebaseAnalytics.Param.VALUE, offer.price.percentage30)
         }
-        params[PARAM_TRANSACTION_ID] = orderId
-        mFBA.logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, createMultipleBundle(params))
+        bundle.putString(PARAM_TRANSACTION_ID, offerInteractor.transferId!!.toString())
+        mFBA.logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, bundle)
     }
 }
