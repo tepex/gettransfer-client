@@ -15,8 +15,8 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.address_list_item.*
 import kotlinx.android.synthetic.main.popular_address_list_item.*
 
-class AddressAdapter(private val presenter: SearchPresenter,
-                     private var list: List<GTAddress>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AddressAdapter(private var list: List<GTAddress>,
+                     private val selectListener: (GTAddress) -> Unit): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var isLastAddresses: Boolean = true
 
@@ -39,7 +39,7 @@ class AddressAdapter(private val presenter: SearchPresenter,
         (holder as AddressViewHolder).bindViews(list[pos], isLastAddresses)
         {
             notifyDataSetChanged()
-            presenter.onAddressSelected(it)
+            selectListener(it)
         }
     }
 

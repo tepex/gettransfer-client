@@ -24,6 +24,7 @@ import android.text.InputFilter
 import android.text.InputType
 import android.util.DisplayMetrics
 import android.view.*
+import android.view.animation.AnimationUtils
 
 import android.view.inputmethod.EditorInfo
 
@@ -55,6 +56,7 @@ import com.kg.gettransfer.presentation.model.UserModel
 
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.view.CreateOrderView
+
 import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
@@ -65,8 +67,8 @@ import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
 
 import com.kg.gettransfer.presentation.IntentKeys
-import kotlinx.android.synthetic.main.amu_info_window.view.*
 
+import kotlinx.android.synthetic.main.amu_info_window.view.*
 
 import org.koin.android.ext.android.inject
 
@@ -91,6 +93,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     companion object {
         const val DIM_AMOUNT = 0.5f
+
+        const val KEYBOARD_WAIT_DELAY = 300L
     }
 
     @ProvidePresenter
@@ -143,13 +147,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         _mapView = mapView
         initMapView(savedInstanceState)
 
-
-        /*setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }*/
-
         rvTransferType.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvTransferType.isNestedScrollingEnabled = false
 
@@ -178,7 +175,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
         tvComments.setOnClickListener {
             showPopupWindowComment()
-            toggleSheetOrder()
+ //           toggleSheetOrder(false)
             presenter.logTransferSettingsEvent(CreateOrderPresenter.COMMENT_INPUT)
         }
         tvAgreement1.setOnClickListener { presenter.showLicenceAgreement() }
@@ -218,8 +215,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     
     private fun initKeyBoardListener() {
         addKeyBoardDismissListener { closed ->
-
-
             if (!closed && !isKeyBoardOpened) {
                 isKeyBoardOpened = true
                 btnGetOffers.visibility = View.GONE
@@ -229,7 +224,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
                 Handler().postDelayed({   // postDelayed нужен, чтобы кнопка не морагала посередине экрана
                     btnGetOffers.visibility = View.VISIBLE
                 }, 100)
-
                 if(etPromo.isFocused) presenter.checkPromoCode()
             }
         }
@@ -255,38 +249,48 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun showPopupWindowComment() {
         val screenHeight = getScreenHeight()
 
-        val layoutPopup = LayoutInflater.from(applicationContext).inflate(R.layout.layout_popup_comment, layoutPopup)
+        val layoutPopupView = LayoutInflater.from(applicationContext).inflate(R.layout.layout_popup_comment, layoutPopup)
+
         applyDim(window.decorView.rootView as  ViewGroup, DIM_AMOUNT)
-        popupWindowComment = PopupWindow(layoutPopup,
+        popupWindowComment = PopupWindow(layoutPopupView,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 screenHeight / 3,
                 true)
         popupWindowComment.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         popupWindowComment.inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
         popupWindowComment.isOutsideTouchable = true
-        layoutPopup.etPopupComment.setText(tvComments.text)
-        layoutPopup.etPopupComment.setRawInputType(InputType.TYPE_CLASS_TEXT)
-        popupWindowComment.showAtLocation(mainLayoutActivityTransfer, Gravity.CENTER, 0, 0)
+        layoutPopupView.etPopupComment.setText(tvComments.text)
+        layoutPopupView.etPopupComment.setRawInputType(InputType.TYPE_CLASS_TEXT)
 
-        layoutPopup.etPopupComment.popupWindow = popupWindowComment
-        layoutPopup.etPopupComment.showKeyboard()
 
-        layoutPopup.btnClearPopupComment.setOnClickListener { layoutPopup.etPopupComment.setText("") }
-        layoutPopup.etPopupComment.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
+        layoutPopupView.etPopupComment.popupWindow = popupWindowComment
+        layoutPopupView.etPopupComment.showKeyboard()
+
+        Handler().postDelayed({
+            popupWindowComment.showAtLocation(mainLayoutActivityTransfer, Gravity.CENTER, 0, 0)
+            val animation = AnimationUtils.loadAnimation(applicationContext, R.anim.show_popup)
+            layoutPopupView.startAnimation(animation)
+        }, CreateOrderActivity.KEYBOARD_WAIT_DELAY)
+
+        layoutPopupView.btnClearPopupComment.setOnClickListener { layoutPopupView.etPopupComment.setText("") }
+        layoutPopupView.etPopupComment.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_DONE) {
-                presenter.setComment(layoutPopup.etPopupComment.text.toString().trim())
+                presenter.setComment(layoutPopupView.etPopupComment.text.toString().trim())
                 popupWindowComment.dismiss()
                 return@OnEditorActionListener true
             }
             false
         })
         popupWindowComment.setOnDismissListener {
-            layoutPopup.etPopupComment.hideKeyboard()
-            toggleSheetOrder()
+            layoutPopupView.etPopupComment.hideKeyboard()
+//            toggleSheetOrder()
+            val animation = AnimationUtils.loadAnimation(applicationContext, R.anim.hide_popup)
+            layoutPopupView.startAnimation(animation)
+            btnGetOffers.requestFocus()
             clearDim(window.decorView.rootView as  ViewGroup)
         }
-        layoutPopup.setOnClickListener { layoutPopup.etPopupComment.requestFocus() }
-        layoutPopup.etPopupComment.setSelection(layoutPopup.etPopupComment.text.length)
+        layoutPopupView.setOnClickListener { layoutPopupView.etPopupComment.requestFocus() }
+        layoutPopupView.etPopupComment.setSelection(layoutPopupView.etPopupComment.text.length)
     }
 
     private fun getScreenHeight(): Int {
@@ -323,9 +327,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     override fun setDateTimeTransfer(dateTimeString: String) { tvDateTimeTransfer.text = dateTimeString }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
-        rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
-            presenter.onTransportChosen()
-            if(showInfo) transportTypeClicked(transportType)
+        rvTransferType.adapter = TransferTypeAdapter( transportTypes, { presenter.onTransportChosen() }) {
+            transportTypeClicked(it)
         }
     }
 

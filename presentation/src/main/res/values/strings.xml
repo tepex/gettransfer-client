@@ -636,6 +636,7 @@
     <string name="LNG_TRANSPORT_9">Container</string>
     <string name="LNG_DIRECTION">Direction</string>
     <string name="LNG_MADE">made</string>
+    <string name="LNG_MADE_RIDES">made transfers: %d</string>
     <string name="LNG_RIDES">transfers</string>
     <string name="LNG_CARRIER">Carrier</string>
     <string name="LNG_RATING">Rating</string>
