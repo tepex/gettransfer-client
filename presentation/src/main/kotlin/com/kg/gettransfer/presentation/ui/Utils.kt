@@ -13,6 +13,7 @@ import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
+import android.telephony.TelephonyManager
 
 import android.text.Editable
 import android.text.SpannableStringBuilder
@@ -43,6 +44,7 @@ import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 
 import java.text.SimpleDateFormat
 
@@ -52,7 +54,7 @@ import java.util.regex.Pattern
 
 internal class Utils {
     companion object {
-        private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11}$")
+        private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
         private val EMAIL_PATTERN = Patterns.EMAIL_ADDRESS
         @JvmField val DATE_TIME_PATTERN = "dd MMMM yyyy, HH:mm"
         
@@ -130,9 +132,8 @@ internal class Utils {
         }
         
         fun checkPhone(phone: String?): Boolean {
-            /*if(phone == null) return false
-            return PHONE_PATTERN.matcher(phone.trim()).matches()*/
-            return phone != null
+            if(phone == null) return false
+            return PHONE_PATTERN.matcher(phone.trim()).matches()
         }
         
         fun formatDistance(context: Context, distance: Int?, distanceUnit: DistanceUnit): String {
@@ -279,6 +280,12 @@ internal class Utils {
             val drawableCompat = ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)!!.constantState!!.newDrawable().mutate()
             drawableCompat.setColorFilter(ContextCompat.getColor(context, colorId), PorterDuff.Mode.SRC_IN)
             return drawableCompat
+        }
+
+        fun getPhoneCodeByCountryIso(context: Context): Int {
+            val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            val countryCode = telephonyManager.simCountryIso
+            return PhoneNumberUtil.createInstance(context).getCountryCodeForRegion(countryCode.toUpperCase())
         }
 
         fun formatJsonString(text: String): String {

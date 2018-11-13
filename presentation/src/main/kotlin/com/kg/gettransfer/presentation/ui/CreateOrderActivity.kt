@@ -19,6 +19,7 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.content.ContextCompat
 
 import android.support.v7.widget.LinearLayoutManager
+import android.telephony.PhoneNumberFormattingTextWatcher
 import android.text.InputFilter
 
 import android.text.InputType
@@ -164,7 +165,13 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
         etName.onTextChanged  { presenter.setName(it.trim()) }
         etEmail.onTextChanged { presenter.setEmail(it.trim()) }
-        tvPhone.onTextChanged { presenter.setPhone(it.trim()) }
+        tvPhone.onTextChanged {
+            if(it.isEmpty()) { tvPhone.setText("+"); tvPhone.setSelection(1) }
+            presenter.setPhone(it.trim().replace(" ", "").replace("-", ""))
+        }
+        val phoneCode = Utils.getPhoneCodeByCountryIso(this)
+        if(phoneCode > 0) tvPhone.setText("+".plus(phoneCode))
+        tvPhone.addTextChangedListener(PhoneNumberFormattingTextWatcher())
         
         ivChildCounterDown.setOnClickListener { presenter.changeChildren(-1) }
         ivChildCounterUp.setOnClickListener   { presenter.changeChildren(1) }
