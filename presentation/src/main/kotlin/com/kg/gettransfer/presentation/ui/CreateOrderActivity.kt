@@ -172,8 +172,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             }
             presenter.setPhone("+".plus(it.replace(Regex("\\D"), "")))
         }
-        val phoneCode = Utils.getPhoneCodeByCountryIso(this)
-        if(phoneCode > 0) tvPhone.setText("+".plus(phoneCode))
         tvPhone.addTextChangedListener(PhoneNumberFormattingTextWatcher())
         
         ivChildCounterDown.setOnClickListener { presenter.changeChildren(-1) }
@@ -350,7 +348,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     override fun setUser(user: UserModel, isLoggedIn: Boolean) {
         etName.setText(user.profile.name ?: "")
-        tvPhone.setText(user.profile.phone ?: "")
+        if(user.profile.phone != null) tvPhone.setText(user.profile.phone)
+        else {
+            val phoneCode = Utils.getPhoneCodeByCountryIso(this)
+            if(phoneCode > 0) tvPhone.setText("+".plus(phoneCode))
+        }
         etEmail.setText(user.profile.email ?: "")
         if(isLoggedIn) etEmail.isEnabled = false
         switchAgreement.isChecked = user.termsAccepted
