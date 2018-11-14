@@ -23,6 +23,7 @@ import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.OffersView
+import com.yandex.metrica.YandexMetrica
 
 import ru.terrakok.cicerone.Router
 
@@ -181,6 +182,19 @@ class OffersPresenter(cc: CoroutineContexts,
         logFilterEvent(sortType)
     }
 
-    private fun logFilterEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value)) }
-    private fun logButtonEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value)) }    
+    private fun logFilterEvent(value: String) {
+        val map = HashMap<String, Any>()
+        map[PARAM_KEY_FILTER] = value
+
+        mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value))
+        YandexMetrica.reportEvent(EVENT, map)
+    }
+
+    private fun logButtonEvent(value: String) {
+        val map = HashMap<String, Any>()
+        map[PARAM_KEY_BUTTON] = value
+
+        mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value))
+        YandexMetrica.reportEvent(EVENT, map)
+    }
 }

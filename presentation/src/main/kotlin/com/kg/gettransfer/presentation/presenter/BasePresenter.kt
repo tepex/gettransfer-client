@@ -15,6 +15,7 @@ import com.kg.gettransfer.extensions.inject
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.BaseView
+import com.yandex.metrica.YandexMetrica
 
 import ru.terrakok.cicerone.Router
 
@@ -28,8 +29,12 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
     protected val mFBA: FirebaseAnalytics by inject()
 
     open fun onBackCommandClick() {
+        val map = HashMap<String, Any>()
+        map[PARAM_KEY_NAME] = SYSTEM_BACK_CLICKED
+
         router.exit()
         mFBA.logEvent(MainPresenter.EVENT_MAIN, createSingeBundle(PARAM_KEY_NAME, SYSTEM_BACK_CLICKED))
+        YandexMetrica.reportEvent(MainPresenter.EVENT_MAIN, map)
     }
 
     protected fun login() = router.navigateTo(Screens.LOGIN)

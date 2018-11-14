@@ -18,6 +18,7 @@ import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.view.SettingsView
+import com.yandex.metrica.YandexMetrica
 
 import java.util.Locale
 
@@ -143,6 +144,10 @@ class SettingsPresenter(cc: CoroutineContexts,
     }
 
     private fun logEvent(param: String, value: String) {
+        val map = HashMap<String, Any>()
+        map[param] = value
+
         mFBA.logEvent(EVENT, createSingeBundle(param, value))
+        YandexMetrica.reportEvent(EVENT, map)
     }
 }

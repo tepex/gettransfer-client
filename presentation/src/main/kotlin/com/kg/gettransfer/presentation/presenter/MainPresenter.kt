@@ -21,6 +21,8 @@ import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.view.MainView
 
+import com.yandex.metrica.YandexMetrica
+
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
@@ -264,7 +266,11 @@ class MainPresenter(cc: CoroutineContexts,
     }
 
     fun logEvent(value: String) {
+        val map = HashMap<String, Any>()
+        map[PARAM_KEY_NAME] = value
+
         mFBA.logEvent(EVENT_MENU, createSingeBundle(PARAM_KEY_NAME, value))
+        YandexMetrica.reportEvent(EVENT_MENU, map)
     }
 
     fun onBackClick(){

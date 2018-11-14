@@ -13,6 +13,7 @@ import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.view.LoginView
+import com.yandex.metrica.YandexMetrica
 
 import ru.terrakok.cicerone.Router
 
@@ -51,13 +52,21 @@ class LoginPresenter(cc: CoroutineContexts,
                     screenForReturn = null
                     router.navigateTo(screen)
                 } else router.exitWithResult(RESULT_CODE, RESULT_OK)
-                mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY, RESULT_SUCCESS))
+                logLoginEvent(RESULT_SUCCESS)
             } else {
-                viewState.setError(result.error!!)
-                mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY, RESULT_FAIL))
+                viewState.setError(e)
+                logLoginEvent(RESULT_FAIL)
             }
             viewState.blockInterface(false)
         }
+    }
+
+    private fun logLoginEvent(result: String) {
+        val map = HashMap<String, Any>()
+        map[PARAM_KEY] = result
+
+        mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY, result))
+        YandexMetrica.reportEvent(EVENT, map)
     }
 
     fun onHomeClick() = router.exit()
