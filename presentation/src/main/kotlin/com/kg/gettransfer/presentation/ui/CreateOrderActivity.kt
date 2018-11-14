@@ -396,9 +396,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     override fun showEmptyFieldError(invalidField: String) {
         var messageRes = R.string.LNG_RIDE_CANT_CREATE
         when (invalidField) {
-            CreateOrderPresenter.TRANSPORT_FIELD -> messageRes = R.string.LNG_RIDE_CHOOSE_TRANSPORT
             CreateOrderPresenter.EMAIL_FIELD -> messageRes = R.string.LNG_ERROR_EMAIL
+            CreateOrderPresenter.NAME_FIELD -> messageRes = R.string.LNG_RIDE_NAME
             CreateOrderPresenter.PHONE_FIELD -> messageRes = R.string.LNG_RIDE_PHONE
+            CreateOrderPresenter.TRANSPORT_FIELD -> messageRes = R.string.LNG_RIDE_CHOOSE_TRANSPORT
+            CreateOrderPresenter.TERMS_ACCEPTED_FIELD -> messageRes = R.string.LNG_RIDE_OFFERT_ERROR
         }
 
         Utils.showEmptyFieldsForTransferRequest(this, getString(messageRes))

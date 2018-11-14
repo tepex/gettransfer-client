@@ -56,7 +56,7 @@ import timber.log.Timber
 
 internal class Utils {
     companion object {
-        //private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
+        private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
         private val EMAIL_PATTERN = Patterns.EMAIL_ADDRESS
         @JvmField val DATE_TIME_PATTERN = "dd MMMM yyyy, HH:mm"
 
@@ -130,10 +130,16 @@ internal class Utils {
             }
         }
 
+        fun checkDate(dateTransfer: Date, dateNow: Date, futureHour: Int, futureMinute: Int){
+
+        }
         fun checkEmail(email: String?) = EMAIL_PATTERN.matcher(email ?: "").matches()
         //fun checkPhone(phone: String?) = PHONE_PATTERN.matcher(phone?.trim() ?: "").matches()
         fun checkPhone(phone: String): Boolean {
-            return try { phoneUtil.isValidNumber(phoneUtil.parse(phone, null)) }
+            try {
+                if(!PHONE_PATTERN.matcher(phone.trim()).matches()) return false
+                return phoneUtil.isValidNumber(phoneUtil.parse(phone, null))
+            }
             catch(e: Exception) {
                 Timber.w("phone parse error: $phone", e)
                 return false

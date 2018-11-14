@@ -74,8 +74,10 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         @JvmField val FUTURE_MINUTE     = 5
 
         const val EMAIL_FIELD           = "email"
+        const val NAME_FIELD            = "name"
         const val PHONE_FIELD           = "phone"
         const val TRANSPORT_FIELD       = "transport"
+        const val TERMS_ACCEPTED_FIELD  = "terms_accepted"
 
 
         /** [см. табл.][https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0] */
@@ -287,16 +289,17 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
 
     private fun checkFieldsForRequest(): Boolean {
-        var errorFiled = ""
-        
-        if(transportTypes != null && !transportTypes!!.any { it.checked }) errorFiled = TRANSPORT_FIELD
-        else if(!Utils.checkEmail(user.profile.email)) errorFiled = EMAIL_FIELD
-        else if(!Utils.checkPhone(user.profile.phone!!)) errorFiled = PHONE_FIELD
+        var errorFiled =
+            if(!Utils.checkEmail(user.profile.email))        errorFiled = EMAIL_FIELD
+            else if(user.profile.name.isNullOrBlank())       errorFiled = NAME_FIELD
+            else if(!Utils.checkPhone(user.profile.phone!!)) errorFiled = PHONE_FIELD
+            else if(transportTypes != null &&
+                    !transportTypes!!.any { it.checked })    errorFiled = TRANSPORT_FIELD
+            else if(!user.termsAccepted)                     errorFiled = TERMS_ACCEPTED_FIELD
+            else return true
 
-        if(errorFiled.isEmpty()) return true
-        else viewState.showEmptyFieldError(errorFiled)
+        viewState.showEmptyFieldError(errorFiled)
         return false
-
     }
     
     /* @TODO: Добавить реакцию на некорректное значение в поле. Отображать, где и что введено некорректно. */
