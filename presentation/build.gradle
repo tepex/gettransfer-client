@@ -51,7 +51,7 @@ android {
             }
 		}
 		
-		prof {
+		prod {
             def keystorePropertiesFile = rootProject.file("keystore-prod.properties")
             if(keystorePropertiesFile.exists()) {
                 def keystoreProperties = new Properties()
