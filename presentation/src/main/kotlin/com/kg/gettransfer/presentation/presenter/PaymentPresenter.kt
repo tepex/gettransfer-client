@@ -94,6 +94,7 @@ class PaymentPresenter(cc: CoroutineContexts,
                 map[VALUE] = price * PRICE_30
             }
         }
+        
         bundle.putString(TRANSACTION_ID, offerInteractor.transferId!!.toString())
         map[TRANSACTION_ID] = offerInteractor.transferId!!.toString()
         */
