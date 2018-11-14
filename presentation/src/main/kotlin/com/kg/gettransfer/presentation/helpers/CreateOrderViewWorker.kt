@@ -19,6 +19,5 @@ import kotlinx.android.synthetic.main.view_create_order_field.view.*
 class CreateOrderViewWorker(val context: Context) {
 
     fun initFieldsViews(){
-
     }
 }

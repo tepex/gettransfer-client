@@ -70,7 +70,7 @@
 
         <include
             android:id="@+id/sheetOrder"
-            layout="@layout/bottom_sheet_create_order"
+            layout="@layout/bottom_sheet_create_order_new"
             android:visibility="gone" />
     </android.support.design.widget.CoordinatorLayout>
 

@@ -62,16 +62,12 @@ import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
-import kotlinx.android.synthetic.main.layout_popup_comment.view.*
-
-import com.kg.gettransfer.extensions.hideKeyboard
-import com.kg.gettransfer.extensions.showKeyboard
 
 import com.kg.gettransfer.presentation.IntentKeys
 
-import kotlinx.android.synthetic.main.amu_info_window.view.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
 import kotlinx.android.synthetic.main.view_create_order_field.view.*
+import kotlinx.android.synthetic.main.view_seats.view.*
 
 import org.koin.android.ext.android.inject
 
@@ -154,58 +150,22 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         rvTransferType.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvTransferType.isNestedScrollingEnabled = false
 
-        etYourPrice.onTextChanged { presenter.cost = it.toDoubleOrNull() }
-        etYourPrice.setOnFocusChangeListener { _, hasFocus ->
-            if(hasFocus) presenter.logTransferSettingsEvent(CreateOrderPresenter.OFFER_PRICE_FOCUSED)
-        }
-        tvDateTimeTransfer.setOnClickListener {
-            showDatePickerDialog()
-            presenter.logTransferSettingsEvent(CreateOrderPresenter.DATE_TIME_CHANGED)
-        }
-
-        ivPersonsCounterDown.setOnClickListener { presenter.changePassengers(-1) }
-        ivPersonsCounterUp.setOnClickListener   { presenter.changePassengers(1) }
-
-        etName.onTextChanged  { presenter.setName(it.trim()) }
-        etEmail.onTextChanged { presenter.setEmail(it.trim()) }
-        tvPhone.onTextChanged {
-            if(it.isEmpty()) {
-                tvPhone.setText("+")
-                tvPhone.setSelection(1)
-            }
-            presenter.setPhone("+".plus(it.replace(Regex("\\D"), "")))
-        }
-        tvPhone.addTextChangedListener(PhoneNumberFormattingTextWatcher())
-        
-        ivChildCounterDown.setOnClickListener { presenter.changeChildren(-1) }
-        ivChildCounterUp.setOnClickListener   { presenter.changeChildren(1) }
-        tvFlightOrTrainNumber.onTextChanged   { presenter.setFlightNumber(it.trim()) }
-
+        initChangeTextListeners()
+        initClickListeners()
         initPromoSection()
         initKeyBoardListener()
-
-        tvComments.setOnClickListener {
-            showPopupWindowComment()
- //           toggleSheetOrder(false)
-            presenter.logTransferSettingsEvent(CreateOrderPresenter.COMMENT_INPUT)
-        }
-        tvAgreement1.setOnClickListener { presenter.showLicenceAgreement() }
-        switchAgreement.setOnCheckedChangeListener { _, isChecked -> presenter.setAgreeLicence(isChecked) }
-
-        btnGetOffers.setOnClickListener   { presenter.onGetTransferClick() }
-        btnCenterRoute.setOnClickListener { presenter.onCenterRouteClick() }
-        btnBack.setOnClickListener { presenter.onBackClick() }
 
         bsOrder = BottomSheetBehavior.from(sheetOrder)
         sheetOrder.visibility = View.VISIBLE
         bsTransport = BottomSheetBehavior.from(sheetTransport)
         bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
-        btnOk.setOnClickListener { hideSheetTransport() }
-    }
 
     private fun initFieldsViews() {
         scrollContent.setOnTouchListener(onTouchListener)
     }
+
+
+
 
     private fun hideSheetTransport() {
         bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
@@ -221,11 +181,12 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     private fun initPromoSection() {
-        etPromo.filters = arrayOf(InputFilter.AllCaps())
-        etPromo.onTextChanged { presenter.setPromo(etPromo.text.toString()) }
-        etPromo.setOnFocusChangeListener { _, hasFocus -> if(!hasFocus) presenter.checkPromoCode()}
-        defaultPromoText = tvPromoResult.text.toString()
-        constraintLayout_promo.setOnClickListener { showKeyboard(); etPromo.requestFocusFromTouch()}
+ //       etPromo.filters = arrayOf(InputFilter.AllCaps())
+        promo_field.field_input.filters = arrayOf(InputFilter.AllCaps())
+        promo_field.field_input.setOnFocusChangeListener { _, hasFocus -> if(!hasFocus) presenter.checkPromoCode() }
+ //       defaultPromoText = tvPromoResult.text.toString()
+        defaultPromoText = promo_field.field_title.text.toString()
+        promo_field.setOnClickListener { showKeyboard(); promo_field.field_input.requestFocusFromTouch() }
     }
     
     private fun initKeyBoardListener() {
@@ -239,7 +200,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
                 Handler().postDelayed({   // postDelayed нужен, чтобы кнопка не морагала посередине экрана
                     btnGetOffers.visibility = View.VISIBLE
                 }, 100)
-                if(etPromo.isFocused) presenter.checkPromoCode()
+                if(promo_field.field_input.isFocused) presenter.checkPromoCode()
             }
         }
     }
@@ -355,6 +316,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         boundTimePickerDialog.show()
     }
 
+<<<<<<< HEAD
     override fun setPassengers(count: Int)                   { tvCountPerson.text = count.toString() }
     override fun setChildren(count: Int)                     { tvCountChild.text = count.toString() }
     override fun setCurrency(currency: String)               { tvCurrencyType.text = currency }
@@ -365,6 +327,13 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
                                                     .plus(getString(R.string.LNG_HOUR_FEW))
         else tvDateTimeTransfer.text = dateTimeString
     }
+=======
+    override fun setPassengers(count: Int)                   { passengers_seats.person_count.text = count.toString() }
+    override fun setChildren(count: Int)                     { child_seats.person_count.text = count.toString() }
+    override fun setCurrency(currency: String)               { /*tvCurrencyType.text = currency*/ }
+    override fun setComment(comment: String)                 { comment_field.field_input.setText(comment) }
+    override fun setDateTimeTransfer(dateTimeString: String) { transfer_date_time_field.field_input.setText(dateTimeString) }
+>>>>>>> todo resources
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
         rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
@@ -380,15 +349,19 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun setUser(user: UserModel, isLoggedIn: Boolean) {
-        etName.setText(user.profile.name ?: "")
-        if(user.profile.phone != null) tvPhone.setText(user.profile.phone)
+        user_name_field.field_input.setText(user.profile.name ?: "")
+        if(user.profile.phone != null) user_name_field.field_input.setText(user.profile.phone)
         else {
             val phoneCode = Utils.getPhoneCodeByCountryIso(this)
+<<<<<<< HEAD
             if(phoneCode > 0) tvPhone.setText("+".plus(phoneCode))
             else tvPhone.setText("+")
+=======
+            if(phoneCode > 0) user_name_field.field_input.setText("+".plus(phoneCode))
+>>>>>>> todo resources
         }
-        etEmail.setText(user.profile.email ?: "")
-        if(isLoggedIn) etEmail.isEnabled = false
+        email_field.field_input.setText(user.profile.email ?: "")
+        if(isLoggedIn) email_field.field_input.isEnabled = false
         switchAgreement.isChecked = user.termsAccepted
     }
 
@@ -415,15 +388,15 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             text = getString(R.string.LNG_RIDE_PROMOCODE_INVALID)
             visibility = View.INVISIBLE
         }
-        tvPromoResult.setTextColor(ContextCompat.getColor(this, colorRes))
-        tvPromoResult.text = text
-        img_okResult.visibility = visibility
+        promo_field.field_title.setTextColor(ContextCompat.getColor(this, colorRes))
+        promo_field.field_title.text = text
+ //       img_okResult.visibility = visibility
     }
 
     override fun resetPromoView() {
-        tvPromoResult.text = defaultPromoText
-        tvPromoResult.setTextColor(ContextCompat.getColor(this, R.color.colorTextLightGray))
-        img_okResult.visibility = View.INVISIBLE
+        promo_field.field_title.text = defaultPromoText
+        promo_field.field_title.setTextColor(ContextCompat.getColor(this, R.color.colorTextLightGray))
+//        img_okResult.visibility = View.INVISIBLE
     }
 
     override fun showEmptyFieldError(invalidField: String) {
@@ -473,5 +446,98 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun clearDim(parent: ViewGroup) {
         val overLay = parent.overlay
         overLay.clear()
+    }
+
+    //TODO create custom view for new bottom sheet
+    private fun initFieldsViews() {
+        //icons
+        offer_price_field.field_icon.setImageDrawable(getDrawable(R.drawable))
+        transfer_date_time_field.field_icon.setImageDrawable(getDrawable(R.drawable))
+        user_name_field.field_icon.setImageDrawable(getDrawable(R.drawable))
+        email_field.field_icon.setImageDrawable(getDrawable(R.drawable))
+        phone_field.field_icon.setImageDrawable(getDrawable(R.drawable))
+        flight_number_field.field_icon.setImageDrawable(getDrawable(R.drawable))
+        promo_field.field_icon.setImageDrawable(getDrawable(R.drawable))
+        comment_field.field_icon.setImageDrawable(getDrawable(R.drawable))
+
+        //titles
+        offer_price_field.field_title.text = getString(R.string)
+        transfer_date_time_field.field_title.text = getString(R.string)
+        user_name_field.field_title.text = getString(R.string)
+        email_field.field_title.text = getString(R.string)
+        phone_field.field_title.text = getString(R.string)
+        flight_number_field.field_title.text = getString(R.string)
+        promo_field.field_title.text = getString(R.string)
+        comment_field.field_title.text = getString(R.string)
+
+        //hints
+        offer_price_field.field_input.hint = getString(R.string)
+        transfer_date_time_field.field_input.hint = getString(R.string)
+        user_name_field.field_input.hint = getString(R.string)
+        email_field.field_input.hint = getString(R.string)
+        phone_field.field_input.hint = getString(R.string)
+        flight_number_field.field_input.hint = getString(R.string)
+        promo_field.field_input.hint = getString(R.string)
+        comment_field.field_input.hint = getString(R.string)
+    }
+
+    private fun initChangeTextListeners() {
+        //        etYourPrice.onTextChanged { presenter.cost = it.toDoubleOrNull() }
+        offer_price_field.field_input.onTextChanged             { presenter.cost = it.toDoubleOrNull() }
+        offer_price_field.field_input.setOnFocusChangeListener  { _, hasFocus ->
+            if(hasFocus) presenter.logTransferSettingsEvent(CreateOrderPresenter.OFFER_PRICE_FOCUSED)
+        }
+        //      tvDateTimeTransfer.setOnClickListener {
+
+
+
+
+//        etName.onTextChanged  { presenter.setName(it.trim()) }
+        user_name_field.field_input.onTextChanged        { presenter.setName(it.trim()) }
+//        etEmail.onTextChanged { presenter.setEmail(it.trim()) }
+        email_field.field_input.onTextChanged            { presenter.setEmail(it.trim()) }
+//        tvPhone.onTextChanged {
+        phone_field.field_input.onTextChanged            {
+            if(it.isEmpty()) {
+                phone_field.field_input.setText("+")
+                phone_field.field_input.setSelection(1)
+            }
+            presenter.setPhone("+".plus(it.replace(Regex("\\D"), "")))
+        }
+        phone_field.field_input.addTextChangedListener(PhoneNumberFormattingTextWatcher())
+        flight_number_field.field_input.onTextChanged    { presenter.setFlightNumber(it.trim()) }
+        promo_field.field_input.onTextChanged            { presenter.setPromo(etPromo.text.toString()) }
+    }
+
+    private fun initClickListeners() {
+        transfer_date_time_field.setOnClickListener {
+            showDatePickerDialog()
+            presenter.logTransferSettingsEvent(CreateOrderPresenter.DATE_TIME_CHANGED)
+        }
+        //        ivPersonsCounterDown.setOnClickListener { presenter.changePassengers(-1) }
+        passengers_seats.img_plus_seat.setOnClickListener   { presenter.changePassengers(1) }
+//        ivPersonsCounterUp.setOnClickListener   { presenter.changePassengers(1) }
+        passengers_seats.img_minus_seat.setOnClickListener  { presenter.changePassengers(-1) }
+        child_seats.img_minus_seat.setOnClickListener       { presenter.changeChildren(-1) }
+        child_seats.img_plus_seat.setOnClickListener        { presenter.changeChildren(1) }
+
+        offer_price_field.setOnClickListener                { offer_price_field.field_input.requestFocusFromTouch() }
+        transfer_date_time_field.setOnClickListener         { transfer_date_time_field.field_input.requestFocusFromTouch() }
+        user_name_field.setOnClickListener                  { user_name_field.field_input.requestFocusFromTouch() }
+        email_field.setOnClickListener                      { email_field.field_input.requestFocusFromTouch() }
+        phone_field.setOnClickListener                      { phone_field.field_input.requestFocusFromTouch() }
+        flight_number_field.setOnClickListener              { flight_number_field.field_input.requestFocusFromTouch() }
+        promo_field.setOnClickListener                      { promo_field.field_input.requestFocusFromTouch() }
+        comment_field.setOnClickListener                    { showPopupWindowComment()
+            presenter.logTransferSettingsEvent(CreateOrderPresenter.COMMENT_INPUT)
+        }
+
+        tvAgreement1.setOnClickListener                     { presenter.showLicenceAgreement() }
+        switchAgreement.setOnCheckedChangeListener          { _, isChecked -> presenter.setAgreeLicence(isChecked) }
+
+        btnGetOffers.setOnClickListener                     { presenter.onGetTransferClick() }
+        btnCenterRoute.setOnClickListener                   { presenter.onCenterRouteClick() }
+        btnBack.setOnClickListener                          { presenter.onBackClick() }
+        btnOk.setOnClickListener                            { hideSheetTransport() }
     }
 }
