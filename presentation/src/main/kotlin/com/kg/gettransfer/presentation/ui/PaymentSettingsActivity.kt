@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.widget.Toolbar
 import android.text.SpannableString
 import android.text.style.ImageSpan
 import android.view.View
@@ -17,6 +18,7 @@ import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter
 import com.kg.gettransfer.presentation.view.PaymentSettingsView
 import kotlinx.android.synthetic.main.activity_payment_settings.*
+import kotlinx.android.synthetic.main.toolbar.view.*
 import org.koin.android.ext.android.inject
 import java.util.*
 
@@ -56,6 +58,13 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
         payThirdOfPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, 30)
         setButton()
         setCommission()
+
+        setSupportActionBar(toolbar as Toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        (toolbar as Toolbar).toolbar_title.setText(R.string.LNG_PAYMENT_SETTINGS)
+        (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
     }
 
     private fun setButton() {
