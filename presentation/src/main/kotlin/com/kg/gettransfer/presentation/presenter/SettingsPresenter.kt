@@ -30,9 +30,9 @@ class SettingsPresenter(cc: CoroutineContexts,
                         router: Router,
                         systemInteractor: SystemInteractor): BasePresenter<SettingsView>(cc, router, systemInteractor) {
 
-    private lateinit var currencies: List<CurrencyModel>
-    private val locales = (systemInteractor.locales?.let { Mappers.getLocalesModels(it) } ?: emptyList<LocaleModel>()).filter { it.locale == "EN" || it.locale == "RU" }
-    private val distanceUnits = systemInteractor.distanceUnits?.let { Mappers.getDistanceUnitsModels(it) } ?: emptyList<DistanceUnitModel>()
+    private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
+    private val locales = Mappers.getLocalesModels(systemInteractor.locales).filter { it.locale == "EN" || it.locale == "RU" } 
+    private val distanceUnits = Mappers.getDistanceUnitsModels(systemInteractor.distanceUnits)
     private val endpoints = systemInteractor.endpoints.map { Mappers.getEndpointModel(it) }
 
     private var localeWasChanged = false
@@ -55,7 +55,7 @@ class SettingsPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: SettingsView) {
         super.attachView(view)
-        currencies = systemInteractor.currencies?.let { Mappers.getCurrenciesModels(it) } ?: emptyList<CurrencyModel>()
+        
 
         viewState.setCurrencies(currencies)
         viewState.setLocales(locales)
@@ -117,18 +117,15 @@ class SettingsPresenter(cc: CoroutineContexts,
         logEvent(LOG_OUT_PARAM, EMPTY_VALUE)
     }
 
-    fun onLogsClicked() {
-        router.navigateTo(Screens.SHARE_LOGS)
-    }
+    fun onLogsClicked() = router.navigateTo(Screens.SHARE_LOGS)
 
     private fun saveAccount() {
-        viewState.blockInterface(true)
-        utils.launchAsyncTryCatchFinally({
-            utils.asyncAwait { systemInteractor.putAccount() }
-        }, { e ->
-            if(e is ApiException && e.isNotLoggedIn()) {}
-            else viewState.setError(e)
-        }, { viewState.blockInterface(false) })
+        utils.launchSuspend {
+            viewState.blockInterface(true)
+            val result = utils.asyncAwait { systemInteractor.putAccount() }
+            result.error?.let { if(!it.isNotLoggedIn()) viewState.setError(it) }
+            viewState.blockInterface(false)
+        }
     }
 
     @CallSuper
@@ -138,7 +135,7 @@ class SettingsPresenter(cc: CoroutineContexts,
     }
 
     override fun onBackCommandClick() {
-        if (localeWasChanged) {
+        if(localeWasChanged) {
             localeWasChanged = false
             router.navigateTo(Screens.MAIN)
         }

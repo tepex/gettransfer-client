@@ -22,6 +22,7 @@ import com.arellomobile.mvp.MvpAppCompatActivity
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 
@@ -125,8 +126,8 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         Utils.showError(this, finish, errMessage)
     }
     
-    override fun setError(e: Throwable) {
-        Timber.e(e)
+    override fun setError(e: ApiException) {
+        Timber.e("code: ${e.code}", e)
         Utils.showError(this, false, getString(R.string.err_server, e.message))
     }
 

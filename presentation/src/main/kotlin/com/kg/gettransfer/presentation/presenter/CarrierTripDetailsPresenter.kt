@@ -33,29 +33,31 @@ class CarrierTripDetailsPresenter(cc: CoroutineContexts,
     private var routeModel: RouteModel? = null
 
     override fun onFirstViewAttach() {
-        utils.launchAsyncTryCatchFinally({
+        utils.launchSuspend {
             viewState.blockInterface(true)
             selectedTripId = carrierTripInteractor.selectedTripId
-            val tripInfo = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(selectedTripId!!) }
-            trip = Mappers.getCarrierTripModel(tripInfo, systemInteractor.locale, systemInteractor.distanceUnit)
-            viewState.setTripInfo(trip)
+            val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(selectedTripId!!) }
+            if(result.error != null) viewState.setError(result.error!!)
+            else {
+                val tripInfo = result.model!!
+                trip = Mappers.getCarrierTripModel(tripInfo, systemInteractor.locale, systemInteractor.distanceUnit)
+                viewState.setTripInfo(trip)
             
-            val routeInfo = routeInteractor.getRouteInfo(tripInfo.from.point!!, tripInfo.to.point!!, false, false)
-            routeInfo?.let {
-                routeModel = Mappers.getRouteModel(it.distance,
-                                                   systemInteractor.distanceUnit,
-                                                   it.polyLines,
-                                                   trip.from,
-                                                   trip.to,
-                                                   tripInfo.from.point!!,
-                                                   tripInfo.to.point!!,
-                                                   trip.dateTime)
+                val routeInfo = routeInteractor.getRouteInfo(tripInfo.from.point!!, tripInfo.to.point!!, false, false)
+                routeInfo?.let {
+                    routeModel = Mappers.getRouteModel(it.distance,
+                                                       systemInteractor.distanceUnit,
+                                                       it.polyLines,
+                                                       trip.from,
+                                                       trip.to,
+                                                       tripInfo.from.point!!,
+                                                       tripInfo.to.point!!,
+                                                       trip.dateTime)
+                }
+                routeModel?.let { viewState.setRoute(Utils.getPolyline(it), it) }
             }
-            routeModel?.let { viewState.setRoute(Utils.getPolyline(it), it) }
-        }, { e ->
-            if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
-            else viewState.setError(e)
-        }, { viewState.blockInterface(false) })
+            viewState.blockInterface(false)
+        }
     }
 
     fun onCallClick() {}

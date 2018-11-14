@@ -8,6 +8,6 @@ interface SystemCache {
     fun setConfigs(configs: ConfigsEntity)
     
     fun getAccount(): AccountEntity?
-    fun setAccount(account: AccountEntity)
+    fun setAccount(account: AccountEntity): AccountEntity
     fun clearAccount()
 }

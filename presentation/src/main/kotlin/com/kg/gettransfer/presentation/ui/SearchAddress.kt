@@ -19,6 +19,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.presentation.presenter.SearchAddressPresenter
@@ -165,8 +166,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         if(addressField.isFocused) parent.setError(finish, errId, *args)
     }
 
-    override fun setError(e: Throwable) {
-        Timber.e(e)
+    override fun setError(e: ApiException) {
         if(addressField.isFocused) parent.setError(e)
     }
 

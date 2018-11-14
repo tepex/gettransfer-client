@@ -2,6 +2,7 @@ package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.PreferencesListener
+import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.SystemDataStore
 
 import com.kg.gettransfer.data.ds.DataStoreFactory
@@ -92,30 +93,37 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         if(account === Account.NO_ACCOUNT) {
             val result: ResultEntity<AccountEntity?> = retrieveEntity { fromRemote ->
                 factory.retrieveDataStore(fromRemote).getAccount() }
-            result.entity?.also {
+            result.entity?.let {
+                if(result.error == null) factory.retrieveCacheDataStore().setAccount(it)
                 account = accountMapper.fromEntity(it)
-            }?.also {
-                factory.retrieveCacheDataStore().setAccount(it)
             }
             result.error?.let { error = ExceptionMapper.map(it) }
         }
         return Result(account, error)
     }
 
-    override suspend fun putAccount(account: Account) {
-        this.account = account
-        val accountEntity = accountMapper.toEntity(account)
+    override suspend fun putAccount(account: Account): Result<Account> {
+        val accountEntity = try { factory.retrieveRemoteDataStore().setAccount(accountMapper.toEntity(account)) }
+        catch(e: RemoteException) { return Result(error = ExceptionMapper.map(e)) }
+        
         factory.retrieveCacheDataStore().setAccount(accountEntity)
-        factory.retrieveRemoteDataStore().setAccount(accountEntity)
+        this.account = accountMapper.fromEntity(accountEntity)
+        return Result(this.account)
     }
 
-    override suspend fun login(email: String, password: String): Account {
-        val accountEntity = factory.retrieveRemoteDataStore().login(email, password)
+    override suspend fun login(email: String, password: String): Result<Account> {
+        val accountEntity = try { factory.retrieveRemoteDataStore().login(email, password) }
+        catch(e: RemoteException) { return Result(error = ExceptionMapper.map(e)) }
+        
         factory.retrieveCacheDataStore().setAccount(accountEntity)
-        return accountMapper.fromEntity(accountEntity)
+        account = accountMapper.fromEntity(accountEntity)
+        return Result(account)
     }
 
-    override fun logout() = factory.retrieveCacheDataStore().clearAccount()
+    override fun logout() {
+        account = Account.NO_ACCOUNT
+        factory.retrieveCacheDataStore().clearAccount()
+    }
 
     override fun accessTokenChanged(accessToken: String) {
         listeners.forEach { it.connectionChanged(endpoint, accessToken) }

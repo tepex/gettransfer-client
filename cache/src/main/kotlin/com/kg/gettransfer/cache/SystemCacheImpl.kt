@@ -19,6 +19,11 @@ class SystemCacheImpl(private val db: CacheDatabase,
     override fun setConfigs(configs: ConfigsEntity) = db.configsCachedDao().update(configsMapper.toCached(configs))
     
     override fun getAccount() = db.accountCachedDao().selectAll().firstOrNull()?.let { accountMapper.fromCached(it) }
-    override fun setAccount(account: AccountEntity) = db.accountCachedDao().update(accountMapper.toCached(account))
+    
+    override fun setAccount(account: AccountEntity): AccountEntity {
+        db.accountCachedDao().update(accountMapper.toCached(account))
+        return account
+    }
+    
     override fun clearAccount() = db.accountCachedDao().deleteAll()
 }

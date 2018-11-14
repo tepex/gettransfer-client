@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory
  * @param <T> the remote model input type
  * @param <V> the model return type
  */
-interface Mapper<E, D> {
+interface Mapper<E, M> {
     companion object {
         val SERVER_DATE_FORMAT = SimpleDateFormat("yyyy/MM/dd", Locale.US)
         val SERVER_TIME_FORMAT = SimpleDateFormat("HH:mm", Locale.US)
@@ -23,6 +23,6 @@ interface Mapper<E, D> {
         val log = LoggerFactory.getLogger("GTR-data")
     }
     
-    fun fromEntity(type: E): D
-    fun toEntity(type: D): E
+    fun fromEntity(type: E): M
+    fun toEntity(type: M): E
 }

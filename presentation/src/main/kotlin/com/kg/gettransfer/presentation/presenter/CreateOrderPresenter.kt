@@ -117,42 +117,46 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
 
     fun initMapAndPrices() {
-        utils.launchAsyncTryCatchFinally({
+        utils.launchSuspend {
             viewState.blockInterface(true)
             val from = routeInteractor.from!!.cityPoint
             val to = routeInteractor.to!!.cityPoint
 
-            val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
-            routeInfo?.let {
-                duration = it.duration
-                var prices: Map<String, TransportPrice>? = null
-                if(it.prices != null) prices = it.prices!!.map { p -> p.tranferId to TransportPrice(p.min, p.max, p.minFloat) }.toMap()
-                if(transportTypes == null) transportTypes =
-                    systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
-                routeModel = Mappers.getRouteModel(it.distance,
-                                                   systemInteractor.distanceUnit,
-                                                   it.polyLines,
-                                                   from.name!!,
-                                                   to.name!!,
-                                                   from.point!!,
-                                                   to.point!!,
-                                                   SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
+            val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
+            if(result.error != null) viewState.setError(result.error!!)
+            else {
+                val routeInfo = result.model!!
+                routeInfo?.let {
+                    duration = it.duration
+                    var prices: Map<String, TransportPrice>? = null
+                    if(it.prices != null) prices = it.prices!!.map { p -> p.tranferId to TransportPrice(p.min, p.max, p.minFloat) }.toMap()
+                    if(transportTypes == null) transportTypes =
+                        systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
+                    routeModel = Mappers.getRouteModel(it.distance,
+                                                       systemInteractor.distanceUnit,
+                                                       it.polyLines,
+                                                       from.name!!,
+                                                       to.name!!,
+                                                       from.point!!,
+                                                       to.point!!,
+                                                       SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
+                }
+                routeModel?.let {
+                    viewState.setTransportTypes(transportTypes!!)
+                    polyline = Utils.getPolyline(it)
+                    track = polyline?.track
+                    viewState.setRoute(false, polyline!!, it)
+                }
             }
-            routeModel?.let {
-                viewState.setTransportTypes(transportTypes!!)
-                polyline = Utils.getPolyline(it)
-                track = polyline?.track
-                viewState.setRoute(false, polyline!!, it)
-            }
-        }, { e -> viewState.setError(e)
-        }, { viewState.blockInterface(false) })
+            viewState.blockInterface(false)
+        }
     }
 
-    fun changeDate(newDate: Date){
+    fun changeDate(newDate: Date) {
         date = newDate
-        if(routeModel != null){
-            routeModel!!.dateTime = SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date)
-            viewState.setRoute(true, polyline!!, routeModel!!)
+        routeModel?.let {
+            it.dateTime = SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date)
+            viewState.setRoute(true, polyline!!, it)
         }
     }
     
@@ -217,13 +221,13 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
 
     fun checkPromoCode() {
-        if(!promoCode.isNullOrEmpty()) {
-            utils.launchAsyncTryCatchFinally({
-                viewState.blockInterface(true)
-                val mDiscount = promoInteractor.getDiscountByPromo(promoCode!!)
-                viewState.setPromoResult(mDiscount.discount)
-            }, { _ -> viewState.setPromoResult(null)
-            }, { viewState.blockInterface(false) })
+        if(promoCode.isNullOrEmpty()) return
+        utils.launchSuspend {
+            viewState.blockInterface(true)
+            val result = utils.asyncAwait { promoInteractor.getDiscountByPromo(promoCode!!) }
+            if(result.model != null) viewState.setPromoResult(result.model!!.discount)
+            else viewState.setPromoResult(null)
+            viewState.blockInterface(false)
         }
     }
 
@@ -258,9 +262,9 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         Timber.d("flightNumber: $flightNumber")
         Timber.d("comment: $comment")
 
-        utils.launchAsyncTryCatchFinally({
+        utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val transfer = utils.asyncAwait {
+            val result = utils.asyncAwait {
                 transferInteractor.createTransfer(Mappers.getTransferNew(routeInteractor.from!!.cityPoint,
                                                                          routeInteractor.to!!.cityPoint,
                                                                          trip,
@@ -274,20 +278,22 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                                                                          promoCode,
                                                                          false))
             }
-            offersInteractor.getOffers(transfer.id)
-            Timber.d("new transfer: %s", transfer)
-            router.navigateTo(Screens.OFFERS)
-            logCreateTransfer(RESULT_SUCCESS)
-        }, { e ->
-                if(e is ApiException) {
-                    when {
-                        e.isNotLoggedIn() -> router.navigateTo(Screens.LOGIN, user.profile.email)
-                        e.details == "{phone=[taken]}" -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
-                        else -> viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
-                    }
+            if(result.error != null) {
+                when {
+                    result.error!!.isNotLoggedIn() -> router.navigateTo(Screens.LOGIN, user.profile.email)
+                    result.error!!.details == "{phone=[taken]}" -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
+                    else -> viewState.setError(result.error!!)
                 }
-                else viewState.setError(e)
-        }, { viewState.blockInterface(false) })
+            }
+            else {
+                val transfer = result.model!!
+                offersInteractor.getOffers(transfer.id)
+                Timber.d("new transfer: %s", transfer)
+                router.navigateTo(Screens.OFFERS)
+                logCreateTransfer(RESULT_SUCCESS)
+            }
+            viewState.blockInterface(false)
+        }
     }
 
     private fun checkFieldsForRequest(): Boolean {
@@ -319,7 +325,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         viewState.setGetTransferEnabled(actionEnabled)
     }
 
-    fun onTransportChosen(){
+    fun onTransportChosen() {
         checkFields()
         try {
             val tripTime = String.format("%d:%d", duration!! / 60, duration!! % 60)
@@ -327,7 +333,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             if (!checkedTransport.isNullOrEmpty())
                 viewState.setFairPrice(checkedTransport.minBy { it.price!!.unitPrice }?.price!!.min, tripTime)
             else viewState.setFairPrice(null, null)
-        } catch (e: KotlinNullPointerException){ viewState.setFairPrice(null, null) }
+        } catch (e: KotlinNullPointerException) { viewState.setFairPrice(null, null) }
     }
 
     fun onCenterRouteClick() {

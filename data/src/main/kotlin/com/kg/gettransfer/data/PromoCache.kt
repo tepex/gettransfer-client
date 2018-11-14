@@ -1,7 +1,7 @@
 package com.kg.gettransfer.data
 
-import com.kg.gettransfer.data.model.PromoEntity
+import com.kg.gettransfer.data.model.PromoDiscountEntity
 
 interface PromoCache {
-    suspend fun getDiscount(code: String): PromoEntity
+    suspend fun getDiscount(code: String): PromoDiscountEntity
 }

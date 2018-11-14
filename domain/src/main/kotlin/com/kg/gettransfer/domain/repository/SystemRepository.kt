@@ -21,8 +21,8 @@ interface SystemRepository {
     var addressHistory: List<GTAddress>    
         
     suspend fun coldStart(): Result<Account>
-    suspend fun putAccount(account: Account)
-    suspend fun login(email: String, password: String): Account
+    suspend fun putAccount(account: Account): Result<Account>
+    suspend fun login(email: String, password: String): Result<Account>
     fun logout()
     
     fun addListener(listener: SystemListener)

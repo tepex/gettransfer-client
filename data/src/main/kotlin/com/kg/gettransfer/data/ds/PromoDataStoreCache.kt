@@ -6,10 +6,10 @@ import com.kg.gettransfer.data.RemoteException
 
 import com.kg.gettransfer.data.mapper.ExceptionMapper
 
-import com.kg.gettransfer.data.model.PromoEntity
+import com.kg.gettransfer.data.model.PromoDiscountEntity
 
 class PromoDataStoreCache(/*private val remote: PromoCache*/): PromoDataStore {
-    override suspend fun getDiscount(code: String): PromoEntity {
+    override suspend fun getDiscount(code: String): PromoDiscountEntity {
         throw UnsupportedOperationException()
     }
 }

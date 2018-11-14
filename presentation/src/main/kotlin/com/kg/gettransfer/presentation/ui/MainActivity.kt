@@ -41,6 +41,7 @@ import com.google.android.gms.maps.model.Marker
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.presentation.IntentKeys
 
@@ -347,7 +348,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         }
     }
 
-    override fun setError(e: Throwable) {
+    override fun setError(e: ApiException) {
         searchFrom.text = getString(R.string.search_nothing)
     }
 

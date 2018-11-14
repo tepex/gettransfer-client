@@ -37,24 +37,26 @@ class LoginPresenter(cc: CoroutineContexts,
     var screenForReturn: String? = null
 
     fun onLoginClick() {
-        if(checkFields()) {
-            utils.launchAsyncTryCatchFinally({
-                viewState.blockInterface(true, true)
-                utils.asyncAwait { systemInteractor.login(email!!, password!!) }
+        if(!checkFields()) return
+        
+        utils.launchSuspend {
+            viewState.blockInterface(true, true)
+            val result = utils.asyncAwait { systemInteractor.login(email!!, password!!) }
+            if(result.error == null) {
                 if(screenForReturn != null) {
-                    val screen = if(screenForReturn == Screens.CARRIER_MODE){
+                    val screen = if(screenForReturn == Screens.CARRIER_MODE) {
                         if(systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) Screens.CARRIER_MODE
                         else Screens.REG_CARRIER
                     } else screenForReturn
                     screenForReturn = null
                     router.navigateTo(screen)
-                } else
-                    router.exitWithResult(RESULT_CODE, RESULT_OK)
+                } else router.exitWithResult(RESULT_CODE, RESULT_OK)
                 mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY, RESULT_SUCCESS))
-            }, { e ->
-                viewState.setError(e)
+            } else {
+                viewState.setError(result.error!!)
                 mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY, RESULT_FAIL))
-            }, { viewState.blockInterface(false) })
+            }
+            viewState.blockInterface(false)
         }
     }
 

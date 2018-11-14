@@ -134,11 +134,6 @@ class PaymentActivity: BaseActivity(), PaymentView {
         presenter.changePaymentStatus(orderId, success)
     }
 
-    override fun setError(e: Throwable) {
-        Timber.e(e)
-        Utils.showError(this, true, getString(R.string.err_server, e.message))
-    }
-
     override fun showSuccessfulMessage() {
         Utils.showShortToast(this, getString(R.string.LNG_TRANSFER_PAID_SUCCESSFULLY))
     }

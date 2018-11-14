@@ -17,6 +17,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
@@ -90,8 +91,8 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         (activity as BaseView).setError(finish, errId, *args)
     }
     
-    override fun setError(e: Throwable) {
-        Timber.e(e)
+    override fun setError(e: ApiException) {
+        Timber.e("code: ${e.code}", e)
         Utils.showError(context!!, false, getString(R.string.err_server, e.message))
     }
 }

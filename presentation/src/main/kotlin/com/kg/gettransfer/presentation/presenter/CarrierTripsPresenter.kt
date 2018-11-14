@@ -32,16 +32,17 @@ class CarrierTripsPresenter(cc: CoroutineContexts,
     override fun onFirstViewAttach() {
         checkLoggedIn()
         systemInteractor.lastMode = Screens.CARRIER_MODE
-        utils.launchAsyncTryCatchFinally({
+        utils.launchSuspend {
             viewState.blockInterface(true)
-            trips = carrierTripInteractor.getCarrierTrips().map {
-                Mappers.getCarrierTripModel(it, systemInteractor.locale, systemInteractor.distanceUnit) }
+            val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrips() }
+            if(result.error != null) viewState.setError(result.error!!)
+            else {
+                trips = result.model!!.map { Mappers.getCarrierTripModel(it, systemInteractor.locale, systemInteractor.distanceUnit) }
                 viewState.initNavigation(Mappers.getProfileModel(systemInteractor.account.user.profile))
-            viewState.setTrips(trips!!)
-        }, { e ->
-            if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
-            else viewState.setError(e)
-        }, { viewState.blockInterface(false) })
+                viewState.setTrips(trips!!)
+            }
+            viewState.blockInterface(false)
+        }
     }
 
     @CallSuper
