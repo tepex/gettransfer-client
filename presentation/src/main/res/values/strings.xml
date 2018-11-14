@@ -4,9 +4,9 @@
     <!-- urls and keys -->
     <string name="licence_agreement_url">https://gettransfer.com/en/terms_of_use</string>
 
-    <string name="api_key_demo">ccd9a245018bfe4f386f4045ee4a006f</string>
+    <string name="api_key_demo">7dfea5095801332db75975c882361bbf</string>
     <string name="api_url_demo">https://stgtr.org</string>
-    <string name="api_key_prod">127746ae669e195d1e05807aaadb97af</string>
+    <string name="api_key_prod">3fe0f9208622274f1a21e78037eea83e</string>
     <string name="api_url_prod">https://gettransfer.com</string>
 
     <!-- logs -->
