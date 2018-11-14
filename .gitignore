@@ -70,3 +70,5 @@ fabric.properties
 
 /tmp
 
+keystore.properties
+keystore-prod.properties

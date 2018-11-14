@@ -39,11 +39,30 @@ android {
 
 	signingConfigs {
 		config {
-            storeFile file(System.getenv("KS_FILE_PATH"))
-            storePassword System.getenv("KS_PASS")
-            keyAlias System.getenv("KS_KEY_ALIAS")
-            keyPassword System.getenv("KS_KEY_PASS")
+            def keystorePropertiesFile = rootProject.file("keystore.properties")
+            if(keystorePropertiesFile.exists()) {
+                def keystoreProperties = new Properties()
+                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+                keyAlias keystoreProperties['KEY_ALIAS']
+                keyPassword keystoreProperties['KEY_PASSWORD']
+                storeFile file(keystoreProperties['STORE_FILE'])
+                storePassword keystoreProperties['STORE_PASSWORD']
+            }
 		}
+		
+		prof {
+            def keystorePropertiesFile = rootProject.file("keystore-prod.properties")
+            if(keystorePropertiesFile.exists()) {
+                def keystoreProperties = new Properties()
+                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+                keyAlias keystoreProperties['KEY_ALIAS']
+                keyPassword keystoreProperties['KEY_PASSWORD']
+                storeFile file(keystoreProperties['STORE_FILE'])
+                storePassword keystoreProperties['STORE_PASSWORD']
+            }
+        }		
 	}
 	
 	android {
@@ -86,7 +105,7 @@ android {
 		}
 
 		prod {
-			signingConfig signingConfigs.config
+			signingConfig signingConfigs.prod
 
 			versionCode getBuildNumber() as Integer
 			versionName getVersionName() as String
