@@ -49,20 +49,7 @@ android {
                 storeFile file(keystoreProperties['STORE_FILE'])
                 storePassword keystoreProperties['STORE_PASSWORD']
             }
-		}
-		
-		prod {
-            def keystorePropertiesFile = rootProject.file("keystore-prod.properties")
-            if(keystorePropertiesFile.exists()) {
-                def keystoreProperties = new Properties()
-                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
-                keyAlias keystoreProperties['KEY_ALIAS']
-                keyPassword keystoreProperties['KEY_PASSWORD']
-                storeFile file(keystoreProperties['STORE_FILE'])
-                storePassword keystoreProperties['STORE_PASSWORD']
-            }
-        }		
+		}		
 	}
 	
 	android {
@@ -92,6 +79,8 @@ android {
 
 	productFlavors {
 		dev {
+			applicationId "com.kg.gettransfer"
+
 			signingConfig signingConfigs.config
 
 			versionCode getBuildNumber() as Integer
@@ -105,6 +94,8 @@ android {
 		}
 
 		prod {
+			applicationId "com.gettransfer"
+
 			signingConfig signingConfigs.prod
 
 			versionCode getBuildNumber() as Integer
