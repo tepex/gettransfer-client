@@ -166,8 +166,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         etName.onTextChanged  { presenter.setName(it.trim()) }
         etEmail.onTextChanged { presenter.setEmail(it.trim()) }
         tvPhone.onTextChanged {
-            if(it.isEmpty()) { tvPhone.setText("+"); tvPhone.setSelection(1) }
-            presenter.setPhone(it.trim().replace(" ", "").replace("-", ""))
+            if(it.isEmpty()) {
+                tvPhone.setText("+")
+                tvPhone.setSelection(1)
+            }
+            presenter.setPhone("+".plus(it.replace(Regex("\\D"), "")))
         }
         val phoneCode = Utils.getPhoneCodeByCountryIso(this)
         if(phoneCode > 0) tvPhone.setText("+".plus(phoneCode))

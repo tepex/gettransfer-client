@@ -126,16 +126,9 @@ internal class Utils {
             }
         }
 
-        fun checkEmail(email: String?): Boolean {
-            if (email.isNullOrBlank()) return false
-            return EMAIL_PATTERN.matcher(email).matches()
-        }
-        
-        fun checkPhone(phone: String?): Boolean {
-            if(phone == null) return false
-            return PHONE_PATTERN.matcher(phone.trim()).matches()
-        }
-        
+        fun checkEmail(email: String?) = EMAIL_PATTERN.matcher(email ?: "").matches()
+        fun checkPhone(phone: String?) = PHONE_PATTERN.matcher(phone?.trim() ?: "").matches()
+
         fun formatDistance(context: Context, distance: Int?, distanceUnit: DistanceUnit): String {
             if(distance == null) return ""
             var d = distance
@@ -143,9 +136,8 @@ internal class Utils {
             return context.getString(R.string.LNG_RIDE_DISTANCE).plus(": $d ").plus(distanceUnit.name)
         }
 
-        fun formatDuration(context: Context, duration: Int): String{
-            return context.getString(R.string.LNG_RIDE_DURATION).plus(": $duration ").plus(context.getString(R.string.LNG_H))
-        }
+        fun formatDuration(context: Context, duration: Int) =
+            context.getString(R.string.LNG_RIDE_DURATION).plus(": $duration ").plus(context.getString(R.string.LNG_H))
 
         fun getPolyline(routeModel: RouteModel): PolylineModel {
             var mPoints = arrayListOf<LatLng>()
