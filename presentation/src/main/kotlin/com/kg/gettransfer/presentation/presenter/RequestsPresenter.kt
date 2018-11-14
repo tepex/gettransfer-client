@@ -10,6 +10,7 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.view.RequestsView
+import com.yandex.metrica.YandexMetrica
 
 import ru.terrakok.cicerone.Router
 
@@ -30,6 +31,12 @@ class RequestsPresenter(cc: CoroutineContexts,
         transferInteractor.deleteAllTransfersList()
     }
 
-    fun logEvent(value: String) { mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY, value)) }
+    fun logEvent(value: String) {
+        val map = HashMap<String, Any>()
+        map[PARAM_KEY] = value
+
+        mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY, value))
+        YandexMetrica.reportEvent(EVENT, map)
+    }
 }
                         
