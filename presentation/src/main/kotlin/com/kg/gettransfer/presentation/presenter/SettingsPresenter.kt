@@ -30,7 +30,7 @@ class SettingsPresenter(cc: CoroutineContexts,
                         router: Router,
                         systemInteractor: SystemInteractor): BasePresenter<SettingsView>(cc, router, systemInteractor) {
 
-    private val currencies = systemInteractor.currencies?.let { Mappers.getCurrenciesModels(it) } ?: emptyList<CurrencyModel>()
+    private lateinit var currencies: List<CurrencyModel>
     private val locales = (systemInteractor.locales?.let { Mappers.getLocalesModels(it) } ?: emptyList<LocaleModel>()).filter { it.locale == "EN" || it.locale == "RU" }
     private val distanceUnits = systemInteractor.distanceUnits?.let { Mappers.getDistanceUnitsModels(it) } ?: emptyList<DistanceUnitModel>()
     private val endpoints = systemInteractor.endpoints.map { Mappers.getEndpointModel(it) }
@@ -53,6 +53,8 @@ class SettingsPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: SettingsView) {
         super.attachView(view)
+        currencies = systemInteractor.currencies?.let { Mappers.getCurrenciesModels(it) } ?: emptyList<CurrencyModel>()
+
         viewState.setCurrencies(currencies)
         viewState.setLocales(locales)
         viewState.setDistanceUnits(distanceUnits)
