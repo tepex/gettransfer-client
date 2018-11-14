@@ -76,7 +76,7 @@ class MainPresenter: BasePresenter<MainView>() {
 
         //other buttons log params
         @JvmField val MY_PLACE_CLICKED   = "my_place"
-        //        @JvmField val SHOW_ROUTE_CLICKED = "show_route"
+//        @JvmField val SHOW_ROUTE_CLICKED = "show_route"
 //        @JvmField val CAR_INFO_CLICKED = "car_info"
 //        @JvmField val BACK_CLICKED = "back"
         @JvmField val POINT_ON_MAP_CLICKED = "point_on_map"
