@@ -8,11 +8,14 @@ import com.kg.gettransfer.cache.model.TransportTypesCachedList
 
 import com.kg.gettransfer.data.model.ConfigsEntity
 
-class ConfigsEntityMapper(private val transportTypeMapper: TransportTypeEntityMapper,
-                          private val paypalCredentialsMapper: PaypalCredentialsEntityMapper,
-                          private val localeMapper: LocaleEntityMapper,
-                          private val currencyMapper: CurrencyEntityMapper,
-                          private val cardGatewaysMapper: CardGatewaysEntityMapper): EntityMapper<ConfigsCached, ConfigsEntity> {
+/**
+ * Map a [ConfigsCached] from/to a [ConfigsEntity] instance when data is moving between this later and the Data layer.
+ */
+open class ConfigsEntityMapper(private val transportTypeMapper: TransportTypeEntityMapper,
+                               private val paypalCredentialsMapper: PaypalCredentialsEntityMapper,
+                               private val localeMapper: LocaleEntityMapper,
+                               private val currencyMapper: CurrencyEntityMapper,
+                               private val cardGatewaysMapper: CardGatewaysEntityMapper): EntityMapper<ConfigsCached, ConfigsEntity> {
     override fun fromCached(type: ConfigsCached) =
         ConfigsEntity(type.transportTypes.list.map { transportTypeMapper.fromCached(it) },
                       paypalCredentialsMapper.fromCached(type.paypalCredentials),

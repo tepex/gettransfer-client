@@ -22,7 +22,7 @@ data class ConfigsCached(@ColumnInfo(name = ConfigsEntity.TRANSPORT_TYPES) val t
                          @Embedded(prefix = ConfigsEntity.CARD_GATEWAYS) val cardGateways: CardGatewaysCached,
                          @ColumnInfo(name = ConfigsEntity.OFFICE_PHONE) val officePhone: String,
                          @ColumnInfo(name = ConfigsEntity.BASE_URL) val baseUrl: String,
-                         @PrimaryKey(autoGenerate = true) val id: Long = 0) 
+                         @PrimaryKey(autoGenerate = true) val id: Long = 14) 
 
 data class PaypalCredentialsCached(@ColumnInfo(name = PaypalCredentialsEntity.ID) val id: String,
                                    @ColumnInfo(name = PaypalCredentialsEntity.ENV) val env: String)

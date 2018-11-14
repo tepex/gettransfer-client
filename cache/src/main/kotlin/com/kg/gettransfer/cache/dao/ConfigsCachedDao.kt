@@ -12,7 +12,7 @@ import com.kg.gettransfer.data.model.ConfigsEntity
 @Dao
 interface ConfigsCachedDao {
     @Query("SELECT * FROM ${ConfigsEntity.ENTITY_NAME}")
-    fun getConfigs(): List<ConfigsCached>
+    fun selectAll(): List<ConfigsCached>
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(configs: ConfigsCached)
@@ -21,7 +21,7 @@ interface ConfigsCachedDao {
     fun deleteAll()
     
     @Transaction
-    fun setConfigs(configs: ConfigsCached) {
+    fun update(configs: ConfigsCached) {
         deleteAll()
         insert(configs)
     }

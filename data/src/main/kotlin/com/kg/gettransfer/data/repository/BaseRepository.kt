@@ -15,9 +15,13 @@ open class BaseRepository() {
     protected suspend fun <E> retrieveEntity(getEntity: suspend (Boolean) -> E?): ResultEntity<E?> {
         var error: RemoteException? = null
         /* First, try retrieve from remote */
-        val entity = try { getEntity(true) }
+        val entity = try {
+            log.debug("    [TEST] Retrieving from remote")
+            getEntity(true)
+        }
         catch(e: RemoteException) {
             error = e
+            log.debug("    [TEST] Error retrieving from remote. Retrieve from cache", e)
             /* If false, get from cache */
             getEntity(false)
         }

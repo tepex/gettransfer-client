@@ -79,7 +79,12 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         if(configs === Configs.DEFAULT) {
             val result: ResultEntity<ConfigsEntity?> = retrieveEntity { fromRemote ->
                 factory.retrieveDataStore(fromRemote).getConfigs() }
-            result.entity?.let { configs = configsMapper.fromEntity(it) }
+            result.entity?.let {
+                /* Save to cache only fresh data from remote */
+                if(result.error == null) factory.retrieveCacheDataStore().setConfigs(it)
+                configs = configsMapper.fromEntity(it)
+            }
+            /* No chance to go further */
             if(result.error != null) return Result(error = ExceptionMapper.map(result.error))
         }
 

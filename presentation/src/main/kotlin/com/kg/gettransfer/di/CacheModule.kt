@@ -24,5 +24,6 @@ val cacheModule = module {
     single { PaypalCredentialsEntityMapper() }
     single { TransportTypeEntityMapper() }
     single { ConfigsEntityMapper(get(), get(), get(), get(), get()) }
-    single { SystemCacheImpl(get(), get()) as SystemCache }
+    single { AccountEntityMapper() }
+    single { SystemCacheImpl(get(), get(), get()) as SystemCache }
 }
