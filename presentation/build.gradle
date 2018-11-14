@@ -96,7 +96,7 @@ android {
 		prod {
 			applicationId "com.gettransfer"
 
-			signingConfig signingConfigs.prod
+			signingConfig signingConfigs.config
 
 			versionCode getBuildNumber() as Integer
 			versionName getVersionName() as String
@@ -212,7 +212,7 @@ def getBuildNumber() {
 }
 
 def getVersionName() {
-	return System.getenv("VERSION_NAME") ? System.getenv("VERSION_NAME") : "2.0.0"
+	return "1.0.1"//System.getenv("VERSION_NAME") ? System.getenv("VERSION_NAME") : "2.0.0"
 }
 
 def generateChangeLog() {
