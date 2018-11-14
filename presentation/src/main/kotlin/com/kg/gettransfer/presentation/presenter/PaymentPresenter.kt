@@ -3,7 +3,10 @@ package com.kg.gettransfer.presentation.presenter
 import android.os.Bundle
 import com.arellomobile.mvp.InjectViewState
 
-import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.FirebaseAnalytics.Event.ECOMMERCE_PURCHASE
+import com.google.firebase.analytics.FirebaseAnalytics.Param.TRANSACTION_ID
+import com.google.firebase.analytics.FirebaseAnalytics.Param.VALUE
+import com.google.firebase.analytics.FirebaseAnalytics.Param.CURRENCY
 
 import com.kg.gettransfer.domain.CoroutineContexts
 
@@ -22,6 +25,7 @@ import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
 import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter.Companion.PRICE_30
 
 import com.kg.gettransfer.presentation.view.PaymentView
+import com.yandex.metrica.YandexMetrica
 
 import kotlinx.serialization.Serializable
 
@@ -73,9 +77,29 @@ class PaymentPresenter(cc: CoroutineContexts,
     
     private fun logEventEcommercePurchase() {
         val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.CURRENCY, systemInteractor.currency.currencyCode)
+        val map = HashMap<String, Any>()
+
+        bundle.putString(CURRENCY, systemInteractor.currency.currencyCode)
+        map[CURRENCY] = systemInteractor.currency.currencyCode
+
         val price = offer.price.amount
-        bundle.putString(PARAM_OFFER_ID, params.offerId.toString())
-        mFBA.logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, bundle)
+        /*
+        when(paymentRequest.percentage) {
+            OfferModel.FULL_PRICE -> {
+                bundle.putDouble(VALUE, price)
+                map[VALUE] = price
+            }
+            OfferModel.PRICE_30 -> {
+                bundle.putDouble(VALUE, price * PRICE_30)
+                map[VALUE] = price * PRICE_30
+            }
+        }
+        */
+
+        bundle.putString(TRANSACTION_ID, offerInteractor.transferId!!.toString())
+        map[TRANSACTION_ID] = offerInteractor.transferId!!.toString()
+
+        mFBA.logEvent(ECOMMERCE_PURCHASE, bundle)
+        YandexMetrica.reportEvent(ECOMMERCE_PURCHASE, map)
     }
 }

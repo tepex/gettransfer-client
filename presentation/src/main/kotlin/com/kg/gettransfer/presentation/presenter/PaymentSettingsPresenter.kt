@@ -7,6 +7,9 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.FirebaseAnalytics.Event.BEGIN_CHECKOUT
+import com.google.firebase.analytics.FirebaseAnalytics.Param.CURRENCY
+import com.google.firebase.analytics.FirebaseAnalytics.Param.VALUE
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
@@ -25,6 +28,7 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
 import com.kg.gettransfer.presentation.view.PaymentSettingsView
+import com.yandex.metrica.YandexMetrica
 
 import java.util.Date
 
@@ -99,14 +103,27 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
 
     private fun logEventBeginCheckout() {
         val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.CURRENCY, systemInteractor.currency.currencyCode)
-        val price = offer?.price?.amount ?: 0.0
-        when(paymentRequest.percentage) {
-            OfferModel.FULL_PRICE -> bundle.putDouble(FirebaseAnalytics.Param.VALUE, price)
-            OfferModel.PRICE_30 -> bundle.putDouble(FirebaseAnalytics.Param.VALUE, price * PRICE_30)
+        val map = HashMap<String, Any>()
+
+        bundle.putString(CURRENCY, systemInteractor.currency.currencyCode)
+        map[CURRENCY] = systemInteractor.currency.currencyCode
+
+        val price = offer!!.price.amount
+        when (paymentRequest.percentage) {
+            OfferModel.FULL_PRICE -> {
+                bundle.putDouble(VALUE, price)
+                map[FirebaseAnalytics.Param.VALUE] = price
+            }
+            OfferModel.PRICE_30 -> {
+                bundle.putDouble(VALUE, price * PRICE_30)
+                map[VALUE] = price * PRICE_30
+            }
         }
         bundle.putInt(PARAM_SHARE, paymentRequest.percentage)
-        mFBA.logEvent(FirebaseAnalytics.Event.BEGIN_CHECKOUT, bundle)
+        map[PARAM_SHARE] = paymentRequest.percentage
+
+        mFBA.logEvent(BEGIN_CHECKOUT, bundle)
+        YandexMetrica.reportEvent(BEGIN_CHECKOUT, map)
     }
 
     fun changePrice(price: Int)        { paymentRequest.percentage = price }

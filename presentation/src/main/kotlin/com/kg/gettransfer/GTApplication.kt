@@ -51,6 +51,7 @@ class GTApplication: MultiDexApplication() {
     private fun setupAppMetrica() {
         val config = YandexMetricaConfig
                 .newConfigBuilder(getString(R.string.appmetrica_api_key))
+                .withCrashReporting(false)
                 .withLogs()
                 .build()
         YandexMetrica.activate(applicationContext, config)
