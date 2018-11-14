@@ -370,8 +370,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     override fun setFairPrice(price: String?, time: String?) {
         if (price == null || time == null) {
             tvRate.text = ""
-        } else
-        tvRate.text = String.format(getString(R.string.LNG_RIDE_FAIR_PRICE_FORMAT), price, time)
+        } else tvRate.text = String.format(getString(R.string.LNG_RIDE_FAIR_PRICE_FORMAT), price, time)
     }
 
     override fun setUser(user: UserModel, isLoggedIn: Boolean) {
