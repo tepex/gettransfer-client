@@ -10,6 +10,8 @@ import com.kg.gettransfer.di.*
 import com.kg.gettransfer.presentation.FileLoggingTree
 
 import com.kg.gettransfer.service.SocketIOService
+import com.yandex.metrica.YandexMetrica
+import com.yandex.metrica.YandexMetricaConfig
 
 import net.hockeyapp.android.CrashManager
 
@@ -43,5 +45,15 @@ class GTApplication: MultiDexApplication() {
                                androidModule))
 
         startService(Intent(this, SocketIOService::class.java))
+        setupAppMetrica()
+    }
+
+    private fun setupAppMetrica() {
+        val config = YandexMetricaConfig
+                .newConfigBuilder(getString(R.string.appmetrica_api_key))
+                .withLogs()
+                .build()
+        YandexMetrica.activate(applicationContext, config)
+        YandexMetrica.enableActivityAutoTracking(this)
     }
 }

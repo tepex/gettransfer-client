@@ -20,6 +20,7 @@ ext {
     markwon_version           = "2.0.0"
     socket_io_version         = "1.0.0"
     libphonenumber_version    = "8.9.14"
+	appmetrica_version        = "3.4.0"
 }
 
 android {
@@ -187,6 +188,9 @@ dependencies {
 
     // Phone number code
     implementation "io.michaelrocks:libphonenumber-android:$libphonenumber_version"
+
+	//AppMetrica
+	implementation "com.yandex.android:mobmetricalib:$appmetrica_version"
 
 	testImplementation libs.junit
 	testImplementation libs.hamcrest
