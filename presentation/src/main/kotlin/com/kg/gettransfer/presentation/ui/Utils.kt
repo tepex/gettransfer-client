@@ -185,6 +185,7 @@ internal class Utils {
         fun getFormattedDate(locale: Locale, dateToLocal: Date) = SimpleDateFormat(DATE_TIME_PATTERN, locale).format(dateToLocal)
         
         /*fun setPins(activity: Activity, googleMap: GoogleMap, routeModel: RouteModel) {
+        
             //Создание пинов с информацией
             val pinLayout = activity.layoutInflater.inflate(R.layout.view_maps_pin, null)
 
