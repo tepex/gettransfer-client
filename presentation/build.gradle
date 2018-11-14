@@ -92,7 +92,7 @@ android {
 			versionName getVersionName() as String
 
 			manifestPlaceholders = [
-					hockeyAppId   : "4fc68a7aeddd46559967981ea4612091",
+					hockeyAppId   : "62939f09f9e0489c8ada1c25d2f30d9d",
 			]
 
 			dimension "type"
