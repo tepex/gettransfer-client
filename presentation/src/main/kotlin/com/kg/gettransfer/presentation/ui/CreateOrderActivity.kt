@@ -456,7 +456,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         else super.onBackPressed()
     }
 
-    private fun applyDim(parent: ViewGroup, dimAmount: Float){
+    private fun applyDim(parent: ViewGroup, dimAmount: Float) {
         val dim = ColorDrawable(Color.BLACK)
         dim.setBounds(0, 0, parent.width, parent.height)
         dim.alpha = (dimAmount * 255).toInt()
