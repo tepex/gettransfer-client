@@ -56,7 +56,6 @@ class SettingsPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: SettingsView) {
         super.attachView(view)
-        
 
         viewState.setCurrencies(currencies)
         viewState.setLocales(locales)
