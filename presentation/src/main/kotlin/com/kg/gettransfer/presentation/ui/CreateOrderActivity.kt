@@ -478,7 +478,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         child_seats.img_plus_seat.setOnClickListener        { presenter.changeChildren(1) }
 
         cl_offer_price.setOnClickListener                   { fieldTouched(price_field_input)  }
-        //transfer_date_time_field.setOnClickListener         { fieldTouched(transfer_date_time_field.field_input)  }
+        //transfer_date_time_field.setOnClickListener         {  fieldTouched(transfer_date_time_field.field_input)  }
         user_name_field.setOnClickListener                  { fieldTouched(user_name_field.field_input) }
         email_field.setOnClickListener                      { fieldTouched(email_field.field_input) }
         phone_field.setOnClickListener                      { fieldTouched(phone_field.field_input)}
