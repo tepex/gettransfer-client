@@ -19,6 +19,7 @@ import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
+import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter.Companion.PRICE_30
 
 import com.kg.gettransfer.presentation.view.PaymentView
 
@@ -45,7 +46,6 @@ class PaymentPresenter(cc: CoroutineContexts,
             viewState.blockInterface(true)
             val model = PaymentStatusRequestModel(null, orderId, true, success)
             val paymentStatus = paymentInteractor.changeStatusPayment(Mappers.getPaymentStatusRequest(model))
-            logEventEcommercePurchase()
             if(paymentStatus.success) {
                 router.navigateTo(Screens.PASSENGER_MODE)
                 viewState.showSuccessfulMessage()
@@ -64,11 +64,11 @@ class PaymentPresenter(cc: CoroutineContexts,
     
     private fun logEventEcommercePurchase() {
         val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.CURRENCY, "USD")
-        when(paymentRequest.percentage) {
-//            OfferModel.FULL_PRICE -> params[FirebaseAnalytics.Param.VALUE] = offer.price.amount
-            OfferModel.FULL_PRICE -> bundle.putDouble(FirebaseAnalytics.Param.VALUE, 300.0)
-//            OfferModel.PRICE_30 -> bundle.putDouble(FirebaseAnalytics.Param.VALUE, offer.price.percentage30)
+        bundle.putString(FirebaseAnalytics.Param.CURRENCY, systemInteractor.currency.currencyCode)
+        val price = offer.price.amount
+        when (paymentRequest.percentage) {
+            OfferModel.FULL_PRICE -> bundle.putDouble(FirebaseAnalytics.Param.VALUE, price)
+            OfferModel.PRICE_30 -> bundle.putDouble(FirebaseAnalytics.Param.VALUE, price * PRICE_30)
         }
         bundle.putString(PARAM_TRANSACTION_ID, offerInteractor.transferId!!.toString())
         mFBA.logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, bundle)

@@ -38,6 +38,7 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
     companion object {
         @JvmField val PARAM_SHARE      = "share"
         @JvmField val BUNDLE_KEY_URL   = "url"
+        @JvmField val PRICE_30        = 0.3
     }
 
     init {
@@ -84,16 +85,13 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
 
     private fun logEventBeginCheckout() {
         val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.CURRENCY, "USD")
-        if(offer != null) {
-            when(paymentRequest.percentage) {
-//                OfferModel.FULL_PRICE -> params[FirebaseAnalytics.Param.VALUE] = offer!!.price.amount
-                OfferModel.FULL_PRICE -> bundle.putDouble(FirebaseAnalytics.Param.VALUE, 300.0)
-//                OfferModel.PRICE_30 -> params[FirebaseAnalytics.Param.VALUE] = offer!!.price.percentage30
-            }
+        bundle.putString(FirebaseAnalytics.Param.CURRENCY, systemInteractor.currency.currencyCode)
+        val price = offer!!.price.amount
+        when (paymentRequest.percentage) {
+            OfferModel.FULL_PRICE -> bundle.putDouble(FirebaseAnalytics.Param.VALUE, price)
+            OfferModel.PRICE_30 -> bundle.putDouble(FirebaseAnalytics.Param.VALUE, price * PRICE_30)
         }
         bundle.putInt(PARAM_SHARE, paymentRequest.percentage)
-        bundle.putString(PaymentPresenter.PARAM_TRANSACTION_ID, offerInteractor.transferId!!.toString())
         mFBA.logEvent(FirebaseAnalytics.Event.BEGIN_CHECKOUT, bundle)
     }
 
