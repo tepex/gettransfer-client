@@ -18,17 +18,9 @@ ext {
     slf4j_timber_version      = "1.0.1"
     markwon_version           = "2.0.0"
     socket_io_version         = "1.0.0"
-<<<<<<< HEAD
-<<<<<<< HEAD
     libphonenumber_version    = "8.9.14"
 	appmetrica_version        = "3.4.0"
 	facebook_version          = "4.38.1"
-=======
-	libphonenumber_version 	  = "8.9.14"
->>>>>>> GAA-246 (Autofilling and formatting  phone in CreateOrderActivity)
-=======
-    libphonenumber_version    = "8.9.14"
->>>>>>> Refactor phone, email validation
 }
 
 android {
@@ -36,8 +28,6 @@ android {
 	buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 	
 	defaultConfig {
-		//applicationId "com.gettransfer"
-		applicationId "com.kg.gettransfer"
 		minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION
 		targetSdkVersion project.ANDROID_BUILD_SDK_VERSION
 		testInstrumentationRunner project.ANDROID_TEST_INSTRUMENTATION_RUNNER
@@ -199,34 +189,15 @@ dependencies {
 	// Socket.IO
 	implementation "io.socket:socket.io-client:$socket_io_version"
 	
-	// Room
-	/*
-	implementation libs.room
-	kapt libs.kapt_room
-<<<<<<< HEAD
-	*/
-
-    // Phone number code
-    implementation "io.michaelrocks:libphonenumber-android:$libphonenumber_version"
-
 	//AppMetrica
 	implementation "com.yandex.android:mobmetricalib:$appmetrica_version"
 
 	//Facebook
 	implementation "com.facebook.android:facebook-core:$facebook_version"
 
-=======
-
-<<<<<<< HEAD
 	// Phone number code
 	implementation "io.michaelrocks:libphonenumber-android:$libphonenumber_version"
     
->>>>>>> GAA-246 (Autofilling and formatting  phone in CreateOrderActivity)
-=======
-    // Phone number code
-    implementation "io.michaelrocks:libphonenumber-android:$libphonenumber_version"
-
->>>>>>> Refactor phone, email validation
 	testImplementation libs.junit
 	testImplementation libs.hamcrest
 	testImplementation libs.mockito
