@@ -202,7 +202,7 @@ def getBuildNumber() {
 }
 
 def getVersionName() {
-	return System.getenv("VERSION_NAME") ?: "1.0"
+	return System.getenv("VERSION_NAME") ? System.getenv("VERSION_NAME") : "2.0.0"
 }
 
 def generateChangeLog() {
