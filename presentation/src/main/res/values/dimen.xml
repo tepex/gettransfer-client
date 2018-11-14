@@ -123,9 +123,33 @@
 	<dimen name="card_transfer_type_elevation_default">2dp</dimen>
 	<item name="card_transfer_type_elevation" format="float" type="dimen">8.0</item>
 
-	<dimen name="circle_plus_height">36dp</dimen>
+	<dimen name="circle_plus_height">35dp</dimen>
 	<dimen name="circle_minus_height">@dimen/circle_plus_height</dimen>
 	<dimen name="expended_sheet_order_height">70dp</dimen>
+
+	<dimen name="icons_width_create_request">31dp</dimen>
+	<dimen name="icons_height_create_request">29dp</dimen>
+	<dimen name="icons_margin_start">20dp</dimen>
+	<dimen name="icons_margin_top">19dp</dimen>
+	<dimen name="icons_margin_bottom">19dp</dimen>
+
+	<dimen name="plus_minus_margin_bottom">18dp</dimen>
+	<dimen name="number_seats_horizontal_margin">16dp</dimen>
+	<dimen name="number_height">22dp</dimen>
+	<dimen name="number_width">14dp</dimen>
+	<dimen name="number_size">22sp</dimen>
+	<dimen name="number_container_margin_end">16dp</dimen>
+	<dimen name="number_container_margin_start">4dp</dimen>
+	<dimen name="number_container_margin_top">9dp</dimen>
+
+	<dimen name="text_range_to_icon">11dp</dimen>
+	<dimen name="title_margin_top">8dp</dimen>
+	<dimen name="title_height">20dp</dimen>
+
+	<dimen name="input_margin_bottom">7dp</dimen>
+	<dimen name="input_height">22dp</dimen>
+
+	<dimen name="divider_margin_start">16dp</dimen>
 
 	<!-- Search address -->
 	<dimen name="address_item_size">16sp</dimen>

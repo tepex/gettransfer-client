@@ -70,6 +70,8 @@ import com.kg.gettransfer.extensions.showKeyboard
 import com.kg.gettransfer.presentation.IntentKeys
 
 import kotlinx.android.synthetic.main.amu_info_window.view.*
+import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
+import kotlinx.android.synthetic.main.view_create_order_field.view.*
 
 import org.koin.android.ext.android.inject
 
@@ -147,7 +149,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         _mapView = mapView
         initMapView(savedInstanceState)
 
-        scrollContent.setOnTouchListener(onTouchListener)
+        initFieldsViews()
 
         rvTransferType.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvTransferType.isNestedScrollingEnabled = false
@@ -199,6 +201,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         bsTransport = BottomSheetBehavior.from(sheetTransport)
         bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
         btnOk.setOnClickListener { hideSheetTransport() }
+    }
+
+    private fun initFieldsViews() {
+        scrollContent.setOnTouchListener(onTouchListener)
     }
 
     private fun hideSheetTransport() {

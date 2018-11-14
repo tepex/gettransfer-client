@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <ImageView
+        android:id="@+id/field_icon"
+        android:layout_width="@dimen/icons_width_create_request"
+        android:layout_height="@dimen/icons_width_create_request"
+
+        android:layout_marginStart="@dimen/icons_margin_start"
+        android:layout_marginTop="@dimen/icons_margin_top"
+        android:layout_marginBottom="@dimen/icons_margin_bottom"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        app:srcCompat="@drawable/ic_account"/>
+
+    <TextView
+        android:id="@+id/field_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="@dimen/text_range_to_icon"
+        android:layout_marginTop="@dimen/title_margin_top"
+
+        android:textSize="@dimen/view_transfer_info_small_text_size"
+        android:text="Offer your price"
+
+        app:layout_constraintLeft_toRightOf="@+id/field_icon"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <EditText
+        android:id="@+id/field_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="@dimen/text_range_to_icon"
+        android:layout_marginBottom="@dimen/input_margin_bottom"
+        android:background="@null"
+        android:textSize="@dimen/create_transfer_additionals_top_text_size"
+        android:hint="450"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:textColor="@color/colorTextBlack"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/field_icon" />
+
+
+
+    <view
+        android:id="@+id/field_divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/create_transfer_divider_height"
+
+
+        android:layout_marginStart="@dimen/divider_margin_start"
+        android:background="@color/create_order_fields_divider"
+
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>
