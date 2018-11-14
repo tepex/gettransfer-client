@@ -24,6 +24,7 @@ import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
+import com.yandex.metrica.YandexMetrica
 
 import java.text.Format
 import java.text.SimpleDateFormat
@@ -339,7 +340,27 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         logEventMain(BACK_CLICKED)
     }
 
-    fun logEventMain(value: String)              { mFBA.logEvent(MainPresenter.EVENT_MAIN, createSingeBundle(PARAM_KEY_NAME, value)) }
-    fun logTransferSettingsEvent(value: String)  { mFBA.logEvent(EVENT_SETTINGS, createSingeBundle(PARAM_KEY_FIELD, value)) }
-    private fun logCreateTransfer(value: String) { mFBA.logEvent(EVENT_TRANSFER, createSingeBundle(PARAM_KEY_RESULT, value)) }
+    fun logEventMain(value: String) {
+        val map = HashMap<String, Any>()
+        map[PARAM_KEY_NAME] = value
+
+        mFBA.logEvent(MainPresenter.EVENT_MAIN, createSingeBundle(PARAM_KEY_NAME, value))
+        YandexMetrica.reportEvent(MainPresenter.EVENT_MAIN, map)
+    }
+
+    fun logTransferSettingsEvent(value: String) {
+        val map = HashMap<String, Any>()
+        map[PARAM_KEY_FIELD] = value
+
+        mFBA.logEvent(EVENT_SETTINGS, createSingeBundle(PARAM_KEY_FIELD, value))
+        YandexMetrica.reportEvent(EVENT_SETTINGS, map)
+    }
+
+    private fun logCreateTransfer(value: String) {
+        val map = HashMap<String, Any>()
+        map[PARAM_KEY_RESULT] = value
+
+        mFBA.logEvent(EVENT_TRANSFER, createSingeBundle(PARAM_KEY_RESULT, value))
+        YandexMetrica.reportEvent(EVENT_TRANSFER, map)
+    }
 }
