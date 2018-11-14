@@ -19,12 +19,16 @@ ext {
     markwon_version           = "2.0.0"
     socket_io_version         = "1.0.0"
 <<<<<<< HEAD
+<<<<<<< HEAD
     libphonenumber_version    = "8.9.14"
 	appmetrica_version        = "3.4.0"
 	facebook_version          = "4.38.1"
 =======
 	libphonenumber_version 	  = "8.9.14"
 >>>>>>> GAA-246 (Autofilling and formatting  phone in CreateOrderActivity)
+=======
+    libphonenumber_version    = "8.9.14"
+>>>>>>> Refactor phone, email validation
 }
 
 android {
@@ -213,10 +217,16 @@ dependencies {
 
 =======
 
+<<<<<<< HEAD
 	// Phone number code
 	implementation "io.michaelrocks:libphonenumber-android:$libphonenumber_version"
     
 >>>>>>> GAA-246 (Autofilling and formatting  phone in CreateOrderActivity)
+=======
+    // Phone number code
+    implementation "io.michaelrocks:libphonenumber-android:$libphonenumber_version"
+
+>>>>>>> Refactor phone, email validation
 	testImplementation libs.junit
 	testImplementation libs.hamcrest
 	testImplementation libs.mockito
