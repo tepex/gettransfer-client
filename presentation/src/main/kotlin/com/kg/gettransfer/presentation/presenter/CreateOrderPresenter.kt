@@ -296,7 +296,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             errorFiled = TRANSPORT_FIELD
         else if (!Utils.checkEmail(user.profile.email))
             errorFiled = EMAIL_FIELD
-        else if (!Utils.checkPhone(user.profile.phone))
+        else if (!Utils.checkPhone(user.profile.phone!!))
             errorFiled = PHONE_FIELD
 
         if(errorFiled.isEmpty()) return true
@@ -314,7 +314,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                             !user.profile.email.isNullOrBlank() &&
                             !user.profile.email.isNullOrBlank() &&
                             Patterns.EMAIL_ADDRESS.matcher(user.profile.email!!).matches() &&
-                            Utils.checkPhone(user.profile.phone) &&
+                            Utils.checkPhone(user.profile.phone!!) &&
                             user.termsAccepted
         viewState.setGetTransferEnabled(actionEnabled)
     }

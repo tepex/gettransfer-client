@@ -54,9 +54,11 @@ import java.util.regex.Pattern
 
 internal class Utils {
     companion object {
-        private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
+        //private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
         private val EMAIL_PATTERN = Patterns.EMAIL_ADDRESS
         @JvmField val DATE_TIME_PATTERN = "dd MMMM yyyy, HH:mm"
+
+        private lateinit var phoneUtil: PhoneNumberUtil
         
         fun getAlertDialogBuilder(context: Context): AlertDialog.Builder {
             return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && false)
@@ -127,7 +129,11 @@ internal class Utils {
         }
 
         fun checkEmail(email: String?) = EMAIL_PATTERN.matcher(email ?: "").matches()
-        fun checkPhone(phone: String?) = PHONE_PATTERN.matcher(phone?.trim() ?: "").matches()
+        //fun checkPhone(phone: String?) = PHONE_PATTERN.matcher(phone?.trim() ?: "").matches()
+        fun checkPhone(phone: String): Boolean{
+            val phoneNumber = phoneUtil.parse(phone, null)
+            return phoneUtil.isValidNumber(phoneNumber)
+        }
 
         fun formatDistance(context: Context, distance: Int?, distanceUnit: DistanceUnit): String {
             if(distance == null) return ""
@@ -274,10 +280,12 @@ internal class Utils {
             return drawableCompat
         }
 
+        fun initPhoneNumberUtil(context: Context) { phoneUtil = PhoneNumberUtil.createInstance(context) }
+
         fun getPhoneCodeByCountryIso(context: Context): Int {
             val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             val countryCode = telephonyManager.simCountryIso
-            return PhoneNumberUtil.createInstance(context).getCountryCodeForRegion(countryCode.toUpperCase())
+            return phoneUtil.getCountryCodeForRegion(countryCode.toUpperCase())
         }
 
         fun formatJsonString(text: String): String {
