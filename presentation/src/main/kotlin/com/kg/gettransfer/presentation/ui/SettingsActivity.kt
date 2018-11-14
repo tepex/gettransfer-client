@@ -49,6 +49,7 @@ class SettingsActivity: BaseActivity(), SettingsView {
 
             when (screenKey) {
                 Screens.SHARE_LOGS -> return Intent(context, LogsActivity::class.java)
+                Screens.MAIN -> return Intent(context, MainActivity::class.java)
             }
             return null
         }

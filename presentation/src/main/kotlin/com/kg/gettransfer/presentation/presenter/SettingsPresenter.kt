@@ -35,6 +35,8 @@ class SettingsPresenter(cc: CoroutineContexts,
     private val distanceUnits = systemInteractor.distanceUnits?.let { Mappers.getDistanceUnitsModels(it) } ?: emptyList<DistanceUnitModel>()
     private val endpoints = systemInteractor.endpoints.map { Mappers.getEndpointModel(it) }
 
+    private var localeWasChanged = false
+
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> saveAccount() })
     }
@@ -83,6 +85,7 @@ class SettingsPresenter(cc: CoroutineContexts,
     }
 
     fun changeLocale(selected: Int): Locale {
+        localeWasChanged = true
         val localeModel = locales.get(selected)
         systemInteractor.locale = localeModel.delegate
         viewState.setLocale(localeModel.name)
@@ -132,6 +135,14 @@ class SettingsPresenter(cc: CoroutineContexts,
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
         super.onDestroy()
+    }
+
+    override fun onBackCommandClick() {
+        if (localeWasChanged) {
+            localeWasChanged = false
+            router.navigateTo(Screens.MAIN)
+        }
+        else super.onBackCommandClick()
     }
 
     private fun logEvent(param: String, value: String) {

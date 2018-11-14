@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation
 object Screens {
 	@JvmField val BUNDLE_KEY       = "bundle_key"
 	
+	@JvmField val MAIN  		   = "main"
 	@JvmField val FIND_ADDRESS     = "find_address"
 	@JvmField val ABOUT            = "about"
 	@JvmField val READ_MORE        = "read_more"
