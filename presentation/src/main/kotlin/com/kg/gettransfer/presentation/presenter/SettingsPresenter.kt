@@ -31,12 +31,6 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
 
     private var localeWasChanged = false
 
-    /*
-    init {
-        router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> saveAccount() })
-    }
-    */
-
     companion object {
         @JvmField val EVENT = "settings"
         
