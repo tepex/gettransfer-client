@@ -272,7 +272,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         layoutPopupView.etPopupComment.setText(tvComments.text)
         layoutPopupView.etPopupComment.setRawInputType(InputType.TYPE_CLASS_TEXT)
         layoutPopupView.etPopupComment.popupWindow = popupWindowComment
-        layoutPopupView.etPopupComment.showKeyboard()
+        if (!isKeyBoardOpened) layoutPopupView.etPopupComment.showKeyboard()
 
         Handler().postDelayed({
             popupWindowComment.showAtLocation(mainLayoutActivityTransfer, Gravity.CENTER, 0, 0)
