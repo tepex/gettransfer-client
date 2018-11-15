@@ -53,6 +53,9 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 import timber.log.Timber
+import android.app.Activity
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     companion object {

@@ -1,10 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.app.DatePickerDialog
-<<<<<<< HEAD
-=======
-import com.kg.gettransfer.common.BoundTimePickerDialog
->>>>>>> GAA-256 (Date and time selection logic)
 
 import android.content.Context
 import android.content.Intent
@@ -262,10 +258,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             calendar.set(Calendar.MINUTE, minute)
             presenter.changeDate(calendar.time)
         }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true)
-<<<<<<< HEAD
-        
-=======
->>>>>>> GAA-256 (Date and time selection logic)
         timePickerDialog.show()*/
 
         val boundTimePickerDialog = BoundTimePickerDialog(this, { _, hour, minute ->
@@ -275,7 +267,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }, setHour, setMinute, true)
         boundTimePickerDialog.setMin(minHour, minMinute)
         boundTimePickerDialog.show()
-<<<<<<< HEAD
     }
 
     override fun setDateTimeTransfer(dateTimeString: String, isAfter4Hours: Boolean) {
@@ -304,20 +295,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
     override fun setCurrency(currency: String) { tv_currency.text = currency }
     override fun setComment(comment: String)   { comment_field.field_input.setText(comment) }
-=======
-    }
-
-    override fun setPassengers(count: Int)                   { tvCountPerson.text = count.toString() }
-    override fun setChildren(count: Int)                     { tvCountChild.text = count.toString() }
-    override fun setCurrency(currency: String)               { tvCurrencyType.text = currency }
-    override fun setComment(comment: String)                 { tvComments.text = comment }
-    override fun setDateTimeTransfer(dateTimeString: String, isAfter4Hours: Boolean) {
-        if(isAfter4Hours) tvDateTimeTransfer.text = getString(R.string.LNG_DATE_IN_HOURS).plus(" ")
-                                                    .plus(CreateOrderPresenter.FUTURE_HOUR).plus(" ")
-                                                    .plus(getString(R.string.LNG_HOUR_FEW))
-        else tvDateTimeTransfer.text = dateTimeString
-    }
->>>>>>> GAA-256 (Date and time selection logic)
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
         rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
