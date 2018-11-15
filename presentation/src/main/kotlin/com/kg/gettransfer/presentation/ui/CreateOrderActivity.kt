@@ -380,6 +380,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         else {
             val phoneCode = Utils.getPhoneCodeByCountryIso(this)
             if(phoneCode > 0) tvPhone.setText("+".plus(phoneCode))
+            else tvPhone.setText("+")
         }
         etEmail.setText(user.profile.email ?: "")
         if(isLoggedIn) etEmail.isEnabled = false
