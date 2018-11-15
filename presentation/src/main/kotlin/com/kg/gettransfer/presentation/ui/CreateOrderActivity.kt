@@ -305,6 +305,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             calendar.set(Calendar.MINUTE, minute)
             presenter.changeDate(calendar.time)
         }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true)
+        
         timePickerDialog.show()*/
 
         val boundTimePickerDialog = BoundTimePickerDialog(this, { _, hour, minute ->
