@@ -54,6 +54,9 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
 import timber.log.Timber
+import android.app.Activity
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     internal val systemInteractor: SystemInteractor by inject()
@@ -74,9 +77,12 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         if(event.action == MotionEvent.ACTION_MOVE) hideKeyboardWithoutClearFocus(this, view)
         else return@OnTouchListener false
     }
+<<<<<<< HEAD
     
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
+=======
+>>>>>>> GAA-232 & GAA-257 (Hide keyboard when scrolling in CreateOrder & Search)
     
     private val inetReceiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) = setNetworkAvailability(context)

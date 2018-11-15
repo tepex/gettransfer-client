@@ -105,8 +105,6 @@ class SearchActivity: BaseActivity(), SearchView {
         predefinedPopularPlaces = initPredefinedPopularPlaces()
         ivInverseWay.setOnClickListener { presenter.inverseWay() }
         pointOnMap.setOnClickListener { presenter.selectFinishPointOnMap() }
-        rv_addressList.setOnTouchListener{ _, _ -> hideKeyboard()}
-        rv_popularList.setOnTouchListener{ _, _ -> hideKeyboard()}
     }
 
     private fun initSearchFields() {
