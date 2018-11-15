@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
@@ -10,42 +9,41 @@
         android:id="@+id/seat_icon"
         android:layout_width="@dimen/icons_width_create_request"
         android:layout_height="@dimen/icons_height_create_request"
-        
+
         android:layout_marginStart="@dimen/icons_margin_start"
-        
+
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" 
         app:srcCompat="@drawable/ic_passenger_small" />
-    
+
     <TextView
         android:id="@+id/seat_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_marginTop="@dimen/title_margin_top"
         android:layout_marginStart="@dimen/text_range_to_icon"
+        android:layout_marginTop="@dimen/title_margin_top"
 
-        android:textSize="@dimen/view_transfer_info_small_text_size"
         android:text="Passengers"
+        android:textSize="@dimen/view_transfer_info_small_text_size"
 
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/seat_icon"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/number_container_margin_start"
+
+        android:layout_marginTop="@dimen/number_container_margin_top"
+        android:layout_marginEnd="@dimen/number_container_margin_end"
+        android:layout_marginBottom="@dimen/plus_minus_margin_bottom"
         android:orientation="horizontal"
 
-        android:layout_marginBottom="@dimen/plus_minus_margin_bottom"
-        android:layout_marginEnd="@dimen/number_container_margin_end"
-        android:layout_marginStart="@dimen/number_container_margin_start"
-        android:layout_marginTop="@dimen/number_container_margin_top"
 
-
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/seat_icon"
         app:layout_constraintTop_toBottomOf="@+id/seat_title">
 
@@ -54,40 +52,33 @@
             android:layout_width="@dimen/circle_plus_height"
             android:layout_height="@dimen/circle_plus_height"
 
-            app:srcCompat="@drawable/ic_circle_minus"
-            />
+            app:srcCompat="@drawable/ic_circle_minus" />
 
         <TextView
             android:id="@+id/person_count"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:layout_gravity="center"
-            android:gravity="center"
-
-
             android:layout_marginStart="@dimen/number_seats_horizontal_margin"
+
+
             android:layout_marginEnd="@dimen/number_seats_horizontal_margin"
-
             android:fontFamily="@font/sf_pro_text_semibold"
-            android:textColor="@color/colorTextBlack"
-            android:text="2"
-            android:textSize="@dimen/number_size"
 
-/>
+            android:gravity="center"
+            android:text="2"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="@dimen/number_size" />
+
         <ImageView
             android:id="@+id/img_plus_seat"
             android:layout_width="@dimen/circle_minus_height"
             android:layout_height="@dimen/circle_minus_height"
 
-            app:srcCompat="@drawable/ic_circle_plus"
-            />
+            app:srcCompat="@drawable/ic_circle_plus" />
 
 
     </LinearLayout>
-
-
-
-
 
 
 </android.support.constraint.ConstraintLayout>

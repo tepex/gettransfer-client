@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     app:behavior_hideable="false"
+    android:id="@+id/info_sheet"
     app:behavior_peekHeight="@dimen/create_order_behaviour_peek_height"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
@@ -41,56 +43,148 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tvRate"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:gravity="center"
                 android:padding="12dp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/create_transfer_divider_height"
                 android:background="@color/colorDividerGray" />
 
 
-            <include
-                android:id="@+id/offer_price_field"
-                layout="@layout/view_create_order_field"/>
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/cl_offer_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/fl_currency"
+                    android:layout_width="49dp"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/tv_currency"
+                        android:layout_width="12dp"
+                        android:layout_height="20dp"
+
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="@dimen/icons_margin_top"
+                        android:layout_marginBottom="@dimen/icons_margin_bottom"
+                        android:fontFamily="@font/sf_pro_text_regular"
+
+                        android:text="@string/rub"
+                        android:textSize="@dimen/create_transfer_additionals_top_text_size"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/triangle_currency"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+
+                        android:layout_marginTop="6dp"
+
+                        app:layout_constraintStart_toEndOf="@+id/tv_currency"
+                        app:layout_constraintTop_toTopOf="@+id/tv_currency"
+
+                        app:srcCompat="@drawable/ic_triangle" />
+
+                </android.support.constraint.ConstraintLayout>
+
+
+                <TextView
+                    android:id="@+id/price_field_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="@dimen/title_margin_top"
+
+                    android:text="Offer your price"
+                    android:textSize="@dimen/view_transfer_info_small_text_size"
+
+                    app:layout_constraintLeft_toRightOf="@+id/fl_currency"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/price_field_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginStart="@dimen/text_range_to_icon"
+                    android:layout_marginBottom="@dimen/input_margin_bottom"
+                    android:background="@null"
+                    android:fontFamily="@font/sf_pro_text_semibold"
+                    android:hint="450"
+                    android:textColor="@color/colorTextBlack"
+                    android:textSize="@dimen/create_transfer_additionals_top_text_size"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/fl_currency" />
+
+
+                <View
+                    android:id="@+id/field_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/create_transfer_divider_height"
+
+
+                    android:layout_marginStart="@dimen/divider_margin_start"
+                    android:background="@color/create_order_fields_divider"
+
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
             <include
                 android:id="@+id/transfer_date_time_field"
-                layout="@layout/view_create_order_field"/>
+                layout="@layout/view_create_order_field" />
 
             <LinearLayout
                 android:id="@+id/ll_seats"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <include
                     android:id="@+id/passengers_seats"
-                    layout="@layout/view_seats"/>
+                    layout="@layout/view_seats" />
+
                 <include
                     android:id="@+id/child_seats"
-                    layout="@layout/view_seats"/>
+                    layout="@layout/view_seats" />
 
             </LinearLayout>
+
             <include
                 android:id="@+id/user_name_field"
-                layout="@layout/view_create_order_field"/>
+                layout="@layout/view_create_order_field" />
+
             <include
                 android:id="@+id/email_field"
-                layout="@layout/view_create_order_field"/>
+                layout="@layout/view_create_order_field" />
+
             <include
                 android:id="@+id/phone_field"
-                layout="@layout/view_create_order_field"/>
+                layout="@layout/view_create_order_field" />
+
             <include
                 android:id="@+id/flight_number_field"
-                layout="@layout/view_create_order_field"/>
+                layout="@layout/view_create_order_field" />
+
             <include
                 android:id="@+id/promo_field"
-                layout="@layout/view_create_order_field"/>
+                layout="@layout/view_create_order_field" />
+
             <include
                 android:id="@+id/comment_field"
-                layout="@layout/view_create_order_field"/>
+                layout="@layout/view_create_order_field" />
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/layoutAgreement"
@@ -109,11 +203,11 @@
                     android:layout_marginEnd="@dimen/create_transfer_cb_agreement_margin"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
+                    android:theme="@style/SwitchCompatStyle"
                     app:layout_constraintBottom_toBottomOf="@+id/tvAgreement1"
                     app:layout_constraintEnd_toStartOf="@+id/tvAgreement1"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/tvAgreement1"
-                    android:theme="@style/SwitchCompatStyle"/>
+                    app:layout_constraintTop_toTopOf="@+id/tvAgreement1" />
 
                 <TextView
                     android:id="@+id/tvAgreement1"
@@ -125,10 +219,10 @@
                     android:text="@string/LNG_RIDE_OFFERT"
                     android:textColor="@color/colorTextLightGray"
                     android:textSize="@dimen/create_transfer_agreement_text_size"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -143,11 +237,11 @@
         style="?android:attr/buttonBarButtonStyle"
         android:layout_width="@dimen/get_offers_btn_height"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/btn_get_transfer"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true">
+        android:background="@drawable/btn_get_transfer">
 
         <ImageView
             android:layout_width="wrap_content"

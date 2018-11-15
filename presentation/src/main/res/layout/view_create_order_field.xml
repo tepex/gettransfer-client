@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
@@ -44,6 +45,7 @@
         android:background="@null"
         android:textSize="@dimen/create_transfer_additionals_top_text_size"
         android:hint="450"
+        android:singleLine="true"
         android:fontFamily="@font/sf_pro_text_semibold"
         android:textColor="@color/colorTextBlack"
 
@@ -52,7 +54,7 @@
 
 
 
-    <view
+    <View
         android:id="@+id/field_divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/create_transfer_divider_height"

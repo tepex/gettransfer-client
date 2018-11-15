@@ -59,9 +59,17 @@ import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.view.CreateOrderView
 
 import kotlinx.android.synthetic.main.activity_create_order.*
-import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
+//import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
+import kotlinx.android.synthetic.main.layout_popup_comment.view.*
+
+import kotlinx.android.synthetic.main.amu_info_window.view.*
+
+
+import com.kg.gettransfer.extensions.hideKeyboard
+import com.kg.gettransfer.extensions.showKeyboard
+
 
 import com.kg.gettransfer.presentation.IntentKeys
 
@@ -217,7 +225,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun setCurrencies(currencies: List<CurrencyModel>) {
-        Utils.setCurrenciesDialogListener(this, layoutCurrencyType, currencies) { selected ->
+        Utils.setCurrenciesDialogListener(this, fl_currency, currencies) { selected ->
             presenter.changeCurrency(selected)
         }
     }
@@ -235,7 +243,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         popupWindowComment.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         popupWindowComment.inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
         popupWindowComment.isOutsideTouchable = true
-        layoutPopupView.etPopupComment.setText(tvComments.text)
+        layoutPopupView.etPopupComment.setText(comment_field.field_input.text)
         layoutPopupView.etPopupComment.setRawInputType(InputType.TYPE_CLASS_TEXT)
         layoutPopupView.etPopupComment.popupWindow = popupWindowComment
         if(!isKeyBoardOpened) layoutPopupView.etPopupComment.showKeyboard()
@@ -451,40 +459,44 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     //TODO create custom view for new bottom sheet
     private fun initFieldsViews() {
         //icons
-        offer_price_field.field_icon.setImageDrawable(getDrawable(R.drawable))
-        transfer_date_time_field.field_icon.setImageDrawable(getDrawable(R.drawable))
-        user_name_field.field_icon.setImageDrawable(getDrawable(R.drawable))
-        email_field.field_icon.setImageDrawable(getDrawable(R.drawable))
-        phone_field.field_icon.setImageDrawable(getDrawable(R.drawable))
-        flight_number_field.field_icon.setImageDrawable(getDrawable(R.drawable))
-        promo_field.field_icon.setImageDrawable(getDrawable(R.drawable))
-        comment_field.field_icon.setImageDrawable(getDrawable(R.drawable))
+        transfer_date_time_field.field_icon.setImageDrawable(getDrawable(R.drawable.ic_calendar_triangle))
+        user_name_field.field_icon.setImageDrawable(getDrawable(R.drawable.ic_passport))
+        email_field.field_icon.setImageDrawable(getDrawable(R.drawable.ic_mail))
+        phone_field.field_icon.setImageDrawable(getDrawable(R.drawable.ic_phone))
+        flight_number_field.field_icon.setImageDrawable(getDrawable(R.drawable.ic_flight))
+        promo_field.field_icon.setImageDrawable(getDrawable(R.drawable.sale_icon))
+        comment_field.field_icon.setImageDrawable(getDrawable(R.drawable.ic_comment))
+
+        passengers_seats.seat_icon.setImageDrawable(getDrawable(R.drawable.ic_passenger_small))
+        child_seats.seat_icon.setImageDrawable(getDrawable(R.drawable.ic_child_seat))
 
         //titles
-        offer_price_field.field_title.text = getString(R.string)
-        transfer_date_time_field.field_title.text = getString(R.string)
-        user_name_field.field_title.text = getString(R.string)
-        email_field.field_title.text = getString(R.string)
-        phone_field.field_title.text = getString(R.string)
-        flight_number_field.field_title.text = getString(R.string)
-        promo_field.field_title.text = getString(R.string)
-        comment_field.field_title.text = getString(R.string)
+        price_field_title.text = getString(R.string.LNG_RIDE_PRICE)
+        transfer_date_time_field.field_title.text = getString(R.string.LNG_RIDE_DATE)
+        user_name_field.field_title.text = getString(R.string.LNG_RIDE_NAME_PLACEHOLDER)
+        email_field.field_title.text = getString(R.string.LNG_RIDE_EMAIL_PLACEHOLDER)
+        phone_field.field_title.text = getString(R.string.LNG_RIDE_PHONE_PLACEHOLDER)
+        flight_number_field.field_title.text = getString(R.string.LNG_RIDE_FLIGHT_PLACEHOLDER)
+        promo_field.field_title.text = getString(R.string.LNG_RIDE_PROMOCODE_PLACEHOLDER)
+        comment_field.field_title.text = getString(R.string.LNG_RIDE_COMMENT)
+        passengers_seats.seat_title.text = getString(R.string.LNG_RIDE_PASSENGERS)
+        child_seats.seat_title.text = getString(R.string.LNG_RIDE_CHILDREN)
 
         //hints
-        offer_price_field.field_input.hint = getString(R.string)
-        transfer_date_time_field.field_input.hint = getString(R.string)
-        user_name_field.field_input.hint = getString(R.string)
-        email_field.field_input.hint = getString(R.string)
-        phone_field.field_input.hint = getString(R.string)
-        flight_number_field.field_input.hint = getString(R.string)
-        promo_field.field_input.hint = getString(R.string)
-        comment_field.field_input.hint = getString(R.string)
+        price_field_input.hint = getString(R.string.LNG_RIDE_PRICE_YOUR)
+ //       transfer_date_time_field.field_input.hint = getString(R.string)
+        user_name_field.field_input.hint = getString(R.string.LNG_RIDE_NAME)
+        email_field.field_input.hint = getString(R.string.LNG_RIDE_EMAIL)
+        phone_field.field_input.hint = getString(R.string.LNG_RIDE_PHONE)
+        flight_number_field.field_input.hint = getString(R.string.LNG_RIDE_FLIGHT)
+        promo_field.field_input.hint = getString(R.string.LNG_RIDE_PROMOCODE)
+        comment_field.field_input.hint = getString(R.string.LNG_COMMENT_PLACEHOLDER)
     }
 
     private fun initChangeTextListeners() {
         //        etYourPrice.onTextChanged { presenter.cost = it.toDoubleOrNull() }
-        offer_price_field.field_input.onTextChanged             { presenter.cost = it.toDoubleOrNull() }
-        offer_price_field.field_input.setOnFocusChangeListener  { _, hasFocus ->
+        price_field_input.onTextChanged             { presenter.cost = it.toDoubleOrNull() }
+        price_field_input.setOnFocusChangeListener  { _, hasFocus ->
             if(hasFocus) presenter.logTransferSettingsEvent(CreateOrderPresenter.OFFER_PRICE_FOCUSED)
         }
         //      tvDateTimeTransfer.setOnClickListener {
@@ -506,7 +518,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
         phone_field.field_input.addTextChangedListener(PhoneNumberFormattingTextWatcher())
         flight_number_field.field_input.onTextChanged    { presenter.setFlightNumber(it.trim()) }
-        promo_field.field_input.onTextChanged            { presenter.setPromo(etPromo.text.toString()) }
+        promo_field.field_input.onTextChanged            { presenter.setPromo(promo_field.field_input.text.toString()) }
     }
 
     private fun initClickListeners() {
@@ -521,7 +533,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         child_seats.img_minus_seat.setOnClickListener       { presenter.changeChildren(-1) }
         child_seats.img_plus_seat.setOnClickListener        { presenter.changeChildren(1) }
 
-        offer_price_field.setOnClickListener                { offer_price_field.field_input.requestFocusFromTouch() }
+        price_field_input.setOnClickListener                { price_field_input.requestFocusFromTouch() }
         transfer_date_time_field.setOnClickListener         { transfer_date_time_field.field_input.requestFocusFromTouch() }
         user_name_field.setOnClickListener                  { user_name_field.field_input.requestFocusFromTouch() }
         email_field.setOnClickListener                      { email_field.field_input.requestFocusFromTouch() }
