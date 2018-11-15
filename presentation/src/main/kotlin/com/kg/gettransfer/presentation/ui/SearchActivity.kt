@@ -7,6 +7,7 @@ import android.location.Location
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+import android.support.v4.content.ContextCompat
 
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
@@ -105,6 +106,8 @@ class SearchActivity: BaseActivity(), SearchView {
         predefinedPopularPlaces = initPredefinedPopularPlaces()
         ivInverseWay.setOnClickListener { presenter.inverseWay() }
         pointOnMap.setOnClickListener { presenter.selectFinishPointOnMap() }
+        rv_addressList.setOnTouchListener{ _, _ -> hideKeyboard()}
+        rv_popularList.setOnTouchListener{ _, _ -> hideKeyboard()}
     }
 
     private fun initSearchFields() {
@@ -144,10 +147,10 @@ class SearchActivity: BaseActivity(), SearchView {
         var iconRes: Int
         if (isTo){
             iconRes = R.drawable.b_point_empty
-            searchForm.icons_container.b_point.setImageDrawable(getDrawable(iconRes))
+            searchForm.icons_container.b_point.setImageDrawable(ContextCompat.getDrawable(this, iconRes))
         } else {
             iconRes = R.drawable.a_point_empty
-            searchForm.icons_container.a_point.setImageDrawable(getDrawable(iconRes))
+            searchForm.icons_container.a_point.setImageDrawable(ContextCompat.getDrawable(this, iconRes))
         }
     }
 
@@ -199,7 +202,7 @@ class SearchActivity: BaseActivity(), SearchView {
     }
 
     override fun updateIcon(isTo: Boolean) {
-        if(isTo) searchForm.icons_container.b_point.setImageDrawable(getDrawable(R.drawable.b_point_filled))
-        else searchForm.icons_container.a_point.setImageDrawable(getDrawable(R.drawable.a_point_filled))
+        if(isTo) searchForm.icons_container.b_point.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.b_point_filled))
+        else searchForm.icons_container.a_point.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.a_point_filled))
     }
 }
