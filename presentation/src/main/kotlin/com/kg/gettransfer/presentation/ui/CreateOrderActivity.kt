@@ -29,11 +29,7 @@ import android.view.*
 import android.view.animation.AnimationUtils
 
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-
-import android.widget.LinearLayout
-import android.widget.PopupWindow
-import android.widget.TextView
+import android.widget.*
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -324,7 +320,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         boundTimePickerDialog.show()
     }
 
-<<<<<<< HEAD
     override fun setPassengers(count: Int)                   { tvCountPerson.text = count.toString() }
     override fun setChildren(count: Int)                     { tvCountChild.text = count.toString() }
     override fun setCurrency(currency: String)               { tvCurrencyType.text = currency }
@@ -335,13 +330,12 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
                                                     .plus(getString(R.string.LNG_HOUR_FEW))
         else tvDateTimeTransfer.text = dateTimeString
     }
-=======
-    override fun setPassengers(count: Int)                   { passengers_seats.person_count.text = count.toString() }
-    override fun setChildren(count: Int)                     { child_seats.person_count.text = count.toString() }
-    override fun setCurrency(currency: String)               { /*tvCurrencyType.text = currency*/ }
-    override fun setComment(comment: String)                 { comment_field.field_input.setText(comment) }
-    override fun setDateTimeTransfer(dateTimeString: String) { transfer_date_time_field.field_input.setText(dateTimeString) }
->>>>>>> todo resources
+
+    private fun checkMinusButton(count: Int, view: ImageView) {
+        val imgRes = if (count == 0) R.drawable.ic_circle_minus else R.drawable.
+
+    }
+
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
         rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
@@ -361,12 +355,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         if(user.profile.phone != null) user_name_field.field_input.setText(user.profile.phone)
         else {
             val phoneCode = Utils.getPhoneCodeByCountryIso(this)
-<<<<<<< HEAD
-            if(phoneCode > 0) tvPhone.setText("+".plus(phoneCode))
-            else tvPhone.setText("+")
-=======
             if(phoneCode > 0) user_name_field.field_input.setText("+".plus(phoneCode))
->>>>>>> todo resources
+            else user_name_field.field_input.setText("+")
         }
         email_field.field_input.setText(user.profile.email ?: "")
         if(isLoggedIn) email_field.field_input.isEnabled = false
@@ -398,13 +388,13 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
         promo_field.field_title.setTextColor(ContextCompat.getColor(this, colorRes))
         promo_field.field_title.text = text
- //       img_okResult.visibility = visibility
+        img_okResult.visibility = visibility
     }
 
     override fun resetPromoView() {
         promo_field.field_title.text = defaultPromoText
         promo_field.field_title.setTextColor(ContextCompat.getColor(this, R.color.colorTextLightGray))
-//        img_okResult.visibility = View.INVISIBLE
+        img_okResult.visibility = View.INVISIBLE
     }
 
     override fun showEmptyFieldError(invalidField: String) {
@@ -458,7 +448,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     //TODO create custom view for new bottom sheet
     private fun initFieldsViews() {
-        //icons
+        /* icons */
         transfer_date_time_field.field_icon.setImageDrawable(getDrawable(R.drawable.ic_calendar_triangle))
         user_name_field.field_icon.setImageDrawable(getDrawable(R.drawable.ic_passport))
         email_field.field_icon.setImageDrawable(getDrawable(R.drawable.ic_mail))
@@ -470,7 +460,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         passengers_seats.seat_icon.setImageDrawable(getDrawable(R.drawable.ic_passenger_small))
         child_seats.seat_icon.setImageDrawable(getDrawable(R.drawable.ic_child_seat))
 
-        //titles
+        /* titles */
         price_field_title.text = getString(R.string.LNG_RIDE_PRICE)
         transfer_date_time_field.field_title.text = getString(R.string.LNG_RIDE_DATE)
         user_name_field.field_title.text = getString(R.string.LNG_RIDE_NAME_PLACEHOLDER)
@@ -482,7 +472,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         passengers_seats.seat_title.text = getString(R.string.LNG_RIDE_PASSENGERS)
         child_seats.seat_title.text = getString(R.string.LNG_RIDE_CHILDREN)
 
-        // editable fields
+        /* editable fields */
         price_field_input.hint = getString(R.string.LNG_RIDE_PRICE_YOUR)
         price_field_input.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
  //       transfer_date_time_field.field_input.hint = getString(R.string)
@@ -493,9 +483,12 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         flight_number_field.field_input.hint = getString(R.string.LNG_RIDE_FLIGHT)
         promo_field.field_input.hint = getString(R.string.LNG_RIDE_PROMOCODE)
         comment_field.field_input.hint = getString(R.string.LNG_COMMENT_PLACEHOLDER)
+
+        passengers_seats.field_input.setText(getString(R.string.passenger_number_default))
+        child_seats.field_input.setText(getString(R.string.child_number_default))
+
         comment_field.field_input.isEnabled = false
         comment_field.field_input.ellipsize = TextUtils.TruncateAt.END
-
         comment_field.isFocusable = false
     }
 
