@@ -54,7 +54,7 @@
             android:theme="@style/AppThemeTransparentStatusBar" />
         <activity android:name=".presentation.ui.CreateOrderActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
         <activity android:name=".presentation.ui.WebPageActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".presentation.ui.SettingsActivity"

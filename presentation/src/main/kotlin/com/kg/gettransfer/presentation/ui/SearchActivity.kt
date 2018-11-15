@@ -2,14 +2,12 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
 import android.content.Intent
-import android.location.Location
 
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.v4.content.ContextCompat
 
-import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 
@@ -27,8 +25,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 
 import com.kg.gettransfer.domain.model.GTAddress
-
-import com.kg.gettransfer.extensions.hideKeyboard
 
 import com.kg.gettransfer.presentation.Screens
 
@@ -96,6 +92,9 @@ class SearchActivity: BaseActivity(), SearchView {
         setContentView(R.layout.activity_search)
         setupToolbar()
 
+        rv_addressList.setOnTouchListener(onTouchListener)
+        rv_popularList.setOnTouchListener(onTouchListener)
+
         rv_addressList.layoutManager = LinearLayoutManager(this)
         rv_popularList.layoutManager = LinearLayoutManager(this)
 
@@ -106,8 +105,6 @@ class SearchActivity: BaseActivity(), SearchView {
         predefinedPopularPlaces = initPredefinedPopularPlaces()
         ivInverseWay.setOnClickListener { presenter.inverseWay() }
         pointOnMap.setOnClickListener { presenter.selectFinishPointOnMap() }
-        rv_addressList.setOnTouchListener{ _, _ -> hideKeyboard()}
-        rv_popularList.setOnTouchListener{ _, _ -> hideKeyboard()}
     }
 
     private fun initSearchFields() {

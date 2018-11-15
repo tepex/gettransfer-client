@@ -147,6 +147,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         _mapView = mapView
         initMapView(savedInstanceState)
 
+        scrollContent.setOnTouchListener(onTouchListener)
+
         rvTransferType.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvTransferType.isNestedScrollingEnabled = false
 

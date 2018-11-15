@@ -13,7 +13,6 @@ import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
 
 import android.support.v4.app.Fragment
-import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatDelegate
 
 import android.view.View
@@ -30,7 +29,6 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
-import com.kg.gettransfer.presentation.IntentKeys
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.BasePresenter
@@ -53,6 +51,9 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
 import timber.log.Timber
+import android.app.Activity
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     internal val systemInteractor: SystemInteractor by inject()
@@ -68,6 +69,11 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     protected open lateinit var navigator: BaseNavigator
 
     protected var viewNetworkNotAvailable: View? = null
+
+    protected val onTouchListener = View.OnTouchListener{ view, event ->
+        if(event.action == MotionEvent.ACTION_MOVE) hideKeyboardWithoutClearFocus(this, view)
+        else return@OnTouchListener false
+    }
     
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
@@ -139,11 +145,16 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         view?.showKeyboard()
     }
 
-    protected fun hideKeyboard(): Boolean {
+    protected fun hideKeyboard(){
         val view = currentFocus
         view?.hideKeyboard()
         view?.clearFocus()
-        return true
+    }
+
+    fun hideKeyboardWithoutClearFocus(context: Context, view: View): Boolean {
+        val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+        return false
     }
 
     //здесь лучше ничего не трогать
