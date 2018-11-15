@@ -120,10 +120,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
                 Screens.PASSENGER_MODE -> return Intent(context, MainActivity::class.java)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                Screens.LOGIN -> return Intent(context, LoginActivity::class.java)
-                        .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                        .putExtra(IntentKeys.SCREEN_FOR_RETURN, Screens.OFFERS )
-                        .putExtra(IntentKeys.EMAIL_TO_LOGIN, data as String)
             }
             return null
         }

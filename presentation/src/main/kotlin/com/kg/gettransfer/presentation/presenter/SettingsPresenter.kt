@@ -111,8 +111,8 @@ class SettingsPresenter(cc: CoroutineContexts,
         //viewState.restartApp() //For restart app
     }
 
-    fun onLogout() {
-        systemInteractor.logout()
+    fun onLogout() = utils.launchSuspend {
+        utils.asyncAwait { systemInteractor.logout() }
         router.exit()
         logEvent(LOG_OUT_PARAM, EMPTY_VALUE)
     }

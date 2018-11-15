@@ -82,9 +82,9 @@ class SearchPresenter(cc: CoroutineContexts,
 
     private fun checkFields() = routeInteractor.let { it.addressFieldsNotNull() }
 
-    private fun createRouteForOrder() {
-        routeInteractor.updateDestinationPoint()
-        routeInteractor.updateStartPoint()
+    private fun createRouteForOrder() = utils.launchSuspend {
+        utils.asyncAwait { routeInteractor.updateDestinationPoint() }
+        utils.asyncAwait { routeInteractor.updateStartPoint() }
         systemInteractor.addressHistory = listOf(routeInteractor.from!!, routeInteractor.to!!)
         router.navigateTo(Screens.CREATE_ORDER)
     }

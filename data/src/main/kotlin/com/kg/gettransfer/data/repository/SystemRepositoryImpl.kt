@@ -84,6 +84,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
                 /* Save to cache only fresh data from remote */
                 if(result.error == null) factory.retrieveCacheDataStore().setConfigs(it)
                 configs = configsMapper.fromEntity(it)
+                accountMapper.configs = configs
             }
             /* No chance to go further */
             if(result.error != null) return Result(account, ExceptionMapper.map(result.error))

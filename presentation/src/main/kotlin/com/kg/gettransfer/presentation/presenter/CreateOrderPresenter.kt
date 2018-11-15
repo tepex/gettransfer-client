@@ -45,7 +45,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                            private val offersInteractor: OfferInteractor): BasePresenter<CreateOrderView>(cc, router, systemInteractor) {
 
     private var user: UserModel = Mappers.getUserModel(systemInteractor.account)
-//    private var isLoggedIn = systemInteractor.isLoggedIn()
     private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
     private var duration: Int? = null
     private var passengers: Int = MIN_PASSENGERS
@@ -165,12 +164,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         val i = systemInteractor.currentCurrencyIndex
         if(i != -1) changeCurrency(i)
 
-//        if(!isLoggedIn && systemInteractor.isLoggedIn()) {
-          if(true) {
-            user = Mappers.getUserModel(systemInteractor.account)
-            //isLoggedIn = true
-        }
-        viewState.setUser(user, true)
+        viewState.setUser(user, systemInteractor.account.user.loggedIn)
         viewState.setDateTimeTransfer(Utils.getFormattedDate(systemInteractor.locale, date))
 	    transportTypes?.let { viewState.setTransportTypes(it) }
 	    //routeModel?.let     { viewState.setRoute(it) }
@@ -294,12 +288,10 @@ class CreateOrderPresenter(cc: CoroutineContexts,
 
     private fun checkFieldsForRequest(): Boolean {
         var errorFiled = ""
-        if (transportTypes != null && !transportTypes!!.any { it.checked })
-            errorFiled = TRANSPORT_FIELD
-        else if (!Utils.checkEmail(user.profile.email))
-            errorFiled = EMAIL_FIELD
-        else if (!Utils.checkPhone(user.profile.phone!!))
-            errorFiled = PHONE_FIELD
+        
+        if(transportTypes != null && !transportTypes!!.any { it.checked }) errorFiled = TRANSPORT_FIELD
+        else if(!Utils.checkEmail(user.profile.email)) errorFiled = EMAIL_FIELD
+        else if(!Utils.checkPhone(user.profile.phone!!)) errorFiled = PHONE_FIELD
 
         if(errorFiled.isEmpty()) return true
         else viewState.showEmptyFieldError(errorFiled)
@@ -326,7 +318,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         try {
             val tripTime = String.format("%d:%d", duration!! / 60, duration!! % 60)
             val checkedTransport = transportTypes?.filter { it.checked }
-            if (!checkedTransport.isNullOrEmpty())
+            if(!checkedTransport.isNullOrEmpty())
                 viewState.setFairPrice(checkedTransport.minBy { it.price!!.unitPrice }?.price!!.min, tripTime)
             else viewState.setFairPrice(null, null)
         } catch (e: KotlinNullPointerException) { viewState.setFairPrice(null, null) }

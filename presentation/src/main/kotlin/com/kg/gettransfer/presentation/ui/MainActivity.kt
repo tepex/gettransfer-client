@@ -128,9 +128,6 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
                         .putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_CARRIER)
                 Screens.REG_CARRIER -> return Intent(context, WebPageActivity()::class.java)
                         .putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_REG_CARRIER)
-                Screens.LOGIN -> return Intent(context, LoginActivity::class.java)
-                        .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                        .putExtra(IntentKeys.SCREEN_FOR_RETURN, presenter.screenForReturnAfterLogin)
             }
             return null
         }

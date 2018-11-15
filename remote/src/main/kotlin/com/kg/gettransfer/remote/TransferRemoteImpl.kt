@@ -16,9 +16,14 @@ import com.kg.gettransfer.remote.model.TransferNewWrapperModel
 import com.kg.gettransfer.remote.model.TransfersModel
 import com.kg.gettransfer.remote.model.TransferWrapperModel
 
+import org.slf4j.LoggerFactory
+
 class TransferRemoteImpl(private val core: ApiCore,
                          private val transferMapper: TransferMapper,
                          private val transferNewMapper: TransferNewMapper): TransferRemote {
+    companion object {
+        private val log = LoggerFactory.getLogger("Transfer-remote")
+    }
 
     override suspend fun createTransfer(transferNew: TransferNewEntity): TransferEntity {
         val wrapper = TransferNewWrapperModel(transferNewMapper.toRemote(transferNew))
@@ -29,6 +34,7 @@ class TransferRemoteImpl(private val core: ApiCore,
     private suspend fun tryPostTransfer(transferNew: TransferNewWrapperModel): ResponseModel<TransferWrapperModel> {
         return try { core.api.postTransfer(transferNew).await() }
         catch(e: Exception) {
+            log.error("Create transfer error", e)
             if(e is RemoteException) throw e /* second invocation */
             val ae = core.remoteException(e)
             if(!ae.isInvalidToken()) throw ae

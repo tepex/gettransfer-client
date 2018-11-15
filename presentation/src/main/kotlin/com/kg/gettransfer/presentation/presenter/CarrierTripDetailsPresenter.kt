@@ -44,7 +44,7 @@ class CarrierTripDetailsPresenter(cc: CoroutineContexts,
                 viewState.setTripInfo(trip)
             
                 val r = utils.asyncAwait { routeInteractor.getRouteInfo(tripInfo.from.point!!, tripInfo.to.point!!, false, false) }
-                if(r.model != null && r.model.success) {
+                if(r.error == null && r.model.success) {
                     routeModel = Mappers.getRouteModel(r.model.distance,
                                                        systemInteractor.distanceUnit,
                                                        r.model.polyLines,

@@ -38,7 +38,10 @@ abstract class BaseRepository() {
     protected suspend fun <E, M> retrieveRemoteModel(mapper: Mapper<E, M>, defaultModel: M, getEntity: suspend () -> E): Result<M> {
         var error: ApiException? = null
         val entity = try { getEntity() }
-        catch(e: RemoteException) { return Result(defaultModel, ExceptionMapper.map(e)) }
+        catch(e: RemoteException) {
+            log.error("error for $defaultModel", e)
+            return Result(defaultModel, ExceptionMapper.map(e))
+        }
         return Result(mapper.fromEntity(entity))
     }
     

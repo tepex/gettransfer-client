@@ -176,6 +176,11 @@ open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, 
             Screens.DETAILS -> return Intent(context, TransferDetailsActivity::class.java)
             Screens.OFFERS -> return Intent(context, OffersActivity::class.java)
             Screens.PAYMENT_SETTINGS -> return context.getPaymentSettingsActivityLaunchIntent(data as Date)
+            Screens.LOGIN -> return Intent(context, LoginActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                putExtra(IntentKeys.SCREEN_FOR_RETURN, Screens.OFFERS )
+                data?.let { putExtra(IntentKeys.EMAIL_TO_LOGIN, it as String) }
+            }
         }
         return null
     }

@@ -52,6 +52,8 @@ import java.util.Date
 import java.util.Locale
 import java.util.regex.Pattern
 
+import timber.log.Timber
+
 internal class Utils {
     companion object {
         //private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
@@ -130,9 +132,12 @@ internal class Utils {
 
         fun checkEmail(email: String?) = EMAIL_PATTERN.matcher(email ?: "").matches()
         //fun checkPhone(phone: String?) = PHONE_PATTERN.matcher(phone?.trim() ?: "").matches()
-        fun checkPhone(phone: String): Boolean{
-            val phoneNumber = phoneUtil.parse(phone, null)
-            return phoneUtil.isValidNumber(phoneNumber)
+        fun checkPhone(phone: String): Boolean {
+            return try { phoneUtil.isValidNumber(phoneUtil.parse(phone, null)) }
+            catch(e: Exception) {
+                Timber.w("phone parse error: $phone", e)
+                return false
+            }
         }
 
         fun formatDistance(context: Context, distance: Int?, distanceUnit: DistanceUnit): String {
