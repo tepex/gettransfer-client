@@ -66,15 +66,18 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
     }
 
     fun getPayment() {
-        utils.launchAsyncTryCatchFinally({
+        utils.launchSuspend {
             viewState.blockInterface(true)
-            val payment = paymentInteractor.getPayment(Mappers.getPaymentRequest(paymentRequest))
-            logEventBeginCheckout()
-            navigateToPayment(payment)
-        }, {
-            e -> Timber.e(e)
-            viewState.setError(e)
-        }, { viewState.blockInterface(false) })
+            val result = utils.asyncAwait { paymentInteractor.getPayment(Mappers.getPaymentRequest(paymentRequest)) }
+            if(result.error != null) {
+                Timber.e(result.error!!)
+                viewState.setError(result.error!!)
+            } else {
+                logEventBeginCheckout()
+                navigateToPayment(result.model)
+            }
+            viewState.blockInterface(false)
+        }
     }
     
     private fun navigateToPayment(payment: Payment) {

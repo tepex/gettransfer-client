@@ -7,6 +7,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 
+import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.RouteInteractor
@@ -125,7 +126,7 @@ class MainPresenter(cc: CoroutineContexts,
     fun updateCurrentLocation() {
         utils.launchAsyncTryCatch(
                 { updateCurrentLocationAsync() },
-                { e -> viewState.setError(e) })
+                { e -> viewState.setError(false, R.string.err_server, e.message) })
         logEvent(MY_PLACE_CLICKED)
     }
 
@@ -192,7 +193,8 @@ class MainPresenter(cc: CoroutineContexts,
                 setAddressInSelectedField(currentAddress.cityPoint.name!!)
                 currentLocation = currentAddress.cityPoint.name!!
             }, { e ->
-                viewState.setError(e)
+                Timber.e("getAddressByLocation", e)
+                viewState.setError(false, R.string.err_server, e.message)
             }, { viewState.blockInterface(false) })
         } else {
             idleAndMoveCamera = true
@@ -200,16 +202,14 @@ class MainPresenter(cc: CoroutineContexts,
         }
     }
 
-    private fun setAddressInSelectedField(address: String){
-        when(systemInteractor.selectedField){
+    private fun setAddressInSelectedField(address: String) {
+        when(systemInteractor.selectedField) {
             FIELD_FROM -> viewState.setAddressFrom(address)
             FIELD_TO -> viewState.setAddressTo(address)
         }
     }
 
-    fun enablePinAnimation(){
-        isMarkerAnimating = false
-    }
+    fun enablePinAnimation() { isMarkerAnimating = false }
 
     fun setAddressFields() {
         viewState.setAddressFrom(routeInteractor.from?.address ?: "")

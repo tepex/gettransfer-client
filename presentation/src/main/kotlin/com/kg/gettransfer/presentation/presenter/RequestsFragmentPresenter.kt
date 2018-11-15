@@ -40,21 +40,23 @@ class RequestsFragmentPresenter(cc: CoroutineContexts,
     }
 
     fun getTransfers() {
-        utils.launchAsyncTryCatchFinally({
+        utils.launchSuspend {
             viewState.blockInterface(true)
-            transfers = when(categoryName) {
-                RequestsActivity.CATEGORY_ACTIVE    -> transferInteractor.getActiveTransfers()
-                RequestsActivity.CATEGORY_COMPLETED -> transferInteractor.getCompletedTransfers()
-                else -> transferInteractor.getArchivedTransfers()
-            }.map { Mappers.getTransferModel(it,
-                                             systemInteractor.locale,
-                                             systemInteractor.distanceUnit,
-                                             systemInteractor.transportTypes) }
-            viewState.setRequests(transfers!!)
-        }, { e ->
-            if(e is ApiException) viewState.setError(false, R.string.err_server_code, e.code.toString(), e.details)
-            else viewState.setError(e)
-        }, { viewState.blockInterface(false) })
+            val result = when(categoryName) {
+                RequestsActivity.CATEGORY_ACTIVE    -> utils.asyncAwait { transferInteractor.getActiveTransfers() }
+                RequestsActivity.CATEGORY_COMPLETED -> utils.asyncAwait { transferInteractor.getCompletedTransfers() }
+                else                                -> utils.asyncAwait { transferInteractor.getArchivedTransfers() }
+            }
+            if(result.error != null) viewState.setError(result.error!!)
+            else {
+                transfers = result.model.map { Mappers.getTransferModel(it,
+                                                                        systemInteractor.locale,
+                                                                        systemInteractor.distanceUnit,
+                                                                        systemInteractor.transportTypes) }
+                viewState.setRequests(transfers!!)
+            }
+            viewState.blockInterface(false)
+        }
     }
 
     fun openTransferDetails(id: Long, status: String) {

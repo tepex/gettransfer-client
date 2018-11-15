@@ -38,38 +38,42 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
-        utils.launchAsyncTryCatchFinally({
+        utils.launchSuspend {
             viewState.blockInterface(true, true)
-            transfer = utils.asyncAwait{ transferInteractor.getTransfer(transferInteractor.selectedId!!) }
-            transferModel = Mappers.getTransferModel(transfer,
+            val result = utils.asyncAwait { transferInteractor.getTransfer(transferInteractor.selectedId!!) }
+            if(result.error != null) viewState.setError(result.error!!)
+            else {
+                transferModel = Mappers.getTransferModel(result.model,
                                                          systemInteractor.locale,
                                                          systemInteractor.distanceUnit,
                                                          systemInteractor.transportTypes)
-            viewState.setTransfer(transferModel)
-            if(transferModel.checkOffers) {
-	            val offers = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
-	            if(offers.size == 1) viewState.setOffer(Mappers.getOfferModel(offers.first(), systemInteractor.locale))
-	        }
-
-            if(transfer.to != null) {
-                val routeInfo = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, true, false) }
-                routeInfo?.let {
-                    val routeModel = Mappers.getRouteModel(it.distance,
-                            systemInteractor.distanceUnit,
-                            it.polyLines,
-                            transfer.from.name!!,
-                            transfer.to!!.name!!,
-                            transfer.from.point!!,
-                            transfer.to!!.point!!,
-                            transferModel.dateTime)
-                    val polyline = Utils.getPolyline(routeModel)
-                    viewState.setRoute(polyline, routeModel)
+                viewState.setTransfer(transferModel)
+                if(transferModel.checkOffers) {
+                    val r = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
+                    if(r.error == null && r.model.size == 1) viewState.setOffer(Mappers.getOfferModel(r.model.first(), systemInteractor.locale))
                 }
-            } else if(transfer.duration != null) {
-                viewState.setPinHourlyTransfer(transferModel.from, transferModel.dateTime, LatLng(transfer.from.point!!.latitude, transfer.from.point!!.longitude))
+
+                if(result.model.to != null) {
+                    val r = utils.asyncAwait { routeInteractor.getRouteInfo(result.model.from.point!!, result.model.to!!.point!!, true, false) }
+                    if(r.error == null) {                   
+                        val routeModel = Mappers.getRouteModel(r.model.distance,
+                                                               systemInteractor.distanceUnit,
+                                                               r.model.polyLines,
+                                                               result.model.from.name!!,
+                                                               result.model.to!!.name!!,
+                                                               result.model.from.point!!,
+                                                               result.model.to!!.point!!,
+                                                               transferModel.dateTime)
+                        val polyline = Utils.getPolyline(routeModel)
+                        viewState.setRoute(polyline, routeModel)
+                    }
+                } else if(result.model.duration != null) {
+                    viewState.setPinHourlyTransfer(transferModel.from,
+                                                   transferModel.dateTime,
+                                                   LatLng(result.model.from.point!!.latitude, transfer.from.point!!.longitude))
+                }
             }
-	    }, { e -> Timber.e(e)
-	        viewState.setError(e)
-        }, { viewState.blockInterface(false) })        
+            viewState.blockInterface(false)
+        }
 	}
 }

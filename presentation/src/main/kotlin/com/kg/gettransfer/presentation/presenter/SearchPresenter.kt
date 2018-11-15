@@ -83,23 +83,17 @@ class SearchPresenter(cc: CoroutineContexts,
     private fun checkFields() = routeInteractor.let { it.addressFieldsNotNull() }
 
     private fun createRouteForOrder() {
-        utils.launchAsyncTryCatchFinally({
-            viewState.blockInterface(true)
-            utils.asyncAwait { routeInteractor.updateDestinationPoint() }
-            utils.asyncAwait { routeInteractor.updateStartPoint() }
-            systemInteractor.addressHistory = listOf(routeInteractor.from!!, routeInteractor.to!!)
-
-            router.navigateTo(Screens.CREATE_ORDER)
-        }, { e ->
-            viewState.setError(e)
-        }, { viewState.blockInterface(false) })
+        routeInteractor.updateDestinationPoint()
+        routeInteractor.updateStartPoint()
+        systemInteractor.addressHistory = listOf(routeInteractor.from!!, routeInteractor.to!!)
+        router.navigateTo(Screens.CREATE_ORDER)
     }
 
-        fun selectFinishPointOnMap(){
-            //router.navigateTo(Screens.SELECT_FINISH)
-            systemInteractor.selectedField = MainPresenter.FIELD_TO
-            router.exit()
-        }
+    fun selectFinishPointOnMap() {
+        //router.navigateTo(Screens.SELECT_FINISH)
+        systemInteractor.selectedField = MainPresenter.FIELD_TO
+        router.exit()
+    }
 
     @CallSuper
     override fun onBackCommandClick() {

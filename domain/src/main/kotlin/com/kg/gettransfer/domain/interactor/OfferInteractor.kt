@@ -15,7 +15,7 @@ class OfferInteractor(private val repository: OfferRepository) {
         return repository.getOffers(transferId)
     }
     
-    fun getOffer(id: Long): Result<Offer> = Result(offers.find { it.id == id }!!)
+    fun getOffer(id: Long) = offers.find { it.id == id }
     
     fun newOffer(offer: Offer) = repository.newOffer(offer)
 }

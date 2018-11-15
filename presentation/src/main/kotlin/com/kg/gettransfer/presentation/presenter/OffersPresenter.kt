@@ -69,24 +69,28 @@ class OffersPresenter(cc: CoroutineContexts,
     @CallSuper
     override fun attachView(view: OffersView) {
         super.attachView(view)
-        utils.launchAsyncTryCatchFinally({
+        utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val transfer = utils.asyncAwait{ transferInteractor.getTransfer(transferInteractor.selectedId!!) }
-            transferModel = Mappers.getTransferModel(transfer,
-                                                     systemInteractor.locale,
-                                                     systemInteractor.distanceUnit,
-                                                     systemInteractor.transportTypes)
+            val result = utils.asyncAwait { transferInteractor.getTransfer(transferInteractor.selectedId!!) }
+            if(result.error != null) {
+                Timber.e(result.error!!)
+                if(result.error!!.isNotLoggedIn()) viewState.redirectView()
+                else if(result.error!!.code != ApiException.NETWORK_ERROR) viewState.setError(result.error!!)
+            } else {
+                transferModel = Mappers.getTransferModel(result.model,
+                                                         systemInteractor.locale,
+                                                         systemInteractor.distanceUnit,
+                                                         systemInteractor.transportTypes)
+                viewState.setDate(transferModel.dateTime)
+                viewState.setTransfer(transferModel)
 
-            offers = offerInteractor.getOffers(transfer.id).map { Mappers.getOfferModel(it, systemInteractor.locale) }
-            viewState.setDate(transferModel.dateTime)
-            viewState.setTransfer(transferModel)
-            //changeSortType(SORT_PRICE)
-            setOffers()
-        }, { e ->
-            Timber.e(e)
-            if(e is ApiException && e.code == ApiException.NOT_LOGGED_IN) viewState.redirectView()
-            else if(e !is InternetNotAvailableException) viewState.setError(e)
-        }, { viewState.blockInterface(false) })
+                val r = utils.asyncAwait{ offerInteractor.getOffers(result.model.id) }
+                if(r.error == null) offers = r.model.map { Mappers.getOfferModel(it, systemInteractor.locale) }
+                //changeSortType(SORT_PRICE)
+                setOffers()
+            }
+            viewState.blockInterface(false)
+        }
     }
 
     @CallSuper
@@ -123,15 +127,16 @@ class OffersPresenter(cc: CoroutineContexts,
     }
 
     fun cancelRequest(isCancel: Boolean) {
-        if(isCancel) {
-            utils.launchAsyncTryCatchFinally({
-                viewState.blockInterface(true, true)
-                utils.asyncAwait { transferInteractor.cancelTransfer("") }
-                router.exit()
-            }, { e ->
-                Timber.e(e)
-                viewState.setError(e)
-            }, { viewState.blockInterface(false) })
+        if(!isCancel) return
+        utils.launchSuspend {
+            viewState.blockInterface(true, true)
+            val result = utils.asyncAwait { transferInteractor.cancelTransfer("") }
+            if(result.error != null) {
+                Timber.e(result.error!!)
+                viewState.setError(result.error!!)
+            }
+            else router.exit()
+            viewState.blockInterface(false)
         }
     }
 
@@ -139,7 +144,7 @@ class OffersPresenter(cc: CoroutineContexts,
         if(sortCategory == sortType) sortHigherToLower = !sortHigherToLower
         else {
             sortCategory = sortType
-            when(sortType){
+            when(sortType) {
                 SORT_YEAR -> sortHigherToLower = true
                 SORT_RATING -> sortHigherToLower = true
                 SORT_PRICE -> sortHigherToLower = false

@@ -39,15 +39,15 @@ class CarrierTripDetailsPresenter(cc: CoroutineContexts,
             val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(selectedTripId!!) }
             if(result.error != null) viewState.setError(result.error!!)
             else {
-                val tripInfo = result.model!!
+                val tripInfo = result.model
                 trip = Mappers.getCarrierTripModel(tripInfo, systemInteractor.locale, systemInteractor.distanceUnit)
                 viewState.setTripInfo(trip)
             
-                val result = utils.asyncAwait { routeInteractor.getRouteInfo(tripInfo.from.point!!, tripInfo.to.point!!, false, false) }
-                if(result.model != null && result.model!!.success) {
-                    routeModel = Mappers.getRouteModel(result.model!!.distance,
+                val r = utils.asyncAwait { routeInteractor.getRouteInfo(tripInfo.from.point!!, tripInfo.to.point!!, false, false) }
+                if(r.model != null && r.model.success) {
+                    routeModel = Mappers.getRouteModel(r.model.distance,
                                                        systemInteractor.distanceUnit,
-                                                       result.model!!.polyLines,
+                                                       r.model.polyLines,
                                                        trip.from,
                                                        trip.to,
                                                        tripInfo.from.point!!,

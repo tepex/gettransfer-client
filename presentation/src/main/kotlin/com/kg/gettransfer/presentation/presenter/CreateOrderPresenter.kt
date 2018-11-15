@@ -125,28 +125,25 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
             if(result.error != null) viewState.setError(result.error!!)
             else {
-                val routeInfo = result.model!!
-                routeInfo?.let {
-                    duration = it.duration
-                    var prices: Map<String, TransportPrice>? = null
-                    if(it.prices != null) prices = it.prices!!.map { p -> p.tranferId to TransportPrice(p.min, p.max, p.minFloat) }.toMap()
-                    if(transportTypes == null) transportTypes =
-                        systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
-                    routeModel = Mappers.getRouteModel(it.distance,
-                                                       systemInteractor.distanceUnit,
-                                                       it.polyLines,
-                                                       from.name!!,
-                                                       to.name!!,
-                                                       from.point!!,
-                                                       to.point!!,
-                                                       SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
-                }
-                routeModel?.let {
-                    viewState.setTransportTypes(transportTypes!!)
-                    polyline = Utils.getPolyline(it)
-                    track = polyline?.track
-                    viewState.setRoute(false, polyline!!, it)
-                }
+                duration = result.model.duration
+                
+                var prices: Map<String, TransportPrice> = result.model.prices.map { p -> p.tranferId to TransportPrice(p.min, p.max, p.minFloat) }.toMap()
+                if(transportTypes == null)
+                    transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
+                routeModel = Mappers.getRouteModel(result.model.distance,
+                                                   systemInteractor.distanceUnit,
+                                                   result.model.polyLines,
+                                                   from.name!!,
+                                                   to.name!!,
+                                                   from.point!!,
+                                                   to.point!!,
+                                                   SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
+            }
+            routeModel?.let {
+                viewState.setTransportTypes(transportTypes!!)
+                polyline = Utils.getPolyline(it)
+                track = polyline?.track
+                viewState.setRoute(false, polyline!!, it)
             }
             viewState.blockInterface(false)
         }
@@ -225,7 +222,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         utils.launchSuspend {
             viewState.blockInterface(true)
             val result = utils.asyncAwait { promoInteractor.getDiscountByPromo(promoCode!!) }
-            if(result.model != null) viewState.setPromoResult(result.model!!.discount)
+            if(result.error == null) viewState.setPromoResult(result.model.discount)
             else viewState.setPromoResult(null)
             viewState.blockInterface(false)
         }
@@ -286,9 +283,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                 }
             }
             else {
-                val transfer = result.model!!
-                offersInteractor.getOffers(transfer.id)
-                Timber.d("new transfer: %s", transfer)
+                offersInteractor.getOffers(result.model.id)
+                Timber.d("new transfer: %s", result.model)
                 router.navigateTo(Screens.OFFERS)
                 logCreateTransfer(RESULT_SUCCESS)
             }

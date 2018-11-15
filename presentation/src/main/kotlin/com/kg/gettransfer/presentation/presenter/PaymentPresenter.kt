@@ -42,31 +42,34 @@ class PaymentPresenter(cc: CoroutineContexts,
     private val paymentRequest = PaymentRequestModel(offerInteractor.transferId!!, offerInteractor.selectedOfferId!!)
     
     fun changePaymentStatus(orderId: Long, success: Boolean) {
-        utils.launchAsyncTryCatchFinally({
+        utils.launchSuspend {
             viewState.blockInterface(true)
             val model = PaymentStatusRequestModel(null, orderId, true, success)
-            val paymentStatus = paymentInteractor.changeStatusPayment(Mappers.getPaymentStatusRequest(model))
-            if(paymentStatus.success) {
-                router.navigateTo(Screens.PASSENGER_MODE)
-                viewState.showSuccessfulMessage()
-                offer = offerInteractor.getOffer(offerInteractor.selectedOfferId!!)!!
-                logEventEcommercePurchase()
-            } else {
+            val result = utils.asyncAwait { paymentInteractor.changeStatusPayment(Mappers.getPaymentStatusRequest(model)) }
+            if(result.error != null) {
+                Timber.e(result.error!!)
+                viewState.setError(result.error!!)
                 router.exit()
-                viewState.showErrorMessage()
+            } else {
+                if(result.model.success) {
+                    router.navigateTo(Screens.PASSENGER_MODE)
+                    viewState.showSuccessfulMessage()
+                    offer = offerInteractor.getOffer(offerInteractor.selectedOfferId!!)!!
+                    logEventEcommercePurchase()
+                } else {
+                    router.exit()
+                    viewState.showErrorMessage()
+                }
             }
-        }, {
-            e -> Timber.e(e)
-            viewState.setError(e)
-            router.exit()
-        }, { viewState.blockInterface(false) })
+            viewState.blockInterface(false)
+        }
     }
     
     private fun logEventEcommercePurchase() {
         val bundle = Bundle()
         bundle.putString(FirebaseAnalytics.Param.CURRENCY, systemInteractor.currency.currencyCode)
         val price = offer.price.amount
-        when (paymentRequest.percentage) {
+        when(paymentRequest.percentage) {
             OfferModel.FULL_PRICE -> bundle.putDouble(FirebaseAnalytics.Param.VALUE, price)
             OfferModel.PRICE_30 -> bundle.putDouble(FirebaseAnalytics.Param.VALUE, price * PRICE_30)
         }
