@@ -139,14 +139,15 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     }
 
     protected fun showKeyboard() {
-        val view = currentFocus
-        view?.showKeyboard()
+        currentFocus?.showKeyboard()
     }
 
-    protected fun hideKeyboard(){
-        val view = currentFocus
-        view?.hideKeyboard()
-        view?.clearFocus()
+    protected fun hideKeyboard() {
+        currentFocus?.let {
+            it.hideKeyboard()
+            it.clearFocus()
+        }
+        return true
     }
 
     fun hideKeyboardWithoutClearFocus(context: Context, view: View): Boolean {
