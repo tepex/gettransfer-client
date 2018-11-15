@@ -13,6 +13,7 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.Screens
 
@@ -39,7 +40,9 @@ class OffersPresenter(cc: CoroutineContexts,
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
 
-    private lateinit var transferModel: TransferModel
+    internal var transferId = 0L
+    
+    private lateinit var transfer: Transfer 
     private lateinit var offers: List<OfferModel>
 
     private var sortCategory: String = SORT_PRICE
@@ -71,16 +74,17 @@ class OffersPresenter(cc: CoroutineContexts,
         super.attachView(view)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = utils.asyncAwait { transferInteractor.getTransfer(transferInteractor.selectedId!!) }
+            val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             if(result.error != null) {
                 Timber.e(result.error!!)
                 if(result.error!!.isNotLoggedIn()) viewState.redirectView()
                 else if(result.error!!.code != ApiException.NETWORK_ERROR) viewState.setError(result.error!!)
             } else {
-                transferModel = Mappers.getTransferModel(result.model,
-                                                         systemInteractor.locale,
-                                                         systemInteractor.distanceUnit,
-                                                         systemInteractor.transportTypes)
+                transfer = result.model
+                val transferModel = Mappers.getTransferModel(transfer,
+                                                             systemInteractor.locale,
+                                                             systemInteractor.distanceUnit,
+                                                             systemInteractor.transportTypes)
                 viewState.setDate(transferModel.dateTime)
                 viewState.setTransfer(transferModel)
 
@@ -106,16 +110,13 @@ class OffersPresenter(cc: CoroutineContexts,
     }
 
     fun onRequestInfoClicked() {
-        router.navigateTo(Screens.DETAILS)
+        router.navigateTo(Screens.DETAILS, transferId)
     }
 
     fun onSelectOfferClicked(offer: OfferModel, isShowingOfferDetails: Boolean) {
         if(isShowingOfferDetails) viewState.showBottomSheetOfferDetails(offer)
-        else {
-            offerInteractor.selectedOfferId = offer.id
-            offerInteractor.transferId = transferInteractor.selectedId
-            router.navigateTo(Screens.PAYMENT_SETTINGS, transferModel.refund_date)
-        }
+        else router.navigateTo(Screens.PAYMENT_SETTINGS,
+                               PaymentSettingsPresenter.Params(transfer.dateRefund, transfer.id, offer.id))
     }
 
     fun onCancelRequestClicked() {
@@ -130,7 +131,7 @@ class OffersPresenter(cc: CoroutineContexts,
         if(!isCancel) return
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = utils.asyncAwait { transferInteractor.cancelTransfer("") }
+            val result = utils.asyncAwait { transferInteractor.cancelTransfer(transferId, "") }
             if(result.error != null) {
                 Timber.e(result.error!!)
                 viewState.setError(result.error!!)

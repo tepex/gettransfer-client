@@ -40,6 +40,10 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
+    companion object {
+        const val TRANSFER_ID = "transfer_id"
+    }
+    
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
     

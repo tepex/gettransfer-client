@@ -8,6 +8,7 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.google.firebase.analytics.FirebaseAnalytics
 
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
@@ -25,6 +26,10 @@ import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
 import com.kg.gettransfer.presentation.view.PaymentSettingsView
 
+import java.util.Date
+
+import kotlinx.serialization.Serializable
+
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
@@ -37,26 +42,33 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
                                private val paymentInteractor: PaymentInteractor): BasePresenter<PaymentSettingsView>(cc, router, systemInteractor) {
     companion object {
         @JvmField val PARAM_SHARE      = "share"
-        @JvmField val BUNDLE_KEY_URL   = "url"
-        @JvmField val PRICE_30        = 0.3
+        @JvmField val PRICE_30         = 0.3
+        
+        @JvmField val PARAMS = "params"
     }
+    
+    @Serializable
+    data class Params(val dateRefund: Date?, val transferId: Long, val offerId: Long)
 
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
 
-    private val paymentRequest = PaymentRequestModel(offerInteractor.transferId!!, offerInteractor.selectedOfferId!!)
-
+    private lateinit var paymentRequest: PaymentRequestModel
     private var offer: Offer? = null
     
-    override fun onFirstViewAttach() {
-        offerInteractor.selectedOfferId?.let { offer = offerInteractor.getOffer(it) }
-    }
-
+    internal lateinit var params: Params
+    
     @CallSuper
     override fun attachView(view: PaymentSettingsView?) {
         super.attachView(view)
-        offer?.let { viewState.setOffer(Mappers.getOfferModel(it, systemInteractor.locale)) }
+        offer = offerInteractor.getOffer(params.offerId)
+        offer?.let {
+            paymentRequest = PaymentRequestModel(params.transferId, params.offerId)
+            viewState.setOffer(Mappers.getOfferModel(it, systemInteractor.locale))
+            return
+        }
+        viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${params.offerId}] not found!"))
     }
 
     @CallSuper
@@ -68,6 +80,7 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
     fun getPayment() {
         utils.launchSuspend {
             viewState.blockInterface(true)
+            
             val result = utils.asyncAwait { paymentInteractor.getPayment(Mappers.getPaymentRequest(paymentRequest)) }
             if(result.error != null) {
                 Timber.e(result.error!!)
@@ -81,16 +94,14 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
     }
     
     private fun navigateToPayment(payment: Payment) {
-        val bundle = Bundle()
-        bundle.putString(BUNDLE_KEY_URL, payment.url)
-        router.navigateTo(Screens.PAYMENT, bundle)
+        router.navigateTo(Screens.PAYMENT, PaymentPresenter.Params(offer!!.id, payment.url!!))
     }
 
     private fun logEventBeginCheckout() {
         val bundle = Bundle()
         bundle.putString(FirebaseAnalytics.Param.CURRENCY, systemInteractor.currency.currencyCode)
-        val price = offer!!.price.amount
-        when (paymentRequest.percentage) {
+        val price = offer?.price?.amount ?: 0.0
+        when(paymentRequest.percentage) {
             OfferModel.FULL_PRICE -> bundle.putDouble(FirebaseAnalytics.Param.VALUE, price)
             OfferModel.PRICE_30 -> bundle.putDouble(FirebaseAnalytics.Param.VALUE, price * PRICE_30)
         }

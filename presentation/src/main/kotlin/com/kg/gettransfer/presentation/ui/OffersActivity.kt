@@ -40,7 +40,13 @@ import kotlinx.android.synthetic.main.view_transfer_request_info.*
 
 import org.koin.android.ext.android.inject
 
+import timber.log.Timber
+
 class OffersActivity: BaseActivity(), OffersView {
+    companion object {
+        const val TRANSFER_ID = "transfer_id"
+    }
+    
     @InjectPresenter
     internal lateinit var presenter: OffersPresenter
 
@@ -88,6 +94,9 @@ class OffersActivity: BaseActivity(), OffersView {
         sortPrice.setOnClickListener  { presenter.changeSortType(OffersPresenter.SORT_PRICE) }
 
         setOfferDetailsSheetListener()
+        
+        presenter.transferId = intent.getLongExtra(TRANSFER_ID, -1)
+        Timber.d("OffersActivity for transfer: ${presenter.transferId}")
     }
 
     @CallSuper

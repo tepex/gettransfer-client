@@ -2,31 +2,37 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
 import android.content.Intent
+
 import android.os.Bundle
+
 import android.support.v7.widget.Toolbar
+
 import android.text.SpannableString
 import android.text.style.ImageSpan
+
 import android.view.View
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
+import com.kg.gettransfer.presentation.presenter.PaymentPresenter
 import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter
 import com.kg.gettransfer.presentation.view.PaymentSettingsView
+
 import kotlinx.android.synthetic.main.activity_payment_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-import org.koin.android.ext.android.inject
-import java.util.*
+import kotlinx.serialization.json.JSON
 
-fun Context.getPaymentSettingsActivityLaunchIntent(date: Date): Intent {
-    val intent = Intent(this, PaymentSettingsActivity::class.java)
-    intent.putExtra("date", date)
-    return intent
-}
+import org.koin.android.ext.android.inject
+
+import java.util.Date
 
 class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
 
@@ -45,7 +51,10 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     protected override var navigator = object: BaseNavigator(this) {
         override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
             when(screenKey) {
-                Screens.PAYMENT -> return context.getPaymentActivityLaunchIntent(data as Bundle)
+                Screens.PAYMENT -> Intent(context, PaymentActivity::class.java).apply {
+                    val params = data!! as PaymentPresenter.Params
+                    putExtra(PaymentPresenter.PARAMS, JSON.stringify(PaymentPresenter.Params.serializer(), params))
+                }
             }
             return null
         }
@@ -65,6 +74,8 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         (toolbar as Toolbar).toolbar_title.setText(R.string.LNG_PAYMENT_SETTINGS)
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
+        
+        presenter.params = JSON.parse(PaymentSettingsPresenter.Params.serializer(), intent!!.getStringExtra(PaymentSettingsPresenter.PARAMS))
     }
 
     private fun setButton() {
@@ -84,9 +95,8 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     }
 
     private fun setCommission() {
-        val date = intent?.extras?.getSerializable("date") as Date?
-        if (date != null) {
-            commission.text = getString(R.string.LNG_PAYMENT_COMISSION, Utils.getFormattedDate(systemInteractor.locale, date))
+        presenter.params.dateRefund?.let {
+            commission.text = getString(R.string.LNG_PAYMENT_COMISSION, Utils.getFormattedDate(systemInteractor.locale, it))
         }
     }
 

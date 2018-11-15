@@ -23,6 +23,8 @@ import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter.Compan
 
 import com.kg.gettransfer.presentation.view.PaymentView
 
+import kotlinx.serialization.Serializable
+
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
@@ -33,14 +35,18 @@ class PaymentPresenter(cc: CoroutineContexts,
                        systemInteractor: SystemInteractor,
                        private val paymentInteractor: PaymentInteractor,
                        private val offerInteractor: OfferInteractor): BasePresenter<PaymentView>(cc, router, systemInteractor) {
+
     private lateinit var offer: Offer
+    internal lateinit var params: Params
     
     companion object {
-        @JvmField val PARAM_TRANSACTION_ID = "transaction_id"
+        @JvmField val PARAM_OFFER_ID = "offer_id"
+        @JvmField val PARAMS = "params"
     }
-
-    private val paymentRequest = PaymentRequestModel(offerInteractor.transferId!!, offerInteractor.selectedOfferId!!)
     
+    @Serializable
+    data class Params(val offerId: Long, val paymentUrl: String)
+
     fun changePaymentStatus(orderId: Long, success: Boolean) {
         utils.launchSuspend {
             viewState.blockInterface(true)
@@ -54,7 +60,7 @@ class PaymentPresenter(cc: CoroutineContexts,
                 if(result.model.success) {
                     router.navigateTo(Screens.PASSENGER_MODE)
                     viewState.showSuccessfulMessage()
-                    offer = offerInteractor.getOffer(offerInteractor.selectedOfferId!!)!!
+                    offer = offerInteractor.getOffer(params.offerId)!!
                     logEventEcommercePurchase()
                 } else {
                     router.exit()
@@ -69,11 +75,7 @@ class PaymentPresenter(cc: CoroutineContexts,
         val bundle = Bundle()
         bundle.putString(FirebaseAnalytics.Param.CURRENCY, systemInteractor.currency.currencyCode)
         val price = offer.price.amount
-        when(paymentRequest.percentage) {
-            OfferModel.FULL_PRICE -> bundle.putDouble(FirebaseAnalytics.Param.VALUE, price)
-            OfferModel.PRICE_30 -> bundle.putDouble(FirebaseAnalytics.Param.VALUE, price * PRICE_30)
-        }
-        bundle.putString(PARAM_TRANSACTION_ID, offerInteractor.transferId!!.toString())
+        bundle.putString(PARAM_OFFER_ID, params.offerId.toString())
         mFBA.logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, bundle)
     }
 }

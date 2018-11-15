@@ -32,15 +32,21 @@ class TransferDetailsPresenter(cc: CoroutineContexts,
                                private val transferInteractor: TransferInteractor,
                                private val offerInteractor: OfferInteractor): BasePresenter<TransferDetailsView>(cc, router, systemInteractor) {
 
+    companion object {
+        const val TRANSFER_ID = "transfer_id"
+    }
+    
     private lateinit var transfer: Transfer
     private lateinit var transferModel: TransferModel
+    
+    internal var transferId = 0L
 
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = utils.asyncAwait { transferInteractor.getTransfer(transferInteractor.selectedId!!) }
+            val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             if(result.error != null) viewState.setError(result.error!!)
             else {
                 transferModel = Mappers.getTransferModel(result.model,

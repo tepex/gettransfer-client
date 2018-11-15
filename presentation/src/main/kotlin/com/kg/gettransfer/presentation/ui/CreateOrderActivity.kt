@@ -114,12 +114,13 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             if(intent != null) return intent
                 
             when(screenKey) {
-                Screens.LICENCE_AGREE -> return Intent(context, WebPageActivity()::class.java)
-                        .putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_LICENSE)
-                Screens.OFFERS -> return Intent(context, OffersActivity::class.java)
-                Screens.PASSENGER_MODE -> return Intent(context, MainActivity::class.java)
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                Screens.LICENCE_AGREE -> return Intent(context, WebPageActivity()::class.java).apply {
+                    putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_LICENSE)
+                }
+                Screens.PASSENGER_MODE -> return Intent(context, MainActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                }
             }
             return null
         }

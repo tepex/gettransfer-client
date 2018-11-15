@@ -277,9 +277,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                 }
             }
             else {
-                offersInteractor.getOffers(result.model.id)
                 Timber.d("new transfer: %s", result.model)
-                router.navigateTo(Screens.OFFERS)
+                router.navigateTo(Screens.OFFERS, result.model.id)
                 logCreateTransfer(RESULT_SUCCESS)
             }
             viewState.blockInterface(false)

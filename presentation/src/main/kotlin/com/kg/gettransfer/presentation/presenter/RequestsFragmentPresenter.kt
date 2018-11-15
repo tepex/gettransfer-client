@@ -60,10 +60,10 @@ class RequestsFragmentPresenter(cc: CoroutineContexts,
     }
 
     fun openTransferDetails(id: Long, status: String) {
-        transferInteractor.selectedId = id
+        Timber.d("Open Transfer details. id: $id")
         when(status) {
-            Transfer.STATUS_NEW -> router.navigateTo(Screens.OFFERS)
-            else -> router.navigateTo(Screens.DETAILS)
+            Transfer.STATUS_NEW -> router.navigateTo(Screens.OFFERS, id)
+            else -> router.navigateTo(Screens.DETAILS, id)
         }
     }
 }

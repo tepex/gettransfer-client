@@ -36,23 +36,18 @@ import com.kg.gettransfer.presentation.view.PaymentView
 
 import kotlinx.android.synthetic.main.activity_payment.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+import kotlinx.serialization.json.JSON
 
 import org.koin.android.ext.android.inject
 
 import timber.log.Timber
-
-fun Context.getPaymentActivityLaunchIntent(paymentUrl: Bundle): Intent {
-    var intent = Intent(this, PaymentActivity::class.java)
-    intent.putExtra(PaymentActivity.PARAM_URL, paymentUrl.getString(PaymentSettingsPresenter.BUNDLE_KEY_URL))
-    return intent
-}
 
 class PaymentActivity: BaseActivity(), PaymentView {
     companion object {
         private const val PAYMENT_RESULT_SUCCESSFUL = "/api/payments/successful"
         private const val PAYMENT_RESULT_FAILED = "/api/payments/failed"
         private const val PG_ORDER_ID = "pg_order_id"
-        internal const val PARAM_URL = "url"
+        const val OFFER_ID = "offer_id"
     }
 
     @InjectPresenter
@@ -60,8 +55,6 @@ class PaymentActivity: BaseActivity(), PaymentView {
 
     private val paymentInteractor: PaymentInteractor by inject()
     private val offerInteractor: OfferInteractor by inject()
-
-    private lateinit var url: String
 
     override fun getPresenter(): PaymentPresenter = presenter
 
@@ -94,7 +87,6 @@ class PaymentActivity: BaseActivity(), PaymentView {
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 
         webView.settings.javaScriptEnabled = true
-        getBundleValues(intent.extras!!)
         webView.webViewClient = object: WebViewClient() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
@@ -114,18 +106,13 @@ class PaymentActivity: BaseActivity(), PaymentView {
                 return true
             }
         }
-        webView.loadUrl(intent.getStringExtra(PARAM_URL))
-    }
-
-    private fun getBundleValues(bundle: Bundle) {
-        url = bundle.getString(PaymentSettingsPresenter.BUNDLE_KEY_URL)!!
+        presenter.params = JSON.parse(PaymentPresenter.Params.serializer(), intent!!.getStringExtra(PaymentPresenter.PARAMS))
+        webView.loadUrl(presenter.params.paymentUrl)
     }
 
     private fun handleUri(uri: Uri?) {
         val path = uri?.path
-        if(path.equals(PAYMENT_RESULT_SUCCESSFUL)) {
-            changePaymentStatus(uri, true)
-        }
+        if(path.equals(PAYMENT_RESULT_SUCCESSFUL)) changePaymentStatus(uri, true)
         else if(path.equals(PAYMENT_RESULT_FAILED)) changePaymentStatus(uri, false)
     }
 

@@ -34,6 +34,7 @@ import com.kg.gettransfer.presentation.IntentKeys
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.BasePresenter
+import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter
 import com.kg.gettransfer.presentation.view.BaseView
 
 import com.kg.gettransfer.utilities.LocaleManager
@@ -42,6 +43,8 @@ import java.util.Date
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+
+import kotlinx.serialization.json.JSON
 
 import org.koin.android.ext.android.inject
 
@@ -173,9 +176,16 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
 open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, Screens.NOT_USED) {
     protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
         when(screenKey) {
-            Screens.DETAILS -> return Intent(context, TransferDetailsActivity::class.java)
-            Screens.OFFERS -> return Intent(context, OffersActivity::class.java)
-            Screens.PAYMENT_SETTINGS -> return context.getPaymentSettingsActivityLaunchIntent(data as Date)
+            Screens.DETAILS -> return Intent(context, TransferDetailsActivity::class.java).apply {
+                putExtra(TransferDetailsActivity.TRANSFER_ID, data as Long)
+            }
+            Screens.OFFERS -> return Intent(context, OffersActivity::class.java).apply {
+                putExtra(OffersActivity.TRANSFER_ID, data as Long)
+            }
+            Screens.PAYMENT_SETTINGS -> Intent(context, PaymentSettingsActivity::class.java).apply {
+                val params = data!! as PaymentSettingsPresenter.Params
+                putExtra(PaymentSettingsPresenter.PARAMS, JSON.stringify(PaymentSettingsPresenter.Params.serializer(), params))
+            }
             Screens.LOGIN -> return Intent(context, LoginActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
                 putExtra(IntentKeys.SCREEN_FOR_RETURN, Screens.OFFERS )
