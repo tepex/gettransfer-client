@@ -9,7 +9,7 @@ import com.kg.gettransfer.remote.model.PriceModel
  */
 open class PriceMapper(private val moneyMapper: MoneyMapper): EntityMapper<PriceModel, PriceEntity> {
     override fun fromRemote(type: PriceModel) =
-        PriceEntity(moneyMapper.fromRemote(type.base), type.percentage30, type.percentage70, type.amount) 
+        PriceEntity(moneyMapper.fromRemote(type.base), type.withoutDiscount?.let { moneyMapper.fromRemote(it) }, type.percentage30, type.percentage70, type.amount)
     override fun toRemote(type: PriceEntity) = 
-        PriceModel(moneyMapper.toRemote(type.base), type.percentage30, type.percentage70, type.amount)
+        PriceModel(moneyMapper.toRemote(type.base), type.withoutDiscount?.let { moneyMapper.toRemote(it) }, type.percentage30, type.percentage70, type.amount)
 }

@@ -283,10 +283,12 @@
 	<dimen name="view_offer_column2_margin_start_end">16dp</dimen>
 	<dimen name="view_offer_column3_width">100dp</dimen>
 	<dimen name="view_offer_column3_margin_end">8dp</dimen>
-	<dimen name="view_offer_cost_text_size">14sp</dimen>
+	<dimen name="view_offer_cost_text_size_17sp">17sp</dimen>
+	<dimen name="view_offer_cost_text_size_14sp">14sp</dimen>
+	<dimen name="view_offer_text_size_13sp">13sp</dimen>
+	<dimen name="view_offer_cost_text_size_12sp">12sp</dimen>
 	<dimen name="view_offer_btn_select_margin_top">13dp</dimen>
 	<dimen name="view_offer_btn_select_height">32dp</dimen>
-	<dimen name="view_offer_text_sizes">13sp</dimen>
 	<dimen name="view_offer_completed_transfers_text_margin_top">10dp</dimen>
 	<dimen name="view_offer_driver_image_size">17dp</dimen>
 	<dimen name="view_offer_driver_image_margin_end">4dp</dimen>
@@ -299,6 +301,7 @@
 	<dimen name="view_offer_top_layout_on_image_padding_start_end">5dp</dimen>
 	<dimen name="view_offer_layouts_on_image_height">24dp</dimen>
 	<dimen name="view_offer_image_like_margin_start">5dp</dimen>
+	<dimen name="view_offer_prices_margin">8dp</dimen>
 
 	<dimen name="general_button_width">300dp</dimen>
 	<dimen name="general_button_height">44dp</dimen>
@@ -317,6 +320,7 @@
 	<dimen name="bottom_sheet_offer_details_text_size_17sp">17sp</dimen>
 	<dimen name="bottom_sheet_offer_details_text_size_14sp">14sp</dimen>
 	<dimen name="bottom_sheet_offer_details_text_size_13sp">13sp</dimen>
+	<dimen name="bottom_sheet_offer_details_text_size_12sp">12sp</dimen>
 	<dimen name="bottom_sheet_offer_details_layout_languages_height">29dp</dimen>
 	<dimen name="bottom_sheet_offer_details_layout_languages_margin_start">8dp</dimen>
 	<dimen name="bottom_sheet_offer_details_carrier_id_margin_top">22dp</dimen>

@@ -171,9 +171,10 @@ object Mappers {
     fun getMoneyModel(type: Money) = MoneyModel(type.default, type.preferred)
     
     fun getPriceModel(type: Price) = PriceModel(getMoneyModel(type.base),
-                                                 type.percentage30,
-                                                 type.percentage70,
-                                                 "%.2f".format(type.amount))
+                                                type.withoutDiscount?.let { getMoneyModel(it)},
+                                                type.percentage30,
+                                                type.percentage70,
+                                                "%.2f".format(type.amount))
     
     fun getCarrierModel(type: Carrier) = CarrierModel(type.id,
                                                          getProfileModel(type.profile),

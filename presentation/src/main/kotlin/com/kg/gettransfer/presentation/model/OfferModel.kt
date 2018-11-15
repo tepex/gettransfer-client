@@ -18,7 +18,7 @@ class OfferModel(val id: Long,
     }
 }
 
-class PriceModel(val base: MoneyModel, val percentage30: String, val percentage70: String, val amount: String)
+class PriceModel(val base: MoneyModel, val withoutDiscount: MoneyModel?, val percentage30: String, val percentage70: String, val amount: String)
 
 class RatingsModel(val average: Float?, val vehicle: Float?, val driver: Float?, val fair: Float?)
 

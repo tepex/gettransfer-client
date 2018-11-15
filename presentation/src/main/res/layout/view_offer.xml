@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="@dimen/view_offer_padding_top_bottom"
     android:paddingBottom="@dimen/view_offer_padding_top_bottom"
     android:layout_marginTop="@dimen/view_offer_margin"
     android:layout_marginStart="@dimen/view_offer_margin"
@@ -171,7 +172,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorTextBlack"
-                android:textSize="@dimen/view_offer_text_sizes"
+                android:textSize="@dimen/view_offer_text_size_13sp"
                 android:fontFamily="@font/helvetica_bold"
                 android:layout_marginBottom="@dimen/view_offer_vehicle_type_margin_bottom"/>
 
@@ -255,7 +256,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/helvetica_bold"
-                android:textSize="@dimen/view_offer_text_sizes"
+                android:textSize="@dimen/view_offer_text_size_13sp"
                 android:textColor="@color/colorTextBlack"/>
 
         </LinearLayout>
@@ -265,7 +266,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/helvetica_bold"
-            android:textSize="@dimen/view_offer_text_sizes"
+            android:textSize="@dimen/view_offer_text_size_13sp"
             android:textColor="@color/colorTextBlack"
             android:gravity="center"
             android:layout_marginTop="@dimen/view_offer_completed_transfers_text_margin_top"/>
@@ -289,21 +290,49 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="@dimen/view_offer_column3_margin_end">
 
+        <LinearLayout
+            android:id="@+id/layoutCostWithoutDiscount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="@dimen/view_offer_prices_margin"
+            android:visibility="gone"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tvCostWithoutDiscountDefault"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTextPriceWithoutDiscount"
+                android:textSize="@dimen/view_offer_cost_text_size_12sp"
+                android:fontFamily="@font/sf_pro_text_bold" />
+
+            <TextView
+                android:id="@+id/tvCostWithoutDiscountPreferred"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTextPriceWithoutDiscount"
+                android:textSize="@dimen/view_offer_cost_text_size_12sp"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/tvCostDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/helvetica_bold"
+            android:fontFamily="@font/sf_pro_text_bold"
             android:textColor="@color/colorTextBlack"
-            android:textSize="@dimen/view_offer_cost_text_size"/>
+            android:textSize="@dimen/view_offer_cost_text_size_17sp"/>
 
         <TextView
             android:id="@+id/tvCostPreferred"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/helvetica_neue"
+            android:fontFamily="@font/sf_pro_text_regular"
             android:textColor="@color/colorTextBlack"
-            android:textSize="@dimen/view_offer_cost_text_size"
+            android:textSize="@dimen/view_offer_cost_text_size_14sp"
             android:visibility="gone"/>
 
         <Button
@@ -312,7 +341,7 @@
             android:layout_height="@dimen/view_offer_btn_select_height"
             android:background="@drawable/btn_get_transfer"
             android:textColor="@color/colorWhite"
-            android:textSize="@dimen/view_offer_text_sizes"
+            android:textSize="@dimen/view_offer_text_size_13sp"
             android:fontFamily="@font/helvetica_neue"
             android:textAllCaps="true"
             android:text="@string/LNG_BOOK"

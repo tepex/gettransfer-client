@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.graphics.Paint
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
@@ -215,6 +216,16 @@ class OffersActivity: BaseActivity(), OffersView {
             offerPricePreferred.text = Utils.formatPrice(this, offer.price.base.preferred)
             offerPricePreferred.visibility = View.VISIBLE
         } else offerPricePreferred.visibility = View.GONE
+        if(offer.price.withoutDiscount != null){
+            offerPriceWithoutDiscountDefault.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+            offerPriceWithoutDiscountDefault.text = offer.price.withoutDiscount.default
+            if(offer.price.withoutDiscount.preferred != null){
+                offerPriceWithoutDiscountPreferred.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+                offerPriceWithoutDiscountPreferred.text = Utils.formatPrice(this, offer.price.withoutDiscount.preferred)
+                offerPriceWithoutDiscountPreferred.visibility = View.VISIBLE
+            } else offerPriceWithoutDiscountPreferred.visibility = View.GONE
+            layoutOfferPriceWithoutDiscount.visibility = View.VISIBLE
+        } else layoutOfferPriceWithoutDiscount.visibility = View.GONE
 
         btnBook.setOnClickListener {
             presenter.onSelectOfferClicked(offer, false)

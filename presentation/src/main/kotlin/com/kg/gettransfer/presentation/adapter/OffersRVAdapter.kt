@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.adapter
 
+import android.graphics.Paint
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -47,6 +48,16 @@ class OffersRVAdapter(private val offers: MutableList<OfferModel>,
             if(item.price.base.preferred != null) {
                 tvCostPreferred.text = Utils.formatPrice(context, item.price.base.preferred)
                 tvCostPreferred.visibility = View.VISIBLE
+            }
+            if(item.price.withoutDiscount != null){
+                tvCostWithoutDiscountDefault.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+                tvCostWithoutDiscountDefault.text = item.price.withoutDiscount.default
+                if(item.price.withoutDiscount.preferred != null){
+                    tvCostWithoutDiscountPreferred.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+                    tvCostWithoutDiscountPreferred.text = Utils.formatPrice(context, item.price.withoutDiscount.preferred)
+                    tvCostWithoutDiscountPreferred.visibility = View.VISIBLE
+                }
+                layoutCostWithoutDiscount.visibility = View.VISIBLE
             }
             if(item.vehicle.photos.isNotEmpty()) {
                 layoutWithCarImage.visibility = View.VISIBLE

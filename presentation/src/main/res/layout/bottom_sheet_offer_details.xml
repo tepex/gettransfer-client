@@ -412,32 +412,68 @@
         android:id="@+id/layoutPrices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
+        android:orientation="vertical"
+        android:gravity="start"
         app:layout_constraintTop_toTopOf="@+id/btnBook"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnBook"
         app:layout_constraintBottom_toBottomOf="@+id/btnBook">
 
-        <TextView
-            android:id="@+id/offerPrice"
+        <LinearLayout
+            android:id="@+id/layoutOfferPriceWithoutDiscount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/sf_pro_text_bold"
-            android:textSize="@dimen/bottom_sheet_offer_details_text_size_14sp"
-            android:textColor="@color/colorTextBlack"
-            android:text="€199,00"/>
+            android:orientation="horizontal"
+            android:visibility="gone">
 
-        <TextView
-            android:id="@+id/offerPricePreferred"
+            <TextView
+                android:id="@+id/offerPriceWithoutDiscountDefault"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTextPriceWithoutDiscount"
+                android:textSize="@dimen/bottom_sheet_offer_details_text_size_12sp"
+                android:fontFamily="@font/sf_pro_text_bold"
+                android:text="€199,00"/>
+
+            <TextView
+                android:id="@+id/offerPriceWithoutDiscountPreferred"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTextPriceWithoutDiscount"
+                android:textSize="@dimen/bottom_sheet_offer_details_text_size_12sp"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:text="($222,00)"
+                android:layout_marginStart="@dimen/bottom_sheet_offer_details_prices_margin"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:textSize="@dimen/bottom_sheet_offer_details_text_size_14sp"
-            android:textColor="@color/colorTextBlack"
-            android:text="($222,00)"
-            android:visibility="gone"
-            android:layout_marginStart="@dimen/bottom_sheet_offer_details_prices_margin"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/offerPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sf_pro_text_bold"
+                android:textSize="@dimen/bottom_sheet_offer_details_text_size_14sp"
+                android:textColor="@color/colorTextBlack"
+                android:text="€199,00"/>
+
+            <TextView
+                android:id="@+id/offerPricePreferred"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:textSize="@dimen/bottom_sheet_offer_details_text_size_14sp"
+                android:textColor="@color/colorTextBlack"
+                android:text="($222,00)"
+                android:visibility="gone"
+                android:layout_marginStart="@dimen/bottom_sheet_offer_details_prices_margin"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
