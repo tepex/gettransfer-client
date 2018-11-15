@@ -304,12 +304,12 @@ class CreateOrderPresenter(cc: CoroutineContexts,
 
     private fun checkFieldsForRequest(): Boolean {
         var errorFiled =
-            if(!Utils.checkEmail(user.profile.email))        errorFiled = EMAIL_FIELD
-            else if(user.profile.name.isNullOrBlank())       errorFiled = NAME_FIELD
-            else if(!Utils.checkPhone(user.profile.phone!!)) errorFiled = PHONE_FIELD
+            if(!Utils.checkEmail(user.profile.email))        EMAIL_FIELD
+            else if(user.profile.name.isNullOrBlank())       NAME_FIELD
+            else if(!Utils.checkPhone(user.profile.phone!!)) PHONE_FIELD
             else if(transportTypes != null &&
-                    !transportTypes!!.any { it.checked })    errorFiled = TRANSPORT_FIELD
-            else if(!user.termsAccepted)                     errorFiled = TERMS_ACCEPTED_FIELD
+                    !transportTypes!!.any { it.checked })    TRANSPORT_FIELD
+            else if(!user.termsAccepted)                     TERMS_ACCEPTED_FIELD
             else return true
 
         viewState.showEmptyFieldError(errorFiled)
