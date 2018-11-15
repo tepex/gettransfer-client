@@ -94,10 +94,10 @@ class PaymentPresenter(cc: CoroutineContexts,
                 map[VALUE] = price * PRICE_30
             }
         }
-        */
 
         bundle.putString(TRANSACTION_ID, offerInteractor.transferId!!.toString())
         map[TRANSACTION_ID] = offerInteractor.transferId!!.toString()
+        */
 
         mFBA.logEvent(ECOMMERCE_PURCHASE, bundle)
         YandexMetrica.reportEvent(ECOMMERCE_PURCHASE, map)

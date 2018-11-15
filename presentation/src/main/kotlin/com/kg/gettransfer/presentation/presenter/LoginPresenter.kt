@@ -54,7 +54,7 @@ class LoginPresenter(cc: CoroutineContexts,
                 } else router.exitWithResult(RESULT_CODE, RESULT_OK)
                 logLoginEvent(RESULT_SUCCESS)
             } else {
-                viewState.setError(e)
+                viewState.setError(result.error!!)
                 logLoginEvent(RESULT_FAIL)
             }
             viewState.blockInterface(false)
