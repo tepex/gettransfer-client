@@ -99,7 +99,7 @@ android {
 			signingConfig signingConfigs.config
 
 			versionCode getBuildNumber() as Integer
-			versionName getVersionName() as String
+			versionName System.getenv("VERSION_NAME")
 
 			manifestPlaceholders = [
 					hockeyAppId   : "62939f09f9e0489c8ada1c25d2f30d9d",
@@ -209,10 +209,6 @@ dependencies {
 
 def getBuildNumber() {
 	return System.getenv("BUILD_NUMBER") ?: "1"
-}
-
-def getVersionName() {
-	return System.getenv("VERSION_NAME") ?: "2.0"
 }
 
 def generateChangeLog() {
