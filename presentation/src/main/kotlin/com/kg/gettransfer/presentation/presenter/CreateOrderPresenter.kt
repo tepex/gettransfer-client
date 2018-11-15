@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import android.util.Patterns
 
@@ -13,11 +12,8 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.*
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.Profile
 
 import com.kg.gettransfer.domain.model.Trip
-import com.kg.gettransfer.domain.model.User
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.*
@@ -58,11 +54,15 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     private var promoCode: String? = null
     
     internal var cost: Double? = null
+
+    private var isAfter4Hours = true
+    internal lateinit var currentDate: Calendar
     internal var date: Date = Date()
         set(value) {
             field = value
-            dateTimeFormat?.let { viewState.setDateTimeTransfer(it.format(date)) }
+            dateTimeFormat?.let { viewState.setDateTimeTransfer(it.format(date), isAfter4Hours) }
         }
+
     private var flightNumber: String? = null
     private var comment: String? = null
     
@@ -111,11 +111,16 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
     
     override fun onFirstViewAttach() {
+        currentDate = getCurrentDatePlus4Hours()
+        date = currentDate.time
+    }
+
+    private fun getCurrentDatePlus4Hours(): Calendar{
         val calendar = Calendar.getInstance(systemInteractor.locale)
         /* Server must send current locale time */
         calendar.add(Calendar.HOUR_OF_DAY, FUTURE_HOUR)
         calendar.add(Calendar.MINUTE, FUTURE_MINUTE)
-        date = calendar.time
+        return calendar
     }
 
     fun initMapAndPrices() {
@@ -152,7 +157,14 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     }
 
     fun changeDate(newDate: Date) {
-        date = newDate
+        currentDate = getCurrentDatePlus4Hours()
+        if(newDate.after(currentDate.time)) {
+            isAfter4Hours = false
+            date = newDate
+        } else {
+            isAfter4Hours = true
+            date = currentDate.time
+        }
         routeModel?.let {
             it.dateTime = SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date)
             viewState.setRoute(true, polyline!!, it)
@@ -168,7 +180,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         if(i != -1) changeCurrency(i)
 
         viewState.setUser(user, systemInteractor.account.user.loggedIn)
-        viewState.setDateTimeTransfer(Utils.getFormattedDate(systemInteractor.locale, date))
+        viewState.setDateTimeTransfer(Utils.getFormattedDate(systemInteractor.locale, date), isAfter4Hours)
 	    transportTypes?.let { viewState.setTransportTypes(it) }
 	    //routeModel?.let     { viewState.setRoute(it) }
     }
@@ -238,6 +250,8 @@ class CreateOrderPresenter(cc: CoroutineContexts,
     fun showLicenceAgreement() { router.navigateTo(Screens.LICENCE_AGREE) }
 
     fun onGetTransferClick() {
+        currentDate = getCurrentDatePlus4Hours()
+        if(currentDate.time.after(date)) date = currentDate.time
 
         if(!checkFieldsForRequest()) return
         val trip = Trip(date, flightNumber)

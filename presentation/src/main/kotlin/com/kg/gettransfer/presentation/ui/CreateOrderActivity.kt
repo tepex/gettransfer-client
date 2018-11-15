@@ -1,7 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.app.DatePickerDialog
-import android.app.TimePickerDialog
+import com.kg.gettransfer.common.BoundTimePickerDialog
 
 import android.content.Context
 import android.content.Intent
@@ -305,31 +305,58 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     private fun showDatePickerDialog() {
+        val currentDate = presenter.currentDate
         calendar.time = presenter.date
         val datePickerDialog = DatePickerDialog(this, { _, year, monthOfYear, dayOfMonth ->
             calendar.set(year, monthOfYear, dayOfMonth)
             presenter.date = calendar.time
-            showTimePickerDialog()
+
+            val calendarWithoutTime: Calendar = Calendar.getInstance()
+            calendarWithoutTime.set(year, monthOfYear, dayOfMonth, 0, 0)
+            when {
+                calendarWithoutTime.time.after(currentDate.time) -> {
+                    showTimePickerDialog(-1, 24, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
+                }
+                calendar.time.after(currentDate.time) -> {
+                    showTimePickerDialog(currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE),
+                                         calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
+                }
+                else -> showTimePickerDialog(currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE),
+                                             currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE))
+            }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
 
-        datePickerDialog.datePicker.minDate = System.currentTimeMillis()
+        datePickerDialog.datePicker.minDate = currentDate.timeInMillis
         datePickerDialog.show()
     }
 
-    private fun showTimePickerDialog() {
-        val timePickerDialog = TimePickerDialog(this, { _, hour, minute ->
+    private fun showTimePickerDialog(minHour: Int, minMinute: Int, setHour: Int, setMinute: Int) {
+        /*val timePickerDialog = TimePickerDialog(this, { _, hour, minute ->
             calendar.set(Calendar.HOUR_OF_DAY, hour)
             calendar.set(Calendar.MINUTE, minute)
             presenter.changeDate(calendar.time)
         }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true)
-        timePickerDialog.show()
+        timePickerDialog.show()*/
+
+        val boundTimePickerDialog = BoundTimePickerDialog(this, { _, hour, minute ->
+            calendar.set(Calendar.HOUR_OF_DAY, hour)
+            calendar.set(Calendar.MINUTE, minute)
+            presenter.changeDate(calendar.time)
+        }, setHour, setMinute, true)
+        boundTimePickerDialog.setMin(minHour, minMinute)
+        boundTimePickerDialog.show()
     }
 
     override fun setPassengers(count: Int)                   { tvCountPerson.text = count.toString() }
     override fun setChildren(count: Int)                     { tvCountChild.text = count.toString() }
     override fun setCurrency(currency: String)               { tvCurrencyType.text = currency }
     override fun setComment(comment: String)                 { tvComments.text = comment }
-    override fun setDateTimeTransfer(dateTimeString: String) { tvDateTimeTransfer.text = dateTimeString }
+    override fun setDateTimeTransfer(dateTimeString: String, isAfter4Hours: Boolean) {
+        if(isAfter4Hours) tvDateTimeTransfer.text = getString(R.string.LNG_DATE_IN_HOURS).plus(" ")
+                                                    .plus(CreateOrderPresenter.FUTURE_HOUR).plus(" ")
+                                                    .plus(getString(R.string.LNG_HOUR_FEW))
+        else tvDateTimeTransfer.text = dateTimeString
+    }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
         rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->

@@ -17,7 +17,7 @@ interface CreateOrderView: BaseView {
     fun setPassengers(count: Int)
     fun setChildren(count: Int)
     fun setCurrency(currency: String)
-    fun setDateTimeTransfer(dateTimeString: String)
+    fun setDateTimeTransfer(dateTimeString: String, isAfter4Hours: Boolean)
     fun setComment(comment: String)
     fun setGetTransferEnabled(enabled: Boolean)
     fun setPromoResult(discountInfo: String?)
