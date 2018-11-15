@@ -60,7 +60,7 @@
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/cl_offer_price"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="69dp">
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/fl_currency"
@@ -160,7 +160,16 @@
                     android:id="@+id/child_seats"
                     layout="@layout/view_seats" />
 
+
+
             </LinearLayout>
+
+            <View
+                android:id="@+id/seats_divider"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:layout_marginStart="@dimen/divider_margin_start"
+                android:background="@color/create_order_fields_divider" />
 
             <include
                 android:id="@+id/user_name_field"
@@ -174,9 +183,25 @@
                 android:id="@+id/phone_field"
                 layout="@layout/view_create_order_field" />
 
-            <include
-                android:id="@+id/flight_number_field"
-                layout="@layout/view_create_order_field" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <include
+                    android:id="@+id/flight_number_field"
+                    layout="@layout/view_create_order_field" />
+
+                <ImageView
+                    android:id="@+id/img_okResult"
+                    android:layout_width="@dimen/circle_plus_height"
+                    android:layout_height="@dimen/circle_plus_height"
+
+                    android:layout_marginEnd="@dimen/promo_ok_img_margin_end"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_promo_ok"/>
+            </RelativeLayout>
+
 
             <include
                 android:id="@+id/promo_field"

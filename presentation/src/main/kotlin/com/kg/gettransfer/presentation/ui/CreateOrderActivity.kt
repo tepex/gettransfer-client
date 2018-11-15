@@ -23,11 +23,13 @@ import android.telephony.PhoneNumberFormattingTextWatcher
 import android.text.InputFilter
 
 import android.text.InputType
+import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.view.*
 import android.view.animation.AnimationUtils
 
 import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 
 import android.widget.LinearLayout
 import android.widget.PopupWindow
@@ -189,12 +191,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     private fun initPromoSection() {
- //       etPromo.filters = arrayOf(InputFilter.AllCaps())
+
         promo_field.field_input.filters = arrayOf(InputFilter.AllCaps())
         promo_field.field_input.setOnFocusChangeListener { _, hasFocus -> if(!hasFocus) presenter.checkPromoCode() }
- //       defaultPromoText = tvPromoResult.text.toString()
         defaultPromoText = promo_field.field_title.text.toString()
-        promo_field.setOnClickListener { showKeyboard(); promo_field.field_input.requestFocusFromTouch() }
     }
     
     private fun initKeyBoardListener() {
@@ -482,33 +482,30 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         passengers_seats.seat_title.text = getString(R.string.LNG_RIDE_PASSENGERS)
         child_seats.seat_title.text = getString(R.string.LNG_RIDE_CHILDREN)
 
-        //hints
+        // editable fields
         price_field_input.hint = getString(R.string.LNG_RIDE_PRICE_YOUR)
+        price_field_input.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
  //       transfer_date_time_field.field_input.hint = getString(R.string)
         user_name_field.field_input.hint = getString(R.string.LNG_RIDE_NAME)
         email_field.field_input.hint = getString(R.string.LNG_RIDE_EMAIL)
         phone_field.field_input.hint = getString(R.string.LNG_RIDE_PHONE)
+        phone_field.field_input.inputType = InputType.TYPE_CLASS_PHONE
         flight_number_field.field_input.hint = getString(R.string.LNG_RIDE_FLIGHT)
         promo_field.field_input.hint = getString(R.string.LNG_RIDE_PROMOCODE)
         comment_field.field_input.hint = getString(R.string.LNG_COMMENT_PLACEHOLDER)
+        comment_field.field_input.isEnabled = false
+        comment_field.field_input.ellipsize = TextUtils.TruncateAt.END
+
+        comment_field.isFocusable = false
     }
 
     private fun initChangeTextListeners() {
-        //        etYourPrice.onTextChanged { presenter.cost = it.toDoubleOrNull() }
         price_field_input.onTextChanged             { presenter.cost = it.toDoubleOrNull() }
         price_field_input.setOnFocusChangeListener  { _, hasFocus ->
             if(hasFocus) presenter.logTransferSettingsEvent(CreateOrderPresenter.OFFER_PRICE_FOCUSED)
         }
-        //      tvDateTimeTransfer.setOnClickListener {
-
-
-
-
-//        etName.onTextChanged  { presenter.setName(it.trim()) }
         user_name_field.field_input.onTextChanged        { presenter.setName(it.trim()) }
-//        etEmail.onTextChanged { presenter.setEmail(it.trim()) }
         email_field.field_input.onTextChanged            { presenter.setEmail(it.trim()) }
-//        tvPhone.onTextChanged {
         phone_field.field_input.onTextChanged            {
             if(it.isEmpty()) {
                 phone_field.field_input.setText("+")
@@ -526,20 +523,18 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             showDatePickerDialog()
             presenter.logTransferSettingsEvent(CreateOrderPresenter.DATE_TIME_CHANGED)
         }
-        //        ivPersonsCounterDown.setOnClickListener { presenter.changePassengers(-1) }
         passengers_seats.img_plus_seat.setOnClickListener   { presenter.changePassengers(1) }
-//        ivPersonsCounterUp.setOnClickListener   { presenter.changePassengers(1) }
         passengers_seats.img_minus_seat.setOnClickListener  { presenter.changePassengers(-1) }
         child_seats.img_minus_seat.setOnClickListener       { presenter.changeChildren(-1) }
         child_seats.img_plus_seat.setOnClickListener        { presenter.changeChildren(1) }
 
-        price_field_input.setOnClickListener                { price_field_input.requestFocusFromTouch() }
-        transfer_date_time_field.setOnClickListener         { transfer_date_time_field.field_input.requestFocusFromTouch() }
-        user_name_field.setOnClickListener                  { user_name_field.field_input.requestFocusFromTouch() }
-        email_field.setOnClickListener                      { email_field.field_input.requestFocusFromTouch() }
-        phone_field.setOnClickListener                      { phone_field.field_input.requestFocusFromTouch() }
-        flight_number_field.setOnClickListener              { flight_number_field.field_input.requestFocusFromTouch() }
-        promo_field.setOnClickListener                      { promo_field.field_input.requestFocusFromTouch() }
+        cl_offer_price.setOnClickListener                   { fieldTouched(price_field_input)  }
+        transfer_date_time_field.setOnClickListener         { fieldTouched(transfer_date_time_field.field_input)  }
+        user_name_field.setOnClickListener                  { fieldTouched(user_name_field.field_input) }
+        email_field.setOnClickListener                      { fieldTouched(email_field.field_input) }
+        phone_field.setOnClickListener                      { fieldTouched(phone_field.field_input)}
+        flight_number_field.setOnClickListener              { fieldTouched(flight_number_field.field_input) }
+        promo_field.setOnClickListener                      { fieldTouched(promo_field.field_input) }
         comment_field.setOnClickListener                    { showPopupWindowComment()
             presenter.logTransferSettingsEvent(CreateOrderPresenter.COMMENT_INPUT)
         }
@@ -551,5 +546,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         btnCenterRoute.setOnClickListener                   { presenter.onCenterRouteClick() }
         btnBack.setOnClickListener                          { presenter.onBackClick() }
         btnOk.setOnClickListener                            { hideSheetTransport() }
+    }
+
+    private fun fieldTouched(viewForFocus: EditText) {
+        if(!isKeyBoardOpened) showKeyboard()
+        viewForFocus.requestFocus()
     }
 }
