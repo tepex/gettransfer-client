@@ -46,7 +46,7 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
                 item.checked = !item.checked
                 cbTransferType.isChecked = item.checked
                 setVisibilityShadow(context, item)
-                transportClick()
+                listener(item, false)
             }
             layoutTransportInfo.setOnClickListener { listener(item, true) }
         }

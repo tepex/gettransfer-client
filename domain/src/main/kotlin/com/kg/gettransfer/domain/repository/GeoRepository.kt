@@ -9,7 +9,7 @@ import java.util.Locale
 interface GeoRepository {
     fun initGeocoder(locale: Locale)
 //    fun checkPlayServicesAvailable(): Boolean
-    suspend fun getCurrentLocation(): Result<Point?>
+    suspend fun getCurrentLocation(): Result<Point>
     fun getAddressByLocation(point: Point, pair: Pair<Point, Point>): GTAddress
     fun getCurrentAddress(): GTAddress
 

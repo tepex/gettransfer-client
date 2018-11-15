@@ -15,7 +15,9 @@ import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatDelegate
 
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 
 import com.arellomobile.mvp.MvpAppCompatActivity
 
@@ -29,7 +31,6 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
-import com.kg.gettransfer.presentation.IntentKeys
 
 import com.kg.gettransfer.presentation.IntentKeys
 import com.kg.gettransfer.presentation.Screens
@@ -53,9 +54,6 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
 import timber.log.Timber
-import android.app.Activity
-import android.view.MotionEvent
-import android.view.inputmethod.InputMethodManager
 
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     internal val systemInteractor: SystemInteractor by inject()
@@ -152,7 +150,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     }
 
     fun hideKeyboardWithoutClearFocus(context: Context, view: View): Boolean {
-        val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
         return false
     }

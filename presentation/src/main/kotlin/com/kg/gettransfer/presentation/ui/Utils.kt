@@ -289,19 +289,12 @@ internal class Utils {
             return drawableCompat
         }
 
-<<<<<<< HEAD
         fun initPhoneNumberUtil(context: Context) { phoneUtil = PhoneNumberUtil.createInstance(context) }
 
         fun getPhoneCodeByCountryIso(context: Context): Int {
             val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             val countryCode = telephonyManager.simCountryIso
             return phoneUtil.getCountryCodeForRegion(countryCode.toUpperCase())
-=======
-        fun getPhoneCodeByCountryIso(context: Context): Int {
-            val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            val countryCode = telephonyManager.simCountryIso
-            return PhoneNumberUtil.createInstance(context).getCountryCodeForRegion(countryCode.toUpperCase())
->>>>>>> GAA-246 (Autofilling and formatting  phone in CreateOrderActivity)
         }
 
         fun formatJsonString(text: String): String {
