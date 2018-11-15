@@ -152,6 +152,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         initMapView(savedInstanceState)
 
         initFieldsViews()
+        scrollContent.setOnTouchListener(onTouchListener)
 
         rvTransferType.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvTransferType.isNestedScrollingEnabled = false
@@ -165,12 +166,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         sheetOrder.visibility = View.VISIBLE
         bsTransport = BottomSheetBehavior.from(sheetTransport)
         bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
-
-    private fun initFieldsViews() {
-        scrollContent.setOnTouchListener(onTouchListener)
     }
-
-
 
 
     private fun hideSheetTransport() {
@@ -320,15 +316,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         boundTimePickerDialog.show()
     }
 
-    override fun setPassengers(count: Int)                   { tvCountPerson.text = count.toString() }
-    override fun setChildren(count: Int)                     { tvCountChild.text = count.toString() }
-    override fun setCurrency(currency: String)               { tvCurrencyType.text = currency }
-    override fun setComment(comment: String)                 { tvComments.text = comment }
     override fun setDateTimeTransfer(dateTimeString: String, isAfter4Hours: Boolean) {
-        if(isAfter4Hours) tvDateTimeTransfer.text = getString(R.string.LNG_DATE_IN_HOURS).plus(" ")
+        if(isAfter4Hours) transfer_date_time_field.field_input.setText(getString(R.string.LNG_DATE_IN_HOURS).plus(" ")
                                                     .plus(CreateOrderPresenter.FUTURE_HOUR).plus(" ")
-                                                    .plus(getString(R.string.LNG_HOUR_FEW))
-        else tvDateTimeTransfer.text = dateTimeString
+                                                    .plus(getString(R.string.LNG_HOUR_FEW)))
+        else transfer_date_time_field.field_input.setText(dateTimeString)
     }
 
     private fun checkMinusButton(count: Int, minimum: Int, view: ImageView) {
@@ -346,7 +338,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
     override fun setCurrency(currency: String)               { tv_currency.text = currency }
     override fun setComment(comment: String)                 { comment_field.field_input.setText(comment) }
-    override fun setDateTimeTransfer(dateTimeString: String) { transfer_date_time_field.field_input.setText(dateTimeString) }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
         rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
