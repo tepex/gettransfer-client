@@ -9,42 +9,79 @@ import com.kg.gettransfer.data.ds.TransferDataStoreRemote
 import com.kg.gettransfer.data.mapper.TransferMapper
 import com.kg.gettransfer.data.mapper.TransferNewMapper
 
+import com.kg.gettransfer.data.model.TransferEntity
+
+import com.kg.gettransfer.domain.model.CityPoint
+import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew
 
 import com.kg.gettransfer.domain.repository.TransferRepository
 
+import java.util.Date
+
 class TransferRepositoryImpl(private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>,
                              private val transferNewMapper: TransferNewMapper,
                              private val transferMapper: TransferMapper): BaseRepository(), TransferRepository {
-    override suspend fun createTransfer(transferNew: TransferNew): Transfer {
-        val transferEntity = factory.retrieveRemoteDataStore().createTransfer(transferNewMapper.toEntity(transferNew))
-        //factory.retrieveCacheDataStore().addTransfer(transferEntity)
-        return transferMapper.fromEntity(transferEntity)
-    }
+    override suspend fun createTransfer(transferNew: TransferNew) =
+        retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, defaultTransfer) {
+            factory.retrieveRemoteDataStore().createTransfer(transferNewMapper.toEntity(transferNew))
+        }
     
-    override suspend fun cancelTransfer(id: Long, reason: String): Transfer {
-        val transferEntity = factory.retrieveRemoteDataStore().cancelTransfer(id, reason)
-        return transferMapper.fromEntity(transferEntity)
-    }
+    override suspend fun cancelTransfer(id: Long, reason: String): Result<Transfer> =
+        retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, defaultTransfer) {
+            factory.retrieveRemoteDataStore().cancelTransfer(id, reason)
+        }
     
-    override suspend fun getTransfer(id: Long): Transfer {
-        val transferEntity = factory.retrieveRemoteDataStore().getTransfer(id)
-        return transferMapper.fromEntity(transferEntity)
-    }
+    override suspend fun getTransfer(id: Long): Result<Transfer> =
+        retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, defaultTransfer) {
+            factory.retrieveRemoteDataStore().getTransfer(id)
+        }
     
-    override suspend fun getAllTransfers(): List<Transfer> {
-        val all = factory.retrieveRemoteDataStore().getAllTransfers()
-        return all.map { transferMapper.fromEntity(it) }
-    }
+    override suspend fun getAllTransfers(): Result<List<Transfer>> =
+        retrieveRemoteListModel<TransferEntity, Transfer>(transferMapper) { factory.retrieveRemoteDataStore().getAllTransfers() }
     
-    override suspend fun getTransfersArchive(): List<Transfer> {
-        val archive = factory.retrieveRemoteDataStore().getTransfersArchive()
-        return archive.map { transferMapper.fromEntity(it) }
-    }
+    override suspend fun getTransfersArchive(): Result<List<Transfer>> =
+        retrieveRemoteListModel<TransferEntity, Transfer>(transferMapper) { factory.retrieveRemoteDataStore().getTransfersArchive() }
 
-    override suspend fun getTransfersActive(): List<Transfer> {
-        val active = factory.retrieveRemoteDataStore().getTransfersActive()
-        return active.map { transferMapper.fromEntity(it) }
+    override suspend fun getTransfersActive(): Result<List<Transfer>> =
+        retrieveRemoteListModel<TransferEntity, Transfer>(transferMapper) { factory.retrieveRemoteDataStore().getTransfersActive() }
+    
+    companion object {
+        private val defaultTransfer =
+            Transfer(0,
+                     Date(),
+                     null,
+                     null,
+                     "",
+                     CityPoint(null, null, null),
+                     null,
+                     Date(),
+                     null,
+                     null,
+                     
+                     null,
+                     null,
+                     null,
+                     null,
+                     null,
+                     0,
+                     0,
+                     0,
+                     0,
+                     null,
+                     
+                     0,
+                     null,
+                     null,
+                     0,
+                     null,
+                     false,
+                     null,
+                     emptyList<String>(),
+                     null,
+                     null,
+                     
+                     emptyList<String>())
     }
 }

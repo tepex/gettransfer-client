@@ -10,9 +10,13 @@ import com.kg.gettransfer.data.mapper.CarrierTripMapper
 import com.kg.gettransfer.data.model.CarrierTripEntity
 
 import com.kg.gettransfer.domain.model.CarrierTrip
+import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.VehicleBase
 
 import com.kg.gettransfer.domain.repository.CarrierTripRepository
+
+import java.util.Date
 
 class CarrierTripRepositoryImpl(private val factory: DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>,
                                 private val mapper: CarrierTripMapper): BaseRepository(), CarrierTripRepository {
@@ -20,5 +24,31 @@ class CarrierTripRepositoryImpl(private val factory: DataStoreFactory<CarrierTri
         retrieveRemoteListModel<CarrierTripEntity, CarrierTrip>(mapper) { factory.retrieveRemoteDataStore().getCarrierTrips() }
         
     override suspend fun getCarrierTrip(id: Long): Result<CarrierTrip> =
-        retrieveRemoteModel<CarrierTripEntity, CarrierTrip>(mapper) { factory.retrieveRemoteDataStore().getCarrierTrip(id) }
+        retrieveRemoteModel<CarrierTripEntity, CarrierTrip>(mapper, defaultModel) {
+            factory.retrieveRemoteDataStore().getCarrierTrip(id)
+        }
+        
+    companion object {
+        private val defaultModel = 
+            CarrierTrip(0,
+                    0,
+                    CityPoint(null, null, null),
+                    CityPoint(null, null, null),
+                    Date(),
+                    null,
+                    null,
+                    0,
+                    0,
+                    null,
+                    false,
+                    "",
+                    VehicleBase("", ""),
+                    0,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null)
+        }
 }

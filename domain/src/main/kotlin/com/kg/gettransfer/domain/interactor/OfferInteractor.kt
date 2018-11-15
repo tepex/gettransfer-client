@@ -1,6 +1,7 @@
 package com.kg.gettransfer.domain.interactor
 
 import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.domain.repository.OfferRepository
 
@@ -9,14 +10,12 @@ class OfferInteractor(private val repository: OfferRepository) {
     var selectedOfferId: Long? = null
     lateinit var offers: List<Offer>
 
-
-    suspend fun getOffers(transferId: Long): List<Offer> {
-        offers = repository.getOffers(transferId)
+    suspend fun getOffers(transferId: Long): Result<List<Offer>> {
         this.transferId = transferId
-        return offers
+        return repository.getOffers(transferId)
     }
     
-    fun getOffer(id: Long) = offers.find { it.id == id }
+    fun getOffer(id: Long): Result<Offer> = Result(offers.find { it.id == id }!!)
     
-    fun newOffer(offer: Offer) { repository.newOffer(offer) }
+    fun newOffer(offer: Offer) = repository.newOffer(offer)
 }

@@ -7,11 +7,12 @@ import com.kg.gettransfer.data.mapper.Mapper
 
 import com.kg.gettransfer.data.model.ResultEntity
 
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Result
 
 import org.slf4j.LoggerFactory
 
-open class BaseRepository() {
+abstract class BaseRepository() {
     companion object {
         @JvmField val TAG = "GTR-repository"
     }
@@ -34,15 +35,17 @@ open class BaseRepository() {
         return ResultEntity(entity, error)
     }
     
-    protected suspend fun <E, M> retrieveRemoteModel(mapper: Mapper<E, M>, getEntity: suspend () -> E): Result<M> {
+    protected suspend fun <E, M> retrieveRemoteModel(mapper: Mapper<E, M>, defaultModel: M, getEntity: suspend () -> E): Result<M> {
+        var error: ApiException? = null
         val entity = try { getEntity() }
-        catch(e: RemoteException) { return Result(error = ExceptionMapper.map(e)) }
-        return Result(entity?.let { mapper.fromEntity(it) })
+        catch(e: RemoteException) { return Result(defaultModel, ExceptionMapper.map(e)) }
+        return Result(mapper.fromEntity(entity))
     }
     
     protected suspend fun <E, M> retrieveRemoteListModel(mapper: Mapper<E, M>, getEntityList: suspend () -> List<E>): Result<List<M>> {
+        var error: ApiException? = null
         val entityList = try { getEntityList() }
-        catch(e: RemoteException) { return Result(error = ExceptionMapper.map(e)) }
+        catch(e: RemoteException) { return Result(emptyList<M>(), ExceptionMapper.map(e)) }
         return Result(entityList.map { mapper.fromEntity(it) })
-    }    
+    }
 }

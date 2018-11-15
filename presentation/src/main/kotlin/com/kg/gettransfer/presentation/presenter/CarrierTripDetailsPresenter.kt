@@ -43,18 +43,18 @@ class CarrierTripDetailsPresenter(cc: CoroutineContexts,
                 trip = Mappers.getCarrierTripModel(tripInfo, systemInteractor.locale, systemInteractor.distanceUnit)
                 viewState.setTripInfo(trip)
             
-                val routeInfo = routeInteractor.getRouteInfo(tripInfo.from.point!!, tripInfo.to.point!!, false, false)
-                routeInfo?.let {
-                    routeModel = Mappers.getRouteModel(it.distance,
+                val result = utils.asyncAwait { routeInteractor.getRouteInfo(tripInfo.from.point!!, tripInfo.to.point!!, false, false) }
+                if(result.model != null && result.model!!.success) {
+                    routeModel = Mappers.getRouteModel(result.model!!.distance,
                                                        systemInteractor.distanceUnit,
-                                                       it.polyLines,
+                                                       result.model!!.polyLines,
                                                        trip.from,
                                                        trip.to,
                                                        tripInfo.from.point!!,
                                                        tripInfo.to.point!!,
                                                        trip.dateTime)
+                    routeModel?.let { viewState.setRoute(Utils.getPolyline(it), it) }
                 }
-                routeModel?.let { viewState.setRoute(Utils.getPolyline(it), it) }
             }
             viewState.blockInterface(false)
         }

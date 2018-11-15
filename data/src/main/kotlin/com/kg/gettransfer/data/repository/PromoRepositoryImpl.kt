@@ -17,5 +17,7 @@ import com.kg.gettransfer.domain.repository.PromoRepository
 class PromoRepositoryImpl(private val factory: DataStoreFactory<PromoDataStore, PromoDataStoreCache, PromoDataStoreRemote>,
                           private val mapper: PromoDiscountMapper): BaseRepository(), PromoRepository {
     override suspend fun getDiscount(code: String): Result<PromoDiscount> =
-        retrieveRemoteModel<PromoDiscountEntity, PromoDiscount>(mapper) { factory.retrieveRemoteDataStore().getDiscount(code) }
+        retrieveRemoteModel<PromoDiscountEntity, PromoDiscount>(mapper, PromoDiscount("")) {
+            factory.retrieveRemoteDataStore().getDiscount(code)
+        }
 }

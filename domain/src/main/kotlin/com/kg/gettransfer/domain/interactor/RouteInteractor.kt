@@ -19,9 +19,8 @@ class RouteInteractor(private val geoRepository: GeoRepository,
     fun getCurrentAddress() = geoRepository.getCurrentAddress()
 
     fun getAddressByLocation(isFrom: Boolean, point: Point, pair: Pair<Point, Point>): GTAddress {
-        val address = try {
-            geoRepository.getAddressByLocation(point, pair)
-        } catch(e: IOException) { throw e }
+        val address = try { geoRepository.getAddressByLocation(point, pair) }
+        catch(e: IOException) { throw e }
         if(isFrom) from = address else to = address
         return address
     }

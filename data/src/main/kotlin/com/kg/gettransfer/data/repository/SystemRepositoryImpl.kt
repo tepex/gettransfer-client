@@ -86,7 +86,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
                 configs = configsMapper.fromEntity(it)
             }
             /* No chance to go further */
-            if(result.error != null) return Result(error = ExceptionMapper.map(result.error))
+            if(result.error != null) return Result(account, ExceptionMapper.map(result.error))
         }
 
         var error: ApiException? = null
@@ -104,7 +104,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
 
     override suspend fun putAccount(account: Account): Result<Account> {
         val accountEntity = try { factory.retrieveRemoteDataStore().setAccount(accountMapper.toEntity(account)) }
-        catch(e: RemoteException) { return Result(error = ExceptionMapper.map(e)) }
+        catch(e: RemoteException) { return Result(account, ExceptionMapper.map(e)) }
         
         factory.retrieveCacheDataStore().setAccount(accountEntity)
         this.account = accountMapper.fromEntity(accountEntity)
@@ -113,7 +113,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
 
     override suspend fun login(email: String, password: String): Result<Account> {
         val accountEntity = try { factory.retrieveRemoteDataStore().login(email, password) }
-        catch(e: RemoteException) { return Result(error = ExceptionMapper.map(e)) }
+        catch(e: RemoteException) { return Result(account, ExceptionMapper.map(e)) }
         
         factory.retrieveCacheDataStore().setAccount(accountEntity)
         account = accountMapper.fromEntity(accountEntity)

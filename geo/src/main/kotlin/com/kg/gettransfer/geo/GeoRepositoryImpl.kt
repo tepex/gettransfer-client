@@ -42,10 +42,10 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
         geocoder = Geocoder(context, locale)
     }
     
-    override suspend fun getCurrentLocation(): Result<Point?> = suspendCoroutine { cont ->
+    override suspend fun getCurrentLocation(): Result<Point> = suspendCoroutine { cont ->
         locationProviderClient.lastLocation
-            .addOnSuccessListener { l: Location -> cont.resume(Result<Point?>(model = Point(l.latitude, l.longitude))) }
-            .addOnFailureListener { cont.resume(Result(error = ApiException(ApiException.NOT_FOUND, it.message!!))) }
+            .addOnSuccessListener { l: Location -> cont.resume(Result<Point>(model = Point(l.latitude, l.longitude))) }
+            .addOnFailureListener { cont.resume(Result(Point(), ApiException(ApiException.NOT_FOUND, it.message!!))) }
     }
 
     override fun getAddressByLocation(point: Point, pair: Pair<Point, Point>): GTAddress {

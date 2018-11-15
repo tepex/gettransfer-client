@@ -1,5 +1,6 @@
 package com.kg.gettransfer.domain.interactor
 
+import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew
 
@@ -14,58 +15,52 @@ class TransferInteractor(private val repository: TransferRepository) {
     private var completedTransfers: List<Transfer>? = null
     private var archivedTransfers: List<Transfer>? = null
     
-    suspend fun createTransfer(transferNew: TransferNew): Transfer {
-        transfer = repository.createTransfer(transferNew)
-        selectedId = transfer!!.id
-        return transfer!!
-    }
+    suspend fun createTransfer(transferNew: TransferNew) =
+        repository.createTransfer(transferNew).apply { if(!isError()) selectedId = model.id }
 
-    suspend fun getTransfer(id: Long): Transfer {
-        if(transfer?.id == id) return transfer!!
-        transfer = repository.getTransfer(id)
-        return transfer!!
-    }
+    suspend fun getTransfer(id: Long) = repository.getTransfer(id).apply { if(!isError()) transfer = model }
     
-    suspend fun cancelTransfer(reason: String) {
+    suspend fun cancelTransfer(reason: String) = repository.cancelTransfer(transfer!!.id, reason)
         /*val cancelledTransfer = repository.cancelTransfer(transfer!!.id, reason)
         if(allTransfers != null) allTransfers!!.map { if(it.id == transfer!!.id) it.status = cancelledTransfer.status }*/
-        repository.cancelTransfer(transfer!!.id, reason)
-    }
-    
-    suspend fun getAllTransfers(): List<Transfer> {
-        if(allTransfers == null) allTransfers = repository.getAllTransfers()
-        //insertNewTransfer()
-        return allTransfers!!
-    }
+        
+    suspend fun getAllTransfers() = repository.getAllTransfers().apply { if(!isError() && allTransfers == null) allTransfers = model}
 
-    fun deleteAllTransfersList(){
-        allTransfers = null
-    }
+    fun deleteAllTransfersList() { allTransfers = null }
 
-    suspend fun getActiveTransfers(): List<Transfer> {
-        /*if(activeTransfers == null) */activeTransfers = getAllTransfers().filter {
+    suspend fun getActiveTransfers(): Result<List<Transfer>> {
+        /*if(activeTransfers == null) */
+        val result = getAllTransfers()
+        if(result.isError()) return result
+        activeTransfers = result.model.filter {
                 it.status == Transfer.STATUS_NEW ||
                 it.status == Transfer.STATUS_DRAFT ||
                 it.status == Transfer.STATUS_PERFORMED ||
                 it.status == Transfer.STATUS_PENDING
         }
-        return activeTransfers!!
+        return Result(allTransfers!!)
     }
 
-    suspend fun getCompletedTransfers(): List<Transfer> {
-        /*if(completedTransfers == null) */completedTransfers = getAllTransfers().filter {
+    suspend fun getCompletedTransfers(): Result<List<Transfer>> {
+        /*if(completedTransfers == null) */
+        val result = getAllTransfers()
+        if(result.isError()) return result
+        completedTransfers = result.model.filter {
                 it.status == Transfer.STATUS_COMPLETED ||
                 it.status == Transfer.STATUS_NOT_COMPLETED
             }
-        return completedTransfers!!
+        return Result(completedTransfers!!)
     }
 
-    suspend fun getArchivedTransfers(): List<Transfer> {
-        /*if(archivedTransfers == null) */archivedTransfers = getAllTransfers().filter {
+    suspend fun getArchivedTransfers(): Result<List<Transfer>> {
+        /*if(archivedTransfers == null) */
+        val result = getAllTransfers()
+        if(result.isError()) return result
+        archivedTransfers = result.model.filter {
                     it.status != Transfer.STATUS_COMPLETED ||
                     it.status != Transfer.STATUS_NOT_COMPLETED
         }
-        return archivedTransfers!!
+        return Result(archivedTransfers!!)
     }
     
     /*private fun insertNewTransfer() {

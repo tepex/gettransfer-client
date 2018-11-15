@@ -11,8 +11,14 @@ import com.kg.gettransfer.data.mapper.PaymentRequestMapper
 import com.kg.gettransfer.data.mapper.PaymentStatusMapper
 import com.kg.gettransfer.data.mapper.PaymentStatusRequestMapper
 
+import com.kg.gettransfer.data.model.PaymentEntity
+import com.kg.gettransfer.data.model.PaymentStatusEntity
+
+import com.kg.gettransfer.domain.model.Payment
 import com.kg.gettransfer.domain.model.PaymentRequest
+import com.kg.gettransfer.domain.model.PaymentStatus
 import com.kg.gettransfer.domain.model.PaymentStatusRequest
+import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.domain.repository.PaymentRepository
 
@@ -21,8 +27,13 @@ class PaymentRepositoryImpl(private val factory: DataStoreFactory<PaymentDataSto
                             private val paymentMapper: PaymentMapper,
                             private val paymentStatusRequestMapper: PaymentStatusRequestMapper,
                             private val paymentStatusMapper: PaymentStatusMapper): BaseRepository(), PaymentRepository {
-    override suspend fun getPayment(paymentRequest: PaymentRequest) =
-        paymentMapper.fromEntity(factory.retrieveRemoteDataStore().createPayment(paymentRequestMapper.toEntity(paymentRequest)))
-    override suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequest) =
-        paymentStatusMapper.fromEntity(factory.retrieveRemoteDataStore().changeStatusPayment(paymentStatusRequestMapper.toEntity(paymentStatusRequest)))
+    override suspend fun getPayment(paymentRequest: PaymentRequest): Result<Payment> =
+        retrieveRemoteModel<PaymentEntity, Payment>(paymentMapper, Payment("", null, null)) {
+            factory.retrieveRemoteDataStore().createPayment(paymentRequestMapper.toEntity(paymentRequest))
+        }
+
+    override suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequest): Result<PaymentStatus> =
+        retrieveRemoteModel<PaymentStatusEntity, PaymentStatus>(paymentStatusMapper, PaymentStatus(0, "")) {
+            factory.retrieveRemoteDataStore().changeStatusPayment(paymentStatusRequestMapper.toEntity(paymentStatusRequest))
+        }
 }

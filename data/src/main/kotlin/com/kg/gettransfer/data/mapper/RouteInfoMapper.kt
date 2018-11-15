@@ -16,7 +16,7 @@ open class RouteInfoMapper(): Mapper<RouteInfoEntity, RouteInfo> {
         RouteInfo(type.success,
                   type.distance,
                   type.duration,
-                  type.prices?.map { TransportTypePrice(it.transferId, it.minFloat, it.min, it.max) },
+                  type.prices.map { TransportTypePrice(it.transferId, it.minFloat, it.min, it.max) },
                   type.watertaxi,
                   type.polyLines,
                   type.overviewPolyline)

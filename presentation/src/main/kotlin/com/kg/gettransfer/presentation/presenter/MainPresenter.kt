@@ -1,19 +1,27 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+
 import com.arellomobile.mvp.InjectViewState
+
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
+
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.view.MainView
+
 import ru.terrakok.cicerone.Router
+
 import timber.log.Timber
 
 @InjectViewState
