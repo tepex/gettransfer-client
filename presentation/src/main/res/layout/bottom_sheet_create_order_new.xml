@@ -70,25 +70,26 @@
                     <TextView
                         android:id="@+id/tv_currency"
                         android:layout_width="12dp"
-                        android:layout_height="20dp"
+                        android:layout_height="wrap_content"
 
                         android:layout_marginStart="24dp"
                         android:layout_marginTop="@dimen/icons_margin_top"
                         android:layout_marginBottom="@dimen/icons_margin_bottom"
                         android:fontFamily="@font/sf_pro_text_regular"
+                        android:textColor="@color/colorTextBlackBold"
 
                         android:text="@string/rub"
-                        android:textSize="@dimen/create_transfer_additionals_top_text_size"
+                        android:textSize="@dimen/currency_symbol_size"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
                         android:id="@+id/triangle_currency"
-                        android:layout_width="10dp"
-                        android:layout_height="10dp"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
 
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="8dp"
 
                         app:layout_constraintStart_toEndOf="@+id/tv_currency"
                         app:layout_constraintTop_toTopOf="@+id/tv_currency"
@@ -158,6 +159,7 @@
 
                 <include
                     android:id="@+id/child_seats"
+
                     layout="@layout/view_seats" />
 
 
@@ -199,6 +201,7 @@
                     android:layout_marginEnd="@dimen/promo_ok_img_margin_end"
                     android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
+                    android:visibility="invisible"
                     android:src="@drawable/ic_promo_ok"/>
             </RelativeLayout>
 

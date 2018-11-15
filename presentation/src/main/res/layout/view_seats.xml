@@ -34,8 +34,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/number_container_margin_start"
 
+        android:layout_marginStart="@dimen/number_container_margin_start"
         android:layout_marginTop="@dimen/number_container_margin_top"
         android:layout_marginEnd="@dimen/number_container_margin_end"
         android:layout_marginBottom="@dimen/plus_minus_margin_bottom"

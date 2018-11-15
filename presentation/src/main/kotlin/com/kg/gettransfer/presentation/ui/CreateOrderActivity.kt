@@ -331,11 +331,22 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         else tvDateTimeTransfer.text = dateTimeString
     }
 
-    private fun checkMinusButton(count: Int, view: ImageView) {
-        val imgRes = if (count == 0) R.drawable.ic_circle_minus else R.drawable.
-
+    private fun checkMinusButton(count: Int, minimum: Int, view: ImageView) {
+        val imgRes = if (count == minimum) R.drawable.ic_circle_minus else R.drawable.ic_minus_enabled
+        view.setImageDrawable(getDrawable(imgRes))
     }
 
+    override fun setPassengers(count: Int) {
+        passengers_seats.person_count.text = count.toString()
+        checkMinusButton(count, 1, passengers_seats.img_minus_seat)
+    }
+    override fun setChildren(count: Int) {
+        child_seats.person_count.text = count.toString()
+        checkMinusButton(count, 0, child_seats.img_minus_seat)
+    }
+    override fun setCurrency(currency: String)               { tv_currency.text = currency }
+    override fun setComment(comment: String)                 { comment_field.field_input.setText(comment) }
+    override fun setDateTimeTransfer(dateTimeString: String) { transfer_date_time_field.field_input.setText(dateTimeString) }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
         rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
@@ -448,6 +459,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     //TODO create custom view for new bottom sheet
     private fun initFieldsViews() {
+
         /* icons */
         transfer_date_time_field.field_icon.setImageDrawable(getDrawable(R.drawable.ic_calendar_triangle))
         user_name_field.field_icon.setImageDrawable(getDrawable(R.drawable.ic_passport))
@@ -484,12 +496,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         promo_field.field_input.hint = getString(R.string.LNG_RIDE_PROMOCODE)
         comment_field.field_input.hint = getString(R.string.LNG_COMMENT_PLACEHOLDER)
 
-        passengers_seats.field_input.setText(getString(R.string.passenger_number_default))
-        child_seats.field_input.setText(getString(R.string.child_number_default))
+        passengers_seats.person_count.text = getString(R.string.passenger_number_default)
+        child_seats.person_count.text = getString(R.string.child_number_default)
 
-        comment_field.field_input.isEnabled = false
-        comment_field.field_input.ellipsize = TextUtils.TruncateAt.END
-        comment_field.isFocusable = false
+        comment_field.field_input.isFocusable = false
+        comment_field.field_input.setOnClickListener { showPopupWindowComment() }
     }
 
     private fun initChangeTextListeners() {

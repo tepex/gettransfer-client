@@ -2,6 +2,9 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/viewGroup_field"
+    android:paddingEnd="20dp"
+    android:paddingStart="0dp"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -19,7 +22,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
 
-        app:srcCompat="@drawable/ic_account"/>
+        app:srcCompat="@drawable/ic_comment"/>
 
     <TextView
         android:id="@+id/field_title"
@@ -37,18 +40,20 @@
 
     <EditText
         android:id="@+id/field_input"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
 
         android:layout_marginStart="@dimen/text_range_to_icon"
         android:layout_marginBottom="@dimen/input_margin_bottom"
         android:background="@null"
         android:textSize="@dimen/create_transfer_additionals_top_text_size"
+        android:ellipsize="end"
         android:hint="450"
         android:imeOptions="actionDone"
         android:singleLine="true"
         android:fontFamily="@font/sf_pro_text_semibold"
         android:textColor="@color/colorTextBlack"
+
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/field_icon" />
