@@ -30,6 +30,10 @@
             android:name="net.hockeyapp.android.appIdentifier"
             android:value="${hockeyAppId}"/>
 
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+
         <activity
             android:name=".presentation.ui.SplashActivity"
             android:screenOrientation="portrait"

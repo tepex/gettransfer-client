@@ -21,6 +21,7 @@ ext {
     socket_io_version         = "1.0.0"
     libphonenumber_version    = "8.9.14"
 	appmetrica_version        = "3.4.0"
+	facebook_version          = "4.33.0"
 }
 
 android {
@@ -201,6 +202,9 @@ dependencies {
 
 	//AppMetrica
 	implementation "com.yandex.android:mobmetricalib:$appmetrica_version"
+
+	//Facebook
+	implementation "com.facebook.android:facebook-core:$facebook_version"
 
 	testImplementation libs.junit
 	testImplementation libs.hamcrest

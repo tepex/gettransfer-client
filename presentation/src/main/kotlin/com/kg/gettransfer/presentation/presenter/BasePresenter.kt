@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.MvpPresenter
+import com.facebook.appevents.AppEventsLogger
 
 import com.google.firebase.analytics.FirebaseAnalytics
 
@@ -27,6 +28,7 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
     protected val compositeDisposable = Job()
     protected val utils = AsyncUtils(cc, compositeDisposable)
     protected val mFBA: FirebaseAnalytics by inject()
+    protected val eventsLogger: AppEventsLogger by inject()
 
     open fun onBackCommandClick() {
         val map = HashMap<String, Any>()
@@ -34,6 +36,7 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
 
         router.exit()
         mFBA.logEvent(MainPresenter.EVENT_MAIN, createSingeBundle(PARAM_KEY_NAME, SYSTEM_BACK_CLICKED))
+        eventsLogger.logEvent(MainPresenter.EVENT_MAIN, createSingeBundle(PARAM_KEY_NAME, SYSTEM_BACK_CLICKED))
         YandexMetrica.reportEvent(MainPresenter.EVENT_MAIN, map)
     }
 
