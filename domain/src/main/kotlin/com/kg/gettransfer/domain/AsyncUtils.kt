@@ -49,6 +49,11 @@ class AsyncUtils(private val cc: CoroutineContexts, root: Job): CoroutineScope {
     fun launchSuspend(tryBlock: Task) = launch { tryBlock() }
     
     @Synchronized
+    fun <T> runAlien(task: TaskGeneric<T>) = launch {
+        coroutineScope { async(context = cc.bg, block = task).await() }
+    }
+    
+    @Synchronized
     fun launchAsyncTryCatch(tryBlock: Task, catchBlock: TaskThrowable) = launch { tryCatch(tryBlock, catchBlock) }
 
     @Synchronized

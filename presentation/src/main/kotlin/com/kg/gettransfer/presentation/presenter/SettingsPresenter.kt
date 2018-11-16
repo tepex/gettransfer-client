@@ -103,7 +103,7 @@ class SettingsPresenter(cc: CoroutineContexts,
     }
 
     fun changeEndpoint(selected: Int) {
-        systemInteractor.logout()
+        utils.runAlien { systemInteractor.logout() }
         val endpoint = endpoints.get(selected)
         systemInteractor.endpoint = endpoint.delegate
         viewState.setEndpoint(endpoint)
@@ -111,8 +111,8 @@ class SettingsPresenter(cc: CoroutineContexts,
         //viewState.restartApp() //For restart app
     }
 
-    fun onLogout() = utils.launchSuspend {
-        utils.asyncAwait { systemInteractor.logout() }
+    fun onLogout() {
+        utils.runAlien { systemInteractor.logout() }
         router.exit()
         logEvent(LOG_OUT_PARAM, EMPTY_VALUE)
     }

@@ -7,6 +7,7 @@ import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.LoggingRepository
@@ -78,7 +79,11 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         set(value) { account.distanceUnit = value }
 
     /** Init geo with account.locale if retrieved from remote */
-    suspend fun coldStart() = systemRepository.coldStart().apply { geoRepository.initGeocoder(model.locale) }
+    suspend fun coldStart(): Result<Account> {
+        val ret = systemRepository.coldStart()
+        geoRepository.initGeocoder(ret.model.locale)
+        return ret
+    }
 
     fun logout() = systemRepository.logout()
     suspend fun login(email: String, password: String) = systemRepository.login(email, password)

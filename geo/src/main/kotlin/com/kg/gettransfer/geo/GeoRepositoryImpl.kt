@@ -45,11 +45,12 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
     override suspend fun getCurrentLocation(): Result<Point> = suspendCoroutine { cont ->
         locationProviderClient.lastLocation
             .addOnSuccessListener { l: Location -> cont.resume(Result<Point>(model = Point(l.latitude, l.longitude))) }
-            .addOnFailureListener { cont.resume(Result(Point(), ApiException(ApiException.NOT_FOUND, it.message!!))) }
+            .addOnFailureListener { cont.resume(Result(Point(), ApiException(ApiException.NOT_FOUND, it.message ?: "Unknown"))) }
     }
 
     override fun getAddressByLocation(point: Point, pair: Pair<Point, Point>): Result<GTAddress> {
-        val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
+        val list = try { geocoder.getFromLocation(point.latitude, point.longitude, 1) }
+        catch(e: Exception) { return Result(GTAddress.EMPTY, ApiException(ApiException.GEOCODER_ERROR, e.message ?: "Unknown")) }
 
         val street  = list.firstOrNull()?.thoroughfare
         val house   = list.firstOrNull()?.subThoroughfare
@@ -112,7 +113,7 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
                                         it.getPrimaryText(null).toString(),
                                         it.getSecondaryText(null).toString())
             })
-        } catch(e: Exception) { Result(emptyList<GTAddress>(), ApiException(ApiException.NETWORK_ERROR, e.message!!)) } 
+        } catch(e: Exception) { Result(emptyList<GTAddress>(), ApiException(ApiException.NETWORK_ERROR, e.message ?: "Unknown")) } 
     }
 
     override fun getLatLngByPlaceId(placeId: String): Point {
