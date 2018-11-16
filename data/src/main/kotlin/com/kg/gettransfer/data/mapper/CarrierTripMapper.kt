@@ -16,9 +16,6 @@ import java.util.Locale
 open class CarrierTripMapper(private val cityPointMapper: CityPointMapper,
                              private val vehicleBaseMapper: VehicleBaseMapper,
                              private val passengerAccountMapper: PassengerAccountMapper): Mapper<CarrierTripEntity, CarrierTrip> {
-
-    private val ISO_FORMAT by lazy { SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US) }
-
     /**
      * Map a [CarrierTripEntity] instance to a [CarrierTrip] instance.
      */
@@ -27,7 +24,7 @@ open class CarrierTripMapper(private val cityPointMapper: CityPointMapper,
                     type.transferId,
                     cityPointMapper.fromEntity(type.from),
                     cityPointMapper.fromEntity(type.to),
-                    ISO_FORMAT.parse(type.dateLocal),
+                    SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(type.dateLocal),
                     type.duration,
                     type.distance,
                     type.time,

@@ -25,9 +25,6 @@ open class OfferMapper(private val priceMapper: PriceMapper,
                        private val carrierMapper: CarrierMapper,
                        private val vehicleMapper: VehicleMapper,
                        private val profileMapper: ProfileMapper): Mapper<OfferEntity, Offer> {
-
-    private val ISO_FORMAT by lazy { SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US) }
-    
     /**
      * Map a [OfferEntity] instance to a [Offer] instance.
      */
@@ -36,8 +33,8 @@ open class OfferMapper(private val priceMapper: PriceMapper,
               type.status,
               type.wifi,
               type.refreshments,
-              ISO_FORMAT.parse(type.createdAt),
-              type.updatedAt?.let { ISO_FORMAT.parse(it) },
+              SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(type.createdAt),
+              type.updatedAt?.let { SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(it) },
               priceMapper.fromEntity(type.price),
               type.ratings?.let { ratingsMapper.fromEntity(it) },
               type.passengerFeedback,

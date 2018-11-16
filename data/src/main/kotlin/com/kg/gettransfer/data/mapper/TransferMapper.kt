@@ -16,22 +16,20 @@ import java.util.Locale
  */
 open class TransferMapper(private val cityPointMapper: CityPointMapper,
                           private val moneyMapper: MoneyMapper): Mapper<TransferEntity, Transfer> {
-    private val ISO_FORMAT by lazy { SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US) }
-    
     /**
      * Map a [TransferEntity] instance to a [Transfer] instance.
      */
     override fun fromEntity(type: TransferEntity) =
         Transfer(type.id,
-                 ISO_FORMAT.parse(type.createdAt),
+                 SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(type.createdAt),
                  type.duration,
                  type.distance,
                  type.status,
                  cityPointMapper.fromEntity(type.from),
                  type.to?.let { cityPointMapper.fromEntity(it) },
-                 ISO_FORMAT.parse(type.dateToLocal),
-                 type.dateReturnLocal?.let { ISO_FORMAT.parse(it) },
-                 type.dateRefund?.let { ISO_FORMAT.parse(it) },
+                 SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(type.dateToLocal),
+                 type.dateReturnLocal?.let { SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(it) },
+                 type.dateRefund?.let { SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(it) },
                         
                  type.nameSign,
                  type.comment,
@@ -42,7 +40,7 @@ open class TransferMapper(private val cityPointMapper: CityPointMapper,
                  type.childSeats,
                  type.offersCount,
                  type.relevantCarriersCount,
-                 type.offersUpdatedAt?.let { ISO_FORMAT.parse(it) },
+                 type.offersUpdatedAt?.let { SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(it) },
                         
                  type.time,
                  type.paidSum?.let { moneyMapper.fromEntity(it) },
