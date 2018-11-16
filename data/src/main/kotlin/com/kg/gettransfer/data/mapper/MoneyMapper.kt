@@ -12,7 +12,7 @@ open class MoneyMapper(): Mapper<MoneyEntity, Money> {
     /**
      * Map a [MoneyEntity] instance to a [Money] instance.
      */
-    override fun fromEntity(type: MoneyEntity) = Money(type.default, type.preferred)
+    override fun fromEntity(type: MoneyEntity) = Money(type.def, type.preferred)
     /**
      * Map a [Money] instance to a [MoneyEntity] instance.
      */

@@ -111,6 +111,7 @@ class OffersPresenter(cc: CoroutineContexts,
     }
 
     fun onRequestInfoClicked() {
+        Timber.d("Navigate to details. Transfer ID: $transferId")
         router.navigateTo(Screens.DETAILS, transferId)
     }
 

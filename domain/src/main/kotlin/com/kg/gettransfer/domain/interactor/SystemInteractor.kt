@@ -78,7 +78,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         set(value) { account.distanceUnit = value }
 
     /** Init geo with account.locale if retrieved from remote */
-    suspend fun coldStart() = systemRepository.coldStart().apply { model?.let { geoRepository.initGeocoder(it.locale) } }
+    suspend fun coldStart() = systemRepository.coldStart().apply { geoRepository.initGeocoder(model.locale) }
 
     fun logout() = systemRepository.logout()
     suspend fun login(email: String, password: String) = systemRepository.login(email, password)
