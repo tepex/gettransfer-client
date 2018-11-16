@@ -67,6 +67,8 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
+        presenter.transferId = intent.getLongExtra(TRANSFER_ID, -1)
+        
         setContentView(R.layout.activity_transfer_details)
 
         setSupportActionBar(toolbar as Toolbar)

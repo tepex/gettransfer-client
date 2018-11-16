@@ -110,10 +110,7 @@ class OffersPresenter(cc: CoroutineContexts,
         setOffers()
     }
 
-    fun onRequestInfoClicked() {
-        Timber.d("Navigate to details. Transfer ID: $transferId")
-        router.navigateTo(Screens.DETAILS, transferId)
-    }
+    fun onRequestInfoClicked() { router.navigateTo(Screens.DETAILS, transferId) }
 
     fun onSelectOfferClicked(offer: OfferModel, isShowingOfferDetails: Boolean) {
         if(isShowingOfferDetails) viewState.showBottomSheetOfferDetails(offer)

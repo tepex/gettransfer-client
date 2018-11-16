@@ -97,7 +97,6 @@ class OffersActivity: BaseActivity(), OffersView {
         setOfferDetailsSheetListener()
         
         presenter.transferId = intent.getLongExtra(TRANSFER_ID, -1)
-        Timber.d("OffersActivity for transfer: ${presenter.transferId}")
     }
 
     @CallSuper

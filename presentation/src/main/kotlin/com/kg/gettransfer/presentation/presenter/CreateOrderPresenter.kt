@@ -294,7 +294,6 @@ class CreateOrderPresenter(cc: CoroutineContexts,
                 }
             }
             else {
-                Timber.d("new transfer: %s", result.model)
                 router.navigateTo(Screens.OFFERS, result.model.id)
                 logCreateTransfer(RESULT_SUCCESS)
             }
