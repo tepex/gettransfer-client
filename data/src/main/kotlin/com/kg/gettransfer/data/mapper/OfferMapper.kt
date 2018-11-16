@@ -12,6 +12,11 @@ import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Profile
 import com.kg.gettransfer.domain.model.Ratings
 
+import java.text.SimpleDateFormat
+
+import java.util.Locale
+
+
 /**
  * Map a [OfferEntity] to and from a [Offer] instance when data is moving between this later and the Domain layer.
  */
@@ -20,6 +25,9 @@ open class OfferMapper(private val priceMapper: PriceMapper,
                        private val carrierMapper: CarrierMapper,
                        private val vehicleMapper: VehicleMapper,
                        private val profileMapper: ProfileMapper): Mapper<OfferEntity, Offer> {
+
+    private val ISO_FORMAT = SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US)
+    
     /**
      * Map a [OfferEntity] instance to a [Offer] instance.
      */
@@ -28,8 +36,8 @@ open class OfferMapper(private val priceMapper: PriceMapper,
               type.status,
               type.wifi,
               type.refreshments,
-              Mapper.ISO_FORMAT.parse(type.createdAt),
-              type.updatedAt?.let { Mapper.ISO_FORMAT.parse(it) },
+              ISO_FORMAT.parse(type.createdAt),
+              type.updatedAt?.let { ISO_FORMAT.parse(it) },
               priceMapper.fromEntity(type.price),
               type.ratings?.let { ratingsMapper.fromEntity(it) },
               type.passengerFeedback,
