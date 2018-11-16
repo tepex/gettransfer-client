@@ -614,6 +614,7 @@
     <string name="LNG_RIDE_NUMBER">Transfer request #</string>
     <string name="LNG_TRANSPORT_ECONOMY">Economy</string>
     <string name="LNG_TRANSPORT_PREMIUM">Premium</string>
+    <string name="LNG_TRANSPORT_SUV">Suv</string>
     <string name="LNG_TRANSPORT_MINIBUS">Minibus</string>
     <string name="LNG_TRANSPORT_BUS">Bus</string>
     <string name="LNG_TRANSPORT_HELICOPTER">Helicopter</string>
