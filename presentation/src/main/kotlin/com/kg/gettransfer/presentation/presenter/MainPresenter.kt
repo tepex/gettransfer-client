@@ -239,7 +239,7 @@ class MainPresenter(cc: CoroutineContexts,
     fun onSettingsClick() { router.navigateTo(Screens.SETTINGS) ;  logEvent(SETTINGS_CLICKED) }
     fun onRequestsClick() { router.navigateTo(Screens.REQUESTS) ;  logEvent(TRANSFER_CLICKED) }
     fun onLoginClick() {
-        login(Screens.REQUESTS, "")
+        login("", "")
         logEvent(LOGIN_CLICKED)
     }
 

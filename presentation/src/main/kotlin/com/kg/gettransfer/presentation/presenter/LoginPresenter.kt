@@ -44,14 +44,12 @@ class LoginPresenter(cc: CoroutineContexts,
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { systemInteractor.login(email!!, password!!) }
             if(result.error == null) {
-                if(screenForReturn != null) {
-                    val screen = if(screenForReturn == Screens.CARRIER_MODE) {
-                        if(systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) Screens.CARRIER_MODE
-                        else Screens.REG_CARRIER
-                    } else screenForReturn
-                    screenForReturn = null
-                    if(screen == Screens.CLOSE_ACTIVITY) router.exit()
-                    else router.navigateTo(screen)
+                if(!screenForReturn.isNullOrEmpty()) {
+                    when (screenForReturn) {
+                        Screens.CARRIER_MODE   -> router.navigateTo(checkCarrierMode())
+                        Screens.OFFERS         -> router.navigateTo(Screens.OFFERS)
+                        Screens.CLOSE_ACTIVITY -> router.exit()
+                    }
                 } else router.exitWithResult(RESULT_CODE, RESULT_OK)
                 logLoginEvent(RESULT_SUCCESS)
             } else {
@@ -72,18 +70,20 @@ class LoginPresenter(cc: CoroutineContexts,
 
     fun onHomeClick() = router.exit()
 
-    fun setEmail(email: String) {
-        if(email.isEmpty()) this.email = null else this.email = email
-    }
+    fun setEmail(email: String) { this.email = if (email.isEmpty()) null else email }
 
-    fun setPassword(password: String) {
-        if(password.isEmpty()) this.password = null else this.password = password
-    }
+    fun setPassword(password: String) { this.password = if (password.isEmpty()) null else password }
 
     private fun checkFields(): Boolean {
         val checkEmail = email != null && Patterns.EMAIL_ADDRESS.matcher(email!!).matches()
         val checkPassword = password != null && password!!.length >= MIN_PASSWORD_LENGTH
         viewState.showError(!(checkEmail && checkPassword))
         return checkEmail && checkPassword
+    }
+
+    private fun checkCarrierMode(): String {
+        if (systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0)
+            return Screens.CARRIER_MODE
+        else return Screens.REG_CARRIER
     }
 }
