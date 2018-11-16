@@ -13,6 +13,9 @@ data class GTAddress(val cityPoint: CityPoint,
         val TYPE_LOCALITY = 1009
         @JvmField
         val TYPE_STREET_ADDRESS = 1021
+        
+        @JvmField
+        val EMPTY = GTAddress(CityPoint(null, null, null), null, null, null, null)
     }
 
     /**

@@ -185,17 +185,21 @@ class MainPresenter(cc: CoroutineContexts,
             val nePoint = Point(latLngBounds.northeast.latitude, latLngBounds.northeast.longitude)
             val swPoint = Point(latLngBounds.southwest.latitude, latLngBounds.southwest.longitude)
             latLonPair = Pair(nePoint, swPoint)
-            utils.launchAsyncTryCatchFinally({
-                val currentAddress = utils.asyncAwait {
+            
+            utils.launchSuspend {
+                val result = utils.asyncAwait {
                     routeInteractor.getAddressByLocation(
                             systemInteractor.selectedField == FIELD_FROM, Mappers.latLng2Point(lastPoint!!), latLonPair)
                 }
-                setAddressInSelectedField(currentAddress.cityPoint.name!!)
-                currentLocation = currentAddress.cityPoint.name!!
-            }, { e ->
-                Timber.e("getAddressByLocation", e)
-                viewState.setError(false, R.string.err_server, e.message)
-            }, { viewState.blockInterface(false) })
+                if(result.error != null) {
+                    Timber.e("getAddressByLocation", result.error!!)
+                    viewState.setError(result.error!!)
+                } else {
+                    currentLocation = result.model.cityPoint.name!!
+                    setAddressInSelectedField(currentLocation)
+                }
+                viewState.blockInterface(false)
+            }
         } else {
             idleAndMoveCamera = true
             setAddressFields()

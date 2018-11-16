@@ -96,6 +96,11 @@ class PreferencesImpl(context: Context,
             }            
         }
         
+    override fun logout() {
+        _accessToken = INVALID_TOKEN
+        configsPrefs.edit().apply { remove(ACCESS_TOKEN) }.apply()
+    }
+        
     override fun addListener(listener: PreferencesListener)    { listeners.add(listener) }
     override fun removeListener(listener: PreferencesListener) { listeners.remove(listener) }
 }

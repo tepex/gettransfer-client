@@ -41,7 +41,6 @@ class ApiCore(private val preferences: PreferencesCache) {
 
     private lateinit var apiKey: String
     private val gson = GsonBuilder().registerTypeAdapter(TransportTypesWrapperModel::class.java, TransportTypesDeserializer()).create()
-    private var isInternetAvailable = true
 
     private var okHttpClient = OkHttpClient.Builder().apply {
         addInterceptor(HttpLoggingInterceptor(log))
@@ -65,10 +64,6 @@ class ApiCore(private val preferences: PreferencesCache) {
                 .addCallAdapterFactory(CoroutineCallAdapterFactory()) // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
                 .build()
                 .create(Api::class.java)
-    }
-
-    fun changeNetworkConnectionAvailability(isNetworkConnected: Boolean){
-        isInternetAvailable = isNetworkConnected
     }
 
     /**

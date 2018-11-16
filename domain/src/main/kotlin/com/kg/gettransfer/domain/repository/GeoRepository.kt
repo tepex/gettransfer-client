@@ -10,10 +10,10 @@ interface GeoRepository {
     fun initGeocoder(locale: Locale)
 //    fun checkPlayServicesAvailable(): Boolean
     suspend fun getCurrentLocation(): Result<Point>
-    fun getAddressByLocation(point: Point, pair: Pair<Point, Point>): GTAddress
+    fun getAddressByLocation(point: Point, pair: Pair<Point, Point>): Result<GTAddress>
     fun getCurrentAddress(): GTAddress
 
-    fun getAutocompletePredictions(prediction: String, points: Pair<Point, Point>?): List<GTAddress>
+    fun getAutocompletePredictions(prediction: String, points: Pair<Point, Point>?): Result<List<GTAddress>>
 
     fun getLatLngByPlaceId(placeId: String): Point
 }

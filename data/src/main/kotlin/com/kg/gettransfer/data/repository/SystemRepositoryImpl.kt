@@ -60,7 +60,9 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         get() = preferencesCache.selectedField
         set(value) { preferencesCache.selectedField = value }
 
-    override val accessToken = preferencesCache.accessToken
+    override val accessToken: String
+        get() = preferencesCache.accessToken
+        
     override val endpoints = preferencesCache.endpoints.map { endpointMapper.fromEntity(it) }
 
     override var endpoint: Endpoint
@@ -124,6 +126,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
     override fun logout() {
         account = Account.NO_ACCOUNT
         factory.retrieveCacheDataStore().clearAccount()
+        preferencesCache.logout()
     }
 
     override fun accessTokenChanged(accessToken: String) {

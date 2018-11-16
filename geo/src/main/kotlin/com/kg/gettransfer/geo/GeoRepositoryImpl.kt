@@ -48,7 +48,7 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
             .addOnFailureListener { cont.resume(Result(Point(), ApiException(ApiException.NOT_FOUND, it.message!!))) }
     }
 
-    override fun getAddressByLocation(point: Point, pair: Pair<Point, Point>): GTAddress {
+    override fun getAddressByLocation(point: Point, pair: Pair<Point, Point>): Result<GTAddress> {
         val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
 
         val street  = list.firstOrNull()?.thoroughfare
@@ -70,13 +70,14 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
             }
             toString()
         }
-        val text = getAutocompletePredictions(addr, pair)
-        val address = if(text.isNotEmpty()) text.get(0).address else addr
-        return GTAddress(CityPoint(address, point, null),
-                         listOf(GTAddress.TYPE_STREET_ADDRESS),
-                         address,
-                         null,
-                         null)
+        val result = getAutocompletePredictions(addr, pair)
+        if(result.error != null) return Result(GTAddress.EMPTY, result.error)
+        val address = result.model.firstOrNull()?.address ?: addr
+        return Result(GTAddress(CityPoint(address, point, null),
+                                listOf(GTAddress.TYPE_STREET_ADDRESS),
+                                address,
+                                null,
+                                null))
     }
 
     override fun getCurrentAddress(): GTAddress {
@@ -94,11 +95,7 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
                          null)
     }
 
-    /**
-     * @TODO: Добавить таймаут
-     */
-    override fun getAutocompletePredictions(prediction: String, points: Pair<Point, Point>?): List<GTAddress> {
-
+    override fun getAutocompletePredictions(prediction: String, points: Pair<Point, Point>?): Result<List<GTAddress>> {
         var bounds: LatLngBounds? = null
         if(points != null) {
             val northEastPoint = LatLng(points.first.latitude,points.first.longitude)
@@ -106,15 +103,16 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
             bounds = LatLngBounds(southWestPoint,northEastPoint)
         }
         val results = gdClient.getAutocompletePredictions(prediction, bounds, null)
-        Tasks.await(results)
-        val list = DataBufferUtils.freezeAndClose(results.getResult())
-        return list.map {
-            GTAddress(CityPoint(it.getPrimaryText(null).toString(), null, it.placeId),
-                      it.placeTypes,
-                      it.getFullText(null).toString(),
-                      it.getPrimaryText(null).toString(),
-                      it.getSecondaryText(null).toString())
-        }
+        return try {
+            Tasks.await(results)
+            val list = DataBufferUtils.freezeAndClose(results.getResult())
+            Result(list.map { GTAddress(CityPoint(it.getPrimaryText(null).toString(), null, it.placeId),
+                                        it.placeTypes,
+                                        it.getFullText(null).toString(),
+                                        it.getPrimaryText(null).toString(),
+                                        it.getSecondaryText(null).toString())
+            })
+        } catch(e: Exception) { Result(emptyList<GTAddress>(), ApiException(ApiException.NETWORK_ERROR, e.message!!)) } 
     }
 
     override fun getLatLngByPlaceId(placeId: String): Point {

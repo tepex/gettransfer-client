@@ -52,15 +52,17 @@ class SearchAddressPresenter(cc: CoroutineContexts,
 			latLonPair = Pair(nePoint, swPoint)
 		}
 
-		utils.launchAsyncTryCatch({
-			lastResult = utils.asyncAwait { routeInteractor.getAutocompletePredictions(prediction, latLonPair) }
-			lastRequest = prediction
-			viewState.setAddressList(lastResult!!)
-		}, {e ->
-			Timber.e(e)
-			// if(e is ...) @TODO: обработать ошибки таймаута
-			viewState.setError(false, R.string.err_address_service_xxx)
-		})
+		utils.launchSuspend {
+		    val result = utils.asyncAwait { routeInteractor.getAutocompletePredictions(prediction, latLonPair) }
+		    if(result.error != null) {
+		        Timber.e(result.error!!)
+		        viewState.setError(result.error!!)
+		    } else {
+		        lastResult = result.model
+		        lastRequest = prediction
+		        viewState.setAddressList(result.model)
+		    }
+		}
 	}
 
     fun onClearAddress(isTo: Boolean) {

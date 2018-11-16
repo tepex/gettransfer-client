@@ -12,6 +12,7 @@ interface PreferencesCache {
     
     val endpoints: List<EndpointEntity>
 
+    fun logout()
     fun addListener(listener: PreferencesListener)
     fun removeListener(listener: PreferencesListener)
 }
