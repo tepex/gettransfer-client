@@ -491,6 +491,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         flight_number_field.field_input.hint = getString(R.string.LNG_RIDE_FLIGHT)
         promo_field.field_input.hint = getString(R.string.LNG_RIDE_PROMOCODE)
         comment_field.field_input.hint = getString(R.string.LNG_COMMENT_PLACEHOLDER)
+        comment_field.field_input.setSingleLine(false)
 
         passengers_seats.person_count.text = getString(R.string.passenger_number_default)
         child_seats.person_count.text = getString(R.string.child_number_default)

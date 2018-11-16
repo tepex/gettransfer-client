@@ -46,19 +46,20 @@
         android:layout_marginStart="@dimen/text_range_to_icon"
         android:layout_marginBottom="@dimen/input_margin_bottom"
         android:background="@null"
-        android:textSize="@dimen/create_transfer_additionals_top_text_size"
         android:ellipsize="end"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:gravity="start|bottom"
         android:hint="450"
         android:imeOptions="actionDone"
         android:singleLine="true"
-        android:fontFamily="@font/sf_pro_text_semibold"
         android:textColor="@color/colorTextBlack"
-        android:gravity="start"
-
+        android:textSize="@dimen/create_transfer_additionals_top_text_size"
 
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/field_icon"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/field_title"
+        app:layout_constraintVertical_bias="1.0" />
 
 
 

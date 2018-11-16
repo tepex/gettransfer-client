@@ -185,12 +185,16 @@
                 android:id="@+id/phone_field"
                 layout="@layout/view_create_order_field" />
 
+            <include
+                android:id="@+id/flight_number_field"
+                layout="@layout/view_create_order_field" />
+
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
                 <include
-                    android:id="@+id/flight_number_field"
+                    android:id="@+id/promo_field"
                     layout="@layout/view_create_order_field" />
 
                 <ImageView
@@ -204,11 +208,6 @@
                     android:visibility="invisible"
                     android:src="@drawable/ic_promo_ok"/>
             </RelativeLayout>
-
-
-            <include
-                android:id="@+id/promo_field"
-                layout="@layout/view_create_order_field" />
 
             <include
                 android:id="@+id/comment_field"
