@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
+import com.facebook.appevents.AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT
+import com.facebook.appevents.AppEventsConstants.EVENT_PARAM_CURRENCY
 
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.FirebaseAnalytics.Event.BEGIN_CHECKOUT
@@ -98,32 +100,39 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
     }
     
     private fun navigateToPayment(payment: Payment) {
-        router.navigateTo(Screens.PAYMENT, PaymentPresenter.Params(offer!!.id, payment.url!!))
+        router.navigateTo(Screens.PAYMENT,
+                PaymentPresenter.Params(offer!!.id, payment.url!!,
+                        params.transferId.toString(), paymentRequest.percentage))
     }
 
     private fun logEventBeginCheckout() {
         val bundle = Bundle()
         val map = HashMap<String, Any>()
+        val fbBundle = Bundle()
 
         bundle.putString(CURRENCY, systemInteractor.currency.currencyCode)
         map[CURRENCY] = systemInteractor.currency.currencyCode
+        fbBundle.putString(EVENT_PARAM_CURRENCY, systemInteractor.currency.currencyCode)
 
-        val price = offer!!.price.amount
+        var price = offer!!.price.amount
         when (paymentRequest.percentage) {
             OfferModel.FULL_PRICE -> {
                 bundle.putDouble(VALUE, price)
                 map[FirebaseAnalytics.Param.VALUE] = price
             }
             OfferModel.PRICE_30 -> {
-                bundle.putDouble(VALUE, price * PRICE_30)
-                map[VALUE] = price * PRICE_30
+                price *= PRICE_30
+                bundle.putDouble(VALUE, price)
+                map[VALUE] = price
             }
         }
         bundle.putInt(PARAM_SHARE, paymentRequest.percentage)
         map[PARAM_SHARE] = paymentRequest.percentage
+        fbBundle.putInt(PARAM_SHARE, paymentRequest.percentage)
 
         mFBA.logEvent(BEGIN_CHECKOUT, bundle)
         YandexMetrica.reportEvent(BEGIN_CHECKOUT, map)
+        eventsLogger.logEvent(EVENT_NAME_INITIATED_CHECKOUT, price, fbBundle)
     }
 
     fun changePrice(price: Int)        { paymentRequest.percentage = price }

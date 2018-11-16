@@ -65,6 +65,7 @@ class LoginPresenter(cc: CoroutineContexts,
         map[PARAM_KEY] = result
 
         mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY, result))
+        eventsLogger.logEvent(EVENT, createSingeBundle(PARAM_KEY, result))
         YandexMetrica.reportEvent(EVENT, map)
     }
 

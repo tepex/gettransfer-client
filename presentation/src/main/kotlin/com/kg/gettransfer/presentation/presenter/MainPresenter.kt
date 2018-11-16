@@ -270,6 +270,7 @@ class MainPresenter(cc: CoroutineContexts,
         map[PARAM_KEY_NAME] = value
 
         mFBA.logEvent(EVENT_MENU, createSingeBundle(PARAM_KEY_NAME, value))
+        eventsLogger.logEvent(EVENT_MENU, createSingeBundle(PARAM_KEY_NAME, value))
         YandexMetrica.reportEvent(EVENT_MENU, map)
     }
 

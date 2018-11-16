@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 
 import android.preference.PreferenceManager
+import com.facebook.appevents.AppEventsLogger
 
 import com.google.firebase.analytics.FirebaseAnalytics
 
@@ -152,6 +153,7 @@ val androidModule = module {
 	single { CoroutineContexts(Dispatchers.Main, Dispatchers.IO) }
 	single { FirebaseAnalytics.getInstance(androidApplication().applicationContext)  }
 	single { LocaleManager() }
+	single { AppEventsLogger.newLogger(androidApplication().applicationContext) }
 }
 
 val testModule = module {

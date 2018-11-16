@@ -147,6 +147,7 @@ class SettingsPresenter(cc: CoroutineContexts,
         map[param] = value
 
         mFBA.logEvent(EVENT, createSingeBundle(param, value))
+        eventsLogger.logEvent(EVENT, createSingeBundle(param, value))
         YandexMetrica.reportEvent(EVENT, map)
     }
 }

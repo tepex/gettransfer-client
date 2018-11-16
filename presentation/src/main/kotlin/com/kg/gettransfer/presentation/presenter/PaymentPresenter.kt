@@ -49,7 +49,8 @@ class PaymentPresenter(cc: CoroutineContexts,
     }
     
     @Serializable
-    data class Params(val offerId: Long, val paymentUrl: String)
+    data class Params(val offerId: Long, val paymentUrl: String,
+                      val  transferId: String, val percentage: Int)
 
     fun changePaymentStatus(orderId: Long, success: Boolean) {
         utils.launchSuspend {
@@ -74,31 +75,33 @@ class PaymentPresenter(cc: CoroutineContexts,
             viewState.blockInterface(false)
         }
     }
-    
+
     private fun logEventEcommercePurchase() {
         val bundle = Bundle()
         val map = HashMap<String, Any>()
 
-        bundle.putString(CURRENCY, systemInteractor.currency.currencyCode)
         map[CURRENCY] = systemInteractor.currency.currencyCode
 
-        val price = offer.price.amount
-        /*
-        when(paymentRequest.percentage) {
+        var price = offer.price.amount
+
+        when(params.percentage) {
             OfferModel.FULL_PRICE -> {
                 bundle.putDouble(VALUE, price)
                 map[VALUE] = price
             }
             OfferModel.PRICE_30 -> {
-                bundle.putDouble(VALUE, price * PRICE_30)
-                map[VALUE] = price * PRICE_30
+                price *= PRICE_30
+                bundle.putDouble(VALUE, price)
+                map[VALUE] = price
             }
         }
-        
-        bundle.putString(TRANSACTION_ID, offerInteractor.transferId!!.toString())
-        map[TRANSACTION_ID] = offerInteractor.transferId!!.toString()
-        */
 
+        bundle.putString(TRANSACTION_ID, params.transferId)
+        map[TRANSACTION_ID] = params.transferId
+
+        eventsLogger.logPurchase(price.toBigDecimal(), systemInteractor.currency, bundle)
+
+        bundle.putString(CURRENCY, systemInteractor.currency.currencyCode)
         mFBA.logEvent(ECOMMERCE_PURCHASE, bundle)
         YandexMetrica.reportEvent(ECOMMERCE_PURCHASE, map)
     }

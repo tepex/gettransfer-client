@@ -183,6 +183,7 @@ class OffersPresenter(cc: CoroutineContexts,
         map[PARAM_KEY_FILTER] = value
 
         mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value))
+        eventsLogger.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value))
         YandexMetrica.reportEvent(EVENT, map)
     }
 
@@ -191,6 +192,7 @@ class OffersPresenter(cc: CoroutineContexts,
         map[PARAM_KEY_BUTTON] = value
 
         mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value))
+        eventsLogger.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value))
         YandexMetrica.reportEvent(EVENT, map)
     }
 }

@@ -36,6 +36,7 @@ class RequestsPresenter(cc: CoroutineContexts,
         map[PARAM_KEY] = value
 
         mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY, value))
+        eventsLogger.logEvent(EVENT, createSingeBundle(PARAM_KEY, value))
         YandexMetrica.reportEvent(EVENT, map)
     }
 }

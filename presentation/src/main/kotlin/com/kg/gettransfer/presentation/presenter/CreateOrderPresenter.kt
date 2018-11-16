@@ -361,6 +361,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         map[PARAM_KEY_NAME] = value
 
         mFBA.logEvent(MainPresenter.EVENT_MAIN, createSingeBundle(PARAM_KEY_NAME, value))
+        eventsLogger.logEvent(MainPresenter.EVENT_MAIN, createSingeBundle(PARAM_KEY_NAME, value))
         YandexMetrica.reportEvent(MainPresenter.EVENT_MAIN, map)
     }
 
@@ -369,6 +370,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         map[PARAM_KEY_FIELD] = value
 
         mFBA.logEvent(EVENT_SETTINGS, createSingeBundle(PARAM_KEY_FIELD, value))
+        eventsLogger.logEvent(EVENT_SETTINGS, createSingeBundle(PARAM_KEY_FIELD, value))
         YandexMetrica.reportEvent(EVENT_SETTINGS, map)
     }
 
@@ -377,6 +379,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
         map[PARAM_KEY_RESULT] = value
 
         mFBA.logEvent(EVENT_TRANSFER, createSingeBundle(PARAM_KEY_RESULT, value))
+        eventsLogger.logEvent(EVENT_TRANSFER, createSingeBundle(PARAM_KEY_RESULT, value))
         YandexMetrica.reportEvent(EVENT_TRANSFER, map)
     }
 }
