@@ -50,7 +50,8 @@ class LoginPresenter(cc: CoroutineContexts,
                         else Screens.REG_CARRIER
                     } else screenForReturn
                     screenForReturn = null
-                    router.navigateTo(screen)
+                    if(screen == Screens.CLOSE_ACTIVITY) router.exit()
+                    else router.navigateTo(screen)
                 } else router.exitWithResult(RESULT_CODE, RESULT_OK)
                 logLoginEvent(RESULT_SUCCESS)
             } else {

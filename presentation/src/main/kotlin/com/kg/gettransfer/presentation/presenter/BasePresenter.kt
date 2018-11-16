@@ -37,7 +37,7 @@ open class BasePresenter<BV: BaseView>(protected val cc: CoroutineContexts,
         YandexMetrica.reportEvent(MainPresenter.EVENT_MAIN, map)
     }
 
-    protected fun login() = router.navigateTo(Screens.LOGIN)
+    protected fun login(nextScreen: String, email: String) = router.navigateTo(Screens.LOGIN, Pair(nextScreen, email))
 
     @CallSuper
     override fun onDestroy() {

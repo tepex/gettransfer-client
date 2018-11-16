@@ -53,10 +53,12 @@
         android:singleLine="true"
         android:fontFamily="@font/sf_pro_text_semibold"
         android:textColor="@color/colorTextBlack"
+        android:gravity="start"
 
 
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/field_icon" />
+        app:layout_constraintStart_toEndOf="@+id/field_icon"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 
 

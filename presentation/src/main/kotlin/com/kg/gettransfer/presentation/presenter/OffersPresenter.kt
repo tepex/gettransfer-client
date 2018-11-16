@@ -124,7 +124,7 @@ class OffersPresenter(cc: CoroutineContexts,
         viewState.showAlertCancelRequest()
     }
 
-    fun openLoginView() { login() }
+    fun openLoginView() { login(Screens.CLOSE_ACTIVITY, "") }
 
     fun cancelRequest(isCancel: Boolean) {
         if(!isCancel) return

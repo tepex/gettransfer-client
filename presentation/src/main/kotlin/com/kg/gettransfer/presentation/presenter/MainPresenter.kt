@@ -44,8 +44,6 @@ class MainPresenter(cc: CoroutineContexts,
     private var markerStateLifted = false
     var isMarkerAnimating = true
 
-    var screenForReturnAfterLogin: String? = null
-
     private var idleAndMoveCamera = true
 
     override fun onFirstViewAttach() {
@@ -237,8 +235,7 @@ class MainPresenter(cc: CoroutineContexts,
     fun onSettingsClick() { router.navigateTo(Screens.SETTINGS) ;  logEvent(SETTINGS_CLICKED) }
     fun onRequestsClick() { router.navigateTo(Screens.REQUESTS) ;  logEvent(TRANSFER_CLICKED) }
     fun onLoginClick() {
-        screenForReturnAfterLogin = Screens.REQUESTS
-        login()
+        login(Screens.REQUESTS, "")
         logEvent(LOGIN_CLICKED)
     }
 
@@ -249,8 +246,7 @@ class MainPresenter(cc: CoroutineContexts,
             else router.navigateTo(Screens.REG_CARRIER)
         }
         else {
-            screenForReturnAfterLogin = Screens.CARRIER_MODE
-            login()
+            login(Screens.CARRIER_MODE, "")
         }
     }
 

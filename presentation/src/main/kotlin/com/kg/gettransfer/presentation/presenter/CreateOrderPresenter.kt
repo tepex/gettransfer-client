@@ -288,7 +288,7 @@ class CreateOrderPresenter(cc: CoroutineContexts,
             }
             if(result.error != null) {
                 when {
-                    result.error!!.isNotLoggedIn() -> router.navigateTo(Screens.LOGIN, user.profile.email)
+                    result.error!!.isNotLoggedIn() -> router.navigateTo(Screens.LOGIN, Pair(Screens.OFFERS, user.profile.email))
                     result.error!!.details == "{phone=[taken]}" -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
                     else -> viewState.setError(result.error!!)
                 }

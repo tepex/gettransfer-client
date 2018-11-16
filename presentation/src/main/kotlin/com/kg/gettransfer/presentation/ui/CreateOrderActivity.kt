@@ -354,11 +354,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     override fun setUser(user: UserModel, isLoggedIn: Boolean) {
         user_name_field.field_input.setText(user.profile.name ?: "")
-        if(user.profile.phone != null) user_name_field.field_input.setText(user.profile.phone)
+        if(user.profile.phone != null) phone_field.field_input.setText(user.profile.phone)
         else {
             val phoneCode = Utils.getPhoneCodeByCountryIso(this)
-            if(phoneCode > 0) user_name_field.field_input.setText("+".plus(phoneCode))
-            else user_name_field.field_input.setText("+")
+            if(phoneCode > 0) phone_field.field_input.setText("+".plus(phoneCode))
+            else phone_field.field_input.setText("+")
         }
         email_field.field_input.setText(user.profile.email ?: "")
         if(isLoggedIn) email_field.field_input.isEnabled = false
@@ -429,9 +429,12 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     @CallSuper
     override fun onBackPressed() {
-        if(bsTransport.state == BottomSheetBehavior.STATE_EXPANDED) hideSheetTransport()
-        else if(bsOrder.state == BottomSheetBehavior.STATE_EXPANDED) toggleSheetOrder()
-        else super.onBackPressed()
+        when {
+            isKeyBoardOpened -> hideKeyboard()
+            bsTransport.state == BottomSheetBehavior.STATE_EXPANDED -> hideSheetTransport()
+            bsOrder.state == BottomSheetBehavior.STATE_EXPANDED -> toggleSheetOrder()
+            else -> super.onBackPressed()
+        }
     }
 
     private fun applyDim(parent: ViewGroup, dimAmount: Float) {
@@ -452,16 +455,16 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun initFieldsViews() {
 
         /* icons */
-        transfer_date_time_field.field_icon.setImageDrawable(getDrawable(R.drawable.ic_calendar_triangle))
-        user_name_field.field_icon.setImageDrawable(getDrawable(R.drawable.ic_passport))
-        email_field.field_icon.setImageDrawable(getDrawable(R.drawable.ic_mail))
-        phone_field.field_icon.setImageDrawable(getDrawable(R.drawable.ic_phone))
-        flight_number_field.field_icon.setImageDrawable(getDrawable(R.drawable.ic_flight))
-        promo_field.field_icon.setImageDrawable(getDrawable(R.drawable.sale_icon))
-        comment_field.field_icon.setImageDrawable(getDrawable(R.drawable.ic_comment))
+        transfer_date_time_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_calendar_triangle))
+        user_name_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_passport))
+        email_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_mail))
+        phone_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_phone))
+        flight_number_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_flight))
+        promo_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.sale_icon))
+        comment_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_comment))
 
-        passengers_seats.seat_icon.setImageDrawable(getDrawable(R.drawable.ic_passenger_small))
-        child_seats.seat_icon.setImageDrawable(getDrawable(R.drawable.ic_child_seat))
+        passengers_seats.seat_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_passenger_small))
+        child_seats.seat_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_child_seat))
 
         /* titles */
         price_field_title.text = getString(R.string.LNG_RIDE_PRICE)
@@ -478,7 +481,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         /* editable fields */
         price_field_input.hint = getString(R.string.LNG_RIDE_PRICE_YOUR)
         price_field_input.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
- //       transfer_date_time_field.field_input.hint = getString(R.string)
+        //transfer_date_time_field.field_input.hint = getString(R.string)
+        transfer_date_time_field.field_input.isFocusable = false
         user_name_field.field_input.hint = getString(R.string.LNG_RIDE_NAME)
         email_field.field_input.hint = getString(R.string.LNG_RIDE_EMAIL)
         phone_field.field_input.hint = getString(R.string.LNG_RIDE_PHONE)
@@ -514,17 +518,19 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     private fun initClickListeners() {
-        transfer_date_time_field.setOnClickListener {
+        val dateTimeFieldClickListener = View.OnClickListener {
             showDatePickerDialog()
             presenter.logTransferSettingsEvent(CreateOrderPresenter.DATE_TIME_CHANGED)
         }
+        transfer_date_time_field.setOnClickListener(dateTimeFieldClickListener)
+        transfer_date_time_field.field_input.setOnClickListener(dateTimeFieldClickListener)
         passengers_seats.img_plus_seat.setOnClickListener   { presenter.changePassengers(1) }
         passengers_seats.img_minus_seat.setOnClickListener  { presenter.changePassengers(-1) }
         child_seats.img_minus_seat.setOnClickListener       { presenter.changeChildren(-1) }
         child_seats.img_plus_seat.setOnClickListener        { presenter.changeChildren(1) }
 
         cl_offer_price.setOnClickListener                   { fieldTouched(price_field_input)  }
-        transfer_date_time_field.setOnClickListener         { fieldTouched(transfer_date_time_field.field_input)  }
+        //transfer_date_time_field.setOnClickListener         { fieldTouched(transfer_date_time_field.field_input)  }
         user_name_field.setOnClickListener                  { fieldTouched(user_name_field.field_input) }
         email_field.setOnClickListener                      { fieldTouched(email_field.field_input) }
         phone_field.setOnClickListener                      { fieldTouched(phone_field.field_input)}
@@ -546,5 +552,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun fieldTouched(viewForFocus: EditText) {
         if(!isKeyBoardOpened) showKeyboard()
         viewForFocus.requestFocus()
+        viewForFocus.setSelection(viewForFocus.text.length)
     }
 }
