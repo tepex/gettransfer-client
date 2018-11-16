@@ -11,10 +11,8 @@ import java.util.Locale
  * Map a [TripEntity] to and from a [Trip] instance when data is moving between this later and the Domain layer.
  */
 open class TripMapper(): Mapper<TripEntity, Trip> {
-    companion object {
-        private val SERVER_DATE_FORMAT = SimpleDateFormat("yyyy/MM/dd", Locale.US)
-        private val SERVER_TIME_FORMAT = SimpleDateFormat("HH:mm", Locale.US)
-    }
+    private val SERVER_DATE_FORMAT by lazy { SimpleDateFormat("yyyy/MM/dd", Locale.US) }
+    private val SERVER_TIME_FORMAT by lazy { SimpleDateFormat("HH:mm", Locale.US) }
     
     /**
      * Map a [TripEntity] instance to a [Trip] instance.

@@ -16,7 +16,7 @@ import java.util.Locale
  */
 open class TransferMapper(private val cityPointMapper: CityPointMapper,
                           private val moneyMapper: MoneyMapper): Mapper<TransferEntity, Transfer> {
-    private val ISO_FORMAT = SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US)
+    private val ISO_FORMAT by lazy { SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US) }
     
     /**
      * Map a [TransferEntity] instance to a [Transfer] instance.

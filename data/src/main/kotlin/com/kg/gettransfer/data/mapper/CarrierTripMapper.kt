@@ -17,7 +17,7 @@ open class CarrierTripMapper(private val cityPointMapper: CityPointMapper,
                              private val vehicleBaseMapper: VehicleBaseMapper,
                              private val passengerAccountMapper: PassengerAccountMapper): Mapper<CarrierTripEntity, CarrierTrip> {
 
-    private val ISO_FORMAT = SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US)
+    private val ISO_FORMAT by lazy { SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US) }
 
     /**
      * Map a [CarrierTripEntity] instance to a [CarrierTrip] instance.

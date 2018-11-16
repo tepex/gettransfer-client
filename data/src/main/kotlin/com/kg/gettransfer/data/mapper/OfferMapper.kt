@@ -26,7 +26,7 @@ open class OfferMapper(private val priceMapper: PriceMapper,
                        private val vehicleMapper: VehicleMapper,
                        private val profileMapper: ProfileMapper): Mapper<OfferEntity, Offer> {
 
-    private val ISO_FORMAT = SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US)
+    private val ISO_FORMAT by lazy { SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US) }
     
     /**
      * Map a [OfferEntity] instance to a [Offer] instance.
