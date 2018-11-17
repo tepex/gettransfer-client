@@ -24,15 +24,16 @@ class LoadingFragment: Fragment() {
         
         fun showLoading(fragmentManager: FragmentManager) {
             if(fragment.isAdded) return
-            fragmentManager.beginTransaction()
-                .add(android.R.id.content, fragment)
-                .commit()
+            fragmentManager.beginTransaction().apply {
+                add(android.R.id.content, fragment)
+                commit()
+            }
         }
 
-        fun hideLoading(fragmentManager: FragmentManager) {
-            fragmentManager.beginTransaction()
-                .remove(fragment)
-                .commit()
+        fun hideLoading(fragmentManager: FragmentManager) =
+            fragmentManager.beginTransaction().apply {
+                remove(fragment)
+                commit()
         }
     }
 

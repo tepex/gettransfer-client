@@ -6,10 +6,10 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.Screens
@@ -24,11 +24,10 @@ import ru.terrakok.cicerone.Router
 import timber.log.Timber
 
 @InjectViewState
-class RequestsFragmentPresenter(cc: CoroutineContexts,
-                                router: Router,
+class RequestsFragmentPresenter(router: Router,
                                 systemInteractor: SystemInteractor,
                                 private val transferInteractor: TransferInteractor,
-                                private val categoryName: String): BasePresenter<RequestsFragmentView>(cc, router, systemInteractor) {
+                                private val categoryName: String): BasePresenter<RequestsFragmentView>(router, systemInteractor) {
     
     private var transfers: List<TransferModel>? = null
                                 

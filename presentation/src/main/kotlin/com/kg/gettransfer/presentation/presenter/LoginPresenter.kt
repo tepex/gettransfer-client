@@ -6,8 +6,6 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.CoroutineContexts
-
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.presentation.Screens
@@ -18,9 +16,8 @@ import com.yandex.metrica.YandexMetrica
 import ru.terrakok.cicerone.Router
 
 @InjectViewState
-class LoginPresenter(cc: CoroutineContexts,
-                     router: Router,
-                     systemInteractor: SystemInteractor): BasePresenter<LoginView>(cc, router, systemInteractor) {
+class LoginPresenter(router: Router,
+                     systemInteractor: SystemInteractor): BasePresenter<LoginView>(router, systemInteractor) {
 
     companion object {
         @JvmField val MIN_PASSWORD_LENGTH = 6

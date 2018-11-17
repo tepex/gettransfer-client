@@ -5,8 +5,6 @@ import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.CoroutineContexts
-
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
@@ -20,10 +18,9 @@ import ru.terrakok.cicerone.Router
 import timber.log.Timber
 
 @InjectViewState
-class SearchAddressPresenter(cc: CoroutineContexts,
-                             router: Router,
+class SearchAddressPresenter(router: Router,
                              systemInteractor: SystemInteractor,
-	                         private val routeInteractor: RouteInteractor): BasePresenter<SearchAddressView>(cc, router, systemInteractor) {
+	                         private val routeInteractor: RouteInteractor): BasePresenter<SearchAddressView>(router, systemInteractor) {
 	/* Cache. @TODO */
 	private var lastRequest: String? = null
 	private var lastResult: List<GTAddress>? = null

@@ -1,15 +1,21 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.res.Configuration
+
 import android.graphics.Bitmap
 import android.graphics.Canvas
+
 import android.os.Build
 import android.os.Bundle
 import android.os.LocaleList
+
 import android.support.annotation.CallSuper
 import android.support.v4.content.ContextCompat
+
 import android.view.View
+
 import android.widget.RelativeLayout
+
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -18,15 +24,25 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
+import com.kg.gettransfer.domain.CoroutineContexts
+
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
+
 import kotlinx.android.synthetic.main.view_maps_pin.view.*
+
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+
+import org.koin.android.ext.android.get
+
 import timber.log.Timber
-import java.util.*
+
+//import java.util.*
+
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -36,7 +52,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     protected lateinit var googleMap: GoogleMap
 
     private val compositeDisposable = Job()
-    private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
+    private val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
 
     companion object {
         @JvmField val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"

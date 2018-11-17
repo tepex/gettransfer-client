@@ -1,10 +1,12 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.graphics.Paint
+
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
+
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
@@ -58,8 +60,7 @@ class OffersActivity: BaseActivity(), OffersView {
     private lateinit var bsOfferDetails: BottomSheetBehavior<View>
     
     @ProvidePresenter
-    fun createOffersPresenter(): OffersPresenter = OffersPresenter(coroutineContexts,
-                                                                   router,
+    fun createOffersPresenter(): OffersPresenter = OffersPresenter(router,
                                                                    systemInteractor,
                                                                    transferInteractor,
                                                                    offerInteractor)
@@ -194,10 +195,10 @@ class OffersActivity: BaseActivity(), OffersView {
             layoutCarrierLanguages.addView(ivLanguage)
         }
 
-        offer.carrier.ratings.average?.let { ratingBarAverage.rating = it }
-        offer.carrier.ratings.driver?.let  { ratingBarDriver.rating = it }
+        offer.carrier.ratings.average?.let { ratingBarAverage.rating     = it }
+        offer.carrier.ratings.driver?.let  { ratingBarDriver.rating      = it }
         offer.carrier.ratings.fair?.let    { ratingBarPunctuality.rating = it }
-        offer.carrier.ratings.vehicle?.let { ratingBarVehicle.rating = it }
+        offer.carrier.ratings.vehicle?.let { ratingBarVehicle.rating     = it }
 
         vehicleName.text = offer.vehicle.vehicleBase.name
         if(offer.vehicle.color != null) colorVehicle.setImageDrawable(Utils.getVehicleColorFormRes(this, offer.vehicle.color))
@@ -215,10 +216,10 @@ class OffersActivity: BaseActivity(), OffersView {
             offerPricePreferred.text = Utils.formatPrice(this, offer.price.base.preferred)
             offerPricePreferred.visibility = View.VISIBLE
         } else offerPricePreferred.visibility = View.GONE
-        if(offer.price.withoutDiscount != null){
+        if(offer.price.withoutDiscount != null) {
             offerPriceWithoutDiscountDefault.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
             offerPriceWithoutDiscountDefault.text = offer.price.withoutDiscount.default
-            if(offer.price.withoutDiscount.preferred != null){
+            if(offer.price.withoutDiscount.preferred != null) {
                 offerPriceWithoutDiscountPreferred.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
                 offerPriceWithoutDiscountPreferred.text = Utils.formatPrice(this, offer.price.withoutDiscount.preferred)
                 offerPriceWithoutDiscountPreferred.visibility = View.VISIBLE
@@ -278,7 +279,6 @@ class OffersActivity: BaseActivity(), OffersView {
     override fun redirectView() =
         Utils.showScreenRedirectingAlert(this, getString(R.string.log_in_requirement_error_title),
                 getString(R.string.log_in_to_see_transfers_and_offers)) { presenter.openLoginView() }
-
 
     @CallSuper
     override fun onBackPressed() {

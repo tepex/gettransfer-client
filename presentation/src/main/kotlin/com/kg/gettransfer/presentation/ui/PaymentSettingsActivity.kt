@@ -28,6 +28,7 @@ import com.kg.gettransfer.presentation.view.PaymentSettingsView
 
 import kotlinx.android.synthetic.main.activity_payment_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+
 import kotlinx.serialization.json.JSON
 
 import org.koin.android.ext.android.inject
@@ -46,7 +47,7 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
 
     @ProvidePresenter
     fun createPaymentSettingsPresenter(): PaymentSettingsPresenter = 
-        PaymentSettingsPresenter(coroutineContexts, router, systemInteractor, offerInteractor, paymentInteractor)
+        PaymentSettingsPresenter(router, systemInteractor, offerInteractor, paymentInteractor)
 
     protected override var navigator = object: BaseNavigator(this) {
         override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {

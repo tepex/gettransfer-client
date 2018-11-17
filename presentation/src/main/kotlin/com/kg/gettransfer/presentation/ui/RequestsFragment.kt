@@ -4,6 +4,7 @@ import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
+
 import android.support.v7.widget.LinearLayoutManager
 
 import android.view.LayoutInflater
@@ -40,7 +41,6 @@ import timber.log.Timber
  * @TODO: Выделить BaseFragment
  */
 class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
-
     @InjectPresenter
     internal lateinit var presenter: RequestsFragmentPresenter
 
@@ -51,18 +51,13 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     private lateinit var categoryName: String
 
     @ProvidePresenter
-    fun createRequestsFragmentPresenter() = RequestsFragmentPresenter(coroutineContexts, 
-        (activity as BaseActivity).router, systemInteractor, transferInteractor, categoryName)
+    fun createRequestsFragmentPresenter() = RequestsFragmentPresenter((activity as BaseActivity).router, systemInteractor, transferInteractor, categoryName)
 
     companion object {
         @JvmField val CATEGORY = "category"
 
-        fun newInstance(categoryName: String): RequestsFragment {
-            val fragment = RequestsFragment()
-            val bundle = Bundle()
-            bundle.putString(CATEGORY, categoryName)
-            fragment.arguments = bundle
-            return fragment
+        fun newInstance(categoryName: String) = RequestsFragment().apply {
+            arguments = Bundle().apply { putString(CATEGORY, categoryName) }
         }
     }
 

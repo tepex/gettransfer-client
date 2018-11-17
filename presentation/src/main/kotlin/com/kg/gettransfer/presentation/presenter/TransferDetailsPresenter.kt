@@ -6,8 +6,6 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.model.LatLng
 
-import com.kg.gettransfer.domain.CoroutineContexts
-
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
@@ -17,6 +15,7 @@ import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.TransferModel
+
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.TransferDetailsView
 
@@ -25,13 +24,11 @@ import ru.terrakok.cicerone.Router
 import timber.log.Timber
 
 @InjectViewState
-class TransferDetailsPresenter(cc: CoroutineContexts,
-                               router: Router,
+class TransferDetailsPresenter(router: Router,
                                systemInteractor: SystemInteractor,
                                private val routeInteractor: RouteInteractor,
                                private val transferInteractor: TransferInteractor,
-                               private val offerInteractor: OfferInteractor): BasePresenter<TransferDetailsView>(cc, router, systemInteractor) {
-
+                               private val offerInteractor: OfferInteractor): BasePresenter<TransferDetailsView>(router, systemInteractor) {
     companion object {
         const val TRANSFER_ID = "transfer_id"
     }

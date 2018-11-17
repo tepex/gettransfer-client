@@ -34,7 +34,7 @@ class RequestsActivity: BaseActivity(), RequestsView {
     private val transferInteractor: TransferInteractor by inject()
     
     @ProvidePresenter
-    fun createRequestsPresenter() = RequestsPresenter(coroutineContexts, router, systemInteractor, transferInteractor)
+    fun createRequestsPresenter() = RequestsPresenter(router, systemInteractor, transferInteractor)
 
     protected override var navigator = BaseNavigator(this)
 
@@ -77,14 +77,12 @@ class RequestsActivity: BaseActivity(), RequestsView {
     }
 
     private class RequestsViewPagerAdapter(manager: FragmentManager): FragmentPagerAdapter(manager) {
-        val fragments = arrayListOf<Fragment>()
-        val titles = arrayListOf<String>()
+        val fragments = mutableListOf<Fragment>()
+        val titles = mutableListOf<String>()
         
-        override fun getItem(position: Int): Fragment = fragments.get(position)
-
-        override fun getCount(): Int = fragments.size
-
-        override fun getPageTitle(position: Int): CharSequence? = titles.get(position)
+        override fun getItem(position: Int) = fragments.get(position)
+        override fun getCount() = fragments.size
+        override fun getPageTitle(position: Int) = titles.get(position)
 
         fun addFragment(fragment: Fragment, title: String) {
             fragments.add(fragment)
@@ -92,7 +90,7 @@ class RequestsActivity: BaseActivity(), RequestsView {
         }
     }
 
-    private fun setListenersForLog(){
+    private fun setListenersForLog() {
         vpRequests.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(p0: Int) {}
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}

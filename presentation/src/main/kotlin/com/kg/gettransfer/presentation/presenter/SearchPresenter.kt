@@ -5,7 +5,6 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.model.GTAddress
 
@@ -19,10 +18,9 @@ import com.kg.gettransfer.presentation.view.SearchView
 import ru.terrakok.cicerone.Router
 
 @InjectViewState
-class SearchPresenter(cc: CoroutineContexts,
-                      router: Router,
+class SearchPresenter(router: Router,
                       systemInteractor: SystemInteractor,
-                      private val routeInteractor: RouteInteractor): BasePresenter<SearchView>(cc, router, systemInteractor) {
+                      private val routeInteractor: RouteInteractor): BasePresenter<SearchView>(router, systemInteractor) {
     var isTo = false
 
     companion object {

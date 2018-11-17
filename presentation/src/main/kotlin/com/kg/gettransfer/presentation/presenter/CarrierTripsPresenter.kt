@@ -7,7 +7,6 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
@@ -22,10 +21,9 @@ import com.kg.gettransfer.presentation.view.CarrierTripsView
 import ru.terrakok.cicerone.Router
 
 @InjectViewState
-class CarrierTripsPresenter(cc: CoroutineContexts,
-                            router: Router,
+class CarrierTripsPresenter(router: Router,
                             systemInteractor: SystemInteractor,
-                            private val carrierTripInteractor: CarrierTripInteractor): BasePresenter<CarrierTripsView>(cc, router, systemInteractor){
+                            private val carrierTripInteractor: CarrierTripInteractor): BasePresenter<CarrierTripsView>(router, systemInteractor) {
 
     private var trips: List<CarrierTripModel>? = null
 

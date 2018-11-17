@@ -5,7 +5,6 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.InternetNotAvailableException
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
@@ -30,12 +29,10 @@ import ru.terrakok.cicerone.Router
 import timber.log.Timber
 
 @InjectViewState
-class OffersPresenter(cc: CoroutineContexts,
-                      router: Router,
+class OffersPresenter(router: Router,
                       systemInteractor: SystemInteractor,
                       private val transferInteractor: TransferInteractor,
-                      private val offerInteractor: OfferInteractor):
-    BasePresenter<OffersView>(cc, router, systemInteractor) {
+                      private val offerInteractor: OfferInteractor): BasePresenter<OffersView>(router, systemInteractor) {
 
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })

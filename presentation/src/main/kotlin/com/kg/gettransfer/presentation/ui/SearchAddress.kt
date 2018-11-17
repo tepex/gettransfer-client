@@ -4,6 +4,7 @@ import android.content.Context
 
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
+
 import android.support.constraint.ConstraintLayout
 
 import android.text.Editable
@@ -31,8 +32,6 @@ import kotlinx.android.synthetic.main.search_address.*
 import timber.log.Timber
 
 /**
- *
- *
  * https://github.com/Arello-Mobile/Moxy/wiki/CustomView-as-MvpView
  *
  * LayoutContainer — Sic!
@@ -46,83 +45,71 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     lateinit var presenter: SearchAddressPresenter
     private lateinit var parent: SearchActivity
 
-	override val containerView: View
-	/** From/To address flag */
-	var isTo = false
-		private set
+    override val containerView: View
+    /** From/To address flag */
+    var isTo = false
+        private set
+        
+    var text: String
+        get() = addressField.text.toString()
+        set(value) { addressField.setText(value) }
+        
+    private var parentDelegate: MvpDelegate<Any>? = null
+    private val mvpDelegate by lazy { MvpDelegate<SearchAddress>(this).apply { setParentDelegate(parentDelegate!!, id.toString()) } }
+    private var blockRequest = false
+    private var hasFocus = false
+    
+    init {
+        containerView = LayoutInflater.from(context).inflate(R.layout.search_address, this, true)
+        if(attrs != null) {
+            val ta = context.obtainStyledAttributes(attrs, R.styleable.SearchAddress)
+            addressField.hint = ta.getString(R.styleable.SearchAddress_hint)
+            ta.recycle()
+        }
+        
+        val clearListener = View.OnClickListener {
+            text = ""
+            addressField.requestFocus()
+            parent.onSearchFieldEmpty(isTo)
+        }
+        fl_clearBtn.setOnClickListener(clearListener)
+        im_clearBtn.setOnClickListener(clearListener)
+    }
+    
+    @ProvidePresenter
+    fun createSearchAddressPresenter(): SearchAddressPresenter =
+        SearchAddressPresenter(parent.router, parent.systemInteractor, parent.routeInteractor)
 
-	var text: String
-		get() { return addressField.text.toString() }
-		set(value) {
-			addressField.setText(value)
-		}
-	private var parentDelegate: MvpDelegate<Any>? = null
-	private val mvpDelegate by lazy {
-		val ret = MvpDelegate<SearchAddress>(this)
-		ret.setParentDelegate(parentDelegate!!, id.toString())
-		ret
-	}
-	private var blockRequest = false
-	private var hasFocus: Boolean = false
-	
-	init {
-		containerView = LayoutInflater.from(context).inflate(R.layout.search_address, this, true)
-		if(attrs != null) {
-			val ta = context.obtainStyledAttributes(attrs, R.styleable.SearchAddress)
-			addressField.hint = ta.getString(R.styleable.SearchAddress_hint)
-			ta.recycle()
-		}
-
-		val clearListener = View.OnClickListener {
-			text = ""
-			addressField.requestFocus()
-			parent.onSearchFieldEmpty(isTo)
-		}
-		fl_clearBtn.setOnClickListener(clearListener)
-		im_clearBtn.setOnClickListener(clearListener)
-	}
-
-	@ProvidePresenter
-	fun createSearchAddressPresenter(): 
-		SearchAddressPresenter = SearchAddressPresenter(parent.coroutineContexts,
-		                                                parent.router,
-		                                                parent.systemInteractor,
-			                                            parent.routeInteractor)
-
-	fun initWidget(parent: SearchActivity, isTo: Boolean) {
-		this.parent = parent
-		this.isTo = isTo
-		addressField.setOnFocusChangeListener { _, hasFocus ->
-			this.hasFocus = hasFocus
-			if(!hasFocus){
-				fl_clearBtn.visibility = View.GONE
-			}
-			else {
-				setClearButtonVisibility()
-				parent.presenter.isTo = isTo
-			}
-		}
-		addressField.addTextChangedListener(this)
-		
-		parentDelegate = parent.mvpDelegate
-		mvpDelegate.onCreate()
-		mvpDelegate.onAttach()
-
-		presenter.mBounds = parent.mBounds
-
+    fun initWidget(parent: SearchActivity, isTo: Boolean) {
+        this.parent = parent
+        this.isTo = isTo
+        addressField.setOnFocusChangeListener { _, hasFocus ->
+            this.hasFocus = hasFocus
+            if(!hasFocus) fl_clearBtn.visibility = View.GONE
+            else {
+                setClearButtonVisibility()
+                parent.presenter.isTo = isTo
+            }
+        }
+        addressField.addTextChangedListener(this)
+        
+        parentDelegate = parent.mvpDelegate
+        mvpDelegate.onCreate()
+        mvpDelegate.onAttach()
+        
+        presenter.mBounds = parent.mBounds
 //		if(isTo) addressField.requestFocus()
-
-		setClearButtonVisibility()
-	}
-	
-	/** Set address text without request */
-	fun initText(text: String, sendRequest: Boolean, cursorOnEnd: Boolean) {
-		blockRequest = true
-		this.text = if(text.isNotEmpty()) text + " " else ""
-		if(cursorOnEnd) addressField.setSelection(addressField.text.length)
-		blockRequest = false
-		if(sendRequest) presenter.requestAddressListByPrediction(text.trim())
-	}
+        setClearButtonVisibility()
+    }
+    
+    /** Set address text without request */
+    fun initText(text: String, sendRequest: Boolean, cursorOnEnd: Boolean) {
+        blockRequest = true
+        this.text = if(text.isNotEmpty()) text + " " else ""
+        if(cursorOnEnd) addressField.setSelection(addressField.text.length)
+        blockRequest = false
+        if(sendRequest) presenter.requestAddressListByPrediction(text.trim())
+    }
 
     fun setUneditable() {
         addressField.keyListener = null
@@ -131,9 +118,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         addressField.isClickable = true
     }
 
-    fun clearFocusOnExit() {
-        addressField.clearFocus()
-    }
+    fun clearFocusOnExit() { addressField.clearFocus() }
 
     override fun setOnClickListener(l: OnClickListener?) {
         super.setOnClickListener(l)
@@ -154,9 +139,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         if(addressField.isFocused) parent.setAddressListByAutoComplete(list)
     }
 
-    override fun returnLastAddress(addressName: String) {
-        text = addressName
-    }
+    override fun returnLastAddress(addressName: String) { text = addressName }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         parent.blockInterface(block, useSpinner)

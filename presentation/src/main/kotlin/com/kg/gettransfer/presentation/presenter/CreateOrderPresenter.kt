@@ -5,13 +5,17 @@ import android.support.annotation.CallSuper
 import android.util.Patterns
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.google.android.gms.maps.CameraUpdate
 
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.*
+import com.kg.gettransfer.domain.interactor.OfferInteractor
+import com.kg.gettransfer.domain.interactor.PromoInteractor
+import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.Trip
 
@@ -20,6 +24,7 @@ import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
+
 import com.yandex.metrica.YandexMetrica
 
 import java.text.Format
@@ -33,13 +38,12 @@ import ru.terrakok.cicerone.Router
 import timber.log.Timber
 
 @InjectViewState
-class CreateOrderPresenter(cc: CoroutineContexts,
-                           router: Router,
+class CreateOrderPresenter(router: Router,
                            systemInteractor: SystemInteractor,
                            private val routeInteractor: RouteInteractor,
                            private val transferInteractor: TransferInteractor,
                            private val promoInteractor: PromoInteractor,
-                           private val offersInteractor: OfferInteractor): BasePresenter<CreateOrderView>(cc, router, systemInteractor) {
+                           private val offersInteractor: OfferInteractor): BasePresenter<CreateOrderView>(router, systemInteractor) {
 
     private var user: UserModel = Mappers.getUserModel(systemInteractor.account)
     private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)

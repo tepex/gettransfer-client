@@ -7,6 +7,7 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+
 import android.os.Build
 import android.os.Bundle
 
@@ -43,8 +44,8 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.presentation.IntentKeys
 
+import com.kg.gettransfer.presentation.IntentKeys
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
@@ -81,17 +82,16 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     private var toClick = false
 
     @ProvidePresenter
-    fun createMainPresenter(): MainPresenter =
-        MainPresenter(coroutineContexts, router, systemInteractor, routeInteractor)
+    fun createMainPresenter(): MainPresenter = MainPresenter(router, systemInteractor, routeInteractor)
 
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
     private val itemsNavigationViewListener = View.OnClickListener { item ->
         when(item.id) {
-            R.id.navLogin -> presenter.onLoginClick()
-            R.id.navAbout -> presenter.onAboutClick()
-            R.id.navSettings -> presenter.onSettingsClick()
-            R.id.navRequests -> presenter.onRequestsClick()
+            R.id.navLogin          -> presenter.onLoginClick()
+            R.id.navAbout          -> presenter.onAboutClick()
+            R.id.navSettings       -> presenter.onSettingsClick()
+            R.id.navRequests       -> presenter.onRequestsClick()
             R.id.navBecomeACarrier -> presenter.onBecomeACarrierClick()
             else -> Timber.d("No route")
         }
@@ -105,29 +105,27 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
             when(screenKey) {
                 Screens.ABOUT -> return Intent(context, AboutActivity::class.java)
-                Screens.FIND_ADDRESS -> {
-                    val searchIntent = Intent(context, SearchActivity::class.java)
+                Screens.FIND_ADDRESS -> return Intent(context, SearchActivity::class.java).apply {
                     @Suppress("UNCHECKED_CAST")
                     val pair = data as Pair<String, String>
-                    searchIntent.putExtra(SearchActivity.EXTRA_ADDRESS_FROM, pair.first)
-                    searchIntent.putExtra(SearchActivity.EXTRA_ADDRESS_TO, pair.second)
-                    searchIntent.putExtra(SearchActivity.EXTRA_FROM_CLICK, fromClick)
-                    searchIntent.putExtra(SearchActivity.EXTRA_TO_CLICK, toClick)
-
-                    val bounds = googleMap.projection.visibleRegion.latLngBounds
-                    searchIntent.putExtra(SearchActivity.LATLON_BOUNDS, bounds)
-                    return searchIntent
+                    putExtra(SearchActivity.EXTRA_ADDRESS_FROM, pair.first)
+                    putExtra(SearchActivity.EXTRA_ADDRESS_TO, pair.second)
+                    putExtra(SearchActivity.EXTRA_FROM_CLICK, fromClick)
+                    putExtra(SearchActivity.EXTRA_TO_CLICK, toClick)
+                    putExtra(SearchActivity.LATLON_BOUNDS, googleMap.projection.visibleRegion.latLngBounds)
                 }
                 Screens.CREATE_ORDER -> return Intent(context, CreateOrderActivity::class.java)
-                Screens.SETTINGS -> return Intent(context, SettingsActivity::class.java)
-                Screens.REQUESTS -> return Intent(context, RequestsActivity::class.java)
+                Screens.SETTINGS     -> return Intent(context, SettingsActivity::class.java)
+                Screens.REQUESTS     -> return Intent(context, RequestsActivity::class.java)
                 /*Screens.CARRIER_MODE -> return Intent(context, CarrierTripsActivity::class.java)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)*/
-                Screens.CARRIER_MODE -> return Intent(context, WebPageActivity()::class.java)
-                        .putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_CARRIER)
-                Screens.REG_CARRIER -> return Intent(context, WebPageActivity()::class.java)
-                        .putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_REG_CARRIER)
+                Screens.CARRIER_MODE -> return Intent(context, WebPageActivity()::class.java).apply {
+                    putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_CARRIER)
+                }
+                Screens.REG_CARRIER -> return Intent(context, WebPageActivity()::class.java).apply {
+                    putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_REG_CARRIER)
+                }
             }
             return null
         }

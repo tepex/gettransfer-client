@@ -28,12 +28,12 @@ class LoginActivity: BaseActivity(), LoginView {
     internal lateinit var presenter: LoginPresenter
     
     @ProvidePresenter
-    fun createLoginPresenter(): LoginPresenter = LoginPresenter(coroutineContexts, router, systemInteractor)
+    fun createLoginPresenter(): LoginPresenter = LoginPresenter(router, systemInteractor)
 
     protected override var navigator = object: BaseNavigator(this) {
         protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
             val intent = super.createActivityIntent(context, screenKey, data)
-            if (intent != null) return intent
+            if(intent != null) return intent
 
             when (screenKey) {
                 Screens.REQUESTS -> return Intent(context, RequestsActivity::class.java)

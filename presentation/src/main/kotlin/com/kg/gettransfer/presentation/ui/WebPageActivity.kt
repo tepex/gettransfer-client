@@ -45,9 +45,11 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
         setContentView(R.layout.activity_web_page)
 
         setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.apply {
+            setDisplayShowTitleEnabled(false)
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 
         webView.settings.javaScriptEnabled = true

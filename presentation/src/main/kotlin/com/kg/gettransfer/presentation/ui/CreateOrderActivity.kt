@@ -14,21 +14,22 @@ import android.os.Bundle
 import android.os.Handler
 
 import android.support.annotation.CallSuper
-
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.content.ContextCompat
-
 import android.support.v7.widget.LinearLayoutManager
-import android.telephony.PhoneNumberFormattingTextWatcher
-import android.text.InputFilter
 
+import android.telephony.PhoneNumberFormattingTextWatcher
+
+import android.text.InputFilter
 import android.text.InputType
 import android.text.TextUtils
+
 import android.util.DisplayMetrics
+
 import android.view.*
 import android.view.animation.AnimationUtils
-
 import android.view.inputmethod.EditorInfo
+
 import android.widget.*
 
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -64,10 +65,8 @@ import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 
 import kotlinx.android.synthetic.main.amu_info_window.view.*
 
-
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
-
 
 import com.kg.gettransfer.presentation.IntentKeys
 
@@ -80,7 +79,6 @@ import org.koin.android.ext.android.inject
 import java.util.Calendar
 
 class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
-
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
 
@@ -88,7 +86,9 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private val transferInteractor: TransferInteractor by inject()
     private val promoInteractor: PromoInteractor by inject()
     private val offerInteractor: OfferInteractor by inject()
+    
     private val calendar = Calendar.getInstance()
+    
     private lateinit var bsOrder: BottomSheetBehavior<View>
     private lateinit var bsTransport: BottomSheetBehavior<View>
     private lateinit var popupWindowComment: PopupWindow
@@ -98,13 +98,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     companion object {
         const val DIM_AMOUNT = 0.5f
-
         const val KEYBOARD_WAIT_DELAY = 300L
     }
 
     @ProvidePresenter
-    fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(coroutineContexts,
-                                                                                  router,
+    fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(router,
                                                                                   systemInteractor,
                                                                                   routeInteractor,
                                                                                   transferInteractor,

@@ -52,8 +52,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
     private val transferInteractor: TransferInteractor by inject()
     
     @ProvidePresenter
-    fun createTransferDetailsPresenter() = TransferDetailsPresenter(coroutineContexts,
-                                                                    router,
+    fun createTransferDetailsPresenter() = TransferDetailsPresenter(router,
                                                                     systemInteractor,
                                                                     routeInteractor,
                                                                     transferInteractor,
@@ -72,9 +71,11 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         setContentView(R.layout.activity_transfer_details)
 
         setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.apply {
+            setDisplayShowTitleEnabled(false)
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
         (toolbar as Toolbar).toolbar_title.text = resources.getString(R.string.LNG_RIDE_DETAILS)
 
@@ -89,7 +90,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
 
         // https://stackoverflow.com/questions/16974983/google-maps-api-v2-supportmapfragment-inside-scrollview-users-cannot-scroll-th
         transparentImage.setOnTouchListener(View.OnTouchListener { _, motionEvent ->
-            when (motionEvent.action) {
+            when(motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
                     svTransferDetails.requestDisallowInterceptTouchEvent(true)
                     return@OnTouchListener false
@@ -150,8 +151,8 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
 
         if(transferModel.price != null) {
             paymentInfoPaid.text = getString(R.string.activity_transfer_details_paid_sum,
-                    transferModel.paidSum,
-                    transferModel.paidPercentage)
+                                             transferModel.paidSum,
+                                             transferModel.paidPercentage)
             paymentInfoPay.text = transferModel.remainToPay
             paymentInfoSum.text = transferModel.price
             layoutPaymentInfo.visibility = View.VISIBLE
@@ -165,13 +166,15 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
     override fun setOffer(offerModel: OfferModel) {
         offerDriverInfoEmail.text = offerModel.driver?.email
         offerDriverInfoPhone.text = offerModel.driver?.phone
-        offerDriverInfoName.text = offerModel.driver?.name
+        offerDriverInfoName.text  = offerModel.driver?.name
+        
         layoutOfferDriverInfo.visibility = View.VISIBLE
 
-        offerTransportInfoCarType.text = getString(offerModel.vehicle.transportType.nameId!!)
-        offerTransportInfoCarName.text = offerModel.vehicle.vehicleBase.name
+        offerTransportInfoCarType.text   = getString(offerModel.vehicle.transportType.nameId!!)
+        offerTransportInfoCarName.text   = offerModel.vehicle.vehicleBase.name
         offerTransportInfoCarNumber.text = offerModel.vehicle.vehicleBase.registrationNumber
-        offerTransportInfoPrice.text = offerModel.price.base.default
+        offerTransportInfoPrice.text     = offerModel.price.base.default
+        
         layoutOfferTransportInfo.visibility = View.VISIBLE
     }
 

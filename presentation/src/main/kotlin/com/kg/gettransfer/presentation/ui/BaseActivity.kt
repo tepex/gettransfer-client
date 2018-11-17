@@ -58,7 +58,6 @@ import timber.log.Timber
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     internal val systemInteractor: SystemInteractor by inject()
     
-    internal val coroutineContexts: CoroutineContexts by inject()
     internal val router: Router by inject()
     protected val navigatorHolder: NavigatorHolder by inject()
     protected val localeManager: LocaleManager by inject()
@@ -70,7 +69,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
 
     protected var viewNetworkNotAvailable: View? = null
 
-    protected val onTouchListener = View.OnTouchListener{ view, event ->
+    protected val onTouchListener = View.OnTouchListener { view, event ->
         if(event.action == MotionEvent.ACTION_MOVE) hideKeyboardWithoutClearFocus(this, view)
         else return@OnTouchListener false
     }

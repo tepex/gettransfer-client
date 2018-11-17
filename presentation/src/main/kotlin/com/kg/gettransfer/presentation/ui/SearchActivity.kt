@@ -13,12 +13,13 @@ import android.support.v7.widget.Toolbar
 
 import android.transition.Fade
 import android.transition.Slide
+
 import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.google.android.gms.maps.model.LatLngBounds
 
+import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.R
 
@@ -57,10 +58,7 @@ class SearchActivity: BaseActivity(), SearchView {
     private lateinit var predefinedPopularPlaces: List<PopularPlace>
 
     @ProvidePresenter
-    fun createSearchPresenter(): SearchPresenter = SearchPresenter(coroutineContexts,
-                                                                   router,
-                                                                   systemInteractor,
-                                                                   routeInteractor)
+    fun createSearchPresenter(): SearchPresenter = SearchPresenter(router, systemInteractor, routeInteractor)
     companion object {
         @JvmField val FADE_DURATION  = 500L
         @JvmField val SLIDE_DURATION = 500L
@@ -141,14 +139,8 @@ class SearchActivity: BaseActivity(), SearchView {
 
     fun onSearchFieldEmpty(isTo: Boolean) {
         presenter.onSearchFieldEmpty()
-        var iconRes: Int
-        if (isTo){
-            iconRes = R.drawable.b_point_empty
-            searchForm.icons_container.b_point.setImageDrawable(ContextCompat.getDrawable(this, iconRes))
-        } else {
-            iconRes = R.drawable.a_point_empty
-            searchForm.icons_container.a_point.setImageDrawable(ContextCompat.getDrawable(this, iconRes))
-        }
+        if(isTo) searchForm.icons_container.b_point.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.b_point_empty))
+        else     searchForm.icons_container.a_point.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.a_point_empty))
     }
 
     override fun onBackPressed() {
@@ -176,9 +168,9 @@ class SearchActivity: BaseActivity(), SearchView {
     override fun setAddressListByAutoComplete(list: List<GTAddress>) {
         ll_popular.visibility = View.GONE
         address_title.visibility = View.GONE
-        if(rv_addressList.adapter != null) {
-            (rv_addressList.adapter as AddressAdapter).isLastAddresses = false
-            (rv_addressList.adapter as AddressAdapter).updateList(list)
+        rv_addressList.adapter?.let {
+            (it as AddressAdapter).isLastAddresses = false
+            it.updateList(list)
         }
     }
 
@@ -200,6 +192,6 @@ class SearchActivity: BaseActivity(), SearchView {
 
     override fun updateIcon(isTo: Boolean) {
         if(isTo) searchForm.icons_container.b_point.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.b_point_filled))
-        else searchForm.icons_container.a_point.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.a_point_filled))
+        else     searchForm.icons_container.a_point.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.a_point_filled))
     }
 }

@@ -15,7 +15,6 @@ import com.google.firebase.analytics.FirebaseAnalytics.Param.CURRENCY
 import com.google.firebase.analytics.FirebaseAnalytics.Param.VALUE
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
@@ -45,11 +44,10 @@ import ru.terrakok.cicerone.Router
 import timber.log.Timber
 
 @InjectViewState
-class PaymentSettingsPresenter(cc: CoroutineContexts,
-                               router: Router,
+class PaymentSettingsPresenter(router: Router,
                                systemInteractor: SystemInteractor,
                                private val offerInteractor: OfferInteractor,
-                               private val paymentInteractor: PaymentInteractor): BasePresenter<PaymentSettingsView>(cc, router, systemInteractor) {
+                               private val paymentInteractor: PaymentInteractor): BasePresenter<PaymentSettingsView>(router, systemInteractor) {
     companion object {
         @JvmField val PARAM_SHARE      = "share"
         @JvmField val PRICE_30         = 0.3

@@ -41,7 +41,7 @@ class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsVie
 
     @ProvidePresenter
     fun createCarrierTripDetailsPresenter(): CarrierTripDetailsPresenter
-        = CarrierTripDetailsPresenter(coroutineContexts, router, systemInteractor, carrierTripInteractor, routeInteractor)
+        = CarrierTripDetailsPresenter(router, systemInteractor, carrierTripInteractor, routeInteractor)
 
     override fun getPresenter(): CarrierTripDetailsPresenter = presenter
 

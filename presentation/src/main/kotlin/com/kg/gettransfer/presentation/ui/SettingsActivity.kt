@@ -39,24 +39,24 @@ class SettingsActivity: BaseActivity(), SettingsView {
     internal lateinit var presenter: SettingsPresenter
     
     @ProvidePresenter
-	fun createSettingsPresenter(): SettingsPresenter = SettingsPresenter(coroutineContexts, router, systemInteractor)
-	
-	protected override var navigator = object: BaseNavigator(this) {
+    fun createSettingsPresenter(): SettingsPresenter = SettingsPresenter(router, systemInteractor)
+    
+    protected override var navigator = object: BaseNavigator(this) {
         @CallSuper
         protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
             val intent = super.createActivityIntent(context, screenKey, data)
-            if (intent != null) return intent
+            if(intent != null) return intent
 
-            when (screenKey) {
+            when(screenKey) {
                 Screens.SHARE_LOGS -> return Intent(context, LogsActivity::class.java)
                 Screens.MAIN -> return Intent(context, MainActivity::class.java)
             }
             return null
         }
     }
-	
+
 	override fun getPresenter(): SettingsPresenter = presenter
-	
+
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,9 +64,11 @@ class SettingsActivity: BaseActivity(), SettingsView {
         setContentView(R.layout.activity_settings)
 
         setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.apply {
+            setDisplayShowTitleEnabled(false)
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
         (toolbar as Toolbar).toolbar_title.setText(R.string.LNG_MENU_TITLE_SETTINGS)
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
         

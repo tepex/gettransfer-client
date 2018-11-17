@@ -1,14 +1,13 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
+
 import com.arellomobile.mvp.InjectViewState
 
 import com.google.firebase.analytics.FirebaseAnalytics.Event.ECOMMERCE_PURCHASE
 import com.google.firebase.analytics.FirebaseAnalytics.Param.TRANSACTION_ID
 import com.google.firebase.analytics.FirebaseAnalytics.Param.VALUE
 import com.google.firebase.analytics.FirebaseAnalytics.Param.CURRENCY
-
-import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
@@ -25,6 +24,7 @@ import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
 import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter.Companion.PRICE_30
 
 import com.kg.gettransfer.presentation.view.PaymentView
+
 import com.yandex.metrica.YandexMetrica
 
 import kotlinx.serialization.Serializable
@@ -34,11 +34,10 @@ import ru.terrakok.cicerone.Router
 import timber.log.Timber
 
 @InjectViewState
-class PaymentPresenter(cc: CoroutineContexts,
-                       router: Router,
+class PaymentPresenter(router: Router,
                        systemInteractor: SystemInteractor,
                        private val paymentInteractor: PaymentInteractor,
-                       private val offerInteractor: OfferInteractor): BasePresenter<PaymentView>(cc, router, systemInteractor) {
+                       private val offerInteractor: OfferInteractor): BasePresenter<PaymentView>(router, systemInteractor) {
 
     private lateinit var offer: Offer
     internal lateinit var params: Params

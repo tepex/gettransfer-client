@@ -7,7 +7,6 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.presentation.Screens
@@ -18,6 +17,7 @@ import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.view.SettingsView
+
 import com.yandex.metrica.YandexMetrica
 
 import java.util.Locale
@@ -27,9 +27,8 @@ import ru.terrakok.cicerone.Router
 import timber.log.Timber
 
 @InjectViewState
-class SettingsPresenter(cc: CoroutineContexts,
-                        router: Router,
-                        systemInteractor: SystemInteractor): BasePresenter<SettingsView>(cc, router, systemInteractor) {
+class SettingsPresenter(router: Router,
+                        systemInteractor: SystemInteractor): BasePresenter<SettingsView>(router, systemInteractor) {
 
     private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
     private val locales = Mappers.getLocalesModels(systemInteractor.locales).filter { it.locale == "EN" || it.locale == "RU" } 

@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+
 import android.text.Html
 
 import android.view.MenuItem
@@ -47,7 +48,7 @@ import ru.terrakok.cicerone.commands.Forward
 
 import timber.log.Timber
 
-class CarrierTripsActivity: BaseActivity(), CarrierTripsView{
+class CarrierTripsActivity: BaseActivity(), CarrierTripsView {
     @InjectPresenter
     internal lateinit var presenter: CarrierTripsPresenter
 
@@ -57,7 +58,7 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView{
     private val carrierTripInteractor: CarrierTripInteractor by inject()
 
     @ProvidePresenter
-    fun createCarrierTripsPresenter(): CarrierTripsPresenter = CarrierTripsPresenter(coroutineContexts, router, systemInteractor, carrierTripInteractor)
+    fun createCarrierTripsPresenter(): CarrierTripsPresenter = CarrierTripsPresenter(router, systemInteractor, carrierTripInteractor)
 
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 

@@ -1,34 +1,40 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Intent
+
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
+
+import android.support.v4.content.FileProvider
 import android.support.v7.widget.Toolbar
+
 import android.view.View
+
+import android.widget.ScrollView
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.kg.gettransfer.presentation.presenter.LogsPresenter
-import com.kg.gettransfer.presentation.view.LogsView
-import kotlinx.android.synthetic.main.activity_share_logs.*
 
 import com.kg.gettransfer.R
-import android.widget.ScrollView
-import kotlinx.android.synthetic.main.toolbar.view.*
-import android.content.Intent
-import android.support.v4.content.FileProvider
+import com.kg.gettransfer.presentation.presenter.LogsPresenter
+import com.kg.gettransfer.presentation.view.LogsView
+
 import java.io.File
 
+import kotlinx.android.synthetic.main.activity_share_logs.*
+import kotlinx.android.synthetic.main.toolbar.view.*
 
 class LogsActivity: BaseActivity(), LogsView {
-
     @InjectPresenter
     internal lateinit var presenter: LogsPresenter
 
     @ProvidePresenter
-    fun createShareLogsPresenter() = LogsPresenter(coroutineContexts, router, systemInteractor)
+    fun createShareLogsPresenter() = LogsPresenter(router, systemInteractor)
 
     override fun getPresenter(): LogsPresenter = presenter
 
-    protected override var navigator = object: BaseNavigator(this){}
+    protected override var navigator = object: BaseNavigator(this) {}
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {

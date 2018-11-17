@@ -59,7 +59,7 @@ class PaymentActivity: BaseActivity(), PaymentView {
     override fun getPresenter(): PaymentPresenter = presenter
 
     @ProvidePresenter
-    fun createPaymentPresenter(): PaymentPresenter = PaymentPresenter(coroutineContexts, router, systemInteractor, paymentInteractor, offerInteractor)
+    fun createPaymentPresenter(): PaymentPresenter = PaymentPresenter(router, systemInteractor, paymentInteractor, offerInteractor)
 
     protected override var navigator = object: BaseNavigator(this) {
         @CallSuper
@@ -68,9 +68,10 @@ class PaymentActivity: BaseActivity(), PaymentView {
             if(intent != null) return intent
 
             when(screenKey) {
-                Screens.PASSENGER_MODE -> return Intent(context, MainActivity::class.java)
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                Screens.PASSENGER_MODE -> return Intent(context, MainActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                }
             }
             return null
         }
