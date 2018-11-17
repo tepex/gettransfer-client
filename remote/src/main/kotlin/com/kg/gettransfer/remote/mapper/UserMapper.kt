@@ -12,7 +12,7 @@ open class UserMapper(): EntityMapper<UserModel, UserEntity> {
      * Map a [UserModel] instance to a [UserEntity] instance.
      */
     override fun fromRemote(type: UserModel): UserEntity { throw UnsupportedOperationException() }
-    
+
     /**
      * Map a [UserEntity] instance to a [UserModel] instance.
      */

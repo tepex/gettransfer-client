@@ -6,22 +6,22 @@ import com.kg.gettransfer.data.model.TripEntity
 import com.kg.gettransfer.remote.model.TransferNewModel
 import com.kg.gettransfer.remote.model.TripModel
 
-import org.koin.standalone.inject
+import org.koin.standalone.get
 
 /**
  * Map a [TransferNewEntity] to and from a [TransferNewModel] instance when data is moving between this later and the Data layer.
  */
 open class TransferNewMapper: EntityMapper<TransferNewModel, TransferNewEntity> {
-    private val cityPointMapper: CityPointMapper by inject()
-    private val tripMapper: TripMapper by inject()
-    private val moneyMapper: MoneyMapper by inject()
-    private val userMapper: UserMapper by inject()
-    
+    private val cityPointMapper = get<CityPointMapper>()
+    private val tripMapper      = get<TripMapper>()
+    private val moneyMapper     = get<MoneyMapper>()
+    private val userMapper      = get<UserMapper>()
+
     /**
      * Map a [TransferNewModel] instance to a [TransferNewEntity] instance.
      */
     override fun fromRemote(type: TransferNewModel): TransferNewEntity { throw UnsupportedOperationException() }
-    
+
     /**
      * Map a [TransferNewEntity] instance to a [TransferNewModel] instance.
      */

@@ -5,14 +5,14 @@ import com.kg.gettransfer.data.model.TransportTypePriceEntity
 
 import com.kg.gettransfer.remote.model.RouteInfoModel
 
-import org.koin.standalone.inject
+import org.koin.standalone.get
 
 /**
  * Map a [RouteInfoModel] from a [RouteInfoEntity] instance when data is moving between this later and the Data layer.
  */
 open class RouteInfoMapper(): EntityMapper<RouteInfoModel, RouteInfoEntity> {
-    private val transportTypePriceMapper: TransportTypePriceMapper by inject()
-    
+    private val transportTypePriceMapper = get<TransportTypePriceMapper>()
+
     override fun fromRemote(type: RouteInfoModel) =
         RouteInfoEntity(type.success,
                         type.distance,
@@ -22,6 +22,6 @@ open class RouteInfoMapper(): EntityMapper<RouteInfoModel, RouteInfoEntity> {
                         type.watertaxi,
                         type.routes?.first()?.legs?.first()?.steps?.map { it.polyline.points } ?: emptyList<String>(),
                         type.routes?.first()?.overviewPolyline?.points)
-    
+
     override fun toRemote(type: RouteInfoEntity): RouteInfoModel { throw UnsupportedOperationException() }
 }

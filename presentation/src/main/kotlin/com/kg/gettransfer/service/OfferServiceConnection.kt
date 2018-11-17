@@ -20,9 +20,12 @@ import com.kg.gettransfer.domain.model.Offer
 
 import kotlinx.serialization.json.JSON
 
+import org.koin.standalone.inject
+import org.koin.standalone.KoinComponent
+
 import timber.log.Timber
 
-class OfferServiceConnection(private val offerMapper: OfferMapper): BroadcastReceiver(), ServiceConnection, SystemListener {
+class OfferServiceConnection: BroadcastReceiver(), ServiceConnection, SystemListener, KoinComponent {
     companion object {
         @JvmField val INTENT_OFFER  = "offer"
         @JvmField val MESSAGE_OFFER = "new_offer"
@@ -33,6 +36,8 @@ class OfferServiceConnection(private val offerMapper: OfferMapper): BroadcastRec
     
     private var socketService: SocketIOService? = null
     private var handler: OfferModelHandler? = null
+    
+    private val offerMapper: OfferMapper by inject()
     
     fun connect(context: Context, handler: OfferModelHandler) {
         this.handler = handler

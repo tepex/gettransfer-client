@@ -16,30 +16,30 @@ import com.kg.gettransfer.remote.model.AccountModelWrapper
 import com.kg.gettransfer.remote.model.ConfigsModel
 import com.kg.gettransfer.remote.model.ResponseModel
 
-import org.koin.standalone.inject
+import org.koin.standalone.get
 
 class SystemRemoteImpl: SystemRemote {
-    private val core: ApiCore by inject()
-    private val configsMapper: ConfigsMapper by inject()
-    private val accountMapper: AccountMapper by inject()
-    private val endpointMapper: EndpointMapper by inject()
-    
+    private val core           = get<ApiCore>()
+    private val configsMapper  = get<ConfigsMapper>()
+    private val accountMapper  = get<AccountMapper>()
+    private val endpointMapper = get<EndpointMapper>()
+
     override suspend fun getConfigs(): ConfigsEntity {
         val response: ResponseModel<ConfigsModel> = core.tryTwice { core.api.getConfigs() }
 		return configsMapper.fromRemote(response.data!!)
     }
-    
+
     override suspend fun getAccount(): AccountEntity? {
         val response: ResponseModel<AccountModelWrapper> = core.tryTwice { core.api.getAccount() }
         response.data?.account?.let { return accountMapper.fromRemote(it) }
         return null
     }
-    
+
     override suspend fun setAccount(accountEntity: AccountEntity): AccountEntity {
         val response: ResponseModel<AccountModelWrapper> = tryPutAccount(accountMapper.toRemote(accountEntity))
         return accountMapper.fromRemote(response.data?.account!!)
     }
-    
+
     private suspend fun tryPutAccount(account: AccountModel): ResponseModel<AccountModelWrapper> {
         return try { core.api.putAccount(account).await() }
         catch(e: Exception) {
@@ -51,12 +51,12 @@ class SystemRemoteImpl: SystemRemote {
             return try { core.api.putAccount(account).await() } catch(e2: Exception) { throw core.remoteException(e2) }
         }
     }
-    
+
     override suspend fun login(email: String, password: String): AccountEntity {
         val response: ResponseModel<AccountModelWrapper> = tryLogin(email, password)
         return accountMapper.fromRemote(response.data?.account!!)
     }
-    
+
     private suspend fun tryLogin(email: String, password: String): ResponseModel<AccountModelWrapper> {
         return try { core.api.login(email, password).await() }
         catch(e: Exception) {
@@ -68,6 +68,6 @@ class SystemRemoteImpl: SystemRemote {
             return try { core.api.login(email, password).await() } catch(e2: Exception) { throw core.remoteException(e2) }
         }
     }
-    
+
     override fun changeEndpoint(endpoint: EndpointEntity) = core.changeEndpoint(endpointMapper.toRemote(endpoint))
 }

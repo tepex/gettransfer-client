@@ -4,13 +4,16 @@ import com.kg.gettransfer.data.model.TripEntity
 
 import com.kg.gettransfer.domain.model.Trip
 
-import java.text.SimpleDateFormat
-import java.util.Locale
+import java.text.DateFormat
+
+import org.koin.standalone.get
 
 /**
  * Map a [TripEntity] to and from a [Trip] instance when data is moving between this later and the Domain layer.
  */
 open class TripMapper(): Mapper<TripEntity, Trip> {
+    private val serverDateFormat = get<ThreadLocal<DateFormat>>("server_date")
+    private val serverTimeFormat = get<ThreadLocal<DateFormat>>("server_time")
     /**
      * Map a [TripEntity] instance to a [Trip] instance.
      */
@@ -19,7 +22,7 @@ open class TripMapper(): Mapper<TripEntity, Trip> {
     /**
      * Map a [Trip] instance to a [TripEntity] instance.
      */
-    override fun toEntity(type: Trip) = TripEntity(SimpleDateFormat("yyyy/MM/dd", Locale.US).format(type.dateTime),
-                                                   SimpleDateFormat("HH:mm", Locale.US).format(type.dateTime),
+    override fun toEntity(type: Trip) = TripEntity(serverDateFormat.get().format(type.dateTime),
+                                                   serverTimeFormat.get().format(type.dateTime),
                                                    type.flightNumber)
 }

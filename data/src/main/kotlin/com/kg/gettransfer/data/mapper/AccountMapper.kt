@@ -9,14 +9,14 @@ import com.kg.gettransfer.domain.model.DistanceUnit
 import java.util.Currency
 import java.util.Locale
 
-import org.koin.standalone.inject
+import org.koin.standalone.get
 
 /**
  * Map a [AccountEntity] to and from a [Account] instance when data is moving between
  * this later and the Domain layer
  */
 open class AccountMapper: Mapper<AccountEntity, Account> {
-    private val userMapper: UserMapper by inject()
+    private val userMapper = get<UserMapper>()
     internal lateinit var configs: Configs
 
     /**

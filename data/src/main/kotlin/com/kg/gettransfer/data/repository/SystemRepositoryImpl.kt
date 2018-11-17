@@ -34,16 +34,15 @@ import com.kg.gettransfer.domain.repository.SystemRepository
 
 import java.util.concurrent.TimeoutException
 
-import org.koin.standalone.inject
-import org.koin.standalone.KoinComponent
+import org.koin.standalone.get
 
 class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>):
-                    BaseRepository(), SystemRepository, PreferencesListener, KoinComponent {
-    private val preferencesCache: PreferencesCache by inject()
-    private val configsMapper: ConfigsMapper by inject()
-    private val accountMapper: AccountMapper by inject()
-    private val endpointMapper: EndpointMapper by inject()
-    private val addressMapper: AddressMapper by inject()
+                    BaseRepository(), SystemRepository, PreferencesListener {
+    private val preferencesCache = get<PreferencesCache>()
+    private val configsMapper    = get<ConfigsMapper>()
+    private val accountMapper    = get<AccountMapper>()
+    private val endpointMapper   = get<EndpointMapper>()
+    private val addressMapper    = get<AddressMapper>()
 
     private val listeners = mutableSetOf<SystemListener>()
 

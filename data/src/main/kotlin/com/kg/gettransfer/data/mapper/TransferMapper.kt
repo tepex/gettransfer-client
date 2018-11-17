@@ -7,33 +7,32 @@ import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.Money
 import com.kg.gettransfer.domain.model.Transfer
 
-import java.text.SimpleDateFormat
+import java.text.DateFormat
 
-import java.util.Locale
-
-import org.koin.standalone.inject
+import org.koin.standalone.get
 
 /**
  * Map a [TransferEntity] to and from a [Transfer] instance when data is moving between this later and the Domain layer.
  */
 open class TransferMapper: Mapper<TransferEntity, Transfer> {
-    private val cityPointMapper: CityPointMapper by inject()
-    private val moneyMapper: MoneyMapper by inject()
+    private val cityPointMapper = get<CityPointMapper>()
+    private val moneyMapper = get<MoneyMapper>()
+    private val dateFormat = get<ThreadLocal<DateFormat>>("iso_date")
 
     /**
      * Map a [TransferEntity] instance to a [Transfer] instance.
      */
     override fun fromEntity(type: TransferEntity) =
         Transfer(type.id,
-                 SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(type.createdAt),
+                 dateFormat.get().parse(type.createdAt),
                  type.duration,
                  type.distance,
                  type.status,
                  cityPointMapper.fromEntity(type.from),
                  type.to?.let { cityPointMapper.fromEntity(it) },
-                 SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(type.dateToLocal),
-                 type.dateReturnLocal?.let { SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(it) },
-                 type.dateRefund?.let { SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(it) },
+                 dateFormat.get().parse(type.dateToLocal),
+                 type.dateReturnLocal?.let { dateFormat.get().parse(it) },
+                 type.dateRefund?.let { dateFormat.get().parse(it) },
 
                  type.nameSign,
                  type.comment,
@@ -44,7 +43,7 @@ open class TransferMapper: Mapper<TransferEntity, Transfer> {
                  type.childSeats,
                  type.offersCount,
                  type.relevantCarriersCount,
-                 type.offersUpdatedAt?.let { SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(it) },
+                 type.offersUpdatedAt?.let { dateFormat.get().parse(it) },
 
                  type.time,
                  type.paidSum?.let { moneyMapper.fromEntity(it) },

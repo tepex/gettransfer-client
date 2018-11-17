@@ -6,11 +6,34 @@ import com.kg.gettransfer.data.repository.*
 
 import com.kg.gettransfer.domain.repository.*
 
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+
+import java.util.Locale
+
 import org.koin.dsl.module.module
 
 import org.slf4j.LoggerFactory
 
 val dataModule = module {
+    single<ThreadLocal<DateFormat>>("iso_date") {
+        object: ThreadLocal<DateFormat>() {
+            override protected fun initialValue(): DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+        }
+    }
+
+    single<ThreadLocal<DateFormat>>("server_date") {
+        object: ThreadLocal<DateFormat>() {
+            override protected fun initialValue(): DateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.US)
+        }        
+    }
+
+    single<ThreadLocal<DateFormat>>("server_time") {
+        object: ThreadLocal<DateFormat>() {
+            override protected fun initialValue(): DateFormat = SimpleDateFormat("HH:mm", Locale.US)
+        }        
+    }
+
 	single { AddressMapper() }
     single { ProfileMapper() }
     single { LocaleMapper() }
@@ -59,12 +82,13 @@ val dataModule = module {
 	single<CarrierTripRepository> { CarrierTripRepositoryImpl(DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>(get(), get())) }
 
     single { TripMapper() }
-	single { TransferMapper() }
+    single { TransferMapper() }
 	single { TransferNewMapper() }
 	single { TransferDataStoreCache() }
 	single { TransferDataStoreRemote() }
 	single<TransferRepository> { TransferRepositoryImpl(DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>(get(), get())) }
 
+	single { PromoDiscountMapper() }
 	single { PromoDataStoreCache() }
 	single { PromoDataStoreRemote() }
 	single<PromoRepository> { PromoRepositoryImpl(DataStoreFactory<PromoDataStore, PromoDataStoreCache, PromoDataStoreRemote>(get(), get())) }

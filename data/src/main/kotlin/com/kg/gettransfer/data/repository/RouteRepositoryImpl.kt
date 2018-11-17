@@ -20,13 +20,12 @@ import com.kg.gettransfer.domain.model.TransportTypePrice
 
 import com.kg.gettransfer.domain.repository.RouteRepository
 
-import org.koin.standalone.inject
-import org.koin.standalone.KoinComponent
+import org.koin.standalone.get
 
 class RouteRepositoryImpl(private val factory: DataStoreFactory<RouteDataStore, RouteDataStoreCache, RouteDataStoreRemote>):
-                                BaseRepository(), RouteRepository, KoinComponent {
-    private val routeInfoMapper: RouteInfoMapper by inject()
-    private val pointMapper: PointMapper by inject()
+                                BaseRepository(), RouteRepository {
+    private val routeInfoMapper = get<RouteInfoMapper>()
+    private val pointMapper = get<PointMapper>()
 
     override suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean): Result<RouteInfo> =
         retrieveRemoteModel<RouteInfoEntity, RouteInfo>(routeInfoMapper, defaultModel) {

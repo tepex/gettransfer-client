@@ -9,11 +9,11 @@ import com.kg.gettransfer.remote.mapper.PromoMapper
 import com.kg.gettransfer.remote.model.PromoModel
 import com.kg.gettransfer.remote.model.ResponseModel
 
-import org.koin.standalone.inject
+import org.koin.standalone.get
 
 class PromoRemoteImpl: PromoRemote {
-    private val core: ApiCore by inject()
-    private val mapper: PromoMapper by inject()
+    private val core   = get<ApiCore>()
+    private val mapper = get<PromoMapper>()
     
     override suspend fun getDiscount(code: String): PromoDiscountEntity {
         val response: ResponseModel<String> = tryGetDiscount(code)

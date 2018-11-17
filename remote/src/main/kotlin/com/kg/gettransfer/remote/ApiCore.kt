@@ -23,6 +23,8 @@ import okhttp3.CookieJar
 import okhttp3.OkHttpClient
 
 import org.koin.core.parameter.parametersOf
+
+import org.koin.standalone.get
 import org.koin.standalone.inject
 import org.koin.standalone.KoinComponent
 
@@ -32,11 +34,12 @@ import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class ApiCore(private val preferences: PreferencesCache): KoinComponent {
+class ApiCore: KoinComponent {
     companion object {
         private val ERROR_PATTERN = Regex("^\\<h1\\>(.+)\\<\\/h1\\>$")
     }
-
+    
+    private val preferences = get<PreferencesCache>()
     private val log: Logger by inject { parametersOf("GTR-remote") }
 
     internal lateinit var api: Api

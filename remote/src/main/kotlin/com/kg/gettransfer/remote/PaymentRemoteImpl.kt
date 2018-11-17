@@ -20,20 +20,20 @@ import com.kg.gettransfer.remote.model.PaymentStatusRequestModel
 import com.kg.gettransfer.remote.model.PaymentStatusWrapperModel
 import com.kg.gettransfer.remote.model.ResponseModel
 
-import org.koin.standalone.inject
+import org.koin.standalone.get
 
 class PaymentRemoteImpl: PaymentRemote {
-    private val core: ApiCore by inject()
-    private val paymentRequestMapper: PaymentRequestMapper by inject()
-    private val paymentMapper: PaymentMapper by inject()
-    private val paymentStatusRequestMapper: PaymentStatusRequestMapper by inject()
-    private val paymentStatusMapper: PaymentStatusMapper by inject()
+    private val core                       = get<ApiCore>()
+    private val paymentRequestMapper       = get<PaymentRequestMapper>()
+    private val paymentMapper              = get<PaymentMapper>()
+    private val paymentStatusRequestMapper = get<PaymentStatusRequestMapper>()
+    private val paymentStatusMapper        = get<PaymentStatusMapper>()
 
     override suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity {
         val response: ResponseModel<PaymentModel> = tryCreatePayment(paymentRequestMapper.toRemote(paymentRequest))
         return paymentMapper.fromRemote(response.data!!)
     }
-    
+
     private suspend fun tryCreatePayment(paymentRequest: PaymentRequestModel): ResponseModel<PaymentModel> {
         return try { core.api.createNewPayment(paymentRequest).await() }
         catch(e: Exception) {
@@ -45,13 +45,13 @@ class PaymentRemoteImpl: PaymentRemote {
             return try { core.api.createNewPayment(paymentRequest).await() } catch(e2: Exception) { throw core.remoteException(e2) }
         }
     }
-    
+
     override suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequestEntity): PaymentStatusEntity {
         val response: ResponseModel<PaymentStatusWrapperModel> = 
             tryChangeStatusPayment(paymentStatusRequest.success, paymentStatusRequestMapper.toRemote(paymentStatusRequest))
         return paymentStatusMapper.fromRemote(response.data!!.payment)
     }
-    
+
     private suspend fun tryChangeStatusPayment(success: Boolean, paymentStatusRequest: PaymentStatusRequestModel): ResponseModel<PaymentStatusWrapperModel> {
         val status = if(success) PaymentStatusRequestModel.STATUS_SUCCESSFUL else PaymentStatusRequestModel.STATUS_FAILED
         return try {

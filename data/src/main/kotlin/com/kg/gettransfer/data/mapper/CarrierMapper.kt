@@ -5,14 +5,14 @@ import com.kg.gettransfer.data.model.CarrierEntity
 import com.kg.gettransfer.domain.model.Carrier
 import com.kg.gettransfer.domain.model.Profile
 
-import org.koin.standalone.inject
+import org.koin.standalone.get
 
 /**
  * Map a [CarrierEntity] to and from a [Carrier] instance when data is moving between this later and the Domain layer.
  */
 open class CarrierMapper: Mapper<CarrierEntity, Carrier> {
-    private val localeMapper: LocaleMapper by inject()
-    private val ratingsMapper: RatingsMapper by inject()
+    private val localeMapper = get<LocaleMapper>()
+    private val ratingsMapper = get<RatingsMapper>()
     /**
      * Map a [CarrierEntity] instance to a [Carrier] instance.
      */

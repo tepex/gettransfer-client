@@ -18,12 +18,11 @@ import com.kg.gettransfer.domain.repository.CarrierTripRepository
 
 import java.util.Date
 
-import org.koin.standalone.inject
-import org.koin.standalone.KoinComponent
+import org.koin.standalone.get
 
 class CarrierTripRepositoryImpl(private val factory: DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>):
-                            BaseRepository(), CarrierTripRepository, KoinComponent {
-    private val mapper: CarrierTripMapper by inject()
+                            BaseRepository(), CarrierTripRepository {
+    private val mapper = get<CarrierTripMapper>()
 
     override suspend fun getCarrierTrips(): Result<List<CarrierTrip>> =
         retrieveRemoteListModel<CarrierTripEntity, CarrierTrip>(mapper) { factory.retrieveRemoteDataStore().getCarrierTrips() }

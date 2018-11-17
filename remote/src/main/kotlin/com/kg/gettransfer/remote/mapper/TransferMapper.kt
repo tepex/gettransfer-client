@@ -3,15 +3,15 @@ package com.kg.gettransfer.remote.mapper
 import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.remote.model.TransferModel
 
-import org.koin.standalone.inject
+import org.koin.standalone.get
 
 /**
  * Map a [TransferEntity] to and from a [TransferModel] instance when data is moving between this later and the Data layer.
  */
 open class TransferMapper: EntityMapper<TransferModel, TransferEntity> {
-    private val cityPointMapper: CityPointMapper by inject()
-    private val moneyMapper: MoneyMapper by inject()
-    
+    private val cityPointMapper = get<CityPointMapper>()
+    private val moneyMapper     = get<MoneyMapper>()
+
     /**
      * Map a [TransferModel] instance to a [TransferEntity] instance.
      */

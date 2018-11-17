@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory
 val remoteModule = module {
     factory { (tag: String) -> LoggerFactory.getLogger(tag) }
     
-    single { ApiCore(get()) }
+    single { ApiCore() }
     
     single { TransportTypePriceMapper() }
     single { RouteInfoMapper() }

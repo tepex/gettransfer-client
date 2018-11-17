@@ -5,16 +5,16 @@ import com.kg.gettransfer.data.model.TripEntity
 
 import com.kg.gettransfer.domain.model.TransferNew
 
-import org.koin.standalone.inject
+import org.koin.standalone.get
 
 /**
  * Map a [TransferNewEntity] to and from a [TransferNew] instance when data is moving between this later and the Domain layer.
  */
 open class TransferNewMapper: Mapper<TransferNewEntity, TransferNew> {
-    private val cityPointMapper: CityPointMapper by inject()
-    private val tripMapper: TripMapper by inject()
-    private val moneyMapper: MoneyMapper by inject()
-    private val userMapper: UserMapper by inject()
+    private val cityPointMapper = get<CityPointMapper>()
+    private val tripMapper      = get<TripMapper>()
+    private val moneyMapper     = get<MoneyMapper>()
+    private val userMapper      = get<UserMapper>()
 
     /**
      * Map a [TransferNewEntity] instance to a [TransferNew] instance.

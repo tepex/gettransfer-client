@@ -12,21 +12,20 @@ import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Profile
 import com.kg.gettransfer.domain.model.Ratings
 
-import java.text.SimpleDateFormat
+import java.text.DateFormat
 
-import java.util.Locale
-
-import org.koin.standalone.inject
+import org.koin.standalone.get
 
 /**
  * Map a [OfferEntity] to and from a [Offer] instance when data is moving between this later and the Domain layer.
  */
 open class OfferMapper: Mapper<OfferEntity, Offer> {
-    private val priceMapper: PriceMapper by inject()
-    private val ratingsMapper: RatingsMapper by inject()
-    private val carrierMapper: CarrierMapper by inject()
-    private val vehicleMapper: VehicleMapper by inject()
-    private val profileMapper: ProfileMapper by inject()
+    private val priceMapper   = get<PriceMapper>()
+    private val ratingsMapper = get<RatingsMapper>()
+    private val carrierMapper = get<CarrierMapper>()
+    private val vehicleMapper = get<VehicleMapper>()
+    private val profileMapper = get<ProfileMapper>()
+    private val dateFormat    = get<ThreadLocal<DateFormat>>("iso_date")
 
     /**
      * Map a [OfferEntity] instance to a [Offer] instance.
@@ -36,8 +35,8 @@ open class OfferMapper: Mapper<OfferEntity, Offer> {
               type.status,
               type.wifi,
               type.refreshments,
-              SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(type.createdAt),
-              type.updatedAt?.let { SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(it) },
+              dateFormat.get().parse(type.createdAt),
+              type.updatedAt?.let { dateFormat.get().parse(it) },
               priceMapper.fromEntity(type.price),
               type.ratings?.let { ratingsMapper.fromEntity(it) },
               type.passengerFeedback,

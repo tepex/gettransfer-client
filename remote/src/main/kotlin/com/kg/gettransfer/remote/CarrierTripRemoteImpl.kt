@@ -12,11 +12,11 @@ import com.kg.gettransfer.remote.model.CarrierTripModelWrapper
 import com.kg.gettransfer.remote.model.CarrierTripsModel
 import com.kg.gettransfer.remote.model.ResponseModel
 
-import org.koin.standalone.inject
+import org.koin.standalone.get
 
 class CarrierTripRemoteImpl: CarrierTripRemote {
-    private val core: ApiCore by inject()
-    private val mapper: CarrierTripMapper by inject()
+    private val core   = get<ApiCore>()
+    private val mapper = get<CarrierTripMapper>()
 
     override suspend fun getCarrierTrips(): List<CarrierTripEntity> {
         val response: ResponseModel<CarrierTripsModel> = core.tryTwice { core.api.getCarrierTrips() }

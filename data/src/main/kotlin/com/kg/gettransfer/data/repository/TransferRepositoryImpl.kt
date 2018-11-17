@@ -20,13 +20,12 @@ import com.kg.gettransfer.domain.repository.TransferRepository
 
 import java.util.Date
 
-import org.koin.standalone.inject
-import org.koin.standalone.KoinComponent
+import org.koin.standalone.get
 
 class TransferRepositoryImpl(private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>):
-                                        BaseRepository(), TransferRepository, KoinComponent {
-    private val transferNewMapper: TransferNewMapper by inject()
-    private val transferMapper: TransferMapper by inject()
+                                        BaseRepository(), TransferRepository {
+    private val transferNewMapper = get<TransferNewMapper>()
+    private val transferMapper    = get<TransferMapper>()
 
     override suspend fun createTransfer(transferNew: TransferNew) =
         retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, defaultTransfer) {

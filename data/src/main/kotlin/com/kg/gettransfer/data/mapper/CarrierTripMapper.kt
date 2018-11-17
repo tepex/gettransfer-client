@@ -5,20 +5,20 @@ import com.kg.gettransfer.data.model.CarrierTripEntity
 import com.kg.gettransfer.domain.model.CarrierTrip
 import com.kg.gettransfer.domain.model.PassengerAccount
 
-import java.text.SimpleDateFormat
+import java.text.DateFormat
 
-import java.util.Locale
-
-import org.koin.standalone.inject
+import org.koin.standalone.get
 
 /**
  * Map a [CarrierTripEntity] to and from a [CarrierTrip] instance when data is moving between
  * this later and the Domain layer.
  */
 open class CarrierTripMapper: Mapper<CarrierTripEntity, CarrierTrip> {
-    private val cityPointMapper: CityPointMapper by inject()
-    private val vehicleBaseMapper: VehicleBaseMapper by inject()
-    private val passengerAccountMapper: PassengerAccountMapper by inject()
+    private val cityPointMapper = get<CityPointMapper>()
+    private val vehicleBaseMapper = get<VehicleBaseMapper>()
+    private val passengerAccountMapper = get<PassengerAccountMapper>()
+    private val dateFormat = get<ThreadLocal<DateFormat>>("iso_date")
+    
     /**
      * Map a [CarrierTripEntity] instance to a [CarrierTrip] instance.
      */
@@ -27,7 +27,7 @@ open class CarrierTripMapper: Mapper<CarrierTripEntity, CarrierTrip> {
                     type.transferId,
                     cityPointMapper.fromEntity(type.from),
                     cityPointMapper.fromEntity(type.to),
-                    SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(type.dateLocal),
+                    dateFormat.get().parse(type.dateLocal),
                     type.duration,
                     type.distance,
                     type.time,

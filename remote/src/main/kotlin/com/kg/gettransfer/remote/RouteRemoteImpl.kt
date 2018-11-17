@@ -11,18 +11,18 @@ import com.kg.gettransfer.remote.mapper.RouteInfoMapper
 import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.RouteInfoModel
 
-import org.koin.standalone.inject
+import org.koin.standalone.get
 
 class RouteRemoteImpl: RouteRemote {
-    private val core: ApiCore by inject()
-    private val mapper: RouteInfoMapper by inject()
-    
+    private val core   = get<ApiCore>()
+    private val mapper = get<RouteInfoMapper>()
+
     override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean): RouteInfoEntity {
         val response: ResponseModel<RouteInfoModel> = tryGetRouteInfo(arrayOf(from, to), withPrices, returnWay)
         response.data?.let { return mapper.fromRemote(it) }
         return RouteInfoEntity(false, null, null, emptyList<TransportTypePriceEntity>(), false, emptyList<String>(), null)
     }
-    
+
     private suspend fun tryGetRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean):
         ResponseModel<RouteInfoModel> {
         return try { core.api.getRouteInfo(points, withPrices, returnWay).await() }

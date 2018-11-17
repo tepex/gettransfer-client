@@ -8,18 +8,17 @@ import com.kg.gettransfer.cache.model.TransportTypesCachedList
 
 import com.kg.gettransfer.data.model.ConfigsEntity
 
-import org.koin.standalone.inject
+import org.koin.standalone.get
 
 /**
  * Map a [ConfigsCached] from/to a [ConfigsEntity] instance when data is moving between this later and the Data layer.
  */
 open class ConfigsEntityMapper: EntityMapper<ConfigsCached, ConfigsEntity> {
-
-    private val transportTypeMapper: TransportTypeEntityMapper by inject()
-    private val paypalCredentialsMapper: PaypalCredentialsEntityMapper by inject()
-    private val localeMapper: LocaleEntityMapper by inject()
-    private val currencyMapper: CurrencyEntityMapper by inject()
-    private val cardGatewaysMapper: CardGatewaysEntityMapper by inject()
+    private val transportTypeMapper     = get<TransportTypeEntityMapper>()
+    private val paypalCredentialsMapper = get<PaypalCredentialsEntityMapper>()
+    private val localeMapper            = get<LocaleEntityMapper>()
+    private val currencyMapper          = get<CurrencyEntityMapper>()
+    private val cardGatewaysMapper      = get<CardGatewaysEntityMapper>()
 
     override fun fromCached(type: ConfigsCached) =
         ConfigsEntity(type.transportTypes.list.map { transportTypeMapper.fromCached(it) },

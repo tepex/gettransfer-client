@@ -6,17 +6,18 @@ import com.kg.gettransfer.data.model.RatingsEntity
 
 import com.kg.gettransfer.remote.model.OfferModel
 
-import org.koin.standalone.inject
+import org.koin.standalone.get
 
 /**
  * Map a [OfferEntity] from an [OfferModel] instance when data is moving between this later and the Data layer.
  */
 open class OfferMapper: EntityMapper<OfferModel, OfferEntity> {
-    private val priceMapper: PriceMapper by inject()
-    private val ratingsMapper: RatingsMapper by inject()
-    private val carrierMapper: CarrierMapper by inject()
-    private val vehicleMapper: VehicleMapper by inject()
-    private val profileMapper: ProfileMapper by inject()
+    private val priceMapper   = get<PriceMapper>()
+    private val ratingsMapper = get<RatingsMapper>()
+    private val carrierMapper = get<CarrierMapper>()
+    private val vehicleMapper = get<VehicleMapper>()
+    private val profileMapper = get<ProfileMapper>()
+
     /**
      * Map a [OfferModel] instance to a [OfferEntity] instance.
      */

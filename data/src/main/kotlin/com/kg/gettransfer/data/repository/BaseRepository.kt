@@ -10,9 +10,11 @@ import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Result
 
+import org.koin.standalone.KoinComponent
+
 import org.slf4j.LoggerFactory
 
-abstract class BaseRepository() {
+abstract class BaseRepository(): KoinComponent {
     companion object {
         @JvmField val TAG = "GTR-repository"
     }

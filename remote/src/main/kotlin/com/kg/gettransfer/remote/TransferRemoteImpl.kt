@@ -17,14 +17,16 @@ import com.kg.gettransfer.remote.model.TransfersModel
 import com.kg.gettransfer.remote.model.TransferWrapperModel
 
 import org.koin.core.parameter.parametersOf
+
+import org.koin.standalone.get
 import org.koin.standalone.inject
 
 import org.slf4j.Logger
 
 class TransferRemoteImpl: TransferRemote {
-    private val core: ApiCore by inject()
-    private val transferMapper: TransferMapper by inject()
-    private val transferNewMapper: TransferNewMapper by inject()
+    private val core              = get<ApiCore>()
+    private val transferMapper    = get<TransferMapper>()
+    private val transferNewMapper = get<TransferNewMapper>()
     private val log: Logger by inject { parametersOf("GTR-remote") }
 
     override suspend fun createTransfer(transferNew: TransferNewEntity): TransferEntity {
@@ -32,7 +34,7 @@ class TransferRemoteImpl: TransferRemote {
         val response = tryPostTransfer(wrapper)
         return transferMapper.fromRemote(response.data?.transfer!!)
     }
-    
+
     private suspend fun tryPostTransfer(transferNew: TransferNewWrapperModel): ResponseModel<TransferWrapperModel> {
         return try { core.api.postTransfer(transferNew).await() }
         catch(e: Exception) {
@@ -45,29 +47,29 @@ class TransferRemoteImpl: TransferRemote {
             return try { core.api.postTransfer(transferNew).await() } catch(e2: Exception) { throw core.remoteException(e2) }
         }
     }
-    
+
     override suspend fun cancelTransfer(id: Long, reason: String): TransferEntity {
         val response: ResponseModel<TransferWrapperModel> = core.tryTwice(id) { _id -> core.api.cancelTransfer(_id, ReasonModel(reason)) }
         return transferMapper.fromRemote(response.data?.transfer!!)
     }
-    
+
     override suspend fun getTransfer(id: Long): TransferEntity {
 		val response: ResponseModel<TransferWrapperModel> = core.tryTwice(id, { _id -> core.api.getTransfer(_id) })
 		return transferMapper.fromRemote(response.data?.transfer!!)
     }
-    
+
     override suspend fun getAllTransfers(): List<TransferEntity> {
 		val response: ResponseModel<TransfersModel> = core.tryTwice { core.api.getAllTransfers() }
 		val transfers: List<TransferModel> = response.data!!.transfers
 		return transfers.map { transferMapper.fromRemote(it) }
     }
-    
+
     override suspend fun getTransfersArchive(): List<TransferEntity> {
 		val response: ResponseModel<TransfersModel> = core.tryTwice { core.api.getTransfersArchive() }
 		val transfers: List<TransferModel> = response.data!!.transfers
 		return transfers.map { transferMapper.fromRemote(it) }
     }
-    
+
     override suspend fun getTransfersActive(): List<TransferEntity> {
 		val response: ResponseModel<TransfersModel> = core.tryTwice { core.api.getTransfersActive() }
 		val transfers: List<TransferModel> = response.data!!.transfers
