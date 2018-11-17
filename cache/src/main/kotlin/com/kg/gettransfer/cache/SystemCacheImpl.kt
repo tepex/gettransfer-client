@@ -11,9 +11,13 @@ import com.kg.gettransfer.data.SystemCache
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 
-class SystemCacheImpl(private val db: CacheDatabase,
-                      private val configsMapper: ConfigsEntityMapper,
-                      private val accountMapper: AccountEntityMapper): SystemCache {
+import org.koin.standalone.inject
+import org.koin.standalone.KoinComponent
+
+class SystemCacheImpl: SystemCache, KoinComponent {
+    private val db: CacheDatabase by inject()
+    private val configsMapper: ConfigsEntityMapper by inject()
+    private val accountMapper: AccountEntityMapper by inject()
 
     override fun getConfigs() = db.configsCachedDao().selectAll().firstOrNull()?.let { configsMapper.fromCached(it) } 
     override fun setConfigs(configs: ConfigsEntity) = db.configsCachedDao().update(configsMapper.toCached(configs))

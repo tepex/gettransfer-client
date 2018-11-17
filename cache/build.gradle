@@ -64,6 +64,7 @@ dependencies {
     implementation libs.coroutines
     implementation libs.serialization
     implementation libs.koin_android
+    implementation libs.koin_core
     implementation project(":data")
 
     implementation libs.room
