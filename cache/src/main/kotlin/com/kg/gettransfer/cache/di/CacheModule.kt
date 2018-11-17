@@ -1,4 +1,4 @@
-package com.kg.gettransfer.di
+package com.kg.gettransfer.cache.di
 
 import android.arch.persistence.room.Room
 
