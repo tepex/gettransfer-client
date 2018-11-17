@@ -4,14 +4,18 @@ import com.kg.gettransfer.data.model.ConfigsEntity
 
 import com.kg.gettransfer.remote.model.ConfigsModel
 
+import org.koin.standalone.inject
+
 /**
  * Map a [ConfigsModel] from a [ConfigsEntity] instance when data is moving between this later and the Data layer.
  */
-open class ConfigsMapper(private val transportTypeMapper: TransportTypeMapper,
-                         private val paypalCredentialsMapper: PaypalCredentialsMapper,
-                         private val localeMapper: LocaleMapper,
-                         private val currencyMapper: CurrencyMapper,
-                         private val cardGatewaysMapper: CardGatewaysMapper): EntityMapper<ConfigsModel, ConfigsEntity> {
+open class ConfigsMapper: EntityMapper<ConfigsModel, ConfigsEntity> {
+    private val transportTypeMapper: TransportTypeMapper by inject()
+    private val paypalCredentialsMapper: PaypalCredentialsMapper by inject()
+    private val localeMapper: LocaleMapper by inject()
+    private val currencyMapper: CurrencyMapper by inject()
+    private val cardGatewaysMapper: CardGatewaysMapper by inject()
+    
     override fun fromRemote(type: ConfigsModel) =
         ConfigsEntity(type.transportTypes.map { transportTypeMapper.fromRemote(it) },
                       paypalCredentialsMapper.fromRemote(type.paypalCredentials),

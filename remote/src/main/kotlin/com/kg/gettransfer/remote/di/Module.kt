@@ -8,49 +8,55 @@ import com.kg.gettransfer.remote.mapper.*
 
 import org.koin.dsl.module.module
 
+import org.slf4j.LoggerFactory
+
 val remoteModule = module {
+    factory { (tag: String) -> LoggerFactory.getLogger(tag) }
+    
     single { ApiCore(get()) }
+    
     single { PromoMapper() }
+    single { TransportTypePriceMapper() }
     single { RouteInfoMapper() }
-    single { RouteRemoteImpl(get(), get()) as RouteRemote }
+    single<RouteRemote> { RouteRemoteImpl() }
+    
     single { AccountMapper() }
     single { TransportTypeMapper() }
     single { PaypalCredentialsMapper() }
     single { LocaleMapper() }
     single { CurrencyMapper() }
     single { CardGatewaysMapper() }
-    single { ConfigsMapper(get(), get(), get(), get(), get()) }
+    single { ConfigsMapper() }
     single { EndpointMapper() }
-    single { SystemRemoteImpl(get(), get(), get(), get()) as SystemRemote }
+    single<SystemRemote> { SystemRemoteImpl() }
     
     single { CityPointMapper() }
     single { VehicleBaseMapper() }
     single { PassengerAccountMapper() }
-    single { CarrierTripMapper(get(), get(), get()) }
-    single { CarrierTripRemoteImpl(get(), get()) as CarrierTripRemote }
+    single { CarrierTripMapper() }
+    single<CarrierTripRemote> { CarrierTripRemoteImpl() }
 
     single { PromoDiscountMapper() }
     single { TripMapper() }
     single { MoneyMapper() }
     single { UserMapper() }
-    single { TransferMapper(get(), get()) }
-    single { TransferNewMapper(get(), get(), get(), get()) }
-    single { TransferRemoteImpl(get(), get(), get()) as TransferRemote }
+    single { TransferMapper() }
+    single { TransferNewMapper() }
+    single<TransferRemote> { TransferRemoteImpl() }
     
     single { ProfileMapper() }
     single { VehicleMapper() }
     single { RatingsMapper() }
-    single { CarrierMapper(get(), get()) }
-    single { PriceMapper(get()) }
-    single { OfferMapper(get(), get(), get(), get(), get()) }
-    single { OfferRemoteImpl(get(), get()) as OfferRemote }
+    single { CarrierMapper() }
+    single { PriceMapper() }
+    single { OfferMapper() }
+    single<OfferRemote> { OfferRemoteImpl() }
     
     single { PaymentMapper() }
     single { PaymentRequestMapper() }
-
     single { PaymentStatusMapper() }
     single { PaymentStatusRequestMapper() }
-    single { PaymentRemoteImpl(get(), get(), get(), get(), get()) as PaymentRemote }
+    single<PaymentRemote> { PaymentRemoteImpl() }
     
     single<PromoRemote> { PromoRemoteImpl() }
 }

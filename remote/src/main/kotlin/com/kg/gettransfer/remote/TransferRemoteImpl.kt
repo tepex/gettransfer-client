@@ -16,14 +16,17 @@ import com.kg.gettransfer.remote.model.TransferNewWrapperModel
 import com.kg.gettransfer.remote.model.TransfersModel
 import com.kg.gettransfer.remote.model.TransferWrapperModel
 
-import org.slf4j.LoggerFactory
+import org.koin.core.parameter.parametersOf
+import org.koin.standalone.inject
+import org.koin.standalone.KoinComponent
 
-class TransferRemoteImpl(private val core: ApiCore,
-                         private val transferMapper: TransferMapper,
-                         private val transferNewMapper: TransferNewMapper): TransferRemote {
-    companion object {
-        private val log = LoggerFactory.getLogger("Transfer-remote")
-    }
+import org.slf4j.Logger
+
+class TransferRemoteImpl: TransferRemote, KoinComponent {
+    private val core: ApiCore by inject()
+    private val transferMapper: TransferMapper by inject()
+    private val transferNewMapper: TransferNewMapper by inject()
+    private val log: Logger by inject { parametersOf("GTR-remote") }
 
     override suspend fun createTransfer(transferNew: TransferNewEntity): TransferEntity {
         val wrapper = TransferNewWrapperModel(transferNewMapper.toRemote(transferNew))

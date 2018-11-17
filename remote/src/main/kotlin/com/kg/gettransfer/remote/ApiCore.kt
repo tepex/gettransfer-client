@@ -22,19 +22,22 @@ import kotlinx.coroutines.Deferred
 import okhttp3.CookieJar
 import okhttp3.OkHttpClient
 
-import org.slf4j.LoggerFactory
+import org.koin.core.parameter.parametersOf
+import org.koin.standalone.inject
+import org.koin.standalone.KoinComponent
+
+import org.slf4j.Logger
 
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class ApiCore(private val preferences: PreferencesCache) {
+class ApiCore(private val preferences: PreferencesCache): KoinComponent {
     companion object {
-        @JvmField val TAG = "GTR-remote"
         private val ERROR_PATTERN = Regex("^\\<h1\\>(.+)\\<\\/h1\\>$")
     }
 
-    private val log = LoggerFactory.getLogger(TAG)
+    private val log: Logger by inject { parametersOf("GTR-remote") }
 
     internal lateinit var api: Api
     lateinit var apiUrl: String

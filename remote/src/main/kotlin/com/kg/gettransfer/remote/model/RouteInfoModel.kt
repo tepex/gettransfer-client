@@ -12,7 +12,8 @@ class RouteInfoModel(@SerializedName("success") @Expose val success: Boolean,
 
 class TransportTypePriceModel(@SerializedName("min_float") @Expose val minFloat: Float,
                               @SerializedName("min") @Expose val min: String,
-                              @SerializedName("max") @Expose val max: String)
+                              @SerializedName("max") @Expose val max: String,
+                              var transferId: String? = null)
 
 class RoutesModel(@SerializedName("overview_polyline") @Expose val overviewPolyline: PointsModel,
                   @SerializedName("legs") @Expose val legs: List<LegModel>)

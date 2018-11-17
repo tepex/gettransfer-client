@@ -11,8 +11,13 @@ import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.OfferModel
 import com.kg.gettransfer.remote.model.OffersModel
 
-class OfferRemoteImpl(private val core: ApiCore,
-                      private val mapper: OfferMapper): OfferRemote {
+import org.koin.standalone.inject
+import org.koin.standalone.KoinComponent
+
+class OfferRemoteImpl: OfferRemote, KoinComponent {
+    private val core: ApiCore by inject()
+    private val mapper: OfferMapper by inject()
+    
     override suspend fun getOffers(id: Long): List<OfferEntity> {
         val response: ResponseModel<OffersModel> = core.tryTwice(id, { _id -> core.api.getOffers(_id) })
         val offers: List<OfferModel> = response.data!!.offers

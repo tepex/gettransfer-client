@@ -16,10 +16,15 @@ import com.kg.gettransfer.remote.model.AccountModelWrapper
 import com.kg.gettransfer.remote.model.ConfigsModel
 import com.kg.gettransfer.remote.model.ResponseModel
 
-class SystemRemoteImpl(private val core: ApiCore,
-                       private val configsMapper: ConfigsMapper,
-                       private val accountMapper: AccountMapper,
-                       private val endpointMapper: EndpointMapper): SystemRemote {
+import org.koin.standalone.inject
+import org.koin.standalone.KoinComponent
+
+class SystemRemoteImpl: SystemRemote, KoinComponent {
+    private val core: ApiCore by inject()
+    private val configsMapper: ConfigsMapper by inject()
+    private val accountMapper: AccountMapper by inject()
+    private val endpointMapper: EndpointMapper by inject()
+    
     override suspend fun getConfigs(): ConfigsEntity {
         val response: ResponseModel<ConfigsModel> = core.tryTwice { core.api.getConfigs() }
 		return configsMapper.fromRemote(response.data!!)

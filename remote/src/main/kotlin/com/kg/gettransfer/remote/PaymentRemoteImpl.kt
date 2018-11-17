@@ -20,11 +20,15 @@ import com.kg.gettransfer.remote.model.PaymentStatusRequestModel
 import com.kg.gettransfer.remote.model.PaymentStatusWrapperModel
 import com.kg.gettransfer.remote.model.ResponseModel
 
-class PaymentRemoteImpl(private val core: ApiCore,
-                        private val paymentRequestMapper: PaymentRequestMapper,
-                        private val paymentMapper: PaymentMapper,
-                        private val paymentStatusRequestMapper: PaymentStatusRequestMapper,
-                        private val paymentStatusMapper: PaymentStatusMapper): PaymentRemote {
+import org.koin.standalone.inject
+import org.koin.standalone.KoinComponent
+
+class PaymentRemoteImpl: PaymentRemote, KoinComponent {
+    private val core: ApiCore by inject()
+    private val paymentRequestMapper: PaymentRequestMapper by inject()
+    private val paymentMapper: PaymentMapper by inject()
+    private val paymentStatusRequestMapper: PaymentStatusRequestMapper by inject()
+    private val paymentStatusMapper: PaymentStatusMapper by inject()
 
     override suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity {
         val response: ResponseModel<PaymentModel> = tryCreatePayment(paymentRequestMapper.toRemote(paymentRequest))

@@ -5,12 +5,15 @@ import com.kg.gettransfer.data.model.PassengerAccountEntity
 
 import com.kg.gettransfer.remote.model.CarrierTripModel
 
+import org.koin.standalone.inject
+
 /**
  * Map a [CarrierTripModel] from a [CarrierTripEntity] instance when data is moving between this later and the Data layer.
  */
-open class CarrierTripMapper(private val cityPointMapper: CityPointMapper,
-                             private val vehicleBaseMapper: VehicleBaseMapper,
-                             private val passengerAccountMapper: PassengerAccountMapper): EntityMapper<CarrierTripModel, CarrierTripEntity> {
+open class CarrierTripMapper: EntityMapper<CarrierTripModel, CarrierTripEntity> {
+    private val cityPointMapper: CityPointMapper by inject()
+    private val vehicleBaseMapper: VehicleBaseMapper by inject()
+    private val passengerAccountMapper: PassengerAccountMapper by inject()
 
     override fun fromRemote(type: CarrierTripModel) = 
         CarrierTripEntity(type.id,
