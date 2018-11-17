@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.facebook.appevents.AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT
 import com.facebook.appevents.AppEventsConstants.EVENT_PARAM_CURRENCY
 
@@ -30,6 +31,9 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
 import com.kg.gettransfer.presentation.view.PaymentSettingsView
+
+import com.kg.gettransfer.utilities.DateSerializer
+
 import com.yandex.metrica.YandexMetrica
 
 import java.util.Date
@@ -54,7 +58,9 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
     }
     
     @Serializable
-    data class Params(val dateRefund: Date?, val transferId: Long, val offerId: Long)
+    data class Params(@Serializable(with = DateSerializer::class) val dateRefund: Date?,
+                      val transferId: Long,
+                      val offerId: Long)
 
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
@@ -101,8 +107,10 @@ class PaymentSettingsPresenter(cc: CoroutineContexts,
     
     private fun navigateToPayment(payment: Payment) {
         router.navigateTo(Screens.PAYMENT,
-                PaymentPresenter.Params(offer!!.id, payment.url!!,
-                        params.transferId.toString(), paymentRequest.percentage))
+                          PaymentPresenter.Params(params.transferId,
+                                                  offer!!.id,
+                                                  payment.url!!,
+                                                  paymentRequest.percentage))
     }
 
     private fun logEventBeginCheckout() {

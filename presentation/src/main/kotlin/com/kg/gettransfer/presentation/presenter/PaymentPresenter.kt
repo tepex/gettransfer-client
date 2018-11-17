@@ -42,15 +42,14 @@ class PaymentPresenter(cc: CoroutineContexts,
 
     private lateinit var offer: Offer
     internal lateinit var params: Params
-    
+
     companion object {
         @JvmField val PARAM_OFFER_ID = "offer_id"
         @JvmField val PARAMS = "params"
     }
-    
+
     @Serializable
-    data class Params(val offerId: Long, val paymentUrl: String,
-                      val  transferId: String, val percentage: Int)
+    data class Params(val transferId: Long, val offerId: Long, val paymentUrl: String, val percentage: Int)
 
     fun changePaymentStatus(orderId: Long, success: Boolean) {
         utils.launchSuspend {
@@ -96,7 +95,7 @@ class PaymentPresenter(cc: CoroutineContexts,
             }
         }
 
-        bundle.putString(TRANSACTION_ID, params.transferId)
+        bundle.putString(TRANSACTION_ID, params.transferId.toString())
         map[TRANSACTION_ID] = params.transferId
 
         eventsLogger.logPurchase(price.toBigDecimal(), systemInteractor.currency, bundle)
