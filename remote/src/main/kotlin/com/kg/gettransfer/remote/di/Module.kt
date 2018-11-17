@@ -51,5 +51,6 @@ val remoteModule = module {
     single { PaymentStatusMapper() }
     single { PaymentStatusRequestMapper() }
     single { PaymentRemoteImpl(get(), get(), get(), get(), get()) as PaymentRemote }
-    single { PromoRemoteImpl(get(), get()) as PromoRemote }
+    
+    single<PromoRemote> { PromoRemoteImpl() }
 }
