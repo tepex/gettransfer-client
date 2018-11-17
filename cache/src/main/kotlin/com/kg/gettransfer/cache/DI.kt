@@ -1,9 +1,6 @@
-package com.kg.gettransfer.cache.di
+package com.kg.gettransfer.cache
 
 import android.arch.persistence.room.Room
-
-import com.kg.gettransfer.cache.CacheDatabase
-import com.kg.gettransfer.cache.SystemCacheImpl
 
 import com.kg.gettransfer.cache.mapper.*
 

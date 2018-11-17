@@ -22,11 +22,16 @@ import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.domain.repository.PaymentRepository
 
-class PaymentRepositoryImpl(private val factory: DataStoreFactory<PaymentDataStore, PaymentDataStoreCache, PaymentDataStoreRemote>,
-                            private val paymentRequestMapper: PaymentRequestMapper,
-                            private val paymentMapper: PaymentMapper,
-                            private val paymentStatusRequestMapper: PaymentStatusRequestMapper,
-                            private val paymentStatusMapper: PaymentStatusMapper): BaseRepository(), PaymentRepository {
+import org.koin.standalone.inject
+import org.koin.standalone.KoinComponent
+
+class PaymentRepositoryImpl(private val factory: DataStoreFactory<PaymentDataStore, PaymentDataStoreCache, PaymentDataStoreRemote>):
+                                BaseRepository(), PaymentRepository, KoinComponent {
+    private val paymentRequestMapper: PaymentRequestMapper by inject()
+    private val paymentMapper: PaymentMapper by inject()
+    private val paymentStatusRequestMapper: PaymentStatusRequestMapper by inject()
+    private val paymentStatusMapper: PaymentStatusMapper by inject()
+
     override suspend fun getPayment(paymentRequest: PaymentRequest): Result<Payment> =
         retrieveRemoteModel<PaymentEntity, Payment>(paymentMapper, Payment("", null, null)) {
             factory.retrieveRemoteDataStore().createPayment(paymentRequestMapper.toEntity(paymentRequest))

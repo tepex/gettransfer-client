@@ -12,9 +12,8 @@ import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.RouteInfoModel
 
 import org.koin.standalone.inject
-import org.koin.standalone.KoinComponent
 
-class RouteRemoteImpl: RouteRemote, KoinComponent {
+class RouteRemoteImpl: RouteRemote {
     private val core: ApiCore by inject()
     private val mapper: RouteInfoMapper by inject()
     

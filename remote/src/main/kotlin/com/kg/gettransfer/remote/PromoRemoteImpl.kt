@@ -10,9 +10,8 @@ import com.kg.gettransfer.remote.model.PromoModel
 import com.kg.gettransfer.remote.model.ResponseModel
 
 import org.koin.standalone.inject
-import org.koin.standalone.KoinComponent
 
-class PromoRemoteImpl: PromoRemote, KoinComponent {
+class PromoRemoteImpl: PromoRemote {
     private val core: ApiCore by inject()
     private val mapper: PromoMapper by inject()
     

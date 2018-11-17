@@ -14,8 +14,13 @@ import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.domain.repository.PromoRepository
 
-class PromoRepositoryImpl(private val factory: DataStoreFactory<PromoDataStore, PromoDataStoreCache, PromoDataStoreRemote>,
-                          private val mapper: PromoDiscountMapper): BaseRepository(), PromoRepository {
+import org.koin.standalone.inject
+import org.koin.standalone.KoinComponent
+
+class PromoRepositoryImpl(private val factory: DataStoreFactory<PromoDataStore, PromoDataStoreCache, PromoDataStoreRemote>):
+                            BaseRepository(), PromoRepository, KoinComponent {
+    private val mapper: PromoDiscountMapper by inject()
+
     override suspend fun getDiscount(code: String): Result<PromoDiscount> =
         retrieveRemoteModel<PromoDiscountEntity, PromoDiscount>(mapper, PromoDiscount("")) {
             factory.retrieveRemoteDataStore().getDiscount(code)

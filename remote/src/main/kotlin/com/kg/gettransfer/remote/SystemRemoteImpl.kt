@@ -17,9 +17,8 @@ import com.kg.gettransfer.remote.model.ConfigsModel
 import com.kg.gettransfer.remote.model.ResponseModel
 
 import org.koin.standalone.inject
-import org.koin.standalone.KoinComponent
 
-class SystemRemoteImpl: SystemRemote, KoinComponent {
+class SystemRemoteImpl: SystemRemote {
     private val core: ApiCore by inject()
     private val configsMapper: ConfigsMapper by inject()
     private val accountMapper: AccountMapper by inject()

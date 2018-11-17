@@ -4,7 +4,9 @@ import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
 
-interface SystemRemote {
+import org.koin.standalone.KoinComponent
+
+interface SystemRemote: KoinComponent {
     suspend fun getConfigs(): ConfigsEntity
     suspend fun getAccount(): AccountEntity?
     suspend fun setAccount(accountEntity: AccountEntity): AccountEntity

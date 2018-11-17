@@ -13,9 +13,8 @@ import com.kg.gettransfer.remote.model.CarrierTripsModel
 import com.kg.gettransfer.remote.model.ResponseModel
 
 import org.koin.standalone.inject
-import org.koin.standalone.KoinComponent
 
-class CarrierTripRemoteImpl: CarrierTripRemote, KoinComponent {
+class CarrierTripRemoteImpl: CarrierTripRemote {
     private val core: ApiCore by inject()
     private val mapper: CarrierTripMapper by inject()
 

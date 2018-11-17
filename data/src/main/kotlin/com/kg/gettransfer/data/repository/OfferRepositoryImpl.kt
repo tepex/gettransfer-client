@@ -28,13 +28,18 @@ import com.kg.gettransfer.domain.repository.OfferRepository
 import java.util.Date
 import java.util.Locale
 
-class OfferRepositoryImpl(private val factory: DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>,
-                          private val mapper: OfferMapper): BaseRepository(), OfferRepository {
+import org.koin.standalone.inject
+import org.koin.standalone.KoinComponent
+
+class OfferRepositoryImpl(private val factory: DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>):
+                            BaseRepository(), OfferRepository, KoinComponent {
+    private val mapper: OfferMapper by inject()
+
     override fun newOffer(offer: Offer): Result<Offer> {
         log.debug("OfferRepository.newOffer: $offer")
         return Result(offer)
     }
-    
+
     override suspend fun getOffers(id: Long): Result<List<Offer>> =
         retrieveRemoteListModel<OfferEntity, Offer>(mapper) {
             factory.retrieveRemoteDataStore().getOffers(id) }

@@ -4,7 +4,9 @@ import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
 
-interface SystemDataStore {
+import org.koin.standalone.KoinComponent
+
+interface SystemDataStore: KoinComponent {
     suspend fun getConfigs(): ConfigsEntity?
     suspend fun setConfigs(configsEntity: ConfigsEntity)
     suspend fun getAccount(): AccountEntity?

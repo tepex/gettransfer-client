@@ -5,14 +5,18 @@ import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.DistanceUnit
 
+import org.koin.standalone.inject
+
 /**
  * Map a [ConfigsEntity] to and from a [Configs] instance when data is moving between this later and the Domain layer.
  */
-open class ConfigsMapper(private val transportTypeMapper: TransportTypeMapper,
-                         private val paypalCredentialsMapper: PaypalCredentialsMapper,
-                         private val localeMapper: LocaleMapper,
-                         private val currencyMapper: CurrencyMapper,
-                         private val cardGatewaysMapper: CardGatewaysMapper): Mapper<ConfigsEntity, Configs> {
+open class ConfigsMapper: Mapper<ConfigsEntity, Configs> {
+    private val transportTypeMapper: TransportTypeMapper by inject()
+    private val paypalCredentialsMapper: PaypalCredentialsMapper by inject()
+    private val localeMapper: LocaleMapper by inject()
+    private val currencyMapper: CurrencyMapper by inject()
+    private val cardGatewaysMapper: CardGatewaysMapper by inject()
+
     /**
      * Map a [ConfigsEntity] instance to a [Configs] instance
      */

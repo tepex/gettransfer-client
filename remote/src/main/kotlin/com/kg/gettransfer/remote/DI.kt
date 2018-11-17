@@ -1,9 +1,13 @@
-package com.kg.gettransfer.remote.di
+package com.kg.gettransfer.remote
 
-import com.kg.gettransfer.data.*
-import com.kg.gettransfer.data.mapper.PromoDiscountMapper
+import com.kg.gettransfer.data.CarrierTripRemote
+import com.kg.gettransfer.data.OfferRemote
+import com.kg.gettransfer.data.PaymentRemote
+import com.kg.gettransfer.data.PromoRemote
+import com.kg.gettransfer.data.RouteRemote
+import com.kg.gettransfer.data.SystemRemote
+import com.kg.gettransfer.data.TransferRemote
 
-import com.kg.gettransfer.remote.*
 import com.kg.gettransfer.remote.mapper.*
 
 import org.koin.dsl.module.module
@@ -15,7 +19,6 @@ val remoteModule = module {
     
     single { ApiCore(get()) }
     
-    single { PromoMapper() }
     single { TransportTypePriceMapper() }
     single { RouteInfoMapper() }
     single<RouteRemote> { RouteRemoteImpl() }
@@ -36,7 +39,6 @@ val remoteModule = module {
     single { CarrierTripMapper() }
     single<CarrierTripRemote> { CarrierTripRemoteImpl() }
 
-    single { PromoDiscountMapper() }
     single { TripMapper() }
     single { MoneyMapper() }
     single { UserMapper() }
@@ -58,5 +60,6 @@ val remoteModule = module {
     single { PaymentStatusRequestMapper() }
     single<PaymentRemote> { PaymentRemoteImpl() }
     
+    single { PromoMapper() }
     single<PromoRemote> { PromoRemoteImpl() }
 }

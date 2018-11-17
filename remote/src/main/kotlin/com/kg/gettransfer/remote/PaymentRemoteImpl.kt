@@ -21,9 +21,8 @@ import com.kg.gettransfer.remote.model.PaymentStatusWrapperModel
 import com.kg.gettransfer.remote.model.ResponseModel
 
 import org.koin.standalone.inject
-import org.koin.standalone.KoinComponent
 
-class PaymentRemoteImpl: PaymentRemote, KoinComponent {
+class PaymentRemoteImpl: PaymentRemote {
     private val core: ApiCore by inject()
     private val paymentRequestMapper: PaymentRequestMapper by inject()
     private val paymentMapper: PaymentMapper by inject()

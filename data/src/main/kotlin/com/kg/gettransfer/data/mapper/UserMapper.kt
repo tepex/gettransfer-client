@@ -4,10 +4,14 @@ import com.kg.gettransfer.data.model.UserEntity
 
 import com.kg.gettransfer.domain.model.User
 
+import org.koin.standalone.inject
+
 /**
  * Map a [UserEntity] to and from a [User] instance when data is moving between this later and the Domain layer.
  */
-open class UserMapper(private val profileMapper: ProfileMapper): Mapper<UserEntity, User> {
+open class UserMapper: Mapper<UserEntity, User> {
+    private val profileMapper: ProfileMapper by inject()
+
     /**
      * Map a [UserEntity] instance to a [User] instance.
      */

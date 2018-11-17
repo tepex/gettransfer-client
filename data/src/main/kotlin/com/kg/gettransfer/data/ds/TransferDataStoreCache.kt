@@ -6,11 +6,15 @@ import com.kg.gettransfer.data.TransferDataStore
 import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.data.model.TransferNewEntity
 
+import org.koin.standalone.inject
+
 /**
  * Implementation of the [TransferDataStore] interface to provide a means of communicating with the local data source.
  */
 @Suppress("UNUSED_PARAMETER")
-open class TransferDataStoreCache(/*private val cache: TransferCache*/): TransferDataStore {
+open class TransferDataStoreCache: TransferDataStore {
+    private val cache: TransferCache by inject()
+    
     override suspend fun createTransfer(transferNew: TransferNewEntity): TransferEntity {
         throw UnsupportedOperationException()
     }

@@ -12,9 +12,8 @@ import com.kg.gettransfer.remote.model.OfferModel
 import com.kg.gettransfer.remote.model.OffersModel
 
 import org.koin.standalone.inject
-import org.koin.standalone.KoinComponent
 
-class OfferRemoteImpl: OfferRemote, KoinComponent {
+class OfferRemoteImpl: OfferRemote {
     private val core: ApiCore by inject()
     private val mapper: OfferMapper by inject()
     

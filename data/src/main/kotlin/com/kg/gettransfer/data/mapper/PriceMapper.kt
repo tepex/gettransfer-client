@@ -4,11 +4,15 @@ import com.kg.gettransfer.data.model.PriceEntity
 
 import com.kg.gettransfer.domain.model.Price
 
+import org.koin.standalone.inject
+
 /**
  * Map a [PriceEntity] to and from a [Price] instance when data is moving between
  * this later and the Domain layer.
  */
-open class PriceMapper(private val moneyMapper: MoneyMapper): Mapper<PriceEntity, Price> {
+open class PriceMapper: Mapper<PriceEntity, Price> {
+    private val moneyMapper: MoneyMapper by inject()
+    
     /**
      * Map a [PriceEntity] instance to a [Price] instance.
      */

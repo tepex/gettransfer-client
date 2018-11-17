@@ -15,9 +15,7 @@ import com.kg.gettransfer.domain.repository.SystemRepository
 
 import java.util.Currency
 import java.util.Locale
-/**
- * Nothing cache properties here!
- */
+
 class SystemInteractor(private val systemRepository: SystemRepository,
                        private val loggingRepository: LoggingRepository,
                        private val geoRepository: GeoRepository) {

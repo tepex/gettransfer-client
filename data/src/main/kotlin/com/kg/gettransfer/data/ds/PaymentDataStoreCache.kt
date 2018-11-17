@@ -11,10 +11,14 @@ import com.kg.gettransfer.data.model.PaymentRequestEntity
 import com.kg.gettransfer.data.model.PaymentStatusEntity
 import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
 
+import org.koin.standalone.inject
+
 /**
  * Implementation of the [PaymentDataStore] interface to provide a means of communicating with the cache data source.
  */
-open class PaymentDataStoreCache(/* private val cache: PaymentCache*/): PaymentDataStore {
+open class PaymentDataStoreCache: PaymentDataStore {
+    private val cache: PaymentCache by inject()
+    
     override suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity {
         throw UnsupportedOperationException()
     }

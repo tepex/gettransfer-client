@@ -34,19 +34,23 @@ import com.kg.gettransfer.domain.repository.SystemRepository
 
 import java.util.concurrent.TimeoutException
 
-class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>,
-                           private val preferencesCache: PreferencesCache,
-                           private val configsMapper: ConfigsMapper,
-                           private val accountMapper: AccountMapper,
-                           private val endpointMapper: EndpointMapper,
-                           private val addressMapper: AddressMapper): BaseRepository(), SystemRepository, PreferencesListener {
+import org.koin.standalone.inject
+import org.koin.standalone.KoinComponent
+
+class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>):
+                    BaseRepository(), SystemRepository, PreferencesListener, KoinComponent {
+    private val preferencesCache: PreferencesCache by inject()
+    private val configsMapper: ConfigsMapper by inject()
+    private val accountMapper: AccountMapper by inject()
+    private val endpointMapper: EndpointMapper by inject()
+    private val addressMapper: AddressMapper by inject()
 
     private val listeners = mutableSetOf<SystemListener>()
-    
+
     init {
         preferencesCache.addListener(this)
     }
-    
+
     override var configs = Configs.DEFAULT
         private set
     override var account = Account.NO_ACCOUNT
@@ -62,7 +66,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
 
     override val accessToken: String
         get() = preferencesCache.accessToken
-        
+
     override val endpoints = preferencesCache.endpoints.map { endpointMapper.fromEntity(it) }
 
     override var endpoint: Endpoint
@@ -108,7 +112,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
     override suspend fun putAccount(account: Account): Result<Account> {
         val accountEntity = try { factory.retrieveRemoteDataStore().setAccount(accountMapper.toEntity(account)) }
         catch(e: RemoteException) { return Result(account, ExceptionMapper.map(e)) }
-        
+
         factory.retrieveCacheDataStore().setAccount(accountEntity)
         this.account = accountMapper.fromEntity(accountEntity)
         return Result(this.account)
@@ -117,7 +121,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
     override suspend fun login(email: String, password: String): Result<Account> {
         val accountEntity = try { factory.retrieveRemoteDataStore().login(email, password) }
         catch(e: RemoteException) { return Result(account, ExceptionMapper.map(e)) }
-        
+
         factory.retrieveCacheDataStore().setAccount(accountEntity)
         account = accountMapper.fromEntity(accountEntity)
         return Result(account)

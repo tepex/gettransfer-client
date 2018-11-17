@@ -8,7 +8,11 @@ import com.kg.gettransfer.data.mapper.ExceptionMapper
 
 import com.kg.gettransfer.data.model.PromoDiscountEntity
 
-class PromoDataStoreCache(/*private val remote: PromoCache*/): PromoDataStore {
+import org.koin.standalone.inject
+
+class PromoDataStoreCache: PromoDataStore {
+    private val remote: PromoCache by inject()
+    
     override suspend fun getDiscount(code: String): PromoDiscountEntity {
         throw UnsupportedOperationException()
     }

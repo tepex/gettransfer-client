@@ -18,11 +18,10 @@ import com.kg.gettransfer.remote.model.TransferWrapperModel
 
 import org.koin.core.parameter.parametersOf
 import org.koin.standalone.inject
-import org.koin.standalone.KoinComponent
 
 import org.slf4j.Logger
 
-class TransferRemoteImpl: TransferRemote, KoinComponent {
+class TransferRemoteImpl: TransferRemote {
     private val core: ApiCore by inject()
     private val transferMapper: TransferMapper by inject()
     private val transferNewMapper: TransferNewMapper by inject()

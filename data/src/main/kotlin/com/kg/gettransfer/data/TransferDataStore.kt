@@ -3,7 +3,9 @@ package com.kg.gettransfer.data
 import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.data.model.TransferNewEntity
 
-interface TransferDataStore {
+import org.koin.standalone.KoinComponent
+
+interface TransferDataStore: KoinComponent {
     suspend fun createTransfer(transferNew: TransferNewEntity): TransferEntity
     suspend fun cancelTransfer(id: Long, reason: String): TransferEntity
     suspend fun getTransfer(id: Long): TransferEntity

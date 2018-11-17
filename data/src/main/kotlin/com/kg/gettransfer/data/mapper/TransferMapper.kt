@@ -11,11 +11,15 @@ import java.text.SimpleDateFormat
 
 import java.util.Locale
 
+import org.koin.standalone.inject
+
 /**
  * Map a [TransferEntity] to and from a [Transfer] instance when data is moving between this later and the Domain layer.
  */
-open class TransferMapper(private val cityPointMapper: CityPointMapper,
-                          private val moneyMapper: MoneyMapper): Mapper<TransferEntity, Transfer> {
+open class TransferMapper: Mapper<TransferEntity, Transfer> {
+    private val cityPointMapper: CityPointMapper by inject()
+    private val moneyMapper: MoneyMapper by inject()
+
     /**
      * Map a [TransferEntity] instance to a [Transfer] instance.
      */
@@ -30,7 +34,7 @@ open class TransferMapper(private val cityPointMapper: CityPointMapper,
                  SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(type.dateToLocal),
                  type.dateReturnLocal?.let { SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(it) },
                  type.dateRefund?.let { SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(it) },
-                        
+
                  type.nameSign,
                  type.comment,
                  type.malinaCard,
@@ -41,7 +45,7 @@ open class TransferMapper(private val cityPointMapper: CityPointMapper,
                  type.offersCount,
                  type.relevantCarriersCount,
                  type.offersUpdatedAt?.let { SimpleDateFormat(Mapper.ISO_FORMAT_STRING, Locale.US).parse(it) },
-                        
+
                  type.time,
                  type.paidSum?.let { moneyMapper.fromEntity(it) },
                  type.remainsToPay?.let { moneyMapper.fromEntity(it) },
@@ -52,7 +56,7 @@ open class TransferMapper(private val cityPointMapper: CityPointMapper,
                  type.transportTypeIds,
                  type.passengerOfferedPrice,
                  type.price?.let { moneyMapper.fromEntity(it) },
-                            
+
                  type.editableFields)
 
     /**

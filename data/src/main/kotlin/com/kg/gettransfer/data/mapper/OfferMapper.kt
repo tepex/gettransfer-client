@@ -16,15 +16,18 @@ import java.text.SimpleDateFormat
 
 import java.util.Locale
 
+import org.koin.standalone.inject
 
 /**
  * Map a [OfferEntity] to and from a [Offer] instance when data is moving between this later and the Domain layer.
  */
-open class OfferMapper(private val priceMapper: PriceMapper,
-                       private val ratingsMapper: RatingsMapper,
-                       private val carrierMapper: CarrierMapper,
-                       private val vehicleMapper: VehicleMapper,
-                       private val profileMapper: ProfileMapper): Mapper<OfferEntity, Offer> {
+open class OfferMapper: Mapper<OfferEntity, Offer> {
+    private val priceMapper: PriceMapper by inject()
+    private val ratingsMapper: RatingsMapper by inject()
+    private val carrierMapper: CarrierMapper by inject()
+    private val vehicleMapper: VehicleMapper by inject()
+    private val profileMapper: ProfileMapper by inject()
+
     /**
      * Map a [OfferEntity] instance to a [Offer] instance.
      */

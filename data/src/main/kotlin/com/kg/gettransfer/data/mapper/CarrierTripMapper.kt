@@ -9,13 +9,16 @@ import java.text.SimpleDateFormat
 
 import java.util.Locale
 
+import org.koin.standalone.inject
+
 /**
  * Map a [CarrierTripEntity] to and from a [CarrierTrip] instance when data is moving between
  * this later and the Domain layer.
  */
-open class CarrierTripMapper(private val cityPointMapper: CityPointMapper,
-                             private val vehicleBaseMapper: VehicleBaseMapper,
-                             private val passengerAccountMapper: PassengerAccountMapper): Mapper<CarrierTripEntity, CarrierTrip> {
+open class CarrierTripMapper: Mapper<CarrierTripEntity, CarrierTrip> {
+    private val cityPointMapper: CityPointMapper by inject()
+    private val vehicleBaseMapper: VehicleBaseMapper by inject()
+    private val passengerAccountMapper: PassengerAccountMapper by inject()
     /**
      * Map a [CarrierTripEntity] instance to a [CarrierTrip] instance.
      */

@@ -3,7 +3,9 @@ package com.kg.gettransfer.data
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 
-interface SystemCache {
+import org.koin.standalone.KoinComponent
+
+interface SystemCache: KoinComponent {
     fun getConfigs(): ConfigsEntity?
     fun setConfigs(configs: ConfigsEntity)
     

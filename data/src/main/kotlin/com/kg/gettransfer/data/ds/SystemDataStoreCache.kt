@@ -7,10 +7,14 @@ import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
 
+import org.koin.standalone.inject
+
 /**
  * Implementation of the [SystemDataStore] interface to provide a means of communicating with the local data source.
  */
-open class SystemDataStoreCache(private val cache: SystemCache): SystemDataStore {
+open class SystemDataStoreCache: SystemDataStore {
+    private val cache: SystemCache by inject()
+    
     override suspend fun getConfigs() = cache.getConfigs() //: ConfigsEntity { throw UnsupportedOperationException() }
     override suspend fun setConfigs(configsEntity: ConfigsEntity) = cache.setConfigs(configsEntity)
     override suspend fun getAccount() = cache.getAccount()

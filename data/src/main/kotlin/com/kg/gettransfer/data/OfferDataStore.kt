@@ -2,6 +2,8 @@ package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.model.OfferEntity
 
-interface OfferDataStore {
+import org.koin.standalone.KoinComponent
+
+interface OfferDataStore: KoinComponent {
     suspend fun getOffers(id: Long): List<OfferEntity>
 }

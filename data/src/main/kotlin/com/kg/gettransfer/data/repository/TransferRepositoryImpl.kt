@@ -20,33 +20,38 @@ import com.kg.gettransfer.domain.repository.TransferRepository
 
 import java.util.Date
 
-class TransferRepositoryImpl(private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>,
-                             private val transferNewMapper: TransferNewMapper,
-                             private val transferMapper: TransferMapper): BaseRepository(), TransferRepository {
+import org.koin.standalone.inject
+import org.koin.standalone.KoinComponent
+
+class TransferRepositoryImpl(private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>):
+                                        BaseRepository(), TransferRepository, KoinComponent {
+    private val transferNewMapper: TransferNewMapper by inject()
+    private val transferMapper: TransferMapper by inject()
+
     override suspend fun createTransfer(transferNew: TransferNew) =
         retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, defaultTransfer) {
             factory.retrieveRemoteDataStore().createTransfer(transferNewMapper.toEntity(transferNew))
         }
-    
+
     override suspend fun cancelTransfer(id: Long, reason: String): Result<Transfer> =
         retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, defaultTransfer) {
             factory.retrieveRemoteDataStore().cancelTransfer(id, reason)
         }
-    
+
     override suspend fun getTransfer(id: Long): Result<Transfer> =
         retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, defaultTransfer) {
             factory.retrieveRemoteDataStore().getTransfer(id)
         }
-    
+
     override suspend fun getAllTransfers(): Result<List<Transfer>> =
         retrieveRemoteListModel<TransferEntity, Transfer>(transferMapper) { factory.retrieveRemoteDataStore().getAllTransfers() }
-    
+
     override suspend fun getTransfersArchive(): Result<List<Transfer>> =
         retrieveRemoteListModel<TransferEntity, Transfer>(transferMapper) { factory.retrieveRemoteDataStore().getTransfersArchive() }
 
     override suspend fun getTransfersActive(): Result<List<Transfer>> =
         retrieveRemoteListModel<TransferEntity, Transfer>(transferMapper) { factory.retrieveRemoteDataStore().getTransfersActive() }
-    
+
     companion object {
         private val defaultTransfer =
             Transfer(0,
@@ -59,7 +64,7 @@ class TransferRepositoryImpl(private val factory: DataStoreFactory<TransferDataS
                      Date(),
                      null,
                      null,
-                     
+
                      null,
                      null,
                      null,
@@ -70,7 +75,7 @@ class TransferRepositoryImpl(private val factory: DataStoreFactory<TransferDataS
                      0,
                      0,
                      null,
-                     
+
                      0,
                      null,
                      null,
@@ -81,7 +86,7 @@ class TransferRepositoryImpl(private val factory: DataStoreFactory<TransferDataS
                      emptyList<String>(),
                      null,
                      null,
-                     
+
                      emptyList<String>())
     }
 }

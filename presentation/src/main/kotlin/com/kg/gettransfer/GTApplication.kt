@@ -5,8 +5,9 @@ import android.content.Intent
 import android.support.annotation.CallSuper
 import android.support.multidex.MultiDexApplication
 
-import com.kg.gettransfer.cache.di.cacheModule
-import com.kg.gettransfer.remote.di.remoteModule
+import com.kg.gettransfer.cache.cacheModule
+import com.kg.gettransfer.data.dataModule
+import com.kg.gettransfer.remote.remoteModule
 import com.kg.gettransfer.di.*
 
 import com.kg.gettransfer.presentation.FileLoggingTree
