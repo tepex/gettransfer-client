@@ -44,7 +44,9 @@ import com.kg.gettransfer.service.OfferServiceConnection
 import kotlinx.coroutines.Dispatchers
 
 import org.koin.android.ext.koin.androidApplication
+import org.koin.android.ext.koin.androidContext
 
+import org.koin.dsl.module.applicationContext
 import org.koin.dsl.module.module
 
 import ru.terrakok.cicerone.Cicerone
@@ -65,18 +67,15 @@ val geoModule = module {
 
 val prefsModule = module {
     single {
-        val context: Context = get()
         val endpoints = listOf(
-            EndpointEntity("Demo", context.resources.getString(R.string.api_key_demo), context.resources.getString(R.string.api_url_demo), true),
-            EndpointEntity("Prod", context.resources.getString(R.string.api_key_prod), context.resources.getString(R.string.api_url_prod)))
-        PreferencesImpl(context, endpoints) as PreferencesCache
+            EndpointEntity("Demo", androidContext().getString(R.string.api_key_demo), androidContext().getString(R.string.api_url_demo), true),
+            EndpointEntity("Prod", androidContext().getString(R.string.api_key_prod), androidContext().getString(R.string.api_url_prod)))
+        PreferencesImpl(androidContext(), endpoints) as PreferencesCache
     }
 }
 
 val loggingModule = module {
-    single {
-        val context: Context = get()
-        LoggingRepositoryImpl(context, context.getString(R.string.logs_file_name)) as LoggingRepository
+    single { LoggingRepositoryImpl(androidContext(), androidContext().getString(R.string.logs_file_name)) as LoggingRepository
     }
 }
 
