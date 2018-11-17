@@ -78,7 +78,10 @@ class OfferServiceConnection: BroadcastReceiver(), ServiceConnection, SystemList
         try {
             val offer = offerMapper.fromEntity(JSON.parse(OfferEntity.serializer(), offerEntity))
             handler?.invoke(offer)
-        } catch(e: Exception) { Timber.e(e) }
+        } catch(e: Exception) {
+            Timber.e(e)
+            throw e
+        }
     }
 }
 

@@ -38,7 +38,7 @@ data class OfferEntity(@SerialName(ID) val id: Long,
 
 @Serializable
 data class PriceEntity(@SerialName(BASE) val base: MoneyEntity,
-                       @SerialName(NO_DISCOUNT) val withoutDiscount: MoneyEntity?,
+                       @Optional @SerialName(NO_DISCOUNT) val withoutDiscount: MoneyEntity? = null,
                        @SerialName(PERCENTAGE_30) val percentage30: String,
                        @SerialName(PERCENTAGE_70) val percentage70: String,
                        @SerialName(AMOUNT) val amount: Double) {
