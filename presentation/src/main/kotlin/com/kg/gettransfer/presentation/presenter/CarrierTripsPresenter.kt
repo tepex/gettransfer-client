@@ -9,7 +9,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.presentation.Screens
 
@@ -18,13 +17,11 @@ import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.view.CarrierTripsView
 
-import ru.terrakok.cicerone.Router
+import org.koin.standalone.inject
 
 @InjectViewState
-class CarrierTripsPresenter(router: Router,
-                            systemInteractor: SystemInteractor,
-                            private val carrierTripInteractor: CarrierTripInteractor): BasePresenter<CarrierTripsView>(router, systemInteractor) {
-
+class CarrierTripsPresenter: BasePresenter<CarrierTripsView>() {
+    private val carrierTripInteractor: CarrierTripInteractor by inject()
     private var trips: List<CarrierTripModel>? = null
 
     override fun onFirstViewAttach() {
@@ -49,7 +46,7 @@ class CarrierTripsPresenter(router: Router,
         checkLoggedIn()
     }
 
-    fun onTripSelected(tripId: Long){
+    fun onTripSelected(tripId: Long) {
         carrierTripInteractor.selectedTripId = tripId
         router.navigateTo(Screens.TRIP_DETAILS)
     }

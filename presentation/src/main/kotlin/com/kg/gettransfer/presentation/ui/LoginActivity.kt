@@ -16,7 +16,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.markAsNotImplemented
 
-import com.kg.gettransfer.presentation.IntentKeys
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.LoginPresenter
 import com.kg.gettransfer.presentation.view.LoginView
@@ -24,11 +23,16 @@ import com.kg.gettransfer.presentation.view.LoginView
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity: BaseActivity(), LoginView {
+    companion object {
+        const val SCREEN_FOR_RETURN = "previous_screen"
+        const val EMAIL_TO_LOGIN    = "email_to_login"
+    }
+
     @InjectPresenter
     internal lateinit var presenter: LoginPresenter
     
     @ProvidePresenter
-    fun createLoginPresenter(): LoginPresenter = LoginPresenter(router, systemInteractor)
+    fun createLoginPresenter() = LoginPresenter()
 
     protected override var navigator = object: BaseNavigator(this) {
         protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
@@ -61,8 +65,8 @@ class LoginActivity: BaseActivity(), LoginView {
         btnLogin.setOnClickListener   { presenter.onLoginClick() }
         homeButton.setOnClickListener { presenter.onHomeClick() }
         btnForgotPassword.markAsNotImplemented()
-        presenter.screenForReturn = intent.getStringExtra(IntentKeys.SCREEN_FOR_RETURN)
-        etEmail.setText(intent.getStringExtra(IntentKeys.EMAIL_TO_LOGIN))
+        presenter.screenForReturn = intent.getStringExtra(SCREEN_FOR_RETURN)
+        etEmail.setText(intent.getStringExtra(EMAIL_TO_LOGIN))
     }
 
     override fun enableBtnLogin(enable: Boolean) {

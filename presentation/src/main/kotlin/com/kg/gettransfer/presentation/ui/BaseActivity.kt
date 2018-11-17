@@ -32,7 +32,6 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
 
-import com.kg.gettransfer.presentation.IntentKeys
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter
@@ -198,8 +197,8 @@ open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, 
                 val nextScreen = nextScreenAndEmailPair.first as String
                 val email = nextScreenAndEmailPair.second as String
                 addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                putExtra(IntentKeys.SCREEN_FOR_RETURN, nextScreen)
-                putExtra(IntentKeys.EMAIL_TO_LOGIN, email)
+                putExtra(LoginActivity.SCREEN_FOR_RETURN, nextScreen)
+                putExtra(LoginActivity.EMAIL_TO_LOGIN, email)
             }
         }
         return null

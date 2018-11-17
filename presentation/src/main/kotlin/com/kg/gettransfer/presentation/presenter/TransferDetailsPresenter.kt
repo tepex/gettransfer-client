@@ -8,7 +8,6 @@ import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Transfer
@@ -19,23 +18,23 @@ import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.TransferDetailsView
 
-import ru.terrakok.cicerone.Router
+import org.koin.standalone.inject
 
 import timber.log.Timber
 
 @InjectViewState
-class TransferDetailsPresenter(router: Router,
-                               systemInteractor: SystemInteractor,
-                               private val routeInteractor: RouteInteractor,
-                               private val transferInteractor: TransferInteractor,
-                               private val offerInteractor: OfferInteractor): BasePresenter<TransferDetailsView>(router, systemInteractor) {
+class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
+    private val routeInteractor: RouteInteractor by inject()
+    private val transferInteractor: TransferInteractor by inject()
+    private val offerInteractor: OfferInteractor by inject()
+
     companion object {
         const val TRANSFER_ID = "transfer_id"
     }
-    
+
     private lateinit var transfer: Transfer
     private lateinit var transferModel: TransferModel
-    
+
     internal var transferId = 0L
 
     @CallSuper

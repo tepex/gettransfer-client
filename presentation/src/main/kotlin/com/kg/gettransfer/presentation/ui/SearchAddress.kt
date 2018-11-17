@@ -77,8 +77,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     }
     
     @ProvidePresenter
-    fun createSearchAddressPresenter(): SearchAddressPresenter =
-        SearchAddressPresenter(parent.router, parent.systemInteractor, parent.routeInteractor)
+    fun createSearchAddressPresenter() = SearchAddressPresenter()
 
     fun initWidget(parent: SearchActivity, isTo: Boolean) {
         this.parent = parent

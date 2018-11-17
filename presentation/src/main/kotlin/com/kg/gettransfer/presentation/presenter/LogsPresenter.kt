@@ -6,11 +6,10 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.presentation.view.LogsView
 
-import ru.terrakok.cicerone.Router
+import org.koin.standalone.inject
 
 @InjectViewState
-class LogsPresenter(router: Router,
-                    systemInteractor: SystemInteractor): BasePresenter<LogsView>(router, systemInteractor) {
+class LogsPresenter: BasePresenter<LogsView>() {
     override fun onFirstViewAttach() {
         viewState.setLogs(systemInteractor.logs)
     }

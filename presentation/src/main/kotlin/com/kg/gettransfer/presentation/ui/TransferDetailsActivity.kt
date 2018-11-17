@@ -14,13 +14,10 @@ import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
-
-import com.kg.gettransfer.domain.interactor.OfferInteractor
-import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
@@ -35,8 +32,6 @@ import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.view.*
 import kotlinx.android.synthetic.main.view_transport_type_transfer_details.view.*
 
-import org.koin.android.ext.android.inject
-
 import timber.log.Timber
 
 class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
@@ -47,16 +42,8 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
     
-    private val offerInteractor: OfferInteractor by inject()
-    private val routeInteractor: RouteInteractor by inject()
-    private val transferInteractor: TransferInteractor by inject()
-    
     @ProvidePresenter
-    fun createTransferDetailsPresenter() = TransferDetailsPresenter(router,
-                                                                    systemInteractor,
-                                                                    routeInteractor,
-                                                                    transferInteractor,
-                                                                    offerInteractor)
+    fun createTransferDetailsPresenter() = TransferDetailsPresenter()
 
     protected override var navigator = object: BaseNavigator(this) {}
 

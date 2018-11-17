@@ -8,7 +8,6 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
 
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
@@ -22,14 +21,10 @@ import com.yandex.metrica.YandexMetrica
 
 import java.util.Locale
 
-import ru.terrakok.cicerone.Router
-
 import timber.log.Timber
 
 @InjectViewState
-class SettingsPresenter(router: Router,
-                        systemInteractor: SystemInteractor): BasePresenter<SettingsView>(router, systemInteractor) {
-
+class SettingsPresenter: BasePresenter<SettingsView>() {
     private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
     private val locales = Mappers.getLocalesModels(systemInteractor.locales).filter { it.locale == "EN" || it.locale == "RU" } 
     private val distanceUnits = Mappers.getDistanceUnitsModels(systemInteractor.distanceUnits)

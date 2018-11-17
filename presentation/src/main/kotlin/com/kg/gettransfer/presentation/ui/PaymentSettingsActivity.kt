@@ -16,22 +16,21 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.interactor.OfferInteractor
-import com.kg.gettransfer.domain.interactor.PaymentInteractor
 
 import com.kg.gettransfer.presentation.Screens
+
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
+
 import com.kg.gettransfer.presentation.presenter.PaymentPresenter
 import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter
+
 import com.kg.gettransfer.presentation.view.PaymentSettingsView
 
 import kotlinx.android.synthetic.main.activity_payment_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
 import kotlinx.serialization.json.JSON
-
-import org.koin.android.ext.android.inject
 
 import java.util.Date
 
@@ -40,14 +39,10 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     @InjectPresenter
     internal lateinit var presenter: PaymentSettingsPresenter
 
-    private val offerInteractor: OfferInteractor by inject()
-    private val paymentInteractor: PaymentInteractor by inject()
-
     override fun getPresenter(): PaymentSettingsPresenter = presenter
 
     @ProvidePresenter
-    fun createPaymentSettingsPresenter(): PaymentSettingsPresenter = 
-        PaymentSettingsPresenter(router, systemInteractor, offerInteractor, paymentInteractor)
+    fun createPaymentSettingsPresenter() = PaymentSettingsPresenter()
 
     protected override var navigator = object: BaseNavigator(this) {
         override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {

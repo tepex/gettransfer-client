@@ -10,7 +10,6 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
@@ -22,14 +21,13 @@ import com.kg.gettransfer.presentation.view.MainView
 
 import com.yandex.metrica.YandexMetrica
 
-import ru.terrakok.cicerone.Router
+import org.koin.standalone.inject
 
 import timber.log.Timber
 
 @InjectViewState
-class MainPresenter(router: Router,
-                    systemInteractor: SystemInteractor,
-                    private val routeInteractor: RouteInteractor): BasePresenter<MainView>(router, systemInteractor) {
+class MainPresenter: BasePresenter<MainView>() {
+    private val routeInteractor: RouteInteractor by inject()
 
     private lateinit var lastAddressPoint: LatLng
     private var lastPoint: LatLng? = null

@@ -11,7 +11,6 @@ import com.google.firebase.analytics.FirebaseAnalytics.Param.CURRENCY
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.Offer
 
@@ -21,6 +20,7 @@ import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
+
 import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter.Companion.PRICE_30
 
 import com.kg.gettransfer.presentation.view.PaymentView
@@ -29,15 +29,14 @@ import com.yandex.metrica.YandexMetrica
 
 import kotlinx.serialization.Serializable
 
-import ru.terrakok.cicerone.Router
+import org.koin.standalone.inject
 
 import timber.log.Timber
 
 @InjectViewState
-class PaymentPresenter(router: Router,
-                       systemInteractor: SystemInteractor,
-                       private val paymentInteractor: PaymentInteractor,
-                       private val offerInteractor: OfferInteractor): BasePresenter<PaymentView>(router, systemInteractor) {
+class PaymentPresenter: BasePresenter<PaymentView>() {
+    private val paymentInteractor: PaymentInteractor by inject()
+    private val offerInteractor: OfferInteractor by inject()
 
     private lateinit var offer: Offer
     internal lateinit var params: Params

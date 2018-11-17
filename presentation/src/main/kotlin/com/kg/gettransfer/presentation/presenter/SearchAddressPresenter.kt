@@ -6,21 +6,19 @@ import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.view.SearchAddressView
 
-import ru.terrakok.cicerone.Router
+import org.koin.standalone.inject
 
 import timber.log.Timber
 
 @InjectViewState
-class SearchAddressPresenter(router: Router,
-                             systemInteractor: SystemInteractor,
-	                         private val routeInteractor: RouteInteractor): BasePresenter<SearchAddressView>(router, systemInteractor) {
+class SearchAddressPresenter: BasePresenter<SearchAddressView>() {
+    private val routeInteractor: RouteInteractor by inject()
 	/* Cache. @TODO */
 	private var lastRequest: String? = null
 	private var lastResult: List<GTAddress>? = null

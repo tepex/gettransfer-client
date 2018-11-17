@@ -18,7 +18,6 @@ import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Payment
@@ -39,15 +38,15 @@ import java.util.Date
 
 import kotlinx.serialization.Serializable
 
-import ru.terrakok.cicerone.Router
+import org.koin.standalone.inject
 
 import timber.log.Timber
 
 @InjectViewState
-class PaymentSettingsPresenter(router: Router,
-                               systemInteractor: SystemInteractor,
-                               private val offerInteractor: OfferInteractor,
-                               private val paymentInteractor: PaymentInteractor): BasePresenter<PaymentSettingsView>(router, systemInteractor) {
+class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
+    private val offerInteractor: OfferInteractor by inject()
+    private val paymentInteractor: PaymentInteractor by inject()
+
     companion object {
         @JvmField val PARAM_SHARE      = "share"
         @JvmField val PRICE_30         = 0.3

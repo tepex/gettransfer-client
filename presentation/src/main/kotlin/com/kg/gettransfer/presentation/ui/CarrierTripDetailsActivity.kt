@@ -15,9 +15,6 @@ import com.google.android.gms.maps.GoogleMap
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
-import com.kg.gettransfer.domain.interactor.RouteInteractor
-
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
@@ -30,18 +27,12 @@ import kotlinx.android.synthetic.main.activity_carrier_transfer_details.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.view.*
 
-import org.koin.android.ext.android.inject
-
 class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsView {
     @InjectPresenter
     internal lateinit var presenter: CarrierTripDetailsPresenter
 
-    private val carrierTripInteractor: CarrierTripInteractor by inject()
-    private val routeInteractor: RouteInteractor by inject()
-
     @ProvidePresenter
-    fun createCarrierTripDetailsPresenter(): CarrierTripDetailsPresenter
-        = CarrierTripDetailsPresenter(router, systemInteractor, carrierTripInteractor, routeInteractor)
+    fun createCarrierTripDetailsPresenter() = CarrierTripDetailsPresenter()
 
     override fun getPresenter(): CarrierTripDetailsPresenter = presenter
 

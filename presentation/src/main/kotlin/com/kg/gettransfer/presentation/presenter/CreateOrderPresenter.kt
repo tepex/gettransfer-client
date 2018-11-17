@@ -15,14 +15,15 @@ import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PromoInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.Trip
 
 import com.kg.gettransfer.presentation.Screens
+
 import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.ui.Utils
+
 import com.kg.gettransfer.presentation.view.CreateOrderView
 
 import com.yandex.metrica.YandexMetrica
@@ -33,17 +34,16 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
-import ru.terrakok.cicerone.Router
+import org.koin.standalone.inject
 
 import timber.log.Timber
 
 @InjectViewState
-class CreateOrderPresenter(router: Router,
-                           systemInteractor: SystemInteractor,
-                           private val routeInteractor: RouteInteractor,
-                           private val transferInteractor: TransferInteractor,
-                           private val promoInteractor: PromoInteractor,
-                           private val offersInteractor: OfferInteractor): BasePresenter<CreateOrderView>(router, systemInteractor) {
+class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
+    private val routeInteractor: RouteInteractor by inject()
+    private val transferInteractor: TransferInteractor by inject()
+    private val promoInteractor: PromoInteractor by inject()
+    private val offersInteractor: OfferInteractor by inject()
 
     private var user: UserModel = Mappers.getUserModel(systemInteractor.account)
     private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
@@ -119,7 +119,7 @@ class CreateOrderPresenter(router: Router,
         date = currentDate.time
     }
 
-    private fun getCurrentDatePlus4Hours(): Calendar{
+    private fun getCurrentDatePlus4Hours(): Calendar {
         val calendar = Calendar.getInstance(systemInteractor.locale)
         /* Server must send current locale time */
         calendar.add(Calendar.HOUR_OF_DAY, FUTURE_HOUR)

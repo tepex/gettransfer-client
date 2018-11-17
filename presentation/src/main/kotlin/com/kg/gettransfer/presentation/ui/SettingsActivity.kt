@@ -25,6 +25,7 @@ import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
+
 import com.kg.gettransfer.presentation.view.SettingsView
 
 import kotlinx.android.synthetic.main.activity_settings.*
@@ -39,7 +40,7 @@ class SettingsActivity: BaseActivity(), SettingsView {
     internal lateinit var presenter: SettingsPresenter
     
     @ProvidePresenter
-    fun createSettingsPresenter(): SettingsPresenter = SettingsPresenter(router, systemInteractor)
+    fun createSettingsPresenter() = SettingsPresenter()
     
     protected override var navigator = object: BaseNavigator(this) {
         @CallSuper

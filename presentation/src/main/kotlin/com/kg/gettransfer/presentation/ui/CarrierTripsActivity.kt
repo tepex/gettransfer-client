@@ -42,8 +42,6 @@ import kotlinx.android.synthetic.main.activity_carrier_trips.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
 
-import org.koin.android.ext.android.inject
-
 import ru.terrakok.cicerone.commands.Forward
 
 import timber.log.Timber
@@ -55,10 +53,8 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView {
     private lateinit var drawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
 
-    private val carrierTripInteractor: CarrierTripInteractor by inject()
-
     @ProvidePresenter
-    fun createCarrierTripsPresenter(): CarrierTripsPresenter = CarrierTripsPresenter(router, systemInteractor, carrierTripInteractor)
+    fun createCarrierTripsPresenter() = CarrierTripsPresenter()
 
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 

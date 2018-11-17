@@ -23,8 +23,6 @@ import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.interactor.RouteInteractor
-
 import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.presentation.Screens
@@ -44,13 +42,10 @@ import kotlinx.android.synthetic.main.search_form.view.*
 import kotlinx.android.synthetic.main.toolbar_search_address.*
 import kotlinx.android.synthetic.main.toolbar_search_address.view.*
 
-import org.koin.android.ext.android.inject
-
 class SearchActivity: BaseActivity(), SearchView {
     @InjectPresenter
     internal lateinit var presenter: SearchPresenter
 
-    internal val routeInteractor: RouteInteractor by inject()
     private lateinit var current: SearchAddress
 
     var mBounds: LatLngBounds? = null
@@ -58,7 +53,8 @@ class SearchActivity: BaseActivity(), SearchView {
     private lateinit var predefinedPopularPlaces: List<PopularPlace>
 
     @ProvidePresenter
-    fun createSearchPresenter(): SearchPresenter = SearchPresenter(router, systemInteractor, routeInteractor)
+    fun createSearchPresenter() = SearchPresenter()
+    
     companion object {
         @JvmField val FADE_DURATION  = 500L
         @JvmField val SLIDE_DURATION = 500L

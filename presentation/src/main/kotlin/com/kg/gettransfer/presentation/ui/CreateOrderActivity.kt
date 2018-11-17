@@ -39,11 +39,6 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.MapStyleOptions
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.interactor.OfferInteractor
-import com.kg.gettransfer.domain.interactor.PromoInteractor
-
-import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
@@ -68,24 +63,15 @@ import kotlinx.android.synthetic.main.amu_info_window.view.*
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
 
-import com.kg.gettransfer.presentation.IntentKeys
-
 import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
 import kotlinx.android.synthetic.main.view_create_order_field.view.*
 import kotlinx.android.synthetic.main.view_seats.view.*
-
-import org.koin.android.ext.android.inject
 
 import java.util.Calendar
 
 class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
-
-    private val routeInteractor: RouteInteractor by inject()
-    private val transferInteractor: TransferInteractor by inject()
-    private val promoInteractor: PromoInteractor by inject()
-    private val offerInteractor: OfferInteractor by inject()
     
     private val calendar = Calendar.getInstance()
     
@@ -102,12 +88,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     @ProvidePresenter
-    fun createCreateOrderPresenter(): CreateOrderPresenter = CreateOrderPresenter(router,
-                                                                                  systemInteractor,
-                                                                                  routeInteractor,
-                                                                                  transferInteractor,
-                                                                                  promoInteractor,
-                                                                                  offerInteractor)
+    fun createCreateOrderPresenter() = CreateOrderPresenter()
 
     protected override var navigator = object: BaseNavigator(this) {
         @CallSuper

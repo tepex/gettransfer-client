@@ -30,7 +30,7 @@ class LogsActivity: BaseActivity(), LogsView {
     internal lateinit var presenter: LogsPresenter
 
     @ProvidePresenter
-    fun createShareLogsPresenter() = LogsPresenter(router, systemInteractor)
+    fun createShareLogsPresenter() = LogsPresenter()
 
     override fun getPresenter(): LogsPresenter = presenter
 

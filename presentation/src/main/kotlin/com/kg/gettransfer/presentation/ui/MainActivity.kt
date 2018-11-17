@@ -43,9 +43,7 @@ import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.interactor.RouteInteractor
 
-import com.kg.gettransfer.presentation.IntentKeys
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
@@ -73,8 +71,6 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     private lateinit var drawer: DrawerLayout
     //private lateinit var toggle: ActionBarDrawerToggle
 
-    private val routeInteractor: RouteInteractor by inject()
-
     private var isFirst = true
     private var centerMarker: Marker? = null
 
@@ -82,7 +78,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     private var toClick = false
 
     @ProvidePresenter
-    fun createMainPresenter(): MainPresenter = MainPresenter(router, systemInteractor, routeInteractor)
+    fun createMainPresenter() = MainPresenter()
 
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 

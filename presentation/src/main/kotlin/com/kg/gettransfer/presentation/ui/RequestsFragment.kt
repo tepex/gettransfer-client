@@ -19,10 +19,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.CoroutineContexts
-
-import com.kg.gettransfer.domain.interactor.SystemInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.adapter.RequestsRVAdapter
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -33,8 +29,6 @@ import com.kg.gettransfer.presentation.view.RequestsFragmentView
 
 import kotlinx.android.synthetic.main.fragment_requests.*
 
-import org.koin.android.ext.android.inject
-
 import timber.log.Timber
 
 /**
@@ -44,14 +38,10 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     @InjectPresenter
     internal lateinit var presenter: RequestsFragmentPresenter
 
-    private val systemInteractor: SystemInteractor by inject()
-    private val transferInteractor: TransferInteractor by inject()
-    private val coroutineContexts: CoroutineContexts by inject()
-    
     private lateinit var categoryName: String
 
     @ProvidePresenter
-    fun createRequestsFragmentPresenter() = RequestsFragmentPresenter((activity as BaseActivity).router, systemInteractor, transferInteractor, categoryName)
+    fun createRequestsFragmentPresenter() = RequestsFragmentPresenter()
 
     companion object {
         @JvmField val CATEGORY = "category"

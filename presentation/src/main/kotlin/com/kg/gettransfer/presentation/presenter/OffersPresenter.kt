@@ -5,10 +5,8 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.InternetNotAvailableException
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Offer
@@ -22,17 +20,17 @@ import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.OffersView
+
 import com.yandex.metrica.YandexMetrica
 
-import ru.terrakok.cicerone.Router
+import org.koin.standalone.inject
 
 import timber.log.Timber
 
 @InjectViewState
-class OffersPresenter(router: Router,
-                      systemInteractor: SystemInteractor,
-                      private val transferInteractor: TransferInteractor,
-                      private val offerInteractor: OfferInteractor): BasePresenter<OffersView>(router, systemInteractor) {
+class OffersPresenter: BasePresenter<OffersView>() {
+    private val transferInteractor: TransferInteractor by inject()
+    private val offerInteractor: OfferInteractor by inject()
 
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })

@@ -56,21 +56,21 @@ import ru.terrakok.cicerone.Router
  * Koin main module
  */
 val ciceroneModule = module {
-    single { Cicerone.create() as Cicerone<Router> }
+    single<Cicerone<Router>> { Cicerone.create() }
     single { get<Cicerone<Router>>().router }
     single { get<Cicerone<Router>>().navigatorHolder }
 }
 
 val geoModule = module {
-    single { GeoRepositoryImpl(get()) as GeoRepository }
+    single<GeoRepository> { GeoRepositoryImpl(get()) }
 }
 
 val prefsModule = module {
-    single {
+    single<PreferencesCache> {
         val endpoints = listOf(
             EndpointEntity("Demo", androidContext().getString(R.string.api_key_demo), androidContext().getString(R.string.api_url_demo), true),
             EndpointEntity("Prod", androidContext().getString(R.string.api_key_prod), androidContext().getString(R.string.api_url_prod)))
-        PreferencesImpl(androidContext(), endpoints) as PreferencesCache
+        PreferencesImpl(androidContext(), endpoints)
     }
 }
 

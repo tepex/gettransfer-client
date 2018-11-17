@@ -7,7 +7,6 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Transfer
@@ -19,15 +18,14 @@ import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.ui.RequestsActivity
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
 
-import ru.terrakok.cicerone.Router
+import org.koin.standalone.inject
 
 import timber.log.Timber
 
 @InjectViewState
-class RequestsFragmentPresenter(router: Router,
-                                systemInteractor: SystemInteractor,
-                                private val transferInteractor: TransferInteractor,
-                                private val categoryName: String): BasePresenter<RequestsFragmentView>(router, systemInteractor) {
+class RequestsFragmentPresenter: BasePresenter<RequestsFragmentView>() {
+    private val transferInteractor: TransferInteractor by inject()
+    //private val categoryName: String by inject()
     
     private var transfers: List<TransferModel>? = null
                                 
@@ -41,11 +39,14 @@ class RequestsFragmentPresenter(router: Router,
     fun getTransfers() {
         utils.launchSuspend {
             viewState.blockInterface(true)
+            /*
             val result = when(categoryName) {
                 RequestsActivity.CATEGORY_ACTIVE    -> utils.asyncAwait { transferInteractor.getActiveTransfers() }
                 RequestsActivity.CATEGORY_COMPLETED -> utils.asyncAwait { transferInteractor.getCompletedTransfers() }
                 else                                -> utils.asyncAwait { transferInteractor.getArchivedTransfers() }
             }
+            */
+            val result = utils.asyncAwait { transferInteractor.getAllTransfers() }
             if(result.error != null) viewState.setError(result.error!!)
             else {
                 transfers = result.model.map { Mappers.getTransferModel(it,

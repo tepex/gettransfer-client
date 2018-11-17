@@ -21,9 +21,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.interactor.OfferInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
-
 import com.kg.gettransfer.presentation.adapter.OffersRVAdapter
 import com.kg.gettransfer.presentation.adapter.VehiclePhotosVPAdapter
 
@@ -31,6 +28,7 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
+
 import com.kg.gettransfer.presentation.view.OffersView
 
 import com.kg.gettransfer.service.OfferServiceConnection
@@ -40,8 +38,6 @@ import kotlinx.android.synthetic.main.bottom_sheet_offer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
-
-import org.koin.android.ext.android.inject
 
 import timber.log.Timber
 
@@ -53,17 +49,10 @@ class OffersActivity: BaseActivity(), OffersView {
     @InjectPresenter
     internal lateinit var presenter: OffersPresenter
 
-    private val offerInteractor: OfferInteractor by inject()
-    private val transferInteractor: TransferInteractor by inject()
-    private val offerServiceConnection: OfferServiceConnection by inject()
-
     private lateinit var bsOfferDetails: BottomSheetBehavior<View>
     
     @ProvidePresenter
-    fun createOffersPresenter(): OffersPresenter = OffersPresenter(router,
-                                                                   systemInteractor,
-                                                                   transferInteractor,
-                                                                   offerInteractor)
+    fun createOffersPresenter() = OffersPresenter()
 
     override var navigator = object: BaseNavigator(this) {}
     
@@ -103,15 +92,19 @@ class OffersActivity: BaseActivity(), OffersView {
     @CallSuper
     protected override fun onStart() {
         super.onStart()
+        /*
         systemInteractor.addListener(offerServiceConnection)
         offerServiceConnection.connectionChanged(systemInteractor.endpoint, systemInteractor.accessToken)
         offerServiceConnection.connect(this) { newOffer -> presenter.onNewOffer(newOffer) }
+        */
     }
     
     @CallSuper
     protected override fun onStop() {
+        /*
         offerServiceConnection.disconnect(this)
         systemInteractor.removeListener(offerServiceConnection)
+        */
         super.onStop()
     }
     

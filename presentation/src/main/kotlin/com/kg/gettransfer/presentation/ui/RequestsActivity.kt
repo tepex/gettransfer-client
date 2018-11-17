@@ -16,7 +16,6 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.presenter.RequestsPresenter
 import com.kg.gettransfer.presentation.view.RequestsView
@@ -24,17 +23,13 @@ import com.kg.gettransfer.presentation.view.RequestsView
 import kotlinx.android.synthetic.main.activity_requests.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
-import org.koin.android.ext.android.inject
-
 class RequestsActivity: BaseActivity(), RequestsView {
 
     @InjectPresenter
     internal lateinit var presenter: RequestsPresenter
 
-    private val transferInteractor: TransferInteractor by inject()
-    
     @ProvidePresenter
-    fun createRequestsPresenter() = RequestsPresenter(router, systemInteractor, transferInteractor)
+    fun createRequestsPresenter() = RequestsPresenter()
 
     protected override var navigator = BaseNavigator(this)
 

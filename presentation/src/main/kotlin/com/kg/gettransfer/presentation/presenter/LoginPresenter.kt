@@ -6,19 +6,17 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.view.LoginView
+
 import com.yandex.metrica.YandexMetrica
 
-import ru.terrakok.cicerone.Router
+import org.koin.standalone.inject
 
 @InjectViewState
-class LoginPresenter(router: Router,
-                     systemInteractor: SystemInteractor): BasePresenter<LoginView>(router, systemInteractor) {
-
+class LoginPresenter: BasePresenter<LoginView>() {
     companion object {
         @JvmField val MIN_PASSWORD_LENGTH = 6
         

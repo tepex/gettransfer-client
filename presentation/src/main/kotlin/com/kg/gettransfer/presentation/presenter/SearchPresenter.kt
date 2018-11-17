@@ -8,19 +8,18 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.GTAddress
 
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 
 import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.view.SearchView
 
-import ru.terrakok.cicerone.Router
+import org.koin.standalone.inject
 
 @InjectViewState
-class SearchPresenter(router: Router,
-                      systemInteractor: SystemInteractor,
-                      private val routeInteractor: RouteInteractor): BasePresenter<SearchView>(router, systemInteractor) {
+class SearchPresenter: BasePresenter<SearchView>() {
+    private val routeInteractor: RouteInteractor by inject()
+
     var isTo = false
 
     companion object {
