@@ -75,8 +75,17 @@ val prefsModule = module {
 }
 
 val loggingModule = module {
-    single { LoggingRepositoryImpl(androidContext(), androidContext().getString(R.string.logs_file_name)) as LoggingRepository
-    }
+    single { LoggingRepositoryImpl(androidContext(), androidContext().getString(R.string.logs_file_name)) as LoggingRepository }
+}
+
+val domainModule = module {
+    single { OfferInteractor(get()) }
+    single { PaymentInteractor(get()) }
+    single { SystemInteractor(get(), get(), get()) }
+    single { RouteInteractor(get(), get()) }
+    single { CarrierTripInteractor(get()) }
+    single { TransferInteractor(get()) }
+    single { PromoInteractor(get()) }
 }
 
 val dataModule = module {
@@ -94,14 +103,13 @@ val dataModule = module {
     single { OfferDataStoreCache(/*get()*/) }
     single { OfferDataStoreRemote(get()) }
 	single { OfferRepositoryImpl(DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>(get(), get()), get()) as OfferRepository }
-	single { OfferInteractor(get()) }
 	
 	single { PaymentMapper() }
 	single { PaymentRequestMapper() }
 	single { PaymentDataStoreCache(/*get()*/) }
 	single { PaymentDataStoreRemote(get()) }
 	single { PaymentRepositoryImpl(DataStoreFactory<PaymentDataStore, PaymentDataStoreCache, PaymentDataStoreRemote>(get(), get()), get(), get(), get(), get()) as PaymentRepository }
-	single { PaymentInteractor(get()) }
+	
 	
 	single { PaypalCredentialsMapper() }
 	single { PaymentStatusRequestMapper() }
@@ -116,14 +124,14 @@ val dataModule = module {
     single { SystemDataStoreRemote(get()) }
 	single { SystemRepositoryImpl(DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>(get(), get()),
 	                              get(), get(), get(), get(), get()) as SystemRepository }
-	single { SystemInteractor(get(), get(), get()) }
+	
 	
 	single { RouteInfoMapper() }
 	single { PointMapper() }
 	single { RouteDataStoreCache(/*get()*/) }
     single { RouteDataStoreRemote(get()) }
 	single { RouteRepositoryImpl(DataStoreFactory<RouteDataStore, RouteDataStoreCache, RouteDataStoreRemote>(get(), get()), get(), get()) as RouteRepository }
-	single { RouteInteractor(get(), get()) }
+	
     
 	single { CityPointMapper(get()) }
 	single { PassengerAccountMapper(get()) }
@@ -131,7 +139,7 @@ val dataModule = module {
 	single { CarrierTripDataStoreCache(/*get()*/) }
 	single { CarrierTripDataStoreRemote(get()) }
 	single { CarrierTripRepositoryImpl(DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>(get(), get()), get()) as CarrierTripRepository }
-    single { CarrierTripInteractor(get()) }
+    
     
     single { TripMapper() }
 	single { TransferMapper(get(), get()) }
@@ -139,12 +147,11 @@ val dataModule = module {
 	single { TransferDataStoreCache(/*get()*/) }
 	single { TransferDataStoreRemote(get()) }
 	single { TransferRepositoryImpl(DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>(get(), get()), get(), get()) as TransferRepository }
-	single { TransferInteractor(get()) }
+	
 
 	single { PromoDataStoreCache(/*get()*/) }
 	single { PromoDataStoreRemote(get()) }
 	single { PromoRepositoryImpl(DataStoreFactory<PromoDataStore, PromoDataStoreCache, PromoDataStoreRemote>(get(), get()), get()) as PromoRepository }
-	single { PromoInteractor(get()) }
 }
 
 val androidModule = module {

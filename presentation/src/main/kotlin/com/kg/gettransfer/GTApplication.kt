@@ -10,6 +10,7 @@ import com.kg.gettransfer.di.*
 import com.kg.gettransfer.presentation.FileLoggingTree
 
 import com.kg.gettransfer.service.SocketIOService
+
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
 
@@ -42,6 +43,7 @@ class GTApplication: MultiDexApplication() {
                                remoteModule,
                                cacheModule,
                                dataModule,
+                               domainModule,
                                androidModule))
 
         startService(Intent(this, SocketIOService::class.java))
