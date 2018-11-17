@@ -1,4 +1,4 @@
-package com.kg.gettransfer.di
+package com.kg.gettransfer.remote.di
 
 import com.kg.gettransfer.data.*
 import com.kg.gettransfer.data.mapper.PromoDiscountMapper

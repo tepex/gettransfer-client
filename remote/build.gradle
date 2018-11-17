@@ -30,6 +30,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 dependencies {
 	implementation libs.kotlin
 	implementation libs.coroutines
+	implementation libs.koin_core
 	implementation project(":data")
 	
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"

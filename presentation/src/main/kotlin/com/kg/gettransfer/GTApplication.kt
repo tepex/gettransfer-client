@@ -6,6 +6,7 @@ import android.support.annotation.CallSuper
 import android.support.multidex.MultiDexApplication
 
 import com.kg.gettransfer.cache.di.cacheModule
+import com.kg.gettransfer.remote.di.remoteModule
 import com.kg.gettransfer.di.*
 
 import com.kg.gettransfer.presentation.FileLoggingTree
