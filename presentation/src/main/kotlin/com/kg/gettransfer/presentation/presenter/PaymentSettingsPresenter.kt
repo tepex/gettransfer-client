@@ -49,8 +49,7 @@ class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
     private var offer: Offer? = null
     
     private lateinit var paymentRequest: PaymentRequestModel
-    private lateinit var transferId: Long
-    private lateinit var offerId: Long
+    private lateinit var params: PaymentSettingsView.Params
     
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
@@ -59,13 +58,13 @@ class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
     @CallSuper
     override fun attachView(view: PaymentSettingsView?) {
         super.attachView(view)
-        offer = offerInteractor.getOffer(view.params.offerId)
+        offer = offerInteractor.getOffer(params.offerId)
         offer?.let {
-            paymentRequest = PaymentRequestModel(view.params.transferId, view.params.offerId)
+            paymentRequest = PaymentRequestModel(params.transferId, params.offerId)
             viewState.setOffer(Mappers.getOfferModel(it, systemInteractor.locale))
             return
         }
-        viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${view.params.offerId}] not found!"))
+        viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${params.offerId}] not found!"))
     }
 
     @CallSuper

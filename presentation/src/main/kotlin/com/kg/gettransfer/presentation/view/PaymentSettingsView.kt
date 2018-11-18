@@ -15,14 +15,13 @@ import kotlinx.serialization.Serializable
 interface PaymentSettingsView: BaseView {
     companion object {
         val EXTRA_PARAMS = "${PaymentSettingsView::class.java.name}.params"
-    
-        @Serializable
-        data class Params(@Serializable(with = DateSerializer::class) val dateRefund: Date?,
-                          val transferId: Long,
-                          val offerId: Long)
+        fun getParams()
     }
     
-    var params: Params
-
+    @Serializable
+    data class Params(@Serializable(with = DateSerializer::class) val dateRefund: Date?,
+                      val transferId: Long,
+                      val offerId: Long)
+    
     fun setOffer(offer: OfferModel)
 }
