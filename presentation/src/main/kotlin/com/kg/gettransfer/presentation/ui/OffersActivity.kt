@@ -42,10 +42,6 @@ import kotlinx.android.synthetic.main.view_transfer_request_info.*
 import timber.log.Timber
 
 class OffersActivity: BaseActivity(), OffersView {
-    companion object {
-        const val TRANSFER_ID = "transfer_id"
-    }
-    
     @InjectPresenter
     internal lateinit var presenter: OffersPresenter
 
@@ -54,8 +50,6 @@ class OffersActivity: BaseActivity(), OffersView {
     @ProvidePresenter
     fun createOffersPresenter() = OffersPresenter()
 
-    override var navigator = object: BaseNavigator(this) {}
-    
     override fun getPresenter(): OffersPresenter = presenter
 
     @CallSuper
@@ -86,7 +80,7 @@ class OffersActivity: BaseActivity(), OffersView {
 
         setOfferDetailsSheetListener()
         
-        presenter.transferId = intent.getLongExtra(TRANSFER_ID, -1)
+        presenter.transferId = intent.getLongExtra(OffersView.EXTRA_TRANSFER_ID, 0)
     }
 
     @CallSuper

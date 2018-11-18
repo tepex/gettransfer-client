@@ -18,8 +18,6 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Trip
 
-import com.kg.gettransfer.presentation.Screens
-
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
@@ -30,6 +28,7 @@ import com.kg.gettransfer.presentation.model.UserModel
 import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.CreateOrderView
+import com.kg.gettransfer.presentation.view.Screens
 
 import com.yandex.metrica.YandexMetrica
 
@@ -256,7 +255,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         checkFields()
     }
     
-    fun showLicenceAgreement() { router.navigateTo(Screens.LICENCE_AGREE) }
+    fun showLicenceAgreement() = router.navigateTo(Screens.LicenceAgree)
 
     fun onGetTransferClick() {
         currentDate = getCurrentDatePlus4Hours()
@@ -297,13 +296,13 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
             }
             if(result.error != null) {
                 when {
-                    result.error!!.isNotLoggedIn() -> router.navigateTo(Screens.LOGIN, Pair(Screens.OFFERS, user.profile.email))
+                    result.error!!.isNotLoggedIn() -> router.navigateTo(Screens.Login(Screens.OFFERS, user.profile.email))
                     result.error!!.details == "{phone=[taken]}" -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
                     else -> viewState.setError(result.error!!)
                 }
             }
             else {
-                router.navigateTo(Screens.OFFERS, result.model.id)
+                router.navigateTo(Screens.Offers(result.model.id))
                 logCreateTransfer(RESULT_SUCCESS)
             }
             viewState.blockInterface(false)
@@ -346,7 +345,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
             if(!checkedTransport.isNullOrEmpty())
                 viewState.setFairPrice(checkedTransport.minBy { it.price!!.unitPrice }?.price!!.min, tripTime)
             else viewState.setFairPrice(null, null)
-        } catch (e: KotlinNullPointerException) { viewState.setFairPrice(null, null) }
+        } catch(e: KotlinNullPointerException) { viewState.setFairPrice(null, null) }
     }
 
     fun onCenterRouteClick() {
@@ -356,12 +355,12 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     }
 
     fun onBackClick() {
-        router.navigateTo(Screens.PASSENGER_MODE)
+        router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
         logEventMain(BACK_CLICKED)
     }
 
     override fun onBackCommandClick() {
-        router.navigateTo(Screens.PASSENGER_MODE)
+        router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
         logEventMain(BACK_CLICKED)
     }
 

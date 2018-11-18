@@ -7,9 +7,9 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.presentation.Screens
 
 import com.kg.gettransfer.presentation.view.LoginView
+import com.kg.gettransfer.presentation.view.Screens
 
 import com.yandex.metrica.YandexMetrica
 
@@ -27,10 +27,10 @@ class LoginPresenter: BasePresenter<LoginView>() {
         @JvmField val PARAM_KEY = "status"
     }
 
-    private var email: String? = null
     private var password: String? = null
 
-    var screenForReturn: String? = null
+    internal var email: String? = null
+    internal var screenForReturn: String? = null
 
     fun onLoginClick() {
         if(!checkFields()) return
@@ -40,12 +40,12 @@ class LoginPresenter: BasePresenter<LoginView>() {
             val result = utils.asyncAwait { systemInteractor.login(email!!, password!!) }
             if(result.error == null) {
                 if(!screenForReturn.isNullOrEmpty()) {
-                    when (screenForReturn) {
-                        Screens.CARRIER_MODE   -> router.navigateTo(checkCarrierMode())
-                        Screens.OFFERS         -> router.navigateTo(Screens.OFFERS)
+                    when(screenForReturn) {
+                        Screens.CARRIER_MODE   -> router.navigateTo(Screens.ChangeMode(checkCarrierMode()))
                         Screens.CLOSE_ACTIVITY -> router.exit()
                     }
-                } else router.exitWithResult(RESULT_CODE, RESULT_OK)
+                }
+                //else router.exitWithResult(RESULT_CODE, RESULT_OK)
                 logLoginEvent(RESULT_SUCCESS)
             } else {
                 viewState.setError(result.error!!)
@@ -78,8 +78,7 @@ class LoginPresenter: BasePresenter<LoginView>() {
     }
 
     private fun checkCarrierMode(): String {
-        if (systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0)
-            return Screens.CARRIER_MODE
+        if(systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) return Screens.CARRIER_MODE
         else return Screens.REG_CARRIER
     }
 }

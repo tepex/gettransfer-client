@@ -28,8 +28,6 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 
-import com.kg.gettransfer.presentation.Screens
-
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 

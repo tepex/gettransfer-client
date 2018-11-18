@@ -26,15 +26,13 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.PaymentPresenter
 import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter
+
 import com.kg.gettransfer.presentation.view.PaymentView
 
 import kotlinx.android.synthetic.main.activity_payment.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-
-import kotlinx.serialization.json.JSON
 
 import timber.log.Timber
 
@@ -43,7 +41,6 @@ class PaymentActivity: BaseActivity(), PaymentView {
         private const val PAYMENT_RESULT_SUCCESSFUL = "/api/payments/successful"
         private const val PAYMENT_RESULT_FAILED = "/api/payments/failed"
         private const val PG_ORDER_ID = "pg_order_id"
-        const val OFFER_ID = "offer_id"
     }
 
     @InjectPresenter
@@ -54,54 +51,40 @@ class PaymentActivity: BaseActivity(), PaymentView {
     @ProvidePresenter
     fun createPaymentPresenter() = PaymentPresenter()
 
-    protected override var navigator = object: BaseNavigator(this) {
-        @CallSuper
-        protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
-            val intent = super.createActivityIntent(context, screenKey, data)
-            if(intent != null) return intent
-
-            when(screenKey) {
-                Screens.PASSENGER_MODE -> return Intent(context, MainActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                }
-            }
-            return null
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment)
 
         setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.apply {
+            setDisplayShowTitleEnabled(false)
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 
         webView.settings.javaScriptEnabled = true
         webView.webViewClient = object: WebViewClient() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                if(view != null && view.url != null) {
-                    handleUri(request!!.url)
-                    return false
-                }
-                return true
+                if(view?.url == null) return true
+                handleUri(request!!.url)
+                return false
             }
 
             // for pre-lollipop
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                if(view != null && url != null) {
-                    handleUri(Uri.parse(url))
-                    return false
-                }
-                return true
+                if(view == null || url == null) return true
+                handleUri(Uri.parse(url))
+                return false
             }
         }
-        presenter.params = JSON.parse(PaymentPresenter.Params.serializer(), intent!!.getStringExtra(PaymentPresenter.PARAMS))
-        webView.loadUrl(presenter.params.paymentUrl)
+        
+        presenter.transferId = intent.getLongExtra(PaymentView.EXTRA_TRANSFER_ID, 0)
+        presenter.offerId    = intent.getLongExtra(PaymentView.EXTRA_OFFER_ID, 0)
+        presenter.percentage = intent.getIntExtra(PaymentView.EXTRA_PERCENTAGE, 0)
+        
+        webView.loadUrl(intent.getStringExtra(PaymentView.EXTRA_URL))
     }
 
     private fun handleUri(uri: Uri?) {

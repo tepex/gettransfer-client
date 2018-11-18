@@ -14,8 +14,6 @@ import com.kg.gettransfer.domain.interactor.PaymentInteractor
 
 import com.kg.gettransfer.domain.model.Offer
 
-import com.kg.gettransfer.presentation.Screens
-
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
@@ -24,10 +22,9 @@ import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
 import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter.Companion.PRICE_30
 
 import com.kg.gettransfer.presentation.view.PaymentView
+import com.kg.gettransfer.presentation.view.Screens
 
 import com.yandex.metrica.YandexMetrica
-
-import kotlinx.serialization.Serializable
 
 import org.koin.standalone.inject
 
@@ -39,15 +36,10 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
     private val offerInteractor: OfferInteractor by inject()
 
     private lateinit var offer: Offer
-    internal lateinit var params: Params
-
-    companion object {
-        @JvmField val PARAM_OFFER_ID = "offer_id"
-        @JvmField val PARAMS = "params"
-    }
-
-    @Serializable
-    data class Params(val transferId: Long, val offerId: Long, val paymentUrl: String, val percentage: Int)
+    
+    internal var transferId = 0L
+    internal var offerId    = 0L
+    internal var percentage = 0
 
     fun changePaymentStatus(orderId: Long, success: Boolean) {
         utils.launchSuspend {
@@ -60,9 +52,9 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
                 router.exit()
             } else {
                 if(result.model.success) {
-                    router.navigateTo(Screens.PASSENGER_MODE)
+                    router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
                     viewState.showSuccessfulMessage()
-                    offer = offerInteractor.getOffer(params.offerId)!!
+                    offer = offerInteractor.getOffer(offerId)!!
                     logEventEcommercePurchase()
                 } else {
                     router.exit()
@@ -81,7 +73,7 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
 
         var price = offer.price.amount
 
-        when(params.percentage) {
+        when(percentage) {
             OfferModel.FULL_PRICE -> {
                 bundle.putDouble(VALUE, price)
                 map[VALUE] = price
@@ -93,8 +85,8 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
             }
         }
 
-        bundle.putString(TRANSACTION_ID, params.transferId.toString())
-        map[TRANSACTION_ID] = params.transferId
+        bundle.putString(TRANSACTION_ID, transferId.toString())
+        map[TRANSACTION_ID] = transferId
 
         eventsLogger.logPurchase(price.toBigDecimal(), systemInteractor.currency, bundle)
 

@@ -24,15 +24,14 @@ class CarrierTripDetailsPresenter: BasePresenter<CarrierTripDetailsView>() {
     private val carrierTripInteractor: CarrierTripInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
 
-    private var selectedTripId: Long? = null
-    private lateinit var trip: CarrierTripModel
     private var routeModel: RouteModel? = null
+    private lateinit var trip: CarrierTripModel
+    internal var tripId = 0L
 
     override fun onFirstViewAttach() {
         utils.launchSuspend {
             viewState.blockInterface(true)
-            selectedTripId = carrierTripInteractor.selectedTripId
-            val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(selectedTripId!!) }
+            val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(tripId) }
             if(result.error != null) viewState.setError(result.error!!)
             else {
                 val tripInfo = result.model

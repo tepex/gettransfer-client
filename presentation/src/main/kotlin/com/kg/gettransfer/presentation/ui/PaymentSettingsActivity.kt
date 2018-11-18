@@ -17,8 +17,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.presentation.Screens
-
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
@@ -42,18 +40,6 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
 
     @ProvidePresenter
     fun createPaymentSettingsPresenter() = PaymentSettingsPresenter()
-
-    protected override var navigator = object: BaseNavigator(this) {
-        override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
-            when(screenKey) {
-                Screens.PAYMENT -> Intent(context, PaymentActivity::class.java).apply {
-                    val params = data!! as PaymentPresenter.Params
-                    putExtra(PaymentPresenter.PARAMS, JSON.stringify(PaymentPresenter.Params.serializer(), params))
-                }
-            }
-            return null
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

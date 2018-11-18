@@ -27,22 +27,17 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
-
-import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TripsRVAdapter
 
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.ProfileModel
 
 import com.kg.gettransfer.presentation.presenter.CarrierTripsPresenter
+
 import com.kg.gettransfer.presentation.view.CarrierTripsView
 
 import kotlinx.android.synthetic.main.activity_carrier_trips.*
-import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
-
-import ru.terrakok.cicerone.commands.Forward
 
 import timber.log.Timber
 
@@ -69,22 +64,7 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView {
         drawer.closeDrawer(GravityCompat.START)
     }
 
-    protected override var navigator = object: BaseNavigator(this) {
-        protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
-            val intent = super.createActivityIntent(context, screenKey, data)
-            if(intent != null) return intent
-
-            when(screenKey) {
-                Screens.ABOUT -> return Intent(context, AboutActivity::class.java)
-                Screens.SETTINGS -> return Intent(context, SettingsActivity::class.java)
-                Screens.PASSENGER_MODE -> return Intent(context, MainActivity::class.java)
-                                                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                Screens.TRIP_DETAILS -> return Intent(context, CarrierTripDetailsActivity::class.java)
-            }
-            return null
-        }
-
+        /*
         @CallSuper
         protected override fun forward(command: Forward) {
             when (command.screenKey){
@@ -96,7 +76,7 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView {
                 else -> super.forward(command)
             }
         }
-    }
+        */
 
     override fun getPresenter(): CarrierTripsPresenter = presenter
 
@@ -106,16 +86,9 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView {
 
         setContentView(R.layout.activity_carrier_trips)
 
-        val tb = this.toolbar as Toolbar
-
-        setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        (toolbar as Toolbar).toolbar_title.setText(R.string.LNG_MENU_TITLE_TRIPS)
-
+        setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_TRIPS, false)
         drawer = drawerLayout as DrawerLayout
-        toggle = ActionBarDrawerToggle(this, drawer, tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        toggle = ActionBarDrawerToggle(this, drawer, toolbar as Toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
 
         initNavigation()
 

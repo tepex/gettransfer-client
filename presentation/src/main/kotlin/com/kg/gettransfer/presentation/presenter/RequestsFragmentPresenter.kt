@@ -11,12 +11,13 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Transfer
 
-import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.ui.RequestsActivity
+
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
+import com.kg.gettransfer.presentation.view.Screens
 
 import org.koin.standalone.inject
 
@@ -62,8 +63,8 @@ class RequestsFragmentPresenter: BasePresenter<RequestsFragmentView>() {
     fun openTransferDetails(id: Long, status: String) {
         Timber.d("Open Transfer details. id: $id")
         when(status) {
-            Transfer.STATUS_NEW -> router.navigateTo(Screens.OFFERS, id)
-            else -> router.navigateTo(Screens.DETAILS, id)
+            Transfer.STATUS_NEW -> router.navigateTo(Screens.Offers(id))
+            else -> router.navigateTo(Screens.Details(id))
         }
     }
 }

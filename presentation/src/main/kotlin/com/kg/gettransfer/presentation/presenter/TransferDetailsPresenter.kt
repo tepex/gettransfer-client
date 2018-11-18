@@ -28,10 +28,6 @@ class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
     private val transferInteractor: TransferInteractor by inject()
     private val offerInteractor: OfferInteractor by inject()
 
-    companion object {
-        const val TRANSFER_ID = "transfer_id"
-    }
-
     private lateinit var transfer: Transfer
     private lateinit var transferModel: TransferModel
 

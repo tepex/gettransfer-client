@@ -34,17 +34,17 @@ class LogsActivity: BaseActivity(), LogsView {
 
     override fun getPresenter(): LogsPresenter = presenter
 
-    protected override var navigator = object: BaseNavigator(this) {}
-
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_share_logs)
 
         setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.apply {
+            setDisplayShowTitleEnabled(false)
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
         (toolbar as Toolbar).layoutLogs.visibility = View.VISIBLE
         (toolbar as Toolbar).btnShare.setOnClickListener { presenter.onShareClicked() }

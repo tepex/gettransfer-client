@@ -14,6 +14,7 @@ import android.support.annotation.StringRes
 
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatDelegate
+import android.support.v7.widget.Toolbar
 
 import android.view.MotionEvent
 import android.view.View
@@ -32,25 +33,24 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
 
-import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter
+
 import com.kg.gettransfer.presentation.view.BaseView
+import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.LocaleManager
 
-import java.util.Date
+import kotlinx.android.synthetic.main.toolbar.view.*
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-
-import kotlinx.serialization.json.JSON
 
 import org.koin.android.ext.android.inject
 
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
-import ru.terrakok.cicerone.android.SupportAppNavigator
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 import timber.log.Timber
 
@@ -64,7 +64,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     private var rootView: View? = null
     private var rootViewHeight: Int? = null
 
-    protected open lateinit var navigator: BaseNavigator
+    protected open var navigator = SupportAppNavigator(this, Screens.NOT_USED)
 
     protected var viewNetworkNotAvailable: View? = null
 
@@ -87,9 +87,20 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
-    
+
     abstract fun getPresenter(): BasePresenter<*>
-	
+
+    protected fun setToolbar(toolbar: Toolbar, @StringRes titleId: Int, hasBackAction: Boolean = true) {
+        setSupportActionBar(toolbar)
+        supportActionBar?.apply {
+            setDisplayShowTitleEnabled(false)
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
+        toolbar.toolbar_title.setText(titleId)
+        if(hasBackAction) toolbar.setNavigationOnClickListener { getPresenter().onBackCommandClick() }
+    }
+
     @CallSuper
     protected override fun onStart() {
         super.onStart()
@@ -155,14 +166,8 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     private fun countDifference(): Boolean {
         if(rootViewHeight == null) rootViewHeight = rootView!!.rootView.height
 
-        val visibleRect = getRect()
+        val visibleRect = Rect().also { rootView!!.getWindowVisibleDisplayFrame(it) }
         return (rootViewHeight!! - visibleRect.bottom) < rootViewHeight!! * 0.15
-    }
-
-    private fun getRect(): Rect {
-        val rect = Rect()
-        rootView!!.getWindowVisibleDisplayFrame(rect)
-        return rect
     }
 
     fun addKeyBoardDismissListener(checkKeyBoardState: (Boolean) -> Unit) {
@@ -170,30 +175,10 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         rootView!!.viewTreeObserver.addOnGlobalLayoutListener { checkKeyBoardState(countDifference()) }
     }
 
-    protected fun openScreen(screen: String) { router.navigateTo(screen) }
-
+    //protected fun openScreen(screen: String) { router.navigateTo(screen) }
 
     override fun attachBaseContext(newBase: Context?) {
         if(newBase != null) super.attachBaseContext(localeManager.updateResources(newBase, systemInteractor.locale))
         else super.attachBaseContext(null)
     }
-}
-
-open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, Screens.NOT_USED) {
-    protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
-        when(screenKey) {
-            Screens.DETAILS -> return Intent(context, TransferDetailsActivity::class.java).apply {
-                putExtra(TransferDetailsActivity.TRANSFER_ID, data as Long)
-            }
-            Screens.OFFERS -> return Intent(context, OffersActivity::class.java).apply {
-                putExtra(OffersActivity.TRANSFER_ID, data as Long)
-            }
-            
-            
-            Screens.PAYMENT_SETTINGS -> Intent(context, PaymentSettingsActivity::class.java).apply {
-            }
-        }
-        return null
-    }
-    protected override fun createFragment(screenKey: String, data: Any?): Fragment? = null
 }

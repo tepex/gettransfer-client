@@ -10,12 +10,11 @@ import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 
-import com.kg.gettransfer.presentation.Screens
-
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.view.CarrierTripsView
+import com.kg.gettransfer.presentation.view.Screens
 
 import org.koin.standalone.inject
 
@@ -46,18 +45,15 @@ class CarrierTripsPresenter: BasePresenter<CarrierTripsView>() {
         checkLoggedIn()
     }
 
-    fun onTripSelected(tripId: Long) {
-        carrierTripInteractor.selectedTripId = tripId
-        router.navigateTo(Screens.TRIP_DETAILS)
-    }
+    fun onTripSelected(tripId: Long) = router.navigateTo(Screens.TripDetails(tripId))
 
     fun checkLoggedIn() {
-        if(!systemInteractor.account.user.loggedIn) router.navigateTo(Screens.PASSENGER_MODE)
+        if(!systemInteractor.account.user.loggedIn) router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
     }
 
-    fun onCarrierTripsClick()   { router.navigateTo(Screens.CARRIER_TRIPS) }
-    fun onAboutClick()          { router.navigateTo(Screens.ABOUT) }
-    fun readMoreClick()         { router.navigateTo(Screens.READ_MORE) }
-    fun onSettingsClick()       { router.navigateTo(Screens.SETTINGS) }
-    fun onPassengerModeClick()  { router.navigateTo(Screens.PASSENGER_MODE) }
+    fun onCarrierTripsClick()   { /*router.navigateTo(Screens.CARRIER_TRIPS)*/ }
+    fun onAboutClick()          = router.navigateTo(Screens.About)
+    fun readMoreClick()         = router.navigateTo(Screens.ReadMore)
+    fun onSettingsClick()       = router.navigateTo(Screens.Settings)
+    fun onPassengerModeClick()  = router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
 }

@@ -12,8 +12,8 @@ import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
-import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.view.BaseView
+import com.kg.gettransfer.presentation.view.Screens
 
 import com.yandex.metrica.YandexMetrica
 

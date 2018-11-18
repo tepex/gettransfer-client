@@ -15,7 +15,6 @@ import kotlinx.serialization.Serializable
 interface PaymentSettingsView: BaseView {
     companion object {
         val EXTRA_PARAMS = "${PaymentSettingsView::class.java.name}.params"
-        fun getParams()
     }
     
     @Serializable

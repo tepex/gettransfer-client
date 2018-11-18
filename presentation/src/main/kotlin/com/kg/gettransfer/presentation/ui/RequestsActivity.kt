@@ -31,8 +31,6 @@ class RequestsActivity: BaseActivity(), RequestsView {
     @ProvidePresenter
     fun createRequestsPresenter() = RequestsPresenter()
 
-    protected override var navigator = BaseNavigator(this)
-
     override fun getPresenter(): RequestsPresenter = presenter
     private fun sendEventLog(param: String) = presenter.logEvent(param)
     
@@ -49,9 +47,11 @@ class RequestsActivity: BaseActivity(), RequestsView {
         setContentView(R.layout.activity_requests)
 
         setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.apply {
+            setDisplayShowTitleEnabled(false)
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
         (toolbar as Toolbar).toolbar_title.setText(R.string.LNG_MENU_TITLE_RIDES)
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 

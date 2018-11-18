@@ -9,15 +9,17 @@ import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
+
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 
-import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.Mappers
+
 import com.kg.gettransfer.presentation.view.MainView
+import com.kg.gettransfer.presentation.view.Screens
 
 import com.yandex.metrica.YandexMetrica
 
@@ -38,7 +40,9 @@ class MainPresenter: BasePresenter<MainView>() {
 
     private val MARKER_ELEVATION = 5f
     private var markerStateLifted = false
+    
     var isMarkerAnimating = true
+    internal var isClickTo: Boolean? = null
 
     private var idleAndMoveCamera = true
 
@@ -92,14 +96,14 @@ class MainPresenter: BasePresenter<MainView>() {
         changeUsedField(systemInteractor.selectedField)
     }
 
-    fun switchUsedField(){
-        when(systemInteractor.selectedField){
+    fun switchUsedField() {
+        when(systemInteractor.selectedField) {
             FIELD_FROM -> changeUsedField(FIELD_TO)
             FIELD_TO -> changeUsedField(FIELD_FROM)
         }
     }
 
-    fun changeUsedField(field: String){
+    fun changeUsedField(field: String) {
         systemInteractor.selectedField = field
 
         val pointSelectedField: Point? = when(field){
@@ -109,7 +113,7 @@ class MainPresenter: BasePresenter<MainView>() {
         }
         var latLngPointSelectedField: LatLng? = null
         if (pointSelectedField != null) latLngPointSelectedField = LatLng(pointSelectedField.latitude, pointSelectedField.longitude)
-        when(systemInteractor.selectedField){
+        when(systemInteractor.selectedField) {
             FIELD_FROM -> viewState.selectFieldFrom()
             FIELD_TO -> viewState.setFieldTo()
         }
@@ -126,7 +130,7 @@ class MainPresenter: BasePresenter<MainView>() {
         logEvent(MY_PLACE_CLICKED)
     }
 
-    private fun setLastLocation(){
+    private fun setLastLocation() {
         viewState.blockInterface(true)
         val currentAddress = routeInteractor.from
         setPointAddress(currentAddress!!)
@@ -139,7 +143,7 @@ class MainPresenter: BasePresenter<MainView>() {
         setPointAddress(currentAddress)
     }
 
-    private fun setPointAddress(currentAddress: GTAddress){
+    private fun setPointAddress(currentAddress: GTAddress) {
         lastAddressPoint = Mappers.point2LatLng(currentAddress.cityPoint.point!!)
         onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
         viewState.setMapPoint(lastAddressPoint, true)
@@ -217,23 +221,38 @@ class MainPresenter: BasePresenter<MainView>() {
         viewState.initSearchForm()
     }
 
-    fun onSearchClick(addresses: Pair<String, String>) {
-        navigateToFindAddress(addresses)
+    fun onSearchClick(from: String, to: String) { navigateToFindAddress(from, to) }
+    fun onNextClick  (from: String, to: String) { navigateToFindAddress(from, to) }
+
+    private fun navigateToFindAddress(from: String, to: String) {
+        routeInteractor.from?.let { router.navigateTo(Screens.FindAddress(from, to, isClickTo)) }
     }
 
-    fun onNextClick(addresses: Pair<String, String>) {
-        navigateToFindAddress(addresses)
+    fun onNextClick() {
+        if(routeInteractor.from?.cityPoint != null &&
+           routeInteractor.to?.cityPoint != null) router.navigateTo(Screens.CreateOrder)
     }
 
-    private fun navigateToFindAddress(addresses: Pair<String, String>) {
-        routeInteractor.from?.let { router.navigateTo(Screens.FIND_ADDRESS, addresses) }
+    fun onAboutClick() {
+        router.navigateTo(Screens.About)
+        logEvent(ABOUT_CLICKED)
     }
 
-    fun onNextClick()     { if(routeInteractor.from?.cityPoint != null && routeInteractor.to?.cityPoint != null) router.navigateTo(Screens.CREATE_ORDER) }
-    fun onAboutClick()    { router.navigateTo(Screens.ABOUT) ;     logEvent(ABOUT_CLICKED) }
-    fun readMoreClick()   { router.navigateTo(Screens.READ_MORE) ; logEvent(BEST_PRICE_CLICKED) }
-    fun onSettingsClick() { router.navigateTo(Screens.SETTINGS) ;  logEvent(SETTINGS_CLICKED) }
-    fun onRequestsClick() { router.navigateTo(Screens.REQUESTS) ;  logEvent(TRANSFER_CLICKED) }
+    fun readMoreClick() {
+        router.navigateTo(Screens.ReadMore)
+        logEvent(BEST_PRICE_CLICKED)
+    }
+
+    fun onSettingsClick() {
+        router.navigateTo(Screens.Settings)
+        logEvent(SETTINGS_CLICKED)
+    }
+
+    fun onRequestsClick() {
+        router.navigateTo(Screens.Requests)
+        logEvent(TRANSFER_CLICKED)
+    }
+
     fun onLoginClick() {
         login("", "")
         logEvent(LOGIN_CLICKED)
@@ -242,8 +261,8 @@ class MainPresenter: BasePresenter<MainView>() {
     fun onBecomeACarrierClick() {
         logEvent(DRIVER_CLICKED)
         if(systemInteractor.account.user.loggedIn) {
-            if(systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) router.navigateTo(Screens.CARRIER_MODE)
-            else router.navigateTo(Screens.REG_CARRIER)
+            if(systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) router.navigateTo(Screens.ChangeMode(Screens.CARRIER_MODE))
+            else router.navigateTo(Screens.ChangeMode(Screens.REG_CARRIER))
         }
         else {
             login(Screens.CARRIER_MODE, "")
@@ -270,7 +289,7 @@ class MainPresenter: BasePresenter<MainView>() {
         YandexMetrica.reportEvent(EVENT_MENU, map)
     }
 
-    fun onBackClick(){
+    fun onBackClick() {
         if(systemInteractor.selectedField == FIELD_TO) switchUsedField()
         else viewState.onBackClick()
     }

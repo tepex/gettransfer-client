@@ -12,14 +12,14 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 
-import com.kg.gettransfer.presentation.Screens
-
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.ui.Utils
+
 import com.kg.gettransfer.presentation.view.OffersView
+import com.kg.gettransfer.presentation.view.Screens
 
 import com.yandex.metrica.YandexMetrica
 
@@ -32,9 +32,11 @@ class OffersPresenter: BasePresenter<OffersView>() {
     private val transferInteractor: TransferInteractor by inject()
     private val offerInteractor: OfferInteractor by inject()
 
+    /*
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
+    */
 
     internal var transferId = 0L
     
@@ -93,11 +95,13 @@ class OffersPresenter: BasePresenter<OffersView>() {
         }
     }
 
+    /*
     @CallSuper
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
         super.onDestroy()
     }
+    */
     
     fun onNewOffer(offer: Offer) {
         offerInteractor.newOffer(offer)
@@ -105,19 +109,18 @@ class OffersPresenter: BasePresenter<OffersView>() {
         setOffers()
     }
 
-    fun onRequestInfoClicked() { router.navigateTo(Screens.DETAILS, transferId) }
+    fun onRequestInfoClicked() { router.navigateTo(Screens.Details(transferId)) }
 
     fun onSelectOfferClicked(offer: OfferModel, isShowingOfferDetails: Boolean) {
         if(isShowingOfferDetails) viewState.showBottomSheetOfferDetails(offer)
-        else router.navigateTo(Screens.PAYMENT_SETTINGS,
-                               PaymentSettingsPresenter.Params(transfer.dateRefund, transfer.id, offer.id))
+        else router.navigateTo(Screens.PaymentSettings(transfer.id, offer.id, transfer.dateRefund))
     }
 
     fun onCancelRequestClicked() {
         viewState.showAlertCancelRequest()
     }
 
-    fun openLoginView() { login(Screens.CLOSE_ACTIVITY, "") }
+    fun openLoginView() { login("", "") }
 
     fun cancelRequest(isCancel: Boolean) {
         if(!isCancel) return

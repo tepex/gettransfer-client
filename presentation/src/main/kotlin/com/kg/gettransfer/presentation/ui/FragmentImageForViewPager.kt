@@ -8,41 +8,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
+import com.bumptech.glide.Glide
+
 import com.kg.gettransfer.R
 
 import kotlinx.android.synthetic.main.fragment_image.*
 
 class FragmentImageForViewPager: Fragment() {
     companion object {
-        val EXTRA_imageUrl = "imageUrl"
+        const val EXTRA_IMAGE_URL = "imageUrl"
 
-        fun newInstance(imageUrl: String): FragmentImageForViewPager {
-            val fragmentImageForViewPager = FragmentImageForViewPager()
-            val args = Bundle()
-            args.putString(EXTRA_imageUrl, imageUrl)
-            fragmentImageForViewPager.arguments = args
-
-            return fragmentImageForViewPager
+        fun newInstance(imageUrl: String) = FragmentImageForViewPager().apply {
+            arguments = Bundle().apply { putString(EXTRA_IMAGE_URL, imageUrl) }
         }
     }
 
-    private var imageUrl: String? = null
+    private lateinit var imageUrl: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        imageUrl = arguments!!.getString(EXTRA_imageUrl)
+        imageUrl = arguments!!.getString(EXTRA_IMAGE_URL)!!
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_image, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+        inflater.inflate(R.layout.fragment_image, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadImage()
-    }
-
-    private fun loadImage() {
-        UtilsImage.loadImage(activity!!, imageUrl, imageForViewPager)
+        Glide.with(activity!!).load(imageUrl).into(imageForViewPager)
     }
 }

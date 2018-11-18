@@ -1,18 +1,24 @@
 package com.kg.gettransfer.presentation.adapter
 
 import android.graphics.Paint
+
 import android.support.v7.widget.RecyclerView
+
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+
+import com.bumptech.glide.Glide
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.ui.Utils
-import com.kg.gettransfer.presentation.ui.UtilsImage
+
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_offer.view.*
 import kotlinx.android.synthetic.main.view_offer_car_name_and_options.view.*
@@ -25,7 +31,7 @@ class OffersRVAdapter(private val offers: MutableList<OfferModel>,
         private var selected = RecyclerView.NO_POSITION
     }
 
-    override fun getItemCount(): Int = offers.size
+    override fun getItemCount() = offers.size
     
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             OffersRVAdapter.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_offer, parent, false))
@@ -45,23 +51,23 @@ class OffersRVAdapter(private val offers: MutableList<OfferModel>,
  //           tvCompletedTransfers.text = context.getString(R.string.LNG_MADE).plus(" ${item.carrier.completedTransfers} ").plus(context.getString(R.string.LNG_RIDES))
             tvCompletedTransfers.text = String.format(context.resources.getString(R.string.LNG_MADE_RIDES), item.carrier.completedTransfers)
             tvCostDefault.text = item.price.base.default
-            if(item.price.base.preferred != null) {
-                tvCostPreferred.text = Utils.formatPrice(context, item.price.base.preferred)
+            item.price.base.preferred?.let {
+                tvCostPreferred.text = Utils.formatPrice(context, it)
                 tvCostPreferred.visibility = View.VISIBLE
             }
-            if(item.price.withoutDiscount != null){
+            item.price.withoutDiscount?.let {
                 tvCostWithoutDiscountDefault.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                tvCostWithoutDiscountDefault.text = item.price.withoutDiscount.default
-                if(item.price.withoutDiscount.preferred != null){
-                    tvCostWithoutDiscountPreferred.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                    tvCostWithoutDiscountPreferred.text = Utils.formatPrice(context, item.price.withoutDiscount.preferred)
-                    tvCostWithoutDiscountPreferred.visibility = View.VISIBLE
+                tvCostWithoutDiscountDefault.text = it.default
+                if(it.preferred != null) with(tvCostWithoutDiscountPreferred) {
+                    paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+                    text = Utils.formatPrice(context, it.preferred)
+                    visibility = View.VISIBLE
                 }
                 layoutCostWithoutDiscount.visibility = View.VISIBLE
             }
             if(item.vehicle.photos.isNotEmpty()) {
                 layoutWithCarImage.visibility = View.VISIBLE
-                UtilsImage.loadImage(this, item.vehicle.photos.first(), carPhoto)
+                Glide.with(this).load(item.vehicle.photos.first()).into(carPhoto)
                 if(item.vehicle.photos.size > 1) ivManyPhotos.visibility = View.VISIBLE
                 item.carrier.ratings.average?.let { ratingBar.rating = it }
                 setTexts(bottomLayoutForImage, tvCountPersonsOnCarImage, tvCountBaggageOnCarImage, item)

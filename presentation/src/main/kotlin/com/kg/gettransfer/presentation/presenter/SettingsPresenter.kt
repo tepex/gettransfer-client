@@ -8,13 +8,12 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
 
-import com.kg.gettransfer.presentation.Screens
-
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.DistanceUnitModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.Mappers
 
+import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
 
 import com.yandex.metrica.YandexMetrica
@@ -32,9 +31,11 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
 
     private var localeWasChanged = false
 
+    /*
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> saveAccount() })
     }
+    */
 
     companion object {
         @JvmField val EVENT = "settings"
@@ -111,27 +112,27 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
         logEvent(LOG_OUT_PARAM, EMPTY_VALUE)
     }
 
-    fun onLogsClicked() = router.navigateTo(Screens.SHARE_LOGS)
+    fun onLogsClicked() = router.navigateTo(Screens.ShareLogs)
 
-    private fun saveAccount() {
-        utils.launchSuspend {
-            viewState.blockInterface(true)
-            val result = utils.asyncAwait { systemInteractor.putAccount() }
-            result.error?.let { if(!it.isNotLoggedIn()) viewState.setError(it) }
-            viewState.blockInterface(false)
-        }
+    private fun saveAccount() = utils.launchSuspend {
+        viewState.blockInterface(true)
+        val result = utils.asyncAwait { systemInteractor.putAccount() }
+        result.error?.let { if(!it.isNotLoggedIn()) viewState.setError(it) }
+        viewState.blockInterface(false)
     }
 
+    /*
     @CallSuper
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
         super.onDestroy()
     }
+    */
 
     override fun onBackCommandClick() {
         if(localeWasChanged) {
             localeWasChanged = false
-            router.navigateTo(Screens.MAIN)
+            router.exit()
         }
         else super.onBackCommandClick()
     }

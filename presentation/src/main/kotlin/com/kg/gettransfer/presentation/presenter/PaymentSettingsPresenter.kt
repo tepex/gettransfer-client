@@ -22,13 +22,12 @@ import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Payment
 
-import com.kg.gettransfer.presentation.Screens
-
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
 import com.kg.gettransfer.presentation.view.PaymentSettingsView
+import com.kg.gettransfer.presentation.view.Screens
 
 import com.yandex.metrica.YandexMetrica
 
@@ -47,13 +46,15 @@ class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
     private val paymentInteractor: PaymentInteractor by inject()
     
     private var offer: Offer? = null
+    internal lateinit var params: PaymentSettingsView.Params
     
     private lateinit var paymentRequest: PaymentRequestModel
-    private lateinit var params: PaymentSettingsView.Params
     
+    /*
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
+    */
     
     @CallSuper
     override fun attachView(view: PaymentSettingsView?) {
@@ -67,36 +68,28 @@ class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
         viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${params.offerId}] not found!"))
     }
 
+    /*
     @CallSuper
     override fun onDestroy() {
         router.removeResultListener(LoginPresenter.RESULT_CODE)
         super.onDestroy()
     }
+    */
 
-    fun getPayment() {
-        utils.launchSuspend {
-            viewState.blockInterface(true)
+    fun getPayment() = utils.launchSuspend {
+        viewState.blockInterface(true)
             
-            val result = utils.asyncAwait { paymentInteractor.getPayment(Mappers.getPaymentRequest(paymentRequest)) }
-            if(result.error != null) {
-                Timber.e(result.error!!)
-                viewState.setError(result.error!!)
-            } else {
-                logEventBeginCheckout()
-                navigateToPayment(result.model)
-            }
-            viewState.blockInterface(false)
+        val result = utils.asyncAwait { paymentInteractor.getPayment(Mappers.getPaymentRequest(paymentRequest)) }
+        if(result.error != null) {
+            Timber.e(result.error!!)
+            viewState.setError(result.error!!)
+        } else {
+            logEventBeginCheckout()
+            router.navigateTo(Screens.Payment(params.transferId, offer!!.id, result.model.url!!, paymentRequest.percentage))
         }
+        viewState.blockInterface(false)
     }
     
-    private fun navigateToPayment(payment: Payment) {
-        router.navigateTo(Screens.PAYMENT,
-                          PaymentPresenter.Params(params.transferId,
-                                                  offer!!.id,
-                                                  payment.url!!,
-                                                  paymentRequest.percentage))
-    }
-
     private fun logEventBeginCheckout() {
         val bundle = Bundle()
         val map = HashMap<String, Any>()

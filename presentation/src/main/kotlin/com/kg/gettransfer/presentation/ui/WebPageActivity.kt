@@ -27,21 +27,14 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
     @InjectPresenter
     internal lateinit var presenter: WebPagePresenter
 
-    private lateinit var screen: String
-
     @ProvidePresenter
-    fun createWebPagePresenter() = WebPagePresenter(screen)
-
-    companion object {
-        @JvmField val SCREEN             = "screen"
-        @JvmField val SCREEN_LICENSE     = "license_agreement"
-        @JvmField val SCREEN_REG_CARRIER = "registration_carrier"
-        @JvmField val SCREEN_CARRIER     = "carrier_mode"
-    }
+    fun createWebPagePresenter() = WebPagePresenter()
 
     @SuppressLint("SetJavaScriptEnabled")
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
         setContentView(R.layout.activity_web_page)
 
         setSupportActionBar(toolbar as Toolbar)
@@ -53,10 +46,13 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 
         webView.settings.javaScriptEnabled = true
-        webView.webViewClient = object: WebViewClient(){}
-        screen = intent.getStringExtra(SCREEN)
-
-        super.onCreate(savedInstanceState)
+        webView.webViewClient = object: WebViewClient() {}
+        
+        when(intent.getStringExtra(WebPageView.EXTRA_SCREEN)) {
+            WebPageView.SCREEN_LICENSE     -> initActivity(R.string.LNG_RIDE_OFFERT_TITLE, R.string.licence_agreement_url)
+            WebPageView.SCREEN_REG_CARRIER -> initActivity(R.string.LNG_RIDE_CREATE_CARRIER, R.string.registration_carrier_url)
+            WebPageView.SCREEN_CARRIER     -> initActivity(R.string.LNG_RIDE_CREATE_CARRIER, R.string.carrier_mode)
+        }
     }
 
     override fun initActivity(@StringRes title: Int, @StringRes url: Int) {

@@ -10,8 +10,9 @@ import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 
-import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.PopularPlace
+
+import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SearchView
 
 import org.koin.standalone.inject
@@ -20,7 +21,7 @@ import org.koin.standalone.inject
 class SearchPresenter: BasePresenter<SearchView>() {
     private val routeInteractor: RouteInteractor by inject()
 
-    var isTo = false
+    internal var isTo = false
 
     companion object {
         @JvmField val ADDRESS_PREDICTION_SIZE = 3
@@ -83,7 +84,7 @@ class SearchPresenter: BasePresenter<SearchView>() {
         utils.asyncAwait { routeInteractor.updateDestinationPoint() }
         utils.asyncAwait { routeInteractor.updateStartPoint() }
         systemInteractor.addressHistory = listOf(routeInteractor.from!!, routeInteractor.to!!)
-        router.navigateTo(Screens.CREATE_ORDER)
+        router.navigateTo(Screens.CreateOrder)
     }
 
     fun selectFinishPointOnMap() {

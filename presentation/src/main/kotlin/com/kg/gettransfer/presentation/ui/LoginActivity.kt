@@ -16,43 +16,19 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.markAsNotImplemented
 
-import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.presenter.LoginPresenter
+
 import com.kg.gettransfer.presentation.view.LoginView
 
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity: BaseActivity(), LoginView {
-    companion object {
-        const val SCREEN_FOR_RETURN = "previous_screen"
-        const val EMAIL_TO_LOGIN    = "email_to_login"
-    }
-
     @InjectPresenter
     internal lateinit var presenter: LoginPresenter
     
     @ProvidePresenter
     fun createLoginPresenter() = LoginPresenter()
 
-    protected override var navigator = object: BaseNavigator(this) {
-        protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
-            val intent = super.createActivityIntent(context, screenKey, data)
-            if(intent != null) return intent
-
-            when (screenKey) {
-                Screens.REQUESTS -> return Intent(context, RequestsActivity::class.java)
-                /*Screens.CARRIER_MODE -> return Intent(context, CarrierTripsActivity::class.java)
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)*/
-                Screens.CARRIER_MODE -> return Intent(context, WebPageActivity()::class.java)
-                        .putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_CARRIER)
-                Screens.REG_CARRIER -> return Intent(context, WebPageActivity()::class.java)
-                        .putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_REG_CARRIER)
-            }
-            return null
-        }
-    }
-    
     override fun getPresenter(): LoginPresenter = presenter
 
     @CallSuper
@@ -64,9 +40,11 @@ class LoginActivity: BaseActivity(), LoginView {
         etPassword.onTextChanged      { presenter.setPassword(it.trim()) }
         btnLogin.setOnClickListener   { presenter.onLoginClick() }
         homeButton.setOnClickListener { presenter.onHomeClick() }
+        
+        presenter.email = intent.getStringExtra(LoginView.EXTRA_EMAIL_TO_LOGIN)
+        presenter.screenForReturn = intent.getStringExtra(LoginView.EXTRA_SCREEN_FOR_RETURN)     
+        etEmail.setText(presenter.email)
         btnForgotPassword.markAsNotImplemented()
-        presenter.screenForReturn = intent.getStringExtra(SCREEN_FOR_RETURN)
-        etEmail.setText(intent.getStringExtra(EMAIL_TO_LOGIN))
     }
 
     override fun enableBtnLogin(enable: Boolean) {

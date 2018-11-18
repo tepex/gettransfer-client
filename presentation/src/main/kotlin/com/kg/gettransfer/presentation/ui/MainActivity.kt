@@ -44,7 +44,6 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
 
-import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
@@ -74,9 +73,6 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     private var isFirst = true
     private var centerMarker: Marker? = null
 
-    private var fromClick = false
-    private var toClick = false
-
     @ProvidePresenter
     fun createMainPresenter() = MainPresenter()
 
@@ -94,38 +90,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         drawer.closeDrawer(GravityCompat.START)
     }
 
-    protected override var navigator = object: BaseNavigator(this) {
-        protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
-            val intent = super.createActivityIntent(context, screenKey, data)
-            if(intent != null) return intent
-
-            when(screenKey) {
-                Screens.ABOUT -> return Intent(context, AboutActivity::class.java)
-                Screens.FIND_ADDRESS -> return Intent(context, SearchActivity::class.java).apply {
-                    @Suppress("UNCHECKED_CAST")
-                    val pair = data as Pair<String, String>
-                    putExtra(SearchActivity.EXTRA_ADDRESS_FROM, pair.first)
-                    putExtra(SearchActivity.EXTRA_ADDRESS_TO, pair.second)
-                    putExtra(SearchActivity.EXTRA_FROM_CLICK, fromClick)
-                    putExtra(SearchActivity.EXTRA_TO_CLICK, toClick)
-                    putExtra(SearchActivity.LATLON_BOUNDS, googleMap.projection.visibleRegion.latLngBounds)
-                }
-                Screens.CREATE_ORDER -> return Intent(context, CreateOrderActivity::class.java)
-                Screens.SETTINGS     -> return Intent(context, SettingsActivity::class.java)
-                Screens.REQUESTS     -> return Intent(context, RequestsActivity::class.java)
-                /*Screens.CARRIER_MODE -> return Intent(context, CarrierTripsActivity::class.java)
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)*/
-                Screens.CARRIER_MODE -> return Intent(context, WebPageActivity()::class.java).apply {
-                    putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_CARRIER)
-                }
-                Screens.REG_CARRIER -> return Intent(context, WebPageActivity()::class.java).apply {
-                    putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_REG_CARRIER)
-                }
-            }
-            return null
-        }
-
+        /*
         @CallSuper
         protected override fun forward(command: Forward) {
             if(command.screenKey == Screens.READ_MORE) {
@@ -138,7 +103,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
             ActivityOptionsCompat
                 .makeSceneTransitionAnimation(this@MainActivity, search, getString(R.string.searchTransitionName))
                 .toBundle()
-    }
+                */
 
     companion object {
         @JvmField val MY_LOCATION_BUTTON_INDEX = 2
@@ -202,14 +167,12 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         searchFrom.setUneditable()
         searchTo.setUneditable()
         searchFrom.setOnClickListener {
-            fromClick = true
-            toClick = false
-            presenter.onSearchClick(Pair(searchFrom.text, searchTo.text))
+            presenter.isClickTo = false
+            presenter.onSearchClick(searchFrom.text, searchTo.text)
         }
         searchTo.setOnClickListener   {
-            toClick = true
-            fromClick = false
-            presenter.onSearchClick(Pair(searchFrom.text, searchTo.text))
+            presenter.isClickTo = true
+            presenter.onSearchClick(searchFrom.text, searchTo.text)
         }
         btnNext.setOnClickListener { presenter.onNextClick() }
         enableBtnNext()

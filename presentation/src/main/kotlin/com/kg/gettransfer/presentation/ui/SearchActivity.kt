@@ -25,8 +25,6 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.GTAddress
 
-import com.kg.gettransfer.presentation.Screens
-
 import com.kg.gettransfer.presentation.adapter.AddressAdapter
 import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
 
@@ -48,7 +46,8 @@ class SearchActivity: BaseActivity(), SearchView {
 
     private lateinit var current: SearchAddress
 
-    var mBounds: LatLngBounds? = null
+    // WTF?
+    //var mBounds: LatLngBounds? = null
 
     private lateinit var predefinedPopularPlaces: List<PopularPlace>
 
@@ -59,22 +58,7 @@ class SearchActivity: BaseActivity(), SearchView {
         @JvmField val FADE_DURATION  = 500L
         @JvmField val SLIDE_DURATION = 500L
 
-        @JvmField val EXTRA_ADDRESS_FROM = "address_from"
-        @JvmField val EXTRA_ADDRESS_TO   = "address_to"
-        @JvmField val EXTRA_FROM_CLICK   = "from_click"
-        @JvmField val EXTRA_TO_CLICK     = "to_click"
-
-        @JvmField val LATLON_BOUNDS = "latlon_map_bounds"
-    }
-
-    protected override var navigator = object: BaseNavigator(this) {
-        protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
-            when(screenKey) {
-                Screens.CREATE_ORDER -> return Intent(context, CreateOrderActivity::class.java)
-                //Screens.SELECT_FINISH -> return Intent(context, SelectFinishPointActivity::class.java)
-            }
-            return null
-        }
+        //@JvmField val LATLON_BOUNDS = "latlon_map_bounds"
     }
 
     override fun getPresenter(): SearchPresenter = presenter
@@ -92,7 +76,7 @@ class SearchActivity: BaseActivity(), SearchView {
         rv_addressList.layoutManager = LinearLayoutManager(this)
         rv_popularList.layoutManager = LinearLayoutManager(this)
 
-        mBounds = intent.getParcelableExtra(LATLON_BOUNDS)
+//        mBounds = intent.getParcelableExtra(LATLON_BOUNDS)
 
         initSearchFields()
 //        changeFocusForSearch()
@@ -123,8 +107,10 @@ class SearchActivity: BaseActivity(), SearchView {
     }
 
     private fun changeFocusForSearch() {
-        if(intent.getBooleanExtra(EXTRA_FROM_CLICK, false)) searchFrom.changeFocus()
-        else if(intent.getBooleanExtra(EXTRA_TO_CLICK, false)) searchTo.changeFocus()
+        if(!intent.hasExtra(SearchView.EXTRA_IS_CLICK_TO)) return 
+            
+        if(intent.getBooleanExtra(SearchView.EXTRA_IS_CLICK_TO, false)) searchTo.changeFocus()
+        else searchFrom.changeFocus()
     }
 
     private fun setupToolbar() {

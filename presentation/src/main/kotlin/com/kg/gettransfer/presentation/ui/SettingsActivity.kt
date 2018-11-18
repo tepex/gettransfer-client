@@ -17,8 +17,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.presentation.Screens
-
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.DistanceUnitModel
 import com.kg.gettransfer.presentation.model.EndpointModel
@@ -42,20 +40,6 @@ class SettingsActivity: BaseActivity(), SettingsView {
     @ProvidePresenter
     fun createSettingsPresenter() = SettingsPresenter()
     
-    protected override var navigator = object: BaseNavigator(this) {
-        @CallSuper
-        protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
-            val intent = super.createActivityIntent(context, screenKey, data)
-            if(intent != null) return intent
-
-            when(screenKey) {
-                Screens.SHARE_LOGS -> return Intent(context, LogsActivity::class.java)
-                Screens.MAIN -> return Intent(context, MainActivity::class.java)
-            }
-            return null
-        }
-    }
-
 	override fun getPresenter(): SettingsPresenter = presenter
 
     @CallSuper

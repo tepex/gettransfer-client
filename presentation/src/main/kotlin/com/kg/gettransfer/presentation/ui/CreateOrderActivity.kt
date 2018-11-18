@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.app.DatePickerDialog
-import com.kg.gettransfer.common.BoundTimePickerDialog
 
 import android.content.Context
 import android.content.Intent
@@ -14,6 +13,8 @@ import android.os.Bundle
 import android.os.Handler
 
 import android.support.annotation.CallSuper
+import android.support.annotation.ColorRes
+
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -39,8 +40,8 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.MapStyleOptions
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.common.BoundTimePickerDialog
 
-import com.kg.gettransfer.presentation.Screens
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
@@ -90,25 +91,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     @ProvidePresenter
     fun createCreateOrderPresenter() = CreateOrderPresenter()
 
-    protected override var navigator = object: BaseNavigator(this) {
-        @CallSuper
-        protected override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? {
-            val intent = super.createActivityIntent(context, screenKey, data)
-            if(intent != null) return intent
-                
-            when(screenKey) {
-                Screens.LICENCE_AGREE -> return Intent(context, WebPageActivity()::class.java).apply {
-                    putExtra(WebPageActivity.SCREEN, WebPageActivity.SCREEN_LICENSE)
-                }
-                Screens.PASSENGER_MODE -> return Intent(context, MainActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                }
-            }
-            return null
-        }
-    }
-
     override fun getPresenter(): CreateOrderPresenter = presenter
 
     @CallSuper
@@ -119,10 +101,10 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
         Utils.initPhoneNumberUtil(this)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.statusBarColor = Color.WHITE
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        } else{
+        } else {
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
             viewGradient.visibility = View.GONE
         }
@@ -147,22 +129,17 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
-
-    private fun hideSheetTransport() {
-        bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
-    }
+    private fun hideSheetTransport() { bsTransport.state = BottomSheetBehavior.STATE_HIDDEN }
 
     private fun toggleSheetOrder() {
-        if(bsOrder.state != BottomSheetBehavior.STATE_EXPANDED) {
-            bsOrder.state = BottomSheetBehavior.STATE_EXPANDED
-        } else {
+        if(bsOrder.state != BottomSheetBehavior.STATE_EXPANDED) bsOrder.state = BottomSheetBehavior.STATE_EXPANDED
+        else {
             bsOrder.state = BottomSheetBehavior.STATE_COLLAPSED
             scrollContent.fullScroll(View.FOCUS_UP)
         }
     }
 
     private fun initPromoSection() {
-
         promo_field.field_input.filters = arrayOf(InputFilter.AllCaps())
         promo_field.field_input.setOnFocusChangeListener { _, hasFocus -> if(!hasFocus) presenter.checkPromoCode() }
         defaultPromoText = promo_field.field_title.text.toString()
@@ -170,11 +147,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     
     private fun initKeyBoardListener() {
         addKeyBoardDismissListener { closed ->
-            if (!closed && !isKeyBoardOpened) {
+            if(!closed && !isKeyBoardOpened) {
                 isKeyBoardOpened = true
                 btnGetOffers.visibility = View.GONE
             }
-            else if (closed && isKeyBoardOpened) {
+            else if(closed && isKeyBoardOpened) {
                 isKeyBoardOpened = false
                 Handler().postDelayed({   // postDelayed нужен, чтобы кнопка не морагала посередине экрана
                     btnGetOffers.visibility = View.VISIBLE
@@ -196,54 +173,51 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun setCurrencies(currencies: List<CurrencyModel>) {
-        Utils.setCurrenciesDialogListener(this, fl_currency, currencies) { selected ->
-            presenter.changeCurrency(selected)
-        }
+        Utils.setCurrenciesDialogListener(this, fl_currency, currencies) { presenter.changeCurrency(it) }
     }
 
     private fun showPopupWindowComment() {
         val screenHeight = getScreenHeight()
-
-        val layoutPopupView = LayoutInflater.from(applicationContext).inflate(R.layout.layout_popup_comment, layoutPopup)
-
         applyDim(window.decorView.rootView as  ViewGroup, DIM_AMOUNT)
-        popupWindowComment = PopupWindow(layoutPopupView,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                screenHeight / 3,
-                true)
-        popupWindowComment.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-        popupWindowComment.inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
-        popupWindowComment.isOutsideTouchable = true
-        layoutPopupView.etPopupComment.setText(comment_field.field_input.text)
-        layoutPopupView.etPopupComment.setRawInputType(InputType.TYPE_CLASS_TEXT)
-        layoutPopupView.etPopupComment.popupWindow = popupWindowComment
-        if(!isKeyBoardOpened) layoutPopupView.etPopupComment.showKeyboard()
+        
+        val layoutPopupView = LayoutInflater.from(applicationContext).inflate(R.layout.layout_popup_comment, layoutPopup).apply {
+            btnClearPopupComment.setOnClickListener { etPopupComment.setText("") }
+            setOnClickListener { etPopupComment.requestFocus() }
+            etPopupComment.setSelection(etPopupComment.text.length)
+        }
+        
+        popupWindowComment = PopupWindow(layoutPopupView, LinearLayout.LayoutParams.MATCH_PARENT, screenHeight / 3, true).apply {
+            softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+            inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
+            isOutsideTouchable = true
+            setOnDismissListener {
+                layoutPopupView.etPopupComment.hideKeyboard()
+//            toggleSheetOrder()
+                layoutPopupView.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.hide_popup))
+                btnGetOffers.requestFocus()
+                clearDim(window.decorView.rootView as  ViewGroup)
+            }
+        }
+        
+        with(layoutPopupView.etPopupComment) {
+            setText(comment_field.field_input.text)
+            setRawInputType(InputType.TYPE_CLASS_TEXT)
+            popupWindow = popupWindowComment
+            if(!isKeyBoardOpened) showKeyboard()
+            setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
+                if(actionId == EditorInfo.IME_ACTION_DONE) {
+                    presenter.setComment(layoutPopupView.etPopupComment.text.toString().trim())
+                    popupWindowComment.dismiss()
+                    return@OnEditorActionListener true
+                }
+                false
+            })
+        }
 
         Handler().postDelayed({
             popupWindowComment.showAtLocation(mainLayoutActivityTransfer, Gravity.CENTER, 0, 0)
-            val animation = AnimationUtils.loadAnimation(applicationContext, R.anim.show_popup)
-            layoutPopupView.startAnimation(animation)
+            layoutPopupView.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.show_popup))
         }, CreateOrderActivity.KEYBOARD_WAIT_DELAY)
-
-        layoutPopupView.btnClearPopupComment.setOnClickListener { layoutPopupView.etPopupComment.setText("") }
-        layoutPopupView.etPopupComment.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
-            if(actionId == EditorInfo.IME_ACTION_DONE) {
-                presenter.setComment(layoutPopupView.etPopupComment.text.toString().trim())
-                popupWindowComment.dismiss()
-                return@OnEditorActionListener true
-            }
-            false
-        })
-        popupWindowComment.setOnDismissListener {
-            layoutPopupView.etPopupComment.hideKeyboard()
-//            toggleSheetOrder()
-            val animation = AnimationUtils.loadAnimation(applicationContext, R.anim.hide_popup)
-            layoutPopupView.startAnimation(animation)
-            btnGetOffers.requestFocus()
-            clearDim(window.decorView.rootView as  ViewGroup)
-        }
-        layoutPopupView.setOnClickListener { layoutPopupView.etPopupComment.requestFocus() }
-        layoutPopupView.etPopupComment.setSelection(layoutPopupView.etPopupComment.text.length)
     }
 
     private fun getScreenHeight(): Int {
@@ -297,9 +271,13 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun setDateTimeTransfer(dateTimeString: String, isAfter4Hours: Boolean) {
-        if(isAfter4Hours) transfer_date_time_field.field_input.setText(getString(R.string.LNG_DATE_IN_HOURS).plus(" ")
-                                                    .plus(CreateOrderPresenter.FUTURE_HOUR).plus(" ")
-                                                    .plus(getString(R.string.LNG_HOUR_FEW)))
+        if(isAfter4Hours) transfer_date_time_field.field_input.setText(
+            getString(R.string.LNG_DATE_IN_HOURS).apply {
+                plus(" ")
+                plus(CreateOrderPresenter.FUTURE_HOUR)
+                plus(" ")
+                plus(getString(R.string.LNG_HOUR_FEW))
+            })
         else transfer_date_time_field.field_input.setText(dateTimeString)
     }
 
@@ -316,8 +294,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         child_seats.person_count.text = count.toString()
         checkMinusButton(count, 0, child_seats.img_minus_seat)
     }
-    override fun setCurrency(currency: String)               { tv_currency.text = currency }
-    override fun setComment(comment: String)                 { comment_field.field_input.setText(comment) }
+    override fun setCurrency(currency: String) { tv_currency.text = currency }
+    override fun setComment(comment: String)   { comment_field.field_input.setText(comment) }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
         rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
@@ -327,9 +305,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun setFairPrice(price: String?, time: String?) {
-        if (price == null || time == null) {
-            tvRate.text = ""
-        } else tvRate.text = String.format(getString(R.string.LNG_RIDE_FAIR_PRICE_FORMAT), price, time)
+        if(price == null || time == null) tvRate.text = ""
+        else tvRate.text = String.format(getString(R.string.LNG_RIDE_FAIR_PRICE_FORMAT), price, time)
     }
 
     override fun setUser(user: UserModel, isLoggedIn: Boolean) {
@@ -353,20 +330,16 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         setPolyline(polyline, routeModel)
     }
 
-    override fun centerRoute(cameraUpdate: CameraUpdate) { showTrack(cameraUpdate) }
+    override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
 
     override fun setPromoResult(discountInfo: String?) {
-        val colorRes: Int
-        val text: String
-        val visibility: Int
-        if(discountInfo != null) {
+        @ColorRes var colorRes = R.color.color_error
+        var text = getString(R.string.LNG_RIDE_PROMOCODE_INVALID)
+        var visibility = View.INVISIBLE
+        discountInfo?.let {
             colorRes = R.color.promo_valid
-            text = discountInfo
+            text = it
             visibility = View.VISIBLE
-        } else {
-            colorRes = R.color.color_error
-            text = getString(R.string.LNG_RIDE_PROMOCODE_INVALID)
-            visibility = View.INVISIBLE
         }
         promo_field.field_title.setTextColor(ContextCompat.getColor(this, colorRes))
         promo_field.field_title.text = text
@@ -380,16 +353,15 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun showEmptyFieldError(invalidField: String) {
-        var messageRes = R.string.LNG_RIDE_CANT_CREATE
-        when (invalidField) {
-            CreateOrderPresenter.EMAIL_FIELD -> messageRes = R.string.LNG_ERROR_EMAIL
-            CreateOrderPresenter.NAME_FIELD -> messageRes = R.string.LNG_RIDE_NAME
-            CreateOrderPresenter.PHONE_FIELD -> messageRes = R.string.LNG_RIDE_PHONE
-            CreateOrderPresenter.TRANSPORT_FIELD -> messageRes = R.string.LNG_RIDE_CHOOSE_TRANSPORT
-            CreateOrderPresenter.TERMS_ACCEPTED_FIELD -> messageRes = R.string.LNG_RIDE_OFFERT_ERROR
+        var message = when(invalidField) {
+            CreateOrderPresenter.EMAIL_FIELD          -> getString(R.string.LNG_ERROR_EMAIL)
+            CreateOrderPresenter.NAME_FIELD           -> getString(R.string.LNG_RIDE_NAME)
+            CreateOrderPresenter.PHONE_FIELD          -> getString(R.string.LNG_RIDE_PHONE)
+            CreateOrderPresenter.TRANSPORT_FIELD      -> getString(R.string.LNG_RIDE_CHOOSE_TRANSPORT)
+            CreateOrderPresenter.TERMS_ACCEPTED_FIELD -> getString(R.string.LNG_RIDE_OFFERT_ERROR)
+            else                                      -> getString(R.string.LNG_RIDE_CANT_CREATE)
         }
-
-        Utils.showEmptyFieldsForTransferRequest(this, getString(messageRes))
+        Utils.showEmptyFieldsForTransferRequest(this, message)
     }
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {
@@ -418,18 +390,13 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     private fun applyDim(parent: ViewGroup, dimAmount: Float) {
-        val dim = ColorDrawable(Color.BLACK)
-        dim.setBounds(0, 0, parent.width, parent.height)
-        dim.alpha = (dimAmount * 255).toInt()
-
-        val overLay = parent.overlay
-        overLay.add(dim)
+        parent.overlay.add(ColorDrawable(Color.BLACK).apply {
+            setBounds(0, 0, parent.width, parent.height)
+            alpha = (dimAmount * 255).toInt()
+        })
     }
 
-    private fun clearDim(parent: ViewGroup) {
-        val overLay = parent.overlay
-        overLay.clear()
-    }
+    private fun clearDim(parent: ViewGroup) = parent.overlay.clear()
 
     //TODO create custom view for new bottom sheet
     private fun initFieldsViews() {
@@ -532,7 +499,9 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     private fun fieldTouched(viewForFocus: EditText) {
         if(!isKeyBoardOpened) showKeyboard()
-        viewForFocus.requestFocus()
-        viewForFocus.setSelection(viewForFocus.text.length)
+        viewForFocus.apply {
+            requestFocus()
+            setSelection(text.length)
+        }
     }
 }

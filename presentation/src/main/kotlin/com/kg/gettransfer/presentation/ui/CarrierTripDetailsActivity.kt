@@ -24,7 +24,6 @@ import com.kg.gettransfer.presentation.presenter.CarrierTripDetailsPresenter
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
 
 import kotlinx.android.synthetic.main.activity_carrier_transfer_details.*
-import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.view.*
 
 class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsView {
@@ -36,8 +35,6 @@ class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsVie
 
     override fun getPresenter(): CarrierTripDetailsPresenter = presenter
 
-    protected override var navigator = object: BaseNavigator(this) {}
-
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,17 +43,14 @@ class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsVie
         _mapView = mapView
         initMapView(savedInstanceState)
 
-        setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        (toolbar as Toolbar).toolbar_title.setText(R.string.activity_carrier_transfer_details_title)
-        (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
+        setToolbar(toolbar as Toolbar, R.string.activity_carrier_transfer_details_title)
 
         layoutTransferInfo.chevron.visibility = View.GONE
         layoutTransferInfo.divider.visibility = View.GONE
 
         btnCall.setOnClickListener { presenter.onCallClick() }
+        
+        presenter.tripId = intent.getLongExtra(CarrierTripDetailsView.EXTRA_TRIP_ID, 0)
     }
 
     protected suspend override fun customizeGoogleMaps() {

@@ -35,17 +35,11 @@ import kotlinx.android.synthetic.main.view_transport_type_transfer_details.view.
 import timber.log.Timber
 
 class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
-    companion object {
-        const val TRANSFER_ID = "transfer_id"
-    }
-    
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
     
     @ProvidePresenter
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
-
-    protected override var navigator = object: BaseNavigator(this) {}
 
     override fun getPresenter(): TransferDetailsPresenter = presenter
     
@@ -53,7 +47,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        presenter.transferId = intent.getLongExtra(TRANSFER_ID, -1)
+        presenter.transferId = intent.getLongExtra(TransferDetailsView.EXTRA_TRANSFER_ID, 0)
         
         setContentView(R.layout.activity_transfer_details)
 
