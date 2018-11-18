@@ -1,5 +1,13 @@
 package com.kg.gettransfer.presentation
 
+import android.content.Context
+import android.content.Intent
+
+import com.kg.gettransfer.presentation.ui.LoginActivity
+import com.kg.gettransfer.presentation.ui.PaymentSettingsActivity
+
+import ru.terrakok.cicerone.android.support.SupportAppScreen
+
 object Screens {
 	@JvmField val BUNDLE_KEY       = "bundle_key"
 	
@@ -9,7 +17,6 @@ object Screens {
 	@JvmField val READ_MORE        = "read_more"
 	@JvmField val SHARE_LOGS	   = "logs"
 
-	@JvmField val LOGIN            = "login"
 	@JvmField val REQUESTS         = "requests"
 	@JvmField val CARRIER_TRIPS    = "carrier_trips"
 	@JvmField val SETTINGS         = "settings"
@@ -26,11 +33,24 @@ object Screens {
 	@JvmField val OFFERS           = "offers"
 	@JvmField val DETAILS          = "details"
 
-	@JvmField val PAYMENT_SETTINGS = "payment_settings"
 	@JvmField val PAYMENT          = "payment"
 	
 	@JvmField val NOT_USED 		   = -1
 
 	@JvmField val CLOSE_ACTIVITY   = "close_activity"
 
+    data class Login(val nextScreen: String, val email: String): SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+            putExtra(LoginActivity.SCREEN_FOR_RETURN, nextScreen)
+            putExtra(LoginActivity.EMAIL_TO_LOGIN, email)
+        }
+    }
+
+    data class PaymentSettings(val dateRefund: Date?, val transferId: Long, val offerId: Long): SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, PaymentSettingsActivity::class.java).apply {
+            putExtra(PaymentSettingsActivity.EXTRA_DATE_REFUND, dateRefund)
+            putExtra(PaymentSettingsActivity.EXTRA_TRANSFER_ID, transferId)
+            putExtra(PaymentSettingsActivity.EXTRA_OFFER_ID, offerId)
+        }
 }

@@ -35,7 +35,8 @@ import kotlinx.serialization.json.JSON
 import java.util.Date
 
 class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
-
+    override lateinit var params: PaymentSettingsView.Params
+    
     @InjectPresenter
     internal lateinit var presenter: PaymentSettingsPresenter
 
@@ -71,7 +72,7 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
         (toolbar as Toolbar).toolbar_title.setText(R.string.LNG_PAYMENT_SETTINGS)
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
         
-        presenter.params = JSON.parse(PaymentSettingsPresenter.Params.serializer(), intent!!.getStringExtra(PaymentSettingsPresenter.PARAMS))
+        params = JSON.parse(PaymentSettingsView.Params.serializer(), intent!!.getStringExtra(PaymentSettingsView.EXTRA_PARAMS))
     }
 
     private fun setButton() {
@@ -91,7 +92,7 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     }
 
     private fun setCommission() {
-        presenter.params.dateRefund?.let {
+        presenter.dateRefund?.let {
             commission.text = getString(R.string.LNG_PAYMENT_COMISSION, Utils.getFormattedDate(systemInteractor.locale, it))
         }
     }

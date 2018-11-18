@@ -20,7 +20,12 @@ import com.kg.gettransfer.domain.model.Trip
 
 import com.kg.gettransfer.presentation.Screens
 
-import com.kg.gettransfer.presentation.model.*
+import com.kg.gettransfer.presentation.model.Mappers
+import com.kg.gettransfer.presentation.model.PolylineModel
+import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.TransportPrice
+import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.UserModel
 
 import com.kg.gettransfer.presentation.ui.Utils
 

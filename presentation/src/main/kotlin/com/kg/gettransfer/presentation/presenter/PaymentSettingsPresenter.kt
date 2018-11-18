@@ -30,13 +30,7 @@ import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
 import com.kg.gettransfer.presentation.view.PaymentSettingsView
 
-import com.kg.gettransfer.utilities.DateSerializer
-
 import com.yandex.metrica.YandexMetrica
-
-import java.util.Date
-
-import kotlinx.serialization.Serializable
 
 import org.koin.standalone.inject
 
@@ -44,40 +38,34 @@ import timber.log.Timber
 
 @InjectViewState
 class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
-    private val offerInteractor: OfferInteractor by inject()
-    private val paymentInteractor: PaymentInteractor by inject()
-
     companion object {
         @JvmField val PARAM_SHARE      = "share"
         @JvmField val PRICE_30         = 0.3
-        
-        @JvmField val PARAMS = "params"
     }
     
-    @Serializable
-    data class Params(@Serializable(with = DateSerializer::class) val dateRefund: Date?,
-                      val transferId: Long,
-                      val offerId: Long)
-
+    private val offerInteractor: OfferInteractor by inject()
+    private val paymentInteractor: PaymentInteractor by inject()
+    
+    private var offer: Offer? = null
+    
+    private lateinit var paymentRequest: PaymentRequestModel
+    private lateinit var transferId: Long
+    private lateinit var offerId: Long
+    
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
     }
-
-    private lateinit var paymentRequest: PaymentRequestModel
-    private var offer: Offer? = null
-    
-    internal lateinit var params: Params
     
     @CallSuper
     override fun attachView(view: PaymentSettingsView?) {
         super.attachView(view)
-        offer = offerInteractor.getOffer(params.offerId)
+        offer = offerInteractor.getOffer(view.params.offerId)
         offer?.let {
-            paymentRequest = PaymentRequestModel(params.transferId, params.offerId)
+            paymentRequest = PaymentRequestModel(view.params.transferId, view.params.offerId)
             viewState.setOffer(Mappers.getOfferModel(it, systemInteractor.locale))
             return
         }
-        viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${params.offerId}] not found!"))
+        viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${view.params.offerId}] not found!"))
     }
 
     @CallSuper

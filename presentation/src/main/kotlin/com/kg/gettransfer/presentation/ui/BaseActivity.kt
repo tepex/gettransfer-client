@@ -188,17 +188,9 @@ open class BaseNavigator(activity: BaseActivity): SupportAppNavigator(activity, 
             Screens.OFFERS -> return Intent(context, OffersActivity::class.java).apply {
                 putExtra(OffersActivity.TRANSFER_ID, data as Long)
             }
+            
+            
             Screens.PAYMENT_SETTINGS -> Intent(context, PaymentSettingsActivity::class.java).apply {
-                val params = data!! as PaymentSettingsPresenter.Params
-                putExtra(PaymentSettingsPresenter.PARAMS, JSON.stringify(PaymentSettingsPresenter.Params.serializer(), params))
-            }
-            Screens.LOGIN -> return Intent(context, LoginActivity::class.java).apply {
-                val nextScreenAndEmailPair = data as Pair<*, *>
-                val nextScreen = nextScreenAndEmailPair.first as String
-                val email = nextScreenAndEmailPair.second as String
-                addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                putExtra(LoginActivity.SCREEN_FOR_RETURN, nextScreen)
-                putExtra(LoginActivity.EMAIL_TO_LOGIN, email)
             }
         }
         return null

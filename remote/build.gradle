@@ -4,7 +4,7 @@ apply plugin: 'kotlin'
 ext {
     retrofit_version  = "2.4.0"
     r2_k_c_a_version  = "0.9.2"
-    okhttp3_version   = "3.11.0"
+    okhttp3_version   = "3.12.0"
     s_o_l_i_version   = "1.0.1"
 }
 

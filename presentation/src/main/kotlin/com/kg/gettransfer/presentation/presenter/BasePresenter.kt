@@ -43,7 +43,7 @@ open class BasePresenter<BV: BaseView>: MvpPresenter<BV>(), KoinComponent {
         YandexMetrica.reportEvent(MainPresenter.EVENT_MAIN, map)
     }
 
-    protected fun login(nextScreen: String, email: String) = router.navigateTo(Screens.LOGIN, Pair(nextScreen, email))
+    protected fun login(nextScreen: String, email: String) = router.navigateTo(Screens.Login(nextScreen, email))
 
     @CallSuper
     override fun onDestroy() {
