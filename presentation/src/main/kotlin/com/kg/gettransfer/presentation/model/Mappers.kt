@@ -58,8 +58,9 @@ object Mappers {
         val nameRes = R.string::class.members.find( { it.name == "LNG_TRANSPORT_${id.toUpperCase()}" } )
         return (nameRes?.call() as Int?) ?: R.string.LNG_TRANSPORT_ECONOMY
     }
-    
-    fun getCurrenciesModels(types: List<Currency>)        = types.map { CurrencyModel(it) }
+
+    private val supportedCurrencies = arrayOf("₽", "฿", "$", "£", "¥", "€" )
+    fun getCurrenciesModels(types: List<Currency>)        = types.map { CurrencyModel(it) }.filter { supportedCurrencies.contains(it.symbol) }
     fun getLocalesModels(types: List<Locale>)             = types.map { LocaleModel(it) }
     fun getDistanceUnitsModels(types: List<DistanceUnit>) = types.map { DistanceUnitModel(it) }
     

@@ -179,7 +179,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
             viewState.setRoute(polyline!!, it, true)
         }
     }
-    
+
     @CallSuper
     override fun attachView(view: CreateOrderView) {
         super.attachView(view)

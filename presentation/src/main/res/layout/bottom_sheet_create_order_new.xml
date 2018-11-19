@@ -69,10 +69,10 @@
 
                     <TextView
                         android:id="@+id/tv_currency"
-                        android:layout_width="12dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
-                        android:layout_marginStart="24dp"
+                        android:layout_marginEnd="14dp"
                         android:layout_marginTop="@dimen/icons_margin_top"
                         android:layout_marginBottom="@dimen/icons_margin_bottom"
                         android:fontFamily="@font/sf_pro_text_regular"
@@ -81,7 +81,7 @@
                         android:text="@string/rub"
                         android:textSize="@dimen/currency_symbol_size"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
