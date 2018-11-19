@@ -15,6 +15,9 @@ import com.kg.gettransfer.data.mapper.OfferMapper
 import com.kg.gettransfer.data.model.OfferEntity
 
 import com.kg.gettransfer.domain.SystemListener
+
+import com.kg.gettransfer.domain.interactor.SystemInteractor
+
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.Offer
 
@@ -37,17 +40,20 @@ class OfferServiceConnection: BroadcastReceiver(), ServiceConnection, SystemList
     private var socketService: SocketIOService? = null
     private var handler: OfferModelHandler? = null
     
+    private val systemInteractor: SystemInteractor by inject()
     private val offerMapper: OfferMapper by inject()
     
     fun connect(context: Context, handler: OfferModelHandler) {
-        this.handler = handler
         Timber.d("Binding service ${context::class.qualifiedName}")
+        this.handler = handler
+        systemInteractor.addListener(this)
         context.bindService(Intent(context, SocketIOService::class.java), this, Context.BIND_AUTO_CREATE)
         LocalBroadcastManager.getInstance(context).registerReceiver(this, IntentFilter(INTENT_OFFER))
     }
     
     fun disconnect(context: Context) {
         Timber.d("Unbinding from service ${context::class.qualifiedName}")
+        systemInteractor.removeListener(this)
         LocalBroadcastManager.getInstance(context).unregisterReceiver(this)
         context.unbindService(this)
     }

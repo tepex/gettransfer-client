@@ -39,6 +39,8 @@ import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
 
+import org.koin.android.ext.android.inject
+
 import timber.log.Timber
 
 class OffersActivity: BaseActivity(), OffersView {
@@ -51,6 +53,8 @@ class OffersActivity: BaseActivity(), OffersView {
     fun createOffersPresenter() = OffersPresenter()
 
     override fun getPresenter(): OffersPresenter = presenter
+    
+    private val offerServiceConnection: OfferServiceConnection by inject()
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,19 +83,14 @@ class OffersActivity: BaseActivity(), OffersView {
     @CallSuper
     protected override fun onStart() {
         super.onStart()
-        /*
-        systemInteractor.addListener(offerServiceConnection)
         offerServiceConnection.connectionChanged(systemInteractor.endpoint, systemInteractor.accessToken)
         offerServiceConnection.connect(this) { newOffer -> presenter.onNewOffer(newOffer) }
-        */
     }
     
     @CallSuper
     protected override fun onStop() {
-        /*
         offerServiceConnection.disconnect(this)
         systemInteractor.removeListener(offerServiceConnection)
-        */
         super.onStop()
     }
     

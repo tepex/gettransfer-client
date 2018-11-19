@@ -67,7 +67,7 @@ fabric.properties
 /captures
 .externalNativeBuild
 *.jks
-
+log.sh
 /tmp
 
 keystore.properties

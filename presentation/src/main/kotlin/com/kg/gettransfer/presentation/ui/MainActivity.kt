@@ -48,8 +48,6 @@ import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
 
-import com.kg.gettransfer.service.OfferServiceConnection
-
 import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_address.view.*
@@ -111,8 +109,6 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         @JvmField val FADE_DURATION = 500L
         @JvmField val MAX_INIT_ZOOM = 2.0f
     }
-
-    private val offerServiceConnection: OfferServiceConnection by inject()
 
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -182,11 +178,6 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     protected override fun onStart() {
         super.onStart()
         hideKeyboard()
-        systemInteractor.addListener(offerServiceConnection)
-        offerServiceConnection.connectionChanged(systemInteractor.endpoint, systemInteractor.accessToken)
-        offerServiceConnection.connect(this) { newOffer ->
-            Timber.d("new Offer: $newOffer")
-        }
     }
 
     @CallSuper
@@ -197,8 +188,6 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     @CallSuper
     protected override fun onStop() {
         enableBtnNext()
-        systemInteractor.removeListener(offerServiceConnection)
-        offerServiceConnection.disconnect(this)
         super.onStop()
     }
 
