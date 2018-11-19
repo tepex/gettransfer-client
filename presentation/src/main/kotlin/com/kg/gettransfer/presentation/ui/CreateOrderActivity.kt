@@ -271,12 +271,11 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     override fun setDateTimeTransfer(dateTimeString: String, isAfter4Hours: Boolean) {
         if(isAfter4Hours) transfer_date_time_field.field_input.setText(
-            getString(R.string.LNG_DATE_IN_HOURS).apply {
-                plus(" ")
-                plus(CreateOrderPresenter.FUTURE_HOUR)
-                plus(" ")
-                plus(getString(R.string.LNG_HOUR_FEW))
-            })
+            getString(R.string.LNG_DATE_IN_HOURS)
+                    .plus(" ")
+                    .plus(CreateOrderPresenter.FUTURE_HOUR)
+                    .plus(" ")
+                    .plus(getString(R.string.LNG_HOUR_FEW)))
         else transfer_date_time_field.field_input.setText(dateTimeString)
     }
 
@@ -429,6 +428,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         price_field_input.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
         //transfer_date_time_field.field_input.hint = getString(R.string)
         transfer_date_time_field.field_input.isFocusable = false
+        transfer_date_time_field.field_input.inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
         user_name_field.field_input.hint = getString(R.string.LNG_RIDE_NAME)
         email_field.field_input.hint = getString(R.string.LNG_RIDE_EMAIL)
         phone_field.field_input.hint = getString(R.string.LNG_RIDE_PHONE)
