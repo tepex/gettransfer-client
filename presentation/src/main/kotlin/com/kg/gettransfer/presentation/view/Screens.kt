@@ -2,6 +2,8 @@ package com.kg.gettransfer.presentation.view
 
 import android.content.Context
 import android.content.Intent
+import android.support.v4.app.Fragment
+import com.kg.gettransfer.presentation.ui.ReadMoreFragment
 
 import com.kg.gettransfer.presentation.ui.*
 
@@ -43,7 +45,9 @@ object Screens {
         override fun getActivityIntent(context: Context?) = Intent(context, AboutActivity::class.java)
     }
 
-    object ReadMore: SupportAppScreen()
+    object ReadMore: SupportAppScreen() {
+        override fun getFragment(): Fragment = ReadMoreFragment()
+    }
 
     object Settings: SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, SettingsActivity::class.java)

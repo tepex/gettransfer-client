@@ -8,8 +8,7 @@
 	android:layout_height="match_parent"
 	android:paddingStart="@dimen/read_more_padding_horizontal"
 	android:paddingEnd="@dimen/read_more_padding_horizontal"
-	android:paddingBottom="@dimen/read_more_close_margin"
-	tools:context=".presentation.ui.ReadMoreDialog">
+	android:paddingBottom="@dimen/read_more_close_margin">
 
 	<TextView android:id="@+id/content1"
 		android:layout_width="match_parent"
@@ -55,7 +54,7 @@
 	</LinearLayout>
 
 	<Button
-		android:id="@+id/closeBtn"
+		android:id="@+id/btnClose"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/read_more_close_margin"
