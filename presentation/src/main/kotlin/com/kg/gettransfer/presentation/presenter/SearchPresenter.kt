@@ -88,8 +88,7 @@ class SearchPresenter: BasePresenter<SearchView>() {
     }
 
     fun selectFinishPointOnMap() {
-        //router.navigateTo(Screens.SELECT_FINISH)
-        systemInteractor.selectedField = MainPresenter.FIELD_TO
+        systemInteractor.selectedField = if(isTo) MainPresenter.FIELD_TO else MainPresenter.FIELD_FROM
         router.exit()
     }
 
