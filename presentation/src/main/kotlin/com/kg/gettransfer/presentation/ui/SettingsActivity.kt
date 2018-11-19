@@ -67,36 +67,26 @@ class SettingsActivity: BaseActivity(), SettingsView {
         }
     }
 
-    override fun setCurrencies(currencies: List<CurrencyModel>) {
-        Utils.setCurrenciesDialogListener(this, layoutSettingsCurrency, currencies) { 
-            selected -> presenter.changeCurrency(selected)
-        }
-    }
-    
-    override fun setLocales(locales: List<LocaleModel>) {
+    override fun setCurrencies(currencies: List<CurrencyModel>) =
+        Utils.setCurrenciesDialogListener(this, layoutSettingsCurrency, currencies) { presenter.changeCurrency(it) }
+
+    override fun setLocales(locales: List<LocaleModel>) =
         Utils.setLocalesDialogListener(this, layoutSettingsLanguage, locales) {
-            selected -> localeManager.updateResources(this, presenter.changeLocale(selected))
+            localeManager.updateResources(this, presenter.changeLocale(it))
             recreate()
         }
-    }
-    
-    override fun setDistanceUnits(distanceUnits: List<DistanceUnitModel>) {
-        Utils.setDistanceUnitsDialogListener(this, layoutSettingsDistanceUnits, distanceUnits) { 
-            selected -> presenter.changeDistanceUnit(selected) 
-        }
-    }
 
-    override fun setEndpoints(endpoints: List<EndpointModel>) {
-        Utils.setEndpointsDialogListener(this, layoutSettingsEndpoint, endpoints) { selected ->
-            presenter.changeEndpoint(selected)
-        }
-    }
-    
+    override fun setDistanceUnits(distanceUnits: List<DistanceUnitModel>) =
+        Utils.setDistanceUnitsDialogListener(this, layoutSettingsDistanceUnits, distanceUnits) { presenter.changeDistanceUnit(it) }
+
+    override fun setEndpoints(endpoints: List<EndpointModel>) =
+        Utils.setEndpointsDialogListener(this, layoutSettingsEndpoint, endpoints) { presenter.changeEndpoint(it) }
+
     override fun setCurrency(currency: String)         { tvSelectedCurrency.text = currency }
     override fun setLocale(locale: String)             { tvSelectedLanguage.text = locale }
     override fun setDistanceUnit(distanceUnit: String) { tvSelectedDistanceUnits.text = distanceUnit }
     override fun setEndpoint(endpoint: EndpointModel)  { tvSelectedEndpoint.text = endpoint.name }
-    
+
     override fun setLogoutButtonEnabled(enabled: Boolean) {
         if(enabled) btnSignOut.visibility = View.VISIBLE else btnSignOut.visibility = View.GONE
     }

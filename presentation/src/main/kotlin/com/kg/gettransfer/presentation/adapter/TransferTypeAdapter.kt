@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.view_transfer_type.view.*
 class TransferTypeAdapter(private var list: List<TransportTypeModel>,
                           private val listener: ChangeListener): RecyclerView.Adapter<TransferTypeAdapter.ViewHolder>() {
 
-    override fun getItemCount(): Int = list.size
+    override fun getItemCount() = list.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_transfer_type, parent, false))
@@ -36,7 +36,8 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
             tvTransferType.setText(item.nameId!!)
             tvNumberPersonsTransfer.text = Utils.formatPersons(context, item.paxMax)
             tvCountBaggage.text = Utils.formatLuggage(context, item.luggageMax)
-            if (item.price == null) tvPriceFrom.visibility = View.GONE
+            
+            if(item.price == null) tvPriceFrom.visibility = View.GONE
             else tvPriceFrom.text = item.price.min
 
             ivTransferType.setImageResource(item.imageId!!)

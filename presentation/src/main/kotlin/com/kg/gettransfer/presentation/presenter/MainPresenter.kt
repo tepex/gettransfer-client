@@ -15,6 +15,7 @@ import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
+import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.presentation.model.Mappers
 
@@ -123,10 +124,9 @@ class MainPresenter: BasePresenter<MainView>() {
         }
     }
 
-    fun updateCurrentLocation() {
-        utils.launchAsyncTryCatch(
-                { updateCurrentLocationAsync() },
-                { e -> viewState.setError(false, R.string.err_server, e.message) })
+    fun updateCurrentLocation() = utils.launchSuspend {
+        val result = updateCurrentLocationAsync()
+        if(result.error != null) viewState.setError(result.error!!)
         logEvent(MY_PLACE_CLICKED)
     }
 
@@ -136,11 +136,12 @@ class MainPresenter: BasePresenter<MainView>() {
         setPointAddress(currentAddress!!)
     }
 
-    private suspend fun updateCurrentLocationAsync() {
+    private suspend fun updateCurrentLocationAsync(): Result<GTAddress> {
         //viewState.blockInterface(true)
         viewState.blockSelectedField(true, systemInteractor.selectedField)
-        val currentAddress = utils.asyncAwait { routeInteractor.getCurrentAddress() }
-        setPointAddress(currentAddress)
+        val result = utils.asyncAwait { routeInteractor.getCurrentAddress() }
+        if(result.error == null) setPointAddress(result.model)
+        return result
     }
 
     private fun setPointAddress(currentAddress: GTAddress) {

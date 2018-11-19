@@ -23,14 +23,13 @@ class RequestsRVAdapter(private val transfers: List<TransferModel>, private val 
 		private var selected = RecyclerView.NO_POSITION
 	}
 
-    override fun getItemCount(): Int = transfers.size
+    override fun getItemCount() = transfers.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            RequestsRVAdapter.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_transfer_request_info, parent, false))
+        RequestsRVAdapter.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_transfer_request_info, parent, false))
 
-    override fun onBindViewHolder(holder: RequestsRVAdapter.ViewHolder, pos: Int) {
+    override fun onBindViewHolder(holder: RequestsRVAdapter.ViewHolder, pos: Int) =
         holder.bind(transfers.get(pos), listener)
-    }
 
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(item: TransferModel, listener: ItemClickListener) = with(containerView) {

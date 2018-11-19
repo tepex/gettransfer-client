@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.ui.Utils
 
 import timber.log.Timber
 
@@ -15,7 +14,7 @@ class FileLoggingTree(private val context: Context): Timber.DebugTree() {
         try {
             context.openFileOutput(context.getString(R.string.logs_file_name), Context.MODE_APPEND).use {
                 it.write("\n\n".toByteArray())
-                val foramtedString = Utils.formatJsonString(message)
+                val foramtedString = formatJsonString(message)
                 if(foramtedString.indexOf("\n") >= 0) it.write(foramtedString.toByteArray())
                 else it.write(message.toByteArray())
             }
@@ -25,5 +24,23 @@ class FileLoggingTree(private val context: Context): Timber.DebugTree() {
         }
 
     }
-
+    
+    private fun formatJsonString(text: String) = buildString {
+        var indentString = ""
+        text.forEach {
+            when(it) {
+                '{', '[' -> {
+                    append("\n${indentString}${it}\n")
+                    indentString += "\t"
+                    append(indentString)
+                }
+                '}', ']' -> {
+                    indentString = indentString.replaceFirst("\t".toRegex(), "")
+                    append("\n${indentString}${it}")
+                }
+                ','  -> append("${it}\n${indentString}")
+                else -> append(it)
+            }
+        }
+    }
 }

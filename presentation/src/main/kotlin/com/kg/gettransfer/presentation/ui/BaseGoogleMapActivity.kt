@@ -144,10 +144,10 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         val bmPinB = getPinBitmap(routeModel.to, Utils.formatDistance(this, routeModel.distance, routeModel.distanceUnit), R.drawable.ic_map_label_b)
 
         val startMakerOptions = MarkerOptions()
-                .position(polyline.startPoint!!)
+                .position(polyline.startPoint)
                 .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
         val endMakerOptions = MarkerOptions()
-                .position(polyline.finishPoint!!)
+                .position(polyline.finishPoint)
                 .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
 
         processGoogleMap {

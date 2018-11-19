@@ -58,7 +58,7 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
         val area    = list.firstOrNull()?.adminArea
         val country = list.firstOrNull()?.countryName
 
-        val addr = with(StringBuilder()) {
+        val addr = buildString {
             if(street == null && !list.isEmpty() && list.firstOrNull()?.getAddressLine(0)!!.isNotEmpty()) {
                 append(list.firstOrNull()?.getAddressLine(0))
             }
@@ -69,10 +69,11 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
                 if(!country.isNullOrEmpty()) append(country)
                 if(!area.isNullOrEmpty() && area != city) append(area).append(", ")
             }
-            toString()
         }
+        
         val result = getAutocompletePredictions(addr, pair)
         if(result.error != null) return Result(GTAddress.EMPTY, result.error)
+            
         val address = result.model.firstOrNull()?.address ?: addr
         return Result(GTAddress(CityPoint(address, point, null),
                                 listOf(GTAddress.TYPE_STREET_ADDRESS),
@@ -81,19 +82,18 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
                                 null))
     }
 
-    override fun getCurrentAddress(): GTAddress {
+    override fun getCurrentAddress(): Result<GTAddress> {
         val results = pdClient.getCurrentPlace(null)
-        Tasks.await(results)
-        val list = DataBufferUtils.freezeAndClose(results.getResult())
-        if(list.isEmpty()) throw RuntimeException("Address not found")
-
-        val place = list.first().place
-        val cityPoint = CityPoint(place.name.toString(), Point(place.latLng.latitude, place.latLng.longitude), place.id)
-        return GTAddress(cityPoint,
-                         place.placeTypes,
-                         place.address.toString(),
-                         null,
-                         null)
+        return try {
+            Tasks.await(results)
+            val list = DataBufferUtils.freezeAndClose(results.getResult())
+            if(list.isEmpty()) Result(GTAddress.EMPTY, ApiException(ApiException.NOT_FOUND, "Address not found"))
+            else {
+                val place = list.first().place
+                val cityPoint = CityPoint(place.name.toString(), Point(place.latLng.latitude, place.latLng.longitude), place.id)
+                Result(GTAddress(cityPoint, place.placeTypes, place.address.toString(), null, null))
+            }
+        } catch(e: Exception) { Result(GTAddress.EMPTY, ApiException(ApiException.NETWORK_ERROR, e.message ?: "Unknown")) }
     }
 
     override fun getAutocompletePredictions(prediction: String, points: Pair<Point, Point>?): Result<List<GTAddress>> {
@@ -116,10 +116,12 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
         } catch(e: Exception) { Result(emptyList<GTAddress>(), ApiException(ApiException.NETWORK_ERROR, e.message ?: "Unknown")) } 
     }
 
-    override fun getLatLngByPlaceId(placeId: String): Point {
+    override fun getLatLngByPlaceId(placeId: String): Result<Point> {
         val results = gdClient.getPlaceById(placeId)
-        Tasks.await(results)
-        val place = DataBufferUtils.freezeAndClose(results.getResult()).first()
-        return Point(place.latLng.latitude, place.latLng.longitude)
+        return try {
+            Tasks.await(results)
+            val place = DataBufferUtils.freezeAndClose(results.getResult()).first()
+            Result(Point(place.latLng.latitude, place.latLng.longitude))
+        } catch(e: Exception) { Result(Point(), ApiException(ApiException.NETWORK_ERROR, e.message ?: "Unknown")) }
     }
 }

@@ -31,17 +31,29 @@ class RouteInteractor(private val geoRepository: GeoRepository,
     fun getAutocompletePredictions(prediction: String, pointsPair: Pair<Point, Point>?) = 
         geoRepository.getAutocompletePredictions(prediction, pointsPair)
 
-    fun updateDestinationPoint() {
-        if(from!!.cityPoint.point == null) from!!.cityPoint.point = geoRepository.getLatLngByPlaceId(from!!.cityPoint.placeId!!)
-        if(to!!.cityPoint.point == null) to!!.cityPoint.point = geoRepository.getLatLngByPlaceId(to!!.cityPoint.placeId!!)
+    fun updateDestinationPoint(): Result<Point> {
+        var result = updateStartPoint()
+        if(result.error != null) return result
+            
+        if(to!!.cityPoint.point == null) {
+            result = geoRepository.getLatLngByPlaceId(to!!.cityPoint.placeId!!)
+            if(result.error != null) return result
+            to!!.cityPoint.point = result.model
+        }
+        return result
     }
 
-    fun updateStartPoint() {
-        if(from!!.cityPoint.point == null) from!!.cityPoint.point = geoRepository.getLatLngByPlaceId(from!!.cityPoint.placeId!!)
+    fun updateStartPoint(): Result<Point> {
+        if(from!!.cityPoint.point == null) {
+            val result = geoRepository.getLatLngByPlaceId(from!!.cityPoint.placeId!!)
+            if(result.error != null) return result
+            from!!.cityPoint.point = result.model
+        }
+        return Result(from!!.cityPoint.point!!)
     }
 
     suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean) =
         routeRepository.getRouteInfo(from, to, withPrices, returnWay)
 
-    fun addressFieldsNotNull(): Boolean = (from != null && to != null && from != to)
+    fun addressFieldsNotNull() = (from != null && to != null && from != to)
 }

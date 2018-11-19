@@ -56,7 +56,7 @@ class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsVie
         super.customizeGoogleMaps()
         // https://stackoverflow.com/questions/16974983/google-maps-api-v2-supportmapfragment-inside-scrollview-users-cannot-scroll-th
         transparentImage.setOnTouchListener(View.OnTouchListener { _, motionEvent ->
-            when (motionEvent.action) {
+            when(motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
                     svTransfer.requestDisallowInterceptTouchEvent(true)
                     return@OnTouchListener false

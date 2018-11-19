@@ -78,8 +78,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
-    private val itemsNavigationViewListener = View.OnClickListener { item ->
-        when(item.id) {
+    private val itemsNavigationViewListener = View.OnClickListener {
+        when(it.id) {
             R.id.navLogin          -> presenter.onLoginClick()
             R.id.navAbout          -> presenter.onAboutClick()
             R.id.navSettings       -> presenter.onSettingsClick()
@@ -239,11 +239,12 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
         googleMap.setOnCameraMoveListener { presenter.onCameraMove(googleMap.getCameraPosition()!!.target, true);  }
         googleMap.setOnCameraIdleListener { presenter.onCameraIdle(googleMap.projection.visibleRegion.latLngBounds) }
-        googleMap.setOnCameraMoveStartedListener { r ->
-            if(r == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+        googleMap.setOnCameraMoveStartedListener {
+            if(it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
                 presenter.enablePinAnimation()
                 googleMap.setOnCameraMoveStartedListener(null)
-            } }
+            }
+        }
     }
 
     /* MainView */

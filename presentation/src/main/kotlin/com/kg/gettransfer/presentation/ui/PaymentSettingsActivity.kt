@@ -65,8 +65,8 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     override fun setOffer(offer: OfferModel) {
         fullPrice.text = offer.price.base.default
         thirdOfPrice.text = getString(R.string.LNG_PAYMENT_TERM_LATER, OfferModel.PRICE_70, offer.price.percentage30)
-        payFullPriceButton.setOnClickListener { view ->  changePaymentSettings(view) }
-        payThirdOfPriceButton.setOnClickListener { view ->  changePaymentSettings(view) }
+        payFullPriceButton.setOnClickListener    { changePaymentSettings(it) }
+        payThirdOfPriceButton.setOnClickListener { changePaymentSettings(it) }
         btnGetPayment.setOnClickListener { presenter.getPayment() }
     }
 

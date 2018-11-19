@@ -90,7 +90,7 @@ class RequestsActivity: BaseActivity(), RequestsView {
             override fun onPageScrollStateChanged(p0: Int) {}
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
             override fun onPageSelected(p0: Int) {
-                when (p0) {
+                when(p0) {
                     0 -> sendEventLog(CATEGORY_ACTIVE)
                     1 -> sendEventLog(CATEGORY_ALL)
                     2 -> sendEventLog(CATEGORY_COMPLETED)

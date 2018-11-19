@@ -162,8 +162,8 @@ class SearchActivity: BaseActivity(), SearchView {
 
     override fun setSuggestedAddresses(addressesList: List<GTAddress>) {
         ll_popular.visibility = View.VISIBLE
-        rv_popularList.adapter = PopularAddressAdapter(predefinedPopularPlaces) { p -> presenter.onPopularSelected(p) }
-        val addressAdapter = AddressAdapter(addressesList) { a -> presenter.onAddressSelected(a) }
+        rv_popularList.adapter = PopularAddressAdapter(predefinedPopularPlaces) { presenter.onPopularSelected(it) }
+        val addressAdapter = AddressAdapter(addressesList) { presenter.onAddressSelected(it) }
         addressAdapter.isLastAddresses = true
 
         rv_addressList.adapter = addressAdapter

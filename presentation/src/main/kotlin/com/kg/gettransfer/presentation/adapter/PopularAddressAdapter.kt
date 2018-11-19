@@ -23,15 +23,13 @@ class PopularAddressAdapter(private val list: List<PopularPlace>,
     override fun onBindViewHolder(holder: PopularAddressAdapter.ViewHolder, pos: Int) = holder.bind(list[pos])
                                                                            { click(it) }
 
-
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(place: PopularPlace, listener: PopularClickHandler) = with(containerView) {
             popular_title.text = place.title
             popular_icon.setImageDrawable(containerView.context.getDrawable(place.icon))
-            setOnClickListener{
-                listener(place)
-            }
+            setOnClickListener { listener(place) }
         }
     }
 }
+
 typealias PopularClickHandler = (PopularPlace) -> Unit

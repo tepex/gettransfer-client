@@ -53,11 +53,11 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView {
 
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
-    private val itemsNavigationViewListener = View.OnClickListener { item ->
-        when(item.id) {
-            R.id.navCarrierTrips -> presenter.onCarrierTripsClick()
-            R.id.navAbout -> presenter.onAboutClick()
-            R.id.navSettings -> presenter.onSettingsClick()
+    private val itemsNavigationViewListener = View.OnClickListener {
+        when(it.id) {
+            R.id.navCarrierTrips  -> presenter.onCarrierTripsClick()
+            R.id.navAbout         -> presenter.onAboutClick()
+            R.id.navSettings      -> presenter.onSettingsClick()
             R.id.navPassengerMode -> presenter.onPassengerModeClick()
             else -> Timber.d("No route")
         }

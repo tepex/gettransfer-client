@@ -67,14 +67,14 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     }
     
     override fun setRequests(transfers: List<TransferModel>) {
-        rvRequests.adapter = RequestsRVAdapter(transfers) { transfer -> presenter.openTransferDetails(transfer.id, transfer.status) }
+        rvRequests.adapter = RequestsRVAdapter(transfers) { presenter.openTransferDetails(it.id, it.status) }
     }
 
-    override fun blockInterface(block: Boolean, useSpinner: Boolean) { (activity as BaseView).blockInterface(block, useSpinner) }
+    override fun blockInterface(block: Boolean, useSpinner: Boolean) =
+        (activity as BaseView).blockInterface(block, useSpinner)
 
-    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
+    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) =
         (activity as BaseView).setError(finish, errId, *args)
-    }
     
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}", e)

@@ -280,19 +280,21 @@ internal class Utils {
 
         fun getVehicleNameWithColor(context: Context, name: String, color: String): SpannableStringBuilder {
             val drawableCompat = getVehicleColorFormRes(context, color)
-            drawableCompat.setBounds(4, 0, drawableCompat.intrinsicWidth + 4, drawableCompat.intrinsicHeight)
-            val ssBuilder = SpannableStringBuilder("$name ")
-            val colorCarImageSpan = ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE)
-            ssBuilder.setSpan(colorCarImageSpan, ssBuilder.length - 1, ssBuilder.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            return ssBuilder
+                .also { it.setBounds(4, 0, it.intrinsicWidth + 4, it.intrinsicHeight) }
+            return SpannableStringBuilder("$name ").apply {
+                setSpan(ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE), length - 1, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
         }
 
-        fun getVehicleColorFormRes(context: Context, color: String): Drawable{
+        fun getVehicleColorFormRes(context: Context, color: String): Drawable {
             val colorRes = R.color::class.members.find( { it.name == "color_vehicle_$color" } )
             val colorId = (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
-            val drawableCompat = ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)!!.constantState!!.newDrawable().mutate()
-            drawableCompat.setColorFilter(ContextCompat.getColor(context, colorId), PorterDuff.Mode.SRC_IN)
-            return drawableCompat
+            
+            return ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)!!
+                .constantState!!
+                .newDrawable()
+                .mutate()
+                .apply { setColorFilter(ContextCompat.getColor(context, colorId), PorterDuff.Mode.SRC_IN) }
         }
 
         fun initPhoneNumberUtil(context: Context) { phoneUtil = PhoneNumberUtil.createInstance(context) }
@@ -301,31 +303,6 @@ internal class Utils {
             val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             val countryCode = telephonyManager.simCountryIso
             return phoneUtil.getCountryCodeForRegion(countryCode.toUpperCase())
-        }
-
-        fun formatJsonString(text: String): String {
-            val json = StringBuilder()
-            var indentString = ""
-
-            for(i in 0 until text.length) {
-                val letter = text[i]
-                when(letter) {
-                    '{', '[' -> {
-                        json.append("\n" + indentString + letter + "\n")
-                        indentString += "\t"
-                        json.append(indentString)
-                    }
-                    '}', ']' -> {
-                        indentString = indentString.replaceFirst("\t".toRegex(), "")
-                        json.append("\n" + indentString + letter)
-                    }
-                    ',' -> json.append(letter + "\n" + indentString)
-
-                    else -> json.append(letter)
-                }
-            }
-
-            return json.toString()
         }
         
         fun formatPersons(context: Context, persons: Int) = context.getString(R.string.count_persons_and_baggage, persons)
@@ -336,11 +313,8 @@ internal class Utils {
         fun showShortToast(context: Context, text: CharSequence) { Toast.makeText(context, text, Toast.LENGTH_SHORT).show() }
         fun showLongToast(context: Context, text: CharSequence)  { Toast.makeText(context, text, Toast.LENGTH_LONG).show() }
 
-        fun convertDpToPixels(context: Context, dp: Float): Float{
-            val res = context.resources
-            val metrics = res.displayMetrics
-            return dp * ((metrics.densityDpi.toFloat()) / DisplayMetrics.DENSITY_DEFAULT)
-        }
+        fun convertDpToPixels(context: Context, dp: Float) =
+            dp * context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT
 
 /*
         fun isConnectedToInternet(context: Context?): Boolean {
@@ -358,7 +332,6 @@ internal class Utils {
         */
     }
 }
-
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {
     this.addTextChangedListener(object: TextWatcher {

@@ -141,9 +141,9 @@ class OffersPresenter: BasePresenter<OffersView>() {
         else {
             sortCategory = sortType
             when(sortType) {
-                SORT_YEAR -> sortHigherToLower = true
+                SORT_YEAR   -> sortHigherToLower = true
                 SORT_RATING -> sortHigherToLower = true
-                SORT_PRICE -> sortHigherToLower = false
+                SORT_PRICE  -> sortHigherToLower = false
             }
         }
         setOffers()

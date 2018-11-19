@@ -72,7 +72,7 @@ open class BasePresenter<BV: BaseView>: MvpPresenter<BV>(), KoinComponent {
     
     protected fun createMultipleBundle(map: Map<String, Any>): Bundle {
         val bundle = Bundle()
-        map.forEach { (k,v) -> bundle.putString(k, v.toString()) }
+        map.forEach { (k, v) -> bundle.putString(k, v.toString()) }
         return bundle
     }
 }

@@ -161,7 +161,7 @@ class OffersActivity: BaseActivity(), OffersView {
     }
 
     override fun showAlertCancelRequest() {
-        Utils.showAlertCancelRequest(this) { isCancel -> presenter.cancelRequest(isCancel) }
+        Utils.showAlertCancelRequest(this) { presenter.cancelRequest(it) }
     }
 
     override fun showBottomSheetOfferDetails(offer: OfferModel) {
