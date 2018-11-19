@@ -20,7 +20,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.InternetNotAvailableException
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
