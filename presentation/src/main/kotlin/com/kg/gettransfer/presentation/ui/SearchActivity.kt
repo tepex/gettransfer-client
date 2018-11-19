@@ -70,6 +70,7 @@ class SearchActivity: BaseActivity(), SearchView {
         setContentView(R.layout.activity_search)
         setupToolbar()
 
+        scrollViewResults.setOnTouchListener(onTouchListener)
         rv_addressList.setOnTouchListener(onTouchListener)
         rv_popularList.setOnTouchListener(onTouchListener)
 
