@@ -74,8 +74,6 @@ class OffersActivity: BaseActivity(), OffersView {
         sortYear.setOnClickListener   { presenter.changeSortType(OffersPresenter.SORT_YEAR) }
         sortRating.setOnClickListener { presenter.changeSortType(OffersPresenter.SORT_RATING) }
         sortPrice.setOnClickListener  { presenter.changeSortType(OffersPresenter.SORT_PRICE) }
-
-        setOfferDetailsSheetListener()
     }
 
     @CallSuper
@@ -95,23 +93,6 @@ class OffersActivity: BaseActivity(), OffersView {
         systemInteractor.removeListener(offerServiceConnection)
         */
         super.onStop()
-    }
-    
-    private fun setOfferDetailsSheetListener() {
-        bsOfferDetails.setBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(p0: View, p1: Float) {}
-
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when(newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                        for(frag in supportFragmentManager.fragments) {
-                            vpVehiclePhotos.currentItem = 0
-                            supportFragmentManager.beginTransaction().remove(frag).commit()
-                        }
-                    }
-                }
-            }
-        })
     }
     
     override fun setTransfer(transferModel: TransferModel) {
