@@ -39,13 +39,7 @@ class LogsActivity: BaseActivity(), LogsView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_share_logs)
 
-        setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.apply {
-            setDisplayShowTitleEnabled(false)
-            setDisplayHomeAsUpEnabled(true)
-            setDisplayShowHomeEnabled(true)
-        }
-        (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
+        setToolbar(toolbar as Toolbar)
         (toolbar as Toolbar).layoutLogs.visibility = View.VISIBLE
         (toolbar as Toolbar).btnShare.setOnClickListener { presenter.onShareClicked() }
         (toolbar as Toolbar).btnClear.setOnClickListener { presenter.clearLogs() }

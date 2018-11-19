@@ -38,6 +38,7 @@ class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsVie
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        presenter.tripId = intent.getLongExtra(CarrierTripDetailsView.EXTRA_TRIP_ID, 0)
 
         setContentView(R.layout.activity_carrier_transfer_details)
         _mapView = mapView
@@ -49,8 +50,6 @@ class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsVie
         layoutTransferInfo.divider.visibility = View.GONE
 
         btnCall.setOnClickListener { presenter.onCallClick() }
-        
-        presenter.tripId = intent.getLongExtra(CarrierTripDetailsView.EXTRA_TRIP_ID, 0)
     }
 
     protected suspend override fun customizeGoogleMaps() {

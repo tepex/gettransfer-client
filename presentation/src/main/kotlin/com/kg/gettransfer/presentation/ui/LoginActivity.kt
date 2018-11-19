@@ -34,6 +34,9 @@ class LoginActivity: BaseActivity(), LoginView {
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        presenter.email = intent.getStringExtra(LoginView.EXTRA_EMAIL_TO_LOGIN)
+        presenter.screenForReturn = intent.getStringExtra(LoginView.EXTRA_SCREEN_FOR_RETURN)
+        
         setContentView(R.layout.activity_login)
         
         etEmail.onTextChanged         { presenter.setEmail(it.trim()) }
@@ -41,8 +44,6 @@ class LoginActivity: BaseActivity(), LoginView {
         btnLogin.setOnClickListener   { presenter.onLoginClick() }
         homeButton.setOnClickListener { presenter.onHomeClick() }
         
-        presenter.email = intent.getStringExtra(LoginView.EXTRA_EMAIL_TO_LOGIN)
-        presenter.screenForReturn = intent.getStringExtra(LoginView.EXTRA_SCREEN_FOR_RETURN)     
         etEmail.setText(presenter.email)
         btnForgotPassword.markAsNotImplemented()
     }

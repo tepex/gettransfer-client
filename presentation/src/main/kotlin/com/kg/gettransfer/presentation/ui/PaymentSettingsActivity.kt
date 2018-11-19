@@ -43,20 +43,15 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        presenter.params = JSON.parse(PaymentSettingsView.Params.serializer(), intent.getStringExtra(PaymentSettingsView.EXTRA_PARAMS))
+        
         setContentView(R.layout.activity_payment_settings)
         payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, 100)
         payThirdOfPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, 30)
         setButton()
         setCommission()
 
-        setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        (toolbar as Toolbar).toolbar_title.setText(R.string.LNG_PAYMENT_SETTINGS)
-        (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
-        
-        presenter.params = JSON.parse(PaymentSettingsView.Params.serializer(), intent!!.getStringExtra(PaymentSettingsView.EXTRA_PARAMS))
+        setToolbar(toolbar as Toolbar, R.string.LNG_PAYMENT_SETTINGS)
     }
 
     private fun setButton() {

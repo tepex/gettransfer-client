@@ -46,20 +46,11 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
         presenter.transferId = intent.getLongExtra(TransferDetailsView.EXTRA_TRANSFER_ID, 0)
         
         setContentView(R.layout.activity_transfer_details)
 
-        setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.apply {
-            setDisplayShowTitleEnabled(false)
-            setDisplayHomeAsUpEnabled(true)
-            setDisplayShowHomeEnabled(true)
-        }
-        (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
-        (toolbar as Toolbar).toolbar_title.text = resources.getString(R.string.LNG_RIDE_DETAILS)
-
+        setToolbar(toolbar as Toolbar, R.string.LNG_RIDE_DETAILS)
         layoutTransferInfo.chevron.visibility = View.GONE
 
         _mapView = mapView

@@ -53,16 +53,13 @@ class PaymentActivity: BaseActivity(), PaymentView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        presenter.transferId = intent.getLongExtra(PaymentView.EXTRA_TRANSFER_ID, 0)
+        presenter.offerId    = intent.getLongExtra(PaymentView.EXTRA_OFFER_ID, 0)
+        presenter.percentage = intent.getIntExtra(PaymentView.EXTRA_PERCENTAGE, 0)
+        
         setContentView(R.layout.activity_payment)
 
-        setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.apply {
-            setDisplayShowTitleEnabled(false)
-            setDisplayHomeAsUpEnabled(true)
-            setDisplayShowHomeEnabled(true)
-        }
-        (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
-
+        setToolbar(toolbar as Toolbar)
         webView.settings.javaScriptEnabled = true
         webView.webViewClient = object: WebViewClient() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -79,11 +76,7 @@ class PaymentActivity: BaseActivity(), PaymentView {
                 return false
             }
         }
-        
-        presenter.transferId = intent.getLongExtra(PaymentView.EXTRA_TRANSFER_ID, 0)
-        presenter.offerId    = intent.getLongExtra(PaymentView.EXTRA_OFFER_ID, 0)
-        presenter.percentage = intent.getIntExtra(PaymentView.EXTRA_PERCENTAGE, 0)
-        
+                
         webView.loadUrl(intent.getStringExtra(PaymentView.EXTRA_URL))
     }
 

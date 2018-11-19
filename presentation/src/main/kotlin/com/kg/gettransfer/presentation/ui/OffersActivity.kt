@@ -55,14 +55,11 @@ class OffersActivity: BaseActivity(), OffersView {
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        presenter.transferId = intent.getLongExtra(OffersView.EXTRA_TRANSFER_ID, 0)
+        
         setContentView(R.layout.activity_offers)
 
-        setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        (toolbar as Toolbar).toolbar_title.setText(R.string.LNG_RIDE_CARRIERS)
-        (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
+        setToolbar(toolbar as Toolbar, R.string.LNG_RIDE_CARRIERS)
 
         btnCancelRequest.visibility = View.VISIBLE
         rvOffers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -79,8 +76,6 @@ class OffersActivity: BaseActivity(), OffersView {
         sortPrice.setOnClickListener  { presenter.changeSortType(OffersPresenter.SORT_PRICE) }
 
         setOfferDetailsSheetListener()
-        
-        presenter.transferId = intent.getLongExtra(OffersView.EXTRA_TRANSFER_ID, 0)
     }
 
     @CallSuper

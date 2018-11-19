@@ -55,6 +55,11 @@ import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import timber.log.Timber
 
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
+    companion object {
+        const val TOOLBAR_NO_TITLE = 0
+    }
+    
+    
     internal val systemInteractor: SystemInteractor by inject()
     
     internal val router: Router by inject()
@@ -90,14 +95,14 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
 
     abstract fun getPresenter(): BasePresenter<*>
 
-    protected fun setToolbar(toolbar: Toolbar, @StringRes titleId: Int, hasBackAction: Boolean = true) {
+    protected fun setToolbar(toolbar: Toolbar, @StringRes titleId: Int = TOOLBAR_NO_TITLE, hasBackAction: Boolean = true) {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(false)
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
-        toolbar.toolbar_title.setText(titleId)
+        if(titleId != TOOLBAR_NO_TITLE) toolbar.toolbar_title.setText(titleId)
         if(hasBackAction) toolbar.setNavigationOnClickListener { getPresenter().onBackCommandClick() }
     }
 
