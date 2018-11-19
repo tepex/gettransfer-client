@@ -325,7 +325,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     //TODO сделать подсветку не заполненных полей
     override fun setGetTransferEnabled(enabled: Boolean) {}
 
-    override fun setRoute(isDateChanged: Boolean, polyline: PolylineModel, routeModel: RouteModel) {
+    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
         if(isDateChanged) clearMarkersAndPolylines()
         setPolyline(polyline, routeModel)
     }

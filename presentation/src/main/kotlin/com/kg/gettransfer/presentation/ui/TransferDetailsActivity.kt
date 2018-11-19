@@ -131,9 +131,8 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         }
     }
 
-    override fun setButtonCancelVisible(visible: Boolean) {
+    override fun setButtonCancelVisible(visible: Boolean) =
         if(visible) btnCancel.visibility = View.VISIBLE else btnCancel.visibility = View.GONE
-    }
 
     override fun setOffer(offerModel: OfferModel) {
         offerDriverInfoEmail.text = offerModel.driver?.email
@@ -150,15 +149,9 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         layoutOfferTransportInfo.visibility = View.VISIBLE
     }
 
-    /*override fun setRoute(routeModel: RouteModel) {
-        Utils.setPins(this, googleMap, routeModel)
-    }*/
-
-    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel) {
+    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) =
         setPolyline(polyline, routeModel)
-    }
 
-    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng) {
+    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng) =
         processGoogleMap { setPinForHourlyTransfer(placeName, info, point) }
-    }
 }

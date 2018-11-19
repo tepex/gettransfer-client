@@ -6,20 +6,16 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.PolylineModel
-import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface TransferDetailsView: BaseView {
+interface TransferDetailsView: BaseView, RouteView {
     companion object {
         val EXTRA_TRANSFER_ID = "${TransferDetailsView::class.java.name}.transferId"
     }
 
     fun setTransfer(transferModel: TransferModel)
     fun setOffer(offerModel: OfferModel)
-    //fun setRoute(routeModel: RouteModel)
-    fun setRoute(polyline: PolylineModel, routeModel: RouteModel)
     fun setButtonCancelVisible(visible: Boolean)
     fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng)
 }

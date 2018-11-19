@@ -158,7 +158,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
                 viewState.setTransportTypes(transportTypes!!)
                 polyline = Utils.getPolyline(it)
                 track = polyline?.track
-                viewState.setRoute(false, polyline!!, it)
+                viewState.setRoute(polyline!!, it, false)
             }
             viewState.blockInterface(false)
         }
@@ -175,7 +175,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         }
         routeModel?.let {
             it.dateTime = SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date)
-            viewState.setRoute(true, polyline!!, it)
+            viewState.setRoute(polyline!!, it, true)
         }
     }
     
@@ -190,7 +190,6 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         viewState.setUser(user, systemInteractor.account.user.loggedIn)
         viewState.setDateTimeTransfer(Utils.getFormattedDate(systemInteractor.locale, date), isAfter4Hours)
 	    transportTypes?.let { viewState.setTransportTypes(it) }
-	    //routeModel?.let     { viewState.setRoute(it) }
     }
 
     fun changeCurrency(selected: Int) { viewState.setCurrency(currencies.get(selected).symbol) }
@@ -349,7 +348,6 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     }
 
     fun onCenterRouteClick() {
-        //viewState.setRoute(routeModel!!)
         viewState.centerRoute(track!!)
         logEventMain(SHOW_ROUTE_CLICKED)
     }

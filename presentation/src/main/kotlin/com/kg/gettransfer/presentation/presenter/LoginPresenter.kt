@@ -45,6 +45,7 @@ class LoginPresenter: BasePresenter<LoginView>() {
                         Screens.CLOSE_ACTIVITY -> router.exit()
                     }
                 }
+                else router.exit()
                 //else router.exitWithResult(RESULT_CODE, RESULT_OK)
                 logLoginEvent(RESULT_SUCCESS)
             } else {

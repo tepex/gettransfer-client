@@ -155,10 +155,10 @@ internal class Utils {
             context.getString(R.string.LNG_RIDE_DURATION).plus(": $duration ").plus(context.getString(R.string.LNG_H))
 
         fun getPolyline(routeModel: RouteModel): PolylineModel {
-            var mPoints = arrayListOf<LatLng>()
+            var mPoints = mutableListOf<LatLng>()
             var line: PolylineOptions? = null
             val latLngBuilder = LatLngBounds.Builder()
-            var track: CameraUpdate
+            var track: CameraUpdate?
 
             if(routeModel.polyLines != null) {
                 for(item in routeModel.polyLines) mPoints.addAll(PolyUtil.decode(item))
@@ -178,8 +178,13 @@ internal class Utils {
 
                 for(i in mPoints.indices) latLngBuilder.include(mPoints.get(i))
             }
-            track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150)
-            return PolylineModel(mPoints.get(0), mPoints.get(mPoints.size - 1), line, track)
+            Timber.d("latLngBuilder: $latLngBuilder")
+            track = try { CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150) }
+            catch(e: Exception) {
+                Timber.w("Create order error: $latLngBuilder", e)
+                null
+            }
+            return PolylineModel(mPoints.firstOrNull(), mPoints.getOrNull(mPoints.size - 1), line, track)
         }
 
         fun getFormattedDate(locale: Locale, dateToLocal: Date) = SimpleDateFormat(DATE_TIME_PATTERN, locale).format(dateToLocal)

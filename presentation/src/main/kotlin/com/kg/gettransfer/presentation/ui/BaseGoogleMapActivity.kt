@@ -136,14 +136,18 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     }
     
     protected fun setPolyline(polyline: PolylineModel, routeModel: RouteModel) {
+        if(polyline.startPoint == null || polyline.finishPoint == null) {
+            Timber.w("Polyline model is empty for route: $routeModel")
+            return
+        }
         val bmPinA = getPinBitmap(routeModel.from, routeModel.dateTime, R.drawable.ic_map_label_a)
         val bmPinB = getPinBitmap(routeModel.to, Utils.formatDistance(this, routeModel.distance, routeModel.distanceUnit), R.drawable.ic_map_label_b)
 
         val startMakerOptions = MarkerOptions()
-                .position(polyline.startPoint)
+                .position(polyline.startPoint!!)
                 .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
         val endMakerOptions = MarkerOptions()
-                .position(polyline.finishPoint)
+                .position(polyline.finishPoint!!)
                 .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
 
         processGoogleMap {
@@ -156,7 +160,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
             googleMap.addMarker(endMakerOptions)
 
             try {
-                googleMap.moveCamera(polyline.track)
+                polyline.track?.let { googleMap.moveCamera(it) }
                 //showTrack(polyline.track)
             }
             catch(e: Exception) { Timber.e(e) }

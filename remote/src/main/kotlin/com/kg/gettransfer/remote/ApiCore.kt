@@ -63,13 +63,12 @@ class ApiCore: KoinComponent {
     fun changeEndpoint(endpoint: EndpointModel) {
         apiKey = endpoint.key
         apiUrl = endpoint.url
-        api = Retrofit.Builder()
-                .baseUrl(endpoint.url)
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(CoroutineCallAdapterFactory()) // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
-                .build()
-                .create(Api::class.java)
+        api = Retrofit.Builder().apply {
+            baseUrl(endpoint.url)
+            client(okHttpClient)
+            addConverterFactory(GsonConverterFactory.create(gson))
+            addCallAdapterFactory(CoroutineCallAdapterFactory()) // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
+        }.build().create(Api::class.java)
     }
 
     /**

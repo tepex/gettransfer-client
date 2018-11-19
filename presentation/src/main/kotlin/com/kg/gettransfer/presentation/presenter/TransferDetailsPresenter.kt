@@ -62,8 +62,7 @@ class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
                                                                result.model.from.point!!,
                                                                result.model.to!!.point!!,
                                                                transferModel.dateTime)
-                        val polyline = Utils.getPolyline(routeModel)
-                        viewState.setRoute(polyline, routeModel)
+                        viewState.setRoute(Utils.getPolyline(routeModel), routeModel)
                     }
                 } else if(result.model.duration != null) {
                     viewState.setPinHourlyTransfer(transferModel.from,

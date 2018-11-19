@@ -79,7 +79,6 @@ class SearchActivity: BaseActivity(), SearchView {
 //        mBounds = intent.getParcelableExtra(LATLON_BOUNDS)
 
         initSearchFields()
-//        changeFocusForSearch()
         predefinedPopularPlaces = initPredefinedPopularPlaces()
         ivInverseWay.setOnClickListener { presenter.inverseWay() }
         pointOnMap.setOnClickListener { presenter.selectFinishPointOnMap() }
