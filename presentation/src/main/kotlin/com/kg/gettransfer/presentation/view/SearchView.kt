@@ -21,4 +21,5 @@ interface SearchView: BaseView {
 	fun setAddressTo(address: String, sendRequest: Boolean, isEditing: Boolean)
 	fun setSuggestedAddresses(addressesList: List<GTAddress>)
 	fun updateIcon(isTo: Boolean)
+    fun setFocus(isToField: Boolean)
 }

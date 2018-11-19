@@ -175,4 +175,9 @@ class SearchActivity: BaseActivity(), SearchView {
         if(isTo) searchForm.icons_container.b_point.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.b_point_filled))
         else     searchForm.icons_container.a_point.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.a_point_filled))
     }
+
+    override fun setFocus(isToField: Boolean) {
+        if(isToField) searchTo.changeFocus()
+        else searchFrom.changeFocus()
+    }
 }
