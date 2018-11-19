@@ -14,12 +14,12 @@ interface SearchView: BaseView {
         val EXTRA_ADDRESS_TO   = "${SearchView::class.java.name}.address_to"
         val EXTRA_IS_CLICK_TO  = "${SearchView::class.java.name}.to_click"
     }
-    
+
     fun setAddressListByAutoComplete(list: List<GTAddress>)
-	fun onFindPopularPlace(isTo: Boolean, place: String)
-	fun setAddressFrom(address: String, sendRequest: Boolean, isEditing: Boolean)
-	fun setAddressTo(address: String, sendRequest: Boolean, isEditing: Boolean)
-	fun setSuggestedAddresses(addressesList: List<GTAddress>)
-	fun updateIcon(isTo: Boolean)
+    fun onFindPopularPlace(isTo: Boolean, place: String)
+    fun setAddressFrom(address: String, sendRequest: Boolean, isEditing: Boolean)
+    fun setAddressTo(address: String, sendRequest: Boolean, isEditing: Boolean)
+    fun setSuggestedAddresses(addressesList: List<GTAddress>)
+    fun updateIcon(isTo: Boolean)
     fun setFocus(isToField: Boolean)
 }
