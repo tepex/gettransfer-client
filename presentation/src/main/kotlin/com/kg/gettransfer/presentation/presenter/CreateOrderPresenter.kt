@@ -88,8 +88,6 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         const val TRANSPORT_FIELD       = "transport"
         const val TERMS_ACCEPTED_FIELD  = "terms_accepted"
 
-
-        /** [см. табл.][https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0] */
         @JvmField val EVENT_TRANSFER = "create_transfer"
         @JvmField val EVENT_SETTINGS = "transfer_settings"
 
