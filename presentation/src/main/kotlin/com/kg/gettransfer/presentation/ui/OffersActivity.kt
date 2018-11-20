@@ -73,11 +73,12 @@ class OffersActivity: BaseActivity(), OffersView {
 
         viewNetworkNotAvailable = textNetworkNotAvailable
 
-        btnCancelRequest.setOnClickListener { presenter.onCancelRequestClicked() }
-        layoutTransferRequestInfo.setOnClickListener { presenter.onRequestInfoClicked() }
-        sortYear.setOnClickListener   { presenter.changeSortType(OffersPresenter.SORT_YEAR) }
-        sortRating.setOnClickListener { presenter.changeSortType(OffersPresenter.SORT_RATING) }
-        sortPrice.setOnClickListener  { presenter.changeSortType(OffersPresenter.SORT_PRICE) }
+        btnCancelRequest.setOnClickListener               { presenter.onCancelRequestClicked() }
+        layoutTransferRequestInfo.setOnClickListener      { presenter.onRequestInfoClicked() }
+        sortYear.setOnClickListener                       { presenter.changeSortType(OffersPresenter.SORT_YEAR) }
+        sortRating.setOnClickListener                     { presenter.changeSortType(OffersPresenter.SORT_RATING) }
+        sortPrice.setOnClickListener                      { presenter.changeSortType(OffersPresenter.SORT_PRICE) }
+        (toolbar as Toolbar).setNavigationOnClickListener { presenter.navigateBackToMain() }
     }
 
     @CallSuper
@@ -245,7 +246,7 @@ class OffersActivity: BaseActivity(), OffersView {
     @CallSuper
     override fun onBackPressed() {
         if(bsOfferDetails.state == BottomSheetBehavior.STATE_EXPANDED) hideSheetOfferDetails()
-        else super.onBackPressed()
+        else presenter.navigateBackToMain()
     }
 
     override fun addNewOffer(offer: OfferModel) { (rvOffers.adapter as OffersRVAdapter).add(offer) }

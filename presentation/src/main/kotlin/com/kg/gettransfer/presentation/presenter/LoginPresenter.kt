@@ -31,6 +31,7 @@ class LoginPresenter: BasePresenter<LoginView>() {
 
     internal var email: String? = null
     internal var screenForReturn: String? = null
+    internal var transferId: Long? = null
 
     fun onLoginClick() {
         if(!checkFields()) return
@@ -43,6 +44,8 @@ class LoginPresenter: BasePresenter<LoginView>() {
                     when(screenForReturn) {
                         Screens.CARRIER_MODE   -> router.navigateTo(Screens.ChangeMode(checkCarrierMode()))
                         Screens.CLOSE_ACTIVITY -> router.exit()
+                        Screens.OFFERS         -> { if (transferId != 0L )router.navigateTo(Screens.Offers(transferId!!))
+                                                  else router.exit() }
                     }
                 }
                 else router.exit()

@@ -11,11 +11,7 @@ import com.google.android.gms.maps.CameraUpdate
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
-
-import com.kg.gettransfer.domain.interactor.OfferInteractor
-import com.kg.gettransfer.domain.interactor.PromoInteractor
-import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.interactor.*
 
 import com.kg.gettransfer.domain.model.Trip
 
@@ -294,16 +290,21 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
                                                                          promoCode,
                                                                          false))
             }
-            if(result.error != null) {
+
+            val logResult = utils.asyncAwait {
+                systemInteractor.putAccount()
+            }
+
+            if (result.error == null && logResult.error == null) {
+                router.navigateTo(Screens.Offers(result.model.id))
+                logCreateTransfer(RESULT_SUCCESS)
+            } else if(result.error != null) {
                 when {
-                    result.error!!.isNotLoggedIn() -> router.navigateTo(Screens.Login(Screens.OFFERS, user.profile.email))
                     result.error!!.details == "{phone=[taken]}" -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
                     else -> viewState.setError(result.error!!)
                 }
-            }
-            else {
-                router.navigateTo(Screens.Offers(result.model.id))
-                logCreateTransfer(RESULT_SUCCESS)
+            } else if (logResult.error != null) {
+                router.navigateTo(Screens.LoginToGetOffers(result.model.id, user.profile.email))
             }
             viewState.blockInterface(false)
         }

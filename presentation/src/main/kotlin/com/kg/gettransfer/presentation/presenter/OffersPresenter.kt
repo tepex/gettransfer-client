@@ -123,7 +123,7 @@ class OffersPresenter: BasePresenter<OffersView>() {
                 Timber.e(result.error!!)
                 viewState.setError(result.error!!)
             }
-            else router.exit()
+            else navigateBackToMain()
             viewState.blockInterface(false)
         }
     }

@@ -36,7 +36,8 @@ class LoginActivity: BaseActivity(), LoginView {
         super.onCreate(savedInstanceState)
         presenter.email = intent.getStringExtra(LoginView.EXTRA_EMAIL_TO_LOGIN)
         presenter.screenForReturn = intent.getStringExtra(LoginView.EXTRA_SCREEN_FOR_RETURN)
-        
+        presenter.transferId = intent.getLongExtra(LoginView.EXTRA_TRANSFER_ID, 0L)
+
         setContentView(R.layout.activity_login)
         
         etEmail.onTextChanged         { presenter.setEmail(it.trim()) }

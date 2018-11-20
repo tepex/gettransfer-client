@@ -19,10 +19,11 @@ object Screens {
 	@JvmField val CARRIER_TRIPS    = "carrier_trips"
 	
 	
+	@JvmField val MAIN             = "main"
 	@JvmField val CARRIER_MODE     = "carrier_mode"
 	@JvmField val REG_CARRIER      = "registration_carrier"
 	@JvmField val PASSENGER_MODE   = "passenger_mode"
-	
+
 	@JvmField val OFFERS           = "offers"
 	@JvmField val CLOSE_ACTIVITY   = "close_activity"
 	
@@ -31,6 +32,10 @@ object Screens {
 
 	
 	@JvmField val NOT_USED 		   = -1
+
+    object Main: SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, MainActivity::class.java)
+    }
 
     object ShareLogs: SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, LogsActivity::class.java)
@@ -58,10 +63,19 @@ object Screens {
         override fun getActivityIntent(context: Context?) = Intent(context, CreateOrderActivity::class.java)
     }
 
-    data class Login(val nextScreen: String, val email: String?): SupportAppScreen() {
+    open class Login(val nextScreen: String, val email: String?): SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
             putExtra(LoginView.EXTRA_SCREEN_FOR_RETURN, nextScreen)
+            putExtra(LoginView.EXTRA_EMAIL_TO_LOGIN, email)
+        }
+    }
+
+    data class LoginToGetOffers(val id: Long, val email: String?): SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+            putExtra(LoginView.EXTRA_TRANSFER_ID, id)
+            putExtra(LoginView.EXTRA_SCREEN_FOR_RETURN, Screens.OFFERS)
             putExtra(LoginView.EXTRA_EMAIL_TO_LOGIN, email)
         }
     }
