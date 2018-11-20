@@ -83,6 +83,7 @@ class OfferServiceConnection: BroadcastReceiver(), ServiceConnection, SystemList
         Timber.d("onReceive: $offerEntity")
         try {
             val offer = offerMapper.fromEntity(JSON.parse(OfferEntity.serializer(), offerEntity))
+            offer.vehicle.photos = offer.vehicle.photos.map { photo -> systemInteractor.endpoint.url.plus(photo) }
             handler?.invoke(offer)
         } catch(e: Exception) {
             Timber.e(e)
