@@ -28,7 +28,6 @@ class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
     private val transferInteractor: TransferInteractor by inject()
     private val offerInteractor: OfferInteractor by inject()
 
-    private lateinit var transfer: Transfer
     private lateinit var transferModel: TransferModel
 
     internal var transferId = 0L
@@ -47,7 +46,7 @@ class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
                                                          systemInteractor.transportTypes)
                 viewState.setTransfer(transferModel)
                 if(transferModel.checkOffers) {
-                    val r = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
+                    val r = utils.asyncAwait { offerInteractor.getOffers(result.model.id) }
                     if(r.error == null && r.model.size == 1) viewState.setOffer(Mappers.getOfferModel(r.model.first(), systemInteractor.locale))
                 }
 
@@ -67,7 +66,7 @@ class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
                 } else if(result.model.duration != null) {
                     viewState.setPinHourlyTransfer(transferModel.from,
                                                    transferModel.dateTime,
-                                                   LatLng(result.model.from.point!!.latitude, transfer.from.point!!.longitude))
+                                                   LatLng(result.model.from.point!!.latitude, result.model.from.point!!.longitude))
                 }
             }
             viewState.blockInterface(false)
