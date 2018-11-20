@@ -105,6 +105,22 @@ android {
 
 			dimension "type"
 		}
+		
+		/* `prod` emulation for testing */
+		home {
+			applicationId "com.kg.gettransfer"
+
+			signingConfig signingConfigs.config
+
+			versionCode getBuildNumber() as Integer
+			versionName "2.0"
+
+			manifestPlaceholders = [
+					hockeyAppId   : "1f061f58b7bd42c387ecd8681d30df48",
+			]
+
+			dimension "type"
+		}
 	}
 	
 	sourceSets {

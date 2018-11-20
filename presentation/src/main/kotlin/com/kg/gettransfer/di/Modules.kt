@@ -52,6 +52,8 @@ import org.koin.dsl.module.module
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Router
 
+import timber.log.Timber
+
 /**
  * Koin main module
  */
@@ -67,7 +69,9 @@ val geoModule = module {
 
 val prefsModule = module {
     single<PreferencesCache> {
-        val endpoints = listOf(
+        val endpoints = if(BuildConfig.FLAVOR == "home") listOf(
+            EndpointEntity("Prod", androidContext().getString(R.string.api_key_prod), androidContext().getString(R.string.api_url_prod)))
+        else listOf(
             EndpointEntity("Demo", androidContext().getString(R.string.api_key_demo), androidContext().getString(R.string.api_url_demo), true),
             EndpointEntity("Prod", androidContext().getString(R.string.api_key_prod), androidContext().getString(R.string.api_url_prod)))
         PreferencesImpl(androidContext(), endpoints)

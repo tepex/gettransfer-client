@@ -71,7 +71,8 @@ class PreferencesImpl(context: Context,
         get() {
             if(_endpoint == null) {
                 val name = configsPrefs.getString(ENDPOINT, null)
-                _endpoint = if(name == null) endpoints.find { it.isDemo }!! else endpoints.find { it.name == name }!!
+                if(name != null) _endpoint = endpoints.find { it.name == name }
+                if(_endpoint == null) _endpoint = endpoints.first()
             }
             return _endpoint!!
         }
