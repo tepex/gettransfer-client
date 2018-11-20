@@ -47,7 +47,7 @@ class SearchActivity: BaseActivity(), SearchView {
     private lateinit var current: SearchAddress
 
     // WTF?
-    //var mBounds: LatLngBounds? = null
+    var mBounds: LatLngBounds? = null
 
     private lateinit var predefinedPopularPlaces: List<PopularPlace>
 
@@ -77,7 +77,7 @@ class SearchActivity: BaseActivity(), SearchView {
         rv_addressList.layoutManager = LinearLayoutManager(this)
         rv_popularList.layoutManager = LinearLayoutManager(this)
 
-//        mBounds = intent.getParcelableExtra(LATLON_BOUNDS)
+        mBounds = intent.getParcelableExtra(SearchView.EXTRA_BOUNDS)
 
         initSearchFields()
         predefinedPopularPlaces = initPredefinedPopularPlaces()
@@ -88,11 +88,9 @@ class SearchActivity: BaseActivity(), SearchView {
     private fun initSearchFields() {
         searchFrom.initWidget(this, false)
         searchFrom.sub_title.text = getString(R.string.LNG_FIELD_SOURCE_PICKUP)
-//        searchFrom.text = intent.getStringExtra(EXTRA_ADDRESS_FROM)
+
         searchTo.initWidget(this, true)
         searchTo.sub_title.text = getString(R.string.LNG_FIELD_DESTINATION)
-  //      searchTo.text = intent.getStringExtra(EXTRA_ADDRESS_TO)
-
         changeFocusForSearch()
     }
 

@@ -222,11 +222,11 @@ class MainPresenter: BasePresenter<MainView>() {
         viewState.initSearchForm()
     }
 
-    fun onSearchClick(from: String, to: String) { navigateToFindAddress(from, to) }
-    fun onNextClick  (from: String, to: String) { navigateToFindAddress(from, to) }
+    fun onSearchClick(from: String, to: String, bounds: LatLngBounds) { navigateToFindAddress(from, to, bounds) }
+    fun onNextClick  (from: String, to: String, bounds: LatLngBounds) { navigateToFindAddress(from, to, bounds) }
 
-    private fun navigateToFindAddress(from: String, to: String) {
-        routeInteractor.from?.let { router.navigateTo(Screens.FindAddress(from, to, isClickTo)) }
+    private fun navigateToFindAddress(from: String, to: String, bounds: LatLngBounds) {
+        routeInteractor.from?.let { router.navigateTo(Screens.FindAddress(from, to, isClickTo, bounds)) }
     }
 
     fun onNextClick() {

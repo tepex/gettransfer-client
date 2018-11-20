@@ -2,8 +2,8 @@ package com.kg.gettransfer.presentation.view
 
 import android.content.Context
 import android.content.Intent
-import android.support.v4.app.Fragment
-import com.kg.gettransfer.presentation.ui.ReadMoreFragment
+
+import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.presentation.ui.*
 
@@ -96,10 +96,11 @@ object Screens {
         }
     }
 
-    data class FindAddress(val from: String, val to: String, val isClickTo: Boolean?): SupportAppScreen() {
+    data class FindAddress(val from: String, val to: String, val isClickTo: Boolean?,val bounds: LatLngBounds): SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, SearchActivity::class.java).apply {
             putExtra(SearchView.EXTRA_ADDRESS_FROM, from)
             putExtra(SearchView.EXTRA_ADDRESS_TO, to)
+            putExtra(SearchView.EXTRA_BOUNDS, bounds)
             isClickTo?.let { putExtra(SearchView.EXTRA_IS_CLICK_TO, it) }
         }
     }

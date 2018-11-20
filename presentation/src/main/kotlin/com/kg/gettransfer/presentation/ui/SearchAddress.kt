@@ -96,7 +96,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         mvpDelegate.onCreate()
         mvpDelegate.onAttach()
         
-        //presenter.mBounds = parent.mBounds
+        presenter.mBounds = parent.mBounds
 //		if(isTo) addressField.requestFocus()
         setClearButtonVisibility()
     }

@@ -147,16 +147,15 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         search.elevation = resources.getDimension(R.dimen.search_elevation)
         searchFrom.setUneditable()
         searchTo.setUneditable()
-        searchFrom.setOnClickListener {
-            presenter.isClickTo = false
-            presenter.onSearchClick(searchFrom.text, searchTo.text)
-        }
-        searchTo.setOnClickListener   {
-            presenter.isClickTo = true
-            presenter.onSearchClick(searchFrom.text, searchTo.text)
-        }
-        btnNext.setOnClickListener { presenter.onNextClick() }
+        searchFrom.setOnClickListener { performClick(false) }
+        searchTo.setOnClickListener   { performClick(true) }
+        btnNext.setOnClickListener    { presenter.onNextClick() }
         enableBtnNext()
+    }
+
+    private fun performClick(clickedTo: Boolean){
+        presenter.isClickTo = clickedTo
+        presenter.onSearchClick(searchFrom.text, searchTo.text, googleMap.projection.visibleRegion.latLngBounds)
     }
 
     @CallSuper
