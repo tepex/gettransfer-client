@@ -24,7 +24,7 @@ import timber.log.Timber
 
 @InjectViewState
 class SettingsPresenter: BasePresenter<SettingsView>() {
-    private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
+    private lateinit var currencies: List<CurrencyModel>
     private val locales = Mappers.getLocalesModels(systemInteractor.locales).filter { it.locale == "EN" || it.locale == "RU" } 
     private val distanceUnits = Mappers.getDistanceUnitsModels(systemInteractor.distanceUnits)
     private val endpoints = systemInteractor.endpoints.map { Mappers.getEndpointModel(it) }
@@ -45,6 +45,7 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
     @CallSuper
     override fun attachView(view: SettingsView) {
         super.attachView(view)
+        currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
 
         viewState.setCurrencies(currencies)
         viewState.setLocales(locales)
