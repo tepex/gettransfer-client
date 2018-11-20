@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import android.util.Patterns
 
@@ -185,7 +186,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
 
         viewState.setUser(user, systemInteractor.account.user.loggedIn)
         viewState.setDateTimeTransfer(Utils.getFormattedDate(systemInteractor.locale, date), isAfter4Hours)
-	    transportTypes?.let { viewState.setTransportTypes(it) }
+	    transportTypes?.let { viewState.setTransportTypes(it); Log.i("FindTransport", "" + it.size) }
     }
 
     fun changeCurrency(selected: Int) { viewState.setCurrency(currencies.get(selected).symbol) }
@@ -310,7 +311,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     }
 
     private fun checkFieldsForRequest(): Boolean {
-        var errorFiled =
+        val errorFiled =
             if(!Utils.checkEmail(user.profile.email))        EMAIL_FIELD
             else if(user.profile.name.isNullOrBlank())       NAME_FIELD
             else if(!Utils.checkPhone(user.profile.phone!!)) PHONE_FIELD
@@ -324,7 +325,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     }
     
     /* @TODO: Добавить реакцию на некорректное значение в поле. Отображать, где и что введено некорректно. */
-    fun checkFields() {
+    private fun checkFields() {
         if(transportTypes == null) return
         val typesHasSelected = transportTypes!!.filter { it.checked }.size > 0
         val actionEnabled = typesHasSelected &&

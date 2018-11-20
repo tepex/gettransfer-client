@@ -27,6 +27,7 @@ import android.text.InputType
 import android.text.TextUtils
 
 import android.util.DisplayMetrics
+import android.util.Log
 
 import android.view.*
 import android.view.animation.AnimationUtils
@@ -42,6 +43,7 @@ import com.google.android.gms.maps.model.MapStyleOptions
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.common.BoundTimePickerDialog
+import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 
@@ -297,6 +299,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     override fun setComment(comment: String)   { comment_field.field_input.setText(comment) }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
+        transportTypes.forEach { Log.i("GiveMeId", it.id) }
+        setTransportTypeDescription(transportTypes)
         rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
             presenter.onTransportChosen()
             if(showInfo) transportTypeClicked(transportType)
@@ -352,7 +356,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun showEmptyFieldError(invalidField: String) {
-        var message = when(invalidField) {
+        val message = when(invalidField) {
             CreateOrderPresenter.EMAIL_FIELD          -> getString(R.string.LNG_ERROR_EMAIL)
             CreateOrderPresenter.NAME_FIELD           -> getString(R.string.LNG_RIDE_NAME)
             CreateOrderPresenter.PHONE_FIELD          -> getString(R.string.LNG_RIDE_PHONE)
@@ -504,7 +508,26 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             setSelection(text.length)
         }
     }
+
     override fun showNotLoggedAlert(withOfferId: Long) =
             Utils.showScreenRedirectingAlert(this, getString(R.string.log_in_requirement_error_title),
                     getString(R.string.log_in_to_see_transfers_and_offers)) { presenter.redirectToLogin(withOfferId) }
+
+    private fun setTransportTypeDescription(list: List<TransportTypeModel>) =
+        list.forEach { it.description = getDescription(it.id) }
+
+    private fun getDescription(id: String): String {
+        val descriptionId = when (id) {
+            "economy" -> R.string.LNG_TRANSPORT_EXAMPLES_ECONOMY
+            "economy" -> R.string.LNG_TRANSPORT_EXAMPLES_PREMIUM
+            "economy" -> R.string.LNG_TRANSPORT_EXAMPLES_MINIBUS
+            "economy" -> R.string.LNG_TRANSPORT_EXAMPLES_BUS
+            "economy" -> R.string.LNG_TRANSPORT_EXAMPLES_HELICOPTER
+            "economy" -> R.string.LNG_TRANSPORT_EXAMPLES_LIMOUSINE
+            "economy" -> R.string.LNG_TRANSPORT_EXAMPLES_BUSINESS
+            "economy" -> R.string.LNG_TRANSPORT_EXAMPLES_VAN
+            else -> 0
+        }
+        return if (descriptionId != 0) getString(descriptionId) else ""
+    }
 }
