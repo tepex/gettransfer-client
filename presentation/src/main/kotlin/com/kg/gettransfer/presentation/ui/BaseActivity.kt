@@ -147,7 +147,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}", e)
-        Utils.showError(this, false, getString(R.string.err_server, e.message))
+        Utils.showError(this, false, getString(R.string.LNG_ERROR) + ": " + e.message)
     }
 
     protected fun showKeyboard() {
