@@ -10,5 +10,9 @@ class OfferInteractor(private val repository: OfferRepository) {
 
     suspend fun getOffers(transferId: Long) = repository.getOffers(transferId).also { offers = it .model}
     fun getOffer(id: Long) = offers.find { it.id == id }    
-    fun newOffer(offer: Offer) = repository.newOffer(offer)
+    //fun newOffer(offer: Offer) = repository.newOffer(offer)
+    fun newOffer(offer: Offer){
+        val newOffer = repository.newOffer(offer)
+        offers = offers.toMutableList().apply { add(newOffer.model) }
+    }
 }
