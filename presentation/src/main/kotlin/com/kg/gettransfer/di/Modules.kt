@@ -69,7 +69,7 @@ val geoModule = module {
 
 val prefsModule = module {
     single<PreferencesCache> {
-        val endpoints = if(BuildConfig.FLAVOR == "home") listOf(
+        val endpoints = if(BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home") listOf(
             EndpointEntity("Prod", androidContext().getString(R.string.api_key_prod), androidContext().getString(R.string.api_url_prod)))
         else listOf(
             EndpointEntity("Demo", androidContext().getString(R.string.api_key_demo), androidContext().getString(R.string.api_url_demo), true),
