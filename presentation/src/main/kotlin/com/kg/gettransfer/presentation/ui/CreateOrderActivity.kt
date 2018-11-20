@@ -299,7 +299,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     override fun setComment(comment: String)   { comment_field.field_input.setText(comment) }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
-        transportTypes.forEach { Log.i("GiveMeId", it.id) }
         setTransportTypeDescription(transportTypes)
         rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
             presenter.onTransportChosen()
@@ -346,13 +345,13 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
         promo_field.field_title.setTextColor(ContextCompat.getColor(this, colorRes))
         promo_field.field_title.text = text
-        img_okResult.visibility = visibility
+        img_okResult.visibility      = visibility
     }
 
     override fun resetPromoView() {
         promo_field.field_title.text = defaultPromoText
         promo_field.field_title.setTextColor(ContextCompat.getColor(this, R.color.colorTextLightGray))
-        img_okResult.visibility = View.INVISIBLE
+        img_okResult.visibility      = View.INVISIBLE
     }
 
     override fun showEmptyFieldError(invalidField: String) {
@@ -377,18 +376,19 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun showTransportInfo(transportType: TransportTypeModel) {
         tvTypeTransfer.setText(transportType.nameId!!)
         ivTypeTransfer.setImageResource(transportType.imageId!!)
-        tvPrice.text = transportType.price?.min
-        tvCountPassengers.text = transportType.paxMax.toString()
-        tvCountLuggage.text = transportType.luggageMax.toString()
+        tvPrice.text            = transportType.price?.min
+        tvCountPassengers.text  = transportType.paxMax.toString()
+        tvCountLuggage.text     = transportType.luggageMax.toString()
+        tvCars.text             = transportType.description
     }
 
     @CallSuper
     override fun onBackPressed() {
         when {
-            isKeyBoardOpened -> hideKeyboard()
+            isKeyBoardOpened                                        -> hideKeyboard()
             bsTransport.state == BottomSheetBehavior.STATE_EXPANDED -> hideSheetTransport()
-            bsOrder.state == BottomSheetBehavior.STATE_EXPANDED -> toggleSheetOrder()
-            else -> super.onBackPressed()
+            bsOrder.state == BottomSheetBehavior.STATE_EXPANDED     -> toggleSheetOrder()
+            else                                                    -> super.onBackPressed()
         }
     }
 
@@ -518,15 +518,16 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     private fun getDescription(id: String): String {
         val descriptionId = when (id) {
-            "economy" -> R.string.LNG_TRANSPORT_EXAMPLES_ECONOMY
-            "economy" -> R.string.LNG_TRANSPORT_EXAMPLES_PREMIUM
-            "economy" -> R.string.LNG_TRANSPORT_EXAMPLES_MINIBUS
-            "economy" -> R.string.LNG_TRANSPORT_EXAMPLES_BUS
-            "economy" -> R.string.LNG_TRANSPORT_EXAMPLES_HELICOPTER
-            "economy" -> R.string.LNG_TRANSPORT_EXAMPLES_LIMOUSINE
-            "economy" -> R.string.LNG_TRANSPORT_EXAMPLES_BUSINESS
-            "economy" -> R.string.LNG_TRANSPORT_EXAMPLES_VAN
-            else -> 0
+            "economy"    -> R.string.LNG_TRANSPORT_EXAMPLES_ECONOMY
+            "premium"    -> R.string.LNG_TRANSPORT_EXAMPLES_PREMIUM
+            "minibus"    -> R.string.LNG_TRANSPORT_EXAMPLES_MINIBUS
+            "bus"        -> R.string.LNG_TRANSPORT_EXAMPLES_BUS
+            "helicopter" -> R.string.LNG_TRANSPORT_EXAMPLES_HELICOPTER
+            "limousine"  -> R.string.LNG_TRANSPORT_EXAMPLES_LIMOUSINE
+            "business"   -> R.string.LNG_TRANSPORT_EXAMPLES_BUSINESS
+            "van"        -> R.string.LNG_TRANSPORT_EXAMPLES_VAN
+            "suv"        -> R.string.LNG_TRANSPORT_EXAMPLES_SUV
+            else         -> 0
         }
         return if (descriptionId != 0) getString(descriptionId) else ""
     }

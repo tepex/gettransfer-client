@@ -629,6 +629,7 @@
     <string name="LNG_TRANSPORT_EXAMPLES_LIMOUSINE"><b>Hummer H2, Lincoln Town Car, Cadillac Escalade</b>\nFor taking people from any airport or railway station to hotels or other places of destination, for romantic trips, all kinds of celebrations.\n- Beverages on request\n- Spacious cabin\n- Audio system</string>
     <string name="LNG_TRANSPORT_EXAMPLES_BUSINESS"><b>BMW 3-series, Honda Accord, Lexus IS, Hyundai Equus Toyota Camry, Mercedes E-class, Audi a6, BMW 5-series</b> \nFor transferring passengers to events, business meetings and appointments.\n- Dress-code for the driver\n- Fixed price\n- Without extra payment for luggage</string>
     <string name="LNG_TRANSPORT_EXAMPLES_VAN"><b>Toyota Alphard, Ford S-MAX, Chrysler Voyager, Honda Stream, Volkswagen Sharan, Mercedes Vito, Mercedes V-class, Volkswagen Transporter</b>\nFor long-time excursions around the city, transferring foreign colleagues to conferences and seminars.\n- Conditioner \n- Comfortable cabin</string>
+    <string name="LNG_TRANSPORT_EXAMPLES_SUV"><b>Chevrolet Tahoe, Volkswagen Tiguan, Hyundai Creta, Nissan X-Trail</b>\nFor off-road trips, safe transferring between cities and ski resorts\n- Fixed price\n- Spacious luggage compartment</string>
     <string name="LNG_TRANSPORT_1">Passenger car</string>
     <string name="LNG_TRANSPORT_2">Minivan</string>
     <string name="LNG_TRANSPORT_3">Porter</string>

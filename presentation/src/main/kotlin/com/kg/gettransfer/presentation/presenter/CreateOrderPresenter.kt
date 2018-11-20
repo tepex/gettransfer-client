@@ -186,7 +186,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
 
         viewState.setUser(user, systemInteractor.account.user.loggedIn)
         viewState.setDateTimeTransfer(Utils.getFormattedDate(systemInteractor.locale, date), isAfter4Hours)
-	    transportTypes?.let { viewState.setTransportTypes(it); Log.i("FindTransport", "" + it.size) }
+	    transportTypes?.let { viewState.setTransportTypes(it) }
     }
 
     fun changeCurrency(selected: Int) { viewState.setCurrency(currencies.get(selected).symbol) }

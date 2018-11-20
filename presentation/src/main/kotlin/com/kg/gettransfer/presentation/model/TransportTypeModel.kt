@@ -10,4 +10,4 @@ class TransportTypeModel(val id: String,
                          val luggageMax: Int,
                          val price: TransportPrice?,
                          var checked: Boolean = false,
-                         var description: String?)
+                         var description: String? = null)

@@ -17,6 +17,7 @@ import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.ui.Utils
 
 import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.bottom_sheet_type_transport.view.*
 
 import kotlinx.android.synthetic.main.view_transfer_type.*
 import kotlinx.android.synthetic.main.view_transfer_type.view.*
@@ -35,7 +36,7 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
         fun bind(item: TransportTypeModel, listener: ChangeListener) = with(containerView) {
             tvTransferType.setText(item.nameId!!)
             tvNumberPersonsTransfer.text = Utils.formatPersons(context, item.paxMax)
-            tvCountBaggage.text = Utils.formatLuggage(context, item.luggageMax)
+            tvCountBaggage.text          = Utils.formatLuggage(context, item.luggageMax)
             
             if(item.price == null) tvPriceFrom.visibility = View.GONE
             else tvPriceFrom.text = item.price.min
@@ -59,17 +60,17 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
 
         private fun hideItemShadowAndCorners(context: Context) {
             cardTransferType.cardElevation = context.resources.getDimension(R.dimen.card_transfer_type_elevation_default)
-            cardTransferType.radius = context.resources.getDimension(R.dimen.card_transfer_type_corner_radius_default)
+            cardTransferType.radius        = context.resources.getDimension(R.dimen.card_transfer_type_corner_radius_default)
         }
 
         private fun showItemShadowAndCorners(context: Context) {
             val elevation = TypedValue()
-            val radius = TypedValue()
+            val radius    = TypedValue()
             context.resources.getValue(R.dimen.card_transfer_type_elevation, elevation, true)
             context.resources.getValue(R.dimen.card_transfer_type_corner_radius, radius, true)
 
             cardTransferType.cardElevation = elevation.float
-            cardTransferType.radius = radius.float
+            cardTransferType.radius        = radius.float
         }
     }
 }
