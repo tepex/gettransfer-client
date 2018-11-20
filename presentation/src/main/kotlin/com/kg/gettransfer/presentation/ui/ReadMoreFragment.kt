@@ -5,7 +5,9 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 
 import com.kg.gettransfer.R
 
@@ -13,14 +15,14 @@ import kotlinx.android.synthetic.main.dialog_read_more.btnClose
 
 class ReadMoreFragment : DialogFragment() {
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity)
-        builder.setTitle(R.string.LNG_BESTPRICE_TITLE)
-        builder.setView(layoutInflater.inflate(R.layout.dialog_read_more, null))
-
-        btnClose.setOnClickListener { dialog.dismiss() }
-
-        return builder.create()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.dialog_read_more, container, false)
+        dialog.setTitle(R.string.LNG_BESTPRICE_TITLE)
+        return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        btnClose.setOnClickListener { dialog.dismiss() }
+    }
 }

@@ -20,4 +20,5 @@ interface MainView: BaseView {
     fun selectFieldFrom()
     fun setFieldTo()
     fun onBackClick()
+    fun showReadMoreDialog()
 }

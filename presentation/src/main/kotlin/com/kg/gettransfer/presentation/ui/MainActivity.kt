@@ -88,21 +88,6 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         drawer.closeDrawer(GravityCompat.START)
     }
 
-        /*
-        @CallSuper
-        protected override fun forward(command: Forward) {
-            if(command.screenKey == Screens.READ_MORE) {
-                drawer.closeDrawer(GravityCompat.START)
-                ReadMoreDialog.newInstance(this@MainActivity).show()
-            } else super.forward(command)
-        }
-
-        protected override fun createStartActivityOptions(command: Command, intent: Intent): Bundle? =
-            ActivityOptionsCompat
-                .makeSceneTransitionAnimation(this@MainActivity, search, getString(R.string.searchTransitionName))
-                .toBundle()
-                */
-
     companion object {
         @JvmField val MY_LOCATION_BUTTON_INDEX = 2
         @JvmField val COMPASS_BUTTON_INDEX = 5
@@ -360,5 +345,10 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     override fun onBackClick() {
         if(drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START)
         else super.onBackPressed()
+    }
+
+    override fun showReadMoreDialog() {
+        drawer.closeDrawer(GravityCompat.START)
+        ReadMoreFragment().show(supportFragmentManager, getString(R.string.tag_read_more))
     }
 }

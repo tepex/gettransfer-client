@@ -31,11 +31,6 @@ object Screens {
 
 	
 	@JvmField val NOT_USED 		   = -1
-	
-    
-	
-	
-    //sdfsdf
 
     object ShareLogs: SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, LogsActivity::class.java)
@@ -43,10 +38,6 @@ object Screens {
     
     object About: SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, AboutActivity::class.java)
-    }
-
-    object ReadMore: SupportAppScreen() {
-        override fun getFragment(): Fragment = ReadMoreFragment()
     }
 
     object Settings: SupportAppScreen() {

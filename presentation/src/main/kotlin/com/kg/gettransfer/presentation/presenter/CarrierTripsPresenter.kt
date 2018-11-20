@@ -53,7 +53,7 @@ class CarrierTripsPresenter: BasePresenter<CarrierTripsView>() {
 
     fun onCarrierTripsClick()   { /*router.navigateTo(Screens.CARRIER_TRIPS)*/ }
     fun onAboutClick()          = router.navigateTo(Screens.About)
-    fun readMoreClick()         = router.navigateTo(Screens.ReadMore)
+    fun readMoreClick()         = viewState.showReadMoreDialog()
     fun onSettingsClick()       = router.navigateTo(Screens.Settings)
     fun onPassengerModeClick()  = router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
 }

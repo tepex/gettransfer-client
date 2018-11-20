@@ -10,4 +10,5 @@ import com.kg.gettransfer.presentation.model.ProfileModel
 interface CarrierTripsView: BaseView {
     fun setTrips(trips: List<CarrierTripModel>)
     fun initNavigation(profile: ProfileModel)
+    fun showReadMoreDialog()
 }

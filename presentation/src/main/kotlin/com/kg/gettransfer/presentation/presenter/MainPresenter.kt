@@ -240,7 +240,7 @@ class MainPresenter: BasePresenter<MainView>() {
     }
 
     fun readMoreClick() {
-        router.navigateTo(Screens.ReadMore)
+        viewState.showReadMoreDialog()
         logEvent(BEST_PRICE_CLICKED)
     }
 

@@ -64,20 +64,6 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView {
         drawer.closeDrawer(GravityCompat.START)
     }
 
-        /*
-        @CallSuper
-        protected override fun forward(command: Forward) {
-            when (command.screenKey){
-                Screens.READ_MORE -> {
-                    drawer.closeDrawer(GravityCompat.START)
-                    ReadMoreDialog.newInstance(this@CarrierTripsActivity).show()
-                }
-                Screens.CARRIER_TRIPS -> drawer.closeDrawer(GravityCompat.START)
-                else -> super.forward(command)
-            }
-        }
-        */
-
     override fun getPresenter(): CarrierTripsPresenter = presenter
 
     @CallSuper
@@ -148,5 +134,9 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView {
         navCarrierTrips.visibility = View.VISIBLE
         navBecomeACarrier.visibility = View.GONE
         navPassengerMode.visibility = View.VISIBLE
+    }
+
+    override fun showReadMoreDialog() {
+        ReadMoreFragment().show(supportFragmentManager, getString(R.string.tag_read_more))
     }
 }
