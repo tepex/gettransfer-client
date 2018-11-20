@@ -10,7 +10,6 @@ import com.google.android.gms.maps.CameraUpdate
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.interactor.*
 
 import com.kg.gettransfer.domain.model.Trip
@@ -304,7 +303,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
                     else -> viewState.setError(result.error!!)
                 }
             } else if (logResult.error != null) {
-                router.navigateTo(Screens.LoginToGetOffers(result.model.id, user.profile.email))
+                viewState.showNotLoggedAlert(result.model.id)
             }
             viewState.blockInterface(false)
         }
@@ -363,6 +362,8 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
         logEventMain(BACK_CLICKED)
     }
+
+    fun redirectToLogin(id: Long) = router.navigateTo(Screens.LoginToGetOffers(id, user.profile.email))
 
     fun logEventMain(value: String) {
         val map = HashMap<String, Any>()

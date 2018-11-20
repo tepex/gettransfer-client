@@ -23,4 +23,5 @@ interface CreateOrderView: BaseView, RouteView {
     fun setPromoResult(discountInfo: String?)
     fun resetPromoView()
     fun showEmptyFieldError(invalidField: String)
+    fun showNotLoggedAlert(withOfferId: Long)
 }

@@ -504,4 +504,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             setSelection(text.length)
         }
     }
+    override fun showNotLoggedAlert(withOfferId: Long) =
+            Utils.showScreenRedirectingAlert(this, getString(R.string.log_in_requirement_error_title),
+                    getString(R.string.log_in_to_see_transfers_and_offers)) { presenter.redirectToLogin(withOfferId) }
 }
