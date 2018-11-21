@@ -9,7 +9,11 @@ import com.kg.gettransfer.data.SystemCache
 import org.koin.dsl.module.module
 
 val cacheModule = module {
-    single { Room.databaseBuilder(get(), CacheDatabase::class.java, "cache.db").build() }
+    single {
+        Room.databaseBuilder(get(), CacheDatabase::class.java, "cache.db")
+            .fallbackToDestructiveMigration()
+            .build() 
+    }
     /*
     single { get<CacheDatabase>().offerCachedDao() }
     single { get<CacheDatabase>().transferCachedDao() }
