@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import android.util.Patterns
 
@@ -11,7 +10,10 @@ import com.google.android.gms.maps.CameraUpdate
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.interactor.*
+import com.kg.gettransfer.domain.interactor.OfferInteractor
+import com.kg.gettransfer.domain.interactor.PromoInteractor
+import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Trip
 
@@ -27,7 +29,19 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.Screens
 
-import com.yandex.metrica.YandexMetrica
+import com.kg.gettransfer.utilities.Analytics.Companion.BACK_CLICKED
+import com.kg.gettransfer.utilities.Analytics.Companion.CHILDREN_ADDED
+import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_MAIN
+import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_SETTINGS
+import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_TRANSFER
+import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_TRANSFER_SETTINGS
+import com.kg.gettransfer.utilities.Analytics.Companion.FLIGHT_NUMBER_ADDED
+import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_FIELD
+import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_NAME
+import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_RESULT
+import com.kg.gettransfer.utilities.Analytics.Companion.PASSENGERS_ADDED
+import com.kg.gettransfer.utilities.Analytics.Companion.RESULT_SUCCESS
+import com.kg.gettransfer.utilities.Analytics.Companion.SHOW_ROUTE_CLICKED
 
 import java.text.Format
 import java.text.SimpleDateFormat
@@ -83,20 +97,6 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         const val TRANSPORT_FIELD       = "transport"
         const val TERMS_ACCEPTED_FIELD  = "terms_accepted"
 
-        @JvmField val EVENT_TRANSFER = "create_transfer"
-        @JvmField val EVENT_SETTINGS = "transfer_settings"
-
-        @JvmField val PARAM_KEY_FIELD  = "field"
-        @JvmField val PARAM_KEY_RESULT = "result"
-
-        //TransferSettings Params:
-        @JvmField val OFFER_PRICE_FOCUSED = "offer_price"
-        @JvmField val DATE_TIME_CHANGED   = "date_time"
-        @JvmField val PASSENGERS_ADDED    = "pax"
-        @JvmField val FLIGHT_NUMBER_ADDED = "flight_number"
-        @JvmField val CHILDREN_ADDED      = "children"
-        @JvmField val COMMENT_INPUT       = "comment"
-
         //CreateTransfer Params:
         @JvmField val NO_TRANSPORT_SELECTED = "no_transport_type"
         @JvmField val NO_EMAIL = "invalid_email"
@@ -104,12 +104,6 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         @JvmField val NO_NAME  = "invalid_name"
         @JvmField val NO_LICENSE_ACCEPTED = "license_not_accepted"
         @JvmField val SERVER_ERROR = "server_error"
-
-        //Main params:
-        @JvmField val SHOW_ROUTE_CLICKED = "show_route"
-        @JvmField val CAR_INFO_CLICKED   = "car_info"
-        @JvmField val BACK_CLICKED       = "back"
-
     }
     
     override fun onFirstViewAttach() {
@@ -367,26 +361,20 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         val map = HashMap<String, Any>()
         map[PARAM_KEY_NAME] = value
 
-        mFBA.logEvent(MainPresenter.EVENT_MAIN, createSingeBundle(PARAM_KEY_NAME, value))
-        eventsLogger.logEvent(MainPresenter.EVENT_MAIN, createSingeBundle(PARAM_KEY_NAME, value))
-        YandexMetrica.reportEvent(MainPresenter.EVENT_MAIN, map)
+        analytics.logEvent(EVENT_MAIN, createStringBundle(PARAM_KEY_NAME, value), map)
     }
 
     fun logTransferSettingsEvent(value: String) {
         val map = HashMap<String, Any>()
         map[PARAM_KEY_FIELD] = value
 
-        mFBA.logEvent(EVENT_SETTINGS, createSingeBundle(PARAM_KEY_FIELD, value))
-        eventsLogger.logEvent(EVENT_SETTINGS, createSingeBundle(PARAM_KEY_FIELD, value))
-        YandexMetrica.reportEvent(EVENT_SETTINGS, map)
+        analytics.logEvent(EVENT_TRANSFER_SETTINGS, createStringBundle(PARAM_KEY_FIELD, value), map)
     }
 
     private fun logCreateTransfer(value: String) {
         val map = HashMap<String, Any>()
         map[PARAM_KEY_RESULT] = value
 
-        mFBA.logEvent(EVENT_TRANSFER, createSingeBundle(PARAM_KEY_RESULT, value))
-        eventsLogger.logEvent(EVENT_TRANSFER, createSingeBundle(PARAM_KEY_RESULT, value))
-        YandexMetrica.reportEvent(EVENT_TRANSFER, map)
+        analytics.logEvent(EVENT_TRANSFER, createStringBundle(PARAM_KEY_RESULT, value), map)
     }
 }

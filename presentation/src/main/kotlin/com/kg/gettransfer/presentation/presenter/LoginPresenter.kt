@@ -11,6 +11,10 @@ import com.kg.gettransfer.presentation.ui.LoginActivity
 
 import com.kg.gettransfer.presentation.view.LoginView
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_LOGIN
+import com.kg.gettransfer.utilities.Analytics.Companion.RESULT_FAIL
+import com.kg.gettransfer.utilities.Analytics.Companion.RESULT_SUCCESS
+import com.kg.gettransfer.utilities.Analytics.Companion.STATUS
 
 import com.yandex.metrica.YandexMetrica
 
@@ -21,9 +25,6 @@ class LoginPresenter: BasePresenter<LoginView>() {
         
         @JvmField val RESULT_CODE = 33
         @JvmField val RESULT_OK   = 1
-
-        @JvmField val EVENT = "login"
-        @JvmField val PARAM_KEY = "status"
     }
 
     private var password: String? = null
@@ -60,11 +61,9 @@ class LoginPresenter: BasePresenter<LoginView>() {
 
     private fun logLoginEvent(result: String) {
         val map = HashMap<String, Any>()
-        map[PARAM_KEY] = result
+        map[STATUS] = result
 
-        mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY, result))
-        eventsLogger.logEvent(EVENT, createSingeBundle(PARAM_KEY, result))
-        YandexMetrica.reportEvent(EVENT, map)
+        analytics.logEvent(EVENT_LOGIN, createStringBundle(STATUS, result), map)
     }
 
     fun onHomeClick() = router.exit()

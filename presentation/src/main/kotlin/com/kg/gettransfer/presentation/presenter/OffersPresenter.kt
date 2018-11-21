@@ -17,6 +17,15 @@ import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_OFFERS
+import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_FILTER
+import com.kg.gettransfer.utilities.Analytics.Companion.PRICE_DOWN
+import com.kg.gettransfer.utilities.Analytics.Companion.PRICE_UP
+import com.kg.gettransfer.utilities.Analytics.Companion.RATING_DOWN
+import com.kg.gettransfer.utilities.Analytics.Companion.RATING_UP
+import com.kg.gettransfer.utilities.Analytics.Companion.YEAH_FILTER_DOWN
+import com.kg.gettransfer.utilities.Analytics.Companion.YEAH_FILTER_UP
 
 import com.yandex.metrica.YandexMetrica
 
@@ -44,21 +53,6 @@ class OffersPresenter: BasePresenter<OffersView>() {
     private var sortHigherToLower = false
 
     companion object {
-        @JvmField val EVENT = "offers"
-
-        @JvmField val PARAM_KEY_FILTER  = "filter"
-        @JvmField val PARAM_KEY_BUTTON  = "button"
-
-        @JvmField val RATING_UP   = "rating_asc"
-        @JvmField val RATING_DOWN = "rating_desc"
-        @JvmField val PRICE_UP    = "price_asc"
-        @JvmField val PRICE_DOWN  = "price_desc"
-
-        @JvmField val CAR_INFO_CLICKED = "car_info"
-        
-        @JvmField val YEAH_FILTER_UP   = "year_asc"
-        @JvmField val YEAH_FILTER_DOWN = "year_desc"
-        
         @JvmField val SORT_YEAR   = "sort_year"
         @JvmField val SORT_RATING = "sort_rating"
         @JvmField val SORT_PRICE  = "sort_price"
@@ -172,17 +166,6 @@ class OffersPresenter: BasePresenter<OffersView>() {
         val map = HashMap<String, Any>()
         map[PARAM_KEY_FILTER] = value
 
-        mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value))
-        eventsLogger.logEvent(EVENT, createSingeBundle(PARAM_KEY_FILTER, value))
-        YandexMetrica.reportEvent(EVENT, map)
-    }
-
-    private fun logButtonEvent(value: String) {
-        val map = HashMap<String, Any>()
-        map[PARAM_KEY_BUTTON] = value
-
-        mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value))
-        eventsLogger.logEvent(EVENT, createSingeBundle(PARAM_KEY_BUTTON, value))
-        YandexMetrica.reportEvent(EVENT, map)
+        analytics.logEvent(EVENT_OFFERS, createStringBundle(PARAM_KEY_FILTER, value), map)
     }
 }

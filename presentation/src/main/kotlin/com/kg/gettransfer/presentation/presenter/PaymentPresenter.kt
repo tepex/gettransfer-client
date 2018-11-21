@@ -4,11 +4,6 @@ import android.os.Bundle
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.google.firebase.analytics.FirebaseAnalytics.Event.ECOMMERCE_PURCHASE
-import com.google.firebase.analytics.FirebaseAnalytics.Param.TRANSACTION_ID
-import com.google.firebase.analytics.FirebaseAnalytics.Param.VALUE
-import com.google.firebase.analytics.FirebaseAnalytics.Param.CURRENCY
-
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 
@@ -22,8 +17,10 @@ import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter.Compan
 
 import com.kg.gettransfer.presentation.view.PaymentView
 import com.kg.gettransfer.presentation.view.Screens
-
-import com.yandex.metrica.YandexMetrica
+import com.kg.gettransfer.utilities.Analytics.Companion.CURRENCY
+import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_ECOMMERCE_PURCHASE
+import com.kg.gettransfer.utilities.Analytics.Companion.TRANSACTION_ID
+import com.kg.gettransfer.utilities.Analytics.Companion.VALUE
 
 import org.koin.standalone.inject
 
@@ -69,6 +66,7 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
         val map = HashMap<String, Any>()
 
         map[CURRENCY] = systemInteractor.currency.currencyCode
+        bundle.putString(CURRENCY, systemInteractor.currency.currencyCode)
 
         var price = offer.price.amount
 
@@ -87,10 +85,7 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
         bundle.putString(TRANSACTION_ID, transferId.toString())
         map[TRANSACTION_ID] = transferId
 
-        eventsLogger.logPurchase(price.toBigDecimal(), systemInteractor.currency, bundle)
-
-        bundle.putString(CURRENCY, systemInteractor.currency.currencyCode)
-        mFBA.logEvent(ECOMMERCE_PURCHASE, bundle)
-        YandexMetrica.reportEvent(ECOMMERCE_PURCHASE, map)
+        analytics.logEventEcommercePurchase(EVENT_ECOMMERCE_PURCHASE, bundle, map,
+                price.toBigDecimal(), systemInteractor.currency)
     }
 }

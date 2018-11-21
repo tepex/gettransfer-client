@@ -21,16 +21,12 @@ class SystemInteractor(private val systemRepository: SystemRepository,
                        private val geoRepository: GeoRepository) {
     companion object {
         private val currenciesFilterList = arrayOf("₽", "฿", "$", "£", "¥", "€" )
+        private val localesFilterList = arrayOf("EN", "RU")
     }
 
     /* Cached properties */
 
     val endpoints      by lazy { systemRepository.endpoints }
-    val transportTypes by lazy { systemRepository.configs.transportTypes }
-    val locales        by lazy { systemRepository.configs.availableLocales }
-    val distanceUnits  by lazy { systemRepository.configs.supportedDistanceUnits }
-    /* Dirty hack. GAA-298 */
-    val currencies     by lazy { systemRepository.configs.supportedCurrencies.filter { currenciesFilterList.contains(it.symbol) } }
     val logsFile       by lazy { loggingRepository.file }
 
     /* Read only properties */
@@ -47,7 +43,19 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     val logs: String
         get() = loggingRepository.logs
 
-    /* Read-write properties */
+    val transportTypes: List<TransportType>
+        get() = systemRepository.configs.transportTypes
+
+    val locales: List<Locale>
+        get() = systemRepository.configs.availableLocales.filter { localesFilterList.contains(it.locale) }
+
+    val distanceUnits: List<DistanceUnit>
+        get() = systemRepository.configs.supportedDistanceUnits
+
+    val currencies: List<Currency> /* Dirty hack. GAA-298 */
+        get() = systemRepository.configs.supportedCurrencies.filter { currenciesFilterList.contains(it.symbol) }
+
+    /* Read-write properties */    
     
     var lastMode: String
         get() = systemRepository.lastMode

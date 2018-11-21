@@ -4,9 +4,6 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.MvpPresenter
-import com.facebook.appevents.AppEventsLogger
-
-import com.google.firebase.analytics.FirebaseAnalytics
 
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
@@ -14,6 +11,10 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.Analytics.Companion.BACK_CLICKED
+import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_MAIN
+import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_NAME
 
 import com.yandex.metrica.YandexMetrica
 
@@ -28,19 +29,16 @@ import kotlinx.coroutines.Job
 open class BasePresenter<BV: BaseView>: MvpPresenter<BV>(), KoinComponent {
     protected val compositeDisposable = Job()
     protected val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
-    protected val mFBA: FirebaseAnalytics by inject()
-    protected val eventsLogger: AppEventsLogger by inject()
     protected val router: Router by inject()
+    protected val analytics: Analytics by inject()
     protected val systemInteractor: SystemInteractor by inject()
     
     open fun onBackCommandClick() {
         val map = HashMap<String, Any>()
-        map[PARAM_KEY_NAME] = SYSTEM_BACK_CLICKED
+        map[PARAM_KEY_NAME] = BACK_CLICKED
 
         router.exit()
-        mFBA.logEvent(MainPresenter.EVENT_MAIN, createSingeBundle(PARAM_KEY_NAME, SYSTEM_BACK_CLICKED))
-        eventsLogger.logEvent(MainPresenter.EVENT_MAIN, createSingeBundle(PARAM_KEY_NAME, SYSTEM_BACK_CLICKED))
-        YandexMetrica.reportEvent(MainPresenter.EVENT_MAIN, map)
+        analytics.logEvent(EVENT_MAIN, createStringBundle(PARAM_KEY_NAME, BACK_CLICKED), map)
     }
 
     protected fun login(nextScreen: String, email: String) = router.navigateTo(Screens.Login(nextScreen, email))
@@ -53,21 +51,14 @@ open class BasePresenter<BV: BaseView>: MvpPresenter<BV>(), KoinComponent {
     }
 
     companion object AnalyticProps {
-        /** [см. табл.][https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0] */
-        @JvmField val RESULT_SUCCESS   = "success"
-        @JvmField val RESULT_FAIL      = "fail"
-
-        @JvmField val PARAM_KEY_NAME = "name"
-
         @JvmField val SINGLE_CAPACITY = 1
         @JvmField val DOUBLE_CAPACITY = 2
 
-        @JvmField val SYSTEM_BACK_CLICKED = "back"
     }
 
-    protected fun createSingeBundle(param: String, value: String): Bundle {
+    protected fun createStringBundle(key: String, value: String): Bundle {
         val bundle = Bundle(SINGLE_CAPACITY)
-        bundle.putString(param, value)
+        bundle.putString(key, value)
         return bundle
     }
     
