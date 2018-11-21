@@ -14,6 +14,11 @@ import com.kg.gettransfer.presentation.model.PopularPlace
 
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SearchView
+import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_BUTTONS
+import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_NAME
+import com.kg.gettransfer.utilities.Analytics.Companion.POINT_ON_MAP_CLICKED
+import com.kg.gettransfer.utilities.Analytics.Companion.SWAP_CLICKED
 
 import org.koin.standalone.inject
 
@@ -88,8 +93,16 @@ class SearchPresenter: BasePresenter<SearchView>() {
     }
 
     fun selectFinishPointOnMap() {
+        logEvent(POINT_ON_MAP_CLICKED)
         systemInteractor.selectedField = if(isTo) MainPresenter.FIELD_TO else MainPresenter.FIELD_FROM
         router.exit()
+    }
+
+    private fun logEvent(value: String) {
+        val map = HashMap<String, Any>()
+        map[PARAM_KEY_NAME] = value
+
+        analytics.logEvent(EVENT_BUTTONS, createStringBundle(PARAM_KEY_NAME, value), map)
     }
 
     @CallSuper
@@ -98,6 +111,7 @@ class SearchPresenter: BasePresenter<SearchView>() {
     }
 
     fun inverseWay() {
+        logEvent(SWAP_CLICKED)
         isTo = !isTo
         val copyTo = routeInteractor.to
         routeInteractor.to = routeInteractor.from
