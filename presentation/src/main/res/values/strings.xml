@@ -702,8 +702,10 @@
     <string name="LNG_PAYMENT_EMAIL_TITLE">Transfer support</string>
     <string name="LNG_PAYMENT_TRANSFER_NUMBER">Transfer number</string>
     <string name="LNG_TRANSFER_TITLE">Transfer paid</string>
+    <string name="LNG_RIDE_ABOUT_REQUEST">About request</string>
+    <string name="LNG_RIDE_ABOUT_DRIVER">About driver</string>
+    <string name="LNG_RIDE_ABOUT">About transport</string>
     <string name="from_price">from:</string>
-    <string name="nav_message">Best prices for transfers between airports and cities worldwide</string>
     <string name="tag_read_more" translatable="false">read_more_dialog</string>
 
 </resources>

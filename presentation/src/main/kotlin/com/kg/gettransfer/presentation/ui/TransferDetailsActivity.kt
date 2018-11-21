@@ -135,11 +135,12 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         if(visible) btnCancel.visibility = View.VISIBLE else btnCancel.visibility = View.GONE
 
     override fun setOffer(offerModel: OfferModel) {
-        offerDriverInfoEmail.text = offerModel.driver?.email
-        offerDriverInfoPhone.text = offerModel.driver?.phone
-        offerDriverInfoName.text  = offerModel.driver?.name
-        
-        layoutOfferDriverInfo.visibility = View.VISIBLE
+        if(offerModel.driver != null) {
+            offerDriverInfoEmail.text = offerModel.driver.email
+            offerDriverInfoPhone.text = offerModel.driver.phone
+            offerDriverInfoName.text = offerModel.driver.name
+            layoutOfferDriverInfo.visibility = View.VISIBLE
+        }
 
         offerTransportInfoCarType.text   = getString(offerModel.vehicle.transportType.nameId!!)
         offerTransportInfoCarName.text   = offerModel.vehicle.vehicleBase.name

@@ -302,7 +302,7 @@
                     android:gravity="center_vertical"
                     android:paddingStart="@dimen/activity_transfer_details_elements_padding_start_end"
                     android:paddingEnd="@dimen/activity_transfer_details_elements_padding_start_end"
-                    android:text="@string/LNG_PAYMENT_SETTINGS"/>
+                    android:text="@string/LNG_RIDE_PAYMENT_DETAILS"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -434,7 +434,7 @@
                     android:gravity="center_vertical"
                     android:paddingStart="@dimen/activity_transfer_details_elements_padding_start_end"
                     android:paddingEnd="@dimen/activity_transfer_details_elements_padding_start_end"
-                    android:text="@string/LNG_RIDE_OFFER"/>
+                    android:text="@string/LNG_RIDE_ABOUT_DRIVER"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -500,8 +500,19 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintTop_toBottomOf="@id/layoutOfferDriverInfo"
-                android:layout_marginTop="@dimen/activity_transfer_details_titles_height"
                 android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/activity_transfer_details_titles_height"
+                    android:textColor="@color/colorTextLightGray"
+                    android:textSize="@dimen/activity_transfer_details_titles_text_size"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textAllCaps="true"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/activity_transfer_details_elements_padding_start_end"
+                    android:paddingEnd="@dimen/activity_transfer_details_elements_padding_start_end"
+                    android:text="@string/LNG_RIDE_ABOUT"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"

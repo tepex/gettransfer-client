@@ -136,7 +136,7 @@
                 android:layout_marginStart="22dp"
                 android:layout_marginEnd="22dp"
                 android:gravity="center_horizontal"
-                android:text="@string/nav_message" />
+                android:text="@string/LNG_BESTPRICES" />
 
             <TextView
                 android:id="@+id/navFooterReadMore"
