@@ -379,7 +379,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         tvPrice.text            = transportType.price?.min
         tvCountPassengers.text  = transportType.paxMax.toString()
         tvCountLuggage.text     = transportType.luggageMax.toString()
-        tvCars.text             = transportType.description
+        tvCars.setText(transportType.description!!)
     }
 
     @CallSuper
@@ -516,8 +516,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun setTransportTypeDescription(list: List<TransportTypeModel>) =
         list.forEach { it.description = getDescription(it.id) }
 
-    private fun getDescription(id: String): String {
-        val descriptionId = when (id) {
+    private fun getDescription(id: String) = when(id) {
             "economy"    -> R.string.LNG_TRANSPORT_EXAMPLES_ECONOMY
             "premium"    -> R.string.LNG_TRANSPORT_EXAMPLES_PREMIUM
             "minibus"    -> R.string.LNG_TRANSPORT_EXAMPLES_MINIBUS
@@ -528,7 +527,5 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             "van"        -> R.string.LNG_TRANSPORT_EXAMPLES_VAN
             "suv"        -> R.string.LNG_TRANSPORT_EXAMPLES_SUV
             else         -> 0
-        }
-        return if (descriptionId != 0) getString(descriptionId) else ""
     }
 }
