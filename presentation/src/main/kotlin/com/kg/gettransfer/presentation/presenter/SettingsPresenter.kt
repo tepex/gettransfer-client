@@ -127,7 +127,7 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
     override fun onBackCommandClick() {
         if(localeWasChanged) {
             localeWasChanged = false
-            router.exit()
+            router.navigateTo(Screens.Main)
         }
         else super.onBackCommandClick()
     }
