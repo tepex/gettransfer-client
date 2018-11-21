@@ -177,6 +177,12 @@
                 android:id="@+id/user_name_field"
                 layout="@layout/view_create_order_field" />
 
+            <com.kg.gettransfer.presentation.ui.CreateOrderField
+                android:id="@+id/user_field"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
             <include
                 android:id="@+id/email_field"
                 layout="@layout/view_create_order_field" />

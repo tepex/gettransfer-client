@@ -3,4 +3,12 @@
 	<declare-styleable name="SearchAddress">
 		<attr name="hint" format="string" />
 	</declare-styleable>
+	<declare-styleable name="CreateOrderSheet">
+		<attr name="title" format="string" />
+		<attr name="text" format="string" />
+	</declare-styleable>
+	<declare-styleable name="CreateOrderField">
+		<attr name="title" format="string" />
+		<attr name="hint" format="string" />
+	</declare-styleable>
 </resources>
