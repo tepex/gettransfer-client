@@ -19,6 +19,7 @@ class Analytics(private val firebase: FirebaseAnalytics,
         @JvmField val EVENT_MAKE_PAYMENT = "make_payment"
         @JvmField val EVENT_MENU = "menu"
         @JvmField val EVENT_MAIN = "main"
+        @JvmField val EVENT_BUTTONS = "buttons"
         @JvmField val EVENT_SETTINGS = "settings"
         @JvmField val EVENT_ONBOARDING = "onboarding"
         @JvmField val EVENT_TRANSFERS   = "transfers"
