@@ -7,6 +7,8 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.view.RequestsView
+import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_FILTER
 
 import com.yandex.metrica.YandexMetrica
 
@@ -16,11 +18,6 @@ import org.koin.standalone.inject
 class RequestsPresenter: BasePresenter<RequestsView>() {
     private val transferInteractor: TransferInteractor by inject()
 
-    companion object {
-        @JvmField val EVENT = "transfers"
-        @JvmField val PARAM_KEY = "filter"
-    }
-
     @CallSuper
     override fun attachView(view: RequestsView) {
         super.attachView(view)
@@ -29,10 +26,8 @@ class RequestsPresenter: BasePresenter<RequestsView>() {
 
     fun logEvent(value: String) {
         val map = HashMap<String, Any>()
-        map[PARAM_KEY] = value
+        map[PARAM_KEY_FILTER] = value
 
-        mFBA.logEvent(EVENT, createSingeBundle(PARAM_KEY, value))
-        eventsLogger.logEvent(EVENT, createSingeBundle(PARAM_KEY, value))
-        YandexMetrica.reportEvent(EVENT, map)
+        analytics.logEvent(Analytics.EVENT_TRANSFERS, createStringBundle(PARAM_KEY_FILTER, value), map)
     }
 }

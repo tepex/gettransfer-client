@@ -40,6 +40,7 @@ import com.kg.gettransfer.geo.GeoRepositoryImpl
 import com.kg.gettransfer.prefs.PreferencesImpl
 
 import com.kg.gettransfer.service.OfferServiceConnection
+import com.kg.gettransfer.utilities.Analytics
 
 import kotlinx.coroutines.Dispatchers
 
@@ -98,6 +99,7 @@ val androidModule = module {
 	single { FirebaseAnalytics.getInstance(androidApplication().applicationContext) }
 	single { LocaleManager() }
 	single { AppEventsLogger.newLogger(androidApplication().applicationContext) }
+    single { Analytics(get(), get()) }
 }
 
 val testModule = module {

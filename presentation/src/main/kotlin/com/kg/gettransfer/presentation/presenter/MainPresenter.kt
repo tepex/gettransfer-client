@@ -8,7 +8,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 
@@ -21,8 +20,15 @@ import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.Screens
-
-import com.yandex.metrica.YandexMetrica
+import com.kg.gettransfer.utilities.Analytics.Companion.ABOUT_CLICKED
+import com.kg.gettransfer.utilities.Analytics.Companion.BEST_PRICE_CLICKED
+import com.kg.gettransfer.utilities.Analytics.Companion.DRIVER_CLICKED
+import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_MENU
+import com.kg.gettransfer.utilities.Analytics.Companion.LOGIN_CLICKED
+import com.kg.gettransfer.utilities.Analytics.Companion.MY_PLACE_CLICKED
+import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_NAME
+import com.kg.gettransfer.utilities.Analytics.Companion.SETTINGS_CLICKED
+import com.kg.gettransfer.utilities.Analytics.Companion.TRANSFER_CLICKED
 
 import org.koin.standalone.inject
 
@@ -61,31 +67,6 @@ class MainPresenter: BasePresenter<MainView>() {
     }
 
     companion object {
-        @JvmField val EVENT_MENU = "menu"
-        @JvmField val EVENT_MAIN = "main"
-
-        //navigation drawer log params
-        @JvmField val LOGIN_CLICKED      = "login"
-        @JvmField val TRANSFER_CLICKED   = "transfers"
-        @JvmField val SETTINGS_CLICKED   = "settings"
-        @JvmField val ABOUT_CLICKED      = "about"
-        @JvmField val DRIVER_CLICKED     = "driver"
-        @JvmField val CUSTOMER_CLICKED   = "customer"
-        @JvmField val BEST_PRICE_CLICKED = "best_price"
-        @JvmField val SHARE_CLICKED      = "share"
-
-        //other buttons log params
-        @JvmField val MY_PLACE_CLICKED   = "my_place"
-//        @JvmField val SHOW_ROUTE_CLICKED = "show_route"
-//        @JvmField val CAR_INFO_CLICKED = "car_info"
-//        @JvmField val BACK_CLICKED = "back"
-        @JvmField val POINT_ON_MAP_CLICKED = "point_on_map"
-        @JvmField val AIRPORT_CLICKED      = "predefined_airport"
-        @JvmField val TRAIN_CLICKED        = "predefined_train"
-        @JvmField val HOTEL_CLICKED        = "predefined_hotel"
-        @JvmField val LAST_PLACE_CLICKED   = "last_place"
-        @JvmField val SWAP_CLICKED         = "swap"
-
         @JvmField val FIELD_FROM = "field_from"
         @JvmField val FIELD_TO   = "field_to"
     }
@@ -285,9 +266,7 @@ class MainPresenter: BasePresenter<MainView>() {
         val map = HashMap<String, Any>()
         map[PARAM_KEY_NAME] = value
 
-        mFBA.logEvent(EVENT_MENU, createSingeBundle(PARAM_KEY_NAME, value))
-        eventsLogger.logEvent(EVENT_MENU, createSingeBundle(PARAM_KEY_NAME, value))
-        YandexMetrica.reportEvent(EVENT_MENU, map)
+        analytics.logEvent(EVENT_MENU, createStringBundle(PARAM_KEY_NAME, value), map)
     }
 
     fun onBackClick() {

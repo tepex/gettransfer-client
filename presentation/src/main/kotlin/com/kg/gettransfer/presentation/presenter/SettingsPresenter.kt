@@ -6,21 +6,20 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.ApiException
-
-import com.kg.gettransfer.presentation.model.CurrencyModel
-import com.kg.gettransfer.presentation.model.DistanceUnitModel
-import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
+import com.kg.gettransfer.utilities.Analytics.Companion.CURRENCY_PARAM
+import com.kg.gettransfer.utilities.Analytics.Companion.EMPTY_VALUE
+import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_SETTINGS
+import com.kg.gettransfer.utilities.Analytics.Companion.LANGUAGE_PARAM
+import com.kg.gettransfer.utilities.Analytics.Companion.LOG_OUT_PARAM
+import com.kg.gettransfer.utilities.Analytics.Companion.UNITS_PARAM
 
 import com.yandex.metrica.YandexMetrica
 
 import java.util.Locale
-
-import timber.log.Timber
 
 @InjectViewState
 class SettingsPresenter: BasePresenter<SettingsView>() {
@@ -30,17 +29,6 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
     private val endpoints = systemInteractor.endpoints.map { Mappers.getEndpointModel(it) }
 
     private var localeWasChanged = false
-
-    companion object {
-        @JvmField val EVENT = "settings"
-        
-        @JvmField val CURRENCY_PARAM = "currency"
-        @JvmField val UNITS_PARAM    = "units"
-        @JvmField val LANGUAGE_PARAM = "language"
-        @JvmField val LOG_OUT_PARAM  = "logout"
-        
-        @JvmField val EMPTY_VALUE = ""
-    }
 
     @CallSuper
     override fun attachView(view: SettingsView) {
@@ -135,8 +123,6 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
         val map = HashMap<String, Any>()
         map[param] = value
 
-        mFBA.logEvent(EVENT, createSingeBundle(param, value))
-        eventsLogger.logEvent(EVENT, createSingeBundle(param, value))
-        YandexMetrica.reportEvent(EVENT, map)
+        analytics.logEvent(EVENT_SETTINGS, createStringBundle(param, value), map)
     }
 }
