@@ -55,18 +55,23 @@
 
         <ImageView
             android:id="@+id/ivPassanger"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+
+            android:layout_width="7dp"
+            android:layout_height="14dp"
             android:layout_marginTop="3dp"
             app:layout_constraintStart_toStartOf="@+id/ivTransferType"
             app:layout_constraintTop_toBottomOf="@+id/ivTransferType"
-            app:srcCompat="@drawable/ic_passenger" />
+            app:srcCompat="@drawable/passengers_num_ic" />
 
         <TextView
             android:id="@+id/tvNumberPersonsTransfer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/sf_pro_text_regular"
+            android:textColor="@color/colorTextBlack"
+            android:layout_marginStart="1dp"
             android:textSize="@dimen/transfer_types_text_size"
             app:layout_constraintBottom_toBottomOf="@+id/ivPassanger"
             app:layout_constraintStart_toEndOf="@+id/ivPassanger"
@@ -75,18 +80,22 @@
 
         <ImageView
             android:id="@+id/ivLuggage"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
+            android:layout_width="10dp"
+            android:layout_height="9dp"
+            android:layout_marginStart="1dp"
             app:layout_constraintBottom_toBottomOf="@+id/tvNumberPersonsTransfer"
             app:layout_constraintStart_toEndOf="@+id/tvNumberPersonsTransfer"
             app:layout_constraintTop_toTopOf="@+id/tvNumberPersonsTransfer"
-            app:srcCompat="@drawable/ic_luggage" />
+            app:srcCompat="@drawable/luggage_num_ic" />
 
         <TextView
             android:id="@+id/tvCountBaggage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:layout_marginStart="1dp"
+
+            android:textColor="@color/colorTextBlack"
             android:fontFamily="@font/sf_pro_text_regular"
             android:textSize="@dimen/transfer_types_text_size"
             app:layout_constraintBottom_toBottomOf="@+id/ivLuggage"
@@ -125,10 +134,11 @@
             android:id="@+id/from"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/transfer_types_text_size"
+            android:textSize="@dimen/transfer_types_cost_title"
             android:text="@string/from_price"
+            android:fontFamily="@font/sf_pro_text_regular"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/separator"/>
 
@@ -139,8 +149,8 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:textSize="13sp"
+            android:fontFamily="@font/sf_pro_text_semibold"
+            android:textSize="@dimen/transfer_types_cost"
             android:textColor="@color/sfproTextSemibold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/separator"
