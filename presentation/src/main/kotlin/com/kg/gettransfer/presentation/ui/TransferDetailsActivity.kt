@@ -135,10 +135,10 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         if(visible) btnCancel.visibility = View.VISIBLE else btnCancel.visibility = View.GONE
 
     override fun setOffer(offerModel: OfferModel) {
-        if(offerModel.driver != null) {
-            offerDriverInfoEmail.text = offerModel.driver.email
-            offerDriverInfoPhone.text = offerModel.driver.phone
-            offerDriverInfoName.text = offerModel.driver.name
+        offerModel.driver?.let {
+            offerDriverInfoEmail.text = it.email
+            offerDriverInfoPhone.text = it.phone
+            offerDriverInfoName.text = it.name
             layoutOfferDriverInfo.visibility = View.VISIBLE
         }
 
