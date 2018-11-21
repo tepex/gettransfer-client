@@ -10,6 +10,7 @@
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
 		<item name="android:windowDisablePreview">true</item>
+		<item name="android:windowLightStatusBar">true</item>
 		<item name="android:windowContentTransitions">true</item>
 		<item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
 		<item name="android:timePickerDialogTheme">@style/MyTimePickerDialogTheme</item>

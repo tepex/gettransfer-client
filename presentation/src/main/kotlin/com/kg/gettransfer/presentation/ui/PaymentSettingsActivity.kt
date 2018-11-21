@@ -57,7 +57,7 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     private fun setButton() {
         val image = ImageSpan(this, R.drawable.credit_card)
         val string = SpannableString(getString(R.string.LNG_PAYMENT_PAY))
-        var title = SpannableString(" $string")
+        var title = SpannableString("  $string")
         title.setSpan(image, 0, 1, 0)
         btnGetPayment.text = title
     }

@@ -111,8 +111,8 @@
 	<dimen name="create_transfer_marker_size">23dp</dimen>
 
 	<dimen name="create_transfer_additionals_top_text_size">17sp</dimen>
+	<dimen name="create_transfer_additionals_bottom_text_size">14sp</dimen>
 	<dimen name="car_type_description">17sp</dimen>
-	<dimen name="create_transfer_additionals_bottom_text_size">15sp</dimen>
 	<dimen name="height_title_sheet_order">35dp</dimen>
 	<dimen name="create_transfer_editText_22">22dp</dimen>
 	<dimen name="create_transfer_textView_20">20dp</dimen>
@@ -273,7 +273,7 @@
 	<dimen name="activity_carrier_transfer_details_btns_layout_padding_top_bottom">16dp</dimen>
 	<dimen name="activity_carrier_transfer_details_btns_layout_padding_start_end">52dp</dimen>
 	<dimen name="activity_carrier_transfer_details_btns_layout_height">72dp</dimen>
-	<dimen name="activity_carrier_transfer_details_header_text_field_height">37dp</dimen>
+	<dimen name="activity_carrier_transfer_details_header_text_field_height">38dp</dimen>
 	<dimen name="activity_carrier_transfer_details_header_text_size">13sp</dimen>
 	<dimen name="activity_carrier_transfer_details_header_text_padding_start_end">16dp</dimen>
 	<dimen name="activity_carrier_transfer_details_info_field_height">44dp</dimen>
