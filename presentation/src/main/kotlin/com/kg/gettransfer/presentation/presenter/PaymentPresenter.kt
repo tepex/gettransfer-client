@@ -21,7 +21,11 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.Analytics.Companion.CURRENCY
 import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_ECOMMERCE_PURCHASE
+import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_MAKE_PAYMENT
 import com.kg.gettransfer.utilities.Analytics.Companion.PROMOCODE
+import com.kg.gettransfer.utilities.Analytics.Companion.RESULT_FAIL
+import com.kg.gettransfer.utilities.Analytics.Companion.RESULT_SUCCESS
+import com.kg.gettransfer.utilities.Analytics.Companion.STATUS
 import com.kg.gettransfer.utilities.Analytics.Companion.TRANSACTION_ID
 import com.kg.gettransfer.utilities.Analytics.Companion.VALUE
 
@@ -56,9 +60,11 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
                     viewState.showSuccessfulMessage()
                     offer = offerInteractor.getOffer(offerId)!!
                     logEventEcommercePurchase()
+                    logEvent(RESULT_SUCCESS)
                 } else {
                     router.exit()
                     viewState.showErrorMessage()
+                    logEvent(RESULT_FAIL)
                 }
             }
             viewState.blockInterface(false)
@@ -94,4 +100,12 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
         analytics.logEventEcommercePurchase(EVENT_ECOMMERCE_PURCHASE, bundle, map,
                 price.toBigDecimal(), systemInteractor.currency)
     }
+
+    fun logEvent(value: String) {
+        val map = HashMap<String, Any>()
+        map[STATUS] = value
+
+        analytics.logEvent(EVENT_MAKE_PAYMENT, createStringBundle(STATUS, value), map)
+    }
+
 }

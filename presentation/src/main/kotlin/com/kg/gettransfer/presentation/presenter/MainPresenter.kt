@@ -28,6 +28,7 @@ import com.kg.gettransfer.utilities.Analytics.Companion.LOGIN_CLICKED
 import com.kg.gettransfer.utilities.Analytics.Companion.MY_PLACE_CLICKED
 import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_NAME
 import com.kg.gettransfer.utilities.Analytics.Companion.SETTINGS_CLICKED
+import com.kg.gettransfer.utilities.Analytics.Companion.SHARE
 import com.kg.gettransfer.utilities.Analytics.Companion.TRANSFER_CLICKED
 
 import org.koin.standalone.inject
@@ -271,5 +272,10 @@ class MainPresenter: BasePresenter<MainView>() {
     fun onBackClick() {
         if(systemInteractor.selectedField == FIELD_TO) switchUsedField()
         else viewState.onBackClick()
+    }
+
+    fun onShareClick() {
+        Timber.d("Share action")
+        logEvent(SHARE)
     }
 }
