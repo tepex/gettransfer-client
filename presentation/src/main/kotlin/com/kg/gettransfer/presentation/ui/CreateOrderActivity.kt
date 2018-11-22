@@ -358,7 +358,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     override fun showEmptyFieldError(invalidField: String) {
         val message = when(invalidField) {
             CreateOrderPresenter.EMAIL_FIELD          -> getString(R.string.LNG_ERROR_EMAIL)
-            CreateOrderPresenter.NAME_FIELD           -> getString(R.string.LNG_RIDE_NAME)
             CreateOrderPresenter.PHONE_FIELD          -> getString(R.string.LNG_RIDE_PHONE)
             CreateOrderPresenter.TRANSPORT_FIELD      -> getString(R.string.LNG_RIDE_CHOOSE_TRANSPORT)
             CreateOrderPresenter.TERMS_ACCEPTED_FIELD -> getString(R.string.LNG_RIDE_OFFERT_ERROR)

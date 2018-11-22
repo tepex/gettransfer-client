@@ -79,7 +79,6 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         @JvmField val FUTURE_MINUTE     = 5
 
         const val EMAIL_FIELD           = "email"
-        const val NAME_FIELD            = "name"
         const val PHONE_FIELD           = "phone"
         const val TRANSPORT_FIELD       = "transport"
         const val TERMS_ACCEPTED_FIELD  = "terms_accepted"
@@ -317,7 +316,6 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     private fun checkFieldsForRequest(): Boolean {
         val errorFiled =
             if(!Utils.checkEmail(user.profile.email))        EMAIL_FIELD
-            else if(user.profile.name.isNullOrBlank())       NAME_FIELD
             else if(!Utils.checkPhone(user.profile.phone!!)) PHONE_FIELD
             else if(transportTypes != null &&
                     !transportTypes!!.any { it.checked })    TRANSPORT_FIELD
@@ -331,11 +329,8 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     /* @TODO: Добавить реакцию на некорректное значение в поле. Отображать, где и что введено некорректно. */
     private fun checkFields() {
         if(transportTypes == null) return
-        val typesHasSelected = transportTypes!!.filter { it.checked }.size > 0
+        val typesHasSelected = transportTypes!!.any { it.checked }
         val actionEnabled = typesHasSelected &&
-                            !user.profile.name.isNullOrBlank() &&
-                            !user.profile.email.isNullOrBlank() &&
-                            !user.profile.email.isNullOrBlank() &&
                             Patterns.EMAIL_ADDRESS.matcher(user.profile.email!!).matches() &&
                             Utils.checkPhone(user.profile.phone!!) &&
                             user.termsAccepted
