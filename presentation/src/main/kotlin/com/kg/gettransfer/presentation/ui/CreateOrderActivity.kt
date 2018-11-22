@@ -284,7 +284,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     private fun checkMinusButton(count: Int, minimum: Int, view: ImageView) {
         val imgRes = if (count == minimum) R.drawable.ic_circle_minus else R.drawable.ic_minus_enabled
-        view.setImageDrawable(getDrawable(imgRes))
+        view.setImageDrawable(ContextCompat.getDrawable(this, imgRes))
     }
 
     override fun setPassengers(count: Int) {
@@ -387,7 +387,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         when {
             isKeyBoardOpened                                        -> hideKeyboard()
             bsTransport.state == BottomSheetBehavior.STATE_EXPANDED -> hideSheetTransport()
-            bsOrder.state == BottomSheetBehavior.STATE_EXPANDED     -> toggleSheetOrder()
+            bsOrder.state     == BottomSheetBehavior.STATE_EXPANDED -> toggleSheetOrder()
             else                                                    -> super.onBackPressed()
         }
     }
@@ -405,54 +405,25 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun initFieldsViews() {
 
         /* icons */
-        transfer_date_time_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_calendar_triangle))
-        user_name_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_passport))
-        email_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_mail))
-        phone_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_phone))
-        flight_number_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_flight))
-        promo_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.sale_icon))
-        comment_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_comment))
 
         passengers_seats.seat_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_passenger_small))
         child_seats.seat_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_child_seat))
 
         /* titles */
-        price_field_title.text = getString(R.string.LNG_RIDE_PRICE)
-        transfer_date_time_field.field_title.text = getString(R.string.LNG_RIDE_DATE)
-        user_name_field.field_title.text = getString(R.string.LNG_RIDE_NAME_PLACEHOLDER)
-        email_field.field_title.text = getString(R.string.LNG_RIDE_EMAIL_PLACEHOLDER)
-        phone_field.field_title.text = getString(R.string.LNG_RIDE_PHONE_PLACEHOLDER)
-        flight_number_field.field_title.text = getString(R.string.LNG_RIDE_FLIGHT_PLACEHOLDER)
-        promo_field.field_title.text = getString(R.string.LNG_RIDE_PROMOCODE_PLACEHOLDER)
-        comment_field.field_title.text = getString(R.string.LNG_RIDE_COMMENT)
         passengers_seats.seat_title.text = getString(R.string.LNG_RIDE_PASSENGERS)
         child_seats.seat_title.text = getString(R.string.LNG_RIDE_CHILDREN)
 
         /* editable fields */
-        price_field_input.hint = getString(R.string.LNG_RIDE_PRICE_YOUR)
-        price_field_input.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
-        //transfer_date_time_field.field_input.hint = getString(R.string)
-        transfer_date_time_field.field_input.isFocusable = false
-        transfer_date_time_field.field_input.inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-        user_name_field.field_input.hint = getString(R.string.LNG_RIDE_NAME)
-        email_field.field_input.hint = getString(R.string.LNG_RIDE_EMAIL)
-        phone_field.field_input.hint = getString(R.string.LNG_RIDE_PHONE)
-        phone_field.field_input.inputType = InputType.TYPE_CLASS_PHONE
-        flight_number_field.field_input.hint = getString(R.string.LNG_RIDE_FLIGHT)
-        promo_field.field_input.hint = getString(R.string.LNG_RIDE_PROMOCODE)
-        comment_field.field_input.hint = getString(R.string.LNG_COMMENT_PLACEHOLDER)
+
         comment_field.field_input.setSingleLine(false)
-
         passengers_seats.person_count.text = getString(R.string.passenger_number_default)
-        child_seats.person_count.text = getString(R.string.child_number_default)
+        child_seats.person_count.text      = getString(R.string.child_number_default)
 
-        comment_field.field_input.isFocusable = false
-        comment_field.field_input.setOnClickListener { showPopupWindowComment() }
     }
 
     private fun initChangeTextListeners() {
-        price_field_input.onTextChanged             { presenter.cost = it.toDoubleOrNull() }
-        price_field_input.setOnFocusChangeListener  { _, hasFocus ->
+        price_field_input.onTextChanged                  { presenter.cost = it.toDoubleOrNull() }
+        price_field_input.setOnFocusChangeListener       { _, hasFocus ->
             if(hasFocus) presenter.logTransferSettingsEvent(CreateOrderPresenter.OFFER_PRICE_FOCUSED)
         }
         user_name_field.field_input.onTextChanged        { presenter.setName(it.trim()) }
@@ -482,7 +453,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         child_seats.img_plus_seat.setOnClickListener        { presenter.changeChildren(1) }
 
         cl_offer_price.setOnClickListener                   { fieldTouched(price_field_input)  }
-        //transfer_date_time_field.setOnClickListener         {  fieldTouched(transfer_date_time_field.field_input)  }
         user_name_field.setOnClickListener                  { fieldTouched(user_name_field.field_input) }
         email_field.setOnClickListener                      { fieldTouched(email_field.field_input) }
         phone_field.setOnClickListener                      { fieldTouched(phone_field.field_input)}
@@ -491,6 +461,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         comment_field.setOnClickListener                    { showPopupWindowComment()
             presenter.logTransferSettingsEvent(CreateOrderPresenter.COMMENT_INPUT)
         }
+        comment_field.field_input.setOnClickListener        { showPopupWindowComment() }
 
         tvAgreement1.setOnClickListener                     { presenter.showLicenceAgreement() }
         switchAgreement.setOnCheckedChangeListener          { _, isChecked -> presenter.setAgreeLicence(isChecked) }

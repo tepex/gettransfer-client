@@ -107,7 +107,7 @@
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="@dimen/title_margin_top"
 
-                    android:text="Offer your price"
+                    android:text="@string/LNG_RIDE_PRICE"
                     android:textSize="@dimen/view_transfer_info_small_text_size"
 
                     app:layout_constraintLeft_toRightOf="@+id/fl_currency"
@@ -122,9 +122,10 @@
                     android:layout_marginBottom="@dimen/input_margin_bottom"
                     android:background="@null"
                     android:fontFamily="@font/sf_pro_text_semibold"
-                    android:hint="450"
+                    android:hint="@string/LNG_RIDE_PRICE_YOUR"
                     android:textColor="@color/colorTextBlack"
                     android:textSize="@dimen/create_transfer_additionals_top_text_size"
+                    android:inputType="numberDecimal"
 
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@+id/fl_currency" />
@@ -143,9 +144,15 @@
 
             </android.support.constraint.ConstraintLayout>
 
-            <include
+            <com.kg.gettransfer.presentation.ui.CreateOrderField
                 android:id="@+id/transfer_date_time_field"
-                layout="@layout/view_create_order_field" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                app:inputType="@integer/inputType_NoSuggestion"
+                app:isFocusable="false"
+                app:title="@string/LNG_RIDE_DATE"
+                app:icon_img="@drawable/ic_calendar_triangle"/>
 
             <LinearLayout
                 android:id="@+id/ll_seats"
@@ -173,35 +180,55 @@
                 android:layout_marginStart="@dimen/divider_margin_start"
                 android:background="@color/create_order_fields_divider" />
 
-            <include
+            <com.kg.gettransfer.presentation.ui.CreateOrderField
                 android:id="@+id/user_name_field"
-                layout="@layout/view_create_order_field" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                app:hint="@string/LNG_RIDE_NAME"
+                app:title="@string/LNG_RIDE_NAME_PLACEHOLDER"
+                app:icon_img="@drawable/ic_passport"/>
 
             <com.kg.gettransfer.presentation.ui.CreateOrderField
-                android:id="@+id/user_field"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <include
                 android:id="@+id/email_field"
-                layout="@layout/view_create_order_field" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-            <include
+                app:title="@string/LNG_RIDE_EMAIL_PLACEHOLDER"
+                app:hint="@string/LNG_RIDE_EMAIL"
+                app:icon_img="@drawable/ic_mail"/>
+
+            <com.kg.gettransfer.presentation.ui.CreateOrderField
                 android:id="@+id/phone_field"
-                layout="@layout/view_create_order_field" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-            <include
+                app:inputType="@integer/inputType_Phone"
+                app:title="@string/LNG_RIDE_PHONE_PLACEHOLDER"
+                app:hint="@string/LNG_RIDE_PHONE"
+                app:icon_img="@drawable/ic_phone"/>
+
+            <com.kg.gettransfer.presentation.ui.CreateOrderField
                 android:id="@+id/flight_number_field"
-                layout="@layout/view_create_order_field" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                app:title="@string/LNG_RIDE_FLIGHT_PLACEHOLDER"
+                app:hint="@string/LNG_RIDE_FLIGHT"
+                app:icon_img="@drawable/ic_flight"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <include
+                <com.kg.gettransfer.presentation.ui.CreateOrderField
                     android:id="@+id/promo_field"
-                    layout="@layout/view_create_order_field" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    app:title="@string/LNG_RIDE_PROMOCODE_PLACEHOLDER"
+                    app:hint="@string/LNG_RIDE_PROMOCODE"
+                    app:icon_img="@drawable/sale_icon"/>
 
                 <ImageView
                     android:id="@+id/img_okResult"
@@ -215,9 +242,15 @@
                     android:src="@drawable/ic_promo_ok"/>
             </RelativeLayout>
 
-            <include
+            <com.kg.gettransfer.presentation.ui.CreateOrderField
                 android:id="@+id/comment_field"
-                layout="@layout/view_create_order_field" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                app:isFocusable="false"
+                app:title="@string/LNG_RIDE_COMMENT"
+                app:hint="@string/LNG_COMMENT_PLACEHOLDER"
+                app:icon_img="@drawable/ic_comment"/>
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/layoutAgreement"

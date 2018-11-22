@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import com.kg.gettransfer.R
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -13,14 +14,13 @@ import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.UserModel
 import com.kg.gettransfer.presentation.presenter.CreateOrderSheetPresenter
-import com.kg.gettransfer.presentation.ui.initializers.CreateOrderInitializer
 import com.kg.gettransfer.presentation.view.CreateOrderSheetView
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.view.*
 import kotlinx.android.synthetic.main.search_address.*
 import kotlinx.android.synthetic.main.view_create_order_field.view.*
 
-class CreateOrderSheet(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0): RelativeLayout(context, attrs, defStyleAttr), CreateOrderSheetView, LayoutContainer {
+class CreateOrderSheet @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0): RelativeLayout(context, attrs, defStyleAttr), CreateOrderSheetView, LayoutContainer {
 
     @InjectPresenter
     lateinit var presenter: CreateOrderSheetPresenter
@@ -34,24 +34,12 @@ class CreateOrderSheet(context: Context, attrs: AttributeSet? = null, defStyleAt
     override val containerView: View
     init {
         containerView = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_create_order_new, this, true)
-
-        if(attrs != null) {
-            val ta = context.obtainStyledAttributes(attrs, R.styleable.SearchAddress)
-            addressField.hint = ta.getString(R.styleable.SearchAddress_hint)
-            ta.recycle()
-        }
-
-    }
-
-    private lateinit var initializer: CreateOrderInitializer
-
-    fun initWidget() {
-        initializer = CreateOrderInitializer(context)
-//        initializer.setViews()
-        val ddd = transfer_date_time_field
-    }
-
-    fun initViews() {
+//
+//        if(attrs != null) {
+//            val ta = context.obtainStyledAttributes(attrs, R.styleable.SearchAddress)
+//            addressField.hint = ta.getString(R.styleable.SearchAddress_hint)
+//            ta.recycle()
+//        }
 
     }
 
