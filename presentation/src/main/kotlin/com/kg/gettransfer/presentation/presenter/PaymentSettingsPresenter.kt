@@ -12,6 +12,7 @@ import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Offer
 
@@ -23,6 +24,7 @@ import com.kg.gettransfer.presentation.view.PaymentSettingsView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics.Companion.CURRENCY
 import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_BEGIN_CHECKOUT
+import com.kg.gettransfer.utilities.Analytics.Companion.PROMOCODE
 import com.kg.gettransfer.utilities.Analytics.Companion.SHARE
 import com.kg.gettransfer.utilities.Analytics.Companion.VALUE
 
@@ -38,6 +40,7 @@ class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
     
     private val offerInteractor: OfferInteractor by inject()
     private val paymentInteractor: PaymentInteractor by inject()
+    private val transferInteractor: TransferInteractor by inject()
     
     private var offer: Offer? = null
     internal lateinit var params: PaymentSettingsView.Params
@@ -99,6 +102,8 @@ class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
         }
         bundle.putInt(SHARE, paymentRequest.percentage)
         map[SHARE] = paymentRequest.percentage
+        bundle.putString(PROMOCODE, transferInteractor.transferNew.promoCode)
+        map[PROMOCODE] = transferInteractor.transferNew.promoCode
 
         analytics.logEventBeginCheckout(EVENT_BEGIN_CHECKOUT, bundle, map, price)
     }
