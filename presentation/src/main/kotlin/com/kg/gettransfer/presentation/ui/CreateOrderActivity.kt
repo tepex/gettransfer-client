@@ -195,7 +195,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             isOutsideTouchable = true
             setOnDismissListener {
                 layoutPopupView.etPopupComment.hideKeyboard()
-//            toggleSheetOrder()
                 layoutPopupView.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.hide_popup))
                 btnGetOffers.requestFocus()
                 clearDim(window.decorView.rootView as  ViewGroup)

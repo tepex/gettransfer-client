@@ -22,7 +22,7 @@ class CreateOrderField @JvmOverloads constructor(
                 field_title.text        = ta.getString(R.styleable.CreateOrderField_title)
                 field_input.hint        = ta.getString(R.styleable.CreateOrderField_hint)
                 field_input.isFocusable = ta.getBoolean(R.styleable.CreateOrderField_isFocusable, true)
-                field_input.inputType   = ta.getInteger(R.styleable.CreateOrderField_inputType, InputType.TYPE_NULL)
+                field_input.inputType   = ta.getInteger(R.styleable.CreateOrderField_inputType, InputType.TYPE_CLASS_TEXT)
                 field_icon.setImageDrawable(ta.getDrawable(R.styleable.CreateOrderField_icon_img))
                 ta.recycle()
             }
