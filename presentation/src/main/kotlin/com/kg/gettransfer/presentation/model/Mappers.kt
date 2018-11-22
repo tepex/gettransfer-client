@@ -122,7 +122,7 @@ object Mappers {
                        passengerOfferedPrice: Double?,
                        comment: String?,
                        user: User,
-                       promoCode: String?,
+                       promoCode: String = "",
                        paypalOnly: Boolean) = TransferNew(from, 
                                                           to,
                                                           tripTo,

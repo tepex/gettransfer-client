@@ -6,7 +6,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.yandex.metrica.YandexMetrica
 import java.math.BigDecimal
 import java.util.*
-
 class Analytics(private val firebase: FirebaseAnalytics,
                 private val facebook: AppEventsLogger) {
 
@@ -58,6 +57,13 @@ class Analytics(private val firebase: FirebaseAnalytics,
         @JvmField val OFFER_DETAILS         = "offer_details"
         @JvmField val OFFER_DETAILS_RATING  = "offer_details_rating"
         @JvmField val OFFER_BOOK            = "offer_book"
+
+        @JvmField val INVALID_EMAIL         = "invalid_email"
+        @JvmField val INVALID_PHONE         = "invalid_phone"
+        @JvmField val INVALID_NAME          = "invalid_name"
+        @JvmField val NO_TRANSPORT_TYPE     = "no_transport_type"
+        @JvmField val LICENSE_NOT_ACCEPTED  = "license_not_accepted"
+        @JvmField val SERVER_ERROR          = "server_error"
 
         @JvmField val CURRENCY_PARAM = "currency"
         @JvmField val UNITS_PARAM    = "units"

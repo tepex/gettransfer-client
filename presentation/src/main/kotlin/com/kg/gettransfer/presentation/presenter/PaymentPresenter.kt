@@ -6,6 +6,7 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Offer
 
@@ -17,8 +18,10 @@ import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter.Compan
 
 import com.kg.gettransfer.presentation.view.PaymentView
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.Analytics.Companion.CURRENCY
 import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_ECOMMERCE_PURCHASE
+import com.kg.gettransfer.utilities.Analytics.Companion.PROMOCODE
 import com.kg.gettransfer.utilities.Analytics.Companion.TRANSACTION_ID
 import com.kg.gettransfer.utilities.Analytics.Companion.VALUE
 
@@ -30,6 +33,7 @@ import timber.log.Timber
 class PaymentPresenter: BasePresenter<PaymentView>() {
     private val paymentInteractor: PaymentInteractor by inject()
     private val offerInteractor: OfferInteractor by inject()
+    private val transferInteractor: TransferInteractor by inject()
 
     private lateinit var offer: Offer
     
@@ -84,6 +88,8 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
 
         bundle.putString(TRANSACTION_ID, transferId.toString())
         map[TRANSACTION_ID] = transferId
+        bundle.putString(PROMOCODE, transferInteractor.transferNew.promoCode)
+        map[PROMOCODE] = transferInteractor.transferNew.promoCode
 
         analytics.logEventEcommercePurchase(EVENT_ECOMMERCE_PURCHASE, bundle, map,
                 price.toBigDecimal(), systemInteractor.currency)

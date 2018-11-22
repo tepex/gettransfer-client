@@ -12,7 +12,7 @@ data class TransferNew(val from: CityPoint,
                        val passengerOfferedPrice: Int?, // x 100 (in cents)
                        val comment: String?,
                        val user: User,
-                       val promoCode: String?,
+                       val promoCode: String = "",
                        val paypalOnly: Boolean)
 
 data class Trip(val dateTime: Date, val flightNumber: String?)

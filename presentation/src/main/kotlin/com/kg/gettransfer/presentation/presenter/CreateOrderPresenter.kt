@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.os.Bundle
 import android.support.annotation.CallSuper
 
 import android.util.Patterns
@@ -31,17 +32,24 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics.Companion.BACK_CLICKED
 import com.kg.gettransfer.utilities.Analytics.Companion.CHILDREN_ADDED
+import com.kg.gettransfer.utilities.Analytics.Companion.CURRENCY
 import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_MAIN
 import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_SETTINGS
 import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_TRANSFER
 import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_TRANSFER_SETTINGS
 import com.kg.gettransfer.utilities.Analytics.Companion.FLIGHT_NUMBER_ADDED
+import com.kg.gettransfer.utilities.Analytics.Companion.INVALID_EMAIL
+import com.kg.gettransfer.utilities.Analytics.Companion.INVALID_NAME
+import com.kg.gettransfer.utilities.Analytics.Companion.INVALID_PHONE
+import com.kg.gettransfer.utilities.Analytics.Companion.LICENSE_NOT_ACCEPTED
+import com.kg.gettransfer.utilities.Analytics.Companion.NO_TRANSPORT_TYPE
 import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_FIELD
 import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_NAME
 import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_RESULT
 import com.kg.gettransfer.utilities.Analytics.Companion.PASSENGERS_ADDED
 import com.kg.gettransfer.utilities.Analytics.Companion.RESULT_SUCCESS
 import com.kg.gettransfer.utilities.Analytics.Companion.SHOW_ROUTE_CLICKED
+import com.kg.gettransfer.utilities.Analytics.Companion.VALUE
 
 import java.text.Format
 import java.text.SimpleDateFormat
@@ -70,7 +78,8 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     private var routeModel: RouteModel? = null
     private var polyline: PolylineModel? = null
     private var track: CameraUpdate? = null
-    private var promoCode: String? = null
+    private var promoCode: String = ""
+    private var selectedCurrency: Int = null
     
     internal var cost: Double? = null
 
@@ -184,7 +193,10 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
 	    transportTypes?.let { viewState.setTransportTypes(it) }
     }
 
-    fun changeCurrency(selected: Int) { viewState.setCurrency(currencies.get(selected).symbol) }
+    fun changeCurrency(selected: Int) {
+        selectedCurrency = selected
+        viewState.setCurrency(currencies[selected].symbol)
+    }
     
     fun changePassengers(count: Int) {
         passengers += count
@@ -285,35 +297,40 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
                                                                          promoCode,
                                                                          false))
             }
-
-            val logResult = utils.asyncAwait {
-                systemInteractor.putAccount()
-            }
-
-            if (result.error == null && logResult.error == null) {
-                router.navigateTo(Screens.Offers(result.model.id))
-                logCreateTransfer(RESULT_SUCCESS)
-            } else if(result.error != null) {
+            if(result.error != null) {
+                logCreateTransfer(SERVER_ERROR)
                 when {
                     result.error!!.details == "{phone=[taken]}" -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
                     else -> viewState.setError(result.error!!)
                 }
-            } else if (logResult.error != null) {
-                viewState.showNotLoggedAlert(result.model.id)
+            }
+            else {
+                logCreateTransfer(RESULT_SUCCESS)
+                router.navigateTo(Screens.Offers(result.model.id))
             }
             viewState.blockInterface(false)
         }
     }
 
     private fun checkFieldsForRequest(): Boolean {
-        val errorFiled =
-            if(!Utils.checkEmail(user.profile.email))        EMAIL_FIELD
-            else if(!Utils.checkPhone(user.profile.phone!!)) PHONE_FIELD
-            else if(transportTypes != null &&
-                    !transportTypes!!.any { it.checked })    TRANSPORT_FIELD
-            else if(!user.termsAccepted)                     TERMS_ACCEPTED_FIELD
-            else return true
-
+        var errorFiled: String
+        if (!Utils.checkEmail(user.profile.email)) {
+            errorFiled = EMAIL_FIELD
+            logCreateTransfer(INVALID_EMAIL)
+        } else if (user.profile.name.isNullOrBlank()) {
+            errorFiled = NAME_FIELD
+            logCreateTransfer(INVALID_NAME)
+        } else if (!Utils.checkPhone(user.profile.phone!!)) {
+            errorFiled = PHONE_FIELD
+            logCreateTransfer(INVALID_PHONE)
+        } else if (transportTypes != null &&
+                !transportTypes!!.any { it.checked }) {
+            errorFiled = TRANSPORT_FIELD
+            logCreateTransfer(NO_TRANSPORT_TYPE)
+        } else if (!user.termsAccepted) {
+            errorFiled = TERMS_ACCEPTED_FIELD
+            logCreateTransfer(LICENSE_NOT_ACCEPTED)
+        } else return true
         viewState.showEmptyFieldError(errorFiled)
         return false
     }
@@ -372,9 +389,19 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     }
 
     private fun logCreateTransfer(value: String) {
+        val bundle = Bundle()
         val map = HashMap<String, Any>()
-        map[PARAM_KEY_RESULT] = value
 
-        analytics.logEvent(EVENT_TRANSFER, createStringBundle(PARAM_KEY_RESULT, value), map)
+        map[PARAM_KEY_RESULT] = value
+        bundle.putString(PARAM_KEY_RESULT, value)
+
+        if (cost != null) {
+            bundle.putString(VALUE, cost.toString())
+            bundle.putString(CURRENCY, currencies[selectedCurrency].name)
+
+            map[VALUE] = cost.toString()
+            map[CURRENCY] = currencies[selectedCurrency].name
+        }
+        analytics.logEvent(EVENT_TRANSFER, bundle, map)
     }
 }
