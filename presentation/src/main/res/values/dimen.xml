@@ -62,6 +62,7 @@
 	<dimen name="search_main_textSize">17sp</dimen>
 	<dimen name="search_main_height">22dp</dimen>
 	<dimen name="search_main_paddingBottom">8dp</dimen>
+	<dimen name="search_main_clear_paddingBottom">@dimen/search_main_paddingBottom</dimen>
 
 	<dimen name="arrow_fl_width">37dp</dimen>
 	<dimen name="arrow_fl_height">44dp</dimen>
