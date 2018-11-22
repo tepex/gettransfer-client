@@ -46,9 +46,11 @@ class SocketIOService: Service() {
 
     @CallSuper
     override fun onDestroy() {
-        Timber.d("closeSocketSession [${socket!!.id()}]")
-        socket!!.off()
-        socket!!.close()
+        socket?.let {
+            Timber.d("closeSocketSession [${it.id()}]")
+            it.off()
+            it.close()
+        }
         super.onDestroy()
     }
 
