@@ -276,7 +276,7 @@ internal class Utils {
         @DrawableRes
         fun getLanguageImage(code: String): Int {
             val imageRes = R.drawable::class.members.find( { it.name == "ic_language_$code" } )
-            return (imageRes?.call() as Int?) ?: R.drawable.ic_language_en
+            return (imageRes?.call() as Int?) ?: R.drawable.ic_language_unknown
         }
 
         fun getVehicleNameWithColor(context: Context, name: String, color: String): SpannableStringBuilder {
