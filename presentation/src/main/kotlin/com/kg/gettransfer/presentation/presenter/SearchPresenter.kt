@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+import android.support.v4.content.ContextCompat
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -16,8 +17,11 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SearchView
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_BUTTONS
+import com.kg.gettransfer.utilities.Analytics.Companion.LAST_PLACE_CLICKED
 import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_NAME
 import com.kg.gettransfer.utilities.Analytics.Companion.POINT_ON_MAP_CLICKED
+import com.kg.gettransfer.utilities.Analytics.Companion.PREDEFINED_CLICKED
+import com.kg.gettransfer.utilities.Analytics.Companion.REQUEST_FORM
 import com.kg.gettransfer.utilities.Analytics.Companion.SWAP_CLICKED
 
 import org.koin.standalone.inject
@@ -50,10 +54,12 @@ class SearchPresenter: BasePresenter<SearchView>() {
     }
 
     fun onPopularSelected(selected: PopularPlace) {
+        logEvent(PREDEFINED_CLICKED + selected.title.toLowerCase())
         viewState.onFindPopularPlace(isTo, selected.title)
     }
 
     fun onAddressSelected(selected: GTAddress) {
+        logEvent(LAST_PLACE_CLICKED)
         val isDoubleClickOnRoute: Boolean
         if(isTo) {
             viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, false, true)
@@ -90,6 +96,7 @@ class SearchPresenter: BasePresenter<SearchView>() {
         utils.asyncAwait { routeInteractor.updateStartPoint() }
         systemInteractor.addressHistory = listOf(routeInteractor.from!!, routeInteractor.to!!)
         router.navigateTo(Screens.CreateOrder)
+        logEvent(REQUEST_FORM)
     }
 
     fun selectFinishPointOnMap() {

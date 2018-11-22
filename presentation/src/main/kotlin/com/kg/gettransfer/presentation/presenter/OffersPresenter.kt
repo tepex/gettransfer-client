@@ -20,6 +20,7 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_OFFERS
 import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_BOOK
+import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_DETAILS
 import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_FILTER
 import com.kg.gettransfer.utilities.Analytics.Companion.PRICE_DOWN
 import com.kg.gettransfer.utilities.Analytics.Companion.PRICE_UP
@@ -96,14 +97,16 @@ class OffersPresenter: BasePresenter<OffersView>() {
     fun onRequestInfoClicked() { router.navigateTo(Screens.Details(transferId)) }
 
     fun onSelectOfferClicked(offer: OfferModel, isShowingOfferDetails: Boolean) {
-        if(isShowingOfferDetails) viewState.showBottomSheetOfferDetails(offer)
-        else {
+        if(isShowingOfferDetails) {
+            viewState.showBottomSheetOfferDetails(offer)
+            logEvent(OFFER_DETAILS)
+        } else {
             logEvent(OFFER_BOOK)
             router.navigateTo(Screens.PaymentSettings(transfer.id, offer.id, transfer.dateRefund))
         }
     }
 
-    private fun logEvent(value: String) {
+    fun logEvent(value: String) {
         val map = HashMap<String, Any>()
         map[Analytics.PARAM_KEY_NAME] = value
 
