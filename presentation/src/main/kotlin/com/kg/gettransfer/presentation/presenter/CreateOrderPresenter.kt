@@ -129,6 +129,10 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     }
 
     fun initMapAndPrices() {
+        if(routeInteractor.from == null || routeInteractor.to == null) {
+            Timber.d("routerInteractor init error. from: ${routeInteractor.from}, to: ${routeInteractor.to}")
+            return
+        }
         utils.launchSuspend {
             viewState.blockInterface(true)
             val from = routeInteractor.from!!.cityPoint
