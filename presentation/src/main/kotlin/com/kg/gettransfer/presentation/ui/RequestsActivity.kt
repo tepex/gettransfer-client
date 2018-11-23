@@ -8,6 +8,7 @@ import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 
 import android.support.v7.widget.Toolbar
@@ -46,14 +47,8 @@ class RequestsActivity: BaseActivity(), RequestsView {
 
         setContentView(R.layout.activity_requests)
 
-        setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.apply {
-            setDisplayShowTitleEnabled(false)
-            setDisplayHomeAsUpEnabled(true)
-            setDisplayShowHomeEnabled(true)
-        }
-        (toolbar as Toolbar).toolbar_title.setText(R.string.LNG_MENU_TITLE_RIDES)
-        (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
+        setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_RIDES)
+        //toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.colorYellow))
 
         val requestsVPAdapter = RequestsViewPagerAdapter(supportFragmentManager)
 
