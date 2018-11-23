@@ -15,6 +15,7 @@ import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
@@ -57,8 +58,8 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         initMapView(savedInstanceState)
     }
     
-    protected suspend override fun customizeGoogleMaps() {
-        super.customizeGoogleMaps()
+    protected suspend override fun customizeGoogleMaps(gm: GoogleMap) {
+        super.customizeGoogleMaps(gm)
 
         // https://stackoverflow.com/questions/16974983/google-maps-api-v2-supportmapfragment-inside-scrollview-users-cannot-scroll-th
         transparentImage.setOnTouchListener(View.OnTouchListener { _, motionEvent ->
@@ -154,5 +155,5 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         setPolyline(polyline, routeModel)
 
     override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng) =
-        processGoogleMap { setPinForHourlyTransfer(placeName, info, point) }
+        processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point) }
 }

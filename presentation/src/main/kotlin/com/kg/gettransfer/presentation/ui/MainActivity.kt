@@ -153,9 +153,9 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         enableBtnNext()
     }
 
-    private fun performClick(clickedTo: Boolean){
+    private fun performClick(clickedTo: Boolean) {
         presenter.isClickTo = clickedTo
-        presenter.onSearchClick(searchFrom.text, searchTo.text, googleMap.projection.visibleRegion.latLngBounds)
+        processGoogleMap(true) { presenter.onSearchClick(searchFrom.text, searchTo.text, it.projection.visibleRegion.latLngBounds) }
     }
 
     @CallSuper
@@ -205,17 +205,17 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
 
-    protected override suspend fun customizeGoogleMaps() {
-        super.customizeGoogleMaps()
-        googleMap.setMyLocationEnabled(true)
-        googleMap.uiSettings.isMyLocationButtonEnabled = false
+    protected override suspend fun customizeGoogleMaps(gm: GoogleMap) {
+        super.customizeGoogleMaps(gm)
+        gm.setMyLocationEnabled(true)
+        gm.uiSettings.isMyLocationButtonEnabled = false
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
-        googleMap.setOnCameraMoveListener { presenter.onCameraMove(googleMap.getCameraPosition()!!.target, true);  }
-        googleMap.setOnCameraIdleListener { presenter.onCameraIdle(googleMap.projection.visibleRegion.latLngBounds) }
-        googleMap.setOnCameraMoveStartedListener {
+        gm.setOnCameraMoveListener { presenter.onCameraMove(gm.getCameraPosition()!!.target, true);  }
+        gm.setOnCameraIdleListener { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
+        gm.setOnCameraMoveStartedListener {
             if(it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
                 presenter.enablePinAnimation()
-                googleMap.setOnCameraMoveStartedListener(null)
+                gm.setOnCameraMoveStartedListener(null)
             }
         }
     }
@@ -223,22 +223,22 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     /* MainView */
     override fun setMapPoint(point: LatLng, withAnimation: Boolean) {
         val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
-        processGoogleMap {
+        processGoogleMap(false) {
             if(centerMarker != null) {
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+                it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
                 moveCenterMarker(point)
             } else {
                 /* Грязный хак!!! */
-                if(isFirst || googleMap.cameraPosition.zoom <= MAX_INIT_ZOOM) {
+                if(isFirst || it.cameraPosition.zoom <= MAX_INIT_ZOOM) {
                     val zoom1 = resources.getInteger(R.integer.map_min_zoom).toFloat()
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom1))
+                    it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom1))
                     isFirst = false
                     //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
                 }
                 //else googleMap.moveCamera(CameraUpdateFactory.newLatLng(point))
                 else {
-                    if(withAnimation) googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
-                    else googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+                    if(withAnimation) it.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+                    else it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
                 }
             }
         }

@@ -164,11 +164,13 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
     }
 
-    protected suspend override fun customizeGoogleMaps() {
-        super.customizeGoogleMaps()
-        googleMap.uiSettings.setRotateGesturesEnabled(false)
-        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
+    /*
+    protected suspend override fun customizeGoogleMaps(gm: GoogleMap) {
+        super.customizeGoogleMaps(gm)
+        gm.uiSettings.setRotateGesturesEnabled(false)
+        gm.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
     }
+    */
 
     protected override fun initMap() {
         super.initMap()

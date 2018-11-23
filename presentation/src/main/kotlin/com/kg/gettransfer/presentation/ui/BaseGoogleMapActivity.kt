@@ -35,6 +35,7 @@ import com.kg.gettransfer.presentation.model.RouteModel
 import kotlinx.android.synthetic.main.view_maps_pin.view.*
 
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 import org.koin.android.ext.android.get
@@ -49,7 +50,7 @@ import kotlin.coroutines.suspendCoroutine
 abstract class BaseGoogleMapActivity: BaseActivity() {
     private lateinit var googleMapJob: Job
     protected lateinit var _mapView: MapView
-    protected lateinit var googleMap: GoogleMap
+    private lateinit var googleMap: GoogleMap
 
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
@@ -119,19 +120,20 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         _mapView.onCreate(mapViewBundle)
         googleMapJob = utils.launch {
             googleMap = suspendCoroutine { cont -> _mapView.getMapAsync { cont.resume(it) } }
-            customizeGoogleMaps()
+            customizeGoogleMaps(googleMap)
         }
     }
 
-    protected suspend open fun customizeGoogleMaps() {
-        googleMap.uiSettings.setRotateGesturesEnabled(false)
-        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
+    protected suspend open fun customizeGoogleMaps(gm: GoogleMap) {
+        gm.uiSettings.setRotateGesturesEnabled(false)
+        gm.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
     }
     
-    protected fun processGoogleMap(block: () -> Unit) {
+    protected fun processGoogleMap(ignore: Boolean, block: (GoogleMap) -> Unit) {
+        if(!googleMapJob.isCompleted && ignore) return
         utils.launch {
             if(!googleMapJob.isCompleted) googleMapJob.join()
-            block()
+            block(googleMap)
         }
     }
     
@@ -150,7 +152,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
                 .position(polyline.finishPoint)
                 .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
 
-        processGoogleMap {
+        processGoogleMap(false) {
             if(polyline.line != null) {
                 polyline.line.width(10f).color(ContextCompat.getColor(this@BaseGoogleMapActivity, R.color.colorPolyline))
                 googleMap.addPolyline(polyline.line)
