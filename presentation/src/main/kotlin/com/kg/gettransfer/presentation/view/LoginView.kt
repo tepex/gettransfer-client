@@ -8,5 +8,6 @@ interface LoginView: BaseView {
     }
 
     fun enableBtnLogin(enable: Boolean)
-    fun showError(show: Boolean)
+    fun showError(show: Boolean, message: String?)
+    fun showValidationError(show: Boolean, errorType: Int)
 }

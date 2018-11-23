@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
 
 import android.os.Bundle
@@ -13,8 +11,6 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
-
-import android.text.Html
 
 import android.view.MenuItem
 import android.view.View

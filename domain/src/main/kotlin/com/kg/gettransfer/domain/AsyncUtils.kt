@@ -1,5 +1,7 @@
 package com.kg.gettransfer.domain
 
+import com.kg.gettransfer.domain.model.Result
+
 import kotlinx.coroutines.*
 
 import java.io.IOException
@@ -51,7 +53,7 @@ class AsyncUtils(private val cc: CoroutineContexts, root: Job): CoroutineScope {
     fun <T> runAlien(task: TaskGeneric<T>) = launch {
         coroutineScope { async(context = cc.bg, block = task).await() }
     }
-    
+/*    
     @Synchronized
     fun launchAsyncTryCatch(tryBlock: Task, catchBlock: TaskThrowable) = launch { tryCatch(tryBlock, catchBlock) }
 
@@ -59,14 +61,15 @@ class AsyncUtils(private val cc: CoroutineContexts, root: Job): CoroutineScope {
     fun launchAsyncTryCatchFinally(tryBlock: Task,
                                    catchBlock: TaskThrowable,
                                    finallyBlock: Task) = launch { tryCatchFinally(tryBlock, catchBlock, finallyBlock) }
+*/
+    @Synchronized
+    suspend fun <T> asyncAwait(bl: TaskResult<T>): Result<T> = async(bl).await()
 
     @Synchronized
-    suspend fun <T> asyncAwait(bl: TaskGeneric<T>): T = coroutineScope { async(context = cc.bg, block = bl).await() }
-
-    @Synchronized
-    suspend fun <T> async(block: TaskGeneric<T>): Deferred<T> = coroutineScope { async(cc.bg) { block() } }
+    suspend fun <T> async(block: TaskResult<T>): Deferred<Result<T>> = coroutineScope { async(cc.bg) { block() } }
 }
 
 typealias Task = suspend CoroutineScope.() -> Unit
 typealias TaskThrowable = suspend CoroutineScope.(Throwable) -> Unit
 typealias TaskGeneric<T> = suspend CoroutineScope.() -> T
+typealias TaskResult<T> = suspend CoroutineScope.() -> Result<T>

@@ -1,8 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
-import android.content.Intent
-
 import android.os.Bundle
 
 import android.support.v7.widget.Toolbar
@@ -20,17 +17,13 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
-import com.kg.gettransfer.presentation.presenter.PaymentPresenter
 import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter
 
 import com.kg.gettransfer.presentation.view.PaymentSettingsView
 
 import kotlinx.android.synthetic.main.activity_payment_settings.*
-import kotlinx.android.synthetic.main.toolbar.view.*
 
 import kotlinx.serialization.json.JSON
-
-import java.util.Date
 
 class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     @InjectPresenter
@@ -57,7 +50,7 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     private fun setButton() {
         val image = ImageSpan(this, R.drawable.credit_card)
         val string = SpannableString(getString(R.string.LNG_PAYMENT_PAY))
-        var title = SpannableString("  $string")
+        val title = SpannableString("  $string")
         title.setSpan(image, 0, 1, 0)
         btnGetPayment.text = title
     }

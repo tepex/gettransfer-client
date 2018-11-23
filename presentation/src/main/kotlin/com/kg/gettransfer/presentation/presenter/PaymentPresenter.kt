@@ -4,27 +4,30 @@ import android.os.Bundle
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.google.firebase.analytics.FirebaseAnalytics.Event.ECOMMERCE_PURCHASE
-import com.google.firebase.analytics.FirebaseAnalytics.Param.TRANSACTION_ID
-import com.google.firebase.analytics.FirebaseAnalytics.Param.VALUE
-import com.google.firebase.analytics.FirebaseAnalytics.Param.CURRENCY
-
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
 
 import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter.Companion.PRICE_30
 
 import com.kg.gettransfer.presentation.view.PaymentView
 import com.kg.gettransfer.presentation.view.Screens
-
-import com.yandex.metrica.YandexMetrica
+import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.Analytics.Companion.CURRENCY
+import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_ECOMMERCE_PURCHASE
+import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_MAKE_PAYMENT
+import com.kg.gettransfer.utilities.Analytics.Companion.PROMOCODE
+import com.kg.gettransfer.utilities.Analytics.Companion.RESULT_FAIL
+import com.kg.gettransfer.utilities.Analytics.Companion.RESULT_SUCCESS
+import com.kg.gettransfer.utilities.Analytics.Companion.STATUS
+import com.kg.gettransfer.utilities.Analytics.Companion.TRANSACTION_ID
+import com.kg.gettransfer.utilities.Analytics.Companion.VALUE
 
 import org.koin.standalone.inject
 
@@ -34,6 +37,7 @@ import timber.log.Timber
 class PaymentPresenter: BasePresenter<PaymentView>() {
     private val paymentInteractor: PaymentInteractor by inject()
     private val offerInteractor: OfferInteractor by inject()
+    private val transferInteractor: TransferInteractor by inject()
 
     private lateinit var offer: Offer
     
@@ -56,9 +60,11 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
                     viewState.showSuccessfulMessage()
                     offer = offerInteractor.getOffer(offerId)!!
                     logEventEcommercePurchase()
+                    logEvent(RESULT_SUCCESS)
                 } else {
                     router.exit()
                     viewState.showErrorMessage()
+                    logEvent(RESULT_FAIL)
                 }
             }
             viewState.blockInterface(false)
@@ -70,6 +76,7 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
         val map = HashMap<String, Any>()
 
         map[CURRENCY] = systemInteractor.currency.currencyCode
+        bundle.putString(CURRENCY, systemInteractor.currency.currencyCode)
 
         var price = offer.price.amount
 
@@ -87,11 +94,18 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
 
         bundle.putString(TRANSACTION_ID, transferId.toString())
         map[TRANSACTION_ID] = transferId
+        bundle.putString(PROMOCODE, transferInteractor.transferNew.promoCode)
+        map[PROMOCODE] = transferInteractor.transferNew.promoCode
 
-        eventsLogger.logPurchase(price.toBigDecimal(), systemInteractor.currency, bundle)
-
-        bundle.putString(CURRENCY, systemInteractor.currency.currencyCode)
-        mFBA.logEvent(ECOMMERCE_PURCHASE, bundle)
-        YandexMetrica.reportEvent(ECOMMERCE_PURCHASE, map)
+        analytics.logEventEcommercePurchase(EVENT_ECOMMERCE_PURCHASE, bundle, map,
+                price.toBigDecimal(), systemInteractor.currency)
     }
+
+    fun logEvent(value: String) {
+        val map = HashMap<String, Any>()
+        map[STATUS] = value
+
+        analytics.logEvent(EVENT_MAKE_PAYMENT, createStringBundle(STATUS, value), map)
+    }
+
 }

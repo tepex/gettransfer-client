@@ -52,8 +52,8 @@ class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsVie
         btnCall.setOnClickListener { presenter.onCallClick() }
     }
 
-    protected suspend override fun customizeGoogleMaps() {
-        super.customizeGoogleMaps()
+    protected suspend override fun customizeGoogleMaps(gm: GoogleMap) {
+        super.customizeGoogleMaps(gm)
         // https://stackoverflow.com/questions/16974983/google-maps-api-v2-supportmapfragment-inside-scrollview-users-cannot-scroll-th
         transparentImage.setOnTouchListener(View.OnTouchListener { _, motionEvent ->
             when(motionEvent.action) {

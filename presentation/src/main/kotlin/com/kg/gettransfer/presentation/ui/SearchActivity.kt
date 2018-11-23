@@ -1,8 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
-import android.content.Intent
-
+import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
@@ -31,6 +29,7 @@ import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
 import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
+import com.kg.gettransfer.utilities.Analytics
 
 import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_search.*
@@ -95,13 +94,16 @@ class SearchActivity: BaseActivity(), SearchView {
     }
 
     private fun setupAnimation() {
-        val fade = Fade()
-        fade.duration = FADE_DURATION
-        window.enterTransition = fade
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            val fade = Fade()
+            fade.duration = FADE_DURATION
+            window.enterTransition = fade
 
-        val slide = Slide()
-        slide.duration = SLIDE_DURATION
-        window.returnTransition = slide
+
+            val slide = Slide()
+            slide.duration = SLIDE_DURATION
+            window.returnTransition = slide
+        }
     }
 
     private fun changeFocusForSearch() {

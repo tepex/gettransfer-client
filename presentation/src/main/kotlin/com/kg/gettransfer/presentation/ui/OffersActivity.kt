@@ -32,16 +32,15 @@ import com.kg.gettransfer.presentation.presenter.OffersPresenter
 import com.kg.gettransfer.presentation.view.OffersView
 
 import com.kg.gettransfer.service.OfferServiceConnection
+import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_DETAILS_RATING
 
 import kotlinx.android.synthetic.main.activity_offers.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
-import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
 
 import org.koin.android.ext.android.inject
-
-import timber.log.Timber
 
 class OffersActivity: BaseActivity(), OffersView {
     @InjectPresenter
@@ -214,6 +213,7 @@ class OffersActivity: BaseActivity(), OffersView {
 
         layoutSomeRatings.visibility = View.GONE
         layoutRatingAverage.setOnClickListener {
+            presenter.logEvent(OFFER_DETAILS_RATING)
             if(layoutSomeRatings.visibility == View.VISIBLE) {
                 layoutSomeRatings.visibility = View.GONE
                 ratingBarAverage.visibility = View.VISIBLE

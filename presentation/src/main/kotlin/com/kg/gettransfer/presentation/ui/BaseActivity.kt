@@ -12,7 +12,6 @@ import android.net.ConnectivityManager
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
 
-import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 
@@ -25,17 +24,13 @@ import com.arellomobile.mvp.MvpAppCompatActivity
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.AsyncUtils
-import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
-import com.kg.gettransfer.presentation.IntentKeys
 
 import com.kg.gettransfer.presentation.presenter.BasePresenter
-import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter
 
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
@@ -44,9 +39,6 @@ import com.kg.gettransfer.utilities.LocaleManager
 
 import kotlinx.android.synthetic.main.toolbar.view.*
 
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-
 import org.koin.android.ext.android.inject
 
 import ru.terrakok.cicerone.NavigatorHolder
@@ -54,7 +46,6 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 import timber.log.Timber
-import android.app.Activity
 
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     companion object {
@@ -84,7 +75,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         
         fun setNetworkAvailability(context: Context) {
             val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val available = cm.activeNetworkInfo?.let { it.isConnected() } ?: false
+            val available = cm.activeNetworkInfo?.let { it.isConnected } ?: false
             viewNetworkNotAvailable?.let { if(available) it.visibility = View.GONE else it.visibility = View.VISIBLE }
         }
     }

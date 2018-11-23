@@ -126,10 +126,11 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         return Result(account)
     }
 
-    override fun logout() {
+    override fun logout(): Result<Account> {
         account = Account.NO_ACCOUNT
         factory.retrieveCacheDataStore().clearAccount()
         preferencesCache.logout()
+        return Result(account)
     }
 
     override fun accessTokenChanged(accessToken: String) {

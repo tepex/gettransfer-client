@@ -249,4 +249,17 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btnSupport"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_activity_height_layouts"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="@dimen/settings_activity_button_support_start_end_margins"
+        android:layout_marginEnd="@dimen/settings_activity_button_support_start_end_margins"
+        android:layout_marginBottom="@dimen/settings_activity_button_support_bottom_margin"
+        android:background="@drawable/bg_rounded_2_yellow"
+        android:text="@string/LNG_CUSTOMER_SUPPORT"
+        android:textSize="@dimen/settings_activity_text_size"
+        android:fontFamily="@font/sf_pro_text_regular"/>
+
 </RelativeLayout>

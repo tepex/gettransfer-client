@@ -1,13 +1,9 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.res.Configuration
-
 import android.graphics.Bitmap
 import android.graphics.Canvas
 
-import android.os.Build
 import android.os.Bundle
-import android.os.LocaleList
 
 import android.support.annotation.CallSuper
 import android.support.v4.content.ContextCompat
@@ -32,7 +28,7 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 
-import kotlinx.android.synthetic.main.view_maps_pin.view.*
+import kotlinx.android.synthetic.main.view_maps_pin.view.* //don't delete
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -41,15 +37,13 @@ import org.koin.android.ext.android.get
 
 import timber.log.Timber
 
-//import java.util.*
-
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 abstract class BaseGoogleMapActivity: BaseActivity() {
     private lateinit var googleMapJob: Job
     protected lateinit var _mapView: MapView
-    protected lateinit var googleMap: GoogleMap
+    private lateinit var googleMap: GoogleMap
 
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
@@ -59,7 +53,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     }
 
     @CallSuper
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        val locale = systemInteractor.locale
 //        Log.i("findLocale", locale.language)
@@ -74,20 +68,20 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     }
 
     @CallSuper
-    protected override fun onStart() {
+    override fun onStart() {
         super.onStart()
         _mapView.onStart()
         initMap()
     }
 
     @CallSuper
-    protected override fun onResume() {
+    override fun onResume() {
         super.onResume()
         _mapView.onResume()
     }
 
     @CallSuper
-    protected override fun onPause() {
+    override fun onPause() {
         _mapView.onPause()
         super.onPause()
     }
@@ -95,13 +89,13 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     protected open fun initMap() {}
 
     @CallSuper
-    protected override fun onStop() {
+    override fun onStop() {
         _mapView.onStop()
         super.onStop()
     }
 
     @CallSuper
-    protected override fun onDestroy() {
+    override fun onDestroy() {
         _mapView.onDestroy()
         compositeDisposable.cancel()
         googleMapJob.cancel()
@@ -119,19 +113,20 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         _mapView.onCreate(mapViewBundle)
         googleMapJob = utils.launch {
             googleMap = suspendCoroutine { cont -> _mapView.getMapAsync { cont.resume(it) } }
-            customizeGoogleMaps()
+            customizeGoogleMaps(googleMap)
         }
     }
 
-    protected suspend open fun customizeGoogleMaps() {
-        googleMap.uiSettings.setRotateGesturesEnabled(false)
-        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
+    protected open suspend fun customizeGoogleMaps(gm: GoogleMap) {
+        gm.uiSettings.isRotateGesturesEnabled = false
+        gm.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
     }
     
-    protected fun processGoogleMap(block: () -> Unit) {
+    protected fun processGoogleMap(ignore: Boolean, block: (GoogleMap) -> Unit) {
+        if(!googleMapJob.isCompleted && ignore) return
         utils.launch {
             if(!googleMapJob.isCompleted) googleMapJob.join()
-            block()
+            block(googleMap)
         }
     }
     
@@ -150,7 +145,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
                 .position(polyline.finishPoint)
                 .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
 
-        processGoogleMap {
+        processGoogleMap(false) {
             if(polyline.line != null) {
                 polyline.line.width(10f).color(ContextCompat.getColor(this@BaseGoogleMapActivity, R.color.colorPolyline))
                 googleMap.addPolyline(polyline.line)

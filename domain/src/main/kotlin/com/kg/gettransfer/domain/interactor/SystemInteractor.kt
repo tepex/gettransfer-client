@@ -4,6 +4,7 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.SystemListener
 
 import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
@@ -19,14 +20,14 @@ import java.util.Locale
 class SystemInteractor(private val systemRepository: SystemRepository,
                        private val loggingRepository: LoggingRepository,
                        private val geoRepository: GeoRepository) {
+    companion object {
+        private val currenciesFilterList = arrayOf("₽", "฿", "$", "£", "¥", "€" )
+        private val localesFilterList = arrayOf("en", "ru")
+    }
 
     /* Cached properties */
 
     val endpoints      by lazy { systemRepository.endpoints }
-    val transportTypes by lazy { systemRepository.configs.transportTypes }
-    val locales        by lazy { systemRepository.configs.availableLocales }
-    val distanceUnits  by lazy { systemRepository.configs.supportedDistanceUnits }
-    val currencies     by lazy { systemRepository.configs.supportedCurrencies }
     val logsFile       by lazy { loggingRepository.file }
 
     /* Read only properties */
@@ -43,7 +44,19 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     val logs: String
         get() = loggingRepository.logs
 
-    /* Read-write properties */
+    val transportTypes: List<TransportType>
+        get() = systemRepository.configs.transportTypes
+
+    val locales: List<Locale>
+        get() = systemRepository.configs.availableLocales.filter { localesFilterList.contains(it.language) }
+
+    val distanceUnits: List<DistanceUnit>
+        get() = systemRepository.configs.supportedDistanceUnits
+
+    val currencies: List<Currency> /* Dirty hack. GAA-298 */
+        get() = systemRepository.configs.supportedCurrencies.filter { currenciesFilterList.contains(it.symbol) }
+
+    /* Read-write properties */    
     
     var lastMode: String
         get() = systemRepository.lastMode
@@ -76,19 +89,16 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         get() = account.distanceUnit
         set(value) { account.distanceUnit = value }
 
-    /** Init geo with account.locale if retrieved from remote */
-    suspend fun coldStart(): Result<Account> {
-        val ret = systemRepository.coldStart()
-        geoRepository.initGeocoder(ret.model.locale)
-        return ret
-    }
+    suspend fun coldStart() = systemRepository.coldStart()
+
+    fun initGeocoder() = geoRepository.initGeocoder(locale)
 
     fun logout() = systemRepository.logout()
     suspend fun login(email: String, password: String) = systemRepository.login(email, password)
     suspend fun putAccount() = systemRepository.putAccount(account)
-    
+
     fun clearLogs() = loggingRepository.clearLogs()
-    
+
     fun addListener(listener: SystemListener)    { systemRepository.addListener(listener) }
     fun removeListener(listener: SystemListener) { systemRepository.removeListener(listener) }
 }

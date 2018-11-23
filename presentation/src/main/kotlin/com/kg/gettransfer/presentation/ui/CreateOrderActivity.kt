@@ -2,9 +2,6 @@ package com.kg.gettransfer.presentation.ui
 
 import android.app.DatePickerDialog
 
-import android.content.Context
-import android.content.Intent
-
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 
@@ -23,15 +20,14 @@ import android.support.v7.widget.LinearLayoutManager
 import android.telephony.PhoneNumberFormattingTextWatcher
 
 import android.text.InputFilter
-import android.text.InputType
-import android.text.TextUtils
+import android.text.InputType //don't delete
+import android.text.TextUtils //don't delete
 
 import android.util.DisplayMetrics
-import android.util.Log
 
 import android.view.*
 import android.view.animation.AnimationUtils
-import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.EditorInfo //don't delete
 
 import android.widget.*
 
@@ -39,11 +35,13 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdate
-import com.google.android.gms.maps.model.MapStyleOptions
 
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.common.BoundTimePickerDialog
-import com.kg.gettransfer.domain.model.TransportType
+
+import com.kg.gettransfer.extensions.hideKeyboard //don't delete
+import com.kg.gettransfer.extensions.showKeyboard //don't delete
 
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 
@@ -56,18 +54,16 @@ import com.kg.gettransfer.presentation.model.UserModel
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.view.CreateOrderView
 
+import com.kg.gettransfer.utilities.Analytics.Companion.CAR_INFO_CLICKED
+import com.kg.gettransfer.utilities.Analytics.Companion.COMMENT_INPUT
+import com.kg.gettransfer.utilities.Analytics.Companion.DATE_TIME_CHANGED
+import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_PRICE_FOCUSED
+
 import kotlinx.android.synthetic.main.activity_create_order.*
-//import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
+import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
-import kotlinx.android.synthetic.main.layout_popup_comment.view.*
-
-import kotlinx.android.synthetic.main.amu_info_window.view.*
-
-import com.kg.gettransfer.extensions.hideKeyboard
-import com.kg.gettransfer.extensions.showKeyboard
-
-import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
+import kotlinx.android.synthetic.main.layout_popup_comment.view.* //don't delete
 import kotlinx.android.synthetic.main.view_create_order_field.view.*
 import kotlinx.android.synthetic.main.view_seats.view.*
 
@@ -164,11 +160,13 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         }
     }
 
-    protected suspend override fun customizeGoogleMaps() {
-        super.customizeGoogleMaps()
-        googleMap.uiSettings.setRotateGesturesEnabled(false)
-        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
+    /*
+    protected suspend override fun customizeGoogleMaps(gm: GoogleMap) {
+        super.customizeGoogleMaps(gm)
+        gm.uiSettings.setRotateGesturesEnabled(false)
+        gm.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
     }
+    */
 
     protected override fun initMap() {
         super.initMap()
@@ -195,7 +193,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
             isOutsideTouchable = true
             setOnDismissListener {
                 layoutPopupView.etPopupComment.hideKeyboard()
-//            toggleSheetOrder()
                 layoutPopupView.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.hide_popup))
                 btnGetOffers.requestFocus()
                 clearDim(window.decorView.rootView as  ViewGroup)
@@ -284,7 +281,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
 
     private fun checkMinusButton(count: Int, minimum: Int, view: ImageView) {
         val imgRes = if (count == minimum) R.drawable.ic_circle_minus else R.drawable.ic_minus_enabled
-        view.setImageDrawable(getDrawable(imgRes))
+        view.setImageDrawable(ContextCompat.getDrawable(this, imgRes))
     }
 
     override fun setPassengers(count: Int) {
@@ -357,7 +354,6 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     override fun showEmptyFieldError(invalidField: String) {
         val message = when(invalidField) {
             CreateOrderPresenter.EMAIL_FIELD          -> getString(R.string.LNG_ERROR_EMAIL)
-            CreateOrderPresenter.NAME_FIELD           -> getString(R.string.LNG_RIDE_NAME)
             CreateOrderPresenter.PHONE_FIELD          -> getString(R.string.LNG_RIDE_PHONE)
             CreateOrderPresenter.TRANSPORT_FIELD      -> getString(R.string.LNG_RIDE_CHOOSE_TRANSPORT)
             CreateOrderPresenter.TERMS_ACCEPTED_FIELD -> getString(R.string.LNG_RIDE_OFFERT_ERROR)
@@ -370,7 +366,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         sheetTransport.visibility = View.VISIBLE
         bsTransport.state = BottomSheetBehavior.STATE_EXPANDED
         showTransportInfo(transportType)
-        presenter.logEventMain(CreateOrderPresenter.CAR_INFO_CLICKED)
+        presenter.logEventMain(CAR_INFO_CLICKED)
     }
 
     private fun showTransportInfo(transportType: TransportTypeModel) {
@@ -387,7 +383,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         when {
             isKeyBoardOpened                                        -> hideKeyboard()
             bsTransport.state == BottomSheetBehavior.STATE_EXPANDED -> hideSheetTransport()
-            bsOrder.state == BottomSheetBehavior.STATE_EXPANDED     -> toggleSheetOrder()
+            bsOrder.state     == BottomSheetBehavior.STATE_EXPANDED -> toggleSheetOrder()
             else                                                    -> super.onBackPressed()
         }
     }
@@ -405,55 +401,26 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun initFieldsViews() {
 
         /* icons */
-        transfer_date_time_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_calendar_triangle))
-        user_name_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_passport))
-        email_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_mail))
-        phone_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_phone))
-        flight_number_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_flight))
-        promo_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.sale_icon))
-        comment_field.field_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_comment))
 
         passengers_seats.seat_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_passenger_small))
         child_seats.seat_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_child_seat))
 
         /* titles */
-        price_field_title.text = getString(R.string.LNG_RIDE_PRICE)
-        transfer_date_time_field.field_title.text = getString(R.string.LNG_RIDE_DATE)
-        user_name_field.field_title.text = getString(R.string.LNG_RIDE_NAME_PLACEHOLDER)
-        email_field.field_title.text = getString(R.string.LNG_RIDE_EMAIL_PLACEHOLDER)
-        phone_field.field_title.text = getString(R.string.LNG_RIDE_PHONE_PLACEHOLDER)
-        flight_number_field.field_title.text = getString(R.string.LNG_RIDE_FLIGHT_PLACEHOLDER)
-        promo_field.field_title.text = getString(R.string.LNG_RIDE_PROMOCODE_PLACEHOLDER)
-        comment_field.field_title.text = getString(R.string.LNG_RIDE_COMMENT)
         passengers_seats.seat_title.text = getString(R.string.LNG_RIDE_PASSENGERS)
         child_seats.seat_title.text = getString(R.string.LNG_RIDE_CHILDREN)
 
         /* editable fields */
-        price_field_input.hint = getString(R.string.LNG_RIDE_PRICE_YOUR)
-        price_field_input.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
-        //transfer_date_time_field.field_input.hint = getString(R.string)
-        transfer_date_time_field.field_input.isFocusable = false
-        transfer_date_time_field.field_input.inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-        user_name_field.field_input.hint = getString(R.string.LNG_RIDE_NAME)
-        email_field.field_input.hint = getString(R.string.LNG_RIDE_EMAIL)
-        phone_field.field_input.hint = getString(R.string.LNG_RIDE_PHONE)
-        phone_field.field_input.inputType = InputType.TYPE_CLASS_PHONE
-        flight_number_field.field_input.hint = getString(R.string.LNG_RIDE_FLIGHT)
-        promo_field.field_input.hint = getString(R.string.LNG_RIDE_PROMOCODE)
-        comment_field.field_input.hint = getString(R.string.LNG_COMMENT_PLACEHOLDER)
+
         comment_field.field_input.setSingleLine(false)
-
         passengers_seats.person_count.text = getString(R.string.passenger_number_default)
-        child_seats.person_count.text = getString(R.string.child_number_default)
+        child_seats.person_count.text      = getString(R.string.child_number_default)
 
-        comment_field.field_input.isFocusable = false
-        comment_field.field_input.setOnClickListener { showPopupWindowComment() }
     }
 
     private fun initChangeTextListeners() {
         price_field_input.onTextChanged             { presenter.cost = it.toDoubleOrNull() }
         price_field_input.setOnFocusChangeListener  { _, hasFocus ->
-            if(hasFocus) presenter.logTransferSettingsEvent(CreateOrderPresenter.OFFER_PRICE_FOCUSED)
+            if(hasFocus) presenter.logTransferSettingsEvent(OFFER_PRICE_FOCUSED)
         }
         user_name_field.field_input.onTextChanged        { presenter.setName(it.trim()) }
         email_field.field_input.onTextChanged            { presenter.setEmail(it.trim()) }
@@ -472,7 +439,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun initClickListeners() {
         val dateTimeFieldClickListener = View.OnClickListener {
             showDatePickerDialog()
-            presenter.logTransferSettingsEvent(CreateOrderPresenter.DATE_TIME_CHANGED)
+            presenter.logTransferSettingsEvent(DATE_TIME_CHANGED)
         }
         transfer_date_time_field.setOnClickListener(dateTimeFieldClickListener)
         transfer_date_time_field.field_input.setOnClickListener(dateTimeFieldClickListener)
@@ -482,15 +449,15 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         child_seats.img_plus_seat.setOnClickListener        { presenter.changeChildren(1) }
 
         cl_offer_price.setOnClickListener                   { fieldTouched(price_field_input)  }
-        //transfer_date_time_field.setOnClickListener         {  fieldTouched(transfer_date_time_field.field_input)  }
         user_name_field.setOnClickListener                  { fieldTouched(user_name_field.field_input) }
         email_field.setOnClickListener                      { fieldTouched(email_field.field_input) }
         phone_field.setOnClickListener                      { fieldTouched(phone_field.field_input)}
         flight_number_field.setOnClickListener              { fieldTouched(flight_number_field.field_input) }
         promo_field.setOnClickListener                      { fieldTouched(promo_field.field_input) }
         comment_field.setOnClickListener                    { showPopupWindowComment()
-            presenter.logTransferSettingsEvent(CreateOrderPresenter.COMMENT_INPUT)
+            presenter.logTransferSettingsEvent(COMMENT_INPUT)
         }
+        comment_field.field_input.setOnClickListener        { showPopupWindowComment() }
 
         tvAgreement1.setOnClickListener                     { presenter.showLicenceAgreement() }
         switchAgreement.setOnCheckedChangeListener          { _, isChecked -> presenter.setAgreeLicence(isChecked) }

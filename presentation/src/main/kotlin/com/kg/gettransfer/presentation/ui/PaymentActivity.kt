@@ -2,16 +2,10 @@ package com.kg.gettransfer.presentation.ui
 
 import android.annotation.TargetApi
 
-import android.content.Context
-import android.content.Intent
-
 import android.net.Uri
 
 import android.os.Build
 import android.os.Bundle
-
-import android.support.annotation.CallSuper
-import android.support.annotation.RequiresApi
 
 import android.support.v7.widget.Toolbar
 
@@ -19,22 +13,16 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 
-import android.widget.Toast
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.presentation.presenter.PaymentPresenter
-import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter
 
 import com.kg.gettransfer.presentation.view.PaymentView
 
 import kotlinx.android.synthetic.main.activity_payment.*
-import kotlinx.android.synthetic.main.toolbar.view.*
-
-import timber.log.Timber
 
 class PaymentActivity: BaseActivity(), PaymentView {
     companion object {

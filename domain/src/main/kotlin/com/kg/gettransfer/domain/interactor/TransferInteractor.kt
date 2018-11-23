@@ -8,13 +8,17 @@ import com.kg.gettransfer.domain.repository.TransferRepository
 
 class TransferInteractor(private val repository: TransferRepository) {
     private var transfer: Transfer? = null
-    
+    lateinit var transferNew: TransferNew
+
     private var allTransfers: List<Transfer>? = null
     private var activeTransfers: List<Transfer>? = null
     private var completedTransfers: List<Transfer>? = null
     private var archivedTransfers: List<Transfer>? = null
     
-    suspend fun createTransfer(transferNew: TransferNew) = repository.createTransfer(transferNew)
+    suspend fun createTransfer(transferNew: TransferNew): Result<Transfer> {
+        this.transferNew = transferNew
+        return repository.createTransfer(transferNew)
+    }
     suspend fun getTransfer(id: Long) = repository.getTransfer(id).apply { if(!isError()) transfer = model }
     
     suspend fun cancelTransfer(id: Long, reason: String) = repository.cancelTransfer(id, reason)

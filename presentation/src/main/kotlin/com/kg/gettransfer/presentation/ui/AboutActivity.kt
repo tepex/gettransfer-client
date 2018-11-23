@@ -45,14 +45,14 @@ class AboutActivity: MvpAppCompatActivity(), AboutView {
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 		
         val adapter = AboutAdapter()
-        viewpager.setAdapter(adapter)
-        viewpager.setOffscreenPageLimit(adapter.count - 1)
+        viewpager.adapter = adapter
+        viewpager.offscreenPageLimit = adapter.count - 1
         indicator.setViewPager(viewpager)
     }
     
     override fun onBackPressed() {
-        if(viewpager.getCurrentItem() == 0) presenter.onBackCommandClick()
-        else viewpager.setCurrentItem(viewpager.currentItem - 1)
+        if(viewpager.currentItem == 0) presenter.onBackCommandClick()
+        else viewpager.currentItem = viewpager.currentItem - 1
     }
 
     inner class AboutAdapter: PagerAdapter() {

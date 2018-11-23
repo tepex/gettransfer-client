@@ -1,14 +1,8 @@
 package com.kg.gettransfer.di
 
-import android.content.Context
-import android.content.SharedPreferences
-
-import android.preference.PreferenceManager
 import com.facebook.appevents.AppEventsLogger
 
 import com.google.firebase.analytics.FirebaseAnalytics
-
-import com.google.gson.Gson
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
@@ -16,20 +10,8 @@ import com.kg.gettransfer.utilities.LocaleManager
 
 import com.kg.gettransfer.logging.LoggingRepositoryImpl
 
-import com.kg.gettransfer.data.CarrierTripDataStore
-import com.kg.gettransfer.data.OfferDataStore
-import com.kg.gettransfer.data.PaymentDataStore
-import com.kg.gettransfer.data.PromoDataStore
 import com.kg.gettransfer.data.PreferencesCache
-import com.kg.gettransfer.data.RouteDataStore
-import com.kg.gettransfer.data.SystemCache
-import com.kg.gettransfer.data.SystemDataStore
-import com.kg.gettransfer.data.TransferDataStore
-
-import com.kg.gettransfer.data.ds.*
-import com.kg.gettransfer.data.mapper.*
 import com.kg.gettransfer.data.model.EndpointEntity
-import com.kg.gettransfer.data.repository.*
 
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.*
@@ -40,19 +22,17 @@ import com.kg.gettransfer.geo.GeoRepositoryImpl
 import com.kg.gettransfer.prefs.PreferencesImpl
 
 import com.kg.gettransfer.service.OfferServiceConnection
+import com.kg.gettransfer.utilities.Analytics
 
 import kotlinx.coroutines.Dispatchers
 
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 
-import org.koin.dsl.module.applicationContext
 import org.koin.dsl.module.module
 
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Router
-
-import timber.log.Timber
 
 /**
  * Koin main module
@@ -98,6 +78,7 @@ val androidModule = module {
 	single { FirebaseAnalytics.getInstance(androidApplication().applicationContext) }
 	single { LocaleManager() }
 	single { AppEventsLogger.newLogger(androidApplication().applicationContext) }
+    single { Analytics(get(), get()) }
 }
 
 val testModule = module {
