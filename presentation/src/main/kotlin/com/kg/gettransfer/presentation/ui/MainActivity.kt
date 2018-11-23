@@ -138,13 +138,13 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
         val fade = Fade()
         fade.duration = FADE_DURATION
-        window.setExitTransition(fade)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) window.exitTransition = fade
     }
 
     @CallSuper
     protected override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        search.elevation = resources.getDimension(R.dimen.search_elevation)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) search.elevation = resources.getDimension(R.dimen.search_elevation)
         searchFrom.setUneditable()
         searchTo.setUneditable()
         searchFrom.setOnClickListener { performClick(false) }
@@ -291,7 +291,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         var iconRes: Int
         if(address.isNotEmpty()) iconRes = R.drawable.a_point_filled
         else iconRes = R.drawable.a_point_empty
-        icons_container.a_point.setImageDrawable(getDrawable(iconRes))
+        icons_container.a_point.setImageDrawable(ContextCompat.getDrawable(this, iconRes))
     }
 
     override fun setAddressTo(address: String)   {
@@ -300,7 +300,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         var iconRes: Int
         if(address.isNotEmpty()) iconRes = R.drawable.b_point_filled
         else iconRes = R.drawable.b_point_empty
-        icons_container.b_point.setImageDrawable(getDrawable(iconRes))
+        icons_container.b_point.setImageDrawable(ContextCompat.getDrawable(this, iconRes))
     }
 
     private fun enableBtnNext() {
