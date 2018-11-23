@@ -32,6 +32,8 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics.Companion.BACK_CLICKED
 import com.kg.gettransfer.utilities.Analytics.Companion.CHILDREN_ADDED
 import com.kg.gettransfer.utilities.Analytics.Companion.CURRENCY
+import com.kg.gettransfer.utilities.Analytics.Companion.DESTINATION
+import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_ADD_TO_CART
 import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_MAIN
 import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_SETTINGS
 import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_TRANSFER
@@ -42,12 +44,15 @@ import com.kg.gettransfer.utilities.Analytics.Companion.INVALID_NAME
 import com.kg.gettransfer.utilities.Analytics.Companion.INVALID_PHONE
 import com.kg.gettransfer.utilities.Analytics.Companion.LICENSE_NOT_ACCEPTED
 import com.kg.gettransfer.utilities.Analytics.Companion.NO_TRANSPORT_TYPE
+import com.kg.gettransfer.utilities.Analytics.Companion.NUMBER_OF_PASSENGERS
+import com.kg.gettransfer.utilities.Analytics.Companion.ORIGIN
 import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_FIELD
 import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_NAME
 import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_RESULT
 import com.kg.gettransfer.utilities.Analytics.Companion.PASSENGERS_ADDED
 import com.kg.gettransfer.utilities.Analytics.Companion.RESULT_SUCCESS
 import com.kg.gettransfer.utilities.Analytics.Companion.SHOW_ROUTE_CLICKED
+import com.kg.gettransfer.utilities.Analytics.Companion.TRAVEL_CLASS
 import com.kg.gettransfer.utilities.Analytics.Companion.VALUE
 
 import java.text.Format
@@ -78,8 +83,8 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     private var polyline: PolylineModel? = null
     private var track: CameraUpdate? = null
     private var promoCode: String = ""
-    private var selectedCurrency: Int = null
-    
+    private var selectedCurrency: Int = -2
+
     internal var cost: Double? = null
 
     private var isAfter4Hours = true
@@ -388,18 +393,35 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
 
     private fun logCreateTransfer(value: String) {
         val bundle = Bundle()
-        val map = HashMap<String, Any>()
+        val map = HashMap<String, Any?>()
 
         map[PARAM_KEY_RESULT] = value
         bundle.putString(PARAM_KEY_RESULT, value)
 
         if (cost != null) {
             bundle.putString(VALUE, cost.toString())
-            bundle.putString(CURRENCY, currencies[selectedCurrency].name)
-
             map[VALUE] = cost.toString()
+
+            bundle.putString(CURRENCY, currencies[selectedCurrency].name)
             map[CURRENCY] = currencies[selectedCurrency].name
         }
         analytics.logEvent(EVENT_TRANSFER, bundle, map)
+
+        logEventAddToCart(bundle, map)
+    }
+
+    private fun logEventAddToCart(bundle: Bundle, map: HashMap<String, Any?>) {
+        bundle.putInt(NUMBER_OF_PASSENGERS, passengers)
+        map[NUMBER_OF_PASSENGERS] = passengers
+
+        bundle.putString(ORIGIN, routeInteractor.from?.primary)
+        map[ORIGIN] = routeInteractor.from?.primary
+        bundle.putString(DESTINATION, routeInteractor.to?.primary)
+        map[DESTINATION] = routeInteractor.to?.primary
+
+        bundle.putString(TRAVEL_CLASS, transportTypes?.filter { it.checked }?.joinToString())
+        map[TRAVEL_CLASS] = transportTypes?.filter { it.checked }?.joinToString()
+
+        analytics.logEvent(EVENT_ADD_TO_CART, bundle, map)
     }
 }

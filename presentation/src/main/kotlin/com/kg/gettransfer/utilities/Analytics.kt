@@ -120,7 +120,7 @@ class Analytics(private val firebase: FirebaseAnalytics,
         @JvmField val RESULT_FAIL      = "fail"
     }
 
-    fun logEvent(event: String, bundle: Bundle, map: Map<String, Any>) {
+    fun logEvent(event: String, bundle: Bundle, map: Map<String, Any?>) {
         logEventToFirebase(event, bundle)
         logEventToFacebook(event, bundle)
         logEventToYandex(event, map)
@@ -134,7 +134,7 @@ class Analytics(private val firebase: FirebaseAnalytics,
         facebook.logEvent(event, data)
     }
 
-    private fun logEventToYandex(event: String, data: Map<String, Any>) {
+    private fun logEventToYandex(event: String, data: Map<String, Any?>) {
         YandexMetrica.reportEvent(event, data)
     }
 
