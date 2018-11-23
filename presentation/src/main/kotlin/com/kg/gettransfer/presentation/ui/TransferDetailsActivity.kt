@@ -24,6 +24,8 @@ import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
 import com.kg.gettransfer.presentation.view.TransferDetailsView
+import com.kg.gettransfer.utilities.Analytics.Companion.TRAVEL_CLASS
+import com.kg.gettransfer.utilities.Analytics.Companion.VALUE
 
 import kotlinx.android.synthetic.main.activity_transfer_details.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.view.*
@@ -114,6 +116,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
             viewTransportType.tvCountPersons.text = Utils.formatPersons(this, it.paxMax)
             viewTransportType.tvCountBaggage.text = Utils.formatLuggage(this, it.luggageMax)
             layoutTransportTypesList.addView(viewTransportType)
+            presenter.logEventGetOffer(TRAVEL_CLASS, viewTransportType.tvNameTransportType.text.toString())
         }
 
         if(transferModel.price != null) {
@@ -122,6 +125,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
                                              transferModel.paidPercentage)
             paymentInfoPay.text = transferModel.remainToPay
             paymentInfoSum.text = transferModel.price
+            presenter.logEventGetOffer(VALUE, transferModel.price)
             layoutPaymentInfo.visibility = View.VISIBLE
         }
     }

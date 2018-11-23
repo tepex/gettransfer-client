@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.os.Bundle
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
@@ -15,6 +16,9 @@ import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.TransferDetailsView
+import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_GET_OFFER
+import com.kg.gettransfer.utilities.Analytics.Companion.TRAVEL_CLASS
+import com.kg.gettransfer.utilities.Analytics.Companion.VALUE
 
 import org.koin.standalone.inject
 
@@ -68,4 +72,10 @@ class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
             viewState.blockInterface(false)
         }
 	}
+
+    fun logEventGetOffer(key: String, value: String) {
+        val map = HashMap<String, Any?>()
+        map[key] = value
+        analytics.logEvent(EVENT_GET_OFFER, createStringBundle(key, value), map)
+    }
 }
