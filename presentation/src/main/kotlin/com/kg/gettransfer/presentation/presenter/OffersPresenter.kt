@@ -87,9 +87,12 @@ class OffersPresenter: BasePresenter<OffersView>() {
                 viewState.setTransfer(transferModel)
 
                 val r = utils.asyncAwait{ offerInteractor.getOffers(result.model.id) }
-                if(r.error == null) offers = r.model.map { Mappers.getOfferModel(it, systemInteractor.locale) }
-                //changeSortType(SORT_PRICE)
-                setOffers()
+                if(r.error == null) {
+                    offers = r.model.map { Mappers.getOfferModel(it, systemInteractor.locale) }
+                    //changeSortType(SORT_PRICE)
+                    setOffers()
+                }
+                else { Timber.e(r.error) }
             }
             viewState.blockInterface(false)
         }
