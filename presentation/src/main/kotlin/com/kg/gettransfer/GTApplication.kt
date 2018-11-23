@@ -52,7 +52,10 @@ class GTApplication: MultiDexApplication() {
 
         startService(Intent(this, SocketIOService::class.java))
         setupAppMetrica()
+        setUpLeakCanary()
+    }
 
+    private fun setUpLeakCanary() {
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return
         }
