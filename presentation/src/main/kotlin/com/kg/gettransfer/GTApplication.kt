@@ -13,6 +13,7 @@ import com.kg.gettransfer.remote.remoteModule
 import com.kg.gettransfer.presentation.FileLoggingTree
 
 import com.kg.gettransfer.service.SocketIOService
+
 import com.squareup.leakcanary.LeakCanary
 
 import com.yandex.metrica.YandexMetrica
@@ -56,10 +57,7 @@ class GTApplication: MultiDexApplication() {
     }
 
     private fun setUpLeakCanary() {
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return
-        }
-        LeakCanary.install(this)
+        if(!LeakCanary.isInAnalyzerProcess(this)) LeakCanary.install(this)
     }
 
     private fun setupAppMetrica() {
