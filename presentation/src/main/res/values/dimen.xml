@@ -385,4 +385,7 @@
 	<dimen name="rating_bar_stars_height_width">12dp</dimen>
 	<dimen name="rating_bar_stars_padding">2dp</dimen>
 
+	<!--drawable values-->
+	<dimen name="panels_corner_radius">10dp</dimen>
+
 </resources>
