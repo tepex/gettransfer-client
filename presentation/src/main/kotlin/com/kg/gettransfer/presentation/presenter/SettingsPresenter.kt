@@ -38,7 +38,7 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
     @CallSuper
     override fun attachView(view: SettingsView) {
         super.attachView(view)
-        if(restart) initConfifs()
+        if(restart) initConfigs()
 
         viewState.setCurrencies(currencies)
         viewState.setLocales(locales)

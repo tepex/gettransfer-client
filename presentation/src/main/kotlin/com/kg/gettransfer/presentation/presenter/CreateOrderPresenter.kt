@@ -30,31 +30,7 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.Screens
 
-import com.kg.gettransfer.utilities.Analytics.Companion.BACK_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.CHILDREN_ADDED
-import com.kg.gettransfer.utilities.Analytics.Companion.CURRENCY
-import com.kg.gettransfer.utilities.Analytics.Companion.DESTINATION
-import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_ADD_TO_CART
-import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_MAIN
-import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_SETTINGS
-import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_TRANSFER
-import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_TRANSFER_SETTINGS
-import com.kg.gettransfer.utilities.Analytics.Companion.FLIGHT_NUMBER_ADDED
-import com.kg.gettransfer.utilities.Analytics.Companion.INVALID_EMAIL
-import com.kg.gettransfer.utilities.Analytics.Companion.INVALID_NAME
-import com.kg.gettransfer.utilities.Analytics.Companion.INVALID_PHONE
-import com.kg.gettransfer.utilities.Analytics.Companion.LICENSE_NOT_ACCEPTED
-import com.kg.gettransfer.utilities.Analytics.Companion.NO_TRANSPORT_TYPE
-import com.kg.gettransfer.utilities.Analytics.Companion.NUMBER_OF_PASSENGERS
-import com.kg.gettransfer.utilities.Analytics.Companion.ORIGIN
-import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_FIELD
-import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_NAME
-import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_RESULT
-import com.kg.gettransfer.utilities.Analytics.Companion.PASSENGERS_ADDED
-import com.kg.gettransfer.utilities.Analytics.Companion.RESULT_SUCCESS
-import com.kg.gettransfer.utilities.Analytics.Companion.SHOW_ROUTE_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.TRAVEL_CLASS
-import com.kg.gettransfer.utilities.Analytics.Companion.VALUE
+import com.kg.gettransfer.utilities.Analytics
 
 import java.text.Format
 import java.text.SimpleDateFormat
@@ -107,6 +83,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         @JvmField val FUTURE_MINUTE     = 5
 
         const val EMAIL_FIELD           = "email"
+        const val NAME_FIELD            = "name"
         const val PHONE_FIELD           = "phone"
         const val TRANSPORT_FIELD       = "transport"
         const val TERMS_ACCEPTED_FIELD  = "terms_accepted"
@@ -117,7 +94,6 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         @JvmField val NO_PHONE = "invalid_phone"
         @JvmField val NO_NAME  = "invalid_name"
         @JvmField val NO_LICENSE_ACCEPTED = "license_not_accepted"
-        @JvmField val SERVER_ERROR = "server_error"
     }
     
     override fun onFirstViewAttach() {
@@ -207,7 +183,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         passengers += count
         if(passengers < MIN_PASSENGERS) passengers = MIN_PASSENGERS
         viewState.setPassengers(passengers)
-        logTransferSettingsEvent(PASSENGERS_ADDED)
+        logTransferSettingsEvent(Analytics.PASSENGERS_ADDED)
     }
     
     fun setName(name: String) {
@@ -229,12 +205,12 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         children += count
         if(children < MIN_CHILDREN) children = MIN_CHILDREN
         viewState.setChildren(children)
-        logTransferSettingsEvent(CHILDREN_ADDED)
+        logTransferSettingsEvent(Analytics.CHILDREN_ADDED)
     }
     
     fun setFlightNumber(flightNumber: String) {
         if(flightNumber.isEmpty()) this.flightNumber = null else this.flightNumber = flightNumber
-        logTransferSettingsEvent(FLIGHT_NUMBER_ADDED)
+        logTransferSettingsEvent(Analytics.FLIGHT_NUMBER_ADDED)
     }
 
     fun setPromo(codeText: String) {
@@ -243,10 +219,10 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     }
 
     fun checkPromoCode() {
-        if(promoCode.isNullOrEmpty()) return
+        if(promoCode.isEmpty()) return
         utils.launchSuspend {
             viewState.blockInterface(true)
-            val result = utils.asyncAwait { promoInteractor.getDiscountByPromo(promoCode!!) }
+            val result = utils.asyncAwait { promoInteractor.getDiscountByPromo(promoCode) }
             if(result.error == null) viewState.setPromoResult(result.model.discount)
             else viewState.setPromoResult(null)
             viewState.blockInterface(false)
@@ -303,14 +279,14 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
                                                                          false))
             }
             if(result.error != null) {
-                logCreateTransfer(SERVER_ERROR)
+                logCreateTransfer(Analytics.SERVER_ERROR)
                 when {
                     result.error!!.details == "{phone=[taken]}" -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
                     else -> viewState.setError(result.error!!)
                 }
             }
             else {
-                logCreateTransfer(RESULT_SUCCESS)
+                logCreateTransfer(Analytics.RESULT_SUCCESS)
                 router.navigateTo(Screens.Offers(result.model.id))
             }
             viewState.blockInterface(false)
@@ -321,20 +297,20 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         var errorFiled: String
         if (!Utils.checkEmail(user.profile.email)) {
             errorFiled = EMAIL_FIELD
-            logCreateTransfer(INVALID_EMAIL)
+            logCreateTransfer(Analytics.INVALID_EMAIL)
         } else if (user.profile.name.isNullOrBlank()) {
             errorFiled = NAME_FIELD
-            logCreateTransfer(INVALID_NAME)
+            logCreateTransfer(Analytics.INVALID_NAME)
         } else if (!Utils.checkPhone(user.profile.phone!!)) {
             errorFiled = PHONE_FIELD
-            logCreateTransfer(INVALID_PHONE)
+            logCreateTransfer(Analytics.INVALID_PHONE)
         } else if (transportTypes != null &&
                 !transportTypes!!.any { it.checked }) {
             errorFiled = TRANSPORT_FIELD
-            logCreateTransfer(NO_TRANSPORT_TYPE)
+            logCreateTransfer(Analytics.NO_TRANSPORT_TYPE)
         } else if (!user.termsAccepted) {
             errorFiled = TERMS_ACCEPTED_FIELD
-            logCreateTransfer(LICENSE_NOT_ACCEPTED)
+            logCreateTransfer(Analytics.LICENSE_NOT_ACCEPTED)
         } else return true
         viewState.showEmptyFieldError(errorFiled)
         return false
@@ -364,66 +340,66 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
 
     fun onCenterRouteClick() {
         viewState.centerRoute(track!!)
-        logEventMain(SHOW_ROUTE_CLICKED)
+        logEventMain(Analytics.SHOW_ROUTE_CLICKED)
     }
 
     fun onBackClick() {
         router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
-        logEventMain(BACK_CLICKED)
+        logEventMain(Analytics.BACK_CLICKED)
     }
 
     override fun onBackCommandClick() {
         router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
-        logEventMain(BACK_CLICKED)
+        logEventMain(Analytics.BACK_CLICKED)
     }
 
     fun redirectToLogin(id: Long) = router.navigateTo(Screens.LoginToGetOffers(id, user.profile.email))
 
     fun logEventMain(value: String) {
-        val map = HashMap<String, Any>()
-        map[PARAM_KEY_NAME] = value
+        val map = mutableMapOf<String, Any>()
+        map[Analytics.PARAM_KEY_NAME] = value
 
-        analytics.logEvent(EVENT_MAIN, createStringBundle(PARAM_KEY_NAME, value), map)
+        analytics.logEvent(Analytics.EVENT_MAIN, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
     }
 
     fun logTransferSettingsEvent(value: String) {
-        val map = HashMap<String, Any>()
-        map[PARAM_KEY_FIELD] = value
+        val map = mutableMapOf<String, Any>()
+        map[Analytics.PARAM_KEY_FIELD] = value
 
-        analytics.logEvent(EVENT_TRANSFER_SETTINGS, createStringBundle(PARAM_KEY_FIELD, value), map)
+        analytics.logEvent(Analytics.EVENT_TRANSFER_SETTINGS, createStringBundle(Analytics.PARAM_KEY_FIELD, value), map)
     }
 
     private fun logCreateTransfer(value: String) {
         val bundle = Bundle()
-        val map = HashMap<String, Any?>()
+        val map = mutableMapOf<String, Any?>()
 
-        map[PARAM_KEY_RESULT] = value
-        bundle.putString(PARAM_KEY_RESULT, value)
+        map[Analytics.PARAM_KEY_RESULT] = value
+        bundle.putString(Analytics.PARAM_KEY_RESULT, value)
 
         if (cost != null) {
-            bundle.putString(VALUE, cost.toString())
-            map[VALUE] = cost.toString()
+            bundle.putString(Analytics.VALUE, cost.toString())
+            map[Analytics.VALUE] = cost.toString()
 
-            bundle.putString(CURRENCY, currencies[selectedCurrency].name)
-            map[CURRENCY] = currencies[selectedCurrency].name
+            bundle.putString(Analytics.CURRENCY, currencies[selectedCurrency].name)
+            map[Analytics.CURRENCY] = currencies[selectedCurrency].name
         }
-        analytics.logEvent(EVENT_TRANSFER, bundle, map)
+        analytics.logEvent(Analytics.EVENT_TRANSFER, bundle, map)
 
         logEventAddToCart(bundle, map)
     }
 
-    private fun logEventAddToCart(bundle: Bundle, map: HashMap<String, Any?>) {
-        bundle.putInt(NUMBER_OF_PASSENGERS, passengers)
-        map[NUMBER_OF_PASSENGERS] = passengers
+    private fun logEventAddToCart(bundle: Bundle, map: MutableMap<String, Any?>) {
+        bundle.putInt(Analytics.NUMBER_OF_PASSENGERS, passengers)
+        map[Analytics.NUMBER_OF_PASSENGERS] = passengers
 
-        bundle.putString(ORIGIN, routeInteractor.from?.primary)
-        map[ORIGIN] = routeInteractor.from?.primary
-        bundle.putString(DESTINATION, routeInteractor.to?.primary)
-        map[DESTINATION] = routeInteractor.to?.primary
+        bundle.putString(Analytics.ORIGIN, routeInteractor.from?.primary)
+        map[Analytics.ORIGIN] = routeInteractor.from?.primary
+        bundle.putString(Analytics.DESTINATION, routeInteractor.to?.primary)
+        map[Analytics.DESTINATION] = routeInteractor.to?.primary
 
-        bundle.putString(TRAVEL_CLASS, transportTypes?.filter { it.checked }?.joinToString())
-        map[TRAVEL_CLASS] = transportTypes?.filter { it.checked }?.joinToString()
+        bundle.putString(Analytics.TRAVEL_CLASS, transportTypes?.filter { it.checked }?.joinToString())
+        map[Analytics.TRAVEL_CLASS] = transportTypes?.filter { it.checked }?.joinToString()
 
-        analytics.logEvent(EVENT_ADD_TO_CART, bundle, map)
+        analytics.logEvent(Analytics.EVENT_ADD_TO_CART, bundle, map)
     }
 }

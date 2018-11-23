@@ -4,6 +4,7 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.SystemListener
 
 import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
@@ -21,7 +22,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
                        private val geoRepository: GeoRepository) {
     companion object {
         private val currenciesFilterList = arrayOf("₽", "฿", "$", "£", "¥", "€" )
-        private val localesFilterList = arrayOf("EN", "RU")
+        private val localesFilterList = arrayOf("en", "ru")
     }
 
     /* Cached properties */
@@ -47,7 +48,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         get() = systemRepository.configs.transportTypes
 
     val locales: List<Locale>
-        get() = systemRepository.configs.availableLocales.filter { localesFilterList.contains(it.locale) }
+        get() = systemRepository.configs.availableLocales.filter { localesFilterList.contains(it.language) }
 
     val distanceUnits: List<DistanceUnit>
         get() = systemRepository.configs.supportedDistanceUnits
@@ -89,15 +90,15 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         set(value) { account.distanceUnit = value }
 
     suspend fun coldStart() = systemRepository.coldStart()
-    
+
     fun initGeocoder() = geoRepository.initGeocoder(locale)
 
     fun logout() = systemRepository.logout()
     suspend fun login(email: String, password: String) = systemRepository.login(email, password)
     suspend fun putAccount() = systemRepository.putAccount(account)
-    
+
     fun clearLogs() = loggingRepository.clearLogs()
-    
+
     fun addListener(listener: SystemListener)    { systemRepository.addListener(listener) }
     fun removeListener(listener: SystemListener) { systemRepository.removeListener(listener) }
 }
