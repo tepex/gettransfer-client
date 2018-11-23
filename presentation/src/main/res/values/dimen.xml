@@ -172,6 +172,8 @@
 	<dimen name="settings_activity_height_layouts">44dp</dimen>
 	<dimen name="settings_activity_top_margin_layouts">38dp</dimen>
 	<dimen name="settings_activity_button_sign_out_start_end_margins">16dp</dimen>
+	<dimen name="settings_activity_button_support_start_end_margins">16dp</dimen>
+	<dimen name="settings_activity_button_support_bottom_margin">24dp</dimen>
 	<dimen name="settings_activity_text_size">17sp</dimen>
 	<dimen name="settings_activity_text_margin_start">16dp</dimen>
 	<dimen name="settings_activity_image_size">14dp</dimen>
