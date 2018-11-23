@@ -19,6 +19,9 @@ import java.util.Locale
 class SystemInteractor(private val systemRepository: SystemRepository,
                        private val loggingRepository: LoggingRepository,
                        private val geoRepository: GeoRepository) {
+    companion object {
+        private val currenciesFilterList = arrayOf("₽", "฿", "$", "£", "¥", "€" )
+    }
 
     /* Cached properties */
 
@@ -26,7 +29,8 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     val transportTypes by lazy { systemRepository.configs.transportTypes }
     val locales        by lazy { systemRepository.configs.availableLocales }
     val distanceUnits  by lazy { systemRepository.configs.supportedDistanceUnits }
-    val currencies     by lazy { systemRepository.configs.supportedCurrencies }
+    /* Dirty hack. GAA-298 */
+    val currencies     by lazy { systemRepository.configs.supportedCurrencies.filter { currenciesFilterList.contains(it.symbol) } }
     val logsFile       by lazy { loggingRepository.file }
 
     /* Read only properties */

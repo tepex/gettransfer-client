@@ -59,8 +59,7 @@ object Mappers {
         return (nameRes?.call() as Int?) ?: R.string.LNG_TRANSPORT_ECONOMY
     }
 
-    private val supportedCurrencies = arrayOf("₽", "฿", "$", "£", "¥", "€" )
-    fun getCurrenciesModels(types: List<Currency>)        = types.map { CurrencyModel(it) }.filter { supportedCurrencies.contains(it.symbol) }
+    fun getCurrenciesModels(types: List<Currency>)        = types.map { CurrencyModel(it) }
     fun getLocalesModels(types: List<Locale>)             = types.map { LocaleModel(it) }
     fun getDistanceUnitsModels(types: List<DistanceUnit>) = types.map { DistanceUnitModel(it) }
     
