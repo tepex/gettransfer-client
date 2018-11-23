@@ -80,12 +80,9 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         get() = account.distanceUnit
         set(value) { account.distanceUnit = value }
 
-    /** Init geo with account.locale if retrieved from remote */
-    suspend fun coldStart(): Result<Account> {
-        val ret = systemRepository.coldStart()
-        geoRepository.initGeocoder(ret.model.locale)
-        return ret
-    }
+    suspend fun coldStart() = systemRepository.coldStart()
+    
+    fun initGeocoder() = geoRepository.initGeocoder(locale)
 
     fun logout() = systemRepository.logout()
     suspend fun login(email: String, password: String) = systemRepository.login(email, password)
