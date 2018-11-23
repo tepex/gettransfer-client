@@ -131,7 +131,6 @@ internal class Utils {
             }
         }
 
-        fun checkDate(dateTransfer: Date, dateNow: Date, futureHour: Int, futureMinute: Int) {}
         fun checkEmail(email: String?) = EMAIL_PATTERN.matcher(email ?: "").matches()
         //fun checkPhone(phone: String?) = PHONE_PATTERN.matcher(phone?.trim() ?: "").matches()
         fun checkPhone(phone: String): Boolean {

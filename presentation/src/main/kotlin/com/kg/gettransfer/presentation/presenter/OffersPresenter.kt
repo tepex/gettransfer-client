@@ -14,9 +14,6 @@ import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.TransferModel
-
-import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.Screens

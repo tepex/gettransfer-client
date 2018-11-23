@@ -8,7 +8,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 

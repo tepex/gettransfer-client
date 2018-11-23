@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
 import android.content.Intent
 
 import android.os.Bundle
@@ -28,10 +27,6 @@ import com.kg.gettransfer.presentation.view.SettingsView
 
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-
-import org.koin.android.ext.android.inject
-
-import timber.log.Timber
 
 class SettingsActivity: BaseActivity(), SettingsView {
     @InjectPresenter

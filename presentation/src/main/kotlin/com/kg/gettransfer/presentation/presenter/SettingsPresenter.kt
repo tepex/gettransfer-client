@@ -6,11 +6,7 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.ApiException
-
 import com.kg.gettransfer.presentation.model.CurrencyModel
-import com.kg.gettransfer.presentation.model.DistanceUnitModel
-import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.view.Screens
@@ -19,8 +15,6 @@ import com.kg.gettransfer.presentation.view.SettingsView
 import com.yandex.metrica.YandexMetrica
 
 import java.util.Locale
-
-import timber.log.Timber
 
 @InjectViewState
 class SettingsPresenter: BasePresenter<SettingsView>() {

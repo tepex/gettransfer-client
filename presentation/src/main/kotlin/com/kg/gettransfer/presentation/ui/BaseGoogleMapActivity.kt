@@ -1,13 +1,9 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.res.Configuration
-
 import android.graphics.Bitmap
 import android.graphics.Canvas
 
-import android.os.Build
 import android.os.Bundle
-import android.os.LocaleList
 
 import android.support.annotation.CallSuper
 import android.support.v4.content.ContextCompat
@@ -32,17 +28,14 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 
-import kotlinx.android.synthetic.main.view_maps_pin.view.*
+import kotlinx.android.synthetic.main.view_maps_pin.view.* //don't delete
 
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 import org.koin.android.ext.android.get
 
 import timber.log.Timber
-
-//import java.util.*
 
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -60,7 +53,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     }
 
     @CallSuper
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        val locale = systemInteractor.locale
 //        Log.i("findLocale", locale.language)
@@ -75,20 +68,20 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     }
 
     @CallSuper
-    protected override fun onStart() {
+    override fun onStart() {
         super.onStart()
         _mapView.onStart()
         initMap()
     }
 
     @CallSuper
-    protected override fun onResume() {
+    override fun onResume() {
         super.onResume()
         _mapView.onResume()
     }
 
     @CallSuper
-    protected override fun onPause() {
+    override fun onPause() {
         _mapView.onPause()
         super.onPause()
     }
@@ -96,13 +89,13 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     protected open fun initMap() {}
 
     @CallSuper
-    protected override fun onStop() {
+    override fun onStop() {
         _mapView.onStop()
         super.onStop()
     }
 
     @CallSuper
-    protected override fun onDestroy() {
+    override fun onDestroy() {
         _mapView.onDestroy()
         compositeDisposable.cancel()
         googleMapJob.cancel()
@@ -124,8 +117,8 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         }
     }
 
-    protected suspend open fun customizeGoogleMaps(gm: GoogleMap) {
-        gm.uiSettings.setRotateGesturesEnabled(false)
+    protected open suspend fun customizeGoogleMaps(gm: GoogleMap) {
+        gm.uiSettings.isRotateGesturesEnabled = false
         gm.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
     }
     

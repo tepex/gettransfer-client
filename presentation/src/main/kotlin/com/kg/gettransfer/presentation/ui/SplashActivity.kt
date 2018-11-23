@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 
@@ -23,11 +22,7 @@ import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.Configs
-
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 import org.koin.android.ext.android.inject
 

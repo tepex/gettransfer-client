@@ -1,9 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
-import android.content.Intent
-import android.content.res.Configuration
-
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
@@ -13,18 +9,15 @@ import android.os.Bundle
 
 import android.support.annotation.CallSuper
 
-import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 
-import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
 
 import android.transition.Fade
 
 import android.view.Gravity
-import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 
@@ -53,11 +46,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_navigation.*
-
-import org.koin.android.ext.android.inject
-
-import ru.terrakok.cicerone.commands.Command
-import ru.terrakok.cicerone.commands.Forward
 
 import timber.log.Timber
 
@@ -210,7 +198,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         gm.setMyLocationEnabled(true)
         gm.uiSettings.isMyLocationButtonEnabled = false
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
-        gm.setOnCameraMoveListener { presenter.onCameraMove(gm.getCameraPosition()!!.target, true);  }
+        gm.setOnCameraMoveListener { presenter.onCameraMove(gm.cameraPosition!!.target, true);  }
         gm.setOnCameraIdleListener { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
         gm.setOnCameraMoveStartedListener {
             if(it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
@@ -250,13 +238,13 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
                 .withStartAction { presenter.isMarkerAnimating = true }
                 .withEndAction {
                     presenter.isMarkerAnimating = false
-                    if(!up) markerShadow.setImageDrawable(getDrawable(R.drawable.default_position_shadow))
+                    if(!up) markerShadow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_position_shadow))
                 }
                 .setDuration(150L)
                 .translationYBy(px)
                 .start()
 
-        if(up) markerShadow.setImageDrawable(getDrawable(R.drawable.lifted_marker_shadow))
+        if(up) markerShadow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.lifted_marker_shadow))
     }
 
     override fun moveCenterMarker(point: LatLng) {
@@ -288,16 +276,15 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     override fun setAddressFrom(address: String) {
         searchFrom.text = address
         enableBtnNext()
-        var iconRes: Int
-        if(address.isNotEmpty()) iconRes = R.drawable.a_point_filled
-        else iconRes = R.drawable.a_point_empty
+        val iconRes: Int = if(address.isNotEmpty()) R.drawable.a_point_filled
+        else R.drawable.a_point_empty
         icons_container.a_point.setImageDrawable(ContextCompat.getDrawable(this, iconRes))
     }
 
     override fun setAddressTo(address: String)   {
         searchTo.text = address
         enableBtnNext()
-        var iconRes: Int
+        val iconRes: Int
         if(address.isNotEmpty()) iconRes = R.drawable.b_point_filled
         else iconRes = R.drawable.b_point_empty
         icons_container.b_point.setImageDrawable(ContextCompat.getDrawable(this, iconRes))

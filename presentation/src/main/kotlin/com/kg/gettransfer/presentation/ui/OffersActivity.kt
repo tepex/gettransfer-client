@@ -36,12 +36,9 @@ import com.kg.gettransfer.service.OfferServiceConnection
 import kotlinx.android.synthetic.main.activity_offers.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
-import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
 
 import org.koin.android.ext.android.inject
-
-import timber.log.Timber
 
 class OffersActivity: BaseActivity(), OffersView {
     @InjectPresenter

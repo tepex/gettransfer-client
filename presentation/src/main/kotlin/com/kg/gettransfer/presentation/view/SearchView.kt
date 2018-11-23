@@ -4,7 +4,6 @@ import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.presentation.model.PopularPlace
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 //interface MainView: MvpView, OnCameraMoveListener

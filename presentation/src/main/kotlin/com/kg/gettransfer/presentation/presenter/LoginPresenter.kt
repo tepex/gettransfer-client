@@ -14,8 +14,6 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.yandex.metrica.YandexMetrica
 
-import org.koin.standalone.inject
-
 @InjectViewState
 class LoginPresenter: BasePresenter<LoginView>() {
     companion object {

@@ -20,7 +20,6 @@ import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 
 import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.domain.model.Payment
 
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel

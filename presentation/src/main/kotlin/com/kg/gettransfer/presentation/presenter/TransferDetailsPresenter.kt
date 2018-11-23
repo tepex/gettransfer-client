@@ -10,8 +10,6 @@ import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
-import com.kg.gettransfer.domain.model.Transfer
-
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.TransferModel
 
@@ -19,8 +17,6 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.TransferDetailsView
 
 import org.koin.standalone.inject
-
-import timber.log.Timber
 
 @InjectViewState
 class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {

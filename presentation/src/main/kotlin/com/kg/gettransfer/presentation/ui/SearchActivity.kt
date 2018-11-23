@@ -1,8 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
-import android.content.Intent
-
+import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
@@ -95,13 +93,16 @@ class SearchActivity: BaseActivity(), SearchView {
     }
 
     private fun setupAnimation() {
-        val fade = Fade()
-        fade.duration = FADE_DURATION
-        window.enterTransition = fade
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            val fade = Fade()
+            fade.duration = FADE_DURATION
+            window.enterTransition = fade
 
-        val slide = Slide()
-        slide.duration = SLIDE_DURATION
-        window.returnTransition = slide
+
+            val slide = Slide()
+            slide.duration = SLIDE_DURATION
+            window.returnTransition = slide
+        }
     }
 
     private fun changeFocusForSearch() {

@@ -2,9 +2,6 @@ package com.kg.gettransfer.presentation.ui
 
 import android.app.DatePickerDialog
 
-import android.content.Context
-import android.content.Intent
-
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 
@@ -23,15 +20,14 @@ import android.support.v7.widget.LinearLayoutManager
 import android.telephony.PhoneNumberFormattingTextWatcher
 
 import android.text.InputFilter
-import android.text.InputType
-import android.text.TextUtils
+import android.text.InputType //don't delete
+import android.text.TextUtils //don't delete
 
 import android.util.DisplayMetrics
-import android.util.Log
 
 import android.view.*
 import android.view.animation.AnimationUtils
-import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.EditorInfo //don't delete
 
 import android.widget.*
 
@@ -39,11 +35,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdate
-import com.google.android.gms.maps.model.MapStyleOptions
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.common.BoundTimePickerDialog
-import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 
@@ -57,15 +51,12 @@ import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.view.CreateOrderView
 
 import kotlinx.android.synthetic.main.activity_create_order.*
-//import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
-import kotlinx.android.synthetic.main.layout_popup_comment.view.*
+import kotlinx.android.synthetic.main.layout_popup_comment.view.* //don't delete
 
-import kotlinx.android.synthetic.main.amu_info_window.view.*
-
-import com.kg.gettransfer.extensions.hideKeyboard
-import com.kg.gettransfer.extensions.showKeyboard
+import com.kg.gettransfer.extensions.hideKeyboard //don't delete
+import com.kg.gettransfer.extensions.showKeyboard //don't delete
 
 import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
 import kotlinx.android.synthetic.main.view_create_order_field.view.*

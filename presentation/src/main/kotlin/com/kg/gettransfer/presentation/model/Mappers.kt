@@ -16,7 +16,7 @@ import java.util.Locale
 object Mappers {
     fun point2LatLng(point: Point) = LatLng(point.latitude, point.longitude)
     
-    fun point2Location(point: Point): Location {
+    private fun point2Location(point: Point): Location {
         val ret = Location("")
         ret.latitude = point.latitude
         ret.longitude = point.longitude
@@ -166,17 +166,17 @@ object Mappers {
                          type.flightNumber,
                          type.remainToPay)
     
-    fun getRatingsModel(type: Ratings) = RatingsModel(type.average, type.vehicle, type.driver, type.fair)
+    private fun getRatingsModel(type: Ratings) = RatingsModel(type.average, type.vehicle, type.driver, type.fair)
     
-    fun getMoneyModel(type: Money) = MoneyModel(type.default, type.preferred)
+    private fun getMoneyModel(type: Money) = MoneyModel(type.default, type.preferred)
     
-    fun getPriceModel(type: Price) = PriceModel(getMoneyModel(type.base),
+    private fun getPriceModel(type: Price) = PriceModel(getMoneyModel(type.base),
                                                 type.withoutDiscount?.let { getMoneyModel(it)},
                                                 type.percentage30,
                                                 type.percentage70,
                                                 "%.2f".format(type.amount))
     
-    fun getCarrierModel(type: Carrier) = CarrierModel(type.id,
+    private fun getCarrierModel(type: Carrier) = CarrierModel(type.id,
                                                          getProfileModel(type.profile),
                                                          type.approved,
                                                          type.completedTransfers,
@@ -184,7 +184,7 @@ object Mappers {
                                                          getRatingsModel(type.ratings),
                                                          type.canUpdateOffers)
     
-    fun getVehicleModel(type: Vehicle) =
+    private fun getVehicleModel(type: Vehicle) =
         VehicleModel(VehicleBaseModel(type.vehicleBase.name, type.vehicleBase.registrationNumber),
                      type.year,
                      type.color,

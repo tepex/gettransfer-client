@@ -29,8 +29,6 @@ import com.kg.gettransfer.presentation.view.SearchAddressView
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.search_address.*
 
-import timber.log.Timber
-
 /**
  * https://github.com/Arello-Mobile/Moxy/wiki/CustomView-as-MvpView
  *
@@ -104,7 +102,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     /** Set address text without request */
     fun initText(text: String, sendRequest: Boolean, cursorOnEnd: Boolean) {
         blockRequest = true
-        this.text = if(text.isNotEmpty()) text + " " else ""
+        this.text = if(text.isNotEmpty()) "$text " else ""
         if(cursorOnEnd) addressField.setSelection(addressField.text.length)
         blockRequest = false
         if(sendRequest) presenter.requestAddressListByPrediction(text.trim())
