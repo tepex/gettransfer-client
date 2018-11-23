@@ -20,6 +20,8 @@ import android.transition.Fade
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 
 import android.widget.TextView
 
@@ -126,6 +128,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         presenter.setAddressFields()
 
         initNavigation()
+
+        switch_mode.setOnCheckedChangeListener { buttonView, isChecked -> modeSwitched(isChecked) }
 
         isFirst = savedInstanceState == null
 
@@ -357,5 +361,13 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     override fun showReadMoreDialog() {
         drawer.closeDrawer(GravityCompat.START)
         ReadMoreFragment().show(supportFragmentManager, getString(R.string.tag_read_more))
+    }
+
+    private fun modeSwitched(hourly: Boolean) {
+        val view = searchTo
+//        view.startAnimation(AnimationUtils.loadAnimation(this, R.anim.switch_out).setAnimationListener(object : Animation.AnimationListener {}))
+        view.animate()
+                .translationXBy(200f)
+                .withEndAction {  }
     }
 }

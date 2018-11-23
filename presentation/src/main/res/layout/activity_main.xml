@@ -146,12 +146,48 @@
 			</FrameLayout>
 
 			<include
+				android:id="@+id/search_panel"
 				layout="@layout/search_form_main"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_alignParentBottom="true" />
 
+
 		</RelativeLayout>
+
+			<FrameLayout
+				android:id="@+id/switch_panel"
+				android:layout_width="120dp"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="10dp"
+				android:layout_marginEnd="5dp"
+
+				android:elevation="8dp"
+				android:background="@drawable/transfer_mode_background"
+				android:padding="5dp"
+
+
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintBottom_toTopOf="@+id/search_panel">
+
+				<TextView
+					android:id="@+id/switch_title"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="5dp"
+					android:text="Per hour"
+					android:layout_gravity="start|center_vertical"/>
+
+				<Switch
+					android:id="@+id/switch_mode"
+
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+
+					android:layout_gravity="end"/>
+			</FrameLayout>
+
+
 
 		<ProgressBar android:id="@+id/progress"
 			style="?android:attr/progressBarStyleLarge"
@@ -163,8 +199,8 @@
 
 	</android.support.design.widget.CoordinatorLayout>
 
-	<include
-		android:id="@+id/navView"
-		layout="@layout/view_navigation" />
+	<!--<include-->
+		<!--android:id="@+id/navView"-->
+		<!--layout="@layout/view_navigation" />-->
 
 </android.support.v4.widget.DrawerLayout>
