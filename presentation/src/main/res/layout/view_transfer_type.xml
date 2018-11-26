@@ -7,6 +7,7 @@
     android:layout_width="110dp"
     android:layout_height="138dp"
     android:layout_margin="3dp"
+    android:background="@drawable/rounded_background"
     card_view:cardCornerRadius="@dimen/card_transfer_type_corner_radius_default"
     card_view:cardElevation="@dimen/card_transfer_type_elevation_default">
 
@@ -23,6 +24,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:button="@drawable/cb_transfer_type_selector"
+            android:background="@null"
             android:clickable="false"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

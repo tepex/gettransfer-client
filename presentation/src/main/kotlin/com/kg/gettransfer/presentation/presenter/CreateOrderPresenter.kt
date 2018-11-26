@@ -83,7 +83,6 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         @JvmField val FUTURE_MINUTE     = 5
 
         const val EMAIL_FIELD           = "email"
-        const val NAME_FIELD            = "name"
         const val PHONE_FIELD           = "phone"
         const val TRANSPORT_FIELD       = "transport"
         const val TERMS_ACCEPTED_FIELD  = "terms_accepted"
@@ -246,6 +245,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         if(currentDate.time.after(date)) date = currentDate.time
 
         if(!checkFieldsForRequest()) return
+                
         val trip = Trip(date, flightNumber)
         /* filter */
         val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
@@ -262,11 +262,16 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         Timber.d("flightNumber: $flightNumber")
         Timber.d("comment: $comment")
 
+        if(routeInteractor.from == null || routeInteractor.to == null) return
+        val from = routeInteractor.from!!
+        val to = routeInteractor.to!!
+        
+        
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait {
-                transferInteractor.createTransfer(Mappers.getTransferNew(routeInteractor.from!!.cityPoint,
-                                                                         routeInteractor.to!!.cityPoint,
+                transferInteractor.createTransfer(Mappers.getTransferNew(from.cityPoint,
+                                                                         to.cityPoint,
                                                                          trip,
                                                                          null,
                                                                          selectedTransportTypes,
@@ -278,17 +283,18 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
                                                                          promoCode,
                                                                          false))
             }
-            if(result.error != null) {
+            
+            val logResult = utils.asyncAwait { systemInteractor.putAccount() }
+            if(result.error == null && logResult.error == null) {
+                logCreateTransfer(Analytics.RESULT_SUCCESS)
+                router.navigateTo(Screens.Offers(result.model.id))
+            } else if(result.error != null) {
                 logCreateTransfer(Analytics.SERVER_ERROR)
                 when {
                     result.error!!.details == "{phone=[taken]}" -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
                     else -> viewState.setError(result.error!!)
                 }
-            }
-            else {
-                logCreateTransfer(Analytics.RESULT_SUCCESS)
-                router.navigateTo(Screens.Offers(result.model.id))
-            }
+            } else if(logResult.error != null) viewState.showNotLoggedAlert(result.model.id)
             viewState.blockInterface(false)
         }
     }
@@ -298,9 +304,6 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         if (!Utils.checkEmail(user.profile.email)) {
             errorFiled = EMAIL_FIELD
             logCreateTransfer(Analytics.INVALID_EMAIL)
-        } else if (user.profile.name.isNullOrBlank()) {
-            errorFiled = NAME_FIELD
-            logCreateTransfer(Analytics.INVALID_NAME)
         } else if (!Utils.checkPhone(user.profile.phone!!)) {
             errorFiled = PHONE_FIELD
             logCreateTransfer(Analytics.INVALID_PHONE)

@@ -50,6 +50,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
 
     companion object {
         @JvmField val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
+        private const val LABEL_VERTICAL_POSITION = 12
     }
 
     @CallSuper
@@ -120,6 +121,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     protected open suspend fun customizeGoogleMaps(gm: GoogleMap) {
         gm.uiSettings.isRotateGesturesEnabled = false
         gm.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
+        gm.setPadding(0, 0, 0, LABEL_VERTICAL_POSITION)
     }
     
     protected fun processGoogleMap(ignore: Boolean, block: (GoogleMap) -> Unit) {
@@ -135,30 +137,32 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
             Timber.w("Polyline model is empty for route: $routeModel")
             return
         }
-        val bmPinA = getPinBitmap(routeModel.from, routeModel.dateTime, R.drawable.ic_map_label_a)
-        val bmPinB = getPinBitmap(routeModel.to, Utils.formatDistance(this, routeModel.distance, routeModel.distanceUnit), R.drawable.ic_map_label_b)
-
-        val startMakerOptions = MarkerOptions()
-                .position(polyline.startPoint)
-                .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
-        val endMakerOptions = MarkerOptions()
-                .position(polyline.finishPoint)
-                .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
 
         processGoogleMap(false) {
-            if(polyline.line != null) {
-                polyline.line.width(10f).color(ContextCompat.getColor(this@BaseGoogleMapActivity, R.color.colorPolyline))
-                googleMap.addPolyline(polyline.line)
-            }
+            val bmPinA = getPinBitmap(routeModel.from, routeModel.dateTime, R.drawable.ic_map_label_a)
+            val bmPinB = getPinBitmap(routeModel.to, Utils.formatDistance(this, routeModel.distance, routeModel.distanceUnit), R.drawable.ic_map_label_b)
+            if(Utils.isValidBitmap(bmPinA) && Utils.isValidBitmap(bmPinB)) {
+                val startMakerOptions = MarkerOptions()
+                    .position(polyline.startPoint)
+                    .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
+                val endMakerOptions = MarkerOptions()
+                    .position(polyline.finishPoint)
+                    .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
 
-            googleMap.addMarker(startMakerOptions)
-            googleMap.addMarker(endMakerOptions)
+                polyline.line?.let {
+                    it.width(10f).color(ContextCompat.getColor(this@BaseGoogleMapActivity, R.color.colorPolyline))
+                    googleMap.addPolyline(it)
+                }
 
-            try {
-                polyline.track?.let { googleMap.moveCamera(it) }
-                //showTrack(polyline.track)
+                googleMap.addMarker(startMakerOptions)
+                googleMap.addMarker(endMakerOptions)
+
+                try {
+                    polyline.track?.let { googleMap.moveCamera(it) }
+                    //showTrack(polyline.track)
+                }
+                catch(e: Exception) { Timber.e(e) }
             }
-            catch(e: Exception) { Timber.e(e) }
         }
     }
 
@@ -172,7 +176,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
     }
 
-    private fun getPinBitmap(placeName: String, info: String, drawable: Int): Bitmap{
+    private fun getPinBitmap(placeName: String, info: String, drawable: Int): Bitmap {
         val pinLayout = layoutInflater.inflate(R.layout.view_maps_pin, null)
         pinLayout.tvPlace.text = placeName
         pinLayout.tvInfo.text = info
@@ -182,7 +186,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         return createBitmapFromView(pinLayout)
     }
 
-    protected fun showTrack (track: CameraUpdate){
+    protected fun showTrack (track: CameraUpdate) {
         googleMap.animateCamera(track)
     }
 
@@ -201,5 +205,5 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         return bitmap
     }
 
-    protected fun clearMarkersAndPolylines(){ googleMap.clear() }
+    protected fun clearMarkersAndPolylines() = googleMap.clear()
 }

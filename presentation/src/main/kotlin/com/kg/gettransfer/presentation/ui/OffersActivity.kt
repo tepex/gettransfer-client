@@ -77,7 +77,7 @@ class OffersActivity: BaseActivity(), OffersView {
         sortYear.setOnClickListener                       { presenter.changeSortType(OffersPresenter.SORT_YEAR) }
         sortRating.setOnClickListener                     { presenter.changeSortType(OffersPresenter.SORT_RATING) }
         sortPrice.setOnClickListener                      { presenter.changeSortType(OffersPresenter.SORT_PRICE) }
-        (toolbar as Toolbar).setNavigationOnClickListener { presenter.navigateBackToMain() }
+        (toolbar as Toolbar).setNavigationOnClickListener { navigateBackWithTransition()  }
     }
 
     @CallSuper
@@ -92,6 +92,11 @@ class OffersActivity: BaseActivity(), OffersView {
         offerServiceConnection.disconnect(this)
         systemInteractor.removeListener(offerServiceConnection)
         super.onStop()
+    }
+
+    private fun navigateBackWithTransition() {
+        presenter.onBackCommandClick()
+        overridePendingTransition(R.anim.transition_l2r, R.anim.transition_r2l)
     }
     
     override fun setTransfer(transferModel: TransferModel) {
@@ -246,7 +251,7 @@ class OffersActivity: BaseActivity(), OffersView {
     @CallSuper
     override fun onBackPressed() {
         if(bsOfferDetails.state == BottomSheetBehavior.STATE_EXPANDED) hideSheetOfferDetails()
-        else presenter.navigateBackToMain()
+        else navigateBackWithTransition()
     }
 
     override fun addNewOffer(offer: OfferModel) { (rvOffers.adapter as OffersRVAdapter).add(offer) }

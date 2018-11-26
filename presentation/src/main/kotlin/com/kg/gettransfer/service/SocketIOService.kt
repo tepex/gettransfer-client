@@ -1,14 +1,26 @@
 package com.kg.gettransfer.service
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
 
+import android.content.Context
 import android.content.Intent
 
+import android.graphics.Color
+
 import android.os.Binder
+import android.os.Build
 import android.os.IBinder
 
 import android.support.annotation.CallSuper
+import android.support.annotation.RequiresApi
+
+import android.support.v4.app.NotificationCompat
 import android.support.v4.content.LocalBroadcastManager
+
+import com.kg.gettransfer.R
 
 import io.socket.client.IO
 import io.socket.client.Manager
@@ -38,9 +50,16 @@ class SocketIOService: Service() {
     internal var serviceBinded = false
     
     companion object {
+        const val DEFAULT_CHANNEL_ID = "offer_service"
         private val NEW_OFFER_RE = Regex("^newOffer/(\\d+)$")
     }
     
+    @CallSuper
+    override fun onCreate() {
+        super.onCreate()
+        startForeground()
+    }
+
     override fun onBind(intent: Intent): IBinder = binder
 
     @CallSuper
@@ -55,7 +74,7 @@ class SocketIOService: Service() {
 
     override fun onUnbind(intent: Intent) = serviceBinded
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int) = START_STICKY
-    
+
     fun connect(url: String, accessToken: String) {
         /* Reconnect iff URL or token changed. */
         val reconnect = (this.url != url || this.accessToken != accessToken)
@@ -153,16 +172,41 @@ class SocketIOService: Service() {
         return componentInfo.getPackageName().equals("com.kg.gettransfer.presentation.ui")
     }
     */
-    
+
     inner class LocalBinder: Binder() {
         val service = this@SocketIOService
     }
-    
+
     private fun retrievePacket(someTrash: Any): JSONArray? {
         Timber.d("someTrash type: ${someTrash::class.qualifiedName}")
         if(someTrash !is Packet<*>) return null
         val packetData: Any? = someTrash.data
         if(packetData == null || packetData !is JSONArray) return null
         return packetData 
+    }
+
+                // If earlier version channel ID is not used
+                // https://developer.android.com/reference/android/support/v4/app/NotificationCompat.Builder.html#NotificationCompat.Builder(android.content.Context)
+    private fun startForeground() {
+        val channelId = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            createNotificationChannel(DEFAULT_CHANNEL_ID, "New Offer Service")
+        else ""
+
+        val notificationBuilder = NotificationCompat.Builder(this, channelId)
+        val notification = notificationBuilder.setOngoing(true)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setCategory(Notification.CATEGORY_SERVICE)
+            .build()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createNotificationChannel(channelId: String, channelName: String): String {
+        val chan = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_NONE)
+        chan.lightColor = Color.BLUE
+        chan.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
+        chan.setImportance(NotificationManager.IMPORTANCE_MIN)
+        val service = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        service.createNotificationChannel(chan)
+        return channelId
     }
 }

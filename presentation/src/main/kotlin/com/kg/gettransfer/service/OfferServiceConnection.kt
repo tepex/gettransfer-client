@@ -9,6 +9,7 @@ import android.content.ServiceConnection
 
 import android.os.IBinder
 
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 
 import com.kg.gettransfer.data.mapper.OfferMapper
@@ -33,51 +34,53 @@ class OfferServiceConnection: BroadcastReceiver(), ServiceConnection, SystemList
         @JvmField val INTENT_OFFER  = "offer"
         @JvmField val MESSAGE_OFFER = "new_offer"
     }
-    
+
     private lateinit var url: String
     private lateinit var accessToken: String
-    
+
     private var socketService: SocketIOService? = null
     private var handler: OfferModelHandler? = null
-    
+
     private val systemInteractor: SystemInteractor by inject()
     private val offerMapper: OfferMapper by inject()
-    
+
     fun connect(context: Context, handler: OfferModelHandler) {
         Timber.d("Binding service ${context::class.qualifiedName}")
         this.handler = handler
         systemInteractor.addListener(this)
-        context.bindService(Intent(context, SocketIOService::class.java), this, Context.BIND_AUTO_CREATE)
+        val intent = Intent(context, SocketIOService::class.java)
+        ContextCompat.startForegroundService(context, intent)
+        context.bindService(intent, this, Context.BIND_AUTO_CREATE)
         LocalBroadcastManager.getInstance(context).registerReceiver(this, IntentFilter(INTENT_OFFER))
     }
-    
+
     fun disconnect(context: Context) {
         Timber.d("Unbinding from service ${context::class.qualifiedName}")
         systemInteractor.removeListener(this)
         LocalBroadcastManager.getInstance(context).unregisterReceiver(this)
         context.unbindService(this)
     }
-    
+
     override fun connectionChanged(endpoint: Endpoint, accessToken: String) {
         url = endpoint.url
         this.accessToken = accessToken
         socketService?.let { it.connect(url, accessToken) }
     }
-    
+
     override fun onServiceConnected(className: ComponentName, service: IBinder) {
         Timber.d("OSC.onServiceConnected")
         socketService = (service as SocketIOService.LocalBinder).service
         socketService!!.serviceBinded = true
         socketService!!.connect(url, accessToken)
     }
-    
+
     override fun onServiceDisconnected(name: ComponentName) {
         socketService!!.serviceBinded = false
         socketService = null
         handler = null
         Timber.d("OSC.onServiceDisconnected")
     }
-    
+
     override fun onReceive(context: Context, intent: Intent) {
         val offerEntity = intent.getStringExtra(MESSAGE_OFFER)
         Timber.d("onReceive: $offerEntity")

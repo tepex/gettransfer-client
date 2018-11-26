@@ -1,12 +1,15 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import com.kg.gettransfer.presentation.view.AboutView
+import com.kg.gettransfer.presentation.view.Screens
 
 @InjectViewState
-class AboutPresenter: MvpPresenter<AboutView>() {
-	fun onBackCommandClick() {
-		viewState.finish()
+class AboutPresenter: BasePresenter<AboutView>() {
+	internal var openMain: Boolean = false
+
+	fun closeAboutActivity() {
+		if(openMain) router.navigateTo(Screens.Main)
+		else router.exit()
 	}
 }

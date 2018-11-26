@@ -59,6 +59,10 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         get() = preferencesCache.lastMode
         set(value) { preferencesCache.lastMode = value }
 
+    override var isOnboardingShowed: Boolean
+        get() = preferencesCache.isOnboardingShowed
+        set(value) { preferencesCache.isOnboardingShowed = value }
+
     override var selectedField: String
         get() = preferencesCache.selectedField
         set(value) { preferencesCache.selectedField = value }

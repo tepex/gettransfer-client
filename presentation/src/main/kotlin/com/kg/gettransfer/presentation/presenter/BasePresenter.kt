@@ -42,7 +42,6 @@ open class BasePresenter<BV: BaseView>: MvpPresenter<BV>(), KoinComponent {
     }
 
     protected fun login(nextScreen: String, email: String) = router.navigateTo(Screens.Login(nextScreen, email))
-    fun navigateBackToMain() = router.navigateTo(Screens.Main)
 
     @CallSuper
     override fun onDestroy() {

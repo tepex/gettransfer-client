@@ -38,6 +38,7 @@
     <string name="endpoint">Endpoint</string>
     <string name="logs">Logs</string>
     <string name="search">Search</string>
+    <string name="reset_onboarding">Reset onboarding</string>
 
     <string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
     <string name="activity_carrier_transfer_details_title">Trip details</string> <!-- Title, which not used in new design -->
@@ -558,7 +559,7 @@
     <string name="LNG_RIDE_PASSENGERS">Passengers</string>
     <string name="LNG_RIDE_lUGGAGE">Luggage</string>
     <string name="LNG_RIDE_NAME">Your name</string>
-    <string name="LNG_RIDE_NAME_PLACEHOLDER">*Driver will meet you with a name sign</string>
+    <string name="LNG_RIDE_NAME_PLACEHOLDER">Driver will meet you with a name sign</string>
     <string name="LNG_RIDE_EMAIL">Enter email</string>
     <string name="LNG_RIDE_EMAIL_PLACEHOLDER">*Email</string>
     <string name="LNG_RIDE_PHONE">Enter phone number</string>

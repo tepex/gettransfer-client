@@ -96,6 +96,8 @@
     <color name="bg_point_on_map">#f7f7f7</color>
     <color name="switch_activated">#98b71b</color>
     <color name="black_50">#80000000</color>
+    <color name="black_a30">#4d000000</color>
+    <color name="black_a10">#1a000000</color>
 
     <color name="promo_valid">#98b71b</color>
 
@@ -103,4 +105,7 @@
 
     <color name="colorBackNetworkNotAvailable">#ff3b30</color>
     <color name="separator_color">#d8d8d8</color>
+
+    <color name="transparent_white">#00ffffff</color>
+    <color name="transparent_black">#00000000</color>
 </resources>

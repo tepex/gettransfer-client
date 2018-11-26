@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
+    android:background="@drawable/rounded_background"
     app:behavior_hideable="false"
     android:id="@+id/info_sheet"
     app:behavior_peekHeight="@dimen/create_order_behaviour_peek_height"
@@ -138,6 +138,7 @@
 
 
                     android:layout_marginStart="@dimen/divider_margin_start"
+                    android:layout_marginEnd="@dimen/divider_margin_start"
                     android:background="@color/create_order_fields_divider"
 
                     app:layout_constraintBottom_toBottomOf="parent" />
@@ -178,13 +179,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/create_transfer_divider_height"
                 android:layout_marginStart="@dimen/divider_margin_start"
+                android:layout_marginEnd="@dimen/divider_margin_start"
                 android:background="@color/create_order_fields_divider" />
 
             <com.kg.gettransfer.presentation.ui.CreateOrderField
                 android:id="@+id/user_name_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 app:hint="@string/LNG_RIDE_NAME"
                 app:title="@string/LNG_RIDE_NAME_PLACEHOLDER"
                 app:icon_img="@drawable/ic_passport"/>
@@ -194,6 +195,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
+                app:inputType="@integer/inputType_Email"
                 app:title="@string/LNG_RIDE_EMAIL_PLACEHOLDER"
                 app:hint="@string/LNG_RIDE_EMAIL"
                 app:icon_img="@drawable/ic_mail"/>
@@ -265,28 +267,27 @@
                     android:id="@+id/switchAgreement"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/create_transfer_cb_agreement_margin"
-                    android:layout_marginEnd="@dimen/create_transfer_cb_agreement_margin"
+                    android:layout_marginEnd="16dp"
+
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:theme="@style/SwitchCompatStyle"
                     app:layout_constraintBottom_toBottomOf="@+id/tvAgreement1"
-                    app:layout_constraintEnd_toStartOf="@+id/tvAgreement1"
-                    app:layout_constraintStart_toStartOf="parent"
+
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tvAgreement1" />
 
                 <TextView
                     android:id="@+id/tvAgreement1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/create_transfer_agreement_text_margin_start"
+                    android:layout_marginStart="20dp"
                     android:layout_marginEnd="@dimen/create_transfer_agreement_text_margin_end"
                     android:fontFamily="@font/sf_pro_text_regular"
                     android:text="@string/LNG_RIDE_OFFERT"
                     android:textColor="@color/colorTextLightGray"
                     android:textSize="@dimen/create_transfer_agreement_text_size"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
