@@ -14,6 +14,7 @@ import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
+
 import android.telephony.TelephonyManager
 
 import android.text.Editable
@@ -45,7 +46,9 @@ import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
+
 import com.yandex.metrica.impl.ob.it
+
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 
 import java.text.SimpleDateFormat
