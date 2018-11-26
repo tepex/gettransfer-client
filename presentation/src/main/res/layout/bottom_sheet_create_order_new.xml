@@ -184,7 +184,6 @@
                 android:id="@+id/user_name_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 app:hint="@string/LNG_RIDE_NAME"
                 app:title="@string/LNG_RIDE_NAME_PLACEHOLDER"
                 app:icon_img="@drawable/ic_passport"/>

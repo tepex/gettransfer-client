@@ -558,7 +558,7 @@
     <string name="LNG_RIDE_PASSENGERS">Passengers</string>
     <string name="LNG_RIDE_lUGGAGE">Luggage</string>
     <string name="LNG_RIDE_NAME">Your name</string>
-    <string name="LNG_RIDE_NAME_PLACEHOLDER">*Driver will meet you with a name sign</string>
+    <string name="LNG_RIDE_NAME_PLACEHOLDER">Driver will meet you with a name sign</string>
     <string name="LNG_RIDE_EMAIL">Enter email</string>
     <string name="LNG_RIDE_EMAIL_PLACEHOLDER">*Email</string>
     <string name="LNG_RIDE_PHONE">Enter phone number</string>
