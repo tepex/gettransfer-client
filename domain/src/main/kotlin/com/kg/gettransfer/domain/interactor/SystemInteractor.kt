@@ -62,6 +62,10 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         get() = systemRepository.lastMode
         set(value) { systemRepository.lastMode = value }
 
+    var isOnboardingShowed: Boolean
+        get() = systemRepository.isOnboardingShowed
+        set(value) { systemRepository.isOnboardingShowed = value }
+
     var selectedField: String
         get() = systemRepository.selectedField
         set(value) { systemRepository.selectedField = value }

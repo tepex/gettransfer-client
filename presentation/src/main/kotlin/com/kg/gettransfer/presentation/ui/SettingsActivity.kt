@@ -58,12 +58,14 @@ class SettingsActivity: BaseActivity(), SettingsView {
         
         btnSignOut.setOnClickListener { presenter.onLogout() }
         layoutSettingsLogs.setOnClickListener { presenter.onLogsClicked() }
+        layoutSettingsResetOnboarding.setOnClickListener { presenter.onResetOnboardingClicked() }
         btnSupport.setOnClickListener { sendEmail() }
 
         //Not showing some layouts in release
         if(BuildConfig.FLAVOR != "dev") {
             layoutSettingsEndpoint.visibility = View.GONE
             layoutSettingsLogs.visibility = View.GONE
+            layoutSettingsResetOnboarding.visibility = View.GONE
         }
     }
 

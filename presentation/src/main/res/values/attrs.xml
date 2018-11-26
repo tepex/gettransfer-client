@@ -5,10 +5,10 @@
 		<attr name="hint" format="string"/>
 	</declare-styleable>
 
-
 	<declare-styleable name="SearchAddress" parent="EditableView">
 		<attr name="hint"/>
 	</declare-styleable>
+
 	<declare-styleable name="CreateOrderField" parent="EditableView">
 		<attr name="title" format="string" />
 		<attr name="hint"/>
@@ -16,4 +16,11 @@
 		<attr name="isFocusable" format="boolean"/>
 		<attr name="inputType" format="integer"/>
 	</declare-styleable>
+
+	<declare-styleable name="AboutItem" parent="EditableView">
+		<attr name="title_about_item" format="string" />
+		<attr name="text_about_item" format="string" />
+		<attr name="img_about_item" format="reference" />
+	</declare-styleable>
+
 </resources>
