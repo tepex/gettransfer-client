@@ -85,7 +85,10 @@ class OffersPresenter: BasePresenter<OffersView>() {
                     //changeSortType(SORT_PRICE)
                     setOffers()
                 }
-                else { Timber.e(r.error) }
+                else {
+                    offers = emptyList<OfferModel>()
+                    Timber.e(r.error)
+                }
             }
             viewState.blockInterface(false)
         }
