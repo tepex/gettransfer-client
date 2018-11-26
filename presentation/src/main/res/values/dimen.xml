@@ -285,6 +285,7 @@
 	<dimen name="activity_carrier_transfer_details_btn_padding_start">12dp</dimen>
 	<dimen name="activity_carrier_transfer_details_btn_text_size">17sp</dimen>
 	<dimen name="activity_carrier_transfer_details_btn_icons_size">16dp</dimen>
+	<dimen name="activity_carrier_transfer_details_btn_text_margin_start">4dp</dimen>
 	<dimen name="activity_carrier_transfer_details_btns_margin">21dp</dimen>
 	<dimen name="activity_carrier_transfer_details_btns_layout_padding_top_bottom">16dp</dimen>
 	<dimen name="activity_carrier_transfer_details_btns_layout_padding_start_end">52dp</dimen>
