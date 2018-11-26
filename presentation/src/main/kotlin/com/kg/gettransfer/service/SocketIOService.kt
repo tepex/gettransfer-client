@@ -188,6 +188,7 @@ class SocketIOService: Service() {
                 // If earlier version channel ID is not used
                 // https://developer.android.com/reference/android/support/v4/app/NotificationCompat.Builder.html#NotificationCompat.Builder(android.content.Context)
     private fun startForeground() {
+        /*
         val channelId = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             createNotificationChannel(DEFAULT_CHANNEL_ID, "New Offer Service")
         else ""
@@ -196,7 +197,13 @@ class SocketIOService: Service() {
         val notification = notificationBuilder.setOngoing(true)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setCategory(Notification.CATEGORY_SERVICE)
+            .setAutoCancel(true)
             .build()
+        */
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notifId = (System.currentTimeMillis()%10000).toInt()
+            startForeground(notifId, Notification.Builder(this).build())
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
