@@ -23,6 +23,7 @@ import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.NumberPicker
 
 import android.widget.TextView
 
@@ -147,6 +148,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         searchTo.setUneditable()
         searchFrom.setOnClickListener { performClick(false) }
         searchTo.setOnClickListener   { performClick(true) }
+        rl_hourly.setOnClickListener  { showNumberPicker() }
         btnNext.setOnClickListener    { presenter.onNextClick() }
         enableBtnNext()
     }
@@ -154,6 +156,13 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     private fun performClick(clickedTo: Boolean) {
         presenter.isClickTo = clickedTo
         processGoogleMap(true) { presenter.onSearchClick(searchFrom.text, searchTo.text, it.projection.visibleRegion.latLngBounds) }
+    }
+
+    private fun showNumberPicker(){
+        val numberPicker = NumberPicker(this)
+        numberPicker.minValue = 1
+        numberPicker.maxValue = 13
+        numberPicker.displayedValues = arrayOf("1","2","3")
     }
 
     @CallSuper
@@ -365,14 +374,35 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
     private fun modeSwitched(hourly: Boolean) {
+        val viewIn: View
+        val viewOut: View
+        val imgIn: View
+        val imgOut: View
+
+        if (hourly) {
+            viewIn  = rl_hourly
+            viewOut = searchTo
+            imgIn   = hourly_point
+            imgOut  = b_point
+        } else {
+            viewIn  = searchTo
+            viewOut = rl_hourly
+            imgIn   = b_point
+            imgOut  = hourly_point
+        }
 
         Handler().postDelayed({
-            searchTo.visibility = View.GONE
-            rl_hourly.visibility = View.VISIBLE
-            rl_hourly.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.transition_r2l))
-        }, 200)
-        searchTo.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.transition_l2r))
-//        view.startAnimation(AnimationUtils.loadAnimation(this, R.anim.switch_out).setAnimationListener(object : Animation.AnimationListener {}))
+            viewOut.visibility = View.GONE
+            imgOut.visibility  = View.GONE
+            viewIn.visibility  = View.VISIBLE
+            viewIn.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.transition_r2l))
+            imgOut.visibility  = View.VISIBLE
+            imgIn.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.transition_down_bounced))
 
+
+        }, 200)
+        viewOut.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.transition_l2r))
+        imgOut.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.transition_up))
+        link_line.visibility = if (hourly) View.INVISIBLE else View.GONE
     }
 }
