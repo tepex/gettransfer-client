@@ -139,27 +139,28 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         processGoogleMap(false) {
             val bmPinA = getPinBitmap(routeModel.from, routeModel.dateTime, R.drawable.ic_map_label_a)
             val bmPinB = getPinBitmap(routeModel.to, Utils.formatDistance(this, routeModel.distance, routeModel.distanceUnit), R.drawable.ic_map_label_b)
+            if(Utils.isValidBitmap(bmPinA) && Utils.isValidBitmap(bmPinB)) {
+                val startMakerOptions = MarkerOptions()
+                    .position(polyline.startPoint)
+                    .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
+                val endMakerOptions = MarkerOptions()
+                    .position(polyline.finishPoint)
+                    .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
 
-            val startMakerOptions = MarkerOptions()
-                .position(polyline.startPoint)
-                .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
-            val endMakerOptions = MarkerOptions()
-                .position(polyline.finishPoint)
-                .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
+                polyline.line?.let {
+                    it.width(10f).color(ContextCompat.getColor(this@BaseGoogleMapActivity, R.color.colorPolyline))
+                    googleMap.addPolyline(it)
+                }
 
-            if(polyline.line != null) {
-                polyline.line.width(10f).color(ContextCompat.getColor(this@BaseGoogleMapActivity, R.color.colorPolyline))
-                googleMap.addPolyline(polyline.line)
+                googleMap.addMarker(startMakerOptions)
+                googleMap.addMarker(endMakerOptions)
+
+                try {
+                    polyline.track?.let { googleMap.moveCamera(it) }
+                    //showTrack(polyline.track)
+                }
+                catch(e: Exception) { Timber.e(e) }
             }
-
-            googleMap.addMarker(startMakerOptions)
-            googleMap.addMarker(endMakerOptions)
-
-            try {
-                polyline.track?.let { googleMap.moveCamera(it) }
-                //showTrack(polyline.track)
-            }
-            catch(e: Exception) { Timber.e(e) }
         }
     }
 
@@ -173,7 +174,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
     }
 
-    private fun getPinBitmap(placeName: String, info: String, drawable: Int): Bitmap{
+    private fun getPinBitmap(placeName: String, info: String, drawable: Int): Bitmap {
         val pinLayout = layoutInflater.inflate(R.layout.view_maps_pin, null)
         pinLayout.tvPlace.text = placeName
         pinLayout.tvInfo.text = info
@@ -183,7 +184,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         return createBitmapFromView(pinLayout)
     }
 
-    protected fun showTrack (track: CameraUpdate){
+    protected fun showTrack (track: CameraUpdate) {
         googleMap.animateCamera(track)
     }
 
@@ -202,5 +203,5 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         return bitmap
     }
 
-    protected fun clearMarkersAndPolylines(){ googleMap.clear() }
+    protected fun clearMarkersAndPolylines() = googleMap.clear()
 }

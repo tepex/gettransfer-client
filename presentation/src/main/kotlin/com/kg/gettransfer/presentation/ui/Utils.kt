@@ -4,6 +4,7 @@ import android.app.Activity
 
 import android.content.Context
 
+import android.graphics.Bitmap
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 
@@ -60,6 +61,7 @@ internal class Utils {
         private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
         private val EMAIL_PATTERN = Patterns.EMAIL_ADDRESS
         @JvmField val DATE_TIME_PATTERN = "dd MMMM yyyy, HH:mm"
+        const val MAX_BITMAP_SIZE = 4096
 
         private lateinit var phoneUtil: PhoneNumberUtil
         
@@ -330,6 +332,7 @@ internal class Utils {
             }
         }
         */
+        fun isValidBitmap(bitmap: Bitmap) = bitmap.width <= MAX_BITMAP_SIZE && bitmap.height <= MAX_BITMAP_SIZE
     }
 }
 
