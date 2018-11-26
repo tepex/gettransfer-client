@@ -286,7 +286,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
             }
             else {
                 logCreateTransfer(Analytics.RESULT_SUCCESS)
-                router.navigateTo(Screens.Offers(result.model.id))
+                router.replaceScreen(Screens.Offers(result.model.id))
             }
             viewState.blockInterface(false)
         }

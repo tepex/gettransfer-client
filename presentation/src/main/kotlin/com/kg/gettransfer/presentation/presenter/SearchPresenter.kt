@@ -95,7 +95,7 @@ class SearchPresenter: BasePresenter<SearchView>() {
         utils.asyncAwait { routeInteractor.updateDestinationPoint() }
         utils.asyncAwait { routeInteractor.updateStartPoint() }
         systemInteractor.addressHistory = listOf(routeInteractor.from!!, routeInteractor.to!!)
-        router.navigateTo(Screens.CreateOrder)
+        router.replaceScreen(Screens.CreateOrder)
         logEvent(REQUEST_FORM)
     }
 

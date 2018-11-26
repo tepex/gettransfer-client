@@ -134,7 +134,7 @@ class OffersPresenter: BasePresenter<OffersView>() {
                 Timber.e(result.error!!)
                 viewState.setError(result.error!!)
             }
-            else navigateBackToMain()
+            else onBackCommandClick()
             viewState.blockInterface(false)
         }
     }
