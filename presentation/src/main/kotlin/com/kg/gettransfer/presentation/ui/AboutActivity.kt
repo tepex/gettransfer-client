@@ -47,12 +47,12 @@ class AboutActivity: BaseActivity(), AboutView {
         viewpager.offscreenPageLimit = adapter.count - 1
         indicator.setViewPager(viewpager)
 
-        btnClose.setOnClickListener { presenter.closeAboutActivity()}
+        btnClose.setOnClickListener { presenter.closeAboutActivity() }
         btnNext.setOnClickListener {
             if(viewpager.currentItem == viewpager.childCount - 1) presenter.closeAboutActivity()
             else viewpager.currentItem = viewpager.currentItem + 1
         }
-        viewpager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener{
+        viewpager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(p0: Int) {}
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
             override fun onPageSelected(p0: Int) {
