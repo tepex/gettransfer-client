@@ -248,6 +248,40 @@
 
         </RelativeLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/create_transfer_divider_height"
+            android:background="@color/colorDividerGray" />
+
+        <RelativeLayout
+            android:id="@+id/layoutSettingsResetOnboarding"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/settings_activity_height_layouts"
+            android:background="@drawable/back_clicked_layouts">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/reset_onboarding"
+                android:textSize="@dimen/settings_activity_text_size"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:textColor="@color/colorTextBlack"
+                android:layout_marginStart="@dimen/settings_activity_text_margin_start"
+                android:layout_toStartOf="@+id/imgSettingsResetOnboarding"
+                android:layout_centerVertical="true"/>
+
+            <ImageView
+                android:id="@+id/imgSettingsResetOnboarding"
+                android:layout_width="@dimen/settings_activity_image_size"
+                android:layout_height="@dimen/settings_activity_image_size"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/settings_activity_image_margin_end"
+                android:layout_marginStart="@dimen/settings_activity_image_margin_start"
+                android:layout_centerVertical="true"
+                android:src="@drawable/chevron"/>
+
+        </RelativeLayout>
+
     </LinearLayout>
 
     <LinearLayout

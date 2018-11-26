@@ -21,6 +21,7 @@ import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.presentation.view.AboutView
 
 import kotlinx.coroutines.Job
 
@@ -72,7 +73,12 @@ class SplashActivity: AppCompatActivity() {
                 }
             }
             else {
-                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                if(!systemInteractor.isOnboardingShowed) {
+                    systemInteractor.isOnboardingShowed = true
+                    startActivity(Intent(this@SplashActivity, AboutActivity::class.java)
+                            .putExtra(AboutView.EXTRA_OPEN_MAIN, true).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
+                }
+                else startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 finish()
             }
         }

@@ -76,13 +76,20 @@
 	<dimen name="link_line_width">2dp</dimen>
 	<dimen name="link_line_height">18dp</dimen>
 
-	<!-- About items -->
-	<dimen name="about_item_top">100dp</dimen>
-	<dimen name="about_item_bottom">50dp</dimen>
-	<dimen name="about_content_top">25dp</dimen>
-	<dimen name="about_content_padding">60dp</dimen>
-	<dimen name="about_title_size">22sp</dimen>
-	<dimen name="about_content_size">18sp</dimen>
+	<!-- About activity -->
+	<dimen name="about_activity_close_button_margin">20dp</dimen>
+	<dimen name="about_activity_view_pager_margin_top">20dp</dimen>
+	<dimen name="about_activity_indicator_margin_bottom">48dp</dimen>
+	<dimen name="about_activity_indicator_radius">5dp</dimen>
+	<dimen name="about_activity_indicator_stroke_width">1dp</dimen>
+	<dimen name="about_activity_button_height">44dp</dimen>
+	<dimen name="about_activity_button_margin_bottom">32dp</dimen>
+	<dimen name="about_activity_button_margin_start_end">30dp</dimen>
+	<dimen name="about_activity_button_text_size">17sp</dimen>
+
+	<dimen name="about_item_title_text_size">22sp</dimen>
+	<dimen name="about_item_description_text_size">17sp</dimen>
+	<dimen name="about_item_description_margin_top">24dp</dimen>
 	
 	<!-- Read more -->
 	<dimen name="read_more_content_margin">10dp</dimen>
@@ -215,6 +222,10 @@
 	<dimen name="view_transfer_info_btn_cancel_request_margin_end">11dp</dimen>
 	<dimen name="view_transfer_info_btn_cancel_request_padding_top_bottom">5dp</dimen>
 
+	<!-- Transfer details -->
+	<dimen name="transfer_details_behaviour_peek_height">250dp</dimen>
+	<dimen name="transfer_details_horizontal_divider_height">0.5dp</dimen>
+	<dimen name="transfer_details_vertical_divider_width">1dp</dimen>
 
 	<!--activity_transfer_details-->
 	<dimen name="activity_transfer_details_map_height">208dp</dimen>
@@ -274,7 +285,6 @@
 	<dimen name="activity_carrier_transfer_details_btn_padding_start">12dp</dimen>
 	<dimen name="activity_carrier_transfer_details_btn_text_size">17sp</dimen>
 	<dimen name="activity_carrier_transfer_details_btn_icons_size">16dp</dimen>
-	<dimen name="activity_carrier_transfer_details_btn_text_margin_start">4dp</dimen>
 	<dimen name="activity_carrier_transfer_details_btns_margin">21dp</dimen>
 	<dimen name="activity_carrier_transfer_details_btns_layout_padding_top_bottom">16dp</dimen>
 	<dimen name="activity_carrier_transfer_details_btns_layout_padding_start_end">52dp</dimen>
@@ -386,6 +396,8 @@
 	<!--rating_bar_stars-->
 	<dimen name="rating_bar_stars_height_width">12dp</dimen>
 	<dimen name="rating_bar_stars_padding">2dp</dimen>
+
+	<dimen name="btn_call_chat_text_margin_start">6dp</dimen>
 
 	<!--drawable values-->
 	<dimen name="panels_corner_radius">5dp</dimen>

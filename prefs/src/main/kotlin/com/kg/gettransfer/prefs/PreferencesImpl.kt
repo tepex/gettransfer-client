@@ -22,6 +22,7 @@ class PreferencesImpl(context: Context,
         @JvmField val INVALID_TOKEN   = "invalid_token"
         @JvmField val ACCESS_TOKEN    = "token"
         @JvmField val LAST_MODE       = "last_mode"
+        @JvmField val ONBOARDING      = "onboarding"
         @JvmField val SELECTED_FIELD  = "selected_field"
         @JvmField val ENDPOINT        = "endpoint"        
         @JvmField val ADDRESS_HISTORY = "history"
@@ -54,6 +55,15 @@ class PreferencesImpl(context: Context,
         set(value) {
             with(configsPrefs.edit()) {
                 putString(LAST_MODE, value)
+                apply()
+            }
+        }
+
+    override var isOnboardingShowed: Boolean
+        get() = configsPrefs.getBoolean(ONBOARDING, false)
+        set(value) {
+            with(configsPrefs.edit()){
+                putBoolean(ONBOARDING, value)
                 apply()
             }
         }

@@ -110,6 +110,8 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
 
     fun onLogsClicked() = router.navigateTo(Screens.ShareLogs)
 
+    fun onResetOnboardingClicked(){ systemInteractor.isOnboardingShowed = false }
+
     private fun saveAccount() = utils.launchSuspend {
         viewState.blockInterface(true)
         val result = utils.asyncAwait { systemInteractor.putAccount() }

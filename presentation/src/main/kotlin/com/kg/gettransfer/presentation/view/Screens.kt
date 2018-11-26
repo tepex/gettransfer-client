@@ -40,10 +40,6 @@ object Screens {
     object ShareLogs: SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, LogsActivity::class.java)
     }
-    
-    object About: SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, AboutActivity::class.java)
-    }
 
     object Settings: SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, SettingsActivity::class.java)
@@ -68,6 +64,12 @@ object Screens {
             addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
             putExtra(LoginView.EXTRA_SCREEN_FOR_RETURN, nextScreen)
             putExtra(LoginView.EXTRA_EMAIL_TO_LOGIN, email)
+        }
+    }
+
+    data class About(val isOnboardingShowed: Boolean): SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, AboutActivity::class.java).apply {
+            putExtra(AboutView.EXTRA_OPEN_MAIN, false)
         }
     }
 

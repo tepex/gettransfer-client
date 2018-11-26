@@ -6,6 +6,7 @@ import com.kg.gettransfer.data.model.GTAddressEntity
 interface PreferencesCache {
     var accessToken: String
     var lastMode: String
+    var isOnboardingShowed: Boolean
     var endpoint: EndpointEntity
     var selectedField: String
     var addressHistory: List<GTAddressEntity>
