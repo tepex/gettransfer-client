@@ -245,6 +245,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         if(currentDate.time.after(date)) date = currentDate.time
 
         if(!checkFieldsForRequest()) return
+                
         val trip = Trip(date, flightNumber)
         /* filter */
         val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
@@ -261,11 +262,16 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         Timber.d("flightNumber: $flightNumber")
         Timber.d("comment: $comment")
 
+        if(routeInteractor.from == null || routeInteractor.to == null) return
+        val from = routeInteractor.from!!
+        val to = routeInteractor.to!!
+        
+        
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait {
-                transferInteractor.createTransfer(Mappers.getTransferNew(routeInteractor.from!!.cityPoint,
-                                                                         routeInteractor.to!!.cityPoint,
+                transferInteractor.createTransfer(Mappers.getTransferNew(from.cityPoint,
+                                                                         to.cityPoint,
                                                                          trip,
                                                                          null,
                                                                          selectedTransportTypes,
