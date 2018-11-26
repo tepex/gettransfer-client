@@ -11,9 +11,9 @@
     android:focusable="true">
 
     <ImageView
-        android:layout_width="@dimen/activity_carrier_transfer_details_btn_icons_size"
-        android:layout_height="@dimen/activity_carrier_transfer_details_btn_icons_size"
-        app:srcCompat="@drawable/ic_call"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_phone_call"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,7 +21,7 @@
         android:text="@string/LNG_PAYMENT_CALL"
         android:textAllCaps="true"
         android:textSize="@dimen/activity_carrier_transfer_details_btn_text_size"
-        android:layout_marginStart="@dimen/activity_carrier_transfer_details_btn_text_margin_start"
+        android:layout_marginStart="@dimen/btn_call_chat_text_margin_start"
         android:textColor="@color/colorWhite"
         android:fontFamily="@font/sf_pro_text_regular"/>
 

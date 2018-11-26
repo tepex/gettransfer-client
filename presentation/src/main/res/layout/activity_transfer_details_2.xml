@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorWhite">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/create_order_behaviour_peek_height"/>
+
+        <View
+            android:id="@+id/viewGradient"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/activity_main_gradient_layout_height"
+            android:background="@drawable/back_status_bar_gradient"
+            android:layout_gravity="top"/>
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="@dimen/activity_main_buttons_size"
+            android:layout_height="@dimen/activity_main_buttons_size"
+            android:layout_gravity="top|start"
+            android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
+            android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end"
+            android:clickable="true"
+            android:focusable="true"
+            app:srcCompat="@drawable/ic_circle_back"
+            android:background="@drawable/back_circle_white_buttons"
+            android:elevation="2dp"/>
+
+    </FrameLayout>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/expended_sheet_order_height">
+
+        <include
+            android:id="@+id/sheetOrder"
+            layout="@layout/bottom_sheet_create_order_new"
+            android:visibility="gone" />
+    </android.support.design.widget.CoordinatorLayout>
+
+</android.support.design.widget.CoordinatorLayout>

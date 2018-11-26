@@ -109,4 +109,13 @@
 
     <color name="transparent_white">#00ffffff</color>
     <color name="transparent_black">#00000000</color>
+
+    <!-- Transfer details -->
+    <color name="color_transfer_details_vertical_divider">#d8d8d8</color>
+    <color name="color_transfer_details_horizontal_divider">#bcbbc1</color>
+    <color name="color_transfer_details_text_green">#98b71b</color>
+    <color name="color_transfer_details_text_gray">#B2B2B2</color>
+    <color name="color_transfer_details_background_gray">#f6f6f6</color>
+    <color name="color_transfer_details_header_text_color">#8e8e93</color>
+
 </resources>

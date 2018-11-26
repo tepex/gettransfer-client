@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="11dp"
+    android:paddingBottom="11dp">
+
+    <ImageView
+        android:id="@+id/field_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/field_title"
+        app:layout_constraintBottom_toBottomOf="@+id/field_title"
+        app:layout_constraintEnd_toStartOf="@+id/field_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_phone"/>
+
+    <TextView
+        android:id="@+id/field_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="17sp"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:layout_marginStart="46dp"
+        android:text="Phone"/>
+
+    <TextView
+        android:id="@+id/field_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/field_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="20dp"
+        android:gravity="end"
+        android:textSize="17sp"
+        android:textColor="@color/color_transfer_details_text_gray"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:text="+7 900 123 56 78" />
+
+</android.support.constraint.ConstraintLayout>
