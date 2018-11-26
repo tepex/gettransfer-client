@@ -41,6 +41,7 @@
                 android:background="@color/colorDividerGray" />
 
             <RelativeLayout
+                android:id="@+id/rl_searchForm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -57,6 +58,28 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     app:srcCompat="@drawable/ic_dark_arrow"/>
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rl_hourly"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.kg.gettransfer.presentation.ui.SearchAddress
+                    android:id="@+id/hourly_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/hourly_arrow_margin_end"
+                    android:rotation="90"
+                    android:src="@drawable/ic_arrow_down"/>
+
 
             </RelativeLayout>
 

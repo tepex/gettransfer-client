@@ -175,6 +175,7 @@
 	<dimen name="minHeight_toDraw_AllPopularPlaces">138dp</dimen>
 	<dimen name="divider_marginStart">56dp</dimen>
 	<dimen name="search_marginStart">56dp</dimen>
+	<dimen name="hourly_arrow_margin_end">11dp</dimen>
 
 
 	<!-- Settings -->

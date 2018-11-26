@@ -6,6 +6,7 @@ import android.graphics.PorterDuffColorFilter
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 
 import android.support.annotation.CallSuper
 
@@ -129,7 +130,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
         initNavigation()
 
-        switch_mode.setOnCheckedChangeListener { buttonView, isChecked -> modeSwitched(isChecked) }
+ //       switch_mode.setOnCheckedChangeListener { buttonView, isChecked -> modeSwitched(isChecked) }
 
         isFirst = savedInstanceState == null
 
@@ -364,10 +365,14 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
     private fun modeSwitched(hourly: Boolean) {
-        val view = searchTo
+
+        Handler().postDelayed({
+            searchTo.visibility = View.GONE
+            rl_hourly.visibility = View.VISIBLE
+            rl_hourly.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.transition_r2l))
+        }, 200)
+        searchTo.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.transition_l2r))
 //        view.startAnimation(AnimationUtils.loadAnimation(this, R.anim.switch_out).setAnimationListener(object : Animation.AnimationListener {}))
-        view.animate()
-                .translationXBy(200f)
-                .withEndAction {  }
+
     }
 }
