@@ -130,7 +130,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
         initNavigation()
 
- //       switch_mode.setOnCheckedChangeListener { buttonView, isChecked -> modeSwitched(isChecked) }
+        switch_mode.setOnCheckedChangeListener { buttonView, isChecked -> modeSwitched(isChecked) }
 
         isFirst = savedInstanceState == null
 
