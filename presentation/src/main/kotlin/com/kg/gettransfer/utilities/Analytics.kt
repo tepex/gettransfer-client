@@ -138,14 +138,14 @@ class Analytics(private val firebase: FirebaseAnalytics,
         YandexMetrica.reportEvent(event, data)
     }
 
-    fun logEventEcommercePurchase(event: String, bundle: Bundle, map: Map<String, Any>,
+    fun logEventEcommercePurchase(event: String, bundle: Bundle, map: Map<String, Any?>,
                                   price: BigDecimal, currency: Currency) {
         logEventToFirebase(event, bundle)
         facebook.logPurchase(price, currency, bundle)
         logEventToYandex(event, map)
     }
 
-    fun logEventBeginCheckout(event: String, bundle: Bundle, map: Map<String, Any>, price: Double) {
+    fun logEventBeginCheckout(event: String, bundle: Bundle, map: Map<String, Any?>, price: Double) {
         logEventToFirebase(event, bundle)
         facebook.logEvent(event, price, bundle)
         logEventToYandex(event, map)
