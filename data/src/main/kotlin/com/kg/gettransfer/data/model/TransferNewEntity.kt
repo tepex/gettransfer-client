@@ -11,7 +11,7 @@ open class TransferNewEntity(val from: CityPointEntity,
                              val nameSign: String?,
                              val comment: String?,
                              val user: UserEntity,
-                             val promoCode: String?)
+                             val promoCode: String = "")
 /* В данный момент не используется
                              val paypalOnly: Boolean) */
 

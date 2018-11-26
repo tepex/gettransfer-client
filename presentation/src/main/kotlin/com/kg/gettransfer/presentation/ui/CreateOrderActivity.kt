@@ -66,6 +66,10 @@ import kotlinx.android.synthetic.main.amu_info_window.view.*
 
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
+import com.kg.gettransfer.utilities.Analytics.Companion.CAR_INFO_CLICKED
+import com.kg.gettransfer.utilities.Analytics.Companion.COMMENT_INPUT
+import com.kg.gettransfer.utilities.Analytics.Companion.DATE_TIME_CHANGED
+import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_PRICE_FOCUSED
 
 import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
 import kotlinx.android.synthetic.main.view_create_order_field.view.*
@@ -370,7 +374,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         sheetTransport.visibility = View.VISIBLE
         bsTransport.state = BottomSheetBehavior.STATE_EXPANDED
         showTransportInfo(transportType)
-        presenter.logEventMain(CreateOrderPresenter.CAR_INFO_CLICKED)
+        presenter.logEventMain(CAR_INFO_CLICKED)
     }
 
     private fun showTransportInfo(transportType: TransportTypeModel) {
@@ -453,7 +457,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun initChangeTextListeners() {
         price_field_input.onTextChanged             { presenter.cost = it.toDoubleOrNull() }
         price_field_input.setOnFocusChangeListener  { _, hasFocus ->
-            if(hasFocus) presenter.logTransferSettingsEvent(CreateOrderPresenter.OFFER_PRICE_FOCUSED)
+            if(hasFocus) presenter.logTransferSettingsEvent(OFFER_PRICE_FOCUSED)
         }
         user_name_field.field_input.onTextChanged        { presenter.setName(it.trim()) }
         email_field.field_input.onTextChanged            { presenter.setEmail(it.trim()) }
@@ -472,7 +476,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
     private fun initClickListeners() {
         val dateTimeFieldClickListener = View.OnClickListener {
             showDatePickerDialog()
-            presenter.logTransferSettingsEvent(CreateOrderPresenter.DATE_TIME_CHANGED)
+            presenter.logTransferSettingsEvent(DATE_TIME_CHANGED)
         }
         transfer_date_time_field.setOnClickListener(dateTimeFieldClickListener)
         transfer_date_time_field.field_input.setOnClickListener(dateTimeFieldClickListener)
@@ -489,7 +493,7 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         flight_number_field.setOnClickListener              { fieldTouched(flight_number_field.field_input) }
         promo_field.setOnClickListener                      { fieldTouched(promo_field.field_input) }
         comment_field.setOnClickListener                    { showPopupWindowComment()
-            presenter.logTransferSettingsEvent(CreateOrderPresenter.COMMENT_INPUT)
+            presenter.logTransferSettingsEvent(COMMENT_INPUT)
         }
 
         tvAgreement1.setOnClickListener                     { presenter.showLicenceAgreement() }

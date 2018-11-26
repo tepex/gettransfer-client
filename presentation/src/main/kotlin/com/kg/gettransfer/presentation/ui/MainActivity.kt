@@ -83,6 +83,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
             R.id.navSettings       -> presenter.onSettingsClick()
             R.id.navRequests       -> presenter.onRequestsClick()
             R.id.navBecomeACarrier -> presenter.onBecomeACarrierClick()
+            R.id.navHeaderShare    -> presenter.onShareClick()
             else -> Timber.d("No route")
         }
         drawer.closeDrawer(GravityCompat.START)
@@ -195,7 +196,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         navFooterStamp.setOnClickListener(readMoreListener)
         navFooterReadMore.setOnClickListener(readMoreListener)
 
-        navHeaderShare.setOnClickListener { Timber.d("Share action") }
+        navHeaderShare.setOnClickListener(itemsNavigationViewListener)
         navLogin.setOnClickListener(itemsNavigationViewListener)
         navRequests.setOnClickListener(itemsNavigationViewListener)
         navSettings.setOnClickListener(itemsNavigationViewListener)
