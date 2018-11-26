@@ -283,17 +283,18 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
                                                                          promoCode,
                                                                          false))
             }
-            if(result.error != null) {
+            
+            val logResult = utils.asyncAwait { systemInteractor.putAccount() }
+            if(result.error == null && logResult.error == null) {
+                logCreateTransfer(Analytics.RESULT_SUCCESS)
+                router.navigateTo(Screens.Offers(result.model.id))
+            } else if(result.error != null) {
                 logCreateTransfer(Analytics.SERVER_ERROR)
                 when {
                     result.error!!.details == "{phone=[taken]}" -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
                     else -> viewState.setError(result.error!!)
                 }
-            }
-            else {
-                logCreateTransfer(Analytics.RESULT_SUCCESS)
-                router.replaceScreen(Screens.Offers(result.model.id))
-            }
+            } else if(logResult.error != null) viewState.showNotLoggedAlert(result.model.id)
             viewState.blockInterface(false)
         }
     }
