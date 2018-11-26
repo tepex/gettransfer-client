@@ -48,6 +48,7 @@
 		android:singleLine="true"
 		android:textColor="@color/colorTextBlack"
 		android:textSize="@dimen/search_main_textSize"
+		android:textColorHint="@color/black_a10"
 		android:text="Tverskaya, 21, Moscow, Russia"
 		android:ellipsize="end"
 		android:paddingBottom="@dimen/search_main_paddingBottom"

@@ -40,6 +40,7 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.view.MainView
+import kotlinx.android.synthetic.main.a_b_view.*
 
 import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -82,6 +83,9 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         @JvmField val COMPASS_BUTTON_INDEX = 5
         @JvmField val FADE_DURATION = 500L
         @JvmField val MAX_INIT_ZOOM = 2.0f
+
+        const val ALPHA_FULL = 1f
+        const val ALPHA_DISABLED = 0.3f
     }
 
     init {
@@ -313,20 +317,33 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
     override fun selectFieldFrom() {
         mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_map_label_empty))
-        btnShowDrawerLayout.visibility = View.VISIBLE
-        btnBack.visibility = View.GONE
-        searchFrom.addressField.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
+        switchButtons(false)
+        setAlpha(ALPHA_FULL)
         ivSelectFieldTo.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(this, R.color.colorTextBlack), PorterDuff.Mode.SRC_IN)
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.START)
     }
 
     override fun setFieldTo() {
         mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_map_label_b))
-        btnShowDrawerLayout.visibility = View.GONE
-        btnBack.visibility = View.VISIBLE
-        searchFrom.addressField.setTextColor(ContextCompat.getColor(this, R.color.colorTextLightGray))
+        switchButtons(true)
+        setAlpha(ALPHA_DISABLED)
         ivSelectFieldTo.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(this, R.color.colorBtnGreen), PorterDuff.Mode.SRC_IN)
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END)
+    }
+
+    private fun switchButtons(isBackVisible: Boolean){
+        if (isBackVisible) {
+            btnBack.visibility = View.VISIBLE
+            btnShowDrawerLayout.visibility = View.GONE
+        } else {
+            btnBack.visibility = View.GONE
+            btnShowDrawerLayout.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setAlpha(alpha: Float) {
+        searchFrom.alpha = alpha
+        a_point.alpha = alpha
     }
 
     override fun onBackClick() {

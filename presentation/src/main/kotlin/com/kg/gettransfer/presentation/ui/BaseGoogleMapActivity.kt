@@ -50,6 +50,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
 
     companion object {
         @JvmField val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
+        private const val LABEL_VERTICAL_POSITION = 12
     }
 
     @CallSuper
@@ -120,6 +121,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     protected open suspend fun customizeGoogleMaps(gm: GoogleMap) {
         gm.uiSettings.isRotateGesturesEnabled = false
         gm.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
+        gm.setPadding(0, 0, 0, LABEL_VERTICAL_POSITION)
     }
     
     protected fun processGoogleMap(ignore: Boolean, block: (GoogleMap) -> Unit) {

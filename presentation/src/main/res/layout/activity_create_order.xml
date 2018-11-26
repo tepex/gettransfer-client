@@ -19,7 +19,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_for_area_behind_rounded_corners">
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"

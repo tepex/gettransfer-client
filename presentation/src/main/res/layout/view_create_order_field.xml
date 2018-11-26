@@ -50,6 +50,7 @@
         android:fontFamily="@font/sf_pro_text_semibold"
         android:gravity="start|bottom"
         android:hint="450"
+        android:textColorHint="@color/black_a10"
         android:imeOptions="actionDone"
         android:singleLine="true"
         android:textColor="@color/colorTextBlack"
@@ -58,8 +59,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/field_icon"
-        app:layout_constraintTop_toBottomOf="@+id/field_title"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/field_title" />
 
 
 

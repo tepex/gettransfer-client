@@ -44,6 +44,7 @@
             <include
                 android:id="@+id/layoutTransferInfo"
                 layout="@layout/view_transfer_request_info"
+                android:layout_marginTop="@dimen/margin_for_area_behind_rounded_corners"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
