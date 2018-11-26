@@ -135,17 +135,18 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
             Timber.w("Polyline model is empty for route: $routeModel")
             return
         }
-        val bmPinA = getPinBitmap(routeModel.from, routeModel.dateTime, R.drawable.ic_map_label_a)
-        val bmPinB = getPinBitmap(routeModel.to, Utils.formatDistance(this, routeModel.distance, routeModel.distanceUnit), R.drawable.ic_map_label_b)
 
-        val startMakerOptions = MarkerOptions()
+        processGoogleMap(false) {
+            val bmPinA = getPinBitmap(routeModel.from, routeModel.dateTime, R.drawable.ic_map_label_a)
+            val bmPinB = getPinBitmap(routeModel.to, Utils.formatDistance(this, routeModel.distance, routeModel.distanceUnit), R.drawable.ic_map_label_b)
+
+            val startMakerOptions = MarkerOptions()
                 .position(polyline.startPoint)
                 .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
-        val endMakerOptions = MarkerOptions()
+            val endMakerOptions = MarkerOptions()
                 .position(polyline.finishPoint)
                 .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
 
-        processGoogleMap(false) {
             if(polyline.line != null) {
                 polyline.line.width(10f).color(ContextCompat.getColor(this@BaseGoogleMapActivity, R.color.colorPolyline))
                 googleMap.addPolyline(polyline.line)

@@ -1,5 +1,6 @@
 package com.kg.gettransfer.service
 
+import android.app.Notification
 import android.app.Service
 
 import android.content.Intent
@@ -41,6 +42,12 @@ class SocketIOService: Service() {
         private val NEW_OFFER_RE = Regex("^newOffer/(\\d+)$")
     }
     
+    @CallSuper
+    override fun onCreate() {
+        super.onCreate()
+        startForeground(1, Notification())
+    }
+
     override fun onBind(intent: Intent): IBinder = binder
 
     @CallSuper
@@ -55,7 +62,7 @@ class SocketIOService: Service() {
 
     override fun onUnbind(intent: Intent) = serviceBinded
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int) = START_STICKY
-    
+
     fun connect(url: String, accessToken: String) {
         /* Reconnect iff URL or token changed. */
         val reconnect = (this.url != url || this.accessToken != accessToken)

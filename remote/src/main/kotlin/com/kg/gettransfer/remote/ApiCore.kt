@@ -15,6 +15,7 @@ import com.kg.gettransfer.remote.model.TransportTypesWrapperModel
 
 import devcsrj.okhttp3.logging.HttpLoggingInterceptor
 
+import java.io.IOException
 import java.util.concurrent.TimeoutException
 
 import kotlinx.coroutines.Deferred
@@ -55,7 +56,12 @@ class ApiCore: KoinComponent {
             if(request.url().encodedPath() != Api.API_ACCESS_TOKEN) request = request.newBuilder()
 	            .addHeader(Api.HEADER_TOKEN, preferences.accessToken)
 	            .build()
-	        chain.proceed(request)
+	        try {
+	            chain.proceed(request)
+	        } catch(e: Exception) {
+	            log.error("Maybe DNS Exception", e)
+	            throw IOException(e)
+	        }
 	    }
 	    .cookieJar(CookieJar.NO_COOKIES)
     }.build()

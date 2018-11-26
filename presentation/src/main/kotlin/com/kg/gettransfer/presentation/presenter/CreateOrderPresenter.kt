@@ -83,7 +83,6 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         @JvmField val FUTURE_MINUTE     = 5
 
         const val EMAIL_FIELD           = "email"
-        const val NAME_FIELD            = "name"
         const val PHONE_FIELD           = "phone"
         const val TRANSPORT_FIELD       = "transport"
         const val TERMS_ACCEPTED_FIELD  = "terms_accepted"
@@ -287,7 +286,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
             }
             else {
                 logCreateTransfer(Analytics.RESULT_SUCCESS)
-                router.navigateTo(Screens.Offers(result.model.id))
+                router.replaceScreen(Screens.Offers(result.model.id))
             }
             viewState.blockInterface(false)
         }
@@ -298,9 +297,6 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         if (!Utils.checkEmail(user.profile.email)) {
             errorFiled = EMAIL_FIELD
             logCreateTransfer(Analytics.INVALID_EMAIL)
-        } else if (user.profile.name.isNullOrBlank()) {
-            errorFiled = NAME_FIELD
-            logCreateTransfer(Analytics.INVALID_NAME)
         } else if (!Utils.checkPhone(user.profile.phone!!)) {
             errorFiled = PHONE_FIELD
             logCreateTransfer(Analytics.INVALID_PHONE)
