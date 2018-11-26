@@ -582,7 +582,7 @@
     <string name="LNG_RIDE_CHOOSE_TRANSPORT">Please select transport type</string>
     <string name="LNG_RIDE_OFFERT">I aggree with \n<a href = '#'>License agreement</a></string>
     <string name="LNG_RIDE_OFFERT_TITLE">License agreement</string>
-    <string name="LNG_RIDE_OFFERT_ERROR">You should aggree with License</string>
+    <string name="LNG_RIDE_OFFERT_ERROR">You should accept terms of use</string>
     <string name="LNG_RIDE_FAIR_PRICE_FORMAT">Average rate on route %s (ETA ~%s)</string>
     <string name="LNG_RIDE_FAIR_PRICE_EMPTY">Please, pick transport type to get a fair price</string>
     <string name="LNG_RIDE_SORT_INFO">Offers sorting</string>
@@ -707,5 +707,9 @@
     <string name="LNG_RIDE_ABOUT">About transport</string>
     <string name="from_price">from:</string>
     <string name="tag_read_more" translatable="false">read_more_dialog</string>
+    <string name="email_support" translatable="false">info@gettransfer.com</string>
+    <string name="LNG_EMAIL_SUBJECT">Get help</string>
+    <string name="send_email">Send mail...</string>
+    <string name="no_email_apps">There are no email apps installed.</string>
 
 </resources>

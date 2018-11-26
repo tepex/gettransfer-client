@@ -12,12 +12,10 @@ import android.view.ViewGroup
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.TransportTypeModel
-import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 
 import com.kg.gettransfer.presentation.ui.Utils
 
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.bottom_sheet_type_transport.view.*
 
 import kotlinx.android.synthetic.main.view_transfer_type.*
 import kotlinx.android.synthetic.main.view_transfer_type.view.*

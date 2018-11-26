@@ -1,8 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
-import android.content.Intent
-
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
@@ -31,6 +28,11 @@ class LoginActivity: BaseActivity(), LoginView {
 
     override fun getPresenter(): LoginPresenter = presenter
 
+    companion object {
+        const val INVALID_EMAIL     = 1
+        const val INVALID_PASSWORD  = 2
+    }
+
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,15 +56,35 @@ class LoginActivity: BaseActivity(), LoginView {
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
-        tvLoginError.visibility = View.GONE
+        if (block) tvLoginError.visibility = View.GONE
     }
     
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
         tvLoginError.visibility = View.VISIBLE
     }
 
-    override fun showError(show: Boolean) {
-        tvLoginError.visibility = if (show) View.VISIBLE else View.GONE
+    override fun showError(show: Boolean, message: String?) {
+        tvLoginError.apply {
+            if (show) {
+                visibility = View.VISIBLE
+                text = message?:getString(R.string.LNG_BAD_CREDENTIALS_ERROR)
+            } else visibility = View.GONE
+
+        }
+    }
+
+    override fun showValidationError(show: Boolean, errorType: Int) {
+        tvLoginError.apply {
+            if (show){
+                visibility = View.VISIBLE
+                val res = when (errorType) {
+                    INVALID_EMAIL    -> R.string.LNG_ERROR_EMAIL
+                    INVALID_PASSWORD -> R.string.LNG_LOGIN_PASSWORD
+                    else             -> R.string.LNG_BAD_CREDENTIALS_ERROR
+                }
+                setText(res)
+            } else visibility = View.GONE
+        }
     }
     
     override fun onBackPressed() { presenter.onBackCommandClick() }

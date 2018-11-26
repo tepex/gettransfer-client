@@ -23,7 +23,7 @@ interface SystemRepository {
     suspend fun coldStart(): Result<Account>
     suspend fun putAccount(account: Account): Result<Account>
     suspend fun login(email: String, password: String): Result<Account>
-    fun logout()
+    fun logout(): Result<Account>
     
     fun addListener(listener: SystemListener)
     fun removeListener(listener: SystemListener)

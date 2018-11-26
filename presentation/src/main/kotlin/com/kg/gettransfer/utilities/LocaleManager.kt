@@ -2,7 +2,7 @@ package com.kg.gettransfer.utilities
 
 import android.content.Context
 import android.content.res.Configuration
-import java.util.*
+import java.util.Locale
 
 class LocaleManager {
 

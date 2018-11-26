@@ -8,12 +8,9 @@ import android.view.ViewGroup
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.presentation.model.PopularPlace
-import com.kg.gettransfer.presentation.presenter.SearchPresenter
 
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.address_list_item.*
-import kotlinx.android.synthetic.main.popular_address_list_item.*
 
 class AddressAdapter(private var list: List<GTAddress>,
                      private val selectListener: (GTAddress) -> Unit): RecyclerView.Adapter<RecyclerView.ViewHolder>() {

@@ -7,6 +7,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.presentation.ui.LoginActivity
 
 import com.kg.gettransfer.presentation.view.LoginView
 import com.kg.gettransfer.presentation.view.Screens
@@ -34,7 +35,7 @@ class LoginPresenter: BasePresenter<LoginView>() {
 
     fun onLoginClick() {
         if(!checkFields()) return
-        
+
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { systemInteractor.login(email!!, password!!) }
@@ -51,7 +52,7 @@ class LoginPresenter: BasePresenter<LoginView>() {
                 //else router.exitWithResult(RESULT_CODE, RESULT_OK)
                 logLoginEvent(RESULT_SUCCESS)
             } else {
-                viewState.setError(result.error!!)
+                viewState.showError(true, result.error!!.message)
                 logLoginEvent(RESULT_FAIL)
             }
             viewState.blockInterface(false)
@@ -72,10 +73,14 @@ class LoginPresenter: BasePresenter<LoginView>() {
     fun setPassword(password: String) { this.password = if (password.isEmpty()) null else password }
 
     private fun checkFields(): Boolean {
-        val checkEmail = email != null && Patterns.EMAIL_ADDRESS.matcher(email!!).matches()
-        val checkPassword = password != null && password!!.length >= MIN_PASSWORD_LENGTH
-        viewState.showError(!(checkEmail && checkPassword))
-        return checkEmail && checkPassword
+        val checkEmail   = email != null && Patterns.EMAIL_ADDRESS.matcher(email!!).matches()
+        val checkPassword= password != null
+        var fieldsValid = true
+        var errorType = 0
+        if (!checkEmail)         { fieldsValid = false; errorType = LoginActivity.INVALID_EMAIL }
+        else if (!checkPassword) { fieldsValid = false; errorType = LoginActivity.INVALID_PASSWORD }
+        viewState.showValidationError(!fieldsValid, errorType)
+        return fieldsValid
     }
 
     private fun checkCarrierMode(): String {

@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.model.TransferModel
 

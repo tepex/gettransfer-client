@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.adapter
 
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 
 import android.view.LayoutInflater
@@ -8,7 +9,6 @@ import android.view.ViewGroup
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.PopularPlace
-import com.kg.gettransfer.presentation.presenter.SearchPresenter
 
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.popular_address_list_item.*
@@ -26,7 +26,7 @@ class PopularAddressAdapter(private val list: List<PopularPlace>,
     class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(place: PopularPlace, listener: PopularClickHandler) = with(containerView) {
             popular_title.text = place.title
-            popular_icon.setImageDrawable(containerView.context.getDrawable(place.icon))
+            popular_icon.setImageDrawable(ContextCompat.getDrawable(containerView.context, place.icon))
             setOnClickListener { listener(place) }
         }
     }

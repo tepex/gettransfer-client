@@ -1,9 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
-import android.content.Intent
-import android.content.res.Configuration
-
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
@@ -13,18 +9,15 @@ import android.os.Bundle
 
 import android.support.annotation.CallSuper
 
-import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 
-import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
 
 import android.transition.Fade
 
 import android.view.Gravity
-import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 
@@ -53,11 +46,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_navigation.*
-
-import org.koin.android.ext.android.inject
-
-import ru.terrakok.cicerone.commands.Command
-import ru.terrakok.cicerone.commands.Forward
 
 import timber.log.Timber
 
@@ -139,13 +127,13 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
         val fade = Fade()
         fade.duration = FADE_DURATION
-        window.setExitTransition(fade)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) window.exitTransition = fade
     }
 
     @CallSuper
     protected override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        search.elevation = resources.getDimension(R.dimen.search_elevation)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) search.elevation = resources.getDimension(R.dimen.search_elevation)
         searchFrom.setUneditable()
         searchTo.setUneditable()
         searchFrom.setOnClickListener { performClick(false) }
@@ -154,9 +142,9 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         enableBtnNext()
     }
 
-    private fun performClick(clickedTo: Boolean){
+    private fun performClick(clickedTo: Boolean) {
         presenter.isClickTo = clickedTo
-        presenter.onSearchClick(searchFrom.text, searchTo.text, googleMap.projection.visibleRegion.latLngBounds)
+        processGoogleMap(true) { presenter.onSearchClick(searchFrom.text, searchTo.text, it.projection.visibleRegion.latLngBounds) }
     }
 
     @CallSuper
@@ -206,17 +194,17 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
 
-    protected override suspend fun customizeGoogleMaps() {
-        super.customizeGoogleMaps()
-        googleMap.setMyLocationEnabled(true)
-        googleMap.uiSettings.isMyLocationButtonEnabled = false
+    protected override suspend fun customizeGoogleMaps(gm: GoogleMap) {
+        super.customizeGoogleMaps(gm)
+        gm.setMyLocationEnabled(true)
+        gm.uiSettings.isMyLocationButtonEnabled = false
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
-        googleMap.setOnCameraMoveListener { presenter.onCameraMove(googleMap.getCameraPosition()!!.target, true);  }
-        googleMap.setOnCameraIdleListener { presenter.onCameraIdle(googleMap.projection.visibleRegion.latLngBounds) }
-        googleMap.setOnCameraMoveStartedListener {
+        gm.setOnCameraMoveListener { presenter.onCameraMove(gm.cameraPosition!!.target, true);  }
+        gm.setOnCameraIdleListener { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
+        gm.setOnCameraMoveStartedListener {
             if(it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
                 presenter.enablePinAnimation()
-                googleMap.setOnCameraMoveStartedListener(null)
+                gm.setOnCameraMoveStartedListener(null)
             }
         }
     }
@@ -224,22 +212,22 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     /* MainView */
     override fun setMapPoint(point: LatLng, withAnimation: Boolean) {
         val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
-        processGoogleMap {
+        processGoogleMap(false) {
             if(centerMarker != null) {
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+                it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
                 moveCenterMarker(point)
             } else {
                 /* Грязный хак!!! */
-                if(isFirst || googleMap.cameraPosition.zoom <= MAX_INIT_ZOOM) {
+                if(isFirst || it.cameraPosition.zoom <= MAX_INIT_ZOOM) {
                     val zoom1 = resources.getInteger(R.integer.map_min_zoom).toFloat()
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom1))
+                    it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom1))
                     isFirst = false
                     //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
                 }
                 //else googleMap.moveCamera(CameraUpdateFactory.newLatLng(point))
                 else {
-                    if(withAnimation) googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
-                    else googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+                    if(withAnimation) it.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+                    else it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
                 }
             }
         }
@@ -251,13 +239,13 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
                 .withStartAction { presenter.isMarkerAnimating = true }
                 .withEndAction {
                     presenter.isMarkerAnimating = false
-                    if(!up) markerShadow.setImageDrawable(getDrawable(R.drawable.default_position_shadow))
+                    if(!up) markerShadow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_position_shadow))
                 }
                 .setDuration(150L)
                 .translationYBy(px)
                 .start()
 
-        if(up) markerShadow.setImageDrawable(getDrawable(R.drawable.lifted_marker_shadow))
+        if(up) markerShadow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.lifted_marker_shadow))
     }
 
     override fun moveCenterMarker(point: LatLng) {
@@ -289,19 +277,18 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     override fun setAddressFrom(address: String) {
         searchFrom.text = address
         enableBtnNext()
-        var iconRes: Int
-        if(address.isNotEmpty()) iconRes = R.drawable.a_point_filled
-        else iconRes = R.drawable.a_point_empty
-        icons_container.a_point.setImageDrawable(getDrawable(iconRes))
+        val iconRes: Int = if(address.isNotEmpty()) R.drawable.a_point_filled
+        else R.drawable.a_point_empty
+        icons_container.a_point.setImageDrawable(ContextCompat.getDrawable(this, iconRes))
     }
 
     override fun setAddressTo(address: String)   {
         searchTo.text = address
         enableBtnNext()
-        var iconRes: Int
+        val iconRes: Int
         if(address.isNotEmpty()) iconRes = R.drawable.b_point_filled
         else iconRes = R.drawable.b_point_empty
-        icons_container.b_point.setImageDrawable(getDrawable(iconRes))
+        icons_container.b_point.setImageDrawable(ContextCompat.getDrawable(this, iconRes))
     }
 
     private fun enableBtnNext() {

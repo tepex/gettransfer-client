@@ -4,7 +4,6 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.ui.WebPageActivity
 import com.kg.gettransfer.presentation.view.WebPageView
 
 @InjectViewState

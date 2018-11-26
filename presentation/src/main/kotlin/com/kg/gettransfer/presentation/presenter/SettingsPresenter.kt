@@ -1,15 +1,21 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.content.Intent
+import android.net.Uri
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.presentation.model.CurrencyModel
+import com.kg.gettransfer.presentation.model.DistanceUnitModel
+import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
+
 import com.kg.gettransfer.utilities.Analytics.Companion.CURRENCY_PARAM
 import com.kg.gettransfer.utilities.Analytics.Companion.EMPTY_VALUE
 import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_SETTINGS
@@ -24,16 +30,17 @@ import java.util.Locale
 @InjectViewState
 class SettingsPresenter: BasePresenter<SettingsView>() {
     private lateinit var currencies: List<CurrencyModel>
-    private val locales = Mappers.getLocalesModels(systemInteractor.locales).filter { it.locale == "EN" || it.locale == "RU" } 
-    private val distanceUnits = Mappers.getDistanceUnitsModels(systemInteractor.distanceUnits)
+    private lateinit var locales: List<LocaleModel>
+    private lateinit var distanceUnits: List<DistanceUnitModel>
     private val endpoints = systemInteractor.endpoints.map { Mappers.getEndpointModel(it) }
 
     private var localeWasChanged = false
+    private var restart = true
 
     @CallSuper
     override fun attachView(view: SettingsView) {
         super.attachView(view)
-        currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
+        if(restart) initConfigs()
 
         viewState.setCurrencies(currencies)
         viewState.setLocales(locales)
@@ -81,12 +88,18 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
     }
 
     fun changeEndpoint(selected: Int) {
-        utils.runAlien { systemInteractor.logout() }
         val endpoint = endpoints.get(selected)
-        systemInteractor.endpoint = endpoint.delegate
         viewState.setEndpoint(endpoint)
-        router.exit() //Without restarting app
-        //viewState.restartApp() //For restart app
+        systemInteractor.endpoint = endpoint.delegate
+        utils.launchSuspend {
+            viewState.blockInterface(true)
+            utils.asyncAwait { systemInteractor.logout() }
+            utils.asyncAwait { systemInteractor.coldStart() }
+            viewState.blockInterface(false)
+            restart = true
+            router.exit() //Without restarting app
+            //viewState.restartApp() //For restart app
+        }
     }
 
     fun onLogout() {
@@ -104,20 +117,19 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
         viewState.blockInterface(false)
     }
 
-    /*
-    @CallSuper
-    override fun onDestroy() {
-        router.removeResultListener(LoginPresenter.RESULT_CODE)
-        super.onDestroy()
-    }
-    */
-
     override fun onBackCommandClick() {
         if(localeWasChanged) {
             localeWasChanged = false
             router.navigateTo(Screens.Main)
         }
         else super.onBackCommandClick()
+    }
+
+    private fun initConfigs() {
+        currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
+        locales = Mappers.getLocalesModels(systemInteractor.locales)
+        distanceUnits = Mappers.getDistanceUnitsModels(systemInteractor.distanceUnits)
+        restart = false
     }
 
     private fun logEvent(param: String, value: String) {

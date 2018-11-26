@@ -3,10 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
 
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 
 import android.view.MotionEvent
@@ -15,6 +12,7 @@ import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
@@ -30,11 +28,8 @@ import com.kg.gettransfer.utilities.Analytics.Companion.TRAVEL_CLASS
 import com.kg.gettransfer.utilities.Analytics.Companion.VALUE
 
 import kotlinx.android.synthetic.main.activity_transfer_details.*
-import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.view.*
-import kotlinx.android.synthetic.main.view_transport_type_transfer_details.view.*
-
-import timber.log.Timber
+import kotlinx.android.synthetic.main.view_transport_type_transfer_details.view.* //don't delete
 
 class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
     @InjectPresenter
@@ -59,8 +54,8 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         initMapView(savedInstanceState)
     }
     
-    protected suspend override fun customizeGoogleMaps() {
-        super.customizeGoogleMaps()
+    protected suspend override fun customizeGoogleMaps(gm: GoogleMap) {
+        super.customizeGoogleMaps(gm)
 
         // https://stackoverflow.com/questions/16974983/google-maps-api-v2-supportmapfragment-inside-scrollview-users-cannot-scroll-th
         transparentImage.setOnTouchListener(View.OnTouchListener { _, motionEvent ->
@@ -158,5 +153,5 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         setPolyline(polyline, routeModel)
 
     override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng) =
-        processGoogleMap { setPinForHourlyTransfer(placeName, info, point) }
+        processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point) }
 }

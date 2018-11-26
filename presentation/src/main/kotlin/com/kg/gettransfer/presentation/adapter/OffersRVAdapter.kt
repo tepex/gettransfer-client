@@ -102,7 +102,7 @@ class OffersRVAdapter(private val offers: MutableList<OfferModel>,
             column1.setOnClickListener   { listener(item, true) }
         }
 
-        fun setTexts(layout: View, textViewPax: TextView, textViewBaggage: TextView, item: OfferModel) {
+        private fun setTexts(layout: View, textViewPax: TextView, textViewBaggage: TextView, item: OfferModel) {
             layout.tvVehicleName.text = 
                 if(item.vehicle.color == null) item.vehicle.vehicleBase.name
                 else Utils.getVehicleNameWithColor(layout.context, item.vehicle.vehicleBase.name, item.vehicle.color)

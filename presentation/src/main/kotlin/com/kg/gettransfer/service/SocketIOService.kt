@@ -1,6 +1,5 @@
 package com.kg.gettransfer.service
 
-import android.app.ActivityManager
 import android.app.Service
 
 import android.content.Intent

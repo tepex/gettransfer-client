@@ -58,10 +58,9 @@ class MainPresenter: BasePresenter<MainView>() {
         super.onFirstViewAttach()
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         systemInteractor.selectedField = FIELD_FROM
-        utils.launchAsyncTryCatch( {
-            if(routeInteractor.from != null) setLastLocation()
-            else updateCurrentLocationAsync()
-        }, { e -> Timber.e(e) } )
+        systemInteractor.initGeocoder()
+        if(routeInteractor.from != null) setLastLocation()
+        else utils.launchSuspend { updateCurrentLocationAsync().apply { error?.let { Timber.e(it) } } }
 
         // Создать листенер для обновления текущей локации
         // https://developer.android.com/training/location/receive-location-updates
@@ -108,7 +107,7 @@ class MainPresenter: BasePresenter<MainView>() {
 
     fun updateCurrentLocation() = utils.launchSuspend {
         val result = updateCurrentLocationAsync()
-        if(result.error != null) viewState.setError(result.error!!)
+        result.error?.let { viewState.setError(it) }
         logEvent(MY_PLACE_CLICKED)
     }
 

@@ -1,7 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
 import android.content.Intent
+import android.net.Uri
 
 import android.os.Bundle
 
@@ -28,10 +28,9 @@ import com.kg.gettransfer.presentation.view.SettingsView
 
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+import android.widget.Toast
 
-import org.koin.android.ext.android.inject
 
-import timber.log.Timber
 
 class SettingsActivity: BaseActivity(), SettingsView {
     @InjectPresenter
@@ -59,6 +58,7 @@ class SettingsActivity: BaseActivity(), SettingsView {
         
         btnSignOut.setOnClickListener { presenter.onLogout() }
         layoutSettingsLogs.setOnClickListener { presenter.onLogsClicked() }
+        btnSupport.setOnClickListener { sendEmail() }
 
         //Not showing some layouts in release
         if(BuildConfig.FLAVOR != "dev") {
@@ -97,5 +97,18 @@ class SettingsActivity: BaseActivity(), SettingsView {
             startActivity(it)
         }
         finish()
+    }
+
+    private fun sendEmail() {
+        val emailIntent = Intent(Intent.ACTION_SENDTO)
+        emailIntent.type = "message/rfc822"
+        emailIntent.data = Uri.parse("mailto:")
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.email_support)))
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.LNG_EMAIL_SUBJECT))
+        try {
+            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)))
+        } catch (ex: android.content.ActivityNotFoundException) {
+            Utils.showShortToast(this, getString(R.string.no_email_apps))
+        }
     }
 }

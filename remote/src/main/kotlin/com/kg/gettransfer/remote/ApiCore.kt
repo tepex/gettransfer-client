@@ -64,7 +64,7 @@ class ApiCore: KoinComponent {
         apiKey = endpoint.key
         apiUrl = endpoint.url
         api = Retrofit.Builder().apply {
-            baseUrl(endpoint.url)
+            baseUrl(apiUrl)
             client(okHttpClient)
             addConverterFactory(GsonConverterFactory.create(gson))
             addCallAdapterFactory(CoroutineCallAdapterFactory()) // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
