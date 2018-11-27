@@ -120,6 +120,9 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
     }
 
     override fun onBackCommandClick() {
+        localeWasChanged = false
+        
+        
         if(localeWasChanged) {
             localeWasChanged = false
             router.navigateTo(Screens.Main)
