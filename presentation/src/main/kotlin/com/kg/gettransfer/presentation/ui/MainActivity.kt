@@ -17,6 +17,7 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatDelegate
 
 import android.transition.Fade
+import android.util.Log
 
 import android.view.Gravity
 import android.view.View
@@ -143,7 +144,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     @CallSuper
     protected override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) search.elevation = resources.getDimension(R.dimen.search_elevation)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) search_panel.elevation = resources.getDimension(R.dimen.search_elevation)
         searchFrom.setUneditable()
         searchTo.setUneditable()
         searchFrom.setOnClickListener { performClick(false) }
@@ -158,12 +159,9 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         processGoogleMap(true) { presenter.onSearchClick(searchFrom.text, searchTo.text, it.projection.visibleRegion.latLngBounds) }
     }
 
-    private fun showNumberPicker(){
-        val numberPicker = NumberPicker(this)
-        numberPicker.minValue = 1
-        numberPicker.maxValue = 13
-        numberPicker.displayedValues = arrayOf("1","2","3")
-    }
+    private fun showNumberPicker() =
+            Utils.showNumberPickerForHourly(this, R.layout.view_hourly_picker) { h -> presenter.onHourlyChosen(h) }
+
 
     @CallSuper
     protected override fun onStart() {
@@ -374,18 +372,19 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
     private fun modeSwitched(hourly: Boolean) {
-        val viewIn: View
+
+        val viewIn:  View
         val viewOut: View
-        val imgIn: View
-        val imgOut: View
+        val imgIn:   View
+        val imgOut:  View
 
         if (hourly) {
             viewIn  = rl_hourly
-            viewOut = searchTo
+            viewOut = rl_searchForm
             imgIn   = hourly_point
             imgOut  = b_point
         } else {
-            viewIn  = searchTo
+            viewIn  = rl_searchForm
             viewOut = rl_hourly
             imgIn   = b_point
             imgOut  = hourly_point
@@ -395,14 +394,14 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
             viewOut.visibility = View.GONE
             imgOut.visibility  = View.GONE
             viewIn.visibility  = View.VISIBLE
-            viewIn.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.transition_r2l))
+            viewIn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.transition_r2l))
             imgOut.visibility  = View.VISIBLE
-            imgIn.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.transition_down_bounced))
+            imgIn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.transition_down_bounced))
 
 
-        }, 200)
-        viewOut.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.transition_l2r))
-        imgOut.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.transition_up))
-        link_line.visibility = if (hourly) View.INVISIBLE else View.GONE
+        }, 300)
+        viewOut.startAnimation(AnimationUtils.loadAnimation(this, R.anim.transition_l2r))
+        imgOut.startAnimation(AnimationUtils.loadAnimation(this, R.anim.transition_up))
+        link_line.visibility = if (hourly) View.INVISIBLE else View.VISIBLE
     }
 }

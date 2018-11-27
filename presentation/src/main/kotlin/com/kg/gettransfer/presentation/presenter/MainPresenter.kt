@@ -243,6 +243,8 @@ class MainPresenter: BasePresenter<MainView>() {
         }
     }
 
+    fun onHourlyChosen(hours: Int) { routeInteractor.duration = hours }
+
     private fun comparePointsWithRounding(point1: LatLng?, point2: LatLng?): Boolean {
         if(point2 == null || point1 == null) return false
         val criteria = 0.000_001

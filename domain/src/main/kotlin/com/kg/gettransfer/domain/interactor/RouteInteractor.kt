@@ -14,6 +14,7 @@ class RouteInteractor(private val geoRepository: GeoRepository,
                       private val routeRepository: RouteRepository) {
     var from: GTAddress? = null
     var to: GTAddress? = null
+    var duration: Int? = null
 
     //suspend fun getCurrentLocation() = geoRepository.getCurrentLocation()
 

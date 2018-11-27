@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.app.Activity
+import android.app.Dialog
 
 import android.content.Context
 
@@ -50,6 +51,7 @@ import com.kg.gettransfer.presentation.model.RouteModel
 import com.yandex.metrica.impl.ob.it
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import kotlinx.android.synthetic.main.view_hourly_picker.*
 
 import java.text.SimpleDateFormat
 
@@ -133,6 +135,18 @@ internal class Utils {
                     .setItems(items.toTypedArray()) { _, which -> listener(which) }
                     .setNegativeButton(android.R.string.cancel, null)
                     .show()
+            }
+        }
+
+        fun showNumberPickerForHourly(context: Context, layoutResource: Int, pickerResult: (Int) -> Unit){
+            val dialog = Dialog(context)
+            dialog.apply {
+                setContentView(layoutResource)
+                np_hours.maxValue = 10
+                np_hours.minValue = 1
+                tv_okBtn.setOnClickListener { dialog.dismiss() }
+                setOnDismissListener        { pickerResult(dialog.np_hours.value)  }
+                show()
             }
         }
 
