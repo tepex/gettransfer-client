@@ -138,18 +138,6 @@ internal class Utils {
             }
         }
 
-        fun showNumberPickerForHourly(context: Context, layoutResource: Int, pickerResult: (Int) -> Unit){
-            val dialog = Dialog(context)
-            dialog.apply {
-                setContentView(layoutResource)
-                np_hours.maxValue = 10
-                np_hours.minValue = 1
-                tv_okBtn.setOnClickListener { dialog.dismiss() }
-                setOnDismissListener        { pickerResult(dialog.np_hours.value)  }
-                show()
-            }
-        }
-
         fun checkEmail(email: String?) = EMAIL_PATTERN.matcher(email ?: "").matches()
         //fun checkPhone(phone: String?) = PHONE_PATTERN.matcher(phone?.trim() ?: "").matches()
         fun checkPhone(phone: String): Boolean {

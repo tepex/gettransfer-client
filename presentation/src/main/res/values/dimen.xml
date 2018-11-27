@@ -16,6 +16,8 @@
 	<dimen name="activity_main_gradient_layout_height">48dp</dimen>
 
 	<dimen name="margin_for_area_behind_rounded_corners">-8dp</dimen>
+	<dimen name="hourly_bottom_sheet_height">250dp</dimen>
+	<dimen name="hourly_bottom_sheet_height_peek">@dimen/hourly_bottom_sheet_height</dimen>
 
 	<!-- Navigation view menu -->
 	<dimen name="nav_header_height">148dp</dimen>

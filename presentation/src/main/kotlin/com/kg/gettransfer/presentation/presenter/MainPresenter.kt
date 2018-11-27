@@ -203,8 +203,8 @@ class MainPresenter: BasePresenter<MainView>() {
     }
 
     fun onNextClick() {
-        if(routeInteractor.from?.cityPoint != null &&
-           routeInteractor.to?.cityPoint != null) router.navigateTo(Screens.CreateOrder)
+        if(routeInteractor.from?.cityPoint != null && (routeInteractor.to?.cityPoint != null || routeInteractor.hourlyDuration != null))
+            router.navigateTo(Screens.CreateOrder)
     }
 
     fun onAboutClick() {
@@ -243,7 +243,9 @@ class MainPresenter: BasePresenter<MainView>() {
         }
     }
 
-    fun onHourlyChosen(hours: Int) { routeInteractor.duration = hours }
+    fun onHourlyChosen(hours: Int?) { routeInteractor.hourlyDuration = hours }
+
+    fun isHourly() = routeInteractor.hourlyDuration != null
 
     private fun comparePointsWithRounding(point1: LatLng?, point2: LatLng?): Boolean {
         if(point2 == null || point1 == null) return false

@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Handler
 
 import android.support.annotation.CallSuper
+import android.support.design.widget.BottomSheetBehavior
 
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
@@ -17,14 +18,11 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatDelegate
 
 import android.transition.Fade
-import android.util.Log
 
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.NumberPicker
 
 import android.widget.TextView
 
@@ -44,6 +42,7 @@ import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
+import com.kg.gettransfer.presentation.ui.helpers.AnimationHelper
 import com.kg.gettransfer.presentation.view.MainView
 import kotlinx.android.synthetic.main.a_b_view.*
 
@@ -51,6 +50,8 @@ import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
+import kotlinx.android.synthetic.main.view_hourly_picker.*
+import kotlinx.android.synthetic.main.view_hourly_picker.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
 
 import timber.log.Timber
@@ -61,6 +62,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
     private lateinit var drawer: DrawerLayout
     //private lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var hourlySheet: BottomSheetBehavior<View>
 
     private var isFirst = true
     private var centerMarker: Marker? = null
@@ -131,6 +133,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         presenter.setAddressFields()
 
         initNavigation()
+        initHourly()
+
 
         switch_mode.setOnCheckedChangeListener { buttonView, isChecked -> modeSwitched(isChecked) }
 
@@ -159,8 +163,10 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         processGoogleMap(true) { presenter.onSearchClick(searchFrom.text, searchTo.text, it.projection.visibleRegion.latLngBounds) }
     }
 
-    private fun showNumberPicker() =
-            Utils.showNumberPickerForHourly(this, R.layout.view_hourly_picker) { h -> presenter.onHourlyChosen(h) }
+    private fun showNumberPicker() {
+        hourlySheet.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
 
 
     @CallSuper
@@ -207,6 +213,13 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         navAbout.setOnClickListener(itemsNavigationViewListener)
         navBecomeACarrier.setOnClickListener(itemsNavigationViewListener)
         navPassengerMode.setOnClickListener(itemsNavigationViewListener)
+    }
+
+    private fun initHourly() {
+        hourlySheet = BottomSheetBehavior.from(hourly_sheet)
+        hourlySheet.state = BottomSheetBehavior.STATE_HIDDEN
+        hourly_sheet.np_hours.setOnValueChangedListener { _, _, newVal -> presenter.onHourlyChosen(newVal) }
+        tv_okBtn.setOnClickListener { hourlySheet.state = BottomSheetBehavior.STATE_HIDDEN }
     }
 
 
@@ -311,7 +324,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
     private fun enableBtnNext() {
-        btnNext.isEnabled = searchFrom.text.isNotEmpty() && searchTo.text.isNotEmpty()
+        btnNext.isEnabled = searchFrom.text.isNotEmpty() && (searchTo.text.isNotEmpty() || presenter.isHourly())
     }
 
     override fun setProfile(profile: ProfileModel) {
@@ -373,35 +386,29 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
     private fun modeSwitched(hourly: Boolean) {
 
-        val viewIn:  View
-        val viewOut: View
-        val imgIn:   View
-        val imgOut:  View
+        val viewIn:       View
+        val viewOut:      View
+        val imgIn:        View
+        val imgOut:       View
+        val currentHours: Int?
 
         if (hourly) {
+            currentHours = np_hours.value
             viewIn  = rl_hourly
             viewOut = rl_searchForm
             imgIn   = hourly_point
             imgOut  = b_point
         } else {
+            currentHours = null
             viewIn  = rl_searchForm
             viewOut = rl_hourly
             imgIn   = b_point
             imgOut  = hourly_point
         }
 
-        Handler().postDelayed({
-            viewOut.visibility = View.GONE
-            imgOut.visibility  = View.GONE
-            viewIn.visibility  = View.VISIBLE
-            viewIn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.transition_r2l))
-            imgOut.visibility  = View.VISIBLE
-            imgIn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.transition_down_bounced))
-
-
-        }, 300)
-        viewOut.startAnimation(AnimationUtils.loadAnimation(this, R.anim.transition_l2r))
-        imgOut.startAnimation(AnimationUtils.loadAnimation(this, R.anim.transition_up))
+        presenter.onHourlyChosen(currentHours)
+        enableBtnNext()
+        AnimationHelper(this).hourlyAnim(viewOut, imgOut, viewIn, imgIn)
         link_line.visibility = if (hourly) View.INVISIBLE else View.VISIBLE
     }
 }

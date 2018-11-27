@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="@dimen/hourly_bottom_sheet_height"
+    app:behavior_peekHeight="@dimen/hourly_bottom_sheet_height_peek"
+    app:behavior_hideable="true"
+    android:background="@drawable/rounded_background"
+    android:id="@+id/hourly_picker"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
     <View
         android:id="@+id/top_divider"
@@ -13,7 +19,7 @@
 
     <RelativeLayout
         android:id="@+id/rl_picker_header"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/top_divider">
 

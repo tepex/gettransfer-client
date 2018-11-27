@@ -17,5 +17,5 @@ interface TransferDetailsView: BaseView, RouteView {
     fun setTransfer(transferModel: TransferModel)
     fun setOffer(offerModel: OfferModel)
     fun setButtonCancelVisible(visible: Boolean)
-    fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng)
+
 }

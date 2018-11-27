@@ -2,12 +2,14 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import android.util.Patterns
 
 import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.CameraUpdate
+import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
 
@@ -109,10 +111,18 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     }
 
     fun initMapAndPrices() {
-        if(routeInteractor.from == null || routeInteractor.to == null) {
-            Timber.d("routerInteractor init error. from: ${routeInteractor.from}, to: ${routeInteractor.to}")
-            return
+
+        routeInteractor.apply {
+            if (from == null || (to == null && hourlyDuration == null)){
+                Timber.d("routerInteractor init error. from: $from, to: $to, duration: $hourlyDuration")
+                return
+            }
+            else if (hourlyDuration != null) { // not need route info when hourly
+                setUIWithoutRoute()
+                return
+            }
         }
+
         utils.launchSuspend {
             viewState.blockInterface(true)
             val from = routeInteractor.from!!.cityPoint
@@ -123,7 +133,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
             else {
                 duration = result.model.duration
                 
-                var prices: Map<String, TransportPrice> = result.model.prices.map { p -> p.tranferId to TransportPrice(p.min, p.max, p.minFloat) }.toMap()
+                val prices: Map<String, TransportPrice> = result.model.prices.map { p -> p.tranferId to TransportPrice(p.min, p.max, p.minFloat) }.toMap()
                 if(transportTypes == null)
                     transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
                 viewState.setTransportTypes(transportTypes!!)
@@ -143,6 +153,12 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
             }
             viewState.blockInterface(false)
         }
+    }
+
+    private fun setUIWithoutRoute() {
+        viewState.setTransportTypes(systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, null) })
+        routeInteractor.from!!.let {
+            viewState.setPinHourlyTransfer(it.address?:"", it.primary?:"", it.cityPoint.point.let { p -> LatLng(p!!.latitude, p.longitude) } ) }
     }
 
     fun changeDate(newDate: Date) {
@@ -300,21 +316,18 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     }
 
     private fun checkFieldsForRequest(): Boolean {
-        var errorFiled: String
+        val errorFiled: String
         if (!Utils.checkEmail(user.profile.email)) {
             errorFiled = EMAIL_FIELD
-            logCreateTransfer(Analytics.INVALID_EMAIL)
         } else if (!Utils.checkPhone(user.profile.phone!!)) {
             errorFiled = PHONE_FIELD
-            logCreateTransfer(Analytics.INVALID_PHONE)
         } else if (transportTypes != null &&
                 !transportTypes!!.any { it.checked }) {
             errorFiled = TRANSPORT_FIELD
-            logCreateTransfer(Analytics.NO_TRANSPORT_TYPE)
         } else if (!user.termsAccepted) {
             errorFiled = TERMS_ACCEPTED_FIELD
-            logCreateTransfer(Analytics.LICENSE_NOT_ACCEPTED)
         } else return true
+        logCreateTransfer(Mappers.getAnalyticsParam(errorFiled))
         viewState.showEmptyFieldError(errorFiled)
         return false
     }

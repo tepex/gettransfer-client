@@ -14,7 +14,7 @@ class RouteInteractor(private val geoRepository: GeoRepository,
                       private val routeRepository: RouteRepository) {
     var from: GTAddress? = null
     var to: GTAddress? = null
-    var duration: Int? = null
+    var hourlyDuration: Int? = null   //nullable to check if transfer is hourly
 
     //suspend fun getCurrentLocation() = geoRepository.getCurrentLocation()
 
