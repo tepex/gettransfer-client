@@ -200,7 +200,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
     protected override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
-        if(systemInteractor.locationPermissionsGranted!!) {
+        if(systemInteractor.locationPermissionsGranted ?: true) {
             gm.setMyLocationEnabled(true)
             gm.uiSettings.isMyLocationButtonEnabled = false
         }
