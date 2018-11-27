@@ -71,6 +71,11 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
         viewState.setLocale(localeModel.name)
         if(systemInteractor.account.user.loggedIn) saveAccount()
         logEvent(Analytics.LANGUAGE_PARAM, localeModel.name)
+
+        Locale.setDefault(systemInteractor.locale)
+        initConfigs()
+        viewState.setCurrencies(currencies)
+
         return systemInteractor.locale
     }
 
