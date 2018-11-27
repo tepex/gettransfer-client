@@ -27,8 +27,9 @@ class SystemInteractor(private val systemRepository: SystemRepository,
 
     /* Cached properties */
 
-    val endpoints      by lazy { systemRepository.endpoints }
-    val logsFile       by lazy { loggingRepository.file }
+    val endpoints by lazy { systemRepository.endpoints }
+    val logsFile  by lazy { loggingRepository.file }
+    var locationPermissionsGranted: Boolean? = null
 
     /* Read only properties */
 

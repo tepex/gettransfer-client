@@ -200,8 +200,11 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
     protected override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
-        gm.setMyLocationEnabled(true)
-        gm.uiSettings.isMyLocationButtonEnabled = false
+        if(systemInteractor.locationPermissionsGranted!!) {
+            gm.setMyLocationEnabled(true)
+            gm.uiSettings.isMyLocationButtonEnabled = false
+        }
+
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
         gm.setOnCameraMoveListener { presenter.onCameraMove(gm.cameraPosition!!.target, true);  }
         gm.setOnCameraIdleListener { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
