@@ -126,6 +126,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
                 var prices: Map<String, TransportPrice> = result.model.prices.map { p -> p.tranferId to TransportPrice(p.min, p.max, p.minFloat) }.toMap()
                 if(transportTypes == null)
                     transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
+                viewState.setTransportTypes(transportTypes!!)
                 routeModel = Mappers.getRouteModel(result.model.distance,
                                                    systemInteractor.distanceUnit,
                                                    result.model.polyLines,
@@ -136,9 +137,8 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
                                                    SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
             }
             routeModel?.let {
-                viewState.setTransportTypes(transportTypes!!)
                 polyline = Utils.getPolyline(it)
-                track = polyline?.track
+                track = polyline!!.track
                 viewState.setRoute(polyline!!, it, false)
             }
             viewState.blockInterface(false)
@@ -245,6 +245,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         if(currentDate.time.after(date)) date = currentDate.time
 
         if(!checkFieldsForRequest()) return
+                
         val trip = Trip(date, flightNumber)
         /* filter */
         val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
@@ -261,11 +262,16 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         Timber.d("flightNumber: $flightNumber")
         Timber.d("comment: $comment")
 
+        if(routeInteractor.from == null || routeInteractor.to == null) return
+        val from = routeInteractor.from!!
+        val to = routeInteractor.to!!
+        
+        
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait {
-                transferInteractor.createTransfer(Mappers.getTransferNew(routeInteractor.from!!.cityPoint,
-                                                                         routeInteractor.to!!.cityPoint,
+                transferInteractor.createTransfer(Mappers.getTransferNew(from.cityPoint,
+                                                                         to.cityPoint,
                                                                          trip,
                                                                          null,
                                                                          selectedTransportTypes,
@@ -277,17 +283,18 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
                                                                          promoCode,
                                                                          false))
             }
-            if(result.error != null) {
+            
+            val logResult = utils.asyncAwait { systemInteractor.putAccount() }
+            if(result.error == null && logResult.error == null) {
+                logCreateTransfer(Analytics.RESULT_SUCCESS)
+                router.navigateTo(Screens.Offers(result.model.id))
+            } else if(result.error != null) {
                 logCreateTransfer(Analytics.SERVER_ERROR)
                 when {
                     result.error!!.details == "{phone=[taken]}" -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
                     else -> viewState.setError(result.error!!)
                 }
-            }
-            else {
-                logCreateTransfer(Analytics.RESULT_SUCCESS)
-                router.replaceScreen(Screens.Offers(result.model.id))
-            }
+            } else if(logResult.error != null) viewState.showNotLoggedAlert(result.model.id)
             viewState.blockInterface(false)
         }
     }
@@ -335,7 +342,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     }
 
     fun onCenterRouteClick() {
-        viewState.centerRoute(track!!)
+        track?.let { viewState.centerRoute(it) }
         logEventMain(Analytics.SHOW_ROUTE_CLICKED)
     }
 

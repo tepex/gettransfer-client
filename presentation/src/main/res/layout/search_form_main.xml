@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal|top"
-    android:background="@android:color/white"
+    android:background="@drawable/rounded_background"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="false"
     android:orientation="vertical"
@@ -80,7 +80,9 @@
         android:layout_margin="@dimen/btn_next_main_margin_16dp"
         android:background="@drawable/btn_bg_rounded"
         android:enabled="false"
+        style="?android:attr/borderlessButtonStyle"
         android:text="@string/LNG_NEXT"
+
         android:textColor="@color/colorWhite" />
 
 </LinearLayout>

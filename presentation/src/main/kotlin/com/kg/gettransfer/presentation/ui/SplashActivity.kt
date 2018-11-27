@@ -21,6 +21,7 @@ import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.presentation.view.AboutView
 
 import kotlinx.coroutines.Job
 
@@ -42,13 +43,14 @@ class SplashActivity: AppCompatActivity() {
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-            (!check(Manifest.permission.ACCESS_FINE_LOCATION) ||
-             !check(Manifest.permission.ACCESS_COARSE_LOCATION))) {
-            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_REQUEST)
-            // show splash
-            Timber.d("Splash screen")
-            return
+        Timber.d("Permissions: ${systemInteractor.locationPermissionsGranted}")
+        if(systemInteractor.locationPermissionsGranted == null &&
+           Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+           (!check(Manifest.permission.ACCESS_FINE_LOCATION) || !check(Manifest.permission.ACCESS_COARSE_LOCATION))) {
+                ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_REQUEST)
+                // show splash
+                Timber.d("Splash screen")
+                return
         }
 
         if(checkIsTaskRoot()) return
@@ -72,7 +74,12 @@ class SplashActivity: AppCompatActivity() {
                 }
             }
             else {
-                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                if(!systemInteractor.isOnboardingShowed) {
+                    systemInteractor.isOnboardingShowed = true
+                    startActivity(Intent(this@SplashActivity, AboutActivity::class.java)
+                            .putExtra(AboutView.EXTRA_OPEN_MAIN, true).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
+                }
+                else startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 finish()
             }
         }
@@ -97,9 +104,15 @@ class SplashActivity: AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if(requestCode != PERMISSION_REQUEST) return
+        systemInteractor.locationPermissionsGranted = (grantResults.size == 2 &&
+                                                       grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                                                       grantResults[1] == PackageManager.PERMISSION_GRANTED)
+        recreate()
+        /*
         if(grantResults.size == 2 &&
            grantResults[0] == PackageManager.PERMISSION_GRANTED &&
            grantResults[1] == PackageManager.PERMISSION_GRANTED) recreate()
         else finish()
+        */
     }
 }

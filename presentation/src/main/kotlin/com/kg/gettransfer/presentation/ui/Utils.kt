@@ -4,6 +4,7 @@ import android.app.Activity
 
 import android.content.Context
 
+import android.graphics.Bitmap
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 
@@ -13,6 +14,7 @@ import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
+
 import android.telephony.TelephonyManager
 
 import android.text.Editable
@@ -44,7 +46,9 @@ import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
+
 import com.yandex.metrica.impl.ob.it
+
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 
 import java.text.SimpleDateFormat
@@ -60,6 +64,7 @@ internal class Utils {
         private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
         private val EMAIL_PATTERN = Patterns.EMAIL_ADDRESS
         @JvmField val DATE_TIME_PATTERN = "dd MMMM yyyy, HH:mm"
+        const val MAX_BITMAP_SIZE = 4096
 
         private lateinit var phoneUtil: PhoneNumberUtil
         
@@ -330,6 +335,7 @@ internal class Utils {
             }
         }
         */
+        fun isValidBitmap(bitmap: Bitmap) = bitmap.width <= MAX_BITMAP_SIZE && bitmap.height <= MAX_BITMAP_SIZE
     }
 }
 

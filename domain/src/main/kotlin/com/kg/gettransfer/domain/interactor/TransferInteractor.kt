@@ -8,7 +8,7 @@ import com.kg.gettransfer.domain.repository.TransferRepository
 
 class TransferInteractor(private val repository: TransferRepository) {
     private var transfer: Transfer? = null
-    lateinit var transferNew: TransferNew
+    var transferNew: TransferNew? = null
 
     private var allTransfers: List<Transfer>? = null
     private var activeTransfers: List<Transfer>? = null

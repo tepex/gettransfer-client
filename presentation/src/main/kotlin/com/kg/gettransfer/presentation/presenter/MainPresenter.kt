@@ -216,7 +216,7 @@ class MainPresenter: BasePresenter<MainView>() {
     }
 
     fun onAboutClick() {
-        router.navigateTo(Screens.About)
+        router.navigateTo(Screens.About(false))
         logEvent(ABOUT_CLICKED)
     }
 

@@ -83,7 +83,7 @@ class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
     
     private fun logEventBeginCheckout() {
         val bundle = Bundle()
-        val map = HashMap<String, Any>()
+        val map = HashMap<String, Any?>()
 
         bundle.putString(CURRENCY, systemInteractor.currency.currencyCode)
         map[CURRENCY] = systemInteractor.currency.currencyCode
@@ -102,8 +102,8 @@ class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
         }
         bundle.putInt(SHARE, paymentRequest.percentage)
         map[SHARE] = paymentRequest.percentage
-        bundle.putString(PROMOCODE, transferInteractor.transferNew.promoCode)
-        map[PROMOCODE] = transferInteractor.transferNew.promoCode
+        bundle.putString(PROMOCODE, transferInteractor.transferNew?.promoCode)
+        map[PROMOCODE] = transferInteractor.transferNew?.promoCode
 
         analytics.logEventBeginCheckout(EVENT_BEGIN_CHECKOUT, bundle, map, price)
     }

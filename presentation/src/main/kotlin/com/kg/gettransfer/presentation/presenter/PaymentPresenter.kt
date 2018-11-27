@@ -73,7 +73,7 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
 
     private fun logEventEcommercePurchase() {
         val bundle = Bundle()
-        val map = HashMap<String, Any>()
+        val map = HashMap<String, Any?>()
 
         map[CURRENCY] = systemInteractor.currency.currencyCode
         bundle.putString(CURRENCY, systemInteractor.currency.currencyCode)
@@ -94,8 +94,8 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
 
         bundle.putString(TRANSACTION_ID, transferId.toString())
         map[TRANSACTION_ID] = transferId
-        bundle.putString(PROMOCODE, transferInteractor.transferNew.promoCode)
-        map[PROMOCODE] = transferInteractor.transferNew.promoCode
+        bundle.putString(PROMOCODE, transferInteractor.transferNew?.promoCode)
+        map[PROMOCODE] = transferInteractor.transferNew?.promoCode
 
         analytics.logEventEcommercePurchase(EVENT_ECOMMERCE_PURCHASE, bundle, map,
                 price.toBigDecimal(), systemInteractor.currency)

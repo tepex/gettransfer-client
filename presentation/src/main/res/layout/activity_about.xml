@@ -6,39 +6,95 @@
 	android:id="@+id/root"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	tools:context=".presentation.ui.AboutActivity">
+	tools:context=".presentation.ui.AboutActivity"
+	android:background="@color/colorWhite">
 
-	<include
-		android:id="@+id/toolbar"
-		layout="@layout/toolbar"
-		android:layout_width="match_parent"
+	<ImageView
+		android:id="@+id/btnClose"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
+		android:layout_marginTop="@dimen/about_activity_close_button_margin"
+		android:layout_marginEnd="@dimen/about_activity_close_button_margin"
+		app:srcCompat="@drawable/ic_close_x"/>
 
 	<android.support.v4.view.ViewPager
 		android:id="@+id/viewpager"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/about_item_top"
+		android:layout_height="0dp"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/toolbar">
+		app:layout_constraintTop_toBottomOf="@+id/btnClose"
+		app:layout_constraintBottom_toTopOf="@+id/indicator"
+		android:layout_marginTop="@dimen/about_activity_view_pager_margin_top">
 		
-		<include layout="@layout/about_item1" />
-		<include layout="@layout/about_item2" />
-		<include layout="@layout/about_item3" />
+		<com.kg.gettransfer.presentation.ui.AboutItem
+            android:id="@+id/item_0"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+
+			app:title_about_item="@string/LNG_PRESENTATION_TITLE_0"
+			app:text_about_item="@string/LNG_PRESENTATION_DESC_0"
+			app:img_about_item="@drawable/img_onboarding_0"/>
+
+		<com.kg.gettransfer.presentation.ui.AboutItem
+            android:id="@+id/item_1"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+
+			app:title_about_item="@string/LNG_PRESENTATION_TITLE_1"
+			app:text_about_item="@string/LNG_PRESENTATION_DESC_1"
+			app:img_about_item="@drawable/img_onboarding_1"/>
+
+		<com.kg.gettransfer.presentation.ui.AboutItem
+            android:id="@+id/item_2"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+
+			app:title_about_item="@string/LNG_PRESENTATION_TITLE_2"
+			app:text_about_item="@string/LNG_PRESENTATION_DESC_2"
+			app:img_about_item="@drawable/img_onboarding_2"/>
+
+		<com.kg.gettransfer.presentation.ui.AboutItem
+            android:id="@+id/item_3"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+
+			app:title_about_item="@string/LNG_PRESENTATION_TITLE_3"
+			app:text_about_item="@string/LNG_PRESENTATION_DESC_3"
+			app:img_about_item="@drawable/img_onboarding_3"/>
+
 	</android.support.v4.view.ViewPager>
 
-	<me.relex.circleindicator.CircleIndicator
+	<com.viewpagerindicator.CirclePageIndicator
 		android:id="@+id/indicator"
 		android:layout_width="match_parent"
-		android:layout_height="40dp"
-		android:layout_marginBottom="@dimen/about_item_bottom"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/about_activity_indicator_margin_bottom"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintBottom_toBottomOf="parent" 
-		app:ci_drawable="@drawable/ic_selected"
-        app:ci_drawable_unselected="@drawable/ic_unselected" />
+		app:layout_constraintBottom_toTopOf="@+id/btnNext"
+		app:radius="@dimen/about_activity_indicator_radius"
+		app:strokeColor="@color/ic_unselected"
+		app:fillColor="@color/ic_unselected"
+		app:strokeWidth="@dimen/about_activity_indicator_stroke_width"/>
+
+	<Button
+		android:id="@+id/btnNext"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/about_activity_button_height"
+		android:background="@drawable/btn_get_transfer"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		android:layout_marginBottom="@dimen/about_activity_button_margin_bottom"
+		android:layout_marginStart="@dimen/about_activity_button_margin_start_end"
+		android:layout_marginEnd="@dimen/about_activity_button_margin_start_end"
+		android:textAllCaps="true"
+		android:textSize="@dimen/about_activity_button_text_size"
+		android:textColor="@color/colorWhite"
+		android:fontFamily="@font/sf_pro_text_regular"
+		android:text="@string/LNG_NEXT"/>
+
 </android.support.constraint.ConstraintLayout>	

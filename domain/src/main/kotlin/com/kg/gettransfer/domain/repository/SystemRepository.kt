@@ -16,6 +16,7 @@ interface SystemRepository {
     val endpoints: List<Endpoint>
     
     var lastMode: String
+    var isOnboardingShowed: Boolean
     var selectedField: String
     var endpoint: Endpoint
     var addressHistory: List<GTAddress>    

@@ -27,8 +27,9 @@ class SystemInteractor(private val systemRepository: SystemRepository,
 
     /* Cached properties */
 
-    val endpoints      by lazy { systemRepository.endpoints }
-    val logsFile       by lazy { loggingRepository.file }
+    val endpoints by lazy { systemRepository.endpoints }
+    val logsFile  by lazy { loggingRepository.file }
+    var locationPermissionsGranted: Boolean? = null
 
     /* Read only properties */
 
@@ -61,6 +62,10 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     var lastMode: String
         get() = systemRepository.lastMode
         set(value) { systemRepository.lastMode = value }
+
+    var isOnboardingShowed: Boolean
+        get() = systemRepository.isOnboardingShowed
+        set(value) { systemRepository.isOnboardingShowed = value }
 
     var selectedField: String
         get() = systemRepository.selectedField
