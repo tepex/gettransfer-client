@@ -342,7 +342,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     }
 
     fun onCenterRouteClick() {
-        viewState.centerRoute(track!!)
+        track?.let { viewState.centerRoute(it) }
         logEventMain(Analytics.SHOW_ROUTE_CLICKED)
     }
 
