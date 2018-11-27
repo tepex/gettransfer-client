@@ -126,6 +126,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
                 var prices: Map<String, TransportPrice> = result.model.prices.map { p -> p.tranferId to TransportPrice(p.min, p.max, p.minFloat) }.toMap()
                 if(transportTypes == null)
                     transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
+                viewState.setTransportTypes(transportTypes!!)
                 routeModel = Mappers.getRouteModel(result.model.distance,
                                                    systemInteractor.distanceUnit,
                                                    result.model.polyLines,
@@ -136,9 +137,8 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
                                                    SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
             }
             routeModel?.let {
-                viewState.setTransportTypes(transportTypes!!)
                 polyline = Utils.getPolyline(it)
-                track = polyline?.track
+                track = polyline!!.track
                 viewState.setRoute(polyline!!, it, false)
             }
             viewState.blockInterface(false)
