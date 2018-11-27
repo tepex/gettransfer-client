@@ -17,17 +17,8 @@ import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.Screens
+
 import com.kg.gettransfer.utilities.Analytics
-import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_OFFERS
-import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_BOOK
-import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_DETAILS
-import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_FILTER
-import com.kg.gettransfer.utilities.Analytics.Companion.PRICE_DOWN
-import com.kg.gettransfer.utilities.Analytics.Companion.PRICE_UP
-import com.kg.gettransfer.utilities.Analytics.Companion.RATING_DOWN
-import com.kg.gettransfer.utilities.Analytics.Companion.RATING_UP
-import com.kg.gettransfer.utilities.Analytics.Companion.YEAH_FILTER_DOWN
-import com.kg.gettransfer.utilities.Analytics.Companion.YEAH_FILTER_UP
 
 import com.yandex.metrica.YandexMetrica
 
@@ -55,6 +46,15 @@ class OffersPresenter: BasePresenter<OffersView>() {
     private var sortHigherToLower = false
 
     companion object {
+        @JvmField val RATING_UP   = "rating_asc"
+        @JvmField val RATING_DOWN = "rating_desc"
+        
+        @JvmField val PRICE_UP    = "price_asc"
+        @JvmField val PRICE_DOWN  = "price_desc"
+        
+        @JvmField val YEAH_FILTER_UP   = "year_asc"
+        @JvmField val YEAH_FILTER_DOWN = "year_desc"
+        
         @JvmField val SORT_YEAR   = "sort_year"
         @JvmField val SORT_RATING = "sort_rating"
         @JvmField val SORT_PRICE  = "sort_price"
@@ -105,15 +105,15 @@ class OffersPresenter: BasePresenter<OffersView>() {
     fun onSelectOfferClicked(offer: OfferModel, isShowingOfferDetails: Boolean) {
         if(isShowingOfferDetails) {
             viewState.showBottomSheetOfferDetails(offer)
-            logEvent(OFFER_DETAILS)
+            logEvent(Analytics.OFFER_DETAILS)
         } else {
-            logEvent(OFFER_BOOK)
+            logEvent(Analytics.OFFER_BOOK)
             router.navigateTo(Screens.PaymentSettings(transfer.id, offer.id, transfer.dateRefund))
         }
     }
 
     fun logEvent(value: String) {
-        val map = HashMap<String, Any>()
+        val map = mutableMapOf<String, Any>()
         map[Analytics.PARAM_KEY_NAME] = value
 
         analytics.logEvent(Analytics.EVENT_BUTTONS, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
@@ -180,9 +180,9 @@ class OffersPresenter: BasePresenter<OffersView>() {
     }
 
     private fun logFilterEvent(value: String) {
-        val map = HashMap<String, Any>()
-        map[PARAM_KEY_FILTER] = value
+        val map = mutableMapOf<String, Any>()
+        map[Analytics.PARAM_KEY_FILTER] = value
 
-        analytics.logEvent(EVENT_OFFERS, createStringBundle(PARAM_KEY_FILTER, value), map)
+        analytics.logEvent(Analytics.EVENT_OFFERS, createStringBundle(Analytics.PARAM_KEY_FILTER, value), map)
     }
 }

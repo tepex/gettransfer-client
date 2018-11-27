@@ -85,13 +85,6 @@ class Analytics(private val firebase: FirebaseAnalytics,
 
         @JvmField val OFFER_TYPE = "offer_type"
 
-        @JvmField val RATING_UP   = "rating_asc"
-        @JvmField val RATING_DOWN = "rating_desc"
-        @JvmField val PRICE_UP    = "price_asc"
-        @JvmField val PRICE_DOWN  = "price_desc"
-        @JvmField val YEAH_FILTER_UP   = "year_asc"
-        @JvmField val YEAH_FILTER_DOWN = "year_desc"
-
         @JvmField val OFFER_PRICE_FOCUSED = "offer_price"
         @JvmField val DATE_TIME_CHANGED   = "date_time"
         @JvmField val PASSENGERS_ADDED    = "pax"
