@@ -18,16 +18,8 @@ import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter.Compan
 
 import com.kg.gettransfer.presentation.view.PaymentView
 import com.kg.gettransfer.presentation.view.Screens
+
 import com.kg.gettransfer.utilities.Analytics
-import com.kg.gettransfer.utilities.Analytics.Companion.CURRENCY
-import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_ECOMMERCE_PURCHASE
-import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_MAKE_PAYMENT
-import com.kg.gettransfer.utilities.Analytics.Companion.PROMOCODE
-import com.kg.gettransfer.utilities.Analytics.Companion.RESULT_FAIL
-import com.kg.gettransfer.utilities.Analytics.Companion.RESULT_SUCCESS
-import com.kg.gettransfer.utilities.Analytics.Companion.STATUS
-import com.kg.gettransfer.utilities.Analytics.Companion.TRANSACTION_ID
-import com.kg.gettransfer.utilities.Analytics.Companion.VALUE
 
 import org.koin.standalone.inject
 
@@ -60,11 +52,11 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
                     viewState.showSuccessfulMessage()
                     offer = offerInteractor.getOffer(offerId)!!
                     logEventEcommercePurchase()
-                    logEvent(RESULT_SUCCESS)
+                    logEvent(Analytics.RESULT_SUCCESS)
                 } else {
                     router.exit()
                     viewState.showErrorMessage()
-                    logEvent(RESULT_FAIL)
+                    logEvent(Analytics.RESULT_FAIL)
                 }
             }
             viewState.blockInterface(false)
@@ -73,39 +65,38 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
 
     private fun logEventEcommercePurchase() {
         val bundle = Bundle()
-        val map = HashMap<String, Any?>()
+        val map = mutableMapOf<String, Any?>()
 
-        map[CURRENCY] = systemInteractor.currency.currencyCode
-        bundle.putString(CURRENCY, systemInteractor.currency.currencyCode)
+        map[Analytics.CURRENCY] = systemInteractor.currency.currencyCode
+        bundle.putString(Analytics.CURRENCY, systemInteractor.currency.currencyCode)
 
         var price = offer.price.amount
 
         when(percentage) {
             OfferModel.FULL_PRICE -> {
-                bundle.putDouble(VALUE, price)
-                map[VALUE] = price
+                bundle.putDouble(Analytics.VALUE, price)
+                map[Analytics.VALUE] = price
             }
             OfferModel.PRICE_30 -> {
                 price *= PRICE_30
-                bundle.putDouble(VALUE, price)
-                map[VALUE] = price
+                bundle.putDouble(Analytics.VALUE, price)
+                map[Analytics.VALUE] = price
             }
         }
 
-        bundle.putString(TRANSACTION_ID, transferId.toString())
-        map[TRANSACTION_ID] = transferId
-        bundle.putString(PROMOCODE, transferInteractor.transferNew?.promoCode)
-        map[PROMOCODE] = transferInteractor.transferNew?.promoCode
+        bundle.putString(Analytics.TRANSACTION_ID, transferId.toString())
+        map[Analytics.TRANSACTION_ID] = transferId
+        bundle.putString(Analytics.PROMOCODE, transferInteractor.transferNew?.promoCode)
+        map[Analytics.PROMOCODE] = transferInteractor.transferNew?.promoCode
 
-        analytics.logEventEcommercePurchase(EVENT_ECOMMERCE_PURCHASE, bundle, map,
+        analytics.logEventEcommercePurchase(Analytics.EVENT_ECOMMERCE_PURCHASE, bundle, map,
                 price.toBigDecimal(), systemInteractor.currency)
     }
 
     fun logEvent(value: String) {
-        val map = HashMap<String, Any>()
-        map[STATUS] = value
+        val map = mutableMapOf<String, Any>()
+        map[Analytics.STATUS] = value
 
-        analytics.logEvent(EVENT_MAKE_PAYMENT, createStringBundle(STATUS, value), map)
+        analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, createStringBundle(Analytics.STATUS, value), map)
     }
-
 }
