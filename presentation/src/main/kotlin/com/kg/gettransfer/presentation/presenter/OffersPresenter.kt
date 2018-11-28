@@ -59,7 +59,7 @@ class OffersPresenter: BasePresenter<OffersView>() {
         @JvmField val SORT_RATING = "sort_rating"
         @JvmField val SORT_PRICE  = "sort_price"
     }
-
+    
     @CallSuper
     override fun attachView(view: OffersView) {
         super.attachView(view)
@@ -97,7 +97,7 @@ class OffersPresenter: BasePresenter<OffersView>() {
     fun onNewOffer(offer: Offer) {
         offerInteractor.newOffer(offer)
         offers = offers.toMutableList().apply { add(Mappers.getOfferModel(offer, systemInteractor.locale)) }
-        setOffers()
+        utils.launchSuspend { setOffers() }
     }
 
     fun onRequestInfoClicked() { router.navigateTo(Screens.Details(transferId)) }

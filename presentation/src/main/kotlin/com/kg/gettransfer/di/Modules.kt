@@ -73,7 +73,7 @@ val domainModule = module {
 }
 
 val androidModule = module {
-    factory { OfferServiceConnection() }
+    single { OfferServiceConnection() }
 	single { CoroutineContexts(Dispatchers.Main, Dispatchers.IO) }
 	single { FirebaseAnalytics.getInstance(androidApplication().applicationContext) }
 	single { LocaleManager() }
