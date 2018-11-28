@@ -129,6 +129,8 @@ internal class Utils {
             listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.LNG_DISTANCE_UNIT, items, listener) }
         fun setEndpointsDialogListener(context: Context, view: View, items: List<CharSequence>,
                                        listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.endpoint, items, listener)}
+        fun setSelectOperationListener(context: Context, view: View, items: List<CharSequence>, @StringRes titleId: Int,
+                                       listener: (Int) -> Unit) { setModelsDialogListener(context, view, titleId, items, listener)}
 
         fun setModelsDialogListener(context: Context, view: View, @StringRes titleId: Int, items: List<CharSequence>,
                                     listener: (Int) -> Unit) {
@@ -196,6 +198,11 @@ internal class Utils {
                 null
             }
             return PolylineModel(mPoints.firstOrNull(), mPoints.getOrNull(mPoints.size - 1), line, track)
+        }
+
+        fun getCameraUpdateForPin(point: LatLng): CameraUpdate{
+            val zoom = BaseGoogleMapActivity.MAP_MIN_ZOOM
+            return CameraUpdateFactory.newLatLngZoom(point, zoom)
         }
 
         fun getFormattedDate(locale: Locale, dateToLocal: Date) = SimpleDateFormat(DATE_TIME_PATTERN, locale).format(dateToLocal)

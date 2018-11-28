@@ -433,6 +433,7 @@
 	<dimen name="bottom_sheet_offer_details_ratings_texts_margin_top">4dp</dimen>
 	<dimen name="bottom_sheet_offer_details_prices_margin">5dp</dimen>
 	<dimen name="bottom_sheet_offer_details_dimen1_margin_top">8dp</dimen>
+	<dimen name="bottom_sheet_offer_details_car_color_indicator_size">16dp</dimen>
 
 	<!--rating_bar_stars-->
 	<dimen name="rating_bar_stars_height_width">12dp</dimen>

@@ -8,6 +8,7 @@ import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.v4.app.MemoryLeakUtils
+import android.support.v4.content.FileProvider
 import android.support.v7.widget.Toolbar
 
 import android.view.View
@@ -34,6 +35,7 @@ import kotlinx.android.synthetic.main.toolbar.view.*
 import org.jetbrains.anko.toast
 
 import timber.log.Timber
+import java.io.File
 
 class SettingsActivity: BaseActivity(), SettingsView {
     @InjectPresenter
@@ -55,7 +57,7 @@ class SettingsActivity: BaseActivity(), SettingsView {
         btnSignOut.setOnClickListener { presenter.onLogout() }
         layoutSettingsLogs.setOnClickListener { presenter.onLogsClicked() }
         layoutSettingsResetOnboarding.setOnClickListener { presenter.onResetOnboardingClicked() }
-        btnSupport.setOnClickListener { sendEmail() }
+        btnSupport.setOnClickListener { presenter.onSupportButtonClicked() }
 
         //Not showing some layouts in release
         if(BuildConfig.FLAVOR != "dev") {
@@ -97,12 +99,15 @@ class SettingsActivity: BaseActivity(), SettingsView {
         finish()
     }
 
-    private fun sendEmail() {
-        val emailIntent = Intent(Intent.ACTION_SENDTO)
-        emailIntent.type = "message/rfc822"
+    override fun sendEmailInSupport(logsFile: File) {
+        val path = FileProvider.getUriForFile(applicationContext, getString(R.string.file_provider_authority), logsFile)
+        val emailIntent = Intent(Intent.ACTION_SEND)
+        emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        emailIntent.type = "text/*"
         emailIntent.data = Uri.parse("mailto:")
         emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.email_support)))
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.LNG_EMAIL_SUBJECT))
+        emailIntent.putExtra(Intent.EXTRA_STREAM, path)
         try {
             startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)))
         } catch (ex: android.content.ActivityNotFoundException) {

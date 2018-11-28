@@ -49,6 +49,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     private val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
 
     companion object {
+        @JvmField val MAP_MIN_ZOOM = 13f
         @JvmField val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
         private const val LABEL_VERTICAL_POSITION = 12
     }
@@ -198,6 +199,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     }
 
     protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng) {
+    //protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
         val bmPinA = getPinBitmap(placeName, info, R.drawable.ic_map_label_a)
         val startMakerOptions = MarkerOptions()
                 .position(point)
@@ -205,6 +207,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         googleMap.addMarker(startMakerOptions)
         val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+        //googleMap.moveCamera(cameraUpdate)
     }
 
     private fun getPinBitmap(placeName: String, info: String, drawable: Int): Bitmap {

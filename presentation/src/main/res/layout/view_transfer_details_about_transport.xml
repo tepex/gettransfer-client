@@ -74,7 +74,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_like_button"
-                android:layout_marginStart="@dimen/view_offer_image_like_margin_start"/>
+                android:layout_marginStart="@dimen/view_offer_image_like_margin_start"
+                android:visibility="gone"/>
 
         </LinearLayout>
 
@@ -124,7 +125,7 @@
             app:layout_constraintStart_toEndOf="@+id/layoutCarLicensePlate"
             android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
             app:srcCompat="@drawable/ic_circle_car_color_indicator"
-            android:background="@drawable/bg_car_color_indicator_transfer_details"/>
+            android:background="@drawable/border_car_color_indicator"/>
 
     </android.support.constraint.ConstraintLayout>
 

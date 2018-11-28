@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.*
+
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.presentation.ui.Utils
@@ -20,8 +22,10 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_transfer_type.*
 import kotlinx.android.synthetic.main.view_transfer_type.view.*
 
-class TransferTypeAdapter(private var list: List<TransportTypeModel>,
-                          private val listener: ChangeListener): RecyclerView.Adapter<TransferTypeAdapter.ViewHolder>() {
+class TransferTypeAdapter(
+    private var list: List<TransportTypeModel>,
+    private val listener: ChangeListener
+) : RecyclerView.Adapter<TransferTypeAdapter.ViewHolder>() {
 
     override fun getItemCount() = list.size
 
@@ -30,14 +34,16 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
 
     override fun onBindViewHolder(holder: ViewHolder, pos: Int) { holder.bind(list.get(pos), listener) }
 
-    class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
+    class ViewHolder(override val containerView: View) :
+        RecyclerView.ViewHolder(containerView),
+        LayoutContainer {
+
         fun bind(item: TransportTypeModel, listener: ChangeListener) = with(containerView) {
             tvTransferType.setText(item.nameId!!)
             tvNumberPersonsTransfer.text = Utils.formatPersons(context, item.paxMax)
             tvCountBaggage.text          = Utils.formatLuggage(context, item.luggageMax)
-            
-            if(item.price == null) rl_price.visibility = View.GONE
-            else tvPriceFrom.text = item.price.min
+
+            if (item.price == null) rl_price.isVisible = false else tvPriceFrom.text = item.price.min
 
             ivTransferType.setImageResource(item.imageId!!)
             cbTransferType.isChecked = item.checked
@@ -52,8 +58,7 @@ class TransferTypeAdapter(private var list: List<TransportTypeModel>,
         }
 
         private fun setVisibilityShadow(context: Context, item: TransportTypeModel) {
-            if(item.checked) showItemShadowAndCorners(context)
-            else hideItemShadowAndCorners(context)
+            if(item.checked) showItemShadowAndCorners(context) else hideItemShadowAndCorners(context)
         }
 
         private fun hideItemShadowAndCorners(context: Context) {

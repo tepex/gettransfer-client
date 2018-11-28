@@ -36,6 +36,19 @@
             android:background="@drawable/back_circle_white_buttons"
             android:elevation="2dp"/>
 
+        <ImageView
+            android:id="@+id/btnCenterRoute"
+            android:layout_width="@dimen/activity_main_buttons_size"
+            android:layout_height="@dimen/activity_main_buttons_size"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
+            android:layout_marginEnd="@dimen/activity_main_buttons_margin_start_end"
+            android:clickable="true"
+            android:focusable="true"
+            app:srcCompat="@drawable/ic_change_route"
+            android:background="@drawable/back_circle_white_buttons"
+            android:elevation="2dp"/>
+
     </FrameLayout>
 
     <android.support.design.widget.CoordinatorLayout

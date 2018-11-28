@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -10,6 +11,8 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.FileProvider
+import android.view.LayoutInflater
 
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +26,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.bumptech.glide.Glide
+import com.google.android.gms.maps.CameraUpdate
 
 import com.google.android.gms.maps.model.LatLng
 
@@ -44,7 +48,9 @@ import kotlinx.android.synthetic.main.view_transfer_details_field.*
 import kotlinx.android.synthetic.main.view_transfer_details_info.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //Don't delete
 
-class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
+import java.io.File
+
+class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
@@ -92,11 +98,12 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         textRequestSentOrCompletedDate.text = getString(R.string.LNG_RIDE_REQUEST_WAS_SENT).plus(":")
     }
 
-    private fun setClickListeners() {
+    private fun setClickListeners(){
         btnBack.setOnClickListener          { presenter.onBackCommandClick() }
-        btnSupportTop.setOnClickListener    { sendEmail(getString(R.string.email_support), getString(R.string.LNG_EMAIL_SUBJECT)) }
-        btnSupportBottom.setOnClickListener { sendEmail(getString(R.string.email_support), getString(R.string.LNG_EMAIL_SUBJECT)) }
-        btnCancel.setOnClickListener        {  }
+        btnCenterRoute.setOnClickListener   { presenter.onCenterRouteClick() }
+        btnSupportTop.setOnClickListener    { presenter.onSupportClicked() }
+        btnSupportBottom.setOnClickListener { presenter.onSupportClicked() }
+        btnCancel.setOnClickListener        { presenter.onCancelRequestClicked() }
     }
 
     override fun setTransfer(transferModel: TransferModel, userProfile: ProfileModel) {
@@ -126,21 +133,21 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         tvDuration.text = Utils.convertDuration(this, transferModel.duration?: 0)
 
         //bottom left
-        if(transferModel.statusCategory == Transfer.STATUS_CATEGORY_ACTIVE || transferModel.statusCategory == Transfer.STATUS_CATEGORY_UNFINISHED){
+        if (transferModel.statusCategory == Transfer.STATUS_CATEGORY_ACTIVE || transferModel.statusCategory == Transfer.STATUS_CATEGORY_UNFINISHED){
             layoutYourPrice.isVisible = true
             tvYourPrice.text = transferModel.price
         } else {
             layoutPrices.isVisible = true
             tvPrice.text = transferModel.price
-            if(transferModel.remainToPay != null) tvNotPaid.text = transferModel.remainToPay
-            else{
+            if (transferModel.remainToPay != null) tvNotPaid.text = transferModel.remainToPay
+            else {
                 textNotPaid.isVisible = false
                 tvNotPaid.isVisible = false
             }
         }
 
         //bottom right
-        when(transferModel.statusCategory){
+        when (transferModel.statusCategory) {
             Transfer.STATUS_CATEGORY_UNFINISHED -> {
                 tvTransferCancelled.isVisible = true
             }
@@ -169,7 +176,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
 
     private fun initAboutRequestView(transferModel: TransferModel, profileModel: ProfileModel) {
         booking_number.field_text.text = transferModel.id.toString()
-        with(profileModel) {
+        with (profileModel) {
             name?.let {
                 passenger_name.field_text.text = it
                 passenger_name.isVisible = true
@@ -183,7 +190,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
                 passenger_phone.isVisible = true
             }
         }
-        with(transferModel) {
+        with (transferModel) {
             flightNumber?.let {
                 flight_number.field_text.text = it
                 flight_number.isVisible = true
@@ -221,34 +228,37 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         layoutAboutTransport.isVisible = true
     }
 
-    private fun initAboutDriverView(offerModel: OfferModel) {
-        offerModel.carrier.let {
-            driver_id.field_title.text = getString(R.string.LNG_DRIVER).plus(" №${it.id}")
-            driver_id.field_text.text = it.completedTransfers.toString().plus(" ").plus(getString(R.string.LNG_RIDES))
-            it.profile.phone?.let { phone ->
-                with(driver_phone) {
-                    field_text.text = phone
-                    isVisible = true
-                    setOnClickListener { callPhone(phone) }
-                }
-                btnCall.setOnClickListener { callPhone(phone) }
+    private fun initAboutDriverView(offerModel: OfferModel){
+        offerModel.carrier.let { offerModel ->
+            driver_id.field_title.text = getString(R.string.LNG_DRIVER).plus(" №${offerModel.id}")
+            driver_id.field_text.text = offerModel.completedTransfers.toString().plus(" ").plus(getString(R.string.LNG_RIDES))
+
+            val operations = listOf<Pair<CharSequence, String>>(
+                    Pair(getString(R.string.LNG_COPY), TransferDetailsPresenter.OPERATION_COPY),
+                    Pair(getString(R.string.LNG_OPEN), TransferDetailsPresenter.OPERATION_OPEN))
+            val operationsName: List<CharSequence> = operations.map { it.first }
+            offerModel.profile.phone?.let { phone ->
+                driver_phone.field_text.text = phone
+                driver_phone.visibility = View.VISIBLE
+                btnCall.setOnClickListener { presenter.onCallCarrierClicked(phone) }
+                Utils.setSelectOperationListener(this, driver_phone, operationsName, R.string.LNG_DRIVER_PHONE) {
+                    presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
             }
-            it.profile.email?.let { email ->
-                with(driver_email) {
-                    field_text.text = email
-                    isVisible = true
-                    setOnClickListener { sendEmail(email, "") }
-                }
+            offerModel.profile.email?.let { email ->
+                driver_email.field_text.text = email
+                driver_email.visibility = View.VISIBLE
+                Utils.setSelectOperationListener(this, driver_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
+                    presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
             }
 
             layoutCarrierLanguages.removeAllViews()
             val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             lp.setMargins(8, 0, 8, 0)
-            for (item in it.languages) {
-                layoutCarrierLanguages.addView(ImageView(this).apply {
-                    setImageResource(Utils.getLanguageImage(item.delegate.language))
-                    layoutParams = lp
-                })
+            for(item in offerModel.languages) {
+                val ivLanguage = ImageView(this)
+                ivLanguage.setImageResource(Utils.getLanguageImage(item.delegate.language))
+                ivLanguage.layoutParams = lp
+                layoutCarrierLanguages.addView(ivLanguage)
             }
 
             layoutAboutDriver.isVisible = true
@@ -260,6 +270,7 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         carType.text = getString(offerModel.vehicle.transportType.nameId!!).plus(":")
         carLicensePlate.text = offerModel.vehicle.vehicleBase.registrationNumber
         offerModel.carrier.ratings.average?.let { ratingBar.rating = it }
+        if(offerModel.carrier.approved) ivLike.visibility = View.VISIBLE
         tvCountPassengers.text = Utils.formatPersons(this, offerModel.vehicle.transportType.paxMax)
         tvCountBaggage.text = Utils.formatLuggage(this, offerModel.vehicle.transportType.luggageMax)
 
@@ -267,12 +278,13 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
             child_seats_field.field_text.text = childSeats.toString()
             child_seats_field.isVisible = true
         }
+
         imgFreeWater.isVisible = offerModel.refreshments
         imgFreeWiFi.isVisible = offerModel.wifi
         ivManyPhotos.isVisible = offerModel.vehicle.photos.size > 1
 
-        if (offerModel.vehicle.color != null) carColor.setImageDrawable(Utils.getVehicleColorFormRes(this, offerModel.vehicle.color))
-        else carColor.isVisible = false
+        offerModel.vehicle.color?.let { carColor.setImageDrawable(Utils.getVehicleColorFormRes(this, it))
+        carColor.isVisible = offerModel.vehicle.color != null
 
         if (offerModel.vehicle.photos.isNotEmpty()) Glide.with(this).load(offerModel.vehicle.photos.first()).into(carPhoto)
         else carPhoto.setImageDrawable(ContextCompat.getDrawable(this, offerModel.vehicle.transportType.imageId!!))
@@ -281,15 +293,28 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) =
         setPolyline(polyline, routeModel)
 
-    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng) =
-        processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point) }
+    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) =
+        processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
 
-    private fun sendEmail(email: String, subject: String) {
-        val emailIntent = Intent(Intent.ACTION_SENDTO)
-        emailIntent.type = "message/rfc822"
+    override fun callPhone(phoneCarrier: String) {
+        val callIntent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneCarrier, null))
+        startActivity(callIntent)
+    }
+
+    override fun sendEmail(emailCarrier: String?, logsFile: File?) {
+        val emailIntent = Intent(Intent.ACTION_SEND)
+        emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        emailIntent.type = "text/*"
         emailIntent.data = Uri.parse("mailto:")
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
+        if (emailCarrier != null) emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(emailCarrier))
+        else {
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.email_support)))
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.LNG_EMAIL_SUBJECT))
+            logsFile?.let {
+                val path = FileProvider.getUriForFile(applicationContext, getString(R.string.file_provider_authority), it)
+                emailIntent.putExtra(Intent.EXTRA_STREAM, path)
+            }
+        }
         try {
             startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)))
         } catch (ex: android.content.ActivityNotFoundException) {
@@ -297,7 +322,17 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
         }
     }
 
-    private fun callPhone(phone: String) {
-        startActivity(Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null)))
+    override fun copyText(text: String) {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+        val clip = android.content.ClipData.newPlainText("Copied Text", text)
+        clipboard.primaryClip = clip
     }
+
+    override fun showAlertCancelRequest() {
+        Utils.showAlertCancelRequest(this) { presenter.cancelRequest(it) }
+    }
+
+    override fun recreateActivity() { recreate() }
+
+    override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
 }

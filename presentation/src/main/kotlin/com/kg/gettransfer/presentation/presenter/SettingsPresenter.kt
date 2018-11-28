@@ -112,6 +112,8 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
 
     fun onResetOnboardingClicked() { systemInteractor.isOnboardingShowed = false }
 
+    fun onSupportButtonClicked(){ viewState.sendEmailInSupport(systemInteractor.logsFile) }
+
     private fun saveAccount() = utils.launchSuspend {
         viewState.blockInterface(true)
         val result = utils.asyncAwait { systemInteractor.putAccount() }

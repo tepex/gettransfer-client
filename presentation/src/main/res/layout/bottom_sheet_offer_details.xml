@@ -251,12 +251,13 @@
 
         <ImageView
             android:id="@+id/colorVehicle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/bottom_sheet_offer_details_car_color_indicator_size"
+            android:layout_height="@dimen/bottom_sheet_offer_details_car_color_indicator_size"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_circle_car_color_indicator"/>
+            app:srcCompat="@drawable/ic_circle_car_color_indicator"
+            android:background="@drawable/border_car_color_indicator"/>
 
     </android.support.constraint.ConstraintLayout>
 

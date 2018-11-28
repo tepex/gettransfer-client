@@ -6,6 +6,7 @@ import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.DistanceUnitModel
 import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
+import java.io.File
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface SettingsView: BaseView {
@@ -19,6 +20,7 @@ interface SettingsView: BaseView {
     fun setDistanceUnit(distanceUnit: String)
     fun setEndpoint(endpoint: EndpointModel)
     fun setLogoutButtonEnabled(enabled: Boolean)
+    fun sendEmailInSupport(logsFile: File)
 
     fun restartApp()
 }

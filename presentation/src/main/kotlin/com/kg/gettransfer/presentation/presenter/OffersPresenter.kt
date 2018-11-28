@@ -71,6 +71,8 @@ class OffersPresenter: BasePresenter<OffersView>() {
                 Timber.e(result.error!!)
                 if(result.error!!.isNotLoggedIn()) viewState.redirectView()
                 else if(result.error!!.code != ApiException.NETWORK_ERROR) viewState.setError(result.error!!)
+            } else if(result.model.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE){
+                router.exit()
             } else {
                 transfer = result.model
                 val transferModel = Mappers.getTransferModel(transfer,
