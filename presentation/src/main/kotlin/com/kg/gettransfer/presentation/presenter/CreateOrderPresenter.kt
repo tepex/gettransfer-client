@@ -287,7 +287,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
             val logResult = utils.asyncAwait { systemInteractor.putAccount() }
             if(result.error == null && logResult.error == null) {
                 logCreateTransfer(Analytics.RESULT_SUCCESS)
-                router.navigateTo(Screens.Offers(result.model.id))
+                router.replaceScreen(Screens.Offers(result.model.id))
             } else if(result.error != null) {
                 logCreateTransfer(Analytics.SERVER_ERROR)
                 when {
