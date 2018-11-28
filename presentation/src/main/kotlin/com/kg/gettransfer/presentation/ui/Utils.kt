@@ -66,16 +66,19 @@ internal class Utils {
         private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
         private val EMAIL_PATTERN = Patterns.EMAIL_ADDRESS
         @JvmField val DATE_TIME_PATTERN = "dd MMMM yyyy, HH:mm"
+        @JvmField val DATE_PATTERN = "dd MMM yyyy"
+        @JvmField val DATE_WITHOUT_YEAR_PATTERN = "dd MMM"
+        @JvmField val TIME_PATTERN = "HH:mm"
         const val MAX_BITMAP_SIZE = 4096
 
         private lateinit var phoneUtil: PhoneNumberUtil
-        
+
         fun getAlertDialogBuilder(context: Context): AlertDialog.Builder {
             return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && false)
                 AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert)
             else AlertDialog.Builder(context)
         }
-        
+
         fun showError(context: Context, finish: Boolean, message: String, onClose: (() -> Unit)? = null) {
             getAlertDialogBuilder(context)
                 .setTitle(R.string.LNG_ERROR)
@@ -127,7 +130,7 @@ internal class Utils {
         fun setEndpointsDialogListener(context: Context, view: View, items: List<CharSequence>,
                                        listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.endpoint, items, listener)}
 
-        fun setModelsDialogListener(context: Context, view: View, @StringRes titleId: Int, items: List<CharSequence>, 
+        fun setModelsDialogListener(context: Context, view: View, @StringRes titleId: Int, items: List<CharSequence>,
                                     listener: (Int) -> Unit) {
             view.setOnClickListener {
                 getAlertDialogBuilder(context)
@@ -151,11 +154,12 @@ internal class Utils {
             }
         }
 
-        fun formatDistance(context: Context, distance: Int?, distanceUnit: DistanceUnit): String {
+        fun formatDistance(context: Context, distance: Int?, distanceUnit: DistanceUnit, withDistanceText: Boolean): String {
             if(distance == null) return ""
             var d = distance
             if(distanceUnit == DistanceUnit.Mi) d = DistanceUnit.km2Mi(distance)
-            return context.getString(R.string.LNG_RIDE_DISTANCE).plus(": $d ").plus(distanceUnit.name)
+            return if(withDistanceText) context.getString(R.string.LNG_RIDE_DISTANCE).plus(": $d ").plus(distanceUnit.name)
+            else d.toString().plus(distanceUnit.name)
         }
 
         fun formatDuration(context: Context, duration: Int) =
@@ -183,7 +187,7 @@ internal class Utils {
                 mPoints.add(Mappers.point2LatLng(routeModel.fromPoint))
                 mPoints.add(Mappers.point2LatLng(routeModel.toPoint))
 
-                for(i in mPoints.indices) latLngBuilder.include(mPoints.get(i))
+                for (i in mPoints.indices) latLngBuilder.include(mPoints.get(i))
             }
             Timber.d("latLngBuilder: $latLngBuilder")
             track = try { CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150) }
@@ -195,9 +199,37 @@ internal class Utils {
         }
 
         fun getFormattedDate(locale: Locale, dateToLocal: Date) = SimpleDateFormat(DATE_TIME_PATTERN, locale).format(dateToLocal)
-        
+
+        fun getDateTimeTransferDetails(locale: Locale, dateToLocal: Date, withYear: Boolean): Pair<String, String> {
+            val dateString = if (withYear) SimpleDateFormat(DATE_PATTERN, locale).format(dateToLocal)
+                             else SimpleDateFormat(DATE_WITHOUT_YEAR_PATTERN, locale).format(dateToLocal)
+            val timeString = SimpleDateFormat(TIME_PATTERN, locale).format(dateToLocal)
+            return Pair(dateString, timeString)
+        }
+
+        fun convertDuration(context: Context, minutes: Int): String {
+            return "${minutes / 60}"
+                    .plus(context.getString(R.string.LNG_H))
+                    .plus(" ${minutes % 60}")
+                    .plus(context.getString(R.string.LNG_M))
+        }
+
+        fun convertDuration(context: Context, millis: Long): String {
+            val seconds = millis / 1000
+            val minutes = seconds / 60
+            val hours = minutes / 60
+            val days = hours / 24
+            return context.getString(R.string.LNG_DATE_IN_HOURS)
+                    .plus(" $days")
+                    .plus(context.getString(R.string.LNG_D))
+                    .plus(" ${hours % 24}")
+                    .plus(context.getString(R.string.LNG_H))
+                    .plus(" ${minutes % 60}")
+                    .plus(context.getString(R.string.LNG_M))
+        }
+
         /*fun setPins(activity: Activity, googleMap: GoogleMap, routeModel: RouteModel) {
-        
+
             //Создание пинов с информацией
             val pinLayout = activity.layoutInflater.inflate(R.layout.view_maps_pin, null)
 
@@ -215,7 +247,7 @@ internal class Utils {
             pinLayout.tvInfoMirror.text = distance
             pinLayout.imgPin.setImageResource(R.drawable.ic_map_label_b)
             val bmPinB = createBitmapFromView(pinLayout)
-            
+
             //Создание polyline
 
             // Для построения подробного маршрута
@@ -244,7 +276,7 @@ internal class Utils {
                 latLngBuilder.include(mPoints.get(i))
             }
             googleMap.addPolyline(line)
-        
+
             *//*
             val sizeWidth = resources.displayMetrics.widthPixels
             val sizeHeight = mapView.height
@@ -256,7 +288,7 @@ internal class Utils {
             googleMap.animateCamera(track)}
             catch(e: Exception) { Timber.e(e) }
         }
-        
+
         fun createBitmapFromView(v: View): Bitmap {
             v.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT)
@@ -296,7 +328,7 @@ internal class Utils {
         fun getVehicleColorFormRes(context: Context, color: String): Drawable {
             val colorRes = R.color::class.members.find( { it.name == "color_vehicle_$color" } )
             val colorId = (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
-            
+
             return ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)!!
                 .constantState!!
                 .newDrawable()
@@ -311,7 +343,7 @@ internal class Utils {
             val countryCode = telephonyManager.simCountryIso
             return phoneUtil.getCountryCodeForRegion(countryCode.toUpperCase())
         }
-        
+
         fun formatPersons(context: Context, persons: Int) = context.getString(R.string.count_persons_and_baggage, persons)
         fun formatLuggage(context: Context, luggage: Int) = context.getString(R.string.count_persons_and_baggage, luggage)
         @Suppress("UNUSED_PARAMETER")

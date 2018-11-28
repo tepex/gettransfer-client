@@ -88,7 +88,7 @@ class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsVie
         layoutTransferInfo.tvTo.text = trip.to
         //layoutTransferInfo.tvOrderDateTime.text = getString(R.string.transfer_date_local, trip.dateTime)
         layoutTransferInfo.tvOrderDateTime.text = trip.dateTime
-        layoutTransferInfo.tvDistance.text = Utils.formatDistance(this, trip.distance, trip.distanceUnit)
+        layoutTransferInfo.tvDistance.text = Utils.formatDistance(this, trip.distance, trip.distanceUnit, true)
         tvCountPassengers.text = trip.countPassengers.toString()
         
         if(trip.nameSign != null) tvPassengerName.text = trip.nameSign else layoutName.visibility = View.GONE

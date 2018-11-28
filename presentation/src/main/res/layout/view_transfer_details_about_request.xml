@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layoutAboutRequestTitle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_transfer_details_title_height"
+        android:background="@color/color_transfer_details_background_gray"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvTitleAboutRequest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
+            android:text="@string/LNG_RIDE_ABOUT_REQUEST"
+            android:textAllCaps="true"
+            android:textSize="@dimen/activity_transfer_details_text_size_13sp"
+            android:fontFamily="@font/sf_pro_text_semibold"
+            android:textColor="@color/color_transfer_details_header_text_color"/>
+
+        <!--<TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="activity_transfer_details_margin_start_end_16dp"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:textSize="17sp"
+            android:textColor="@color/color_transfer_details_text_green"
+            android:text="@string/LNG_DOWNLOAD_BOOKING_VOUCHER"/>-->
+
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_transfer_details_horizontal_divider_height"
+        android:background="@color/color_transfer_details_horizontal_divider"/>
+
+    <com.kg.gettransfer.presentation.ui.TransferDetailsField
+        android:id="@+id/booking_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:title_transfer_details="@string/LNG_BOOKING_NUMBER"
+        app:input_transfer_details="11009942"
+        app:icon_img_transfer_details="@drawable/ic_num"/>
+
+    <com.kg.gettransfer.presentation.ui.TransferDetailsField
+        android:id="@+id/passenger_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:title_transfer_details="@string/LNG_RIDE_NAME"
+        app:input_transfer_details="Smith Family"
+        app:icon_img_transfer_details="@drawable/ic_passport"
+
+        android:visibility="gone"/>
+
+    <com.kg.gettransfer.presentation.ui.TransferDetailsField
+        android:id="@+id/passenger_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:title_transfer_details="@string/LNG_DRIVER_EMAIL"
+        app:input_transfer_details="example@gmail.com"
+        app:icon_img_transfer_details="@drawable/ic_email"
+
+        android:visibility="gone"/>
+
+    <com.kg.gettransfer.presentation.ui.TransferDetailsField
+        android:id="@+id/passenger_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:title_transfer_details="@string/LNG_DRIVER_PHONE"
+        app:input_transfer_details="+7 900 123 56 78"
+        app:icon_img_transfer_details="@drawable/ic_phone"
+
+        android:visibility="gone"/>
+
+    <com.kg.gettransfer.presentation.ui.TransferDetailsField
+        android:id="@+id/flight_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:title_transfer_details="@string/LNG_RIDE_FLIGHT_NUMBER"
+        app:input_transfer_details="BA 2243"
+        app:icon_img_transfer_details="@drawable/ic_flight"
+
+        android:visibility="gone"/>
+
+    <com.kg.gettransfer.presentation.ui.TransferDetailsField
+        android:id="@+id/comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:title_transfer_details="@string/LNG_RIDE_SETTINGS_OPTIONAL_COMMENT"
+        app:input_transfer_details="Need car to back exit"
+        app:icon_img_transfer_details="@drawable/ic_comment"
+        android:visibility="gone"/>
+
+</LinearLayout>

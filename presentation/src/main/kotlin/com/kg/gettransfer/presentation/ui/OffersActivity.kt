@@ -104,7 +104,7 @@ class OffersActivity: BaseActivity(), OffersView {
         tvFrom.text = transferModel.from
         if(transferModel.to != null) {
             tvTo.text = transferModel.to
-            tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
+            tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit, true)
         } else if(transferModel.duration != null){
             rl_hourly_info.visibility = View.VISIBLE
             tvMarkerTo.visibility = View.GONE

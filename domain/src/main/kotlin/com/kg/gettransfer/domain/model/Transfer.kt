@@ -29,7 +29,7 @@ data class Transfer(val id: Long,
                     val offersCount: Int,
                     val relevantCarriersCount: Int,
                     val offersUpdatedAt: Date?,
-                    
+
                     val time: Int,
                     val paidSum: Money?,
                     val remainsToPay: Money?,
@@ -40,7 +40,7 @@ data class Transfer(val id: Long,
                     val transportTypeIds: List<String>,
                     val passengerOfferedPrice: String?,
                     val price: Money?,
-                    
+
                     val editableFields: List<String>) {
     companion object {
         @JvmField val STATUS_NEW           = "new"
@@ -52,6 +52,11 @@ data class Transfer(val id: Long,
         @JvmField val STATUS_DRAFT         = "draft"
         @JvmField val STATUS_PENDING       = "pending_confirmation"
         @JvmField val STATUS_OUTDATED      = "outdated"
+
+        @JvmField val STATUS_CATEGORY_ACTIVE     = "active_status"
+        @JvmField val STATUS_CATEGORY_CONFIRMED  = "confirmed_status"
+        @JvmField val STATUS_CATEGORY_UNFINISHED = "unfinished_status"
+        @JvmField val STATUS_CATEGORY_FINISHED   = "finished_status"
     }
 
     val checkOffers = status == STATUS_PERFORMED ||
@@ -59,5 +64,15 @@ data class Transfer(val id: Long,
                       status == STATUS_COMPLETED ||
                       status == STATUS_NOT_COMPLETED
 
-    //val checkOffers = true
+    fun checkStatusCategory(): String {
+        return when(status) {
+            STATUS_NEW           -> STATUS_CATEGORY_ACTIVE
+            STATUS_DRAFT         -> STATUS_CATEGORY_ACTIVE
+            STATUS_PERFORMED     -> STATUS_CATEGORY_CONFIRMED
+            STATUS_OUTDATED      -> STATUS_CATEGORY_UNFINISHED
+            STATUS_CANCELED      -> STATUS_CATEGORY_UNFINISHED
+            STATUS_REJECTED      -> STATUS_CATEGORY_UNFINISHED
+            else                 -> STATUS_CATEGORY_FINISHED
+        }
+    }
 }

@@ -37,14 +37,14 @@ class RequestsRVAdapter(private val transfers: List<TransferModel>, private val 
             tvFrom.text = item.from
             if(item.to != null) {
                 tvTo.text = item.to
-                tvDistance.text = Utils.formatDistance(context, item.distance, item.distanceUnit)
+                tvDistance.text = Utils.formatDistance(context, item.distance, item.distanceUnit, true)
             } else if(item.duration != null) {
                 rl_hourly_info.visibility = View.VISIBLE
                 tvMarkerTo.visibility = View.GONE
                 tv_duration.text = HourlyValuesHelper.getValue(item.duration, context)
             }
             //tvOrderDateTime.text = context.getString(R.string.transfer_date_local, item.dateTime)
-            tvOrderDateTime.text = item.dateTime
+            tvOrderDateTime.text = Utils.getFormattedDate(item.locale, item.dateTime)
             setOnClickListener { listener(item) }
         }
     }

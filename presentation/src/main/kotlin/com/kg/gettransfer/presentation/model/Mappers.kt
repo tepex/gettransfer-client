@@ -15,6 +15,7 @@ import com.kg.gettransfer.utilities.Analytics
 
 import java.util.Currency
 import java.util.Locale
+import java.util.Calendar
 
 object Mappers {
     fun point2LatLng(point: Point) = LatLng(point.latitude, point.longitude)
@@ -91,12 +92,16 @@ object Mappers {
         val selected = transportTypes.filter { type.transportTypeIds.contains(it.id) }
         var distance: Int? = null
         if(type.to != null) distance = type.distance ?: checkDistance(type.from.point!!, type.to!!.point!!)
+        var timeToTransfer = type.dateToLocal.time - Calendar.getInstance().timeInMillis
+        if(timeToTransfer < 0) timeToTransfer = 0
 
         return TransferModel(type.id,
                              type.status,
                              type.from.name!!,
                              type.to?.name,
-                             Utils.getFormattedDate(locale, type.dateToLocal),
+                             type.createdAt,
+                             type.dateToLocal,
+                             locale,
                              distance,
                              distanceUnit,
                              type.pax,
@@ -112,7 +117,9 @@ object Mappers {
                              type.relevantCarriersCount,
                              type.checkOffers,
                              type.dateRefund,
-                             type.duration)
+                             type.time,
+                             type.checkStatusCategory(),
+                             timeToTransfer)
     }
 
     fun getTransferNew(from: CityPoint,

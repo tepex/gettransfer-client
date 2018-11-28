@@ -3,12 +3,15 @@ package com.kg.gettransfer.presentation.model
 import com.kg.gettransfer.domain.model.DistanceUnit
 
 import java.util.Date
+import java.util.Locale
 
 class TransferModel(val id: Long,
                     val status: String,
                     val from: String,
                     val to: String?,
-                    val dateTime: String,
+                    val createdAt: Date,
+                    val dateTime: Date,
+                    val locale: Locale,
                     val distance: Int?,
                     val distanceUnit: DistanceUnit,
                     val countPassengers: Int,
@@ -24,4 +27,6 @@ class TransferModel(val id: Long,
                     val relevantCarriersCount: Int?,
                     val checkOffers: Boolean,
                     val refund_date: Date?,
-                    val duration: Int?)
+                    val duration: Int?,
+                    val statusCategory: String,
+                    val timeToTransfer: Long)

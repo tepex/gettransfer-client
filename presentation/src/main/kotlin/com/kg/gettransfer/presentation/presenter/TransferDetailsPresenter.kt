@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.os.Bundle
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
@@ -43,10 +42,10 @@ class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
                                                          systemInteractor.locale,
                                                          systemInteractor.distanceUnit,
                                                          systemInteractor.transportTypes)
-                viewState.setTransfer(transferModel)
+                viewState.setTransfer(transferModel, Mappers.getProfileModel(systemInteractor.account.user.profile))
                 if(transferModel.checkOffers) {
                     val r = utils.asyncAwait { offerInteractor.getOffers(result.model.id) }
-                    if(r.error == null && r.model.size == 1) viewState.setOffer(Mappers.getOfferModel(r.model.first(), systemInteractor.locale))
+                    if(r.error == null && r.model.size == 1) viewState.setOffer(Mappers.getOfferModel(r.model.first(), systemInteractor.locale), transferModel.countChilds)
                 }
 
                 if(result.model.to != null) {
@@ -59,12 +58,12 @@ class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
                                                                result.model.to!!.name!!,
                                                                result.model.from.point!!,
                                                                result.model.to!!.point!!,
-                                                               transferModel.dateTime)
+                                                               Utils.getFormattedDate(transferModel.locale, transferModel.dateTime))
                         viewState.setRoute(Utils.getPolyline(routeModel), routeModel)
                     }
                 } else if(result.model.duration != null) {
                     viewState.setPinHourlyTransfer(transferModel.from,
-                                                   transferModel.dateTime,
+                                                   Utils.getFormattedDate(transferModel.locale, transferModel.dateTime),
                                                    LatLng(result.model.from.point!!.latitude, result.model.from.point!!.longitude))
                 }
             }

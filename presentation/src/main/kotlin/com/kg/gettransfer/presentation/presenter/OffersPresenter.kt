@@ -14,6 +14,7 @@ import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.Screens
@@ -76,7 +77,7 @@ class OffersPresenter: BasePresenter<OffersView>() {
                                                              systemInteractor.locale,
                                                              systemInteractor.distanceUnit,
                                                              systemInteractor.transportTypes)
-                viewState.setDate(transferModel.dateTime)
+                viewState.setDate(Utils.getFormattedDate(transferModel.locale, transferModel.dateTime))
                 viewState.setTransfer(transferModel)
 
                 val r = utils.asyncAwait{ offerInteractor.getOffers(result.model.id) }

@@ -36,7 +36,7 @@ class TripsRVAdapter(private val presenter: CarrierTripsPresenter,
             tvTo.text = item.to
             //tvOrderDateTime.text = context.getString(R.string.transfer_date_local, item.dateTime)
             tvOrderDateTime.text = item.dateTime
-            tvDistance.text = Utils.formatDistance(context, item.distance, item.distanceUnit)
+            tvDistance.text = Utils.formatDistance(context, item.distance, item.distanceUnit, true)
             tvPrice.text = item.pay
             tvVehicle.text = item.vehicleName
             
