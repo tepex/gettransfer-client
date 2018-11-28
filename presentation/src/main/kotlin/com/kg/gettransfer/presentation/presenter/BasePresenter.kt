@@ -11,10 +11,8 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
+
 import com.kg.gettransfer.utilities.Analytics
-import com.kg.gettransfer.utilities.Analytics.Companion.BACK_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_MAIN
-import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_NAME
 
 import com.yandex.metrica.YandexMetrica
 
@@ -34,11 +32,11 @@ open class BasePresenter<BV: BaseView>: MvpPresenter<BV>(), KoinComponent {
     protected val systemInteractor: SystemInteractor by inject()
     
     open fun onBackCommandClick() {
-        val map = HashMap<String, Any>()
-        map[PARAM_KEY_NAME] = BACK_CLICKED
+        val map = mutableMapOf<String, Any>()
+        map[Analytics.PARAM_KEY_NAME] = Analytics.BACK_CLICKED
 
         router.exit()
-        analytics.logEvent(EVENT_MAIN, createStringBundle(PARAM_KEY_NAME, BACK_CLICKED), map)
+        analytics.logEvent(Analytics.EVENT_MAIN, createStringBundle(Analytics.PARAM_KEY_NAME, Analytics.BACK_CLICKED), map)
     }
 
     protected fun login(nextScreen: String, email: String) = router.navigateTo(Screens.Login(nextScreen, email))

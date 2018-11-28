@@ -16,9 +16,8 @@ import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.TransferDetailsView
-import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_GET_OFFER
-import com.kg.gettransfer.utilities.Analytics.Companion.TRAVEL_CLASS
-import com.kg.gettransfer.utilities.Analytics.Companion.VALUE
+
+import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.standalone.inject
 
@@ -74,8 +73,8 @@ class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
 	}
 
     fun logEventGetOffer(key: String, value: String) {
-        val map = HashMap<String, Any?>()
+        val map = mutableMapOf<String, Any?>()
         map[key] = value
-        analytics.logEvent(EVENT_GET_OFFER, createStringBundle(key, value), map)
+        analytics.logEvent(Analytics.EVENT_GET_OFFER, createStringBundle(key, value), map)
     }
 }

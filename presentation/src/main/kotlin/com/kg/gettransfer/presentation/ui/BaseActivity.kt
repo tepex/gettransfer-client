@@ -80,6 +80,8 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         }
     }
     
+    private val loadingFragment by lazy { LoadingFragment() }
+    
     /** [https://stackoverflow.com/questions/37615470/support-library-vectordrawable-resourcesnotfoundexception] */
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -125,9 +127,9 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         if(block) {
-            if(useSpinner) LoadingFragment.showLoading(supportFragmentManager)
+            if(useSpinner) showLoading()
         }
-        else  LoadingFragment.hideLoading(supportFragmentManager)
+        else hideLoading()
     }
     
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
@@ -177,5 +179,20 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     override fun attachBaseContext(newBase: Context?) {
         if(newBase != null) super.attachBaseContext(localeManager.updateResources(newBase, systemInteractor.locale))
         else super.attachBaseContext(null)
+    }
+
+    private fun showLoading() {
+        if(loadingFragment.isAdded) return
+        supportFragmentManager.beginTransaction().apply {
+            add(android.R.id.content, loadingFragment)
+            commit()
+        }
+    }
+    
+    private fun hideLoading() {
+        supportFragmentManager.beginTransaction().apply {
+            remove(loadingFragment)
+            commit()
+        }
     }
 }

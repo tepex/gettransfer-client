@@ -1,15 +1,18 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.Intent
+
 import android.net.Uri
 
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
-
+import android.support.v4.app.MemoryLeakUtils
 import android.support.v7.widget.Toolbar
 
 import android.view.View
+
+import android.widget.Toast
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -28,9 +31,8 @@ import com.kg.gettransfer.presentation.view.SettingsView
 
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-import android.widget.Toast
 
-
+import timber.log.Timber
 
 class SettingsActivity: BaseActivity(), SettingsView {
     @InjectPresenter
@@ -47,14 +49,7 @@ class SettingsActivity: BaseActivity(), SettingsView {
 
         setContentView(R.layout.activity_settings)
 
-        setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.apply {
-            setDisplayShowTitleEnabled(false)
-            setDisplayHomeAsUpEnabled(true)
-            setDisplayShowHomeEnabled(true)
-        }
-        (toolbar as Toolbar).toolbar_title.setText(R.string.LNG_MENU_TITLE_SETTINGS)
-        (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
+        setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_SETTINGS)
         
         btnSignOut.setOnClickListener { presenter.onLogout() }
         layoutSettingsLogs.setOnClickListener { presenter.onLogsClicked() }

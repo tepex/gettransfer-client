@@ -64,7 +64,7 @@ class SplashActivity: AppCompatActivity() {
                 Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             }*/
-            
+
             if(result.error != null) {
                 Timber.e(result.error!!)
                 val msg = if(result.error!!.code == ApiException.NETWORK_ERROR)

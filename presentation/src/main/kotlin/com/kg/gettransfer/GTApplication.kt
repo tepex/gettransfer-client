@@ -51,9 +51,9 @@ class GTApplication: MultiDexApplication() {
                                domainModule,
                                androidModule))
 
-        startService(Intent(this, SocketIOService::class.java))
+        //startService(Intent(this, SocketIOService::class.java))
         setupAppMetrica()
-        setUpLeakCanary()
+        //setUpLeakCanary()
     }
 
     private fun setUpLeakCanary() {

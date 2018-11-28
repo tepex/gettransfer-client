@@ -7,14 +7,13 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.Account
+
 import com.kg.gettransfer.presentation.ui.LoginActivity
 
 import com.kg.gettransfer.presentation.view.LoginView
 import com.kg.gettransfer.presentation.view.Screens
-import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_LOGIN
-import com.kg.gettransfer.utilities.Analytics.Companion.RESULT_FAIL
-import com.kg.gettransfer.utilities.Analytics.Companion.RESULT_SUCCESS
-import com.kg.gettransfer.utilities.Analytics.Companion.STATUS
+
+import com.kg.gettransfer.utilities.Analytics
 
 import com.yandex.metrica.YandexMetrica
 
@@ -44,47 +43,47 @@ class LoginPresenter: BasePresenter<LoginView>() {
                     when(screenForReturn) {
                         Screens.CARRIER_MODE   -> router.navigateTo(Screens.ChangeMode(checkCarrierMode()))
                         Screens.CLOSE_ACTIVITY -> router.exit()
-                        Screens.OFFERS         -> { if (transferId != 0L )router.navigateTo(Screens.Offers(transferId!!))
-                                                  else router.exit() }
+                        Screens.OFFERS         -> {
+                            if(transferId != 0L) router.navigateTo(Screens.Offers(transferId!!))
+                            else router.exit()
+                        }
                     }
                 }
                 else router.exit()
                 //else router.exitWithResult(RESULT_CODE, RESULT_OK)
-                logLoginEvent(RESULT_SUCCESS)
+                logLoginEvent(Analytics.RESULT_SUCCESS)
             } else {
                 viewState.showError(true, result.error!!.message)
-                logLoginEvent(RESULT_FAIL)
+                logLoginEvent(Analytics.RESULT_FAIL)
             }
             viewState.blockInterface(false)
         }
     }
 
     private fun logLoginEvent(result: String) {
-        val map = HashMap<String, Any>()
-        map[STATUS] = result
+        val map = mutableMapOf<String, Any>()
+        map[Analytics.STATUS] = result
 
-        analytics.logEvent(EVENT_LOGIN, createStringBundle(STATUS, result), map)
+        analytics.logEvent(Analytics.EVENT_LOGIN, createStringBundle(Analytics.STATUS, result), map)
     }
 
     fun onHomeClick() = router.exit()
 
-    fun setEmail(email: String) { this.email = if (email.isEmpty()) null else email }
-
-    fun setPassword(password: String) { this.password = if (password.isEmpty()) null else password }
+    fun setEmail(email: String) { this.email = if(email.isEmpty()) null else email }
+    fun setPassword(password: String) { this.password = if(password.isEmpty()) null else password }
 
     private fun checkFields(): Boolean {
-        val checkEmail   = email != null && Patterns.EMAIL_ADDRESS.matcher(email!!).matches()
-        val checkPassword= password != null
+        val checkEmail = email != null && Patterns.EMAIL_ADDRESS.matcher(email!!).matches()
+        val checkPassword = password != null
         var fieldsValid = true
         var errorType = 0
-        if (!checkEmail)         { fieldsValid = false; errorType = LoginActivity.INVALID_EMAIL }
-        else if (!checkPassword) { fieldsValid = false; errorType = LoginActivity.INVALID_PASSWORD }
+        if(!checkEmail)         { fieldsValid = false; errorType = LoginActivity.INVALID_EMAIL }
+        else if(!checkPassword) { fieldsValid = false; errorType = LoginActivity.INVALID_PASSWORD }
         viewState.showValidationError(!fieldsValid, errorType)
         return fieldsValid
     }
 
-    private fun checkCarrierMode(): String {
-        if(systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) return Screens.CARRIER_MODE
-        else return Screens.REG_CARRIER
-    }
+    private fun checkCarrierMode() =
+        if(systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) Screens.CARRIER_MODE
+        else Screens.REG_CARRIER
 }

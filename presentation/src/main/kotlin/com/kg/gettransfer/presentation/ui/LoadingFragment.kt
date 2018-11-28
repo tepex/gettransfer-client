@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 
 import android.view.LayoutInflater
 import android.view.View
@@ -19,24 +18,6 @@ import com.kg.gettransfer.R
 import kotlinx.android.synthetic.main.fragment_loading_view.*
 
 class LoadingFragment: Fragment() {
-    companion object {
-        private val fragment by lazy { LoadingFragment() }
-        
-        fun showLoading(fragmentManager: FragmentManager) {
-            if(fragment.isAdded) return
-            fragmentManager.beginTransaction().apply {
-                add(android.R.id.content, fragment)
-                commit()
-            }
-        }
-
-        fun hideLoading(fragmentManager: FragmentManager) =
-            fragmentManager.beginTransaction().apply {
-                remove(fragment)
-                commit()
-        }
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
         inflater.inflate(R.layout.fragment_loading_view, container, false)
 

@@ -21,7 +21,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
                        private val loggingRepository: LoggingRepository,
                        private val geoRepository: GeoRepository) {
     companion object {
-        private val currenciesFilterList = arrayOf("₽", "฿", "$", "£", "¥", "€" )
+        private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBR", "CNY", "EUR" )
         private val localesFilterList = arrayOf("en", "ru")
     }
 
@@ -30,7 +30,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     val endpoints by lazy { systemRepository.endpoints }
     val logsFile  by lazy { loggingRepository.file }
     var locationPermissionsGranted: Boolean? = null
-
+    
     /* Read only properties */
 
     val accessToken: String
@@ -55,7 +55,7 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         get() = systemRepository.configs.supportedDistanceUnits
 
     val currencies: List<Currency> /* Dirty hack. GAA-298 */
-        get() = systemRepository.configs.supportedCurrencies.filter { currenciesFilterList.contains(it.symbol) }
+        get() = systemRepository.configs.supportedCurrencies.filter { currenciesFilterList.contains(it.currencyCode) }
 
     /* Read-write properties */    
     

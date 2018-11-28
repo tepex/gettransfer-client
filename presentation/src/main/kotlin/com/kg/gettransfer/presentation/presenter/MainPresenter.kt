@@ -20,16 +20,8 @@ import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.Screens
-import com.kg.gettransfer.utilities.Analytics.Companion.ABOUT_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.BEST_PRICE_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.DRIVER_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_MENU
-import com.kg.gettransfer.utilities.Analytics.Companion.LOGIN_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.MY_PLACE_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_NAME
-import com.kg.gettransfer.utilities.Analytics.Companion.SETTINGS_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.SHARE
-import com.kg.gettransfer.utilities.Analytics.Companion.TRANSFER_CLICKED
+
+import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.standalone.inject
 
@@ -108,7 +100,7 @@ class MainPresenter: BasePresenter<MainView>() {
     fun updateCurrentLocation() = utils.launchSuspend {
         val result = updateCurrentLocationAsync()
         result.error?.let { viewState.setError(it) }
-        logEvent(MY_PLACE_CLICKED)
+        logEvent(Analytics.MY_PLACE_CLICKED)
     }
 
     private fun setLastLocation() {
@@ -217,31 +209,31 @@ class MainPresenter: BasePresenter<MainView>() {
 
     fun onAboutClick() {
         router.navigateTo(Screens.About(false))
-        logEvent(ABOUT_CLICKED)
+        logEvent(Analytics.ABOUT_CLICKED)
     }
 
     fun readMoreClick() {
         viewState.showReadMoreDialog()
-        logEvent(BEST_PRICE_CLICKED)
+        logEvent(Analytics.BEST_PRICE_CLICKED)
     }
 
     fun onSettingsClick() {
         router.navigateTo(Screens.Settings)
-        logEvent(SETTINGS_CLICKED)
+        logEvent(Analytics.SETTINGS_CLICKED)
     }
 
     fun onRequestsClick() {
         router.navigateTo(Screens.Requests)
-        logEvent(TRANSFER_CLICKED)
+        logEvent(Analytics.TRANSFER_CLICKED)
     }
 
     fun onLoginClick() {
         login("", "")
-        logEvent(LOGIN_CLICKED)
+        logEvent(Analytics.LOGIN_CLICKED)
     }
 
     fun onBecomeACarrierClick() {
-        logEvent(DRIVER_CLICKED)
+        logEvent(Analytics.DRIVER_CLICKED)
         if(systemInteractor.account.user.loggedIn) {
             if(systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) router.navigateTo(Screens.ChangeMode(Screens.CARRIER_MODE))
             else router.navigateTo(Screens.ChangeMode(Screens.REG_CARRIER))
@@ -263,10 +255,10 @@ class MainPresenter: BasePresenter<MainView>() {
     }
 
     fun logEvent(value: String) {
-        val map = HashMap<String, Any>()
-        map[PARAM_KEY_NAME] = value
+        val map = mutableMapOf<String, Any>()
+        map[Analytics.PARAM_KEY_NAME] = value
 
-        analytics.logEvent(EVENT_MENU, createStringBundle(PARAM_KEY_NAME, value), map)
+        analytics.logEvent(Analytics.EVENT_MENU, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
     }
 
     fun onBackClick() {
@@ -276,6 +268,6 @@ class MainPresenter: BasePresenter<MainView>() {
 
     fun onShareClick() {
         Timber.d("Share action")
-        logEvent(SHARE)
+        logEvent(Analytics.SHARE)
     }
 }

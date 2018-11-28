@@ -8,8 +8,6 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 
-import android.graphics.Color
-
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
@@ -50,7 +48,7 @@ class SocketIOService: Service() {
     internal var serviceBinded = false
     
     companion object {
-        const val DEFAULT_CHANNEL_ID = "offer_service"
+        val DEFAULT_CHANNEL_ID = "${SocketIOService::class.java.name}.offer_service"
         private val NEW_OFFER_RE = Regex("^newOffer/(\\d+)$")
     }
     
@@ -188,32 +186,24 @@ class SocketIOService: Service() {
                 // If earlier version channel ID is not used
                 // https://developer.android.com/reference/android/support/v4/app/NotificationCompat.Builder.html#NotificationCompat.Builder(android.content.Context)
     private fun startForeground() {
-        /*
-        val channelId = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            createNotificationChannel(DEFAULT_CHANNEL_ID, "New Offer Service")
-        else ""
+        val channelId = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) createNotificationChannel("New Offer Service") else ""
 
-        val notificationBuilder = NotificationCompat.Builder(this, channelId)
-        val notification = notificationBuilder.setOngoing(true)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setCategory(Notification.CATEGORY_SERVICE)
-            .setAutoCancel(true)
-            .build()
-        */
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notifId = (System.currentTimeMillis()%10000).toInt()
-            startForeground(notifId, Notification.Builder(this).build())
-        }
+        val notification = NotificationCompat.Builder(this, channelId).apply {
+            setOngoing(true)
+            setCategory(Notification.CATEGORY_SERVICE)
+            setAutoCancel(true)
+        }.build()
+        
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            startForeground((System.currentTimeMillis() % 10000).toInt(), notification)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createNotificationChannel(channelId: String, channelName: String): String {
-        val chan = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_NONE)
-        chan.lightColor = Color.BLUE
+    private fun createNotificationChannel(channelName: String): String {
+        val chan = NotificationChannel(DEFAULT_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE)
         chan.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
         chan.setImportance(NotificationManager.IMPORTANCE_MIN)
-        val service = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        service.createNotificationChannel(chan)
-        return channelId
+        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(chan)
+        return DEFAULT_CHANNEL_ID
     }
 }
