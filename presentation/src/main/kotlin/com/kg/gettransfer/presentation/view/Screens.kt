@@ -141,4 +141,10 @@ object Screens {
                                     PaymentSettingsView.Params(dateRefund, transferId, offerId)))
         }
     }
+
+    data class PaymentError(val transactionId: String): SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) =  Intent(context, PaymentErrorActivity::class.java).apply {
+            putExtra(PaymentErrorActivity.TRANSACTION_ID, transactionId)
+        }
+    }
 }

@@ -54,8 +54,7 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
                     logEventEcommercePurchase()
                     logEvent(Analytics.RESULT_SUCCESS)
                 } else {
-                    router.exit()
-                    viewState.showErrorMessage()
+                    router.navigateTo(Screens.PaymentError(transferId.toString()))
                     logEvent(Analytics.RESULT_FAIL)
                 }
             }
@@ -85,7 +84,7 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
         }
 
         bundle.putString(Analytics.TRANSACTION_ID, transferId.toString())
-        map[Analytics.TRANSACTION_ID] = transferId
+        map[Analytics.TRANSACTION_ID] = transferId.toString()
         bundle.putString(Analytics.PROMOCODE, transferInteractor.transferNew?.promoCode)
         map[Analytics.PROMOCODE] = transferInteractor.transferNew?.promoCode
 

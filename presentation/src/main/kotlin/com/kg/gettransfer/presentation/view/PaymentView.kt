@@ -13,5 +13,4 @@ interface PaymentView: BaseView {
     }
     
     fun showSuccessfulMessage()
-    fun showErrorMessage()
 }

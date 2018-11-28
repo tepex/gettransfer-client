@@ -414,7 +414,6 @@
     <!-- new locales -->
 
 
-
     <string name="LNG_MISKO">TEST</string>
     <string name="LNG_OK">OK</string>
     <string name="LNG_CANCEL">Cancel</string>
@@ -586,7 +585,7 @@
     <string name="LNG_RIDE_COMPLETED">Completed transfers: %s</string>
     <string name="LNG_RIDE_CREATION_SPINNER">Please wait, connecting...</string>
     <string name="LNG_RIDE_CHOOSE_TRANSPORT">Please select transport type</string>
-    <string name="LNG_RIDE_OFFERT">I aggree with \n<a href = '#'>License agreement</a></string>
+    <string name="LNG_RIDE_OFFERT">I aggree with \n<a href='#'>License agreement</a></string>
     <string name="LNG_RIDE_OFFERT_TITLE">License agreement</string>
     <string name="LNG_RIDE_OFFERT_ERROR">You should accept terms of use</string>
     <string name="LNG_RIDE_FAIR_PRICE_FORMAT">Average rate on route %s (ETA ~%s)</string>
@@ -695,7 +694,7 @@
     <string name="LNG_RIDE_OFFER_BLOCKED">Blocked</string>
     <string name="LNG_RIDE_OFFER_CANCELED">Canceled</string>
     <string name="LNG_TRANSFER_NOT_PAID">Transfer is not paid</string>
-    <string name="LNG_BOOKING_NUMBER">Booking number</string>
+    <string name="LNG_BOOKING_NUMBER">Booking number %1$s</string>
     <string name="LNG_PAYMENT_DECLINED">Payment declined</string>
     <string name="LNG_PAYMENT_DECLINE_INFO">Try to pay again or use another bank card</string>
     <string name="LNG_PAYMENT_TRY_AGAIN">Try again</string>
