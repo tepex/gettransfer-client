@@ -694,7 +694,7 @@
     <string name="LNG_RIDE_OFFER_BLOCKED">Blocked</string>
     <string name="LNG_RIDE_OFFER_CANCELED">Canceled</string>
     <string name="LNG_TRANSFER_NOT_PAID">Transfer is not paid</string>
-    <string name="LNG_BOOKING_NUMBER">Booking number %1$s</string>
+    <string name="LNG_BOOKING_NUMBER">Booking number %1$d</string>
     <string name="LNG_PAYMENT_DECLINED">Payment declined</string>
     <string name="LNG_PAYMENT_DECLINE_INFO">Try to pay again or use another bank card</string>
     <string name="LNG_PAYMENT_TRY_AGAIN">Try again</string>
@@ -716,5 +716,6 @@
     <string name="LNG_EMAIL_SUBJECT">Get help</string>
     <string name="send_email">Send mail...</string>
     <string name="no_email_apps">There are no email apps installed.</string>
+    <string name="coming_soon">Coming soon</string>
 
 </resources>

@@ -49,12 +49,12 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
             } else {
                 if(result.model.success) {
                     router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
-                    router.navigateTo(Screens.PaymentSuccess(transferId.toString(), offerId))
+                    router.navigateTo(Screens.PaymentSuccess(transferId, offerId))
                     offer = offerInteractor.getOffer(offerId)!!
                     logEventEcommercePurchase()
                     logEvent(Analytics.RESULT_SUCCESS)
                 } else {
-                    router.navigateTo(Screens.PaymentError(transferId.toString()))
+                    router.navigateTo(Screens.PaymentError(transferId))
                     logEvent(Analytics.RESULT_FAIL)
                 }
             }

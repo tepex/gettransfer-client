@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_payment_error.*
 class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
 
     companion object {
-        const val TRANSACTION_ID = "transactionId"
+        const val TRANSFER_ID = "transferId"
     }
 
     @InjectPresenter
@@ -37,7 +37,7 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
         val dialog = builder.show()
 
         tvClose.setOnClickListener { finish() }
-        tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, intent.getStringExtra(TRANSACTION_ID))
+        tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, intent.getLongExtra(TRANSFER_ID, 0L))
         btnTryAgain.setOnClickListener { dialog.dismiss() }
         btnSupport.setOnClickListener { sendEmail() }
     }

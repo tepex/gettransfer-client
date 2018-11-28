@@ -142,15 +142,15 @@ object Screens {
         }
     }
 
-    data class PaymentError(val transactionId: String): SupportAppScreen() {
+    data class PaymentError(val transferId: Long): SupportAppScreen() {
         override fun getActivityIntent(context: Context?) =  Intent(context, PaymentErrorActivity::class.java).apply {
-            putExtra(PaymentErrorActivity.TRANSACTION_ID, transactionId)
+            putExtra(PaymentErrorActivity.TRANSFER_ID, transferId)
         }
     }
 
-    data class PaymentSuccess(val transactionId: String, val offerId: Long): SupportAppScreen() {
+    data class PaymentSuccess(val transferId: Long, val offerId: Long): SupportAppScreen() {
         override fun getActivityIntent(context: Context?) =  Intent(context, PaymentSuccessfulActivity::class.java).apply {
-            putExtra(PaymentSuccessfulActivity.TRANSACTION_ID, transactionId)
+            putExtra(PaymentSuccessfulActivity.TRANSFER_ID, transferId)
             putExtra(PaymentSuccessfulActivity.OFFER_ID, offerId)
         }
     }

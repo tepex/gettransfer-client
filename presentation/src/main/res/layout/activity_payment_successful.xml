@@ -88,7 +88,7 @@
         android:fontFamily="@font/sf_pro_text_regular"/>
 
     <com.google.android.gms.maps.MapView
-        android:id="@+id/mapviewRoute"
+        android:id="@+id/mapViewRoute"
         android:layout_width="154dp"
         android:layout_height="163dp"
         android:layout_marginStart="8dp"
@@ -103,8 +103,8 @@
         android:layout_height="44dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintStart_toEndOf="@+id/mapviewRoute"
-        app:layout_constraintTop_toTopOf="@+id/mapviewRoute" />
+        app:layout_constraintStart_toEndOf="@+id/mapViewRoute"
+        app:layout_constraintTop_toTopOf="@+id/mapViewRoute" />
 
     <include
         android:id="@+id/btnChat"
@@ -120,8 +120,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="@+id/mapviewRoute"
-        app:layout_constraintTop_toBottomOf="@+id/mapviewRoute"
+        app:layout_constraintStart_toStartOf="@+id/mapViewRoute"
+        app:layout_constraintTop_toBottomOf="@+id/mapViewRoute"
         tools:text="Transfer will start in: 2d 4h 42m"
         android:textColor="@color/colorGreen"
         android:textSize="12sp"

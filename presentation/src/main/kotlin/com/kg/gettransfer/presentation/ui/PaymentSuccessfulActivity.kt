@@ -9,14 +9,16 @@ import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.model.PolylineModel
+import com.kg.gettransfer.presentation.model.RouteModel
 import kotlinx.android.synthetic.main.activity_payment_successful.*
-import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.makeCall
+import org.jetbrains.anko.toast
 
 class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView {
 
     companion object {
-        const val TRANSACTION_ID = "transactionId"
+        const val TRANSFER_ID = "transferId"
         const val OFFER_ID = "offerId"
     }
 
@@ -28,21 +30,26 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.offerId = intent.getLongExtra(OFFER_ID, 0L)
-        showPaymentDialog()
+        presenter.transferId = intent.getLongExtra(TRANSFER_ID, 0L)
+        showPaymentDialog(savedInstanceState)
     }
 
-    private fun showPaymentDialog() {
+    private fun showPaymentDialog(savedInstanceState: Bundle?) {
         val dialogView = layoutInflater.inflate(R.layout.activity_payment_successful, null)
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
                 .setView(dialogView)
         builder.show()
 
+        _mapView = mapViewRoute
+        initMapView(savedInstanceState)
+        presenter.setMapRoute()
+
         tvDone.setOnClickListener { finish() }
-        tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, intent.getStringExtra(TRANSACTION_ID))
-        tvDetails.setOnClickListener {  }
-        tvVoucher.setOnClickListener {  }
+        tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, presenter.transferId)
+        tvDetails.setOnClickListener { presenter.onDetailsClick() }
+        tvVoucher.setOnClickListener { this.toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
         btnCall.setOnClickListener { presenter.onCallClick() }
-        btnChat.setOnClickListener {  }
+        btnChat.setOnClickListener { this.toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
         btnSupport.setOnClickListener { sendEmail() }
     }
 
@@ -62,4 +69,6 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     override fun call(number: String?) {
         number?.let { this.makeCall(it) }
     }
+
+    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel) = setPolyline(polyline, routeModel)
 }
