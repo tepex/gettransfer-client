@@ -26,7 +26,8 @@ open class TransferNewMapper: Mapper<TransferNewEntity, TransferNew> {
      */
     override fun toEntity(type: TransferNew) =
         TransferNewEntity(cityPointMapper.toEntity(type.from),
-                          cityPointMapper.toEntity(type.to),
+                          type.to?.let { cityPointMapper.toEntity(it) },
+                          type.duration,
                           tripMapper.toEntity(type.tripTo),
                           type.tripReturn?.let { tripMapper.toEntity(it) },
                           type.transportTypeIds,

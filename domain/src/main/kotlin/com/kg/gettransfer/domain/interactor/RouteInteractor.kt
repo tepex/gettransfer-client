@@ -12,8 +12,9 @@ import java.io.IOException
 
 class RouteInteractor(private val geoRepository: GeoRepository,
                       private val routeRepository: RouteRepository) {
-    var from: GTAddress? = null
-    var to: GTAddress? = null
+
+    var from: GTAddress?     = null
+    var to: GTAddress?       = null
     var hourlyDuration: Int? = null   //nullable to check if transfer is hourly
 
     //suspend fun getCurrentLocation() = geoRepository.getCurrentLocation()

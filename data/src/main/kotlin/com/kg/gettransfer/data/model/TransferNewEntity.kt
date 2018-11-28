@@ -1,7 +1,8 @@
 package com.kg.gettransfer.data.model
 
 open class TransferNewEntity(val from: CityPointEntity,
-                             val to: CityPointEntity,
+                             val to: CityPointEntity?,
+                             val duration: Int?,
                              val tripTo: TripEntity,
                              val tripReturn: TripEntity?,
                              val transportTypeIds: List<String>,

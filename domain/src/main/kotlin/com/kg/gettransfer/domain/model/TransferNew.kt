@@ -3,7 +3,8 @@ package com.kg.gettransfer.domain.model
 import java.util.Date
 
 data class TransferNew(val from: CityPoint,
-                       val to: CityPoint,
+                       val to: CityPoint?,
+                       val duration: Int?,
                        val tripTo: Trip,
                        val tripReturn: Trip?,
                        val transportTypeIds: List<String>,

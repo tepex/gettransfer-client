@@ -136,7 +136,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         initHourly()
 
 
-        switch_mode.setOnCheckedChangeListener { buttonView, isChecked -> modeSwitched(isChecked) }
+        switch_mode.setOnCheckedChangeListener { buttonView, isChecked -> presenter.tripModeSwitched(isChecked) }
 
         isFirst = savedInstanceState == null
 
@@ -153,7 +153,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         searchTo.setUneditable()
         searchFrom.setOnClickListener { performClick(false) }
         searchTo.setOnClickListener   { performClick(true) }
-        rl_hourly.setOnClickListener  { showNumberPicker() }
+        rl_hourly.setOnClickListener  { showNumberPicker(true) }
         btnNext.setOnClickListener    { presenter.onNextClick() }
         enableBtnNext()
     }
@@ -163,11 +163,17 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         processGoogleMap(true) { presenter.onSearchClick(searchFrom.text, searchTo.text, it.projection.visibleRegion.latLngBounds) }
     }
 
-    private fun showNumberPicker() {
-        hourlySheet.state = BottomSheetBehavior.STATE_COLLAPSED
+    private fun showNumberPicker(show: Boolean) {
+        hourlySheet.state = if (show) BottomSheetBehavior.STATE_COLLAPSED else BottomSheetBehavior.STATE_HIDDEN
+        onPickerExpanded(show)
     }
 
-
+    private fun onPickerExpanded(expanded: Boolean) {
+        expanded.let {
+            switch_mode.isEnabled    = !it
+            search_panel.isClickable = !it
+        }
+    }
 
     @CallSuper
     protected override fun onStart() {
@@ -203,23 +209,29 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         (navFooterVersion as TextView).text =
                 String.format(getString(R.string.nav_footer_version), versionName, versionCode)
         //navFooterReadMore.text = Html.fromHtml(Utils.convertMarkdownToHtml(getString(R.string.LNG_READMORE)))
-        navFooterStamp.setOnClickListener(readMoreListener)
-        navFooterReadMore.setOnClickListener(readMoreListener)
 
-        navHeaderShare.setOnClickListener(itemsNavigationViewListener)
-        navLogin.setOnClickListener(itemsNavigationViewListener)
-        navRequests.setOnClickListener(itemsNavigationViewListener)
-        navSettings.setOnClickListener(itemsNavigationViewListener)
-        navAbout.setOnClickListener(itemsNavigationViewListener)
-        navBecomeACarrier.setOnClickListener(itemsNavigationViewListener)
-        navPassengerMode.setOnClickListener(itemsNavigationViewListener)
+        readMoreListener.let {
+            navFooterStamp.setOnClickListener   (it)
+            navFooterReadMore.setOnClickListener(it)
+        }
+        itemsNavigationViewListener.let {
+            navHeaderShare.setOnClickListener   (it)
+            navLogin.setOnClickListener         (it)
+            navRequests.setOnClickListener      (it)
+            navSettings.setOnClickListener      (it)
+            navAbout.setOnClickListener         (it)
+            navBecomeACarrier.setOnClickListener(it)
+            navPassengerMode.setOnClickListener (it)
+        }
     }
 
     private fun initHourly() {
         hourlySheet = BottomSheetBehavior.from(hourly_sheet)
         hourlySheet.state = BottomSheetBehavior.STATE_HIDDEN
-        hourly_sheet.np_hours.setOnValueChangedListener { _, _, newVal -> presenter.onHourlyChosen(newVal) }
-        tv_okBtn.setOnClickListener { hourlySheet.state = BottomSheetBehavior.STATE_HIDDEN }
+        np_hours.minValue = MainPresenter.MIN_HOURLY
+        np_hours.maxValue = 12
+        hourly_sheet.np_hours.setOnValueChangedListener { _, _, newVal -> presenter.tripDurationSelected(newVal) }
+        tv_okBtn.setOnClickListener                     { showNumberPicker(false) }
     }
 
 
@@ -231,8 +243,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         }
 
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
-        gm.setOnCameraMoveListener { presenter.onCameraMove(gm.cameraPosition!!.target, true);  }
-        gm.setOnCameraIdleListener { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
+        gm.setOnCameraMoveListener        { presenter.onCameraMove(gm.cameraPosition!!.target, true);  }
+        gm.setOnCameraIdleListener        { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
         gm.setOnCameraMoveStartedListener {
             if(it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
                 presenter.enablePinAnimation()
@@ -292,7 +304,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         if(block){
             when(field){
                 MainPresenter.FIELD_FROM -> searchFrom.text = getString(R.string.search_start)
-                MainPresenter.FIELD_TO -> searchTo.text = getString(R.string.search_start)
+                MainPresenter.FIELD_TO   -> searchTo.text   = getString(R.string.search_start)
             }
         }
     }
@@ -303,7 +315,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
     override fun initSearchForm() {
         searchFrom.sub_title.text = getString(R.string.LNG_FIELD_SOURCE_PICKUP)
-        searchTo.sub_title.text = getString(R.string.LNG_FIELD_DESTINATION)
+        searchTo.sub_title.text   = getString(R.string.LNG_FIELD_DESTINATION)
     }
 
     override fun setAddressFrom(address: String) {
@@ -371,7 +383,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
     private fun setAlpha(alpha: Float) {
         searchFrom.alpha = alpha
-        a_point.alpha = alpha
+        a_point.alpha    = alpha
     }
 
     override fun onBackClick() {
@@ -384,29 +396,24 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         ReadMoreFragment().show(supportFragmentManager, getString(R.string.tag_read_more))
     }
 
-    private fun modeSwitched(hourly: Boolean) {
-
+    override fun changeFields(hourly: Boolean) {
         val viewIn:       View
         val viewOut:      View
         val imgIn:        View
         val imgOut:       View
-        val currentHours: Int?
 
         if (hourly) {
-            currentHours = np_hours.value
             viewIn  = rl_hourly
             viewOut = rl_searchForm
             imgIn   = hourly_point
             imgOut  = b_point
         } else {
-            currentHours = null
             viewIn  = rl_searchForm
             viewOut = rl_hourly
             imgIn   = b_point
             imgOut  = hourly_point
         }
 
-        presenter.onHourlyChosen(currentHours)
         enableBtnNext()
         AnimationHelper(this).hourlyAnim(viewOut, imgOut, viewIn, imgIn)
         link_line.visibility = if (hourly) View.INVISIBLE else View.VISIBLE

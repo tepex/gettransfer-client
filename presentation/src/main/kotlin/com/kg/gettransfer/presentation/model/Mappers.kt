@@ -115,7 +115,8 @@ object Mappers {
     }
     
     fun getTransferNew(from: CityPoint,
-                       to: CityPoint,
+                       to: CityPoint?,
+                       duration: Int?,
                        tripTo: Trip,
                        tripReturn: Trip?,
                        transportTypes: List<String>,
@@ -127,6 +128,7 @@ object Mappers {
                        promoCode: String = "",
                        paypalOnly: Boolean) = TransferNew(from, 
                                                           to,
+                                                          duration,
                                                           tripTo,
                                                           tripReturn,
                                                           transportTypes,
@@ -137,6 +139,7 @@ object Mappers {
                                                           user,
                                                           promoCode,
                                                           paypalOnly)
+
 
     fun getOfferModel(type: Offer, locale: Locale) = 
         OfferModel(type.id,

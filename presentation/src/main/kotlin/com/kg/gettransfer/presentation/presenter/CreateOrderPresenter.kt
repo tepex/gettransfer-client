@@ -156,7 +156,8 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     }
 
     private fun setUIWithoutRoute() {
-        viewState.setTransportTypes(systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, null) })
+        transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, null) }
+        viewState.setTransportTypes(transportTypes!!)
         routeInteractor.from!!.let {
             viewState.setPinHourlyTransfer(it.address?:"", it.primary?:"", it.cityPoint.point.let { p -> LatLng(p!!.latitude, p.longitude) } ) }
     }
@@ -267,7 +268,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
         
         Timber.d("from: %s", routeInteractor.from)
-        Timber.d("to: %s", routeInteractor.to!!)
+        Timber.d("to: %s", routeInteractor.to)
         Timber.d("trip: %s", trip)
         Timber.d("transport types: %s", selectedTransportTypes)
         Timber.d("user: $user")
@@ -278,16 +279,17 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         Timber.d("flightNumber: $flightNumber")
         Timber.d("comment: $comment")
 
-        if(routeInteractor.from == null || routeInteractor.to == null) return
+//        if(routeInteractor.from == null || routeInteractor.to == null) return
         val from = routeInteractor.from!!
-        val to = routeInteractor.to!!
+        val to = routeInteractor.to
         
         
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait {
                 transferInteractor.createTransfer(Mappers.getTransferNew(from.cityPoint,
-                                                                         to.cityPoint,
+                                                                         to?.cityPoint,
+                                                                         routeInteractor.hourlyDuration,
                                                                          trip,
                                                                          null,
                                                                          selectedTransportTypes,
@@ -299,7 +301,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
                                                                          promoCode,
                                                                          false))
             }
-            
+
             val logResult = utils.asyncAwait { systemInteractor.putAccount() }
             if(result.error == null && logResult.error == null) {
                 logCreateTransfer(Analytics.RESULT_SUCCESS)

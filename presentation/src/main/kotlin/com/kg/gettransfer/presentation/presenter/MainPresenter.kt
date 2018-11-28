@@ -61,6 +61,8 @@ class MainPresenter: BasePresenter<MainView>() {
     companion object {
         @JvmField val FIELD_FROM = "field_from"
         @JvmField val FIELD_TO   = "field_to"
+
+        const val MIN_HOURLY     = 2
     }
 
     @CallSuper
@@ -189,6 +191,17 @@ class MainPresenter: BasePresenter<MainView>() {
 
     fun enablePinAnimation() { isMarkerAnimating = false }
 
+    fun tripModeSwitched(hourly: Boolean) {
+        routeInteractor.hourlyDuration = if (hourly) MIN_HOURLY else null
+        viewState.changeFields(hourly)
+    }
+
+    fun tripDurationSelected(hours: Int) {
+        routeInteractor.hourlyDuration = hours
+    }
+
+    fun isHourly() = routeInteractor.hourlyDuration != null
+
     fun setAddressFields() {
         viewState.setAddressFrom(routeInteractor.from?.address ?: "")
         viewState.setAddressTo(routeInteractor.to?.address ?: "")
@@ -242,10 +255,6 @@ class MainPresenter: BasePresenter<MainView>() {
             login(Screens.CARRIER_MODE, "")
         }
     }
-
-    fun onHourlyChosen(hours: Int?) { routeInteractor.hourlyDuration = hours }
-
-    fun isHourly() = routeInteractor.hourlyDuration != null
 
     private fun comparePointsWithRounding(point1: LatLng?, point2: LatLng?): Boolean {
         if(point2 == null || point1 == null) return false
