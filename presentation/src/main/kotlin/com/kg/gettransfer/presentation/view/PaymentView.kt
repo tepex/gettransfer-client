@@ -11,6 +11,4 @@ interface PaymentView: BaseView {
         val EXTRA_URL         = "${PaymentView::class.java.name}.url"
         val EXTRA_PERCENTAGE  = "${PaymentView::class.java.name}.percentage"
     }
-    
-    fun showSuccessfulMessage()
 }

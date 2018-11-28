@@ -49,7 +49,7 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
             } else {
                 if(result.model.success) {
                     router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
-                    viewState.showSuccessfulMessage()
+                    router.navigateTo(Screens.PaymentSuccess(transferId.toString(), offerId))
                     offer = offerInteractor.getOffer(offerId)!!
                     logEventEcommercePurchase()
                     logEvent(Analytics.RESULT_SUCCESS)

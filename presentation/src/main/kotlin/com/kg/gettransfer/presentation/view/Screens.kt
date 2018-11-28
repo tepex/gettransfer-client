@@ -147,4 +147,11 @@ object Screens {
             putExtra(PaymentErrorActivity.TRANSACTION_ID, transactionId)
         }
     }
+
+    data class PaymentSuccess(val transactionId: String, val offerId: Long): SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) =  Intent(context, PaymentSuccessfulActivity::class.java).apply {
+            putExtra(PaymentSuccessfulActivity.TRANSACTION_ID, transactionId)
+            putExtra(PaymentSuccessfulActivity.OFFER_ID, offerId)
+        }
+    }
 }
