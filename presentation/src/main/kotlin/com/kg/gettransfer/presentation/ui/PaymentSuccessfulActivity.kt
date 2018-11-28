@@ -11,7 +11,7 @@ import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
-import kotlinx.android.synthetic.main.activity_payment_successful.*
+import kotlinx.android.synthetic.main.dialog_payment_successful.view.*
 import org.jetbrains.anko.makeCall
 import org.jetbrains.anko.toast
 
@@ -29,28 +29,29 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_payment_successful)
         presenter.offerId = intent.getLongExtra(OFFER_ID, 0L)
         presenter.transferId = intent.getLongExtra(TRANSFER_ID, 0L)
         showPaymentDialog(savedInstanceState)
     }
 
     private fun showPaymentDialog(savedInstanceState: Bundle?) {
-        val dialogView = layoutInflater.inflate(R.layout.activity_payment_successful, null)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_payment_successful, null)
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
                 .setView(dialogView)
         builder.show().setCanceledOnTouchOutside(false)
 
-        _mapView = mapViewRoute
+        _mapView = dialogView.mapViewRoute
         initMapView(savedInstanceState)
         presenter.setMapRoute()
 
-        tvDone.setOnClickListener { finish() }
-        tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, presenter.transferId)
-        tvDetails.setOnClickListener { presenter.onDetailsClick() }
-        tvVoucher.setOnClickListener { this.toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
-        btnCall.setOnClickListener { presenter.onCallClick() }
-        btnChat.setOnClickListener { this.toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
-        btnSupport.setOnClickListener { sendEmail() }
+        dialogView.tvDone.setOnClickListener { finish() }
+        dialogView.tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, presenter.transferId.toString())
+        dialogView.tvDetails.setOnClickListener { presenter.onDetailsClick() }
+        dialogView.tvVoucher.setOnClickListener { this.toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
+        dialogView.btnCall.setOnClickListener { presenter.onCallClick() }
+        dialogView.btnChat.setOnClickListener { this.toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
+        dialogView.btnSupport.setOnClickListener { sendEmail() }
     }
 
     private fun sendEmail() {

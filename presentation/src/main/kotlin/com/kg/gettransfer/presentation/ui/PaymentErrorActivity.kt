@@ -10,7 +10,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.PaymentErrorPresenter
 import com.kg.gettransfer.presentation.view.PaymentErrorView
-import kotlinx.android.synthetic.main.activity_payment_error.*
+import kotlinx.android.synthetic.main.dialog_payment_error.view.*
 
 
 class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
@@ -31,15 +31,15 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
     }
 
     private fun showPaymentDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.activity_payment_error, null)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_payment_error, null)
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
                 .setView(dialogView)
         builder.show().setCanceledOnTouchOutside(false)
 
-        tvClose.setOnClickListener { finish() }
-        tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, intent.getLongExtra(TRANSFER_ID, 0L))
-        btnTryAgain.setOnClickListener { finish() }
-        btnSupport.setOnClickListener { sendEmail() }
+        dialogView.tvClose.setOnClickListener { finish() }
+        dialogView.tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, intent.getLongExtra(TRANSFER_ID, 0L).toString())
+        dialogView.btnTryAgain.setOnClickListener { finish() }
+        dialogView.btnSupport.setOnClickListener { sendEmail() }
     }
 
     private fun sendEmail() {

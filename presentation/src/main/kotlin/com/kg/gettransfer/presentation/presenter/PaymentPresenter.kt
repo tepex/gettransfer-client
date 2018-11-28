@@ -54,6 +54,7 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
                     logEventEcommercePurchase()
                     logEvent(Analytics.RESULT_SUCCESS)
                 } else {
+                    router.exit()
                     router.navigateTo(Screens.PaymentError(transferId))
                     logEvent(Analytics.RESULT_FAIL)
                 }
