@@ -8,6 +8,7 @@ import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
+import com.kg.gettransfer.presentation.view.Screens
 import org.koin.standalone.inject
 
 @InjectViewState
@@ -27,7 +28,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
     }
 
     fun onDetailsClick() {
-
+        router.navigateTo(Screens.Details(transferId))
     }
 
     fun setMapRoute() {

@@ -34,11 +34,11 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
         val dialogView = layoutInflater.inflate(R.layout.activity_payment_error, null)
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
                 .setView(dialogView)
-        val dialog = builder.show()
+        builder.show().setCanceledOnTouchOutside(false)
 
         tvClose.setOnClickListener { finish() }
         tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, intent.getLongExtra(TRANSFER_ID, 0L))
-        btnTryAgain.setOnClickListener { dialog.dismiss() }
+        btnTryAgain.setOnClickListener { finish() }
         btnSupport.setOnClickListener { sendEmail() }
     }
 

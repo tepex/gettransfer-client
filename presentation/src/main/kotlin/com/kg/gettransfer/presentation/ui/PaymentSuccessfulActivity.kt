@@ -38,7 +38,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         val dialogView = layoutInflater.inflate(R.layout.activity_payment_successful, null)
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
                 .setView(dialogView)
-        builder.show()
+        builder.show().setCanceledOnTouchOutside(false)
 
         _mapView = mapViewRoute
         initMapView(savedInstanceState)

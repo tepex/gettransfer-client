@@ -101,7 +101,7 @@
         layout="@layout/btn_layout_call_passenger"
         android:layout_width="126dp"
         android:layout_height="44dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toEndOf="@+id/mapViewRoute"
         app:layout_constraintTop_toTopOf="@+id/mapViewRoute" />
@@ -112,6 +112,7 @@
         android:layout_width="126dp"
         android:layout_height="44dp"
         android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/btnCall"
         app:layout_constraintStart_toStartOf="@+id/btnCall"
         app:layout_constraintTop_toBottomOf="@+id/btnCall" />
 
