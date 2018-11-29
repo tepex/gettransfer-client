@@ -39,7 +39,9 @@ class SearchPresenter: BasePresenter<SearchView>() {
     override fun attachView(view: SearchView) {
         super.attachView(view)
         viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false, !isTo)
-        viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false, isTo)
+        if (routeInteractor.hourlyDuration == null)
+            viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false, isTo)
+        else viewState.hideAddressTo()
         onSearchFieldEmpty()
     }
 

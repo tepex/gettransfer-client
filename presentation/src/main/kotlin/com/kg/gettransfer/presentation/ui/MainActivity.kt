@@ -235,8 +235,10 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
             minValue = 0
             maxValue = displayedValues.size - 1
             wrapSelectorWheel = false
+            tvCurrent_hours.text = displayedValues[0]
             np_hours.setOnValueChangedListener { _, _, newVal ->
-                presenter.tripDurationSelected(pickerHelper.durationValues[newVal]) }
+                presenter.tripDurationSelected(pickerHelper.durationValues[newVal])
+                tvCurrent_hours.text = displayedValues[newVal] }
         }
         tv_okBtn.setOnClickListener { showNumberPicker(false) }
     }
@@ -422,7 +424,13 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         }
 
         enableBtnNext()
-        AnimationHelper(this).hourlyAnim(viewOut, imgOut, viewIn, imgIn)
+
+        viewIn.visibility  = View.VISIBLE
+        imgIn.visibility   = View.VISIBLE
+        viewOut.visibility = View.GONE
+        imgOut.visibility  = View.GONE
+
+//        AnimationHelper(this).hourlyAnim(viewOut, imgOut, viewIn, imgIn)
         link_line.visibility = if (hourly) View.INVISIBLE else View.VISIBLE
     }
 }

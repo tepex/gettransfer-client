@@ -35,7 +35,7 @@ class PickerValuesHelper private constructor() {
         hours.let {
             when (it) {
                 in 2..4  -> stringValue = "$it " + context.getString(R.string.LNG_HOUR_FEW)
-                in 5..10 -> stringValue = "$it " + context.getString(R.string.LNG_HOUR)
+                in 5..10 -> stringValue = "$it " + context.getString(R.string.LNG_HOURS)
                 else  -> {
                     val days = it / 24
                     when (days) {
