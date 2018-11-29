@@ -361,13 +361,11 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         logEventMain(Analytics.SHOW_ROUTE_CLICKED)
     }
 
-    fun onBackClick() {
-        router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
-        logEventMain(Analytics.BACK_CLICKED)
-    }
+    fun onBackClick() = onBackCommandClick()
 
     override fun onBackCommandClick() {
-        router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+ //       router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+        router.exit()
         logEventMain(Analytics.BACK_CLICKED)
     }
 

@@ -136,7 +136,6 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         initNavigation()
         initHourly()
 
-
         switch_mode.setOnCheckedChangeListener { buttonView, isChecked -> presenter.tripModeSwitched(isChecked) }
 
         isFirst = savedInstanceState == null

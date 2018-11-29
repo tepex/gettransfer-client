@@ -39,8 +39,7 @@
 			<FrameLayout
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				app:layout_constraintTop_toTopOf="parent"
-				android:layout_above="@+id/search"
+				android:layout_above="@+id/search_panel"
 				android:layout_marginBottom="@dimen/margin_for_area_behind_rounded_corners"
 				>
 
