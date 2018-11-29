@@ -330,8 +330,8 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         setPolyline(polyline, routeModel)
     }
 
-    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng) =
-            processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point) }
+    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) =
+            processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
 
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
 

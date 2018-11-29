@@ -8,9 +8,11 @@ import android.content.IntentFilter
 import android.graphics.Rect
 
 import android.net.ConnectivityManager
+import android.net.Uri
 
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
+import android.support.v4.content.FileProvider
 
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
@@ -46,6 +48,7 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 import timber.log.Timber
+import java.io.File
 
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     companion object {

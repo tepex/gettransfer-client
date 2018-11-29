@@ -112,14 +112,15 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
 
     fun onResetOnboardingClicked() { systemInteractor.isOnboardingShowed = false }
 
-    fun onSupportButtonClicked(){ viewState.sendEmailInSupport(systemInteractor.logsFile) }
-
     private fun saveAccount() = utils.launchSuspend {
         viewState.blockInterface(true)
         val result = utils.asyncAwait { systemInteractor.putAccount() }
         result.error?.let { if(!it.isNotLoggedIn()) viewState.setError(it) }
         viewState.blockInterface(false)
     }
+
+    fun sendEmail(emailCarrier: String?){ viewState.sendEmail(emailCarrier, if(emailCarrier == null) systemInteractor.logsFile else null) }
+    fun callPhone(phone: String){ viewState.callPhone(phone) }
 
     override fun onBackCommandClick() {
         localeWasChanged = false

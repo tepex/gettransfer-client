@@ -2,13 +2,10 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Intent
 
-import android.net.Uri
-
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.v4.app.MemoryLeakUtils
-import android.support.v4.content.FileProvider
 import android.support.v7.widget.Toolbar
 
 import android.view.View
@@ -29,6 +26,7 @@ import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 
 import com.kg.gettransfer.presentation.view.SettingsView
+import com.kg.gettransfer.utilities.CommunicateMethods
 
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
@@ -57,7 +55,7 @@ class SettingsActivity: BaseActivity(), SettingsView {
         btnSignOut.setOnClickListener { presenter.onLogout() }
         layoutSettingsLogs.setOnClickListener { presenter.onLogsClicked() }
         layoutSettingsResetOnboarding.setOnClickListener { presenter.onResetOnboardingClicked() }
-        btnSupport.setOnClickListener { presenter.onSupportButtonClicked() }
+        btnSupport.setOnClickListener { presenter.sendEmail(null) }
 
         //Not showing some layouts in release
         if(BuildConfig.FLAVOR != "dev") {
@@ -91,27 +89,17 @@ class SettingsActivity: BaseActivity(), SettingsView {
         if(enabled) btnSignOut.visibility = View.VISIBLE else btnSignOut.visibility = View.GONE
     }
 
+    override fun callPhone(phoneCarrier: String) =
+            CommunicateMethods.callPhone(this, phoneCarrier)
+
+    override fun sendEmail(emailCarrier: String?, logsFile: File?) =
+            CommunicateMethods.sendEmail(this, emailCarrier, logsFile)
+
     override fun restartApp() {
         baseContext.packageManager.getLaunchIntentForPackage(baseContext.packageName)?.let {
             it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(it)
         }
         finish()
-    }
-
-    override fun sendEmailInSupport(logsFile: File) {
-        val path = FileProvider.getUriForFile(applicationContext, getString(R.string.file_provider_authority), logsFile)
-        val emailIntent = Intent(Intent.ACTION_SEND)
-        emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        emailIntent.type = "text/*"
-        emailIntent.data = Uri.parse("mailto:")
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.email_support)))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.LNG_EMAIL_SUBJECT))
-        emailIntent.putExtra(Intent.EXTRA_STREAM, path)
-        try {
-            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)))
-        } catch (ex: android.content.ActivityNotFoundException) {
-            this.toast(getString(R.string.no_email_apps))
-        }
     }
 }

@@ -445,10 +445,10 @@
     <string name="LNG_H">h</string>
     <string name="LNG_MIN">min</string>
     <string name="LNG_HOUR">hour</string>
+    <string name="LNG_DAYS">days</string>
     <string name="LNG_HOURS">hours</string>
     <string name="LNG_HOUR_FEW">hours</string>
     <string name="LNG_DAY">day</string>
-    <string name="LNG_DAYS">days</string>
     <string name="LNG_DAYS_FEW">days</string>
     <string name="LNG_FIELD_DURATION_TRIP">Duration of the trip</string>
     <string name="LNG_FIELD_PER_HOUSE">Select the duration of the trip</string>
@@ -695,7 +695,7 @@
     <string name="LNG_RIDE_OFFER_BLOCKED">Blocked</string>
     <string name="LNG_RIDE_OFFER_CANCELED">Canceled</string>
     <string name="LNG_TRANSFER_NOT_PAID">Transfer is not paid</string>
-    <string name="LNG_BOOKING_NUMBER">Booking number %1$s</string>
+    <string name="LNG_BOOKING_NUMBER">Booking number</string>
     <string name="LNG_PAYMENT_DECLINED">Payment declined</string>
     <string name="LNG_PAYMENT_DECLINE_INFO">Try to pay again or use another bank card</string>
     <string name="LNG_PAYMENT_TRY_AGAIN">Try again</string>
@@ -721,6 +721,8 @@
     <string name="LNG_RIDE_NOT_PAID">Not paid</string>
     <string name="LNG_TRANSFER_START">Transfer will start</string>
     <string name="LNG_TRANSFER">Transfer</string>
+    <string name="LNG_RIDE_REQUEST_FOR">Request for</string>
+    <string name="LNG_RIDE_TRANSFER_CANCELLED">transfer cancelled</string>
     <string name="tag_read_more" translatable="false">read_more_dialog</string>
     <string name="email_support" translatable="false">error.report@gettransfer.com</string>
     <string name="LNG_EMAIL_SUBJECT">Get help</string>

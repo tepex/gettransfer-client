@@ -117,15 +117,14 @@ class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
             OPERATION_OPEN -> {
                 when(field){
                     FIELD_PHONE -> viewState.callPhone(text)
-                    FIELD_EMAIL -> viewState.sendEmail(text, null)
+                    FIELD_EMAIL -> sendEmail(text)
                 }
             }
         }
     }
 
-    fun onCallCarrierClicked(phone: String){ viewState.callPhone(phone) }
-
-    fun onSupportClicked(){ viewState.sendEmail(null, systemInteractor.logsFile) }
+    fun sendEmail(emailCarrier: String?){ viewState.sendEmail(emailCarrier, if(emailCarrier == null) systemInteractor.logsFile else null) }
+    fun callPhone(phone: String){ viewState.callPhone(phone) }
 
     fun logEventGetOffer(key: String, value: String) {
         val map = mutableMapOf<String, Any?>()

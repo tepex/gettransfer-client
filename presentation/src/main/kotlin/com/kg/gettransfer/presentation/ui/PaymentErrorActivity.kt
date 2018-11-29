@@ -1,9 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
-
-import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 
@@ -12,9 +8,10 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.PaymentErrorPresenter
 import com.kg.gettransfer.presentation.view.PaymentErrorView
+import com.kg.gettransfer.utilities.CommunicateMethods
 
 import kotlinx.android.synthetic.main.dialog_payment_error.view.*
-import org.jetbrains.anko.toast
+import java.io.File
 
 class PaymentErrorActivity: BaseActivity(), PaymentErrorView {
     companion object {
@@ -37,23 +34,16 @@ class PaymentErrorActivity: BaseActivity(), PaymentErrorView {
         AlertDialog.Builder(this).apply { setView(dialogView) }.show().setCanceledOnTouchOutside(false)
 
         with(dialogView) {
-            tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, intent.getLongExtra(TRANSFER_ID, 0L).toString())
+            tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER).plus(" ${intent.getLongExtra(TRANSFER_ID, 0L)}")
             tvClose.setOnClickListener     { this@PaymentErrorActivity.finish() }
             btnTryAgain.setOnClickListener { this@PaymentErrorActivity.finish() }
-            btnSupport.setOnClickListener  { this@PaymentErrorActivity.sendEmail() }
+            btnSupport.setOnClickListener  { presenter.sendEmail(null) }
         }
     }
 
-    private fun sendEmail() {
-        val emailIntent = Intent(Intent.ACTION_SENDTO)
-        emailIntent.type = "message/rfc822"
-        emailIntent.data = Uri.parse("mailto:")
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.email_support)))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.LNG_EMAIL_SUBJECT))
-        try {
-            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)))
-        } catch(e: ActivityNotFoundException) {
-            this.toast(getString(R.string.no_email_apps))
-        }
-    }
+    override fun callPhone(phoneCarrier: String) =
+            CommunicateMethods.callPhone(this, phoneCarrier)
+
+    override fun sendEmail(emailCarrier: String?, logsFile: File?) =
+            CommunicateMethods.sendEmail(this, emailCarrier, logsFile)
 }

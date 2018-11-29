@@ -1,9 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
-
-import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.view.View
@@ -16,11 +12,13 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
+import com.kg.gettransfer.utilities.CommunicateMethods
 
 import kotlinx.android.synthetic.main.dialog_payment_successful.view.*
 
-import org.jetbrains.anko.makeCall
+//import org.jetbrains.anko.makeCall
 import org.jetbrains.anko.toast
+import java.io.File
 
 class PaymentSuccessfulActivity: BaseGoogleMapActivity(), PaymentSuccessfulView {
 
@@ -53,14 +51,14 @@ class PaymentSuccessfulActivity: BaseGoogleMapActivity(), PaymentSuccessfulView 
         presenter.setMapRoute()
 
         with(dialogView) {
-            tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, presenter.transferId.toString())
+            tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER).plus(" ${presenter.transferId}")
             tvDetails.setOnClickListener { presenter.onDetailsClick() }
             btnCall.setOnClickListener   { presenter.onCallClick() }
-//            tvVoucher.setOnClickListener {  }
-//            btnChat.setOnClickListener   {  }
+            tvVoucher.setOnClickListener { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
+            btnChat.setOnClickListener   { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
 
             tvDone.setOnClickListener     { finish() }
-            btnSupport.setOnClickListener { sendEmail() }
+            btnSupport.setOnClickListener { presenter.sendEmail(null) }
         }
     }
 
@@ -70,28 +68,20 @@ class PaymentSuccessfulActivity: BaseGoogleMapActivity(), PaymentSuccessfulView 
         gm.uiSettings.isZoomGesturesEnabled   = false
     }
 
-    private fun sendEmail() {
-        val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
-            type = "message/rfc822"
-            data = Uri.parse("mailto:")
-            putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.email_support)))
-            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.LNG_EMAIL_SUBJECT))
-        }
-        try {
-            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)))
-        } catch(e: ActivityNotFoundException) {
-            this.toast(getString(R.string.no_email_apps))
-        }
-    }
-
-    override fun call(number: String?) {
-        if(number.isNullOrEmpty()) this.toast(getString(R.string.driver_not_number))
-        else this.makeCall(number)
-    }
-
     override fun setRoute(polyline: PolylineModel) = setPolylineWithoutInfo(polyline)
 
     override fun setRemainTime(time: String?) {
         dialogView.tvRemainTime.text = getString(R.string.transfer_remain_time, time)
     }
+
+    /*override fun call(number: String?) {
+        if(number.isNullOrEmpty()) this.toast(getString(R.string.driver_not_number))
+        else this.makeCall(number!!)
+    }*/
+
+    override fun callPhone(phoneCarrier: String) =
+            CommunicateMethods.callPhone(this, phoneCarrier)
+
+    override fun sendEmail(emailCarrier: String?, logsFile: File?) =
+            CommunicateMethods.sendEmail(this, emailCarrier, logsFile)
 }

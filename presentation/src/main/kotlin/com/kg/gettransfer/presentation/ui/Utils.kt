@@ -164,8 +164,11 @@ internal class Utils {
             else d.toString().plus(distanceUnit.name)
         }
 
-        fun formatDuration(context: Context, duration: Int) =
-            context.getString(R.string.LNG_RIDE_DURATION).plus(": $duration ").plus(context.getString(R.string.LNG_H))
+        fun formatDuration(context: Context, duration: Int): String {
+            val days = duration / 24
+            return if (days > 0) "$days ".plus(context.getString(R.string.LNG_DAYS))
+                   else "$duration ".plus(context.getString(R.string.LNG_HOURS))
+        }
 
         fun getPolyline(routeModel: RouteModel): PolylineModel {
             var mPoints = mutableListOf<LatLng>()

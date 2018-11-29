@@ -30,7 +30,7 @@ data class Transfer(val id: Long,
                     val relevantCarriersCount: Int,
                     val offersUpdatedAt: Date?,
 
-                    val time: Int,
+                    val time: Int?,
                     val paidSum: Money?,
                     val remainsToPay: Money?,
                     val paidPercentage: Int,

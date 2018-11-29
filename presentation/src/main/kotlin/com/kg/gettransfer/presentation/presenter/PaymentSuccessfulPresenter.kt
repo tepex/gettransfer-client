@@ -36,10 +36,6 @@ class PaymentSuccessfulPresenter: BasePresenter<PaymentSuccessfulView>() {
 
     private lateinit var transferModel: TransferModel
 
-    fun onCallClick() {
-        viewState.call(offerInteractor.getOffer(offerId)?.carrier?.profile?.phone)
-    }
-
     fun onDetailsClick() {
         router.navigateTo(Screens.Details(transferId))
     }
@@ -88,7 +84,7 @@ class PaymentSuccessfulPresenter: BasePresenter<PaymentSuccessfulView>() {
                                 result.model.to!!.name!!,
                                 result.model.from.point!!,
                                 result.model.to!!.point!!,
-                                transferModel.dateTime)
+                                Utils.getFormattedDate(transferModel.locale, transferModel.dateTime))
                         viewState.setRoute(Utils.getPolyline(routeModel))
                     }
                 }
@@ -96,4 +92,7 @@ class PaymentSuccessfulPresenter: BasePresenter<PaymentSuccessfulView>() {
             viewState.blockInterface(false)
         }
     }
+
+    fun sendEmail(emailCarrier: String?){ viewState.sendEmail(emailCarrier, if(emailCarrier == null) systemInteractor.logsFile else null) }
+    fun onCallClick(){ viewState.callPhone(offerInteractor.getOffer(offerId)?.carrier?.profile?.phone!!) }
 }

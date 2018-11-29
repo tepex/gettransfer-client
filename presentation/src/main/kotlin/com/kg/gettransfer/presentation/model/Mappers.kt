@@ -118,6 +118,7 @@ object Mappers {
                              type.checkOffers,
                              type.dateRefund,
                              type.time,
+                             type.duration,
                              type.checkStatusCategory(),
                              timeToTransfer)
     }

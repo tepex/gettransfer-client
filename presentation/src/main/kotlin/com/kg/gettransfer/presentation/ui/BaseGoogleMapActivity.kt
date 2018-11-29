@@ -198,16 +198,13 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
         }
     }
 
-    protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng) {
-    //protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
+    protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
         val bmPinA = getPinBitmap(placeName, info, R.drawable.ic_map_label_a)
         val startMakerOptions = MarkerOptions()
                 .position(point)
                 .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
         googleMap.addMarker(startMakerOptions)
-        val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
-        //googleMap.moveCamera(cameraUpdate)
+        googleMap.moveCamera(cameraUpdate)
     }
 
     private fun getPinBitmap(placeName: String, info: String, drawable: Int): Bitmap {

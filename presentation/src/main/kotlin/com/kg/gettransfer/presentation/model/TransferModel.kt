@@ -27,6 +27,7 @@ class TransferModel(val id: Long,
                     val relevantCarriersCount: Int?,
                     val checkOffers: Boolean,
                     val refund_date: Date?,
+                    val time: Int?,
                     val duration: Int?,
                     val statusCategory: String,
                     val timeToTransfer: Long)

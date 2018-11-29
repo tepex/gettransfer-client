@@ -1,19 +1,17 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 
 import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+import android.support.constraint.ConstraintLayout
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.FileProvider
-import android.view.LayoutInflater
 
+import android.view.LayoutInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
@@ -37,9 +35,11 @@ import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
 import com.kg.gettransfer.presentation.view.TransferDetailsView
+import com.kg.gettransfer.utilities.CommunicateMethods
 
 import kotlinx.android.synthetic.main.activity_transfer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_transfer_details.*
+
 import kotlinx.android.synthetic.main.view_transfer_details_about_driver.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_request.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_transport.*
@@ -47,6 +47,7 @@ import kotlinx.android.synthetic.main.view_transfer_details_communicate_buttons.
 import kotlinx.android.synthetic.main.view_transfer_details_field.*
 import kotlinx.android.synthetic.main.view_transfer_details_info.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //Don't delete
+import java.io.File
 
 import java.io.File
 
@@ -86,8 +87,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         setClickListeners()
     }
 
-    private fun initTextFields() {
-        tvTransferCancelled.text = getString(R.string.LNG_TRANSFER).plus(" ").plus(getString(R.string.LNG_RIDE_STATUS_CANCELED))
+    private fun initTextFields(){
+        tvTransferCancelled.text = getString(R.string.LNG_RIDE_REQUEST_FOR).plus(" ").plus(getString(R.string.LNG_RIDE_TRANSFER_CANCELLED))
         textTransferWillStartTime.text = getString(R.string.LNG_TRANSFER_START).plus(":")
         textRequestSentOrCompletedDate.text = getString(R.string.LNG_RIDE_REQUEST_WAS_SENT).plus(":")
         textYourPrice.text = getString(R.string.LNG_RIDE_PRICE_YOUR).plus(":")
@@ -101,8 +102,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     private fun setClickListeners(){
         btnBack.setOnClickListener          { presenter.onBackCommandClick() }
         btnCenterRoute.setOnClickListener   { presenter.onCenterRouteClick() }
-        btnSupportTop.setOnClickListener    { presenter.onSupportClicked() }
-        btnSupportBottom.setOnClickListener { presenter.onSupportClicked() }
+        btnSupportTop.setOnClickListener    { presenter.sendEmail(null) }
+        btnSupportBottom.setOnClickListener { presenter.sendEmail(null) }
         btnCancel.setOnClickListener        { presenter.onCancelRequestClicked() }
     }
 
@@ -129,13 +130,26 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         tvTransferTime.text = getString(R.string.LNG_TRANSFER_AT).plus(" ").plus(transferDateTimePair.second)
 
         //top right
-        tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit, false)
-        tvDuration.text = Utils.convertDuration(this, transferModel.duration?: 0)
+        if(transferModel.to != null){
+            tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit, false)
+            tvDuration.text = Utils.convertDuration(this, transferModel.time?: 0)
+        } else {
+            textDistance.text = getString(R.string.LNG_TIME_RIDE)
+            tvDuration.text = Utils.formatDuration(this, transferModel.duration!!)
+        }
 
         //bottom left
-        if (transferModel.statusCategory == Transfer.STATUS_CATEGORY_ACTIVE || transferModel.statusCategory == Transfer.STATUS_CATEGORY_UNFINISHED){
-            layoutYourPrice.isVisible = true
-            tvYourPrice.text = transferModel.price
+        if(transferModel.statusCategory == Transfer.STATUS_CATEGORY_ACTIVE || transferModel.statusCategory == Transfer.STATUS_CATEGORY_UNFINISHED){
+            if(transferModel.price != null) {
+                layoutYourPrice.visibility = View.VISIBLE
+                tvYourPrice.text = transferModel.price
+            }
+            else {
+                verticalDivider2.visibility = View.GONE
+                val lp = bottomRightLayouts.layoutParams
+                lp.width = ConstraintLayout.LayoutParams.MATCH_PARENT
+                bottomRightLayouts.layoutParams = lp
+            }
         } else {
             layoutPrices.isVisible = true
             tvPrice.text = transferModel.price
@@ -229,22 +243,22 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     }
 
     private fun initAboutDriverView(offerModel: OfferModel){
-        offerModel.carrier.let { offerModel ->
-            driver_id.field_title.text = getString(R.string.LNG_DRIVER).plus(" №${offerModel.id}")
-            driver_id.field_text.text = offerModel.completedTransfers.toString().plus(" ").plus(getString(R.string.LNG_RIDES))
+        offerModel.carrier.let { offer ->
+            driver_id.field_title.text = getString(R.string.LNG_DRIVER).plus(" №${offer.id}")
+            driver_id.field_text.text = offer.completedTransfers.toString().plus(" ").plus(getString(R.string.LNG_RIDES))
 
             val operations = listOf<Pair<CharSequence, String>>(
                     Pair(getString(R.string.LNG_COPY), TransferDetailsPresenter.OPERATION_COPY),
                     Pair(getString(R.string.LNG_OPEN), TransferDetailsPresenter.OPERATION_OPEN))
             val operationsName: List<CharSequence> = operations.map { it.first }
-            offerModel.profile.phone?.let { phone ->
+            offer.profile.phone?.let { phone ->
                 driver_phone.field_text.text = phone
                 driver_phone.visibility = View.VISIBLE
-                btnCall.setOnClickListener { presenter.onCallCarrierClicked(phone) }
+                btnCall.setOnClickListener { presenter.callPhone(phone) }
                 Utils.setSelectOperationListener(this, driver_phone, operationsName, R.string.LNG_DRIVER_PHONE) {
                     presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
             }
-            offerModel.profile.email?.let { email ->
+            offer.profile.email?.let { email ->
                 driver_email.field_text.text = email
                 driver_email.visibility = View.VISIBLE
                 Utils.setSelectOperationListener(this, driver_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
@@ -254,7 +268,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
             layoutCarrierLanguages.removeAllViews()
             val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             lp.setMargins(8, 0, 8, 0)
-            for(item in offerModel.languages) {
+            for(item in offer.languages) {
                 val ivLanguage = ImageView(this)
                 ivLanguage.setImageResource(Utils.getLanguageImage(item.delegate.language))
                 ivLanguage.layoutParams = lp
@@ -296,10 +310,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) =
         processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
 
-    override fun callPhone(phoneCarrier: String) {
-        val callIntent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneCarrier, null))
-        startActivity(callIntent)
-    }
+    override fun callPhone(phoneCarrier: String) =
+            CommunicateMethods.callPhone(this, phoneCarrier)
+
+    override fun sendEmail(emailCarrier: String?, logsFile: File?) =
+            CommunicateMethods.sendEmail(this, emailCarrier, logsFile)
 
     override fun sendEmail(emailCarrier: String?, logsFile: File?) {
         val emailIntent = Intent(Intent.ACTION_SEND)

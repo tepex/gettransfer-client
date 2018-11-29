@@ -162,7 +162,9 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, null) }
         viewState.setTransportTypes(transportTypes!!)
         routeInteractor.from!!.let {
-            viewState.setPinHourlyTransfer(it.address?:"", it.primary?:"", it.cityPoint.point.let { p -> LatLng(p!!.latitude, p.longitude) } ) }
+            val point = it.cityPoint.point.let { p -> LatLng(p!!.latitude, p.longitude) }
+            track = Utils.getCameraUpdateForPin(point)
+            viewState.setPinHourlyTransfer(it.address?:"", it.primary?:"", point, track!!) }
     }
 
     fun changeDate(newDate: Date) {
