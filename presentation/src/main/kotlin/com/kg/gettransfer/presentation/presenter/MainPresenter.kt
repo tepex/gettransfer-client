@@ -40,7 +40,7 @@ class MainPresenter: BasePresenter<MainView>() {
 
     private val MARKER_ELEVATION = 5f
     private var markerStateLifted = false
-    
+
     var isMarkerAnimating = true
     internal var isClickTo: Boolean? = null
 
@@ -70,6 +70,7 @@ class MainPresenter: BasePresenter<MainView>() {
         super.attachView(view)
         viewState.setProfile(Mappers.getProfileModel(systemInteractor.account.user.profile))
         changeUsedField(systemInteractor.selectedField)
+        routeInteractor.from?.address?.let { viewState.setAddressFrom(it) }
     }
 
     fun switchUsedField() {
@@ -161,7 +162,7 @@ class MainPresenter: BasePresenter<MainView>() {
             val nePoint = Point(latLngBounds.northeast.latitude, latLngBounds.northeast.longitude)
             val swPoint = Point(latLngBounds.southwest.latitude, latLngBounds.southwest.longitude)
             latLonPair = Pair(nePoint, swPoint)
-            
+
             utils.launchSuspend {
                 val result = utils.asyncAwait {
                     routeInteractor.getAddressByLocation(
@@ -285,6 +286,4 @@ class MainPresenter: BasePresenter<MainView>() {
         Timber.d("Share action")
         logEvent(Analytics.SHARE)
     }
-
-    fun updateSearchForm() = routeInteractor.from
 }
