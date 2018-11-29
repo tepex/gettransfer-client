@@ -120,13 +120,13 @@
         app:layout_constraintTop_toBottomOf="@+id/btnCall" />
 
     <TextView
-        android:id="@+id/tvStart"
+        android:id="@+id/tvRemainTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="@+id/mapViewRoute"
         app:layout_constraintTop_toBottomOf="@+id/mapViewRoute"
-        tools:text="Transfer will start in: 2d 4h 42m"
+        android:text="@string/transfer_remain_time"
         android:textColor="@color/colorGreen"
         android:textSize="12sp"
         android:fontFamily="@font/sf_pro_text_regular"/>
@@ -144,5 +144,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvStart" />
+        app:layout_constraintTop_toBottomOf="@+id/tvRemainTime" />
 </android.support.constraint.ConstraintLayout>

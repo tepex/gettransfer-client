@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.google.android.gms.maps.GoogleMap
 import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
@@ -25,6 +26,8 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     @InjectPresenter
     internal lateinit var presenter: PaymentSuccessfulPresenter
 
+    private lateinit var dialogView: View
+
     override fun getPresenter(): PaymentSuccessfulPresenter = presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +39,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     }
 
     private fun showPaymentDialog(savedInstanceState: Bundle?) {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_payment_successful, null)
+        dialogView = layoutInflater.inflate(R.layout.dialog_payment_successful, null)
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
                 .setView(dialogView)
         builder.show().setCanceledOnTouchOutside(false)
@@ -78,4 +81,8 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     }
 
     override fun setRoute(polyline: PolylineModel) = setPolylineWithoutInfo(polyline)
+
+    override fun setRemainTime(time: String?) {
+        dialogView.tvRemainTime.text = getString(R.string.transfer_remain_time, time)
+    }
 }

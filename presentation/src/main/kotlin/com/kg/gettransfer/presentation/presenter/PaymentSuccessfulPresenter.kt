@@ -10,6 +10,7 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 import com.kg.gettransfer.presentation.view.Screens
 import org.koin.standalone.inject
+import java.util.*
 
 @InjectViewState
 class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
@@ -29,6 +30,35 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
 
     fun onDetailsClick() {
         router.navigateTo(Screens.Details(transferId))
+    }
+
+    override fun attachView(view: PaymentSuccessfulView?) {
+        super.attachView(view)
+        utils.launchSuspend{
+            val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
+            calculateRemainTime(result.model.dateToLocal)
+        }
+    }
+
+    private fun calculateRemainTime(endDate: Date) {
+        val calendar = Calendar.getInstance(systemInteractor.locale)
+        val startDate = calendar.time
+        var diffrent = endDate.time - startDate.time
+
+        val minutesInMilli: Long = 1000 * 60
+        val hoursInMilli: Long = minutesInMilli * 60
+        val daysInMilli: Long = hoursInMilli * 24
+
+        val remainedDays = diffrent / daysInMilli
+        diffrent %= daysInMilli
+
+        val remainedHours = diffrent / hoursInMilli
+        diffrent %= hoursInMilli
+
+        val remainedMinutes = diffrent / minutesInMilli
+        diffrent %= minutesInMilli
+
+        viewState.setRemainTime("$remainedDays d $remainedHours h $remainedMinutes m")
     }
 
     fun setMapRoute() {

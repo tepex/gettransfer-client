@@ -6,4 +6,5 @@ import com.kg.gettransfer.presentation.model.RouteModel
 interface PaymentSuccessfulView: BaseView {
     fun call(number: String?)
     fun setRoute(polyline: PolylineModel)
+    fun setRemainTime(time: String?)
 }
