@@ -701,7 +701,7 @@
     <string name="LNG_CUSTOMER_SUPPORT">Customer support</string>
     <string name="LNG_PAYMENT_DETAILS"><u>Details</u></string>
     <string name="LNG_TRANSFER_PAID_SUCCESSFULLY">Transfer paid successfully</string>
-    <string name="LNG_DOWNLOAD_BOOKING_VOUCHER">Download booking voucher</string>
+    <string name="LNG_DOWNLOAD_BOOKING_VOUCHER"><u>Download booking voucher</u></string>
     <string name="LNG_PAYMENT_CALL">Call</string>
     <string name="LNG_PAYMENT_CHAT">Chat</string>
     <string name="LNG_PAYMENT_EMAIL_TITLE">Transfer support</string>

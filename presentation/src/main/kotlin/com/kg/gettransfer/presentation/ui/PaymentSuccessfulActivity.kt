@@ -5,12 +5,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.google.android.gms.maps.GoogleMap
 import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.PolylineModel
-import com.kg.gettransfer.presentation.model.RouteModel
 import kotlinx.android.synthetic.main.dialog_payment_successful.view.*
 import org.jetbrains.anko.makeCall
 import org.jetbrains.anko.toast
@@ -54,6 +54,12 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         dialogView.btnSupport.setOnClickListener { sendEmail() }
     }
 
+    override suspend fun customizeGoogleMaps(gm: GoogleMap) {
+        super.customizeGoogleMaps(gm)
+        gm.uiSettings.isScrollGesturesEnabled = false
+        gm.uiSettings.isZoomGesturesEnabled = false
+    }
+
     private fun sendEmail() {
         val emailIntent = Intent(Intent.ACTION_SENDTO)
         emailIntent.type = "message/rfc822"
@@ -71,5 +77,5 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         number?.let { this.makeCall(it) }
     }
 
-    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel) = setPolyline(polyline, routeModel)
+    override fun setRoute(polyline: PolylineModel) = setPolylineWithoutInfo(polyline)
 }

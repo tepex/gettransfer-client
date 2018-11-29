@@ -54,7 +54,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                                 result.model.from.point!!,
                                 result.model.to!!.point!!,
                                 transferModel.dateTime)
-                        viewState.setRoute(Utils.getPolyline(routeModel), routeModel)
+                        viewState.setRoute(Utils.getPolyline(routeModel))
                     }
                 }
             }
