@@ -285,4 +285,6 @@ class MainPresenter: BasePresenter<MainView>() {
         Timber.d("Share action")
         logEvent(Analytics.SHARE)
     }
+
+    fun updateSearchForm() = routeInteractor.from
 }

@@ -177,6 +177,13 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
     @CallSuper
+    override fun onResume() {
+        super.onResume()
+        val from = presenter.updateSearchForm()?.address
+        if (from != null) searchFrom.text = from
+    }
+
+    @CallSuper
     protected override fun onStart() {
         super.onStart()
         hideKeyboard()
