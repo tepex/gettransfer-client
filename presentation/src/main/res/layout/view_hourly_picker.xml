@@ -13,33 +13,37 @@
     <View
         android:id="@+id/top_divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/divider_height"
+        android:layout_marginTop="@dimen/divider_margin_top"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/colorTextBlack" />
+        android:background="@color/colorDividerGray" />
 
     <RelativeLayout
         android:id="@+id/rl_picker_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         app:layout_constraintTop_toBottomOf="@+id/top_divider">
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="@dimen/title_margin"
             android:fontFamily="@font/sf_pro_text_regular"
-            android:textSize="17sp"
-            android:text="Duration of trip" />
+            android:textSize="@dimen/hourly_title_text_size"
+            android:text="@string/LNG_FIELD_DURATION_TRIP" />
+
 
         <TextView
             android:id="@+id/tv_okBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_margin="8dp"
-            android:textSize="15sp"
-            android:text="Done"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/action_done_padding"
+            android:textSize="@dimen/action_done_text_size"
+            android:text="@string/LNG_DONE"
             android:textColor="@color/colorBtnGreen" />
 
 
@@ -48,8 +52,9 @@
     <View
         android:id="@+id/bot_divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorTextBlack"
+        android:layout_height="@dimen/divider_height"
+        android:layout_marginTop="@dimen/divider_margin_top"
+        android:background="@color/colorDividerGray"
         app:layout_constraintTop_toBottomOf="@+id/rl_picker_header"/>
 
     <NumberPicker

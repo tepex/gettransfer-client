@@ -192,7 +192,9 @@ class MainPresenter: BasePresenter<MainView>() {
     fun enablePinAnimation() { isMarkerAnimating = false }
 
     fun tripModeSwitched(hourly: Boolean) {
-        routeInteractor.hourlyDuration = if (hourly) MIN_HOURLY else null
+        routeInteractor.apply {
+            hourlyDuration = if (hourly) hourlyDuration?: MIN_HOURLY else null
+        }
         viewState.changeFields(hourly)
     }
 

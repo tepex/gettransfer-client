@@ -16,8 +16,19 @@
 	<dimen name="activity_main_gradient_layout_height">48dp</dimen>
 
 	<dimen name="margin_for_area_behind_rounded_corners">-8dp</dimen>
+
+	<!--Hourly picker-->
 	<dimen name="hourly_bottom_sheet_height">250dp</dimen>
 	<dimen name="hourly_bottom_sheet_height_peek">@dimen/hourly_bottom_sheet_height</dimen>
+	<dimen name="divider_height">0.5dp</dimen>
+	<dimen name="divider_margin_top">@dimen/divider_height</dimen>
+	<dimen name="title_margin">8dp</dimen>
+	<dimen name="hourly_title_text_size">17sp</dimen>
+	<dimen name="action_done_padding">8dp</dimen>
+	<dimen name="action_done_text_size">15sp</dimen>
+
+
+
 
 	<!-- Navigation view menu -->
 	<dimen name="nav_header_height">148dp</dimen>

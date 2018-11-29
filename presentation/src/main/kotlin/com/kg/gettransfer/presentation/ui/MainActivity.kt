@@ -43,6 +43,7 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.helpers.AnimationHelper
+import com.kg.gettransfer.presentation.ui.helpers.PickerValuesHelper
 import com.kg.gettransfer.presentation.view.MainView
 import kotlinx.android.synthetic.main.a_b_view.*
 
@@ -228,10 +229,16 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     private fun initHourly() {
         hourlySheet = BottomSheetBehavior.from(hourly_sheet)
         hourlySheet.state = BottomSheetBehavior.STATE_HIDDEN
-        np_hours.minValue = MainPresenter.MIN_HOURLY
-        np_hours.maxValue = 12
-        hourly_sheet.np_hours.setOnValueChangedListener { _, _, newVal -> presenter.tripDurationSelected(newVal) }
-        tv_okBtn.setOnClickListener                     { showNumberPicker(false) }
+        np_hours.apply {
+            val pickerHelper = PickerValuesHelper.instance
+            displayedValues = pickerHelper.getHourlyValues(this@MainActivity).toTypedArray()
+            minValue = 0
+            maxValue = displayedValues.size - 1
+            wrapSelectorWheel = false
+            np_hours.setOnValueChangedListener { _, _, newVal ->
+                presenter.tripDurationSelected(pickerHelper.durationValues[newVal]) }
+        }
+        tv_okBtn.setOnClickListener { showNumberPicker(false) }
     }
 
 
