@@ -1,22 +1,28 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
+
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.view.View
+
 import com.arellomobile.mvp.presenter.InjectPresenter
+
 import com.google.android.gms.maps.GoogleMap
-import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
-import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.PolylineModel
+import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
+import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
+
 import kotlinx.android.synthetic.main.dialog_payment_successful.view.*
+
 import org.jetbrains.anko.makeCall
 import org.jetbrains.anko.toast
 
-class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView {
+class PaymentSuccessfulActivity: BaseGoogleMapActivity(), PaymentSuccessfulView {
 
     companion object {
         const val TRANSFER_ID = "transferId"
@@ -40,47 +46,47 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
 
     private fun showPaymentDialog(savedInstanceState: Bundle?) {
         dialogView = layoutInflater.inflate(R.layout.dialog_payment_successful, null)
-        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-                .setView(dialogView)
-        builder.show().setCanceledOnTouchOutside(false)
+        AlertDialog.Builder(this).apply { setView(dialogView) }.show().setCanceledOnTouchOutside(false)
 
         _mapView = dialogView.mapViewRoute
         initMapView(savedInstanceState)
         presenter.setMapRoute()
 
-        dialogView.tvDone.setOnClickListener { finish() }
-        dialogView.tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, presenter.transferId.toString())
-        dialogView.tvDetails.setOnClickListener { presenter.onDetailsClick() }
-        dialogView.tvVoucher.setOnClickListener { this.toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
-        dialogView.btnCall.setOnClickListener { presenter.onCallClick() }
-        dialogView.btnChat.setOnClickListener { this.toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
-        dialogView.btnSupport.setOnClickListener { sendEmail() }
+        with(dialogView) {
+            tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, presenter.transferId.toString())
+            tvDetails.setOnClickListener { presenter.onDetailsClick() }
+            btnCall.setOnClickListener   { presenter.onCallClick() }
+            tvVoucher.setOnClickListener { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
+            btnChat.setOnClickListener   { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
+
+            tvDone.setOnClickListener     { finish() }
+            btnSupport.setOnClickListener { sendEmail() }
+        }
     }
 
     override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
         gm.uiSettings.isScrollGesturesEnabled = false
-        gm.uiSettings.isZoomGesturesEnabled = false
+        gm.uiSettings.isZoomGesturesEnabled   = false
     }
 
     private fun sendEmail() {
-        val emailIntent = Intent(Intent.ACTION_SENDTO)
-        emailIntent.type = "message/rfc822"
-        emailIntent.data = Uri.parse("mailto:")
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.email_support)))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.LNG_EMAIL_SUBJECT))
+        val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+            type = "message/rfc822"
+            data = Uri.parse("mailto:")
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.email_support)))
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.LNG_EMAIL_SUBJECT))
+        }
         try {
             startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)))
-        } catch (ex: android.content.ActivityNotFoundException) {
+        } catch(e: ActivityNotFoundException) {
             Utils.showShortToast(this, getString(R.string.no_email_apps))
         }
     }
 
     override fun call(number: String?) {
-        number?.let { this.makeCall(it) }
-        if (number.isNullOrEmpty()) {
-            this.toast(getString(R.string.driver_not_number))
-        }
+        if(number.isNullOrEmpty()) this.toast(getString(R.string.driver_not_number))
+        else this.makeCall(number!!)
     }
 
     override fun setRoute(polyline: PolylineModel) = setPolylineWithoutInfo(polyline)

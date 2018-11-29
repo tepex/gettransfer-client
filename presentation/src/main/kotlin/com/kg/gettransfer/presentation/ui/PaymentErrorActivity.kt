@@ -1,20 +1,21 @@
 package com.kg.gettransfer.presentation.ui
 
-
+import android.content.ActivityNotFoundException
 import android.content.Intent
+
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.PaymentErrorPresenter
 import com.kg.gettransfer.presentation.view.PaymentErrorView
+
 import kotlinx.android.synthetic.main.dialog_payment_error.view.*
 
-
-class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
-
+class PaymentErrorActivity: BaseActivity(), PaymentErrorView {
     companion object {
         const val TRANSFER_ID = "transferId"
     }
@@ -32,14 +33,14 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
 
     private fun showPaymentDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_payment_error, null)
-        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-                .setView(dialogView)
-        builder.show().setCanceledOnTouchOutside(false)
+        AlertDialog.Builder(this).apply { setView(dialogView) }.show().setCanceledOnTouchOutside(false)
 
-        dialogView.tvClose.setOnClickListener { finish() }
-        dialogView.tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, intent.getLongExtra(TRANSFER_ID, 0L).toString())
-        dialogView.btnTryAgain.setOnClickListener { finish() }
-        dialogView.btnSupport.setOnClickListener { sendEmail() }
+        with(dialogView) {
+            tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, intent.getLongExtra(TRANSFER_ID, 0L).toString())
+            tvClose.setOnClickListener     { finish() }
+            btnTryAgain.setOnClickListener { finish() }
+            btnSupport.setOnClickListener  { sendEmail() }
+        }
     }
 
     private fun sendEmail() {
@@ -50,7 +51,7 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.LNG_EMAIL_SUBJECT))
         try {
             startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)))
-        } catch (ex: android.content.ActivityNotFoundException) {
+        } catch(e: ActivityNotFoundException) {
             Utils.showShortToast(this, getString(R.string.no_email_apps))
         }
     }

@@ -1,19 +1,31 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.TransferModel
+
 import com.kg.gettransfer.presentation.ui.Utils
+
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 import com.kg.gettransfer.presentation.view.Screens
+
 import org.koin.standalone.inject
-import java.util.*
+
+import java.util.Calendar
+import java.util.Date
 
 @InjectViewState
-class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
+class PaymentSuccessfulPresenter: BasePresenter<PaymentSuccessfulView>() {
+    companion object {
+        const val MILLIS_PER_MINUTE = 60 * 1000
+        const val MIN_PER_HOUR = 60
+        const val MIN_PER_DAY = MIN_PER_HOUR * 24
+    }
 
     private val offerInteractor: OfferInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
@@ -34,7 +46,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
 
     override fun attachView(view: PaymentSuccessfulView?) {
         super.attachView(view)
-        utils.launchSuspend{
+        utils.launchSuspend {
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             calculateRemainTime(result.model.dateToLocal)
         }
@@ -43,22 +55,15 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
     private fun calculateRemainTime(endDate: Date) {
         val calendar = Calendar.getInstance(systemInteractor.locale)
         val startDate = calendar.time
-        var diffrent = endDate.time - startDate.time
+        var remainsMinutes = (endDate.time - startDate.time) / MILLIS_PER_MINUTE
 
-        val minutesInMilli: Long = 1000 * 60
-        val hoursInMilli: Long = minutesInMilli * 60
-        val daysInMilli: Long = hoursInMilli * 24
+        val remainsDays = remainsMinutes / MIN_PER_DAY
+        remainsMinutes %= MIN_PER_DAY
 
-        val remainedDays = diffrent / daysInMilli
-        diffrent %= daysInMilli
+        val remainsHours = remainsMinutes / MIN_PER_HOUR
+        remainsMinutes %= MIN_PER_HOUR
 
-        val remainedHours = diffrent / hoursInMilli
-        diffrent %= hoursInMilli
-
-        val remainedMinutes = diffrent / minutesInMilli
-        diffrent %= minutesInMilli
-
-        viewState.setRemainTime("$remainedDays d $remainedHours h $remainedMinutes m")
+        viewState.setRemainTime("$remainsDays d $remainsHours h $remainsMinutes m")
     }
 
     fun setMapRoute() {
