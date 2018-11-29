@@ -39,7 +39,7 @@ class OfferServiceConnection: SystemListener, KoinComponent {
         forceNew = true
     }
 
-    private lateinit var handler: OfferModelHandler
+    private var handler: OfferModelHandler? = null
     private var socket: Socket? = null
     private var url: String? = null
     private var accessToken: String? = null
@@ -94,12 +94,12 @@ class OfferServiceConnection: SystemListener, KoinComponent {
                     headers.put("Cookie", listOf("rack.session=$accessToken"))
                 }
             }
-            
+
             on(Manager.EVENT_CONNECT_ERROR) { args -> Timber.e("socket connect error: $args") }
             on(Manager.EVENT_OPEN) { _ -> Timber.d("socket open [${socket?.id()}]") }
             on(Manager.EVENT_CLOSE) { _ -> Timber.d("socket close [${socket?.id()}]") }
             on(Manager.EVENT_RECONNECTING) { _ -> Timber.d("EVENT_RECONNECTING [${socket?.id()}]") }
-            
+
             on(Manager.EVENT_CONNECT_TIMEOUT) { _ -> Timber.w("socket timeout") }
             on(Manager.EVENT_ERROR) { args ->
                 val msg = if(args.first() is Exception) (args.first() as Exception).message else args.first().toString()
@@ -126,7 +126,7 @@ class OfferServiceConnection: SystemListener, KoinComponent {
         if(someTrash !is Packet<*>) return null
         val packetData: Any? = someTrash.data
         if(packetData == null || packetData !is JSONArray) return null
-        return packetData 
+        return packetData
     }
 
     private fun onReceiveOffer(offerEntity: String) {

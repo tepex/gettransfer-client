@@ -15,6 +15,7 @@ open class TransferNewMapper: Mapper<TransferNewEntity, TransferNew> {
     private val tripMapper      = get<TripMapper>()
     private val moneyMapper     = get<MoneyMapper>()
     private val userMapper      = get<UserMapper>()
+    private val destMapper      = get<DestMapper>()
 
     /**
      * Map a [TransferNewEntity] instance to a [TransferNew] instance.
@@ -26,8 +27,7 @@ open class TransferNewMapper: Mapper<TransferNewEntity, TransferNew> {
      */
     override fun toEntity(type: TransferNew) =
         TransferNewEntity(cityPointMapper.toEntity(type.from),
-                          type.to?.let { cityPointMapper.toEntity(it) },
-                          type.duration,
+                          destMapper.toEntity(type.dest),
                           tripMapper.toEntity(type.tripTo),
                           type.tripReturn?.let { tripMapper.toEntity(it) },
                           type.transportTypeIds,

@@ -10,6 +10,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.ui.Utils
+
 import com.kg.gettransfer.utilities.Analytics
 
 import java.util.Currency
@@ -17,22 +18,22 @@ import java.util.Locale
 
 object Mappers {
     fun point2LatLng(point: Point) = LatLng(point.latitude, point.longitude)
-    
+
     private fun point2Location(point: Point): Location {
         val ret = Location("")
         ret.latitude = point.latitude
         ret.longitude = point.longitude
         return ret
     }
-    
+
     fun latLng2Point(latLng: LatLng) = Point(latLng.latitude, latLng.longitude)
-    
+
     fun getUserModel(type: Account) = UserModel(getProfileModel(type.user.profile), type.user.termsAccepted)
-    
+
     fun getProfileModel(type: Profile) = ProfileModel(type.fullName, type.email, type.phone)
 
     fun getProfile(model: ProfileModel) = Profile(model.name, model.email, model.phone)
-    
+
     fun getUser(model: UserModel) = User(getProfile(model.profile), model.termsAccepted)
 
     /*
@@ -54,7 +55,7 @@ object Mappers {
                                   type.luggageMax,
                                   prices?.get(type.id))
     }
-        
+
     @StringRes
     fun getTransportTypeName(id: String): Int {
         val nameRes = R.string::class.members.find( { it.name == "LNG_TRANSPORT_${id.toUpperCase()}" } )
@@ -64,9 +65,9 @@ object Mappers {
     fun getCurrenciesModels(types: List<Currency>)        = types.map { CurrencyModel(it) }
     fun getLocalesModels(types: List<Locale>)             = types.map { LocaleModel(it) }
     fun getDistanceUnitsModels(types: List<DistanceUnit>) = types.map { DistanceUnitModel(it) }
-    
+
     fun getEndpointModel(endpoint: Endpoint) = EndpointModel(endpoint)
-    
+
     fun getRouteModel(distance: Int?,
                       distanceUnit: DistanceUnit,
                       polyLines: List<String>?,
@@ -82,7 +83,7 @@ object Mappers {
                                                      fromPoint,
                                                      toPoint,
                                                      dateTime)
-    
+
     fun getTransferModel(type: Transfer,
                          locale: Locale,
                          distanceUnit: DistanceUnit,
@@ -90,7 +91,7 @@ object Mappers {
         val selected = transportTypes.filter { type.transportTypeIds.contains(it.id) }
         var distance: Int? = null
         if(type.to != null) distance = type.distance ?: checkDistance(type.from.point!!, type.to!!.point!!)
-        
+
         return TransferModel(type.id,
                              type.status,
                              type.from.name!!,
@@ -113,10 +114,9 @@ object Mappers {
                              type.dateRefund,
                              type.duration)
     }
-    
+
     fun getTransferNew(from: CityPoint,
-                       to: CityPoint?,
-                       duration: Int?,
+                       dest: Dest<CityPoint, Int>,
                        tripTo: Trip,
                        tripReturn: Trip?,
                        transportTypes: List<String>,
@@ -126,9 +126,8 @@ object Mappers {
                        comment: String?,
                        user: User,
                        promoCode: String = "",
-                       paypalOnly: Boolean) = TransferNew(from, 
-                                                          to,
-                                                          duration,
+                       paypalOnly: Boolean) = TransferNew(from,
+                                                          dest,
                                                           tripTo,
                                                           tripReturn,
                                                           transportTypes,
@@ -141,7 +140,7 @@ object Mappers {
                                                           paypalOnly)
 
 
-    fun getOfferModel(type: Offer, locale: Locale) = 
+    fun getOfferModel(type: Offer, locale: Locale) =
         OfferModel(type.id,
                    type.status,
                    type.wifi,
@@ -170,17 +169,17 @@ object Mappers {
                          type.nameSign,
                          type.flightNumber,
                          type.remainToPay)
-    
+
     private fun getRatingsModel(type: Ratings) = RatingsModel(type.average, type.vehicle, type.driver, type.fair)
-    
+
     private fun getMoneyModel(type: Money) = MoneyModel(type.default, type.preferred)
-    
+
     private fun getPriceModel(type: Price) = PriceModel(getMoneyModel(type.base),
                                                 type.withoutDiscount?.let { getMoneyModel(it)},
                                                 type.percentage30,
                                                 type.percentage70,
                                                 "%.2f".format(type.amount))
-    
+
     private fun getCarrierModel(type: Carrier) = CarrierModel(type.id,
                                                          getProfileModel(type.profile),
                                                          type.approved,
@@ -188,20 +187,20 @@ object Mappers {
                                                          getLocalesModels(type.languages),
                                                          getRatingsModel(type.ratings),
                                                          type.canUpdateOffers)
-    
+
     private fun getVehicleModel(type: Vehicle) =
         VehicleModel(VehicleBaseModel(type.vehicleBase.name, type.vehicleBase.registrationNumber),
                      type.year,
                      type.color,
                      getTransportTypeModel(type.transportType, null),
                      type.photos)
-        
+
     fun getPaymentRequest(model: PaymentRequestModel) =
         PaymentRequest(model.transferId, model.offerId, model.gatewayId, model.percentage)
 
     fun getPaymentStatusRequest(model: PaymentStatusRequestModel) =
         PaymentStatusRequest(model.paymentId, model.pgOrderId, model.withoutRedirect, model.success)
-        
+
     private fun checkDistance(from: Point, to: Point) = (point2Location(from).distanceTo(point2Location(to)) / 1000).toInt()
 
     fun getAnalyticsParam(errorField: String) = when (errorField) {
