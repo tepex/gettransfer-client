@@ -86,7 +86,7 @@ class PaymentSuccessfulActivity: BaseGoogleMapActivity(), PaymentSuccessfulView 
 
     override fun call(number: String?) {
         if(number.isNullOrEmpty()) this.toast(getString(R.string.driver_not_number))
-        else this.makeCall(number!!)
+        else this.makeCall(number)
     }
 
     override fun setRoute(polyline: PolylineModel) = setPolylineWithoutInfo(polyline)
