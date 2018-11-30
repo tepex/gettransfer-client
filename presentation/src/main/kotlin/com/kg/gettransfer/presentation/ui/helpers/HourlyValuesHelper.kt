@@ -3,16 +3,7 @@ package com.kg.gettransfer.presentation.ui.helpers
 import android.content.Context
 import com.kg.gettransfer.R
 
-class PickerValuesHelper private constructor() {
-
-    private object Holder {
-        val INSTANCE = PickerValuesHelper()
-    }
-
-    companion object {
-        val instance: PickerValuesHelper by lazy { Holder.INSTANCE }
-
-    }
+object HourlyValuesHelper {
 
     lateinit var durationValues: ArrayList<Int>
 
@@ -30,7 +21,7 @@ class PickerValuesHelper private constructor() {
         return displayedValues
     }
 
-    private fun getValue(hours: Int, context: Context): String {
+    fun getValue(hours: Int, context: Context): String {
         var stringValue = ""
         hours.let {
             when (it) {

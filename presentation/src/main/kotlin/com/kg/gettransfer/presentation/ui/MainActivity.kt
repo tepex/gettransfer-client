@@ -6,7 +6,6 @@ import android.graphics.PorterDuffColorFilter
 
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
@@ -22,7 +21,6 @@ import android.transition.Fade
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
-import android.view.animation.AnimationUtils
 
 import android.widget.TextView
 
@@ -42,8 +40,7 @@ import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
-import com.kg.gettransfer.presentation.ui.helpers.AnimationHelper
-import com.kg.gettransfer.presentation.ui.helpers.PickerValuesHelper
+import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.MainView
 import kotlinx.android.synthetic.main.a_b_view.*
 
@@ -229,14 +226,13 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         hourlySheet = BottomSheetBehavior.from(hourly_sheet)
         hourlySheet.state = BottomSheetBehavior.STATE_HIDDEN
         np_hours.apply {
-            val pickerHelper = PickerValuesHelper.instance
-            displayedValues = pickerHelper.getHourlyValues(this@MainActivity).toTypedArray()
+            displayedValues = HourlyValuesHelper.getHourlyValues(this@MainActivity).toTypedArray()
             minValue = 0
             maxValue = displayedValues.size - 1
             wrapSelectorWheel = false
             tvCurrent_hours.text = displayedValues[0]
             np_hours.setOnValueChangedListener { _, _, newVal ->
-                presenter.tripDurationSelected(pickerHelper.durationValues[newVal])
+                presenter.tripDurationSelected(HourlyValuesHelper.durationValues[newVal])
                 tvCurrent_hours.text = displayedValues[newVal] }
         }
         tv_okBtn.setOnClickListener { showNumberPicker(false) }

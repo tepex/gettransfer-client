@@ -23,11 +23,13 @@ import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
+import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.TransferDetailsView
 import com.kg.gettransfer.utilities.Analytics.Companion.TRAVEL_CLASS
 import com.kg.gettransfer.utilities.Analytics.Companion.VALUE
 
 import kotlinx.android.synthetic.main.activity_transfer_details.*
+import kotlinx.android.synthetic.main.view_transfer_request_info.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.view.*
 import kotlinx.android.synthetic.main.view_transport_type_transfer_details.view.* //don't delete
 
@@ -85,8 +87,11 @@ class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
             layoutTransferInfo.tvTo.text = transferModel.to
             layoutTransferInfo.tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
         } else if(transferModel.duration != null) {
-            layoutTransferInfo.tvTo.text = getString(R.string.LNG_TIME_RIDE)
-            layoutTransferInfo.tvDistance.text = Utils.formatDuration(this, transferModel.duration)
+
+            rl_hourly_info.visibility = View.VISIBLE
+            tvMarkerTo.visibility = View.GONE
+            tv_duration.text = HourlyValuesHelper.getValue(transferModel.duration, this)
+
         }
         //layoutTransferInfo.tvTo.text = transferModel.to
         //layoutTransferInfo.tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)

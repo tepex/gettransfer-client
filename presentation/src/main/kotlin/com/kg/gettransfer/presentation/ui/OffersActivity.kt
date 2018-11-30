@@ -28,6 +28,7 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
+import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 
 import com.kg.gettransfer.presentation.view.OffersView
 
@@ -105,8 +106,9 @@ class OffersActivity: BaseActivity(), OffersView {
             tvTo.text = transferModel.to
             tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
         } else if(transferModel.duration != null){
-            tvTo.text = getString(R.string.LNG_TIME_RIDE)
-            tvDistance.text = Utils.formatDuration(this, transferModel.duration)
+            rl_hourly_info.visibility = View.VISIBLE
+            tvMarkerTo.visibility = View.GONE
+            tv_duration.text = HourlyValuesHelper.getValue(transferModel.duration, this)
         }
         //tvTo.text = transferModel.to
         //tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)

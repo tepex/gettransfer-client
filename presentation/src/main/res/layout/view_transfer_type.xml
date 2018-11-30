@@ -8,7 +8,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="3dp"
 
-    android:background="@drawable/rounded_background"
+    android:background="@drawable/back_rounded"
     card_view:cardCornerRadius="@dimen/card_transfer_type_corner_radius_default"
     card_view:cardElevation="@dimen/card_transfer_type_elevation_default">
 

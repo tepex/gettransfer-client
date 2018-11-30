@@ -227,6 +227,7 @@
 	<dimen name="view_transfer_info_to_margin_top">7dp</dimen>
 	<dimen name="view_transfer_info_order_date_margin_end">37dp</dimen>
 	<dimen name="view_transfer_info_markers_size">23dp</dimen>
+	<dimen name="view_transfer_info_markers_hourly_size">25dp</dimen>
 	<dimen name="view_transfer_info_markers_margin_start">18dp</dimen>
 	<dimen name="view_transfer_info_markers_margin_top">7dp</dimen>
 	<dimen name="view_transfer_info_chevron_size">14dp</dimen>
@@ -416,5 +417,6 @@
 
 	<!--drawable values-->
 	<dimen name="panels_corner_radius">5dp</dimen>
+	<dimen name="hourly_icon_borders">2dp</dimen>
 
 </resources>
