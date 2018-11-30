@@ -176,7 +176,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginStart="5dp"
-					android:text="Per hour"
+					android:text="@string/LNG_PER_HOUR"
 					android:layout_gravity="start|center_vertical"/>
 
 				<Switch

@@ -452,6 +452,7 @@
     <string name="LNG_DAYS_FEW">days</string>
     <string name="LNG_FIELD_DURATION_TRIP">Duration of the trip</string>
     <string name="LNG_FIELD_PER_HOUSE">Select the duration of the trip</string>
+    <string name="LNG_PER_HOUR">Per hour</string>
     <string name="LNG_USD">US Dollar</string>
     <string name="LNG_EUR">Euro</string>
     <string name="LNG_GBP">Pound Sterling</string>
