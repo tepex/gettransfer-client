@@ -127,6 +127,7 @@ class OffersPresenter: BasePresenter<OffersView>() {
 
     fun cancelRequest(isCancel: Boolean) {
         if(!isCancel) return
+        logEvent(Analytics.CANCEL_TRANSFER_BTN)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.cancelTransfer(transferId, "") }

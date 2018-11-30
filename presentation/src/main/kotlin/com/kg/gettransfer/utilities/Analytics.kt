@@ -56,6 +56,7 @@ class Analytics(private val firebase: FirebaseAnalytics,
         @JvmField val OFFER_DETAILS         = "offer_details"
         @JvmField val OFFER_DETAILS_RATING  = "offer_details_rating"
         @JvmField val OFFER_BOOK            = "offer_book"
+        @JvmField val CANCEL_TRANSFER_BTN   = "cancel_transfer_btn"
 
         @JvmField val INVALID_EMAIL         = "invalid_email"
         @JvmField val INVALID_PHONE         = "invalid_phone"
