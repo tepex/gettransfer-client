@@ -370,7 +370,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         logEventMain(Analytics.BACK_CLICKED)
     }
 
-    fun redirectToLogin(id: Long) = router.navigateTo(Screens.LoginToGetOffers(id, user.profile.email))
+    fun redirectToLogin(id: Long) = router.replaceScreen(Screens.LoginToGetOffers(id, user.profile.email))
 
     fun logEventMain(value: String) {
         val map = mutableMapOf<String, Any>()
