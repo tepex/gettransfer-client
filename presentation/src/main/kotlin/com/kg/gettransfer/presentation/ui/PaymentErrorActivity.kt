@@ -38,9 +38,9 @@ class PaymentErrorActivity: BaseActivity(), PaymentErrorView {
 
         with(dialogView) {
             tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, intent.getLongExtra(TRANSFER_ID, 0L).toString())
-            tvClose.setOnClickListener     { finish() }
-            btnTryAgain.setOnClickListener { finish() }
-            btnSupport.setOnClickListener  { sendEmail() }
+            tvClose.setOnClickListener     { this@PaymentErrorActivity.finish() }
+            btnTryAgain.setOnClickListener { this@PaymentErrorActivity.finish() }
+            btnSupport.setOnClickListener  { this@PaymentErrorActivity.sendEmail() }
         }
     }
 

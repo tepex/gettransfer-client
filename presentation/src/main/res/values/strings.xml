@@ -713,7 +713,7 @@
     <string name="LNG_RIDE_ABOUT">About transport</string>
     <string name="from_price">from:</string>
     <string name="tag_read_more" translatable="false">read_more_dialog</string>
-    <string name="email_support" translatable="false">info@gettransfer.com</string>
+    <string name="email_support" translatable="false">error.report@gettransfer.com</string>
     <string name="LNG_EMAIL_SUBJECT">Get help</string>
     <string name="send_email">Send mail...</string>
     <string name="no_email_apps">There are no email apps installed.</string>
