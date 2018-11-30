@@ -4,5 +4,5 @@ import java.io.File
 
 interface CommunicateView {
     fun sendEmail(emailCarrier: String?, logsFile: File?)
-    fun callPhone(phoneCarrier: String)
+    fun callPhone(phoneCarrier: String?)
 }

@@ -21,6 +21,14 @@ data class Offer(val id: Long,
         @JvmField val STATUS_BLOCKED   = "blocked"
         @JvmField val STATUS_CANCELED  = "canceled"
     }
+
+    fun getPhoneToCall(): String?{
+        return when {
+            driver?.phone != null -> driver.phone
+            carrier.profile.phone != null -> carrier.profile.phone
+            else -> null
+        }
+    }
 }
 
 data class Price(val base: Money,

@@ -243,32 +243,53 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     }
 
     private fun initAboutDriverView(offerModel: OfferModel){
-        offerModel.carrier.let { offer ->
-            driver_id.field_title.text = getString(R.string.LNG_DRIVER).plus(" №${offer.id}")
-            driver_id.field_text.text = offer.completedTransfers.toString().plus(" ").plus(getString(R.string.LNG_RIDES))
+        offerModel.phoneToCall?.let{phoneCall ->
+            layoutCommunicateButtons.visibility = View.VISIBLE
+            btnCall.setOnClickListener { presenter.callPhone(phoneCall) }
+        }
 
-            val operations = listOf<Pair<CharSequence, String>>(
-                    Pair(getString(R.string.LNG_COPY), TransferDetailsPresenter.OPERATION_COPY),
-                    Pair(getString(R.string.LNG_OPEN), TransferDetailsPresenter.OPERATION_OPEN))
-            val operationsName: List<CharSequence> = operations.map { it.first }
-            offer.profile.phone?.let { phone ->
+        val operations = listOf<Pair<CharSequence, String>>(
+                Pair(getString(R.string.LNG_COPY), TransferDetailsPresenter.OPERATION_COPY),
+                Pair(getString(R.string.LNG_OPEN), TransferDetailsPresenter.OPERATION_OPEN))
+        val operationsName: List<CharSequence> = operations.map { it.first }
+
+        offerModel.driver?.let {driver ->
+            driver.phone?.let { phone ->
                 driver_phone.field_text.text = phone
                 driver_phone.visibility = View.VISIBLE
-                btnCall.setOnClickListener { presenter.callPhone(phone) }
                 Utils.setSelectOperationListener(this, driver_phone, operationsName, R.string.LNG_DRIVER_PHONE) {
                     presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
             }
-            offer.profile.email?.let { email ->
+            driver.email?.let { email ->
                 driver_email.field_text.text = email
                 driver_email.visibility = View.VISIBLE
                 Utils.setSelectOperationListener(this, driver_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
+                    presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
+            }
+        }
+
+        offerModel.carrier.let { carrier ->
+            carrier_id.field_title.text = getString(R.string.LNG_DRIVER).plus(" №${carrier.id}")
+            carrier_id.field_text.text = carrier.completedTransfers.toString().plus(" ").plus(getString(R.string.LNG_RIDES))
+
+            carrier.profile.name?.let { name -> carrier_name.text = name }
+            carrier.profile.phone?.let { phone ->
+                carrier_phone.field_text.text = phone
+                carrier_phone.visibility = View.VISIBLE
+                Utils.setSelectOperationListener(this, carrier_phone, operationsName, R.string.LNG_DRIVER_PHONE) {
+                    presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
+            }
+            carrier.profile.email?.let { email ->
+                carrier_email.field_text.text = email
+                carrier_email.visibility = View.VISIBLE
+                Utils.setSelectOperationListener(this, carrier_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
                     presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
             }
 
             layoutCarrierLanguages.removeAllViews()
             val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             lp.setMargins(8, 0, 8, 0)
-            for(item in offer.languages) {
+            for(item in carrier.languages) {
                 val ivLanguage = ImageView(this)
                 ivLanguage.setImageResource(Utils.getLanguageImage(item.delegate.language))
                 ivLanguage.layoutParams = lp
@@ -310,7 +331,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) =
         processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
 
-    override fun callPhone(phoneCarrier: String) =
+    override fun callPhone(phoneCarrier: String?) =
             CommunicateMethods.callPhone(this, phoneCarrier)
 
     override fun sendEmail(emailCarrier: String?, logsFile: File?) =

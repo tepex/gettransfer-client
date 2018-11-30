@@ -16,7 +16,6 @@ import com.kg.gettransfer.utilities.CommunicateMethods
 
 import kotlinx.android.synthetic.main.dialog_payment_successful.view.*
 
-//import org.jetbrains.anko.makeCall
 import org.jetbrains.anko.toast
 import java.io.File
 
@@ -74,12 +73,7 @@ class PaymentSuccessfulActivity: BaseGoogleMapActivity(), PaymentSuccessfulView 
         dialogView.tvRemainTime.text = getString(R.string.transfer_remain_time, time)
     }
 
-    /*override fun call(number: String?) {
-        if(number.isNullOrEmpty()) this.toast(getString(R.string.driver_not_number))
-        else this.makeCall(number!!)
-    }*/
-
-    override fun callPhone(phoneCarrier: String) =
+    override fun callPhone(phoneCarrier: String?) =
             CommunicateMethods.callPhone(this, phoneCarrier)
 
     override fun sendEmail(emailCarrier: String?, logsFile: File?) =

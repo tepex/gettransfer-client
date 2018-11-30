@@ -94,5 +94,5 @@ class PaymentSuccessfulPresenter: BasePresenter<PaymentSuccessfulView>() {
     }
 
     fun sendEmail(emailCarrier: String?){ viewState.sendEmail(emailCarrier, if(emailCarrier == null) systemInteractor.logsFile else null) }
-    fun onCallClick(){ viewState.callPhone(offerInteractor.getOffer(offerId)?.carrier?.profile?.phone!!) }
+    fun onCallClick(){ viewState.callPhone(offerInteractor.getOffer(offerId)?.getPhoneToCall()) }
 }

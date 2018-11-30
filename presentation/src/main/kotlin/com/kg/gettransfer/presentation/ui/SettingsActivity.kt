@@ -89,7 +89,7 @@ class SettingsActivity: BaseActivity(), SettingsView {
         if(enabled) btnSignOut.visibility = View.VISIBLE else btnSignOut.visibility = View.GONE
     }
 
-    override fun callPhone(phoneCarrier: String) =
+    override fun callPhone(phoneCarrier: String?) =
             CommunicateMethods.callPhone(this, phoneCarrier)
 
     override fun sendEmail(emailCarrier: String?, logsFile: File?) =

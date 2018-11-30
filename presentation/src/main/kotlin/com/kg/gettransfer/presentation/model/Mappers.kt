@@ -159,7 +159,8 @@ object Mappers {
                    type.passengerFeedback,
                    getCarrierModel(type.carrier),
                    getVehicleModel(type.vehicle),
-                   type.driver?.let { getProfileModel(it) })
+                   type.driver?.let { getProfileModel(it) },
+                   type.getPhoneToCall())
 
     fun getCarrierTripModel(type: CarrierTrip, locale: Locale, distanceUnit: DistanceUnit) =
         CarrierTripModel(type.id,

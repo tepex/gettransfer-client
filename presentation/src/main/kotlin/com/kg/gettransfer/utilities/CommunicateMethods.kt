@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.support.v4.content.FileProvider
-import com.kg.gettransfer.presentation.ui.Utils
+import org.jetbrains.anko.toast
 import java.io.File
 
 internal class CommunicateMethods {
@@ -31,13 +31,15 @@ internal class CommunicateMethods {
             try {
                 context.startActivity(Intent.createChooser(emailIntent, context.getString(R.string.send_email)))
             } catch (ex: android.content.ActivityNotFoundException) {
-                Utils.showShortToast(context, context.getString(R.string.no_email_apps))
+                context.toast(context.getString(R.string.no_email_apps))
             }
         }
 
-        fun callPhone(context: Context, phoneCarrier: String){
-            val callIntent = Intent(Intent.ACTION_DIAL, Uri.fromParts(DIAL_SCHEME, phoneCarrier, null))
-            context.startActivity(callIntent)
+        fun callPhone(context: Context, phoneCarrier: String?){
+            if(phoneCarrier != null){
+                val callIntent = Intent(Intent.ACTION_DIAL, Uri.fromParts(DIAL_SCHEME, phoneCarrier, null))
+                context.startActivity(callIntent)
+            } else context.toast(context.getString(R.string.driver_not_number))
         }
     }
 }

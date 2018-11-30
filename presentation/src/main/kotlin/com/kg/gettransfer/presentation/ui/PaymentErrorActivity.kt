@@ -41,7 +41,7 @@ class PaymentErrorActivity: BaseActivity(), PaymentErrorView {
         }
     }
 
-    override fun callPhone(phoneCarrier: String) =
+    override fun callPhone(phoneCarrier: String?) =
             CommunicateMethods.callPhone(this, phoneCarrier)
 
     override fun sendEmail(emailCarrier: String?, logsFile: File?) =
