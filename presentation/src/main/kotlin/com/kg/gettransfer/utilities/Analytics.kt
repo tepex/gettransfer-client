@@ -44,7 +44,6 @@ class Analytics(private val firebase: FirebaseAnalytics,
         @JvmField val TRANSFER_CLICKED   = "transfers"
         @JvmField val LOGIN_CLICKED      = "login"
 
-        //other buttons log params
         @JvmField val MY_PLACE_CLICKED      = "my_place"
         @JvmField val SHOW_ROUTE_CLICKED    = "show_route"
         @JvmField val CAR_INFO_CLICKED      = "car_info"

@@ -18,6 +18,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.presentation.presenter.AboutPresenter
 import com.kg.gettransfer.presentation.view.AboutView
+import com.kg.gettransfer.utilities.Analytics
 
 import kotlinx.android.synthetic.main.activity_about.*
 
@@ -47,9 +48,17 @@ class AboutActivity: BaseActivity(), AboutView {
         viewpager.offscreenPageLimit = adapter.count - 1
         indicator.setViewPager(viewpager)
 
-        btnClose.setOnClickListener { presenter.closeAboutActivity() }
+        btnClose.setOnClickListener {
+            presenter.closeAboutActivity()
+            if (viewpager.currentItem == viewpager.childCount - 1) presenter.logEvent(0)
+            else presenter.logEvent(viewpager.currentItem + 1)
+
+        }
         btnNext.setOnClickListener {
-            if(viewpager.currentItem == viewpager.childCount - 1) presenter.closeAboutActivity()
+            if(viewpager.currentItem == viewpager.childCount - 1) {
+                presenter.closeAboutActivity()
+                presenter.logEvent(0)
+            }
             else viewpager.currentItem = viewpager.currentItem + 1
         }
         viewpager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
