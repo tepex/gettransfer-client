@@ -7,7 +7,6 @@
     android:orientation="horizontal"
     android:gravity="center"
     android:background="@drawable/btn_get_transfer"
-    android:paddingStart="@dimen/activity_carrier_transfer_details_btn_padding_start"
     android:clickable="true"
     android:focusable="true">
     

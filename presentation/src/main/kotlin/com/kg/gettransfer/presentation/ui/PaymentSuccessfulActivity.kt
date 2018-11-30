@@ -56,8 +56,8 @@ class PaymentSuccessfulActivity: BaseGoogleMapActivity(), PaymentSuccessfulView 
             tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, presenter.transferId.toString())
             tvDetails.setOnClickListener { presenter.onDetailsClick() }
             btnCall.setOnClickListener   { presenter.onCallClick() }
-            tvVoucher.setOnClickListener { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
-            btnChat.setOnClickListener   { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
+//            tvVoucher.setOnClickListener {  }
+//            btnChat.setOnClickListener   {  }
 
             tvDone.setOnClickListener     { finish() }
             btnSupport.setOnClickListener { sendEmail() }
