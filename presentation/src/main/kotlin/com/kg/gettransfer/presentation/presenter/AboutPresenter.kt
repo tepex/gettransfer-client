@@ -17,6 +17,13 @@ class AboutPresenter: BasePresenter<AboutView>() {
 	}
 
 	fun logEvent(value: Int) {
+		if (systemInteractor.isFirstLaunch) {
+			systemInteractor.isFirstLaunch = false
+			logExitStep(value)
+		}
+	}
+
+	private fun logExitStep(value: Int) {
 		val map = mutableMapOf<String, Any>()
 		map[Analytics.EXIT_STEP] = value
 
