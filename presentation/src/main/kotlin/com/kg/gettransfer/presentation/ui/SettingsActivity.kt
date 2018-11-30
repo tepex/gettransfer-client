@@ -31,6 +31,7 @@ import com.kg.gettransfer.presentation.view.SettingsView
 
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+import org.jetbrains.anko.toast
 
 import timber.log.Timber
 
@@ -105,7 +106,7 @@ class SettingsActivity: BaseActivity(), SettingsView {
         try {
             startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)))
         } catch (ex: android.content.ActivityNotFoundException) {
-            Utils.showShortToast(this, getString(R.string.no_email_apps))
+            this.toast(getString(R.string.no_email_apps))
         }
     }
 }

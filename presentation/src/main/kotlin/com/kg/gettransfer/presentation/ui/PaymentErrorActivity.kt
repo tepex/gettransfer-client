@@ -14,6 +14,7 @@ import com.kg.gettransfer.presentation.presenter.PaymentErrorPresenter
 import com.kg.gettransfer.presentation.view.PaymentErrorView
 
 import kotlinx.android.synthetic.main.dialog_payment_error.view.*
+import org.jetbrains.anko.toast
 
 class PaymentErrorActivity: BaseActivity(), PaymentErrorView {
     companion object {
@@ -52,7 +53,7 @@ class PaymentErrorActivity: BaseActivity(), PaymentErrorView {
         try {
             startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)))
         } catch(e: ActivityNotFoundException) {
-            Utils.showShortToast(this, getString(R.string.no_email_apps))
+            this.toast(getString(R.string.no_email_apps))
         }
     }
 }

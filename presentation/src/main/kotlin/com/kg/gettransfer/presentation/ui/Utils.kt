@@ -317,9 +317,6 @@ internal class Utils {
         @Suppress("UNUSED_PARAMETER")
         fun formatPrice(context: Context, price: String)  = "($price)"
 
-        fun showShortToast(context: Context, text: CharSequence) { Toast.makeText(context, text, Toast.LENGTH_SHORT).show() }
-        fun showLongToast(context: Context, text: CharSequence)  { Toast.makeText(context, text, Toast.LENGTH_LONG).show() }
-
         fun convertDpToPixels(context: Context, dp: Float) =
             dp * context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT
 

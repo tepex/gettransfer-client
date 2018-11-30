@@ -80,7 +80,7 @@ class PaymentSuccessfulActivity: BaseGoogleMapActivity(), PaymentSuccessfulView 
         try {
             startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)))
         } catch(e: ActivityNotFoundException) {
-            Utils.showShortToast(this, getString(R.string.no_email_apps))
+            this.toast(getString(R.string.no_email_apps))
         }
     }
 
