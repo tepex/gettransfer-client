@@ -81,17 +81,15 @@ class OffersActivity: BaseActivity(), OffersView {
     }
 
     @CallSuper
-    protected override fun onStart() {
-        super.onStart()
-        offerServiceConnection.connectionChanged(systemInteractor.endpoint, systemInteractor.accessToken)
-        offerServiceConnection.connect(this) { newOffer -> presenter.onNewOffer(newOffer) }
+    protected override fun onResume() {
+        super.onResume()
+        offerServiceConnection.connect(systemInteractor.endpoint, systemInteractor.accessToken) { presenter.onNewOffer(it) }
     }
     
     @CallSuper
-    protected override fun onStop() {
-        offerServiceConnection.disconnect(this)
-        systemInteractor.removeListener(offerServiceConnection)
-        super.onStop()
+    protected override fun onPause() {
+        offerServiceConnection.disconnect()
+        super.onPause()
     }
 
     private fun navigateBackWithTransition() {

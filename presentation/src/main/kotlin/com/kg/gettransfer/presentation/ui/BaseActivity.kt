@@ -51,9 +51,9 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     companion object {
         const val TOOLBAR_NO_TITLE = 0
     }
-    
+
     internal val systemInteractor: SystemInteractor by inject()
-    
+
     internal val router: Router by inject()
     protected val navigatorHolder: NavigatorHolder by inject()
     protected val localeManager: LocaleManager by inject()
@@ -69,19 +69,19 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         if(event.action == MotionEvent.ACTION_MOVE) hideKeyboardWithoutClearFocus(this, view)
         else return@OnTouchListener false
     }
-    
+
     private val inetReceiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) = setNetworkAvailability(context)
-        
+
         fun setNetworkAvailability(context: Context) {
             val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val available = cm.activeNetworkInfo?.let { it.isConnected } ?: false
             viewNetworkNotAvailable?.let { if(available) it.visibility = View.GONE else it.visibility = View.VISIBLE }
         }
     }
-    
+
     private val loadingFragment by lazy { LoadingFragment() }
-    
+
     /** [https://stackoverflow.com/questions/37615470/support-library-vectordrawable-resourcesnotfoundexception] */
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -104,7 +104,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     protected override fun onStart() {
         super.onStart()
         registerReceiver(inetReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        inetReceiver.setNetworkAvailability(this) 
+        inetReceiver.setNetworkAvailability(this)
     }
 
     @CallSuper
@@ -112,7 +112,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         super.onResume()
         navigatorHolder.setNavigator(navigator)
     }
-    
+
     @CallSuper
     protected override fun onPause() {
         navigatorHolder.removeNavigator()
@@ -123,7 +123,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     protected override fun onStop() {
         unregisterReceiver(inetReceiver)
         super.onStop()
-	}
+    }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         if(block) {
@@ -131,13 +131,13 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         }
         else hideLoading()
     }
-    
+
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
         var errMessage = getString(errId, *args)
         Timber.e(RuntimeException(errMessage))
         Utils.showError(this, finish, errMessage)
     }
-    
+
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}", e)
         Utils.showError(this, false, getString(R.string.LNG_ERROR) + ": " + e.message)
@@ -188,7 +188,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
             commit()
         }
     }
-    
+
     private fun hideLoading() {
         supportFragmentManager.beginTransaction().apply {
             remove(loadingFragment)

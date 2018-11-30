@@ -14,24 +14,24 @@ import java.util.Date
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
 object Screens {
-	@JvmField val BUNDLE_KEY       = "bundle_key"
-	
-	@JvmField val CARRIER_TRIPS    = "carrier_trips"
-	
-	
-	@JvmField val MAIN             = "main"
-	@JvmField val CARRIER_MODE     = "carrier_mode"
-	@JvmField val REG_CARRIER      = "registration_carrier"
-	@JvmField val PASSENGER_MODE   = "passenger_mode"
+    @JvmField val BUNDLE_KEY       = "bundle_key"
 
-	@JvmField val OFFERS           = "offers"
-	@JvmField val CLOSE_ACTIVITY   = "close_activity"
-	
-	
-	@JvmField val SELECT_FINISH    = "select_finish_on_map"
+    @JvmField val CARRIER_TRIPS    = "carrier_trips"
 
-	
-	@JvmField val NOT_USED 		   = -1
+
+    @JvmField val MAIN             = "main"
+    @JvmField val CARRIER_MODE     = "carrier_mode"
+    @JvmField val REG_CARRIER      = "registration_carrier"
+    @JvmField val PASSENGER_MODE   = "passenger_mode"
+
+    @JvmField val OFFERS           = "offers"
+    @JvmField val CLOSE_ACTIVITY   = "close_activity"
+
+
+    @JvmField val SELECT_FINISH    = "select_finish_on_map"
+
+
+    @JvmField val NOT_USED 		   = -1
 
     object Main: SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, MainActivity::class.java)
@@ -139,6 +139,19 @@ object Screens {
             putExtra(PaymentSettingsView.EXTRA_PARAMS,
                      JSON.stringify(PaymentSettingsView.Params.serializer(),
                                     PaymentSettingsView.Params(dateRefund, transferId, offerId)))
+        }
+    }
+
+    data class PaymentError(val transferId: Long): SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, PaymentErrorActivity::class.java).apply {
+            putExtra(PaymentErrorActivity.TRANSFER_ID, transferId)
+        }
+    }
+
+    data class PaymentSuccess(val transferId: Long, val offerId: Long): SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, PaymentSuccessfulActivity::class.java).apply {
+            putExtra(PaymentSuccessfulActivity.TRANSFER_ID, transferId)
+            putExtra(PaymentSuccessfulActivity.OFFER_ID, offerId)
         }
     }
 }

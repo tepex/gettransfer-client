@@ -56,7 +56,7 @@
                 android:layout_marginEnd="@dimen/settings_activity_image_margin_end"
                 android:layout_marginStart="@dimen/settings_activity_image_margin_start"
                 android:layout_centerVertical="true"
-                android:src="@drawable/chevron"/>
+                android:src="@drawable/ic_arrow_down"/>
 
         </RelativeLayout>
 
@@ -102,7 +102,7 @@
                 android:layout_marginEnd="@dimen/settings_activity_image_margin_end"
                 android:layout_marginStart="@dimen/settings_activity_image_margin_start"
                 android:layout_centerVertical="true"
-                android:src="@drawable/chevron"/>
+                android:src="@drawable/ic_arrow_down"/>
 
         </RelativeLayout>
 
@@ -148,7 +148,7 @@
                 android:layout_marginEnd="@dimen/settings_activity_image_margin_end"
                 android:layout_marginStart="@dimen/settings_activity_image_margin_start"
                 android:layout_centerVertical="true"
-                android:src="@drawable/chevron"/>
+                android:src="@drawable/ic_arrow_down"/>
 
         </RelativeLayout>
 
@@ -210,7 +210,7 @@
                 android:layout_marginEnd="@dimen/settings_activity_image_margin_end"
                 android:layout_marginStart="@dimen/settings_activity_image_margin_start"
                 android:layout_centerVertical="true"
-                android:src="@drawable/chevron"/>
+                android:src="@drawable/ic_arrow_down"/>
 
         </RelativeLayout>
 
@@ -244,7 +244,7 @@
                 android:layout_marginEnd="@dimen/settings_activity_image_margin_end"
                 android:layout_marginStart="@dimen/settings_activity_image_margin_start"
                 android:layout_centerVertical="true"
-                android:src="@drawable/chevron"/>
+                android:src="@drawable/ic_arrow_down"/>
 
         </RelativeLayout>
 

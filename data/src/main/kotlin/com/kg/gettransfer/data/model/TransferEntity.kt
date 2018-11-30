@@ -44,7 +44,7 @@ open class TransferEntity(@SerialName(ID) val id: Long,
     companion object {
         const val ID                      = "id"
         const val CREATED_AT              = "created_at"
-        const val DURATION                = "duration"
+        const val DURATION                = "hourlyDuration"
         const val DISTANCE                = "distance"
         const val STATUS                  = "status"
         const val FROM                    = "from"

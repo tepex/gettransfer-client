@@ -49,13 +49,13 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
             } else {
                 if(result.model.success) {
                     router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
-                    viewState.showSuccessfulMessage()
+                    router.navigateTo(Screens.PaymentSuccess(transferId, offerId))
                     offer = offerInteractor.getOffer(offerId)!!
                     logEventEcommercePurchase()
                     logEvent(Analytics.RESULT_SUCCESS)
                 } else {
                     router.exit()
-                    viewState.showErrorMessage()
+                    router.navigateTo(Screens.PaymentError(transferId))
                     logEvent(Analytics.RESULT_FAIL)
                 }
             }
@@ -85,7 +85,7 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
         }
 
         bundle.putString(Analytics.TRANSACTION_ID, transferId.toString())
-        map[Analytics.TRANSACTION_ID] = transferId
+        map[Analytics.TRANSACTION_ID] = transferId.toString()
         bundle.putString(Analytics.PROMOCODE, transferInteractor.transferNew?.promoCode)
         map[Analytics.PROMOCODE] = transferInteractor.transferNew?.promoCode
 

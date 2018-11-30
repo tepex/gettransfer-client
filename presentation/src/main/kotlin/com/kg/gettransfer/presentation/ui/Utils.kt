@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.app.Activity
+import android.app.Dialog
 
 import android.content.Context
 
@@ -50,6 +51,7 @@ import com.kg.gettransfer.presentation.model.RouteModel
 import com.yandex.metrica.impl.ob.it
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import kotlinx.android.synthetic.main.view_hourly_picker.*
 
 import java.text.SimpleDateFormat
 

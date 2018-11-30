@@ -414,15 +414,14 @@
     <!-- new locales -->
 
 
-
     <string name="LNG_MISKO">TEST</string>
     <string name="LNG_OK">OK</string>
     <string name="LNG_CANCEL">Cancel</string>
-    <string name="LNG_CLOSE">Close</string>
+    <string name="LNG_CLOSE"><u>Close</u></string>
     <string name="LNG_CHOOSE">Select</string>
     <string name="LNG_BOOK">Book</string>
     <string name="LNG_CLEAR">Clear</string>
-    <string name="LNG_DONE">Done</string>
+    <string name="LNG_DONE"><u>Done</u></string>
     <string name="LNG_OPEN">Open</string>
     <string name="LNG_COPY">Copy</string>
     <string name="LNG_NEXT">Next</string>
@@ -448,6 +447,11 @@
     <string name="LNG_HOUR">hour</string>
     <string name="LNG_HOURS">hours</string>
     <string name="LNG_HOUR_FEW">hours</string>
+    <string name="LNG_DAY">day</string>
+    <string name="LNG_DAYS">days</string>
+    <string name="LNG_DAYS_FEW">days</string>
+    <string name="LNG_FIELD_DURATION_TRIP">Duration of the trip</string>
+    <string name="LNG_FIELD_PER_HOUSE">Select the duration of the trip</string>
     <string name="LNG_USD">US Dollar</string>
     <string name="LNG_EUR">Euro</string>
     <string name="LNG_GBP">Pound Sterling</string>
@@ -581,7 +585,7 @@
     <string name="LNG_RIDE_COMPLETED">Completed transfers: %s</string>
     <string name="LNG_RIDE_CREATION_SPINNER">Please wait, connecting...</string>
     <string name="LNG_RIDE_CHOOSE_TRANSPORT">Please select transport type</string>
-    <string name="LNG_RIDE_OFFERT">I aggree with \n<a href = '#'>License agreement</a></string>
+    <string name="LNG_RIDE_OFFERT">I aggree with \n<a href='#'>License agreement</a></string>
     <string name="LNG_RIDE_OFFERT_TITLE">License agreement</string>
     <string name="LNG_RIDE_OFFERT_ERROR">You should accept terms of use</string>
     <string name="LNG_RIDE_FAIR_PRICE_FORMAT">Average rate on route %s (ETA ~%s)</string>
@@ -690,14 +694,14 @@
     <string name="LNG_RIDE_OFFER_BLOCKED">Blocked</string>
     <string name="LNG_RIDE_OFFER_CANCELED">Canceled</string>
     <string name="LNG_TRANSFER_NOT_PAID">Transfer is not paid</string>
-    <string name="LNG_BOOKING_NUMBER">Booking number</string>
+    <string name="LNG_BOOKING_NUMBER">Booking number %1$s</string>
     <string name="LNG_PAYMENT_DECLINED">Payment declined</string>
     <string name="LNG_PAYMENT_DECLINE_INFO">Try to pay again or use another bank card</string>
     <string name="LNG_PAYMENT_TRY_AGAIN">Try again</string>
     <string name="LNG_CUSTOMER_SUPPORT">Customer support</string>
-    <string name="LNG_PAYMENT_DETAILS">Details</string>
+    <string name="LNG_PAYMENT_DETAILS"><u>Details</u></string>
     <string name="LNG_TRANSFER_PAID_SUCCESSFULLY">Transfer paid successfully</string>
-    <string name="LNG_DOWNLOAD_BOOKING_VOUCHER">Download booking voucher</string>
+    <string name="LNG_DOWNLOAD_BOOKING_VOUCHER"><u>Download booking voucher</u></string>
     <string name="LNG_PAYMENT_CALL">Call</string>
     <string name="LNG_PAYMENT_CHAT">Chat</string>
     <string name="LNG_PAYMENT_EMAIL_TITLE">Transfer support</string>
@@ -712,5 +716,8 @@
     <string name="LNG_EMAIL_SUBJECT">Get help</string>
     <string name="send_email">Send mail...</string>
     <string name="no_email_apps">There are no email apps installed.</string>
+    <string name="coming_soon">Coming soon</string>
+    <string name="transfer_remain_time">Transfer will start in: %1$s</string>
+    <string name="driver_not_number">Driver has not a phone number</string>
 
 </resources>

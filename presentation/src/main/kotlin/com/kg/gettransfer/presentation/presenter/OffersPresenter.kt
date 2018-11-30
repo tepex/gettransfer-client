@@ -38,8 +38,8 @@ class OffersPresenter: BasePresenter<OffersView>() {
     */
 
     internal var transferId = 0L
-    
-    private lateinit var transfer: Transfer 
+
+    private lateinit var transfer: Transfer
     private lateinit var offers: List<OfferModel>
 
     private var sortCategory: String = SORT_PRICE
@@ -48,13 +48,13 @@ class OffersPresenter: BasePresenter<OffersView>() {
     companion object {
         @JvmField val RATING_UP   = "rating_asc"
         @JvmField val RATING_DOWN = "rating_desc"
-        
+
         @JvmField val PRICE_UP    = "price_asc"
         @JvmField val PRICE_DOWN  = "price_desc"
-        
+
         @JvmField val YEAH_FILTER_UP   = "year_asc"
         @JvmField val YEAH_FILTER_DOWN = "year_desc"
-        
+
         @JvmField val SORT_YEAR   = "sort_year"
         @JvmField val SORT_RATING = "sort_rating"
         @JvmField val SORT_PRICE  = "sort_price"
@@ -97,7 +97,7 @@ class OffersPresenter: BasePresenter<OffersView>() {
     fun onNewOffer(offer: Offer) {
         offerInteractor.newOffer(offer)
         offers = offers.toMutableList().apply { add(Mappers.getOfferModel(offer, systemInteractor.locale)) }
-        setOffers()
+        utils.launchSuspend { setOffers() }
     }
 
     fun onRequestInfoClicked() { router.navigateTo(Screens.Details(transferId)) }
@@ -151,7 +151,7 @@ class OffersPresenter: BasePresenter<OffersView>() {
         }
         setOffers()
     }
-    
+
     private fun setOffers() {
         sortOffers()
         viewState.setOffers(offers)

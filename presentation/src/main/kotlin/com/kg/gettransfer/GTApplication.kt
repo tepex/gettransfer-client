@@ -12,8 +12,6 @@ import com.kg.gettransfer.remote.remoteModule
 
 import com.kg.gettransfer.presentation.FileLoggingTree
 
-import com.kg.gettransfer.service.SocketIOService
-
 import com.squareup.leakcanary.LeakCanary
 
 import com.yandex.metrica.YandexMetrica
@@ -51,7 +49,6 @@ class GTApplication: MultiDexApplication() {
                                domainModule,
                                androidModule))
 
-        //startService(Intent(this, SocketIOService::class.java))
         setupAppMetrica()
         //setUpLeakCanary()
     }

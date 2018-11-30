@@ -40,7 +40,7 @@ class MainPresenter: BasePresenter<MainView>() {
 
     private val MARKER_ELEVATION = 5f
     private var markerStateLifted = false
-    
+
     var isMarkerAnimating = true
     internal var isClickTo: Boolean? = null
 
@@ -61,6 +61,8 @@ class MainPresenter: BasePresenter<MainView>() {
     companion object {
         @JvmField val FIELD_FROM = "field_from"
         @JvmField val FIELD_TO   = "field_to"
+
+        const val MIN_HOURLY     = 2
     }
 
     @CallSuper
@@ -68,6 +70,7 @@ class MainPresenter: BasePresenter<MainView>() {
         super.attachView(view)
         viewState.setProfile(Mappers.getProfileModel(systemInteractor.account.user.profile))
         changeUsedField(systemInteractor.selectedField)
+        routeInteractor.from?.address?.let { viewState.setAddressFrom(it) }
     }
 
     fun switchUsedField() {
@@ -159,7 +162,7 @@ class MainPresenter: BasePresenter<MainView>() {
             val nePoint = Point(latLngBounds.northeast.latitude, latLngBounds.northeast.longitude)
             val swPoint = Point(latLngBounds.southwest.latitude, latLngBounds.southwest.longitude)
             latLonPair = Pair(nePoint, swPoint)
-            
+
             utils.launchSuspend {
                 val result = utils.asyncAwait {
                     routeInteractor.getAddressByLocation(
@@ -189,6 +192,19 @@ class MainPresenter: BasePresenter<MainView>() {
 
     fun enablePinAnimation() { isMarkerAnimating = false }
 
+    fun tripModeSwitched(hourly: Boolean) {
+        routeInteractor.apply {
+            hourlyDuration = if (hourly) hourlyDuration?: MIN_HOURLY else null
+        }
+        viewState.changeFields(hourly)
+    }
+
+    fun tripDurationSelected(hours: Int) {
+        routeInteractor.hourlyDuration = hours
+    }
+
+    fun isHourly() = routeInteractor.hourlyDuration != null
+
     fun setAddressFields() {
         viewState.setAddressFrom(routeInteractor.from?.address ?: "")
         viewState.setAddressTo(routeInteractor.to?.address ?: "")
@@ -203,8 +219,8 @@ class MainPresenter: BasePresenter<MainView>() {
     }
 
     fun onNextClick() {
-        if(routeInteractor.from?.cityPoint != null &&
-           routeInteractor.to?.cityPoint != null) router.navigateTo(Screens.CreateOrder)
+        if(routeInteractor.from?.cityPoint != null && (routeInteractor.to?.cityPoint != null || routeInteractor.hourlyDuration != null))
+            router.navigateTo(Screens.CreateOrder)
     }
 
     fun onAboutClick() {

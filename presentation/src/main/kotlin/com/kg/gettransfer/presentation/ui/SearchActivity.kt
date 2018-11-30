@@ -30,6 +30,7 @@ import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
 import com.kg.gettransfer.utilities.Analytics
+import kotlinx.android.synthetic.main.a_b_view.*
 
 import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_search.*
@@ -145,6 +146,15 @@ class SearchActivity: BaseActivity(), SearchView {
     override fun setAddressTo(address: String, sendRequest: Boolean, isEditing: Boolean) {
         searchTo.initText(address, sendRequest, isEditing)
         if(address.isNotEmpty()) updateIcon(true)
+    }
+
+    override fun hideAddressTo() {
+        View.GONE.let {
+            searchTo.visibility  = it
+            link_line.visibility = it
+            b_point.visibility   = it
+            separator.visibility = it
+        }
     }
 
     override fun setAddressListByAutoComplete(list: List<GTAddress>) {

@@ -35,6 +35,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdate
+import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
 
@@ -173,9 +174,9 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         presenter.initMapAndPrices()
     }
 
-    override fun setCurrencies(currencies: List<CurrencyModel>) {
+    override fun setCurrencies(currencies: List<CurrencyModel>) =
         Utils.setCurrenciesDialogListener(this, fl_currency, currencies) { presenter.changeCurrency(it) }
-    }
+
 
     private fun showPopupWindowComment() {
         val screenHeight = getScreenHeight()
@@ -328,6 +329,9 @@ class CreateOrderActivity: BaseGoogleMapActivity(), CreateOrderView {
         if(isDateChanged) clearMarkersAndPolylines()
         setPolyline(polyline, routeModel)
     }
+
+    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng) =
+            processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point) }
 
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
 

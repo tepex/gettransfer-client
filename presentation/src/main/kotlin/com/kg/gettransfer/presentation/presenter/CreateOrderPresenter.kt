@@ -2,12 +2,14 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import android.util.Patterns
 
 import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.CameraUpdate
+import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
 
@@ -16,6 +18,10 @@ import com.kg.gettransfer.domain.interactor.PromoInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
+import com.kg.gettransfer.domain.model.CityPoint
+import com.kg.gettransfer.domain.model.Dest
+import com.kg.gettransfer.domain.model.DestDuration
+import com.kg.gettransfer.domain.model.DestPoint
 import com.kg.gettransfer.domain.model.Trip
 
 import com.kg.gettransfer.presentation.model.Mappers
@@ -74,7 +80,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
 
     private var flightNumber: String? = null
     private var comment: String? = null
-    
+
     companion object {
         @JvmField val MIN_PASSENGERS    = 1
         @JvmField val MIN_CHILDREN      = 0
@@ -94,7 +100,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         @JvmField val NO_NAME  = "invalid_name"
         @JvmField val NO_LICENSE_ACCEPTED = "license_not_accepted"
     }
-    
+
     override fun onFirstViewAttach() {
         currentDate = getCurrentDatePlus4Hours()
         date = currentDate.time
@@ -109,10 +115,18 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     }
 
     fun initMapAndPrices() {
-        if(routeInteractor.from == null || routeInteractor.to == null) {
-            Timber.d("routerInteractor init error. from: ${routeInteractor.from}, to: ${routeInteractor.to}")
-            return
+
+        routeInteractor.apply {
+            if (from == null || (to == null && hourlyDuration == null)){
+                Timber.d("routerInteractor init error. from: $from, to: $to, duration: $hourlyDuration")
+                return
+            }
+            else if (hourlyDuration != null) { // not need route info when hourly
+                setUIWithoutRoute()
+                return
+            }
         }
+
         utils.launchSuspend {
             viewState.blockInterface(true)
             val from = routeInteractor.from!!.cityPoint
@@ -122,8 +136,8 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
             if(result.error != null) viewState.setError(result.error!!)
             else {
                 duration = result.model.duration
-                
-                var prices: Map<String, TransportPrice> = result.model.prices.map { p -> p.tranferId to TransportPrice(p.min, p.max, p.minFloat) }.toMap()
+
+                val prices: Map<String, TransportPrice> = result.model.prices.map { p -> p.tranferId to TransportPrice(p.min, p.max, p.minFloat) }.toMap()
                 if(transportTypes == null)
                     transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
                 viewState.setTransportTypes(transportTypes!!)
@@ -143,6 +157,13 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
             }
             viewState.blockInterface(false)
         }
+    }
+
+    private fun setUIWithoutRoute() {
+        transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, null) }
+        viewState.setTransportTypes(transportTypes!!)
+        routeInteractor.from!!.let {
+            viewState.setPinHourlyTransfer(it.address?:"", it.primary?:"", it.cityPoint.point.let { p -> LatLng(p!!.latitude, p.longitude) } ) }
     }
 
     fun changeDate(newDate: Date) {
@@ -170,31 +191,31 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
 
         viewState.setUser(user, systemInteractor.account.user.loggedIn)
         viewState.setDateTimeTransfer(Utils.getFormattedDate(systemInteractor.locale, date), isAfter4Hours)
-	    transportTypes?.let { viewState.setTransportTypes(it) }
+        transportTypes?.let { viewState.setTransportTypes(it) }
     }
 
     fun changeCurrency(selected: Int) {
         selectedCurrency = selected
         viewState.setCurrency(currencies[selected].symbol)
     }
-    
+
     fun changePassengers(count: Int) {
         passengers += count
         if(passengers < MIN_PASSENGERS) passengers = MIN_PASSENGERS
         viewState.setPassengers(passengers)
         logTransferSettingsEvent(Analytics.PASSENGERS_ADDED)
     }
-    
+
     fun setName(name: String) {
         user.profile.name = name
         checkFields()
     }
-    
+
     fun setEmail(email: String) {
         user.profile.email = email
         checkFields()
     }
-    
+
     fun setPhone(phone: String) {
         user.profile.phone = phone
         checkFields()
@@ -206,7 +227,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         viewState.setChildren(children)
         logTransferSettingsEvent(Analytics.CHILDREN_ADDED)
     }
-    
+
     fun setFlightNumber(flightNumber: String) {
         if(flightNumber.isEmpty()) this.flightNumber = null else this.flightNumber = flightNumber
         logTransferSettingsEvent(Analytics.FLIGHT_NUMBER_ADDED)
@@ -232,12 +253,12 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         if(comment.isEmpty()) this.comment = null else this.comment = comment
         viewState.setComment(comment)
     }
-    
+
     fun setAgreeLicence(agreeLicence: Boolean) {
         user.termsAccepted = agreeLicence
         checkFields()
     }
-    
+
     fun showLicenceAgreement() = router.navigateTo(Screens.LicenceAgree)
 
     fun onGetTransferClick() {
@@ -245,13 +266,13 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         if(currentDate.time.after(date)) date = currentDate.time
 
         if(!checkFieldsForRequest()) return
-                
+
         val trip = Trip(date, flightNumber)
         /* filter */
         val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
-        
+
         Timber.d("from: %s", routeInteractor.from)
-        Timber.d("to: %s", routeInteractor.to!!)
+        Timber.d("to: %s", routeInteractor.to)
         Timber.d("trip: %s", trip)
         Timber.d("transport types: %s", selectedTransportTypes)
         Timber.d("user: $user")
@@ -262,16 +283,15 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         Timber.d("flightNumber: $flightNumber")
         Timber.d("comment: $comment")
 
-        if(routeInteractor.from == null || routeInteractor.to == null) return
+//        if(routeInteractor.from == null || routeInteractor.to == null) return
         val from = routeInteractor.from!!
-        val to = routeInteractor.to!!
-        
-        
+        val to = routeInteractor.to
+        val dest: Dest<CityPoint, Int> = if(routeInteractor.hourlyDuration != null) DestDuration(routeInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait {
                 transferInteractor.createTransfer(Mappers.getTransferNew(from.cityPoint,
-                                                                         to.cityPoint,
+                                                                         dest,
                                                                          trip,
                                                                          null,
                                                                          selectedTransportTypes,
@@ -283,11 +303,11 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
                                                                          promoCode,
                                                                          false))
             }
-            
+
             val logResult = utils.asyncAwait { systemInteractor.putAccount() }
             if(result.error == null && logResult.error == null) {
                 logCreateTransfer(Analytics.RESULT_SUCCESS)
-                router.navigateTo(Screens.Offers(result.model.id))
+                router.replaceScreen(Screens.Offers(result.model.id))
             } else if(result.error != null) {
                 logCreateTransfer(Analytics.SERVER_ERROR)
                 when {
@@ -300,25 +320,22 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     }
 
     private fun checkFieldsForRequest(): Boolean {
-        var errorFiled: String
+        val errorFiled: String
         if (!Utils.checkEmail(user.profile.email)) {
             errorFiled = EMAIL_FIELD
-            logCreateTransfer(Analytics.INVALID_EMAIL)
         } else if (!Utils.checkPhone(user.profile.phone!!)) {
             errorFiled = PHONE_FIELD
-            logCreateTransfer(Analytics.INVALID_PHONE)
         } else if (transportTypes != null &&
                 !transportTypes!!.any { it.checked }) {
             errorFiled = TRANSPORT_FIELD
-            logCreateTransfer(Analytics.NO_TRANSPORT_TYPE)
         } else if (!user.termsAccepted) {
             errorFiled = TERMS_ACCEPTED_FIELD
-            logCreateTransfer(Analytics.LICENSE_NOT_ACCEPTED)
         } else return true
+        logCreateTransfer(Mappers.getAnalyticsParam(errorFiled))
         viewState.showEmptyFieldError(errorFiled)
         return false
     }
-    
+
     /* @TODO: Добавить реакцию на некорректное значение в поле. Отображать, где и что введено некорректно. */
     private fun checkFields() {
         if(transportTypes == null) return
@@ -346,13 +363,11 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         logEventMain(Analytics.SHOW_ROUTE_CLICKED)
     }
 
-    fun onBackClick() {
-        router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
-        logEventMain(Analytics.BACK_CLICKED)
-    }
+    fun onBackClick() = onBackCommandClick()
 
     override fun onBackCommandClick() {
-        router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+ //       router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+        router.exit()
         logEventMain(Analytics.BACK_CLICKED)
     }
 
