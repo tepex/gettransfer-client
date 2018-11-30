@@ -53,8 +53,8 @@ class PaymentSuccessfulActivity: BaseGoogleMapActivity(), PaymentSuccessfulView 
             tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER).plus(" ${presenter.transferId}")
             tvDetails.setOnClickListener { presenter.onDetailsClick() }
             btnCall.setOnClickListener   { presenter.onCallClick() }
-            tvVoucher.setOnClickListener { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
-            btnChat.setOnClickListener   { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
+            //tvVoucher.setOnClickListener { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
+            //btnChat.setOnClickListener   { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
 
             tvDone.setOnClickListener     { finish() }
             btnSupport.setOnClickListener { presenter.sendEmail(null) }
