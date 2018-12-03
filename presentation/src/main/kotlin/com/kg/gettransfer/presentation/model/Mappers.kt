@@ -205,12 +205,4 @@ object Mappers {
         PaymentStatusRequest(model.paymentId, model.pgOrderId, model.withoutRedirect, model.success)
 
     private fun checkDistance(from: Point, to: Point) = (point2Location(from).distanceTo(point2Location(to)) / 1000).toInt()
-
-    fun getAnalyticsParam(errorField: String) = when (errorField) {
-        CreateOrderPresenter.EMAIL_FIELD          -> Analytics.INVALID_EMAIL
-        CreateOrderPresenter.PHONE_FIELD          -> Analytics.INVALID_PHONE
-        CreateOrderPresenter.TRANSPORT_FIELD      -> Analytics.NO_TRANSPORT_TYPE
-        CreateOrderPresenter.TERMS_ACCEPTED_FIELD -> Analytics.LICENSE_NOT_ACCEPTED
-        else                                      -> "no_param"
-    }
 }

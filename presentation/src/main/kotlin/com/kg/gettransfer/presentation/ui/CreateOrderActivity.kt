@@ -52,7 +52,9 @@ import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.UserModel
 
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
+
 import com.kg.gettransfer.presentation.view.CreateOrderView
+import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 
 import com.kg.gettransfer.utilities.Analytics.Companion.CAR_INFO_CLICKED
 import com.kg.gettransfer.utilities.Analytics.Companion.COMMENT_INPUT
@@ -270,7 +272,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         if (isAfter4Hours) transfer_date_time_field.field_input.setText(
             getString(R.string.LNG_DATE_IN_HOURS)
                     .plus(" ")
-                    .plus(CreateOrderPresenter.FUTURE_HOUR)
+                    .plus(CreateOrderView.FUTURE_HOUR)
                     .plus(" ")
                     .plus(getString(R.string.LNG_HOUR_FEW)))
         else transfer_date_time_field.field_input.setText(dateTimeString)
@@ -349,15 +351,13 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         img_okResult.isVisible = false
     }
 
-    override fun showEmptyFieldError(invalidField: String) {
-        val message = when (invalidField) {
-            CreateOrderPresenter.EMAIL_FIELD          -> getString(R.string.LNG_ERROR_EMAIL)
-            CreateOrderPresenter.PHONE_FIELD          -> getString(R.string.LNG_RIDE_PHONE)
-            CreateOrderPresenter.TRANSPORT_FIELD      -> getString(R.string.LNG_RIDE_CHOOSE_TRANSPORT)
-            CreateOrderPresenter.TERMS_ACCEPTED_FIELD -> getString(R.string.LNG_RIDE_OFFERT_ERROR)
-            else                                      -> getString(R.string.LNG_RIDE_CANT_CREATE)
+    override fun showEmptyFieldError(invalidField: FieldError) {
+        Utils.getAlertDialogBuilder(this).apply {
+            setTitle(getString(R.string.LNG_RIDE_CANT_CREATE))
+            setMessage(getString(invalidField.stringId))
+            setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
+            show()
         }
-        Utils.showEmptyFieldsForTransferRequest(this, message)
     }
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {

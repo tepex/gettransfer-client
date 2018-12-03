@@ -33,6 +33,7 @@ import com.kg.gettransfer.presentation.model.UserModel
 import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.CreateOrderView
+import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
@@ -80,26 +81,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private var flightNumber: String? = null
     private var comment: String? = null
 
-    companion object {
-        @JvmField val MIN_PASSENGERS    = 1
-        @JvmField val MIN_CHILDREN      = 0
-        /* Пока сервевер не присылает минимальный временной промежуток до заказа */
-        @JvmField val FUTURE_HOUR       = 4
-        @JvmField val FUTURE_MINUTE     = 5
-
-        const val EMAIL_FIELD           = "email"
-        const val PHONE_FIELD           = "phone"
-        const val TRANSPORT_FIELD       = "transport"
-        const val TERMS_ACCEPTED_FIELD  = "terms_accepted"
-
-        //CreateTransfer Params:
-        @JvmField val NO_TRANSPORT_SELECTED = "no_transport_type"
-        @JvmField val NO_EMAIL = "invalid_email"
-        @JvmField val NO_PHONE = "invalid_phone"
-        @JvmField val NO_NAME  = "invalid_name"
-        @JvmField val NO_LICENSE_ACCEPTED = "license_not_accepted"
-    }
-
     override fun onFirstViewAttach() {
         currentDate = getCurrentDatePlus4Hours()
         date = currentDate.time
@@ -108,8 +89,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private fun getCurrentDatePlus4Hours(): Calendar {
         val calendar = Calendar.getInstance(systemInteractor.locale)
         /* Server must send current locale time */
-        calendar.add(Calendar.HOUR_OF_DAY, FUTURE_HOUR)
-        calendar.add(Calendar.MINUTE, FUTURE_MINUTE)
+        calendar.add(Calendar.HOUR_OF_DAY, CreateOrderView.FUTURE_HOUR)
+        calendar.add(Calendar.MINUTE, CreateOrderView.FUTURE_MINUTE)
         return calendar
     }
 
@@ -319,16 +300,16 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun checkFieldsForRequest(): Boolean {
-        val errorFiled = when {
-            !Utils.checkEmail(user.profile.email)   -> EMAIL_FIELD
-            !Utils.checkPhone(user.profile.phone!!) -> PHONE_FIELD
-            !transportTypes!!.any { it.checked }    -> TRANSPORT_FIELD
-            !user.termsAccepted                     -> TERMS_ACCEPTED_FIELD
-            else return true
+        val errorField = when {
+            !Utils.checkEmail(user.profile.email)   -> FieldError.EMAIL_FIELD
+            !Utils.checkPhone(user.profile.phone!!) -> FieldError.PHONE_FIELD
+            !transportTypes!!.any { it.checked }    -> FieldError.TRANSPORT_FIELD
+            !user.termsAccepted                     -> FieldError.TERMS_ACCEPTED_FIELD
+            else                                    -> FieldError.UNKNOWN
         }
-
-        logCreateTransfer(Mappers.getAnalyticsParam(errorFiled))
-        viewState.showEmptyFieldError(errorFiled)
+        if (errorField == FieldError.UNKNOWN) return true
+        logCreateTransfer(errorField.value)
+        viewState.showEmptyFieldError(errorField)
         return false
     }
 
@@ -415,5 +396,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         map[Analytics.TRAVEL_CLASS] = transportTypes?.filter { it.checked }?.joinToString()
 
         analytics.logEvent(Analytics.EVENT_ADD_TO_CART, bundle, map)
+    }
+
+    companion object {
+        private const val MIN_PASSENGERS = 1
+        private const val MIN_CHILDREN   = 0
     }
 }

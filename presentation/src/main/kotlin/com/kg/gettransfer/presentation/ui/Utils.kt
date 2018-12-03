@@ -121,15 +121,6 @@ object Utils : KoinComponent {
         }
     }
 
-    fun showEmptyFieldsForTransferRequest(context: Context, message: String) {
-        getAlertDialogBuilder(context).apply {
-            setTitle(context.resources.getString(R.string.LNG_RIDE_CANT_CREATE))
-            setMessage(message)
-            setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
-            show()
-        }
-    }
-
     fun setCurrenciesDialogListener(
         context: Context,
         view: View,
