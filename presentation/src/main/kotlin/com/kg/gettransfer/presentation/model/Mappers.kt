@@ -17,6 +17,8 @@ import java.util.Currency
 import java.util.Locale
 import java.util.Calendar
 
+import kotlin.math.absoluteValue
+
 object Mappers {
     fun point2LatLng(point: Point) = LatLng(point.latitude, point.longitude)
 
@@ -85,43 +87,35 @@ object Mappers {
                                                      toPoint,
                                                      dateTime)
 
-    fun getTransferModel(type: Transfer,
-                         locale: Locale,
-                         distanceUnit: DistanceUnit,
-                         transportTypes: List<TransportType>): TransferModel {
-        val selected = transportTypes.filter { type.transportTypeIds.contains(it.id) }
-        var distance: Int? = null
-        if(type.to != null) distance = type.distance ?: checkDistance(type.from.point!!, type.to!!.point!!)
-        var timeToTransfer = type.dateToLocal.time - Calendar.getInstance().timeInMillis
-        if(timeToTransfer < 0) timeToTransfer = 0
-
-        return TransferModel(type.id,
-                             type.status,
-                             type.from.name!!,
-                             type.to?.name,
-                             type.createdAt,
-                             type.dateToLocal,
-                             locale,
-                             distance,
-                             distanceUnit,
-                             type.pax,
-                             type.nameSign,
-                             type.childSeats,
-                             type.flightNumber,
-                             type.comment,
-                             selected.map { getTransportTypeModel(it, null) },
-                             type.paidSum?.default,
-                             type.paidPercentage,
-                             type.remainsToPay?.default,
-                             type.price?.default,
-                             type.relevantCarriersCount,
-                             type.checkOffers,
-                             type.dateRefund,
-                             type.time,
-                             type.duration,
-                             type.checkStatusCategory(),
-                             timeToTransfer)
-    }
+    fun getTransferModel(type: Transfer, locale: Locale, distanceUnit: DistanceUnit, transportTypes: List<TransportType>) =
+        TransferModel(
+            type.id,
+            type.status,
+            type.from.name!!,
+            type.to?.name,
+            type.createdAt,
+            type.dateToLocal,
+            locale,
+            type.to?.let { type.distance ?: checkDistance(type.from.point!!, type.to!!.point!!) },
+            distanceUnit,
+            type.pax,
+            type.nameSign,
+            type.childSeats,
+            type.flightNumber,
+            type.comment,
+            transportTypes.filter { type.transportTypeIds.contains(it.id) }.map { getTransportTypeModel(it, null) },
+            type.paidSum?.default,
+            type.paidPercentage,
+            type.remainsToPay?.default,
+            type.price?.default,
+            type.relevantCarriersCount,
+            type.checkOffers,
+            type.dateRefund,
+            type.time,
+            type.duration,
+            type.checkStatusCategory(),
+            (type.dateToLocal.time - Calendar.getInstance().timeInMillis).toInt().absoluteValue / 60_000
+        )
 
     fun getTransferNew(from: CityPoint,
                        dest: Dest<CityPoint, Int>,
@@ -160,7 +154,7 @@ object Mappers {
                    getCarrierModel(type.carrier),
                    getVehicleModel(type.vehicle),
                    type.driver?.let { getProfileModel(it) },
-                   type.getPhoneToCall())
+                   type.phoneToCall)
 
     fun getCarrierTripModel(type: CarrierTrip, locale: Locale, distanceUnit: DistanceUnit) =
         CarrierTripModel(type.id,

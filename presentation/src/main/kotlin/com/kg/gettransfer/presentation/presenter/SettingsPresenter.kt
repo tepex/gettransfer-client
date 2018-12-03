@@ -23,7 +23,7 @@ import com.yandex.metrica.YandexMetrica
 import java.util.Locale
 
 @InjectViewState
-class SettingsPresenter: BasePresenter<SettingsView>() {
+class SettingsPresenter : BasePresenter<SettingsView>() {
     private lateinit var currencies: List<CurrencyModel>
     private lateinit var locales: List<LocaleModel>
     private lateinit var distanceUnits: List<DistanceUnitModel>
@@ -35,7 +35,7 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
     @CallSuper
     override fun attachView(view: SettingsView) {
         super.attachView(view)
-        if(restart) initConfigs()
+        if (restart) initConfigs()
 
         viewState.setCurrencies(currencies)
         viewState.setLocales(locales)
@@ -43,7 +43,7 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
 
         viewState.setEndpoints(endpoints)
 
-		val locale = systemInteractor.locale
+        val locale = systemInteractor.locale
         val localeModel = locales.find { it.delegate.language == locale.getLanguage() }
         viewState.setLocale(localeModel?.name ?: "")
 
@@ -69,7 +69,7 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
         val localeModel = locales.get(selected)
         systemInteractor.locale = localeModel.delegate
         viewState.setLocale(localeModel.name)
-        if(systemInteractor.account.user.loggedIn) saveAccount()
+        if (systemInteractor.account.user.loggedIn) saveAccount()
         logEvent(Analytics.LANGUAGE_PARAM, localeModel.name)
 
         Locale.setDefault(systemInteractor.locale)
@@ -115,17 +115,12 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
     private fun saveAccount() = utils.launchSuspend {
         viewState.blockInterface(true)
         val result = utils.asyncAwait { systemInteractor.putAccount() }
-        result.error?.let { if(!it.isNotLoggedIn()) viewState.setError(it) }
+        result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
         viewState.blockInterface(false)
     }
 
-    fun sendEmail(emailCarrier: String?){ viewState.sendEmail(emailCarrier, if(emailCarrier == null) systemInteractor.logsFile else null) }
-    fun callPhone(phone: String){ viewState.callPhone(phone) }
-
     override fun onBackCommandClick() {
-        localeWasChanged = false
-        
-        
+//        localeWasChanged = false
         if(localeWasChanged) {
             localeWasChanged = false
             router.navigateTo(Screens.Main)

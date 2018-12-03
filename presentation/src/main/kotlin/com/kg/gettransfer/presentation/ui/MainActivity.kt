@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+import android.support.annotation.DrawableRes
 import android.support.design.widget.BottomSheetBehavior
 
 import android.support.v4.content.ContextCompat
@@ -35,6 +36,7 @@ import com.google.android.gms.maps.model.Marker
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.domain.ApiException
 
@@ -42,8 +44,8 @@ import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.MainView
-import kotlinx.android.synthetic.main.a_b_view.*
 
+import kotlinx.android.synthetic.main.a_b_view.*
 import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_address.view.*
@@ -54,7 +56,7 @@ import kotlinx.android.synthetic.main.view_navigation.*
 
 import timber.log.Timber
 
-class MainActivity: BaseGoogleMapActivity(), MainView {
+class MainActivity : BaseGoogleMapActivity(), MainView {
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
 
@@ -71,7 +73,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
     private val itemsNavigationViewListener = View.OnClickListener {
-        when(it.id) {
+        when (it.id) {
             R.id.navLogin          -> presenter.onLoginClick()
             R.id.navAbout          -> presenter.onAboutClick()
             R.id.navSettings       -> presenter.onSettingsClick()
@@ -105,10 +107,10 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
         setContentView(R.layout.activity_main)
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) window.statusBarColor = Color.TRANSPARENT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) window.statusBarColor = Color.TRANSPARENT
         else {
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            viewGradient.visibility = View.GONE
+            viewGradient.isVisible = false
         }
 
         _mapView = mapView
@@ -120,7 +122,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         btnBack.setOnClickListener { presenter.onBackClick() }
         ivSelectFieldTo.setOnClickListener { presenter.switchUsedField() }
         drawer = drawerLayout as DrawerLayout
-        drawer.addDrawerListener(object: DrawerLayout.SimpleDrawerListener() {
+        drawer.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
             @CallSuper
             override fun onDrawerStateChanged(newState: Int) {
                 super.onDrawerStateChanged(newState)
@@ -137,9 +139,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
         isFirst = savedInstanceState == null
 
-        val fade = Fade()
-        fade.duration = FADE_DURATION
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) window.exitTransition = fade
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) window.exitTransition = Fade().apply { duration = FADE_DURATION }
     }
 
     @CallSuper
@@ -238,19 +238,18 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         tv_okBtn.setOnClickListener { showNumberPicker(false) }
     }
 
-
     protected override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
-        if(systemInteractor.locationPermissionsGranted ?: true) {
+        if (systemInteractor.locationPermissionsGranted ?: true) {
             gm.setMyLocationEnabled(true)
             gm.uiSettings.isMyLocationButtonEnabled = false
         }
 
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
-        gm.setOnCameraMoveListener        { presenter.onCameraMove(gm.cameraPosition!!.target, true);  }
+        gm.setOnCameraMoveListener        { presenter.onCameraMove(gm.cameraPosition!!.target, true)  }
         gm.setOnCameraIdleListener        { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
         gm.setOnCameraMoveStartedListener {
-            if(it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+            if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
                 presenter.enablePinAnimation()
                 gm.setOnCameraMoveStartedListener(null)
             }
@@ -261,12 +260,12 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     override fun setMapPoint(point: LatLng, withAnimation: Boolean) {
         val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
         processGoogleMap(false) {
-            if(centerMarker != null) {
+            if (centerMarker != null) {
                 it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
                 moveCenterMarker(point)
             } else {
                 /* Грязный хак!!! */
-                if(isFirst || it.cameraPosition.zoom <= MAX_INIT_ZOOM) {
+                if (isFirst || it.cameraPosition.zoom <= MAX_INIT_ZOOM) {
                     val zoom1 = resources.getInteger(R.integer.map_min_zoom).toFloat()
                     it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom1))
                     isFirst = false
@@ -274,7 +273,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
                 }
                 //else googleMap.moveCamera(CameraUpdateFactory.newLatLng(point))
                 else {
-                    if(withAnimation) it.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+                    if (withAnimation) it.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
                     else it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
                 }
             }
@@ -305,8 +304,8 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
     override fun blockSelectedField(block: Boolean, field: String) {
-        if(block){
-            when(field){
+        if (block) {
+            when (field) {
                 MainPresenter.FIELD_FROM -> searchFrom.text = getString(R.string.search_start)
                 MainPresenter.FIELD_TO   -> searchTo.text   = getString(R.string.search_start)
             }
@@ -325,18 +324,19 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     override fun setAddressFrom(address: String) {
         searchFrom.text = address
         enableBtnNext()
-        val iconRes: Int = if(address.isNotEmpty()) R.drawable.a_point_filled
-        else R.drawable.a_point_empty
-        icons_container.a_point.setImageDrawable(ContextCompat.getDrawable(this, iconRes))
+        icons_container.a_point.setImageDrawable(ContextCompat.getDrawable(
+            this,
+            if (address.isNotEmpty()) R.drawable.a_point_filled else R.drawable.a_point_empty
+        ))
     }
 
-    override fun setAddressTo(address: String)   {
+    override fun setAddressTo(address: String) {
         searchTo.text = address
         enableBtnNext()
-        val iconRes: Int
-        if(address.isNotEmpty()) iconRes = R.drawable.b_point_filled
-        else iconRes = R.drawable.b_point_empty
-        icons_container.b_point.setImageDrawable(ContextCompat.getDrawable(this, iconRes))
+        icons_container.b_point.setImageDrawable(ContextCompat.getDrawable(
+            this,
+            if (address.isNotEmpty()) R.drawable.b_point_filled else R.drawable.b_point_empty
+        ))
     }
 
     private fun enableBtnNext() {
@@ -344,18 +344,13 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
     override fun setProfile(profile: ProfileModel) {
-        if(!profile.isLoggedIn()) {
-            navHeaderName.visibility = View.GONE
-            navHeaderEmail.visibility = View.GONE
-            navLogin.visibility = View.VISIBLE
-            navRequests.visibility = View.GONE
-        } else {
-            navHeaderName.visibility = View.VISIBLE
-            navHeaderEmail.visibility = View.VISIBLE
+        navHeaderName.isVisible  = profile.isLoggedIn()
+        navHeaderEmail.isVisible = profile.isLoggedIn()
+        navRequests.isVisible    = profile.isLoggedIn()
+        navLogin.isVisible       = !profile.isLoggedIn()
+        if (profile.isLoggedIn()) {
             navHeaderName.text = profile.name
             navHeaderEmail.text = profile.email
-            navLogin.visibility = View.GONE
-            navRequests.visibility = View.VISIBLE
         }
     }
 
@@ -375,14 +370,9 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END)
     }
 
-    private fun switchButtons(isBackVisible: Boolean){
-        if (isBackVisible) {
-            btnBack.visibility = View.VISIBLE
-            btnShowDrawerLayout.visibility = View.GONE
-        } else {
-            btnBack.visibility = View.GONE
-            btnShowDrawerLayout.visibility = View.VISIBLE
-        }
+    private fun switchButtons(isBackVisible: Boolean) {
+        btnBack.isVisible = isBackVisible
+        btnShowDrawerLayout.isVisible = !isBackVisible
     }
 
     private fun setAlpha(alpha: Float) {
@@ -391,8 +381,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
     override fun onBackClick() {
-        if(drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START)
-        else super.onBackPressed()
+        if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START) else super.onBackPressed()
     }
 
     override fun showReadMoreDialog() {
@@ -401,31 +390,13 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
     override fun changeFields(hourly: Boolean) {
-        val viewIn:       View
-        val viewOut:      View
-        val imgIn:        View
-        val imgOut:       View
+        rl_hourly.isVisible    = hourly
+        hourly_point.isVisible = hourly
 
-        if (hourly) {
-            viewIn  = rl_hourly
-            viewOut = rl_searchForm
-            imgIn   = hourly_point
-            imgOut  = b_point
-        } else {
-            viewIn  = rl_searchForm
-            viewOut = rl_hourly
-            imgIn   = b_point
-            imgOut  = hourly_point
-        }
-
+        rl_searchForm.isGone = hourly
+        b_point.isGone       = hourly
         enableBtnNext()
-
-        viewIn.visibility  = View.VISIBLE
-        imgIn.visibility   = View.VISIBLE
-        viewOut.visibility = View.GONE
-        imgOut.visibility  = View.GONE
-
 //        AnimationHelper(this).hourlyAnim(viewOut, imgOut, viewIn, imgIn)
-        link_line.visibility = if (hourly) View.INVISIBLE else View.VISIBLE
+        link_line.isInvisible = hourly
     }
 }

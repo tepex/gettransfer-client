@@ -30,4 +30,4 @@ class TransferModel(val id: Long,
                     val time: Int?,
                     val duration: Int?,
                     val statusCategory: String,
-                    val timeToTransfer: Long)
+                    val timeToTransfer: Int)

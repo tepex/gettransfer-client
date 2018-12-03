@@ -69,7 +69,7 @@ class OffersActivity : BaseActivity(), OffersView {
 
         setToolbar(toolbar as Toolbar, R.string.LNG_RIDE_CARRIERS)
 
-        btnCancelRequest.visibility = View.VISIBLE
+        btnCancelRequest.isVisible = true
         rvOffers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         bsOfferDetails = BottomSheetBehavior.from(sheetOfferDetails)
@@ -109,7 +109,7 @@ class OffersActivity : BaseActivity(), OffersView {
         if (transferModel.to != null) {
             tvTo.text = transferModel.to
             tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit, true)
-        } else if(transferModel.duration != null) {
+        } else if (transferModel.duration != null) {
             rl_hourly_info.isVisible = true
             tvMarkerTo.isVisible = false
             tv_duration.text = HourlyValuesHelper.getValue(transferModel.duration, this)
@@ -126,7 +126,7 @@ class OffersActivity : BaseActivity(), OffersView {
 
     override fun setSortState(sortCategory: String, sortHigherToLower: Boolean) {
         cleanSortState()
-        when(sortCategory) {
+        when (sortCategory) {
             OffersPresenter.SORT_YEAR   -> { selectSort(sortYear, triangleYear, sortHigherToLower) }
             OffersPresenter.SORT_RATING -> { selectSort(sortRating, triangleRating, sortHigherToLower) }
             OffersPresenter.SORT_PRICE  -> { selectSort(sortPrice, trianglePrice, sortHigherToLower) }
@@ -156,15 +156,7 @@ class OffersActivity : BaseActivity(), OffersView {
     override fun showBottomSheetOfferDetails(offer: OfferModel) {
         carrierId.text = getString(R.string.LNG_CARRIER).plus(" ").plus(offer.carrier.id)
 
-        layoutCarrierLanguages.removeAllViews()
-        val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        lp.setMargins(8, 0, 8, 0)
-        for (item in offer.carrier.languages) {
-            layoutCarrierLanguages.addView(ImageView(this).apply {
-                setImageResource(Utils.getLanguageImage(item.delegate.language))
-                layoutParams = lp
-            })
-        }
+        Utils.initCarrierLanguages(layoutCarrierLanguages, offer.carrier.languages)
 
         ivLikeDriver.isVisible = offer.carrier.approved
 
@@ -198,7 +190,7 @@ class OffersActivity : BaseActivity(), OffersView {
             it.preferred?.let { preferred ->
                 with(offerPriceWithoutDiscountPreferred) {
                     paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                    text = Utils.formatPrice(this, preferred)
+                    text = Utils.formatPrice(this@OffersActivity, preferred)
                 }
             }
             offerPriceWithoutDiscountPreferred.isVisible = it.preferred != null
@@ -250,8 +242,7 @@ class OffersActivity : BaseActivity(), OffersView {
 
     @CallSuper
     override fun onBackPressed() {
-        if(bsOfferDetails.state == BottomSheetBehavior.STATE_EXPANDED) hideSheetOfferDetails()
-        else navigateBackWithTransition()
+        if (bsOfferDetails.state == BottomSheetBehavior.STATE_EXPANDED) hideSheetOfferDetails() else navigateBackWithTransition()
     }
 
     override fun addNewOffer(offer: OfferModel) { (rvOffers.adapter as OffersRVAdapter).add(offer) }

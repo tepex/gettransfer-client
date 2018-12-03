@@ -12,19 +12,10 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
-import com.kg.gettransfer.utilities.CommunicateMethods
 
 import kotlinx.android.synthetic.main.dialog_payment_successful.view.*
 
-import org.jetbrains.anko.toast
-import java.io.File
-
-class PaymentSuccessfulActivity: BaseGoogleMapActivity(), PaymentSuccessfulView {
-
-    companion object {
-        const val TRANSFER_ID = "transferId"
-        const val OFFER_ID = "offerId"
-    }
+class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView {
 
     @InjectPresenter
     internal lateinit var presenter: PaymentSuccessfulPresenter
@@ -52,11 +43,11 @@ class PaymentSuccessfulActivity: BaseGoogleMapActivity(), PaymentSuccessfulView 
         with(dialogView) {
             tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER).plus(" ${presenter.transferId}")
             tvDetails.setOnClickListener { presenter.onDetailsClick() }
-            btnCall.setOnClickListener   { presenter.onCallClick() }
+            btnCall.setOnClickListener { presenter.onCallClick() }
             //tvVoucher.setOnClickListener { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
             //btnChat.setOnClickListener   { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
 
-            tvDone.setOnClickListener     { finish() }
+            tvDone.setOnClickListener { finish() }
             btnSupport.setOnClickListener { presenter.sendEmail(null) }
         }
     }
@@ -64,18 +55,18 @@ class PaymentSuccessfulActivity: BaseGoogleMapActivity(), PaymentSuccessfulView 
     override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
         gm.uiSettings.isScrollGesturesEnabled = false
-        gm.uiSettings.isZoomGesturesEnabled   = false
+        gm.uiSettings.isZoomGesturesEnabled = false
     }
 
     override fun setRoute(polyline: PolylineModel) = setPolylineWithoutInfo(polyline)
 
-    override fun setRemainTime(time: String?) {
+    override fun setRemainTime(days: Int, hours: Int, minutes: Int) {
+        val time = "$days d $hours h $minutes m"
         dialogView.tvRemainTime.text = getString(R.string.transfer_remain_time, time)
     }
 
-    override fun callPhone(phoneCarrier: String?) =
-            CommunicateMethods.callPhone(this, phoneCarrier)
-
-    override fun sendEmail(emailCarrier: String?, logsFile: File?) =
-            CommunicateMethods.sendEmail(this, emailCarrier, logsFile)
+    companion object {
+        const val TRANSFER_ID = "transferId"
+        const val OFFER_ID = "offerId"
+    }
 }

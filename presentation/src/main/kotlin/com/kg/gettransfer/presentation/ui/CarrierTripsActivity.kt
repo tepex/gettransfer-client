@@ -23,6 +23,8 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.extensions.*
+
 import com.kg.gettransfer.presentation.adapter.TripsRVAdapter
 
 import com.kg.gettransfer.presentation.model.CarrierTripModel
@@ -37,7 +39,7 @@ import kotlinx.android.synthetic.main.view_navigation.*
 
 import timber.log.Timber
 
-class CarrierTripsActivity: BaseActivity(), CarrierTripsView {
+class CarrierTripsActivity : BaseActivity(), CarrierTripsView {
     @InjectPresenter
     internal lateinit var presenter: CarrierTripsPresenter
 
@@ -50,7 +52,7 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView {
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
     private val itemsNavigationViewListener = View.OnClickListener {
-        when(it.id) {
+        when (it.id) {
             R.id.navCarrierTrips  -> presenter.onCarrierTripsClick()
             R.id.navAbout         -> presenter.onAboutClick()
             R.id.navSettings      -> presenter.onSettingsClick()
@@ -85,8 +87,7 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView {
 
     @CallSuper
     override fun onBackPressed() {
-        if(drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START)
-        else super.onBackPressed()
+        if(drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START) else super.onBackPressed()
     }
 
     /** @see {@link android.support.v7.app.ActionBarDrawerToggle} */
@@ -108,7 +109,7 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView {
         navFooterStamp.setOnClickListener(readMoreListener)
         navFooterReadMore.setOnClickListener(readMoreListener)
 
-        navHeaderShare.setOnClickListener {Timber.d("Share action")}
+        navHeaderShare.setOnClickListener { Timber.d("Share action") }
 
         navCarrierTrips.setOnClickListener(itemsNavigationViewListener)
         navSettings.setOnClickListener(itemsNavigationViewListener)
@@ -121,15 +122,15 @@ class CarrierTripsActivity: BaseActivity(), CarrierTripsView {
     }
 
     override fun initNavigation(profile: ProfileModel) {
-        navHeaderName.visibility = View.VISIBLE
-        navHeaderEmail.visibility = View.VISIBLE
+        navHeaderName.isVisible = true
+        navHeaderEmail.isVisible = true
         navHeaderName.text = profile.name
         navHeaderEmail.text = profile.email
 
-        navLogin.visibility = View.GONE
-        navCarrierTrips.visibility = View.VISIBLE
-        navBecomeACarrier.visibility = View.GONE
-        navPassengerMode.visibility = View.VISIBLE
+        navLogin.isVisible = false
+        navCarrierTrips.isVisible = true
+        navBecomeACarrier.isVisible = false
+        navPassengerMode.isVisible = true
     }
 
     override fun showReadMoreDialog() {

@@ -13,7 +13,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-
+import com.kg.gettransfer.extensions.*
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.activity_payment_settings.*
 
 import kotlinx.serialization.json.JSON
 
-class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
+class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
     @InjectPresenter
     internal lateinit var presenter: PaymentSettingsPresenter
 
@@ -37,7 +37,7 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.params = JSON.parse(PaymentSettingsView.Params.serializer(), intent.getStringExtra(PaymentSettingsView.EXTRA_PARAMS))
-        
+
         setContentView(R.layout.activity_payment_settings)
         payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, 100)
         payThirdOfPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, 30)
@@ -70,15 +70,15 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     }
 
     private fun changePaymentSettings(view: View?) {
-        when(view?.id) {
+        when (view?.id) {
             R.id.payFullPriceButton -> {
-                fullPriceCheckIcon.visibility = View.VISIBLE
-                thirdOfPriceCheckIcon.visibility = View.GONE
+                fullPriceCheckIcon.isVisible = true
+                thirdOfPriceCheckIcon.isVisible = false
                 presenter.changePrice(PaymentRequestModel.FULL_PRICE)
             }
             R.id.payThirdOfPriceButton -> {
-                thirdOfPriceCheckIcon.visibility = View.VISIBLE
-                fullPriceCheckIcon.visibility = View.GONE
+                thirdOfPriceCheckIcon.isVisible = true
+                fullPriceCheckIcon.isVisible = false
                 presenter.changePrice(PaymentRequestModel.PRICE_30)
             }
         }

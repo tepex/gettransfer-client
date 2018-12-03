@@ -12,15 +12,18 @@ import java.util.Date
 import kotlinx.serialization.Serializable
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface PaymentSettingsView: BaseView {
+interface PaymentSettingsView : BaseView {
+
+    fun setOffer(offer: OfferModel)
+
     companion object {
         val EXTRA_PARAMS = "${PaymentSettingsView::class.java.name}.params"
     }
-    
+
     @Serializable
-    data class Params(@Serializable(with = DateSerializer::class) val dateRefund: Date?,
-                      val transferId: Long,
-                      val offerId: Long)
-    
-    fun setOffer(offer: OfferModel)
+    data class Params(
+        @Serializable(with = DateSerializer::class) val dateRefund: Date?,
+        val transferId: Long,
+        val offerId: Long
+    )
 }

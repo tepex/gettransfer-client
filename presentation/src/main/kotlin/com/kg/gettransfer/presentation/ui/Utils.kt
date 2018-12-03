@@ -28,8 +28,11 @@ import android.util.DisplayMetrics
 import android.util.Patterns
 
 import android.view.View
+import android.view.ViewGroup
 
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 
 import com.google.android.gms.maps.CameraUpdate
@@ -44,6 +47,7 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.DistanceUnit
 
+import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
@@ -59,184 +63,202 @@ import java.util.Date
 import java.util.Locale
 import java.util.regex.Pattern
 
+import org.koin.standalone.inject
+import org.koin.standalone.KoinComponent
+
 import timber.log.Timber
 
-internal class Utils {
-    companion object {
-        private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
-        private val EMAIL_PATTERN = Patterns.EMAIL_ADDRESS
-        @JvmField val DATE_TIME_PATTERN = "dd MMMM yyyy, HH:mm"
-        @JvmField val DATE_PATTERN = "dd MMM yyyy"
-        @JvmField val DATE_WITHOUT_YEAR_PATTERN = "dd MMM"
-        @JvmField val TIME_PATTERN = "HH:mm"
-        const val MAX_BITMAP_SIZE = 4096
+object Utils : KoinComponent {
+    private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
+    private val EMAIL_PATTERN = Patterns.EMAIL_ADDRESS
 
-        private lateinit var phoneUtil: PhoneNumberUtil
+    @JvmField val DATE_TIME_PATTERN = "dd MMMM yyyy, HH:mm"
+    @JvmField val DATE_PATTERN = "dd MMM yyyy"
+    @JvmField val DATE_WITHOUT_YEAR_PATTERN = "dd MMM"
+    @JvmField val TIME_PATTERN = "HH:mm"
+    const val MAX_BITMAP_SIZE = 4096
 
-        fun getAlertDialogBuilder(context: Context): AlertDialog.Builder {
-            return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && false)
-                AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert)
-            else AlertDialog.Builder(context)
+    internal val phoneUtil: PhoneNumberUtil by inject()
+
+    fun getAlertDialogBuilder(context: Context): AlertDialog.Builder {
+        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && false)
+            AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert)
+        else AlertDialog.Builder(context)
+    }
+
+    fun showError(context: Context, finish: Boolean, message: String, onClose: (() -> Unit)? = null) {
+        getAlertDialogBuilder(context).apply {
+            setTitle(R.string.LNG_ERROR)
+            setMessage(message)
+            setPositiveButton(android.R.string.ok, { dialog, _ ->
+                dialog.dismiss()
+                if (finish) (context as Activity).finish()
+                onClose?.invoke()
+            })
+            setIcon(android.R.drawable.ic_dialog_alert)
+            show()
         }
+    }
 
-        fun showError(context: Context, finish: Boolean, message: String, onClose: (() -> Unit)? = null) {
-            getAlertDialogBuilder(context)
-                .setTitle(R.string.LNG_ERROR)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, { dialog, _ ->
-                   dialog.dismiss()
-                   if(finish) (context as Activity).finish()
-                   onClose?.invoke()
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show()
+    fun showAlertCancelRequest(context: Context, listener: (Boolean) -> Unit) {
+        getAlertDialogBuilder(context).apply {
+            setTitle(R.string.LNG_CANCEL_CONFIRM)
+            setPositiveButton(android.R.string.yes) { _, _ -> listener(true) }
+            setNegativeButton(android.R.string.no)  { _, _ -> listener(false) }
+            show()
         }
+    }
 
-        fun showAlertCancelRequest(context: Context, listener: (Boolean) -> Unit){
-            getAlertDialogBuilder(context)
-                    .setTitle(R.string.LNG_CANCEL_CONFIRM)
-                    .setPositiveButton(android.R.string.yes) { _, _ -> listener(true) }
-                    .setNegativeButton(android.R.string.no)  { _, _ -> listener(false) }
-                    .show()
+    fun showScreenRedirectingAlert(context: Context, title: String, message: String, navigate: () -> Unit) {
+        getAlertDialogBuilder(context).apply {
+            setTitle(title)
+            setMessage(message)
+            setPositiveButton(android.R.string.ok) { dialog, _ ->
+                dialog.dismiss()
+                navigate()
+            }
+            show()
         }
+    }
 
-        fun showScreenRedirectingAlert(context: Context, title: String, message: String, navigate: () -> Unit){
-            getAlertDialogBuilder(context)
-                    .setTitle(title)
-                    .setMessage(message)
-                    .setPositiveButton(android.R.string.ok){ dialog, _ ->
-                        dialog.dismiss()
-                        navigate()
-                    }
-                    .show()
+    fun showEmptyFieldsForTransferRequest(context: Context, message: String) {
+        getAlertDialogBuilder(context).apply {
+            setTitle(context.resources.getString(R.string.LNG_RIDE_CANT_CREATE))
+            setMessage(message)
+            setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
+            show()
         }
+    }
 
-        fun showEmptyFieldsForTransferRequest(context: Context, message: String){
-            getAlertDialogBuilder(context)
-                    .setTitle(context.resources.getString(R.string.LNG_RIDE_CANT_CREATE))
-                    .setMessage(message)
-                    .setPositiveButton(android.R.string.ok){ dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .show()
-        }
+    fun setCurrenciesDialogListener(
+        context: Context,
+        view: View,
+        items: List<CharSequence>,
+        listener: (Int) -> Unit
+    ) { setModelsDialogListener(context, view, R.string.LNG_CURRENCY, items, listener) }
 
-        fun setCurrenciesDialogListener(context: Context, view: View, items: List<CharSequence>,
-            listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.LNG_CURRENCY, items, listener) }
-        fun setLocalesDialogListener(context: Context, view: View, items: List<CharSequence>,
-            listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.LNG_LANGUAGE, items, listener) }
-        fun setDistanceUnitsDialogListener(context: Context, view: View, items: List<CharSequence>,
-            listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.LNG_DISTANCE_UNIT, items, listener) }
-        fun setEndpointsDialogListener(context: Context, view: View, items: List<CharSequence>,
-                                       listener: (Int) -> Unit) { setModelsDialogListener(context, view, R.string.endpoint, items, listener)}
-        fun setSelectOperationListener(context: Context, view: View, items: List<CharSequence>, @StringRes titleId: Int,
-                                       listener: (Int) -> Unit) { setModelsDialogListener(context, view, titleId, items, listener)}
+    fun setLocalesDialogListener(
+        context: Context,
+        view: View,
+        items: List<CharSequence>,
+        listener: (Int) -> Unit
+    ) { setModelsDialogListener(context, view, R.string.LNG_LANGUAGE, items, listener) }
 
-        fun setModelsDialogListener(context: Context, view: View, @StringRes titleId: Int, items: List<CharSequence>,
-                                    listener: (Int) -> Unit) {
-            view.setOnClickListener {
-                getAlertDialogBuilder(context)
-                    .setTitle(titleId)
-                    .setItems(items.toTypedArray()) { _, which -> listener(which) }
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show()
+    fun setDistanceUnitsDialogListener(
+        context: Context,
+        view: View,
+        items: List<CharSequence>,
+        listener: (Int) -> Unit
+    ) { setModelsDialogListener(context, view, R.string.LNG_DISTANCE_UNIT, items, listener) }
+
+    fun setEndpointsDialogListener(
+        context: Context,
+        view: View,
+        items: List<CharSequence>,
+        listener: (Int) -> Unit
+    ) { setModelsDialogListener(context, view, R.string.endpoint, items, listener) }
+
+    fun setSelectOperationListener(
+        context: Context,
+        view: View,
+        items: List<CharSequence>,
+        @StringRes titleId: Int,
+        listener: (Int) -> Unit
+    ) { setModelsDialogListener(context, view, titleId, items, listener) }
+
+    fun setModelsDialogListener(
+        context: Context,
+        view: View,
+        @StringRes titleId: Int,
+        items: List<CharSequence>,
+        listener: (Int) -> Unit
+    ) {
+
+        view.setOnClickListener {
+            getAlertDialogBuilder(context).apply {
+                setTitle(titleId)
+                setItems(items.toTypedArray()) { _, which -> listener(which) }
+                setNegativeButton(android.R.string.cancel, null)
+                show()
             }
         }
+    }
 
-        fun checkEmail(email: String?) = EMAIL_PATTERN.matcher(email ?: "").matches()
+    fun checkEmail(email: String?) = EMAIL_PATTERN.matcher(email ?: "").matches()
         //fun checkPhone(phone: String?) = PHONE_PATTERN.matcher(phone?.trim() ?: "").matches()
-        fun checkPhone(phone: String): Boolean {
-            try {
-                if(!PHONE_PATTERN.matcher(phone.trim()).matches()) return false
-                return phoneUtil.isValidNumber(phoneUtil.parse(phone, null))
+
+    fun checkPhone(phone: String): Boolean {
+        try {
+            return if(!PHONE_PATTERN.matcher(phone.trim()).matches()) false
+            else phoneUtil.isValidNumber(phoneUtil.parse(phone, null))
+        } catch (e: Exception) {
+            Timber.w("phone parse error: $phone", e)
+            return false
+        }
+    }
+
+    fun formatDistance(context: Context, _distance: Int?, du: DistanceUnit, withDistanceText: Boolean): String {
+        if (_distance == null) return ""
+        val distance = if(du == DistanceUnit.mi) DistanceUnit.km2Mi(_distance) else _distance
+        return if (withDistanceText) context.getString(R.string.LNG_RIDE_DISTANCE).plus(": $distance ").plus(du.name)
+        else distance.toString().plus(du.name)
+    }
+
+    fun getPolyline(routeModel: RouteModel): PolylineModel {
+        var mPoints = mutableListOf<LatLng>()
+        var line: PolylineOptions? = null
+        val latLngBuilder = LatLngBounds.Builder()
+        var track: CameraUpdate?
+
+        if (routeModel.polyLines != null) {
+            for (item in routeModel.polyLines) mPoints.addAll(PolyUtil.decode(item))
+
+            // Для построения упрощённого маршрута (меньше точек)
+            //val mPoints = PolyUtil.decode(routeInfo.overviewPolyline)
+
+            line = PolylineOptions()
+
+            for (i in mPoints.indices) {
+                line.add(mPoints.get(i))
+                latLngBuilder.include(mPoints.get(i))
             }
-            catch(e: Exception) {
-                Timber.w("phone parse error: $phone", e)
-                return false
-            }
+        } else {
+            mPoints.add(Mappers.point2LatLng(routeModel.fromPoint))
+            mPoints.add(Mappers.point2LatLng(routeModel.toPoint))
+
+            for (i in mPoints.indices) latLngBuilder.include(mPoints.get(i))
         }
 
-        fun formatDistance(context: Context, distance: Int?, distanceUnit: DistanceUnit, withDistanceText: Boolean): String {
-            if(distance == null) return ""
-            var d = distance
-            if(distanceUnit == DistanceUnit.Mi) d = DistanceUnit.km2Mi(distance)
-            return if(withDistanceText) context.getString(R.string.LNG_RIDE_DISTANCE).plus(": $d ").plus(distanceUnit.name)
-            else d.toString().plus(distanceUnit.name)
+        Timber.d("latLngBuilder: $latLngBuilder")
+        track = try { CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150) }
+        catch (e: Exception) {
+            Timber.w("Create order error: $latLngBuilder", e)
+            null
         }
+        return PolylineModel(mPoints.firstOrNull(), mPoints.getOrNull(mPoints.size - 1), line, track)
+    }
 
-        fun formatDuration(context: Context, duration: Int): String {
-            val days = duration / 24
-            return if (days > 0) "$days ".plus(context.getString(R.string.LNG_DAYS))
-                   else "$duration ".plus(context.getString(R.string.LNG_HOURS))
-        }
+    fun getCameraUpdateForPin(point: LatLng) = CameraUpdateFactory.newLatLngZoom(point, BaseGoogleMapActivity.MAP_MIN_ZOOM)
 
-        fun getPolyline(routeModel: RouteModel): PolylineModel {
-            var mPoints = mutableListOf<LatLng>()
-            var line: PolylineOptions? = null
-            val latLngBuilder = LatLngBounds.Builder()
-            var track: CameraUpdate?
+    fun getFormattedDate(locale: Locale, dateToLocal: Date) = SimpleDateFormat(DATE_TIME_PATTERN, locale).format(dateToLocal)
 
-            if(routeModel.polyLines != null) {
-                for(item in routeModel.polyLines) mPoints.addAll(PolyUtil.decode(item))
+    fun getDateTimeTransferDetails(locale: Locale, dateToLocal: Date, withYear: Boolean): Pair<String, String> {
+        val dateString = if (withYear) SimpleDateFormat(DATE_PATTERN, locale).format(dateToLocal)
+                         else SimpleDateFormat(DATE_WITHOUT_YEAR_PATTERN, locale).format(dateToLocal)
+        val timeString = SimpleDateFormat(TIME_PATTERN, locale).format(dateToLocal)
+        return Pair(dateString, timeString)
+    }
 
-                // Для построения упрощённого маршрута (меньше точек)
-                //val mPoints = PolyUtil.decode(routeInfo.overviewPolyline)
+    fun convertDuration(min: Int): Triple<Int, Int, Int> {
+        val hours = min / 60
+        return Triple(hours / 24, hours % 24, min % 60)
+    }
 
-                line = PolylineOptions()
-
-                for(i in mPoints.indices) {
-                    line.add(mPoints.get(i))
-                    latLngBuilder.include(mPoints.get(i))
-                }
-            } else {
-                mPoints.add(Mappers.point2LatLng(routeModel.fromPoint))
-                mPoints.add(Mappers.point2LatLng(routeModel.toPoint))
-
-                for (i in mPoints.indices) latLngBuilder.include(mPoints.get(i))
-            }
-            Timber.d("latLngBuilder: $latLngBuilder")
-            track = try { CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150) }
-            catch(e: Exception) {
-                Timber.w("Create order error: $latLngBuilder", e)
-                null
-            }
-            return PolylineModel(mPoints.firstOrNull(), mPoints.getOrNull(mPoints.size - 1), line, track)
-        }
-
-        fun getCameraUpdateForPin(point: LatLng): CameraUpdate{
-            val zoom = BaseGoogleMapActivity.MAP_MIN_ZOOM
-            return CameraUpdateFactory.newLatLngZoom(point, zoom)
-        }
-
-        fun getFormattedDate(locale: Locale, dateToLocal: Date) = SimpleDateFormat(DATE_TIME_PATTERN, locale).format(dateToLocal)
-
-        fun getDateTimeTransferDetails(locale: Locale, dateToLocal: Date, withYear: Boolean): Pair<String, String> {
-            val dateString = if (withYear) SimpleDateFormat(DATE_PATTERN, locale).format(dateToLocal)
-                             else SimpleDateFormat(DATE_WITHOUT_YEAR_PATTERN, locale).format(dateToLocal)
-            val timeString = SimpleDateFormat(TIME_PATTERN, locale).format(dateToLocal)
-            return Pair(dateString, timeString)
-        }
-
-        fun convertDuration(context: Context, minutes: Int): String {
-            return "${minutes / 60}"
-                    .plus(context.getString(R.string.LNG_H))
-                    .plus(" ${minutes % 60}")
-                    .plus(context.getString(R.string.LNG_M))
-        }
-
-        fun convertDuration(context: Context, millis: Long): String {
-            val seconds = millis / 1000
-            val minutes = seconds / 60
-            val hours = minutes / 60
-            val days = hours / 24
-            return context.getString(R.string.LNG_DATE_IN_HOURS)
-                    .plus(" $days")
-                    .plus(context.getString(R.string.LNG_D))
-                    .plus(" ${hours % 24}")
-                    .plus(context.getString(R.string.LNG_H))
-                    .plus(" ${minutes % 60}")
-                    .plus(context.getString(R.string.LNG_M))
-        }
+    fun formatDuration(context: Context, duration: Int): String {
+        val days = duration / 24
+        return if (days > 0) "$days ".plus(context.getString(R.string.LNG_DAYS))
+        else "$duration ".plus(context.getString(R.string.LNG_HOURS))
+    }
 
         /*fun setPins(activity: Activity, googleMap: GoogleMap, routeModel: RouteModel) {
 
@@ -321,46 +343,43 @@ internal class Utils {
         }
         */
 
-        @DrawableRes
-        fun getLanguageImage(code: String): Int {
-            val imageRes = R.drawable::class.members.find( { it.name == "ic_language_$code" } )
-            return (imageRes?.call() as Int?) ?: R.drawable.ic_language_unknown
-        }
+    @DrawableRes
+    fun getLanguageImage(code: String): Int {
+        val imageRes = R.drawable::class.members.find( { it.name == "ic_language_$code" } )
+        return (imageRes?.call() as Int?) ?: R.drawable.ic_language_unknown
+    }
 
-        fun getVehicleNameWithColor(context: Context, name: String, color: String): SpannableStringBuilder {
-            val drawableCompat = getVehicleColorFormRes(context, color)
-                .also { it.setBounds(4, 0, it.intrinsicWidth + 4, it.intrinsicHeight) }
-            return SpannableStringBuilder("$name ").apply {
-                setSpan(ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE), length - 1, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    fun getVehicleNameWithColor(context: Context, name: String, color: String): SpannableStringBuilder {
+        val drawableCompat = getVehicleColorFormRes(context, color)
+            .also { it.setBounds(4, 0, it.intrinsicWidth + 4, it.intrinsicHeight) }
+        return SpannableStringBuilder("$name ").apply {
+            setSpan(ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE), length - 1, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+    }
+
+    fun getVehicleColorFormRes(context: Context, color: String): Drawable {
+        val colorRes = R.color::class.members.find( { it.name == "color_vehicle_$color" } )
+        val colorId = (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
+
+        return ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)!!
+            .constantState!!.newDrawable().mutate().apply {
+                setColorFilter(ContextCompat.getColor(context, colorId), PorterDuff.Mode.SRC_IN)
             }
-        }
+    }
 
-        fun getVehicleColorFormRes(context: Context, color: String): Drawable {
-            val colorRes = R.color::class.members.find( { it.name == "color_vehicle_$color" } )
-            val colorId = (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
+    fun getPhoneCodeByCountryIso(context: Context): Int {
+        val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        return phoneUtil.getCountryCodeForRegion(telephonyManager.simCountryIso.toUpperCase())
+    }
 
-            return ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)!!
-                .constantState!!
-                .newDrawable()
-                .mutate()
-                .apply { setColorFilter(ContextCompat.getColor(context, colorId), PorterDuff.Mode.SRC_IN) }
-        }
+    fun formatPersons(context: Context, persons: Int) = context.getString(R.string.count_persons_and_baggage, persons)
+    fun formatLuggage(context: Context, luggage: Int) = context.getString(R.string.count_persons_and_baggage, luggage)
 
-        fun initPhoneNumberUtil(context: Context) { phoneUtil = PhoneNumberUtil.createInstance(context) }
+    @Suppress("UNUSED_PARAMETER")
+    fun formatPrice(context: Context, price: String) = "($price)"
 
-        fun getPhoneCodeByCountryIso(context: Context): Int {
-            val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            val countryCode = telephonyManager.simCountryIso
-            return phoneUtil.getCountryCodeForRegion(countryCode.toUpperCase())
-        }
-
-        fun formatPersons(context: Context, persons: Int) = context.getString(R.string.count_persons_and_baggage, persons)
-        fun formatLuggage(context: Context, luggage: Int) = context.getString(R.string.count_persons_and_baggage, luggage)
-        @Suppress("UNUSED_PARAMETER")
-        fun formatPrice(context: Context, price: String)  = "($price)"
-
-        fun convertDpToPixels(context: Context, dp: Float) =
-            dp * context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT
+    fun convertDpToPixels(context: Context, dp: Float) =
+        dp * context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT
 
 /*
         fun isConnectedToInternet(context: Context?): Boolean {
@@ -376,7 +395,18 @@ internal class Utils {
             }
         }
         */
-        fun isValidBitmap(bitmap: Bitmap) = bitmap.width <= MAX_BITMAP_SIZE && bitmap.height <= MAX_BITMAP_SIZE
+    fun isValidBitmap(bitmap: Bitmap) = bitmap.width <= MAX_BITMAP_SIZE && bitmap.height <= MAX_BITMAP_SIZE
+
+    fun initCarrierLanguages(layoutCarrierLanguages: ViewGroup, languages: List<LocaleModel>) {
+        layoutCarrierLanguages.removeAllViews()
+        val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        lp.setMargins(8, 0, 8, 0)
+        for (item in languages) {
+            layoutCarrierLanguages.addView(ImageView(layoutCarrierLanguages.context).apply {
+                setImageResource(getLanguageImage(item.delegate.language))
+                layoutParams = lp
+            })
+        }
     }
 }
 

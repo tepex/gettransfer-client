@@ -32,7 +32,7 @@ class OffersRVAdapter(
     override fun getItemCount() = offers.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            OffersRVAdapter.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_offer, parent, false))
+        OffersRVAdapter.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_offer, parent, false))
 
     override fun onBindViewHolder(holder: OffersRVAdapter.ViewHolder, pos: Int) {
         holder.bind(offers.get(pos), listener)
@@ -61,7 +61,7 @@ class OffersRVAdapter(
                     text = Utils.formatPrice(context, it.preferred)
                     isVisible = true
                 }
-                layoutCostWithoutDiscount.visibility = View.VISIBLE
+                layoutCostWithoutDiscount.isVisible = true
             }
             if (item.vehicle.photos.isNotEmpty()) {
                 layoutWithCarImage.isVisible = true
@@ -79,19 +79,19 @@ class OffersRVAdapter(
             val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             lp.setMargins(8, 4, 8, 4)
 
-            val raws = item.carrier.languages.size.ceil(2)
-            for (i in 0..raws) {
+            for (row in 0 until item.carrier.languages.size.ceil(TRANSPORT_TYPES_COLUMNS)) {
                 val layout = LinearLayout(context)
                 layout.orientation = LinearLayout.HORIZONTAL
                 layout.gravity = Gravity.CENTER
-                for (j in 0..1) {
-                    if (i * 2 + j == item.carrier.languages.size) break
-                    val ivLanguage = ImageView(context)
-                    ivLanguage.setImageResource(Utils.getLanguageImage(item.carrier.languages[i * 2 + j].delegate.language))
-                    ivLanguage.layoutParams = lp
-                    layout.addView(ivLanguage)
+                for (col in 0 until TRANSPORT_TYPES_COLUMNS) {
+                    val i = row * TRANSPORT_TYPES_COLUMNS + col
+                    if (i == item.carrier.languages.size) break
+                    layout.addView(ImageView(context).apply {
+                        setImageResource(Utils.getLanguageImage(item.carrier.languages[i].delegate.language))
+                        layoutParams = lp
+                    }, col)
                 }
-                layoutLanguages.addView(layout)
+                layoutLanguages.addView(layout, row)
             }
 
             setOnClickListener           { listener(item, false) }
@@ -109,6 +109,10 @@ class OffersRVAdapter(
             textViewPax.text = Utils.formatPersons(layout.context, item.vehicle.transportType.paxMax)
             textViewBaggage.text = Utils.formatLuggage(layout.context, item.vehicle.transportType.luggageMax)
         }
+    }
+
+    companion object {
+        const val TRANSPORT_TYPES_COLUMNS = 2
     }
 }
 

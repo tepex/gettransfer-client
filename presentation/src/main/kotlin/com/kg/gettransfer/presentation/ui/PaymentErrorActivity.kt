@@ -8,15 +8,10 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.PaymentErrorPresenter
 import com.kg.gettransfer.presentation.view.PaymentErrorView
-import com.kg.gettransfer.utilities.CommunicateMethods
 
 import kotlinx.android.synthetic.main.dialog_payment_error.view.*
-import java.io.File
 
 class PaymentErrorActivity: BaseActivity(), PaymentErrorView {
-    companion object {
-        const val TRANSFER_ID = "transferId"
-    }
 
     @InjectPresenter
     internal lateinit var presenter: PaymentErrorPresenter
@@ -41,9 +36,7 @@ class PaymentErrorActivity: BaseActivity(), PaymentErrorView {
         }
     }
 
-    override fun callPhone(phoneCarrier: String?) =
-            CommunicateMethods.callPhone(this, phoneCarrier)
-
-    override fun sendEmail(emailCarrier: String?, logsFile: File?) =
-            CommunicateMethods.sendEmail(this, emailCarrier, logsFile)
+    companion object {
+        const val TRANSFER_ID = "transferId"
+    }
 }

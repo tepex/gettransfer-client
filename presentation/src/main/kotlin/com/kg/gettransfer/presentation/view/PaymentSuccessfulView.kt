@@ -2,7 +2,7 @@ package com.kg.gettransfer.presentation.view
 
 import com.kg.gettransfer.presentation.model.PolylineModel
 
-interface PaymentSuccessfulView: BaseView, CommunicateView {
+interface PaymentSuccessfulView: BaseView {
     fun setRoute(polyline: PolylineModel)
-    fun setRemainTime(time: String?)
+    fun setRemainTime(days: Int, hours: Int, minutes: Int)
 }

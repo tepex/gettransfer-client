@@ -24,13 +24,13 @@ import ru.terrakok.cicerone.Router
 
 import kotlinx.coroutines.Job
 
-open class BasePresenter<BV: BaseView>: MvpPresenter<BV>(), KoinComponent {
+open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
     protected val compositeDisposable = Job()
     protected val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
     protected val router: Router by inject()
     protected val analytics: Analytics by inject()
     protected val systemInteractor: SystemInteractor by inject()
-    
+
     open fun onBackCommandClick() {
         val map = mutableMapOf<String, Any>()
         map[Analytics.PARAM_KEY_NAME] = Analytics.BACK_CLICKED
@@ -47,21 +47,33 @@ open class BasePresenter<BV: BaseView>: MvpPresenter<BV>(), KoinComponent {
         super.onDestroy()
     }
 
-    companion object AnalyticProps {
-        @JvmField val SINGLE_CAPACITY = 1
-        @JvmField val DOUBLE_CAPACITY = 2
-
-    }
-
     protected fun createStringBundle(key: String, value: String): Bundle {
         val bundle = Bundle(SINGLE_CAPACITY)
         bundle.putString(key, value)
         return bundle
     }
-    
+
     protected fun createMultipleBundle(map: Map<String, Any>): Bundle {
         val bundle = Bundle()
         map.forEach { (k, v) -> bundle.putString(k, v.toString()) }
         return bundle
+    }
+
+    internal fun sendEmail(emailCarrier: String?) {
+        router.navigateTo(
+            Screens.SendEmail(
+                emailCarrier,
+                if (emailCarrier == null) systemInteractor.logsFile else null
+            )
+        )
+    }
+
+    internal fun callPhone(phone: String) {
+        router.navigateTo(Screens.CallPhone(phone))
+    }
+
+    companion object AnalyticProps {
+        @JvmField val SINGLE_CAPACITY = 1
+        @JvmField val DOUBLE_CAPACITY = 2
     }
 }

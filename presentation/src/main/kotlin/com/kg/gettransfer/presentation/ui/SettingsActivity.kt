@@ -18,6 +18,8 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.extensions.*
+
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.DistanceUnitModel
 import com.kg.gettransfer.presentation.model.EndpointModel
@@ -26,23 +28,21 @@ import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 
 import com.kg.gettransfer.presentation.view.SettingsView
-import com.kg.gettransfer.utilities.CommunicateMethods
 
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-import org.jetbrains.anko.toast
 
 import timber.log.Timber
-import java.io.File
 
-class SettingsActivity: BaseActivity(), SettingsView {
+class SettingsActivity : BaseActivity(), SettingsView {
+
     @InjectPresenter
     internal lateinit var presenter: SettingsPresenter
-    
+
     @ProvidePresenter
     fun createSettingsPresenter() = SettingsPresenter()
-    
-	override fun getPresenter(): SettingsPresenter = presenter
+
+    override fun getPresenter(): SettingsPresenter = presenter
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,17 +51,17 @@ class SettingsActivity: BaseActivity(), SettingsView {
         setContentView(R.layout.activity_settings)
 
         setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_SETTINGS)
-        
+
         btnSignOut.setOnClickListener { presenter.onLogout() }
         layoutSettingsLogs.setOnClickListener { presenter.onLogsClicked() }
         layoutSettingsResetOnboarding.setOnClickListener { presenter.onResetOnboardingClicked() }
         btnSupport.setOnClickListener { presenter.sendEmail(null) }
 
         //Not showing some layouts in release
-        if(BuildConfig.FLAVOR != "dev") {
-            layoutSettingsEndpoint.visibility = View.GONE
-            layoutSettingsLogs.visibility = View.GONE
-            layoutSettingsResetOnboarding.visibility = View.GONE
+        if (BuildConfig.FLAVOR != "dev") {
+            layoutSettingsEndpoint.isVisible = false
+            layoutSettingsLogs.isVisible = false
+            layoutSettingsResetOnboarding.isVisible = false
         }
     }
 
@@ -86,14 +86,8 @@ class SettingsActivity: BaseActivity(), SettingsView {
     override fun setEndpoint(endpoint: EndpointModel)  { tvSelectedEndpoint.text = endpoint.name }
 
     override fun setLogoutButtonEnabled(enabled: Boolean) {
-        if(enabled) btnSignOut.visibility = View.VISIBLE else btnSignOut.visibility = View.GONE
+        btnSignOut.isVisible = enabled
     }
-
-    override fun callPhone(phoneCarrier: String?) =
-            CommunicateMethods.callPhone(this, phoneCarrier)
-
-    override fun sendEmail(emailCarrier: String?, logsFile: File?) =
-            CommunicateMethods.sendEmail(this, emailCarrier, logsFile)
 
     override fun restartApp() {
         baseContext.packageManager.getLaunchIntentForPackage(baseContext.packageName)?.let {

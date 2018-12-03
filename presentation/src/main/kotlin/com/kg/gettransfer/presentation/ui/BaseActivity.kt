@@ -29,8 +29,7 @@ import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
-import com.kg.gettransfer.extensions.hideKeyboard
-import com.kg.gettransfer.extensions.showKeyboard
+import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.presentation.presenter.BasePresenter
 
@@ -48,7 +47,6 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 import timber.log.Timber
-import java.io.File
 
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     companion object {
@@ -73,13 +71,13 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         else return@OnTouchListener false
     }
 
-    private val inetReceiver = object: BroadcastReceiver() {
+    private val inetReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) = setNetworkAvailability(context)
 
         fun setNetworkAvailability(context: Context) {
             val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val available = cm.activeNetworkInfo?.let { it.isConnected } ?: false
-            viewNetworkNotAvailable?.let { if(available) it.visibility = View.GONE else it.visibility = View.VISIBLE }
+            viewNetworkNotAvailable?.let { it.isGone = available }
         }
     }
 

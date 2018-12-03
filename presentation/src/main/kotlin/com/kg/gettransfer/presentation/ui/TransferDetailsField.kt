@@ -23,12 +23,13 @@ class TransferDetailsField @JvmOverloads constructor(
     override val containerView = LayoutInflater.from(context).inflate(R.layout.view_transfer_details_field, this, true)
 
     init {
-        if(attrs == null) return
-        context.obtainStyledAttributes(attrs, R.styleable.TransferDetailsField).apply {
-            field_title.text = getString(R.styleable.TransferDetailsField_title_transfer_details)
-            field_text.text  = getString(R.styleable.TransferDetailsField_input_transfer_details)
-            field_icon.setImageDrawable(getDrawable(R.styleable.TransferDetailsField_icon_img_transfer_details))
-            recycle()
+        if(attrs != null) {
+            context.obtainStyledAttributes(attrs, R.styleable.TransferDetailsField).apply {
+                field_title.text = getString(R.styleable.TransferDetailsField_title_transfer_details)
+                field_text.text  = getString(R.styleable.TransferDetailsField_input_transfer_details)
+                field_icon.setImageDrawable(getDrawable(R.styleable.TransferDetailsField_icon_img_transfer_details))
+                recycle()
+            }
         }
     }
 }

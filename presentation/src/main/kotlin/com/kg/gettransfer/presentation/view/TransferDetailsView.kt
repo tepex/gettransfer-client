@@ -9,15 +9,15 @@ import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface TransferDetailsView: BaseView, RouteView, CommunicateView {
-    companion object {
-        val EXTRA_TRANSFER_ID = "${TransferDetailsView::class.java.name}.transferId"
-    }
-
-    fun setTransfer(transferModel: TransferModel, userProfile: ProfileModel)
-    fun setOffer(offerModel: OfferModel, childSeats: Int)
+interface TransferDetailsView: BaseView, RouteView {
+    fun setTransfer(transfer: TransferModel, userProfile: ProfileModel)
+    fun setOffer(offer: OfferModel, childSeats: Int)
     fun showAlertCancelRequest()
     fun copyText(text: String)
     fun recreateActivity()
     fun centerRoute(cameraUpdate: CameraUpdate)
+
+    companion object {
+        val EXTRA_TRANSFER_ID = "${TransferDetailsView::class.java.name}.transferId"
+    }
 }

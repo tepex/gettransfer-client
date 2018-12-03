@@ -64,7 +64,7 @@ class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
 
                 if(result.model.to != null) {
                     val r = utils.asyncAwait { routeInteractor.getRouteInfo(result.model.from.point!!, result.model.to!!.point!!, true, false) }
-                    if(r.error == null) {                   
+                    if(r.error == null) {
                         routeModel = Mappers.getRouteModel(r.model.distance,
                                                                systemInteractor.distanceUnit,
                                                                r.model.polyLines,
@@ -90,7 +90,7 @@ class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
             }
             viewState.blockInterface(false)
         }
-	}
+    }
 
     fun onCenterRouteClick() { track?.let { viewState.centerRoute(it) } }
 
@@ -111,20 +111,17 @@ class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
         }
     }
 
-    fun makeFieldOperation(field: String, operation: String, text: String){
-        when(operation){
+    fun makeFieldOperation(field: String, operation: String, text: String) {
+        when(operation) {
             OPERATION_COPY -> viewState.copyText(text)
             OPERATION_OPEN -> {
-                when(field){
-                    FIELD_PHONE -> viewState.callPhone(text)
+                when(field) {
+                    FIELD_PHONE -> callPhone(text)
                     FIELD_EMAIL -> sendEmail(text)
                 }
             }
         }
     }
-
-    fun sendEmail(emailCarrier: String?){ viewState.sendEmail(emailCarrier, if(emailCarrier == null) systemInteractor.logsFile else null) }
-    fun callPhone(phone: String){ viewState.callPhone(phone) }
 
     fun logEventGetOffer(key: String, value: String) {
         val map = mutableMapOf<String, Any?>()
