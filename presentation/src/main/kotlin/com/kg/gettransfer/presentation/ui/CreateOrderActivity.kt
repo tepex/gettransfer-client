@@ -313,8 +313,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
             phone_field.field_input.setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
         }
         email_field.field_input.setText(user.profile.email ?: "")
-        if (isLoggedIn) email_field.field_input.isEnabled = false
-        switchAgreement.isChecked = user.termsAccepted
+
+        if(isLoggedIn) email_field.field_input.isEnabled = false
+        layoutAgreement.visibility = if (user.termsAccepted) View.GONE else View.VISIBLE
     }
 
     //TODO сделать подсветку не заполненных полей
