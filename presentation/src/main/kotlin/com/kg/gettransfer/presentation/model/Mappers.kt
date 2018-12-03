@@ -114,7 +114,8 @@ object Mappers {
             type.time,
             type.duration,
             type.checkStatusCategory(),
-            (type.dateToLocal.time - Calendar.getInstance().timeInMillis).toInt().absoluteValue / 60_000
+            (type.dateToLocal.time - Calendar.getInstance().timeInMillis).toInt().absoluteValue / 60_000,
+            type.paymentPercentages
         )
 
     fun getTransferNew(from: CityPoint,

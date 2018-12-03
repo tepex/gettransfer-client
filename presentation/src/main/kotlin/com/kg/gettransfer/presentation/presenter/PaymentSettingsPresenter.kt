@@ -48,7 +48,7 @@ class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
         offer = offerInteractor.getOffer(params.offerId)
         offer?.let {
             paymentRequest = PaymentRequestModel(params.transferId, params.offerId)
-            viewState.setOffer(Mappers.getOfferModel(it, systemInteractor.locale))
+            viewState.setOffer(Mappers.getOfferModel(it, systemInteractor.locale), params.paymentPercentages)
             return
         }
         viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${params.offerId}] not found!"))

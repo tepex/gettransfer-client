@@ -55,6 +55,7 @@ open class TransferMapper: Mapper<TransferEntity, Transfer> {
                  type.transportTypeIds,
                  type.passengerOfferedPrice,
                  type.price?.let { moneyMapper.fromEntity(it) },
+                 type.paymentPercentages,
 
                  type.editableFields)
 

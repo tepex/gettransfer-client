@@ -1,6 +1,5 @@
 package com.kg.gettransfer.data.model
 
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
 
@@ -39,6 +38,7 @@ open class TransferEntity(@SerialName(ID) val id: Long,
                           @SerialName(TRANSPORT_TYPE_IDS) val transportTypeIds: List<String>,
                           @SerialName(PASSENGER_OFFERED_PRICE) val passengerOfferedPrice: String?,
                           @SerialName(PRICE) val price: MoneyEntity?,
+                          @SerialName(PAYMENT_PERCENTAGES) val paymentPercentages: List<Int>,
                           
                           @SerialName(EDITABLE_FIELDS) val editableFields: List<String>) {
     companion object {
@@ -74,6 +74,7 @@ open class TransferEntity(@SerialName(ID) val id: Long,
         const val TRANSPORT_TYPE_IDS      = "transport_type_ids"
         const val PASSENGER_OFFERED_PRICE = "passenger_offered_price"
         const val PRICE                   = "price"
+        const val PAYMENT_PERCENTAGES     = "payment_percentages"
 
         const val EDITABLE_FIELDS         = "editable_fields"
     }

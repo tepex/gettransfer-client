@@ -111,7 +111,7 @@ class OffersPresenter: BasePresenter<OffersView>() {
             logEvent(Analytics.OFFER_DETAILS)
         } else {
             logEvent(Analytics.OFFER_BOOK)
-            router.navigateTo(Screens.PaymentSettings(transfer.id, offer.id, transfer.dateRefund))
+            router.navigateTo(Screens.PaymentSettings(transfer.id, offer.id, transfer.dateRefund, transfer.paymentPercentages))
         }
     }
 

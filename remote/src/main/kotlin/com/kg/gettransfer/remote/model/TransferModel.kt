@@ -39,6 +39,7 @@ class TransferModel(@SerializedName(TransferEntity.ID) val id: Long,
                     @SerializedName(TransferEntity.TRANSPORT_TYPE_IDS) val transportTypeIds: List<String>,
                     @SerializedName(TransferEntity.PASSENGER_OFFERED_PRICE) val passengerOfferedPrice: String?, // Can be Null!!!
                     @SerializedName(TransferEntity.PRICE) val price: MoneyModel?, // Can be Null!!!
+                    @SerializedName(TransferEntity.PAYMENT_PERCENTAGES) val paymentPercentages: List<Int>,
                     
                     @SerializedName(TransferEntity.EDITABLE_FIELDS) val editableFields: List<String>)
 

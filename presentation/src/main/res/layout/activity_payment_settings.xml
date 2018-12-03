@@ -31,13 +31,13 @@
         android:id="@+id/payFullPriceButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/create_transfer_additionals_view_height"
-        android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
         android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding"
         android:background="@color/colorWhite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2">
+        app:layout_constraintTop_toBottomOf="@+id/view2"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/payFullPriceTitle"
@@ -54,34 +54,32 @@
             android:id="@+id/fullPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:fontFamily="@font/sf_pro_text_regular"
             android:text="@string/LNG_RIDE_PASSENGERS"
             android:textColor="@color/colorTextLightGray"
             android:textSize="@dimen/create_transfer_additionals_bottom_text_size"
             app:layout_constraintStart_toStartOf="@+id/payFullPriceTitle"
-            app:layout_constraintTop_toBottomOf="@+id/payFullPriceTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/payFullPriceTitle"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ImageView
             android:id="@+id/fullPriceCheckIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_check_blue_24dp"
+            app:srcCompat="@drawable/ic_check_blue_24dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/create_transfer_divider_height"
+            android:background="@color/colorDividerGray"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </android.support.constraint.ConstraintLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/create_transfer_divider_height"
-        android:background="@color/colorDividerGray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/payThirdOfPriceButton"
@@ -93,7 +91,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2">
+        app:layout_constraintTop_toBottomOf="@+id/view2"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/payThirdOfPriceTitle"
@@ -123,7 +122,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/ic_check_blue_24dp"
+            app:srcCompat="@drawable/ic_check_blue_24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:visibility="gone"/>
@@ -173,7 +172,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="13dp"
-            android:src="@drawable/ic_check_blue_24dp"
+            app:srcCompat="@drawable/ic_check_blue_24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

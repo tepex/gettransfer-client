@@ -30,4 +30,5 @@ class TransferModel(val id: Long,
                     val time: Int?,
                     val duration: Int?,
                     val statusCategory: String,
-                    val timeToTransfer: Int)
+                    val timeToTransfer: Int,
+                    val paymentPrecentage: List<Int>)

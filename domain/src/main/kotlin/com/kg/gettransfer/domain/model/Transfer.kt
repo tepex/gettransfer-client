@@ -40,6 +40,7 @@ data class Transfer(val id: Long,
                     val transportTypeIds: List<String>,
                     val passengerOfferedPrice: String?,
                     val price: Money?,
+                    val paymentPercentages: List<Int>,
 
                     val editableFields: List<String>) {
     companion object {
