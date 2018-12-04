@@ -54,12 +54,13 @@ import com.kg.gettransfer.presentation.model.UserModel
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 
 import com.kg.gettransfer.presentation.view.CreateOrderView
-import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 
 import com.kg.gettransfer.utilities.Analytics.Companion.CAR_INFO_CLICKED
 import com.kg.gettransfer.utilities.Analytics.Companion.COMMENT_INPUT
 import com.kg.gettransfer.utilities.Analytics.Companion.DATE_TIME_CHANGED
 import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_PRICE_FOCUSED
+
+import java.util.Calendar
 
 import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
@@ -68,8 +69,6 @@ import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.* //don't delete
 import kotlinx.android.synthetic.main.view_create_order_field.view.*
 import kotlinx.android.synthetic.main.view_seats.view.*
-
-import java.util.Calendar
 
 class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     @InjectPresenter
@@ -154,7 +153,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
                 isKeyBoardOpened = false
                 // postDelayed нужен, чтобы кнопка не морагала посередине экрана
                 Handler().postDelayed({ btnGetOffers.isVisible = true }, 100)
-                if(promo_field.field_input.isFocused) presenter.checkPromoCode()
+                if (promo_field.field_input.isFocused) presenter.checkPromoCode()
             }
         }
     }
@@ -316,7 +315,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         }
         email_field.field_input.setText(user.profile.email ?: "")
 
-        if(isLoggedIn) email_field.field_input.isEnabled = false
+        if (isLoggedIn) email_field.field_input.isEnabled = false
         layoutAgreement.visibility = if (user.termsAccepted) View.GONE else View.VISIBLE
     }
 
@@ -351,10 +350,10 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         img_okResult.isVisible = false
     }
 
-    override fun showEmptyFieldError(res: Int) {
+    override fun showEmptyFieldError(@StringRes stringId: Int) {
         Utils.getAlertDialogBuilder(this).apply {
             setTitle(getString(R.string.LNG_RIDE_CANT_CREATE))
-            setMessage(getString(res))
+            setMessage(getString(stringId))
             setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
             show()
         }

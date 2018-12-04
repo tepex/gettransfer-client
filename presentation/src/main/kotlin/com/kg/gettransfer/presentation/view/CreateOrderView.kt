@@ -30,7 +30,7 @@ interface CreateOrderView: BaseView, RouteView {
     fun setGetTransferEnabled(enabled: Boolean)
     fun setPromoResult(discountInfo: String?)
     fun resetPromoView()
-    fun showEmptyFieldError(res: Int)
+    fun showEmptyFieldError(@StringRes stringId: Int)
     fun showNotLoggedAlert(withOfferId: Long)
 
     enum class FieldError(val value: String, @StringRes val stringId: Int) {
