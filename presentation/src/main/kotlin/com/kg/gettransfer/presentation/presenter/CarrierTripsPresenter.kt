@@ -17,7 +17,7 @@ import com.kg.gettransfer.presentation.view.Screens
 import org.koin.standalone.inject
 
 @InjectViewState
-class CarrierTripsPresenter: BasePresenter<CarrierTripsView>() {
+class CarrierTripsPresenter : BasePresenter<CarrierTripsView>() {
     private val carrierTripInteractor: CarrierTripInteractor by inject()
     private var trips: List<CarrierTripModel>? = null
 
@@ -27,7 +27,7 @@ class CarrierTripsPresenter: BasePresenter<CarrierTripsView>() {
         utils.launchSuspend {
             viewState.blockInterface(true)
             val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrips() }
-            if(result.error != null) viewState.setError(result.error!!)
+            if (result.error != null) viewState.setError(result.error!!)
             else {
                 trips = result.model.map { Mappers.getCarrierTripModel(it) }
                 viewState.initNavigation(Mappers.getProfileModel(systemInteractor.account.user.profile))
