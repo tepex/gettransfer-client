@@ -161,6 +161,8 @@ class OffersActivity : BaseActivity(), OffersView {
         ivLikeDriver.isVisible = offer.carrier.approved
 
         offer.carrier.ratings.average?.let { ratingBarAverage.rating     = it }
+        offer.carrier.approved.let         { tvTopSelection.isGone       = !it
+                                             ivLikeDriver.isGone         = !it }
         offer.carrier.ratings.driver?.let  { ratingBarDriver.rating      = it }
         offer.carrier.ratings.fair?.let    { ratingBarPunctuality.rating = it }
         offer.carrier.ratings.vehicle?.let { ratingBarVehicle.rating     = it }
@@ -221,7 +223,7 @@ class OffersActivity : BaseActivity(), OffersView {
         layoutSomeRatings.isVisible = false
         layoutRatingAverage.setOnClickListener {
             layoutSomeRatings.apply { isVisible = !isVisible }
-            ratingBarAverage.isVisible = layoutSomeRatings.isVisible
+            ratingBarAverage.apply { isVisible = !isVisible }
             presenter.logEvent(OFFER_DETAILS_RATING)
         }
         bsOfferDetails.state = BottomSheetBehavior.STATE_EXPANDED
