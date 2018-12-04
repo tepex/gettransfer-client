@@ -42,6 +42,7 @@ import kotlinx.android.synthetic.main.view_transfer_details_about_transport.*
 import kotlinx.android.synthetic.main.view_transfer_details_communicate_buttons.*
 import kotlinx.android.synthetic.main.view_transfer_details_field.*
 import kotlinx.android.synthetic.main.view_transfer_details_info.*
+import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //Don't delete
 
 class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
@@ -113,7 +114,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
         btnsLayoutBottom.isVisible = status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_CONFIRMED
         btnSupportBottom.isVisible = status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_CONFIRMED
-        btnCancel.isVisible        = status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_CONFIRMED
+        btnCancel.isVisible        = status == Transfer.STATUS_CATEGORY_ACTIVE
     }
 
     private fun initInfoView(transfer: TransferModel) {
