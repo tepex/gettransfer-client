@@ -11,6 +11,7 @@ import android.os.Handler
 
 import android.support.annotation.CallSuper
 import android.support.annotation.ColorRes
+import android.support.annotation.StringRes
 
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.content.ContextCompat
