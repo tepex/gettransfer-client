@@ -13,6 +13,7 @@ class TransferModel(
     val duration: Int?,
     val distance: Int?,
     val status: Status,
+    val statusName: Int?,
     val from: String,
     val to: String?,
     val dateTime: Date,
@@ -26,7 +27,7 @@ class TransferModel(
     /* flightNumberReturn not used */
     val countPassengers: Int,
     val countChilds: Int,
-    /* offersCount */
+    val offersCount: Int,
     val relevantCarriersCount: Int?,
     /* offersUpdatedAt */
 /* ================================================== */

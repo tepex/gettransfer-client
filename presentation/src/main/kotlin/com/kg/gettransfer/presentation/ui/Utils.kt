@@ -244,6 +244,17 @@ object Utils : KoinComponent {
         else "$duration ".plus(context.getString(R.string.LNG_HOURS))
     }
 
+    fun durationToString(context: Context, duration: Triple<Int, Int, Int>) = buildString {
+        val (days: Int, hours: Int, minutes: Int) = duration
+        context.getString(R.string.LNG_DATE_IN_HOURS)
+        append(" $days")
+        append(context.getString(R.string.LNG_D))
+        append(" ${hours % 24}")
+        append(context.getString(R.string.LNG_H))
+        append(" ${minutes % 60}")
+        append(context.getString(R.string.LNG_M))
+    }
+
         /*fun setPins(activity: Activity, googleMap: GoogleMap, routeModel: RouteModel) {
 
             //Создание пинов с информацией

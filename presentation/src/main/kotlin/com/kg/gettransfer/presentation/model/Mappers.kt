@@ -99,6 +99,7 @@ object Mappers : KoinComponent {
             duration = type.duration,
             distance = type.to?.let { type.distance ?: checkDistance(type.from.point!!, type.to!!.point!!) },
             status = type.status,
+            statusName = getTransferStatusName(type.status),
             from = type.from.name!!,
             to = type.to?.name,
             dateTime = type.dateToLocal,
@@ -112,7 +113,7 @@ object Mappers : KoinComponent {
             /* flightNumberReturn */
             countPassengers = type.pax,
             countChilds = type.childSeats,
-            /* offersCount */
+            offersCount = type.offersCount,
             relevantCarriersCount = type.relevantCarriersCount,
             /* offersUpdatedAt */
 /* ================================================== */
@@ -136,6 +137,17 @@ object Mappers : KoinComponent {
             timeToTransfer = (type.dateToLocal.time - Calendar.getInstance().timeInMillis).toInt().absoluteValue / 60_000
             //checkOffers = type.checkOffers
         )
+
+    @StringRes
+    fun getTransferStatusName(status: String): Int? {
+        val nameId = when(status){
+            Transfer.STATUS_PENDING_CONFIRM -> Transfer.STATUS_PENDING_ID_IN_RES
+            Transfer.STATUS_NOT_COMPLETED -> Transfer.STATUS_NOTCOMPLETED_ID_IN_RES
+            else -> status
+        }
+        val nameRes = R.string::class.members.find( { it.name == "LNG_RIDE_STATUS_${nameId.toUpperCase()}" } )
+        return (nameRes?.call() as Int?)
+    }
 
     fun getTransferNew(from: CityPoint,
                        dest: Dest<CityPoint, Int>,

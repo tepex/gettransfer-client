@@ -45,11 +45,10 @@
 
             </LinearLayout>
 
-            <include
+            <com.kg.gettransfer.presentation.ui.TransferRequestItem
                 android:id="@+id/layoutTransferRequestInfo"
-                layout="@layout/view_transfer_request_info"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
             
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"

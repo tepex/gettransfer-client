@@ -725,6 +725,7 @@
     <string name="LNG_RIDE_REQUEST_FOR">Request for</string>
     <string name="LNG_RIDE_TRANSFER_CANCELLED">transfer cancelled</string>
     <string name="LNG_ERROR_PASSENGERS">Number of passenger must be greater than zero</string>
+    <string name="LNG_TRANSFER_IN_PROGRESS">Transfer in progress</string>
     <string name="tag_read_more" translatable="false">read_more_dialog</string>
     <string name="email_support" translatable="false">error.report@gettransfer.com</string>
     <string name="LNG_EMAIL_SUBJECT">Get help</string>

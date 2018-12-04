@@ -30,13 +30,11 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
-import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 
 import com.kg.gettransfer.presentation.view.OffersView
 
 import com.kg.gettransfer.service.OfferServiceConnection
 
-import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_DETAILS_RATING
 
 import kotlinx.android.synthetic.main.activity_offers.*
@@ -103,19 +101,7 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun setTransfer(transferModel: TransferModel) {
-        //tvConnectingCarriers.text = getString(R.string.transfer_connecting_carriers, transferModel.relevantCarriersCount)
-        tvTransferRequestNumber.text = getString(R.string.LNG_RIDE_NUMBER).plus(transferModel.id)
-        tvFrom.text = transferModel.from
-        if (transferModel.to != null) {
-            tvTo.text = transferModel.to
-            tvDistance.text = SystemUtils.formatDistance(this, transferModel.distance, true)
-        } else if (transferModel.duration != null) {
-            rl_hourly_info.isVisible = true
-            tvMarkerTo.isVisible = false
-            tv_duration.text = HourlyValuesHelper.getValue(transferModel.duration, this)
-        }
-        //tvTo.text = transferModel.to
-        //tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
+        layoutTransferRequestInfo.setInfo(transferModel)
     }
 
     override fun setDate(date: String) { tvOrderDateTime.text = date }

@@ -127,12 +127,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         //top right
         if (transfer.to != null) {
             tvDistance.text = SystemUtils.formatDistance(this, transfer.distance, false)
-            tvDuration.text = durationToString(Utils.convertDuration(transfer.time ?: 0))
+            tvDuration.text = Utils.durationToString(this, Utils.convertDuration(transfer.time ?: 0))
         } else {
             textDistance.text = getString(R.string.LNG_TIME_RIDE)
             tvDuration.text = Utils.formatDuration(this, transfer.duration!!)
 
-            tvTransferWillStartTime.text = durationToString(Utils.convertDuration(transfer.timeToTransfer))
+            tvTransferWillStartTime.text = Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer))
         }
 
         //bottom left
@@ -180,7 +180,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
             }
             Transfer.STATUS_CATEGORY_CONFIRMED -> {
                 layoutTransferWillStartTime.isVisible = true
-                tvTransferWillStartTime.text = durationToString(Utils.convertDuration(transfer.timeToTransfer))
+                tvTransferWillStartTime.text = Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer))
             }
         }
     }
@@ -332,17 +332,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     override fun recreateActivity() { recreate() }
 
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
-
-    private fun durationToString(duration: Triple<Int, Int, Int>) = buildString {
-        val (days: Int, hours: Int, minutes: Int) = duration
-        getString(R.string.LNG_DATE_IN_HOURS)
-        append(" $days")
-        append(getString(R.string.LNG_D))
-        append(" ${hours % 24}")
-        append(getString(R.string.LNG_H))
-        append(" ${minutes % 60}")
-        append(getString(R.string.LNG_M))
-    }
 
     companion object {
         const val TRANSPORT_TYPES_COLUMNS = 2

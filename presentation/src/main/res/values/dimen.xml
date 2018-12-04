@@ -218,7 +218,7 @@
 	<!-- view_transfer_info -->
 	<dimen name="view_transfer_info_big_text_size">17sp</dimen>
 	<dimen name="view_transfer_info_small_text_size">12sp</dimen>
-	<dimen name="view_transfer_info_request_number_text_size">13sp</dimen>
+	<dimen name="view_transfer_info_request_number_text_size">12sp</dimen>
 	<dimen name="view_transfer_info_request_number_margin_top">10dp</dimen>
 	<dimen name="view_transfer_info_request_number_margin_start">16dp</dimen>
 	<dimen name="view_transfer_info_from_margin_end">37dp</dimen>

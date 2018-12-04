@@ -59,6 +59,9 @@ data class Transfer(
 
 
     companion object {
+        @JvmField val STATUS_PENDING_ID_IN_RES      = "pending"
+        @JvmField val STATUS_NOTCOMPLETED_ID_IN_RES = "notcomleted"
+
         @JvmField val STATUS_CATEGORY_ACTIVE     = "active_status"
         @JvmField val STATUS_CATEGORY_CONFIRMED  = "confirmed_status"
         @JvmField val STATUS_CATEGORY_UNFINISHED = "unfinished_status"
