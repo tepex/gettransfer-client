@@ -22,71 +22,78 @@ import java.util.Date
 
 import org.koin.standalone.get
 
-class TransferRepositoryImpl(private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>):
-                                        BaseRepository(), TransferRepository {
+class TransferRepositoryImpl(private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>) :
+    BaseRepository(), TransferRepository {
     private val transferNewMapper = get<TransferNewMapper>()
-    private val transferMapper    = get<TransferMapper>()
+    private val transferMapper = get<TransferMapper>()
 
     override suspend fun createTransfer(transferNew: TransferNew) =
-        retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, defaultTransfer) {
+        retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, DEFAULT) {
             factory.retrieveRemoteDataStore().createTransfer(transferNewMapper.toEntity(transferNew))
         }
 
     override suspend fun cancelTransfer(id: Long, reason: String): Result<Transfer> =
-        retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, defaultTransfer) {
+        retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, DEFAULT) {
             factory.retrieveRemoteDataStore().cancelTransfer(id, reason)
         }
 
     override suspend fun getTransfer(id: Long): Result<Transfer> =
-        retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, defaultTransfer) {
+        retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, DEFAULT) {
             factory.retrieveRemoteDataStore().getTransfer(id)
         }
 
     override suspend fun getAllTransfers(): Result<List<Transfer>> =
-        retrieveRemoteListModel<TransferEntity, Transfer>(transferMapper) { factory.retrieveRemoteDataStore().getAllTransfers() }
+        retrieveRemoteListModel<TransferEntity, Transfer>(transferMapper) {
+            factory.retrieveRemoteDataStore().getAllTransfers()
+        }
 
     override suspend fun getTransfersArchive(): Result<List<Transfer>> =
-        retrieveRemoteListModel<TransferEntity, Transfer>(transferMapper) { factory.retrieveRemoteDataStore().getTransfersArchive() }
+        retrieveRemoteListModel<TransferEntity, Transfer>(transferMapper) {
+            factory.retrieveRemoteDataStore().getTransfersArchive()
+        }
 
     override suspend fun getTransfersActive(): Result<List<Transfer>> =
-        retrieveRemoteListModel<TransferEntity, Transfer>(transferMapper) { factory.retrieveRemoteDataStore().getTransfersActive() }
+        retrieveRemoteListModel<TransferEntity, Transfer>(transferMapper) {
+            factory.retrieveRemoteDataStore().getTransfersActive()
+        }
 
     companion object {
-        private val defaultTransfer =
-            Transfer(0,
-                     Date(),
-                     null,
-                     null,
-                     "",
-                     CityPoint(null, null, null),
-                     null,
-                     Date(),
-                     null,
-                     null,
+        private val DEFAULT =
+            Transfer(
+                id = 0,
+                createdAt = Date(),
+                duration = null,
+                distance = null,
+                status = Transfer.Status.NEW,
+                from = CityPoint(null, null, null),
+                to = null,
+                dateToLocal = Date(),
+                dateReturnLocal = null,
+                dateRefund = null,
 
-                     null,
-                     null,
-                     null,
-                     null,
-                     null,
-                     0,
-                     0,
-                     0,
-                     0,
-                     null,
+                nameSign = null,
+                comment = null,
+                malinaCard = null,
+                flightNumber = null,
+                flightNumberReturn = null,
+                pax = 0,
+                childSeats = 0,
+                offersCount = 0,
+                relevantCarriersCount = 0,
 
-                     0,
-                     null,
-                     null,
-                     0,
-                     null,
-                     false,
-                     null,
-                     emptyList<String>(),
-                     null,
-                     null,
-                    listOf<Int>(),
+                time = 0,
+                paidSum = null,
+                remainsToPay = null,
+                paidPercentage = 0,
+                pendingPaymentId = null,
+                bookNow = false,
+                bookNowExpiration = null,
+                transportTypeIds = emptyList<String>(),
+                passengerOfferedPrice = null,
+                price = null,
 
-                     emptyList<String>())
+                paymentPercentages = emptyList<Int>(),
+                editableFields = emptyList<String>()
+            )
     }
 }

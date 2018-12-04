@@ -30,6 +30,7 @@ import com.kg.gettransfer.presentation.model.TransportPrice
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.UserModel
 
+import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.CreateOrderView
@@ -60,7 +61,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private var duration: Int? = null
     private var passengers = MIN_PASSENGERS
     private var children = MIN_CHILDREN
-    private var dateTimeFormat: Format? = null
     private var transportTypes: List<TransportTypeModel>? = null
     private var routeModel: RouteModel? = null
     private var polyline: PolylineModel? = null
@@ -75,7 +75,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     internal var date: Date = Date()
         set(value) {
             field = value
-            dateTimeFormat?.let { viewState.setDateTimeTransfer(it.format(date), isAfter4Hours) }
+            viewState.setDateTimeTransfer(SystemUtils.formatDateTime(date), isAfter4Hours)
         }
 
     private var flightNumber: String? = null
@@ -121,13 +121,12 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                     transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
                 viewState.setTransportTypes(transportTypes!!)
                 routeModel = Mappers.getRouteModel(result.model.distance,
-                                                   systemInteractor.distanceUnit,
                                                    result.model.polyLines,
                                                    from.name!!,
                                                    to.name!!,
                                                    from.point!!,
                                                    to.point!!,
-                                                   SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
+                                                   SystemUtils.formatDateTime(date))
             }
             routeModel?.let {
                 polyline = Utils.getPolyline(it)
@@ -157,7 +156,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             date = currentDate.time
         }
         routeModel?.let {
-            it.dateTime = SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date)
+            it.dateTime = SystemUtils.formatDateTime(date)
             viewState.setRoute(polyline!!, it, true)
         }
     }
@@ -165,13 +164,12 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     @CallSuper
     override fun attachView(view: CreateOrderView) {
         super.attachView(view)
-        dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
         viewState.setCurrencies(currencies)
         val i = systemInteractor.currentCurrencyIndex
         if (i != -1) changeCurrency(i)
 
         viewState.setUser(user, systemInteractor.account.user.loggedIn)
-        viewState.setDateTimeTransfer(Utils.getFormattedDate(systemInteractor.locale, date), isAfter4Hours)
+        viewState.setDateTimeTransfer(SystemUtils.formatDateTime(date), isAfter4Hours)
         transportTypes?.let { viewState.setTransportTypes(it) }
     }
 

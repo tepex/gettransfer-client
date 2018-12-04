@@ -13,6 +13,7 @@ import android.os.Build
 
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 
@@ -72,7 +73,6 @@ object Utils : KoinComponent {
     private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
     private val EMAIL_PATTERN = Patterns.EMAIL_ADDRESS
 
-    @JvmField val DATE_TIME_PATTERN = "dd MMMM yyyy, HH:mm"
     @JvmField val DATE_PATTERN = "dd MMM yyyy"
     @JvmField val DATE_WITHOUT_YEAR_PATTERN = "dd MMM"
     @JvmField val TIME_PATTERN = "HH:mm"
@@ -188,13 +188,6 @@ object Utils : KoinComponent {
         }
     }
 
-    fun formatDistance(context: Context, _distance: Int?, du: DistanceUnit, withDistanceText: Boolean): String {
-        if (_distance == null) return ""
-        val distance = if(du == DistanceUnit.mi) DistanceUnit.km2Mi(_distance) else _distance
-        return if (withDistanceText) context.getString(R.string.LNG_RIDE_DISTANCE).plus(": $distance ").plus(du.name)
-        else distance.toString().plus(du.name)
-    }
-
     fun getPolyline(routeModel: RouteModel): PolylineModel {
         var mPoints = mutableListOf<LatLng>()
         var line: PolylineOptions? = null
@@ -231,7 +224,7 @@ object Utils : KoinComponent {
 
     fun getCameraUpdateForPin(point: LatLng) = CameraUpdateFactory.newLatLngZoom(point, BaseGoogleMapActivity.MAP_MIN_ZOOM)
 
-    fun getFormattedDate(locale: Locale, dateToLocal: Date) = SimpleDateFormat(DATE_TIME_PATTERN, locale).format(dateToLocal)
+
 
     fun getDateTimeTransferDetails(locale: Locale, dateToLocal: Date, withYear: Boolean): Pair<String, String> {
         val dateString = if (withYear) SimpleDateFormat(DATE_PATTERN, locale).format(dateToLocal)

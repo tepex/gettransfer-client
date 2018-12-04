@@ -54,7 +54,7 @@ class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
     }
 
     override fun setOffer(offer: OfferModel, paymentPercentages: List<Int>) {
-        paymentPercentages?.forEach { percentage ->
+        paymentPercentages.forEach { percentage ->
             when(percentage){
                 OfferModel.FULL_PRICE -> {
                     payFullPriceButton.isVisible = true
@@ -76,7 +76,7 @@ class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
 
     private fun setCommission() {
         presenter.params.dateRefund?.let {
-            commission.text = getString(R.string.LNG_PAYMENT_COMISSION, Utils.getFormattedDate(systemInteractor.locale, it))
+            commission.text = getString(R.string.LNG_PAYMENT_COMISSION, SystemUtils.formatDateTime(it))
         }
     }
 

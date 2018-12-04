@@ -7,8 +7,11 @@ import android.support.annotation.StringRes
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
+
+import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.utilities.Analytics
@@ -19,7 +22,12 @@ import java.util.Calendar
 
 import kotlin.math.absoluteValue
 
-object Mappers {
+import org.koin.standalone.get
+import org.koin.standalone.KoinComponent
+
+object Mappers : KoinComponent {
+    private val systemInteractor = get<SystemInteractor>()
+
     fun point2LatLng(point: Point) = LatLng(point.latitude, point.longitude)
 
     private fun point2Location(point: Point): Location {
@@ -45,8 +53,7 @@ object Mappers {
                    currency: Currency?,
                    distanceUnit: DistanceUnit?,
                    groups: List<String>?,
-                   carrierId: Long?) = Account(model, locale, currency, distanceUnit, groups, carrierId)
-                   */
+                   carrierId: Long?) = Account(model, locale, currency, distanceUnit, groups, carrierId) */
 
     fun getTransportTypeModel(type: TransportType, prices: Map<String, TransportPrice>?): TransportTypeModel {
         val imageRes = R.drawable::class.members.find( { it.name == "ic_transport_type_${type.id}" } )
@@ -72,14 +79,12 @@ object Mappers {
     fun getEndpointModel(endpoint: Endpoint) = EndpointModel(endpoint)
 
     fun getRouteModel(distance: Int?,
-                      distanceUnit: DistanceUnit,
                       polyLines: List<String>?,
                       from: String,
                       to: String,
                       fromPoint: Point,
                       toPoint: Point,
                       dateTime: String) = RouteModel(distance ?: checkDistance(fromPoint, toPoint),
-                                                     distanceUnit,
                                                      polyLines,
                                                      from,
                                                      to,
@@ -87,35 +92,49 @@ object Mappers {
                                                      toPoint,
                                                      dateTime)
 
-    fun getTransferModel(type: Transfer, locale: Locale, distanceUnit: DistanceUnit, transportTypes: List<TransportType>) =
+    fun getTransferModel(type: Transfer) =
         TransferModel(
-            type.id,
-            type.status,
-            type.from.name!!,
-            type.to?.name,
-            type.createdAt,
-            type.dateToLocal,
-            locale,
-            type.to?.let { type.distance ?: checkDistance(type.from.point!!, type.to!!.point!!) },
-            distanceUnit,
-            type.pax,
-            type.nameSign,
-            type.childSeats,
-            type.flightNumber,
-            type.comment,
-            transportTypes.filter { type.transportTypeIds.contains(it.id) }.map { getTransportTypeModel(it, null) },
-            type.paidSum?.default,
-            type.paidPercentage,
-            type.remainsToPay?.default,
-            type.price?.default,
-            type.relevantCarriersCount,
-            type.checkOffers,
-            type.dateRefund,
-            type.time,
-            type.duration,
-            type.checkStatusCategory(),
-            (type.dateToLocal.time - Calendar.getInstance().timeInMillis).toInt().absoluteValue / 60_000,
-            type.paymentPercentages
+            id = type.id,
+            createdAt = type.createdAt,
+            duration = type.duration,
+            distance = type.to?.let { type.distance ?: checkDistance(type.from.point!!, type.to!!.point!!) },
+            status = type.status,
+            from = type.from.name!!,
+            to = type.to?.name,
+            dateTime = type.dateToLocal,
+            /* dateReturn */
+            dateRefund = type.dateRefund,
+/* ================================================== */
+            nameSign = type.nameSign,
+            comment = type.comment,
+            /* malinaCard */
+            flightNumber = type.flightNumber,
+            /* flightNumberReturn */
+            countPassengers = type.pax,
+            countChilds = type.childSeats,
+            /* offersCount */
+            relevantCarriersCount = type.relevantCarriersCount,
+            /* offersUpdatedAt */
+/* ================================================== */
+            time = type.time,
+            paidSum = type.paidSum?.default,
+            remainToPay = type.remainsToPay?.default,
+            paidPercentage = type.paidPercentage,
+            /* pendingPaymentId
+               bookNow
+               bookNowExpiration */
+            transportTypes = systemInteractor.transportTypes.filter {
+                type.transportTypeIds.contains(it.id) }.map { getTransportTypeModel(it, null)
+            },
+            /* passengerOfferedPrice */
+            price = type.price?.default,
+/* ================================================== */
+            paymentPrecentages = type.paymentPercentages,
+/* ================================================== */
+/* ================================================== */
+            statusCategory = type.checkStatusCategory(),
+            timeToTransfer = (type.dateToLocal.time - Calendar.getInstance().timeInMillis).toInt().absoluteValue / 60_000
+            //checkOffers = type.checkOffers
         )
 
     fun getTransferNew(from: CityPoint,
@@ -143,36 +162,39 @@ object Mappers {
                                                           paypalOnly)
 
 
-    fun getOfferModel(type: Offer, locale: Locale) =
-        OfferModel(type.id,
-                   type.status,
-                   type.wifi,
-                   type.refreshments,
-                   Utils.getFormattedDate(locale, type.createdAt),
-                   getPriceModel(type.price),
-                   type.ratings?.let { getRatingsModel(it) },
-                   type.passengerFeedback,
-                   getCarrierModel(type.carrier),
-                   getVehicleModel(type.vehicle),
-                   type.driver?.let { getProfileModel(it) },
-                   type.phoneToCall)
+    fun getOfferModel(type: Offer) =
+        OfferModel(
+            type.id,
+            type.status,
+            type.wifi,
+            type.refreshments,
+            SystemUtils.formatDateTime(type.createdAt),
+            getPriceModel(type.price),
+            type.ratings?.let { getRatingsModel(it) },
+            type.passengerFeedback,
+            getCarrierModel(type.carrier),
+            getVehicleModel(type.vehicle),
+            type.driver?.let { getProfileModel(it) },
+            type.phoneToCall
+        )
 
-    fun getCarrierTripModel(type: CarrierTrip, locale: Locale, distanceUnit: DistanceUnit) =
-        CarrierTripModel(type.id,
-                         type.transferId,
-                         type.from.name!!,
-                         type.to.name!!,
-                         Utils.getFormattedDate(locale, type.dateLocal),
-                         type.distance ?: checkDistance(type.from.point!!, type.to.point!!),
-                         distanceUnit,
-                         type.childSeats,
-                         type.comment,
-                         type.price,
-                         type.vehicle.name,
-                         type.pax,
-                         type.nameSign,
-                         type.flightNumber,
-                         type.remainToPay)
+    fun getCarrierTripModel(type: CarrierTrip) =
+        CarrierTripModel(
+            type.id,
+            type.transferId,
+            type.from.name!!,
+            type.to.name!!,
+            SystemUtils.formatDateTime(type.dateLocal),
+            type.distance ?: checkDistance(type.from.point!!, type.to.point!!),
+            type.childSeats,
+            type.comment,
+            type.price,
+            type.vehicle.name,
+            type.pax,
+            type.nameSign,
+            type.flightNumber,
+            type.remainToPay
+        )
 
     private fun getRatingsModel(type: Ratings) = RatingsModel(type.average, type.vehicle, type.driver, type.fair)
 

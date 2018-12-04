@@ -21,6 +21,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.bumptech.glide.Glide
+
 import com.google.android.gms.maps.CameraUpdate
 
 import com.google.android.gms.maps.model.LatLng
@@ -119,13 +120,13 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
     private fun initInfoView(transfer: TransferModel) {
         //top left
-        val transferDateTimePair = Utils.getDateTimeTransferDetails(transfer.locale, transfer.dateTime, true)
+        val transferDateTimePair = Utils.getDateTimeTransferDetails(systemInteractor.locale, transfer.dateTime, true)
         tvTransferDate.text = transferDateTimePair.first
         tvTransferTime.text = getString(R.string.LNG_TRANSFER_AT).plus(" ").plus(transferDateTimePair.second)
 
         //top right
         if (transfer.to != null) {
-            tvDistance.text = Utils.formatDistance(this, transfer.distance, transfer.distanceUnit, false)
+            tvDistance.text = SystemUtils.formatDistance(this, transfer.distance, false)
             tvDuration.text = durationToString(Utils.convertDuration(transfer.time ?: 0))
         } else {
             textDistance.text = getString(R.string.LNG_TIME_RIDE)
@@ -164,7 +165,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
             Transfer.STATUS_CATEGORY_ACTIVE -> {
                 layoutRequestSentOrCompletedDate.isVisible = true
                 textRequestSentOrCompletedDate.text = getString(R.string.LNG_RIDE_REQUEST_WAS_SENT)
-                val transferCreateDateTimePair = Utils.getDateTimeTransferDetails(transfer.locale, transfer.createdAt, false)
+                val transferCreateDateTimePair = Utils.getDateTimeTransferDetails(systemInteractor.locale, transfer.createdAt, false)
                 tvRequestSentOrCompletedDate.text = transferCreateDateTimePair.first
                         .plus(" ${getString(R.string.LNG_TRANSFER_AT)} ")
                         .plus(transferCreateDateTimePair.second)
@@ -172,7 +173,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
             Transfer.STATUS_CATEGORY_FINISHED -> {
                 layoutRequestSentOrCompletedDate.isVisible = true
                 textRequestSentOrCompletedDate.text = getString(R.string.LNG_RIDE_REQUEST_WAS_SENT)
-                val transferCreateDateTimePair = Utils.getDateTimeTransferDetails(transfer.locale, transfer.createdAt, false)
+                val transferCreateDateTimePair = Utils.getDateTimeTransferDetails(systemInteractor.locale, transfer.createdAt, false)
                 tvRequestSentOrCompletedDate.text = transferCreateDateTimePair.first
                         .plus(" ${getString(R.string.LNG_TRANSFER_AT)} ")
                         .plus(transferCreateDateTimePair.second)

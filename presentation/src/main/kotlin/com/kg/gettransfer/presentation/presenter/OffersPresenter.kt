@@ -14,7 +14,8 @@ import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.ui.Utils
+
+import com.kg.gettransfer.presentation.ui.SystemUtils
 
 import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.Screens
@@ -75,16 +76,13 @@ class OffersPresenter: BasePresenter<OffersView>() {
                 router.exit()
             } else {
                 transfer = result.model
-                val transferModel = Mappers.getTransferModel(transfer,
-                                                             systemInteractor.locale,
-                                                             systemInteractor.distanceUnit,
-                                                             systemInteractor.transportTypes)
-                viewState.setDate(Utils.getFormattedDate(transferModel.locale, transferModel.dateTime))
+                val transferModel = Mappers.getTransferModel(transfer)
+                viewState.setDate(SystemUtils.formatDateTime(transferModel.dateTime))
                 viewState.setTransfer(transferModel)
 
                 val r = utils.asyncAwait{ offerInteractor.getOffers(result.model.id) }
                 if(r.error == null) {
-                    offers = r.model.map { Mappers.getOfferModel(it, systemInteractor.locale) }
+                    offers = r.model.map { Mappers.getOfferModel(it) }
                     //changeSortType(SORT_PRICE)
                     setOffers()
                 }
@@ -99,7 +97,7 @@ class OffersPresenter: BasePresenter<OffersView>() {
 
     fun onNewOffer(offer: Offer) {
         offerInteractor.newOffer(offer)
-        offers = offers.toMutableList().apply { add(Mappers.getOfferModel(offer, systemInteractor.locale)) }
+        offers = offers.toMutableList().apply { add(Mappers.getOfferModel(offer)) }
         utils.launchSuspend { setOffers() }
     }
 

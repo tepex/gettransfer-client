@@ -19,7 +19,7 @@ import org.koin.standalone.get
 /**
  * Map a [OfferEntity] to and from a [Offer] instance when data is moving between this later and the Domain layer.
  */
-open class OfferMapper: Mapper<OfferEntity, Offer> {
+open class OfferMapper : Mapper<OfferEntity, Offer> {
     private val priceMapper   = get<PriceMapper>()
     private val ratingsMapper = get<RatingsMapper>()
     private val carrierMapper = get<CarrierMapper>()
@@ -31,18 +31,21 @@ open class OfferMapper: Mapper<OfferEntity, Offer> {
      * Map a [OfferEntity] instance to a [Offer] instance.
      */
     override fun fromEntity(type: OfferEntity) =
-        Offer(type.id,
-              type.status,
-              type.wifi,
-              type.refreshments,
-              dateFormat.get().parse(type.createdAt),
-              type.updatedAt?.let { dateFormat.get().parse(it) },
-              priceMapper.fromEntity(type.price),
-              type.ratings?.let { ratingsMapper.fromEntity(it) },
-              type.passengerFeedback,
-              carrierMapper.fromEntity(type.carrier),
-              vehicleMapper.fromEntity(type.vehicle),
-              type.driver?.let { profileMapper.fromEntity(it) })
+        Offer(
+            type.id,
+            type.transferId,
+            type.status,
+            type.wifi,
+            type.refreshments,
+            dateFormat.get().parse(type.createdAt),
+            type.updatedAt?.let { dateFormat.get().parse(it) },
+            priceMapper.fromEntity(type.price),
+            type.ratings?.let { ratingsMapper.fromEntity(it) },
+            type.passengerFeedback,
+            carrierMapper.fromEntity(type.carrier),
+            vehicleMapper.fromEntity(type.vehicle),
+            type.driver?.let { profileMapper.fromEntity(it) }
+        )
 
     /**
      * Map a [Offer] instance to a [OfferEntity] instance.

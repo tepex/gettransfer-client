@@ -16,7 +16,9 @@ import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
+import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
+
 import com.kg.gettransfer.presentation.view.TransferDetailsView
 
 import com.kg.gettransfer.utilities.Analytics
@@ -25,7 +27,7 @@ import org.koin.standalone.inject
 import timber.log.Timber
 
 @InjectViewState
-class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
+class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
     private val routeInteractor: RouteInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
     private val offerInteractor: OfferInteractor by inject()
@@ -50,42 +52,42 @@ class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            if(result.error != null) viewState.setError(result.error!!)
+            if (result.error != null) viewState.setError(result.error!!)
             else {
-                transferModel = Mappers.getTransferModel(result.model,
-                                                         systemInteractor.locale,
-                                                         systemInteractor.distanceUnit,
-                                                         systemInteractor.transportTypes)
+                transferModel = Mappers.getTransferModel(result.model)
                 viewState.setTransfer(transferModel, Mappers.getProfileModel(systemInteractor.account.user.profile))
-                if(transferModel.checkOffers) {
+                if (transferModel.status.checkOffers) {
                     val r = utils.asyncAwait { offerInteractor.getOffers(result.model.id) }
-                    if(r.error == null && r.model.size == 1) viewState.setOffer(Mappers.getOfferModel(r.model.first(), systemInteractor.locale), transferModel.countChilds)
+                    if(r.error == null && r.model.size == 1) viewState.setOffer(Mappers.getOfferModel(r.model.first()), transferModel.countChilds)
                 }
 
-                if(result.model.to != null) {
+                if (result.model.to != null) {
                     val r = utils.asyncAwait { routeInteractor.getRouteInfo(result.model.from.point!!, result.model.to!!.point!!, true, false) }
-                    if(r.error == null) {
-                        routeModel = Mappers.getRouteModel(r.model.distance,
-                                                               systemInteractor.distanceUnit,
-                                                               r.model.polyLines,
-                                                               result.model.from.name!!,
-                                                               result.model.to!!.name!!,
-                                                               result.model.from.point!!,
-                                                               result.model.to!!.point!!,
-                                                               Utils.getFormattedDate(transferModel.locale, transferModel.dateTime))
+                    if (r.error == null) {
+                        routeModel = Mappers.getRouteModel(
+                            r.model.distance,
+                            r.model.polyLines,
+                            result.model.from.name!!,
+                            result.model.to!!.name!!,
+                            result.model.from.point!!,
+                            result.model.to!!.point!!,
+                            SystemUtils.formatDateTime(transferModel.dateTime)
+                        )
                         routeModel?.let {
                             polyline = Utils.getPolyline(it)
                             track = polyline!!.track
                             viewState.setRoute(polyline!!, it)
                         }
                     }
-                } else if(result.model.duration != null) {
+                } else if (result.model.duration != null) {
                     val point = LatLng(result.model.from.point!!.latitude, result.model.from.point!!.longitude)
                     track = Utils.getCameraUpdateForPin(point)
-                    viewState.setPinHourlyTransfer(transferModel.from,
-                                                   Utils.getFormattedDate(transferModel.locale, transferModel.dateTime),
-                                                   point,
-                                                   track!!)
+                    viewState.setPinHourlyTransfer(
+                        transferModel.from,
+                        SystemUtils.formatDateTime(transferModel.dateTime),
+                        point,
+                        track!!
+                    )
                 }
             }
             viewState.blockInterface(false)
@@ -99,11 +101,11 @@ class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
     }
 
     fun cancelRequest(isCancel: Boolean) {
-        if(!isCancel) return
+        if (!isCancel) return
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.cancelTransfer(transferId, "") }
-            if(result.error != null) {
+            if (result.error != null) {
                 Timber.e(result.error!!)
                 viewState.setError(result.error!!)
             } else viewState.recreateActivity()
@@ -112,10 +114,10 @@ class TransferDetailsPresenter: BasePresenter<TransferDetailsView>() {
     }
 
     fun makeFieldOperation(field: String, operation: String, text: String) {
-        when(operation) {
+        when (operation) {
             OPERATION_COPY -> viewState.copyText(text)
             OPERATION_OPEN -> {
-                when(field) {
+                when (field) {
                     FIELD_PHONE -> callPhone(text)
                     FIELD_EMAIL -> sendEmail(text)
                 }

@@ -11,7 +11,7 @@ import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.presentation.model.TransferModel
 
-import com.kg.gettransfer.presentation.ui.Utils
+import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 
 import kotlinx.android.extensions.LayoutContainer
@@ -39,14 +39,14 @@ class RequestsRVAdapter(
             tvFrom.text = item.from
             if (item.to != null) {
                 tvTo.text = item.to
-                tvDistance.text = Utils.formatDistance(context, item.distance, item.distanceUnit, true)
+                tvDistance.text = SystemUtils.formatDistance(context, item.distance, true)
             } else if(item.duration != null) {
                 rl_hourly_info.isVisible = true
                 tvMarkerTo.isVisible = false
                 tv_duration.text = HourlyValuesHelper.getValue(item.duration, context)
             }
             //tvOrderDateTime.text = context.getString(R.string.transfer_date_local, item.dateTime)
-            tvOrderDateTime.text = Utils.getFormattedDate(item.locale, item.dateTime)
+            tvOrderDateTime.text = SystemUtils.formatDateTime(item.dateTime)
             setOnClickListener { listener(item) }
         }
     }

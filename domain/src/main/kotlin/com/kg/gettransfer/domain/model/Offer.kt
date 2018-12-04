@@ -5,6 +5,7 @@ import java.util.Locale
 
 data class Offer(
     val id: Long,
+    val transferId: Long,
     val status: String,
     val wifi: Boolean,
     val refreshments: Boolean,

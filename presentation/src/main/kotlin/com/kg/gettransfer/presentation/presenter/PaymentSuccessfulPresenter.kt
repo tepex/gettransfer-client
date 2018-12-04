@@ -9,6 +9,7 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.TransferModel
 
+import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
@@ -46,12 +47,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             if (result.error != null) viewState.setError(result.error!!)
             else {
-                transferModel = Mappers.getTransferModel(
-                    result.model,
-                    systemInteractor.locale,
-                    systemInteractor.distanceUnit,
-                    systemInteractor.transportTypes
-                )
+                transferModel = Mappers.getTransferModel(result.model)
 
                 if (result.model.to != null) {
                     val r = utils.asyncAwait {
@@ -61,13 +57,12 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                     if (r.error == null) {
                         val routeModel = Mappers.getRouteModel(
                             r.model.distance,
-                            systemInteractor.distanceUnit,
                             r.model.polyLines,
                             result.model.from.name!!,
                             result.model.to!!.name!!,
                             result.model.from.point!!,
                             result.model.to!!.point!!,
-                            Utils.getFormattedDate(transferModel.locale, transferModel.dateTime)
+                            SystemUtils.formatDateTime(transferModel.dateTime)
                         )
                         viewState.setRoute(Utils.getPolyline(routeModel))
                     }
