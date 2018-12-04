@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 class RouteInfoModel(@SerializedName("success") @Expose val success: Boolean,
                      @SerializedName("distance") @Expose val distance: Int?,
-                     @SerializedName("hourlyDuration") @Expose val duration: Int?,
+                     @SerializedName("duration") @Expose val duration: Int?,
                      @SerializedName("prices") @Expose val prices: Map<String, TransportTypePriceModel>?,
                      @SerializedName("watertaxi") @Expose val watertaxi: Boolean,
                      @SerializedName("routes") @Expose val routes: List<RoutesModel>?)
