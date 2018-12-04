@@ -234,6 +234,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun setAgreeLicence(agreeLicence: Boolean) {
         user.termsAccepted = agreeLicence
+        systemInteractor.account.user.termsAccepted = true
         checkFields()
     }
 

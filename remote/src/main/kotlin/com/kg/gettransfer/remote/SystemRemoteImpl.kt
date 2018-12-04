@@ -36,11 +36,12 @@ class SystemRemoteImpl: SystemRemote {
     }
 
     override suspend fun setAccount(accountEntity: AccountEntity): AccountEntity {
-        val response: ResponseModel<AccountModelWrapper> = tryPutAccount(accountMapper.toRemote(accountEntity))
+        val response: ResponseModel<AccountModelWrapper> = tryPutAccount(AccountModelWrapper(accountMapper.toRemote(accountEntity)))
         return accountMapper.fromRemote(response.data?.account!!)
+
     }
 
-    private suspend fun tryPutAccount(account: AccountModel): ResponseModel<AccountModelWrapper> {
+    private suspend fun tryPutAccount(account: AccountModelWrapper): ResponseModel<AccountModelWrapper> {
         return try { core.api.putAccount(account).await() }
         catch(e: Exception) {
             if(e is RemoteException) throw e /* second invocation */

@@ -31,7 +31,7 @@ interface Api {
     fun getAccount(): Deferred<ResponseModel<AccountModelWrapper>>
 
     @PUT(API_ACCOUNT)
-    fun putAccount(@Body account: AccountModel): Deferred<ResponseModel<AccountModelWrapper>>
+    fun putAccount(@Body account: AccountModelWrapper): Deferred<ResponseModel<AccountModelWrapper>>
 
     /* If we are not signed in, don't post request to save account
     @POST("/api/account")
