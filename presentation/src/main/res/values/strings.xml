@@ -43,7 +43,7 @@
     <string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
     <string name="activity_carrier_transfer_details_title">Trip details</string> <!-- Title, which not used in new design -->
 
-    <string name="passenger_number_default">1</string>
+    <string name="passenger_number_default">0</string>
     <string name="child_number_default">0</string>
 
     <!-- old locales -->
@@ -723,6 +723,7 @@
     <string name="LNG_TRANSFER">Transfer</string>
     <string name="LNG_RIDE_REQUEST_FOR">Request for</string>
     <string name="LNG_RIDE_TRANSFER_CANCELLED">transfer cancelled</string>
+    <string name="LNG_ERROR_PASSENGERS">Number of passenger must be greater than zero</string>
     <string name="tag_read_more" translatable="false">read_more_dialog</string>
     <string name="email_support" translatable="false">error.report@gettransfer.com</string>
     <string name="LNG_EMAIL_SUBJECT">Get help</string>
@@ -731,5 +732,6 @@
     <string name="coming_soon">Coming soon</string>
     <string name="transfer_remain_time">Transfer will start in: %1$s</string>
     <string name="driver_not_number">Driver has not a phone number</string>
+
 
 </resources>

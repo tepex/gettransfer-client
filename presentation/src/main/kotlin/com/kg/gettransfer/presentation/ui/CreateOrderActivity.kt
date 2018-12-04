@@ -285,7 +285,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
 
     override fun setPassengers(count: Int) {
         passengers_seats.person_count.text = count.toString()
-        checkMinusButton(count, 1, passengers_seats.img_minus_seat)
+        checkMinusButton(count, 0, passengers_seats.img_minus_seat)
     }
     override fun setChildren(count: Int) {
         child_seats.person_count.text = count.toString()
@@ -351,10 +351,10 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         img_okResult.isVisible = false
     }
 
-    override fun showEmptyFieldError(invalidField: FieldError) {
+    override fun showEmptyFieldError(res: Int) {
         Utils.getAlertDialogBuilder(this).apply {
             setTitle(getString(R.string.LNG_RIDE_CANT_CREATE))
-            setMessage(getString(invalidField.stringId))
+            setMessage(getString(res))
             setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
             show()
         }

@@ -63,6 +63,7 @@ class Analytics(private val firebase: FirebaseAnalytics,
         @JvmField val INVALID_NAME          = "invalid_name"
         @JvmField val NO_TRANSPORT_TYPE     = "no_transport_type"
         @JvmField val LICENSE_NOT_ACCEPTED  = "license_not_accepted"
+        @JvmField val PASSENGERS_NOT_CHOSEN = "passengers"
         @JvmField val SERVER_ERROR          = "server_error"
 
         @JvmField val CURRENCY_PARAM = "currency"

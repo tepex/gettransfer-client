@@ -302,12 +302,13 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             !Utils.checkEmail(user.profile.email)   -> FieldError.EMAIL_FIELD
             !Utils.checkPhone(user.profile.phone!!) -> FieldError.PHONE_FIELD
             !transportTypes!!.any { it.checked }    -> FieldError.TRANSPORT_FIELD
+            passengers == 0                         -> FieldError.PASSENGERS_COUNT
             !user.termsAccepted                     -> FieldError.TERMS_ACCEPTED_FIELD
             else                                    -> FieldError.UNKNOWN
         }
         if (errorField == FieldError.UNKNOWN) return true
         logCreateTransfer(errorField.value)
-        viewState.showEmptyFieldError(errorField)
+        viewState.showEmptyFieldError(errorField.stringId)
         return false
     }
 
@@ -397,7 +398,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     companion object {
-        private const val MIN_PASSENGERS = 1
+        private const val MIN_PASSENGERS = 0
         private const val MIN_CHILDREN   = 0
     }
 }

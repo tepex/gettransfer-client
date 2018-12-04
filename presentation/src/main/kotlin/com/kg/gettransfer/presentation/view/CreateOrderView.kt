@@ -30,7 +30,7 @@ interface CreateOrderView: BaseView, RouteView {
     fun setGetTransferEnabled(enabled: Boolean)
     fun setPromoResult(discountInfo: String?)
     fun resetPromoView()
-    fun showEmptyFieldError(invalidField: FieldError)
+    fun showEmptyFieldError(res: Int)
     fun showNotLoggedAlert(withOfferId: Long)
 
     enum class FieldError(val value: String, @StringRes val stringId: Int) {
@@ -38,6 +38,7 @@ interface CreateOrderView: BaseView, RouteView {
         PHONE_FIELD(Analytics.INVALID_PHONE, R.string.LNG_RIDE_PHONE),
         TRANSPORT_FIELD(Analytics.NO_TRANSPORT_TYPE, R.string.LNG_RIDE_CHOOSE_TRANSPORT),
         TERMS_ACCEPTED_FIELD(Analytics.LICENSE_NOT_ACCEPTED, R.string.LNG_RIDE_OFFERT_ERROR),
+        PASSENGERS_COUNT(Analytics.PASSENGERS_NOT_CHOSEN, R.string.LNG_ERROR_PASSENGERS),
         UNKNOWN("no_param", R.string.LNG_RIDE_CANT_CREATE);
     }
 
