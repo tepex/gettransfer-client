@@ -62,7 +62,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
 
     override fun setRemainTime(days: Int, hours: Int, minutes: Int) {
         val time = "$days d $hours h $minutes m"
-        dialogView.tvRemainTime.text = getString(R.string.transfer_remain_time, time)
+        dialogView.tvRemainTime.text = getString(R.string.LNG_TRANSFER_WILL_START).plus(": $time")
     }
 
     companion object {
