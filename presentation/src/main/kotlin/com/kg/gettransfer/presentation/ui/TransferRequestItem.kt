@@ -25,11 +25,11 @@ class TransferRequestItem @JvmOverloads constructor(
     fun setInfo(item: TransferModel){
         tvTransferRequestNumber.text = context.getString(R.string.LNG_RIDE_NUMBER).plus(item.id)
         tvTransferRequestStatus.text = when(item.status){
-            Transfer.STATUS_NEW -> {
+            Transfer.Status.NEW -> {
                 if(item.offersCount > 0) context.getString(R.string.LNG_BOOK_OFFER)
                 else context.getString(R.string.LNG_WAIT_FOR_OFFERS)
             }
-            Transfer.STATUS_PERFORMED -> {
+            Transfer.Status.PERFORMED -> {
                 if(item.dateTime.after(Calendar.getInstance().time)) context.getString(R.string.LNG_TRANSFER_WILL_START)
                         .plus("")
                         .plus(Utils.durationToString(context, Utils.convertDuration(item.timeToTransfer)))
@@ -41,20 +41,20 @@ class TransferRequestItem @JvmOverloads constructor(
         }
         tvTransferRequestStatus.setTextColor(ContextCompat.getColor(context,
                 when(item.status){
-                    Transfer.STATUS_OUTDATED -> R.color.color_transfer_details_text_red
-                    Transfer.STATUS_PERFORMED -> R.color.color_transfer_details_text_green
+                    Transfer.Status.OUTDATED -> R.color.color_transfer_details_text_red
+                    Transfer.Status.PERFORMED -> R.color.color_transfer_details_text_green
                     else -> R.color.colorTransferRequestText
                 }))
         tvFrom.text = item.from
         if (item.to != null) {
             tvTo.text = item.to
-            tvDistance.text = Utils.formatDistance(context, item.distance, item.distanceUnit, true)
+            tvDistance.text = SystemUtils.formatDistance(context, item.distance, true)
             changeViewForHourlyTransfer(false)
         } else if(item.duration != null) {
             changeViewForHourlyTransfer(true)
             tv_duration.text = HourlyValuesHelper.getValue(item.duration, context)
         }
-        tvOrderDateTime.text = Utils.getFormattedDate(item.locale, item.dateTime)
+        tvOrderDateTime.text = SystemUtils.formatDateTime(item.dateTime)
     }
 
     private fun changeViewForHourlyTransfer(isHourlyTransfer: Boolean){
