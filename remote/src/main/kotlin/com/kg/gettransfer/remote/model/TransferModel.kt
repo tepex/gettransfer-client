@@ -29,17 +29,17 @@ class TransferModel(@SerializedName(TransferEntity.ID) @Expose val id: Long,
                     @SerializedName(TransferEntity.RELEVANT_CARRIERS_COUNT) @Expose val relevantCarriersCount: Int,
                     @SerializedName(TransferEntity.OFFERS_UPDATED_AT) @Expose val offersUpdatedAt: String? = null,
 
-                    @SerializedName(TransferEntity.TIME) val time: Int,
-                    @SerializedName(TransferEntity.PAID_SUM) val paidSum: MoneyModel?,
-                    @SerializedName(TransferEntity.REMAINS_TO_PAY) val remainsToPay: MoneyModel?,
-                    @SerializedName(TransferEntity.PAID_PERCENTAGE) val paidPercentage: Int,
-                    @SerializedName(TransferEntity.PENDING_PAYMENT_ID) val pendingPaymentId: Int?,
-                    @SerializedName(TransferEntity.BOOK_NOW) val bookNow: Boolean,
-                    @SerializedName(TransferEntity.BOOK_NOW_EXPIRATION) val bookNowExpiration: String?,
-                    @SerializedName(TransferEntity.TRANSPORT_TYPE_IDS) val transportTypeIds: List<String>,
-                    @SerializedName(TransferEntity.PASSENGER_OFFERED_PRICE) val passengerOfferedPrice: String?, // Can be Null!!!
-                    @SerializedName(TransferEntity.PRICE) val price: MoneyModel?, // Can be Null!!!
-                    @SerializedName(TransferEntity.PAYMENT_PERCENTAGES) val paymentPercentages: List<Int>,
+                    @SerializedName(TransferEntity.TIME) @Expose val time: Int,
+                    @SerializedName(TransferEntity.PAID_SUM) @Expose val paidSum: MoneyModel?,
+                    @SerializedName(TransferEntity.REMAINS_TO_PAY) @Expose val remainsToPay: MoneyModel?,
+                    @SerializedName(TransferEntity.PAID_PERCENTAGE) @Expose val paidPercentage: Int,
+                    @SerializedName(TransferEntity.PENDING_PAYMENT_ID) @Expose val pendingPaymentId: Int?,
+                    @SerializedName(TransferEntity.BOOK_NOW) @Expose val bookNow: Boolean,
+                    @SerializedName(TransferEntity.BOOK_NOW_EXPIRATION) @Expose val bookNowExpiration: String?,
+                    @SerializedName(TransferEntity.TRANSPORT_TYPE_IDS) @Expose val transportTypeIds: List<String>,
+                    @SerializedName(TransferEntity.PASSENGER_OFFERED_PRICE) @Expose val passengerOfferedPrice: String?, // Can be Null!!!
+                    @SerializedName(TransferEntity.PRICE) @Expose val price: MoneyModel?, // Can be Null!!!
+                    @SerializedName(TransferEntity.PAYMENT_PERCENTAGES) @Expose val paymentPercentages: List<Int>,
 
                     @SerializedName(TransferEntity.EDITABLE_FIELDS) @Expose val editableFields: List<String>)
 
