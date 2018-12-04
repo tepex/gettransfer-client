@@ -174,8 +174,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun changeCurrency(selected: Int) {
-        selectedCurrency = selected
-        viewState.setCurrency(currencies[selected].symbol)
+        if (currencies.isNotEmpty()) {
+            selectedCurrency = selected
+            viewState.setCurrency(currencies[selected].symbol)
+        }
     }
 
     fun changePassengers(count: Int) {
