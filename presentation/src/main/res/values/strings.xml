@@ -257,7 +257,7 @@
     <string name="LNG_TIME_RIDE">Hourly transfer</string>
     <string name="LNG_WAIT_FOR_OFFERS">Please wait for offers</string>
     <string name="LNG_BOOK_OFFER">Please book car and driver</string>
-    <string name="LNG_TRANSFER_WAS">Transfer was</string>
+    <string name="LNG_TRANSFER_WAS">Transfer</string>
     <string name="LNG_TRANSFER_WILL_START">Transfer will start in</string>
     <string name="LNG_PENDING_PAYMENT">Transfer payment pending</string>
     <string name="LNG_RIDE_NUMBER">Transfer request #</string>
@@ -326,10 +326,10 @@
     <string name="LNG_RIDE_STATUS_PERFORMED">Performed</string>
     <string name="LNG_RIDE_STATUS_COMPLETED">Completed</string>
     <string name="LNG_RIDE_STATUS_CANCELED">Canceled</string>
-    <string name="LNG_RIDE_STATUS_NOTCOMPLETED">Not completed</string>
+    <string name="LNG_RIDE_STATUS_NOT_COMPLETED">Not completed</string>
     <string name="LNG_RIDE_STATUS_REJECTED">Rejected</string>
     <string name="LNG_RIDE_STATUS_DRAFT">Draft</string>
-    <string name="LNG_RIDE_STATUS_PENDING">Pending</string>
+    <string name="LNG_RIDE_STATUS_PENDING_CONFIRMATION">Pending</string>
     <string name="LNG_RIDE_STATUS_OUTDATED">Outdated</string>
     <string name="LNG_RIDE_OFFER_NEW">New</string>
     <string name="LNG_RIDE_OFFER_PERFORMED">Performed</string>

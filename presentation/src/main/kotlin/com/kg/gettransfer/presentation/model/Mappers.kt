@@ -140,12 +140,7 @@ object Mappers : KoinComponent {
 
     @StringRes
     fun getTransferStatusName(status: Transfer.Status): Int? {
-        val nameId = when(status){
-            Transfer.Status.PENDING_CONFIRMATION -> Transfer.STATUS_PENDING_ID_IN_RES
-            Transfer.Status.NOT_COMPLETED -> Transfer.STATUS_NOTCOMPLETED_ID_IN_RES
-            else -> status.name
-        }
-        val nameRes = R.string::class.members.find( { it.name == "LNG_RIDE_STATUS_${nameId.toUpperCase()}" } )
+        val nameRes = R.string::class.members.find( { it.name == "LNG_RIDE_STATUS_${status.name.toUpperCase()}" } )
         return (nameRes?.call() as Int?)
     }
 
