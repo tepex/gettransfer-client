@@ -25,8 +25,7 @@ class TransferRequestItem @JvmOverloads constructor(
         defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr), LayoutContainer {
 
-        // override val containerView = LayoutInflater.from(context).inflate(R.layout.view_transfer_request_info, this, true)
-    override val containerView = LayoutInflater.from(context).inflate(R.layout.view_transfer_details_field, this, true)
+    override val containerView = LayoutInflater.from(context).inflate(R.layout.view_transfer_request_info, this, true)
 
     fun setInfo(item: TransferModel) {
         tvTransferRequestNumber.text = context.getString(R.string.LNG_RIDE_NUMBER).plus(item.id)

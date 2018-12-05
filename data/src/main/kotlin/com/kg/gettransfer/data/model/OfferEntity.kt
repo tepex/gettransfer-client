@@ -9,7 +9,7 @@ import kotlinx.serialization.SerialName
 @Serializable
 data class OfferEntity(
     @SerialName(ID) val id: Long,
-    @SerialName(TRANSFER_ID) val transferId: Long,
+    @Optional @SerialName(TRANSFER_ID) var transferId: Long? = null,
     @SerialName(STATUS) val status: String,
     @SerialName(WIFI) val wifi: Boolean,
     @SerialName(REFRESHMENTS) val refreshments: Boolean,
