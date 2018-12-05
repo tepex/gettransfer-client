@@ -2,8 +2,6 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Intent
 
-import android.net.Uri
-
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
@@ -20,6 +18,8 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.extensions.*
+
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.DistanceUnitModel
 import com.kg.gettransfer.presentation.model.EndpointModel
@@ -34,14 +34,15 @@ import kotlinx.android.synthetic.main.toolbar.view.*
 
 import timber.log.Timber
 
-class SettingsActivity: BaseActivity(), SettingsView {
+class SettingsActivity : BaseActivity(), SettingsView {
+
     @InjectPresenter
     internal lateinit var presenter: SettingsPresenter
-    
+
     @ProvidePresenter
     fun createSettingsPresenter() = SettingsPresenter()
-    
-	override fun getPresenter(): SettingsPresenter = presenter
+
+    override fun getPresenter(): SettingsPresenter = presenter
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,17 +51,17 @@ class SettingsActivity: BaseActivity(), SettingsView {
         setContentView(R.layout.activity_settings)
 
         setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_SETTINGS)
-        
+
         btnSignOut.setOnClickListener { presenter.onLogout() }
         layoutSettingsLogs.setOnClickListener { presenter.onLogsClicked() }
         layoutSettingsResetOnboarding.setOnClickListener { presenter.onResetOnboardingClicked() }
-        btnSupport.setOnClickListener { sendEmail() }
+        btnSupport.setOnClickListener { presenter.sendEmail(null) }
 
         //Not showing some layouts in release
-        if(BuildConfig.FLAVOR != "dev") {
-            layoutSettingsEndpoint.visibility = View.GONE
-            layoutSettingsLogs.visibility = View.GONE
-            layoutSettingsResetOnboarding.visibility = View.GONE
+        if (BuildConfig.FLAVOR != "dev") {
+            layoutSettingsEndpoint.isVisible = false
+            layoutSettingsLogs.isVisible = false
+            layoutSettingsResetOnboarding.isVisible = false
         }
     }
 
@@ -85,7 +86,7 @@ class SettingsActivity: BaseActivity(), SettingsView {
     override fun setEndpoint(endpoint: EndpointModel)  { tvSelectedEndpoint.text = endpoint.name }
 
     override fun setLogoutButtonEnabled(enabled: Boolean) {
-        if(enabled) btnSignOut.visibility = View.VISIBLE else btnSignOut.visibility = View.GONE
+        btnSignOut.isVisible = enabled
     }
 
     override fun restartApp() {
@@ -94,18 +95,5 @@ class SettingsActivity: BaseActivity(), SettingsView {
             startActivity(it)
         }
         finish()
-    }
-
-    private fun sendEmail() {
-        val emailIntent = Intent(Intent.ACTION_SENDTO)
-        emailIntent.type = "message/rfc822"
-        emailIntent.data = Uri.parse("mailto:")
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.email_support)))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.LNG_EMAIL_SUBJECT))
-        try {
-            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)))
-        } catch (ex: android.content.ActivityNotFoundException) {
-            Utils.showShortToast(this, getString(R.string.no_email_apps))
-        }
     }
 }

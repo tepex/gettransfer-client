@@ -63,6 +63,10 @@ class SystemInteractor(private val systemRepository: SystemRepository,
         get() = systemRepository.lastMode
         set(value) { systemRepository.lastMode = value }
 
+    var isFirstLaunch: Boolean
+        get() = systemRepository.isFirstLaunch
+        set(value) { systemRepository.isFirstLaunch = value }
+
     var isOnboardingShowed: Boolean
         get() = systemRepository.isOnboardingShowed
         set(value) { systemRepository.isOnboardingShowed = value }

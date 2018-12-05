@@ -44,7 +44,6 @@ class Analytics(private val firebase: FirebaseAnalytics,
         @JvmField val TRANSFER_CLICKED   = "transfers"
         @JvmField val LOGIN_CLICKED      = "login"
 
-        //other buttons log params
         @JvmField val MY_PLACE_CLICKED      = "my_place"
         @JvmField val SHOW_ROUTE_CLICKED    = "show_route"
         @JvmField val CAR_INFO_CLICKED      = "car_info"
@@ -57,12 +56,14 @@ class Analytics(private val firebase: FirebaseAnalytics,
         @JvmField val OFFER_DETAILS         = "offer_details"
         @JvmField val OFFER_DETAILS_RATING  = "offer_details_rating"
         @JvmField val OFFER_BOOK            = "offer_book"
+        @JvmField val CANCEL_TRANSFER_BTN   = "cancel_transfer_btn"
 
         @JvmField val INVALID_EMAIL         = "invalid_email"
         @JvmField val INVALID_PHONE         = "invalid_phone"
         @JvmField val INVALID_NAME          = "invalid_name"
         @JvmField val NO_TRANSPORT_TYPE     = "no_transport_type"
         @JvmField val LICENSE_NOT_ACCEPTED  = "license_not_accepted"
+        @JvmField val PASSENGERS_NOT_CHOSEN = "passengers"
         @JvmField val SERVER_ERROR          = "server_error"
 
         @JvmField val CURRENCY_PARAM = "currency"

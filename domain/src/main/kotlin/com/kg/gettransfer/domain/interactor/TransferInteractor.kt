@@ -14,17 +14,17 @@ class TransferInteractor(private val repository: TransferRepository) {
     private var activeTransfers: List<Transfer>? = null
     private var completedTransfers: List<Transfer>? = null
     private var archivedTransfers: List<Transfer>? = null
-    
+
     suspend fun createTransfer(transferNew: TransferNew): Result<Transfer> {
         this.transferNew = transferNew
         return repository.createTransfer(transferNew)
     }
     suspend fun getTransfer(id: Long) = repository.getTransfer(id).apply { if(!isError()) transfer = model }
-    
+
     suspend fun cancelTransfer(id: Long, reason: String) = repository.cancelTransfer(id, reason)
         /*val cancelledTransfer = repository.cancelTransfer(transfer!!.id, reason)
         if(allTransfers != null) allTransfers!!.map { if(it.id == transfer!!.id) it.status = cancelledTransfer.status }*/
-        
+
     suspend fun getAllTransfers() = repository.getAllTransfers().apply { if(!isError() && allTransfers == null) allTransfers = model}
 
     fun deleteAllTransfersList() { allTransfers = null }
@@ -34,10 +34,10 @@ class TransferInteractor(private val repository: TransferRepository) {
         val result = getAllTransfers()
         if(result.isError()) return result
         activeTransfers = result.model.filter {
-                it.status == Transfer.STATUS_NEW ||
-                it.status == Transfer.STATUS_DRAFT ||
-                it.status == Transfer.STATUS_PERFORMED ||
-                it.status == Transfer.STATUS_PENDING
+                it.status == Transfer.Status.NEW ||
+                it.status == Transfer.Status.DRAFT ||
+                it.status == Transfer.Status.PERFORMED ||
+                it.status == Transfer.Status.PENDING_CONFIRMATION
         }
         return Result(allTransfers!!)
     }
@@ -47,8 +47,8 @@ class TransferInteractor(private val repository: TransferRepository) {
         val result = getAllTransfers()
         if(result.isError()) return result
         completedTransfers = result.model.filter {
-                it.status == Transfer.STATUS_COMPLETED ||
-                it.status == Transfer.STATUS_NOT_COMPLETED
+                it.status == Transfer.Status.COMPLETED ||
+                it.status == Transfer.Status.NOT_COMPLETED
             }
         return Result(completedTransfers!!)
     }
@@ -58,12 +58,12 @@ class TransferInteractor(private val repository: TransferRepository) {
         val result = getAllTransfers()
         if(result.isError()) return result
         archivedTransfers = result.model.filter {
-                    it.status != Transfer.STATUS_COMPLETED ||
-                    it.status != Transfer.STATUS_NOT_COMPLETED
+                    it.status != Transfer.Status.COMPLETED ||
+                    it.status != Transfer.Status.NOT_COMPLETED
         }
         return Result(archivedTransfers!!)
     }
-    
+
     /*private fun insertNewTransfer() {
         if(allTransfers == null || transfer == null || allTransfers!!.firstOrNull()?.id == transfer!!.id) return
         val mutableList = allTransfers!!.toMutableList()

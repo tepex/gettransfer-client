@@ -28,27 +28,27 @@ import org.koin.standalone.inject
 import timber.log.Timber
 
 @InjectViewState
-class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
+class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
     companion object {
-        @JvmField val PRICE_30         = 0.3
+        @JvmField val PRICE_30 = 0.3
     }
-    
+
     private val offerInteractor: OfferInteractor by inject()
     private val paymentInteractor: PaymentInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
-    
+
     private var offer: Offer? = null
     internal lateinit var params: PaymentSettingsView.Params
-    
+
     private lateinit var paymentRequest: PaymentRequestModel
-    
+
     @CallSuper
     override fun attachView(view: PaymentSettingsView?) {
         super.attachView(view)
         offer = offerInteractor.getOffer(params.offerId)
         offer?.let {
             paymentRequest = PaymentRequestModel(params.transferId, params.offerId)
-            viewState.setOffer(Mappers.getOfferModel(it, systemInteractor.locale))
+            viewState.setOffer(Mappers.getOfferModel(it), params.paymentPercentages)
             return
         }
         viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${params.offerId}] not found!"))
@@ -64,7 +64,7 @@ class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
 
     fun getPayment() = utils.launchSuspend {
         viewState.blockInterface(true)
-            
+
         val result = utils.asyncAwait { paymentInteractor.getPayment(Mappers.getPaymentRequest(paymentRequest)) }
         if(result.error != null) {
             Timber.e(result.error!!)
@@ -75,7 +75,7 @@ class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
         }
         viewState.blockInterface(false)
     }
-    
+
     private fun logEventBeginCheckout() {
         val bundle = Bundle()
         val map = mutableMapOf<String, Any?>()

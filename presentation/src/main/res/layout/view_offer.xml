@@ -138,7 +138,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:srcCompat="@drawable/ic_like_button"
-                        android:layout_marginStart="@dimen/view_offer_image_like_margin_start"/>
+                        android:layout_marginStart="@dimen/view_offer_image_like_margin_start"
+                        android:visibility="gone"/>
 
                 </LinearLayout>
 

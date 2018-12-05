@@ -29,7 +29,7 @@ class CarrierTripsPresenter: BasePresenter<CarrierTripsView>() {
             val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrips() }
             if(result.error != null) viewState.setError(result.error!!)
             else {
-                trips = result.model.map { Mappers.getCarrierTripModel(it, systemInteractor.locale, systemInteractor.distanceUnit) }
+                trips = result.model.map { Mappers.getCarrierTripModel(it) }
                 viewState.initNavigation(Mappers.getProfileModel(systemInteractor.account.user.profile))
                 viewState.setTrips(trips!!)
             }

@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import android.util.Patterns
 
@@ -31,9 +30,11 @@ import com.kg.gettransfer.presentation.model.TransportPrice
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.UserModel
 
+import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.CreateOrderView
+import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
@@ -49,7 +50,7 @@ import org.koin.standalone.inject
 import timber.log.Timber
 
 @InjectViewState
-class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
+class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val routeInteractor: RouteInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
     private val promoInteractor: PromoInteractor by inject()
@@ -58,15 +59,14 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     private var user: UserModel = Mappers.getUserModel(systemInteractor.account)
     private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
     private var duration: Int? = null
-    private var passengers: Int = MIN_PASSENGERS
-    private var children: Int = MIN_CHILDREN
-    private var dateTimeFormat: Format? = null
+    private var passengers = MIN_PASSENGERS
+    private var children = MIN_CHILDREN
     private var transportTypes: List<TransportTypeModel>? = null
     private var routeModel: RouteModel? = null
     private var polyline: PolylineModel? = null
     private var track: CameraUpdate? = null
-    private var promoCode: String = ""
-    private var selectedCurrency: Int = -2
+    private var promoCode = ""
+    private var selectedCurrency = -2
 
     internal var cost: Double? = null
 
@@ -75,31 +75,11 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     internal var date: Date = Date()
         set(value) {
             field = value
-            dateTimeFormat?.let { viewState.setDateTimeTransfer(it.format(date), isAfter4Hours) }
+            viewState.setDateTimeTransfer(SystemUtils.formatDateTime(date), isAfter4Hours)
         }
 
     private var flightNumber: String? = null
     private var comment: String? = null
-
-    companion object {
-        @JvmField val MIN_PASSENGERS    = 1
-        @JvmField val MIN_CHILDREN      = 0
-        /* Пока сервевер не присылает минимальный временной промежуток до заказа */
-        @JvmField val FUTURE_HOUR       = 4
-        @JvmField val FUTURE_MINUTE     = 5
-
-        const val EMAIL_FIELD           = "email"
-        const val PHONE_FIELD           = "phone"
-        const val TRANSPORT_FIELD       = "transport"
-        const val TERMS_ACCEPTED_FIELD  = "terms_accepted"
-
-        //CreateTransfer Params:
-        @JvmField val NO_TRANSPORT_SELECTED = "no_transport_type"
-        @JvmField val NO_EMAIL = "invalid_email"
-        @JvmField val NO_PHONE = "invalid_phone"
-        @JvmField val NO_NAME  = "invalid_name"
-        @JvmField val NO_LICENSE_ACCEPTED = "license_not_accepted"
-    }
 
     override fun onFirstViewAttach() {
         currentDate = getCurrentDatePlus4Hours()
@@ -109,15 +89,14 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     private fun getCurrentDatePlus4Hours(): Calendar {
         val calendar = Calendar.getInstance(systemInteractor.locale)
         /* Server must send current locale time */
-        calendar.add(Calendar.HOUR_OF_DAY, FUTURE_HOUR)
-        calendar.add(Calendar.MINUTE, FUTURE_MINUTE)
+        calendar.add(Calendar.HOUR_OF_DAY, CreateOrderView.FUTURE_HOUR)
+        calendar.add(Calendar.MINUTE, CreateOrderView.FUTURE_MINUTE)
         return calendar
     }
 
     fun initMapAndPrices() {
-
         routeInteractor.apply {
-            if (from == null || (to == null && hourlyDuration == null)){
+            if (from == null || (to == null && hourlyDuration == null)) {
                 Timber.d("routerInteractor init error. from: $from, to: $to, duration: $hourlyDuration")
                 return
             }
@@ -133,22 +112,21 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
             val to = routeInteractor.to!!.cityPoint
 
             val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
-            if(result.error != null) viewState.setError(result.error!!)
+            if (result.error != null) viewState.setError(result.error!!)
             else {
                 duration = result.model.duration
 
                 val prices: Map<String, TransportPrice> = result.model.prices.map { p -> p.tranferId to TransportPrice(p.min, p.max, p.minFloat) }.toMap()
-                if(transportTypes == null)
+                if (transportTypes == null)
                     transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
                 viewState.setTransportTypes(transportTypes!!)
                 routeModel = Mappers.getRouteModel(result.model.distance,
-                                                   systemInteractor.distanceUnit,
                                                    result.model.polyLines,
                                                    from.name!!,
                                                    to.name!!,
                                                    from.point!!,
                                                    to.point!!,
-                                                   SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date))
+                                                   SystemUtils.formatDateTime(date))
             }
             routeModel?.let {
                 polyline = Utils.getPolyline(it)
@@ -163,7 +141,9 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, null) }
         viewState.setTransportTypes(transportTypes!!)
         routeInteractor.from!!.let {
-            viewState.setPinHourlyTransfer(it.address?:"", it.primary?:"", it.cityPoint.point.let { p -> LatLng(p!!.latitude, p.longitude) } ) }
+            val point = it.cityPoint.point.let { p -> LatLng(p!!.latitude, p.longitude) }
+            track = Utils.getCameraUpdateForPin(point)
+            viewState.setPinHourlyTransfer(it.address ?: "", it.primary ?: "", point, track!!) }
     }
 
     fun changeDate(newDate: Date) {
@@ -176,7 +156,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
             date = currentDate.time
         }
         routeModel?.let {
-            it.dateTime = SimpleDateFormat(Utils.DATE_TIME_PATTERN).format(date)
+            it.dateTime = SystemUtils.formatDateTime(date)
             viewState.setRoute(polyline!!, it, true)
         }
     }
@@ -184,24 +164,25 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
     @CallSuper
     override fun attachView(view: CreateOrderView) {
         super.attachView(view)
-        dateTimeFormat = SimpleDateFormat(Utils.DATE_TIME_PATTERN, systemInteractor.locale)
         viewState.setCurrencies(currencies)
         val i = systemInteractor.currentCurrencyIndex
-        if(i != -1) changeCurrency(i)
+        if (i != -1) changeCurrency(i)
 
         viewState.setUser(user, systemInteractor.account.user.loggedIn)
-        viewState.setDateTimeTransfer(Utils.getFormattedDate(systemInteractor.locale, date), isAfter4Hours)
+        viewState.setDateTimeTransfer(SystemUtils.formatDateTime(date), isAfter4Hours)
         transportTypes?.let { viewState.setTransportTypes(it) }
     }
 
     fun changeCurrency(selected: Int) {
-        selectedCurrency = selected
-        viewState.setCurrency(currencies[selected].symbol)
+        if (selected < currencies.size) {
+            selectedCurrency = selected
+            viewState.setCurrency(currencies[selected].symbol)
+        }
     }
 
     fun changePassengers(count: Int) {
         passengers += count
-        if(passengers < MIN_PASSENGERS) passengers = MIN_PASSENGERS
+        if (passengers < MIN_PASSENGERS) passengers = MIN_PASSENGERS
         viewState.setPassengers(passengers)
         logTransferSettingsEvent(Analytics.PASSENGERS_ADDED)
     }
@@ -223,39 +204,39 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
 
     fun changeChildren(count: Int) {
         children += count
-        if(children < MIN_CHILDREN) children = MIN_CHILDREN
+        if (children < MIN_CHILDREN) children = MIN_CHILDREN
         viewState.setChildren(children)
         logTransferSettingsEvent(Analytics.CHILDREN_ADDED)
     }
 
     fun setFlightNumber(flightNumber: String) {
-        if(flightNumber.isEmpty()) this.flightNumber = null else this.flightNumber = flightNumber
+        if (flightNumber.isEmpty()) this.flightNumber = null else this.flightNumber = flightNumber
         logTransferSettingsEvent(Analytics.FLIGHT_NUMBER_ADDED)
     }
 
     fun setPromo(codeText: String) {
         promoCode = codeText
-        if(codeText.isEmpty()) viewState.resetPromoView()
+        if (codeText.isEmpty()) viewState.resetPromoView()
     }
 
     fun checkPromoCode() {
-        if(promoCode.isEmpty()) return
+        if (promoCode.isEmpty()) return
         utils.launchSuspend {
             viewState.blockInterface(true)
             val result = utils.asyncAwait { promoInteractor.getDiscountByPromo(promoCode) }
-            if(result.error == null) viewState.setPromoResult(result.model.discount)
-            else viewState.setPromoResult(null)
+            if (result.error == null) viewState.setPromoResult(result.model.discount) else viewState.setPromoResult(null)
             viewState.blockInterface(false)
         }
     }
 
     fun setComment(comment: String) {
-        if(comment.isEmpty()) this.comment = null else this.comment = comment
+        if (comment.isEmpty()) this.comment = null else this.comment = comment
         viewState.setComment(comment)
     }
 
     fun setAgreeLicence(agreeLicence: Boolean) {
         user.termsAccepted = agreeLicence
+        systemInteractor.account.user.termsAccepted = true
         checkFields()
     }
 
@@ -263,9 +244,9 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
 
     fun onGetTransferClick() {
         currentDate = getCurrentDatePlus4Hours()
-        if(currentDate.time.after(date)) date = currentDate.time
+        if (currentDate.time.after(date)) date = currentDate.time
 
-        if(!checkFieldsForRequest()) return
+        if (!checkFieldsForRequest()) return
 
         val trip = Trip(date, flightNumber)
         /* filter */
@@ -305,40 +286,38 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
             }
 
             val logResult = utils.asyncAwait { systemInteractor.putAccount() }
-            if(result.error == null && logResult.error == null) {
+            if (result.error == null && logResult.error == null) {
                 logCreateTransfer(Analytics.RESULT_SUCCESS)
                 router.replaceScreen(Screens.Offers(result.model.id))
-            } else if(result.error != null) {
+            } else if (result.error != null) {
                 logCreateTransfer(Analytics.SERVER_ERROR)
                 when {
                     result.error!!.details == "{phone=[taken]}" -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
                     else -> viewState.setError(result.error!!)
                 }
-            } else if(logResult.error != null) viewState.showNotLoggedAlert(result.model.id)
+            } else if (logResult.error != null) viewState.showNotLoggedAlert(result.model.id)
             viewState.blockInterface(false)
         }
     }
 
     private fun checkFieldsForRequest(): Boolean {
-        val errorFiled: String
-        if (!Utils.checkEmail(user.profile.email)) {
-            errorFiled = EMAIL_FIELD
-        } else if (!Utils.checkPhone(user.profile.phone!!)) {
-            errorFiled = PHONE_FIELD
-        } else if (transportTypes != null &&
-                !transportTypes!!.any { it.checked }) {
-            errorFiled = TRANSPORT_FIELD
-        } else if (!user.termsAccepted) {
-            errorFiled = TERMS_ACCEPTED_FIELD
-        } else return true
-        logCreateTransfer(Mappers.getAnalyticsParam(errorFiled))
-        viewState.showEmptyFieldError(errorFiled)
+        val errorField = when {
+            !Utils.checkEmail(user.profile.email)   -> FieldError.EMAIL_FIELD
+            !Utils.checkPhone(user.profile.phone!!) -> FieldError.PHONE_FIELD
+            !transportTypes!!.any { it.checked }    -> FieldError.TRANSPORT_FIELD
+            passengers == 0                         -> FieldError.PASSENGERS_COUNT
+            !user.termsAccepted                     -> FieldError.TERMS_ACCEPTED_FIELD
+            else                                    -> FieldError.UNKNOWN
+        }
+        if (errorField == FieldError.UNKNOWN) return true
+        logCreateTransfer(errorField.value)
+        viewState.showEmptyFieldError(errorField.stringId)
         return false
     }
 
     /* @TODO: Добавить реакцию на некорректное значение в поле. Отображать, где и что введено некорректно. */
     private fun checkFields() {
-        if(transportTypes == null) return
+        if (transportTypes == null) return
         val typesHasSelected = transportTypes!!.any { it.checked }
         val actionEnabled = typesHasSelected &&
                             Patterns.EMAIL_ADDRESS.matcher(user.profile.email!!).matches() &&
@@ -352,10 +331,10 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         try {
             val tripTime = String.format("%d:%d", duration!! / 60, duration!! % 60)
             val checkedTransport = transportTypes?.filter { it.checked }
-            if(!checkedTransport.isNullOrEmpty())
+            if (!checkedTransport.isNullOrEmpty())
                 viewState.setFairPrice(checkedTransport.minBy { it.price!!.unitPrice }?.price!!.min, tripTime)
             else viewState.setFairPrice(null, null)
-        } catch(e: KotlinNullPointerException) { viewState.setFairPrice(null, null) }
+        } catch (e: KotlinNullPointerException) { viewState.setFairPrice(null, null) }
     }
 
     fun onCenterRouteClick() {
@@ -371,7 +350,7 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         logEventMain(Analytics.BACK_CLICKED)
     }
 
-    fun redirectToLogin(id: Long) = router.navigateTo(Screens.LoginToGetOffers(id, user.profile.email))
+    fun redirectToLogin(id: Long) = router.replaceScreen(Screens.LoginToGetOffers(id, user.profile.email))
 
     fun logEventMain(value: String) {
         val map = mutableMapOf<String, Any>()
@@ -419,5 +398,10 @@ class CreateOrderPresenter: BasePresenter<CreateOrderView>() {
         map[Analytics.TRAVEL_CLASS] = transportTypes?.filter { it.checked }?.joinToString()
 
         analytics.logEvent(Analytics.EVENT_ADD_TO_CART, bundle, map)
+    }
+
+    companion object {
+        private const val MIN_PASSENGERS = 0
+        private const val MIN_CHILDREN   = 0
     }
 }

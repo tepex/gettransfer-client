@@ -16,11 +16,12 @@ import org.koin.standalone.get
 class OfferRemoteImpl: OfferRemote {
     private val core   = get<ApiCore>()
     private val mapper = get<OfferMapper>()
-    
+
     override suspend fun getOffers(id: Long): List<OfferEntity> {
         val response: ResponseModel<OffersModel> = core.tryTwice(id, { _id -> core.api.getOffers(_id) })
         val offers: List<OfferModel> = response.data!!.offers
         offers.forEach { it.vehicle.photos = it.vehicle.photos.map { photo -> core.apiUrl.plus(photo) } }
+        mapper.transferId = id
         return offers.map { mapper.fromRemote(it) }
     }
 }

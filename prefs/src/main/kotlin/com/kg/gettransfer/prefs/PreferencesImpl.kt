@@ -22,6 +22,7 @@ class PreferencesImpl(context: Context,
         @JvmField val INVALID_TOKEN   = "invalid_token"
         @JvmField val ACCESS_TOKEN    = "token"
         @JvmField val LAST_MODE       = "last_mode"
+        @JvmField val FIRST_LAUNCH    = "first_launch"
         @JvmField val ONBOARDING      = "onboarding"
         @JvmField val SELECTED_FIELD  = "selected_field"
         @JvmField val ENDPOINT        = "endpoint"        
@@ -55,6 +56,15 @@ class PreferencesImpl(context: Context,
         set(value) {
             with(configsPrefs.edit()) {
                 putString(LAST_MODE, value)
+                apply()
+            }
+        }
+
+    override var isFirstLaunch: Boolean
+        get() = configsPrefs.getBoolean(FIRST_LAUNCH, true)
+        set(value) {
+            with(configsPrefs.edit()) {
+                putBoolean(FIRST_LAUNCH, value)
                 apply()
             }
         }

@@ -1,9 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
-
-import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.view.View
@@ -19,15 +15,7 @@ import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 
 import kotlinx.android.synthetic.main.dialog_payment_successful.view.*
 
-import org.jetbrains.anko.makeCall
-import org.jetbrains.anko.toast
-
-class PaymentSuccessfulActivity: BaseGoogleMapActivity(), PaymentSuccessfulView {
-
-    companion object {
-        const val TRANSFER_ID = "transferId"
-        const val OFFER_ID = "offerId"
-    }
+class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView {
 
     @InjectPresenter
     internal lateinit var presenter: PaymentSuccessfulPresenter
@@ -53,45 +41,32 @@ class PaymentSuccessfulActivity: BaseGoogleMapActivity(), PaymentSuccessfulView 
         presenter.setMapRoute()
 
         with(dialogView) {
-            tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER, presenter.transferId.toString())
+            tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER).plus(" ${presenter.transferId}")
             tvDetails.setOnClickListener { presenter.onDetailsClick() }
-            btnCall.setOnClickListener   { presenter.onCallClick() }
-            tvVoucher.setOnClickListener { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
-            btnChat.setOnClickListener   { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
+            btnCall.setOnClickListener { presenter.onCallClick() }
+            //tvVoucher.setOnClickListener { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
+            //btnChat.setOnClickListener   { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
 
-            tvDone.setOnClickListener     { finish() }
-            btnSupport.setOnClickListener { sendEmail() }
+            tvDone.setOnClickListener { finish() }
+            btnSupport.setOnClickListener { presenter.sendEmail(null) }
         }
     }
 
     override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
         gm.uiSettings.isScrollGesturesEnabled = false
-        gm.uiSettings.isZoomGesturesEnabled   = false
-    }
-
-    private fun sendEmail() {
-        val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
-            type = "message/rfc822"
-            data = Uri.parse("mailto:")
-            putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.email_support)))
-            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.LNG_EMAIL_SUBJECT))
-        }
-        try {
-            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)))
-        } catch(e: ActivityNotFoundException) {
-            Utils.showShortToast(this, getString(R.string.no_email_apps))
-        }
-    }
-
-    override fun call(number: String?) {
-        if(number.isNullOrEmpty()) this.toast(getString(R.string.driver_not_number))
-        else this.makeCall(number!!)
+        gm.uiSettings.isZoomGesturesEnabled = false
     }
 
     override fun setRoute(polyline: PolylineModel) = setPolylineWithoutInfo(polyline)
 
-    override fun setRemainTime(time: String?) {
+    override fun setRemainTime(days: Int, hours: Int, minutes: Int) {
+        val time = "$days d $hours h $minutes m"
         dialogView.tvRemainTime.text = getString(R.string.transfer_remain_time, time)
+    }
+
+    companion object {
+        const val TRANSFER_ID = "transferId"
+        const val OFFER_ID = "offerId"
     }
 }

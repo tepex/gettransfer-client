@@ -30,8 +30,9 @@ import java.util.Locale
 
 import org.koin.standalone.get
 
-class OfferRepositoryImpl(private val factory: DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>):
-                            BaseRepository(), OfferRepository {
+class OfferRepositoryImpl(private val factory: DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>) :
+    BaseRepository(), OfferRepository {
+
     private val mapper = get<OfferMapper>()
 
     override fun newOffer(offer: Offer): Result<Offer> {
@@ -41,7 +42,8 @@ class OfferRepositoryImpl(private val factory: DataStoreFactory<OfferDataStore, 
 
     override suspend fun getOffers(id: Long): Result<List<Offer>> =
         retrieveRemoteListModel<OfferEntity, Offer>(mapper) {
-            factory.retrieveRemoteDataStore().getOffers(id) }
+            factory.retrieveRemoteDataStore().getOffers(id)
+        }
             /*
             , {
                 Offer(0,

@@ -47,7 +47,10 @@ class ApiCore: KoinComponent {
     lateinit var apiUrl: String
 
     private lateinit var apiKey: String
-    private val gson = GsonBuilder().registerTypeAdapter(TransportTypesWrapperModel::class.java, TransportTypesDeserializer()).create()
+    private val gson = GsonBuilder()
+            .registerTypeAdapter(TransportTypesWrapperModel::class.java, TransportTypesDeserializer())
+            .excludeFieldsWithoutExposeAnnotation()
+            .create()
 
     private var okHttpClient = OkHttpClient.Builder().apply {
         addInterceptor(HttpLoggingInterceptor(log))

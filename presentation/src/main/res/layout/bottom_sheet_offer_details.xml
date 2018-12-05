@@ -69,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/sf_pro_text_bold"
-                android:text="Rating"
+                android:text="@string/LNG_FILTER_RATING"
                 android:textColor="@color/colorTextBlack"
                 android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@+id/ratingAverage"
                 app:layout_constraintBottom_toBottomOf="@+id/ratingAverage"
-                app:layout_constraintEnd_toStartOf="@+id/ivLikeDriver"
+                app:layout_constraintEnd_toStartOf="@+id/ivRatingBarAverage"
                 android:layout_marginEnd="@dimen/bottom_sheet_offer_details_iv_like_margin_start"
                 app:srb_clickable="false"
                 app:srb_drawableEmpty="@drawable/ic_star_empty"
@@ -96,15 +96,7 @@
                 app:srb_starWidth="@dimen/rating_bar_stars_height_width"
                 app:srb_stepSize="0.1" />
 
-            <ImageView
-                android:id="@+id/ivLikeDriver"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/bottom_sheet_offer_details_iv_like_margin_end"
-                app:layout_constraintTop_toTopOf="@+id/ratingAverage"
-                app:layout_constraintBottom_toBottomOf="@+id/ratingAverage"
-                app:layout_constraintEnd_toStartOf="@+id/ivRatingBarAverage"
-                app:srcCompat="@drawable/ic_like_button" />
+
 
             <ImageView
                 android:id="@+id/ivRatingBarAverage"
@@ -125,15 +117,39 @@
             app:layout_constraintTop_toBottomOf="@+id/layoutRatingAverage">
 
             <TextView
-                android:id="@+id/ratingDriver"
+                android:id="@+id/tvTopSelection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/LNG_TOP_RATED"
                 android:fontFamily="@font/sf_pro_text_regular"
-                android:text="Driver:"
                 android:textColor="@color/colorTextBlack"
                 android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/ivLikeDriver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintBottom_toBottomOf="@+id/tvTopSelection"
+                app:layout_constraintTop_toTopOf="@+id/tvTopSelection"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/ic_like_button" />
+
+
+
+            <TextView
+                android:id="@+id/ratingDriver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/bottom_sheet_offer_details_ratings_texts_margin_top"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:text="@string/LNG_DRIVER"
+                android:textColor="@color/colorTextBlack"
+                android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTopSelection" />
 
             <com.willy.ratingbar.ScaleRatingBar
                 android:id="@+id/ratingBarDriver"
@@ -160,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/bottom_sheet_offer_details_ratings_texts_margin_top"
                 android:fontFamily="@font/sf_pro_text_regular"
-                android:text="Punctuality:"
+                android:text="@string/LNG_PUNCTUALITY"
                 android:textColor="@color/colorTextBlack"
                 android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -192,7 +208,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/bottom_sheet_offer_details_ratings_texts_margin_top"
                 android:fontFamily="@font/sf_pro_text_regular"
-                android:text="Vehicle:"
+                android:text="@string/LNG_VEHICLE"
                 android:textColor="@color/colorTextBlack"
                 android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -251,12 +267,13 @@
 
         <ImageView
             android:id="@+id/colorVehicle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/bottom_sheet_offer_details_car_color_indicator_size"
+            android:layout_height="@dimen/bottom_sheet_offer_details_car_color_indicator_size"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_circle_car_color_indicator"/>
+            app:srcCompat="@drawable/ic_circle_car_color_indicator"
+            android:background="@drawable/border_car_color_indicator"/>
 
     </android.support.constraint.ConstraintLayout>
 

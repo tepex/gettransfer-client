@@ -9,6 +9,7 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.TransferModel
 
+import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
@@ -20,13 +21,7 @@ import java.util.Calendar
 import java.util.Date
 
 @InjectViewState
-class PaymentSuccessfulPresenter: BasePresenter<PaymentSuccessfulView>() {
-    companion object {
-        const val MILLIS_PER_MINUTE = 60 * 1000
-        const val MIN_PER_HOUR = 60
-        const val MIN_PER_DAY = MIN_PER_HOUR * 24
-    }
-
+class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
     private val offerInteractor: OfferInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
@@ -36,64 +31,52 @@ class PaymentSuccessfulPresenter: BasePresenter<PaymentSuccessfulView>() {
 
     private lateinit var transferModel: TransferModel
 
-    fun onCallClick() {
-        viewState.call(offerInteractor.getOffer(offerId)?.carrier?.profile?.phone)
-    }
-
-    fun onDetailsClick() {
-        router.navigateTo(Screens.Details(transferId))
-    }
-
     override fun attachView(view: PaymentSuccessfulView?) {
         super.attachView(view)
         utils.launchSuspend {
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            calculateRemainTime(result.model.dateToLocal)
+            val min = (result.model.dateToLocal.time - Calendar.getInstance(systemInteractor.locale).timeInMillis / 60_1000).toInt()
+            val (days, hours, minutes) = Utils.convertDuration(min)
+            viewState.setRemainTime(days, hours, minutes)
         }
-    }
-
-    private fun calculateRemainTime(endDate: Date) {
-        val calendar = Calendar.getInstance(systemInteractor.locale)
-        val startDate = calendar.time
-        var remainsMinutes = (endDate.time - startDate.time) / MILLIS_PER_MINUTE
-
-        val remainsDays = remainsMinutes / MIN_PER_DAY
-        remainsMinutes %= MIN_PER_DAY
-
-        val remainsHours = remainsMinutes / MIN_PER_HOUR
-        remainsMinutes %= MIN_PER_HOUR
-
-        viewState.setRemainTime("$remainsDays d $remainsHours h $remainsMinutes m")
     }
 
     fun setMapRoute() {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            if(result.error != null) viewState.setError(result.error!!)
+            if (result.error != null) viewState.setError(result.error!!)
             else {
-                transferModel = Mappers.getTransferModel(result.model,
-                        systemInteractor.locale,
-                        systemInteractor.distanceUnit,
-                        systemInteractor.transportTypes)
+                transferModel = Mappers.getTransferModel(result.model)
 
-                if(result.model.to != null) {
-                    val r = utils.asyncAwait { routeInteractor
-                            .getRouteInfo(result.model.from.point!!, result.model.to!!.point!!, false, false) }
-                    if(r.error == null) {
-                        val routeModel = Mappers.getRouteModel(r.model.distance,
-                                systemInteractor.distanceUnit,
-                                r.model.polyLines,
-                                result.model.from.name!!,
-                                result.model.to!!.name!!,
-                                result.model.from.point!!,
-                                result.model.to!!.point!!,
-                                transferModel.dateTime)
+                if (result.model.to != null) {
+                    val r = utils.asyncAwait {
+                        routeInteractor
+                            .getRouteInfo(result.model.from.point!!, result.model.to!!.point!!, false, false)
+                    }
+                    if (r.error == null) {
+                        val routeModel = Mappers.getRouteModel(
+                            r.model.distance,
+                            r.model.polyLines,
+                            result.model.from.name!!,
+                            result.model.to!!.name!!,
+                            result.model.from.point!!,
+                            result.model.to!!.point!!,
+                            SystemUtils.formatDateTime(transferModel.dateTime)
+                        )
                         viewState.setRoute(Utils.getPolyline(routeModel))
                     }
                 }
             }
             viewState.blockInterface(false)
         }
+    }
+
+    fun onCallClick() {
+        offerInteractor.getOffer(offerId)?.phoneToCall?.let { callPhone(it) }
+    }
+
+    fun onDetailsClick() {
+        router.navigateTo(Screens.Details(transferId))
     }
 }

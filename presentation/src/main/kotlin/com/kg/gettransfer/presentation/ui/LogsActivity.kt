@@ -6,7 +6,6 @@ import android.os.Bundle
 
 import android.support.annotation.CallSuper
 
-import android.support.v4.content.FileProvider
 import android.support.v7.widget.Toolbar
 
 import android.view.View
@@ -17,15 +16,14 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.*
 import com.kg.gettransfer.presentation.presenter.LogsPresenter
 import com.kg.gettransfer.presentation.view.LogsView
-
-import java.io.File
 
 import kotlinx.android.synthetic.main.activity_share_logs.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
-class LogsActivity: BaseActivity(), LogsView {
+class LogsActivity : BaseActivity(), LogsView {
     @InjectPresenter
     internal lateinit var presenter: LogsPresenter
 
@@ -40,23 +38,15 @@ class LogsActivity: BaseActivity(), LogsView {
         setContentView(R.layout.activity_share_logs)
 
         setToolbar(toolbar as Toolbar)
-        (toolbar as Toolbar).layoutLogs.visibility = View.VISIBLE
-        (toolbar as Toolbar).btnShare.setOnClickListener { presenter.onShareClicked() }
-        (toolbar as Toolbar).btnClear.setOnClickListener { presenter.clearLogs() }
+        with(toolbar as Toolbar) {
+            layoutLogs.isVisible = true
+            btnShare.setOnClickListener { presenter.onShareClicked() }
+            btnClear.setOnClickListener { presenter.clearLogs() }
+        }
     }
 
     override fun setLogs(logs: String) {
         textLogs.text = logs
         scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
-    }
-
-    override fun share(logsFile: File) {
-        val path = FileProvider.getUriForFile(applicationContext, getString(R.string.file_provider_authority), logsFile)
-        val emailIntent = Intent(Intent.ACTION_SEND)
-        emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        emailIntent.type = "text/*"
-        emailIntent.putExtra(Intent.EXTRA_STREAM, path)
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_extra_subject))
-        startActivity(Intent.createChooser(emailIntent, getString(R.string.share)))
     }
 }

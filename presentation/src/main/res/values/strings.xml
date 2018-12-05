@@ -43,7 +43,7 @@
     <string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
     <string name="activity_carrier_transfer_details_title">Trip details</string> <!-- Title, which not used in new design -->
 
-    <string name="passenger_number_default">1</string>
+    <string name="passenger_number_default">0</string>
     <string name="child_number_default">0</string>
 
     <!-- old locales -->
@@ -445,13 +445,14 @@
     <string name="LNG_H">h</string>
     <string name="LNG_MIN">min</string>
     <string name="LNG_HOUR">hour</string>
+    <string name="LNG_DAYS">days</string>
     <string name="LNG_HOURS">hours</string>
     <string name="LNG_HOUR_FEW">hours</string>
     <string name="LNG_DAY">day</string>
-    <string name="LNG_DAYS">days</string>
     <string name="LNG_DAYS_FEW">days</string>
     <string name="LNG_FIELD_DURATION_TRIP">Duration of the trip</string>
     <string name="LNG_FIELD_PER_HOUSE">Select the duration of the trip</string>
+    <string name="LNG_PER_HOUR">Per hour</string>
     <string name="LNG_USD">US Dollar</string>
     <string name="LNG_EUR">Euro</string>
     <string name="LNG_GBP">Pound Sterling</string>
@@ -617,6 +618,7 @@
     <string name="LNG_TRANSFER_WILL_START">Transfer will start in</string>
     <string name="LNG_PENDING_PAYMENT">Transfer payment pending</string>
     <string name="LNG_RIDE_NUMBER">Transfer request #</string>
+    <string name="LNG_TOP_RATED">Top selection</string>
     <string name="LNG_TRANSPORT_ECONOMY">Economy</string>
     <string name="LNG_TRANSPORT_PREMIUM">Premium</string>
     <string name="LNG_TRANSPORT_SUV">Suv</string>
@@ -694,7 +696,7 @@
     <string name="LNG_RIDE_OFFER_BLOCKED">Blocked</string>
     <string name="LNG_RIDE_OFFER_CANCELED">Canceled</string>
     <string name="LNG_TRANSFER_NOT_PAID">Transfer is not paid</string>
-    <string name="LNG_BOOKING_NUMBER">Booking number %1$s</string>
+    <string name="LNG_BOOKING_NUMBER">Booking number</string>
     <string name="LNG_PAYMENT_DECLINED">Payment declined</string>
     <string name="LNG_PAYMENT_DECLINE_INFO">Try to pay again or use another bank card</string>
     <string name="LNG_PAYMENT_TRY_AGAIN">Try again</string>
@@ -711,13 +713,26 @@
     <string name="LNG_RIDE_ABOUT_DRIVER">About driver</string>
     <string name="LNG_RIDE_ABOUT">About transport</string>
     <string name="from_price">from:</string>
+    <string name="LNG_RIDE_REQUEST_WAS_SENT">Request was sent</string>
+    <string name="LNG_TRANSFER_AT">at</string>
+    <string name="LNG_LANGUAGES">Languages</string>
+    <string name="LNG_DRIVER_PHONE">Phone</string>
+    <string name="LNG_DRIVER_EMAIL">Email</string>
+    <string name="LNG_RIDE_FLIGHT_NUMBER">Flight number</string>
+    <string name="LNG_RIDE_NOT_PAID">Not paid</string>
+    <string name="LNG_TRANSFER_START">Transfer will start</string>
+    <string name="LNG_TRANSFER">Transfer</string>
+    <string name="LNG_RIDE_REQUEST_FOR">Request for</string>
+    <string name="LNG_RIDE_TRANSFER_CANCELLED">transfer cancelled</string>
+    <string name="LNG_ERROR_PASSENGERS">Number of passenger must be greater than zero</string>
     <string name="tag_read_more" translatable="false">read_more_dialog</string>
-    <string name="email_support" translatable="false">info@gettransfer.com</string>
+    <string name="email_support" translatable="false">error.report@gettransfer.com</string>
     <string name="LNG_EMAIL_SUBJECT">Get help</string>
     <string name="send_email">Send mail...</string>
     <string name="no_email_apps">There are no email apps installed.</string>
     <string name="coming_soon">Coming soon</string>
     <string name="transfer_remain_time">Transfer will start in: %1$s</string>
     <string name="driver_not_number">Driver has not a phone number</string>
+
 
 </resources>

@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.presentation.adapter.AddressAdapter
 import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
@@ -29,9 +30,10 @@ import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
 import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
-import com.kg.gettransfer.utilities.Analytics
-import kotlinx.android.synthetic.main.a_b_view.*
 
+import com.kg.gettransfer.utilities.Analytics
+
+import kotlinx.android.synthetic.main.a_b_view.*
 import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.search_address.*
@@ -40,7 +42,8 @@ import kotlinx.android.synthetic.main.search_form.view.*
 import kotlinx.android.synthetic.main.toolbar_search_address.*
 import kotlinx.android.synthetic.main.toolbar_search_address.view.*
 
-class SearchActivity: BaseActivity(), SearchView {
+class SearchActivity : BaseActivity(), SearchView {
+
     @InjectPresenter
     internal lateinit var presenter: SearchPresenter
 
@@ -53,7 +56,7 @@ class SearchActivity: BaseActivity(), SearchView {
 
     @ProvidePresenter
     fun createSearchPresenter() = SearchPresenter()
-    
+
     companion object {
         @JvmField val FADE_DURATION  = 500L
         @JvmField val SLIDE_DURATION = 500L
@@ -95,21 +98,15 @@ class SearchActivity: BaseActivity(), SearchView {
     }
 
     private fun setupAnimation() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            val fade = Fade()
-            fade.duration = FADE_DURATION
-            window.enterTransition = fade
-
-
-            val slide = Slide()
-            slide.duration = SLIDE_DURATION
-            window.returnTransition = slide
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.enterTransition  = Fade().apply { duration = FADE_DURATION }
+            window.returnTransition = Slide().apply { duration = SLIDE_DURATION }
         }
     }
 
     private fun changeFocusForSearch() {
-        if(!intent.hasExtra(SearchView.EXTRA_IS_CLICK_TO)) return 
-            
+        if(!intent.hasExtra(SearchView.EXTRA_IS_CLICK_TO)) return
+
         if(intent.getBooleanExtra(SearchView.EXTRA_IS_CLICK_TO, false)) searchTo.changeFocus()
         else searchFrom.changeFocus()
     }
@@ -140,26 +137,24 @@ class SearchActivity: BaseActivity(), SearchView {
     /* SearchView */
     override fun setAddressFrom(address: String, sendRequest: Boolean, isEditing: Boolean) {
         searchFrom.initText(address, sendRequest, isEditing)
-        if(address.isNotEmpty()) updateIcon(false)
+        if (address.isNotEmpty()) updateIcon(false)
     }
 
     override fun setAddressTo(address: String, sendRequest: Boolean, isEditing: Boolean) {
         searchTo.initText(address, sendRequest, isEditing)
-        if(address.isNotEmpty()) updateIcon(true)
+        if (address.isNotEmpty()) updateIcon(true)
     }
 
     override fun hideAddressTo() {
-        View.GONE.let {
-            searchTo.visibility  = it
-            link_line.visibility = it
-            b_point.visibility   = it
-            separator.visibility = it
-        }
+        searchTo.isGone  = true
+        link_line.isGone = true
+        b_point.isGone   = true
+        separator.isGone = true
     }
 
     override fun setAddressListByAutoComplete(list: List<GTAddress>) {
-        ll_popular.visibility = View.GONE
-        address_title.visibility = View.GONE
+        ll_popular.isVisible    = false
+        address_title.isVisible = false
         rv_addressList.adapter?.let {
             (it as AddressAdapter).isLastAddresses = false
             it.updateList(list)
@@ -167,28 +162,23 @@ class SearchActivity: BaseActivity(), SearchView {
     }
 
     override fun onFindPopularPlace(isTo: Boolean, place: String) {
-        val searchField = if(isTo) searchTo else searchFrom
+        val searchField = if (isTo) searchTo else searchFrom
         searchField.initText(place, true, true)
     }
 
     override fun setSuggestedAddresses(addressesList: List<GTAddress>) {
-        ll_popular.visibility = View.VISIBLE
+        ll_popular.isVisible = true
         rv_popularList.adapter = PopularAddressAdapter(predefinedPopularPlaces) { presenter.onPopularSelected(it) }
-        val addressAdapter = AddressAdapter(addressesList) { presenter.onAddressSelected(it) }
-        addressAdapter.isLastAddresses = true
-
-        rv_addressList.adapter = addressAdapter
-        if(addressesList.isEmpty()) address_title.visibility = View.GONE
-        else address_title.visibility = View.VISIBLE
+        rv_addressList.adapter = AddressAdapter(addressesList) { presenter.onAddressSelected(it) }.apply { isLastAddresses = true }
+        address_title.isVisible = addressesList.isNotEmpty()
     }
 
     override fun updateIcon(isTo: Boolean) {
-        if(isTo) searchForm.icons_container.b_point.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.b_point_filled))
-        else     searchForm.icons_container.a_point.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.a_point_filled))
+        if (isTo) searchForm.icons_container.b_point.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.b_point_filled))
+        else      searchForm.icons_container.a_point.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.a_point_filled))
     }
 
     override fun setFocus(isToField: Boolean) {
-        if(isToField) searchTo.changeFocus()
-        else searchFrom.changeFocus()
+        if (isToField) searchTo.changeFocus() else searchFrom.changeFocus()
     }
 }

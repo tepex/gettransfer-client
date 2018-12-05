@@ -18,7 +18,6 @@ import com.kg.gettransfer.data.mapper.ExceptionMapper
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
-import com.kg.gettransfer.data.model.GTAddressEntity
 import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.domain.ApiException
@@ -31,8 +30,6 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.domain.repository.SystemRepository
-
-import java.util.concurrent.TimeoutException
 
 import org.koin.standalone.get
 
@@ -58,6 +55,10 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
     override var lastMode: String
         get() = preferencesCache.lastMode
         set(value) { preferencesCache.lastMode = value }
+
+    override var isFirstLaunch: Boolean
+        get() = preferencesCache.isFirstLaunch
+        set(value) { preferencesCache.isFirstLaunch = value }
 
     override var isOnboardingShowed: Boolean
         get() = preferencesCache.isOnboardingShowed

@@ -14,49 +14,56 @@ import org.koin.standalone.get
 /**
  * Map a [TransferEntity] to and from a [Transfer] instance when data is moving between this later and the Domain layer.
  */
-open class TransferMapper: Mapper<TransferEntity, Transfer> {
+open class TransferMapper : Mapper<TransferEntity, Transfer> {
     private val cityPointMapper = get<CityPointMapper>()
-    private val moneyMapper = get<MoneyMapper>()
-    private val dateFormat = get<ThreadLocal<DateFormat>>("iso_date")
+    private val moneyMapper     = get<MoneyMapper>()
+    private val dateFormat      = get<ThreadLocal<DateFormat>>("iso_date")
+
+
+
+
 
     /**
      * Map a [TransferEntity] instance to a [Transfer] instance.
      */
     override fun fromEntity(type: TransferEntity) =
-        Transfer(type.id,
-                 dateFormat.get().parse(type.createdAt),
-                 type.duration,
-                 type.distance,
-                 type.status,
-                 cityPointMapper.fromEntity(type.from),
-                 type.to?.let { cityPointMapper.fromEntity(it) },
-                 dateFormat.get().parse(type.dateToLocal),
-                 type.dateReturnLocal?.let { dateFormat.get().parse(it) },
-                 type.dateRefund?.let { dateFormat.get().parse(it) },
-
-                 type.nameSign,
-                 type.comment,
-                 type.malinaCard,
-                 type.flightNumber,
-                 type.flightNumberReturn,
-                 type.pax,
-                 type.childSeats,
-                 type.offersCount,
-                 type.relevantCarriersCount,
-                 type.offersUpdatedAt?.let { dateFormat.get().parse(it) },
-
-                 type.time,
-                 type.paidSum?.let { moneyMapper.fromEntity(it) },
-                 type.remainsToPay?.let { moneyMapper.fromEntity(it) },
-                 type.paidPercentage,
-                 type.pendingPaymentId,
-                 type.bookNow,
-                 type.bookNowExpiration,
-                 type.transportTypeIds,
-                 type.passengerOfferedPrice,
-                 type.price?.let { moneyMapper.fromEntity(it) },
-
-                 type.editableFields)
+        Transfer(
+            id = type.id,
+            createdAt = dateFormat.get().parse(type.createdAt),
+            duration = type.duration,
+            distance = type.distance,
+            status = Transfer.Status.valueOf(type.status.toUpperCase()),
+            from = cityPointMapper.fromEntity(type.from),
+            to = type.to?.let { cityPointMapper.fromEntity(it) },
+            dateToLocal = dateFormat.get().parse(type.dateToLocal),
+            dateReturnLocal = type.dateReturnLocal?.let { dateFormat.get().parse(it) },
+            dateRefund = type.dateRefund?.let { dateFormat.get().parse(it) },
+/* ================================================== */
+            nameSign = type.nameSign,
+            comment = type.comment,
+            malinaCard = type.malinaCard,
+            flightNumber = type.flightNumber,
+            flightNumberReturn = type.flightNumberReturn,
+            pax = type.pax,
+            childSeats = type.childSeats,
+            offersCount = type.offersCount,
+            relevantCarriersCount = type.relevantCarriersCount,
+            /* offersUpdatedAt */
+/* ================================================== */
+            time = type.time,
+            paidSum = type.paidSum?.let { moneyMapper.fromEntity(it) },
+            remainsToPay = type.remainsToPay?.let { moneyMapper.fromEntity(it) },
+            paidPercentage = type.paidPercentage,
+            pendingPaymentId = type.pendingPaymentId,
+            bookNow = type.bookNow,
+            bookNowExpiration = type.bookNowExpiration,
+            transportTypeIds = type.transportTypeIds,
+            passengerOfferedPrice = type.passengerOfferedPrice,
+            price = type.price?.let { moneyMapper.fromEntity(it) },
+/* ================================================== */
+            paymentPercentages = type.paymentPercentages,
+            editableFields = type.editableFields
+        )
 
     /**
      * Map a [Transfer] instance to a [TransferEntity] instance.

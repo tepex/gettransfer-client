@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/rounded_background"
+    android:background="@drawable/back_rounded"
     app:behavior_hideable="false"
     android:id="@+id/info_sheet"
     app:behavior_peekHeight="@dimen/create_order_behaviour_peek_height"

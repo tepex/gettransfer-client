@@ -21,7 +21,7 @@ import com.yandex.metrica.YandexMetrica
 class LoginPresenter: BasePresenter<LoginView>() {
     companion object {
         @JvmField val MIN_PASSWORD_LENGTH = 6
-        
+
         @JvmField val RESULT_CODE = 33
         @JvmField val RESULT_OK   = 1
     }
@@ -42,7 +42,6 @@ class LoginPresenter: BasePresenter<LoginView>() {
                 if(!screenForReturn.isNullOrEmpty()) {
                     when(screenForReturn) {
                         Screens.CARRIER_MODE   -> router.navigateTo(Screens.ChangeMode(checkCarrierMode()))
-                        Screens.CLOSE_ACTIVITY -> router.exit()
                         Screens.OFFERS         -> {
                             if(transferId != 0L) router.navigateTo(Screens.Offers(transferId!!))
                             else router.exit()

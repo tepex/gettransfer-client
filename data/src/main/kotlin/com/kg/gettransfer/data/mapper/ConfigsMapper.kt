@@ -10,7 +10,7 @@ import org.koin.standalone.get
 /**
  * Map a [ConfigsEntity] to and from a [Configs] instance when data is moving between this later and the Domain layer.
  */
-open class ConfigsMapper: Mapper<ConfigsEntity, Configs> {
+open class ConfigsMapper : Mapper<ConfigsEntity, Configs> {
     private val transportTypeMapper = get<TransportTypeMapper>()
     private val paypalCredentialsMapper = get<PaypalCredentialsMapper>()
     private val localeMapper = get<LocaleMapper>()
@@ -22,16 +22,20 @@ open class ConfigsMapper: Mapper<ConfigsEntity, Configs> {
      */
     override fun fromEntity(type: ConfigsEntity): Configs {
         val locales = type.availableLocales.map { localeMapper.fromEntity(it) }
-        return Configs(type.transportTypes.map { transportTypeMapper.fromEntity(it) },
-                paypalCredentialsMapper.fromEntity(type.paypalCredentials),
-                locales,
-                locales.find { it.language == type.preferredLocale }!!,
-                type.supportedCurrencies.map { currencyMapper.fromEntity(it) },
-                type.supportedDistanceUnits.map { DistanceUnit.parse(it) },
-                cardGatewaysMapper.fromEntity(type.cardGateways),
-                type.officePhone,
-                type.baseUrl)
+        return Configs(
+            type.transportTypes.map { transportTypeMapper.fromEntity(it) },
+            paypalCredentialsMapper.fromEntity(type.paypalCredentials),
+            locales,
+            locales.find { it.language == type.preferredLocale }!!,
+            type.supportedCurrencies.map { currencyMapper.fromEntity(it) },
+            type.supportedDistanceUnits.map { DistanceUnit.valueOf(it) },
+            cardGatewaysMapper.fromEntity(type.cardGateways),
+            type.officePhone,
+            type.baseUrl
+        )
     }
 
-    override fun toEntity(type: Configs): ConfigsEntity { throw UnsupportedOperationException() }
+    override fun toEntity(type: Configs): ConfigsEntity {
+        throw UnsupportedOperationException()
+    }
 }

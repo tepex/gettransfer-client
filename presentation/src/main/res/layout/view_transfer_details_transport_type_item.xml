@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/view_transfer_details_transport_type_item_padding_start_end"
+        android:paddingEnd="@dimen/view_transfer_details_transport_type_item_padding_start_end"
+        android:paddingTop="@dimen/view_transfer_details_transport_type_item_padding_top_bottom"
+        android:paddingBottom="@dimen/view_transfer_details_transport_type_item_padding_top_bottom"
+        android:layout_margin="@dimen/view_transfer_details_transport_type_item_margin"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@drawable/bg_transfer_details_transport_type_item">
+
+        <TextView
+            android:id="@+id/transportTypeItemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextBlack"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:textSize="@dimen/activity_transfer_details_text_size_17sp"
+            android:text="Business"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/view_transfer_details_transport_type_item_img_passenger_margin_start"
+            app:srcCompat="@drawable/ic_passenger_small"/>
+
+        <TextView
+            android:id="@+id/transportTypeItemCountPassengers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/view_transfer_details_transport_type_item_texts_margin_start"
+            android:textColor="@color/colorTextBlack"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:textSize="@dimen/activity_transfer_details_text_size_13sp"
+            android:text="X 3"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_baggage_small"
+            android:layout_marginStart="@dimen/view_transfer_details_transport_type_item_img_baggage_margin_start"/>
+
+        <TextView
+            android:id="@+id/transportTypeItemCountBaggage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/view_transfer_details_transport_type_item_texts_margin_start"
+            android:textColor="@color/colorTextBlack"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:textSize="@dimen/activity_transfer_details_text_size_13sp"
+            android:text="X 3"/>
+
+    </LinearLayout>
+
+</LinearLayout>

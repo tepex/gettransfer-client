@@ -8,7 +8,7 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
-import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.Transfer.Status
 
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -21,12 +21,12 @@ import org.koin.standalone.inject
 import timber.log.Timber
 
 @InjectViewState
-class RequestsFragmentPresenter: BasePresenter<RequestsFragmentView>() {
+class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
     private val transferInteractor: TransferInteractor by inject()
     //private val categoryName: String by inject()
-    
+
     private var transfers: List<TransferModel>? = null
-                                
+
     @CallSuper
     override fun attachView(view: RequestsFragmentView) {
         super.attachView(view)
@@ -45,22 +45,19 @@ class RequestsFragmentPresenter: BasePresenter<RequestsFragmentView>() {
             }
             */
             val result = utils.asyncAwait { transferInteractor.getAllTransfers() }
-            if(result.error != null) viewState.setError(result.error!!)
+            if (result.error != null) viewState.setError(result.error!!)
             else {
-                transfers = result.model.map { Mappers.getTransferModel(it,
-                                                                        systemInteractor.locale,
-                                                                        systemInteractor.distanceUnit,
-                                                                        systemInteractor.transportTypes) }
+                transfers = result.model.map { Mappers.getTransferModel(it) }
                 viewState.setRequests(transfers!!)
             }
             viewState.blockInterface(false)
         }
     }
 
-    fun openTransferDetails(id: Long, status: String) {
+    fun openTransferDetails(id: Long, status: Status) {
         Timber.d("Open Transfer details. id: $id")
-        when(status) {
-            Transfer.STATUS_NEW -> router.navigateTo(Screens.Offers(id))
+        when (status) {
+            Status.NEW -> router.navigateTo(Screens.Offers(id))
             else -> router.navigateTo(Screens.Details(id))
         }
     }
