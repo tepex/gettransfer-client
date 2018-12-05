@@ -49,7 +49,7 @@
         android:id="@+id/ibClear"
         android:layout_width="48dp"
         android:layout_height="0dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        style="@style/BorderlessBackground"
         android:clickable="true"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
