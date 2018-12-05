@@ -4,11 +4,11 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.SystemListener
 
 import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.LoggingRepository
@@ -17,21 +17,21 @@ import com.kg.gettransfer.domain.repository.SystemRepository
 import java.util.Currency
 import java.util.Locale
 
-class SystemInteractor(private val systemRepository: SystemRepository,
-                       private val loggingRepository: LoggingRepository,
-                       private val geoRepository: GeoRepository) {
-    companion object {
-        private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBR", "CNY", "EUR" )
-        private val localesFilterList = arrayOf("en", "ru")
-    }
-
+class SystemInteractor(
+    private val systemRepository: SystemRepository,
+    private val loggingRepository: LoggingRepository,
+    private val geoRepository: GeoRepository
+) {
     /* Cached properties */
 
     val endpoints by lazy { systemRepository.endpoints }
     val logsFile  by lazy { loggingRepository.file }
     var locationPermissionsGranted: Boolean? = null
-    
+
     /* Read only properties */
+
+    val isInitialized: Boolean
+        get() = systemRepository.isInitialized
 
     val accessToken: String
         get() = systemRepository.accessToken
@@ -57,8 +57,8 @@ class SystemInteractor(private val systemRepository: SystemRepository,
     val currencies: List<Currency> /* Dirty hack. GAA-298 */
         get() = systemRepository.configs.supportedCurrencies.filter { currenciesFilterList.contains(it.currencyCode) }
 
-    /* Read-write properties */    
-    
+    /* Read-write properties */
+
     var lastMode: String
         get() = systemRepository.lastMode
         set(value) { systemRepository.lastMode = value }
@@ -110,4 +110,9 @@ class SystemInteractor(private val systemRepository: SystemRepository,
 
     fun addListener(listener: SystemListener)    { systemRepository.addListener(listener) }
     fun removeListener(listener: SystemListener) { systemRepository.removeListener(listener) }
+
+    companion object {
+        private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBR", "CNY", "EUR" )
+        private val localesFilterList = arrayOf("en", "ru")
+    }
 }

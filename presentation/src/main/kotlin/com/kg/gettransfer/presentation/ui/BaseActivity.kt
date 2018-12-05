@@ -67,7 +67,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     protected var viewNetworkNotAvailable: View? = null
 
     protected val onTouchListener = View.OnTouchListener { view, event ->
-        if(event.action == MotionEvent.ACTION_MOVE) hideKeyboardWithoutClearFocus(this, view)
+        if (event.action == MotionEvent.ACTION_MOVE) hideKeyboardWithoutClearFocus(this, view)
         else return@OnTouchListener false
     }
 

@@ -47,6 +47,9 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         preferencesCache.addListener(this)
     }
 
+    override var isInitialized = false
+        private set
+
     override var configs = Configs.DEFAULT
         private set
     override var account = Account.NO_ACCOUNT
@@ -110,6 +113,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
             }
             result.error?.let { error = ExceptionMapper.map(it) }
         }
+        isInitialized = true
         return Result(account, error)
     }
 
@@ -148,5 +152,5 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
     }
 
     override fun addListener(listener: SystemListener)    { listeners.add(listener) }
-    override fun removeListener(listener: SystemListener) { listeners.add(listener) }    
+    override fun removeListener(listener: SystemListener) { listeners.add(listener) }
 }
