@@ -86,7 +86,7 @@
             android:id="@+id/ivLuggage"
             android:layout_width="10dp"
             android:layout_height="9dp"
-            android:layout_marginStart="1dp"
+            android:layout_marginStart="5dp"
             app:layout_constraintBottom_toBottomOf="@+id/tvNumberPersonsTransfer"
             app:layout_constraintStart_toEndOf="@+id/tvNumberPersonsTransfer"
             app:layout_constraintTop_toTopOf="@+id/tvNumberPersonsTransfer"

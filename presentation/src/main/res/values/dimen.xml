@@ -238,7 +238,7 @@
 	<dimen name="view_transfer_info_btn_cancel_request_padding_top_bottom">5dp</dimen>
 
 	<!--activity_transfer_details-->
-	<dimen name="activity_transfer_details_behaviour_peek_height">250dp</dimen>
+	<dimen name="activity_transfer_details_behaviour_peek_height">385dp</dimen>
 	<dimen name="activity_transfer_details_text_size_17sp">17sp</dimen>
 	<dimen name="activity_transfer_details_text_size_13sp">13sp</dimen>
 	<dimen name="activity_transfer_details_margin_start_end_16dp">16dp</dimen>

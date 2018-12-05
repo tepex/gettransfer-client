@@ -11,6 +11,7 @@ import android.os.Handler
 
 import android.support.annotation.CallSuper
 import android.support.annotation.ColorRes
+import android.support.annotation.NonNull
 import android.support.annotation.StringRes
 
 import android.support.design.widget.BottomSheetBehavior
@@ -122,10 +123,40 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         initPromoSection()
         initKeyBoardListener()
 
+        initBottomSheets()
+    }
+
+    private fun initBottomSheets(){
         bsOrder = BottomSheetBehavior.from(sheetOrder)
-        sheetOrder.isVisible = true
         bsTransport = BottomSheetBehavior.from(sheetTransport)
         bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
+
+        _tintBackground = tintBackground
+        bsOrder.setBottomSheetCallback(bottomSheetCallback)
+        bsTransport.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN && bsOrder.state == BottomSheetBehavior.STATE_HIDDEN)
+                    _tintBackground.isVisible = false
+            }
+
+            override fun onSlide(@NonNull bottomSheet: View, slideOffset: Float) {
+                if(bsOrder.state == BottomSheetBehavior.STATE_COLLAPSED) {
+                    _tintBackground.isVisible = true
+                    _tintBackground.alpha = slideOffset
+                }
+            }
+        })
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            if (bsTransport.state == BottomSheetBehavior.STATE_EXPANDED) {
+                if(hideBottomSheet(bsTransport, sheetTransport, BottomSheetBehavior.STATE_HIDDEN, event)) return true
+            } else if (bsOrder.state == BottomSheetBehavior.STATE_EXPANDED) {
+                if(hideBottomSheet(bsOrder, sheetOrder, BottomSheetBehavior.STATE_COLLAPSED, event)) return true
+            }
+        }
+        return super.dispatchTouchEvent(event)
     }
 
     private fun hideSheetTransport() { bsTransport.state = BottomSheetBehavior.STATE_HIDDEN }
@@ -361,7 +392,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     }
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {
-        sheetTransport.isVisible = true
         bsTransport.state = BottomSheetBehavior.STATE_EXPANDED
         showTransportInfo(transportType)
         presenter.logEventMain(CAR_INFO_CLICKED)

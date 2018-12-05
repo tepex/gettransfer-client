@@ -10,6 +10,7 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+import android.view.MotionEvent
 
 import android.view.View
 
@@ -73,6 +74,9 @@ class OffersActivity : BaseActivity(), OffersView {
         bsOfferDetails = BottomSheetBehavior.from(sheetOfferDetails)
         bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN
 
+        _tintBackground = tintBackground
+        bsOfferDetails.setBottomSheetCallback(bottomSheetCallback)
+
         viewNetworkNotAvailable = textNetworkNotAvailable
 
         btnCancelRequest.setOnClickListener               { presenter.onCancelRequestClicked() }
@@ -81,6 +85,15 @@ class OffersActivity : BaseActivity(), OffersView {
         sortRating.setOnClickListener                     { presenter.changeSortType(OffersPresenter.SORT_RATING) }
         sortPrice.setOnClickListener                      { presenter.changeSortType(OffersPresenter.SORT_PRICE) }
         (toolbar as Toolbar).setNavigationOnClickListener { navigateBackWithTransition()  }
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            if (bsOfferDetails.state == BottomSheetBehavior.STATE_EXPANDED) {
+                if(hideBottomSheet(bsOfferDetails, sheetOfferDetails, BottomSheetBehavior.STATE_HIDDEN, event)) return true
+            }
+        }
+        return super.dispatchTouchEvent(event)
     }
 
     @CallSuper

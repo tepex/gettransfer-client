@@ -45,6 +45,7 @@ import kotlinx.android.synthetic.main.view_transfer_details_field.*
 import kotlinx.android.synthetic.main.view_transfer_details_info.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //Don't delete
+import android.view.MotionEvent
 
 class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
@@ -76,10 +77,21 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         _mapView = mapView
         initMapView(savedInstanceState)
 
+        _tintBackground = tintBackground
         bsTransferDetails = BottomSheetBehavior.from(sheetTransferDetails)
+        bsTransferDetails.setBottomSheetCallback(bottomSheetCallback)
 
         initTextFields()
         setClickListeners()
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            if (bsTransferDetails.state == BottomSheetBehavior.STATE_EXPANDED) {
+                if(hideBottomSheet(bsTransferDetails, sheetTransferDetails, BottomSheetBehavior.STATE_COLLAPSED, event)) return true
+            }
+        }
+        return super.dispatchTouchEvent(event)
     }
 
     private fun initTextFields() {
