@@ -24,8 +24,45 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:background="@color/colorBackNetworkNotAvailable">
+
+                <TextView
+                    android:id="@+id/textNetworkNotAvailable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:text="@string/LNG_OFFLINE_MESSAGE_CACHE"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
+
+            <com.kg.gettransfer.presentation.ui.TransferRequestItem
+                android:id="@+id/layoutTransferRequestInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_offers_excellent_price_layout_height"
+                android:background="@color/colorBtnGreen">
+
+                <ImageView
+                    android:id="@+id/ivLock"
+                    android:layout_width="@dimen/activity_offers_iv_lock_width"
+                    android:layout_height="@dimen/activity_offers_iv_lock_height"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginStart="@dimen/activity_offers_iv_lock_margin_start"
+                    app:srcCompat="@drawable/ic_lock"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
