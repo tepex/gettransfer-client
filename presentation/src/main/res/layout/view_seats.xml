@@ -37,7 +37,7 @@
 
         android:layout_marginStart="@dimen/number_container_margin_start"
         android:layout_marginTop="@dimen/number_container_margin_top"
-        android:layout_marginEnd="@dimen/number_container_margin_end"
+
         android:layout_marginBottom="@dimen/plus_minus_margin_bottom"
         android:orientation="horizontal"
 
