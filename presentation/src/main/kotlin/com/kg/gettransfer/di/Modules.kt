@@ -23,7 +23,10 @@ import com.kg.gettransfer.geo.GeoRepositoryImpl
 
 import com.kg.gettransfer.prefs.PreferencesImpl
 
+import com.kg.gettransfer.presentation.mapper.*
+
 import com.kg.gettransfer.service.OfferServiceConnection
+
 import com.kg.gettransfer.utilities.Analytics
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
@@ -77,6 +80,8 @@ val domainModule = module {
 }
 
 val androidModule = module {
+    single { PaymentStatusRequestMapper() }
+
     single { OfferServiceConnection() }
     single { CoroutineContexts(Dispatchers.Main, Dispatchers.IO) }
     single { FirebaseAnalytics.getInstance(androidApplication().applicationContext) }

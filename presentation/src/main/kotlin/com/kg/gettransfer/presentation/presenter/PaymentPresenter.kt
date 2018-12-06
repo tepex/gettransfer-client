@@ -10,6 +10,8 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Offer
 
+import com.kg.gettransfer.presentation.mapper.PaymentStatusRequestMapper
+
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
@@ -30,9 +32,10 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
     private val paymentInteractor: PaymentInteractor by inject()
     private val offerInteractor: OfferInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
+    private val mapper: PaymentStatusRequestMapper by inject()
 
     private lateinit var offer: Offer
-    
+
     internal var transferId = 0L
     internal var offerId    = 0L
     internal var percentage = 0
@@ -41,7 +44,7 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
         utils.launchSuspend {
             viewState.blockInterface(true)
             val model = PaymentStatusRequestModel(null, orderId, true, success)
-            val result = utils.asyncAwait { paymentInteractor.changeStatusPayment(Mappers.getPaymentStatusRequest(model)) }
+            val result = utils.asyncAwait { paymentInteractor.changeStatusPayment(mapper.fromView(model)) }
             if(result.error != null) {
                 Timber.e(result.error!!)
                 viewState.setError(result.error!!)
