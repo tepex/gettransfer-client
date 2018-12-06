@@ -8,8 +8,6 @@ import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.RouteRepository
 
-import java.io.IOException
-
 class RouteInteractor(private val geoRepository: GeoRepository, private val routeRepository: RouteRepository) {
 
     var from: GTAddress?     = null
@@ -22,8 +20,8 @@ class RouteInteractor(private val geoRepository: GeoRepository, private val rout
 
     fun getAddressByLocation(isFrom: Boolean, point: Point, pair: Pair<Point, Point>): Result<GTAddress> {
         val result = geoRepository.getAddressByLocation(point, pair)
-        if(result.error != null) return result
-        if(isFrom) from = result.model else to = result.model
+        if (result.error != null) return result
+        if (isFrom) from = result.model else to = result.model
         return result
     }
 

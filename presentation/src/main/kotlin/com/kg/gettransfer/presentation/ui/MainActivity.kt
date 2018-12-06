@@ -215,13 +215,13 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     private fun initHourly() {
         hourlySheet = BottomSheetBehavior.from(hourly_sheet)
         hourlySheet.state = BottomSheetBehavior.STATE_HIDDEN
-        np_hours.apply {
+        with(np_hours) {
             displayedValues = HourlyValuesHelper.getHourlyValues(this@MainActivity).toTypedArray()
             minValue = 0
             maxValue = displayedValues.size - 1
             wrapSelectorWheel = false
             tvCurrent_hours.text = displayedValues[0]
-            np_hours.setOnValueChangedListener { _, _, newVal ->
+            setOnValueChangedListener { _, _, newVal ->
                 presenter.tripDurationSelected(HourlyValuesHelper.durationValues[newVal])
                 tvCurrent_hours.text = displayedValues[newVal] }
         }
@@ -391,13 +391,12 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     override fun setTripMode(duration: Int?) {
-        if (duration != null){
+        duration?.let {
             switch_mode.isChecked = true
-            HourlyValuesHelper.apply {
-                np_hours.value = durationValues.indexOf(duration)
-                tvCurrent_hours.text = getValue(duration, this@MainActivity)
+            with(HourlyValuesHelper) {
+                np_hours.value = durationValues.indexOf(it)
+                tvCurrent_hours.text = getValue(it, this@MainActivity)
             }
-
         }
     }
 

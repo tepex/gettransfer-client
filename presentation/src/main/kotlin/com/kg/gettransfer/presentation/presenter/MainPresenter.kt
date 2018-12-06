@@ -67,7 +67,6 @@ class MainPresenter : BasePresenter<MainView>() {
         changeUsedField(systemInteractor.selectedField)
         routeInteractor.from?.address?.let { viewState.setAddressFrom(it) }
         viewState.setTripMode(routeInteractor.hourlyDuration)
-
     }
 
     @CallSuper
@@ -79,7 +78,7 @@ class MainPresenter : BasePresenter<MainView>() {
     fun switchUsedField() {
         when (systemInteractor.selectedField) {
             FIELD_FROM -> changeUsedField(FIELD_TO)
-            FIELD_TO -> changeUsedField(FIELD_FROM)
+            FIELD_TO   -> changeUsedField(FIELD_FROM)
         }
     }
 
