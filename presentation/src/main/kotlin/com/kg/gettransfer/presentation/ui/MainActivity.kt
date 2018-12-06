@@ -390,6 +390,17 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         link_line.isInvisible = hourly
     }
 
+    override fun setTripMode(duration: Int?) {
+        if (duration != null){
+            switch_mode.isChecked = true
+            HourlyValuesHelper.apply {
+                np_hours.value = durationValues.indexOf(duration)
+                tvCurrent_hours.text = getValue(duration, this@MainActivity)
+            }
+
+        }
+    }
+
     companion object {
         @JvmField val MY_LOCATION_BUTTON_INDEX = 2
         @JvmField val COMPASS_BUTTON_INDEX = 5

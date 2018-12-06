@@ -21,4 +21,5 @@ interface MainView: BaseView {
     fun setFieldTo()
     fun onBackClick()
     fun showReadMoreDialog()
+    fun setTripMode(duration: Int?)
 }

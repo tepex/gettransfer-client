@@ -66,6 +66,8 @@ class MainPresenter : BasePresenter<MainView>() {
         viewState.setProfile(Mappers.getProfileModel(systemInteractor.account.user.profile))
         changeUsedField(systemInteractor.selectedField)
         routeInteractor.from?.address?.let { viewState.setAddressFrom(it) }
+        viewState.setTripMode(routeInteractor.hourlyDuration)
+
     }
 
     @CallSuper
