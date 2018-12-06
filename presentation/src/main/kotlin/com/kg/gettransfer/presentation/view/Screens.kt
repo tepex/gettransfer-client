@@ -168,7 +168,7 @@ object Screens {
 
     data class SendEmail(val emailCarrier: String?, val logsFile: File?) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?): Intent? {
-            val emailIntent = Intent(Intent.ACTION_SEND).apply {
+            val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 type = EMAIL_TYPE
                 data = Uri.parse(EMAIL_DATA)
