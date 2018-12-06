@@ -50,11 +50,10 @@
     <string name="log_in_requirement_error_title">You are not logged in</string>
 
     <string name="tag_read_more" translatable="false">read_more_dialog</string>
-    <string name="email_support" translatable="false">info@gettransfer.com</string>
+    <string name="email_support" translatable="false">error.report@gettransfer.com</string>
     <string name="send_email">Send mail...</string>
     <string name="no_email_apps">There are no email apps installed.</string>
     <string name="driver_not_number">Driver has not a phone number</string>
-
 
 
     <string name="LNG_MISKO">TEST</string>

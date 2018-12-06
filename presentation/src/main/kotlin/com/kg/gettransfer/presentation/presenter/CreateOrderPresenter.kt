@@ -267,7 +267,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 //        if(routeInteractor.from == null || routeInteractor.to == null) return
         val from = routeInteractor.from!!
         val to = routeInteractor.to
-        val dest: Dest<CityPoint, Int> = if(routeInteractor.hourlyDuration != null) DestDuration(routeInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint)
+        val dest: Dest<CityPoint, Int> = if (routeInteractor.hourlyDuration != null) DestDuration(routeInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait {

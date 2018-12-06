@@ -11,7 +11,6 @@ import android.os.Handler
 
 import android.support.annotation.CallSuper
 import android.support.annotation.ColorRes
-import android.support.annotation.NonNull
 import android.support.annotation.StringRes
 
 import android.support.design.widget.BottomSheetBehavior
@@ -126,7 +125,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         initBottomSheets()
     }
 
-    private fun initBottomSheets(){
+    private fun initBottomSheets() {
         bsOrder = BottomSheetBehavior.from(sheetOrder)
         bsTransport = BottomSheetBehavior.from(sheetTransport)
         bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
@@ -134,13 +133,13 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         _tintBackground = tintBackground
         bsOrder.setBottomSheetCallback(bottomSheetCallback)
         bsTransport.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_HIDDEN && bsOrder.state == BottomSheetBehavior.STATE_HIDDEN)
                     _tintBackground.isVisible = false
             }
 
-            override fun onSlide(@NonNull bottomSheet: View, slideOffset: Float) {
-                if(bsOrder.state == BottomSheetBehavior.STATE_COLLAPSED) {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                if (bsOrder.state == BottomSheetBehavior.STATE_COLLAPSED) {
                     _tintBackground.isVisible = true
                     _tintBackground.alpha = slideOffset
                 }
