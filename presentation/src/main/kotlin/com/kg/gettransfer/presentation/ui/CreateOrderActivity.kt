@@ -437,10 +437,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         child_seats.seat_title.text = getString(R.string.LNG_RIDE_CHILDREN)
 
         /* editable fields */
-
         passengers_seats.person_count.text = getString(R.string.passenger_number_default)
         child_seats.person_count.text      = getString(R.string.child_number_default)
-
     }
 
     private fun initChangeTextListeners() {
