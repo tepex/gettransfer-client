@@ -25,6 +25,8 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
+        <uses-library android:name="android.test.runner" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/geoapikey" />
