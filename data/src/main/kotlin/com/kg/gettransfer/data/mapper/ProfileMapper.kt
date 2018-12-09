@@ -8,11 +8,12 @@ import com.kg.gettransfer.domain.model.Profile
  * Map a [ProfileEntity] to and from a [Profile] instance when data is moving between
  * this later and the Domain layer.
  */
-open class ProfileMapper(): Mapper<ProfileEntity, Profile> {
+open class ProfileMapper : Mapper<ProfileEntity, Profile> {
     /**
      * Map a [ProfileEntity] instance to a [Profile] instance.
      */
     override fun fromEntity(type: ProfileEntity) = Profile(type.fullName, type.email, type.phone)
+
     /**
      * Map a [Profile] instance to a [ProfileEntity] instance.
      */
