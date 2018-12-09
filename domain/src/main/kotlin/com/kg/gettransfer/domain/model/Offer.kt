@@ -20,7 +20,7 @@ data class Offer(
 
     val phoneToCall = when {
         driver?.phone != null -> driver.phone
-        carrier.profile.phone != null -> carrier.profile.phone
+        carrier.profile?.phone != null -> carrier.profile.phone
         else -> null
     }
 
