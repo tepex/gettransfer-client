@@ -1,7 +1,6 @@
 package com.kg.gettransfer.domain.model
 
 import java.util.Date
-import java.util.Locale
 
 data class Offer(
     override val id: Long,
