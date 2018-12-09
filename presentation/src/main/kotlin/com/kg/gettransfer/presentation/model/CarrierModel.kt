@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.model
 
-class CarrierModel(
+data class CarrierModel(
     val id: Long,
     val profile: ProfileModel?,
     val approved: Boolean,

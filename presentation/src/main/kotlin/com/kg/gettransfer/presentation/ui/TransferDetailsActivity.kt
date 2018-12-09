@@ -252,7 +252,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
                 Pair(getString(R.string.LNG_OPEN), TransferDetailsPresenter.OPERATION_OPEN))
         val operationsName: List<CharSequence> = operations.map { it.first }
 
-        offer.driver?.let {driver ->
+        offer.driver?.let { driver ->
             driver.phone?.let { phone ->
                 driver_phone.field_text.text = phone
                 driver_phone.isVisible = true

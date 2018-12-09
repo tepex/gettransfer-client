@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.model
 
-class OfferModel(
+data class OfferModel(
     val id: Long,
     val status: String,
     val wifi: Boolean,
