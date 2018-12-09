@@ -22,7 +22,7 @@ import com.kg.gettransfer.remote.model.ResponseModel
 
 import org.koin.standalone.get
 
-class PaymentRemoteImpl: PaymentRemote {
+class PaymentRemoteImpl : PaymentRemote {
     private val core                       = get<ApiCore>()
     private val paymentRequestMapper       = get<PaymentRequestMapper>()
     private val paymentMapper              = get<PaymentMapper>()
@@ -36,38 +36,37 @@ class PaymentRemoteImpl: PaymentRemote {
 
     private suspend fun tryCreatePayment(paymentRequest: PaymentRequestModel): ResponseModel<PaymentModel> {
         return try { core.api.createNewPayment(paymentRequest).await() }
-        catch(e: Exception) {
-            if(e is RemoteException) throw e /* second invocation */
+        catch (e: Exception) {
+            if (e is RemoteException) throw e /* second invocation */
             val ae = core.remoteException(e)
-            if(!ae.isInvalidToken()) throw ae
+            if (!ae.isInvalidToken()) throw ae
 
-            try { core.updateAccessToken() } catch(e1: Exception) { throw core.remoteException(e1) }
-            return try { core.api.createNewPayment(paymentRequest).await() } catch(e2: Exception) { throw core.remoteException(e2) }
+            try { core.updateAccessToken() } catch (e1: Exception) { throw core.remoteException(e1) }
+            return try { core.api.createNewPayment(paymentRequest).await() } catch (e2: Exception) { throw core.remoteException(e2) }
         }
     }
 
     override suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequestEntity): PaymentStatusEntity {
-        val response: ResponseModel<PaymentStatusWrapperModel> = 
+        val response: ResponseModel<PaymentStatusWrapperModel> =
             tryChangeStatusPayment(paymentStatusRequest.success, paymentStatusRequestMapper.toRemote(paymentStatusRequest))
         return paymentStatusMapper.fromRemote(response.data!!.payment)
     }
 
     private suspend fun tryChangeStatusPayment(success: Boolean, paymentStatusRequest: PaymentStatusRequestModel): ResponseModel<PaymentStatusWrapperModel> {
-        val status = if(success) PaymentStatusRequestModel.STATUS_SUCCESSFUL else PaymentStatusRequestModel.STATUS_FAILED
+        val status = if (success) PaymentStatusRequestModel.STATUS_SUCCESSFUL else PaymentStatusRequestModel.STATUS_FAILED
         return try {
             core.api.changePaymentStatus(status,
                     paymentStatusRequest.pgOrderId!!,
                     paymentStatusRequest.withoutRedirect!!).await()
-        }
-        catch(e: Exception) {
-            if(e is RemoteException) throw e /* second invocation */
+        } catch (e: Exception) {
+            if (e is RemoteException) throw e /* second invocation */
             val ae = core.remoteException(e)
-            if(!ae.isInvalidToken()) throw ae
+            if (!ae.isInvalidToken()) throw ae
 
-            try { core.updateAccessToken() } catch(e1: Exception) { throw core.remoteException(e1) }
+            try { core.updateAccessToken() } catch (e1: Exception) { throw core.remoteException(e1) }
             return try { core.api.changePaymentStatus(status,
                     paymentStatusRequest.pgOrderId!!,
-                    paymentStatusRequest.withoutRedirect!!).await() } catch(e2: Exception) { throw core.remoteException(e2) }
+                    paymentStatusRequest.withoutRedirect!!).await() } catch (e2: Exception) { throw core.remoteException(e2) }
         }
     }
 }
