@@ -22,15 +22,6 @@ open class VehicleMapper : EntityMapper<VehicleModel, VehicleEntity> {
             type.luggageMax,
             type.photos
         )
-        /*
-        VehicleEntity(
-            9,
-            VehicleBaseEntity("erwe", "sdfsdf"),
-            2000,
-            "",
-            TransportTypeEntity("economy", 3, 4),
-            emptyList<String>()
-            )*/
 
     override fun toRemote(type: VehicleEntity): VehicleModel { throw UnsupportedOperationException() }
 }
