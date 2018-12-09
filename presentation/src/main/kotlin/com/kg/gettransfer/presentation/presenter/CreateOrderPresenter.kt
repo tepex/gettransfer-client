@@ -154,7 +154,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun changeDate(newDate: Date) {
         currentDate = getCurrentDatePlus4Hours()
-        if(newDate.after(currentDate.time)) {
+        if (newDate.after(currentDate.time)) {
             isAfter4Hours = false
             date = newDate
         } else {
