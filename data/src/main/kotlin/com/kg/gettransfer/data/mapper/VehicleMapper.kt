@@ -7,6 +7,8 @@ import com.kg.gettransfer.domain.model.Vehicle
 
 import org.koin.standalone.get
 
+import org.koin.standalone.get
+
 /**
  * Map a [VehicleEntity] to and from a [Vehicle] instance when data is moving between this later and the Domain layer.
  */
