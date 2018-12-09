@@ -10,7 +10,7 @@ import org.koin.standalone.get
 /**
  * Map a [CarrierEntity] to and from a [Carrier] instance when data is moving between this later and the Domain layer.
  */
-open class CarrierMapper: Mapper<CarrierEntity, Carrier> {
+open class CarrierMapper : Mapper<CarrierEntity, Carrier> {
     private val localeMapper = get<LocaleMapper>()
     private val ratingsMapper = get<RatingsMapper>()
     private val profileMapper = get<ProfileMapper>()
