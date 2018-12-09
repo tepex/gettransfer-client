@@ -231,8 +231,6 @@ object Mappers : KoinComponent {
                      getTransportTypeModel(type.transportType, null),
                      type.photos)
 
-    fun getPaymentRequest(model: PaymentRequestModel) =
-        PaymentRequest(model.transferId, model.offerId, model.gatewayId, model.percentage)
 
     private fun checkDistance(from: Point, to: Point) = (point2Location(from).distanceTo(point2Location(to)) / 1000).toInt()
 }

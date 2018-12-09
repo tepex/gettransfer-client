@@ -14,6 +14,8 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Offer
 
+import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
+
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
@@ -36,6 +38,7 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
     private val offerInteractor: OfferInteractor by inject()
     private val paymentInteractor: PaymentInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
+    private val paymentRequestMapper: PaymentRequestMapper by inject()
 
     private var offer: Offer? = null
     internal lateinit var params: PaymentSettingsView.Params
@@ -65,7 +68,7 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
     fun getPayment() = utils.launchSuspend {
         viewState.blockInterface(true)
 
-        val result = utils.asyncAwait { paymentInteractor.getPayment(Mappers.getPaymentRequest(paymentRequest)) }
+        val result = utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentRequest)) }
         if(result.error != null) {
             Timber.e(result.error!!)
             viewState.setError(result.error!!)
