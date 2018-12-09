@@ -42,7 +42,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
     protected fun login(nextScreen: String, email: String) = router.navigateTo(Screens.Login(nextScreen, email))
 
     override fun onFirstViewAttach() {
-        if(systemInteractor.isInitialized) return
+        if (systemInteractor.isInitialized) return
         utils.launchSuspend {
             val result = utils.asyncAwait { systemInteractor.coldStart() }
             if(result.error != null) viewState.setError(result.error!!)
