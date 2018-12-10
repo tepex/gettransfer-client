@@ -10,6 +10,7 @@ import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.mapper.TransferMapper
 
 import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
@@ -52,7 +53,6 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             if (result.error != null) viewState.setError(result.error!!)
             else {
-
                 if (result.model.to != null) {
                     val r = utils.asyncAwait {
                         routeInteractor

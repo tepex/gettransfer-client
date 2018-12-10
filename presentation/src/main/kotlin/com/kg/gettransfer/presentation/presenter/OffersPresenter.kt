@@ -34,7 +34,9 @@ import timber.log.Timber
 class OffersPresenter : BasePresenter<OffersView>() {
     private val transferInteractor: TransferInteractor by inject()
     private val offerInteractor: OfferInteractor by inject()
+
     private val offerMapper: OfferMapper by inject()
+    private val transferMapper: TransferMapper by inject()
 
     private val offerMapper: OfferMapper by inject()
     private val transferMapper: TransferMapper by inject()
