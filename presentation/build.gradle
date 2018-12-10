@@ -11,7 +11,7 @@ ext {
     moxy_version              = "1.5.5"
     cicerone_version          = "4.0.2"
     circle_indicator_version  = "1.2.2"
-	vp_indicator_version	  = "2.4.1"
+    vp_indicator_version      = "2.4.1"
     hockey_version            = "5.1.1"
     firebase_version          = "16.0.5"
     glide_version             = "4.8.0"
@@ -20,26 +20,27 @@ ext {
     markwon_version           = "2.0.0"
     socket_io_version         = "1.0.0"
     libphonenumber_version    = "8.9.14"
-	appmetrica_version        = "3.4.0"
-	facebook_version          = "4.38.1"
-	leakcanary_version        = "1.6.2"
-	anko_version			  = "0.10.8"
+    appmetrica_version        = "3.4.0"
+    facebook_version          = "4.38.1"
+    leakcanary_version        = "1.6.2"
+    anko_version              = "0.10.8"
+    pageindicator_version     = "1.0.2"
 }
 
 android {
-	compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
-	buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
-	
-	defaultConfig {
-		minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION
-		targetSdkVersion project.ANDROID_BUILD_SDK_VERSION
-		testInstrumentationRunner project.ANDROID_TEST_INSTRUMENTATION_RUNNER
-		vectorDrawables.useSupportLibrary = true
-		multiDexEnabled true
-	}
+    compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
+    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 
-	signingConfigs {
-		config {
+    defaultConfig {
+        minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION
+        targetSdkVersion project.ANDROID_BUILD_SDK_VERSION
+        testInstrumentationRunner project.ANDROID_TEST_INSTRUMENTATION_RUNNER
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
+    }
+
+    signingConfigs {
+        config {
             def keystorePropertiesFile = rootProject.file("keystore.properties")
             if(keystorePropertiesFile.exists()) {
                 def keystoreProperties = new Properties()
@@ -50,119 +51,119 @@ android {
                 storeFile file(keystoreProperties['STORE_FILE'])
                 storePassword keystoreProperties['STORE_PASSWORD']
             }
-		}		
-	}
-	
-	android {
-		lintOptions {
-			abortOnError false
-		}
-	}
-	
-	buildTypes {
-		release {
-			shrinkResources false
-			minifyEnabled false
-			useProguard true
-			debuggable false
-			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-			signingConfig signingConfigs.config
-		}
-		debug {
-			//applicationIdSuffix ".debug"
-			minifyEnabled false
-			debuggable true
-			shrinkResources false
-		}
-	}
+        }
+    }
 
-	flavorDimensions "type"
+    android {
+        lintOptions {
+            abortOnError false
+        }
+    }
 
-	productFlavors {
-		dev {
-			applicationId "com.kg.gettransfer"
+    buildTypes {
+        release {
+            shrinkResources false
+            minifyEnabled false
+            useProguard true
+            debuggable false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            //applicationIdSuffix ".debug"
+            minifyEnabled false
+            debuggable true
+            shrinkResources false
+        }
+    }
 
-			signingConfig signingConfigs.config
+    flavorDimensions "type"
 
-			versionCode getBuildNumber() as Integer
-			versionName "2.0"
+    productFlavors {
+        dev {
+            applicationId "com.kg.gettransfer"
 
-			manifestPlaceholders = [
-					hockeyAppId   : "1f061f58b7bd42c387ecd8681d30df48",
-			]
+            signingConfig signingConfigs.config
 
-			dimension "type"
-		}
+            versionCode getBuildNumber() as Integer
+            versionName "2.0"
 
-		prod {
-			applicationId "com.gettransfer"
+            manifestPlaceholders = [
+                    hockeyAppId   : "1f061f58b7bd42c387ecd8681d30df48",
+            ]
 
-			signingConfig signingConfigs.config
+            dimension "type"
+        }
 
-			versionCode getBuildNumber() as Integer
-			versionName System.getenv("VERSION_NAME")
+        prod {
+            applicationId "com.gettransfer"
 
-			manifestPlaceholders = [
-					hockeyAppId   : "62939f09f9e0489c8ada1c25d2f30d9d",
-			]
+            signingConfig signingConfigs.config
 
-			dimension "type"
-		}
-		
-		/* `prod` emulation for testing */
-		home {
-			applicationId "com.kg.gettransfer"
+            versionCode getBuildNumber() as Integer
+            versionName System.getenv("VERSION_NAME")
 
-			signingConfig signingConfigs.config
+            manifestPlaceholders = [
+                    hockeyAppId   : "62939f09f9e0489c8ada1c25d2f30d9d",
+            ]
 
-			versionCode getBuildNumber() as Integer
-			versionName "2.0"
+            dimension "type"
+        }
 
-			manifestPlaceholders = [
-					hockeyAppId   : "1f061f58b7bd42c387ecd8681d30df48",
-			]
+        /* `prod` emulation for testing */
+        home {
+            applicationId "com.kg.gettransfer"
 
-			dimension "type"
-		}
-	}
-	
-	sourceSets {
-		main.java.srcDirs += 'src/main/kotlin'
-	}
-	
-	compileOptions {
-		sourceCompatibility JavaVersion.VERSION_1_8
-		targetCompatibility JavaVersion.VERSION_1_8
-	}
+            signingConfig signingConfigs.config
+
+            versionCode getBuildNumber() as Integer
+            versionName "2.0"
+
+            manifestPlaceholders = [
+                    hockeyAppId   : "1f061f58b7bd42c387ecd8681d30df48",
+            ]
+
+            dimension "type"
+        }
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 androidExtensions {
-	experimental = true
+    experimental = true
 }
 
 hockeyapp {
-	apiToken = "7381bebd314d4f69b363cd29d4ce6b41" //api token with owner rights
-	restoreAllowed = true // Enables restoring function for previous versions
-	notes = generateChangeLog() // Generates default notes - feel free to change this
-	buildServerUrl = System.getenv("JOB_URL") ?: "Unknown"
-	repositoryUrl = System.getenv("GIT_URL") ?: "Unknown"
+    apiToken = "7381bebd314d4f69b363cd29d4ce6b41" //api token with owner rights
+    restoreAllowed = true // Enables restoring function for previous versions
+    notes = generateChangeLog() // Generates default notes - feel free to change this
+    buildServerUrl = System.getenv("JOB_URL") ?: "Unknown"
+    repositoryUrl = System.getenv("GIT_URL") ?: "Unknown"
 }
 
 dependencies {
-	implementation project(":domain")
-	implementation project(":data")
-	implementation project(":geo")
-	implementation project(":prefs")
-	implementation project(':logging')
-	implementation project(":remote")
-	implementation project(":cache")
-	implementation libs.kotlin
-	implementation libs.coroutines
-	implementation libs.serialization
-	implementation libs.koin_android
-	
-	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-	implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    implementation project(":domain")
+    implementation project(":data")
+    implementation project(":geo")
+    implementation project(":prefs")
+    implementation project(':logging')
+    implementation project(":remote")
+    implementation project(":cache")
+    implementation libs.kotlin
+    implementation libs.coroutines
+    implementation libs.serialization
+    implementation libs.koin_android
+
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "com.android.support:design:$support_version"
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
@@ -171,83 +172,83 @@ dependencies {
     implementation libs.psLocation
     implementation libs.psPlaces
     implementation "com.google.android.gms:play-services-maps:$gms_version"
-	implementation 'com.google.maps.android:android-maps-utils:0.5'
+    implementation 'com.google.maps.android:android-maps-utils:0.5'
     // Gson
-    implementation libs.gson    
+    implementation libs.gson
     // Moxy
-	implementation "com.arello-mobile:moxy:$moxy_version"
-	implementation "com.arello-mobile:moxy-app-compat:$moxy_version"
-	kapt "com.arello-mobile:moxy-compiler:$moxy_version"
-	
-	// Cicerone
-	implementation "ru.terrakok.cicerone:cicerone:$cicerone_version"
-    
-	// ViewPagerIndicator
-	implementation "com.github.JakeWharton:ViewPagerIndicator:$vp_indicator_version"
-    
+    implementation "com.arello-mobile:moxy:$moxy_version"
+    implementation "com.arello-mobile:moxy-app-compat:$moxy_version"
+    kapt "com.arello-mobile:moxy-compiler:$moxy_version"
+
+    // Cicerone
+    implementation "ru.terrakok.cicerone:cicerone:$cicerone_version"
+
+    // ViewPagerIndicator
+    implementation "com.github.JakeWharton:ViewPagerIndicator:$vp_indicator_version"
+
     // Logger
     implementation libs.timber
     implementation "at.favre.lib:slf4j-timber:$slf4j_timber_version"
 
-	// Hockey
-	implementation "net.hockeyapp.android:HockeySDK:$hockey_version"
+    // Hockey
+    implementation "net.hockeyapp.android:HockeySDK:$hockey_version"
 
-	//Firebase
-	implementation "com.google.firebase:firebase-core:$firebase_version"
+    //Firebase
+    implementation "com.google.firebase:firebase-core:$firebase_version"
 
-	//Glide
-	implementation "com.github.bumptech.glide:glide:$glide_version"
-	kapt "com.github.bumptech.glide:compiler:$glide_version"
+    //Glide
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
 
-	//RatingBar with vector images
-	implementation "com.github.ome450901:SimpleRatingBar:$simple_rating_bar_version"
+    //RatingBar with vector images
+    implementation "com.github.ome450901:SimpleRatingBar:$simple_rating_bar_version"
 
-	//For markdown
-	implementation "ru.noties:markwon:$markwon_version"
-	
-	// Socket.IO
-	implementation "io.socket:socket.io-client:$socket_io_version"
-	
-	//AppMetrica
-	implementation "com.yandex.android:mobmetricalib:$appmetrica_version"
+    //For markdown
+    implementation "ru.noties:markwon:$markwon_version"
 
-	//Facebook
-	implementation "com.facebook.android:facebook-core:$facebook_version"
+    // Socket.IO
+    implementation "io.socket:socket.io-client:$socket_io_version"
 
-	// Phone number code
-	implementation "io.michaelrocks:libphonenumber-android:$libphonenumber_version"
-    
-	testImplementation libs.junit
-	testImplementation libs.hamcrest
-	testImplementation libs.mockito
+    //AppMetrica
+    implementation "com.yandex.android:mobmetricalib:$appmetrica_version"
 
-	// LeakCanary
-	debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
-	releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
-	debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakcanary_version"
+    //Facebook
+    implementation "com.facebook.android:facebook-core:$facebook_version"
 
-	//Anko
-	implementation "org.jetbrains.anko:anko-commons:$anko_version"
+    // Phone number code
+    implementation "io.michaelrocks:libphonenumber-android:$libphonenumber_version"
 
-	implementation 'com.romandanylyk:pageindicatorview:1.0.2'
+    testImplementation libs.junit
+    testImplementation libs.hamcrest
+    testImplementation libs.mockito
+
+    // LeakCanary
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
+    debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakcanary_version"
+
+    //Anko
+    implementation "org.jetbrains.anko:anko-commons:$anko_version"
+
+    implementation "com.romandanylyk:pageindicatorview:$pageindicator_version"
 }
 
 def getBuildNumber() {
-	return System.getenv("BUILD_NUMBER") ?: "1"
+    return System.getenv("BUILD_NUMBER") ?: "1"
 }
 
 def getVersionName() {
-	return System.getenv("VERSION_NAME") ?: "1.0"
+    return System.getenv("VERSION_NAME") ?: "1.0"
 }
 
 def generateChangeLog() {
-	def changelog = "  \nbranch: " + System.getenv("GIT_BRANCH") ?: "Unknown"
-	changelog += "  \ncommit: " + System.getenv("GIT_COMMIT") ?: "Unknown"
-	changelog += "  \n\njob name: " + System.getenv("JOB_NAME") ?: "Unknown"
-	changelog += "  \nstarted by: " + System.getenv("BUILD_USER") ?: "Unknown"
-	changelog += "  \nbuild number: " + System.getenv("BUILD_NUMBER") ?: "Unknown"
-	println changelog
-	return changelog
+    def changelog = "  \nbranch: " + System.getenv("GIT_BRANCH") ?: "Unknown"
+    changelog += "  \ncommit: " + System.getenv("GIT_COMMIT") ?: "Unknown"
+    changelog += "  \n\njob name: " + System.getenv("JOB_NAME") ?: "Unknown"
+    changelog += "  \nstarted by: " + System.getenv("BUILD_USER") ?: "Unknown"
+    changelog += "  \nbuild number: " + System.getenv("BUILD_NUMBER") ?: "Unknown"
+    println changelog
+    return changelog
 }
 
 apply plugin: 'com.google.gms.google-services'
