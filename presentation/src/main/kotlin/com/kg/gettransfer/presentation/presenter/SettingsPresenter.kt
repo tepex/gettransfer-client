@@ -8,6 +8,8 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.presentation.mapper.LocaleMapper
+
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.DistanceUnitModel
 import com.kg.gettransfer.presentation.model.LocaleModel
@@ -22,12 +24,16 @@ import com.yandex.metrica.YandexMetrica
 
 import java.util.Locale
 
+import org.koin.standalone.inject
+
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>() {
     private lateinit var currencies: List<CurrencyModel>
     private lateinit var locales: List<LocaleModel>
     private lateinit var distanceUnits: List<DistanceUnitModel>
     private val endpoints = systemInteractor.endpoints.map { Mappers.getEndpointModel(it) }
+
+    private val localeMapper: LocaleMapper by inject()
 
     private var localeWasChanged = false
     private var restart = true
@@ -130,7 +136,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private fun initConfigs() {
         currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
-        locales = Mappers.getLocalesModels(systemInteractor.locales)
+        locales = systemInteractor.locales.map { localeMapper.toView(it) }
         distanceUnits = Mappers.getDistanceUnitsModels(systemInteractor.distanceUnits)
         restart = false
     }

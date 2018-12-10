@@ -16,6 +16,8 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.model.Result
 
+import com.kg.gettransfer.presentation.mapper.ProfileMapper
+
 import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.view.MainView
@@ -30,6 +32,7 @@ import timber.log.Timber
 @InjectViewState
 class MainPresenter : BasePresenter<MainView>() {
     private val routeInteractor: RouteInteractor by inject()
+    private val profileMapper: ProfileMapper by inject()
 
     private lateinit var lastAddressPoint: LatLng
     private var lastPoint: LatLng? = null
@@ -63,7 +66,7 @@ class MainPresenter : BasePresenter<MainView>() {
     override fun attachView(view: MainView) {
         super.attachView(view)
         Timber.d("MainPresenter.is user logged in: ${systemInteractor.account.user.loggedIn}")
-        viewState.setProfile(Mappers.getProfileModel(systemInteractor.account.user.profile))
+        viewState.setProfile(profileMapper.toView(systemInteractor.account.user.profile))
         changeUsedField(systemInteractor.selectedField)
         routeInteractor.from?.address?.let { viewState.setAddressFrom(it) }
         viewState.setTripMode(routeInteractor.hourlyDuration)
@@ -72,7 +75,7 @@ class MainPresenter : BasePresenter<MainView>() {
     @CallSuper
     override fun systemInitialized() {
         super.systemInitialized()
-        viewState.setProfile(Mappers.getProfileModel(systemInteractor.account.user.profile))
+        viewState.setProfile(profileMapper.toView(systemInteractor.account.user.profile))
     }
 
     fun switchUsedField() {
