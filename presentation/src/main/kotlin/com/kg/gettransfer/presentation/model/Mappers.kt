@@ -44,8 +44,6 @@ object Mappers : KoinComponent {
 
     fun latLng2Point(latLng: LatLng) = Point(latLng.latitude, latLng.longitude)
 
-    fun getCurrenciesModels(types: List<Currency>)        = types.map { CurrencyModel(it) }
-//    fun getLocalesModels(types: List<Locale>)             = types.map { LocaleModel(it) }
     fun getDistanceUnitsModels(types: List<DistanceUnit>) = types.map { DistanceUnitModel(it) }
 
     fun getRouteModel(distance: Int?,

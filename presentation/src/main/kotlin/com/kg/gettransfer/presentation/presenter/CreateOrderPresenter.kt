@@ -25,6 +25,7 @@ import com.kg.gettransfer.domain.model.DestDuration
 import com.kg.gettransfer.domain.model.DestPoint
 import com.kg.gettransfer.domain.model.Trip
 
+import com.kg.gettransfer.presentation.mapper.CurrencyMapper
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
 import com.kg.gettransfer.presentation.mapper.UserMapper
 
@@ -60,10 +61,11 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val offersInteractor: OfferInteractor by inject()
 
     private val transportTypeMapper: TransportTypeMapper by inject()
+    private val currencyMapper = get<CurrencyMapper>()
     private val userMapper = get<UserMapper>()
 
     private var user = userMapper.toView(systemInteractor.account.user)
-    private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
+    private val currencies = systemInteractor.currencies.map { currencyMapper.toView(it) }
     private var duration: Int? = null
     private var passengers = MIN_PASSENGERS
     private var children = MIN_CHILDREN
