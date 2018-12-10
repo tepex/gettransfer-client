@@ -228,6 +228,8 @@ dependencies {
 
 	//Anko
 	implementation "org.jetbrains.anko:anko-commons:$anko_version"
+
+	implementation 'com.romandanylyk:pageindicatorview:1.0.2'
 }
 
 def getBuildNumber() {

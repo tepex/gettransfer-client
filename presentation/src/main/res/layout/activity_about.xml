@@ -26,14 +26,14 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/btnClose"
-		app:layout_constraintBottom_toTopOf="@+id/indicator"
+		app:layout_constraintBottom_toTopOf="@+id/pageIndicator"
+		android:layout_marginBottom="8dp"
 		android:layout_marginTop="@dimen/about_activity_view_pager_margin_top">
 		
 		<com.kg.gettransfer.presentation.ui.AboutItem
             android:id="@+id/item_0"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-
 			app:title_about_item="@string/LNG_PRESENTATION_TITLE_0"
 			app:text_about_item="@string/LNG_PRESENTATION_DESC_0"
 			app:img_about_item="@drawable/img_onboarding_0"/>
@@ -67,18 +67,21 @@
 
 	</android.support.v4.view.ViewPager>
 
-	<com.viewpagerindicator.CirclePageIndicator
-		android:id="@+id/indicator"
-		android:layout_width="match_parent"
+	<com.rd.PageIndicatorView
+		android:id="@+id/pageIndicator"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/about_activity_indicator_margin_bottom"
+		android:layout_marginTop="4dp"
+		app:piv_animationType="fill"
+		app:piv_interactiveAnimation="true"
+		app:piv_selectedColor="@color/ic_unselected"
+		app:piv_unselectedColor="@color/ic_unselected"
+		app:piv_viewPager="@id/viewpager"
+		app:piv_radius="@dimen/about_activity_indicator_radius"
+		android:layout_marginBottom="48dp"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintBottom_toTopOf="@+id/btnNext"
-		app:radius="@dimen/about_activity_indicator_radius"
-		app:strokeColor="@color/ic_unselected"
-		app:fillColor="@color/ic_unselected"
-		app:strokeWidth="@dimen/about_activity_indicator_stroke_width"/>
+		app:layout_constraintBottom_toTopOf="@+id/btnNext"/>
 
 	<Button
 		android:id="@+id/btnNext"
