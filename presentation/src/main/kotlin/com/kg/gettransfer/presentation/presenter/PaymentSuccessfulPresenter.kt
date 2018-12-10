@@ -6,10 +6,10 @@ import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
+import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.mapper.TransferMapper
 
 import com.kg.gettransfer.presentation.model.TransferModel
-import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
@@ -28,6 +28,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
     private val transferInteractor: TransferInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
 
+    private val routeMapper: RouteMapper by inject()
     private val transferMapper: TransferMapper by inject()
 
     internal var offerId = 0L
@@ -59,7 +60,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                             .getRouteInfo(result.model.from.point!!, result.model.to!!.point!!, false, false)
                     }
                     if (r.error == null) {
-                        val routeModel = Mappers.getRouteModel(
+                        val routeModel = routeMapper.getView(
                             r.model.distance,
                             r.model.polyLines,
                             result.model.from.name!!,

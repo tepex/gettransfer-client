@@ -27,10 +27,10 @@ import com.kg.gettransfer.domain.model.TransferNew
 import com.kg.gettransfer.domain.model.Trip
 
 import com.kg.gettransfer.presentation.mapper.CurrencyMapper
+import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
 import com.kg.gettransfer.presentation.mapper.UserMapper
 
-import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportPriceModel
@@ -61,8 +61,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val promoInteractor: PromoInteractor by inject()
     private val offersInteractor: OfferInteractor by inject()
 
-    private val transportTypeMapper: TransportTypeMapper by inject()
     private val currencyMapper = get<CurrencyMapper>()
+    private val routeMapper = get<RouteMapper>()
+    private val transportTypeMapper: TransportTypeMapper by inject()
     private val userMapper = get<UserMapper>()
 
     private var user = userMapper.toView(systemInteractor.account.user)
@@ -135,13 +136,15 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 if (transportTypes == null)
                     transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
                 viewState.setTransportTypes(transportTypes!!)
-                routeModel = Mappers.getRouteModel(result.model.distance,
-                                                   result.model.polyLines,
-                                                   from.name!!,
-                                                   to.name!!,
-                                                   from.point!!,
-                                                   to.point!!,
-                                                   SystemUtils.formatDateTime(date))
+                routeModel = routeMapper.getView(
+                    result.model.distance,
+                    result.model.polyLines,
+                    from.name!!,
+                    to.name!!,
+                    from.point!!,
+                    to.point!!,
+                    SystemUtils.formatDateTime(date)
+                )
             }
             routeModel?.let {
                 polyline = Utils.getPolyline(it)

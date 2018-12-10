@@ -51,7 +51,6 @@ import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.presentation.mapper.PointMapper
 
 import com.kg.gettransfer.presentation.model.LocaleModel
-import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 

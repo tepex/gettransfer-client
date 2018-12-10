@@ -19,8 +19,6 @@ import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.presentation.mapper.PointMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 
-import com.kg.gettransfer.presentation.model.Mappers
-
 import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.Screens
 

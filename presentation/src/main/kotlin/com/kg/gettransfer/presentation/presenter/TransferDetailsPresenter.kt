@@ -13,9 +13,9 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.mapper.OfferMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
+import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.mapper.TransferMapper
 
-import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -39,6 +39,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
 
     private val offerMapper: OfferMapper by inject()
     private val profileMapper: ProfileMapper by inject()
+    private val routeMapper: RouteMapper by inject()
     private val transferMapper: TransferMapper by inject()
 
     companion object {
@@ -73,7 +74,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
                 if (result.model.to != null) {
                     val r = utils.asyncAwait { routeInteractor.getRouteInfo(result.model.from.point!!, result.model.to!!.point!!, true, false) }
                     if (r.error == null) {
-                        routeModel = Mappers.getRouteModel(
+                        routeModel = routeMapper.getView(
                             r.model.distance,
                             r.model.polyLines,
                             result.model.from.name!!,
