@@ -131,6 +131,7 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
     }
 
     compileOptions {
@@ -226,6 +227,7 @@ dependencies {
     testImplementation libs.junit
     testImplementation libs.hamcrest
     testImplementation libs.mockito
+    testImplementation "org.koin:koin-test:$koin_version"
 
     // LeakCanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
