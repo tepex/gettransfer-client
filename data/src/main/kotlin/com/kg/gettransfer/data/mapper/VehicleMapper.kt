@@ -12,7 +12,8 @@ import org.koin.standalone.get
  * Map a [VehicleEntity] to and from a [Vehicle] instance when data is moving between this later and the Domain layer.
  */
 open class VehicleMapper : Mapper<VehicleEntity, Vehicle> {
-    private val vehicleBaseMapper = get<VehicleBaseMapper>()
+    private val vehicleBaseMapper   = get<VehicleBaseMapper>()
+    private val transportTypeMapper = get<TransportTypeMapper>()
 
     /**
      * Map a [VehicleEntity] instance to a [Vehicle] instance.
@@ -22,7 +23,7 @@ open class VehicleMapper : Mapper<VehicleEntity, Vehicle> {
             vehicleBaseMapper.fromEntity(type.vehicleBase),
             type.year,
             type.color,
-            TransportType(type.transportTypeId, type.paxMax, type.luggageMax),
+            transportTypeMapper.fromEntity(type.transportType),
             type.photos
         )
 
@@ -34,9 +35,7 @@ open class VehicleMapper : Mapper<VehicleEntity, Vehicle> {
             vehicleBaseMapper.toEntity(type.vehicleBase),
             type.year,
             type.color,
-            type.transportType.id,
-            type.transportType.paxMax,
-            type.transportType.luggageMax,
+            transportTypeMapper.toEntity(type.transportType),
             type.photos
         )
 }

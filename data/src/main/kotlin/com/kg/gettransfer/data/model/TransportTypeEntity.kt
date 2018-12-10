@@ -4,9 +4,12 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
 @Serializable
-data class TransportTypeEntity(@SerialName(ID) val id: String,
-                               @SerialName(PAX_MAX) val paxMax: Int,
-                               @SerialName(LUGGAGE_MAX) val luggageMax: Int) {
+data class TransportTypeEntity(
+    @SerialName(ID) val id: String,
+    @SerialName(PAX_MAX) val paxMax: Int,
+    @SerialName(LUGGAGE_MAX) val luggageMax: Int
+) {
+
     companion object {
         const val ID          = "id"
         const val PAX_MAX     = "pax_max"

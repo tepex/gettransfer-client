@@ -1,5 +1,6 @@
 package com.kg.gettransfer.remote.mapper
 
+import com.kg.gettransfer.data.model.TransportTypeEntity
 import com.kg.gettransfer.data.model.VehicleBaseEntity
 import com.kg.gettransfer.data.model.VehicleEntity
 
@@ -14,9 +15,7 @@ open class VehicleMapper : EntityMapper<VehicleModel, VehicleEntity> {
             VehicleBaseEntity(type.name, type.registrationNumber),
             type.year,
             type.color,
-            type.transportTypeId,
-            type.paxMax,
-            type.luggageMax,
+            TransportTypeEntity(type.transportTypeId, type.paxMax, type.luggageMax),
             type.photos
         )
 

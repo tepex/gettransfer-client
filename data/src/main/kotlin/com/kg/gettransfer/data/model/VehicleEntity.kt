@@ -8,9 +8,7 @@ data class VehicleEntity(
     @SerialName(VEHICLE_BASE) val vehicleBase: VehicleBaseEntity,
     @SerialName(YEAR) val year: Int,
     @SerialName(COLOR) val color: String?,
-    @SerialName(TRANSPORT_TYPE_ID) val transportTypeId: String,
-    @SerialName(PAX_MAX) val paxMax: Int,
-    @SerialName(LUGGAGE_MAX) val luggageMax: Int,
+    @SerialName(TRANSPORT_TYPE) val transportType: TransportTypeEntity,
     @SerialName(PHOTOS) val photos: List<String>
 ) {
 
@@ -18,9 +16,7 @@ data class VehicleEntity(
         const val VEHICLE_BASE        = "vehicle_base"
         const val YEAR                = "year"
         const val COLOR               = "color"
-        const val TRANSPORT_TYPE_ID   = "transport_type_id"
-        const val PAX_MAX             = "pax_max"
-        const val LUGGAGE_MAX         = "luggage_max"
+        const val TRANSPORT_TYPE      = "transport_type"
         const val PHOTOS              = "photos"
     }
 }
