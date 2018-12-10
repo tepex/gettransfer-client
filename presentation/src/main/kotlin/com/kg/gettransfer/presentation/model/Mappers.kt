@@ -44,8 +44,6 @@ object Mappers : KoinComponent {
 
     fun latLng2Point(latLng: LatLng) = Point(latLng.latitude, latLng.longitude)
 
-    fun getDistanceUnitsModels(types: List<DistanceUnit>) = types.map { DistanceUnitModel(it) }
-
     fun getRouteModel(distance: Int?,
                       polyLines: List<String>?,
                       from: String,
