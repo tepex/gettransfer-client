@@ -13,7 +13,8 @@ import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterActive
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterCompleted
 
-import com.kg.gettransfer.presentation.model.Mappers
+import com.kg.gettransfer.presentation.mapper.TransferMapper
+
 import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.view.RequestsFragmentView

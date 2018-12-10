@@ -13,8 +13,7 @@ import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.mapper.OfferMapper
-
-import com.kg.gettransfer.presentation.model.Mappers
+import com.kg.gettransfer.presentation.mapper.TransferMapper
 
 import com.kg.gettransfer.presentation.model.OfferModel
 
@@ -35,7 +34,9 @@ import timber.log.Timber
 class OffersPresenter : BasePresenter<OffersView>() {
     private val transferInteractor: TransferInteractor by inject()
     private val offerInteractor: OfferInteractor by inject()
+
     private val offerMapper: OfferMapper by inject()
+    private val transferMapper: TransferMapper by inject()
 
     /*
     init {
@@ -80,7 +81,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
                 router.exit()
             } else {
                 transfer = result.model
-                val transferModel = Mappers.getTransferModel(transfer)
+                val transferModel = transferMapper.toView(transfer)
                 viewState.setDate(SystemUtils.formatDateTime(transferModel.dateTime))
                 viewState.setTransfer(transferModel)
 
