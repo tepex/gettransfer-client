@@ -268,7 +268,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
         if (!checkFieldsForRequest()) return
 
-//        if(routeInteractor.from == null || routeInteractor.to == null) return
+//        if (routeInteractor.from == null || routeInteractor.to == null) return
         val from = routeInteractor.from!!
         val to = routeInteractor.to
         val transferNew = TransferNew(
