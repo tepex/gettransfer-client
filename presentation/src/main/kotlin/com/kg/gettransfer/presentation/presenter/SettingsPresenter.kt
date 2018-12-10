@@ -9,13 +9,13 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.presentation.mapper.CurrencyMapper
+import com.kg.gettransfer.presentation.mapper.DistanceUnitMapper
 import com.kg.gettransfer.presentation.mapper.EndpointMapper
 import com.kg.gettransfer.presentation.mapper.LocaleMapper
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.DistanceUnitModel
 import com.kg.gettransfer.presentation.model.LocaleModel
-import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
@@ -38,6 +38,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private val localeMapper: LocaleMapper by inject()
     private val currencyMapper = get<CurrencyMapper>()
+    private val distanceUnitMapper = get<DistanceUnitMapper>()
     private val endpointMapper = get<EndpointMapper>()
 
     private var localeWasChanged = false
@@ -142,7 +143,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private fun initConfigs() {
         currencies = systemInteractor.currencies.map { currencyMapper.toView(it) }
         locales = systemInteractor.locales.map { localeMapper.toView(it) }
-        distanceUnits = Mappers.getDistanceUnitsModels(systemInteractor.distanceUnits)
+        distanceUnits = systemInteractor.distanceUnits.map { distanceUnitMapper.toView(it) }
         restart = false
     }
 
