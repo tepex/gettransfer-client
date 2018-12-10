@@ -7,6 +7,8 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 
+import com.kg.gettransfer.presentation.mapper.CarrierTripMapper
+
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.RouteModel
@@ -21,6 +23,8 @@ class CarrierTripDetailsPresenter: BasePresenter<CarrierTripDetailsView>() {
     private val carrierTripInteractor: CarrierTripInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
 
+    private val carrierTripMapper: CarrierTripMapper by inject()
+
     private var routeModel: RouteModel? = null
     private lateinit var trip: CarrierTripModel
     internal var tripId = 0L
@@ -32,7 +36,7 @@ class CarrierTripDetailsPresenter: BasePresenter<CarrierTripDetailsView>() {
             if(result.error != null) viewState.setError(result.error!!)
             else {
                 val tripInfo = result.model
-                trip = Mappers.getCarrierTripModel(tripInfo)
+                trip = carrierTripMapper.toView(tripInfo)
                 viewState.setTripInfo(trip)
 
                 val r = utils.asyncAwait { routeInteractor.getRouteInfo(tripInfo.from.point!!, tripInfo.to.point!!, false, false) }
