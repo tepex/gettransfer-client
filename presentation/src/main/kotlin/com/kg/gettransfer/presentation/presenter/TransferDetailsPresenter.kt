@@ -13,6 +13,7 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.mapper.OfferMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
+import com.kg.gettransfer.presentation.mapper.TransferMapper
 
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.PolylineModel
@@ -38,6 +39,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
 
     private val offerMapper: OfferMapper by inject()
     private val profileMapper: ProfileMapper by inject()
+    private val transferMapper: TransferMapper by inject()
 
     companion object {
         @JvmField val FIELD_EMAIL = "field_email"
@@ -61,7 +63,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             if (result.error != null) viewState.setError(result.error!!)
             else {
-                transferModel = Mappers.getTransferModel(result.model)
+                transferModel = transferMapper.toView(result.model)
                 viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile))
                 if (transferModel.status.checkOffers) {
                     val r = utils.asyncAwait { offerInteractor.getOffers(result.model.id) }

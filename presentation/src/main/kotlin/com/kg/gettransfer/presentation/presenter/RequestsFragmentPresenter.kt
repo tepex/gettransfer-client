@@ -10,7 +10,8 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Transfer.Status
 
-import com.kg.gettransfer.presentation.model.Mappers
+import com.kg.gettransfer.presentation.mapper.TransferMapper
+
 import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
@@ -23,6 +24,8 @@ import timber.log.Timber
 @InjectViewState
 class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
     private val transferInteractor: TransferInteractor by inject()
+
+    private val transferMapper: TransferMapper by inject()
     //private val categoryName: String by inject()
 
     private var transfers: List<TransferModel>? = null
@@ -47,7 +50,7 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
             val result = utils.asyncAwait { transferInteractor.getAllTransfers() }
             if (result.error != null) viewState.setError(result.error!!)
             else {
-                transfers = result.model.map { Mappers.getTransferModel(it) }
+                transfers = result.model.map { transferMapper.toView(it) }
                 viewState.setRequests(transfers!!)
             }
             viewState.blockInterface(false)
