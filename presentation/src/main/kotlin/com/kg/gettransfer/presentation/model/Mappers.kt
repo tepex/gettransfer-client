@@ -48,8 +48,6 @@ object Mappers : KoinComponent {
 //    fun getLocalesModels(types: List<Locale>)             = types.map { LocaleModel(it) }
     fun getDistanceUnitsModels(types: List<DistanceUnit>) = types.map { DistanceUnitModel(it) }
 
-    fun getEndpointModel(endpoint: Endpoint) = EndpointModel(endpoint)
-
     fun getRouteModel(distance: Int?,
                       polyLines: List<String>?,
                       from: String,
