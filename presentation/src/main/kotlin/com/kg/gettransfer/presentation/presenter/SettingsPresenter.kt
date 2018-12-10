@@ -8,6 +8,7 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.presentation.mapper.EndpointMapper
 import com.kg.gettransfer.presentation.mapper.LocaleMapper
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
@@ -24,6 +25,7 @@ import com.yandex.metrica.YandexMetrica
 
 import java.util.Locale
 
+import org.koin.standalone.get
 import org.koin.standalone.inject
 
 @InjectViewState
@@ -31,9 +33,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private lateinit var currencies: List<CurrencyModel>
     private lateinit var locales: List<LocaleModel>
     private lateinit var distanceUnits: List<DistanceUnitModel>
-    private val endpoints = systemInteractor.endpoints.map { Mappers.getEndpointModel(it) }
+    private val endpoints = systemInteractor.endpoints.map { endpointMapper.toView(it) }
 
     private val localeMapper: LocaleMapper by inject()
+    private val endpointMapper = get<EndpointMapper>()
 
     private var localeWasChanged = false
     private var restart = true
@@ -58,7 +61,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setCurrency(currencyModel?.name ?: "")
         viewState.setDistanceUnit(systemInteractor.distanceUnit.name)
 
-        viewState.setEndpoint(Mappers.getEndpointModel(systemInteractor.endpoint))
+        viewState.setEndpoint(endpointMapper.toView(systemInteractor.endpoint))
         viewState.setLogoutButtonEnabled(systemInteractor.account.user.loggedIn)
     }
 
