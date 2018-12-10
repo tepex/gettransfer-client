@@ -12,7 +12,6 @@ import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.presentation.mapper.PaymentStatusRequestMapper
 
-import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
 
