@@ -23,6 +23,7 @@ import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.Dest
 import com.kg.gettransfer.domain.model.DestDuration
 import com.kg.gettransfer.domain.model.DestPoint
+import com.kg.gettransfer.domain.model.TransferNew
 import com.kg.gettransfer.domain.model.Trip
 
 import com.kg.gettransfer.presentation.mapper.CurrencyMapper
@@ -265,42 +266,28 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
         if (!checkFieldsForRequest()) return
 
-        val trip = Trip(date, flightNumber)
-        /* filter */
-        val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
-
-        Timber.d("from: %s", routeInteractor.from)
-        Timber.d("to: %s", routeInteractor.to)
-        Timber.d("trip: %s", trip)
-        Timber.d("transport types: %s", selectedTransportTypes)
-        Timber.d("user: $user")
-        Timber.d("passenger price: $cost")
-        Timber.d("date: $date")
-        Timber.d("passengers: $passengers")
-        Timber.d("children: $children")
-        Timber.d("flightNumber: $flightNumber")
-        Timber.d("comment: $comment")
-
 //        if(routeInteractor.from == null || routeInteractor.to == null) return
         val from = routeInteractor.from!!
         val to = routeInteractor.to
-        val dest: Dest<CityPoint, Int> = if (routeInteractor.hourlyDuration != null) DestDuration(routeInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint)
+        val transferNew = TransferNew(
+            from.cityPoint,
+            if (routeInteractor.hourlyDuration != null) DestDuration(routeInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint),
+            Trip(date, flightNumber),
+            null,
+            transportTypes!!.filter { it.checked }.map { it.id },
+            passengers,
+            children,
+            cost?.let { it.times(100).toInt() },
+            comment,
+            userMapper.fromView(user),
+            promoCode,
+            false
+        )
+        Timber.d("new transfer: $transferNew")
+
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = utils.asyncAwait {
-                transferInteractor.createTransfer(Mappers.getTransferNew(from.cityPoint,
-                                                                         dest,
-                                                                         trip,
-                                                                         null,
-                                                                         selectedTransportTypes,
-                                                                         passengers,
-                                                                         children,
-                                                                         cost,
-                                                                         comment,
-                                                                         userMapper.fromView(user),
-                                                                         promoCode,
-                                                                         false))
-            }
+            val result = utils.asyncAwait { transferInteractor.createTransfer(transferNew) }
 
             val logResult = utils.asyncAwait { systemInteractor.putAccount() }
             if (result.error == null && logResult.error == null) {

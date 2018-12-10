@@ -29,9 +29,6 @@ import org.koin.standalone.get
 import org.koin.standalone.KoinComponent
 
 object Mappers : KoinComponent {
-    private val systemInteractor = get<SystemInteractor>()
-    private val transportTypeMapper = get<TransportTypeMapper>()
-
     fun getRouteModel(distance: Int?,
                       polyLines: List<String>?,
                       from: String,
@@ -45,31 +42,5 @@ object Mappers : KoinComponent {
                                                      fromPoint,
                                                      toPoint,
                                                      dateTime)
-
-    fun getTransferNew(from: CityPoint,
-                       dest: Dest<CityPoint, Int>,
-                       tripTo: Trip,
-                       tripReturn: Trip?,
-                       transportTypes: List<String>,
-                       pax: Int,
-                       childSeats: Int?,
-                       passengerOfferedPrice: Double?,
-                       comment: String?,
-                       user: User,
-                       promoCode: String = "",
-                       paypalOnly: Boolean) = TransferNew(from,
-                                                          dest,
-                                                          tripTo,
-                                                          tripReturn,
-                                                          transportTypes,
-                                                          pax,
-                                                          childSeats,
-                                                          passengerOfferedPrice?.let { it.times(100).toInt() },
-                                                          comment,
-                                                          user,
-                                                          promoCode,
-                                                          paypalOnly)
-
-
 
 }
