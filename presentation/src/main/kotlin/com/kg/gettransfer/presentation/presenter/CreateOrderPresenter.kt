@@ -25,10 +25,13 @@ import com.kg.gettransfer.domain.model.DestDuration
 import com.kg.gettransfer.domain.model.DestPoint
 import com.kg.gettransfer.domain.model.Trip
 
+import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
+import com.kg.gettransfer.presentation.mapper.UserMapper
+
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransportPrice
+import com.kg.gettransfer.presentation.model.TransportPriceModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.UserModel
 
@@ -44,6 +47,7 @@ import com.kg.gettransfer.utilities.Analytics
 import java.util.Calendar
 import java.util.Date
 
+import org.koin.standalone.get
 import org.koin.standalone.inject
 
 import timber.log.Timber
@@ -55,7 +59,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val promoInteractor: PromoInteractor by inject()
     private val offersInteractor: OfferInteractor by inject()
 
-    private var user: UserModel = Mappers.getUserModel(systemInteractor.account)
+    private val transportTypeMapper: TransportTypeMapper by inject()
+    private val userMapper = get<UserMapper>()
+
+    private var user = userMapper.toView(systemInteractor.account.user)
     private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
     private var duration: Int? = null
     private var passengers = MIN_PASSENGERS
@@ -119,9 +126,11 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             else {
                 duration = result.model.duration
 
-                val prices: Map<String, TransportPrice> = result.model.prices.map { p -> p.tranferId to TransportPrice(p.min ?: "", p.max ?: "", p.minFloat ?: 0.0f) }.toMap()
+                transportTypeMapper.prices = result.model.prices.map { p ->
+                    p.tranferId to TransportPriceModel(p.min ?: "", p.max ?: "", p.minFloat)
+                }.toMap()
                 if (transportTypes == null)
-                    transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
+                    transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
                 viewState.setTransportTypes(transportTypes!!)
                 routeModel = Mappers.getRouteModel(result.model.distance,
                                                    result.model.polyLines,
@@ -141,7 +150,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun setUIWithoutRoute() {
-        transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, null) }
+        transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
         viewState.setTransportTypes(transportTypes!!)
         routeInteractor.from?.let { from ->
             from.cityPoint.point?.let { p ->
@@ -286,7 +295,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                                                                          children,
                                                                          cost,
                                                                          comment,
-                                                                         Mappers.getUser(user),
+                                                                         userMapper.fromView(user),
                                                                          promoCode,
                                                                          false))
             }
