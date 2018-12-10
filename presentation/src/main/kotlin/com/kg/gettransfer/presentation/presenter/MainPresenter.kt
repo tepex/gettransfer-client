@@ -16,6 +16,7 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.model.Result
 
+import com.kg.gettransfer.presentation.mapper.PointMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 
 import com.kg.gettransfer.presentation.model.Mappers
@@ -32,6 +33,8 @@ import timber.log.Timber
 @InjectViewState
 class MainPresenter : BasePresenter<MainView>() {
     private val routeInteractor: RouteInteractor by inject()
+
+    private val pointMapper: PointMapper by inject()
     private val profileMapper: ProfileMapper by inject()
 
     private lateinit var lastAddressPoint: LatLng
@@ -125,13 +128,13 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     private fun setPointAddress(currentAddress: GTAddress) {
-        lastAddressPoint = Mappers.point2LatLng(currentAddress.cityPoint.point!!)
+        lastAddressPoint = pointMapper.toView(currentAddress.cityPoint.point!!)
         onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
         viewState.setMapPoint(lastAddressPoint, true)
         //viewState.setAddressFrom(currentAddress.cityPoint.name!!)
         setAddressInSelectedField(currentAddress.cityPoint.name!!)
 
-        lastAddressPoint = Mappers.point2LatLng(currentAddress.cityPoint.point!!)
+        lastAddressPoint = pointMapper.toView(currentAddress.cityPoint.point!!)
     }
 
     fun onCameraMove(lastPoint: LatLng, animateMarker: Boolean) {
@@ -170,9 +173,12 @@ class MainPresenter : BasePresenter<MainView>() {
             utils.launchSuspend {
                 val result = utils.asyncAwait {
                     routeInteractor.getAddressByLocation(
-                            systemInteractor.selectedField == FIELD_FROM, Mappers.latLng2Point(lastPoint!!), latLonPair)
+                        systemInteractor.selectedField == FIELD_FROM,
+                        pointMapper.fromView(lastPoint!!),
+                        latLonPair
+                    )
                 }
-                if(result.error != null) {
+                if (result.error != null) {
                     Timber.e("getAddressByLocation", result.error!!)
                     viewState.setError(result.error!!)
                 } else {
