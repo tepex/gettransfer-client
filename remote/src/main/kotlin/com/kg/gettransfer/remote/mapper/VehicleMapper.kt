@@ -17,9 +17,7 @@ open class VehicleMapper : EntityMapper<VehicleModel, VehicleEntity> {
             type.registrationNumber,
             type.year,
             type.color,
-            type.transportTypeId,
-            type.paxMax,
-            type.luggageMax,
+            TransportTypeEntity(type.transportTypeId, type.paxMax, type.luggageMax),
             type.photos
         )
 

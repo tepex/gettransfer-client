@@ -14,7 +14,3 @@ data class VehicleBaseEntity(
         const val REGISTRATION_NUMBER = "registration_number"
     }
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> refactor(model): VehicleBase
