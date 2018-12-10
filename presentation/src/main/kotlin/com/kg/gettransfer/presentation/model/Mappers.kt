@@ -33,11 +33,6 @@ object Mappers : KoinComponent {
     private val systemInteractor = get<SystemInteractor>()
     private val transportTypeMapper = get<TransportTypeMapper>()
 
-
-    fun point2LatLng(point: Point) = LatLng(point.latitude, point.longitude)
-
-    fun latLng2Point(latLng: LatLng) = Point(latLng.latitude, latLng.longitude)
-
     fun getRouteModel(distance: Int?,
                       polyLines: List<String>?,
                       from: String,

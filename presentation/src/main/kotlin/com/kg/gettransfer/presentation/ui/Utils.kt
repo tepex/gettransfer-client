@@ -48,6 +48,8 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.DistanceUnit
 
+import com.kg.gettransfer.presentation.mapper.PointMapper
+
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.PolylineModel
@@ -79,6 +81,8 @@ object Utils : KoinComponent {
     const val MAX_BITMAP_SIZE = 4096
 
     internal val phoneUtil: PhoneNumberUtil by inject()
+
+    private val pointMapper: PointMapper by inject()
 
     fun getAlertDialogBuilder(context: Context): AlertDialog.Builder {
         return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && false)
@@ -207,8 +211,8 @@ object Utils : KoinComponent {
                 latLngBuilder.include(mPoints.get(i))
             }
         } else {
-            mPoints.add(Mappers.point2LatLng(routeModel.fromPoint))
-            mPoints.add(Mappers.point2LatLng(routeModel.toPoint))
+            mPoints.add(pointMapper.toView(routeModel.fromPoint))
+            mPoints.add(pointMapper.toView(routeModel.toPoint))
 
             for (i in mPoints.indices) latLngBuilder.include(mPoints.get(i))
         }
