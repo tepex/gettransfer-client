@@ -18,76 +18,79 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorBackNetworkNotAvailable">
-
-                <TextView
-                    android:id="@+id/textNetworkNotAvailable"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/sf_pro_text_regular"
-                    android:gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
-                    android:text="@string/LNG_OFFLINE_MESSAGE_CACHE"
-                    android:visibility="gone"/>
-
-            </LinearLayout>
-
-            <include
-                android:id="@+id/layoutTransferRequestInfo"
-                layout="@layout/view_transfer_request_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/activity_offers_excellent_price_layout_height"
-                android:background="@color/colorBtnGreen">
-                
-                <ImageView
-                    android:id="@+id/ivLock"
-                    android:layout_width="@dimen/activity_offers_iv_lock_width"
-                    android:layout_height="@dimen/activity_offers_iv_lock_height"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginStart="@dimen/activity_offers_iv_lock_margin_start"
-                    app:srcCompat="@drawable/ic_lock"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/ivLock"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginStart="@dimen/activity_offers_excellent_price_layout_margin_start"
-                    android:gravity="center">
+                    android:background="@color/colorBackNetworkNotAvailable">
 
                     <TextView
-                        android:id="@+id/tvExcellentPrice1"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/textNetworkNotAvailable"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/sf_pro_text_bold"
-                        android:textSize="@dimen/activity_offers_excellent_price_text_size"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/sf_pro_text_regular"
                         android:gravity="center"
-                        android:text="@string/LNG_OFFERS_PROMO_MESSAGE"
-                        android:textColor="@color/colorWhite" />
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/LNG_OFFLINE_MESSAGE_CACHE"
+                        android:visibility="gone"/>
 
-                    <!--<TextView-->
+                </LinearLayout>
+
+                <com.kg.gettransfer.presentation.ui.TransferRequestItem
+                    android:id="@+id/layoutTransferRequestInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/activity_offers_excellent_price_layout_height"
+                    android:background="@color/colorBtnGreen">
+
+                    <ImageView
+                        android:id="@+id/ivLock"
+                        android:layout_width="@dimen/activity_offers_iv_lock_width"
+                        android:layout_height="@dimen/activity_offers_iv_lock_height"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginStart="@dimen/activity_offers_iv_lock_margin_start"
+                        app:srcCompat="@drawable/ic_lock"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/ivLock"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginStart="@dimen/activity_offers_excellent_price_layout_margin_start"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tvExcellentPrice1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/sf_pro_text_bold"
+                            android:textSize="@dimen/activity_offers_excellent_price_text_size"
+                            android:gravity="center"
+                            android:text="@string/LNG_OFFERS_PROMO_MESSAGE"
+                            android:textColor="@color/colorWhite" />
+
+                        <!--<TextView-->
                         <!--android:id="@+id/tvExcellentPrice2"-->
                         <!--android:layout_width="wrap_content"-->
                         <!--android:layout_height="wrap_content"-->
@@ -97,118 +100,127 @@
                         <!--android:text="@string/excellent_price_text_2"-->
                         <!--android:textColor="@color/colorWhite" />-->
 
-                </LinearLayout>
+                    </LinearLayout>
 
-            </android.support.constraint.ConstraintLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/activity_offers_sorted_layout_height"
-                android:orientation="horizontal"
-                android:background="@color/colorBack"
-                android:paddingTop="@dimen/activity_offers_sorted_layout_padding_top_bottom"
-                android:paddingBottom="@dimen/activity_offers_sorted_layout_padding_top_bottom"
-                android:paddingStart="@dimen/activity_offers_sorted_layout_padding_start_end"
-                android:paddingEnd="@dimen/activity_offers_sorted_layout_padding_start_end">
+                </android.support.constraint.ConstraintLayout>
 
                 <LinearLayout
-                    android:id="@+id/sortYear"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="@dimen/activity_offers_sorted_layout_height"
                     android:orientation="horizontal"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="@dimen/activity_offers_sorted_layout_left_right_elements_margin_side"
-                    android:gravity="center"
-                    android:background="@drawable/back_sorted_layouts">
+                    android:background="@color/colorBack"
+                    android:paddingTop="@dimen/activity_offers_sorted_layout_padding_top_bottom"
+                    android:paddingBottom="@dimen/activity_offers_sorted_layout_padding_top_bottom"
+                    android:paddingStart="@dimen/activity_offers_sorted_layout_padding_start_end"
+                    android:paddingEnd="@dimen/activity_offers_sorted_layout_padding_start_end">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/helvetica_neue"
-                        android:textSize="@dimen/activity_offers_sorted_layout_texts_size"
-                        android:textColor="@color/colorTextBlack"
-                        android:text="@string/LNG_FILTER_YEAR"/>
+                    <LinearLayout
+                        android:id="@+id/sortYear"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/activity_offers_sorted_layout_left_right_elements_margin_side"
+                        android:gravity="center"
+                        android:background="@drawable/back_sorted_layouts">
 
-                    <ImageView
-                        android:id="@+id/triangleYear"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_triangle"
-                        android:layout_marginStart="@dimen/activity_offers_sorted_layout_triangle_margin_start"
-                        android:visibility="gone"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/helvetica_neue"
+                            android:textSize="@dimen/activity_offers_sorted_layout_texts_size"
+                            android:textColor="@color/colorTextBlack"
+                            android:text="@string/LNG_FILTER_YEAR"/>
+
+                        <ImageView
+                            android:id="@+id/triangleYear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_triangle"
+                            android:layout_marginStart="@dimen/activity_offers_sorted_layout_triangle_margin_start"
+                            android:visibility="gone"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/sortRating"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="1"
+                        android:layout_marginStart="@dimen/activity_offers_sorted_layout_center_element_margin_side"
+                        android:layout_marginEnd="@dimen/activity_offers_sorted_layout_center_element_margin_side"
+                        android:gravity="center"
+                        android:background="@drawable/back_sorted_layouts">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/helvetica_neue"
+                            android:textSize="@dimen/activity_offers_sorted_layout_texts_size"
+                            android:textColor="@color/colorTextBlack"
+                            android:text="@string/LNG_FILTER_RATING"/>
+
+                        <ImageView
+                            android:id="@+id/triangleRating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_triangle"
+                            android:layout_marginStart="@dimen/activity_offers_sorted_layout_triangle_margin_start"
+                            android:visibility="gone"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/sortPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="1"
+                        android:layout_marginStart="@dimen/activity_offers_sorted_layout_left_right_elements_margin_side"
+                        android:gravity="center"
+                        android:background="@drawable/back_sorted_layouts">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/helvetica_neue"
+                            android:textSize="@dimen/activity_offers_sorted_layout_texts_size"
+                            android:textColor="@color/colorTextBlack"
+                            android:text="@string/LNG_FILTER_PRICE"/>
+
+                        <ImageView
+                            android:id="@+id/trianglePrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_triangle"
+                            android:layout_marginStart="@dimen/activity_offers_sorted_layout_triangle_margin_start"
+                            android:visibility="gone"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/sortRating"
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_weight="1"
-                    android:layout_marginStart="@dimen/activity_offers_sorted_layout_center_element_margin_side"
-                    android:layout_marginEnd="@dimen/activity_offers_sorted_layout_center_element_margin_side"
-                    android:gravity="center"
-                    android:background="@drawable/back_sorted_layouts">
+                    android:layout_height="@dimen/activity_offers_divider_height"
+                    android:background="@color/colorDividerGray" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/helvetica_neue"
-                        android:textSize="@dimen/activity_offers_sorted_layout_texts_size"
-                        android:textColor="@color/colorTextBlack"
-                        android:text="@string/LNG_FILTER_RATING"/>
-
-                    <ImageView
-                        android:id="@+id/triangleRating"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_triangle"
-                        android:layout_marginStart="@dimen/activity_offers_sorted_layout_triangle_margin_start"
-                        android:visibility="gone"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/sortPrice"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvOffers"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_weight="1"
-                    android:layout_marginStart="@dimen/activity_offers_sorted_layout_left_right_elements_margin_side"
-                    android:gravity="center"
-                    android:background="@drawable/back_sorted_layouts">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/helvetica_neue"
-                        android:textSize="@dimen/activity_offers_sorted_layout_texts_size"
-                        android:textColor="@color/colorTextBlack"
-                        android:text="@string/LNG_FILTER_PRICE"/>
-
-                    <ImageView
-                        android:id="@+id/trianglePrice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_triangle"
-                        android:layout_marginStart="@dimen/activity_offers_sorted_layout_triangle_margin_start"
-                        android:visibility="gone"/>
-
-                </LinearLayout>
+                    android:layout_height="match_parent"/>
 
             </LinearLayout>
 
             <View
+                android:id="@+id/tintBackground"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/activity_offers_divider_height"
-                android:background="@color/colorDividerGray" />
+                android:layout_height="match_parent"
+                android:background="#99000000"
+                android:visibility="gone"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvOffers"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-        </LinearLayout>
+        </FrameLayout>
 
     </android.support.v4.widget.NestedScrollView>
 

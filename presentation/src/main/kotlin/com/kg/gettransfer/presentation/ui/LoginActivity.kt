@@ -11,7 +11,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.markAsNotImplemented
+import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.presentation.presenter.LoginPresenter
 
@@ -19,10 +19,10 @@ import com.kg.gettransfer.presentation.view.LoginView
 
 import kotlinx.android.synthetic.main.activity_login.*
 
-class LoginActivity: BaseActivity(), LoginView {
+class LoginActivity : BaseActivity(), LoginView {
     @InjectPresenter
     internal lateinit var presenter: LoginPresenter
-    
+
     @ProvidePresenter
     fun createLoginPresenter() = LoginPresenter()
 
@@ -41,12 +41,12 @@ class LoginActivity: BaseActivity(), LoginView {
         presenter.transferId = intent.getLongExtra(LoginView.EXTRA_TRANSFER_ID, 0L)
 
         setContentView(R.layout.activity_login)
-        
+
         etEmail.onTextChanged         { presenter.setEmail(it.trim()) }
         etPassword.onTextChanged      { presenter.setPassword(it.trim()) }
         btnLogin.setOnClickListener   { presenter.onLoginClick() }
         homeButton.setOnClickListener { presenter.onHomeClick() }
-        
+
         etEmail.setText(presenter.email)
         btnForgotPassword.markAsNotImplemented()
     }
@@ -56,36 +56,26 @@ class LoginActivity: BaseActivity(), LoginView {
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
-        if (block) tvLoginError.visibility = View.GONE
+        if (block) tvLoginError.isVisible = false
     }
-    
+
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-        tvLoginError.visibility = View.VISIBLE
+        tvLoginError.isVisible = true
     }
 
     override fun showError(show: Boolean, message: String?) {
-        tvLoginError.apply {
-            if (show) {
-                visibility = View.VISIBLE
-                text = message?:getString(R.string.LNG_BAD_CREDENTIALS_ERROR)
-            } else visibility = View.GONE
-
-        }
+        tvLoginError.isVisible = show
+        if (show) tvLoginError.text = message ?: getString(R.string.LNG_BAD_CREDENTIALS_ERROR)
     }
 
     override fun showValidationError(show: Boolean, errorType: Int) {
-        tvLoginError.apply {
-            if (show){
-                visibility = View.VISIBLE
-                val res = when (errorType) {
-                    INVALID_EMAIL    -> R.string.LNG_ERROR_EMAIL
-                    INVALID_PASSWORD -> R.string.LNG_LOGIN_PASSWORD
-                    else             -> R.string.LNG_BAD_CREDENTIALS_ERROR
-                }
-                setText(res)
-            } else visibility = View.GONE
-        }
+        tvLoginError.isVisible = show
+        if (show) tvLoginError.setText(when (errorType) {
+            INVALID_EMAIL    -> R.string.LNG_ERROR_EMAIL
+            INVALID_PASSWORD -> R.string.LNG_LOGIN_PASSWORD
+            else             -> R.string.LNG_BAD_CREDENTIALS_ERROR
+        })
     }
-    
+
     override fun onBackPressed() { presenter.onBackCommandClick() }
 }

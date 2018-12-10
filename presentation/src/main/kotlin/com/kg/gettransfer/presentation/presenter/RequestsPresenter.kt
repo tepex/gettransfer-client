@@ -7,8 +7,8 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.view.RequestsView
+
 import com.kg.gettransfer.utilities.Analytics
-import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_FILTER
 
 import com.yandex.metrica.YandexMetrica
 
@@ -25,9 +25,9 @@ class RequestsPresenter: BasePresenter<RequestsView>() {
     }
 
     fun logEvent(value: String) {
-        val map = HashMap<String, Any>()
-        map[PARAM_KEY_FILTER] = value
+        val map = mutableMapOf<String, Any>()
+        map[Analytics.PARAM_KEY_FILTER] = value
 
-        analytics.logEvent(Analytics.EVENT_TRANSFERS, createStringBundle(PARAM_KEY_FILTER, value), map)
+        analytics.logEvent(Analytics.EVENT_TRANSFERS, createStringBundle(Analytics.PARAM_KEY_FILTER, value), map)
     }
 }

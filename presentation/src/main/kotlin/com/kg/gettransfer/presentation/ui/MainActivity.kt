@@ -8,6 +8,8 @@ import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+import android.support.annotation.DrawableRes
+import android.support.design.widget.BottomSheetBehavior
 
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
@@ -34,28 +36,33 @@ import com.google.android.gms.maps.model.Marker
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
+import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.MainView
-import kotlinx.android.synthetic.main.a_b_view.*
 
+import kotlinx.android.synthetic.main.a_b_view.*
 import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
+import kotlinx.android.synthetic.main.view_hourly_picker.*
+import kotlinx.android.synthetic.main.view_hourly_picker.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
 
 import timber.log.Timber
 
-class MainActivity: BaseGoogleMapActivity(), MainView {
+class MainActivity : BaseGoogleMapActivity(), MainView {
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
 
     private lateinit var drawer: DrawerLayout
     //private lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var hourlySheet: BottomSheetBehavior<View>
 
     private var isFirst = true
     private var centerMarker: Marker? = null
@@ -66,7 +73,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
     private val itemsNavigationViewListener = View.OnClickListener {
-        when(it.id) {
+        when (it.id) {
             R.id.navLogin          -> presenter.onLoginClick()
             R.id.navAbout          -> presenter.onAboutClick()
             R.id.navSettings       -> presenter.onSettingsClick()
@@ -76,16 +83,6 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
             else -> Timber.d("No route")
         }
         drawer.closeDrawer(GravityCompat.START)
-    }
-
-    companion object {
-        @JvmField val MY_LOCATION_BUTTON_INDEX = 2
-        @JvmField val COMPASS_BUTTON_INDEX = 5
-        @JvmField val FADE_DURATION = 500L
-        @JvmField val MAX_INIT_ZOOM = 2.0f
-
-        const val ALPHA_FULL = 1f
-        const val ALPHA_DISABLED = 0.3f
     }
 
     init {
@@ -100,10 +97,10 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
         setContentView(R.layout.activity_main)
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) window.statusBarColor = Color.TRANSPARENT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) window.statusBarColor = Color.TRANSPARENT
         else {
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            viewGradient.visibility = View.GONE
+            viewGradient.isVisible = false
         }
 
         _mapView = mapView
@@ -115,7 +112,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         btnBack.setOnClickListener { presenter.onBackClick() }
         ivSelectFieldTo.setOnClickListener { presenter.switchUsedField() }
         drawer = drawerLayout as DrawerLayout
-        drawer.addDrawerListener(object: DrawerLayout.SimpleDrawerListener() {
+        drawer.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
             @CallSuper
             override fun onDrawerStateChanged(newState: Int) {
                 super.onDrawerStateChanged(newState)
@@ -126,22 +123,24 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         presenter.setAddressFields()
 
         initNavigation()
+        initHourly()
+
+        switch_mode.setOnCheckedChangeListener { _, isChecked -> presenter.tripModeSwitched(isChecked) }
 
         isFirst = savedInstanceState == null
 
-        val fade = Fade()
-        fade.duration = FADE_DURATION
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) window.exitTransition = fade
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) window.exitTransition = Fade().apply { duration = FADE_DURATION }
     }
 
     @CallSuper
     protected override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) search.elevation = resources.getDimension(R.dimen.search_elevation)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) search_panel.elevation = resources.getDimension(R.dimen.search_elevation)
         searchFrom.setUneditable()
         searchTo.setUneditable()
         searchFrom.setOnClickListener { performClick(false) }
         searchTo.setOnClickListener   { performClick(true) }
+        rl_hourly.setOnClickListener  { showNumberPicker(true) }
         btnNext.setOnClickListener    { presenter.onNextClick() }
         enableBtnNext()
     }
@@ -149,6 +148,18 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     private fun performClick(clickedTo: Boolean) {
         presenter.isClickTo = clickedTo
         processGoogleMap(true) { presenter.onSearchClick(searchFrom.text, searchTo.text, it.projection.visibleRegion.latLngBounds) }
+    }
+
+    private fun showNumberPicker(show: Boolean) {
+        hourlySheet.state = if (show) BottomSheetBehavior.STATE_COLLAPSED else BottomSheetBehavior.STATE_HIDDEN
+        onPickerExpanded(show)
+    }
+
+    private fun onPickerExpanded(expanded: Boolean) {
+        expanded.let {
+            switch_mode.isEnabled    = !it
+            search_panel.isClickable = !it
+        }
     }
 
     @CallSuper
@@ -185,28 +196,50 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         (navFooterVersion as TextView).text =
                 String.format(getString(R.string.nav_footer_version), versionName, versionCode)
         //navFooterReadMore.text = Html.fromHtml(Utils.convertMarkdownToHtml(getString(R.string.LNG_READMORE)))
-        navFooterStamp.setOnClickListener(readMoreListener)
-        navFooterReadMore.setOnClickListener(readMoreListener)
 
-        navHeaderShare.setOnClickListener(itemsNavigationViewListener)
-        navLogin.setOnClickListener(itemsNavigationViewListener)
-        navRequests.setOnClickListener(itemsNavigationViewListener)
-        navSettings.setOnClickListener(itemsNavigationViewListener)
-        navAbout.setOnClickListener(itemsNavigationViewListener)
-        navBecomeACarrier.setOnClickListener(itemsNavigationViewListener)
-        navPassengerMode.setOnClickListener(itemsNavigationViewListener)
+        readMoreListener.let {
+            navFooterStamp.setOnClickListener   (it)
+            navFooterReadMore.setOnClickListener(it)
+        }
+        itemsNavigationViewListener.let {
+            navHeaderShare.setOnClickListener   (it)
+            navLogin.setOnClickListener         (it)
+            navRequests.setOnClickListener      (it)
+            navSettings.setOnClickListener      (it)
+            navAbout.setOnClickListener         (it)
+            navBecomeACarrier.setOnClickListener(it)
+            navPassengerMode.setOnClickListener (it)
+        }
     }
 
+    private fun initHourly() {
+        hourlySheet = BottomSheetBehavior.from(hourly_sheet)
+        hourlySheet.state = BottomSheetBehavior.STATE_HIDDEN
+        with(np_hours) {
+            displayedValues = HourlyValuesHelper.getHourlyValues(this@MainActivity).toTypedArray()
+            minValue = 0
+            maxValue = displayedValues.size - 1
+            wrapSelectorWheel = false
+            tvCurrent_hours.text = displayedValues[0]
+            setOnValueChangedListener { _, _, newVal ->
+                presenter.tripDurationSelected(HourlyValuesHelper.durationValues[newVal])
+                tvCurrent_hours.text = displayedValues[newVal] }
+        }
+        tv_okBtn.setOnClickListener { showNumberPicker(false) }
+    }
 
     protected override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
-        gm.setMyLocationEnabled(true)
-        gm.uiSettings.isMyLocationButtonEnabled = false
+        if (systemInteractor.locationPermissionsGranted ?: true) {
+            gm.setMyLocationEnabled(true)
+            gm.uiSettings.isMyLocationButtonEnabled = false
+        }
+
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
-        gm.setOnCameraMoveListener { presenter.onCameraMove(gm.cameraPosition!!.target, true);  }
-        gm.setOnCameraIdleListener { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
+        gm.setOnCameraMoveListener        { presenter.onCameraMove(gm.cameraPosition!!.target, true)  }
+        gm.setOnCameraIdleListener        { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
         gm.setOnCameraMoveStartedListener {
-            if(it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+            if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
                 presenter.enablePinAnimation()
                 gm.setOnCameraMoveStartedListener(null)
             }
@@ -217,12 +250,12 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     override fun setMapPoint(point: LatLng, withAnimation: Boolean) {
         val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
         processGoogleMap(false) {
-            if(centerMarker != null) {
+            if (centerMarker != null) {
                 it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
                 moveCenterMarker(point)
             } else {
                 /* Грязный хак!!! */
-                if(isFirst || it.cameraPosition.zoom <= MAX_INIT_ZOOM) {
+                if (isFirst || it.cameraPosition.zoom <= MAX_INIT_ZOOM) {
                     val zoom1 = resources.getInteger(R.integer.map_min_zoom).toFloat()
                     it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom1))
                     isFirst = false
@@ -230,7 +263,7 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
                 }
                 //else googleMap.moveCamera(CameraUpdateFactory.newLatLng(point))
                 else {
-                    if(withAnimation) it.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+                    if (withAnimation) it.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
                     else it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
                 }
             }
@@ -261,10 +294,10 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
     }
 
     override fun blockSelectedField(block: Boolean, field: String) {
-        if(block){
-            when(field){
+        if (block) {
+            when (field) {
                 MainPresenter.FIELD_FROM -> searchFrom.text = getString(R.string.search_start)
-                MainPresenter.FIELD_TO -> searchTo.text = getString(R.string.search_start)
+                MainPresenter.FIELD_TO   -> searchTo.text   = getString(R.string.search_start)
             }
         }
     }
@@ -275,43 +308,39 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
 
     override fun initSearchForm() {
         searchFrom.sub_title.text = getString(R.string.LNG_FIELD_SOURCE_PICKUP)
-        searchTo.sub_title.text = getString(R.string.LNG_FIELD_DESTINATION)
+        searchTo.sub_title.text   = getString(R.string.LNG_FIELD_DESTINATION)
     }
 
     override fun setAddressFrom(address: String) {
         searchFrom.text = address
         enableBtnNext()
-        val iconRes: Int = if(address.isNotEmpty()) R.drawable.a_point_filled
-        else R.drawable.a_point_empty
-        icons_container.a_point.setImageDrawable(ContextCompat.getDrawable(this, iconRes))
+        icons_container.a_point.setImageDrawable(ContextCompat.getDrawable(
+            this,
+            if (address.isNotEmpty()) R.drawable.a_point_filled else R.drawable.a_point_empty
+        ))
     }
 
-    override fun setAddressTo(address: String)   {
+    override fun setAddressTo(address: String) {
         searchTo.text = address
         enableBtnNext()
-        val iconRes: Int
-        if(address.isNotEmpty()) iconRes = R.drawable.b_point_filled
-        else iconRes = R.drawable.b_point_empty
-        icons_container.b_point.setImageDrawable(ContextCompat.getDrawable(this, iconRes))
+        icons_container.b_point.setImageDrawable(ContextCompat.getDrawable(
+            this,
+            if (address.isNotEmpty()) R.drawable.b_point_filled else R.drawable.b_point_empty
+        ))
     }
 
     private fun enableBtnNext() {
-        btnNext.isEnabled = searchFrom.text.isNotEmpty() && searchTo.text.isNotEmpty()
+        btnNext.isEnabled = searchFrom.text.isNotEmpty() && (searchTo.text.isNotEmpty() || presenter.isHourly())
     }
 
     override fun setProfile(profile: ProfileModel) {
-        if(!profile.isLoggedIn()) {
-            navHeaderName.visibility = View.GONE
-            navHeaderEmail.visibility = View.GONE
-            navLogin.visibility = View.VISIBLE
-            navRequests.visibility = View.GONE
-        } else {
-            navHeaderName.visibility = View.VISIBLE
-            navHeaderEmail.visibility = View.VISIBLE
+        navHeaderName.isVisible  = profile.isLoggedIn()
+        navHeaderEmail.isVisible = profile.isLoggedIn()
+        navRequests.isVisible    = profile.isLoggedIn()
+        navLogin.isVisible       = !profile.isLoggedIn()
+        if (profile.isLoggedIn()) {
             navHeaderName.text = profile.name
             navHeaderEmail.text = profile.email
-            navLogin.visibility = View.GONE
-            navRequests.visibility = View.VISIBLE
         }
     }
 
@@ -331,28 +360,53 @@ class MainActivity: BaseGoogleMapActivity(), MainView {
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END)
     }
 
-    private fun switchButtons(isBackVisible: Boolean){
-        if (isBackVisible) {
-            btnBack.visibility = View.VISIBLE
-            btnShowDrawerLayout.visibility = View.GONE
-        } else {
-            btnBack.visibility = View.GONE
-            btnShowDrawerLayout.visibility = View.VISIBLE
-        }
+    private fun switchButtons(isBackVisible: Boolean) {
+        btnBack.isVisible = isBackVisible
+        btnShowDrawerLayout.isVisible = !isBackVisible
     }
 
     private fun setAlpha(alpha: Float) {
         searchFrom.alpha = alpha
-        a_point.alpha = alpha
+        a_point.alpha    = alpha
     }
 
     override fun onBackClick() {
-        if(drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START)
-        else super.onBackPressed()
+        if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START) else super.onBackPressed()
     }
 
     override fun showReadMoreDialog() {
         drawer.closeDrawer(GravityCompat.START)
         ReadMoreFragment().show(supportFragmentManager, getString(R.string.tag_read_more))
+    }
+
+    override fun changeFields(hourly: Boolean) {
+        rl_hourly.isVisible    = hourly
+        hourly_point.isVisible = hourly
+
+        rl_searchForm.isGone = hourly
+        b_point.isGone       = hourly
+        enableBtnNext()
+//        AnimationHelper(this).hourlyAnim(viewOut, imgOut, viewIn, imgIn)
+        link_line.isInvisible = hourly
+    }
+
+    override fun setTripMode(duration: Int?) {
+        duration?.let {
+            switch_mode.isChecked = true
+            with(HourlyValuesHelper) {
+                np_hours.value = durationValues.indexOf(it)
+                tvCurrent_hours.text = getValue(it, this@MainActivity)
+            }
+        }
+    }
+
+    companion object {
+        @JvmField val MY_LOCATION_BUTTON_INDEX = 2
+        @JvmField val COMPASS_BUTTON_INDEX = 5
+        @JvmField val FADE_DURATION = 500L
+        @JvmField val MAX_INIT_ZOOM = 2.0f
+
+        const val ALPHA_FULL = 1f
+        const val ALPHA_DISABLED = 0.3f
     }
 }

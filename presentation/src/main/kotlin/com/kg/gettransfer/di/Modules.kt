@@ -1,5 +1,7 @@
 package com.kg.gettransfer.di
 
+import android.content.Context
+
 import com.facebook.appevents.AppEventsLogger
 
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -21,8 +23,13 @@ import com.kg.gettransfer.geo.GeoRepositoryImpl
 
 import com.kg.gettransfer.prefs.PreferencesImpl
 
+import com.kg.gettransfer.presentation.mapper.*
+
 import com.kg.gettransfer.service.OfferServiceConnection
+
 import com.kg.gettransfer.utilities.Analytics
+
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 
 import kotlinx.coroutines.Dispatchers
 
@@ -73,14 +80,17 @@ val domainModule = module {
 }
 
 val androidModule = module {
-    factory { OfferServiceConnection() }
-	single { CoroutineContexts(Dispatchers.Main, Dispatchers.IO) }
-	single { FirebaseAnalytics.getInstance(androidApplication().applicationContext) }
-	single { LocaleManager() }
-	single { AppEventsLogger.newLogger(androidApplication().applicationContext) }
+    single { PaymentStatusRequestMapper() }
+
+    single { OfferServiceConnection() }
+    single { CoroutineContexts(Dispatchers.Main, Dispatchers.IO) }
+    single { FirebaseAnalytics.getInstance(androidApplication().applicationContext) }
+    single { LocaleManager() }
+    single { AppEventsLogger.newLogger(androidApplication().applicationContext) }
     single { Analytics(get(), get()) }
+    single { PhoneNumberUtil.createInstance(get<Context>()) }
 }
 
 val testModule = module {
-	single { CoroutineContexts(Dispatchers.IO, Dispatchers.IO) }
+    single { CoroutineContexts(Dispatchers.IO, Dispatchers.IO) }
 }

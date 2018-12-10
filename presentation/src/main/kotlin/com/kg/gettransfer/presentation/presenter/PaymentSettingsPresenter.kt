@@ -6,8 +6,6 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.google.firebase.analytics.FirebaseAnalytics
-
 import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
@@ -22,38 +20,35 @@ import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
 import com.kg.gettransfer.presentation.view.PaymentSettingsView
 import com.kg.gettransfer.presentation.view.Screens
-import com.kg.gettransfer.utilities.Analytics.Companion.CURRENCY
-import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_BEGIN_CHECKOUT
-import com.kg.gettransfer.utilities.Analytics.Companion.PROMOCODE
-import com.kg.gettransfer.utilities.Analytics.Companion.SHARE
-import com.kg.gettransfer.utilities.Analytics.Companion.VALUE
+
+import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.standalone.inject
 
 import timber.log.Timber
 
 @InjectViewState
-class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
+class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
     companion object {
-        @JvmField val PRICE_30         = 0.3
+        @JvmField val PRICE_30 = 0.3
     }
-    
+
     private val offerInteractor: OfferInteractor by inject()
     private val paymentInteractor: PaymentInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
-    
+
     private var offer: Offer? = null
     internal lateinit var params: PaymentSettingsView.Params
-    
+
     private lateinit var paymentRequest: PaymentRequestModel
-    
+
     @CallSuper
     override fun attachView(view: PaymentSettingsView?) {
         super.attachView(view)
         offer = offerInteractor.getOffer(params.offerId)
         offer?.let {
             paymentRequest = PaymentRequestModel(params.transferId, params.offerId)
-            viewState.setOffer(Mappers.getOfferModel(it, systemInteractor.locale))
+            viewState.setOffer(Mappers.getOfferModel(it), params.paymentPercentages)
             return
         }
         viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${params.offerId}] not found!"))
@@ -69,7 +64,7 @@ class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
 
     fun getPayment() = utils.launchSuspend {
         viewState.blockInterface(true)
-            
+
         val result = utils.asyncAwait { paymentInteractor.getPayment(Mappers.getPaymentRequest(paymentRequest)) }
         if(result.error != null) {
             Timber.e(result.error!!)
@@ -80,32 +75,32 @@ class PaymentSettingsPresenter: BasePresenter<PaymentSettingsView>() {
         }
         viewState.blockInterface(false)
     }
-    
+
     private fun logEventBeginCheckout() {
         val bundle = Bundle()
-        val map = HashMap<String, Any?>()
+        val map = mutableMapOf<String, Any?>()
 
-        bundle.putString(CURRENCY, systemInteractor.currency.currencyCode)
-        map[CURRENCY] = systemInteractor.currency.currencyCode
+        bundle.putString(Analytics.CURRENCY, systemInteractor.currency.currencyCode)
+        map[Analytics.CURRENCY] = systemInteractor.currency.currencyCode
 
         var price = offer!!.price.amount
         when (paymentRequest.percentage) {
             OfferModel.FULL_PRICE -> {
-                bundle.putDouble(VALUE, price)
-                map[FirebaseAnalytics.Param.VALUE] = price
+                bundle.putDouble(Analytics.VALUE, price)
+                map[Analytics.VALUE] = price
             }
             OfferModel.PRICE_30 -> {
                 price *= PRICE_30
-                bundle.putDouble(VALUE, price)
-                map[VALUE] = price
+                bundle.putDouble(Analytics.VALUE, price)
+                map[Analytics.VALUE] = price
             }
         }
-        bundle.putInt(SHARE, paymentRequest.percentage)
-        map[SHARE] = paymentRequest.percentage
-        bundle.putString(PROMOCODE, transferInteractor.transferNew?.promoCode)
-        map[PROMOCODE] = transferInteractor.transferNew?.promoCode
+        bundle.putInt(Analytics.SHARE, paymentRequest.percentage)
+        map[Analytics.SHARE] = paymentRequest.percentage
+        bundle.putString(Analytics.PROMOCODE, transferInteractor.transferNew?.promoCode)
+        map[Analytics.PROMOCODE] = transferInteractor.transferNew?.promoCode
 
-        analytics.logEventBeginCheckout(EVENT_BEGIN_CHECKOUT, bundle, map, price)
+        analytics.logEventBeginCheckout(Analytics.EVENT_BEGIN_CHECKOUT, bundle, map, price)
     }
 
     fun changePrice(price: Int)        { paymentRequest.percentage = price }

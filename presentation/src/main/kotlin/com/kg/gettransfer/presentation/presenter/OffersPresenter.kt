@@ -15,19 +15,12 @@ import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 
+import com.kg.gettransfer.presentation.ui.SystemUtils
+
 import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.Screens
+
 import com.kg.gettransfer.utilities.Analytics
-import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_OFFERS
-import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_BOOK
-import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_DETAILS
-import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_FILTER
-import com.kg.gettransfer.utilities.Analytics.Companion.PRICE_DOWN
-import com.kg.gettransfer.utilities.Analytics.Companion.PRICE_UP
-import com.kg.gettransfer.utilities.Analytics.Companion.RATING_DOWN
-import com.kg.gettransfer.utilities.Analytics.Companion.RATING_UP
-import com.kg.gettransfer.utilities.Analytics.Companion.YEAH_FILTER_DOWN
-import com.kg.gettransfer.utilities.Analytics.Companion.YEAH_FILTER_UP
 
 import com.yandex.metrica.YandexMetrica
 
@@ -47,14 +40,23 @@ class OffersPresenter: BasePresenter<OffersView>() {
     */
 
     internal var transferId = 0L
-    
-    private lateinit var transfer: Transfer 
+
+    private lateinit var transfer: Transfer
     private lateinit var offers: List<OfferModel>
 
     private var sortCategory: String = SORT_PRICE
     private var sortHigherToLower = false
 
     companion object {
+        @JvmField val RATING_UP   = "rating_asc"
+        @JvmField val RATING_DOWN = "rating_desc"
+
+        @JvmField val PRICE_UP    = "price_asc"
+        @JvmField val PRICE_DOWN  = "price_desc"
+
+        @JvmField val YEAH_FILTER_UP   = "year_asc"
+        @JvmField val YEAH_FILTER_DOWN = "year_desc"
+
         @JvmField val SORT_YEAR   = "sort_year"
         @JvmField val SORT_RATING = "sort_rating"
         @JvmField val SORT_PRICE  = "sort_price"
@@ -70,18 +72,17 @@ class OffersPresenter: BasePresenter<OffersView>() {
                 Timber.e(result.error!!)
                 if(result.error!!.isNotLoggedIn()) viewState.redirectView()
                 else if(result.error!!.code != ApiException.NETWORK_ERROR) viewState.setError(result.error!!)
+            } else if(result.model.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE){
+                router.exit()
             } else {
                 transfer = result.model
-                val transferModel = Mappers.getTransferModel(transfer,
-                                                             systemInteractor.locale,
-                                                             systemInteractor.distanceUnit,
-                                                             systemInteractor.transportTypes)
-                viewState.setDate(transferModel.dateTime)
+                val transferModel = Mappers.getTransferModel(transfer)
+                viewState.setDate(SystemUtils.formatDateTime(transferModel.dateTime))
                 viewState.setTransfer(transferModel)
 
                 val r = utils.asyncAwait{ offerInteractor.getOffers(result.model.id) }
                 if(r.error == null) {
-                    offers = r.model.map { Mappers.getOfferModel(it, systemInteractor.locale) }
+                    offers = r.model.map { Mappers.getOfferModel(it) }
                     //changeSortType(SORT_PRICE)
                     setOffers()
                 }
@@ -96,8 +97,8 @@ class OffersPresenter: BasePresenter<OffersView>() {
 
     fun onNewOffer(offer: Offer) {
         offerInteractor.newOffer(offer)
-        offers = offers.toMutableList().apply { add(Mappers.getOfferModel(offer, systemInteractor.locale)) }
-        setOffers()
+        offers = offers.toMutableList().apply { add(Mappers.getOfferModel(offer)) }
+        utils.launchSuspend { setOffers() }
     }
 
     fun onRequestInfoClicked() { router.navigateTo(Screens.Details(transferId)) }
@@ -105,15 +106,15 @@ class OffersPresenter: BasePresenter<OffersView>() {
     fun onSelectOfferClicked(offer: OfferModel, isShowingOfferDetails: Boolean) {
         if(isShowingOfferDetails) {
             viewState.showBottomSheetOfferDetails(offer)
-            logEvent(OFFER_DETAILS)
+            logEvent(Analytics.OFFER_DETAILS)
         } else {
-            logEvent(OFFER_BOOK)
-            router.navigateTo(Screens.PaymentSettings(transfer.id, offer.id, transfer.dateRefund))
+            logEvent(Analytics.OFFER_BOOK)
+            router.navigateTo(Screens.PaymentSettings(transfer.id, offer.id, transfer.dateRefund, transfer.paymentPercentages))
         }
     }
 
     fun logEvent(value: String) {
-        val map = HashMap<String, Any>()
+        val map = mutableMapOf<String, Any>()
         map[Analytics.PARAM_KEY_NAME] = value
 
         analytics.logEvent(Analytics.EVENT_BUTTONS, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
@@ -127,6 +128,7 @@ class OffersPresenter: BasePresenter<OffersView>() {
 
     fun cancelRequest(isCancel: Boolean) {
         if(!isCancel) return
+        logEvent(Analytics.CANCEL_TRANSFER_BTN)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.cancelTransfer(transferId, "") }
@@ -151,7 +153,7 @@ class OffersPresenter: BasePresenter<OffersView>() {
         }
         setOffers()
     }
-    
+
     private fun setOffers() {
         sortOffers()
         viewState.setOffers(offers)
@@ -180,9 +182,9 @@ class OffersPresenter: BasePresenter<OffersView>() {
     }
 
     private fun logFilterEvent(value: String) {
-        val map = HashMap<String, Any>()
-        map[PARAM_KEY_FILTER] = value
+        val map = mutableMapOf<String, Any>()
+        map[Analytics.PARAM_KEY_FILTER] = value
 
-        analytics.logEvent(EVENT_OFFERS, createStringBundle(PARAM_KEY_FILTER, value), map)
+        analytics.logEvent(Analytics.EVENT_OFFERS, createStringBundle(Analytics.PARAM_KEY_FILTER, value), map)
     }
 }

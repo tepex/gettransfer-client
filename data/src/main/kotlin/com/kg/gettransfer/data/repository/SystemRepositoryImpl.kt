@@ -18,7 +18,6 @@ import com.kg.gettransfer.data.mapper.ExceptionMapper
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
-import com.kg.gettransfer.data.model.GTAddressEntity
 import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.domain.ApiException
@@ -31,8 +30,6 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.domain.repository.SystemRepository
-
-import java.util.concurrent.TimeoutException
 
 import org.koin.standalone.get
 
@@ -50,6 +47,9 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         preferencesCache.addListener(this)
     }
 
+    override var isInitialized = false
+        private set
+
     override var configs = Configs.DEFAULT
         private set
     override var account = Account.NO_ACCOUNT
@@ -58,6 +58,10 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
     override var lastMode: String
         get() = preferencesCache.lastMode
         set(value) { preferencesCache.lastMode = value }
+
+    override var isFirstLaunch: Boolean
+        get() = preferencesCache.isFirstLaunch
+        set(value) { preferencesCache.isFirstLaunch = value }
 
     override var isOnboardingShowed: Boolean
         get() = preferencesCache.isOnboardingShowed
@@ -109,6 +113,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
             }
             result.error?.let { error = ExceptionMapper.map(it) }
         }
+        isInitialized = true
         return Result(account, error)
     }
 
@@ -147,5 +152,5 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
     }
 
     override fun addListener(listener: SystemListener)    { listeners.add(listener) }
-    override fun removeListener(listener: SystemListener) { listeners.add(listener) }    
+    override fun removeListener(listener: SystemListener) { listeners.add(listener) }
 }

@@ -43,386 +43,27 @@
     <string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
     <string name="activity_carrier_transfer_details_title">Trip details</string> <!-- Title, which not used in new design -->
 
-    <string name="passenger_number_default">1</string>
+    <string name="passenger_number_default">0</string>
     <string name="child_number_default">0</string>
-
-    <!-- old locales -->
-
-    <!--&lt;!&ndash; Navigation &ndash;&gt;
-    <string name="nav_active_rides_title">Active rides</string>
-    <string name="nav_active_rides_subtitle">Current transfers</string>
-    <string name="nav_archived_rides_title">Archived rides</string>
-    <string name="nav_archived_rides_subtitle">Last transfers</string>
-    <string name="nav_settings_title">Settings</string>
-    <string name="nav_settings_subtitle">Language and regional preferences</string>
-    <string name="nav_about_title">About</string>
-    <string name="nav_about_subtitle">Advantages of GetTransport</string>
-    <string name="nav_footer_read_more">Read more</string>
-    &lt;!&ndash; Search form &ndash;&gt;
-    <string name="search_from_hint">From</string>
-    <string name="search_to_hint">To</string>
-    <string name="point_on_the_map">Point on the map</string>
-    <string name="search">Search</string>
-
-    <string name="title_latest">Недавние места</string>
-    <string name="title_popular">Популярные места</string>
-
-    <string name="airport">Аэропорт</string>
-    <string name="railway">Вокзал</string>
-    <string name="hotel">Отель</string>
-
-    &lt;!&ndash; About &ndash;&gt;
-    <string name="about_title_item1">ЛУЧШИЕ ЦЕНЫ</string>
-    <string name="about_content_item1">Выберите цену перевозки из множества предложений.</string>
-    <string name="about_title_item2">ЛУЧШИЕ УСЛОВИЯ</string>
-    <string name="about_content_item2">Широкий выбор классов и типов машин. Все включено. Время ожидания до 45 минут — бесплатно.</string>
-    <string name="about_title_item3">БЕЗОПАСНЫЕ ПЕРЕВОЗКИ</string>
-    <string name="about_content_item3">Вы всегда заранее знаете, кто вас везет. Все перевозчики аккредитованы и проверены.</string>
-    &lt;!&ndash; Read more &ndash;&gt;
-    <string name="read_more_title">We return the difference in price</string>
-    <string name="read_more_content1">You can claim a refund of the difference in price, if you find a similar offer on another site at a lower price.</string>
-    <string name="read_more_content2">Just remember to contact us after booking with us and at least 48 hours before your check-in date. You\'ll need to provide us with the link to the other offer and it must be online and available when we check.</string>
-    <string name="read_more_title1">We will refund you the difference provided that the other offer:</string>
-    <string name="read_more_item1">• identical to our transfer</string>
-    <string name="read_more_item2">• designated on the relevant dates</string>
-    <string name="read_more_item3">• does not participate in the action from the carrier and does not have a discount</string>
-    <string name="read_more_item4">• is provided by a legal entity</string>
-    <string name="read_more_close_button">Close</string>
-    &lt;!&ndash; Transfer &ndash;&gt;
-    <string name="distance_time">Distance: %1$s\nExpected travel time: %2$s</string>
-    <string name="distance">Distance: %1$d %2$s</string>
-    <string name="transfer_connecting_carriers">Соединяем с ближайшими %1$d перевозчиками</string>
-    <string name="transfer_date_local">%1$s (местное)</string> &lt;!&ndash; Formated string &ndash;&gt;
-    <string name="transfer_order">Заявка на трансфер №%1$d</string> &lt;!&ndash; динамические значения &ndash;&gt;
-    <string name="transfer_promo_hint">Enter promocode</string>
-    <string name="transfer_promo_result_default">I have got a promo code</string>
-    <string name="transfer_promo_result_success">%1$s discount</string>
-    <string name="transfer_promo_result_fail">Invalid promo code</string>
-    &lt;!&ndash; Transport types &ndash;&gt;
-    <string name="transport_type_economy">Economy</string>
-    <string name="transport_type_business">Business</string>
-    <string name="transport_type_premium">Premium</string>
-    <string name="transport_type_van">Van</string>
-    <string name="transport_type_minibus">Minibus</string>
-    <string name="transport_type_bus">Bus</string>
-    <string name="transport_type_limousine">Limousine</string>
-    <string name="transport_type_helicopter">Helicopter</string>
-    <string name="transport_type_unknown">Unknown</string>
-    <string name="count_persons_and_baggage"> X %1$d</string>
-
-    &lt;!&ndash; Login &ndash;&gt;
-    <string name="email_address">Email address</string>
-    <string name="enter_password">Enter password</string>
-    <string name="login_subtitle">Вход для клиентов и водителей</string>
-
-    &lt;!&ndash;
-	<string name=""></string>
-	&ndash;&gt;
-
-
-    &lt;!&ndash; Errors & messages &ndash;&gt;
-    <string name="err_title">Ошибка</string>
-    <string name="err_location_service_not_available">Cервис геолокации недоступен!</string>
-    <string name="err_address_service_xxx">Ошибка определения адреса!</string> &lt;!&ndash; нет в iOS&ndash;&gt;
-    <string name="err_server">Ошибка: %1$s</string> &lt;!&ndash; нет в iOS&ndash;&gt;
-    <string name="err_server_code">Ошибка сервера %1$s! %2$s</string> &lt;!&ndash; нет в iOS&ndash;&gt;
-    <string name="error_login">Incorrect login or password</string>
-
-
-    <string name="login">Login</string>
-    <string name="email">Email</string>
-    <string name="email_">*Email</string>
-    <string name="password">Password</string>
-    <string name="restore_password"><a href="https://gettransfer.com/en/forgot_password">Restore password</a></string>
-    <string name="no_net_info">No internet</string>
-    <string name="log_in_to_see_transfers_and_offers">Log in to see transfers and offers</string>
-    <string name="create_new_transfer">Create new transfer</string>
-    <string name="no_transfers">You have not уet requested any transfers</string>
-    <string name="book">Book</string>
-
-    <string name="profile">Profile</string>
-    <string name="newTransfer">New</string>
-    <string name="list">List</string>
-
-    <string name="offers">Offers</string>
-
-    <string name="number_symbol">#</string>
-
-    &lt;!&ndash;<string name="carrier_number">Carrier #</string>&ndash;&gt;
-
-    <string name="from">From</string>
-    <string name="to">To</string>
-    <string name="duration">Duration</string>
-
-    <string name="pick_up_address">Pick up address</string>
-    <string name="destination_address">Destination address</string>
-    <string name="time_you_ll_need_a_car">Time you\'ll need a car</string>
-
-    <string name="swipe_to_refresh">Swipe to refresh</string>
-
-    <string name="economy">Economy</string>
-    <string name="business">Business</string>
-    <string name="premium">Premium</string>
-    <string name="van">Van</string>
-    <string name="minibus">Minibus</string>
-    <string name="bus">Bus</string>
-    <string name="limousine">Limousine</string>
-    <string name="helicopter">Helicopter</string>
-
-    <string name="transfer_header">Transfer #</string>
-    <string name="book_header">Book transfer #</string>
-
-    <string name="schedule_transfer">Schedule transfer</string>
-    <string name="for_a_while">For a while</string>
-    <string name="from_a_to_b">From A to B</string>
-
-    <string name="transfers">Transfers</string>
-    <string name="active">Active</string>
-    <string name="archive">Archive</string>
-
-    <string name="pl_hours">hour|hours</string>
-    <string name="pl_days">day|days</string>
-    <string name="pl_offers">offer|offers</string>
-
-    <string name="connecting_to">Connecting to</string>
-    <string name="pl_carriers">carrier|carriers</string>
-
-    <string name="routing_failed">Routing failed</string>
-
-    <string name="connecting_to_carriers">Connecting to carriers…</string>
-    <string name="transfer_date_passed">Transfer date passed</string>
-    <string name="manager_rejected_request">Manager rejected request</string>
-    <string name="you_cancelled_request">You cancelled request</string>
-    <string name="restore_question">Restore?</string>
-    <string name="cancel_request">Cancel request</string>
-    <string name="care_service">Care service</string>
-    <string name="offers_will_be_shortly">Offers will be there shortly, often faster than in 1 day</string>
-    <string name="choose_your_carrier">Choose your carrier</string>
-    <string name="restore_request">Restore request</string>
-
-    <string name="comments">Comments</string>
-    <string name="child_seats">Child seats</string>
-    <string name="transport">Transport</string>
-    <string name="passengers">Passengers</string>
-    <string name="name_sign">Name sign</string>
-    <string name="details">DETAILS</string>
-    <string name="when">When</string>
-    <string name="pick_up_at">Pick up at</string>
-    <string name="refreshments">Refreshments</string>
-
-    <string name="status_active">Active</string>
-    <string name="status_confirmed">Confirmed</string>
-    <string name="status_expired">Expired</string>
-    <string name="status_canceled">Canceled</string>
-    <string name="status_rejected">Rejected</string>
-    <string name="status_archive">Archive</string>
-
-    <string name="status_long_connecting">Connecting …</string>
-    <string name="phone">Phone</string>
-    <string name="phone_">*Phone</string>
-    <string name="currency">Currency</string>
-    <string name="distance_unit">Distance unit</string>
-    <string name="name">Name</string>
-    <string name="receive_email_notifications">Receive email notifications</string>
-    <string name="register">Register</string>
-    <string name="log_out">Log out</string>
-
-    <string name="vehicle">Vehicle</string>
-    <string name="driver">Driver</string>
-    <string name="fair">Fair</string>
-    <string name="successful_transfers">Successful transfers</string>
-    <string name="price">Price</string>
-    <string name="pay_30_now_70_to_the_driver" formatted="false">Pay 30% now, 70% later to the driver</string>
-    <string name="pay_100_now" formatted="false">Pay 100% now</string>
-    <string name="pay_n_now_n_to_the_driver">%1$s now, %2$s later</string>
-    <string name="pay_n_now">%1$s now</string>
-    <string name="pay">Pay</string>
-
-    <string name="date">Date</string>
-    <string name="time">Time</string>
-    <string name="adults_and_children">Adults and children</string>
-    <string name="class_type">Class, type</string>
-    <string name="contact_with">Contact with</string>
-    <string name="to_meet_you_with_a_name_sign">To meet you with a name sign</string>
-    <string name="optional_fields">Optional fields</string>
-    <string name="your_price">Your price</string>
-    <string name="flight_or_train">Flight or train</string>
-    <string name="number">Number</string>
-    <string name="children_snowboards_ski_bags_surfboards">Children, snowboards, ski bags, surfboards</string>
-    <string name="have_a_promo_code">Have a promo code?</string>
-    <string name="use_promo">Use promo</string>
-    <string name="promo_code">Promo code</string>
-    <string name="list_unavailable">List unavailable</string>
-    <string name="error_creating_request">Error creating request</string>
-
-    <string name="please_fill_to_get_offers">Please fill %1$s to get offers."</string>
-    <string name="dont_worry">"You'll be able to cancel your request anytime."</string>
-
-    <string name="km">km</string>
-    <string name="mi">mi</string>
-    <string name="pl_mi">mi</string>
-
-    <string name="min">min</string>
-
-    <string name="from_price">from</string>
-    <string name="unable_to_load_prices">Unable to load prices</string>
-    <string name="unable_to_update_offers">Unable to update offers</string>
-    <string name="unable_to_update_transfer">Unable to update transfer</string>
-
-    <string name="payment_processing_fee_etc" formatted="false">"Payment processing fee is 3%\nRefund is available 3 days before trip"</string>
-    <string name="unable_to_update_transfers">Unable to update transfers</string>
-
-    <string name="new_transfer_short">New</string>
-
-    <string name="i_read_and_agree">Я ознакомился и согласен с текстом</string>
-    <string name="license_agreement"><u>Лицензионное соглашение</u></string>
-    <string name="get_offers">Get offers</string>
-    <string name="type_your_comments">Type here your comments, requirements, or driver tasks</string>
-    <string name="flight_or_train_number">Flight or train number</string>
-    <string name="enter_phone_number">Enter phone number</string>
-    <string name="enter_email">Enter email</string>
-    <string name="your_name">Your name</string>
-    <string name="additional">Additional</string>
-    <string name="number_of_passengers">Number of passengers</string>
-    <string name="transfer_date_and_time">Transfer date and time</string>
-    <string name="suggest_your_price"><font size="15">Suggest your price</font></string>
-
-    <string name="licence_agreement">Licence agreement</string>
-
-    <string name="sign_up">Sign up</string>
-    <string name="sign_out">Sign out</string>
-    <string name="application_language">Application language</string>
-    <string name="distance_units">Distance units</string>
-    <string name="endpoint">Endpoint</string> &lt;!&ndash; нет в iOS&ndash;&gt;
-    <string name="logs">Logs</string> &lt;!&ndash; нет в iOS&ndash;&gt;
-    <string name="carrier_offers">Carrier offers</string>
-    <string name="select">Select</string>
-
-    <string name="price_from">from %1$s</string> &lt;!&ndash; Formated string. Изменить на LNG_RIDE_FROM при изменении дизайна &ndash;&gt;
-
-    &lt;!&ndash;NavigationView&ndash;&gt;
-    <string name="text_nav_login_title">Sign up</string>
-    <string name="text_nav_login_subtitle">Client and drivers login</string>
-
-    <string name="text_nav_requests_title">Requests</string>
-    <string name="text_nav_requests_subtitle">Active and archived rides</string>
-
-    <string name="text_nav_carrier_trips_title">Upcoming transfers</string>
-    <string name="text_nav_carrier_trips_subtitle">Upcoming transfers</string>
-
-    <string name="text_nav_settings_title">Settings</string>
-    <string name="text_nav_settings_subtitle">Language and payment settings</string>
-
-    <string name="text_nav_about_title">About us</string>
-    <string name="text_nav_about_subtitle">Our features</string>
-
-    <string name="text_nav_become_a_carrier_title">Become a carrier</string>
-    <string name="text_nav_become_a_carrier_subtitle">Drivers registration</string>
-
-    <string name="text_nav_passenger_mode_title">Passenger mode</string>
-    <string name="text_nav_passenger_mode_subtitle">Passenger mode</string>
-
-    &lt;!&ndash;Title text&ndash;&gt;
-    <string name="requests">Requests</string>
-
-    &lt;!&ndash;view_transfer_request_info&ndash;&gt;
-    <string name="transfer_request_num">Transfer request № %1$s</string> &lt;!&ndash; Formated string &ndash;&gt;
-    <string name="next">Next</string>
-    <string name="done">Done</string>
-    <string name="average_rate">average rate on route</string> &lt;!&ndash; Иначе на iOS &ndash;&gt;
-    <string name="rub">₽</string> &lt;!&ndash; Нет на iOS &ndash;&gt;
-    <string name="comment_options">Comment and options</string>
-
-    &lt;!&ndash;activity_transfer_details&ndash;&gt;
-    <string name="activity_transfer_details_title">Request details</string>
-    <string name="activity_transfer_details_paid_sum">%1$s (%2$s\%%)</string> &lt;!&ndash; динамические значения &ndash;&gt;
-    <string name="activity_transfer_details_btn_cancel">Cancel</string>
-    <string name="activity_transfer_details_languages">Languges</string>
-    <string name="activity_transfer_details_price">Price</string>
-    <string name="activity_transfer_details_car_number">Number</string>
-    <string name="activity_transfer_details_car_name">Transport</string>
-    <string name="activity_transfer_details_transport_type">Transport type</string>
-    <string name="activity_transfer_details_choosen_offer">Chosen offer</string>
-    <string name="activity_transfer_details_pay">Pay</string>
-    <string name="activity_transfer_details_paid">Paid</string>
-    <string name="activity_transfer_details_paid_details">Paid details</string>
-    <string name="activity_transfer_details_flight_or_train_number">Flight or train number</string>
-    <string name="activity_transfer_details_child_seats">Child seats</string>
-    <string name="activity_transfer_details_name">Name</string>
-    <string name="activity_transfer_details_passenger">Passenger</string>
-    <string name="luggage">Luggage</string>
-
-    &lt;!&ndash;activity_carrier_trips&ndash;&gt;
-    <string name="activity_carrier_trips_title">Upcoming transfers</string>
-
-    &lt;!&ndash;activity_carrier_transfer_details&ndash;&gt;
-    <string name="call">Call</string>
-    <string name="chat">Chat</string>
-    <string name="btn_confirm_appointment">Confirm appointment</string>
-    <string name="transfer_details">Transfer details</string>
-    <string name="payment_details">Payment details</string>
-    <string name="remains_to_pay">Remain to pay</string>
-    <string name="driver_will_meet_you">*Driver will meet you with a name sign</string>
-    <string name="example_flight">Example: BA 2243</string>
-    <string name="close">Close</string>
-    <string name="ready">Ready</string>
-
-    &lt;!&ndash;activity_offers&ndash;&gt;
-    <string name="excellent_price_text_1">Fix an excellent price for your trip now</string>
-    <string name="excellent_price_text_2">Prices can grow, book now to guarantee best price</string>
-    <string name="sorted_year_made_text">Year made</string>
-    <string name="sorted_rating_text">Rating</string>
-    <string name="sorted_price_text">Price</string>
-
-    &lt;!&ndash;view_transfer_request_info&ndash;&gt;
-    <string name="cancel_request_underlined"><u>Cancel request</u></string>
-
-    <string name="alert_cancel_transfer_text">Are you shure cancel transfer?</string>
-    <string name="alert_no">No</string>
-    <string name="alert_yes">Yes</string>
-
-    <string name="driver_number">#%1$d</string> &lt;!&ndash; Formated string &ndash;&gt;
-    <string name="carrier_number">Carrier #%1$d</string>
-    <string name="driver_completed_transfers">made %1$d transfers</string> &lt;!&ndash; Formated string &ndash;&gt;
-    <string name="preferred_cost">(%1$s)</string>
-    <string name="terms">TERMS</string>
-    <string name="pay_full_price">Pay 100% now</string> &lt;!&ndash; динамические значения &ndash;&gt;
-    <string name="pay_third_of_price">Pay 30% now</string> &lt;!&ndash; динамические значения &ndash;&gt;
-    <string name="credit_card">Credit Card</string>
-    <string name="pay_pal">Pay Pal</string>
-    <string name="soon">Soon</string>
-    <string name="method_of_payment">METHOD OF PAYMENT</string>
-    <string name="payment_successful">Payment successful</string>
-    <string name="payment_failed">Payment failed</string>
-
-    <string name="price_part_1">70%% (%s) later to the driver</string> &lt;!&ndash; динамические значения &ndash;&gt;
-
-    <string name="clear">Clear</string>
-    <string name="title_starting_session">/////////////////////////////////////////////////////\n//////////////////// NEW SESSION ////////////////////\n/////////////////////////////////////////////////////</string>
-
-    <string name="please_wait">Please, wait, connection to carries...</string>
-
-    <string name="number_of_photos">%1$d/%2$d</string> &lt;!&ndash; динамические значения &ndash;&gt;
-
-    <string name="license_agreement"><u>Лицензионное соглашение</u></string>
-    <string name="become_carrier">Become a carrier</string>-->
-
 
     <string name="log_in_to_see_transfers_and_offers">Log in to see transfers and offers</string>
     <string name="log_in_requirement_error_title">You are not logged in</string>
 
-    <!-- new locales -->
-
+    <string name="tag_read_more" translatable="false">read_more_dialog</string>
+    <string name="email_support" translatable="false">info@gettransfer.com</string>
+    <string name="send_email">Send mail...</string>
+    <string name="no_email_apps">There are no email apps installed.</string>
+    <string name="driver_not_number">Driver has not a phone number</string>
 
 
     <string name="LNG_MISKO">TEST</string>
     <string name="LNG_OK">OK</string>
     <string name="LNG_CANCEL">Cancel</string>
-    <string name="LNG_CLOSE">Close</string>
+    <string name="LNG_CLOSE"><u>Close</u></string>
     <string name="LNG_CHOOSE">Select</string>
     <string name="LNG_BOOK">Book</string>
     <string name="LNG_CLEAR">Clear</string>
-    <string name="LNG_DONE">Done</string>
+    <string name="LNG_DONE"><u>Done</u></string>
     <string name="LNG_OPEN">Open</string>
     <string name="LNG_COPY">Copy</string>
     <string name="LNG_NEXT">Next</string>
@@ -446,8 +87,14 @@
     <string name="LNG_H">h</string>
     <string name="LNG_MIN">min</string>
     <string name="LNG_HOUR">hour</string>
+    <string name="LNG_DAYS">days</string>
     <string name="LNG_HOURS">hours</string>
     <string name="LNG_HOUR_FEW">hours</string>
+    <string name="LNG_DAY">day</string>
+    <string name="LNG_DAYS_FEW">days</string>
+    <string name="LNG_FIELD_DURATION_TRIP">Duration of the trip</string>
+    <string name="LNG_FIELD_PER_HOUSE">Select the duration of the trip</string>
+    <string name="LNG_PER_HOUR">Per hour</string>
     <string name="LNG_USD">US Dollar</string>
     <string name="LNG_EUR">Euro</string>
     <string name="LNG_GBP">Pound Sterling</string>
@@ -581,7 +228,7 @@
     <string name="LNG_RIDE_COMPLETED">Completed transfers: %s</string>
     <string name="LNG_RIDE_CREATION_SPINNER">Please wait, connecting...</string>
     <string name="LNG_RIDE_CHOOSE_TRANSPORT">Please select transport type</string>
-    <string name="LNG_RIDE_OFFERT">I aggree with \n<a href = '#'>License agreement</a></string>
+    <string name="LNG_RIDE_OFFERT">I aggree with \n<a href='#'>License agreement</a></string>
     <string name="LNG_RIDE_OFFERT_TITLE">License agreement</string>
     <string name="LNG_RIDE_OFFERT_ERROR">You should accept terms of use</string>
     <string name="LNG_RIDE_FAIR_PRICE_FORMAT">Average rate on route %s (ETA ~%s)</string>
@@ -609,10 +256,11 @@
     <string name="LNG_TIME_RIDE">Hourly transfer</string>
     <string name="LNG_WAIT_FOR_OFFERS">Please wait for offers</string>
     <string name="LNG_BOOK_OFFER">Please book car and driver</string>
-    <string name="LNG_TRANSFER_WAS">Transfer was</string>
+    <string name="LNG_TRANSFER_WAS">Transfer</string>
     <string name="LNG_TRANSFER_WILL_START">Transfer will start in</string>
     <string name="LNG_PENDING_PAYMENT">Transfer payment pending</string>
     <string name="LNG_RIDE_NUMBER">Transfer request #</string>
+    <string name="LNG_TOP_RATED">Top selection</string>
     <string name="LNG_TRANSPORT_ECONOMY">Economy</string>
     <string name="LNG_TRANSPORT_PREMIUM">Premium</string>
     <string name="LNG_TRANSPORT_SUV">Suv</string>
@@ -677,10 +325,10 @@
     <string name="LNG_RIDE_STATUS_PERFORMED">Performed</string>
     <string name="LNG_RIDE_STATUS_COMPLETED">Completed</string>
     <string name="LNG_RIDE_STATUS_CANCELED">Canceled</string>
-    <string name="LNG_RIDE_STATUS_NOTCOMPLETED">Not completed</string>
+    <string name="LNG_RIDE_STATUS_NOT_COMPLETED">Not completed</string>
     <string name="LNG_RIDE_STATUS_REJECTED">Rejected</string>
     <string name="LNG_RIDE_STATUS_DRAFT">Draft</string>
-    <string name="LNG_RIDE_STATUS_PENDING">Pending</string>
+    <string name="LNG_RIDE_STATUS_PENDING_CONFIRMATION">Pending</string>
     <string name="LNG_RIDE_STATUS_OUTDATED">Outdated</string>
     <string name="LNG_RIDE_OFFER_NEW">New</string>
     <string name="LNG_RIDE_OFFER_PERFORMED">Performed</string>
@@ -695,9 +343,9 @@
     <string name="LNG_PAYMENT_DECLINE_INFO">Try to pay again or use another bank card</string>
     <string name="LNG_PAYMENT_TRY_AGAIN">Try again</string>
     <string name="LNG_CUSTOMER_SUPPORT">Customer support</string>
-    <string name="LNG_PAYMENT_DETAILS">Details</string>
+    <string name="LNG_PAYMENT_DETAILS"><u>Details</u></string>
     <string name="LNG_TRANSFER_PAID_SUCCESSFULLY">Transfer paid successfully</string>
-    <string name="LNG_DOWNLOAD_BOOKING_VOUCHER">Download booking voucher</string>
+    <string name="LNG_DOWNLOAD_BOOKING_VOUCHER"><u>Download booking voucher</u></string>
     <string name="LNG_PAYMENT_CALL">Call</string>
     <string name="LNG_PAYMENT_CHAT">Chat</string>
     <string name="LNG_PAYMENT_EMAIL_TITLE">Transfer support</string>
@@ -706,11 +354,19 @@
     <string name="LNG_RIDE_ABOUT_REQUEST">About request</string>
     <string name="LNG_RIDE_ABOUT_DRIVER">About driver</string>
     <string name="LNG_RIDE_ABOUT">About transport</string>
-    <string name="from_price">from:</string>
-    <string name="tag_read_more" translatable="false">read_more_dialog</string>
-    <string name="email_support" translatable="false">info@gettransfer.com</string>
+    <string name="LNG_RIDE_REQUEST_WAS_SENT">Request was sent</string>
+    <string name="LNG_TRANSFER_AT">at</string>
+    <string name="LNG_LANGUAGES">Languages</string>
+    <string name="LNG_DRIVER_PHONE">Phone</string>
+    <string name="LNG_DRIVER_EMAIL">Email</string>
+    <string name="LNG_RIDE_FLIGHT_NUMBER">Flight number</string>
+    <string name="LNG_RIDE_NOT_PAID">Not paid</string>
+    <string name="LNG_TRANSFER_START">Transfer will start</string>
+    <string name="LNG_TRANSFER">Transfer</string>
+    <string name="LNG_RIDE_REQUEST_FOR">Request for</string>
+    <string name="LNG_RIDE_TRANSFER_CANCELLED">transfer cancelled</string>
+    <string name="LNG_ERROR_PASSENGERS">Number of passenger must be greater than zero</string>
+    <string name="LNG_TRANSFER_IN_PROGRESS">Transfer in progress</string>
     <string name="LNG_EMAIL_SUBJECT">Get help</string>
-    <string name="send_email">Send mail...</string>
-    <string name="no_email_apps">There are no email apps installed.</string>
 
 </resources>

@@ -16,19 +16,14 @@ import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
 
-import com.kg.gettransfer.utilities.Analytics.Companion.CURRENCY_PARAM
-import com.kg.gettransfer.utilities.Analytics.Companion.EMPTY_VALUE
-import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_SETTINGS
-import com.kg.gettransfer.utilities.Analytics.Companion.LANGUAGE_PARAM
-import com.kg.gettransfer.utilities.Analytics.Companion.LOG_OUT_PARAM
-import com.kg.gettransfer.utilities.Analytics.Companion.UNITS_PARAM
+import com.kg.gettransfer.utilities.Analytics
 
 import com.yandex.metrica.YandexMetrica
 
 import java.util.Locale
 
 @InjectViewState
-class SettingsPresenter: BasePresenter<SettingsView>() {
+class SettingsPresenter : BasePresenter<SettingsView>() {
     private lateinit var currencies: List<CurrencyModel>
     private lateinit var locales: List<LocaleModel>
     private lateinit var distanceUnits: List<DistanceUnitModel>
@@ -40,7 +35,7 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
     @CallSuper
     override fun attachView(view: SettingsView) {
         super.attachView(view)
-        if(restart) initConfigs()
+        if (restart) initConfigs()
 
         viewState.setCurrencies(currencies)
         viewState.setLocales(locales)
@@ -48,7 +43,7 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
 
         viewState.setEndpoints(endpoints)
 
-		val locale = systemInteractor.locale
+        val locale = systemInteractor.locale
         val localeModel = locales.find { it.delegate.language == locale.getLanguage() }
         viewState.setLocale(localeModel?.name ?: "")
 
@@ -66,7 +61,7 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
         systemInteractor.currency = currencyModel.delegate
         viewState.setCurrency(currencyModel.name)
         saveAccount()
-        logEvent(CURRENCY_PARAM, currencyModel.code)
+        logEvent(Analytics.CURRENCY_PARAM, currencyModel.code)
     }
 
     fun changeLocale(selected: Int): Locale {
@@ -74,8 +69,13 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
         val localeModel = locales.get(selected)
         systemInteractor.locale = localeModel.delegate
         viewState.setLocale(localeModel.name)
-        if(systemInteractor.account.user.loggedIn) saveAccount()
-        logEvent(LANGUAGE_PARAM, localeModel.name)
+        if (systemInteractor.account.user.loggedIn) saveAccount()
+        logEvent(Analytics.LANGUAGE_PARAM, localeModel.name)
+
+        Locale.setDefault(systemInteractor.locale)
+        initConfigs()
+        viewState.setCurrencies(currencies)
+
         return systemInteractor.locale
     }
 
@@ -84,7 +84,7 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
         systemInteractor.distanceUnit = distanceUnit.delegate
         viewState.setDistanceUnit(distanceUnit.name)
         saveAccount()
-        logEvent(UNITS_PARAM, distanceUnit.name)
+        logEvent(Analytics.UNITS_PARAM, distanceUnit.name)
     }
 
     fun changeEndpoint(selected: Int) {
@@ -105,21 +105,22 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
     fun onLogout() {
         utils.runAlien { systemInteractor.logout() }
         router.exit()
-        logEvent(LOG_OUT_PARAM, EMPTY_VALUE)
+        logEvent(Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)
     }
 
     fun onLogsClicked() = router.navigateTo(Screens.ShareLogs)
 
-    fun onResetOnboardingClicked(){ systemInteractor.isOnboardingShowed = false }
+    fun onResetOnboardingClicked() { systemInteractor.isOnboardingShowed = false }
 
     private fun saveAccount() = utils.launchSuspend {
         viewState.blockInterface(true)
         val result = utils.asyncAwait { systemInteractor.putAccount() }
-        result.error?.let { if(!it.isNotLoggedIn()) viewState.setError(it) }
+        result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
         viewState.blockInterface(false)
     }
 
     override fun onBackCommandClick() {
+//        localeWasChanged = false
         if(localeWasChanged) {
             localeWasChanged = false
             router.navigateTo(Screens.Main)
@@ -135,9 +136,9 @@ class SettingsPresenter: BasePresenter<SettingsView>() {
     }
 
     private fun logEvent(param: String, value: String) {
-        val map = HashMap<String, Any>()
+        val map = mutableMapOf<String, Any>()
         map[param] = value
 
-        analytics.logEvent(EVENT_SETTINGS, createStringBundle(param, value), map)
+        analytics.logEvent(Analytics.EVENT_SETTINGS, createStringBundle(param, value), map)
     }
 }

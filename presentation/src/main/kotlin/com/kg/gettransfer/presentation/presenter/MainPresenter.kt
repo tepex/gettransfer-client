@@ -20,23 +20,15 @@ import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.Screens
-import com.kg.gettransfer.utilities.Analytics.Companion.ABOUT_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.BEST_PRICE_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.DRIVER_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_MENU
-import com.kg.gettransfer.utilities.Analytics.Companion.LOGIN_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.MY_PLACE_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_NAME
-import com.kg.gettransfer.utilities.Analytics.Companion.SETTINGS_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.SHARE
-import com.kg.gettransfer.utilities.Analytics.Companion.TRANSFER_CLICKED
+
+import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.standalone.inject
 
 import timber.log.Timber
 
 @InjectViewState
-class MainPresenter: BasePresenter<MainView>() {
+class MainPresenter : BasePresenter<MainView>() {
     private val routeInteractor: RouteInteractor by inject()
 
     private lateinit var lastAddressPoint: LatLng
@@ -48,54 +40,59 @@ class MainPresenter: BasePresenter<MainView>() {
 
     private val MARKER_ELEVATION = 5f
     private var markerStateLifted = false
-    
+
     var isMarkerAnimating = true
     internal var isClickTo: Boolean? = null
 
     private var idleAndMoveCamera = true
 
+    @CallSuper
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         systemInteractor.selectedField = FIELD_FROM
         systemInteractor.initGeocoder()
-        if(routeInteractor.from != null) setLastLocation()
+        if (routeInteractor.from != null) setLastLocation()
         else utils.launchSuspend { updateCurrentLocationAsync().apply { error?.let { Timber.e(it) } } }
 
         // Создать листенер для обновления текущей локации
         // https://developer.android.com/training/location/receive-location-updates
     }
 
-    companion object {
-        @JvmField val FIELD_FROM = "field_from"
-        @JvmField val FIELD_TO   = "field_to"
-    }
-
     @CallSuper
     override fun attachView(view: MainView) {
         super.attachView(view)
+        Timber.d("MainPresenter.is user logged in: ${systemInteractor.account.user.loggedIn}")
         viewState.setProfile(Mappers.getProfileModel(systemInteractor.account.user.profile))
         changeUsedField(systemInteractor.selectedField)
+        routeInteractor.from?.address?.let { viewState.setAddressFrom(it) }
+        viewState.setTripMode(routeInteractor.hourlyDuration)
+    }
+
+    @CallSuper
+    override fun systemInitialized() {
+        super.systemInitialized()
+        viewState.setProfile(Mappers.getProfileModel(systemInteractor.account.user.profile))
     }
 
     fun switchUsedField() {
-        when(systemInteractor.selectedField) {
+        when (systemInteractor.selectedField) {
             FIELD_FROM -> changeUsedField(FIELD_TO)
-            FIELD_TO -> changeUsedField(FIELD_FROM)
+            FIELD_TO   -> changeUsedField(FIELD_FROM)
         }
     }
 
     fun changeUsedField(field: String) {
         systemInteractor.selectedField = field
 
-        val pointSelectedField: Point? = when(field){
+        val pointSelectedField: Point? = when (field) {
             FIELD_FROM -> routeInteractor.from?.cityPoint?.point
             FIELD_TO -> routeInteractor.to?.cityPoint?.point
             else -> null
         }
         var latLngPointSelectedField: LatLng? = null
         if (pointSelectedField != null) latLngPointSelectedField = LatLng(pointSelectedField.latitude, pointSelectedField.longitude)
-        when(systemInteractor.selectedField) {
+        when (systemInteractor.selectedField) {
             FIELD_FROM -> viewState.selectFieldFrom()
             FIELD_TO -> viewState.setFieldTo()
         }
@@ -108,20 +105,19 @@ class MainPresenter: BasePresenter<MainView>() {
     fun updateCurrentLocation() = utils.launchSuspend {
         val result = updateCurrentLocationAsync()
         result.error?.let { viewState.setError(it) }
-        logEvent(MY_PLACE_CLICKED)
+        logEvent(Analytics.MY_PLACE_CLICKED)
     }
 
     private fun setLastLocation() {
         viewState.blockInterface(true)
-        val currentAddress = routeInteractor.from
-        setPointAddress(currentAddress!!)
+        setPointAddress(routeInteractor.from!!)
     }
 
     private suspend fun updateCurrentLocationAsync(): Result<GTAddress> {
         //viewState.blockInterface(true)
         viewState.blockSelectedField(true, systemInteractor.selectedField)
         val result = utils.asyncAwait { routeInteractor.getCurrentAddress() }
-        if(result.error == null) setPointAddress(result.model)
+        if (result.error == null) setPointAddress(result.model)
         return result
     }
 
@@ -136,7 +132,7 @@ class MainPresenter: BasePresenter<MainView>() {
     }
 
     fun onCameraMove(lastPoint: LatLng, animateMarker: Boolean) {
-        if(idleAndMoveCamera) {
+        if (idleAndMoveCamera) {
             if (!markerStateLifted && !isMarkerAnimating && animateMarker) {
                 viewState.setMarkerElevation(true, MARKER_ELEVATION)
                 markerStateLifted = true
@@ -149,7 +145,7 @@ class MainPresenter: BasePresenter<MainView>() {
     }
 
     fun onCameraIdle(latLngBounds: LatLngBounds) {
-        if(idleAndMoveCamera) {
+        if (idleAndMoveCamera) {
             if (markerStateLifted && !isMarkerAnimating) {
                 viewState.setMarkerElevation(false, -MARKER_ELEVATION)
                 markerStateLifted = false
@@ -167,7 +163,7 @@ class MainPresenter: BasePresenter<MainView>() {
             val nePoint = Point(latLngBounds.northeast.latitude, latLngBounds.northeast.longitude)
             val swPoint = Point(latLngBounds.southwest.latitude, latLngBounds.southwest.longitude)
             latLonPair = Pair(nePoint, swPoint)
-            
+
             utils.launchSuspend {
                 val result = utils.asyncAwait {
                     routeInteractor.getAddressByLocation(
@@ -189,13 +185,26 @@ class MainPresenter: BasePresenter<MainView>() {
     }
 
     private fun setAddressInSelectedField(address: String) {
-        when(systemInteractor.selectedField) {
+        when (systemInteractor.selectedField) {
             FIELD_FROM -> viewState.setAddressFrom(address)
             FIELD_TO -> viewState.setAddressTo(address)
         }
     }
 
     fun enablePinAnimation() { isMarkerAnimating = false }
+
+    fun tripModeSwitched(hourly: Boolean) {
+        routeInteractor.apply {
+            hourlyDuration = if (hourly) hourlyDuration?: MIN_HOURLY else null
+        }
+        viewState.changeFields(hourly)
+    }
+
+    fun tripDurationSelected(hours: Int) {
+        routeInteractor.hourlyDuration = hours
+    }
+
+    fun isHourly() = routeInteractor.hourlyDuration != null
 
     fun setAddressFields() {
         viewState.setAddressFrom(routeInteractor.from?.address ?: "")
@@ -211,39 +220,39 @@ class MainPresenter: BasePresenter<MainView>() {
     }
 
     fun onNextClick() {
-        if(routeInteractor.from?.cityPoint != null &&
-           routeInteractor.to?.cityPoint != null) router.navigateTo(Screens.CreateOrder)
+        if (routeInteractor.from?.cityPoint != null && (routeInteractor.to?.cityPoint != null || routeInteractor.hourlyDuration != null))
+            router.navigateTo(Screens.CreateOrder)
     }
 
     fun onAboutClick() {
         router.navigateTo(Screens.About(false))
-        logEvent(ABOUT_CLICKED)
+        logEvent(Analytics.ABOUT_CLICKED)
     }
 
     fun readMoreClick() {
         viewState.showReadMoreDialog()
-        logEvent(BEST_PRICE_CLICKED)
+        logEvent(Analytics.BEST_PRICE_CLICKED)
     }
 
     fun onSettingsClick() {
         router.navigateTo(Screens.Settings)
-        logEvent(SETTINGS_CLICKED)
+        logEvent(Analytics.SETTINGS_CLICKED)
     }
 
     fun onRequestsClick() {
         router.navigateTo(Screens.Requests)
-        logEvent(TRANSFER_CLICKED)
+        logEvent(Analytics.TRANSFER_CLICKED)
     }
 
     fun onLoginClick() {
         login("", "")
-        logEvent(LOGIN_CLICKED)
+        logEvent(Analytics.LOGIN_CLICKED)
     }
 
     fun onBecomeACarrierClick() {
-        logEvent(DRIVER_CLICKED)
-        if(systemInteractor.account.user.loggedIn) {
-            if(systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) router.navigateTo(Screens.ChangeMode(Screens.CARRIER_MODE))
+        logEvent(Analytics.DRIVER_CLICKED)
+        if (systemInteractor.account.user.loggedIn) {
+            if (systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) router.navigateTo(Screens.ChangeMode(Screens.CARRIER_MODE))
             else router.navigateTo(Screens.ChangeMode(Screens.REG_CARRIER))
         }
         else {
@@ -252,30 +261,37 @@ class MainPresenter: BasePresenter<MainView>() {
     }
 
     private fun comparePointsWithRounding(point1: LatLng?, point2: LatLng?): Boolean {
-        if(point2 == null || point1 == null) return false
+        if (point2 == null || point1 == null) return false
         val criteria = 0.000_001
 
         var latDiff = point1.latitude - point1.latitude
-        if(latDiff < 0) latDiff *= -1
+        if (latDiff < 0) latDiff *= -1
         var lngDiff = point2.longitude - point2.longitude
-        if(lngDiff < 0) lngDiff *= -1
+        if (lngDiff < 0) lngDiff *= -1
         return latDiff < criteria && lngDiff < criteria
     }
 
     fun logEvent(value: String) {
-        val map = HashMap<String, Any>()
-        map[PARAM_KEY_NAME] = value
+        val map = mutableMapOf<String, Any>()
+        map[Analytics.PARAM_KEY_NAME] = value
 
-        analytics.logEvent(EVENT_MENU, createStringBundle(PARAM_KEY_NAME, value), map)
+        analytics.logEvent(Analytics.EVENT_MENU, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
     }
 
     fun onBackClick() {
-        if(systemInteractor.selectedField == FIELD_TO) switchUsedField()
+        if (systemInteractor.selectedField == FIELD_TO) switchUsedField()
         else viewState.onBackClick()
     }
 
     fun onShareClick() {
         Timber.d("Share action")
-        logEvent(SHARE)
+        logEvent(Analytics.SHARE)
+    }
+
+    companion object {
+        @JvmField val FIELD_FROM = "field_from"
+        @JvmField val FIELD_TO   = "field_to"
+
+        const val MIN_HOURLY     = 2
     }
 }

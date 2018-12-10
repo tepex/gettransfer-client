@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/view_transfer_info_request_number_margin_start"
         android:layout_marginTop="@dimen/view_transfer_info_request_number_margin_top"
-        android:fontFamily="@font/helvetica_neue"
+        android:fontFamily="@font/sf_pro_text_regular"
         android:textColor="@color/colorTransferRequestText"
         android:textSize="@dimen/view_transfer_info_request_number_text_size"
         app:layout_constraintTop_toTopOf="parent"
@@ -20,18 +20,27 @@
         app:layout_constraintEnd_toStartOf="@id/btnCancelRequest"/>
 
     <TextView
+        android:id="@+id/tvTransferRequestStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/tvTransferRequestNumber"
+        app:layout_constraintTop_toBottomOf="@+id/tvTransferRequestNumber"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:textSize="@dimen/view_transfer_info_request_number_text_size"
+        android:textColor="@color/colorTransferRequestText"/>
+
+    <TextView
         android:id="@+id/btnCancelRequest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/LNG_CANCEL_REQUEST"
-        android:fontFamily="@font/helvetica_neue"
+        android:fontFamily="@font/sf_pro_text_regular"
         android:textColor="@color/colorRedText"
         android:layout_marginTop="@dimen/view_transfer_info_request_number_margin_top"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:textSize="@dimen/view_transfer_info_request_number_text_size"
         android:layout_marginEnd="@dimen/view_transfer_info_btn_cancel_request_margin_end"
-        android:paddingTop="@dimen/view_transfer_info_btn_cancel_request_padding_top_bottom"
         android:paddingBottom="@dimen/view_transfer_info_btn_cancel_request_padding_top_bottom"
         android:visibility="gone"/>
 
@@ -49,7 +58,7 @@
         android:textSize="@dimen/view_transfer_info_big_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTransferRequestNumber" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTransferRequestStatus" />
 
     <TextView
         android:id="@+id/tvOrderDateTime"
@@ -68,13 +77,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/view_transfer_info_to_margin_top"
+        android:layout_marginStart="8dp"
         android:ellipsize="end"
         android:fontFamily="@font/sf_pro_text_bold"
         android:lines="1"
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/view_transfer_info_big_text_size"
         app:layout_constraintEnd_toEndOf="@+id/tvFrom"
-        app:layout_constraintStart_toStartOf="@+id/tvFrom"
+        app:layout_constraintStart_toEndOf="@+id/fl_bottom_point_view"
         app:layout_constraintTop_toBottomOf="@+id/tvOrderDateTime" />
 
     <TextView
@@ -85,8 +95,9 @@
         android:fontFamily="@font/sf_pro_text_regular"
         android:textColor="@color/colorBtnGreen"
         android:textSize="@dimen/view_transfer_info_small_text_size"
+        android:layout_marginStart="8dp"
         app:layout_constraintEnd_toEndOf="@+id/tvFrom"
-        app:layout_constraintStart_toStartOf="@+id/tvFrom"
+        app:layout_constraintStart_toEndOf="@+id/fl_bottom_point_view"
         app:layout_constraintTop_toBottomOf="@+id/tvTo" />
 
     <TextView
@@ -95,7 +106,7 @@
         android:layout_height="@dimen/view_transfer_info_markers_size"
         android:layout_marginStart="@dimen/view_transfer_info_markers_margin_start"
         android:layout_marginTop="@dimen/view_transfer_info_markers_margin_top"
-        android:background="@drawable/back_circle_marker"
+        android:background="@drawable/back_circle_marker_filled"
         android:gravity="center"
         android:text="@string/transfer_start_sign"
         app:layout_constraintStart_toStartOf="parent"
@@ -106,30 +117,75 @@
         android:layout_width="5dp"
         android:layout_height="0dp"
         android:layerType="software"
-        app:layout_constraintBottom_toTopOf="@+id/tvMarkerTo"
+        app:layout_constraintBottom_toTopOf="@+id/fl_bottom_point_view"
         app:layout_constraintEnd_toEndOf="@+id/tvMarkerFrom"
         app:layout_constraintStart_toStartOf="@+id/tvMarkerFrom"
         app:layout_constraintTop_toBottomOf="@+id/tvMarkerFrom"
-        app:srcCompat="@drawable/sh_h_line" />
+        android:layout_marginTop="1dp"
 
-    <TextView
-        android:id="@+id/tvMarkerTo"
-        android:layout_width="@dimen/view_transfer_info_markers_size"
-        android:layout_height="@dimen/view_transfer_info_markers_size"
+        app:srcCompat="@drawable/a_b_group" />
+
+    <FrameLayout
+        android:id="@+id/fl_bottom_point_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/view_transfer_info_markers_margin_start"
         android:layout_marginTop="@dimen/view_transfer_info_markers_margin_top"
-        android:background="@drawable/back_circle_marker"
         android:gravity="center"
-        android:text="@string/transfer_end_sign"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvTo" />
+        app:layout_constraintTop_toTopOf="@+id/tvTo">
+
+        <TextView
+            android:id="@+id/tvMarkerTo"
+            android:layout_width="@dimen/view_transfer_info_markers_size"
+            android:layout_height="@dimen/view_transfer_info_markers_size"
+            android:layout_marginTop="1dp"
+            android:background="@drawable/back_circle_marker_filled"
+            android:gravity="center"
+            android:visibility="visible"
+            android:text="@string/transfer_end_sign" />
+
+        <RelativeLayout
+            android:id="@+id/rl_hourly_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:background="@drawable/back_hours_info"
+                android:layout_toEndOf="@+id/ivHourlyPoint"
+                android:layout_marginStart="-16dp"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:fontFamily="@font/sf_pro_text_semibold"
+                android:textColor="@color/colorTextBlack"
+                android:paddingEnd="8dp"
+                android:paddingBottom="1dp"
+                android:paddingStart="22dp"
+                android:text="8 hours"/>
+            <ImageView
+                android:id="@+id/ivHourlyPoint"
+                android:layout_width="@dimen/view_transfer_info_markers_hourly_size"
+                android:layout_height="@dimen/view_transfer_info_markers_hourly_size"
+                android:gravity="center"
+                android:background="@drawable/back_stroke_img"
+                android:src="@drawable/ic_hourly"
+                />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
 
     <ImageView
         android:id="@+id/chevron"
         android:layout_width="@dimen/view_transfer_info_chevron_size"
         android:layout_height="@dimen/view_transfer_info_chevron_size"
         android:layout_marginEnd="@dimen/view_transfer_info_chevron_margin_end"
-        android:src="@drawable/chevron"
+        android:src="@drawable/ic_arrow_down"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

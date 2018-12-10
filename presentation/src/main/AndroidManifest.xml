@@ -4,11 +4,11 @@
     package="com.kg.gettransfer">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="replace" />
-
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:node="replace" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -17,40 +17,39 @@
         android:name=".GTApplication"
         android:allowBackup="true"
         android:icon="@mipmap/launcher_icon"
-        android:roundIcon="@mipmap/launcher_icon"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/launcher_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/geoapikey" />
-
         <meta-data
             android:name="net.hockeyapp.android.appIdentifier"
-            android:value="${hockeyAppId}"/>
-
+            android:value="${hockeyAppId}" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+            android:value="@string/facebook_app_id" />
 
         <activity
             android:name=".presentation.ui.SplashActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".presentation.ui.MainActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeTransparentStatusBar" />
+            android:theme="@style/AppThemeTransparentStatusBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".presentation.ui.AboutActivity"
             android:screenOrientation="portrait" />
@@ -58,39 +57,49 @@
             android:name=".presentation.ui.SearchActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeTransparentStatusBar" />
-        <activity android:name=".presentation.ui.CreateOrderActivity"
+        <activity
+            android:name=".presentation.ui.CreateOrderActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
-        <activity android:name=".presentation.ui.WebPageActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+        <activity
+            android:name=".presentation.ui.WebPageActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".presentation.ui.SettingsActivity"
+        <activity
+            android:name=".presentation.ui.SettingsActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".presentation.ui.OffersActivity"
+        <activity
+            android:name=".presentation.ui.OffersActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".presentation.ui.RequestsActivity"
+        <activity
+            android:name=".presentation.ui.RequestsActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".presentation.ui.TransferDetailsActivity"
+        <activity
+            android:name=".presentation.ui.TransferDetailsActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".presentation.ui.CarrierTripsActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".presentation.ui.CarrierTripDetailsActivity"
+        <activity
+            android:name=".presentation.ui.CarrierTripDetailsActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".presentation.ui.LogsActivity"
+        <activity
+            android:name=".presentation.ui.LogsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateUnchanged|adjustResize" />
-        <activity android:name=".presentation.ui.PaymentActivity"
+        <activity
+            android:name=".presentation.ui.PaymentActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".presentation.ui.PaymentSettingsActivity"
+        <activity
+            android:name=".presentation.ui.PaymentSettingsActivity"
             android:screenOrientation="portrait" />
-
-        <service android:name=".service.SocketIOService">
-            <intent-filter>
-                <action android:name=".service.SocketIOService" />
-            </intent-filter>
-        </service>
+        <activity android:name=".presentation.ui.PaymentErrorActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".presentation.ui.PaymentSuccessfulActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -102,5 +111,4 @@
                 android:resource="@xml/file_provider_path" />
         </provider>
     </application>
-
 </manifest>

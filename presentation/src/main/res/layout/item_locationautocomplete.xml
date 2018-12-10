@@ -36,7 +36,7 @@
         android:id="@+id/ibInsert"
         android:layout_width="56dp"
         android:layout_height="0dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        style="@style/BorderlessBackground"
         android:clickable="true"
         android:focusable="false"
         android:focusableInTouchMode="false"

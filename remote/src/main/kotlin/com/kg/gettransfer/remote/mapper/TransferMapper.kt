@@ -48,6 +48,7 @@ open class TransferMapper: EntityMapper<TransferModel, TransferEntity> {
                        type.transportTypeIds,
                        type.passengerOfferedPrice,
                        type.price?.let { moneyMapper.fromRemote(it) },
+                       type.paymentPercentages,
 
                        type.editableFields)
 

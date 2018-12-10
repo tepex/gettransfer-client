@@ -15,14 +15,8 @@ import com.kg.gettransfer.presentation.model.PopularPlace
 
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SearchView
+
 import com.kg.gettransfer.utilities.Analytics
-import com.kg.gettransfer.utilities.Analytics.Companion.EVENT_BUTTONS
-import com.kg.gettransfer.utilities.Analytics.Companion.LAST_PLACE_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.PARAM_KEY_NAME
-import com.kg.gettransfer.utilities.Analytics.Companion.POINT_ON_MAP_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.PREDEFINED_CLICKED
-import com.kg.gettransfer.utilities.Analytics.Companion.REQUEST_FORM
-import com.kg.gettransfer.utilities.Analytics.Companion.SWAP_CLICKED
 
 import org.koin.standalone.inject
 
@@ -45,7 +39,9 @@ class SearchPresenter: BasePresenter<SearchView>() {
     override fun attachView(view: SearchView) {
         super.attachView(view)
         viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false, !isTo)
-        viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false, isTo)
+        if (routeInteractor.hourlyDuration == null)
+            viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false, isTo)
+        else viewState.hideAddressTo()
         onSearchFieldEmpty()
     }
 
@@ -54,12 +50,12 @@ class SearchPresenter: BasePresenter<SearchView>() {
     }
 
     fun onPopularSelected(selected: PopularPlace) {
-        logEvent(PREDEFINED_CLICKED + selected.title.toLowerCase())
+        logEvent(Analytics.PREDEFINED_CLICKED + selected.title.toLowerCase())
         viewState.onFindPopularPlace(isTo, selected.title)
     }
 
     fun onAddressSelected(selected: GTAddress) {
-        logEvent(LAST_PLACE_CLICKED)
+        logEvent(Analytics.LAST_PLACE_CLICKED)
         val isDoubleClickOnRoute: Boolean
         if(isTo) {
             viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, false, true)
@@ -96,20 +92,20 @@ class SearchPresenter: BasePresenter<SearchView>() {
         utils.asyncAwait { routeInteractor.updateStartPoint() }
         systemInteractor.addressHistory = listOf(routeInteractor.from!!, routeInteractor.to!!)
         router.replaceScreen(Screens.CreateOrder)
-        logEvent(REQUEST_FORM)
+        logEvent(Analytics.REQUEST_FORM)
     }
 
     fun selectFinishPointOnMap() {
-        logEvent(POINT_ON_MAP_CLICKED)
+        logEvent(Analytics.POINT_ON_MAP_CLICKED)
         systemInteractor.selectedField = if(isTo) MainPresenter.FIELD_TO else MainPresenter.FIELD_FROM
         router.exit()
     }
 
     private fun logEvent(value: String) {
-        val map = HashMap<String, Any>()
-        map[PARAM_KEY_NAME] = value
+        val map = mutableMapOf<String, Any>()
+        map[Analytics.PARAM_KEY_NAME] = value
 
-        analytics.logEvent(EVENT_BUTTONS, createStringBundle(PARAM_KEY_NAME, value), map)
+        analytics.logEvent(Analytics.EVENT_BUTTONS, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
     }
 
     @CallSuper
@@ -118,7 +114,7 @@ class SearchPresenter: BasePresenter<SearchView>() {
     }
 
     fun inverseWay() {
-        logEvent(SWAP_CLICKED)
+        logEvent(Analytics.SWAP_CLICKED)
         isTo = !isTo
         val copyTo = routeInteractor.to
         routeInteractor.to = routeInteractor.from

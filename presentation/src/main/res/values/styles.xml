@@ -142,6 +142,10 @@
 		<item name="colorControlActivated">@color/switch_activated</item>
 	</style>
 
+	<style name="BorderlessBackground">
+		<item name="android:background">?android:attr/selectableItemBackground</item>
+	</style>
+
 
 
 

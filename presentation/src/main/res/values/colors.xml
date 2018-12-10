@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#ffffff</color>
     <color name="colorAccent">#216edd</color>
     <color name="colorYellow">#fffedb06</color>
+    <color name="colorGreen">#98b71b</color>
 
 	<color name="nav_item_subtitle">#9b9b9b</color>
 
@@ -50,6 +51,8 @@
 
     <color name="colorBtnGreen">#98B71B</color>
     <color name="colorBtnGreenPressed">#769614</color>
+    <color name="colorBtnYellow">#fffedb06</color>
+    <color name="colorBtnYellowPressed">#70fedb06</color>
     <color name="colorBtnRed">#FF0000</color>
     <color name="colorBtnRedPressed">#dc0007</color>
     <color name="colorLinkText">#5597c2</color>
@@ -108,4 +111,14 @@
 
     <color name="transparent_white">#00ffffff</color>
     <color name="transparent_black">#00000000</color>
+
+    <!-- Transfer details -->
+    <color name="color_transfer_details_vertical_divider">#d8d8d8</color>
+    <color name="color_transfer_details_horizontal_divider">#bcbbc1</color>
+    <color name="color_transfer_details_text_green">#98b71b</color>
+    <color name="color_transfer_details_text_gray">#B2B2B2</color>
+    <color name="color_transfer_details_text_red">#ff3b30</color>
+    <color name="color_transfer_details_background_gray">#f6f6f6</color>
+    <color name="color_transfer_details_header_text_color">#8e8e93</color>
+
 </resources>

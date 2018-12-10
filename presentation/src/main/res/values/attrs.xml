@@ -17,6 +17,12 @@
 		<attr name="inputType" format="integer"/>
 	</declare-styleable>
 
+	<declare-styleable name="TransferDetailsField" parent="EditableView">
+		<attr name="title_transfer_details" format="string" />
+		<attr name="input_transfer_details" format="string"/>
+		<attr name="icon_img_transfer_details" format="reference" />
+	</declare-styleable>
+
 	<declare-styleable name="AboutItem" parent="EditableView">
 		<attr name="title_about_item" format="string" />
 		<attr name="text_about_item" format="string" />

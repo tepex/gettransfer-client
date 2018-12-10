@@ -20,5 +20,11 @@
         android:layout_width="@dimen/a_b_point_iconSize"
         android:layout_height="@dimen/a_b_point_iconSize"
         android:src="@drawable/b_point_empty"/>
+    <ImageView
+        android:id="@+id/hourly_point"
+        android:visibility="gone"
+        android:layout_width="@dimen/a_b_point_iconSize"
+        android:layout_height="@dimen/a_b_point_iconSize"
+        android:src="@drawable/ic_hourly"/>
 
 </LinearLayout>

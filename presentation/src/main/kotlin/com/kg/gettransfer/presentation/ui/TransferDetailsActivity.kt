@@ -1,157 +1,351 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Context
+import android.graphics.Color
+
+import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+import android.support.constraint.ConstraintLayout
+import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.content.ContextCompat
 
-import android.support.v7.widget.Toolbar
-
-import android.view.MotionEvent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
+
+import android.widget.TableRow
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
-import com.google.android.gms.maps.GoogleMap
+import com.bumptech.glide.Glide
+
+import com.google.android.gms.maps.CameraUpdate
+
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
-
-import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.PolylineModel
-import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.extensions.*
+import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
 import com.kg.gettransfer.presentation.view.TransferDetailsView
-import com.kg.gettransfer.utilities.Analytics.Companion.TRAVEL_CLASS
-import com.kg.gettransfer.utilities.Analytics.Companion.VALUE
 
 import kotlinx.android.synthetic.main.activity_transfer_details.*
-import kotlinx.android.synthetic.main.view_transfer_request_info.view.*
-import kotlinx.android.synthetic.main.view_transport_type_transfer_details.view.* //don't delete
+import kotlinx.android.synthetic.main.bottom_sheet_transfer_details.*
 
-class TransferDetailsActivity: BaseGoogleMapActivity(), TransferDetailsView {
+import kotlinx.android.synthetic.main.view_transfer_details_about_driver.*
+import kotlinx.android.synthetic.main.view_transfer_details_about_request.*
+import kotlinx.android.synthetic.main.view_transfer_details_about_transport.*
+import kotlinx.android.synthetic.main.view_transfer_details_communicate_buttons.*
+import kotlinx.android.synthetic.main.view_transfer_details_field.*
+import kotlinx.android.synthetic.main.view_transfer_details_info.*
+import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.*
+import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //Don't delete
+import android.view.MotionEvent
+
+class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
+
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
-    
+
+    private lateinit var bsTransferDetails: BottomSheetBehavior<View>
+
     @ProvidePresenter
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
 
     override fun getPresenter(): TransferDetailsPresenter = presenter
-    
+
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.transferId = intent.getLongExtra(TransferDetailsView.EXTRA_TRANSFER_ID, 0)
-        
+
         setContentView(R.layout.activity_transfer_details)
 
-        setToolbar(toolbar as Toolbar, R.string.LNG_RIDE_DETAILS)
-        layoutTransferInfo.chevron.visibility = View.GONE
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.statusBarColor = Color.WHITE
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        } else {
+            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            viewGradient.isVisible = false
+        }
 
         _mapView = mapView
         initMapView(savedInstanceState)
-    }
-    
-    protected suspend override fun customizeGoogleMaps(gm: GoogleMap) {
-        super.customizeGoogleMaps(gm)
 
-        // https://stackoverflow.com/questions/16974983/google-maps-api-v2-supportmapfragment-inside-scrollview-users-cannot-scroll-th
-        transparentImage.setOnTouchListener(View.OnTouchListener { _, motionEvent ->
-            when(motionEvent.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    svTransferDetails.requestDisallowInterceptTouchEvent(true)
-                    return@OnTouchListener false
-                }
-                MotionEvent.ACTION_UP -> {
-                    svTransferDetails.requestDisallowInterceptTouchEvent(false)
-                    return@OnTouchListener true
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    svTransferDetails.requestDisallowInterceptTouchEvent(true)
-                    return@OnTouchListener false
-                }
+        _tintBackground = tintBackground
+        bsTransferDetails = BottomSheetBehavior.from(sheetTransferDetails)
+        bsTransferDetails.setBottomSheetCallback(bottomSheetCallback)
+
+        initTextFields()
+        setClickListeners()
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            if (bsTransferDetails.state == BottomSheetBehavior.STATE_EXPANDED) {
+                if(hideBottomSheet(bsTransferDetails, sheetTransferDetails, BottomSheetBehavior.STATE_COLLAPSED, event)) return true
             }
-            return@OnTouchListener true
-        })
+        }
+        return super.dispatchTouchEvent(event)
     }
 
-    override fun setTransfer(transferModel: TransferModel) {
-        layoutTransferInfo.tvTransferRequestNumber.text = getString(R.string.LNG_RIDE_NUMBER).plus(transferModel.id)
-        layoutTransferInfo.tvFrom.text = transferModel.from
-        layoutTransferInfo.tvOrderDateTime.text = transferModel.dateTime
-        if(transferModel.to != null) {
-            layoutTransferInfo.tvTo.text = transferModel.to
-            layoutTransferInfo.tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
-        } else if(transferModel.duration != null) {
-            layoutTransferInfo.tvTo.text = getString(R.string.LNG_TIME_RIDE)
-            layoutTransferInfo.tvDistance.text = Utils.formatDuration(this, transferModel.duration)
-        }
-        //layoutTransferInfo.tvTo.text = transferModel.to
-        //layoutTransferInfo.tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
+    private fun initTextFields() {
+        tvTransferCancelled.text = getString(R.string.LNG_RIDE_REQUEST_FOR).plus(" ").plus(getString(R.string.LNG_RIDE_TRANSFER_CANCELLED))
+        textTransferWillStartTime.text = getString(R.string.LNG_TRANSFER_START).plus(":")
+        textRequestSentOrCompletedDate.text = getString(R.string.LNG_RIDE_REQUEST_WAS_SENT).plus(":")
+        textYourPrice.text = getString(R.string.LNG_RIDE_PRICE_YOUR).plus(":")
+        textNotPaid.text = getString(R.string.LNG_RIDE_NOT_PAID).plus(":")
+        textPrice.text = getString(R.string.LNG_RIDE_PAYMENT_COST).plus(":")
+        textDistance.text = getString(R.string.LNG_RIDE_DISTANCE).plus(":")
+        textDuration.text = getString(R.string.LNG_RIDE_TIME).plus(":")
+        textRequestSentOrCompletedDate.text = getString(R.string.LNG_RIDE_REQUEST_WAS_SENT).plus(":")
+    }
 
-        tvCountPassengers.text = transferModel.countPassengers.toString()
-        if(transferModel.nameSign != null) {
-            tvPassengerName.text = transferModel.nameSign
-            layoutName.visibility = View.VISIBLE
+    private fun setClickListeners() {
+        btnBack.setOnClickListener          { presenter.onBackCommandClick() }
+        btnCenterRoute.setOnClickListener   { presenter.onCenterRouteClick() }
+        btnSupportTop.setOnClickListener    { presenter.sendEmail(null) }
+        btnSupportBottom.setOnClickListener { presenter.sendEmail(null) }
+        btnCancel.setOnClickListener        { presenter.onCancelRequestClicked() }
+    }
+
+    override fun setTransfer(transfer: TransferModel, userProfile: ProfileModel) {
+        initInfoView(transfer)
+        initAboutRequestView(transfer, userProfile)
+        val status = transfer.statusCategory
+        if(status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_UNFINISHED) {
+            initTableLayoutTransportTypes(transfer.transportTypes)
+            tableLayoutTransportTypes.isVisible = true
         }
-        if(transferModel.countChilds > 0) {
-            tvCountChilds.text = transferModel.countChilds.toString()
-            layoutChilds.visibility = View.VISIBLE
-        }
-        if(transferModel.flightNumber != null) {
-            tvFlightNumber.text = transferModel.flightNumber
-            layoutFlightNumber.visibility = View.VISIBLE
-        }
-        if(transferModel.comment != null) {
-            tvComment.text = transferModel.comment
-            layoutComment.visibility = View.VISIBLE
+        layoutButtonSupportTop.isVisible   = status == Transfer.STATUS_CATEGORY_FINISHED
+        layoutCommunicateButtons.isVisible = status == Transfer.STATUS_CATEGORY_CONFIRMED
+
+        btnsLayoutBottom.isVisible = status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_CONFIRMED
+        btnSupportBottom.isVisible = status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_CONFIRMED
+        btnCancel.isVisible        = status == Transfer.STATUS_CATEGORY_ACTIVE
+    }
+
+    private fun initInfoView(transfer: TransferModel) {
+        //top left
+        val transferDateTimePair = Utils.getDateTimeTransferDetails(systemInteractor.locale, transfer.dateTime, true)
+        tvTransferDate.text = transferDateTimePair.first
+        tvTransferTime.text = getString(R.string.LNG_TRANSFER_AT).plus(" ").plus(transferDateTimePair.second)
+
+        //top right
+        if (transfer.to != null) {
+            tvDistance.text = SystemUtils.formatDistance(this, transfer.distance, false)
+            tvDuration.text = Utils.durationToString(this, Utils.convertDuration(transfer.time ?: 0))
+        } else {
+            textDistance.text = getString(R.string.LNG_TIME_RIDE)
+            tvDuration.text = Utils.formatDuration(this, transfer.duration!!)
+
+            tvTransferWillStartTime.text = Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer))
         }
 
-        layoutTransportTypesList.removeAllViews()
-        transferModel.transportTypes.forEach {
-            var viewTransportType = layoutInflater.inflate(R.layout.view_transport_type_transfer_details, null, false)
-            viewTransportType.tvNameTransportType.setText(it.nameId!!)
-            viewTransportType.tvCountPersons.text = Utils.formatPersons(this, it.paxMax)
-            viewTransportType.tvCountBaggage.text = Utils.formatLuggage(this, it.luggageMax)
-            layoutTransportTypesList.addView(viewTransportType)
-            presenter.logEventGetOffer(TRAVEL_CLASS, viewTransportType.tvNameTransportType.text.toString())
+        //bottom left
+        if (transfer.statusCategory == Transfer.STATUS_CATEGORY_ACTIVE || transfer.statusCategory == Transfer.STATUS_CATEGORY_UNFINISHED) {
+            if (transfer.price != null) {
+                layoutYourPrice.isVisible = true
+                tvYourPrice.text = transfer.price
+            }
+            else {
+                verticalDivider2.isVisible = false
+                val lp = bottomRightLayouts.layoutParams
+                lp.width = ConstraintLayout.LayoutParams.MATCH_PARENT
+                bottomRightLayouts.layoutParams = lp
+            }
+        } else {
+            layoutPrices.isVisible = true
+            tvPrice.text = transfer.price
+            if (transfer.remainToPay != null) tvNotPaid.text = transfer.remainToPay
+            else {
+                textNotPaid.isVisible = false
+                tvNotPaid.isVisible = false
+            }
         }
 
-        if(transferModel.price != null) {
-            paymentInfoPaid.text = getString(R.string.activity_transfer_details_paid_sum,
-                                             transferModel.paidSum,
-                                             transferModel.paidPercentage)
-            paymentInfoPay.text = transferModel.remainToPay
-            paymentInfoSum.text = transferModel.price
-            presenter.logEventGetOffer(VALUE, transferModel.price)
-            layoutPaymentInfo.visibility = View.VISIBLE
+        //bottom right
+        when (transfer.statusCategory) {
+            Transfer.STATUS_CATEGORY_UNFINISHED -> {
+                tvTransferCancelled.isVisible = true
+            }
+            Transfer.STATUS_CATEGORY_ACTIVE -> {
+                layoutRequestSentOrCompletedDate.isVisible = true
+                textRequestSentOrCompletedDate.text = getString(R.string.LNG_RIDE_REQUEST_WAS_SENT)
+                val transferCreateDateTimePair = Utils.getDateTimeTransferDetails(systemInteractor.locale, transfer.createdAt, false)
+                tvRequestSentOrCompletedDate.text = transferCreateDateTimePair.first
+                        .plus(" ${getString(R.string.LNG_TRANSFER_AT)} ")
+                        .plus(transferCreateDateTimePair.second)
+            }
+            Transfer.STATUS_CATEGORY_FINISHED -> {
+                layoutRequestSentOrCompletedDate.isVisible = true
+                textRequestSentOrCompletedDate.text = getString(R.string.LNG_RIDE_REQUEST_WAS_SENT)
+                val transferCreateDateTimePair = Utils.getDateTimeTransferDetails(systemInteractor.locale, transfer.createdAt, false)
+                tvRequestSentOrCompletedDate.text = transferCreateDateTimePair.first
+                        .plus(" ${getString(R.string.LNG_TRANSFER_AT)} ")
+                        .plus(transferCreateDateTimePair.second)
+            }
+            Transfer.STATUS_CATEGORY_CONFIRMED -> {
+                layoutTransferWillStartTime.isVisible = true
+                tvTransferWillStartTime.text = Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer))
+            }
         }
     }
 
-    override fun setButtonCancelVisible(visible: Boolean) =
-        if(visible) btnCancel.visibility = View.VISIBLE else btnCancel.visibility = View.GONE
+    private fun initAboutRequestView(transfer: TransferModel, userProfile: ProfileModel) {
+        booking_number.field_text.text = transfer.id.toString()
+        with (userProfile) {
+            name?.let {
+                passenger_name.field_text.text = it
+                passenger_name.isVisible = true
+            }
+            email?.let {
+                passenger_email.field_text.text = it
+                passenger_email.isVisible = true
+            }
+            phone?.let {
+                passenger_phone.field_text.text = it
+                passenger_phone.isVisible = true
+            }
+        }
+        transfer.flightNumber?.let {
+            flight_number.field_text.text = it
+            flight_number.isVisible = true
+        }
+        transfer.comment?.let {
+            comment.field_text.text = it
+            comment.isVisible = true
+        }
+    }
 
-    override fun setOffer(offerModel: OfferModel) {
-        offerModel.driver?.let {
-            offerDriverInfoEmail.text = it.email
-            offerDriverInfoPhone.text = it.phone
-            offerDriverInfoName.text = it.name
-            layoutOfferDriverInfo.visibility = View.VISIBLE
+    private fun initTableLayoutTransportTypes(transportTypes: List<TransportTypeModel>) {
+        for (row in 0 until transportTypes.size.ceil(TRANSPORT_TYPES_COLUMNS)) {
+            val tableRow = TableRow(this).apply {
+                layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
+            }
+            for (col in 0 until TRANSPORT_TYPES_COLUMNS) {
+                val i = row * TRANSPORT_TYPES_COLUMNS + col
+                if (i == transportTypes.size) break
+                tableRow.addView(
+                    LayoutInflater.from(this).inflate(R.layout.view_transfer_details_transport_type_item, null, false).apply {
+
+                        transportTypeItemName.text            = getString(transportTypes[i].nameId!!).plus(":")
+                        transportTypeItemCountPassengers.text = Utils.formatPersons(this@TransferDetailsActivity, transportTypes[i].paxMax)
+                        transportTypeItemCountBaggage.text    = Utils.formatLuggage(this@TransferDetailsActivity, transportTypes[i].luggageMax)
+                    }, col)
+            }
+            tableLayoutTransportTypes.addView(tableRow, row)
+        }
+    }
+
+    override fun setOffer(offer: OfferModel, childSeats: Int) {
+        initAboutDriverView(offer)
+        initAboutTransportView(offer, childSeats)
+
+        layoutAboutRequestTitle.isVisible = true
+        layoutAboutTransport.isVisible = true
+    }
+
+    private fun initAboutDriverView(offer: OfferModel) {
+        offer.phoneToCall?.let { phone ->
+            layoutCommunicateButtons.isVisible = true
+            btnCall.setOnClickListener { presenter.callPhone(phone) }
         }
 
-        offerTransportInfoCarType.text   = getString(offerModel.vehicle.transportType.nameId!!)
-        offerTransportInfoCarName.text   = offerModel.vehicle.vehicleBase.name
-        offerTransportInfoCarNumber.text = offerModel.vehicle.vehicleBase.registrationNumber
-        offerTransportInfoPrice.text     = offerModel.price.base.default
-        
-        layoutOfferTransportInfo.visibility = View.VISIBLE
+        val operations = listOf<Pair<CharSequence, String>>(
+                Pair(getString(R.string.LNG_COPY), TransferDetailsPresenter.OPERATION_COPY),
+                Pair(getString(R.string.LNG_OPEN), TransferDetailsPresenter.OPERATION_OPEN))
+        val operationsName: List<CharSequence> = operations.map { it.first }
+
+        offer.driver?.let {driver ->
+            driver.phone?.let { phone ->
+                driver_phone.field_text.text = phone
+                driver_phone.isVisible = true
+                Utils.setSelectOperationListener(this, driver_phone, operationsName, R.string.LNG_DRIVER_PHONE) {
+                    presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
+            }
+            driver.email?.let { email ->
+                driver_email.field_text.text = email
+                driver_email.isVisible = true
+                Utils.setSelectOperationListener(this, driver_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
+                    presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
+            }
+        }
+
+        offer.carrier.let { carrier ->
+            carrier_id.field_title.text = getString(R.string.LNG_DRIVER).plus(" №${carrier.id}")
+            carrier_id.field_text.text = carrier.completedTransfers.toString().plus(" ").plus(getString(R.string.LNG_RIDES))
+
+            carrier.profile.name?.let { name -> carrier_name.text = name }
+            carrier.profile.phone?.let { phone ->
+                carrier_phone.field_text.text = phone
+                carrier_phone.isVisible = true
+                Utils.setSelectOperationListener(this, carrier_phone, operationsName, R.string.LNG_DRIVER_PHONE) {
+                    presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
+            }
+            carrier.profile.email?.let { email ->
+                carrier_email.field_text.text = email
+                carrier_email.isVisible = true
+                Utils.setSelectOperationListener(this, carrier_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
+                    presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
+            }
+
+            Utils.initCarrierLanguages(layoutCarrierLanguages, offer.carrier.languages)
+            layoutAboutDriver.isVisible = true
+        }
+    }
+
+    private fun initAboutTransportView(offerModel: OfferModel, childSeats: Int) {
+        carName.text = offerModel.vehicle.vehicleBase.name.plus(", ${offerModel.vehicle.year}")
+        carType.text = getString(offerModel.vehicle.transportType.nameId!!).plus(":")
+        carLicensePlate.text = offerModel.vehicle.vehicleBase.registrationNumber
+        offerModel.carrier.ratings.average?.let { ratingBar.rating = it }
+        if (offerModel.carrier.approved) ivLike.isVisible = true
+        tvCountPassengers.text = Utils.formatPersons(this, offerModel.vehicle.transportType.paxMax)
+        tvCountBaggage.text = Utils.formatLuggage(this, offerModel.vehicle.transportType.luggageMax)
+
+        if (childSeats > 0) {
+            child_seats_field.field_text.text = childSeats.toString()
+            child_seats_field.isVisible = true
+        }
+
+        imgFreeWater.isVisible = offerModel.refreshments
+        imgFreeWiFi.isVisible = offerModel.wifi
+        ivManyPhotos.isVisible = offerModel.vehicle.photos.size > 1
+
+        offerModel.vehicle.color?.let { carColor.setImageDrawable(Utils.getVehicleColorFormRes(this, it)) }
+        carColor.isVisible = offerModel.vehicle.color != null
+
+        if (offerModel.vehicle.photos.isNotEmpty()) Glide.with(this).load(offerModel.vehicle.photos.first()).into(carPhoto)
+        else carPhoto.setImageDrawable(ContextCompat.getDrawable(this, offerModel.vehicle.transportType.imageId!!))
     }
 
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) =
         setPolyline(polyline, routeModel)
 
-    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng) =
-        processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point) }
+    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) =
+        processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
+
+    override fun copyText(text: String) {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+        val clip = android.content.ClipData.newPlainText("Copied Text", text)
+        clipboard.primaryClip = clip
+    }
+
+    override fun showAlertCancelRequest() {
+        Utils.showAlertCancelRequest(this) { presenter.cancelRequest(it) }
+    }
+
+    override fun recreateActivity() { recreate() }
+
+    override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
+
+    companion object {
+        const val TRANSPORT_TYPES_COLUMNS = 2
+    }
 }

@@ -10,7 +10,8 @@ class OfferModel(val id: Long,
                  val passengerFeedback: String?,
                  val carrier: CarrierModel,
                  val vehicle: VehicleModel,
-                 val driver: ProfileModel?) {
+                 val driver: ProfileModel?,
+                 val phoneToCall: String?) {
     companion object {
         const val FULL_PRICE = 100
         const val PRICE_30   = 30

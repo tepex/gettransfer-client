@@ -78,12 +78,4 @@ class PaymentActivity: BaseActivity(), PaymentView {
         val orderId = uri?.getQueryParameter(PG_ORDER_ID)!!.toLong()
         presenter.changePaymentStatus(orderId, success)
     }
-
-    override fun showSuccessfulMessage() {
-        Utils.showShortToast(this, getString(R.string.LNG_TRANSFER_PAID_SUCCESSFULLY))
-    }
-
-    override fun showErrorMessage() {
-        Utils.showShortToast(this, getString(R.string.LNG_PAYMENT_DECLINED))
-    }
 }

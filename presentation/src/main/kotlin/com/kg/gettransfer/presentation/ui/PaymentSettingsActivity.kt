@@ -13,7 +13,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-
+import com.kg.gettransfer.extensions.*
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.activity_payment_settings.*
 
 import kotlinx.serialization.json.JSON
 
-class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
+class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
     @InjectPresenter
     internal lateinit var presenter: PaymentSettingsPresenter
 
@@ -37,10 +37,8 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.params = JSON.parse(PaymentSettingsView.Params.serializer(), intent.getStringExtra(PaymentSettingsView.EXTRA_PARAMS))
-        
+
         setContentView(R.layout.activity_payment_settings)
-        payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, 100)
-        payThirdOfPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, 30)
         setButton()
         setCommission()
 
@@ -55,30 +53,50 @@ class PaymentSettingsActivity: BaseActivity(), PaymentSettingsView {
         btnGetPayment.text = title
     }
 
-    override fun setOffer(offer: OfferModel) {
-        fullPrice.text = offer.price.base.default
-        thirdOfPrice.text = getString(R.string.LNG_PAYMENT_TERM_LATER, OfferModel.PRICE_70, offer.price.percentage30)
-        payFullPriceButton.setOnClickListener    { changePaymentSettings(it) }
-        payThirdOfPriceButton.setOnClickListener { changePaymentSettings(it) }
+    override fun setOffer(offer: OfferModel, paymentPercentages: List<Int>) {
+        paymentPercentages.forEach { percentage ->
+            when(percentage){
+                OfferModel.FULL_PRICE -> {
+                    payFullPriceButton.isVisible = true
+                    payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.FULL_PRICE)
+                    fullPrice.text = offer.price.base.default
+                    payFullPriceButton.setOnClickListener { changePaymentSettings(it) }
+                }
+                OfferModel.PRICE_30 -> {
+                    payThirdOfPriceButton.isVisible = true
+                    payThirdOfPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.PRICE_30)
+                    thirdOfPrice.text = getString(R.string.LNG_PAYMENT_TERM_LATER, OfferModel.PRICE_70, offer.price.percentage30)
+                    payThirdOfPriceButton.setOnClickListener { changePaymentSettings(it) }
+                }
+            }
+        }
+        selectPaymentPercentage(paymentPercentages.first())
         btnGetPayment.setOnClickListener { presenter.getPayment() }
     }
 
     private fun setCommission() {
         presenter.params.dateRefund?.let {
-            commission.text = getString(R.string.LNG_PAYMENT_COMISSION, Utils.getFormattedDate(systemInteractor.locale, it))
+            commission.text = getString(R.string.LNG_PAYMENT_COMISSION, SystemUtils.formatDateTime(it))
         }
     }
 
     private fun changePaymentSettings(view: View?) {
-        when(view?.id) {
-            R.id.payFullPriceButton -> {
-                fullPriceCheckIcon.visibility = View.VISIBLE
-                thirdOfPriceCheckIcon.visibility = View.GONE
+        when (view?.id) {
+            R.id.payFullPriceButton -> PaymentRequestModel.FULL_PRICE
+            R.id.payThirdOfPriceButton -> selectPaymentPercentage(PaymentRequestModel.PRICE_30)
+        }
+    }
+
+    private fun selectPaymentPercentage(selectedPercentage: Int){
+        when(selectedPercentage){
+            PaymentRequestModel.FULL_PRICE -> {
+                fullPriceCheckIcon.isVisible = true
+                thirdOfPriceCheckIcon.isVisible = false
                 presenter.changePrice(PaymentRequestModel.FULL_PRICE)
             }
-            R.id.payThirdOfPriceButton -> {
-                thirdOfPriceCheckIcon.visibility = View.VISIBLE
-                fullPriceCheckIcon.visibility = View.GONE
+            PaymentRequestModel.PRICE_30 -> {
+                thirdOfPriceCheckIcon.isVisible = true
+                fullPriceCheckIcon.isVisible = false
                 presenter.changePrice(PaymentRequestModel.PRICE_30)
             }
         }

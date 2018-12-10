@@ -62,6 +62,13 @@
             android:background="@drawable/back_circle_white_buttons"
             android:elevation="2dp"/>
 
+        <View
+            android:id="@+id/tintBackground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#99000000"
+            android:visibility="gone"/>
+
     </FrameLayout>
 
     <android.support.design.widget.CoordinatorLayout
@@ -71,8 +78,7 @@
 
         <include
             android:id="@+id/sheetOrder"
-            layout="@layout/bottom_sheet_create_order_new"
-            android:visibility="gone" />
+            layout="@layout/bottom_sheet_create_order_new"/>
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.CoordinatorLayout
@@ -82,8 +88,7 @@
 
         <include
             android:id="@+id/sheetTransport"
-            layout="@layout/bottom_sheet_type_transport"
-            android:visibility="gone" />
+            layout="@layout/bottom_sheet_type_transport"/>
     </android.support.design.widget.CoordinatorLayout>
 
 </android.support.design.widget.CoordinatorLayout>

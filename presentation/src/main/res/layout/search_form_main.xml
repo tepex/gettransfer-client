@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal|top"
-    android:background="@drawable/rounded_background"
+    android:background="@drawable/back_rounded"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="false"
     android:orientation="vertical"
@@ -41,6 +41,7 @@
                 android:background="@color/colorDividerGray" />
 
             <RelativeLayout
+                android:id="@+id/rl_searchForm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -57,6 +58,44 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     app:srcCompat="@drawable/ic_dark_arrow"/>
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rl_hourly"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/hourly_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/search_sub_title_height"
+                    android:layout_marginTop="@dimen/search_sub_title_marginTop"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textSize="@dimen/search_sub_title_textSize"
+                    android:text="@string/LNG_FIELD_PER_HOUSE"/>
+
+                <TextView
+                    android:id="@+id/tvCurrent_hours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="6 hours"
+                    android:layout_below="@+id/hourly_title"
+                    android:paddingBottom="@dimen/search_main_paddingBottom"
+
+                    android:fontFamily="@font/sf_pro_text_semibold"
+                    android:textColor="@color/colorTextBlack"
+                    android:textSize="@dimen/search_main_textSize"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/hourly_arrow_margin_end"
+                    android:rotation="90"
+                    android:src="@drawable/ic_arrow_down"/>
+
 
             </RelativeLayout>
 
