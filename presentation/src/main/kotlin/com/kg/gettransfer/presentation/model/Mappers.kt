@@ -10,6 +10,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.model.*
 
+import com.kg.gettransfer.presentation.mapper.Mapper
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
 
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
@@ -35,13 +36,6 @@ object Mappers : KoinComponent {
 
     fun point2LatLng(point: Point) = LatLng(point.latitude, point.longitude)
 
-    private fun point2Location(point: Point): Location {
-        val ret = Location("")
-        ret.latitude = point.latitude
-        ret.longitude = point.longitude
-        return ret
-    }
-
     fun latLng2Point(latLng: LatLng) = Point(latLng.latitude, latLng.longitude)
 
     fun getRouteModel(distance: Int?,
@@ -50,7 +44,7 @@ object Mappers : KoinComponent {
                       to: String,
                       fromPoint: Point,
                       toPoint: Point,
-                      dateTime: String) = RouteModel(distance ?: checkDistance(fromPoint, toPoint),
+                      dateTime: String) = RouteModel(distance ?: Mapper.checkDistance(fromPoint, toPoint),
                                                      polyLines,
                                                      from,
                                                      to,
@@ -63,7 +57,7 @@ object Mappers : KoinComponent {
             id = type.id,
             createdAt = type.createdAt,
             duration = type.duration,
-            distance = type.to?.let { type.distance ?: checkDistance(type.from.point!!, type.to!!.point!!) },
+            distance = type.to?.let { type.distance ?: Mapper.checkDistance(type.from.point!!, type.to!!.point!!) },
             status = type.status,
             statusName = getTransferStatusName(type.status),
             from = type.from.name!!,
@@ -135,23 +129,4 @@ object Mappers : KoinComponent {
 
 
 
-    fun getCarrierTripModel(type: CarrierTrip) =
-        CarrierTripModel(
-            type.id,
-            type.transferId,
-            type.from.name!!,
-            type.to.name!!,
-            SystemUtils.formatDateTime(type.dateLocal),
-            type.distance ?: checkDistance(type.from.point!!, type.to.point!!),
-            type.childSeats,
-            type.comment,
-            type.price,
-            type.vehicle.name,
-            type.pax,
-            type.nameSign,
-            type.flightNumber,
-            type.remainToPay
-        )
-
-    private fun checkDistance(from: Point, to: Point) = (point2Location(from).distanceTo(point2Location(to)) / 1000).toInt()
 }
