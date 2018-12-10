@@ -14,9 +14,9 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Offer
 
+import com.kg.gettransfer.presentation.mapper.OfferMapper
 import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
 
-import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
@@ -38,6 +38,8 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
     private val offerInteractor: OfferInteractor by inject()
     private val paymentInteractor: PaymentInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
+
+    private val offerMapper: OfferMapper by inject()
     private val paymentRequestMapper: PaymentRequestMapper by inject()
 
     private var offer: Offer? = null
@@ -51,7 +53,7 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
         offer = offerInteractor.getOffer(params.offerId)
         offer?.let {
             paymentRequest = PaymentRequestModel(params.transferId, params.offerId)
-            viewState.setOffer(Mappers.getOfferModel(it), params.paymentPercentages)
+            viewState.setOffer(offerMapper.toView(it), params.paymentPercentages)
             return
         }
         viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${params.offerId}] not found!"))

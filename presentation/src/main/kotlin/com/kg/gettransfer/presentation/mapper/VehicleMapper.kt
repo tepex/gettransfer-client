@@ -5,13 +5,18 @@ import com.kg.gettransfer.domain.model.Vehicle
 import com.kg.gettransfer.presentation.model.VehicleBaseModel
 import com.kg.gettransfer.presentation.model.VehicleModel
 
+import org.koin.standalone.get
+
 open class VehicleMapper : Mapper<VehicleModel, Vehicle> {
+    private val transportTypeMapper = get<TransportTypeMapper>()
+    private val vehicleBaseMapper = get<VehicleBaseMapper>()
+
     override fun toView(type: Vehicle) =
         VehicleModel(
-            VehicleBaseModel(type.vehicleBase.name, type.vehicleBase.registrationNumber),
+            vehicleBaseMapper.toView(type.vehicleBase),
             type.year,
             type.color,
-            TransportTypeModel(type.transportType, null),
+            transportTypeMapper.toView(type.transportType),
             type.photos
         )
 

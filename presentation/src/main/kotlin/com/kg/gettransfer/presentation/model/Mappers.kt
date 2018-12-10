@@ -9,6 +9,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.model.*
+
+import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
+
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
@@ -27,6 +30,8 @@ import org.koin.standalone.KoinComponent
 
 object Mappers : KoinComponent {
     private val systemInteractor = get<SystemInteractor>()
+    private val transportTypeMapper = get<TransportTypeMapper>()
+
 
     fun point2LatLng(point: Point) = LatLng(point.latitude, point.longitude)
 
@@ -38,20 +43,6 @@ object Mappers : KoinComponent {
     }
 
     fun latLng2Point(latLng: LatLng) = Point(latLng.latitude, latLng.longitude)
-
-    fun getUserModel(type: Account) = UserModel(getProfileModel(type.user.profile), type.user.termsAccepted)
-
-    fun getUser(model: UserModel) = User(getProfile(model.profile), model.termsAccepted)
-
-    /*
-    fun getAccount(model: User,
-                   locale: Locale?,
-                   currency: Currency?,
-                   distanceUnit: DistanceUnit?,
-                   groups: List<String>?,
-                   carrierId: Long?) = Account(model, locale, currency, distanceUnit, groups, carrierId) */
-
-
 
     fun getCurrenciesModels(types: List<Currency>)        = types.map { CurrencyModel(it) }
 //    fun getLocalesModels(types: List<Locale>)             = types.map { LocaleModel(it) }
@@ -106,8 +97,7 @@ object Mappers : KoinComponent {
                bookNow
                bookNowExpiration */
             transportTypes = systemInteractor.transportTypes.filter {
-                type.transportTypeIds.contains(it.id) }.map { getTransportTypeModel(it, null)
-            },
+                type.transportTypeIds.contains(it.id) }.map { transportTypeMapper.toView(it) },
             /* passengerOfferedPrice */
             price = type.price?.default,
 /* ================================================== */
