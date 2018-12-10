@@ -39,9 +39,6 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
-import java.text.Format
-import java.text.SimpleDateFormat
-
 import java.util.Calendar
 import java.util.Date
 
@@ -288,6 +285,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             val logResult = utils.asyncAwait { systemInteractor.putAccount() }
             if (result.error == null && logResult.error == null) {
                 logCreateTransfer(Analytics.RESULT_SUCCESS)
+                logEventAddToCart(Analytics.EVENT_ADD_TO_CART)
                 router.replaceScreen(Screens.Offers(result.model.id))
             } else if (result.error != null) {
                 logCreateTransfer(Analytics.SERVER_ERROR)
@@ -381,11 +379,20 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             map[Analytics.CURRENCY] = currencies[selectedCurrency].name
         }
         analytics.logEvent(Analytics.EVENT_TRANSFER, bundle, map)
-
-        logEventAddToCart(bundle, map)
     }
 
-    private fun logEventAddToCart(bundle: Bundle, map: MutableMap<String, Any?>) {
+    private fun logEventAddToCart(value: String) {
+        val bundle = Bundle()
+        val map = mutableMapOf<String, Any?>()
+
+        if (cost != null) {
+            bundle.putString(Analytics.VALUE, cost.toString())
+            map[Analytics.VALUE] = cost.toString()
+
+            bundle.putString(Analytics.CURRENCY, currencies[selectedCurrency].name)
+            map[Analytics.CURRENCY] = currencies[selectedCurrency].name
+        }
+
         bundle.putInt(Analytics.NUMBER_OF_PASSENGERS, passengers)
         map[Analytics.NUMBER_OF_PASSENGERS] = passengers
 
@@ -397,7 +404,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         bundle.putString(Analytics.TRAVEL_CLASS, transportTypes?.filter { it.checked }?.joinToString())
         map[Analytics.TRAVEL_CLASS] = transportTypes?.filter { it.checked }?.joinToString()
 
-        analytics.logEvent(Analytics.EVENT_ADD_TO_CART, bundle, map)
+        analytics.logEvent(value, bundle, map)
     }
 
     companion object {
