@@ -41,6 +41,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private val distanceUnitMapper = get<DistanceUnitMapper>()
     private val endpointMapper     = get<EndpointMapper>()
 
+    private val localeMapper: LocaleMapper by inject()
+
     private var localeWasChanged = false
     private var restart = true
 

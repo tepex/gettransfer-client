@@ -31,6 +31,7 @@ import timber.log.Timber
 @InjectViewState
 class MainPresenter : BasePresenter<MainView>() {
     private val routeInteractor: RouteInteractor by inject()
+    private val profileMapper: ProfileMapper by inject()
 
     private val pointMapper: PointMapper by inject()
     private val profileMapper: ProfileMapper by inject()
