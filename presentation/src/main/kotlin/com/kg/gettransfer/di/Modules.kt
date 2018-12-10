@@ -79,9 +79,30 @@ val domainModule = module {
     single { PromoInteractor(get()) }
 }
 
-val androidModule = module {
+val mappersModule = module {
+    single { CarrierMapper() }
+    single { CarrierTripMapper() }
+    single { CurrencyMapper() }
+    single { DistanceUnitMapper() }
+    single { EndpointMapper() }
+    single { LocaleMapper() }
+    single { MoneyMapper() }
+    single { OfferMapper() }
+    single { PaymentRequestMapper() }
     single { PaymentStatusRequestMapper() }
+    single { PointMapper() }
+    single { PriceMapper() }
+    single { ProfileMapper() }
+    single { RatingsMapper() }
+    single { RouteMapper() }
+    single { TransferMapper() }
+    single { TransportTypeMapper() }
+    single { UserMapper() }
+    single { VehicleBaseMapper() }
+    single { VehicleMapper() }
+}
 
+val androidModule = module {
     single { OfferServiceConnection() }
     single { CoroutineContexts(Dispatchers.Main, Dispatchers.IO) }
     single { FirebaseAnalytics.getInstance(androidApplication().applicationContext) }

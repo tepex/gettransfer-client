@@ -4,7 +4,7 @@ import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.model.RouteModel
 
-object RouteMapper {
+open class RouteMapper {
     fun getView(
         distance: Int?,
         polyLines: List<String>?,

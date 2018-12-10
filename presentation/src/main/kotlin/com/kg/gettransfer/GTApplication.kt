@@ -47,6 +47,7 @@ class GTApplication: MultiDexApplication() {
                                cacheModule,
                                dataModule,
                                domainModule,
+                               mappersModule,
                                androidModule))
 
         setupAppMetrica()
