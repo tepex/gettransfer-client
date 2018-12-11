@@ -15,6 +15,7 @@ import com.kg.gettransfer.presentation.mapper.LocaleMapper
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.DistanceUnitModel
+import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 
 import com.kg.gettransfer.presentation.view.Screens
@@ -27,19 +28,18 @@ import com.yandex.metrica.YandexMetrica
 import java.util.Locale
 
 import org.koin.standalone.get
-import org.koin.standalone.inject
 
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>() {
     private lateinit var currencies: List<CurrencyModel>
     private lateinit var locales: List<LocaleModel>
     private lateinit var distanceUnits: List<DistanceUnitModel>
-    private val endpoints = systemInteractor.endpoints.map { endpointMapper.toView(it) }
+    private lateinit var endpoints: List<EndpointModel>
 
-    private val localeMapper: LocaleMapper by inject()
-    private val currencyMapper = get<CurrencyMapper>()
+    private val localeMapper       = get<LocaleMapper>()
+    private val currencyMapper     = get<CurrencyMapper>()
     private val distanceUnitMapper = get<DistanceUnitMapper>()
-    private val endpointMapper = get<EndpointMapper>()
+    private val endpointMapper     = get<EndpointMapper>()
 
     private var localeWasChanged = false
     private var restart = true
@@ -141,6 +141,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     private fun initConfigs() {
+        endpoints = systemInteractor.endpoints.map { endpointMapper.toView(it) }
         currencies = systemInteractor.currencies.map { currencyMapper.toView(it) }
         locales = systemInteractor.locales.map { localeMapper.toView(it) }
         distanceUnits = systemInteractor.distanceUnits.map { distanceUnitMapper.toView(it) }
