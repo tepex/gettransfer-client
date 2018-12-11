@@ -137,10 +137,13 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private fun setUIWithoutRoute() {
         transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, null) }
         viewState.setTransportTypes(transportTypes!!)
-        routeInteractor.from!!.let {
-            val point = it.cityPoint.point.let { p -> LatLng(p!!.latitude, p.longitude) }
-            track = Utils.getCameraUpdateForPin(point)
-            viewState.setPinHourlyTransfer(it.address ?: "", it.primary ?: "", point, track!!) }
+        routeInteractor.from?.let { from ->
+            from.cityPoint.point?.let { p ->
+                val point = LatLng(p.latitude, p.longitude)
+                track = Utils.getCameraUpdateForPin(point)
+                viewState.setPinHourlyTransfer(from.address ?: "", from.primary ?: "", point, track!!)
+            }
+        }
     }
 
     fun changeDate(newDate: Date) {
