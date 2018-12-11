@@ -12,6 +12,8 @@ import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.domain.ApiException
+
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PromoInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
@@ -94,7 +96,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     fun initMapAndPrices() {
         routeInteractor.apply {
             if (from == null || (to == null && hourlyDuration == null)) {
-                Timber.d("routerInteractor init error. from: $from, to: $to, duration: $hourlyDuration")
+                Timber.w("routerInteractor init error. from: $from, to: $to, duration: $hourlyDuration")
                 return
             }
             else if (hourlyDuration != null) { // not need route info when hourly
@@ -103,11 +105,15 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             }
         }
 
+        val from = routeInteractor.from!!.cityPoint
+        val to = routeInteractor.to!!.cityPoint
+        if (from.point == null || to.point == null) {
+            Timber.w("NPE! from: $from, to: $to")
+            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) or `To` {$to} is not set"))
+            return
+        }
         utils.launchSuspend {
             viewState.blockInterface(true)
-            val from = routeInteractor.from!!.cityPoint
-            val to = routeInteractor.to!!.cityPoint
-
             val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
             if (result.error != null) viewState.setError(result.error!!)
             else {
