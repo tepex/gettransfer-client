@@ -100,16 +100,16 @@
                 android:paddingBottom="@dimen/bottom_sheet_transfer_details_support_bottom_layout_buttons_padding_bottom"
                 android:visibility="gone">
 
-                <TableLayout
-                    android:id="@+id/tableLayoutTransportTypes"
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/flexboxLayoutTransportTypes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom"
                     android:paddingBottom="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom"
                     android:paddingStart="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_start_end"
                     android:paddingEnd="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_start_end"
-                    android:visibility="gone">
-                </TableLayout>
+                    app:flexWrap="wrap"
+                    android:visibility="gone"/>
 
                 <LinearLayout
                     android:id="@+id/btnSupportBottom"

@@ -15,8 +15,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 
-import android.widget.TableRow
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
@@ -120,7 +118,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         val status = transfer.statusCategory
         if(status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_UNFINISHED) {
             initTableLayoutTransportTypes(transfer.transportTypes)
-            tableLayoutTransportTypes.isVisible = true
+            flexboxLayoutTransportTypes.isVisible = true
         }
         layoutButtonSupportTop.isVisible   = status == Transfer.STATUS_CATEGORY_FINISHED
         layoutCommunicateButtons.isVisible = status == Transfer.STATUS_CATEGORY_CONFIRMED
@@ -224,23 +222,14 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     }
 
     private fun initTableLayoutTransportTypes(transportTypes: List<TransportTypeModel>) {
-        tableLayoutTransportTypes.removeAllViews()
-        for (row in 0 until transportTypes.size.ceil(TRANSPORT_TYPES_COLUMNS)) {
-            val tableRow = TableRow(this).apply {
-                layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
-            }
-            for (col in 0 until TRANSPORT_TYPES_COLUMNS) {
-                val i = row * TRANSPORT_TYPES_COLUMNS + col
-                if (i == transportTypes.size) break
-                tableRow.addView(
-                    LayoutInflater.from(this).inflate(R.layout.view_transfer_details_transport_type_item, null, false).apply {
+        flexboxLayoutTransportTypes.removeAllViews()
+        transportTypes.forEach {
+            flexboxLayoutTransportTypes.addView(LayoutInflater.from(this).inflate(R.layout.view_transfer_details_transport_type_item, null, false).apply {
 
-                        transportTypeItemName.text            = getString(transportTypes[i].nameId!!).plus(":")
-                        transportTypeItemCountPassengers.text = Utils.formatPersons(this@TransferDetailsActivity, transportTypes[i].paxMax)
-                        transportTypeItemCountBaggage.text    = Utils.formatLuggage(this@TransferDetailsActivity, transportTypes[i].luggageMax)
-                    }, col)
-            }
-            tableLayoutTransportTypes.addView(tableRow, row)
+                transportTypeItemName.text            = getString(it.nameId!!).plus(":")
+                transportTypeItemCountPassengers.text = Utils.formatPersons(this@TransferDetailsActivity, it.paxMax)
+                transportTypeItemCountBaggage.text    = Utils.formatLuggage(this@TransferDetailsActivity, it.luggageMax)
+            })
         }
     }
 
