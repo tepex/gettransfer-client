@@ -224,6 +224,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     }
 
     private fun initTableLayoutTransportTypes(transportTypes: List<TransportTypeModel>) {
+        tableLayoutTransportTypes.removeAllViews()
         for (row in 0 until transportTypes.size.ceil(TRANSPORT_TYPES_COLUMNS)) {
             val tableRow = TableRow(this).apply {
                 layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
