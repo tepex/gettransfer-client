@@ -44,6 +44,7 @@ import kotlinx.android.synthetic.main.view_transfer_details_info.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //Don't delete
 import android.view.MotionEvent
+import android.widget.ImageView
 
 class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
@@ -316,7 +317,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         offerModel.vehicle.color?.let { carColor.setImageDrawable(Utils.getVehicleColorFormRes(this, it)) }
         carColor.isVisible = offerModel.vehicle.color != null
 
-        if (offerModel.vehicle.photos.isNotEmpty()) Glide.with(this).load(offerModel.vehicle.photos.first()).into(carPhoto)
+        if (offerModel.vehicle.photos.isNotEmpty()) {
+            Glide.with(this).load(offerModel.vehicle.photos.first()).into(carPhoto)
+            carPhoto.scaleType = ImageView.ScaleType.CENTER_CROP
+        }
         else carPhoto.setImageDrawable(ContextCompat.getDrawable(this, offerModel.vehicle.transportType.imageId!!))
     }
 

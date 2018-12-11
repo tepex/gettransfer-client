@@ -1,7 +1,6 @@
 package com.kg.gettransfer.remote.mapper
 
 import com.kg.gettransfer.data.model.CarrierTripEntity
-import com.kg.gettransfer.data.model.PassengerAccountEntity
 
 import com.kg.gettransfer.remote.model.CarrierTripModel
 

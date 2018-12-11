@@ -96,4 +96,6 @@ class SettingsActivity : BaseActivity(), SettingsView {
         }
         finish()
     }
+
+    override fun onBackPressed() { presenter.onBackCommandClick() }
 }

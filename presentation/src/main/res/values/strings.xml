@@ -368,5 +368,19 @@
     <string name="LNG_ERROR_PASSENGERS">Number of passenger must be greater than zero</string>
     <string name="LNG_TRANSFER_IN_PROGRESS">Transfer in progress</string>
     <string name="LNG_EMAIL_SUBJECT">Get help</string>
-
+    <string name="LNG_TRIPS_TODAY">Today</string>
+    <string name="LNG_TRIPS_ALL">All</string>
+    <string name="LNG_TRIPS_COMPLETED">Completed</string>
+    <string name="LNG_SCROLL_TO_SEE">Scroll to see other days</string>
+    <string name="LNG_IN_PROGRESS">in progress</string>
+    <string name="LNG_WILL_START_IN">will start in</string>
+    <string name="LNG_HAVE_NO_TRIPS_TODAY">You have no scheduled trips today</string>
+    <string name="LNG_TRIP_DETAILS">Transfer details</string>
+    <string name="LNG_TOTAL_PRICE">Total price</string>
+    <string name="LNG_ABOUT_PASSENGER">About passenger</string>
+    <string name="LNG_ABOUT_CAR">About car</string>
+    <string name="LNG_MORE_INFO">More info</string>
+    <string name="LNG_EMAIL">Email</string>
+    <string name="LNG_PHONE">Phone</string>
+    <string name="LNG_TRIP_ON_MY_WAY">On my way</string>
 </resources>

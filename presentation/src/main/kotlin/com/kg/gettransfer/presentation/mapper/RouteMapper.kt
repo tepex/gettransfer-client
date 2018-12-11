@@ -9,7 +9,7 @@ open class RouteMapper {
         distance: Int?,
         polyLines: List<String>?,
         from: String,
-        to: String,
+        to: String?,
         fromPoint: Point,
         toPoint: Point,
         dateTime: String

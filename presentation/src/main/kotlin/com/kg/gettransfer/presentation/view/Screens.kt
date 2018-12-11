@@ -87,8 +87,12 @@ object Screens {
 
     data class ChangeMode(val mode: String) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = when (mode) {
-            CARRIER_MODE -> Intent(context, WebPageActivity()::class.java).apply {
+            /*CARRIER_MODE -> Intent(context, WebPageActivity()::class.java).apply {
                 putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_CARRIER)
+            }*/
+            CARRIER_MODE -> Intent(context, CarrierTripsActivity()::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             }
             REG_CARRIER -> Intent(context, WebPageActivity()::class.java).apply {
                 putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_REG_CARRIER)
@@ -123,10 +127,11 @@ object Screens {
         }
     }
 
-    data class TripDetails(val tripId: Long) : SupportAppScreen() {
+    data class TripDetails(val tripId: Long, val transferId: Long) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) =
             Intent(context, CarrierTripDetailsActivity::class.java).apply {
                 putExtra(CarrierTripDetailsView.EXTRA_TRIP_ID, tripId)
+                putExtra(CarrierTripDetailsView.EXTRA_TRANSFER_ID, transferId)
             }
     }
 

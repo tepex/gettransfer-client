@@ -15,7 +15,6 @@ interface TransferDetailsView: BaseView, RouteView {
     fun showAlertCancelRequest()
     fun copyText(text: String)
     fun recreateActivity()
-    fun centerRoute(cameraUpdate: CameraUpdate)
 
     companion object {
         val EXTRA_TRANSFER_ID = "${TransferDetailsView::class.java.name}.transferId"

@@ -6,7 +6,7 @@ data class RouteModel(
     val distance: Int?,
     val polyLines: List<String>?,
     val from: String,
-    val to: String,
+    val to: String?,
     val fromPoint: Point,
     val toPoint: Point,
     var dateTime: String

@@ -17,6 +17,8 @@
 
 	<dimen name="margin_for_area_behind_rounded_corners">-8dp</dimen>
 
+	<dimen name="transfer_start_end_sign_marker_text_size">14sp</dimen>
+
 	<!--Hourly picker-->
 	<dimen name="hourly_bottom_sheet_height">250dp</dimen>
 	<dimen name="hourly_bottom_sheet_height_peek">@dimen/hourly_bottom_sheet_height</dimen>
@@ -321,6 +323,31 @@
 	<dimen name="view_trips_info_iv_comment_height">18dp</dimen>
 	<dimen name="view_trips_info_iv_comment_margin_end">11dp</dimen>
 
+
+	<!-- Carrier trip details activity -->
+	<!-- activity_carrier_trips_details -->
+	<dimen name="activity_carrier_trips_details_behaviour_peek_height">265dp</dimen>
+	<dimen name="activity_carrier_trips_details_map_margin_bottom">175dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_texts_size_12sp">12sp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_texts_size_17sp">17sp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_element_padding_16dp">16dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_details_margin_top">215dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_details_swiped_view_width">110dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_details_swiped_view_height">5dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_details_swiped_view_margin_top_bottom">8dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_btn_support_height">44dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_btn_support_margin_top">8dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_btn_support_margin_bottom">18dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_btn_support_margin_start_end">35dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_btn_support_img_margin_end">8dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_layouts_card_view_padding_top">4dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_layouts_card_view_margin">8dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_layouts_card_view_elevation">4dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_layouts_card_view_radius">5dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_buttons_text_margin_top">7dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_buttons_layout_margin_bottom">13dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_buttons_elevation">5dp</dimen>
+
 	<!--activity_carrier_transfer_details-->
 	<dimen name="activity_carrier_transfer_details_btn_padding_start">12dp</dimen>
 	<dimen name="activity_carrier_transfer_details_btn_text_size">17sp</dimen>
@@ -344,6 +371,66 @@
 	<dimen name="activity_carrier_transfer_details_btn_confirm_meeting_margin_bottom">42dp</dimen>
 	<dimen name="activity_carrier_transfer_details_layout_remains_to_pay_margin_bottom">16dp</dimen>
 
+	<!-- Carrier trips -->
+	<!-- activity_carrier_trips -->
+	<dimen name="views_carrier_trips_info_divider_height">1dp</dimen>
+	<dimen name="views_carrier_trips_info_title_dividers_margin_start_end">12dp</dimen>
+	<dimen name="views_carrier_trips_info_title_padding_top">9dp</dimen>
+	<dimen name="views_carrier_trips_info_title_padding_bottom">4dp</dimen>
+	<dimen name="views_carrier_trips_info_title_text_size">12sp</dimen>
+	<dimen name="views_carrier_trips_info_subtitle_text_size">12sp</dimen>
+	<dimen name="views_carrier_trips_info_subtitle_text_margin_start">8dp</dimen>
+	<dimen name="views_carrier_trips_info_subtitle_divider_margin_start">8dp</dimen>
+	<dimen name="views_carrier_trips_info_subtitle_padding_top">12dp</dimen>
+	<dimen name="views_carrier_trips_info_subtitle_padding_bottom">4dp</dimen>
+	<dimen name="views_carrier_trips_info_item_margin">5dp</dimen>
+	<dimen name="views_carrier_trips_info_item_elevation">4dp</dimen>
+	<dimen name="views_carrier_trips_activity_tab_layout_height">44dp</dimen>
+	<dimen name="views_carrier_trips_activity_tab_layout_text_size">17sp</dimen>
+	<dimen name="views_carrier_trips_info_layout_padding_top_bottom">14dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_padding_end">16dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_text_size_11sp">11sp</dimen>
+	<dimen name="views_carrier_trips_info_layout_text_size_14sp">14sp</dimen>
+	<dimen name="views_carrier_trips_info_layout_text_size_17sp">17sp</dimen>
+	<dimen name="views_carrier_trips_info_layout_items_margin_start_16dp">16dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_date_margin_top">2dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_date_padding_top_bottom">4dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_date_padding_end">19dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_distance_margin_top">3dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_fields_from_to_margin_start">8dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_fields_from_to_margin_top">8dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_fields_from_to_min_height">34dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_address_divider_margin_top_bottom">8dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_markers_size">23dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_markers_hourly_size">25dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_markers_line_width">5dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_markers_line_margin_top_bottom">1dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_hourly_duration_text_padding_start">22dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_hourly_duration_text_padding_end">8dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_hourly_duration_text_padding_bottom">1dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_hourly_duration_text_height">25dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_hourly_duration_text_margin_start">-16dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_vehicle_info_margin_top">4dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_trip_info_margin_top">10dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_vehicle_name_margin_end">4dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_images_width">4dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_images_size">36dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_images_padding">4dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_image_comment_margin_start">5dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_distance_duration_price_items_margin">6dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_more_info_layouts_margin">6dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_more_info_padding">10dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_more_info_passenger_indicator_margin_top">5dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_more_info_tv_flight_margin_top">12dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_more_info_tv_comment_margin_top">8dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_about_passenger_padding">16dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_about_passenger_text_views_margin_top">8dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_about_passenger_layouts_margin_top">16dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_about_passenger_image_buttons_elevation">4dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_about_car_license_plate_margin_top">11dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_about_car_number_margin_top_bottom">6dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_about_car_number_margin_start_end">9dp</dimen>
+	
 	<!--activity_offers-->
 	<dimen name="activity_offers_divider_height">0.5dp</dimen>
 	<dimen name="activity_offers_excellent_price_text_size">12sp</dimen>
@@ -388,6 +475,7 @@
 	<dimen name="view_offer_layouts_on_image_height">24dp</dimen>
 	<dimen name="view_offer_image_like_margin_start">5dp</dimen>
 	<dimen name="view_offer_prices_margin">8dp</dimen>
+	<dimen name="view_offer_car_photo_height">96dp</dimen>
 
 	<dimen name="general_button_width">300dp</dimen>
 	<dimen name="general_button_height">44dp</dimen>

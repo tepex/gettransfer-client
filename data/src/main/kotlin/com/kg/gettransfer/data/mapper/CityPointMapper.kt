@@ -1,6 +1,5 @@
 package com.kg.gettransfer.data.mapper
 
-import com.kg.gettransfer.data.mapper.PointMapper
 import com.kg.gettransfer.data.model.CityPointEntity
 
 import com.kg.gettransfer.domain.model.CityPoint

@@ -253,7 +253,7 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     fun onLoginClick() {
-        login("", "")
+        login(Screens.PASSENGER_MODE, "")
         logEvent(Analytics.LOGIN_CLICKED)
     }
 

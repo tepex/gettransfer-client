@@ -10,6 +10,7 @@ import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 
 import com.kg.gettransfer.presentation.mapper.CarrierTripBaseMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
+import com.kg.gettransfer.presentation.mapper.CarrierTripsRVItemsListMapper
 
 import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 
@@ -36,7 +37,7 @@ class CarrierTripsPresenter : BasePresenter<CarrierTripsView>() {
             else {
                 trips = result.model.map { carrierTripBaseMapper.toView(it) }
                 viewState.initNavigation(profileMapper.toView(systemInteractor.account.user.profile))
-                viewState.setTrips(trips!!)
+                viewState.setTrips(tripsRVItems!!, carrierTripsRVItemsList.startTodayPosition, carrierTripsRVItemsList.endTodayPosition)
             }
             viewState.blockInterface(false)
         }
@@ -48,7 +49,7 @@ class CarrierTripsPresenter : BasePresenter<CarrierTripsView>() {
         checkLoggedIn()
     }
 
-    fun onTripSelected(tripId: Long) = router.navigateTo(Screens.TripDetails(tripId))
+    fun onTripSelected(tripId: Long, transferId: Long) = router.navigateTo(Screens.TripDetails(tripId, transferId))
 
     fun checkLoggedIn() {
         if(!systemInteractor.account.user.loggedIn) router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))

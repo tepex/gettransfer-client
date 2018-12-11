@@ -1,6 +1,5 @@
 package com.kg.gettransfer.data.model
 
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
 data class CityPointEntity(

@@ -141,7 +141,7 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
 
         processGoogleMap(false) {
             val bmPinA = getPinBitmap(routeModel.from, routeModel.dateTime, R.drawable.ic_map_label_a)
-            val bmPinB = getPinBitmap(routeModel.to, SystemUtils.formatDistance(this, routeModel.distance, true), R.drawable.ic_map_label_b)
+            val bmPinB = getPinBitmap(routeModel.to!!, SystemUtils.formatDistance(this, routeModel.distance, true), R.drawable.ic_map_label_b)
             if(Utils.isValidBitmap(bmPinA) && Utils.isValidBitmap(bmPinB)) {
                 val startMakerOptions = createStartMarker(polyline.startPoint, bmPinA)
                 val endMakerOptions = createEndMarker(polyline.finishPoint, bmPinB)

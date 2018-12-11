@@ -20,7 +20,6 @@ interface CreateOrderView: BaseView, RouteView {
     fun setTransportTypes(transportTypes: List<TransportTypeModel>)
     fun setFairPrice(price: String?, time: String?)
     fun setCurrencies(currencies: List<CurrencyModel>)
-    fun centerRoute(cameraUpdate: CameraUpdate)
     fun setUser(user: UserModel, isLoggedIn: Boolean)
     fun setPassengers(count: Int)
     fun setChildren(count: Int)

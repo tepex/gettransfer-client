@@ -95,6 +95,7 @@ val mappersModule = module {
     single { PaymentStatusRequestMapper() }
     single { PointMapper() }
     single { PriceMapper() }
+    single { PassengerAccountMapper() }
     single { ProfileMapper() }
     single { RatingsMapper() }
     single { RouteMapper() }
@@ -104,6 +105,7 @@ val mappersModule = module {
     single { UserMapper() }
     single { VehicleInfoMapper() }
     single { VehicleMapper() }
+    single { CarrierTripsRVItemsListMapper() }
 }
 
 val androidModule = module {

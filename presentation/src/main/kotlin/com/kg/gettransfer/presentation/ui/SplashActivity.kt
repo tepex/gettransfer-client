@@ -22,6 +22,7 @@ import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.presentation.view.AboutView
+import com.kg.gettransfer.presentation.view.Screens
 
 import kotlinx.coroutines.Job
 
@@ -59,11 +60,6 @@ class SplashActivity: AppCompatActivity() {
         Timber.d("Permissions granted!")
         utils.launchSuspend {
             val result = utils.asyncAwait { systemInteractor.coldStart() }
-            /*when(systemInteractor.lastMode) {
-                Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsActivity::class.java))
-                Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-            }*/
 
             if(result.error != null) {
                 Timber.e(result.error!!)
@@ -79,7 +75,14 @@ class SplashActivity: AppCompatActivity() {
                     startActivity(Intent(this@SplashActivity, AboutActivity::class.java)
                             .putExtra(AboutView.EXTRA_OPEN_MAIN, true).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
                 }
-                else startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                else {
+                    //startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                    when(systemInteractor.lastMode) {
+                        Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsActivity::class.java))
+                        Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                        else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                    }
+                }
                 finish()
             }
         }

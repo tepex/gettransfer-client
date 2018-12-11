@@ -81,6 +81,7 @@
     <color name="colorOfferStroke">#dfdfdf</color>
     <color name="colorSortOffersStroke">#cacace</color>
     <color name="colorLayoutsOnImageBack">#60000000</color>
+    <color name="colorCarImageBackground">#e4e4e4</color>
     <color name="colorStarsInRatingBar">#f6dc66</color>
 
     <!--vehicle_colors-->
@@ -121,4 +122,11 @@
     <color name="color_transfer_details_background_gray">#f6f6f6</color>
     <color name="color_transfer_details_header_text_color">#8e8e93</color>
 
+    <!--Driver mode -->
+    <color name="color_driver_mode_text_gray">#B2B2B2</color>
+    <color name="color_driver_mode_text_green">#98b71b</color>
+    <color name="color_driver_mode_divider">#19000000</color>
+    <color name="color_driver_mode_address_divider">#30979797</color>
+    <color name="color_carrier_trips_activity_background">#f6f6f6</color>
+    <color name="color_carrier_trip_details_activity_divider">#d8d8d8</color>
 </resources>
