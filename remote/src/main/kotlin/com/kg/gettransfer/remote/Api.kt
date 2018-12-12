@@ -55,7 +55,8 @@ interface Api {
     fun getCarrierTrip(@Path("id") id: Long): Deferred<ResponseModel<CarrierTripModelWrapper>>
 
     @GET("$API_TRANSFERS/{id}/offers")
-    fun getOffers(@Path("id") id: Long): Deferred<ResponseModel<OffersModel>>
+    //fun getOffers(@Path("id") id: Long): Deferred<ResponseModel<OffersModel>>
+    fun getOffers(@Path("id") id: Long): Deferred<ResponseModel<String>>
 
     @GET(API_TRANSFERS)
     fun getAllTransfers(): Deferred<ResponseModel<TransfersModel>>

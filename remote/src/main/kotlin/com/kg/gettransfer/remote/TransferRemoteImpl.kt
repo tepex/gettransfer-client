@@ -23,7 +23,7 @@ import org.koin.standalone.inject
 
 import org.slf4j.Logger
 
-class TransferRemoteImpl: TransferRemote {
+class TransferRemoteImpl : TransferRemote {
     private val core              = get<ApiCore>()
     private val transferMapper    = get<TransferMapper>()
     private val transferNewMapper = get<TransferNewMapper>()
@@ -37,14 +37,14 @@ class TransferRemoteImpl: TransferRemote {
 
     private suspend fun tryPostTransfer(transferNew: TransferNewWrapperModel): ResponseModel<TransferWrapperModel> {
         return try { core.api.postTransfer(transferNew).await() }
-        catch(e: Exception) {
+        catch (e: Exception) {
             log.error("Create transfer error", e)
-            if(e is RemoteException) throw e /* second invocation */
+            if (e is RemoteException) throw e /* second invocation */
             val ae = core.remoteException(e)
-            if(!ae.isInvalidToken()) throw ae
+            if (!ae.isInvalidToken()) throw ae
 
-            try { core.updateAccessToken() } catch(e1: Exception) { throw core.remoteException(e1) }
-            return try { core.api.postTransfer(transferNew).await() } catch(e2: Exception) { throw core.remoteException(e2) }
+            try { core.updateAccessToken() } catch (e1: Exception) { throw core.remoteException(e1) }
+            return try { core.api.postTransfer(transferNew).await() } catch (e2: Exception) { throw core.remoteException(e2) }
         }
     }
 

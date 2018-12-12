@@ -18,7 +18,7 @@ import org.koin.standalone.inject
 
 import org.slf4j.Logger
 
-class OfferRemoteImpl: OfferRemote {
+class OfferRemoteImpl : OfferRemote {
     private val core   = get<ApiCore>()
     private val mapper = get<OfferMapper>()
     private val log: Logger by inject { parametersOf("GTR-remote") }
@@ -33,5 +33,12 @@ class OfferRemoteImpl: OfferRemote {
         //offers.forEach { it.vehicle.photos = it.vehicle.photos.map { photo -> core.apiUrl.plus(photo) } }
         mapper.transferId = id
         return offers.map { mapper.fromRemote(it) }
+        */
+        return emptyList<OfferEntity>()
+        }
+        catch(e: Exception) {
+            log.error("remote offer error", e)
+            return emptyList<OfferEntity>()
+        }
     }
 }

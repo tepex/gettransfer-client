@@ -136,7 +136,8 @@ class ApiCore: KoinComponent {
                 }
                 RemoteException(e.code(), msg ?: e.message!!)
             }
-            else -> RemoteException(RemoteException.NOT_HTTP, e.message!!)
+            RemoteException(e.code(), msg ?: e.message!!)
         }
+        else -> RemoteException(RemoteException.NOT_HTTP, e.message!!)
     }
 }
