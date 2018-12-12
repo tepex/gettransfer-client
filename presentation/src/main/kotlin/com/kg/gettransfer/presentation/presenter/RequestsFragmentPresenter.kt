@@ -28,7 +28,7 @@ import timber.log.Timber
 @InjectViewState
 class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
     private val transferInteractor: TransferInteractor by inject()
-
+    private val transferMapper: TransferMapper by inject()
     lateinit var categoryName: String
 
     private var transfers: List<TransferModel>? = null
@@ -62,7 +62,7 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
             RequestsView.CATEGORY_COMPLETED -> transfers.filterCompleted()
             else                            -> transfers
         }
-        viewState.setRequests(filtered.sortDescendant().map { Mappers.getTransferModel(it) })
+        viewState.setRequests(filtered.sortDescendant().map { transferMapper.toView(it) })
     }
 
     fun openTransferDetails(id: Long, status: Transfer.Status) {
