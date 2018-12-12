@@ -6,10 +6,10 @@ import com.google.gson.annotations.SerializedName
 import com.kg.gettransfer.data.model.CarrierEntity
 
 class CarrierModel(
+    @SerializedName(CarrierEntity.ID) @Expose val id: Long,
     @SerializedName(CarrierEntity.TITLE) @Expose val title: String?,
     @SerializedName(CarrierEntity.EMAIL) @Expose val email: String?,
     @SerializedName(CarrierEntity.PHONE) @Expose val phone: String?,
-    @SerializedName(CarrierEntity.ID) @Expose val id: Long,
     @SerializedName(CarrierEntity.APPROVED) @Expose val approved: Boolean,
     @SerializedName(CarrierEntity.COMPLETED_TRANSFERS) @Expose val completedTransfers: Int,
     @SerializedName(CarrierEntity.LANGUAGES) @Expose val languages: List<LocaleModel>,

@@ -9,7 +9,7 @@ import retrofit2.http.*
 interface Api {
     companion object {
         const val HEADER_TOKEN = "X-ACCESS-TOKEN"
-        
+
         const val API_ACCESS_TOKEN       = "/api/access_token"
         const val API_CONFIGS            = "/api/configs"
         const val API_ACCOUNT            = "/api/account"
@@ -53,9 +53,10 @@ interface Api {
 
     @GET("$API_CARRIER_TRIPS/{id}")
     fun getCarrierTrip(@Path("id") id: Long): Deferred<ResponseModel<CarrierTripModelWrapper>>
-    
+
     @GET("$API_TRANSFERS/{id}/offers")
-    fun getOffers(@Path("id") id: Long): Deferred<ResponseModel<OffersModel>>
+    //fun getOffers(@Path("id") id: Long): Deferred<ResponseModel<OffersModel>>
+    fun getOffers(@Path("id") id: Long): Deferred<ResponseModel<String>>
 
     @GET(API_TRANSFERS)
     fun getAllTransfers(): Deferred<ResponseModel<TransfersModel>>

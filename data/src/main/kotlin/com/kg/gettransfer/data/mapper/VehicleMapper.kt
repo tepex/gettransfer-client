@@ -20,6 +20,7 @@ open class VehicleMapper : Mapper<VehicleEntity, Vehicle> {
      */
     override fun fromEntity(type: VehicleEntity) =
         Vehicle(
+            type.id,
             vehicleBaseMapper.fromEntity(type.vehicleBase),
             type.year,
             type.color,
@@ -32,6 +33,7 @@ open class VehicleMapper : Mapper<VehicleEntity, Vehicle> {
      */
     override fun toEntity(type: Vehicle) =
         VehicleEntity(
+            type.id,
             vehicleBaseMapper.toEntity(type.vehicleBase),
             type.year,
             type.color,

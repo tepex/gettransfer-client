@@ -39,7 +39,7 @@ class ApiCore: KoinComponent {
     companion object {
         private val ERROR_PATTERN = Regex("^\\<h1\\>(.+)\\<\\/h1\\>$")
     }
-    
+
     private val preferences = get<PreferencesCache>()
     private val log: Logger by inject { parametersOf("GTR-remote") }
 
@@ -57,16 +57,16 @@ class ApiCore: KoinComponent {
         addInterceptor { chain ->
             var request = chain.request()
             if(request.url().encodedPath() != Api.API_ACCESS_TOKEN) request = request.newBuilder()
-	            .addHeader(Api.HEADER_TOKEN, preferences.accessToken)
-	            .build()
-	        try {
-	            chain.proceed(request)
-	        } catch(e: Exception) {
-	            log.error("Maybe DNS Exception", e)
-	            throw IOException(e)
-	        }
-	    }
-	    .cookieJar(CookieJar.NO_COOKIES)
+                .addHeader(Api.HEADER_TOKEN, preferences.accessToken)
+                .build()
+            try {
+                chain.proceed(request)
+            } catch(e: Exception) {
+                log.error("Maybe DNS Exception", e)
+                throw IOException(e)
+            }
+        }
+        .cookieJar(CookieJar.NO_COOKIES)
     }.build()
 
     fun changeEndpoint(endpoint: EndpointModel) {
@@ -98,10 +98,10 @@ class ApiCore: KoinComponent {
             return try { apiCall().await() } catch(e2: Exception) { throw remoteException(e2) }
         }
     }
-    
+
     internal suspend fun <R> tryTwice(id: Long, apiCall: (Long) -> Deferred<R>): R {
         return try { apiCall(id).await() }
-        catch(e: Exception) {
+        catch (e: Exception) {
            if(e is RemoteException) throw e /* second invocation */
            val ae = remoteException(e)
            if(!ae.isInvalidToken()) throw ae
@@ -110,7 +110,7 @@ class ApiCore: KoinComponent {
            return try { apiCall(id).await() } catch(e2: Exception) { throw remoteException(e2) }
         }
     }
-    
+
     /*
     private suspend fun <T, R> tryTwice(vararg param: T, apiCall: (T) -> Deferred<R>): R {
         return apiCall(param).await()
@@ -122,21 +122,19 @@ class ApiCore: KoinComponent {
         val accessToken = response.data!!.token
         preferences.accessToken = accessToken
     }
-    
-    internal fun remoteException(e: Exception): RemoteException {
-        return when(e) {
-            is HttpException -> {
-                val errorBody = e.response().errorBody()?.string()
-                val msg = try {
-                    gson.fromJson(errorBody, ResponseModel::class.java).error?.details?.toString()
-                } catch(je: JsonSyntaxException) {
-                    val matchResult = errorBody?.let { ERROR_PATTERN.find(it)?.let { it.groupValues } }
-                    log.warn("${e.message} matchResult: $matchResult", je)
-                    matchResult?.getOrNull(1)
-                }
-                RemoteException(e.code(), msg ?: e.message!!)
+
+    internal fun remoteException(e: Exception): RemoteException = when(e) {
+        is HttpException -> {
+            val errorBody = e.response().errorBody()?.string()
+            val msg = try {
+                gson.fromJson(errorBody, ResponseModel::class.java).error?.details?.toString()
+            } catch (je: JsonSyntaxException) {
+                val matchResult = errorBody?.let { ERROR_PATTERN.find(it)?.let { it.groupValues } }
+                log.warn("${e.message} matchResult: $matchResult", je)
+                matchResult?.getOrNull(1)
             }
-            else -> RemoteException(RemoteException.NOT_HTTP, e.message!!)
+            RemoteException(e.code(), msg ?: e.message!!)
         }
+        else -> RemoteException(RemoteException.NOT_HTTP, e.message!!)
     }
 }

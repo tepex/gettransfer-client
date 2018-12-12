@@ -18,7 +18,7 @@ import com.kg.gettransfer.remote.model.ResponseModel
 
 import org.koin.standalone.get
 
-class SystemRemoteImpl: SystemRemote {
+class SystemRemoteImpl : SystemRemote {
     private val core           = get<ApiCore>()
     private val configsMapper  = get<ConfigsMapper>()
     private val accountMapper  = get<AccountMapper>()
@@ -26,7 +26,7 @@ class SystemRemoteImpl: SystemRemote {
 
     override suspend fun getConfigs(): ConfigsEntity {
         val response: ResponseModel<ConfigsModel> = core.tryTwice { core.api.getConfigs() }
-		return configsMapper.fromRemote(response.data!!)
+        return configsMapper.fromRemote(response.data!!)
     }
 
     override suspend fun getAccount(): AccountEntity? {
@@ -38,18 +38,17 @@ class SystemRemoteImpl: SystemRemote {
     override suspend fun setAccount(accountEntity: AccountEntity): AccountEntity {
         val response: ResponseModel<AccountModelWrapper> = tryPutAccount(AccountModelWrapper(accountMapper.toRemote(accountEntity)))
         return accountMapper.fromRemote(response.data?.account!!)
-
     }
 
     private suspend fun tryPutAccount(account: AccountModelWrapper): ResponseModel<AccountModelWrapper> {
         return try { core.api.putAccount(account).await() }
-        catch(e: Exception) {
-            if(e is RemoteException) throw e /* second invocation */
+        catch (e: Exception) {
+            if (e is RemoteException) throw e /* second invocation */
             val ae = core.remoteException(e)
-            if(!ae.isInvalidToken()) throw ae
+            if (!ae.isInvalidToken()) throw ae
 
-            try { core.updateAccessToken() } catch(e1: Exception) { throw core.remoteException(e1) }
-            return try { core.api.putAccount(account).await() } catch(e2: Exception) { throw core.remoteException(e2) }
+            try { core.updateAccessToken() } catch (e1: Exception) { throw core.remoteException(e1) }
+            return try { core.api.putAccount(account).await() } catch (e2: Exception) { throw core.remoteException(e2) }
         }
     }
 
@@ -60,13 +59,13 @@ class SystemRemoteImpl: SystemRemote {
 
     private suspend fun tryLogin(email: String, password: String): ResponseModel<AccountModelWrapper> {
         return try { core.api.login(email, password).await() }
-        catch(e: Exception) {
-            if(e is RemoteException) throw e /* second invocation */
+        catch (e: Exception) {
+            if (e is RemoteException) throw e /* second invocation */
             val ae = core.remoteException(e)
-            if(!ae.isInvalidToken()) throw ae
+            if (!ae.isInvalidToken()) throw ae
 
-            try { core.updateAccessToken() } catch(e1: Exception) { throw core.remoteException(e1) }
-            return try { core.api.login(email, password).await() } catch(e2: Exception) { throw core.remoteException(e2) }
+            try { core.updateAccessToken() } catch (e1: Exception) { throw core.remoteException(e1) }
+            return try { core.api.login(email, password).await() } catch (e2: Exception) { throw core.remoteException(e2) }
         }
     }
 

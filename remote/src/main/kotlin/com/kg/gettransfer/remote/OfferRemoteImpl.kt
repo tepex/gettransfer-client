@@ -11,17 +11,33 @@ import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.OfferModel
 import com.kg.gettransfer.remote.model.OffersModel
 
-import org.koin.standalone.get
+import org.koin.core.parameter.parametersOf
 
-class OfferRemoteImpl: OfferRemote {
+import org.koin.standalone.get
+import org.koin.standalone.inject
+
+import org.slf4j.Logger
+
+class OfferRemoteImpl : OfferRemote {
     private val core   = get<ApiCore>()
     private val mapper = get<OfferMapper>()
+    private val log: Logger by inject { parametersOf("GTR-remote") }
 
     override suspend fun getOffers(id: Long): List<OfferEntity> {
-        val response: ResponseModel<OffersModel> = core.tryTwice(id, { _id -> core.api.getOffers(_id) })
+        try {
+        //val response: ResponseModel<OffersModel> = core.tryTwice(id, { _id -> core.api.getOffers(_id) })
+        val response: ResponseModel<String> = core.tryTwice(id, { _id -> core.api.getOffers(_id) })
+        /*
         val offers: List<OfferModel> = response.data!!.offers
         offers.forEach { it.vehicle.photos = it.vehicle.photos.map { photo -> core.apiUrl.plus(photo) } }
         mapper.transferId = id
         return offers.map { mapper.fromRemote(it) }
+        */
+        return emptyList<OfferEntity>()
+        }
+        catch(e: Exception) {
+            log.error("remote offer error", e)
+            return emptyList<OfferEntity>()
+        }
     }
 }

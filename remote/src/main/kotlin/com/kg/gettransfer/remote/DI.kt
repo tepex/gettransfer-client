@@ -14,52 +14,55 @@ import org.koin.dsl.module.module
 
 import org.slf4j.LoggerFactory
 
-val remoteModule = module {
-    factory { (tag: String) -> LoggerFactory.getLogger(tag) }
-    
-    single { ApiCore() }
-    
-    single { TransportTypePriceMapper() }
-    single { RouteInfoMapper() }
-    single<RouteRemote> { RouteRemoteImpl() }
-    
+val remoteMappersModule = module {
     single { AccountMapper() }
-    single { TransportTypeMapper() }
-    single { PaypalCredentialsMapper() }
-    single { LocaleMapper() }
-    single { CurrencyMapper() }
-    single { CardGatewaysMapper() }
-    single { ConfigsMapper() }
-    single { EndpointMapper() }
-    single<SystemRemote> { SystemRemoteImpl() }
-    
-    single { CityPointMapper() }
-    single { VehicleBaseMapper() }
-    single { PassengerAccountMapper() }
-    single { CarrierTripMapper() }
-    single<CarrierTripRemote> { CarrierTripRemoteImpl() }
 
-    single { TripMapper() }
-    single { MoneyMapper() }
-    single { UserMapper() }
-    single { TransferMapper() }
-    single { TransferNewMapper() }
-    single<TransferRemote> { TransferRemoteImpl() }
-    
-    single { ProfileMapper() }
-    single { VehicleMapper() }
-    single { RatingsMapper() }
+    single { CardGatewaysMapper() }
     single { CarrierMapper() }
-    single { PriceMapper() }
+    single { CarrierTripMapper() }
+    single { CityPointMapper() }
+    single { ConfigsMapper() }
+    single { CurrencyMapper() }
+
+    single { EndpointMapper() }
+    single { LocaleMapper() }
+    single { MoneyMapper() }
+
     single { OfferMapper() }
-    single<OfferRemote> { OfferRemoteImpl() }
-    
+
+    single { PassengerAccountMapper() }
     single { PaymentMapper() }
     single { PaymentRequestMapper() }
     single { PaymentStatusMapper() }
     single { PaymentStatusRequestMapper() }
-    single<PaymentRemote> { PaymentRemoteImpl() }
-    
+    single { PaypalCredentialsMapper() }
+    single { PriceMapper() }
+    single { ProfileMapper() }
     single { PromoMapper() }
+
+    single { RatingsMapper() }
+    single { RouteInfoMapper() }
+
+    single { TransferMapper() }
+    single { TransferNewMapper() }
+    single { TransportTypeMapper() }
+    single { TransportTypePriceMapper() }
+    single { TripMapper() }
+
+    single { UserMapper() }
+    single { VehicleBaseMapper() }
+    single { VehicleMapper() }
+}
+
+val remoteModule = module {
+    factory { (tag: String) -> LoggerFactory.getLogger(tag) }
+
+    single { ApiCore() }
+    single<RouteRemote> { RouteRemoteImpl() }
+    single<SystemRemote> { SystemRemoteImpl() }
+    single<CarrierTripRemote> { CarrierTripRemoteImpl() }
+    single<TransferRemote> { TransferRemoteImpl() }
+    single<OfferRemote> { OfferRemoteImpl() }
+    single<PaymentRemote> { PaymentRemoteImpl() }
     single<PromoRemote> { PromoRemoteImpl() }
 }

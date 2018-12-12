@@ -12,6 +12,7 @@ import com.kg.gettransfer.remote.model.VehicleModel
 open class VehicleMapper : EntityMapper<VehicleModel, VehicleEntity> {
     override fun fromRemote(type: VehicleModel) =
         VehicleEntity(
+            type.id,
             VehicleBaseEntity(type.name, type.registrationNumber),
             type.year,
             type.color,
