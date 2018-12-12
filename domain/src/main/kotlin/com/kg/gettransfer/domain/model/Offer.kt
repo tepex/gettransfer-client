@@ -4,7 +4,7 @@ import java.util.Date
 import java.util.Locale
 
 data class Offer(
-    val id: Long,
+    override val id: Long,
     val transferId: Long,
     val status: String,
     val wifi: Boolean,
@@ -17,47 +17,18 @@ data class Offer(
     val carrier: Carrier,
     val vehicle: Vehicle,
     val driver: Profile?
-) {
+) : Entity() {
 
     val phoneToCall = when {
-        driver?.phone != null -> driver.phone
-        carrier.profile.phone != null -> carrier.profile.phone
-        else -> null
+        driver?.phone != null          -> driver.phone
+        carrier.profile?.phone != null -> carrier.profile.phone
+        else                           -> null
     }
 
     companion object {
-        @JvmField
-        val STATUS_NEW = "new"
-        @JvmField
-        val STATUS_PERFORMED = "performed"
-        @JvmField
-        val STATUS_BLOCKED = "blocked"
-        @JvmField
-        val STATUS_CANCELED = "canceled"
+        const val STATUS_NEW       = "new"
+        const val STATUS_PERFORMED = "performed"
+        const val STATUS_BLOCKED   = "blocked"
+        const val STATUS_CANCELED  = "canceled"
     }
 }
-
-data class Price(
-    val base: Money,
-    val withoutDiscount: Money?,
-    val percentage30: String,
-    val percentage70: String,
-    val amount: Double // Double !!!
-)
-
-data class Ratings(
-    val average: Float?,
-    val vehicle: Float?,
-    val driver: Float?,
-    val fair: Float?
-)
-
-data class Carrier(
-    val id: Long,
-    val profile: Profile,
-    val approved: Boolean,
-    val completedTransfers: Int,
-    val languages: List<Locale>,
-    val ratings: Ratings,
-    val canUpdateOffers: Boolean
-)

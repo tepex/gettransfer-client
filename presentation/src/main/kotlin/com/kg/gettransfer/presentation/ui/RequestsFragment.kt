@@ -38,8 +38,6 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     @InjectPresenter
     internal lateinit var presenter: RequestsFragmentPresenter
 
-    private lateinit var categoryName: String
-
     @ProvidePresenter
     fun createRequestsFragmentPresenter() = RequestsFragmentPresenter()
 
@@ -53,8 +51,8 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
-        arguments!!.getString(CATEGORY)?.let { categoryName = it }
         super.onCreate(savedInstanceState)
+        presenter.categoryName = arguments!!.getString(CATEGORY)!!
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
@@ -65,7 +63,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         super.onViewCreated(view, savedInstanceState)
         rvRequests.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
-    
+
     override fun setRequests(transfers: List<TransferModel>) {
         rvRequests.adapter = RequestsRVAdapter(transfers) { presenter.openTransferDetails(it.id, it.status) }
     }
@@ -75,7 +73,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) =
         (activity as BaseView).setError(finish, errId, *args)
-    
+
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}", e)
         Utils.showError(context!!, false, getString(R.string.err_server, e.message))

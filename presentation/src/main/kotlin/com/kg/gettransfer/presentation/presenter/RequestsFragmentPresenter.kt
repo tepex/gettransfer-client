@@ -8,12 +8,16 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
-import com.kg.gettransfer.domain.model.Transfer.Status
+import com.kg.gettransfer.domain.model.sortDescendant
+import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.Transfer.Companion.filterActive
+import com.kg.gettransfer.domain.model.Transfer.Companion.filterCompleted
 
 import com.kg.gettransfer.presentation.model.Mappers
 import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
+import com.kg.gettransfer.presentation.view.RequestsView
 import com.kg.gettransfer.presentation.view.Screens
 
 import org.koin.standalone.inject
@@ -23,7 +27,8 @@ import timber.log.Timber
 @InjectViewState
 class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
     private val transferInteractor: TransferInteractor by inject()
-    //private val categoryName: String by inject()
+
+    lateinit var categoryName: String
 
     private var transfers: List<TransferModel>? = null
 
@@ -45,20 +50,25 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
             }
             */
             val result = utils.asyncAwait { transferInteractor.getAllTransfers() }
-            if (result.error != null) viewState.setError(result.error!!)
-            else {
-                transfers = result.model.map { Mappers.getTransferModel(it) }
-                viewState.setRequests(transfers!!)
-            }
+            if (result.error != null) viewState.setError(result.error!!) else showTransfers(result.model)
             viewState.blockInterface(false)
         }
     }
 
-    fun openTransferDetails(id: Long, status: Status) {
+    private fun showTransfers(transfers: List<Transfer>) {
+        var filtered = when (categoryName) {
+            RequestsView.CATEGORY_ACTIVE    -> transfers.filterActive()
+            RequestsView.CATEGORY_COMPLETED -> transfers.filterCompleted()
+            else                            -> transfers
+        }
+        viewState.setRequests(filtered.sortDescendant().map { Mappers.getTransferModel(it) })
+    }
+
+    fun openTransferDetails(id: Long, status: Transfer.Status) {
         Timber.d("Open Transfer details. id: $id")
         when (status) {
-            Status.NEW -> router.navigateTo(Screens.Offers(id))
-            else -> router.navigateTo(Screens.Details(id))
+            Transfer.Status.NEW -> router.navigateTo(Screens.Offers(id))
+            else       -> router.navigateTo(Screens.Details(id))
         }
     }
 }
