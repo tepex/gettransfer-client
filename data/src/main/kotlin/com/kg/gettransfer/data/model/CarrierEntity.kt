@@ -6,7 +6,6 @@ import kotlinx.serialization.SerialName
 
 @Serializable
 data class CarrierEntity(
-    @SerialName(ID) val id: Long,
     @Optional @SerialName(PROFILE) val profile: ProfileEntity? = null,
     @SerialName(APPROVED) val approved: Boolean,
     @SerialName(COMPLETED_TRANSFERS) val completedTransfers: Int,
@@ -17,7 +16,6 @@ data class CarrierEntity(
 
     companion object {
         const val ENTITY_NAME         = "carrier"
-        const val ID                  = "id"
         const val PROFILE             = "profile"
         const val APPROVED            = "approved"
         const val COMPLETED_TRANSFERS = "completed_transfers"

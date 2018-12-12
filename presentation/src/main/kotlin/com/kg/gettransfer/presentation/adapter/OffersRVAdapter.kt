@@ -45,7 +45,7 @@ class OffersRVAdapter(
 
     class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(item: OfferModel, listener: SelectOfferClickListener) = with(containerView) {
-            tvCarrierId.text = "#".plus(item.carrier.id)
+            tvCarrierId.text = "#".plus(item.carrier.profile?.id ?: "")
             //           tvCompletedTransfers.text = context.getString(R.string.LNG_MADE).plus(" ${item.carrier.completedTransfers} ").plus(context.getString(R.string.LNG_RIDES))
             tvCompletedTransfers.text =
                     String.format(context.resources.getString(R.string.LNG_MADE_RIDES), item.carrier.completedTransfers)

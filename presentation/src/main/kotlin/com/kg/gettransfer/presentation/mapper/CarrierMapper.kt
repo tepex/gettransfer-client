@@ -13,7 +13,6 @@ open class CarrierMapper : Mapper<CarrierModel, Carrier> {
 
     override fun toView(type: Carrier) =
         CarrierModel(
-            type.id,
             type.profile?.let { profileMapper.toView(it) },
             type.approved,
             type.completedTransfers,

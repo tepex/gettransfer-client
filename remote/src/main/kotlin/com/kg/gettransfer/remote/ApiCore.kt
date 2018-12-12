@@ -35,7 +35,7 @@ import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class ApiCore: KoinComponent {
+class ApiCore : KoinComponent {
     companion object {
         private val ERROR_PATTERN = Regex("^\\<h1\\>(.+)\\<\\/h1\\>$")
     }
@@ -56,12 +56,12 @@ class ApiCore: KoinComponent {
         addInterceptor(HttpLoggingInterceptor(log))
         addInterceptor { chain ->
             var request = chain.request()
-            if(request.url().encodedPath() != Api.API_ACCESS_TOKEN) request = request.newBuilder()
+            if (request.url().encodedPath() != Api.API_ACCESS_TOKEN) request = request.newBuilder()
                 .addHeader(Api.HEADER_TOKEN, preferences.accessToken)
                 .build()
             try {
                 chain.proceed(request)
-            } catch(e: Exception) {
+            } catch (e: Exception) {
                 log.error("Maybe DNS Exception", e)
                 throw IOException(e)
             }
@@ -86,16 +86,16 @@ class ApiCore: KoinComponent {
      */
     internal suspend fun <R> tryTwice(apiCall: () -> Deferred<R>): R {
         return try { apiCall().await() }
-        catch(e: Exception) {
-            if(e is RemoteException) throw e /* second invocation */
+        catch (e: Exception) {
+            if (e is RemoteException) throw e /* second invocation */
             val ae = remoteException(e)
-            if(!ae.isInvalidToken()) {
+            if (!ae.isInvalidToken()) {
                 log.error("apiCall", e)
                 throw ae
             }
 
-            try { updateAccessToken() } catch(e1: Exception) { throw remoteException(e1) }
-            return try { apiCall().await() } catch(e2: Exception) { throw remoteException(e2) }
+            try { updateAccessToken() } catch (e1: Exception) { throw remoteException(e1) }
+            return try { apiCall().await() } catch (e2: Exception) { throw remoteException(e2) }
         }
     }
 
@@ -119,8 +119,7 @@ class ApiCore: KoinComponent {
 
     internal suspend fun updateAccessToken() {
         val response: ResponseModel<TokenModel> = api.accessToken(apiKey).await()
-        val accessToken = response.data!!.token
-        preferences.accessToken = accessToken
+        preferences.accessToken = response.data!!.token
     }
 
     internal fun remoteException(e: Exception): RemoteException {

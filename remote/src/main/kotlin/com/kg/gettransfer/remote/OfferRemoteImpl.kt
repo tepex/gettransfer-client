@@ -25,20 +25,9 @@ class OfferRemoteImpl : OfferRemote {
 
     override suspend fun getOffers(id: Long): List<OfferEntity> {
         val response: ResponseModel<OffersModel> = core.tryTwice(id, { _id -> core.api.getOffers(_id) })
-        /*
-        log.debug("offers: ${response.data}")
-        return emptyList<OfferEntity>()
-        */
         val offers: List<OfferModel> = response.data!!.offers
-        //offers.forEach { it.vehicle.photos = it.vehicle.photos.map { photo -> core.apiUrl.plus(photo) } }
+        offers.forEach { it.vehicle.photos = it.vehicle.photos.map { photo -> core.apiUrl.plus(photo) } }
         mapper.transferId = id
         return offers.map { mapper.fromRemote(it) }
-        */
-        return emptyList<OfferEntity>()
-        }
-        catch(e: Exception) {
-            log.error("remote offer error", e)
-            return emptyList<OfferEntity>()
-        }
     }
 }
