@@ -11,8 +11,9 @@ data class TransportTypeEntity(
 ) {
 
     companion object {
-        const val ID          = "id"
-        const val PAX_MAX     = "pax_max"
-        const val LUGGAGE_MAX = "luggage_max"
+        const val ID                = "id"
+        const val TRANSPORT_TYPE_ID = "transport_type_id"
+        const val PAX_MAX           = "pax_max"
+        const val LUGGAGE_MAX       = "luggage_max"
     }
 }

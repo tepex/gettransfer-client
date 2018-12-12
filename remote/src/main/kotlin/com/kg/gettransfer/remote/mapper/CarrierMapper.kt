@@ -16,8 +16,7 @@ open class CarrierMapper : EntityMapper<CarrierModel, CarrierEntity> {
 
     override fun fromRemote(type: CarrierModel) =
         CarrierEntity(
-            type.id,
-            ProfileEntity(type.title, type.email, type.phone),
+            ProfileEntity(type.id, type.title, type.email, type.phone),
             type.approved,
             type.completedTransfers,
             type.languages.map { localeMapper.fromRemote(it) },

@@ -14,7 +14,7 @@ data class Account(
 
     companion object {
         val NO_ACCOUNT = Account(
-            User(Profile(null, null, null)),
+            User(Profile(0, null, null, null)),
             Locale.getDefault(),
             Currency.getInstance("USD"),
             DistanceUnit.km,

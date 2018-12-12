@@ -19,7 +19,6 @@ open class CarrierMapper : Mapper<CarrierEntity, Carrier> {
      */
     override fun fromEntity(type: CarrierEntity) =
         Carrier(
-            type.id,
             type.profile?.let { profileMapper.fromEntity(it) },
             type.approved,
             type.completedTransfers,
