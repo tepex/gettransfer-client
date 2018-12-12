@@ -1,5 +1,8 @@
 package com.kg.gettransfer.remote.mapper
 
+import com.kg.gettransfer.data.model.CarrierEntity
+import com.kg.gettransfer.data.model.LocaleEntity
+import com.kg.gettransfer.data.model.MoneyEntity
 import com.kg.gettransfer.data.model.OfferEntity
 
 import com.kg.gettransfer.remote.model.OfferModel
