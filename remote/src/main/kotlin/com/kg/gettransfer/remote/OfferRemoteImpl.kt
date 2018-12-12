@@ -24,10 +24,20 @@ class OfferRemoteImpl : OfferRemote {
     private val log: Logger by inject { parametersOf("GTR-remote") }
 
     override suspend fun getOffers(id: Long): List<OfferEntity> {
-        val response: ResponseModel<OffersModel> = core.tryTwice(id, { _id -> core.api.getOffers(_id) })
+        try {
+        //val response: ResponseModel<OffersModel> = core.tryTwice(id, { _id -> core.api.getOffers(_id) })
+        val response: ResponseModel<String> = core.tryTwice(id, { _id -> core.api.getOffers(_id) })
+        /*
         val offers: List<OfferModel> = response.data!!.offers
         offers.forEach { it.vehicle.photos = it.vehicle.photos.map { photo -> core.apiUrl.plus(photo) } }
         mapper.transferId = id
         return offers.map { mapper.fromRemote(it) }
+        */
+        return emptyList<OfferEntity>()
+        }
+        catch(e: Exception) {
+            log.error("remote offer error", e)
+            return emptyList<OfferEntity>()
+        }
     }
 }
