@@ -3,7 +3,7 @@ package com.kg.gettransfer.domain.model
 import java.util.Date
 
 data class CarrierTrip(
-    val id: Long,
+    override val id: Long,
     val transferId: Long,
     val from: CityPoint,
     val to: CityPoint,
@@ -23,6 +23,6 @@ data class CarrierTrip(
     val remainToPay: String?,
     val paidPercentage: Int?,
     val passengerAccount: PassengerAccount?
-)
+) : Entity()
 
 data class PassengerAccount(val profile: Profile, val lastSeen: Date)
