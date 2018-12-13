@@ -8,41 +8,42 @@ import kotlinx.serialization.SerialName
 
 /* Align to line :9 */
 open class TransferEntity(
-    @SerialName(ID)                val id: Long,
-    @SerialName(CREATED_AT)        val createdAt: String,
-    @SerialName(DURATION)          val duration: Int?,
-    @SerialName(DISTANCE)          val distance: Int?,
-    @SerialName(STATUS)            val status: String,
-    @SerialName(FROM)              val from: CityPointEntity,
-    @SerialName(TO)                val to: CityPointEntity?,
-    @SerialName(DATE_TO_LOCAL)     val dateToLocal: String,
-    @SerialName(DATE_RETURN_LOCAL) val dateReturnLocal: String?,
-    @SerialName(DATE_REFUND)       val dateRefund: String?,
+        @SerialName(ID)                val id: Long,
+        @SerialName(CREATED_AT)        val createdAt: String,
+        @SerialName(DURATION)          val duration: Int?,
+        @SerialName(DISTANCE)          val distance: Int?,
+        @SerialName(STATUS)            val status: String,
+        @SerialName(FROM)              val from: CityPointEntity,
+        @SerialName(TO)                val to: CityPointEntity?,
+        @SerialName(DATE_TO_LOCAL)     val dateToLocal: String,
+        @SerialName(DATE_RETURN_LOCAL) val dateReturnLocal: String?,
+        @SerialName(DATE_REFUND)       val dateRefund: String?,
 /* ================================================== */
     @SerialName(NAME_SIGN)               val nameSign: String?, /* Имя на табличке, которую держит встречающий (сейчас поле full_name) */
     @SerialName(COMMENT)                 val comment: String?,
-    @SerialName(MALINA_CARD)             val malinaCard: String?,
-    @SerialName(FLIGHT_NUMBER)           val flightNumber: String?,
-    @SerialName(FLIGHT_NUMBER_RETURN)    val flightNumberReturn: String?,
-    @SerialName(PAX)                     val pax: Int,
-    @SerialName(CHILD_SEATS)             val childSeats: Int,
-    @SerialName(OFFERS_COUNT)            val offersCount: Int,
-    @SerialName(RELEVANT_CARRIERS_COUNT) val relevantCarriersCount: Int,
-    @SerialName(OFFERS_UPDATED_AT)       val offersUpdatedAt: String?,
+        @SerialName(MALINA_CARD)             val malinaCard: String?,
+        @SerialName(FLIGHT_NUMBER)           val flightNumber: String?,
+        @SerialName(FLIGHT_NUMBER_RETURN)    val flightNumberReturn: String?,
+        @SerialName(PAX)                     val pax: Int,
+        @SerialName(CHILD_SEATS)             val childSeats: Int,
+        @SerialName(PROMO_CODE)              val promoCode: String?,
+        @SerialName(OFFERS_COUNT)            val offersCount: Int,
+        @SerialName(RELEVANT_CARRIERS_COUNT) val relevantCarriersCount: Int,
+        @SerialName(OFFERS_UPDATED_AT)       val offersUpdatedAt: String?,
 /* ================================================== */
     @SerialName(TIME)                    val time: Int,
-    @SerialName(PAID_SUM)                val paidSum: MoneyEntity?,
-    @SerialName(REMAINS_TO_PAY)          val remainsToPay: MoneyEntity?,
-    @SerialName(PAID_PERCENTAGE)         val paidPercentage: Int,
-    @SerialName(PENDING_PAYMENT_ID)      val pendingPaymentId: Int?,
-    @SerialName(BOOK_NOW)                val bookNow: Boolean,
-    @SerialName(BOOK_NOW_EXPIRATION)     val bookNowExpiration: String?,
-    @SerialName(TRANSPORT_TYPE_IDS)      val transportTypeIds: List<String>,
-    @SerialName(PASSENGER_OFFERED_PRICE) val passengerOfferedPrice: String?,
-    @SerialName(PRICE)                   val price: MoneyEntity?,
+        @SerialName(PAID_SUM)                val paidSum: MoneyEntity?,
+        @SerialName(REMAINS_TO_PAY)          val remainsToPay: MoneyEntity?,
+        @SerialName(PAID_PERCENTAGE)         val paidPercentage: Int,
+        @SerialName(PENDING_PAYMENT_ID)      val pendingPaymentId: Int?,
+        @SerialName(BOOK_NOW)                val bookNow: Boolean,
+        @SerialName(BOOK_NOW_EXPIRATION)     val bookNowExpiration: String?,
+        @SerialName(TRANSPORT_TYPE_IDS)      val transportTypeIds: List<String>,
+        @SerialName(PASSENGER_OFFERED_PRICE) val passengerOfferedPrice: String?,
+        @SerialName(PRICE)                   val price: MoneyEntity?,
 /* ================================================== */
     @SerialName(PAYMENT_PERCENTAGES)     val paymentPercentages: List<Int>,
-    @SerialName(EDITABLE_FIELDS)         val editableFields: List<String>
+        @SerialName(EDITABLE_FIELDS)         val editableFields: List<String>
 ) {
 
     companion object {
@@ -64,6 +65,7 @@ open class TransferEntity(
         const val FLIGHT_NUMBER_RETURN    = "flight_number_return"
         const val PAX                     = "pax"
         const val CHILD_SEATS             = "child_seats"
+        const val PROMO_CODE              = "promo_code"
         const val OFFERS_COUNT            = "offers_count"
         const val RELEVANT_CARRIERS_COUNT = "relevant_carriers_count"
         const val OFFERS_UPDATED_AT       = "offers_updated_at"

@@ -215,6 +215,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
             flight_number.field_text.text = it
             flight_number.isVisible = true
         }
+        transfer.promoCode?.let {
+            promo_code.field_text.text = it
+            promo_code.isVisible = true
+        }
         transfer.comment?.let {
             comment.field_text.text = it
             comment.isVisible = true

@@ -46,6 +46,7 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
             flightNumberReturn = type.flightNumberReturn,
             pax = type.pax,
             childSeats = type.childSeats,
+            promoCode = type.promoCode,
             offersCount = type.offersCount,
             relevantCarriersCount = type.relevantCarriersCount,
             /* offersUpdatedAt */
