@@ -100,6 +100,17 @@
         android:visibility="gone"/>
 
     <com.kg.gettransfer.presentation.ui.TransferDetailsField
+        android:id="@+id/promo_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:title_transfer_details="@string/LNG_MENU_TITLE_PROMO"
+        app:input_transfer_details="WINTER7, 7%"
+        app:icon_img_transfer_details="@drawable/ic_percentage"
+
+        android:visibility="gone"/>
+
+    <com.kg.gettransfer.presentation.ui.TransferDetailsField
         android:id="@+id/comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

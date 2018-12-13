@@ -230,7 +230,7 @@
 
                     app:title="@string/LNG_RIDE_PROMOCODE_PLACEHOLDER"
                     app:hint="@string/LNG_RIDE_PROMOCODE"
-                    app:icon_img="@drawable/sale_icon"/>
+                    app:icon_img="@drawable/ic_percentage"/>
 
                 <ImageView
                     android:id="@+id/img_okResult"

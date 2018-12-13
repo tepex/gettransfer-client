@@ -34,6 +34,7 @@ open class TransferMapper: EntityMapper<TransferModel, TransferEntity> {
                        type.flightNumberReturn,
                        type.pax,
                        type.childSeats,
+                       type.promoCode,
                        type.offersCount,
                        type.relevantCarriersCount,
                        type.offersUpdatedAt,

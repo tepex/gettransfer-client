@@ -28,6 +28,7 @@ class TransferModel(
     /* flightNumberReturn not used */
     val countPassengers: Int,
     val countChilds: Int,
+    val promoCode: String?,
     val offersCount: Int,
     val relevantCarriersCount: Int?,
     /* offersUpdatedAt */

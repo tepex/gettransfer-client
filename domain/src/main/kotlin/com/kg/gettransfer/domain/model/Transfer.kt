@@ -26,6 +26,7 @@ data class Transfer(
     val flightNumberReturn: String?,
     val pax: Int,
     val childSeats: Int,
+    val promoCode: String?,
     val offersCount: Int,
     val relevantCarriersCount: Int,
     /* offersUpdatedAt */

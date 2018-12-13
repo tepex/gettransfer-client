@@ -78,6 +78,7 @@ class TransferRepositoryImpl(private val factory: DataStoreFactory<TransferDataS
                 flightNumberReturn = null,
                 pax = 0,
                 childSeats = 0,
+                promoCode = null,
                 offersCount = 0,
                 relevantCarriersCount = 0,
 
