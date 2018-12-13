@@ -6,7 +6,7 @@
     android:layout_height="@dimen/hourly_bottom_sheet_height"
     app:behavior_peekHeight="@dimen/hourly_bottom_sheet_height_peek"
     app:behavior_hideable="true"
-    android:background="@drawable/back_rounded"
+    android:background="@drawable/back_top_rounded"
     android:id="@+id/hourly_picker"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 

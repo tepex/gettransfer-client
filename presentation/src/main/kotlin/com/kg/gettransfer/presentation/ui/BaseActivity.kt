@@ -1,28 +1,37 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
 
 import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
 
 import android.net.ConnectivityManager
-import android.net.Network
+import android.net.Uri
 
 import android.support.annotation.CallSuper
+import android.support.annotation.IdRes
 import android.support.annotation.NonNull
 import android.support.annotation.StringRes
 import android.support.design.widget.BottomSheetBehavior
 
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
+import android.util.DisplayMetrics
+import android.view.*
 
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.LinearLayout
+import android.widget.PopupWindow
 
 import com.arellomobile.mvp.MvpAppCompatActivity
+import com.arellomobile.mvp.MvpPresenter
 
 import com.kg.gettransfer.R
 
@@ -52,6 +61,10 @@ import timber.log.Timber
 abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     companion object {
         const val TOOLBAR_NO_TITLE = 0
+
+        const val DIM_AMOUNT = 0.5f
+
+        const val PLAY_MARKET_RATE = 42
     }
 
     internal val systemInteractor: SystemInteractor by inject()
@@ -62,6 +75,9 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
 
     private var rootView: View? = null
     private var rootViewHeight: Int? = null
+    protected var isKeyBoardOpened = false
+
+    private lateinit var popupWindowRate: PopupWindow
 
     protected open var navigator = SupportAppNavigator(this, Screens.NOT_USED)
 
@@ -207,7 +223,17 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
 
     fun addKeyBoardDismissListener(checkKeyBoardState: (Boolean) -> Unit) {
         rootView = findViewById(android.R.id.content)
-        rootView!!.viewTreeObserver.addOnGlobalLayoutListener { checkKeyBoardState(countDifference()) }
+        rootView!!.viewTreeObserver.addOnGlobalLayoutListener {
+            val state = countDifference()
+            if(!state && !isKeyBoardOpened){
+                isKeyBoardOpened = true
+                checkKeyBoardState(isKeyBoardOpened)
+            }
+            else if (state && isKeyBoardOpened){
+                isKeyBoardOpened = false
+                checkKeyBoardState(isKeyBoardOpened)
+            }
+        }
     }
 
     //protected fun openScreen(screen: String) { router.navigateTo(screen) }
@@ -231,4 +257,52 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
             commit()
         }
     }
+
+    protected fun getScreenSide(height: Boolean): Int {
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        return if (height) displayMetrics.heightPixels else displayMetrics.widthPixels
+    }
+
+    protected fun applyDim(parent: ViewGroup, dimAmount: Float) {
+        parent.overlay.add(ColorDrawable(Color.BLACK).apply {
+            setBounds(0, 0, parent.width, parent.height)
+            alpha = (dimAmount * 255).toInt()
+        })
+    }
+
+    protected fun clearDim(parent: ViewGroup) = parent.overlay.clear()
+
+    @SuppressLint("ResourceType")
+    protected fun showPopUpWindow(@IdRes res: Int, parent: View): View {
+        applyDim(window.decorView.rootView as  ViewGroup, DIM_AMOUNT)
+        val layoutPopUp = LayoutInflater.from(this).inflate(res, null)
+//        val widthPx = Utils.convertDpToPixels(this, 350f).toInt()
+        val widthPx = getScreenSide(false) - 40
+
+        popupWindowRate = PopupWindow(layoutPopUp, widthPx, LinearLayout.LayoutParams.WRAP_CONTENT, true).apply {
+            setOnDismissListener { clearDim(window.decorView.rootView as  ViewGroup)
+                mDisMissAction()
+            }
+            softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+            inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
+
+        }
+        popupWindowRate.showAtLocation(parent,  Gravity.CENTER, 0, 100)
+        popupWindowRate.isOutsideTouchable = false
+        return layoutPopUp
+    }
+
+    protected var mDisMissAction = { }    // used in popup dismiss event, need later init, when view with map would be created
+
+    protected fun redirectToPlayMarket() =
+        Intent(Intent.ACTION_VIEW).let {
+            closePopUp()
+            it.data = Uri.parse(getString(R.string.market_link) + getString(R.string.app_package))
+            it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            startActivityForResult(it, PLAY_MARKET_RATE)
+        }
+
+
+    protected fun closePopUp() = popupWindowRate.dismiss()
 }

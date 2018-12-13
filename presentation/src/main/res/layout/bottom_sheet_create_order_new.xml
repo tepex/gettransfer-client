@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/back_rounded"
+    android:background="@drawable/back_top_rounded"
     app:behavior_hideable="false"
     android:id="@+id/info_sheet"
     app:behavior_peekHeight="@dimen/create_order_behaviour_peek_height"
@@ -26,7 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/view"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:paddingBottom="4dp"
+        android:clipToPadding="false"
         android:background="@color/colorWhite"
         android:orientation="horizontal" />
 
@@ -145,7 +146,7 @@
 
             </android.support.constraint.ConstraintLayout>
 
-            <com.kg.gettransfer.presentation.ui.CreateOrderField
+            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
                 android:id="@+id/transfer_date_time_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -182,7 +183,7 @@
                 android:layout_marginEnd="@dimen/divider_margin_start"
                 android:background="@color/create_order_fields_divider" />
 
-            <com.kg.gettransfer.presentation.ui.CreateOrderField
+            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
                 android:id="@+id/user_name_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -190,7 +191,7 @@
                 app:title="@string/LNG_RIDE_NAME_PLACEHOLDER"
                 app:icon_img="@drawable/ic_passport"/>
 
-            <com.kg.gettransfer.presentation.ui.CreateOrderField
+            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
                 android:id="@+id/email_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -200,7 +201,7 @@
                 app:hint="@string/LNG_RIDE_EMAIL"
                 app:icon_img="@drawable/ic_mail"/>
 
-            <com.kg.gettransfer.presentation.ui.CreateOrderField
+            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
                 android:id="@+id/phone_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -210,7 +211,7 @@
                 app:hint="@string/LNG_RIDE_PHONE"
                 app:icon_img="@drawable/ic_phone"/>
 
-            <com.kg.gettransfer.presentation.ui.CreateOrderField
+            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
                 android:id="@+id/flight_number_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -223,7 +224,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <com.kg.gettransfer.presentation.ui.CreateOrderField
+                <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
                     android:id="@+id/promo_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -244,7 +245,7 @@
                     android:src="@drawable/ic_promo_ok"/>
             </RelativeLayout>
 
-            <com.kg.gettransfer.presentation.ui.CreateOrderField
+            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
                 android:id="@+id/comment_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

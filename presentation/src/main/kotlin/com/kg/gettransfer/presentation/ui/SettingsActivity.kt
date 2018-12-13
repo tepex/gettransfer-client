@@ -56,12 +56,14 @@ class SettingsActivity : BaseActivity(), SettingsView {
         layoutSettingsLogs.setOnClickListener { presenter.onLogsClicked() }
         layoutSettingsResetOnboarding.setOnClickListener { presenter.onResetOnboardingClicked() }
         btnSupport.setOnClickListener { presenter.sendEmail(null) }
+        rlResetMarketRate.setOnClickListener { presenter.onResetRateClicked() }
 
         //Not showing some layouts in release
         if (BuildConfig.FLAVOR != "dev") {
             layoutSettingsEndpoint.isVisible = false
             layoutSettingsLogs.isVisible = false
             layoutSettingsResetOnboarding.isVisible = false
+            rlResetMarketRate.isVisible = false
         }
     }
 

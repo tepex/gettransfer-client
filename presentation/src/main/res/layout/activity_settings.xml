@@ -13,11 +13,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar">
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_below="@id/toolbar">
+>
 
         <RelativeLayout
             android:id="@+id/layoutSettingsCurrency"
@@ -282,7 +288,42 @@
 
         </RelativeLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/create_transfer_divider_height"
+            android:background="@color/colorDividerGray" />
+
+        <RelativeLayout
+            android:id="@+id/rlResetMarketRate"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/settings_activity_height_layouts"
+            android:background="@drawable/back_clicked_layouts">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/reset_rate"
+                android:textSize="@dimen/settings_activity_text_size"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:textColor="@color/colorTextBlack"
+                android:layout_marginStart="@dimen/settings_activity_text_margin_start"
+                android:layout_toStartOf="@+id/imgSettingsResetRate"
+                android:layout_centerVertical="true"/>
+
+            <ImageView
+                android:id="@+id/imgSettingsResetRate"
+                android:layout_width="@dimen/settings_activity_image_size"
+                android:layout_height="@dimen/settings_activity_image_size"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/settings_activity_image_margin_end"
+                android:layout_marginStart="@dimen/settings_activity_image_margin_start"
+                android:layout_centerVertical="true"
+                app:srcCompat="@drawable/chevron"/>
+
+        </RelativeLayout>
+
     </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
     <LinearLayout
         android:id="@+id/btnSupport"

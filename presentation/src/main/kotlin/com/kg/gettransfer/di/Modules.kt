@@ -77,6 +77,7 @@ val domainModule = module {
     single { CarrierTripInteractor(get()) }
     single { TransferInteractor(get()) }
     single { PromoInteractor(get()) }
+    single { ReviewInteractor(get()) }
 }
 
 val mappersModule = module {

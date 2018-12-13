@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/rate_your_transfer_height">
+
+    <View android:background="@color/color_transfer_details_horizontal_divider"
+        android:layout_height="0.5dp"
+        android:layout_width="match_parent"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_transfer_details_title_height"
+        android:background="@color/color_transfer_details_background_gray"
+        android:text="@string/LNG_RATE_TRANSFER"
+        android:textAllCaps="true"
+        android:textSize="@dimen/activity_transfer_details_text_size_13sp"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:textColor="@color/color_transfer_details_header_text_color"
+        android:paddingStart="@dimen/activity_transfer_details_margin_start_end_16dp"
+        android:paddingEnd="@dimen/activity_transfer_details_margin_start_end_16dp"
+        android:gravity="center_vertical"/>
+
+    <View android:background="@color/color_transfer_details_horizontal_divider"
+        android:layout_height="0.5dp"
+        android:layout_width="match_parent"/>
+
+
+    <com.willy.ratingbar.ScaleRatingBar
+        android:id="@+id/tripRate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:paddingTop="32dp"
+
+        app:srb_drawableEmpty="@drawable/ic_star_empty"
+        app:srb_drawableFilled="@drawable/ic_star_filled"
+        app:srb_minimumStars="@integer/stars_minimum"
+        app:srb_numStars="@integer/stars_number"
+        app:srb_rating="0"
+        app:srb_starHeight="@dimen/rating_bar_stars_enabled_height"
+        app:srb_starPadding="@dimen/rating_bar_stars_padding"
+        app:srb_starWidth="@dimen/rating_bar_stars_enabled_width"
+        app:srb_stepSize="1"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/LNG_RIDE_YOU_HAPPY_TRANSFER"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:textSize="@dimen/rate_question_text_size"
+        android:gravity="center"
+        android:layout_weight="1"/>
+
+</LinearLayout>

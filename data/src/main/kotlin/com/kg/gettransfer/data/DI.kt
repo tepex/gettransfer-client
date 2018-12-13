@@ -96,4 +96,7 @@ val dataModule = module {
     single { PromoDataStoreCache() }
     single { PromoDataStoreRemote() }
     single<PromoRepository> { PromoRepositoryImpl(DataStoreFactory<PromoDataStore, PromoDataStoreCache, PromoDataStoreRemote>(get(), get())) }
+
+    single { ReviewDataStoreRemote() }
+    single<ReviewRepository> { ReviewRepositoryImpl(get()) }
 }

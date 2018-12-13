@@ -477,6 +477,8 @@
 	<dimen name="view_offer_prices_margin">8dp</dimen>
 	<dimen name="view_offer_car_photo_height">96dp</dimen>
 
+	<dimen name="rate_your_transfer_height">154dp</dimen>
+
 	<dimen name="general_button_width">300dp</dimen>
 	<dimen name="general_button_height">44dp</dimen>
 	<dimen name="rounded_rectangle_width">110dp</dimen>
@@ -523,16 +525,38 @@
 	<dimen name="bottom_sheet_offer_details_dimen1_margin_top">8dp</dimen>
 	<dimen name="bottom_sheet_offer_details_car_color_indicator_size">16dp</dimen>
 
-	<!--rating_bar_stars-->
+	<!--rating_ui-->
 	<dimen name="rating_bar_stars_height_width">12dp</dimen>
 	<dimen name="rating_bar_stars_padding">2dp</dimen>
+
+	<dimen name="rating_bar_stars_enabled_height">24dp</dimen>
+	<dimen name="rating_bar_stars_enabled_width">@dimen/rating_bar_stars_enabled_height</dimen>
+	<dimen name="detail_rate_bar_stars_enabled_height">18dp</dimen>
+	<dimen name="detail_rate_bar_stars_enabled_width">@dimen/detail_rate_bar_stars_enabled_height</dimen>
+
+	<dimen name="title_rating_text_size">17sp</dimen>
+	<dimen name="cancelRate_text_size">17sp</dimen>
+	<dimen name="thanks_forRate_text_size">17sp</dimen>
+	<dimen name="detailRate_title_text_size">17sp</dimen>
+	<dimen name="sub_title_rating_text_size">12sp</dimen>
+	<dimen name="transfer_number_rate_text_size">22sp</dimen>
+	<dimen name="rate_question_text_size">17sp</dimen>
+	<dimen name="transfer_date_text_size">17sp</dimen>
+
+    <dimen name="vertical_margin_rate_dialog">16dp</dimen>
+    <dimen name="rate_container_dialog_padding">16dp</dimen>
 
 	<dimen name="btn_call_chat_text_margin_start">6dp</dimen>
 	<dimen name="btn_call_chat_text_size">17sp</dimen>
 	<dimen name="btn_next_main_margin_16dp">16dp</dimen>
 
+
+
+
+
 	<!--drawable values-->
 	<dimen name="panels_corner_radius">5dp</dimen>
 	<dimen name="hourly_icon_borders">2dp</dimen>
+
 
 </resources>

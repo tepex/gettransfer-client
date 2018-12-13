@@ -1,4 +1,4 @@
-package com.kg.gettransfer.presentation.ui
+package com.kg.gettransfer.presentation.ui.custom
 
 import com.kg.gettransfer.R
 import android.content.Context

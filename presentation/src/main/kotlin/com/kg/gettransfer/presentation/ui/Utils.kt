@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.app.Activity
-import android.app.Dialog
 
 import android.content.Context
 
@@ -34,7 +33,6 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.Toast
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -45,8 +43,7 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.PolyUtil
 
 import com.kg.gettransfer.R
-
-import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.domain.interactor.ReviewInteractor
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
 
@@ -57,7 +54,8 @@ import com.kg.gettransfer.presentation.model.RouteModel
 import com.yandex.metrica.impl.ob.it
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
-import kotlinx.android.synthetic.main.view_hourly_picker.*
+import kotlinx.android.synthetic.main.view_rate_dialog.view.*
+import kotlinx.android.synthetic.main.view_rate_field.*
 
 import java.text.SimpleDateFormat
 
@@ -405,6 +403,14 @@ object Utils : KoinComponent {
                 layoutParams = lp
             })
         }
+    }
+
+    fun createMapOfDetailedRates(view: View): HashMap<String, Int> {
+        val map = HashMap<String, Int>()
+        map[ReviewInteractor.DRIVER]      = view.driver_rate.rate_bar.rating.toInt()
+        map[ReviewInteractor.PUNCTUALITY] = view.punctuality_rate.rate_bar.rating.toInt()
+        map[ReviewInteractor.VEHICLE]     = view.vehicle_rate.rate_bar.rating.toInt()
+        return map
     }
 }
 

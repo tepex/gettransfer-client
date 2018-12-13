@@ -7,4 +7,9 @@
 	<integer name="inputType_Phone">0x00000003</integer>
 	<integer name="inputType_Email">0x00000020</integer>
 	<integer name="inputType_NoSuggestion">0x00080000</integer>
+
+	<!--Rating stars-->
+	<integer name="stars_number">5</integer>
+	<integer name="stars_minimum">1</integer>
+
 </resources>

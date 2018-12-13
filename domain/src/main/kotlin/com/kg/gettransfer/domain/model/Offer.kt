@@ -24,6 +24,12 @@ data class Offer(
         else                           -> null
     }
 
+    fun isRated(): Boolean {
+        ratings?.apply {
+            return vehicle != null && driver != null && fair != null
+        }
+    }
+
     companion object {
         const val STATUS_NEW       = "new"
         const val STATUS_PERFORMED = "performed"

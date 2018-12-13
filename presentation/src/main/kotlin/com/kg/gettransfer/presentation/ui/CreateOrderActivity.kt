@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation.ui
 import android.app.DatePickerDialog
 
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 
 import android.os.Build
 import android.os.Bundle
@@ -24,7 +23,6 @@ import android.text.InputFilter
 import android.text.InputType //don't delete
 import android.text.TextUtils //don't delete
 
-import android.util.DisplayMetrics
 
 import android.view.*
 import android.view.animation.AnimationUtils
@@ -82,10 +80,10 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     private lateinit var popupWindowComment: PopupWindow
 
     private var defaultPromoText: String? = null
-    private var isKeyBoardOpened = false
+
 
     companion object {
-        const val DIM_AMOUNT = 0.5f
+
         const val KEYBOARD_WAIT_DELAY = 300L
     }
 
@@ -121,7 +119,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         initClickListeners()
         initPromoSection()
         initKeyBoardListener()
-
         initBottomSheets()
     }
 
@@ -176,14 +173,10 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
 
     private fun initKeyBoardListener() {
         addKeyBoardDismissListener { closed ->
-            if (!closed && !isKeyBoardOpened) {
-                isKeyBoardOpened = true
-                btnGetOffers.isVisible = false
-            }
-            else if (closed && isKeyBoardOpened) {
-                isKeyBoardOpened = false
+            if (!closed) btnGetOffers.isVisible = !closed
+            else {
                 // postDelayed нужен, чтобы кнопка не морагала посередине экрана
-                Handler().postDelayed({ btnGetOffers.isVisible = true }, 100)
+                Handler().postDelayed({ btnGetOffers.isVisible = closed }, 100)
                 if (promo_field.field_input.isFocused) presenter.checkPromoCode()
             }
         }
@@ -207,7 +200,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
 
 
     private fun showPopupWindowComment() {
-        val screenHeight = getScreenHeight()
+        val screenHeight = getScreenSide(true)
         applyDim(window.decorView.rootView as  ViewGroup, DIM_AMOUNT)
 
         val layoutPopupView = LayoutInflater.from(applicationContext).inflate(R.layout.layout_popup_comment, layoutPopup).apply {
@@ -249,11 +242,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         }, CreateOrderActivity.KEYBOARD_WAIT_DELAY)
     }
 
-    private fun getScreenHeight(): Int {
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        return displayMetrics.heightPixels
-    }
+
 
     private fun showDatePickerDialog() {
         val currentDate = presenter.currentDate
@@ -414,14 +403,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         }
     }
 
-    private fun applyDim(parent: ViewGroup, dimAmount: Float) {
-        parent.overlay.add(ColorDrawable(Color.BLACK).apply {
-            setBounds(0, 0, parent.width, parent.height)
-            alpha = (dimAmount * 255).toInt()
-        })
-    }
 
-    private fun clearDim(parent: ViewGroup) = parent.overlay.clear()
+
+
 
     //TODO create custom view for new bottom sheet
     private fun initFieldsViews() {

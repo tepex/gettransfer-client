@@ -226,6 +226,7 @@ class OffersActivity : BaseActivity(), OffersView {
             presenter.logEvent(OFFER_DETAILS_RATING)
         }
         bsOfferDetails.state = BottomSheetBehavior.STATE_EXPANDED
+
     }
 
     private fun checkNumberOfPhoto(currentPos: Int, size: Int) {

@@ -162,6 +162,10 @@ class SystemRepositoryImpl(
         listeners.forEach { it.connectionChanged(endpoint, accessToken) }
     }
 
+    override var appEnters: Int
+        get() = preferencesCache.appEnters
+        set(value) { preferencesCache.appEnters = value }
+
     override fun addListener(listener: SystemListener)    { listeners.add(listener) }
     override fun removeListener(listener: SystemListener) { listeners.add(listener) }
 

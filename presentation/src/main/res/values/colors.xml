@@ -6,14 +6,14 @@
     <color name="colorYellow">#fffedb06</color>
     <color name="colorGreen">#98b71b</color>
 
-	<color name="nav_item_subtitle">#9b9b9b</color>
+    <color name="nav_item_subtitle">#9b9b9b</color>
 
-	<color name="aboutToolbar">#d1f8f8f8</color>
-	<color name="ic_selected">#101010</color>
-	<color name="ic_unselected">#bbbbbb</color>
+    <color name="aboutToolbar">#d1f8f8f8</color>
+    <color name="ic_selected">#101010</color>
+    <color name="ic_unselected">#bbbbbb</color>
 
-	<color name="address_item_subtitle">#9b9b9b</color>
-	<color name="search_list_title">#9b9b9b</color>
+    <color name="address_item_subtitle">#9b9b9b</color>
+    <color name="search_list_title">#9b9b9b</color>
 
     <color name="colorBGSecondary">#eeeeee</color>
     <color name="colorBG">#fcfcfc</color>
@@ -129,4 +129,7 @@
     <color name="color_driver_mode_address_divider">#30979797</color>
     <color name="color_carrier_trips_activity_background">#f6f6f6</color>
     <color name="color_carrier_trip_details_activity_divider">#d8d8d8</color>
+
+    <color name="rateCancel">#7d7d7d</color>
+    <color name="rate_comment_border">#979797</color>
 </resources>

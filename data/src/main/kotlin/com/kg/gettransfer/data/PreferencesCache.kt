@@ -11,6 +11,7 @@ interface PreferencesCache {
     var endpoint: EndpointEntity
     var selectedField: String
     var addressHistory: List<GTAddressEntity>
+    var appEnters: Int
     
     val endpoints: List<EndpointEntity>
 

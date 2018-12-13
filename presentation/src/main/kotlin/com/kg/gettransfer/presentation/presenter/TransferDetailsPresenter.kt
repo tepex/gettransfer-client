@@ -6,10 +6,14 @@ import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.maps.CameraUpdate
 
 import com.google.android.gms.maps.model.LatLng
+import com.kg.gettransfer.domain.interactor.ReviewInteractor
 
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.mapper.OfferMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
@@ -36,6 +40,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
     private val routeInteractor: RouteInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
     private val offerInteractor: OfferInteractor by inject()
+    private val reviewInteractor: ReviewInteractor by inject()
 
     private val offerMapper: OfferMapper by inject()
     private val profileMapper: ProfileMapper by inject()
@@ -47,6 +52,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
         @JvmField val FIELD_PHONE = "field_phone"
         @JvmField val OPERATION_COPY = "operation_copy"
         @JvmField val OPERATION_OPEN = "operation_open"
+
     }
 
     private lateinit var transferModel: TransferModel
@@ -64,43 +70,30 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             if (result.error != null) viewState.setError(result.error!!)
             else {
-                transferModel = transferMapper.toView(result.model)
-                viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile))
+                val transfer = result.model
+                transferModel = transferMapper.toView(transfer)
+                var offer: Offer? = null
+
                 if (transferModel.status.checkOffers) {
-                    val r = utils.asyncAwait { offerInteractor.getOffers(result.model.id) }
-                    if(r.error == null && r.model.size == 1) viewState.setOffer(offerMapper.toView(r.model.first()), transferModel.countChilds)
+                    val offersResult = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
+                    if(offersResult.error == null && offersResult.model.size == 1){
+                        offer = offersResult.model.first()
+                        reviewInteractor.offerIdForReview = offer.id
+                        viewState.setOffer(offerMapper.toView(offer), transferModel.countChilds)
+                    }
                 }
 
-                if (result.model.to != null) {
-                    val r = utils.asyncAwait { routeInteractor.getRouteInfo(result.model.from.point!!, result.model.to!!.point!!, true, false) }
-                    if (r.error == null) {
-                        routeModel = routeMapper.getView(
-                            r.model.distance,
-                            r.model.polyLines,
-                            result.model.from.name!!,
-                            result.model.to!!.name!!,
-                            result.model.from.point!!,
-                            result.model.to!!.point!!,
-                            SystemUtils.formatDateTime(transferModel.dateTime)
-                        )
-                        routeModel?.let {
-                            polyline = Utils.getPolyline(it)
-                            track = polyline!!.track
-                            viewState.setRoute(polyline!!, it)
-                        }
-                    }
-                } else if (result.model.duration != null) {
-                    val point = LatLng(result.model.from.point!!.latitude, result.model.from.point!!.longitude)
-                    track = Utils.getCameraUpdateForPin(point)
-                    viewState.setPinHourlyTransfer(
-                        transferModel.from,
-                        SystemUtils.formatDateTime(transferModel.dateTime),
-                        point,
-                        track!!
-                    )
-                }
+                val showRate = offer?.isRated()?.not()?:false
+                viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile), showRate)
+
+                if (transfer.to != null) {
+                    val r = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, true, false) }
+                    if (r.error == null) setRouteTransfer(transfer, r.model)
+                } else if(transfer.duration != null) setHourlyTransfer(transfer)
+
             }
             viewState.blockInterface(false)
+
         }
     }
 
@@ -108,6 +101,34 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
 
     fun onCancelRequestClicked() {
         viewState.showAlertCancelRequest()
+    }
+
+    private fun setRouteTransfer(transfer: Transfer, route: RouteInfo){
+        routeModel =  routeMapper.getView(
+                route.distance,
+                route.polyLines,
+                transfer.from.name!!,
+                transfer.to!!.name!!,
+                transfer.from.point!!,
+                transfer.to!!.point!!,
+                SystemUtils.formatDateTime(transferModel.dateTime)
+        )
+        routeModel?.let {
+            polyline = Utils.getPolyline(it)
+            track = polyline!!.track
+            viewState.setRoute(polyline!!, it)
+        }
+    }
+    private fun setHourlyTransfer(transfer: Transfer) {
+        val from = transfer.from.point!!
+        val point = LatLng(from.latitude, from.longitude)
+        track = Utils.getCameraUpdateForPin(point)
+        viewState.setPinHourlyTransfer(
+                transferModel.from,
+                SystemUtils.formatDateTime(transferModel.dateTime),
+                point,
+                track!!
+        )
     }
 
     fun cancelRequest(isCancel: Boolean) {
@@ -134,6 +155,38 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
             }
         }
     }
+
+    fun rateTrip(rating: Float){
+        if (rating.toInt() == ReviewInteractor.MAX_RATE) {
+            reviewInteractor.apply {
+                utils.launchSuspend{ sendTopRate() }
+                viewState.thanksForRate()
+                if (shouldAskRateInMarket) viewState.askRateInPlayMarket()
+            }
+        }
+        else viewState.showDetailRate(rating)
+    }
+
+    fun sendReview(mapOfRates: HashMap<String, Int>, feedBackComment: String) {
+        utils.launchSuspend {
+            val result = utils.asyncAwait { reviewInteractor.sendRates(mapOfRates, feedBackComment) }
+            if (result.error != null) {
+                /* some error for analytics */
+            }
+        }
+         viewState.thanksForRate()
+    }
+
+    fun onRateInStore() {
+        systemInteractor.appEntersForMarketRate = ReviewInteractor.APP_RATED_IN_MARKET
+        viewState.showRateInPlayMarket()
+    }
+
+    fun onReviewCanceled(){
+        viewState.closeRateWindow()
+        reviewInteractor.rateCanceled()
+    }
+
 
     fun logEventGetOffer(key: String, value: String) {
         val map = mutableMapOf<String, Any?>()

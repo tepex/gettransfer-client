@@ -102,6 +102,10 @@ class SystemInteractor(
 
     fun initGeocoder() = geoRepository.initGeocoder(locale)
 
+    var appEntersForMarketRate: Int
+        get()  = systemRepository.appEnters
+        set(value) { systemRepository.appEnters = value }
+
     fun logout() = systemRepository.logout()
     suspend fun login(email: String, password: String) = systemRepository.login(email, password)
     suspend fun putAccount() = systemRepository.putAccount(account)

@@ -19,6 +19,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.interactor.ReviewInteractor
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.presentation.view.AboutView
@@ -40,6 +41,7 @@ class SplashActivity: AppCompatActivity() {
     private val coroutineContexts: CoroutineContexts by inject()
     private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
     private val systemInteractor: SystemInteractor by inject()
+    private val reviewInteractor: ReviewInteractor by inject()
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +55,8 @@ class SplashActivity: AppCompatActivity() {
                 Timber.d("Splash screen")
                 return
         }
+
+        reviewInteractor.shouldAskRateInMarket = shouldAskForRateApp()
 
         if(checkIsTaskRoot()) return
 
@@ -118,4 +122,11 @@ class SplashActivity: AppCompatActivity() {
         else finish()
         */
     }
+    private fun shouldAskForRateApp() =
+            when (systemInteractor.appEntersForMarketRate) {
+                3    -> true
+                9    -> true
+                18   -> true
+                else -> false
+            }
 }

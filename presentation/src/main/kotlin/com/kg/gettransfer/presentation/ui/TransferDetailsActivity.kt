@@ -5,6 +5,7 @@ import android.graphics.Color
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 
 import android.support.annotation.CallSuper
 import android.support.constraint.ConstraintLayout
@@ -14,6 +15,7 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -43,6 +45,12 @@ import kotlinx.android.synthetic.main.view_transfer_details_field.*
 import kotlinx.android.synthetic.main.view_transfer_details_info.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //Don't delete
+
+import android.widget.PopupWindow
+import kotlinx.android.synthetic.main.view_rate_dialog.view.*
+import kotlinx.android.synthetic.main.view_rate_field.*
+import kotlinx.android.synthetic.main.view_rate_in_store.view.*
+import kotlinx.android.synthetic.main.view_rate_your_transfer.*
 import android.view.MotionEvent
 import android.widget.ImageView
 
@@ -52,6 +60,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     internal lateinit var presenter: TransferDetailsPresenter
 
     private lateinit var bsTransferDetails: BottomSheetBehavior<View>
+    private lateinit var popupWindowRate: PopupWindow
 
     @ProvidePresenter
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
@@ -111,9 +120,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         btnSupportTop.setOnClickListener    { presenter.sendEmail(null) }
         btnSupportBottom.setOnClickListener { presenter.sendEmail(null) }
         btnCancel.setOnClickListener        { presenter.onCancelRequestClicked() }
+        tripRate.setOnRatingChangeListener  { _, fl -> disableRate(); presenter.rateTrip(fl) }
     }
 
-    override fun setTransfer(transfer: TransferModel, userProfile: ProfileModel) {
+    override fun setTransfer(transfer: TransferModel, userProfile: ProfileModel, showRate: Boolean) {
         initInfoView(transfer)
         initAboutRequestView(transfer, userProfile)
         val status = transfer.statusCategory
@@ -127,6 +137,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         btnsLayoutBottom.isVisible = status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_CONFIRMED
         btnSupportBottom.isVisible = status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_CONFIRMED
         btnCancel.isVisible        = status == Transfer.STATUS_CATEGORY_ACTIVE
+        view_rate_ride.isVisible   = status == Transfer.STATUS_CATEGORY_FINISHED && showRate
     }
 
     private fun initInfoView(transfer: TransferModel) {
@@ -342,6 +353,55 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     override fun recreateActivity() { recreate() }
 
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
+
+    override fun showDetailRate(tappedRate: Float) {
+        val popUpView = showPopUpWindow(R.layout.view_rate_dialog, transferDetailsParent)
+        popUpView.main_rate.isScrollable = false
+        popUpView.tvCancelRate.setOnClickListener { presenter.onReviewCanceled() }
+        popUpView.send_feedBack.setOnClickListener {
+            closePopUp()
+            presenter.sendReview(Utils.createMapOfDetailedRates(popUpView), popUpView.et_reviewComment.text.toString())
+        }
+        setupDetailRatings(tappedRate, popUpView)
+    }
+
+    override fun askRateInPlayMarket() {
+        view_rate_ride.isGone = true
+        showPopUpWindow(R.layout.view_rate_in_store, transferDetailsParent).apply {
+            tv_reject_store.setOnClickListener { closePopUp() }
+            tv_agree_store.setOnClickListener { presenter.onRateInStore() }
+        }
+
+    }
+
+    override fun thanksForRate() {
+        thanks_for_rate.isVisible = true
+        thanks_for_rate.apply {
+            isVisible = true
+            Handler().postDelayed( { isVisible = false }, 3000)
+        }
+
+    }
+
+    override fun showRateInPlayMarket() = redirectToPlayMarket()
+
+    override fun closeRateWindow() = closePopUp()
+
+    private fun disableRate() {
+        view_rate_ride.isGone = true
+        tripRate.setOnRatingChangeListener(null)
+    }
+
+    private fun setupDetailRatings(rateForFill: Float, v: View){
+        rateForFill.let {
+            v.apply {
+                main_rate.rating                 = it
+                driver_rate.rate_bar.rating      = it
+                punctuality_rate.rate_bar.rating = it
+                vehicle_rate.rate_bar.rating     = it
+            }
+        }
+    }
 
     companion object {
         const val TRANSPORT_TYPES_COLUMNS = 2

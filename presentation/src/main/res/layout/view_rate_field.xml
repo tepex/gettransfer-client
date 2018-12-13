@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:paddingEnd="8dp"
+    android:paddingStart="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/tv_rate_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        style="@style/rate_title"
+        android:text="Driver:"/>
+    <TextView
+        android:id="@+id/tv_rate_sub_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_rate_title"
+
+        android:textColor="@color/black_a30"
+        style="@style/rate_sub_title"
+        android:text="professionalism:"/>
+    <com.willy.ratingbar.ScaleRatingBar
+        android:id="@+id/rate_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+
+        app:srb_drawableEmpty="@drawable/ic_star_empty"
+        app:srb_drawableFilled="@drawable/ic_star_filled"
+        app:srb_starHeight="@dimen/detail_rate_bar_stars_enabled_height"
+        app:srb_starWidth="@dimen/detail_rate_bar_stars_enabled_width"
+        app:srb_starPadding="@dimen/rating_bar_stars_padding"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"/>
+</RelativeLayout>
