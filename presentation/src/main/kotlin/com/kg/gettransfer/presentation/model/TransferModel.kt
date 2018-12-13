@@ -1,11 +1,11 @@
 package com.kg.gettransfer.presentation.model
 
+import android.support.annotation.StringRes
+
 import com.kg.gettransfer.domain.model.Transfer.Status
 
 import java.util.Date
 import java.util.Locale
-
-
 
 class TransferModel(
     val id: Long,
@@ -13,6 +13,8 @@ class TransferModel(
     val duration: Int?,
     val distance: Int?,
     val status: Status,
+    @StringRes
+    val statusName: Int?,
     val from: String,
     val to: String?,
     val dateTime: Date,
@@ -26,7 +28,7 @@ class TransferModel(
     /* flightNumberReturn not used */
     val countPassengers: Int,
     val countChilds: Int,
-    /* offersCount */
+    val offersCount: Int,
     val relevantCarriersCount: Int?,
     /* offersUpdatedAt */
 /* ================================================== */

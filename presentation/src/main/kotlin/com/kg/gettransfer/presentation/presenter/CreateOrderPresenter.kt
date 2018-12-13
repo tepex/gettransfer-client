@@ -12,6 +12,8 @@ import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.domain.ApiException
+
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PromoInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
@@ -21,12 +23,17 @@ import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.Dest
 import com.kg.gettransfer.domain.model.DestDuration
 import com.kg.gettransfer.domain.model.DestPoint
+import com.kg.gettransfer.domain.model.TransferNew
 import com.kg.gettransfer.domain.model.Trip
 
-import com.kg.gettransfer.presentation.model.Mappers
+import com.kg.gettransfer.presentation.mapper.CurrencyMapper
+import com.kg.gettransfer.presentation.mapper.RouteMapper
+import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
+import com.kg.gettransfer.presentation.mapper.UserMapper
+
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransportPrice
+import com.kg.gettransfer.presentation.model.TransportPriceModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.UserModel
 
@@ -39,12 +46,10 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
-import java.text.Format
-import java.text.SimpleDateFormat
-
 import java.util.Calendar
 import java.util.Date
 
+import org.koin.standalone.get
 import org.koin.standalone.inject
 
 import timber.log.Timber
@@ -56,8 +61,13 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val promoInteractor: PromoInteractor by inject()
     private val offersInteractor: OfferInteractor by inject()
 
-    private var user: UserModel = Mappers.getUserModel(systemInteractor.account)
-    private val currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
+    private val currencyMapper = get<CurrencyMapper>()
+    private val routeMapper = get<RouteMapper>()
+    private val transportTypeMapper: TransportTypeMapper by inject()
+    private val userMapper = get<UserMapper>()
+
+    private var user = userMapper.toView(systemInteractor.account.user)
+    private val currencies = systemInteractor.currencies.map { currencyMapper.toView(it) }
     private var duration: Int? = null
     private var passengers = MIN_PASSENGERS
     private var children = MIN_CHILDREN
@@ -97,7 +107,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     fun initMapAndPrices() {
         routeInteractor.apply {
             if (from == null || (to == null && hourlyDuration == null)) {
-                Timber.d("routerInteractor init error. from: $from, to: $to, duration: $hourlyDuration")
+                Timber.w("routerInteractor init error. from: $from, to: $to, duration: $hourlyDuration")
                 return
             }
             else if (hourlyDuration != null) { // not need route info when hourly
@@ -106,27 +116,35 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             }
         }
 
+        val from = routeInteractor.from!!.cityPoint
+        val to = routeInteractor.to!!.cityPoint
+        if (from.point == null || to.point == null) {
+            Timber.w("NPE! from: $from, to: $to")
+            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) or `To` {$to} is not set"))
+            return
+        }
         utils.launchSuspend {
             viewState.blockInterface(true)
-            val from = routeInteractor.from!!.cityPoint
-            val to = routeInteractor.to!!.cityPoint
-
             val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
             if (result.error != null) viewState.setError(result.error!!)
             else {
                 duration = result.model.duration
 
-                val prices: Map<String, TransportPrice> = result.model.prices.map { p -> p.tranferId to TransportPrice(p.min, p.max, p.minFloat) }.toMap()
+                transportTypeMapper.prices = result.model.prices.map { p ->
+                    p.tranferId to TransportPriceModel(p.min, p.max, p.minFloat)
+                }.toMap()
                 if (transportTypes == null)
-                    transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
+                    transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
                 viewState.setTransportTypes(transportTypes!!)
-                routeModel = Mappers.getRouteModel(result.model.distance,
-                                                   result.model.polyLines,
-                                                   from.name!!,
-                                                   to.name!!,
-                                                   from.point!!,
-                                                   to.point!!,
-                                                   SystemUtils.formatDateTime(date))
+                routeModel = routeMapper.getView(
+                    result.model.distance,
+                    result.model.polyLines,
+                    from.name!!,
+                    to.name!!,
+                    from.point!!,
+                    to.point!!,
+                    SystemUtils.formatDateTime(date)
+                )
             }
             routeModel?.let {
                 polyline = Utils.getPolyline(it)
@@ -138,17 +156,20 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun setUIWithoutRoute() {
-        transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, null) }
+        transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
         viewState.setTransportTypes(transportTypes!!)
-        routeInteractor.from!!.let {
-            val point = it.cityPoint.point.let { p -> LatLng(p!!.latitude, p.longitude) }
-            track = Utils.getCameraUpdateForPin(point)
-            viewState.setPinHourlyTransfer(it.address ?: "", it.primary ?: "", point, track!!) }
+        routeInteractor.from?.let { from ->
+            from.cityPoint.point?.let { p ->
+                val point = LatLng(p.latitude, p.longitude)
+                track = Utils.getCameraUpdateForPin(point)
+                viewState.setPinHourlyTransfer(from.address ?: "", from.primary ?: "", point, track!!)
+            }
+        }
     }
 
     fun changeDate(newDate: Date) {
         currentDate = getCurrentDatePlus4Hours()
-        if(newDate.after(currentDate.time)) {
+        if (newDate.after(currentDate.time)) {
             isAfter4Hours = false
             date = newDate
         } else {
@@ -248,46 +269,33 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
         if (!checkFieldsForRequest()) return
 
-        val trip = Trip(date, flightNumber)
-        /* filter */
-        val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
-
-        Timber.d("from: %s", routeInteractor.from)
-        Timber.d("to: %s", routeInteractor.to)
-        Timber.d("trip: %s", trip)
-        Timber.d("transport types: %s", selectedTransportTypes)
-        Timber.d("user: $user")
-        Timber.d("passenger price: $cost")
-        Timber.d("date: $date")
-        Timber.d("passengers: $passengers")
-        Timber.d("children: $children")
-        Timber.d("flightNumber: $flightNumber")
-        Timber.d("comment: $comment")
-
 //        if(routeInteractor.from == null || routeInteractor.to == null) return
         val from = routeInteractor.from!!
         val to = routeInteractor.to
-        val dest: Dest<CityPoint, Int> = if(routeInteractor.hourlyDuration != null) DestDuration(routeInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint)
+        val transferNew = TransferNew(
+            from.cityPoint,
+            if (routeInteractor.hourlyDuration != null) DestDuration(routeInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint),
+            Trip(date, flightNumber),
+            null,
+            transportTypes!!.filter { it.checked }.map { it.id },
+            passengers,
+            children,
+            cost?.let { it.times(100).toInt() },
+            comment,
+            userMapper.fromView(user),
+            promoCode,
+            false
+        )
+        Timber.d("new transfer: $transferNew")
+
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = utils.asyncAwait {
-                transferInteractor.createTransfer(Mappers.getTransferNew(from.cityPoint,
-                                                                         dest,
-                                                                         trip,
-                                                                         null,
-                                                                         selectedTransportTypes,
-                                                                         passengers,
-                                                                         children,
-                                                                         cost,
-                                                                         comment,
-                                                                         Mappers.getUser(user),
-                                                                         promoCode,
-                                                                         false))
-            }
+            val result = utils.asyncAwait { transferInteractor.createTransfer(transferNew) }
 
             val logResult = utils.asyncAwait { systemInteractor.putAccount() }
             if (result.error == null && logResult.error == null) {
                 logCreateTransfer(Analytics.RESULT_SUCCESS)
+                logEventAddToCart(Analytics.EVENT_ADD_TO_CART)
                 router.replaceScreen(Screens.Offers(result.model.id))
             } else if (result.error != null) {
                 logCreateTransfer(Analytics.SERVER_ERROR)
@@ -381,11 +389,20 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             map[Analytics.CURRENCY] = currencies[selectedCurrency].name
         }
         analytics.logEvent(Analytics.EVENT_TRANSFER, bundle, map)
-
-        logEventAddToCart(bundle, map)
     }
 
-    private fun logEventAddToCart(bundle: Bundle, map: MutableMap<String, Any?>) {
+    private fun logEventAddToCart(value: String) {
+        val bundle = Bundle()
+        val map = mutableMapOf<String, Any?>()
+
+        if (cost != null) {
+            bundle.putString(Analytics.VALUE, cost.toString())
+            map[Analytics.VALUE] = cost.toString()
+
+            bundle.putString(Analytics.CURRENCY, currencies[selectedCurrency].name)
+            map[Analytics.CURRENCY] = currencies[selectedCurrency].name
+        }
+
         bundle.putInt(Analytics.NUMBER_OF_PASSENGERS, passengers)
         map[Analytics.NUMBER_OF_PASSENGERS] = passengers
 
@@ -397,7 +414,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         bundle.putString(Analytics.TRAVEL_CLASS, transportTypes?.filter { it.checked }?.joinToString())
         map[Analytics.TRAVEL_CLASS] = transportTypes?.filter { it.checked }?.joinToString()
 
-        analytics.logEvent(Analytics.EVENT_ADD_TO_CART, bundle, map)
+        analytics.logEvent(value, bundle, map)
     }
 
     companion object {

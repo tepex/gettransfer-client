@@ -12,7 +12,9 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 
-import com.kg.gettransfer.presentation.model.Mappers
+import com.kg.gettransfer.presentation.mapper.OfferMapper
+import com.kg.gettransfer.presentation.mapper.TransferMapper
+
 import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
@@ -29,9 +31,12 @@ import org.koin.standalone.inject
 import timber.log.Timber
 
 @InjectViewState
-class OffersPresenter: BasePresenter<OffersView>() {
+class OffersPresenter : BasePresenter<OffersView>() {
     private val transferInteractor: TransferInteractor by inject()
     private val offerInteractor: OfferInteractor by inject()
+
+    private val offerMapper: OfferMapper by inject()
+    private val transferMapper: TransferMapper by inject()
 
     /*
     init {
@@ -76,13 +81,13 @@ class OffersPresenter: BasePresenter<OffersView>() {
                 router.exit()
             } else {
                 transfer = result.model
-                val transferModel = Mappers.getTransferModel(transfer)
+                val transferModel = transferMapper.toView(transfer)
                 viewState.setDate(SystemUtils.formatDateTime(transferModel.dateTime))
                 viewState.setTransfer(transferModel)
 
                 val r = utils.asyncAwait{ offerInteractor.getOffers(result.model.id) }
                 if(r.error == null) {
-                    offers = r.model.map { Mappers.getOfferModel(it) }
+                    offers = r.model.map { offerMapper.toView(it) }
                     //changeSortType(SORT_PRICE)
                     setOffers()
                 }
@@ -97,7 +102,7 @@ class OffersPresenter: BasePresenter<OffersView>() {
 
     fun onNewOffer(offer: Offer) {
         offerInteractor.newOffer(offer)
-        offers = offers.toMutableList().apply { add(Mappers.getOfferModel(offer)) }
+        offers = offers.toMutableList().apply { add(offerMapper.toView(offer)) }
         utils.launchSuspend { setOffers() }
     }
 

@@ -65,7 +65,7 @@
 			android:layout_width="@dimen/image_inverse_size"
 			android:layout_height="@dimen/image_inverse_size"
 			app:srcCompat="@drawable/ic_inverse"
-			android:background="?attr/selectableItemBackgroundBorderless"
+			style="@style/BorderlessBackground"
 			android:clickable="true" />
 	</FrameLayout>
 

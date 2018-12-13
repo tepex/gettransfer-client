@@ -11,7 +11,11 @@ import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
-import com.kg.gettransfer.presentation.model.Mappers
+import com.kg.gettransfer.presentation.mapper.OfferMapper
+import com.kg.gettransfer.presentation.mapper.ProfileMapper
+import com.kg.gettransfer.presentation.mapper.RouteMapper
+import com.kg.gettransfer.presentation.mapper.TransferMapper
+
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -24,6 +28,7 @@ import com.kg.gettransfer.presentation.view.TransferDetailsView
 import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.standalone.inject
+
 import timber.log.Timber
 
 @InjectViewState
@@ -31,6 +36,11 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
     private val routeInteractor: RouteInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
     private val offerInteractor: OfferInteractor by inject()
+
+    private val offerMapper: OfferMapper by inject()
+    private val profileMapper: ProfileMapper by inject()
+    private val routeMapper: RouteMapper by inject()
+    private val transferMapper: TransferMapper by inject()
 
     companion object {
         @JvmField val FIELD_EMAIL = "field_email"
@@ -54,17 +64,17 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             if (result.error != null) viewState.setError(result.error!!)
             else {
-                transferModel = Mappers.getTransferModel(result.model)
-                viewState.setTransfer(transferModel, Mappers.getProfileModel(systemInteractor.account.user.profile))
+                transferModel = transferMapper.toView(result.model)
+                viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile))
                 if (transferModel.status.checkOffers) {
                     val r = utils.asyncAwait { offerInteractor.getOffers(result.model.id) }
-                    if(r.error == null && r.model.size == 1) viewState.setOffer(Mappers.getOfferModel(r.model.first()), transferModel.countChilds)
+                    if(r.error == null && r.model.size == 1) viewState.setOffer(offerMapper.toView(r.model.first()), transferModel.countChilds)
                 }
 
                 if (result.model.to != null) {
                     val r = utils.asyncAwait { routeInteractor.getRouteInfo(result.model.from.point!!, result.model.to!!.point!!, true, false) }
                     if (r.error == null) {
-                        routeModel = Mappers.getRouteModel(
+                        routeModel = routeMapper.getView(
                             r.model.distance,
                             r.model.polyLines,
                             result.model.from.name!!,

@@ -8,10 +8,7 @@ import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.RouteRepository
 
-import java.io.IOException
-
-class RouteInteractor(private val geoRepository: GeoRepository,
-                      private val routeRepository: RouteRepository) {
+class RouteInteractor(private val geoRepository: GeoRepository, private val routeRepository: RouteRepository) {
 
     var from: GTAddress?     = null
     var to: GTAddress?       = null
@@ -22,33 +19,33 @@ class RouteInteractor(private val geoRepository: GeoRepository,
     fun getCurrentAddress() = geoRepository.getCurrentAddress()
 
     fun getAddressByLocation(isFrom: Boolean, point: Point, pair: Pair<Point, Point>): Result<GTAddress> {
-        var result = geoRepository.getAddressByLocation(point, pair)
-        if(result.error != null) return result
-        if(isFrom) from = result.model else to = result.model
+        val result = geoRepository.getAddressByLocation(point, pair)
+        if (result.error != null) return result
+        if (isFrom) from = result.model else to = result.model
         return result
     }
 
     fun isConcreteObjects() = from?.isConcreteObject() ?: false && to?.isConcreteObject() ?: false
 
-    fun getAutocompletePredictions(prediction: String, pointsPair: Pair<Point, Point>?) = 
+    fun getAutocompletePredictions(prediction: String, pointsPair: Pair<Point, Point>?) =
         geoRepository.getAutocompletePredictions(prediction, pointsPair)
 
     fun updateDestinationPoint(): Result<Point> {
         var result = updateStartPoint()
-        if(result.error != null) return result
-            
-        if(to!!.cityPoint.point == null) {
+        if (result.error != null) return result
+
+        if (to!!.cityPoint.point == null) {
             result = geoRepository.getLatLngByPlaceId(to!!.cityPoint.placeId!!)
-            if(result.error != null) return result
+            if (result.error != null) return result
             to!!.cityPoint.point = result.model
         }
         return result
     }
 
     fun updateStartPoint(): Result<Point> {
-        if(from!!.cityPoint.point == null) {
+        if (from!!.cityPoint.point == null) {
             val result = geoRepository.getLatLngByPlaceId(from!!.cityPoint.placeId!!)
-            if(result.error != null) return result
+            if (result.error != null) return result
             from!!.cityPoint.point = result.model
         }
         return Result(from!!.cityPoint.point!!)

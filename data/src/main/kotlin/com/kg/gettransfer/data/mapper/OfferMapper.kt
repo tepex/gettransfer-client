@@ -33,7 +33,7 @@ open class OfferMapper : Mapper<OfferEntity, Offer> {
     override fun fromEntity(type: OfferEntity) =
         Offer(
             type.id,
-            type.transferId,
+            type.transferId!!,
             type.status,
             type.wifi,
             type.refreshments,

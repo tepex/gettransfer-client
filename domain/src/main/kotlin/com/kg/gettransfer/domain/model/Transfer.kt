@@ -8,7 +8,7 @@ import java.util.Date
 
 /* Align to line:9 */
 data class Transfer(
-    val id: Long,
+    override val id: Long,
     val createdAt: Date,
     val duration: Int?,
     val distance: Int?,
@@ -43,7 +43,19 @@ data class Transfer(
 /* ================================================== */
     val paymentPercentages: List<Int>,
     val editableFields: List<String> /* not used */
-) {
+) : Entity() {
+
+    fun checkStatusCategory(): String {
+        return when (status) {
+            Status.NEW       -> STATUS_CATEGORY_ACTIVE
+            Status.DRAFT     -> STATUS_CATEGORY_ACTIVE
+            Status.PERFORMED -> STATUS_CATEGORY_CONFIRMED
+            Status.OUTDATED  -> STATUS_CATEGORY_UNFINISHED
+            Status.CANCELED  -> STATUS_CATEGORY_UNFINISHED
+            Status.REJECTED  -> STATUS_CATEGORY_UNFINISHED
+            else             -> STATUS_CATEGORY_FINISHED
+        }
+    }
 
     enum class Status(val checkOffers: Boolean) {
         NEW(false),
@@ -57,23 +69,25 @@ data class Transfer(
         OUTDATED(false);
     }
 
-
     companion object {
-        @JvmField val STATUS_CATEGORY_ACTIVE     = "active_status"
-        @JvmField val STATUS_CATEGORY_CONFIRMED  = "confirmed_status"
-        @JvmField val STATUS_CATEGORY_UNFINISHED = "unfinished_status"
-        @JvmField val STATUS_CATEGORY_FINISHED   = "finished_status"
-    }
+        const val STATUS_CATEGORY_ACTIVE     = "active_status"
+        const val STATUS_CATEGORY_CONFIRMED  = "confirmed_status"
+        const val STATUS_CATEGORY_UNFINISHED = "unfinished_status"
+        const val STATUS_CATEGORY_FINISHED   = "finished_status"
 
-    fun checkStatusCategory(): String {
-        return when (status) {
-            Status.NEW       -> STATUS_CATEGORY_ACTIVE
-            Status.DRAFT     -> STATUS_CATEGORY_ACTIVE
-            Status.PERFORMED -> STATUS_CATEGORY_CONFIRMED
-            Status.OUTDATED  -> STATUS_CATEGORY_UNFINISHED
-            Status.CANCELED  -> STATUS_CATEGORY_UNFINISHED
-            Status.REJECTED  -> STATUS_CATEGORY_UNFINISHED
-            else             -> STATUS_CATEGORY_FINISHED
+        fun List<Transfer>.filterActive() = filter {
+            it.status == Status.NEW ||
+            it.status == Status.DRAFT ||
+            it.status == Status.PERFORMED ||
+            it.status == Status.PENDING_CONFIRMATION
+        }
+
+        fun List<Transfer>.filterCompleted() = filter {
+            it.status == Status.COMPLETED || it.status == Status.NOT_COMPLETED
+        }
+
+        fun List<Transfer>.filterArchived() = filter {
+            it.status != Status.COMPLETED || it.status != Status.NOT_COMPLETED
         }
     }
 }

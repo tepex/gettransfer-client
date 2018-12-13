@@ -23,7 +23,10 @@ import com.kg.gettransfer.geo.GeoRepositoryImpl
 
 import com.kg.gettransfer.prefs.PreferencesImpl
 
+import com.kg.gettransfer.presentation.mapper.*
+
 import com.kg.gettransfer.service.OfferServiceConnection
+
 import com.kg.gettransfer.utilities.Analytics
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
@@ -74,6 +77,29 @@ val domainModule = module {
     single { CarrierTripInteractor(get()) }
     single { TransferInteractor(get()) }
     single { PromoInteractor(get()) }
+}
+
+val mappersModule = module {
+    single { CarrierMapper() }
+    single { CarrierTripMapper() }
+    single { CurrencyMapper() }
+    single { DistanceUnitMapper() }
+    single { EndpointMapper() }
+    single { LocaleMapper() }
+    single { MoneyMapper() }
+    single { OfferMapper() }
+    single { PaymentRequestMapper() }
+    single { PaymentStatusRequestMapper() }
+    single { PointMapper() }
+    single { PriceMapper() }
+    single { ProfileMapper() }
+    single { RatingsMapper() }
+    single { RouteMapper() }
+    single { TransferMapper() }
+    single { TransportTypeMapper() }
+    single { UserMapper() }
+    single { VehicleBaseMapper() }
+    single { VehicleMapper() }
 }
 
 val androidModule = module {

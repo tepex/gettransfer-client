@@ -1,8 +1,14 @@
 package com.kg.gettransfer.remote.mapper
 
+import com.kg.gettransfer.data.model.CarrierEntity
+import com.kg.gettransfer.data.model.LocaleEntity
+import com.kg.gettransfer.data.model.MoneyEntity
 import com.kg.gettransfer.data.model.OfferEntity
-import com.kg.gettransfer.data.model.ProfileEntity
+import com.kg.gettransfer.data.model.PriceEntity
 import com.kg.gettransfer.data.model.RatingsEntity
+import com.kg.gettransfer.data.model.TransportTypeEntity
+import com.kg.gettransfer.data.model.VehicleBaseEntity
+import com.kg.gettransfer.data.model.VehicleEntity
 
 import com.kg.gettransfer.remote.model.OfferModel
 

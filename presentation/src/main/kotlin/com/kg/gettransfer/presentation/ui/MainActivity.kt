@@ -85,16 +85,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         drawer.closeDrawer(GravityCompat.START)
     }
 
-    companion object {
-        @JvmField val MY_LOCATION_BUTTON_INDEX = 2
-        @JvmField val COMPASS_BUTTON_INDEX = 5
-        @JvmField val FADE_DURATION = 500L
-        @JvmField val MAX_INIT_ZOOM = 2.0f
-
-        const val ALPHA_FULL = 1f
-        const val ALPHA_DISABLED = 0.3f
-    }
-
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
@@ -225,13 +215,13 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     private fun initHourly() {
         hourlySheet = BottomSheetBehavior.from(hourly_sheet)
         hourlySheet.state = BottomSheetBehavior.STATE_HIDDEN
-        np_hours.apply {
+        with(np_hours) {
             displayedValues = HourlyValuesHelper.getHourlyValues(this@MainActivity).toTypedArray()
             minValue = 0
             maxValue = displayedValues.size - 1
             wrapSelectorWheel = false
             tvCurrent_hours.text = displayedValues[0]
-            np_hours.setOnValueChangedListener { _, _, newVal ->
+            setOnValueChangedListener { _, _, newVal ->
                 presenter.tripDurationSelected(HourlyValuesHelper.durationValues[newVal])
                 tvCurrent_hours.text = displayedValues[newVal] }
         }
@@ -398,5 +388,25 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         enableBtnNext()
 //        AnimationHelper(this).hourlyAnim(viewOut, imgOut, viewIn, imgIn)
         link_line.isInvisible = hourly
+    }
+
+    override fun setTripMode(duration: Int?) {
+        duration?.let {
+            switch_mode.isChecked = true
+            with(HourlyValuesHelper) {
+                np_hours.value = durationValues.indexOf(it)
+                tvCurrent_hours.text = getValue(it, this@MainActivity)
+            }
+        }
+    }
+
+    companion object {
+        @JvmField val MY_LOCATION_BUTTON_INDEX = 2
+        @JvmField val COMPASS_BUTTON_INDEX = 5
+        @JvmField val FADE_DURATION = 500L
+        @JvmField val MAX_INIT_ZOOM = 2.0f
+
+        const val ALPHA_FULL = 1f
+        const val ALPHA_DISABLED = 0.3f
     }
 }

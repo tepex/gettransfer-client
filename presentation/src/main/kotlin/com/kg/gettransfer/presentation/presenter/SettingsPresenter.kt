@@ -8,10 +8,15 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.presentation.mapper.CurrencyMapper
+import com.kg.gettransfer.presentation.mapper.DistanceUnitMapper
+import com.kg.gettransfer.presentation.mapper.EndpointMapper
+import com.kg.gettransfer.presentation.mapper.LocaleMapper
+
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.DistanceUnitModel
+import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
-import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
@@ -22,12 +27,19 @@ import com.yandex.metrica.YandexMetrica
 
 import java.util.Locale
 
+import org.koin.standalone.get
+
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>() {
     private lateinit var currencies: List<CurrencyModel>
     private lateinit var locales: List<LocaleModel>
     private lateinit var distanceUnits: List<DistanceUnitModel>
-    private val endpoints = systemInteractor.endpoints.map { Mappers.getEndpointModel(it) }
+    private lateinit var endpoints: List<EndpointModel>
+
+    private val localeMapper       = get<LocaleMapper>()
+    private val currencyMapper     = get<CurrencyMapper>()
+    private val distanceUnitMapper = get<DistanceUnitMapper>()
+    private val endpointMapper     = get<EndpointMapper>()
 
     private var localeWasChanged = false
     private var restart = true
@@ -52,7 +64,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setCurrency(currencyModel?.name ?: "")
         viewState.setDistanceUnit(systemInteractor.distanceUnit.name)
 
-        viewState.setEndpoint(Mappers.getEndpointModel(systemInteractor.endpoint))
+        viewState.setEndpoint(endpointMapper.toView(systemInteractor.endpoint))
         viewState.setLogoutButtonEnabled(systemInteractor.account.user.loggedIn)
     }
 
@@ -129,9 +141,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     private fun initConfigs() {
-        currencies = Mappers.getCurrenciesModels(systemInteractor.currencies)
-        locales = Mappers.getLocalesModels(systemInteractor.locales)
-        distanceUnits = Mappers.getDistanceUnitsModels(systemInteractor.distanceUnits)
+        endpoints = systemInteractor.endpoints.map { endpointMapper.toView(it) }
+        currencies = systemInteractor.currencies.map { currencyMapper.toView(it) }
+        locales = systemInteractor.locales.map { localeMapper.toView(it) }
+        distanceUnits = systemInteractor.distanceUnits.map { distanceUnitMapper.toView(it) }
         restart = false
     }
 

@@ -35,11 +35,11 @@ import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class ApiCore: KoinComponent {
+class ApiCore : KoinComponent {
     companion object {
         private val ERROR_PATTERN = Regex("^\\<h1\\>(.+)\\<\\/h1\\>$")
     }
-    
+
     private val preferences = get<PreferencesCache>()
     private val log: Logger by inject { parametersOf("GTR-remote") }
 
@@ -56,17 +56,17 @@ class ApiCore: KoinComponent {
         addInterceptor(HttpLoggingInterceptor(log))
         addInterceptor { chain ->
             var request = chain.request()
-            if(request.url().encodedPath() != Api.API_ACCESS_TOKEN) request = request.newBuilder()
-	            .addHeader(Api.HEADER_TOKEN, preferences.accessToken)
-	            .build()
-	        try {
-	            chain.proceed(request)
-	        } catch(e: Exception) {
-	            log.error("Maybe DNS Exception", e)
-	            throw IOException(e)
-	        }
-	    }
-	    .cookieJar(CookieJar.NO_COOKIES)
+            if (request.url().encodedPath() != Api.API_ACCESS_TOKEN) request = request.newBuilder()
+                .addHeader(Api.HEADER_TOKEN, preferences.accessToken)
+                .build()
+            try {
+                chain.proceed(request)
+            } catch (e: Exception) {
+                log.error("Maybe DNS Exception", e)
+                throw IOException(e)
+            }
+        }
+        .cookieJar(CookieJar.NO_COOKIES)
     }.build()
 
     fun changeEndpoint(endpoint: EndpointModel) {
@@ -86,31 +86,31 @@ class ApiCore: KoinComponent {
      */
     internal suspend fun <R> tryTwice(apiCall: () -> Deferred<R>): R {
         return try { apiCall().await() }
-        catch(e: Exception) {
-            if(e is RemoteException) throw e /* second invocation */
+        catch (e: Exception) {
+            if (e is RemoteException) throw e /* second invocation */
             val ae = remoteException(e)
-            if(!ae.isInvalidToken()) {
+            if (!ae.isInvalidToken()) {
                 log.error("apiCall", e)
                 throw ae
             }
 
-            try { updateAccessToken() } catch(e1: Exception) { throw remoteException(e1) }
-            return try { apiCall().await() } catch(e2: Exception) { throw remoteException(e2) }
+            try { updateAccessToken() } catch (e1: Exception) { throw remoteException(e1) }
+            return try { apiCall().await() } catch (e2: Exception) { throw remoteException(e2) }
         }
     }
-    
+
     internal suspend fun <R> tryTwice(id: Long, apiCall: (Long) -> Deferred<R>): R {
         return try { apiCall(id).await() }
-        catch(e: Exception) {
-           if(e is RemoteException) throw e /* second invocation */
+        catch (e: Exception) {
+           if (e is RemoteException) throw e /* second invocation */
            val ae = remoteException(e)
-           if(!ae.isInvalidToken()) throw ae
+           if (!ae.isInvalidToken()) throw ae
 
-           try { updateAccessToken() } catch(e1: Exception) { throw remoteException(e1) }
-           return try { apiCall(id).await() } catch(e2: Exception) { throw remoteException(e2) }
+           try { updateAccessToken() } catch (e1: Exception) { throw remoteException(e1) }
+           return try { apiCall(id).await() } catch (e2: Exception) { throw remoteException(e2) }
         }
     }
-    
+
     /*
     private suspend fun <T, R> tryTwice(vararg param: T, apiCall: (T) -> Deferred<R>): R {
         return apiCall(param).await()
@@ -119,24 +119,21 @@ class ApiCore: KoinComponent {
 
     internal suspend fun updateAccessToken() {
         val response: ResponseModel<TokenModel> = api.accessToken(apiKey).await()
-        val accessToken = response.data!!.token
-        preferences.accessToken = accessToken
+        preferences.accessToken = response.data!!.token
     }
-    
-    internal fun remoteException(e: Exception): RemoteException {
-        return when(e) {
-            is HttpException -> {
-                val errorBody = e.response().errorBody()?.string()
-                val msg = try {
-                    gson.fromJson(errorBody, ResponseModel::class.java).error?.details?.toString()
-                } catch(je: JsonSyntaxException) {
-                    val matchResult = errorBody?.let { ERROR_PATTERN.find(it)?.let { it.groupValues } }
-                    log.warn("${e.message} matchResult: $matchResult", je)
-                    matchResult?.getOrNull(1)
-                }
-                RemoteException(e.code(), msg ?: e.message!!)
+
+    internal fun remoteException(e: Exception): RemoteException = when(e) {
+        is HttpException -> {
+            val errorBody = e.response().errorBody()?.string()
+            val msg = try {
+                gson.fromJson(errorBody, ResponseModel::class.java).error?.details?.toString()
+            } catch (je: JsonSyntaxException) {
+                val matchResult = errorBody?.let { ERROR_PATTERN.find(it)?.let { it.groupValues } }
+                log.warn("${e.message} matchResult: $matchResult", je)
+                matchResult?.getOrNull(1)
             }
-            else -> RemoteException(RemoteException.NOT_HTTP, e.message!!)
+            RemoteException(e.code(), msg ?: e.message!!)
         }
+        else -> RemoteException(RemoteException.NOT_HTTP, e.message!!)
     }
 }

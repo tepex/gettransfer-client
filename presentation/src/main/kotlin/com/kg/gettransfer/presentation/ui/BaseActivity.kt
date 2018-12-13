@@ -8,11 +8,11 @@ import android.content.IntentFilter
 import android.graphics.Rect
 
 import android.net.ConnectivityManager
-import android.net.Uri
 
 import android.support.annotation.CallSuper
+import android.support.annotation.NonNull
 import android.support.annotation.StringRes
-import android.support.v4.content.FileProvider
+import android.support.design.widget.BottomSheetBehavior
 
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
@@ -66,8 +66,31 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
 
     protected var viewNetworkNotAvailable: View? = null
 
+    protected lateinit var _tintBackground: View
+    protected val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN)
+                _tintBackground.isVisible = false
+        }
+
+        override fun onSlide(@NonNull bottomSheet: View, slideOffset: Float) {
+            _tintBackground.isVisible = true
+            _tintBackground.alpha = slideOffset
+        }
+    }
+
+    protected fun hideBottomSheet(bottomSheet: BottomSheetBehavior<View>, bottomSheetLayout: View, hiddenState: Int, event: MotionEvent): Boolean{
+        val outRect = Rect()
+        bottomSheetLayout.getGlobalVisibleRect(outRect)
+        if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+            bottomSheet.state = hiddenState
+            return true
+        }
+        return false
+    }
+
     protected val onTouchListener = View.OnTouchListener { view, event ->
-        if(event.action == MotionEvent.ACTION_MOVE) hideKeyboardWithoutClearFocus(this, view)
+        if (event.action == MotionEvent.ACTION_MOVE) hideKeyboardWithoutClearFocus(this, view)
         else return@OnTouchListener false
     }
 

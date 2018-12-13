@@ -46,7 +46,9 @@ class AboutActivity: BaseActivity(), AboutView {
         val adapter = AboutAdapter()
         viewpager.adapter = adapter
         viewpager.offscreenPageLimit = adapter.count - 1
-        indicator.setViewPager(viewpager)
+
+        pageIndicator.count = 4
+        pageIndicator.setSelected(1)
 
         btnClose.setOnClickListener {
             presenter.closeAboutActivity()
@@ -65,6 +67,7 @@ class AboutActivity: BaseActivity(), AboutView {
             override fun onPageScrollStateChanged(p0: Int) {}
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
             override fun onPageSelected(p0: Int) {
+                pageIndicator.setSelected(p0)
                 if(p0 == viewpager.childCount - 1) btnNext.text = getString(R.string.LNG_PRESENTATION_FINAL_BUTTON)
                 else btnNext.text = getString(R.string.LNG_NEXT)
             }

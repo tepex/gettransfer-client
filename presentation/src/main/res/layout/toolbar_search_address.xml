@@ -20,7 +20,7 @@
 			android:layout_height="@dimen/back_circle_size"
 			app:srcCompat="@drawable/ic_circle_back"
 			android:clickable="true"
-			android:background="?android:attr/selectableItemBackgroundBorderless" />
+			style="@style/BorderlessBackground" />
 
 		<TextView
 			android:layout_width="wrap_content"

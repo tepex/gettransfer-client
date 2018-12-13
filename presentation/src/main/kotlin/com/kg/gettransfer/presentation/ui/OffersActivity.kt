@@ -10,6 +10,7 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+import android.view.MotionEvent
 
 import android.view.View
 
@@ -30,13 +31,11 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
-import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 
 import com.kg.gettransfer.presentation.view.OffersView
 
 import com.kg.gettransfer.service.OfferServiceConnection
 
-import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_DETAILS_RATING
 
 import kotlinx.android.synthetic.main.activity_offers.*
@@ -75,6 +74,9 @@ class OffersActivity : BaseActivity(), OffersView {
         bsOfferDetails = BottomSheetBehavior.from(sheetOfferDetails)
         bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN
 
+        _tintBackground = tintBackground
+        bsOfferDetails.setBottomSheetCallback(bottomSheetCallback)
+
         viewNetworkNotAvailable = textNetworkNotAvailable
 
         btnCancelRequest.setOnClickListener               { presenter.onCancelRequestClicked() }
@@ -83,6 +85,15 @@ class OffersActivity : BaseActivity(), OffersView {
         sortRating.setOnClickListener                     { presenter.changeSortType(OffersPresenter.SORT_RATING) }
         sortPrice.setOnClickListener                      { presenter.changeSortType(OffersPresenter.SORT_PRICE) }
         (toolbar as Toolbar).setNavigationOnClickListener { navigateBackWithTransition()  }
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            if (bsOfferDetails.state == BottomSheetBehavior.STATE_EXPANDED) {
+                if(hideBottomSheet(bsOfferDetails, sheetOfferDetails, BottomSheetBehavior.STATE_HIDDEN, event)) return true
+            }
+        }
+        return super.dispatchTouchEvent(event)
     }
 
     @CallSuper
@@ -103,19 +114,7 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun setTransfer(transferModel: TransferModel) {
-        //tvConnectingCarriers.text = getString(R.string.transfer_connecting_carriers, transferModel.relevantCarriersCount)
-        tvTransferRequestNumber.text = getString(R.string.LNG_RIDE_NUMBER).plus(transferModel.id)
-        tvFrom.text = transferModel.from
-        if (transferModel.to != null) {
-            tvTo.text = transferModel.to
-            tvDistance.text = SystemUtils.formatDistance(this, transferModel.distance, true)
-        } else if (transferModel.duration != null) {
-            rl_hourly_info.isVisible = true
-            tvMarkerTo.isVisible = false
-            tv_duration.text = HourlyValuesHelper.getValue(transferModel.duration, this)
-        }
-        //tvTo.text = transferModel.to
-        //tvDistance.text = Utils.formatDistance(this, transferModel.distance, transferModel.distanceUnit)
+        layoutTransferRequestInfo.setInfo(transferModel)
     }
 
     override fun setDate(date: String) { tvOrderDateTime.text = date }
@@ -154,7 +153,7 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun showBottomSheetOfferDetails(offer: OfferModel) {
-        carrierId.text = getString(R.string.LNG_CARRIER).plus(" ").plus(offer.carrier.id)
+        carrierId.text = getString(R.string.LNG_CARRIER).plus(" ").plus(offer.carrier.profile?.id ?: "")
 
         Utils.initCarrierLanguages(layoutCarrierLanguages, offer.carrier.languages)
 

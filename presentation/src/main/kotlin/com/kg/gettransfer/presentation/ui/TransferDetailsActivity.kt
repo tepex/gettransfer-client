@@ -15,8 +15,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 
-import android.widget.TableRow
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
@@ -45,6 +43,7 @@ import kotlinx.android.synthetic.main.view_transfer_details_field.*
 import kotlinx.android.synthetic.main.view_transfer_details_info.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //Don't delete
+import android.view.MotionEvent
 
 class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
@@ -76,10 +75,21 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         _mapView = mapView
         initMapView(savedInstanceState)
 
+        _tintBackground = tintBackground
         bsTransferDetails = BottomSheetBehavior.from(sheetTransferDetails)
+        bsTransferDetails.setBottomSheetCallback(bottomSheetCallback)
 
         initTextFields()
         setClickListeners()
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            if (bsTransferDetails.state == BottomSheetBehavior.STATE_EXPANDED) {
+                if(hideBottomSheet(bsTransferDetails, sheetTransferDetails, BottomSheetBehavior.STATE_COLLAPSED, event)) return true
+            }
+        }
+        return super.dispatchTouchEvent(event)
     }
 
     private fun initTextFields() {
@@ -108,7 +118,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         val status = transfer.statusCategory
         if(status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_UNFINISHED) {
             initTableLayoutTransportTypes(transfer.transportTypes)
-            tableLayoutTransportTypes.isVisible = true
+            flexboxLayoutTransportTypes.isVisible = true
         }
         layoutButtonSupportTop.isVisible   = status == Transfer.STATUS_CATEGORY_FINISHED
         layoutCommunicateButtons.isVisible = status == Transfer.STATUS_CATEGORY_CONFIRMED
@@ -127,12 +137,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         //top right
         if (transfer.to != null) {
             tvDistance.text = SystemUtils.formatDistance(this, transfer.distance, false)
-            tvDuration.text = durationToString(Utils.convertDuration(transfer.time ?: 0))
+            tvDuration.text = Utils.durationToString(this, Utils.convertDuration(transfer.time ?: 0))
         } else {
             textDistance.text = getString(R.string.LNG_TIME_RIDE)
             tvDuration.text = Utils.formatDuration(this, transfer.duration!!)
 
-            tvTransferWillStartTime.text = durationToString(Utils.convertDuration(transfer.timeToTransfer))
+            tvTransferWillStartTime.text = Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer))
         }
 
         //bottom left
@@ -180,7 +190,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
             }
             Transfer.STATUS_CATEGORY_CONFIRMED -> {
                 layoutTransferWillStartTime.isVisible = true
-                tvTransferWillStartTime.text = durationToString(Utils.convertDuration(transfer.timeToTransfer))
+                tvTransferWillStartTime.text = Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer))
             }
         }
     }
@@ -212,22 +222,14 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     }
 
     private fun initTableLayoutTransportTypes(transportTypes: List<TransportTypeModel>) {
-        for (row in 0 until transportTypes.size.ceil(TRANSPORT_TYPES_COLUMNS)) {
-            val tableRow = TableRow(this).apply {
-                layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
-            }
-            for (col in 0 until TRANSPORT_TYPES_COLUMNS) {
-                val i = row * TRANSPORT_TYPES_COLUMNS + col
-                if (i == transportTypes.size) break
-                tableRow.addView(
-                    LayoutInflater.from(this).inflate(R.layout.view_transfer_details_transport_type_item, null, false).apply {
+        flexboxLayoutTransportTypes.removeAllViews()
+        transportTypes.forEach {
+            flexboxLayoutTransportTypes.addView(LayoutInflater.from(this).inflate(R.layout.view_transfer_details_transport_type_item, null, false).apply {
 
-                        transportTypeItemName.text            = getString(transportTypes[i].nameId!!).plus(":")
-                        transportTypeItemCountPassengers.text = Utils.formatPersons(this@TransferDetailsActivity, transportTypes[i].paxMax)
-                        transportTypeItemCountBaggage.text    = Utils.formatLuggage(this@TransferDetailsActivity, transportTypes[i].luggageMax)
-                    }, col)
-            }
-            tableLayoutTransportTypes.addView(tableRow, row)
+                transportTypeItemName.text            = getString(it.nameId!!).plus(":")
+                transportTypeItemCountPassengers.text = Utils.formatPersons(this@TransferDetailsActivity, it.paxMax)
+                transportTypeItemCountBaggage.text    = Utils.formatLuggage(this@TransferDetailsActivity, it.luggageMax)
+            })
         }
     }
 
@@ -250,7 +252,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
                 Pair(getString(R.string.LNG_OPEN), TransferDetailsPresenter.OPERATION_OPEN))
         val operationsName: List<CharSequence> = operations.map { it.first }
 
-        offer.driver?.let {driver ->
+        offer.driver?.let { driver ->
             driver.phone?.let { phone ->
                 driver_phone.field_text.text = phone
                 driver_phone.isVisible = true
@@ -266,17 +268,18 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         }
 
         offer.carrier.let { carrier ->
-            carrier_id.field_title.text = getString(R.string.LNG_DRIVER).plus(" №${carrier.id}")
+            val carrierId = carrier.profile?.id ?: ""
+            carrier_id.field_title.text = getString(R.string.LNG_DRIVER).plus(" №$carrierId")
             carrier_id.field_text.text = carrier.completedTransfers.toString().plus(" ").plus(getString(R.string.LNG_RIDES))
 
-            carrier.profile.name?.let { name -> carrier_name.text = name }
-            carrier.profile.phone?.let { phone ->
+            carrier.profile?.name?.let { name -> carrier_name.text = name }
+            carrier.profile?.phone?.let { phone ->
                 carrier_phone.field_text.text = phone
                 carrier_phone.isVisible = true
                 Utils.setSelectOperationListener(this, carrier_phone, operationsName, R.string.LNG_DRIVER_PHONE) {
                     presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
             }
-            carrier.profile.email?.let { email ->
+            carrier.profile?.email?.let { email ->
                 carrier_email.field_text.text = email
                 carrier_email.isVisible = true
                 Utils.setSelectOperationListener(this, carrier_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
@@ -332,17 +335,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     override fun recreateActivity() { recreate() }
 
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
-
-    private fun durationToString(duration: Triple<Int, Int, Int>) = buildString {
-        val (days: Int, hours: Int, minutes: Int) = duration
-        getString(R.string.LNG_DATE_IN_HOURS)
-        append(" $days")
-        append(getString(R.string.LNG_D))
-        append(" ${hours % 24}")
-        append(getString(R.string.LNG_H))
-        append(" ${minutes % 60}")
-        append(getString(R.string.LNG_M))
-    }
 
     companion object {
         const val TRANSPORT_TYPES_COLUMNS = 2

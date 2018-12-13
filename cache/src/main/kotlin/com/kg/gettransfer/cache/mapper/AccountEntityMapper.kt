@@ -10,23 +10,27 @@ import com.kg.gettransfer.data.model.UserEntity
 /**
  * Map a [AccountCached] from/to an [AccountEntity] instance when data is moving between this later and the Data layer.
  */
-open class AccountEntityMapper(): EntityMapper<AccountCached, AccountEntity> {
+open class AccountEntityMapper : EntityMapper<AccountCached, AccountEntity> {
     override fun fromCached(type: AccountCached) =
-        AccountEntity(UserEntity(ProfileEntity(type.fullName, type.email, type.phone), type.termsAccepted ?: false),
-                      type.locale,
-                      type.currency,
-                      type.distanceUnit,
-                      type.groups?.list,
-                      type.carrierId)
-    
-    override fun toCached(type: AccountEntity) = 
-        AccountCached(type.user.profile.fullName,
-                      type.user.profile.email,
-                      type.user.profile.phone,
-                      type.locale,
-                      type.currency,
-                      type.distanceUnit,
-                      type.groups?.let { StringList(it) },
-                      type.user.termsAccepted,
-                      type.carrierId)
+        AccountEntity(
+            UserEntity(ProfileEntity(0L, type.fullName, type.email, type.phone), type.termsAccepted ?: false),
+            type.locale,
+            type.currency,
+            type.distanceUnit,
+            type.groups?.list,
+            type.carrierId
+        )
+
+    override fun toCached(type: AccountEntity) =
+        AccountCached(
+            type.user.profile.fullName,
+            type.user.profile.email,
+            type.user.profile.phone,
+            type.locale,
+            type.currency,
+            type.distanceUnit,
+            type.groups?.let { StringList(it) },
+            type.user.termsAccepted,
+            type.carrierId
+        )
 }
