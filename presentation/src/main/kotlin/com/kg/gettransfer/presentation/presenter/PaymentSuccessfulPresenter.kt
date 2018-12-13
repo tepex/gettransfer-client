@@ -40,8 +40,8 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
         super.attachView(view)
         utils.launchSuspend {
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            val min = (result.model.dateToLocal.time - Calendar.getInstance(systemInteractor.locale).timeInMillis / 60_1000).toInt()
-            val (days, hours, minutes) = Utils.convertDuration(min)
+            transferModel = transferMapper.toView(result.model)
+            val (days, hours, minutes) = Utils.convertDuration(transferModel.timeToTransfer)
             viewState.setRemainTime(days, hours, minutes)
         }
     }
@@ -52,7 +52,6 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             if (result.error != null) viewState.setError(result.error!!)
             else {
-                transferModel = transferMapper.toView(result.model)
 
                 if (result.model.to != null) {
                     val r = utils.asyncAwait {
