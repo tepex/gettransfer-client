@@ -584,7 +584,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:srcCompat="@drawable/sale_icon"
+                    app:srcCompat="@drawable/ic_percentage"
                     android:layout_width="31dp"
                     android:layout_height="29dp" />
 
