@@ -9,6 +9,8 @@
     <string name="api_key_prod">3fe0f9208622274f1a21e78037eea83e</string>
     <string name="api_url_prod">https://gettransfer.com</string>
 
+    <string name="api_restore_password">https://gettransfer.com/forgot_password</string>
+
     <!-- logs -->
     <string name="logs_file_name">Logs.txt</string>
     <string name="file_provider_authority" translatable="false">com.kg.gettransfer.fileprovider</string>

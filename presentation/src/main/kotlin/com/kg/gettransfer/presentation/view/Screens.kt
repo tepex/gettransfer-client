@@ -19,6 +19,8 @@ import java.util.Date
 import org.jetbrains.anko.toast
 
 import ru.terrakok.cicerone.android.support.SupportAppScreen
+import java.util.*
+
 
 object Screens {
     @JvmField val NOT_USED = -1
@@ -55,6 +57,12 @@ object Screens {
     object LicenceAgree : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, WebPageActivity()::class.java).apply {
             putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_LICENSE)
+        }
+    }
+
+    object RestorePassword: SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, WebPageActivity()::class.java).apply {
+            putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_RESTORE_PASS)
         }
     }
 
