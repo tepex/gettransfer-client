@@ -85,4 +85,6 @@ class LoginPresenter: BasePresenter<LoginView>() {
     private fun checkCarrierMode() =
         if(systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) Screens.CARRIER_MODE
         else Screens.REG_CARRIER
+
+    fun onPassForgot() = router.navigateTo(Screens.RestorePassword)
 }
