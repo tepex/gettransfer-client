@@ -6,6 +6,7 @@ import android.support.annotation.CallSuper
 import android.util.Patterns
 
 import com.arellomobile.mvp.InjectViewState
+import com.facebook.appevents.AppEventsConstants
 
 import com.facebook.appevents.AppEventsConstants
 
