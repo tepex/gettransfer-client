@@ -107,6 +107,8 @@ class SystemInteractor(
         set(value) { systemRepository.appEnters = value }
 
     fun logout() = systemRepository.logout()
+    suspend fun registerPushToken(provider: String) = systemRepository.registerPushToken(provider)
+    suspend fun unregisterPushToken() = systemRepository.unregisterPushToken()
     suspend fun login(email: String, password: String) = systemRepository.login(email, password)
     suspend fun putAccount() = systemRepository.putAccount(account)
 

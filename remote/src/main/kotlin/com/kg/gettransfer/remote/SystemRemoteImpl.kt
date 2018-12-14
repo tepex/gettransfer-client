@@ -16,13 +16,19 @@ import com.kg.gettransfer.remote.model.AccountModelWrapper
 import com.kg.gettransfer.remote.model.ConfigsModel
 import com.kg.gettransfer.remote.model.ResponseModel
 
+import org.koin.core.parameter.parametersOf
+
 import org.koin.standalone.get
+import org.koin.standalone.inject
+
+import org.slf4j.Logger
 
 class SystemRemoteImpl : SystemRemote {
     private val core           = get<ApiCore>()
     private val configsMapper  = get<ConfigsMapper>()
     private val accountMapper  = get<AccountMapper>()
     private val endpointMapper = get<EndpointMapper>()
+    private val log: Logger by inject { parametersOf("GTR-remote") }
 
     override suspend fun getConfigs(): ConfigsEntity {
         val response: ResponseModel<ConfigsModel> = core.tryTwice { core.api.getConfigs() }
@@ -66,6 +72,25 @@ class SystemRemoteImpl : SystemRemote {
 
             try { core.updateAccessToken() } catch (e1: Exception) { throw core.remoteException(e1) }
             return try { core.api.login(email, password).await() } catch (e2: Exception) { throw core.remoteException(e2) }
+        }
+    }
+
+    override suspend fun registerPushToken(provider: String, accessToken: String) {
+        try {
+            val response = core.api.registerPushToken(provider, accessToken).await()
+            log.debug("register token: ${response.data}")
+        } catch (e: Exception) {
+            log.error("register token error", e)
+        }
+    }
+
+    override suspend fun unregisterPushToken(accessToken: String) {
+        try {
+            val response = core.api.unregisterPushToken(accessToken).await()
+            log.debug("unregister token: ${response.data}")
+        }
+        catch (e: Exception) {
+            log.error("unregister token error", e)
         }
     }
 

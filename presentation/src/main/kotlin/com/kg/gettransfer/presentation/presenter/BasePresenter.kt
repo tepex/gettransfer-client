@@ -5,6 +5,9 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.MvpPresenter
 
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
+
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.SystemInteractor
@@ -16,13 +19,15 @@ import com.kg.gettransfer.utilities.Analytics
 
 import com.yandex.metrica.YandexMetrica
 
+import kotlinx.coroutines.Job
+
 import org.koin.standalone.get
 import org.koin.standalone.inject
 import org.koin.standalone.KoinComponent
 
 import ru.terrakok.cicerone.Router
 
-import kotlinx.coroutines.Job
+import timber.log.Timber
 
 open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
     protected val compositeDisposable = Job()
@@ -83,8 +88,22 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
         router.navigateTo(Screens.CallPhone(phone))
     }
 
+    protected fun registerPushToken() {
+        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener(OnCompleteListener {
+            if (it.isSuccessful) {
+                val token = it.result?.token
+                Timber.d("[FCM token]: $token")
+                token?.let { utils.runAlien { systemInteractor.registerPushToken(it) } }
+            } else Timber.w("getInstanceId failed", it.exception)
+        })
+    }
+
+    protected fun unregisterPushToken() {
+        utils.runAlien { systemInteractor.unregisterPushToken() }
+    }
+
     companion object AnalyticProps {
-        @JvmField val SINGLE_CAPACITY = 1
-        @JvmField val DOUBLE_CAPACITY = 2
+        const val SINGLE_CAPACITY = 1
+        const val DOUBLE_CAPACITY = 2
     }
 }

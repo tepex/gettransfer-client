@@ -117,7 +117,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun onLogout() {
-        utils.runAlien { systemInteractor.logout() }
+        utils.runAlien {
+            systemInteractor.logout()
+            unregisterPushToken()
+        }
         router.exit()
         logEvent(Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)
     }

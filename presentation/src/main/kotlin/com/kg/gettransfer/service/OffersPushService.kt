@@ -1,4 +1,4 @@
-package com.google.firebase.quickstart.fcm.kotlin
+package com.kg.gettransfer.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

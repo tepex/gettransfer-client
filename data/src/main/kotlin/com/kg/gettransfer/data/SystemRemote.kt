@@ -11,5 +11,7 @@ interface SystemRemote: KoinComponent {
     suspend fun getAccount(): AccountEntity?
     suspend fun setAccount(accountEntity: AccountEntity): AccountEntity
     suspend fun login(email: String, password: String): AccountEntity
+    suspend fun registerPushToken(provider: String, accessToken: String)
+    suspend fun unregisterPushToken(accessToken: String)
     fun changeEndpoint(endpoint: EndpointEntity)
 }

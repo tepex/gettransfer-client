@@ -28,6 +28,8 @@ interface SystemRepository {
     suspend fun putAccount(account: Account): Result<Account>
     suspend fun login(email: String, password: String): Result<Account>
     fun logout(): Result<Account>
+    suspend fun registerPushToken(provider: String)
+    suspend fun unregisterPushToken()
 
     fun addListener(listener: SystemListener)
     fun removeListener(listener: SystemListener)

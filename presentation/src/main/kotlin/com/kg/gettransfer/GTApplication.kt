@@ -63,9 +63,10 @@ class GTApplication : MultiDexApplication() {
             androidModule
         ))
 
-        setupAppMetrica()
+
         //setUpLeakCanary()
         setupFcm()
+        setupAppMetrica()
     }
 
     private fun setUpLeakCanary() {

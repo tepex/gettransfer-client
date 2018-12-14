@@ -31,7 +31,7 @@ import org.koin.android.ext.android.inject
 
 import timber.log.Timber
 
-class SplashActivity: AppCompatActivity() {
+class SplashActivity : AppCompatActivity() {
     companion object {
         @JvmField val PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
         @JvmField val PERMISSION_REQUEST = 2211
@@ -47,9 +47,9 @@ class SplashActivity: AppCompatActivity() {
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.d("Permissions: ${systemInteractor.locationPermissionsGranted}")
-        if(systemInteractor.locationPermissionsGranted == null &&
-           Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-           (!check(Manifest.permission.ACCESS_FINE_LOCATION) || !check(Manifest.permission.ACCESS_COARSE_LOCATION))) {
+        if (systemInteractor.locationPermissionsGranted == null &&
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            (!check(Manifest.permission.ACCESS_FINE_LOCATION) || !check(Manifest.permission.ACCESS_COARSE_LOCATION))) {
                 ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_REQUEST)
                 // show splash
                 Timber.d("Splash screen")
@@ -62,19 +62,20 @@ class SplashActivity: AppCompatActivity() {
 
         Timber.d(getString(R.string.title_starting_session))
         Timber.d("Permissions granted!")
+
         utils.launchSuspend {
             val result = utils.asyncAwait { systemInteractor.coldStart() }
 
-            if(result.error != null) {
+            if (result.error != null) {
                 Timber.e(result.error!!)
-                val msg = if(result.error!!.code == ApiException.NETWORK_ERROR)
+                val msg = if (result.error!!.code == ApiException.NETWORK_ERROR)
                     getString(R.string.LNG_NETWORK_ERROR) else getString(R.string.err_server, result.error!!.details)
                 Utils.showError(this@SplashActivity, true, msg) {
                     startActivity(Intent(this@SplashActivity, SettingsActivity::class.java))
                 }
             }
             else {
-                if(!systemInteractor.isOnboardingShowed) {
+                if (!systemInteractor.isOnboardingShowed) {
                     systemInteractor.isOnboardingShowed = true
                     startActivity(Intent(this@SplashActivity, AboutActivity::class.java)
                             .putExtra(AboutView.EXTRA_OPEN_MAIN, true).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
@@ -93,11 +94,10 @@ class SplashActivity: AppCompatActivity() {
     }
 
     private fun checkIsTaskRoot(): Boolean {
-        if(!isTaskRoot && intent.hasCategory(Intent.CATEGORY_LAUNCHER) && intent.action != Intent.ACTION_MAIN) {
+        return if(!isTaskRoot && intent.hasCategory(Intent.CATEGORY_LAUNCHER) && intent.action != Intent.ACTION_MAIN) {
             finish()
-            return true
-        }
-        return false
+            true
+        } else false
     }
 
     @CallSuper
@@ -110,7 +110,7 @@ class SplashActivity: AppCompatActivity() {
         ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if(requestCode != PERMISSION_REQUEST) return
+        if (requestCode != PERMISSION_REQUEST) return
         systemInteractor.locationPermissionsGranted = (grantResults.size == 2 &&
                                                        grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                                                        grantResults[1] == PackageManager.PERMISSION_GRANTED)

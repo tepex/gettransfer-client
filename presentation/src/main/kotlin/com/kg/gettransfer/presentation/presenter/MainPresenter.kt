@@ -70,10 +70,11 @@ class MainPresenter : BasePresenter<MainView>() {
         if (routeInteractor.from != null) setLastLocation()
         else utils.launchSuspend { updateCurrentLocationAsync().apply { error?.let { Timber.e(it) } } }
 
-        reviewInteractor.apply {
+        with(reviewInteractor) {
             if (!isReviewSuggested) showRateForLastTrip()
             else if (shouldAskRateInMarket) viewState.askRateInPlayMarket()
         }
+        if (systemInteractor.account.user.loggedIn) registerPushToken()
 
         // Создать листенер для обновления текущей локации
         // https://developer.android.com/training/location/receive-location-updates

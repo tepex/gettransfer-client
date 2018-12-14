@@ -153,6 +153,14 @@ class SystemRepositoryImpl(
         return Result(account)
     }
 
+    override suspend fun registerPushToken(provider: String) {
+        factory.retrieveRemoteDataStore().registerPushToken(provider, accessToken)
+    }
+
+    override suspend fun unregisterPushToken() {
+        factory.retrieveRemoteDataStore().unregisterPushToken(accessToken)
+    }
+
     override fun accessTokenChanged(accessToken: String) {
         listeners.forEach { it.connectionChanged(endpoint, accessToken) }
     }

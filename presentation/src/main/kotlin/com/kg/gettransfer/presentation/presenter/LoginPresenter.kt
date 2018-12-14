@@ -15,15 +15,13 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
-import com.yandex.metrica.YandexMetrica
-
 @InjectViewState
-class LoginPresenter: BasePresenter<LoginView>() {
+class LoginPresenter : BasePresenter<LoginView>() {
     companion object {
-        @JvmField val MIN_PASSWORD_LENGTH = 6
+        const val MIN_PASSWORD_LENGTH = 6
 
-        @JvmField val RESULT_CODE = 33
-        @JvmField val RESULT_OK   = 1
+        //@JvmField val RESULT_CODE = 33
+        //@JvmField val RESULT_OK   = 1
     }
 
     private var password: String? = null
@@ -33,7 +31,7 @@ class LoginPresenter: BasePresenter<LoginView>() {
     internal var transferId: Long? = null
 
     fun onLoginClick() {
-        if(!checkFields()) return
+        if (!checkFields()) return
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)
@@ -44,14 +42,12 @@ class LoginPresenter: BasePresenter<LoginView>() {
                         Screens.CARRIER_MODE   -> router.navigateTo(Screens.ChangeMode(checkCarrierMode()))
                         Screens.PASSENGER_MODE -> router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
                         Screens.OFFERS         -> {
-                            if(transferId != 0L) router.navigateTo(Screens.Offers(transferId!!))
-                            else router.exit()
+                            if (transferId != null) router.navigateTo(Screens.Offers(transferId)) else router.exit()
                         }
                     }
                 }
-                else router.exit()
-                //else router.exitWithResult(RESULT_CODE, RESULT_OK)
                 logLoginEvent(Analytics.RESULT_SUCCESS)
+                registerPushToken()
             } else {
                 viewState.showError(true, result.error!!.message)
                 logLoginEvent(Analytics.RESULT_FAIL)
@@ -69,22 +65,22 @@ class LoginPresenter: BasePresenter<LoginView>() {
 
     fun onHomeClick() = router.exit()
 
-    fun setEmail(email: String) { this.email = if(email.isEmpty()) null else email }
-    fun setPassword(password: String) { this.password = if(password.isEmpty()) null else password }
+    fun setEmail(email: String) { this.email = if (email.isEmpty()) null else email }
+    fun setPassword(password: String) { this.password = if (password.isEmpty()) null else password }
 
     private fun checkFields(): Boolean {
         val checkEmail = email != null && Patterns.EMAIL_ADDRESS.matcher(email!!).matches()
         val checkPassword = password != null
         var fieldsValid = true
         var errorType = 0
-        if(!checkEmail)         { fieldsValid = false; errorType = LoginActivity.INVALID_EMAIL }
-        else if(!checkPassword) { fieldsValid = false; errorType = LoginActivity.INVALID_PASSWORD }
+        if (!checkEmail)         { fieldsValid = false; errorType = LoginActivity.INVALID_EMAIL }
+        else if (!checkPassword) { fieldsValid = false; errorType = LoginActivity.INVALID_PASSWORD }
         viewState.showValidationError(!fieldsValid, errorType)
         return fieldsValid
     }
 
     private fun checkCarrierMode() =
-        if(systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) Screens.CARRIER_MODE
+        if (systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) Screens.CARRIER_MODE
         else Screens.REG_CARRIER
 
     fun onPassForgot() = router.navigateTo(Screens.RestorePassword)
