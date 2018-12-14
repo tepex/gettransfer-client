@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.graphics.Rect
 
 import android.net.ConnectivityManager
+import android.net.Network
 
 import android.support.annotation.CallSuper
 import android.support.annotation.NonNull
@@ -78,6 +79,17 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
             _tintBackground.alpha = slideOffset
         }
     }
+
+    /*TODO use when increase min sdk version
+    private val networkCallback: ConnectivityManager.NetworkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onUnavailable() {
+            viewNetworkNotAvailable?.let { it.isGone = true }
+        }
+
+        override fun onAvailable(network: Network?) {
+            viewNetworkNotAvailable?.let { it.isGone = false }
+        }
+    }*/
 
     protected fun hideBottomSheet(bottomSheet: BottomSheetBehavior<View>, bottomSheetLayout: View, hiddenState: Int, event: MotionEvent): Boolean{
         val outRect = Rect()
