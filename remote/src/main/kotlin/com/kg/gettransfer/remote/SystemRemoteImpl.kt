@@ -26,7 +26,7 @@ class SystemRemoteImpl: SystemRemote {
 
     override suspend fun getConfigs(): ConfigsEntity {
         val response: ResponseModel<ConfigsModel> = core.tryTwice { core.api.getConfigs() }
-		return configsMapper.fromRemote(response.data!!)
+        return configsMapper.fromRemote(response.data!!)
     }
 
     override suspend fun getAccount(): AccountEntity? {

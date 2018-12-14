@@ -1,0 +1,22 @@
+{
+    "id":1,
+    "status":"new",
+    "wifi":false,
+    "refreshments":false,
+    "created_at":"",
+    "updated_at":"",
+    "price":{
+        "base":{"default":"qqq","preferred":"sdfs"},
+        "percentage_30":"30",
+        "percentage_70":"70",
+        "without_discount":{"default":"qqq","preferred":"sdfs"},
+        "amount":222
+    },
+    "ratings": null,
+    "passenger_feedback":"",
+    "carrier":{
+        "id":3
+    },
+    "vehicle":{},
+    "driver":null
+}

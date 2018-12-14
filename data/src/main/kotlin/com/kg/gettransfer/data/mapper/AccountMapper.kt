@@ -23,12 +23,14 @@ open class AccountMapper : Mapper<AccountEntity, Account> {
      * Map a [AccountEntity] instance to a [Account] instance
      */
     override fun fromEntity(type: AccountEntity) =
-        Account(userMapper.fromEntity(type.user),
+        Account(
+            userMapper.fromEntity(type.user),
             configs.availableLocales.find { it.language == type.locale } ?: Locale.getDefault(),
             configs.supportedCurrencies.find { it.currencyCode == type.currency } ?: Currency.getInstance("USD"),
             type.distanceUnit?.let { DistanceUnit.valueOf(it) } ?: DistanceUnit.km,
             type.groups ?: emptyList<String>(),
-            if (type.carrierId == -1L) null else type.carrierId)
+            type.carrierId
+        )
 
     /**
      * Map a [Account] instance to a [AccountEntity] instance

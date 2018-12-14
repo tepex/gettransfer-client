@@ -4,7 +4,7 @@ import java.util.Locale
 
 data class Carrier(
     override val id: Long,
-    val profile: Profile,
+    val profile: Profile?,
     val approved: Boolean,
     val completedTransfers: Int,
     val languages: List<Locale>,

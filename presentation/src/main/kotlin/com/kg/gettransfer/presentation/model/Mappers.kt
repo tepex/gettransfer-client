@@ -213,13 +213,16 @@ object Mappers : KoinComponent {
                                                 type.percentage70,
                                                 "%.2f".format(type.amount))
 
-    private fun getCarrierModel(type: Carrier) = CarrierModel(type.id,
-                                                         getProfileModel(type.profile),
-                                                         type.approved,
-                                                         type.completedTransfers,
-                                                         getLocalesModels(type.languages),
-                                                         getRatingsModel(type.ratings),
-                                                         type.canUpdateOffers)
+    private fun getCarrierModel(type: Carrier) =
+        CarrierModel(
+            type.id,
+            type.profile?.let { getProfileModel(it) },
+            type.approved,
+            type.completedTransfers,
+            getLocalesModels(type.languages),
+            getRatingsModel(type.ratings),
+            type.canUpdateOffers
+        )
 
     private fun getVehicleModel(type: Vehicle) =
         VehicleModel(VehicleBaseModel(type.vehicleBase.name, type.vehicleBase.registrationNumber),

@@ -18,9 +18,9 @@ abstract class BaseRepository(): KoinComponent {
     companion object {
         @JvmField val TAG = "GTR-repository"
     }
-    
+
     protected val log = LoggerFactory.getLogger(TAG)
-    
+
     protected suspend fun <E> retrieveEntity(getEntity: suspend (Boolean) -> E?): ResultEntity<E?> {
         var error: RemoteException? = null
         /* First, try retrieve from remote */
@@ -36,7 +36,7 @@ abstract class BaseRepository(): KoinComponent {
         }
         return ResultEntity(entity, error)
     }
-    
+
     protected suspend fun <E, M> retrieveRemoteModel(mapper: Mapper<E, M>, defaultModel: M, getEntity: suspend () -> E): Result<M> {
         var error: ApiException? = null
         val entity = try { getEntity() }
@@ -46,11 +46,14 @@ abstract class BaseRepository(): KoinComponent {
         }
         return Result(mapper.fromEntity(entity))
     }
-    
+
     protected suspend fun <E, M> retrieveRemoteListModel(mapper: Mapper<E, M>, getEntityList: suspend () -> List<E>): Result<List<M>> {
         var error: ApiException? = null
         val entityList = try { getEntityList() }
-        catch(e: RemoteException) { return Result(emptyList<M>(), ExceptionMapper.map(e)) }
+        catch (e: RemoteException) {
+            log.error("remote list error", e)
+            return Result(emptyList<M>(), ExceptionMapper.map(e))
+        }
         return Result(entityList.map { mapper.fromEntity(it) })
     }
 }

@@ -9,7 +9,7 @@ import org.koin.standalone.get
 /**
  * Map a [UserEntity] to and from a [User] instance when data is moving between this later and the Domain layer.
  */
-open class UserMapper: Mapper<UserEntity, User> {
+open class UserMapper : Mapper<UserEntity, User> {
     private val profileMapper = get<ProfileMapper>()
 
     /**

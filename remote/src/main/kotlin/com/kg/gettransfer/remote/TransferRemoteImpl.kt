@@ -54,25 +54,25 @@ class TransferRemoteImpl: TransferRemote {
     }
 
     override suspend fun getTransfer(id: Long): TransferEntity {
-		val response: ResponseModel<TransferWrapperModel> = core.tryTwice(id, { _id -> core.api.getTransfer(_id) })
-		return transferMapper.fromRemote(response.data?.transfer!!)
+        val response: ResponseModel<TransferWrapperModel> = core.tryTwice(id, { _id -> core.api.getTransfer(_id) })
+        return transferMapper.fromRemote(response.data?.transfer!!)
     }
 
     override suspend fun getAllTransfers(): List<TransferEntity> {
-		val response: ResponseModel<TransfersModel> = core.tryTwice { core.api.getAllTransfers() }
-		val transfers: List<TransferModel> = response.data!!.transfers
-		return transfers.map { transferMapper.fromRemote(it) }
+        val response: ResponseModel<TransfersModel> = core.tryTwice { core.api.getAllTransfers() }
+        val transfers: List<TransferModel> = response.data!!.transfers
+        return transfers.map { transferMapper.fromRemote(it) }
     }
 
     override suspend fun getTransfersArchive(): List<TransferEntity> {
-		val response: ResponseModel<TransfersModel> = core.tryTwice { core.api.getTransfersArchive() }
-		val transfers: List<TransferModel> = response.data!!.transfers
-		return transfers.map { transferMapper.fromRemote(it) }
+        val response: ResponseModel<TransfersModel> = core.tryTwice { core.api.getTransfersArchive() }
+        val transfers: List<TransferModel> = response.data!!.transfers
+        return transfers.map { transferMapper.fromRemote(it) }
     }
 
     override suspend fun getTransfersActive(): List<TransferEntity> {
-		val response: ResponseModel<TransfersModel> = core.tryTwice { core.api.getTransfersActive() }
-		val transfers: List<TransferModel> = response.data!!.transfers
-		return transfers.map { transferMapper.fromRemote(it) }
+        val response: ResponseModel<TransfersModel> = core.tryTwice { core.api.getTransfersActive() }
+        val transfers: List<TransferModel> = response.data!!.transfers
+        return transfers.map { transferMapper.fromRemote(it) }
     }
 }

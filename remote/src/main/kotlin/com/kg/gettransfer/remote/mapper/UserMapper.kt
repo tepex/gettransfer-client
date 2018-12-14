@@ -7,7 +7,7 @@ import com.kg.gettransfer.remote.model.UserModel
 /**
  * Map a [UserEntity] to and from a [UserModel] instance when data is moving between this later and the Data layer.
  */
-open class UserMapper(): EntityMapper<UserModel, UserEntity> {
+open class UserMapper : EntityMapper<UserModel, UserEntity> {
     /**
      * Map a [UserModel] instance to a [UserEntity] instance.
      */
@@ -16,6 +16,6 @@ open class UserMapper(): EntityMapper<UserModel, UserEntity> {
     /**
      * Map a [UserEntity] instance to a [UserModel] instance.
      */
-    override fun toRemote(type: UserEntity) = 
+    override fun toRemote(type: UserEntity) =
         UserModel(type.profile.fullName!!, type.profile.email, type.profile.phone!!, type.termsAccepted)
 }

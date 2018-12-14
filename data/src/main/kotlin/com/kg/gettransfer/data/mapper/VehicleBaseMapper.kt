@@ -8,7 +8,7 @@ import com.kg.gettransfer.domain.model.VehicleBase
  * Map a [VehicleBaseEntity] to and from a [VehicleBase] instance when data is moving between
  * this later and the Domain layer.
  */
-open class VehicleBaseMapper(): Mapper<VehicleBaseEntity, VehicleBase> {
+open class VehicleBaseMapper : Mapper<VehicleBaseEntity, VehicleBase> {
     /**
      * Map a [VehicleBaseEntity] instance to a [VehicleBase] instance.
      */

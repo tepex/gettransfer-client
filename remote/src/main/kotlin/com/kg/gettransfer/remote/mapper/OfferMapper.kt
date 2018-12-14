@@ -1,8 +1,7 @@
 package com.kg.gettransfer.remote.mapper
 
-import com.kg.gettransfer.data.model.OfferEntity
-import com.kg.gettransfer.data.model.ProfileEntity
-import com.kg.gettransfer.data.model.RatingsEntity
+//import com.kg.gettransfer.data.model.OfferEntity
+import com.kg.gettransfer.data.model.*
 
 import com.kg.gettransfer.remote.model.OfferModel
 
@@ -39,6 +38,43 @@ open class OfferMapper : EntityMapper<OfferModel, OfferEntity> {
             vehicleMapper.fromRemote(type.vehicle),
             type.driver?.let { profileMapper.fromRemote(it) }
         )
+        /*
+        OfferEntity(
+            1,
+            null,
+            "new",
+            true,
+            true,
+            "created",
+            null,
+            PriceEntity(
+                base = MoneyEntity("def", null),
+                withoutDiscount = null,
+                percentage30 = "30",
+                percentage70 = "70",
+                amount = 0.3
+            ),
+            null,
+            null,
+            CarrierEntity(
+                id = 2,
+                profile = ProfileEntity(fullName = null, email = null, phone = null),
+                approved = true,
+                completedTransfers = 3,
+                languages = emptyList<LocaleEntity>(),
+                ratings = RatingsEntity(0.5f, 0.5f, 0.5f, 0.5f),
+                canUpdateOffers = null
+            ),
+            VehicleEntity(
+                id = 3,
+                vehicleBase = VehicleBaseEntity(name = "v name", registrationNumber = "edfsd"),
+                year = 2000,
+                color = null,
+                transportType = TransportTypeEntity("economy", paxMax = 3, luggageMax = 4),
+                photos = emptyList<String>()
+            ),
+            null
+            )*/
 
     /**
      * Map a [OfferEntity] instance to a [OfferModel] instance.

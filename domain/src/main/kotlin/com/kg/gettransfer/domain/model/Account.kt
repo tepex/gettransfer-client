@@ -22,6 +22,6 @@ data class Account(
             null
         )
 
-        @JvmField val GROUP_CARRIER_DRIVER = "carrier/driver"
+        const val GROUP_CARRIER_DRIVER = "carrier/driver"
     }
 }
