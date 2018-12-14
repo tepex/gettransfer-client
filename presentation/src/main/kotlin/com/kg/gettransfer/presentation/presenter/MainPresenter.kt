@@ -280,7 +280,6 @@ class MainPresenter : BasePresenter<MainView>() {
     fun logEvent(value: String) {
         val map = mutableMapOf<String, Any>()
         map[Analytics.PARAM_KEY_NAME] = value
-
         analytics.logEvent(Analytics.EVENT_MENU, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
     }
 
@@ -292,6 +291,7 @@ class MainPresenter : BasePresenter<MainView>() {
     fun onShareClick() {
         Timber.d("Share action")
         logEvent(Analytics.SHARE)
+        router.navigateTo(Screens.Share())
     }
 
     companion object {

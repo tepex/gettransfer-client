@@ -204,6 +204,15 @@ object Screens {
         }
     }
 
+    class Share() : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?): Intent {
+            return Intent(Intent.ACTION_SEND).apply {
+                putExtra(Intent.EXTRA_TEXT, context?.getString(R.string.LNG_SHARE_TEXT,"https://play.google.com/store/apps/details?id=com.gettransfer"))
+                type = "text/plain"
+            }
+        }
+    }
+
     data class CallPhone(val phoneCarrier: String?) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) =
             if (phoneCarrier != null) Intent(Intent.ACTION_DIAL, Uri.fromParts(DIAL_SCHEME, phoneCarrier, null))
