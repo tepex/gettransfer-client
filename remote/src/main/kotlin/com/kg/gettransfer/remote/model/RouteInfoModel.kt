@@ -3,22 +3,23 @@ package com.kg.gettransfer.remote.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class RouteInfoModel(@SerializedName("success") @Expose val success: Boolean,
-                     @SerializedName("distance") @Expose val distance: Int?,
-                     @SerializedName("duration") @Expose val duration: Int?,
-                     @SerializedName("prices") @Expose val prices: Map<String, TransportTypePriceModel>?,
-                     @SerializedName("watertaxi") @Expose val watertaxi: Boolean,
-                     @SerializedName("routes") @Expose val routes: List<RoutesModel>?)
+import com.kg.gettransfer.data.model.RouteInfoEntity
 
-class TransportTypePriceModel(@SerializedName("min_float") @Expose val minFloat: Float,
-                              @SerializedName("min") @Expose val min: String,
-                              @SerializedName("max") @Expose val max: String,
-                              var transferId: String? = null)
+data class RouteInfoModel(
+    @SerializedName(RouteInfoEntity.SUCCESS) @Expose val success: Boolean,
+    @SerializedName(RouteInfoEntity.DISTANCE) @Expose val distance: Int?,
+    @SerializedName(RouteInfoEntity.DURATION) @Expose val duration: Int?,
+    @SerializedName(RouteInfoEntity.PRICES) @Expose val prices: Map<String, TransportTypePriceModel>?,
+    @SerializedName(RouteInfoEntity.WATERTAXI) @Expose val watertaxi: Boolean,
+    @SerializedName(RouteInfoEntity.ROUTES) @Expose val routes: List<RoutesModel>?
+)
 
-class RoutesModel(@SerializedName("overview_polyline") @Expose val overviewPolyline: PointsModel,
-                  @SerializedName("legs") @Expose val legs: List<LegModel>)
+data class RoutesModel(
+    @SerializedName("overview_polyline") @Expose val overviewPolyline: PointsModel,
+    @SerializedName("legs") @Expose val legs: List<LegModel>
+)
 
-class PointsModel(@SerializedName("points") @Expose val points: String)
-class LegModel(@SerializedName("steps") @Expose val steps: List<StepModel>)
-class StepModel(@SerializedName("polyline") @Expose val polyline: PolylineModel)
-class PolylineModel(@SerializedName("points") @Expose val points: String)
+data class PointsModel(@SerializedName("points") @Expose val points: String)
+data class LegModel(@SerializedName("steps") @Expose val steps: List<StepModel>)
+data class StepModel(@SerializedName("polyline") @Expose val polyline: PolylineModel)
+data class PolylineModel(@SerializedName("points") @Expose val points: String)

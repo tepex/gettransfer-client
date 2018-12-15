@@ -116,7 +116,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             else {
                 duration = result.model.duration
 
-                val prices: Map<String, TransportPrice> = result.model.prices.map { p -> p.tranferId to TransportPrice(p.min, p.max, p.minFloat) }.toMap()
+                val prices: Map<String, TransportPrice> = result.model.prices.map { p -> p.tranferId to TransportPrice(p.min ?: "", p.max ?: "", p.minFloat ?: 0.0f) }.toMap()
                 if (transportTypes == null)
                     transportTypes = systemInteractor.transportTypes.map { Mappers.getTransportTypeModel(it, prices) }
                 viewState.setTransportTypes(transportTypes!!)
