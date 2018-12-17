@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 import com.kg.gettransfer.data.model.OfferEntity
 
-class OffersModel(@SerializedName("offers") @Expose val offers: List<OfferModel>)
+data class OffersModel(@SerializedName("offers") @Expose val offers: List<OfferModel>)
 
 data class OfferModel(
     @SerializedName(OfferEntity.ID) @Expose val id: Long,

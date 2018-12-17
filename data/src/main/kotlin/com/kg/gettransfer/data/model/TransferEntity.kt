@@ -47,6 +47,7 @@ open class TransferEntity(
 ) {
 
     companion object {
+        const val ENTITY_NAME             = "transfer"
         const val ID                      = "id"
         const val CREATED_AT              = "created_at"
         const val DURATION                = "duration"

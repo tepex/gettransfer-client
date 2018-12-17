@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName
 
 import com.kg.gettransfer.data.model.CityPointEntity
 
-class CityPointModel(@SerializedName(CityPointEntity.NAME) @Expose val name: String,
-                     @SerializedName(CityPointEntity.POINT) @Expose val point: String,
-                     @SerializedName(CityPointEntity.PLACE_ID) @Expose val placeId: String?)
+data class CityPointModel(
+    @SerializedName(CityPointEntity.NAME) @Expose val name: String,
+    @SerializedName(CityPointEntity.POINT) @Expose val point: String,
+    @SerializedName(CityPointEntity.PLACE_ID) @Expose val placeId: String?
+)

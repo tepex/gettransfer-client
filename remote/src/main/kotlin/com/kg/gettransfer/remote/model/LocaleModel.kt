@@ -5,5 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 import com.kg.gettransfer.data.model.LocaleEntity
 
-class LocaleModel(@SerializedName(LocaleEntity.CODE) @Expose val code: String,
-                  @SerializedName(LocaleEntity.TITLE) @Expose val title: String)
+data class LocaleModel(
+    @SerializedName(LocaleEntity.CODE) @Expose val code: String,
+    @SerializedName(LocaleEntity.TITLE) @Expose val title: String
+)

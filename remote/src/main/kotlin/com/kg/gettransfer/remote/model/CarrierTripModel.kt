@@ -23,7 +23,7 @@ class CarrierTripModel(
     @SerializedName(CarrierTripEntity.COMMENT) @Expose val comment: String?,
     @SerializedName(CarrierTripEntity.WATER_TAXI) @Expose val waterTaxi: Boolean,
     @SerializedName(CarrierTripEntity.PRICE) @Expose val price: String,
-    @SerializedName(CarrierTripEntity.VEHICLE) @Expose val vehicle: VehicleBaseModel,
+    @SerializedName(CarrierTripEntity.VEHICLE) @Expose val vehicle: VehicleInfoModel,
     @SerializedName(CarrierTripEntity.PAX) @Expose val pax: Int?,
     @SerializedName(CarrierTripEntity.NAME_SIGN) @Expose val nameSign: String?,
     @SerializedName(CarrierTripEntity.FLIGHT_NUMBER) @Expose val flightNumber: String?,
