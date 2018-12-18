@@ -15,9 +15,18 @@ open class UserMapper : Mapper<UserEntity, User> {
     /**
      * Map a [UserEntity] instance to a [User] instance.
      */
-    override fun fromEntity(type: UserEntity) = User(profileMapper.fromEntity(type.profile), type.termsAccepted)
+    override fun fromEntity(type: UserEntity) =
+        User(
+            profile = profileMapper.fromEntity(type.profile),
+            termsAccepted = type.termsAccepted
+        )
+
     /**
      * Map a [User] instance to a [UserEntity] instance.
      */
-    override fun toEntity(type: User) = UserEntity(profileMapper.toEntity(type.profile), type.termsAccepted)
+    override fun toEntity(type: User) =
+        UserEntity(
+            profile = profileMapper.toEntity(type.profile),
+            termsAccepted = type.termsAccepted
+        )
 }

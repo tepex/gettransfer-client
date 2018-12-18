@@ -1,7 +1,9 @@
 package com.kg.gettransfer.presentation.model
 
-class VehicleModel(
-    val vehicleBase: VehicleBaseModel,
+data class VehicleModel(
+    val id: Long,
+    val name: String,
+    val registrationNumber: String,
     val year: Int,
     val color: String?,
     val transportType: TransportTypeModel,

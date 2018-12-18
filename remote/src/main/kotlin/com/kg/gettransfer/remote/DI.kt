@@ -19,6 +19,7 @@ val remoteMappersModule = module {
 
     single { CardGatewaysMapper() }
     single { CarrierMapper() }
+    single { CarrierTripBaseMapper() }
     single { CarrierTripMapper() }
     single { CityPointMapper() }
     single { ConfigsMapper() }
@@ -50,7 +51,7 @@ val remoteMappersModule = module {
     single { TripMapper() }
 
     single { UserMapper() }
-    single { VehicleBaseMapper() }
+    single { VehicleInfoMapper() }
     single { VehicleMapper() }
 }
 

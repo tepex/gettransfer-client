@@ -13,24 +13,24 @@ import com.kg.gettransfer.data.model.UserEntity
 open class AccountEntityMapper : EntityMapper<AccountCached, AccountEntity> {
     override fun fromCached(type: AccountCached) =
         AccountEntity(
-            UserEntity(ProfileEntity(type.fullName, type.email, type.phone), type.termsAccepted ?: false),
-            type.locale,
-            type.currency,
-            type.distanceUnit,
-            type.groups?.list,
-            type.carrierId
+            user         = UserEntity(ProfileEntity(type.fullName, type.email, type.phone), type.termsAccepted ?: false),
+            locale       = type.locale,
+            currency     = type.currency,
+            distanceUnit = type.distanceUnit,
+            groups       = type.groups?.list,
+            carrierId    = type.carrierId
         )
 
     override fun toCached(type: AccountEntity) =
         AccountCached(
-            type.user.profile.fullName,
-            type.user.profile.email,
-            type.user.profile.phone,
-            type.locale,
-            type.currency,
-            type.distanceUnit,
-            type.groups?.let { StringList(it) },
-            type.user.termsAccepted,
-            type.carrierId
+            fullName      = type.user.profile.fullName,
+            email         = type.user.profile.email,
+            phone         = type.user.profile.phone,
+            locale        = type.locale,
+            currency      = type.currency,
+            distanceUnit  = type.distanceUnit,
+            groups        = type.groups?.let { StringList(it) },
+            termsAccepted = type.user.termsAccepted,
+            carrierId     = type.carrierId
         )
 }

@@ -7,14 +7,15 @@ import com.kg.gettransfer.remote.model.TransportTypePriceModel
 /**
  * Map a [TransportTypePriceModel] from a [TransportTypePriceEntity] instance when data is moving between this later and the Data layer.
  */
-open class TransportTypePriceMapper : EntityMapper<TransportTypePriceModel, TransportTypePriceEntity> {
-    override fun fromRemote(type: TransportTypePriceModel) =
+open class TransportTypePriceMapper : EntityMapper<Map.Entry<String, TransportTypePriceModel>, TransportTypePriceEntity> {
+
+    override fun fromRemote(type: Map.Entry<String, TransportTypePriceModel>): TransportTypePriceEntity =
         TransportTypePriceEntity(
-            type.transferId!!,
-            type.minFloat,
-            type.min,
-            type.max
+            transportTypeId = type.key,
+            minFloat = type.value.minFloat,
+            min = type.value.min,
+            bookNow = type.value.bookNow
         )
 
-    override fun toRemote(type: TransportTypePriceEntity): TransportTypePriceModel { throw UnsupportedOperationException() }
+    override fun toRemote(type: TransportTypePriceEntity): Map.Entry<String, TransportTypePriceModel> { throw UnsupportedOperationException() }
 }

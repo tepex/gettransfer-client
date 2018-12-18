@@ -5,22 +5,25 @@ import com.kg.gettransfer.data.model.RouteInfoEntity
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.TransportTypePrice
 
+import org.koin.standalone.get
+
 /**
  * Map a [RouteInfoEntity] to and from a [RouteInfo] instance when data is moving between this later and the Domain layer.
  */
 open class RouteInfoMapper : Mapper<RouteInfoEntity, RouteInfo> {
+    private val transportTypePriceMapper = get<TransportTypePriceMapper>()
     /**
      * Map a [AccountEntity] instance to a [Account] instance
      */
     override fun fromEntity(type: RouteInfoEntity) =
         RouteInfo(
-            type.success,
-            type.distance,
-            type.duration,
-            type.prices.map { TransportTypePrice(it.transferId, it.minFloat, it.min, it.max) },
-            type.watertaxi,
-            type.polyLines,
-            type.overviewPolyline
+            success          = type.success,
+            distance         = type.distance,
+            duration         = type.duration,
+            prices           = type.prices.map { transportTypePriceMapper.fromEntity(it) },
+            watertaxi        = type.watertaxi,
+            polyLines        = type.polyLines,
+            overviewPolyline = type.overviewPolyline
         )
 
     /**

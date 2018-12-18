@@ -122,18 +122,15 @@ class ApiCore : KoinComponent {
         preferences.accessToken = response.data!!.token
     }
 
-    internal fun remoteException(e: Exception): RemoteException {
-        return when(e) {
-            is HttpException -> {
-                val errorBody = e.response().errorBody()?.string()
-                val msg = try {
-                    gson.fromJson(errorBody, ResponseModel::class.java).error?.details?.toString()
-                } catch(je: JsonSyntaxException) {
-                    val matchResult = errorBody?.let { ERROR_PATTERN.find(it)?.let { it.groupValues } }
-                    log.warn("${e.message} matchResult: $matchResult", je)
-                    matchResult?.getOrNull(1)
-                }
-                RemoteException(e.code(), msg ?: e.message!!)
+    internal fun remoteException(e: Exception): RemoteException = when(e) {
+        is HttpException -> {
+            val errorBody = e.response().errorBody()?.string()
+            val msg = try {
+                gson.fromJson(errorBody, ResponseModel::class.java).error?.details?.toString()
+            } catch(je: JsonSyntaxException) {
+                val matchResult = errorBody?.let { ERROR_PATTERN.find(it)?.let { it.groupValues } }
+                log.warn("${e.message} matchResult: $matchResult", je)
+                matchResult?.getOrNull(1)
             }
             RemoteException(e.code(), msg ?: e.message!!)
         }

@@ -35,6 +35,6 @@ data class CurrencyModel(
 )
 
 data class CardGatewaysModel(
-    @SerializedName(CardGatewaysEntity.DEFAULT) @Expose val default: String,
+    @SerializedName(CardGatewaysEntity.DEFAULT) @Expose val def: String,
     @SerializedName(CardGatewaysEntity.ISO_COUNTRY_CODE) @Expose val countryCode: String?
 )

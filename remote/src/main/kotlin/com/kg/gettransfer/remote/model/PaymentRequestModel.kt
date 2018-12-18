@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 import com.kg.gettransfer.data.model.PaymentRequestEntity
 
-class PaymentRequestModel(
+data class PaymentRequestModel(
     @SerializedName(PaymentRequestEntity.TRANSFER_ID) @Expose val transferId: Long,
     @SerializedName(PaymentRequestEntity.OFFER_ID)    @Expose val offerId: Long?,
     @SerializedName(PaymentRequestEntity.GATEWAY_ID)  @Expose val gatewayId: String,

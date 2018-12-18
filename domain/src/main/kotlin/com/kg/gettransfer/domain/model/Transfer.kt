@@ -17,33 +17,44 @@ data class Transfer(
     val to: CityPoint?,
     val dateToLocal: Date,
     val dateReturnLocal: Date?,
-    val dateRefund: Date?,
+    val flightNumber: String?,
 /* ================================================== */
+    val flightNumberReturn: String?,
+    val transportTypeIds: List<String>,
+    val pax: Int,
+    val bookNow: String?,
+    val time: Int?,
     val nameSign: String?,
     val comment: String?,
-    val malinaCard: String?,
-    val flightNumber: String?,
-    val flightNumberReturn: String?,
-    val pax: Int,
     val childSeats: Int,
-    val promoCode: String?,
-    val offersCount: Int,
-    val relevantCarriersCount: Int,
-    /* offersUpdatedAt */
+    val childSeatsInfant: Int,
+    val childSeatsConvertible: Int,
 /* ================================================== */
-    val time: Int?,
+    val childSeatsBooster: Int,
+    val promoCode: String?,
+    val passengerOfferedPrice: String?,
+    val price: Money?,
     val paidSum: Money?,
     val remainsToPay: Money?,
     val paidPercentage: Int,
-    val pendingPaymentId: Int?,
-    val bookNow: Boolean,
-    val bookNowExpiration: String?,
-    val transportTypeIds: List<String>,
-    val passengerOfferedPrice: String?,
-    val price: Money?,
+    val watertaxi: Boolean,
+    val bookNowOffers: List<BookNowOffer>,
+    val offersCount: Int,
 /* ================================================== */
-    val paymentPercentages: List<Int>,
-    val editableFields: List<String> /* not used */
+    val relevantCarriersCount: Int,
+    /* offersUpdatedAt */
+    val dateRefund: Date?,
+    val paypalOnly: Boolean?,
+    val carrierMainPhone: String?,
+    val pendingPaymentId: Int?,
+    val analyticsSent: Boolean,
+    val rubPrice: Double?,
+    val refundedPrice: Money?,
+    val campaign: String?,
+/* ================================================== */
+    val editableFields: List<String>, /* not used */
+    val airlineCard: String?,
+    val paymentPercentages: List<Int>
 ) : Entity() {
 
     fun checkStatusCategory(): String {

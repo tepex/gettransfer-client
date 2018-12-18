@@ -10,7 +10,7 @@ class TransferNewWrapperModel(@SerializedName(TransferNewEntity.ENTITY_NAME) @Ex
 
 open class TransferNewBase(
     @SerializedName(TransferNewEntity.FROM) @Expose val from: CityPointModel,
-    @SerializedName(TransferNewEntity.TO) @Expose var to: CityPointModel? = null,
+    @SerializedName(TransferNewEntity.TO) @Expose val to: CityPointModel? = null,
     @SerializedName(TransferNewEntity.TRIP_TO) @Expose val tripTo: TripModel,
     @SerializedName(TransferNewEntity.TRANSPORT_TYPE_IDS) @Expose val transportTypeIds: List<String>,
     @SerializedName(TransferNewEntity.PAX) @Expose val pax: Int,
@@ -36,7 +36,7 @@ class TransferPointToPointNewModel(
     promoCode: String?,
 /* Not used now
     @SerializedName("paypal_only") @Expose val paypalOnly: Boolean */
-    @SerializedName(TransferNewEntity.TRIP_RETURN) @Expose var tripReturn: TripModel? = null
+    @SerializedName(TransferNewEntity.TRIP_RETURN) @Expose val tripReturn: TripModel? = null
 ) : TransferNewBase(from, to, tripTo, transportTypeIds, pax, childSeats, passengerOfferedPrice, nameSign, comment, user, promoCode)
 
 class TransferHourlyNewModel(
@@ -50,7 +50,7 @@ class TransferHourlyNewModel(
     comment: String?,
     user: UserModel,
     promoCode: String?,
-    @SerializedName(TransferNewEntity.DURATION) @Expose var duration: Int
+    @SerializedName(TransferNewEntity.DURATION) @Expose val duration: Int
 ) : TransferNewBase(from, null, tripTo, transportTypeIds, pax, childSeats, passengerOfferedPrice, nameSign, comment, user, promoCode)
 
 data class TripModel(

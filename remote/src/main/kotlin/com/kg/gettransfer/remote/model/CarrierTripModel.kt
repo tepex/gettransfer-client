@@ -6,24 +6,27 @@ import com.google.gson.annotations.SerializedName
 import com.kg.gettransfer.data.model.CarrierTripEntity
 import com.kg.gettransfer.data.model.PassengerAccountEntity
 
-class CarrierTripModelWrapper(@SerializedName(CarrierTripEntity.ENTITY_NAME) @Expose val trip: CarrierTripModel)
+data class CarrierTripModelWrapper(@SerializedName(CarrierTripEntity.ENTITY_NAME) @Expose val trip: CarrierTripModel)
 
-class CarrierTripsModel(@SerializedName("trips") @Expose val trips: List<CarrierTripModel>)
+data class CarrierTripsModel(@SerializedName("trips") @Expose val trips: List<CarrierTripModel>)
 
 class CarrierTripModel(
-    @SerializedName(CarrierTripEntity.ID) @Expose val id: Long,
-    @SerializedName(CarrierTripEntity.TRANSFER_ID) @Expose val transferId: Long,
-    @SerializedName(CarrierTripEntity.FROM) @Expose val from: CityPointModel,
-    @SerializedName(CarrierTripEntity.TO) @Expose val to: CityPointModel,
-    @SerializedName(CarrierTripEntity.DATE_LOCAL) @Expose val dateLocal: String,
-    @SerializedName(CarrierTripEntity.DURATION) @Expose val duration: Int?,
-    @SerializedName(CarrierTripEntity.DISTANCE) @Expose val distance: Int,
-    @SerializedName(CarrierTripEntity.TIME) @Expose val time: Int,
-    @SerializedName(CarrierTripEntity.CHILD_SEATS) @Expose val childSeats: Int,
-    @SerializedName(CarrierTripEntity.COMMENT) @Expose val comment: String?,
-    @SerializedName(CarrierTripEntity.WATER_TAXI) @Expose val waterTaxi: Boolean,
-    @SerializedName(CarrierTripEntity.PRICE) @Expose val price: String,
-    @SerializedName(CarrierTripEntity.VEHICLE) @Expose val vehicle: VehicleInfoModel,
+    id: Long,
+    transferId: Long,
+    from: CityPointModel,
+    to: CityPointModel,
+    dateLocal: String,
+    duration: Int?,
+    distance: Int,
+    time: Int,
+    childSeats: Int,
+    childSeatsInfant: Int,
+    childSeatsConvertible: Int,
+    childSeatsBooster: Int,
+    comment: String?,
+    waterTaxi: Boolean,
+    price: String,
+    vehicle: VehicleInfoModel,
     @SerializedName(CarrierTripEntity.PAX) @Expose val pax: Int?,
     @SerializedName(CarrierTripEntity.NAME_SIGN) @Expose val nameSign: String?,
     @SerializedName(CarrierTripEntity.FLIGHT_NUMBER) @Expose val flightNumber: String?,
@@ -31,11 +34,29 @@ class CarrierTripModel(
     @SerializedName(CarrierTripEntity.REMAINS_TO_PAY) @Expose val remainToPay: String?,
     @SerializedName(CarrierTripEntity.PAID_PERCENTAGE) @Expose val paidPercentage: Int?,
     @SerializedName(CarrierTripEntity.PASSENGER_ACCOUNT) @Expose val passengerAccount: PassengerAccountModel?
+) : CarrierTripBaseModel(
+    id,
+    transferId,
+    from,
+    to,
+    dateLocal,
+    duration,
+    distance,
+    time,
+    childSeats,
+    childSeatsInfant,
+    childSeatsConvertible,
+    childSeatsBooster,
+    comment,
+    waterTaxi,
+    price,
+    vehicle
 )
 
 class PassengerAccountModel(
     fullName: String,
     email: String,
     phone: String,
+    @SerializedName(PassengerAccountEntity.ID) @Expose val id: Long,
     @SerializedName(PassengerAccountEntity.LAST_SEEN) @Expose val lastSeen: String
 ) : ProfileModel(fullName, email, phone)

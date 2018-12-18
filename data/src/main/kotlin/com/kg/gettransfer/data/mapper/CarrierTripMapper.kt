@@ -14,36 +14,39 @@ import org.koin.standalone.get
  * this later and the Domain layer.
  */
 open class CarrierTripMapper : Mapper<CarrierTripEntity, CarrierTrip> {
-    private val cityPointMapper = get<CityPointMapper>()
-    private val vehicleBaseMapper = get<VehicleBaseMapper>()
+    private val cityPointMapper        = get<CityPointMapper>()
+    private val vehicleInfoMapper      = get<VehicleInfoMapper>()
     private val passengerAccountMapper = get<PassengerAccountMapper>()
-    private val dateFormat = get<ThreadLocal<DateFormat>>("iso_date")
+    private val dateFormat             = get<ThreadLocal<DateFormat>>("iso_date")
 
     /**
      * Map a [CarrierTripEntity] instance to a [CarrierTrip] instance.
      */
     override fun fromEntity(type: CarrierTripEntity) =
         CarrierTrip(
-            type.id,
-            type.transferId,
-            cityPointMapper.fromEntity(type.from),
-            cityPointMapper.fromEntity(type.to),
-            dateFormat.get().parse(type.dateLocal),
-            type.duration,
-            type.distance,
-            type.time,
-            type.childSeats,
-            type.comment,
-            type.waterTaxi,
-            type.price,
-            vehicleBaseMapper.fromEntity(type.vehicleBase),
-            type.pax,
-            type.nameSign,
-            type.flightNumber,
-            type.paidSum,
-            type.remainToPay,
-            type.paidPercentage,
-            type.passengerAccount?.let { passengerAccountMapper.fromEntity(it) }
+            id                    = type.id,
+            transferId            = type.transferId,
+            from                  = cityPointMapper.fromEntity(type.from),
+            to                    = type.to?.let { cityPointMapper.fromEntity(it) },
+            dateLocal             = dateFormat.get().parse(type.dateLocal),
+            duration              = type.duration,
+            distance              = type.distance,
+            time                  = type.time,
+            childSeats            = type.childSeats,
+            childSeatsInfant      = type.childSeatsInfant,
+            childSeatsConvertible = type.childSeatsConvertible,
+            childSeatsBooster     = type.childSeatsBooster,
+            comment               = type.comment,
+            waterTaxi             = type.waterTaxi,
+            price                 = type.price,
+            vehicle               = vehicleInfoMapper.fromEntity(type.vehicle),
+            pax                   = type.pax,
+            nameSign              = type.nameSign,
+            flightNumber          = type.flightNumber,
+            paidSum               = type.paidSum,
+            remainToPay           = type.remainToPay,
+            paidPercentage        = type.paidPercentage,
+            passengerAccount      = type.passengerAccount?.let { passengerAccountMapper.fromEntity(it) }
         )
 
     /**

@@ -17,4 +17,7 @@ data class TransferNew(
     val paypalOnly: Boolean
 )
 
-data class Trip(val dateTime: Date, val flightNumber: String?)
+data class Trip(
+    val dateTime: Date,
+    val flightNumber: String?
+)

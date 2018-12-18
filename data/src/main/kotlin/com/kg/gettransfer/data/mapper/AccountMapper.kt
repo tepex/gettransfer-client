@@ -24,12 +24,12 @@ open class AccountMapper : Mapper<AccountEntity, Account> {
      */
     override fun fromEntity(type: AccountEntity) =
         Account(
-            userMapper.fromEntity(type.user),
-            configs.availableLocales.find { it.language == type.locale } ?: Locale.getDefault(),
-            configs.supportedCurrencies.find { it.currencyCode == type.currency } ?: Currency.getInstance("USD"),
-            type.distanceUnit?.let { DistanceUnit.valueOf(it) } ?: DistanceUnit.km,
-            type.groups ?: emptyList<String>(),
-            type.carrierId
+            user = userMapper.fromEntity(type.user),
+            locale = configs.availableLocales.find { it.language == type.locale } ?: Locale.getDefault(),
+            currency = configs.supportedCurrencies.find { it.currencyCode == type.currency } ?: Currency.getInstance("USD"),
+            distanceUnit = type.distanceUnit?.let { DistanceUnit.valueOf(it) } ?: DistanceUnit.km,
+            groups = type.groups ?: emptyList<String>(),
+            carrierId = type.carrierId
         )
 
     /**
@@ -37,11 +37,11 @@ open class AccountMapper : Mapper<AccountEntity, Account> {
      */
     override fun toEntity(type: Account) =
         AccountEntity(
-            userMapper.toEntity(type.user),
-            type.locale.language,
-            type.currency.currencyCode,
-            type.distanceUnit.name,
-            type.groups,
-            type.carrierId
+            user = userMapper.toEntity(type.user),
+            locale = type.locale.language,
+            currency = type.currency.currencyCode,
+            distanceUnit = type.distanceUnit.name,
+            groups = type.groups,
+            carrierId = type.carrierId
         )
 }

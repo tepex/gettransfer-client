@@ -6,10 +6,10 @@ import com.google.gson.annotations.SerializedName
 import com.kg.gettransfer.data.model.TransportTypeEntity
 import com.kg.gettransfer.data.model.VehicleEntity
 
-class VehicleModel(
-    name: String,
-    regNumber: String,
+data class VehicleModel(
     @SerializedName(VehicleEntity.ID) @Expose val id: Long,
+    @SerializedName(VehicleEntity.NAME) @Expose val name: String,
+    @SerializedName(VehicleEntity.REGISTRATION_NUMBER) @Expose val registrationNumber: String,
     @SerializedName(VehicleEntity.YEAR) @Expose val year: Int,
     @SerializedName(VehicleEntity.COLOR) @Expose val color: String?,
 
@@ -18,4 +18,4 @@ class VehicleModel(
     @SerializedName(TransportTypeEntity.LUGGAGE_MAX) @Expose val luggageMax: Int,
 
     @SerializedName(VehicleEntity.PHOTOS) @Expose var photos: List<String>
-) : VehicleBaseModel(name, regNumber)
+)

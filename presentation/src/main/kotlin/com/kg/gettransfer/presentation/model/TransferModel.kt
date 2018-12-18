@@ -7,7 +7,7 @@ import com.kg.gettransfer.domain.model.Transfer.Status
 import java.util.Date
 import java.util.Locale
 
-class TransferModel(
+data class TransferModel(
     val id: Long,
     val createdAt: Date,
     val duration: Int?,

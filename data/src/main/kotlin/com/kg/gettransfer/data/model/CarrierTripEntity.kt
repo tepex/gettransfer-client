@@ -1,19 +1,24 @@
 package com.kg.gettransfer.data.model
 
+
+
 data class CarrierTripEntity(
-    val id: Long,
-    val transferId: Long,
-    val from: CityPointEntity,
-    var to: CityPointEntity,
-    val dateLocal: String,
-    val duration: Int?,
-    val distance: Int,
-    val time: Int,
-    val childSeats: Int,
-    val comment: String?,
-    var waterTaxi: Boolean,
-    val price: String, /* formatted, i.e "$10.00" */
-    val vehicleBase: VehicleBaseEntity,
+    override val id: Long,
+    override val transferId: Long,
+    override val from: CityPointEntity,
+    override val to: CityPointEntity?,
+    override val dateLocal: String,
+    override val duration: Int?,
+    override val distance: Int?,
+    override val time: Int?,
+    override val childSeats: Int,
+    override val childSeatsInfant: Int,
+    override val childSeatsConvertible: Int,
+    override val childSeatsBooster: Int,
+    override val comment: String?,
+    override val waterTaxi: Boolean,
+    override val price: String,
+    override val vehicle: VehicleInfoEntity,
     val pax: Int?, /* passengers count */
     val nameSign: String?,
     val flightNumber: String?,
@@ -21,22 +26,26 @@ data class CarrierTripEntity(
     val remainToPay: String?, /* formatted */
     val paidPercentage: Int?,
     val passengerAccount: PassengerAccountEntity?
+) : CarrierTripBaseEntity(
+    id,
+    transferId,
+    from,
+    to,
+    dateLocal,
+    duration,
+    distance,
+    time,
+    childSeats,
+    childSeatsInfant,
+    childSeatsConvertible,
+    childSeatsBooster,
+    comment,
+    waterTaxi,
+    price,
+    vehicle
 ) {
+
     companion object {
-        const val ENTITY_NAME       = "trip"
-        const val ID                = "id"
-        const val TRANSFER_ID       = "transfer_id"
-        const val FROM              = "from"
-        const val TO                = "to"
-        const val DATE_LOCAL        = "local"
-        const val DURATION          = "duration"
-        const val DISTANCE          = "distance"
-        const val TIME              = "time"
-        const val CHILD_SEATS       = "child_seats"
-        const val COMMENT           = "comment"
-        const val WATER_TAXI        = "water_taxi"
-        const val PRICE             = "price"
-        const val VEHICLE           = "vehicle"
         const val PAX               = "pax"
         const val NAME_SIGN         = "name_sign"
         const val FLIGHT_NUMBER     = "flight_number"
@@ -47,8 +56,14 @@ data class CarrierTripEntity(
     }
 }
 
-data class PassengerAccountEntity(val profile: ProfileEntity, var lastSeen: String) {
+data class PassengerAccountEntity(
+    val id: Long,
+    val profile: ProfileEntity,
+    var lastSeen: String
+) {
+
     companion object {
+        const val ID        = "id"
         const val LAST_SEEN = "last_seen"
     }
 }

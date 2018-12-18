@@ -16,8 +16,16 @@ open class PassengerAccountMapper : Mapper<PassengerAccountEntity, PassengerAcco
     private val dateFormat    = get<ThreadLocal<DateFormat>>("iso_date")
 
     override fun fromEntity(type: PassengerAccountEntity) =
-        PassengerAccount(profileMapper.fromEntity(type.profile), dateFormat.get().parse(type.lastSeen))
+        PassengerAccount(
+            id = type.id,
+            profile = profileMapper.fromEntity(type.profile),
+            lastSeen = dateFormat.get().parse(type.lastSeen)
+        )
 
     override fun toEntity(type: PassengerAccount) =
-        PassengerAccountEntity(profileMapper.toEntity(type.profile), dateFormat.get().format(type.lastSeen))
+        PassengerAccountEntity(
+            id = type.id,
+            profile = profileMapper.toEntity(type.profile),
+            lastSeen = dateFormat.get().format(type.lastSeen)
+        )
 }

@@ -13,11 +13,11 @@ data class AccountEntity(
 ) {
 
     companion object {
-        const val ENTITY_NAME    = "account"
-        const val LOCALE         = "locale"
-        const val CURRENCY       = "currency"
-        const val DISTANCE_UNIT  = "distance_unit"
-        const val GROUPS         = "groups"
-        const val CARRIER_ID     = "carrier_id"
+        const val ENTITY_NAME   = "account"
+        const val LOCALE        = "locale"
+        const val CURRENCY      = "currency"
+        const val DISTANCE_UNIT = "distance_unit"
+        const val GROUPS        = "groups"
+        const val CARRIER_ID    = "carrier_id"
     }
 }

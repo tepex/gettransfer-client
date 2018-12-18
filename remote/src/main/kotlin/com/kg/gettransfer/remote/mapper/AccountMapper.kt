@@ -12,24 +12,31 @@ import com.kg.gettransfer.remote.model.AccountModel
 open class AccountMapper : EntityMapper<AccountModel, AccountEntity> {
     override fun fromRemote(type: AccountModel) =
         AccountEntity(
-            UserEntity(ProfileEntity(type.fullName, type.email, type.phone), type.termsAccepted),
-            type.locale,
-            type.currency,
-            type.distanceUnit,
-            type.groups,
-            type.carrierId
+            user = UserEntity(
+                profile = ProfileEntity(
+                    fullName = type.fullName,
+                    email = type.email,
+                    phone = type.phone
+                ),
+                termsAccepted = type.termsAccepted
+            ),
+            locale       = type.locale,
+            currency     = type.currency,
+            distanceUnit = type.distanceUnit,
+            groups       = type.groups,
+            carrierId    = type.carrierId
         )
 
     override fun toRemote(type: AccountEntity) =
         AccountModel(
-            type.user.profile.fullName,
-            type.user.profile.email,
-            type.user.profile.phone,
-            type.locale,
-            type.currency,
-            type.distanceUnit,
-            type.groups,
-            type.user.termsAccepted,
-            type.carrierId
+            fullName      = type.user.profile.fullName,
+            email         = type.user.profile.email,
+            phone         = type.user.profile.phone,
+            locale        = type.locale,
+            currency      = type.currency,
+            distanceUnit  = type.distanceUnit,
+            groups        = type.groups,
+            termsAccepted = type.user.termsAccepted,
+            carrierId     = type.carrierId
         )
 }

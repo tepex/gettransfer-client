@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.model
 
-class CarrierTripModel(
+data class CarrierTripModel(
     val tripId: Long,
     val transferId: Long,
     val from: String,
@@ -10,7 +10,7 @@ class CarrierTripModel(
     val countChild: Int,
     val comment: String?,
     val pay: String?,
-    val vehicleName: String,
+    val vehicle: VehicleInfoModel,
     val countPassengers: Int?,
     val nameSign: String?,
     val flightNumber: String?,

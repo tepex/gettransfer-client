@@ -9,12 +9,11 @@ import org.koin.standalone.KoinComponent
  * @param <E> the entity type
  * @param <M> the model type
  */
-interface Mapper<E, M>: KoinComponent {
+interface Mapper<E, M> : KoinComponent {
     companion object {
-        @JvmField
-        val ISO_FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss"
+        const val ISO_FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss"
     }
-    
+
     fun fromEntity(type: E): M
     fun toEntity(type: M): E
 }

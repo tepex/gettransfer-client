@@ -11,8 +11,13 @@ import com.kg.gettransfer.remote.model.PassengerAccountModel
 open class PassengerAccountMapper : EntityMapper<PassengerAccountModel, PassengerAccountEntity> {
     override fun fromRemote(type: PassengerAccountModel) =
         PassengerAccountEntity(
-            ProfileEntity(type.fullName, type.email, type.phone),
-            type.lastSeen
+            profile = ProfileEntity(
+                fullName = type.fullName,
+                email = type.email,
+                phone = type.phone
+            ),
+            id = type.id,
+            lastSeen = type.lastSeen
         )
 
     override fun toRemote(type: PassengerAccountEntity): PassengerAccountModel { throw UnsupportedOperationException() }

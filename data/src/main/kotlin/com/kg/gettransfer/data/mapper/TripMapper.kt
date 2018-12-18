@@ -14,6 +14,7 @@ import org.koin.standalone.get
 open class TripMapper : Mapper<TripEntity, Trip> {
     private val serverDateFormat = get<ThreadLocal<DateFormat>>("server_date")
     private val serverTimeFormat = get<ThreadLocal<DateFormat>>("server_time")
+
     /**
      * Map a [TripEntity] instance to a [Trip] instance.
      */
@@ -24,8 +25,8 @@ open class TripMapper : Mapper<TripEntity, Trip> {
      */
     override fun toEntity(type: Trip) =
         TripEntity(
-            serverDateFormat.get().format(type.dateTime),
-            serverTimeFormat.get().format(type.dateTime),
-            type.flightNumber
+            date = serverDateFormat.get().format(type.dateTime),
+            time = serverTimeFormat.get().format(type.dateTime),
+            flight = type.flightNumber
         )
 }

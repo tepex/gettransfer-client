@@ -11,11 +11,11 @@ import org.koin.standalone.get
  * Map a [ConfigsEntity] to and from a [Configs] instance when data is moving between this later and the Domain layer.
  */
 open class ConfigsMapper : Mapper<ConfigsEntity, Configs> {
-    private val transportTypeMapper = get<TransportTypeMapper>()
+    private val transportTypeMapper     = get<TransportTypeMapper>()
     private val paypalCredentialsMapper = get<PaypalCredentialsMapper>()
-    private val localeMapper = get<LocaleMapper>()
-    private val currencyMapper = get<CurrencyMapper>()
-    private val cardGatewaysMapper = get<CardGatewaysMapper>()
+    private val localeMapper            = get<LocaleMapper>()
+    private val currencyMapper          = get<CurrencyMapper>()
+    private val cardGatewaysMapper      = get<CardGatewaysMapper>()
 
     /**
      * Map a [ConfigsEntity] instance to a [Configs] instance
@@ -23,15 +23,15 @@ open class ConfigsMapper : Mapper<ConfigsEntity, Configs> {
     override fun fromEntity(type: ConfigsEntity): Configs {
         val locales = type.availableLocales.map { localeMapper.fromEntity(it) }
         return Configs(
-            type.transportTypes.map { transportTypeMapper.fromEntity(it) },
-            paypalCredentialsMapper.fromEntity(type.paypalCredentials),
-            locales,
-            locales.find { it.language == type.preferredLocale }!!,
-            type.supportedCurrencies.map { currencyMapper.fromEntity(it) },
-            type.supportedDistanceUnits.map { DistanceUnit.valueOf(it) },
-            cardGatewaysMapper.fromEntity(type.cardGateways),
-            type.officePhone,
-            type.baseUrl
+            transportTypes = type.transportTypes.map { transportTypeMapper.fromEntity(it) },
+            paypalCredentials = paypalCredentialsMapper.fromEntity(type.paypalCredentials),
+            availableLocales = locales,
+            preferredLocale = locales.find { it.language == type.preferredLocale }!!,
+            supportedCurrencies = type.supportedCurrencies.map { currencyMapper.fromEntity(it) },
+            supportedDistanceUnits = type.supportedDistanceUnits.map { DistanceUnit.valueOf(it) },
+            cardGateways = cardGatewaysMapper.fromEntity(type.cardGateways),
+            officePhone = type.officePhone,
+            baseUrl = type.baseUrl
         )
     }
 

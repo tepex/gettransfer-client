@@ -25,7 +25,7 @@ open class TransportTypeMapper : Mapper<TransportTypeModel, TransportType> {
         )
     }
 
-    override fun fromView(type: TransportTypeModel) : TransportType { throw UnsupportedOperationException() }
+    override fun fromView(type: TransportTypeModel): TransportType { throw UnsupportedOperationException() }
 
     companion object {
         @StringRes

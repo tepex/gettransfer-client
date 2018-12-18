@@ -12,31 +12,35 @@ import org.koin.standalone.get
  */
 open class CarrierTripMapper : EntityMapper<CarrierTripModel, CarrierTripEntity> {
     private val cityPointMapper        = get<CityPointMapper>()
-    private val vehicleBaseMapper      = get<VehicleBaseMapper>()
+    private val vehicleInfoMapper      = get<VehicleInfoMapper>()
     private val passengerAccountMapper = get<PassengerAccountMapper>()
 
     override fun fromRemote(type: CarrierTripModel) =
         CarrierTripEntity(
-            type.id,
-            type.transferId,
-            cityPointMapper.fromRemote(type.from),
-            cityPointMapper.fromRemote(type.to),
-            type.dateLocal,
-            type.duration,
-            type.distance,
-            type.time,
-            type.childSeats,
-            type.comment,
-            type.waterTaxi,
-            type.price,
-            vehicleBaseMapper.fromRemote(type.vehicle),
-            type.pax,
-            type.nameSign,
-            type.flightNumber,
-            type.paidSum,
-            type.remainToPay,
-            type.paidPercentage,
-            type.passengerAccount?.let { passengerAccountMapper.fromRemote(it) })
+            id                    = type.id,
+            transferId            = type.transferId,
+            from                  = cityPointMapper.fromRemote(type.from),
+            to                    = type.to?.let { cityPointMapper.fromRemote(it) },
+            dateLocal             = type.dateLocal,
+            duration              = type.duration,
+            distance              = type.distance,
+            time                  = type.time,
+            childSeats            = type.childSeats,
+            childSeatsInfant      = type.childSeatsInfant,
+            childSeatsConvertible = type.childSeatsConvertible,
+            childSeatsBooster     = type.childSeatsBooster,
+            comment               = type.comment,
+            waterTaxi             = type.waterTaxi,
+            price                 = type.price,
+            vehicle               = vehicleInfoMapper.fromRemote(type.vehicle),
+            pax                   = type.pax,
+            nameSign              = type.nameSign,
+            flightNumber          = type.flightNumber,
+            paidSum               = type.paidSum,
+            remainToPay           = type.remainToPay,
+            paidPercentage        = type.paidPercentage,
+            passengerAccount      = type.passengerAccount?.let { passengerAccountMapper.fromRemote(it) }
+        )
 
     override fun toRemote(type: CarrierTripEntity): CarrierTripModel { throw UnsupportedOperationException() }
 }
