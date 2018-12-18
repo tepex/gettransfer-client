@@ -128,17 +128,18 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
             if (result.error != null) viewState.setError(result.error!!)
             else {
-                duration = result.model.duration
+                val route = result.model
+                duration = route.duration
 
-                transportTypeMapper.prices = result.model.prices.map { p ->
-                    p.tranferId to TransportPriceModel(p.min, p.max, p.minFloat)
+                transportTypeMapper.prices = route.prices.map { p ->
+                    p.tranferId to TransportPriceModel(p.min, p.minFloat)
                 }.toMap()
                 if (transportTypes == null)
                     transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
                 viewState.setTransportTypes(transportTypes!!)
                 routeModel = routeMapper.getView(
-                    result.model.distance,
-                    result.model.polyLines,
+                    route.distance,
+                    route.polyLines,
                     from.name!!,
                     to.name!!,
                     from.point!!,
