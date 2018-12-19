@@ -52,6 +52,7 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
             WebPageView.SCREEN_LICENSE     -> initActivity(R.string.LNG_RIDE_OFFERT_TITLE, R.string.licence_agreement_url)
             WebPageView.SCREEN_REG_CARRIER -> initActivity(R.string.LNG_RIDE_CREATE_CARRIER, R.string.registration_carrier_url)
             WebPageView.SCREEN_CARRIER     -> initActivity(R.string.LNG_RIDE_CREATE_CARRIER, R.string.carrier_mode)
+            WebPageView.SCREEN_RESTORE_PASS     -> initActivity(R.string.LNG_LOGIN_RECOVERY_PASSWORD, R.string.api_restore_password)
         }
     }
 

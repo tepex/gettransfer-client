@@ -48,7 +48,7 @@ class LoginActivity : BaseActivity(), LoginView {
         homeButton.setOnClickListener { presenter.onHomeClick() }
 
         etEmail.setText(presenter.email)
-        btnForgotPassword.markAsNotImplemented()
+        btnForgotPassword.setOnClickListener { presenter.onPassForgot() }
     }
 
     override fun enableBtnLogin(enable: Boolean) {

@@ -14,6 +14,7 @@ interface WebPageView: MvpView {
         const val SCREEN_LICENSE     = "license_agreement"
         const val SCREEN_REG_CARRIER = "registration_carrier"
         const val SCREEN_CARRIER     = "carrier_mode"
+        const val SCREEN_RESTORE_PASS     = "restore_password"
     }
 
     fun initActivity(@StringRes title: Int, @StringRes url: Int)

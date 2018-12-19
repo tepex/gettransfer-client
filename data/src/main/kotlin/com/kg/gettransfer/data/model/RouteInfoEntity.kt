@@ -10,5 +10,4 @@ data class RouteInfoEntity(val success: Boolean,
 
 data class TransportTypePriceEntity(val transferId: String,
                                     val minFloat: Float,
-                                    val min: String,
-                                    val max: String)
+                                    val min: String)
