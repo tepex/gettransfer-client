@@ -5,6 +5,7 @@ import com.google.gson.JsonSyntaxException
 
 import com.kg.gettransfer.data.model.AccountEntity
 
+import com.kg.gettransfer.remote.mapper.*
 import com.kg.gettransfer.remote.model.*
 
 import java.io.BufferedReader
@@ -15,9 +16,11 @@ import java.io.Reader
 
 import org.junit.After
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Test
 
 import org.koin.dsl.module.module
+import org.koin.standalone.StandAloneContext.startKoin
 import org.koin.standalone.StandAloneContext.stopKoin
 import org.koin.test.KoinTest
 import org.koin.test.checkModules
@@ -34,6 +37,10 @@ class DryRunTest : KoinTest {
         single { mock(Context::class.java) }
     }
     */
+    @Before
+    fun before() {
+        startKoin(listOf(remoteMappersModule))
+    }
 
     @After
     fun after() {
@@ -42,8 +49,7 @@ class DryRunTest : KoinTest {
 
     @Test
     fun `check Koin configuration`() {
-        assertEquals(12, 3*4)
-        //checkModules(listOf(mockedAndroidContext) + androidModule + mappersModule + mockedDomainModule)
+        checkModules(listOf(remoteMappersModule))
     }
 
     @Test
@@ -86,7 +92,7 @@ class DryRunTest : KoinTest {
             ),
             VehicleModel(
                 name = "v name",
-                regNumber = "edfsd",
+                registrationNumber = "edfsd",
                 id = 3,
                 year = 2000,
                 color = null,

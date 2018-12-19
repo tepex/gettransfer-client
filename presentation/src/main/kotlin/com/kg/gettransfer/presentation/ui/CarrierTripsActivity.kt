@@ -27,7 +27,7 @@ import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.presentation.adapter.TripsRVAdapter
 
-import com.kg.gettransfer.presentation.model.CarrierTripModel
+import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 import com.kg.gettransfer.presentation.model.ProfileModel
 
 import com.kg.gettransfer.presentation.presenter.CarrierTripsPresenter
@@ -117,7 +117,7 @@ class CarrierTripsActivity : BaseActivity(), CarrierTripsView {
         navPassengerMode.setOnClickListener(itemsNavigationViewListener)
     }
 
-    override fun setTrips(trips: List<CarrierTripModel>) {
+    override fun setTrips(trips: List<CarrierTripBaseModel>) {
         rvTrips.adapter = TripsRVAdapter(presenter, trips)
     }
 

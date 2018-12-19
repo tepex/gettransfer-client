@@ -18,7 +18,7 @@ open class RouteInfoMapper : EntityMapper<RouteInfoModel, RouteInfoEntity> {
             success = type.success,
             distance = type.distance,
             duration = type.duration,
-            prices = type.prices?.map { transportTypePriceMapper.fromRemote(it) } ?: emptyList<TransportTypePriceEntity>(),
+            prices = type.prices?.mapValues { transportTypePriceMapper.fromRemote(it) } ?: emptyMap<String, TransportTypePriceEntity>(),
             watertaxi = type.watertaxi,
             polyLines = type.routes?.first()?.legs?.first()?.steps?.map { it.polyline.points } ?: emptyList<String>(),
             overviewPolyline = type.routes?.first()?.overviewPolyline?.points

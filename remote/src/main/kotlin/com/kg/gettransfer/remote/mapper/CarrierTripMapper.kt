@@ -37,9 +37,9 @@ open class CarrierTripMapper : EntityMapper<CarrierTripModel, CarrierTripEntity>
             nameSign              = type.nameSign,
             flightNumber          = type.flightNumber,
             paidSum               = type.paidSum,
-            remainToPay           = type.remainToPay,
+            remainsToPay          = type.remainsToPay,
             paidPercentage        = type.paidPercentage,
-            passengerAccount      = type.passengerAccount?.let { passengerAccountMapper.fromRemote(it) }
+            passengerAccount      = passengerAccountMapper.fromRemote(type.passengerAccount)
         )
 
     override fun toRemote(type: CarrierTripEntity): CarrierTripModel { throw UnsupportedOperationException() }

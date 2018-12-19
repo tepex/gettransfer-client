@@ -8,8 +8,6 @@ import com.kg.gettransfer.data.model.PassengerAccountEntity
 
 data class CarrierTripModelWrapper(@SerializedName(CarrierTripEntity.ENTITY_NAME) @Expose val trip: CarrierTripModel)
 
-data class CarrierTripsModel(@SerializedName("trips") @Expose val trips: List<CarrierTripModel>)
-
 class CarrierTripModel(
     id: Long,
     transferId: Long,
@@ -27,13 +25,13 @@ class CarrierTripModel(
     waterTaxi: Boolean,
     price: String,
     vehicle: VehicleInfoModel,
-    @SerializedName(CarrierTripEntity.PAX) @Expose val pax: Int?,
+    @SerializedName(CarrierTripEntity.PAX) @Expose val pax: Int,
     @SerializedName(CarrierTripEntity.NAME_SIGN) @Expose val nameSign: String?,
     @SerializedName(CarrierTripEntity.FLIGHT_NUMBER) @Expose val flightNumber: String?,
-    @SerializedName(CarrierTripEntity.PAID_SUM) @Expose val paidSum: String?,
-    @SerializedName(CarrierTripEntity.REMAINS_TO_PAY) @Expose val remainToPay: String?,
-    @SerializedName(CarrierTripEntity.PAID_PERCENTAGE) @Expose val paidPercentage: Int?,
-    @SerializedName(CarrierTripEntity.PASSENGER_ACCOUNT) @Expose val passengerAccount: PassengerAccountModel?
+    @SerializedName(CarrierTripEntity.PAID_SUM) @Expose val paidSum: String,
+    @SerializedName(CarrierTripEntity.REMAINS_TO_PAY) @Expose val remainsToPay: String,
+    @SerializedName(CarrierTripEntity.PAID_PERCENTAGE) @Expose val paidPercentage: Int,
+    @SerializedName(CarrierTripEntity.PASSENGER_ACCOUNT) @Expose val passengerAccount: PassengerAccountModel
 ) : CarrierTripBaseModel(
     id,
     transferId,

@@ -14,6 +14,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.GoogleMap
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.isGone
 
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.PolylineModel
@@ -46,8 +47,8 @@ class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsVie
 
         setToolbar(toolbar as Toolbar, R.string.activity_carrier_transfer_details_title)
 
-        layoutTransferInfo.chevron.visibility = View.GONE
-        layoutTransferInfo.divider.visibility = View.GONE
+        layoutTransferInfo.chevron.isGone = true
+        layoutTransferInfo.divider.isGone = true
 
         btnCall.setOnClickListener { presenter.onCallClick() }
     }
@@ -83,18 +84,18 @@ class CarrierTripDetailsActivity: BaseGoogleMapActivity(), CarrierTripDetailsVie
     }
 
     override fun setTripInfo(trip: CarrierTripModel) {
-        layoutTransferInfo.tvTransferRequestNumber.text = getString(R.string.LNG_RIDE_NUMBER).plus(trip.transferId)
-        layoutTransferInfo.tvFrom.text = trip.from
-        layoutTransferInfo.tvTo.text = trip.to
+        layoutTransferInfo.tvTransferRequestNumber.text = getString(R.string.LNG_RIDE_NUMBER).plus(trip.base.transferId)
+        layoutTransferInfo.tvFrom.text = trip.base.from
+        layoutTransferInfo.tvTo.text = trip.base.to
         //layoutTransferInfo.tvOrderDateTime.text = getString(R.string.transfer_date_local, trip.dateTime)
-        layoutTransferInfo.tvOrderDateTime.text = trip.dateTime
-        layoutTransferInfo.tvDistance.text = SystemUtils.formatDistance(this, trip.distance, true)
+        layoutTransferInfo.tvOrderDateTime.text = trip.base.dateTime
+        layoutTransferInfo.tvDistance.text = SystemUtils.formatDistance(this, trip.base.distance, true)
         tvCountPassengers.text = trip.countPassengers.toString()
 
-        if(trip.nameSign != null) tvPassengerName.text = trip.nameSign else layoutName.visibility = View.GONE
-        if(trip.countChild > 0) tvCountChildSeats.text = trip.countChild.toString() else layoutChildSeat.visibility = View.GONE
-        if(trip.flightNumber != null) tvFlightOrTrainNumber.text = trip.flightNumber else layoutFlightNumber.visibility = View.GONE
-        if(trip.comment != null) tvComment.text = trip.comment else layoutComment.visibility = View.GONE
-        if(trip.remainsToPay != null) tvPay.text = trip.remainsToPay else layoutRemainsToPay.visibility = View.GONE
+        if (trip.nameSign != null) tvPassengerName.text = trip.nameSign else layoutName.isGone = true
+        if (trip.base.countChild > 0) tvCountChildSeats.text = trip.base.countChild.toString() else layoutChildSeat.isGone = true
+        if (trip.flightNumber != null) tvFlightOrTrainNumber.text = trip.flightNumber else layoutFlightNumber.isGone = true
+        if (trip.base.comment != null) tvComment.text = trip.base.comment else layoutComment.isGone = true
+        tvPay.text = trip.remainsToPay
     }
 }

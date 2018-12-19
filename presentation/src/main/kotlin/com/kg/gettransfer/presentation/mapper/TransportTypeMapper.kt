@@ -1,37 +1,48 @@
 package com.kg.gettransfer.presentation.mapper
 
+import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.TransportType
 
-import com.kg.gettransfer.presentation.model.TransportPriceModel
+import com.kg.gettransfer.presentation.model.TransportTypePriceModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 open class TransportTypeMapper : Mapper<TransportTypeModel, TransportType> {
-    var prices: Map<String, TransportPriceModel>? = null
+    var prices: Map<TransportType.ID, TransportTypePriceModel>? = null
 
-    override fun toView(type: TransportType): TransportTypeModel {
-        val imageRes = R.drawable::class.members.find( { it.name == "ic_transport_type_${type.id}" } )
-        val imageId = (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_unknown
-        return TransportTypeModel(
-            type.id,
-            getNameById(type.id),
-            imageId,
-            type.paxMax,
-            type.luggageMax,
-            prices?.get(type.id)
+    override fun toView(type: TransportType) =
+        TransportTypeModel(
+            id = type.id,
+            nameId = getNameById(type.id),
+            imageId = getImageById(type.id),
+            paxMax = type.paxMax,
+            luggageMax = type.luggageMax,
+            price = prices?.get(type.id),
+            description = getDescriptionById(type.id)
         )
-    }
 
     override fun fromView(type: TransportTypeModel): TransportType { throw UnsupportedOperationException() }
 
     companion object {
         @StringRes
-        fun getNameById(id: String): Int {
-            val nameRes = R.string::class.members.find( { it.name == "LNG_TRANSPORT_${id.toUpperCase()}" } )
+        fun getNameById(id: TransportType.ID): Int {
+            val nameRes = R.string::class.members.find( { it.name == "LNG_TRANSPORT_${id.name}" } )
             return (nameRes?.call() as Int?) ?: R.string.LNG_TRANSPORT_ECONOMY
+        }
+
+        @DrawableRes
+        fun getImageById(id: TransportType.ID): Int {
+            val imageRes = R.drawable::class.members.find( { it.name == "ic_transport_type_$id" } )
+            return (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_unknown
+        }
+
+        @StringRes
+        fun getDescriptionById(id: TransportType.ID): Int {
+            val nameRes = R.string::class.members.find( { it.name == "LNG_TRANSPORT_EXAMPLES_${id.name}" } )
+            return (nameRes?.call() as Int?) ?: R.string.LNG_TRANSPORT_EXAMPLES_ECONOMY
         }
     }
 }

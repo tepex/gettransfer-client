@@ -3,6 +3,7 @@ package com.kg.gettransfer.data.mapper
 import com.kg.gettransfer.data.model.RouteInfoEntity
 
 import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.TransportTypePrice
 
 import org.koin.standalone.get
@@ -20,7 +21,7 @@ open class RouteInfoMapper : Mapper<RouteInfoEntity, RouteInfo> {
             success          = type.success,
             distance         = type.distance,
             duration         = type.duration,
-            prices           = type.prices.map { transportTypePriceMapper.fromEntity(it) },
+            prices           = type.prices.entries.associate { TransportType.ID.parse(it.key) to transportTypePriceMapper.fromEntity(it.value) },
             watertaxi        = type.watertaxi,
             polyLines        = type.polyLines,
             overviewPolyline = type.overviewPolyline

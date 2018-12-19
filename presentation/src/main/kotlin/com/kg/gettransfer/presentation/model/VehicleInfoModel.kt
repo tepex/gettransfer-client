@@ -2,5 +2,5 @@ package com.kg.gettransfer.presentation.model
 
 data class VehicleInfoModel(
     val name: String,
-    val licensePlate: String
+    val registrationNumber: String
 )

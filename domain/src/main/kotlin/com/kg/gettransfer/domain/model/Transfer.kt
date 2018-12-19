@@ -20,9 +20,9 @@ data class Transfer(
     val flightNumber: String?,
 /* ================================================== */
     val flightNumberReturn: String?,
-    val transportTypeIds: List<String>,
+    val transportTypeIds: List<TransportType.ID>,
     val pax: Int,
-    val bookNow: String?,
+    val bookNow: TransportType.ID?,
     val time: Int?,
     val nameSign: String?,
     val comment: String?,
@@ -38,7 +38,7 @@ data class Transfer(
     val remainsToPay: Money?,
     val paidPercentage: Int,
     val watertaxi: Boolean,
-    val bookNowOffers: List<BookNowOffer>,
+    val bookNowOffers: Map<TransportType.ID, BookNowOffer>,
     val offersCount: Int,
 /* ================================================== */
     val relevantCarriersCount: Int,
@@ -57,16 +57,14 @@ data class Transfer(
     val paymentPercentages: List<Int>
 ) : Entity() {
 
-    fun checkStatusCategory(): String {
-        return when (status) {
-            Status.NEW       -> STATUS_CATEGORY_ACTIVE
-            Status.DRAFT     -> STATUS_CATEGORY_ACTIVE
-            Status.PERFORMED -> STATUS_CATEGORY_CONFIRMED
-            Status.OUTDATED  -> STATUS_CATEGORY_UNFINISHED
-            Status.CANCELED  -> STATUS_CATEGORY_UNFINISHED
-            Status.REJECTED  -> STATUS_CATEGORY_UNFINISHED
-            else             -> STATUS_CATEGORY_FINISHED
-        }
+    fun checkStatusCategory() = when (status) {
+        Status.NEW       -> STATUS_CATEGORY_ACTIVE
+        Status.DRAFT     -> STATUS_CATEGORY_ACTIVE
+        Status.PERFORMED -> STATUS_CATEGORY_CONFIRMED
+        Status.OUTDATED  -> STATUS_CATEGORY_UNFINISHED
+        Status.CANCELED  -> STATUS_CATEGORY_UNFINISHED
+        Status.REJECTED  -> STATUS_CATEGORY_UNFINISHED
+        else             -> STATUS_CATEGORY_FINISHED
     }
 
     enum class Status(val checkOffers: Boolean) {

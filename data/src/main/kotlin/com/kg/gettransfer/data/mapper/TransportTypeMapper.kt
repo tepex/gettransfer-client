@@ -9,14 +9,14 @@ import com.kg.gettransfer.domain.model.TransportType
 open class TransportTypeMapper : Mapper<TransportTypeEntity, TransportType> {
     override fun fromEntity(type: TransportTypeEntity) =
         TransportType(
-            id = type.id,
+            id = TransportType.ID.parse(type.id),
             paxMax = type.paxMax,
             luggageMax = type.luggageMax
         )
 
     override fun toEntity(type: TransportType) =
         TransportTypeEntity(
-            id = type.id,
+            id = type.id.toString(),
             paxMax = type.paxMax,
             luggageMax = type.luggageMax
         )

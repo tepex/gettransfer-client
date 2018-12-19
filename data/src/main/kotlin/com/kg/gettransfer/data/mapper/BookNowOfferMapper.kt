@@ -11,7 +11,6 @@ open class BookNowOfferMapper : Mapper<BookNowOfferEntity, BookNowOffer> {
 
     override fun fromEntity(type: BookNowOfferEntity): BookNowOffer =
         BookNowOffer(
-            transportTypeId = type.transportTypeId,
             amount = type.amount,
             base = moneyMapper.fromEntity(type.base),
             withoutDiscount = type.withoutDiscount?.let { moneyMapper.fromEntity(it) }
@@ -19,7 +18,6 @@ open class BookNowOfferMapper : Mapper<BookNowOfferEntity, BookNowOffer> {
 
     override fun toEntity(type: BookNowOffer): BookNowOfferEntity =
         BookNowOfferEntity(
-            transportTypeId = type.transportTypeId,
             amount = type.amount,
             base = moneyMapper.toEntity(type.base),
             withoutDiscount = type.withoutDiscount?.let { moneyMapper.toEntity(it) }

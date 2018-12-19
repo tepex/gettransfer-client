@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.model
 
 data class MoneyModel(
-    val default: String,
+    val def: String,
     val preferred: String?
 )

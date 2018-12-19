@@ -3,6 +3,7 @@ package com.kg.gettransfer.data.ds
 import com.kg.gettransfer.data.CarrierTripCache
 import com.kg.gettransfer.data.CarrierTripDataStore
 
+import com.kg.gettransfer.data.model.CarrierTripBaseEntity
 import com.kg.gettransfer.data.model.CarrierTripEntity
 
 import org.koin.standalone.inject
@@ -13,7 +14,7 @@ import org.koin.standalone.inject
 open class CarrierTripDataStoreCache: CarrierTripDataStore {
     private val cache: CarrierTripCache by inject()
 
-    override suspend fun getCarrierTrips(): List<CarrierTripEntity> {
+    override suspend fun getCarrierTrips(): List<CarrierTripBaseEntity> {
         /*= cache.getCarrierTrips()*/
         throw UnsupportedOperationException()
     }

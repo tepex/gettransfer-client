@@ -17,13 +17,13 @@ open class VehicleMapper : Mapper<VehicleEntity, Vehicle> {
      */
     override fun fromEntity(type: VehicleEntity) =
         Vehicle(
-            id = type.id,
-            name = type.name,
+            id                 = type.id,
+            name               = type.name,
             registrationNumber = type.registrationNumber,
-            year = type.year,
-            color = type.color,
-            transportType = TransportType(
-                id = type.transportTypeId,
+            year               = type.year,
+            color              = type.color,
+            transportType      = TransportType(
+                id = TransportType.ID.parse(type.transportTypeId),
                 paxMax = type.paxMax,
                 luggageMax = type.luggageMax
             ),
@@ -40,7 +40,7 @@ open class VehicleMapper : Mapper<VehicleEntity, Vehicle> {
             registrationNumber = type.registrationNumber,
             year = type.year,
             color = type.color,
-            transportTypeId = type.transportType.id,
+            transportTypeId = type.transportType.id.toString(),
             paxMax = type.transportType.paxMax,
             luggageMax = type.transportType.luggageMax,
             photos = type.photos

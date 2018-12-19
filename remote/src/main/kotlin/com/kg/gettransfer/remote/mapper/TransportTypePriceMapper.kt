@@ -11,7 +11,6 @@ open class TransportTypePriceMapper : EntityMapper<Map.Entry<String, TransportTy
 
     override fun fromRemote(type: Map.Entry<String, TransportTypePriceModel>): TransportTypePriceEntity =
         TransportTypePriceEntity(
-            transportTypeId = type.key,
             minFloat = type.value.minFloat,
             min = type.value.min,
             bookNow = type.value.bookNow

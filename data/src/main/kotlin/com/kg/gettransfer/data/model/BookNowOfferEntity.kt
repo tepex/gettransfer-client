@@ -1,9 +1,10 @@
 package com.kg.gettransfer.data.model
 
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
+@Serializable
 class BookNowOfferEntity(
-    @SerialName(TransportTypeEntity.TRANSPORT_TYPE_ID) val transportTypeId: String,
     @SerialName(AMOUNT) val amount: Double,
     @SerialName(BASE) val base: MoneyEntity,
     @SerialName(WITHOUT_DISCOUNT) val withoutDiscount: MoneyEntity?

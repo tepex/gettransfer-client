@@ -1,8 +1,7 @@
 package com.kg.gettransfer.domain.model
 
 data class TransportTypePrice(
-    val transportTypeId: String,
+    val bookNow: TransportType.ID?,
     val minFloat: Float,
-    val min: String,
-    val bookNow: String?
+    val min: String
 )

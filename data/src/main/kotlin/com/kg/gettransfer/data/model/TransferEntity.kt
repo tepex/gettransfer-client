@@ -38,7 +38,7 @@ open class TransferEntity(
     @SerialName(REMAINS_TO_PAY)          val remainsToPay: MoneyEntity?,
     @SerialName(PAID_PERCENTAGE)         val paidPercentage: Int,
     @SerialName(WATERTAXI)               val watertaxi: Boolean,
-    @SerialName(BOOK_NOW_OFFERS)         val bookNowOffers: List<BookNowOfferEntity>,
+    @SerialName(BOOK_NOW_OFFERS)         val bookNowOffers: Map<String, BookNowOfferEntity>,
     @SerialName(OFFERS_COUNT)            val offersCount: Int,
 /* ================================================== */
     @SerialName(RELEVANT_CARRIERS_COUNT) val relevantCarriersCount: Int,

@@ -6,6 +6,7 @@ import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.Money
 import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.TransportType
 
 import java.text.DateFormat
 
@@ -19,7 +20,6 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
     private val bookNowOfferMapper = get<BookNowOfferMapper>()
     private val moneyMapper        = get<MoneyMapper>()
     private val dateFormat         = get<ThreadLocal<DateFormat>>("iso_date")
-
 
 
 
@@ -40,9 +40,9 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
             flightNumber    = type.flightNumber,
 /* ================================================== */
             flightNumberReturn    = type.flightNumberReturn,
-            transportTypeIds      = type.transportTypeIds,
+            transportTypeIds      = type.transportTypeIds.map { TransportType.ID.parse(it) },
             pax                   = type.pax,
-            bookNow               = type.bookNow,
+            bookNow               = type.bookNow?.let { TransportType.ID.parse(it) },
             time                  = type.time,
             nameSign              = type.nameSign,
             comment               = type.comment,
@@ -58,7 +58,7 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
             remainsToPay          = type.remainsToPay?.let { moneyMapper.fromEntity(it) },
             paidPercentage        = type.paidPercentage,
             watertaxi             = type.watertaxi,
-            bookNowOffers         = type.bookNowOffers.map { bookNowOfferMapper.fromEntity(it) },
+            bookNowOffers         = type.bookNowOffers.entries.associate { TransportType.ID.parse(it.key) to bookNowOfferMapper.fromEntity(it.value) },
             offersCount           = type.offersCount,
 /* ================================================== */
             relevantCarriersCount = type.relevantCarriersCount,

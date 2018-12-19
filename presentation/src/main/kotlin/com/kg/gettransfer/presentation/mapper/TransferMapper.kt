@@ -17,49 +17,66 @@ import kotlin.math.absoluteValue
 
 import org.koin.standalone.get
 
+
+
+
+
 open class TransferMapper : Mapper<TransferModel, Transfer> {
+    private val bookNowOfferMapper  = get<BookNowOfferMapper>()
     private val transportTypeMapper  = get<TransportTypeMapper>()
     private val systemTransportTypes = get<SystemInteractor>().transportTypes
 
     override fun toView(type: Transfer) =
         TransferModel(
-            id = type.id,
-            createdAt = type.createdAt,
-            duration = type.duration,
-            distance = type.to?.let { type.distance ?: Mapper.checkDistance(type.from.point!!, type.to!!.point!!) },
-            status = type.status,
-            statusName = getTransferStatusName(type.status),
-            from = type.from.name!!,
-            to = type.to?.name,
-            dateTime = type.dateToLocal,
-            /* dateReturn */
-            dateRefund = type.dateRefund,
+            id             = type.id,
+            createdAt      = type.createdAt,
+            duration       = type.duration,
+            distance       = type.to?.let { type.distance ?: Mapper.checkDistance(type.from.point!!, type.to!!.point!!) },
+            status         = type.status,
+
+            statusName     = getTransferStatusNameId(type.status),
+            from           = type.from.name!!,
+            to             = type.to?.name,
+            dateTime       = type.dateToLocal,
+            dateTimeReturn = type.dateReturnLocal,
+            flightNumber   = type.flightNumber,
 /* ================================================== */
-            nameSign = type.nameSign,
-            comment = type.comment,
-            /* malinaCard */
-            flightNumber = type.flightNumber,
             /* flightNumberReturn */
-            countPassengers = type.pax,
-            countChilds = type.childSeats,
-            promoCode = type.promoCode,
-            offersCount = type.offersCount,
+            transportTypes        = systemTransportTypes.filter { type.transportTypeIds.contains(it.id) }.map { transportTypeMapper.toView(it) },
+            countPassengers       = type.pax,
+            bookNow               = type.bookNow,
+            time                  = type.time,
+            nameSign              = type.nameSign,
+            comment               = type.comment,
+            countChilds           = type.childSeats,
+            childSeatsInfant      = type.childSeatsInfant,
+            childSeatsConvertible = type.childSeatsConvertible,
+/* ================================================== */
+            childSeatsBooster     = type.childSeatsBooster,
+            promoCode             = type.promoCode,
+            passengerOfferedPrice = type.passengerOfferedPrice,
+            price                 = type.price?.def,
+            paidSum               = type.paidSum?.def,
+            remainsToPay          = type.remainsToPay?.def,
+            paidPercentage        = type.paidPercentage,
+            watertaxi             = type.watertaxi,
+            bookNowOffers         = type.bookNowOffers.map { bookNowOfferMapper.toView(it.value).apply { transportTypeId = it.key } },
+            offersCount           = type.offersCount,
+/* ================================================== */
             relevantCarriersCount = type.relevantCarriersCount,
             /* offersUpdatedAt */
+            dateRefund            = type.dateRefund,
+            paypalOnly            = type.paypalOnly,
+            carrierMainPhone      = type.carrierMainPhone,
+            pendingPaymentId      = type.pendingPaymentId,
+            analyticsSent         = type.analyticsSent,
+            rubPrice              = type.rubPrice,
+            refundedPrice         = type.refundedPrice?.def,
+            campaign              = type.campaign,
 /* ================================================== */
-            time = type.time,
-            paidSum = type.paidSum?.default,
-            remainToPay = type.remainsToPay?.default,
-            paidPercentage = type.paidPercentage,
-            /* pendingPaymentId
-               bookNow
-               bookNowExpiration */
-            transportTypes = systemTransportTypes.filter {
-                type.transportTypeIds.contains(it.id) }.map { transportTypeMapper.toView(it) },
-            /* passengerOfferedPrice */
-            price = type.price?.default,
-/* ================================================== */
-            paymentPrecentages = type.paymentPercentages,
+            editableFields        = type.editableFields,
+            airlineCard           = type.airlineCard,
+            paymentPercentages    = type.paymentPercentages,
 /* ================================================== */
 /* ================================================== */
             statusCategory = type.checkStatusCategory(),
@@ -71,8 +88,8 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
 
     companion object {
         @StringRes
-        private fun getTransferStatusName(status: Transfer.Status): Int? {
-            val nameRes = R.string::class.members.find( { it.name == "LNG_RIDE_STATUS_${status.name.toUpperCase()}" } )
+        private fun getTransferStatusNameId(status: Transfer.Status): Int? {
+            val nameRes = R.string::class.members.find( { it.name == "LNG_RIDE_STATUS_${status.name}" } )
             return (nameRes?.call() as Int?)
         }
     }

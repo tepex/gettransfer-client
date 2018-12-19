@@ -50,7 +50,7 @@ open class TransferMapper : EntityMapper<TransferModel, TransferEntity> {
             remainsToPay          = type.remainsToPay?.let { moneyMapper.fromRemote(it) },
             paidPercentage        = type.paidPercentage,
             watertaxi             = type.watertaxi,
-            bookNowOffers         = type.bookNowOffers?.map { bookNowOfferMapper.fromRemote(it) } ?: emptyList<BookNowOfferEntity>(),
+            bookNowOffers         = type.bookNowOffers?.mapValues { bookNowOfferMapper.fromRemote(it) } ?: emptyMap<String, BookNowOfferEntity>(),
             offersCount           = type.offersCount,
 /* ================================================== */
             relevantCarriersCount = type.relevantCarriersCount,

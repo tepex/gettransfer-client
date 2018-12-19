@@ -11,7 +11,6 @@ open class BookNowOfferMapper : EntityMapper<Map.Entry<String, BookNowOfferModel
 
     override fun fromRemote(type: Map.Entry<String, BookNowOfferModel>): BookNowOfferEntity =
         BookNowOfferEntity(
-            transportTypeId = type.key,
             amount = type.value.amount,
             base = moneyMapper.fromRemote(type.value.base),
             withoutDiscount = type.value.withoutDiscount?.let { moneyMapper.fromRemote(it) }

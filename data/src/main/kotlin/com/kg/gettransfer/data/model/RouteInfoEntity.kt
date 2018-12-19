@@ -4,7 +4,7 @@ data class RouteInfoEntity(
     val success: Boolean,
     val distance: Int?,
     val duration: Int?,
-    val prices: List<TransportTypePriceEntity>,
+    val prices: Map<String, TransportTypePriceEntity>,
     val watertaxi: Boolean,
     val polyLines: List<String>,
     val overviewPolyline: String?

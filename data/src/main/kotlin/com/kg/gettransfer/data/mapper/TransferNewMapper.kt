@@ -4,6 +4,7 @@ import com.kg.gettransfer.data.model.TransferNewEntity
 import com.kg.gettransfer.data.model.TripEntity
 
 import com.kg.gettransfer.domain.model.TransferNew
+import com.kg.gettransfer.domain.model.TransportType
 
 import org.koin.standalone.get
 
@@ -31,7 +32,7 @@ open class TransferNewMapper : Mapper<TransferNewEntity, TransferNew> {
             dest                  = destMapper.toEntity(type.dest),
             tripTo                = tripMapper.toEntity(type.tripTo),
             tripReturn            = type.tripReturn?.let { tripMapper.toEntity(it) },
-            transportTypeIds      = type.transportTypeIds,
+            transportTypeIds      = type.transportTypeIds.map { TransportType.ID.toString() },
             pax                   = type.pax,
             childSeats            = type.childSeats,
             passengerOfferedPrice = type.passengerOfferedPrice,

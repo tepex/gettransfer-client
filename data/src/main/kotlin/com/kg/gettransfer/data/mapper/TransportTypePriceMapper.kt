@@ -2,6 +2,7 @@ package com.kg.gettransfer.data.mapper
 
 import com.kg.gettransfer.data.model.TransportTypePriceEntity
 
+import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.TransportTypePrice
 
 import org.koin.standalone.get
@@ -16,19 +17,18 @@ open class TransportTypePriceMapper : Mapper<TransportTypePriceEntity, Transport
      */
     override fun fromEntity(type: TransportTypePriceEntity) =
         TransportTypePrice(
-            transportTypeId = type.transportTypeId,
             minFloat = type.minFloat,
-            min = type.min,
-            bookNow = type.bookNow
+            min      = type.min,
+            bookNow  = type.bookNow?.let { TransportType.ID.parse(it) }
         )
+
     /**
      * Map a [TransportTypePrice] instance to a [TransportTypePriceEntity] instance.
      */
     override fun toEntity(type: TransportTypePrice) =
         TransportTypePriceEntity(
-            transportTypeId = type.transportTypeId,
             minFloat = type.minFloat,
-            min = type.min,
-            bookNow = type.bookNow
+            min      = type.min,
+            bookNow  = type.bookNow?.toString()
         )
 }

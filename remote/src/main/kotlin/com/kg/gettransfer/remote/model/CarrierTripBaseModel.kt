@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName
 
 import com.kg.gettransfer.data.model.CarrierTripBaseEntity
 
+data class CarrierTripsBaseModel(@SerializedName("trips") @Expose val trips: List<CarrierTripBaseModel>)
+
 open class CarrierTripBaseModel(
     @SerializedName(CarrierTripBaseEntity.ID) @Expose val id: Long,
     @SerializedName(CarrierTripBaseEntity.TRANSFER_ID) @Expose val transferId: Long,

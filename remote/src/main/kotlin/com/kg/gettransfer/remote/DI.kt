@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory
 
 val remoteMappersModule = module {
     single { AccountMapper() }
+    single { BookNowOfferMapper() }
 
     single { CardGatewaysMapper() }
     single { CarrierMapper() }

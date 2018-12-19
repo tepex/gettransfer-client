@@ -2,21 +2,21 @@ package com.kg.gettransfer.domain.model
 
 import java.util.Date
 
-open class CarrierTripBase(
+data class CarrierTripBase(
     override val id: Long,
-    open val transferId: Long,
-    open val from: CityPoint,
-    open val to: CityPoint?,
-    open val dateLocal: Date,
-    open val duration: Int?,
-    open val distance: Int?,
-    open val time: Int?,
-    open val childSeats: Int,
-    open val childSeatsInfant: Int,
-    open val childSeatsConvertible: Int,
-    open val childSeatsBooster: Int,
-    open val comment: String?,
-    open val waterTaxi: Boolean,
-    open val price: String,
-    open val vehicle: VehicleInfo
+    val transferId: Long,
+    val from: CityPoint,
+    val to: CityPoint?,
+    val dateLocal: Date,
+    val duration: Int?,
+    val distance: Int?,
+    val time: Int?,
+    val childSeats: Int,
+    val childSeatsInfant: Int,
+    val childSeatsConvertible: Int,
+    val childSeatsBooster: Int,
+    val comment: String?,
+    val waterTaxi: Boolean,
+    val price: String,
+    val vehicle: VehicleInfo
 ) : Entity()

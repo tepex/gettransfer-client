@@ -7,7 +7,7 @@ data class TransferNew(
     val dest: Dest<CityPoint, Int>,
     val tripTo: Trip,
     val tripReturn: Trip?,
-    val transportTypeIds: List<String>,
+    val transportTypeIds: List<TransportType.ID>,
     val pax: Int,
     val childSeats: Int?,
     val passengerOfferedPrice: Int?, // x 100 (in cents)

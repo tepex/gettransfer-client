@@ -16,6 +16,7 @@ import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew
+import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.domain.repository.TransferRepository
 
@@ -23,8 +24,10 @@ import java.util.Date
 
 import org.koin.standalone.get
 
-class TransferRepositoryImpl(private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>) :
-    BaseRepository(), TransferRepository {
+class TransferRepositoryImpl(
+    private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>
+) : BaseRepository(), TransferRepository {
+
     private val transferNewMapper = get<TransferNewMapper>()
     private val transferMapper = get<TransferMapper>()
 
@@ -73,7 +76,7 @@ class TransferRepositoryImpl(private val factory: DataStoreFactory<TransferDataS
                 flightNumber    = null,
 /* ================================================== */
                 flightNumberReturn    = null,
-                transportTypeIds      = emptyList<String>(),
+                transportTypeIds      = emptyList<TransportType.ID>(),
                 pax                   = 0,
                 bookNow               = null,
                 time                  = 0,
@@ -91,7 +94,7 @@ class TransferRepositoryImpl(private val factory: DataStoreFactory<TransferDataS
                 remainsToPay          = null,
                 paidPercentage        = 0,
                 watertaxi             = false,
-                bookNowOffers         = emptyList<BookNowOffer>(),
+                bookNowOffers         = emptyMap<TransportType.ID, BookNowOffer>(),
                 offersCount           = 0,
 /* ================================================== */
                 relevantCarriersCount = 0,

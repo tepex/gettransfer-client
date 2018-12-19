@@ -160,7 +160,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         } else {
             layoutPrices.isVisible = true
             tvPrice.text = transfer.price
-            if (transfer.remainToPay != null) tvNotPaid.text = transfer.remainToPay
+            if (transfer.remainsToPay != null) tvNotPaid.text = transfer.remainsToPay
             else {
                 textNotPaid.isVisible = false
                 tvNotPaid.isVisible = false
@@ -272,8 +272,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         }
 
         offer.carrier.let { carrier ->
-            val carrierId = carrier.profile?.id ?: ""
-            carrier_id.field_title.text = getString(R.string.LNG_DRIVER).plus(" №$carrierId")
+            carrier_id.field_title.text = getString(R.string.LNG_DRIVER).plus(" №${carrier.id}")
             carrier_id.field_text.text = carrier.completedTransfers.toString().plus(" ").plus(getString(R.string.LNG_RIDES))
 
             carrier.profile?.name?.let { name -> carrier_name.text = name }
@@ -296,9 +295,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     }
 
     private fun initAboutTransportView(offerModel: OfferModel, childSeats: Int) {
-        carName.text = offerModel.vehicle.vehicleBase.name.plus(", ${offerModel.vehicle.year}")
+        carName.text = offerModel.vehicle.name.plus(", ${offerModel.vehicle.year}")
         carType.text = getString(offerModel.vehicle.transportType.nameId!!).plus(":")
-        carLicensePlate.text = offerModel.vehicle.vehicleBase.registrationNumber
+        carLicensePlate.text = offerModel.vehicle.registrationNumber
         offerModel.carrier.ratings.average?.let { ratingBar.rating = it }
         if (offerModel.carrier.approved) ivLike.isVisible = true
         tvCountPassengers.text = Utils.formatPersons(this, offerModel.vehicle.transportType.paxMax)

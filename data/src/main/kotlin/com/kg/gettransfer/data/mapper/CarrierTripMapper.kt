@@ -3,6 +3,7 @@ package com.kg.gettransfer.data.mapper
 import com.kg.gettransfer.data.model.CarrierTripEntity
 
 import com.kg.gettransfer.domain.model.CarrierTrip
+import com.kg.gettransfer.domain.model.CarrierTripBase
 import com.kg.gettransfer.domain.model.PassengerAccount
 
 import java.text.DateFormat
@@ -24,29 +25,31 @@ open class CarrierTripMapper : Mapper<CarrierTripEntity, CarrierTrip> {
      */
     override fun fromEntity(type: CarrierTripEntity) =
         CarrierTrip(
-            id                    = type.id,
-            transferId            = type.transferId,
-            from                  = cityPointMapper.fromEntity(type.from),
-            to                    = type.to?.let { cityPointMapper.fromEntity(it) },
-            dateLocal             = dateFormat.get().parse(type.dateLocal),
-            duration              = type.duration,
-            distance              = type.distance,
-            time                  = type.time,
-            childSeats            = type.childSeats,
-            childSeatsInfant      = type.childSeatsInfant,
-            childSeatsConvertible = type.childSeatsConvertible,
-            childSeatsBooster     = type.childSeatsBooster,
-            comment               = type.comment,
-            waterTaxi             = type.waterTaxi,
-            price                 = type.price,
-            vehicle               = vehicleInfoMapper.fromEntity(type.vehicle),
-            pax                   = type.pax,
-            nameSign              = type.nameSign,
-            flightNumber          = type.flightNumber,
-            paidSum               = type.paidSum,
-            remainToPay           = type.remainToPay,
-            paidPercentage        = type.paidPercentage,
-            passengerAccount      = type.passengerAccount?.let { passengerAccountMapper.fromEntity(it) }
+            base = CarrierTripBase(
+                id                    = type.id,
+                transferId            = type.transferId,
+                from                  = cityPointMapper.fromEntity(type.from),
+                to                    = type.to?.let { cityPointMapper.fromEntity(it) },
+                dateLocal             = dateFormat.get().parse(type.dateLocal),
+                duration              = type.duration,
+                distance              = type.distance,
+                time                  = type.time,
+                childSeats            = type.childSeats,
+                childSeatsInfant      = type.childSeatsInfant,
+                childSeatsConvertible = type.childSeatsConvertible,
+                childSeatsBooster     = type.childSeatsBooster,
+                comment               = type.comment,
+                waterTaxi             = type.waterTaxi,
+                price                 = type.price,
+                vehicle               = vehicleInfoMapper.fromEntity(type.vehicle)
+            ),
+            pax              = type.pax,
+            nameSign         = type.nameSign,
+            flightNumber     = type.flightNumber,
+            paidSum          = type.paidSum,
+            remainsToPay     = type.remainsToPay,
+            paidPercentage   = type.paidPercentage,
+            passengerAccount = passengerAccountMapper.fromEntity(type.passengerAccount)
         )
 
     /**

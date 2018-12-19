@@ -5,6 +5,17 @@ import com.kg.gettransfer.domain.model.Profile
 import com.kg.gettransfer.presentation.model.ProfileModel
 
 open class ProfileMapper : Mapper<ProfileModel, Profile> {
-    override fun toView(type: Profile) = ProfileModel(type.id, type.fullName, type.email, type.phone)
-    override fun fromView(type: ProfileModel) = Profile(type.id ?: 0L, type.name, type.email, type.phone)
+    override fun toView(type: Profile) =
+        ProfileModel(
+            name  = type.fullName,
+            email = type.email,
+            phone = type.phone
+        )
+
+    override fun fromView(type: ProfileModel) =
+        Profile(
+            fullName = type.name,
+            email    = type.email,
+            phone    = type.phone
+        )
 }

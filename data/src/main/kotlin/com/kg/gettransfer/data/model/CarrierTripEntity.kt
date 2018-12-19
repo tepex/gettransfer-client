@@ -19,13 +19,13 @@ data class CarrierTripEntity(
     override val waterTaxi: Boolean,
     override val price: String,
     override val vehicle: VehicleInfoEntity,
-    val pax: Int?, /* passengers count */
+    val pax: Int, /* passengers count */
     val nameSign: String?,
     val flightNumber: String?,
-    val paidSum: String?, /* formatted */
-    val remainToPay: String?, /* formatted */
-    val paidPercentage: Int?,
-    val passengerAccount: PassengerAccountEntity?
+    val paidSum: String, /* formatted */
+    val remainsToPay: String, /* formatted */
+    val paidPercentage: Int,
+    val passengerAccount: PassengerAccountEntity
 ) : CarrierTripBaseEntity(
     id,
     transferId,

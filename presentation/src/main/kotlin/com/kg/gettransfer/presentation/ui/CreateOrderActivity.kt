@@ -325,7 +325,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     override fun setComment(comment: String)   { comment_field.field_input.setText(comment) }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
-        setTransportTypeDescription(transportTypes)
         rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
             presenter.onTransportChosen()
             if (showInfo) transportTypeClicked(transportType)
@@ -503,20 +502,4 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     override fun showNotLoggedAlert(withOfferId: Long) =
         Utils.showScreenRedirectingAlert(this, getString(R.string.log_in_requirement_error_title),
                     getString(R.string.log_in_to_see_transfers_and_offers)) { presenter.redirectToLogin(withOfferId) }
-
-    private fun setTransportTypeDescription(list: List<TransportTypeModel>) =
-        list.forEach { it.description = getDescription(it.id) }
-
-    private fun getDescription(id: String) = when (id) {
-            "economy"    -> R.string.LNG_TRANSPORT_EXAMPLES_ECONOMY
-            "premium"    -> R.string.LNG_TRANSPORT_EXAMPLES_PREMIUM
-            "minibus"    -> R.string.LNG_TRANSPORT_EXAMPLES_MINIBUS
-            "bus"        -> R.string.LNG_TRANSPORT_EXAMPLES_BUS
-            "helicopter" -> R.string.LNG_TRANSPORT_EXAMPLES_HELICOPTER
-            "limousine"  -> R.string.LNG_TRANSPORT_EXAMPLES_LIMOUSINE
-            "business"   -> R.string.LNG_TRANSPORT_EXAMPLES_BUSINESS
-            "van"        -> R.string.LNG_TRANSPORT_EXAMPLES_VAN
-            "suv"        -> R.string.LNG_TRANSPORT_EXAMPLES_SUV
-            else         -> 0
-    }
 }

@@ -80,7 +80,9 @@ val domainModule = module {
 }
 
 val mappersModule = module {
+    single { BookNowOfferMapper() }
     single { CarrierMapper() }
+    single { CarrierTripBaseMapper() }
     single { CarrierTripMapper() }
     single { CurrencyMapper() }
     single { DistanceUnitMapper() }
@@ -88,6 +90,7 @@ val mappersModule = module {
     single { LocaleMapper() }
     single { MoneyMapper() }
     single { OfferMapper() }
+    single { PassengerAccountMapper() }
     single { PaymentRequestMapper() }
     single { PaymentStatusRequestMapper() }
     single { PointMapper() }
@@ -97,8 +100,9 @@ val mappersModule = module {
     single { RouteMapper() }
     single { TransferMapper() }
     single { TransportTypeMapper() }
+    single { TransportTypePriceMapper() }
     single { UserMapper() }
-    single { VehicleBaseMapper() }
+    single { VehicleInfoMapper() }
     single { VehicleMapper() }
 }
 

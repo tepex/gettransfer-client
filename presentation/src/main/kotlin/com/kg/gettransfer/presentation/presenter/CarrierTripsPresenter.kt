@@ -8,10 +8,10 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 
-import com.kg.gettransfer.presentation.mapper.CarrierTripMapper
+import com.kg.gettransfer.presentation.mapper.CarrierTripBaseMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 
-import com.kg.gettransfer.presentation.model.CarrierTripModel
+import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 
 import com.kg.gettransfer.presentation.view.CarrierTripsView
 import com.kg.gettransfer.presentation.view.Screens
@@ -22,9 +22,9 @@ import org.koin.standalone.inject
 class CarrierTripsPresenter : BasePresenter<CarrierTripsView>() {
     private val carrierTripInteractor: CarrierTripInteractor by inject()
 
-    private val carrierTripMapper: CarrierTripMapper by inject()
+    private val carrierTripBaseMapper: CarrierTripBaseMapper by inject()
     private val profileMapper: ProfileMapper by inject()
-    private var trips: List<CarrierTripModel>? = null
+    private var trips: List<CarrierTripBaseModel>? = null
 
     override fun onFirstViewAttach() {
         checkLoggedIn()
@@ -34,7 +34,7 @@ class CarrierTripsPresenter : BasePresenter<CarrierTripsView>() {
             val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrips() }
             if (result.error != null) viewState.setError(result.error!!)
             else {
-                trips = result.model.map { carrierTripMapper.toView(it) }
+                trips = result.model.map { carrierTripBaseMapper.toView(it) }
                 viewState.initNavigation(profileMapper.toView(systemInteractor.account.user.profile))
                 viewState.setTrips(trips!!)
             }

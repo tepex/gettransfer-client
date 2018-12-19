@@ -276,13 +276,13 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
                 .withStartAction { presenter.isMarkerAnimating = true }
                 .withEndAction {
                     presenter.isMarkerAnimating = false
-                    if(!up) markerShadow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_position_shadow))
+                    if (!up) markerShadow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_position_shadow))
                 }
                 .setDuration(150L)
                 .translationYBy(px)
                 .start()
 
-        if(up) markerShadow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.lifted_marker_shadow))
+        if (up) markerShadow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.lifted_marker_shadow))
     }
 
     override fun moveCenterMarker(point: LatLng) {
@@ -290,7 +290,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
-        if(block) searchFrom.text = getString(R.string.search_start)
+        if (block) searchFrom.text = getString(R.string.search_start)
     }
 
     override fun blockSelectedField(block: Boolean, field: String) {
@@ -393,7 +393,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     override fun setTripMode(duration: Int?) {
         duration?.let {
             switch_mode.isChecked = true
-            with(HourlyValuesHelper) {
+            with (HourlyValuesHelper) {
                 np_hours.value = durationValues.indexOf(it)
                 tvCurrent_hours.text = getValue(it, this@MainActivity)
             }

@@ -40,16 +40,16 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
                 trip = carrierTripMapper.toView(tripInfo)
                 viewState.setTripInfo(trip)
 
-                val r = utils.asyncAwait { routeInteractor.getRouteInfo(tripInfo.from.point!!, tripInfo.to.point!!, false, false) }
+                val r = utils.asyncAwait { routeInteractor.getRouteInfo(tripInfo.base.from.point!!, tripInfo.base.to!!.point!!, false, false) }
                 if (r.error == null && r.model.success) {
                     routeModel = routeMapper.getView(
                         r.model.distance,
                         r.model.polyLines,
-                        trip.from,
-                        trip.to,
-                        tripInfo.from.point!!,
-                        tripInfo.to.point!!,
-                        trip.dateTime
+                        trip.base.from,
+                        trip.base.to!!,
+                        tripInfo.base.from.point!!,
+                        tripInfo.base.to!!.point!!,
+                        trip.base.dateTime
                     )
                     routeModel?.let { viewState.setRoute(Utils.getPolyline(it), it) }
                 }

@@ -8,7 +8,7 @@ import android.view.ViewGroup
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.*
-import com.kg.gettransfer.presentation.model.CarrierTripModel
+import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 import com.kg.gettransfer.presentation.presenter.CarrierTripsPresenter
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.view_trips_info.view.*
 
 class TripsRVAdapter(
     private val presenter: CarrierTripsPresenter,
-    private var trips: List<CarrierTripModel>
+    private var trips: List<CarrierTripBaseModel>
 ) : RecyclerView.Adapter<TripsRVAdapter.ViewHolder>() {
 
     override fun getItemCount() = trips.size
@@ -33,22 +33,22 @@ class TripsRVAdapter(
         RecyclerView.ViewHolder(containerView),
         LayoutContainer {
 
-        fun bind(item: CarrierTripModel, listener: ClickOnCarrierTripHandler) = with(containerView) {
+        fun bind(item: CarrierTripBaseModel, listener: ClickOnCarrierTripHandler) = with (containerView) {
             tvTransferRequestNumber.text = context.getString(R.string.LNG_RIDE_NUMBER).plus(item.transferId)
             tvFrom.text = item.from
-            tvTo.text = item.to
+            tvTo.text = item.to ?: ""
             //tvOrderDateTime.text = context.getString(R.string.transfer_date_local, item.dateTime)
             tvOrderDateTime.text = item.dateTime
             tvDistance.text = SystemUtils.formatDistance(context, item.distance, true)
             tvPrice.text = item.pay
-            tvVehicle.text = item.vehicleName
+            tvVehicle.text = item.vehicle.name
 
             ivChildSeat.isInvisible = item.countChild == 0
             ivComment.isInvisible   = item.comment.isNullOrEmpty()
 
             setOnClickListener {
                 selected = adapterPosition
-                listener(item.tripId)
+                listener(item.id)
             }
         }
     }
