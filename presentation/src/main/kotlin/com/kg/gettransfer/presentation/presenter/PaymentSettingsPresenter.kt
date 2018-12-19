@@ -110,4 +110,5 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
 
     fun changePrice(price: Int)        { paymentRequest.percentage = price }
     fun changePayment(payment: String) { paymentRequest.gatewayId  = payment }
+    fun onAgreementClicked() = router.navigateTo(Screens.LicenceAgree)
 }

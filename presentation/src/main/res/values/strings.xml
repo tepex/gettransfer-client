@@ -8,6 +8,7 @@
     <string name="api_url_demo">https://stgtr.org</string>
     <string name="api_key_prod">3fe0f9208622274f1a21e78037eea83e</string>
     <string name="api_url_prod">https://gettransfer.com</string>
+    <string name="api_url_payment">/terms_of_use</string>
 
     <string name="api_restore_password">https://gettransfer.com/forgot_password</string>
 
@@ -236,6 +237,7 @@
     <string name="LNG_RIDE_CREATION_SPINNER">Please wait, connecting...</string>
     <string name="LNG_RIDE_CHOOSE_TRANSPORT">Please select transport type</string>
     <string name="LNG_RIDE_OFFERT">I aggree with \n<a href='#'>License agreement</a></string>
+    <string name="LNG_RIDE_PAYMENT_OFFERT">By pressing \"\PAY\"\ you accept <a href="#">terms of the Agreement</a></string>
     <string name="LNG_RIDE_OFFERT_TITLE">License agreement</string>
     <string name="LNG_RIDE_OFFERT_ERROR">You should accept terms of use</string>
     <string name="LNG_RIDE_FAIR_PRICE_FORMAT">Average rate on route %s (ETA ~%s)</string>

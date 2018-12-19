@@ -43,6 +43,7 @@ class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
         setCommission()
 
         setToolbar(toolbar as Toolbar, R.string.LNG_PAYMENT_SETTINGS)
+        tv_payment_agreement.setOnClickListener { presenter.onAgreementClicked() }
     }
 
     private fun setButton() {

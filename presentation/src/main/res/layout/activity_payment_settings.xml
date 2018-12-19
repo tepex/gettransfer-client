@@ -253,4 +253,15 @@
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/create_transfer_additionals_top_text_size"/>
 
+    <TextView
+        android:id="@+id/tv_payment_agreement"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+
+        android:text="@string/LNG_RIDE_PAYMENT_OFFERT"
+        android:gravity="center_horizontal"
+        android:layout_marginStart="72dp"
+        android:layout_marginEnd="72dp"/>
+
 </LinearLayout>
