@@ -287,17 +287,22 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         boundTimePickerDialog.show()
     }
 
-    override fun setDateTimeTransfer(dateTimeString: String, isAfter4Hours: Boolean) {
-        if (isAfter4Hours) transfer_date_time_field.field_input.setText(
-            getString(R.string.LNG_DATE_IN_HOURS)
-                    .plus(" ")
-                    .plus(CreateOrderView.FUTURE_HOUR)
-                    .plus(" ")
-                    .plus(getString(R.string.LNG_HOUR_FEW)))
+    override fun setDateTimeTransfer(dateTimeString: String, isAfterMinHours: Boolean) {
+        if (isAfterMinHours) transfer_date_time_field.field_input.setText(getTextForMinDate())
         else transfer_date_time_field.field_input.setText(dateTimeString)
     }
 
-    private fun checkMinusButton(count: Int, minimum: Int, view: ImageView) {
+    override fun setHintForDateTimeTransfer() {
+        transfer_date_time_field.field_input.hint = getTextForMinDate()
+    }
+
+    private fun getTextForMinDate() = getString(R.string.LNG_DATE_IN_HOURS)
+            .plus(" ")
+            .plus(CreateOrderView.FUTURE_HOUR)
+            .plus(" ")
+            .plus(getString(R.string.LNG_HOUR_FEW))
+
+            private fun checkMinusButton(count: Int, minimum: Int, view: ImageView) {
         val imgRes = if (count == minimum) R.drawable.ic_circle_minus else R.drawable.ic_minus_enabled
         view.setImageDrawable(ContextCompat.getDrawable(this, imgRes))
     }

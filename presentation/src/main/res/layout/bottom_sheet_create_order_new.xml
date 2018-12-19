@@ -125,6 +125,7 @@
                     android:fontFamily="@font/sf_pro_text_semibold"
                     android:hint="@string/LNG_RIDE_PRICE_YOUR"
                     android:textColor="@color/colorTextBlack"
+                    android:textColorHint="@color/black_a10"
                     android:textSize="@dimen/create_transfer_additionals_top_text_size"
                     android:inputType="numberDecimal"
 
@@ -165,13 +166,9 @@
                 <include
                     android:id="@+id/passengers_seats"
                     layout="@layout/view_seats" />
-
                 <include
                     android:id="@+id/child_seats"
-
                     layout="@layout/view_seats" />
-
-
 
             </LinearLayout>
 

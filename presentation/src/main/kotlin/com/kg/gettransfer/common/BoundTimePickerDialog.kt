@@ -31,7 +31,7 @@ class BoundTimePickerDialog(context: CreateOrderActivity,
     override fun onTimeChanged(view: TimePicker?, hourOfDay: Int, minute: Int) {
         super.onTimeChanged(view, hourOfDay, minute)
 
-        var validTime: Boolean = when {
+        val validTime: Boolean = when {
             hourOfDay < minHour -> false
             hourOfDay == minHour -> minute >= minMinute
             hourOfDay == maxHour -> minute <= maxMinute

@@ -175,6 +175,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         //bottom right
         when (transfer.statusCategory) {
             Transfer.STATUS_CATEGORY_UNFINISHED -> {
+                tvTransferCancelled.text = transfer.statusName?.let {
+                    getString(R.string.LNG_TRANSFER_WAS)
+                            .plus(" ")
+                            .plus(getString(transfer.statusName).toLowerCase())
+                }
                 tvTransferCancelled.isVisible = true
             }
             Transfer.STATUS_CATEGORY_ACTIVE -> {

@@ -20,8 +20,6 @@ import com.kg.gettransfer.domain.interactor.PromoInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
-import com.kg.gettransfer.domain.model.CityPoint
-import com.kg.gettransfer.domain.model.Dest
 import com.kg.gettransfer.domain.model.DestDuration
 import com.kg.gettransfer.domain.model.DestPoint
 import com.kg.gettransfer.domain.model.TransferNew
@@ -36,7 +34,6 @@ import com.kg.gettransfer.presentation.mapper.UserMapper
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
-import com.kg.gettransfer.presentation.model.UserModel
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
@@ -82,23 +79,20 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     internal var cost: Double? = null
 
-    private var isAfter4Hours = true
+    private var isAfterMinHours = true
+    private var isTimeSetByUser = false
     internal lateinit var currentDate: Calendar
     internal var date: Date = Date()
-        set(value) {
-            field = value
-            viewState.setDateTimeTransfer(SystemUtils.formatDateTime(date), isAfter4Hours)
-        }
 
     private var flightNumber: String? = null
     private var comment: String? = null
 
     override fun onFirstViewAttach() {
-        currentDate = getCurrentDatePlus4Hours()
+        currentDate = getCurrentDatePlusMinimumHours()
         date = currentDate.time
     }
 
-    private fun getCurrentDatePlus4Hours(): Calendar {
+    private fun getCurrentDatePlusMinimumHours(): Calendar {
         val calendar = Calendar.getInstance(systemInteractor.locale)
         /* Server must send current locale time */
         calendar.add(Calendar.HOUR_OF_DAY, CreateOrderView.FUTURE_HOUR)
@@ -169,14 +163,16 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun changeDate(newDate: Date) {
-        currentDate = getCurrentDatePlus4Hours()
+        isTimeSetByUser = true
+        currentDate = getCurrentDatePlusMinimumHours()
         if (newDate.after(currentDate.time)) {
-            isAfter4Hours = false
+            isAfterMinHours = false
             date = newDate
         } else {
-            isAfter4Hours = true
+            isAfterMinHours = true
             date = currentDate.time
         }
+        viewState.setDateTimeTransfer(SystemUtils.formatDateTime(date), isAfterMinHours)
         routeModel?.let {
             it.dateTime = SystemUtils.formatDateTime(date)
             viewState.setRoute(polyline!!, it, true)
@@ -191,7 +187,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         if (i != -1) changeCurrency(i)
 
         viewState.setUser(user, systemInteractor.account.user.loggedIn)
-        viewState.setDateTimeTransfer(SystemUtils.formatDateTime(date), isAfter4Hours)
+        viewState.setHintForDateTimeTransfer()
         transportTypes?.let { viewState.setTransportTypes(it) }
     }
 
@@ -265,7 +261,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     fun showLicenceAgreement() = router.navigateTo(Screens.LicenceAgree)
 
     fun onGetTransferClick() {
-        currentDate = getCurrentDatePlus4Hours()
+        currentDate = getCurrentDatePlusMinimumHours()
         if (currentDate.time.after(date)) date = currentDate.time
 
         if (!checkFieldsForRequest()) return
@@ -310,6 +306,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     private fun checkFieldsForRequest(): Boolean {
         val errorField = when {
+            !isTimeSetByUser                        -> FieldError.TIME_NOT_SELECTED
             !Utils.checkEmail(user.profile.email)   -> FieldError.EMAIL_FIELD
             !Utils.checkPhone(user.profile.phone!!) -> FieldError.PHONE_FIELD
             !transportTypes!!.any { it.checked }    -> FieldError.TRANSPORT_FIELD
