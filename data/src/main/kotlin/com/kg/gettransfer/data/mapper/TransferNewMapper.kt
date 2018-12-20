@@ -32,7 +32,7 @@ open class TransferNewMapper : Mapper<TransferNewEntity, TransferNew> {
             dest                  = destMapper.toEntity(type.dest),
             tripTo                = tripMapper.toEntity(type.tripTo),
             tripReturn            = type.tripReturn?.let { tripMapper.toEntity(it) },
-            transportTypeIds      = type.transportTypeIds.map { TransportType.ID.toString() },
+            transportTypeIds      = type.transportTypeIds.map { it.toString() },
             pax                   = type.pax,
             childSeats            = type.childSeats,
             passengerOfferedPrice = type.passengerOfferedPrice,

@@ -33,10 +33,10 @@ class TransferPointToPointNewModel(
     nameSign: String?,
     comment: String?,
     user: UserModel,
-    promoCode: String?,
+    promoCode: String?
 /* Not used now
-    @SerializedName("paypal_only") @Expose val paypalOnly: Boolean */
-    @SerializedName(TransferNewEntity.TRIP_RETURN) @Expose val tripReturn: TripModel? = null
+    @SerializedName("paypal_only") @Expose val paypalOnly: Boolean
+    @SerializedName(TransferNewEntity.TRIP_RETURN) @Expose val tripReturn: TripModel? = null*/
 ) : TransferNewBase(from, to, tripTo, transportTypeIds, pax, childSeats, passengerOfferedPrice, nameSign, comment, user, promoCode)
 
 class TransferHourlyNewModel(
