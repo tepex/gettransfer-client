@@ -52,7 +52,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
         @JvmField val FIELD_PHONE = "field_phone"
         @JvmField val OPERATION_COPY = "operation_copy"
         @JvmField val OPERATION_OPEN = "operation_open"
-
     }
 
     private lateinit var transferModel: TransferModel
@@ -79,7 +78,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
                     if(offersResult.error == null && offersResult.model.size == 1){
                         offer = offersResult.model.first()
                         reviewInteractor.offerIdForReview = offer.id
-                        viewState.setOffer(offerMapper.toView(offer), transferModel.countChilds)
+                        if(!transfer.isCompletedTransfer()) viewState.setOffer(offerMapper.toView(offer), transferModel.countChilds)
                     }
                 }
 

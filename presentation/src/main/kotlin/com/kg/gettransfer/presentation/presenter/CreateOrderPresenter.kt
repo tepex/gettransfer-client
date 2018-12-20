@@ -8,8 +8,6 @@ import android.util.Patterns
 import com.arellomobile.mvp.InjectViewState
 import com.facebook.appevents.AppEventsConstants
 
-import com.facebook.appevents.AppEventsConstants
-
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 

@@ -79,6 +79,8 @@ data class Transfer(
         OUTDATED(false);
     }
 
+    fun isCompletedTransfer() = status == Status.NOT_COMPLETED || status == Status.COMPLETED
+
     companion object {
         const val STATUS_CATEGORY_ACTIVE     = "active_status"
         const val STATUS_CATEGORY_CONFIRMED  = "confirmed_status"

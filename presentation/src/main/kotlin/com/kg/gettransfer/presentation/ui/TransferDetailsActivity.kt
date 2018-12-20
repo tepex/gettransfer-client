@@ -16,7 +16,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
@@ -117,7 +116,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     private fun setClickListeners() {
         btnBack.setOnClickListener          { presenter.onBackCommandClick() }
         btnCenterRoute.setOnClickListener   { presenter.onCenterRouteClick() }
-        btnSupportTop.setOnClickListener    { presenter.sendEmail(null) }
         btnSupportBottom.setOnClickListener { presenter.sendEmail(null) }
         btnCancel.setOnClickListener        { presenter.onCancelRequestClicked() }
         tripRate.setOnRatingChangeListener  { _, fl -> disableRate(); presenter.rateTrip(fl) }
@@ -131,13 +129,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
             initTableLayoutTransportTypes(transfer.transportTypes)
             flexboxLayoutTransportTypes.isVisible = true
         }
-        layoutButtonSupportTop.isVisible   = status == Transfer.STATUS_CATEGORY_FINISHED
-        layoutCommunicateButtons.isVisible = status == Transfer.STATUS_CATEGORY_CONFIRMED
-
-        btnsLayoutBottom.isVisible = status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_CONFIRMED
-        btnSupportBottom.isVisible = status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_CONFIRMED
-        btnCancel.isVisible        = status == Transfer.STATUS_CATEGORY_ACTIVE
-        view_rate_ride.isVisible   = status == Transfer.STATUS_CATEGORY_FINISHED && showRate
+        btnCancel.isVisible      = status == Transfer.STATUS_CATEGORY_ACTIVE
+        view_rate_ride.isVisible = status == Transfer.STATUS_CATEGORY_FINISHED && showRate
     }
 
     private fun initInfoView(transfer: TransferModel) {
