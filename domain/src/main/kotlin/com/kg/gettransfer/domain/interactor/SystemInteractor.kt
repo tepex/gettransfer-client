@@ -10,6 +10,7 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.PushTokenType
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.LoggingRepository
@@ -60,6 +61,9 @@ class SystemInteractor(
 
     var pushToken: String? = null
         private set
+
+    val mobileConfigs: MobileConfig
+        get() = systemRepository.mobileConfig
 
     /* Read-write properties */
 

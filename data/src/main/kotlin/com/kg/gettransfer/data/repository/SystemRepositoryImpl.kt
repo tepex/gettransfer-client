@@ -8,12 +8,7 @@ import com.kg.gettransfer.data.SystemDataStore
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.SystemDataStoreCache
 import com.kg.gettransfer.data.ds.SystemDataStoreRemote
-
-import com.kg.gettransfer.data.mapper.AccountMapper
-import com.kg.gettransfer.data.mapper.AddressMapper
-import com.kg.gettransfer.data.mapper.ConfigsMapper
-import com.kg.gettransfer.data.mapper.EndpointMapper
-import com.kg.gettransfer.data.mapper.ExceptionMapper
+import com.kg.gettransfer.data.mapper.*
 
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
@@ -22,19 +17,8 @@ import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.SystemListener
+import com.kg.gettransfer.domain.model.*
 
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.CardGateways
-import com.kg.gettransfer.domain.model.Configs
-import com.kg.gettransfer.domain.model.DistanceUnit
-import com.kg.gettransfer.domain.model.Endpoint
-import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.PaypalCredentials
-import com.kg.gettransfer.domain.model.Profile
-import com.kg.gettransfer.domain.model.PushTokenType
-import com.kg.gettransfer.domain.model.TransportType
-import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.domain.model.User
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
@@ -52,6 +36,7 @@ class SystemRepositoryImpl(
     private val accountMapper    = get<AccountMapper>()
     private val endpointMapper   = get<EndpointMapper>()
     private val addressMapper    = get<AddressMapper>()
+    private val mobileConfMapper = get<MobileConfigMapper>()
 
     private val listeners = mutableSetOf<SystemListener>()
 
@@ -66,6 +51,9 @@ class SystemRepositoryImpl(
         private set
     override var account = NO_ACCOUNT
         private set
+    override var mobileConfig = MobileConfig.LAST_KNOWN_CONFIGS
+        private set
+
 
     override var lastMode: String
         get() = preferencesCache.lastMode
@@ -113,6 +101,12 @@ class SystemRepositoryImpl(
             }
             /* No chance to go further */
             if(result.error != null) return Result(account, ExceptionMapper.map(result.error))
+        }
+
+        if (mobileConfig === MobileConfig.LAST_KNOWN_CONFIGS) {
+            retrieveEntity { factory.retrieveRemoteDataStore().getMobileConfig() }.let {
+                it.entity?.let { c -> mobileConfig = mobileConfMapper.fromEntity(c) }
+            }
         }
 
         var error: ApiException? = null

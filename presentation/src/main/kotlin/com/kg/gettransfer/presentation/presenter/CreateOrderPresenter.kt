@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import android.util.Patterns
 
@@ -90,6 +91,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     override fun onFirstViewAttach() {
         currentDate = getCurrentDatePlusMinimumHours()
         date = currentDate.time
+        CreateOrderView.FUTURE_HOUR = systemInteractor.mobileConfigs.orderMinimumMinutes / 60
     }
 
     private fun getCurrentDatePlusMinimumHours(): Calendar {

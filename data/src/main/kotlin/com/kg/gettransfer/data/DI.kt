@@ -65,6 +65,8 @@ val dataModule = module {
     single { AccountMapper() }
     single { ConfigsMapper() }
     single { ReviewRateMapper() }
+    single { MobileConfigMapper() }
+
     single { SystemDataStoreCache() }
     single { SystemDataStoreRemote() }
     single<SystemRepository> { SystemRepositoryImpl(DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>(get(), get())) }

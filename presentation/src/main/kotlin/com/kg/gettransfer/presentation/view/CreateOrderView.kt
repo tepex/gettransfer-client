@@ -45,7 +45,7 @@ interface CreateOrderView: BaseView, RouteView {
 
     companion object {
         /* Пока сервевер не присылает минимальный временной промежуток до заказа */
-        const val FUTURE_HOUR   = 4
+        var FUTURE_HOUR         = 4
         const val FUTURE_MINUTE = 5
     }
 }

@@ -13,9 +13,14 @@ import org.koin.standalone.inject
 class WebPagePresenter: MvpPresenter<WebPageView>(), KoinComponent {
     private val systemInteractor: SystemInteractor by inject()
 
+    val termsUrl: String
+    get() = "/${systemInteractor.mobileConfigs.termsUrl}"
+
+
     fun onBackCommandClick() {
         viewState.finish()
     }
 
-    fun getLang() = systemInteractor.locale.language
+    fun getLang(): String = systemInteractor.locale.language
+
 }

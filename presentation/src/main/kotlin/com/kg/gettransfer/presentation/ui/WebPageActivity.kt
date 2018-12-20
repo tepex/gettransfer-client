@@ -34,7 +34,7 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContentView(R.layout.activity_web_page)
 
         setSupportActionBar(toolbar as Toolbar)
@@ -47,7 +47,7 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
 
         webView.settings.javaScriptEnabled = true
         webView.webViewClient = object: WebViewClient() {}
-        
+
         when(intent.getStringExtra(WebPageView.EXTRA_SCREEN)) {
             WebPageView.SCREEN_LICENSE      -> initActivity(R.string.LNG_RIDE_OFFERT_TITLE, WebPageView.INIT_WITH_STRING, createLicenceUrl(R.string.api_url_payment))
             WebPageView.SCREEN_REG_CARRIER  -> initActivity(R.string.LNG_RIDE_CREATE_CARRIER, R.string.registration_carrier_url)
@@ -75,6 +75,5 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
     private fun createLicenceUrl(apiPath: Int) =
        getString(R.string.api_url_prod)
                 .plus("/" + presenter.getLang())
-                .plus(getString(apiPath))
-
+                .plus(presenter.termsUrl)
 }

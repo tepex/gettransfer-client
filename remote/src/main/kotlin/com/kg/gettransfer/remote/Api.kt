@@ -22,6 +22,8 @@ interface Api {
         const val API_RATE_OFFER         = "/api/offers/rate"
         const val API_FEEDBACK           = "/api/offers"
         const val API_WEBPUSH_TOKENS     = "/api/webpush_tokens"
+
+        const val MOBILE_CONFIGS         = "/mobile/mobile.conf"
     }
 
     @GET(API_ACCESS_TOKEN)
@@ -112,12 +114,12 @@ interface Api {
         @Query("without_redirect") withoutRedirect: Boolean
     ): Deferred<ResponseModel<PaymentStatusWrapperModel>>
 
-     @POST("$API_RATE_OFFER/{id}/{type}")
-     fun rateOffer(
-         @Path("id") id: Long,
-         @Path("type") type: String,
-         @Body ratingModel: RateToRemote
-     ): Deferred<ResponseModel<RateModel>>
+    @POST("$API_RATE_OFFER/{id}/{type}")
+    fun rateOffer(
+        @Path("id") id: Long,
+        @Path("type") type: String,
+        @Body ratingModel: RateToRemote
+    ): Deferred<ResponseModel<RateModel>>
 
     @POST("$API_FEEDBACK/{id}/feedback")
     fun sendFeedBack(
@@ -135,4 +137,7 @@ interface Api {
     fun unregisterPushToken(
         @Path("id") token: String
     ): Deferred<ResponseModel<String>>
+
+    @GET(MOBILE_CONFIGS)
+    fun getMobileConfigs(): Deferred<MobileConfig>
 }
