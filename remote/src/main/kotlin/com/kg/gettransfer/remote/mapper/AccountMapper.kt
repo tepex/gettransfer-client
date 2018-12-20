@@ -9,23 +9,34 @@ import com.kg.gettransfer.remote.model.AccountModel
 /**
  * Map a [AccountModel] from an [AccountEntity] instance when data is moving between this later and the Data layer.
  */
-open class AccountMapper(): EntityMapper<AccountModel, AccountEntity> {
+open class AccountMapper : EntityMapper<AccountModel, AccountEntity> {
     override fun fromRemote(type: AccountModel) =
-        AccountEntity(UserEntity(ProfileEntity(0L, type.fullName, type.email, type.phone), type.termsAccepted),
-                      type.locale,
-                      type.currency,
-                      type.distanceUnit,
-                      type.groups,
-                      type.carrierId)
+        AccountEntity(
+            user = UserEntity(
+                profile = ProfileEntity(
+                    fullName = type.fullName,
+                    email = type.email,
+                    phone = type.phone
+                ),
+                termsAccepted = type.termsAccepted
+            ),
+            locale       = type.locale,
+            currency     = type.currency,
+            distanceUnit = type.distanceUnit,
+            groups       = type.groups,
+            carrierId    = type.carrierId
+        )
 
     override fun toRemote(type: AccountEntity) =
-        AccountModel(type.user.profile.fullName,
-                     type.user.profile.email,
-                     type.user.profile.phone,
-                     type.locale,
-                     type.currency,
-                     type.distanceUnit,
-                     type.groups,
-                     type.user.termsAccepted,
-                     type.carrierId)
+        AccountModel(
+            fullName      = type.user.profile.fullName,
+            email         = type.user.profile.email,
+            phone         = type.user.profile.phone,
+            locale        = type.locale,
+            currency      = type.currency,
+            distanceUnit  = type.distanceUnit,
+            groups        = type.groups,
+            termsAccepted = type.user.termsAccepted,
+            carrierId     = type.carrierId
+        )
 }

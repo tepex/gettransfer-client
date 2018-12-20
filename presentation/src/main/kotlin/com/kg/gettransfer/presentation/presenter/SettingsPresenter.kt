@@ -135,7 +135,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 //        localeWasChanged = false
         if(localeWasChanged) {
             localeWasChanged = false
-            router.navigateTo(Screens.Main)
+            router.navigateTo(Screens.ChangeMode(systemInteractor.lastMode))
         }
         else super.onBackCommandClick()
     }

@@ -29,11 +29,11 @@ import com.kg.gettransfer.domain.model.Trip
 import com.kg.gettransfer.presentation.mapper.CurrencyMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
+import com.kg.gettransfer.presentation.mapper.TransportTypePriceMapper
 import com.kg.gettransfer.presentation.mapper.UserMapper
 
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransportPriceModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.UserModel
 
@@ -64,6 +64,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val currencyMapper = get<CurrencyMapper>()
     private val routeMapper = get<RouteMapper>()
     private val transportTypeMapper: TransportTypeMapper by inject()
+    private val transportTypePriceMapper: TransportTypePriceMapper by inject()
     private val userMapper = get<UserMapper>()
 
     private var user = userMapper.toView(systemInteractor.account.user)
@@ -130,9 +131,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             else {
                 duration = result.model.duration
 
-                transportTypeMapper.prices = result.model.prices.map { p ->
-                    p.tranferId to TransportPriceModel(p.min, p.max, p.minFloat)
-                }.toMap()
+                transportTypeMapper.prices = result.model.prices.mapValues { transportTypePriceMapper.toView(it.value) }
                 if (transportTypes == null)
                     transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
                 viewState.setTransportTypes(transportTypes!!)
@@ -269,7 +268,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
         if (!checkFieldsForRequest()) return
 
-//        if(routeInteractor.from == null || routeInteractor.to == null) return
         val from = routeInteractor.from!!
         val to = routeInteractor.to
         val transferNew = TransferNew(
@@ -340,7 +338,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             val tripTime = String.format("%d:%d", duration!! / 60, duration!! % 60)
             val checkedTransport = transportTypes?.filter { it.checked }
             if (!checkedTransport.isNullOrEmpty())
-                viewState.setFairPrice(checkedTransport.minBy { it.price!!.unitPrice }?.price!!.min, tripTime)
+                viewState.setFairPrice(checkedTransport.minBy { it.price!!.minFloat }?.price!!.min, tripTime)
             else viewState.setFairPrice(null, null)
         } catch (e: KotlinNullPointerException) { viewState.setFairPrice(null, null) }
     }

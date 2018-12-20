@@ -11,10 +11,12 @@ import com.kg.gettransfer.data.mapper.TransferNewMapper
 
 import com.kg.gettransfer.data.model.TransferEntity
 
+import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew
+import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.domain.repository.TransferRepository
 
@@ -22,8 +24,10 @@ import java.util.Date
 
 import org.koin.standalone.get
 
-class TransferRepositoryImpl(private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>) :
-    BaseRepository(), TransferRepository {
+class TransferRepositoryImpl(
+    private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>
+) : BaseRepository(), TransferRepository {
+
     private val transferNewMapper = get<TransferNewMapper>()
     private val transferMapper = get<TransferMapper>()
 
@@ -60,41 +64,53 @@ class TransferRepositoryImpl(private val factory: DataStoreFactory<TransferDataS
     companion object {
         private val DEFAULT =
             Transfer(
-                id = 0,
-                createdAt = Date(),
-                duration = null,
-                distance = null,
-                status = Transfer.Status.NEW,
-                from = CityPoint(null, null, null),
-                to = null,
-                dateToLocal = Date(),
+                id              = 0,
+                createdAt       = Date(),
+                duration        = null,
+                distance        = null,
+                status          = Transfer.Status.NEW,
+                from            = CityPoint(null, null, null),
+                to              = null,
+                dateToLocal     = Date(),
                 dateReturnLocal = null,
-                dateRefund = null,
-
-                nameSign = null,
-                comment = null,
-                malinaCard = null,
-                flightNumber = null,
-                flightNumberReturn = null,
-                pax = 0,
-                childSeats = 0,
-                promoCode = null,
-                offersCount = 0,
+                flightNumber    = null,
+/* ================================================== */
+                flightNumberReturn    = null,
+                transportTypeIds      = emptyList<TransportType.ID>(),
+                pax                   = 0,
+                bookNow               = null,
+                time                  = 0,
+                nameSign              = null,
+                comment               = null,
+                childSeats            = 0,
+                childSeatsInfant      = 0,
+                childSeatsConvertible = 0,
+/* ================================================== */
+                childSeatsBooster     = 0,
+                promoCode             = null,
+                passengerOfferedPrice = null,
+                price                 = null,
+                paidSum               = null,
+                remainsToPay          = null,
+                paidPercentage        = 0,
+                watertaxi             = false,
+                bookNowOffers         = emptyMap<TransportType.ID, BookNowOffer>(),
+                offersCount           = 0,
+/* ================================================== */
                 relevantCarriersCount = 0,
 
-                time = 0,
-                paidSum = null,
-                remainsToPay = null,
-                paidPercentage = 0,
-                pendingPaymentId = null,
-                bookNow = false,
-                bookNowExpiration = null,
-                transportTypeIds = emptyList<String>(),
-                passengerOfferedPrice = null,
-                price = null,
-
-                paymentPercentages = emptyList<Int>(),
-                editableFields = emptyList<String>()
+                dateRefund            = null,
+                paypalOnly            = null,
+                carrierMainPhone      = null,
+                pendingPaymentId      = null,
+                analyticsSent         = false,
+                rubPrice              = null,
+                refundedPrice         = null,
+                campaign              = null,
+/* ================================================== */
+                editableFields     = emptyList<String>(),
+                airlineCard        = null,
+                paymentPercentages = emptyList<Int>()
             )
     }
 }

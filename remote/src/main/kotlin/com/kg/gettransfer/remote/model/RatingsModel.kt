@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 import com.kg.gettransfer.data.model.RatingsEntity
 
-class RatingsModel(
+data class RatingsModel(
     @SerializedName(RatingsEntity.AVERAGE) @Expose val average: Float?,
     @SerializedName(RatingsEntity.VEHICLE) @Expose val vehicle: Float?,
     @SerializedName(RatingsEntity.DRIVER) @Expose val driver: Float?,

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="@dimen/views_carrier_trips_info_layout_about_passenger_padding">
+
+    <TextView
+        android:id="@+id/passengerName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/bottom_sheet_carrier_trip_texts_size_17sp"
+        android:textColor="@color/colorTextBlack"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:text="Elvis Smith"/>
+
+    <LinearLayout
+        android:id="@+id/layoutPassengerEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnSendEmailPassenger"
+        app:layout_constraintTop_toBottomOf="@+id/passengerName"
+        android:layout_marginTop="@dimen/views_carrier_trips_info_layout_about_passenger_layouts_margin_top"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/titlePassengerEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/bottom_sheet_carrier_trip_texts_size_12sp"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:textColor="@color/color_driver_mode_text_gray"
+            android:textAllCaps="true"
+            android:text="@string/LNG_EMAIL"/>
+
+        <TextView
+            android:id="@+id/passengerEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/titlePassengerEmail"
+            android:layout_marginTop="@dimen/views_carrier_trips_info_layout_about_passenger_text_views_margin_top"
+            android:textSize="@dimen/bottom_sheet_carrier_trip_texts_size_17sp"
+            android:textColor="@color/colorTextBlack"
+            android:fontFamily="@font/sf_pro_text_semibold"
+            android:text="smithexample@gmail.com"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/btnSendEmailPassenger"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_send_email_with_round_border"
+        app:layout_constraintTop_toTopOf="@+id/layoutPassengerEmail"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="@dimen/views_carrier_trips_info_layout_about_passenger_image_buttons_elevation"/>
+
+    <LinearLayout
+        android:id="@+id/layoutPassengerPhone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnCallPassenger"
+        app:layout_constraintTop_toBottomOf="@+id/layoutPassengerEmail"
+        android:layout_marginTop="@dimen/views_carrier_trips_info_layout_about_passenger_layouts_margin_top"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/titlePassengerPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/bottom_sheet_carrier_trip_texts_size_12sp"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:textColor="@color/color_driver_mode_text_gray"
+            android:textAllCaps="true"
+            android:text="@string/LNG_PHONE"/>
+
+        <TextView
+            android:id="@+id/passengerPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/titlePassengerPhone"
+            android:layout_marginTop="@dimen/views_carrier_trips_info_layout_about_passenger_text_views_margin_top"
+            android:textSize="@dimen/bottom_sheet_carrier_trip_texts_size_17sp"
+            android:textColor="@color/colorTextBlack"
+            android:fontFamily="@font/sf_pro_text_semibold"
+            android:text="+345 123 98 000000"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/btnCallPassenger"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_call_with_round_border"
+        app:layout_constraintTop_toTopOf="@+id/layoutPassengerPhone"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="@dimen/views_carrier_trips_info_layout_about_passenger_image_buttons_elevation"/>
+
+</android.support.constraint.ConstraintLayout>

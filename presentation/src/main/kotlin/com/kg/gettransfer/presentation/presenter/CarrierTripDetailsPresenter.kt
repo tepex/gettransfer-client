@@ -2,7 +2,8 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.R
+import com.google.android.gms.maps.CameraUpdate
+import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
@@ -11,6 +12,7 @@ import com.kg.gettransfer.presentation.mapper.CarrierTripMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper
 
 import com.kg.gettransfer.presentation.model.CarrierTripModel
+import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 
 import com.kg.gettransfer.presentation.ui.Utils
@@ -26,8 +28,18 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
     private val carrierTripMapper: CarrierTripMapper by inject()
     private val routeMapper: RouteMapper by inject()
 
+    companion object {
+        @JvmField val FIELD_EMAIL = "field_email"
+        @JvmField val FIELD_PHONE = "field_phone"
+        @JvmField val OPERATION_COPY = "operation_copy"
+        @JvmField val OPERATION_OPEN = "operation_open"
+    }
+
     private var routeModel: RouteModel? = null
-    private lateinit var trip: CarrierTripModel
+    private var polyline: PolylineModel? = null
+    private var track: CameraUpdate? = null
+
+    private lateinit var tripModel: CarrierTripModel
     internal var tripId = 0L
 
     override fun onFirstViewAttach() {
@@ -36,27 +48,38 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
             val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(tripId) }
             if (result.error != null) viewState.setError(result.error!!)
             else {
-                val tripInfo = result.model
-                trip = carrierTripMapper.toView(tripInfo)
+                val tripModel = result.model
+                val trip = carrierTripMapper.toView(tripModel)
                 viewState.setTripInfo(trip)
 
-                val r = utils.asyncAwait { routeInteractor.getRouteInfo(tripInfo.from.point!!, tripInfo.to.point!!, false, false) }
+                val r = utils.asyncAwait { routeInteractor.getRouteInfo(tripModel.base.from.point!!, tripModel.base.to!!.point!!, false, false) }
                 if (r.error == null && r.model.success) {
                     routeModel = routeMapper.getView(
                         r.model.distance,
                         r.model.polyLines,
-                        trip.from,
-                        trip.to,
-                        tripInfo.from.point!!,
-                        tripInfo.to.point!!,
-                        trip.dateTime
+                        trip.base.from,
+                        trip.base.to!!,
+                        tripModel.base.from.point!!,
+                        tripModel.base.to!!.point!!,
+                        trip.base.dateTime
                     )
-                    routeModel?.let { viewState.setRoute(Utils.getPolyline(it), it) }
                 }
             }
             viewState.blockInterface(false)
         }
     }
 
-    fun onCallClick() {}
+    fun onCenterRouteClick() { track?.let { viewState.centerRoute(it) } }
+
+    fun makeFieldOperation(field: String, operation: String, text: String) {
+        when (operation) {
+            OPERATION_COPY -> viewState.copyText(text)
+            OPERATION_OPEN -> {
+                when (field) {
+                    FIELD_PHONE -> callPhone(text)
+                    FIELD_EMAIL -> sendEmail(text)
+                }
+            }
+        }
+    }
 }

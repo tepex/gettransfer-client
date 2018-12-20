@@ -1,0 +1,11 @@
+{
+    "email":"test@email.com",
+    "phone":"+79255898040",
+    "locale":"ru",
+    "currency":"RUB",
+    "distance_unit":"km",
+    "full_name":"John Smith",
+    "groups":["gr1","gr2"],
+    "terms_accepted":true,
+    "carrier_id":33
+}

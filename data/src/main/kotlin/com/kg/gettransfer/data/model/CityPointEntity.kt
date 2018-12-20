@@ -1,11 +1,13 @@
 package com.kg.gettransfer.data.model
 
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
-class CityPointEntity(@SerialName(NAME) val name: String,
-                      @SerialName(POINT) val point: String,
-                      @SerialName(PLACE_ID) val placeId: String?) {
+data class CityPointEntity(
+    @SerialName(NAME) val name: String,
+    @SerialName(POINT) val point: String,
+    @SerialName(PLACE_ID) val placeId: String?
+) {
+
     companion object {
         const val NAME     = "name"
         const val POINT    = "point"

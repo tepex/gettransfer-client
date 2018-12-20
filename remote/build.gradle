@@ -9,30 +9,30 @@ ext {
 }
 
 compileKotlin {
-	kotlinOptions {
-		jvmTarget = JavaVersion.VERSION_1_8
-	}
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
 }
 
 compileTestKotlin {
-	kotlinOptions {
-		jvmTarget = JavaVersion.VERSION_1_8
-	}
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
 }
 
 // enable @ParametersAreNonnullByDefault annotation. See https://blog.jetbrains.com/kotlin/2017/09/kotlin-1-1-50-is-out/
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-	kotlinOptions {
-		freeCompilerArgs = ["-Xjsr305=strict"]
-	}
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+    }
 }
 
 dependencies {
-	implementation libs.kotlin
-	implementation libs.coroutines
-	implementation libs.koin_core
-	implementation project(":data")
-	
+    implementation libs.kotlin
+    implementation libs.coroutines
+    implementation libs.koin_core
+    implementation project(":data")
+
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$r2_k_c_a_version"
@@ -40,7 +40,8 @@ dependencies {
     implementation "com.github.devcsrj:slf4j-okhttp3-logging-interceptor:$s_o_l_i_version"
     implementation libs.slf4j
 
-	testImplementation libs.junit
-	testImplementation libs.hamcrest
-	testImplementation libs.mockito
+    testImplementation libs.junit
+    testImplementation libs.hamcrest
+    testImplementation libs.mockito
+    testImplementation "org.koin:koin-test:$koin_version"
 }

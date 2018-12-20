@@ -24,17 +24,28 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.SystemListener
 
 import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.CardGateways
 import com.kg.gettransfer.domain.model.Configs
+import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.PaypalCredentials
+import com.kg.gettransfer.domain.model.Profile
+import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.User
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
+import java.util.Currency
+import java.util.Locale
+
 import org.koin.standalone.get
 
-class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>):
-                    BaseRepository(), SystemRepository, PreferencesListener {
+class SystemRepositoryImpl(
+    private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>
+) : BaseRepository(), SystemRepository, PreferencesListener {
+
     private val preferencesCache = get<PreferencesCache>()
     private val configsMapper    = get<ConfigsMapper>()
     private val accountMapper    = get<AccountMapper>()
@@ -50,9 +61,9 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
     override var isInitialized = false
         private set
 
-    override var configs = Configs.DEFAULT
+    override var configs = CONFIGS_DEFAULT
         private set
-    override var account = Account.NO_ACCOUNT
+    override var account = NO_ACCOUNT
         private set
 
     override var lastMode: String
@@ -90,7 +101,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
     override suspend fun coldStart(): Result<Account> {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
 
-        if(configs === Configs.DEFAULT) {
+        if(configs === CONFIGS_DEFAULT) {
             val result: ResultEntity<ConfigsEntity?> = retrieveEntity { fromRemote ->
                 factory.retrieveDataStore(fromRemote).getConfigs() }
             result.entity?.let {
@@ -104,7 +115,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
         }
 
         var error: ApiException? = null
-        if(account === Account.NO_ACCOUNT) {
+        if(account === NO_ACCOUNT) {
             val result: ResultEntity<AccountEntity?> = retrieveEntity { fromRemote ->
                 factory.retrieveDataStore(fromRemote).getAccount() }
             result.entity?.let {
@@ -136,7 +147,7 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
     }
 
     override fun logout(): Result<Account> {
-        account = Account.NO_ACCOUNT
+        account = NO_ACCOUNT
         factory.retrieveCacheDataStore().clearAccount()
         preferencesCache.logout()
         return Result(account)
@@ -153,4 +164,26 @@ class SystemRepositoryImpl(private val factory: DataStoreFactory<SystemDataStore
 
     override fun addListener(listener: SystemListener)    { listeners.add(listener) }
     override fun removeListener(listener: SystemListener) { listeners.add(listener) }
+
+    companion object {
+        private val CONFIGS_DEFAULT = Configs(
+            transportTypes         = emptyList<TransportType>(),
+            paypalCredentials      = PaypalCredentials("", ""),
+            availableLocales       = emptyList<Locale>(),
+            preferredLocale        = Locale.getDefault(),
+            supportedCurrencies    = emptyList<Currency>(),
+            supportedDistanceUnits = emptyList<DistanceUnit>(),
+            cardGateways           = CardGateways("", null),
+            officePhone            = "",
+            baseUrl                = ""
+        )
+        private val NO_ACCOUNT = Account(
+            user         = User(Profile(null, null, null)),
+            locale       = Locale.getDefault(),
+            currency     = Currency.getInstance("USD"),
+            distanceUnit = DistanceUnit.km,
+            groups       = emptyList<String>(),
+            carrierId    = null
+        )
+    }
 }

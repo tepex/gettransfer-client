@@ -49,7 +49,7 @@ interface Api {
                      @Query("return_way") returnWay: Boolean): Deferred<ResponseModel<RouteInfoModel>>
 
     @GET(API_CARRIER_TRIPS)
-    fun getCarrierTrips(): Deferred<ResponseModel<CarrierTripsModel>>
+    fun getCarrierTrips(): Deferred<ResponseModel<CarrierTripsBaseModel>>
 
     @GET("$API_CARRIER_TRIPS/{id}")
     fun getCarrierTrip(@Path("id") id: Long): Deferred<ResponseModel<CarrierTripModelWrapper>>

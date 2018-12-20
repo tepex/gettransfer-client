@@ -4,11 +4,6 @@ import com.kg.gettransfer.data.model.CarrierEntity
 import com.kg.gettransfer.data.model.LocaleEntity
 import com.kg.gettransfer.data.model.MoneyEntity
 import com.kg.gettransfer.data.model.OfferEntity
-import com.kg.gettransfer.data.model.PriceEntity
-import com.kg.gettransfer.data.model.RatingsEntity
-import com.kg.gettransfer.data.model.TransportTypeEntity
-import com.kg.gettransfer.data.model.VehicleBaseEntity
-import com.kg.gettransfer.data.model.VehicleEntity
 
 import com.kg.gettransfer.remote.model.OfferModel
 
@@ -31,19 +26,19 @@ open class OfferMapper : EntityMapper<OfferModel, OfferEntity> {
      */
     override fun fromRemote(type: OfferModel) =
         OfferEntity(
-            type.id,
-            transferId,
-            type.status,
-            type.wifi,
-            type.refreshments,
-            type.createdAt,
-            type.updatedAt,
-            priceMapper.fromRemote(type.price),
-            type.ratings?.let { ratingsMapper.fromRemote(it) },
-            type.passengerFeedback,
-            carrierMapper.fromRemote(type.carrier),
-            vehicleMapper.fromRemote(type.vehicle),
-            type.driver?.let { profileMapper.fromRemote(it) }
+            id                = type.id,
+            transferId        = transferId,
+            status            = type.status,
+            wifi              = type.wifi,
+            refreshments      = type.refreshments,
+            createdAt         = type.createdAt,
+            updatedAt         = type.updatedAt,
+            price             = priceMapper.fromRemote(type.price),
+            ratings           = type.ratings?.let { ratingsMapper.fromRemote(it) },
+            passengerFeedback = type.passengerFeedback,
+            carrier           = carrierMapper.fromRemote(type.carrier),
+            vehicle           = vehicleMapper.fromRemote(type.vehicle),
+            driver            = type.driver?.let { profileMapper.fromRemote(it) }
         )
 
     /**

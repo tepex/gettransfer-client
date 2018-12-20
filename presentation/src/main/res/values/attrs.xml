@@ -29,4 +29,9 @@
 		<attr name="img_about_item" format="reference" />
 	</declare-styleable>
 
+	<declare-styleable name="IconWithNumberIndicator" parent="EditableField">
+		<attr name="icon_with_number_indicator" format="reference" />
+		<attr name="is_showing_number" format="boolean" />
+	</declare-styleable>
+
 </resources>

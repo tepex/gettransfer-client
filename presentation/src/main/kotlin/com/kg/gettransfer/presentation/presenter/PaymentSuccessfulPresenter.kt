@@ -52,7 +52,6 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             if (result.error != null) viewState.setError(result.error!!)
             else {
-
                 if (result.model.to != null) {
                     val r = utils.asyncAwait {
                         routeInteractor

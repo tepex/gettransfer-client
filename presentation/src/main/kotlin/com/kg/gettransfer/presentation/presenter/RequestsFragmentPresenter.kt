@@ -28,7 +28,6 @@ import timber.log.Timber
 @InjectViewState
 class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
     private val transferInteractor: TransferInteractor by inject()
-
     private val transferMapper: TransferMapper by inject()
     lateinit var categoryName: String
 
@@ -70,7 +69,7 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
         Timber.d("Open Transfer details. id: $id")
         when (status) {
             Transfer.Status.NEW -> router.navigateTo(Screens.Offers(id))
-            else       -> router.navigateTo(Screens.Details(id))
+            else                -> router.navigateTo(Screens.Details(id))
         }
     }
 }

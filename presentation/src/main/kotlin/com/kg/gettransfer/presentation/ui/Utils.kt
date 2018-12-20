@@ -192,12 +192,12 @@ object Utils : KoinComponent {
     }
 
     fun getPolyline(routeModel: RouteModel): PolylineModel {
-        var mPoints = mutableListOf<LatLng>()
+        val mPoints = mutableListOf<LatLng>()
         var line: PolylineOptions? = null
         val latLngBuilder = LatLngBounds.Builder()
-        var track: CameraUpdate?
+        val track: CameraUpdate?
 
-        if (routeModel.polyLines != null) {
+        if (routeModel.polyLines != null && routeModel.polyLines.isNotEmpty()) {
             for (item in routeModel.polyLines) mPoints.addAll(PolyUtil.decode(item))
 
             // Для построения упрощённого маршрута (меньше точек)

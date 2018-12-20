@@ -15,7 +15,7 @@ import org.koin.standalone.get
 /**
  * Map a [TransferNewEntity] to and from a [TransferNewModel] instance when data is moving between this later and the Data layer.
  */
-open class TransferNewMapper: EntityMapper<TransferNewBase, TransferNewEntity> {
+open class TransferNewMapper : EntityMapper<TransferNewBase, TransferNewEntity> {
     private val cityPointMapper = get<CityPointMapper>()
     private val tripMapper      = get<TripMapper>()
     private val moneyMapper     = get<MoneyMapper>()
@@ -31,39 +31,39 @@ open class TransferNewMapper: EntityMapper<TransferNewBase, TransferNewEntity> {
      */
     override fun toRemote(type: TransferNewEntity): TransferNewBase {
         val dest = type.dest
-        return when(dest) {
+        return when (dest) {
             is DestDurationEntity -> getHourly(type, dest.duration)
             is DestPointEntity    -> getPointToPoint(type, dest.to)
         }
     }
 
-    private fun getHourly(type: TransferNewEntity, duration: Int) =
-            type.let {  TransferHourlyNewModel(
-                        cityPointMapper.toRemote(it.from),
-                        tripMapper.toRemote(it.tripTo),
-                        it.transportTypeIds,
-                        it.pax,
-                        it.childSeats,
-                        it.passengerOfferedPrice?.let { int ->  int.toDouble() / 100 },
-                        it.nameSign,
-                        it.comment,
-                        userMapper.toRemote(it.user),
-                        it.promoCode,
-                        duration
-            ) }
+    private fun getHourly(type: TransferNewEntity, _duration: Int) =
+        TransferHourlyNewModel(
+            from                  = cityPointMapper.toRemote(type.from),
+            tripTo                = tripMapper.toRemote(type.tripTo),
+            transportTypeIds      = type.transportTypeIds,
+            pax                   = type.pax,
+            childSeats            = type.childSeats,
+            passengerOfferedPrice = type.passengerOfferedPrice?.let { it.toDouble() / 100 },
+            nameSign              = type.nameSign,
+            comment               = type.comment,
+            user                  = userMapper.toRemote(type.user),
+            promoCode             = type.promoCode,
+            duration              = _duration
+        )
 
-    private fun getPointToPoint(type: TransferNewEntity, to: CityPointEntity) =
-            type.let { TransferPointToPointNewModel(
-                       cityPointMapper.toRemote(it.from),
-                       cityPointMapper.toRemote(to),
-                       tripMapper.toRemote(it.tripTo),
-                       it.transportTypeIds,
-                       it.pax,
-                       it.childSeats,
-                       it.passengerOfferedPrice?.let { int -> int.toDouble() / 100 },
-                       it.nameSign,
-                       it.comment,
-                       userMapper.toRemote(it.user),
-                       it.promoCode) }
-
+    private fun getPointToPoint(type: TransferNewEntity, _to: CityPointEntity) =
+        TransferPointToPointNewModel(
+            from                  = cityPointMapper.toRemote(type.from),
+            to                    = cityPointMapper.toRemote(_to),
+            tripTo                = tripMapper.toRemote(type.tripTo),
+            transportTypeIds      = type.transportTypeIds,
+            pax                   = type.pax,
+            childSeats            = type.childSeats,
+            passengerOfferedPrice = type.passengerOfferedPrice?.let { it.toDouble() / 100 },
+            nameSign              = type.nameSign,
+            comment               = type.comment,
+            user                  = userMapper.toRemote(type.user),
+            promoCode             = type.promoCode
+        )
 }

@@ -7,15 +7,18 @@ import kotlinx.serialization.SerialName
  * Representation for a [ConfigsEntity] fetched from an external layer data source
  */
 @Serializable
-data class ConfigsEntity(@SerialName(TRANSPORT_TYPES) val transportTypes: List<TransportTypeEntity>,
-                         @SerialName(PAYPAL_CREDENTIALS) val paypalCredentials: PaypalCredentialsEntity,
-                         @SerialName(AVAILABLE_LOCALES) val availableLocales: List<LocaleEntity>,
-                         @SerialName(PREFERRED_LOCALE) val preferredLocale: String,
-                         @SerialName(SUPPORTED_CURRENCIES) val supportedCurrencies: List<CurrencyEntity>,
-                         @SerialName(SUPPORTED_DISTANCE_UNITS) val supportedDistanceUnits: List<String>,
-                         @SerialName(CARD_GATEWAYS) val cardGateways: CardGatewaysEntity,
-                         @SerialName(OFFICE_PHONE) val officePhone: String,
-                         @SerialName(BASE_URL) val baseUrl: String) {
+data class ConfigsEntity(
+    @SerialName(TRANSPORT_TYPES) val transportTypes: List<TransportTypeEntity>,
+    @SerialName(PAYPAL_CREDENTIALS) val paypalCredentials: PaypalCredentialsEntity,
+    @SerialName(AVAILABLE_LOCALES) val availableLocales: List<LocaleEntity>,
+    @SerialName(PREFERRED_LOCALE) val preferredLocale: String,
+    @SerialName(SUPPORTED_CURRENCIES) val supportedCurrencies: List<CurrencyEntity>,
+    @SerialName(SUPPORTED_DISTANCE_UNITS) val supportedDistanceUnits: List<String>,
+    @SerialName(CARD_GATEWAYS) val cardGateways: CardGatewaysEntity,
+    @SerialName(OFFICE_PHONE) val officePhone: String,
+    @SerialName(BASE_URL) val baseUrl: String
+) {
+
     companion object {
         const val ENTITY_NAME              = "configs"
         const val TRANSPORT_TYPES          = "transport_types"
@@ -31,8 +34,11 @@ data class ConfigsEntity(@SerialName(TRANSPORT_TYPES) val transportTypes: List<T
 }
 
 @Serializable
-data class PaypalCredentialsEntity(@SerialName(ID)  val id: String,
-                                   @SerialName(ENV) val env: String) {
+data class PaypalCredentialsEntity(
+    @SerialName(ID)  val id: String,
+    @SerialName(ENV) val env: String
+) {
+
     companion object {
         const val ID  = "id"
         const val ENV = "env"
@@ -40,8 +46,11 @@ data class PaypalCredentialsEntity(@SerialName(ID)  val id: String,
 }
 
 @Serializable
-data class CardGatewaysEntity(@SerialName(DEFAULT) val default: String,
-                              @SerialName(ISO_COUNTRY_CODE) val countryCode: String?) {
+data class CardGatewaysEntity(
+    @SerialName(DEFAULT) val def: String,
+    @SerialName(ISO_COUNTRY_CODE) val countryCode: String?
+) {
+
     companion object {
         const val DEFAULT          = "default"
         const val ISO_COUNTRY_CODE = "iso_country_code"
@@ -49,8 +58,11 @@ data class CardGatewaysEntity(@SerialName(DEFAULT) val default: String,
 }
 
 @Serializable
-data class CurrencyEntity(@SerialName(ISO_CODE) val code: String,
-                          @SerialName(SYMBOL) val symbol: String) {
+data class CurrencyEntity(
+    @SerialName(ISO_CODE) val code: String,
+    @SerialName(SYMBOL) val symbol: String
+) {
+
     companion object {
         const val ISO_CODE = "iso_code"
         const val SYMBOL   = "symbol"

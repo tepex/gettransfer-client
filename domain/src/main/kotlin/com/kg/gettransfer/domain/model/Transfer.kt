@@ -17,45 +17,54 @@ data class Transfer(
     val to: CityPoint?,
     val dateToLocal: Date,
     val dateReturnLocal: Date?,
-    val dateRefund: Date?,
+    val flightNumber: String?,
 /* ================================================== */
+    val flightNumberReturn: String?,
+    val transportTypeIds: List<TransportType.ID>,
+    val pax: Int,
+    val bookNow: TransportType.ID?,
+    val time: Int?,
     val nameSign: String?,
     val comment: String?,
-    val malinaCard: String?,
-    val flightNumber: String?,
-    val flightNumberReturn: String?,
-    val pax: Int,
     val childSeats: Int,
-    val promoCode: String?,
-    val offersCount: Int,
-    val relevantCarriersCount: Int,
-    /* offersUpdatedAt */
+    val childSeatsInfant: Int,
+    val childSeatsConvertible: Int,
 /* ================================================== */
-    val time: Int?,
+    val childSeatsBooster: Int,
+    val promoCode: String?,
+    val passengerOfferedPrice: String?,
+    val price: Money?,
     val paidSum: Money?,
     val remainsToPay: Money?,
     val paidPercentage: Int,
-    val pendingPaymentId: Int?,
-    val bookNow: Boolean,
-    val bookNowExpiration: String?,
-    val transportTypeIds: List<String>,
-    val passengerOfferedPrice: String?,
-    val price: Money?,
+    val watertaxi: Boolean,
+    val bookNowOffers: Map<TransportType.ID, BookNowOffer>,
+    val offersCount: Int,
 /* ================================================== */
-    val paymentPercentages: List<Int>,
-    val editableFields: List<String> /* not used */
+    val relevantCarriersCount: Int,
+    /* offersUpdatedAt */
+    val dateRefund: Date?,
+    val paypalOnly: Boolean?,
+    val carrierMainPhone: String?,
+    val pendingPaymentId: Int?,
+    val analyticsSent: Boolean,
+    val rubPrice: Double?,
+    val refundedPrice: Money?,
+    val campaign: String?,
+/* ================================================== */
+    val editableFields: List<String>, /* not used */
+    val airlineCard: String?,
+    val paymentPercentages: List<Int>
 ) : Entity() {
 
-    fun checkStatusCategory(): String {
-        return when (status) {
-            Status.NEW       -> STATUS_CATEGORY_ACTIVE
-            Status.DRAFT     -> STATUS_CATEGORY_ACTIVE
-            Status.PERFORMED -> STATUS_CATEGORY_CONFIRMED
-            Status.OUTDATED  -> STATUS_CATEGORY_UNFINISHED
-            Status.CANCELED  -> STATUS_CATEGORY_UNFINISHED
-            Status.REJECTED  -> STATUS_CATEGORY_UNFINISHED
-            else             -> STATUS_CATEGORY_FINISHED
-        }
+    fun checkStatusCategory() = when (status) {
+        Status.NEW       -> STATUS_CATEGORY_ACTIVE
+        Status.DRAFT     -> STATUS_CATEGORY_ACTIVE
+        Status.PERFORMED -> STATUS_CATEGORY_CONFIRMED
+        Status.OUTDATED  -> STATUS_CATEGORY_UNFINISHED
+        Status.CANCELED  -> STATUS_CATEGORY_UNFINISHED
+        Status.REJECTED  -> STATUS_CATEGORY_UNFINISHED
+        else             -> STATUS_CATEGORY_FINISHED
     }
 
     enum class Status(val checkOffers: Boolean) {

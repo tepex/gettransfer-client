@@ -3,32 +3,58 @@ package com.kg.gettransfer.remote.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class CarrierTripModelWrapper(@SerializedName("trip") @Expose val trip: CarrierTripModel)
+import com.kg.gettransfer.data.model.CarrierTripEntity
+import com.kg.gettransfer.data.model.PassengerAccountEntity
 
-class CarrierTripsModel(@SerializedName("trips") @Expose val trips: List<CarrierTripModel>)
+data class CarrierTripModelWrapper(@SerializedName(CarrierTripEntity.ENTITY_NAME) @Expose val trip: CarrierTripModel)
 
 class CarrierTripModel(
-    @SerializedName("id") @Expose val id: Long,
-    @SerializedName("transfer_id") @Expose val transferId: Long,
-    @SerializedName("from") @Expose val from: CityPointModel,
-    @SerializedName("to") @Expose val to: CityPointModel,
-    @SerializedName("date_local") @Expose val dateLocal: String,
-    @SerializedName("duration") @Expose val duration: Int?,
-    @SerializedName("distance") @Expose val distance: Int?,
-    @SerializedName("time") @Expose val time: Int?,
-    @SerializedName("child_seats") @Expose val childSeats: Int,
-    @SerializedName("comment") @Expose val comment: String?,
-    @SerializedName("water_taxi") @Expose val waterTaxi: Boolean,
-    @SerializedName("price") @Expose val price: String,
-    @SerializedName("vehicle") @Expose val vehicle: VehicleBaseModel,
-    @SerializedName("pax") @Expose val pax: Int?,
-    @SerializedName("name_sign") @Expose val nameSign: String?,
-    @SerializedName("flight_number") @Expose val flightNumber: String?,
-    @SerializedName("paid_sum") @Expose val paidSum: String?,
-    @SerializedName("remains_to_pay") @Expose val remainToPay: String?,
-    @SerializedName("paid_percentage") @Expose val paidPercentage: Int?,
-    @SerializedName("passenger_account") @Expose val passengerAccount: PassengerAccountModel?
+    id: Long,
+    transferId: Long,
+    from: CityPointModel,
+    to: CityPointModel,
+    dateLocal: String,
+    duration: Int?,
+    distance: Int,
+    time: Int,
+    childSeats: Int,
+    childSeatsInfant: Int,
+    childSeatsConvertible: Int,
+    childSeatsBooster: Int,
+    comment: String?,
+    waterTaxi: Boolean,
+    price: String,
+    vehicle: VehicleInfoModel,
+    @SerializedName(CarrierTripEntity.PAX) @Expose val pax: Int,
+    @SerializedName(CarrierTripEntity.NAME_SIGN) @Expose val nameSign: String?,
+    @SerializedName(CarrierTripEntity.FLIGHT_NUMBER) @Expose val flightNumber: String?,
+    @SerializedName(CarrierTripEntity.PAID_SUM) @Expose val paidSum: String,
+    @SerializedName(CarrierTripEntity.REMAINS_TO_PAY) @Expose val remainsToPay: String,
+    @SerializedName(CarrierTripEntity.PAID_PERCENTAGE) @Expose val paidPercentage: Int,
+    @SerializedName(CarrierTripEntity.PASSENGER_ACCOUNT) @Expose val passengerAccount: PassengerAccountModel
+) : CarrierTripBaseModel(
+    id,
+    transferId,
+    from,
+    to,
+    dateLocal,
+    duration,
+    distance,
+    time,
+    childSeats,
+    childSeatsInfant,
+    childSeatsConvertible,
+    childSeatsBooster,
+    comment,
+    waterTaxi,
+    price,
+    vehicle
 )
 
-class PassengerAccountModel(fullName: String, email: String, phone: String,
-                            @SerializedName("last_seen") @Expose val lastSeen: String): ProfileModel(fullName, email, phone)
+class PassengerAccountModel(
+    fullName: String,
+    email: String,
+    phone: String,
+    @SerializedName(PassengerAccountEntity.ID) @Expose val id: Long,
+    @SerializedName(PassengerAccountEntity.LAST_SEEN) @Expose val lastSeen: String
+) : ProfileModel(fullName, email, phone)

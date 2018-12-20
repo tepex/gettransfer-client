@@ -16,9 +16,11 @@ import org.slf4j.LoggerFactory
 
 val remoteMappersModule = module {
     single { AccountMapper() }
+    single { BookNowOfferMapper() }
 
     single { CardGatewaysMapper() }
     single { CarrierMapper() }
+    single { CarrierTripBaseMapper() }
     single { CarrierTripMapper() }
     single { CityPointMapper() }
     single { ConfigsMapper() }
@@ -50,7 +52,7 @@ val remoteMappersModule = module {
     single { TripMapper() }
 
     single { UserMapper() }
-    single { VehicleBaseMapper() }
+    single { VehicleInfoMapper() }
     single { VehicleMapper() }
 }
 

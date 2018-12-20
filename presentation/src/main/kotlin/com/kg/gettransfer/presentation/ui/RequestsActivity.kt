@@ -48,11 +48,11 @@ class RequestsActivity: BaseActivity(), RequestsView {
         viewNetworkNotAvailable = textNetworkNotAvailable
 
         val fragmentRequestsActive = RequestsFragment.newInstance(RequestsView.CATEGORY_ACTIVE)
-        requestsVPAdapter.addFragment(fragmentRequestsActive, RequestsView.CATEGORY_ACTIVE)
+        requestsVPAdapter.addFragment(fragmentRequestsActive, getString(R.string.LNG_RIDES_ACTIVE))
         val fragmentRequestsAll = RequestsFragment.newInstance(RequestsView.CATEGORY_ALL)
-        requestsVPAdapter.addFragment(fragmentRequestsAll, RequestsView.CATEGORY_ALL)
+        requestsVPAdapter.addFragment(fragmentRequestsAll, getString(R.string.LNG_RIDES_ALL))
         val fragmentRequestsCompleted = RequestsFragment.newInstance(RequestsView.CATEGORY_COMPLETED)
-        requestsVPAdapter.addFragment(fragmentRequestsCompleted, RequestsView.CATEGORY_COMPLETED)
+        requestsVPAdapter.addFragment(fragmentRequestsCompleted, getString(R.string.LNG_RIDES_COMPLETED))
 
         vpRequests.adapter = requestsVPAdapter
         tabs.setupWithViewPager(vpRequests)

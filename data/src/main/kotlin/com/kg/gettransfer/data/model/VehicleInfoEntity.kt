@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
 @Serializable
-data class VehicleBaseEntity(
+data class VehicleInfoEntity(
     @SerialName(NAME) val name: String,
     @SerialName(REGISTRATION_NUMBER) val registrationNumber: String
 ) {
@@ -14,4 +14,3 @@ data class VehicleBaseEntity(
         const val REGISTRATION_NUMBER = "registration_number"
     }
 }
-

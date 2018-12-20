@@ -146,6 +146,13 @@
 		<item name="android:background">?android:attr/selectableItemBackground</item>
 	</style>
 
+	<style name="TabLayoutTextStyle">
+		<item name="android:textSize">@dimen/views_carrier_trips_activity_tab_layout_text_size</item>
+		<item name="android:textColor">@color/colorTextBlack</item>
+		<item name="android:fontFamily">@font/sf_pro_text_regular</item>
+		<item name="android:textAllCaps">false</item>
+	</style>
+
 
 
 

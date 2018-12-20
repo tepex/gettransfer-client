@@ -20,6 +20,6 @@ interface Mapper<V, M>: KoinComponent {
             longitude = point.longitude
         }
 
-        fun checkDistance(from: Point, to: Point) = (point2Location(from).distanceTo(point2Location(to)) / 1000).toInt()
+        fun checkDistance(from: Point, to: Point?) = to?.let { (point2Location(from).distanceTo(point2Location(it)) / 1000).toInt() }
     }
 }
