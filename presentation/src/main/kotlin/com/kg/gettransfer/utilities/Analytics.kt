@@ -1,6 +1,7 @@
 package com.kg.gettransfer.utilities
 
 import android.os.Bundle
+import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.yandex.metrica.YandexMetrica
@@ -120,15 +121,15 @@ class Analytics(private val firebase: FirebaseAnalytics,
         logEventToYandex(event, map)
     }
 
-    private fun logEventToFirebase(event: String, data: Bundle) {
+    fun logEventToFirebase(event: String, data: Bundle) {
         firebase.logEvent(event, data)
     }
 
-    private fun logEventToFacebook(event: String, data: Bundle) {
+    fun logEventToFacebook(event: String, data: Bundle) {
         facebook.logEvent(event, data)
     }
 
-    private fun logEventToYandex(event: String, data: Map<String, Any?>) {
+    fun logEventToYandex(event: String, data: Map<String, Any?>) {
         YandexMetrica.reportEvent(event, data)
     }
 
@@ -141,7 +142,7 @@ class Analytics(private val firebase: FirebaseAnalytics,
 
     fun logEventBeginCheckout(event: String, bundle: Bundle, map: Map<String, Any?>, price: Double) {
         logEventToFirebase(event, bundle)
-        facebook.logEvent(event, price, bundle)
+        facebook.logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT, price, bundle)
         logEventToYandex(event, map)
     }
 }

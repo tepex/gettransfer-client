@@ -7,6 +7,8 @@ import android.util.Patterns
 
 import com.arellomobile.mvp.InjectViewState
 
+import com.facebook.appevents.AppEventsConstants
+
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 
@@ -413,7 +415,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         bundle.putString(Analytics.TRAVEL_CLASS, transportTypes?.filter { it.checked }?.joinToString())
         map[Analytics.TRAVEL_CLASS] = transportTypes?.filter { it.checked }?.joinToString()
 
-        analytics.logEvent(value, bundle, map)
+        analytics.logEventToFirebase(value, bundle)
+        analytics.logEventToFacebook(AppEventsConstants.EVENT_NAME_ADDED_TO_CART, bundle)
+        analytics.logEventToYandex(value, map)
     }
 
     companion object {
