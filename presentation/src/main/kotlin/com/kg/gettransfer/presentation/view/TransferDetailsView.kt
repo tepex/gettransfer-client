@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.view
 
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import com.google.android.gms.maps.CameraUpdate
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.ProfileModel
@@ -15,7 +14,6 @@ interface TransferDetailsView: BaseView, RouteView {
     fun showAlertCancelRequest()
     fun copyText(text: String)
     fun recreateActivity()
-    fun centerRoute(cameraUpdate: CameraUpdate)
     fun showDetailRate(tappedRate: Float)
     fun closeRateWindow()
     fun askRateInPlayMarket()

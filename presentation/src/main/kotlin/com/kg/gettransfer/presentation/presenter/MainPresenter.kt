@@ -306,25 +306,26 @@ class MainPresenter : BasePresenter<MainView>() {
 
     private fun getLastTransfer(transfers: List<Transfer>) =
         transfers.filter { it.status.checkOffers }
-                .sortedByDescending { it.dateToLocal }
-                .firstOrNull()
+            .sortedByDescending { it.dateToLocal }
+            .firstOrNull()
 
     private suspend fun checkToShowReview(transfer: Transfer) =
-            utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
-                    .isNotError()
-                    ?.firstOrNull()
-                    ?.let { offer ->
-                        if (!offer.isRated()) {
-                            val routeModel = createRouteModel(transfer)
-                            reviewInteractor.offerIdForReview = offer.id
-                            viewState.openReviewForLastTrip(transfer.id,
-                                                            transfer.dateToLocal.toString(),
-                                                            offer.vehicle.vehicleBase.name,
-                                                      offer.vehicle.color?:"",
-                                                            routeModel)
-                        }
-
-                    }
+        utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
+            .isNotError()
+            ?.firstOrNull()
+            ?.let { offer ->
+                if (!offer.isRated()) {
+                    val routeModel = createRouteModel(transfer)
+                    reviewInteractor.offerIdForReview = offer.id
+                    viewState.openReviewForLastTrip(
+                        transfer.id,
+                        transfer.dateToLocal.toString(),
+                        offer.vehicle.name,
+                        offer.vehicle.color?:"",
+                        routeModel
+                    )
+                }
+            }
 
     fun onReviewCanceled() {
         reviewInteractor.rateCanceled()
@@ -335,14 +336,12 @@ class MainPresenter : BasePresenter<MainView>() {
         if (rate.toInt() == ReviewInteractor.MAX_RATE) {
             reviewInteractor.apply {
                 utils.launchSuspend{ sendTopRate() }
-                if (shouldAskRateInMarket) viewState.askRateInPlayMarket()
-                else viewState.thanksForRate()
+                if (shouldAskRateInMarket) viewState.askRateInPlayMarket() else viewState.thanksForRate()
             }
-        }
-        else viewState.showDetailedReview(rate)
+        } else viewState.showDetailedReview(rate)
     }
 
-    fun sendReview(mapOfRates: HashMap<String, Int>, comment: String){
+    fun sendReview(mapOfRates: HashMap<String, Int>, comment: String) {
         utils.launchSuspend {
             val result = utils.asyncAwait{ reviewInteractor.sendRates(mapOfRates, comment) }
             if (result.error != null) {
@@ -380,20 +379,20 @@ class MainPresenter : BasePresenter<MainView>() {
     private suspend fun createRouteModel(transfer: Transfer): RouteModel {
         val route = routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false).model
         return routeMapper.getView(
-                route.distance,
-                route.polyLines,
-                transfer.from.name!!,
-                transfer.to!!.name!!,
-                transfer.from.point!!,
-                transfer.to!!.point!!,
-                SystemUtils.formatDateTime(transferMapper.toView(transfer).dateTime)
+            route.distance,
+            route.polyLines,
+            transfer.from.name!!,
+            transfer.to!!.name!!,
+            transfer.from.point!!,
+            transfer.to!!.point!!,
+            SystemUtils.formatDateTime(transferMapper.toView(transfer).dateTime)
         )
 
     }
 
     companion object {
-        @JvmField val FIELD_FROM = "field_from"
-        @JvmField val FIELD_TO   = "field_to"
+        const val FIELD_FROM = "field_from"
+        const val FIELD_TO   = "field_to"
 
         const val MIN_HOURLY          = 2
 
