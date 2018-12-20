@@ -38,9 +38,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
     private val offerMapper: OfferMapper by inject()
     private val transferMapper: TransferMapper by inject()
 
-    private val offerMapper: OfferMapper by inject()
-    private val transferMapper: TransferMapper by inject()
-
     /*
     init {
         router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })

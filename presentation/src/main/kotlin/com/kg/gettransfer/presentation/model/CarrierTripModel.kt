@@ -6,7 +6,11 @@ data class CarrierTripModel(
     val nameSign: String?,
     val flightNumber: String?,
     val paidSum: String,
-    val remainsToPay: String,
-    val paidPercentage: Int,
+    val totalPrice: TotalPriceModel,
     val passenger: PassengerAccountModel
+)
+
+data class TotalPriceModel(
+    val remainsToPay: String,
+    val paidPercentage: Int
 )

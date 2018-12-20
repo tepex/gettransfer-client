@@ -5,6 +5,7 @@ import android.content.Context
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.presentation.presenter.*
+import com.kg.gettransfer.presentation.mapper.*
 
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -39,4 +40,10 @@ class DryRunTest : KoinTest {
     fun `check Koin configuration`() {
         checkModules(listOf(mockedAndroidContext) + androidModule + mappersModule + mockedDomainModule)
     }
+
+    @Test
+    fun `check profile mapper`() {
+        val mapper = ProfileMapper()
+    }
+
 }

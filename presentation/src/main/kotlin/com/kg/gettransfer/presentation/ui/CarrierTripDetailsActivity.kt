@@ -17,14 +17,19 @@ import android.view.WindowManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
+import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isGone
+import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.model.CarrierTripModel
+import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.VehicleInfoModel
 
 import com.kg.gettransfer.presentation.presenter.CarrierTripDetailsPresenter
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
@@ -88,23 +93,25 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         return super.dispatchTouchEvent(event)
     }*/
 
-        layoutTransferInfo.chevron.isGone = true
-        layoutTransferInfo.divider.isGone = true
+    private fun setOnClickListeners() {
+        btnCenterRoute.setOnClickListener { presenter.onCenterRouteClick() }
+        btnSupport.setOnClickListener { presenter.sendEmail(null) }
+    }
 
     override fun setTripInfo(trip: CarrierTripModel) {
-        layoutCarrierTripInfo.setInfo(trip, true)
+        layoutCarrierTripInfo.setInfo(trip.base, trip.totalPrice)
         initMoreInfoLayout(trip)
-        initAboutCarLayout(trip.vehicleName, trip.vehicleNumber)
+        initAboutCarLayout(trip.base.vehicle)
         /*if(trip.tripStatus == CarrierTripModel.PAST_TRIP){
             layoutAboutPassenger.isVisible = false
         } else {
            trip.passengerAccount?.profileModel?.let { initAboutPassengerLayout(it) }
         }*/
-        trip.passengerAccount?.profileModel?.let { initAboutPassengerLayout(it) }
+        trip.passenger?.profile?.let { initAboutPassengerLayout(it) }
     }
 
-    private fun initMoreInfoLayout(trip: CarrierTripModel){
-        trip.comment?.let {
+    private fun initMoreInfoLayout(trip: CarrierTripModel) {
+        trip.base.comment?.let {
             tvComment.text = it
             layoutMoreInfoComment.isVisible = true
         }
@@ -113,33 +120,33 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
             layoutFlightNumber.isVisible = true
         }
         countPassengers.numberIndicator.text = trip.countPassengers.toString()
-        if(trip.countChild > 0){
+        if (trip.base.countChild > 0) {
             layoutCountChild.isVisible = true
-            childSeats.numberIndicator.text = trip.countChild.toString()
+            childSeats.numberIndicator.text = trip.base.countChild.toString()
         }
     }
 
-    private fun initAboutCarLayout(vehicleName: String, vehicleNumber: String){
-        carName.text = vehicleName
-        carNumber.text = vehicleNumber
+    private fun initAboutCarLayout(vehicle: VehicleInfoModel) {
+        carName.text = vehicle.name
+        carNumber.text = vehicle.registrationNumber
     }
 
-    private fun initAboutPassengerLayout(passengerProfile: ProfileModel){
-        passengerName.text = passengerProfile.name
+    private fun initAboutPassengerLayout(passenger: ProfileModel) {
+        passengerName.text = passenger.name
 
         val operations = listOf<Pair<CharSequence, String>>(
                 Pair(getString(R.string.LNG_COPY), CarrierTripDetailsPresenter.OPERATION_COPY),
                 Pair(getString(R.string.LNG_OPEN), CarrierTripDetailsPresenter.OPERATION_OPEN))
         val operationsName: List<CharSequence> = operations.map { it.first }
 
-        passengerProfile.email?.let { email ->
+        passenger.email?.let { email ->
             passengerEmail.text = email
             Utils.setSelectOperationListener(this, layoutPassengerEmail, operationsName, R.string.LNG_DRIVER_EMAIL) {
                 presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
             btnSendEmailPassenger.setOnClickListener { presenter.sendEmail(email) }
             btnChat.setOnClickListener { presenter.sendEmail(email) }
         }
-        passengerProfile.phone?.let{ phone ->
+        passenger.phone?.let { phone ->
             passengerPhone.text = phone
             Utils.setSelectOperationListener(this, layoutPassengerPhone, operationsName, R.string.LNG_DRIVER_PHONE) {
                 presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
@@ -148,19 +155,20 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         }
     }
 
-    override fun setTripInfo(trip: CarrierTripModel) {
-        layoutTransferInfo.tvTransferRequestNumber.text = getString(R.string.LNG_RIDE_NUMBER).plus(trip.base.transferId)
-        layoutTransferInfo.tvFrom.text = trip.base.from
-        layoutTransferInfo.tvTo.text = trip.base.to
-        //layoutTransferInfo.tvOrderDateTime.text = getString(R.string.transfer_date_local, trip.dateTime)
-        layoutTransferInfo.tvOrderDateTime.text = trip.base.dateTime
-        layoutTransferInfo.tvDistance.text = SystemUtils.formatDistance(this, trip.base.distance, true)
-        tvCountPassengers.text = trip.countPassengers.toString()
+    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) =
+        setPolyline(polyline, routeModel)
 
-        if (trip.nameSign != null) tvPassengerName.text = trip.nameSign else layoutName.isGone = true
-        if (trip.base.countChild > 0) tvCountChildSeats.text = trip.base.countChild.toString() else layoutChildSeat.isGone = true
-        if (trip.flightNumber != null) tvFlightOrTrainNumber.text = trip.flightNumber else layoutFlightNumber.isGone = true
-        if (trip.base.comment != null) tvComment.text = trip.base.comment else layoutComment.isGone = true
-        tvPay.text = trip.remainsToPay
+    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
+        processGoogleMap(false) {
+            setPinForHourlyTransfer(placeName, info, point, cameraUpdate)
+        }
+    }
+
+    override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
+
+    override fun copyText(text: String) {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+        val clip = android.content.ClipData.newPlainText("Copied Text", text)
+        clipboard.primaryClip = clip
     }
 }

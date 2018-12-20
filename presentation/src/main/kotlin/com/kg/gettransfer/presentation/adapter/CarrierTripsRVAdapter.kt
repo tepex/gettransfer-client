@@ -8,17 +8,19 @@ import android.view.ViewGroup
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
-import com.kg.gettransfer.presentation.model.CarrierTripModel
+
+import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 import com.kg.gettransfer.presentation.model.CarrierTripsRVItemModel
 import com.kg.gettransfer.presentation.presenter.CarrierTripsPresenter
 
 import kotlinx.android.extensions.LayoutContainer
+
 import kotlinx.android.synthetic.main.view_carrier_trip_info_item_rv.view.*
 import kotlinx.android.synthetic.main.view_carrier_trips_end_today.*
 import kotlinx.android.synthetic.main.view_carrier_trips_subtitle.view.*
 import kotlinx.android.synthetic.main.view_carrier_trips_title.view.*
 
-class TripsRVAdapter(
+class CarrierTripsRVAdapter(
     private val presenter: CarrierTripsPresenter,
     private var tripsItems: List<CarrierTripsRVItemModel>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -32,27 +34,23 @@ class TripsRVAdapter(
 
     override fun getItemCount() = tripsItems.size
 
-    override fun getItemViewType(position: Int): Int {
-        return when(tripsItems[position].type){
-            CarrierTripsRVItemModel.TYPE_TITLE -> VIEW_HOLDER_TITLE
-            CarrierTripsRVItemModel.TYPE_SUBTITLE -> VIEW_HOLDER_SUBTITLE
-            CarrierTripsRVItemModel.TYPE_ITEM -> VIEW_HOLDER_ITEM
-            else -> VIEW_HOLDER_END_TODAY_VIEW
-        }
+    override fun getItemViewType(position: Int) = when (tripsItems[position].type) {
+        CarrierTripsRVItemModel.TYPE_TITLE    -> VIEW_HOLDER_TITLE
+        CarrierTripsRVItemModel.TYPE_SUBTITLE -> VIEW_HOLDER_SUBTITLE
+        CarrierTripsRVItemModel.TYPE_ITEM     -> VIEW_HOLDER_ITEM
+        else                                  -> VIEW_HOLDER_END_TODAY_VIEW
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when(viewType){
-            VIEW_HOLDER_TITLE -> TripsRVAdapter.ViewHolderTitle(LayoutInflater.from(parent.context).inflate(R.layout.view_carrier_trips_title, parent, false))
-            VIEW_HOLDER_SUBTITLE -> TripsRVAdapter.ViewHolderSubtitle(LayoutInflater.from(parent.context).inflate(R.layout.view_carrier_trips_subtitle, parent, false))
-            VIEW_HOLDER_ITEM   -> TripsRVAdapter.ViewHolderItem(LayoutInflater.from(parent.context).inflate(R.layout.view_carrier_trip_info_item_rv, parent, false))
-            else -> TripsRVAdapter.ViewHolderEndToday(LayoutInflater.from(parent.context).inflate(R.layout.view_carrier_trips_end_today, parent, false))
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder = when (viewType) {
+        VIEW_HOLDER_TITLE    -> ViewHolderTitle(LayoutInflater.from(parent.context).inflate(R.layout.view_carrier_trips_title, parent, false))
+        VIEW_HOLDER_SUBTITLE -> ViewHolderSubtitle(LayoutInflater.from(parent.context).inflate(R.layout.view_carrier_trips_subtitle, parent, false))
+        VIEW_HOLDER_ITEM     -> ViewHolderItem(LayoutInflater.from(parent.context).inflate(R.layout.view_carrier_trip_info_item_rv, parent, false))
+        else                 -> ViewHolderEndToday(LayoutInflater.from(parent.context).inflate(R.layout.view_carrier_trips_end_today, parent, false))
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int){
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) {
         val trip = tripsItems[pos]
-        when(holder.itemViewType){
+        when (holder.itemViewType) {
             VIEW_HOLDER_TITLE          -> (holder as ViewHolderTitle).bind(trip.titleText!!)
             VIEW_HOLDER_SUBTITLE       -> (holder as ViewHolderSubtitle).bind(trip.isToday!!, trip.titleText!!)
             VIEW_HOLDER_ITEM           -> (holder as ViewHolderItem).bind(trip.item!!) { tripId, transferId -> presenter.onTripSelected(tripId, transferId) }
@@ -74,7 +72,7 @@ class TripsRVAdapter(
             LayoutContainer {
 
         fun bind(isToday: Boolean, text: String) = with(containerView) {
-            subtitleText.text = if(isToday) context.getString(R.string.LNG_TRIPS_TODAY).toUpperCase().plus(": $text")
+            subtitleText.text = if (isToday) context.getString(R.string.LNG_TRIPS_TODAY).toUpperCase().plus(": $text")
                                 else text
         }
     }
@@ -83,9 +81,9 @@ class TripsRVAdapter(
             RecyclerView.ViewHolder(containerView),
             LayoutContainer {
 
-        fun bind(item: CarrierTripModel, listener: ClickOnCarrierTripHandler) = with(containerView) {
-            layoutCarrierTripInfo.setInfo(item, false)
-            setOnClickListener { listener(item.tripId, item.transferId) }
+        fun bind(item: CarrierTripBaseModel, listener: ClickOnCarrierTripHandler) = with(containerView) {
+            layoutCarrierTripInfo.setInfo(item, null)
+            setOnClickListener { listener(item.id, item.transferId) }
         }
     }
 
@@ -93,7 +91,7 @@ class TripsRVAdapter(
             RecyclerView.ViewHolder(containerView),
             LayoutContainer{
 
-        fun bind(noHaveTripsToday: Boolean){
+        fun bind(noHaveTripsToday: Boolean) {
             textNoTripsToday.isVisible = noHaveTripsToday
         }
     }

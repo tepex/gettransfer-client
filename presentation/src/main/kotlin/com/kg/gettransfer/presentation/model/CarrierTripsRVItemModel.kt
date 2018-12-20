@@ -1,10 +1,11 @@
 package com.kg.gettransfer.presentation.model
 
-class CarrierTripsRVItemModel(
-        val type: String,
-        val titleText: String?,
-        val isToday: Boolean?,
-        val item: CarrierTripModel?){
+data class CarrierTripsRVItemModel(
+    val type: String,
+    val titleText: String?,
+    val isToday: Boolean?,
+    val item: CarrierTripBaseModel?
+) {
 
     companion object {
         const val TYPE_TITLE          = "type_title"

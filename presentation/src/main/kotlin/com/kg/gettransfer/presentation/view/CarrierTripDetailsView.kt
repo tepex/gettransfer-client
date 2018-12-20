@@ -5,12 +5,12 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface CarrierTripDetailsView: BaseView, RouteView {
+interface CarrierTripDetailsView : BaseView, RouteView {
+    fun setTripInfo(trip: CarrierTripModel)
+    fun copyText(text: String)
+
     companion object {
         val EXTRA_TRIP_ID = "${CarrierTripDetailsView::class.java.name}.tripId"
         val EXTRA_TRANSFER_ID = "${CarrierTripDetailsView::class.java.name}.transferId"
     }
-
-    fun setTripInfo(trip: CarrierTripModel)
-    fun copyText(text: String)
 }

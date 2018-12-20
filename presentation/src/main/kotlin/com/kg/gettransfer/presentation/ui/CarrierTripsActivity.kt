@@ -30,9 +30,9 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.extensions.*
 
-import com.kg.gettransfer.presentation.adapter.TripsRVAdapter
+import com.kg.gettransfer.presentation.adapter.CarrierTripsRVAdapter
 
-import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
+import com.kg.gettransfer.presentation.model.CarrierTripsRVItemModel
 import com.kg.gettransfer.presentation.model.ProfileModel
 
 import com.kg.gettransfer.presentation.presenter.CarrierTripsPresenter
@@ -138,8 +138,46 @@ class CarrierTripsActivity : BaseActivity(), CarrierTripsView {
         tabsForRecyclerView.addTab(tabsForRecyclerView.newTab().setText(getString(R.string.LNG_TRIPS_COMPLETED)))
     }
 
-    override fun setTrips(trips: List<CarrierTripBaseModel>) {
-        rvTrips.adapter = TripsRVAdapter(presenter, trips)
+    override fun setTrips(tripsItems: List<CarrierTripsRVItemModel>, startTodayPosition: Int, endTodayPosition: Int) {
+        rvTrips.adapter = CarrierTripsRVAdapter(presenter, tripsItems)
+        rvTrips.scrollToPosition(startTodayPosition)
+
+        rvTrips.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val itemPosition = (rvTrips.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+
+                if (isUserScrolling) {
+                    val tab = when {
+                        itemPosition in startTodayPosition..endTodayPosition -> tabsForRecyclerView.getTabAt(0)
+                        itemPosition > endTodayPosition                      -> tabsForRecyclerView.getTabAt(1)
+                        itemPosition < startTodayPosition                    -> tabsForRecyclerView.getTabAt(2)
+                        else                                                 -> null
+                    }
+                    tab?.select()
+                }
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                when (newState) {
+                    RecyclerView.SCROLL_STATE_DRAGGING -> isUserScrolling = true
+                    RecyclerView.SCROLL_STATE_IDLE     -> isUserScrolling = false
+                }
+            }
+        })
+        tabsForRecyclerView.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(p0: TabLayout.Tab?) {  }
+            override fun onTabUnselected(p0: TabLayout.Tab?) {  }
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                if (isUserScrolling) return
+                when (tab.position) {
+                    0 -> (rvTrips.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(startTodayPosition, 0)
+                    1 -> if (tripsItems.size >= endTodayPosition) (rvTrips.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(endTodayPosition, 0)
+                    2 -> if (startTodayPosition > 0) (rvTrips.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(0, 0)
+                }
+            }
+        })
     }
 
     override fun initNavigation(profile: ProfileModel) {

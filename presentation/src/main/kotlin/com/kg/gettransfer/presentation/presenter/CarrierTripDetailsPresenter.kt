@@ -49,19 +49,19 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
             val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(tripId) }
             if (result.error != null) viewState.setError(result.error!!)
             else {
-                val tripInfo = result.model
-                trip = carrierTripMapper.toView(tripInfo)
+                val tripModel = result.model
+                val trip = carrierTripMapper.toView(tripModel)
                 viewState.setTripInfo(trip)
 
-                val r = utils.asyncAwait { routeInteractor.getRouteInfo(tripInfo.base.from.point!!, tripInfo.base.to!!.point!!, false, false) }
+                val r = utils.asyncAwait { routeInteractor.getRouteInfo(tripModel.base.from.point!!, tripModel.base.to!!.point!!, false, false) }
                 if (r.error == null && r.model.success) {
                     routeModel = routeMapper.getView(
                         r.model.distance,
                         r.model.polyLines,
                         trip.base.from,
                         trip.base.to!!,
-                        tripInfo.base.from.point!!,
-                        tripInfo.base.to!!.point!!,
+                        tripModel.base.from.point!!,
+                        tripModel.base.to!!.point!!,
                         trip.base.dateTime
                     )
                 }

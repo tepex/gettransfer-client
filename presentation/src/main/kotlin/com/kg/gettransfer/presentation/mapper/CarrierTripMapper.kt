@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.mapper
 import com.kg.gettransfer.domain.model.CarrierTrip
 
 import com.kg.gettransfer.presentation.model.CarrierTripModel
+import com.kg.gettransfer.presentation.model.TotalPriceModel
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 
@@ -21,8 +22,7 @@ open class CarrierTripMapper : Mapper<CarrierTripModel, CarrierTrip> {
             nameSign        = type.nameSign,
             flightNumber    = type.flightNumber,
             paidSum         = type.paidSum,
-            remainsToPay    = type.remainsToPay,
-            paidPercentage  = type.paidPercentage,
+            totalPrice      = TotalPriceModel(type.remainsToPay, type.paidPercentage),
             passenger       = passengerAccountMapper.toView(type.passengerAccount)
         )
 

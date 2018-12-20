@@ -153,7 +153,7 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun showBottomSheetOfferDetails(offer: OfferModel) {
-        carrierId.text = getString(R.string.LNG_CARRIER).plus(" ").plus(offer.carrier.profile?.id ?: "")
+        carrierId.text = getString(R.string.LNG_CARRIER).plus(" ").plus(offer.carrier.id)
 
         Utils.initCarrierLanguages(layoutCarrierLanguages, offer.carrier.languages)
 

@@ -273,8 +273,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         }
 
         offer.carrier.let { carrier ->
-            val carrierId = carrier.profile?.id ?: ""
-            carrier_id.field_title.text = getString(R.string.LNG_DRIVER).plus(" №$carrierId")
+            carrier_id.field_title.text = getString(R.string.LNG_DRIVER).plus(" №$carrier.id")
             carrier_id.field_text.text = carrier.completedTransfers.toString().plus(" ").plus(getString(R.string.LNG_RIDES))
 
             carrier.profile?.name?.let { name -> carrier_name.text = name }

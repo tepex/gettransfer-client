@@ -1,21 +1,25 @@
 package com.kg.gettransfer.presentation.mapper
 
 import android.text.format.DateUtils
-import com.kg.gettransfer.domain.model.CarrierTrip
-import com.kg.gettransfer.presentation.model.CarrierTripModel
+
+import com.kg.gettransfer.domain.model.CarrierTripBase
+
+import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 import com.kg.gettransfer.presentation.model.CarrierTripsRVItemsListModel
 import com.kg.gettransfer.presentation.model.CarrierTripsRVItemModel
-import com.kg.gettransfer.presentation.ui.SystemUtils
-import org.koin.standalone.KoinComponent
 
-import org.koin.standalone.get
+import com.kg.gettransfer.presentation.ui.SystemUtils
+
 import java.util.Calendar
 import java.util.Date
 
-open class CarrierTripsRVItemsListMapper: KoinComponent {
-    private val carrierTripMapper = get<CarrierTripMapper>()
+import org.koin.standalone.get
+import org.koin.standalone.KoinComponent
 
-    fun toRecyclerView(type: List<CarrierTrip>): CarrierTripsRVItemsListModel {
+open class CarrierTripsRVItemsListMapper: KoinComponent {
+    private val carrierTripBaseMapper = get<CarrierTripBaseMapper>()
+
+    fun toRecyclerView(type: List<CarrierTripBase>): CarrierTripsRVItemsListModel {
         val rvItemsList = arrayListOf<CarrierTripsRVItemModel>()
         var startTodayPosition: Int? = null
         var endTodayPosition: Int? = null
@@ -25,13 +29,13 @@ open class CarrierTripsRVItemsListMapper: KoinComponent {
         var isToday: Boolean
         var dateLastItem: Date? = null
 
-        while (i < type.size){
+        while (i < type.size) {
             val trip = type[i]
             var itemDate = trip.dateLocal
             isToday = DateUtils.isToday(itemDate.time)
 
             if(isToday) startTodayPosition = rvItemsList.size
-            if (startTodayPosition == null && dateNow.before(itemDate)){ // if today there are no trips
+            if (startTodayPosition == null && dateNow.before(itemDate)) { // if today there are no trips
                 startTodayPosition = rvItemsList.size
                 isToday = true
                 itemDate = dateNow
@@ -45,11 +49,11 @@ open class CarrierTripsRVItemsListMapper: KoinComponent {
             }
             dateLastItem = itemDate
 
-            if(isToday && !DateUtils.isToday(trip.dateLocal.time)){ // if today there are no trips
+            if (isToday && !DateUtils.isToday(trip.dateLocal.time)) { // if today there are no trips
                 endTodayPosition = addViewEndOfToday(rvItemsList)
             } else {
-                addViewItem(rvItemsList, carrierTripMapper.toView(trip))
-                if(isToday && i + 1 < rvItemsList.size && !DateUtils.isToday(type[i + 1].dateLocal.time)){ //
+                addViewItem(rvItemsList, carrierTripBaseMapper.toView(trip))
+                if (isToday && i + 1 < rvItemsList.size && !DateUtils.isToday(type[i + 1].dateLocal.time)) { //
                     endTodayPosition = addViewEndOfToday(rvItemsList)
                 }
                 i++
@@ -58,7 +62,7 @@ open class CarrierTripsRVItemsListMapper: KoinComponent {
         return CarrierTripsRVItemsListModel(rvItemsList, startTodayPosition!!, endTodayPosition!!)
     }
 
-    private fun equalsDates(dateFirst: Date, dateSecond: Date, checkWithoutDayOfMonth: Boolean): Boolean{
+    private fun equalsDates(dateFirst: Date, dateSecond: Date, checkWithoutDayOfMonth: Boolean): Boolean {
         val calendar = Calendar.getInstance()
         calendar.time = dateFirst
 
@@ -74,19 +78,19 @@ open class CarrierTripsRVItemsListMapper: KoinComponent {
                 && thenMonth == calendar.get(Calendar.MONTH))
     }
 
-    private fun addViewNewMonth(rvItemsList: ArrayList<CarrierTripsRVItemModel>, date: Date){
+    private fun addViewNewMonth(rvItemsList: ArrayList<CarrierTripsRVItemModel>, date: Date) {
         rvItemsList.add(CarrierTripsRVItemModel(CarrierTripsRVItemModel.TYPE_TITLE, SystemUtils.formatMonth(date), null,  null))
     }
 
-    private fun addViewNewDay(rvItemsList: ArrayList<CarrierTripsRVItemModel>, date: Date, isToday: Boolean){
+    private fun addViewNewDay(rvItemsList: ArrayList<CarrierTripsRVItemModel>, date: Date, isToday: Boolean) {
         rvItemsList.add(CarrierTripsRVItemModel(CarrierTripsRVItemModel.TYPE_SUBTITLE, SystemUtils.formatDayMonth(date), isToday, null))
     }
 
-    private fun addViewItem(rvItemsList: ArrayList<CarrierTripsRVItemModel>, item: CarrierTripModel){
+    private fun addViewItem(rvItemsList: ArrayList<CarrierTripsRVItemModel>, item: CarrierTripBaseModel) {
         rvItemsList.add(CarrierTripsRVItemModel(CarrierTripsRVItemModel.TYPE_ITEM, null, null, item))
     }
 
-    private fun addViewEndOfToday(rvItemsList: ArrayList<CarrierTripsRVItemModel>): Int{
+    private fun addViewEndOfToday(rvItemsList: ArrayList<CarrierTripsRVItemModel>): Int {
         rvItemsList.add(CarrierTripsRVItemModel(CarrierTripsRVItemModel.TYPE_END_TODAY_VIEW, null, null, null))
         return rvItemsList.size
     }

@@ -16,8 +16,8 @@ open class ProfileMapper : Mapper<ProfileEntity, Profile> {
     override fun fromEntity(type: ProfileEntity) =
         Profile(
             fullName = type.fullName,
-            email = type.email,
-            phone = type.phone
+            email    = type.email,
+            phone    = type.phone
         )
 
     /**
@@ -26,7 +26,7 @@ open class ProfileMapper : Mapper<ProfileEntity, Profile> {
     override fun toEntity(type: Profile) =
         ProfileEntity(
             fullName = type.fullName,
-            email = type.email,
-            phone = type.phone
+            email    = type.email,
+            phone    = type.phone
         )
 }

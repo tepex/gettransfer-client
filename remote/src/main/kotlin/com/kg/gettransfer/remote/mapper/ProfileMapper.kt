@@ -11,14 +11,14 @@ open class ProfileMapper : EntityMapper<ProfileModel, ProfileEntity> {
     override fun fromRemote(type: ProfileModel) =
         ProfileEntity(
             fullName = type.fullName,
-            email = type.email,
-            phone = type.phone
+            email    = type.email,
+            phone    = type.phone
         )
 
     override fun toRemote(type: ProfileEntity) =
         ProfileModel(
             fullName = type.fullName,
-            email = type.email,
-            phone = type.phone
+            email    = type.email,
+            phone    = type.phone
         )
 }

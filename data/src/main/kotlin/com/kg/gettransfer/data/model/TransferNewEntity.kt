@@ -17,6 +17,7 @@ data class TransferNewEntity(
                              val paypalOnly: Boolean */
 ) {
     companion object {
+        const val ENTITY_NAME             = "transfer"
         const val FROM                    = "from"
         const val TO                      = "to"
         const val TRIP_TO                 = "trip_to"

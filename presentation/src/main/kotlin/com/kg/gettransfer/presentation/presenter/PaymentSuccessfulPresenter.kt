@@ -10,7 +10,6 @@ import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.mapper.TransferMapper
 
 import com.kg.gettransfer.presentation.model.TransferModel
-import com.kg.gettransfer.presentation.model.Mappers
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils

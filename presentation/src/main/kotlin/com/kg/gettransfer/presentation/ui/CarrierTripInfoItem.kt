@@ -11,7 +11,8 @@ import android.widget.TextView
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
-import com.kg.gettransfer.presentation.model.CarrierTripModel
+import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
+import com.kg.gettransfer.presentation.model.TotalPriceModel
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 
 import kotlinx.android.extensions.LayoutContainer
@@ -25,22 +26,22 @@ class CarrierTripInfoItem @JvmOverloads constructor(
 
     override val containerView = LayoutInflater.from(context).inflate(R.layout.view_carrier_trip_info_layout, this, true)
 
-    fun setInfo(item: CarrierTripModel, isCarrierTripDetailsActivity: Boolean) {
-        val transferStatus = when(item.tripStatus) {
-            CarrierTripModel.FUTURE_TRIP -> context.getString(R.string.LNG_WILL_START_IN).plus(" ")
+    fun setInfo(item: CarrierTripBaseModel, totalPrice: TotalPriceModel?) {
+        val transferStatus = when (item.tripStatus) {
+            CarrierTripBaseModel.FUTURE_TRIP -> context.getString(R.string.LNG_WILL_START_IN).plus(" ")
                     .plus(Utils.durationToString(context, Utils.convertDuration(item.timeToTransfer)))
-            CarrierTripModel.IN_PROGRESS_TRIP -> context.getString(R.string.LNG_IN_PROGRESS)
-            CarrierTripModel.PAST_TRIP -> context.getString(R.string.LNG_RIDE_STATUS_CANCELED)
+            CarrierTripBaseModel.IN_PROGRESS_TRIP -> context.getString(R.string.LNG_IN_PROGRESS)
+            CarrierTripBaseModel.PAST_TRIP -> context.getString(R.string.LNG_RIDE_STATUS_CANCELED)
             else -> ""
         }
         setColorStyle(item.tripStatus)
 
         transferId.text = context.getString(R.string.LNG_TRANSFER).plus(" #${item.transferId}").plus(" ${transferStatus?: ""}")
-        tripDateTime.text = item.dateTimeString
+        tripDateTime.text = item.dateTime
         tvTripFrom.text = item.from
 
-        if(item.to != null) {
-            if(isCarrierTripDetailsActivity){
+        if (item.to != null) {
+            if (totalPrice != null) {
                 item.distance?.let {
                     setDistance(bsTvDistance, it)
                     bsLayoutDistance.isVisible = true
@@ -54,8 +55,8 @@ class CarrierTripInfoItem @JvmOverloads constructor(
             }
             tvTripTo.text = item.to
             changeViewForHourlyTransfer(false)
-        } else if(item.duration != null){
-            if(isCarrierTripDetailsActivity){
+        } else if (item.duration != null) {
+            if (totalPrice != null) {
                 setDuration(bsTvDuration, item.duration, true)
                 bsLayoutDuration.isVisible = true
             } else {
@@ -66,52 +67,52 @@ class CarrierTripInfoItem @JvmOverloads constructor(
             changeViewForHourlyTransfer(true)
         }
 
-        if(isCarrierTripDetailsActivity){
-            setPrice(bsTvPrice, item.price, bsTvTotalPrice, item.remainsToPay, item.paidPercentage)
+        if (totalPrice != null) {
+            setPrice(bsTvPrice, item.price, bsTvTotalPrice, totalPrice)
             tripDistance.isVisible = false
             tripPrice.isVisible = false
             layoutDistanceDurationPrice.isVisible = true
         } else {
             setPrice(tripPrice, item.price)
-            vehicleName.text = item.vehicleName
-            vehicleNumber.text = item.vehicleNumber
+            vehicleName.text = item.vehicle.name
+            vehicleNumber.text = item.vehicle.registrationNumber
             imgChildSeats.isVisible = item.countChild > 0
             imgComment.isVisible = item.comment != null
             layoutVehicleInfo.isVisible = true
         }
     }
 
-    private fun setDistance(textView: TextView, distance: Int?){
+    private fun setDistance(textView: TextView, distance: Int?) {
         textView.text = SystemUtils.formatDistance(context, distance, false)
     }
 
-    private fun setDuration(textView: TextView, duration: Int?, isHourlyTransfer: Boolean){
-        textView.text = when (isHourlyTransfer){
+    private fun setDuration(textView: TextView, duration: Int?, isHourlyTransfer: Boolean) {
+        textView.text = when (isHourlyTransfer) {
             true -> HourlyValuesHelper.getValue(duration!!, context)
             false -> Utils.durationToString(context, Utils.convertDuration(duration?: 0))
         }
     }
 
-    private fun setPrice(textViewPrice: TextView, price: String, textViewTotalPrice: TextView? = null, totalPrice: String? = null, percentage: Int? = null){
+    private fun setPrice(textViewPrice: TextView, price: String, textViewTotalPrice: TextView? = null, totalPrice: TotalPriceModel? = null) {
         textViewPrice.text = price
         totalPrice?.let {
             textViewTotalPrice!!.text = context.getString(R.string.LNG_TOTAL_PRICE).toUpperCase()
-                    .plus(": $it \n")
-                    .plus("(${100 - percentage!!}% ")
+                    .plus(": ${it.remainsToPay} \n")
+                    .plus("(${100 - it.paidPercentage}% ")
                     .plus(context.getString(R.string.LNG_RIDE_NOT_PAID))
                     .plus(")")
         }
     }
 
-    private fun setColorStyle(tripStatus: String){
-        when(tripStatus){
-            CarrierTripModel.PAST_TRIP        -> setStyleCanceled()
-            CarrierTripModel.IN_PROGRESS_TRIP -> setStyleActive()
-            CarrierTripModel.FUTURE_TRIP      -> setStyleActive()
+    private fun setColorStyle(tripStatus: String) {
+        when (tripStatus) {
+            CarrierTripBaseModel.PAST_TRIP        -> setStyleCanceled()
+            CarrierTripBaseModel.IN_PROGRESS_TRIP -> setStyleActive()
+            CarrierTripBaseModel.FUTURE_TRIP      -> setStyleActive()
         }
     }
 
-    private fun setStyleCanceled(){
+    private fun setStyleCanceled() {
         transferId.setTextColor(ContextCompat.getColor(context, R.color.color_driver_mode_text_gray))
         tripDateTime.setTextColor(ContextCompat.getColor(context, R.color.color_driver_mode_text_gray))
         tripDateTime.background = null
@@ -119,7 +120,7 @@ class CarrierTripInfoItem @JvmOverloads constructor(
         tripDistance.setTextColor(ContextCompat.getColor(context, R.color.color_driver_mode_text_gray))
     }
 
-    private fun setStyleActive(){
+    private fun setStyleActive() {
         transferId.setTextColor(ContextCompat.getColor(context, R.color.color_driver_mode_text_green))
         tripDateTime.setTextColor(ContextCompat.getColor(context, R.color.colorWhite))
         tripDateTime.background = ContextCompat.getDrawable(context, R.drawable.back_carrier_trips_items_date)

@@ -8,11 +8,10 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 
-import com.kg.gettransfer.presentation.mapper.CarrierTripBaseMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.mapper.CarrierTripsRVItemsListMapper
 
-import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
+import com.kg.gettransfer.presentation.model.CarrierTripsRVItemModel
 
 import com.kg.gettransfer.presentation.view.CarrierTripsView
 import com.kg.gettransfer.presentation.view.Screens
@@ -23,9 +22,10 @@ import org.koin.standalone.inject
 class CarrierTripsPresenter : BasePresenter<CarrierTripsView>() {
     private val carrierTripInteractor: CarrierTripInteractor by inject()
 
-    private val carrierTripBaseMapper: CarrierTripBaseMapper by inject()
+    private val carrierTripsRVItemsListMapper: CarrierTripsRVItemsListMapper by inject()
     private val profileMapper: ProfileMapper by inject()
-    private var trips: List<CarrierTripBaseModel>? = null
+
+    private var tripsRVItems: List<CarrierTripsRVItemModel>? = null
 
     override fun onFirstViewAttach() {
         checkLoggedIn()
@@ -35,7 +35,8 @@ class CarrierTripsPresenter : BasePresenter<CarrierTripsView>() {
             val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrips() }
             if (result.error != null) viewState.setError(result.error!!)
             else {
-                trips = result.model.map { carrierTripBaseMapper.toView(it) }
+                val carrierTripsRVItemsList = carrierTripsRVItemsListMapper.toRecyclerView(result.model)
+                tripsRVItems = carrierTripsRVItemsList.itemsList
                 viewState.initNavigation(profileMapper.toView(systemInteractor.account.user.profile))
                 viewState.setTrips(tripsRVItems!!, carrierTripsRVItemsList.startTodayPosition, carrierTripsRVItemsList.endTodayPosition)
             }

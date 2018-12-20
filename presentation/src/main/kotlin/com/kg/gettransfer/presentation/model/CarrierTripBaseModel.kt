@@ -9,7 +9,7 @@ data class CarrierTripBaseModel(
     val to: String?,
     val dateTime: String,
     val duration: Int?,
-    val distance: Int,
+    val distance: Int?,
     val time: Int?,
     val countChild: Int,
     val childSeatsInfant: Int,
@@ -17,6 +17,15 @@ data class CarrierTripBaseModel(
     val childSeatsBooster: Int,
     val comment: String?,
     val waterTaxi: Boolean,
-    val pay: String,
-    val vehicle: VehicleInfoModel
-)
+    val price: String,
+    val vehicle: VehicleInfoModel,
+    val timeToTransfer: Int,
+    val tripStatus: String
+) {
+
+    companion object {
+        const val FUTURE_TRIP      = "future_trip"
+        const val IN_PROGRESS_TRIP = "now_trip"
+        const val PAST_TRIP        = "past_trip"
+    }
+}
