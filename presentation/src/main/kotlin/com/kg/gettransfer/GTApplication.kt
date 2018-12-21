@@ -30,27 +30,29 @@ class GTApplication: MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         // Display some logs
-        if(BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
             System.setProperty("kotlinx.coroutines.debug", "on")
         } else CrashManager.register(this)
-        if(BuildConfig.FLAVOR == "dev") {
+        if (BuildConfig.FLAVOR == "dev") {
             Timber.plant(FileLoggingTree(applicationContext))
             System.setProperty("kotlinx.coroutines.debug", "on")
             //DELETE CrashManager.register(this)
         }
         // Start Koin
-        startKoin(this, listOf(ciceroneModule,
-                               geoModule,
-                               prefsModule,
-                               loggingModule,
-                               remoteMappersModule,
-                               remoteModule,
-                               cacheModule,
-                               dataModule,
-                               domainModule,
-                               mappersModule,
-                               androidModule))
+        startKoin(this, listOf(
+            ciceroneModule,
+            geoModule,
+            prefsModule,
+            loggingModule,
+            remoteMappersModule,
+            remoteModule,
+            cacheModule,
+            dataModule,
+            domainModule,
+            mappersModule,
+            androidModule
+        ))
 
         setupAppMetrica()
         //setUpLeakCanary()
@@ -62,10 +64,10 @@ class GTApplication: MultiDexApplication() {
 
     private fun setupAppMetrica() {
         val config = YandexMetricaConfig
-                .newConfigBuilder(getString(R.string.appmetrica_api_key))
-                .withCrashReporting(false)
-                .withLogs()
-                .build()
+            .newConfigBuilder(getString(R.string.appmetrica_api_key))
+            .withCrashReporting(false)
+            .withLogs()
+            .build()
         YandexMetrica.activate(applicationContext, config)
         YandexMetrica.enableActivityAutoTracking(this)
     }
