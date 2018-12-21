@@ -18,6 +18,7 @@ import android.support.v7.app.AlertDialog
 
 import android.telephony.TelephonyManager
 
+import android.text.Html
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -254,6 +255,11 @@ object Utils : KoinComponent {
         append(context.getString(R.string.LNG_H))
         append(" ${minutes % 60}")
         append(context.getString(R.string.LNG_M))
+    }
+
+    fun getSpannedStringFromHtmlString(htmlString: String): Spanned {
+        return if (Build.VERSION.SDK_INT >= 24) Html.fromHtml(htmlString, Html.FROM_HTML_MODE_LEGACY)
+               else Html.fromHtml(htmlString)
     }
 
         /*fun setPins(activity: Activity, googleMap: GoogleMap, routeModel: RouteModel) {
