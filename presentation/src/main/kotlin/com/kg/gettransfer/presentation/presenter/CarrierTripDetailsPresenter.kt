@@ -7,6 +7,8 @@ import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.model.CarrierTripBase
+import com.kg.gettransfer.domain.model.RouteInfo
 
 import com.kg.gettransfer.presentation.mapper.CarrierTripMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper
@@ -29,10 +31,10 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
     private val routeMapper: RouteMapper by inject()
 
     companion object {
-        @JvmField val FIELD_EMAIL = "field_email"
-        @JvmField val FIELD_PHONE = "field_phone"
-        @JvmField val OPERATION_COPY = "operation_copy"
-        @JvmField val OPERATION_OPEN = "operation_open"
+        const val FIELD_EMAIL = "field_email"
+        const val FIELD_PHONE = "field_phone"
+        const val OPERATION_COPY = "operation_copy"
+        const val OPERATION_OPEN = "operation_open"
     }
 
     private var routeModel: RouteModel? = null
@@ -48,25 +50,50 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
             val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(tripId) }
             if (result.error != null) viewState.setError(result.error!!)
             else {
-                val tripModel = result.model
-                val trip = carrierTripMapper.toView(tripModel)
-                viewState.setTripInfo(trip)
+                val tripInfo = result.model
+                tripModel = carrierTripMapper.toView(tripInfo)
+                viewState.setTripInfo(tripModel)
 
-                val r = utils.asyncAwait { routeInteractor.getRouteInfo(tripModel.base.from.point!!, tripModel.base.to!!.point!!, false, false) }
-                if (r.error == null && r.model.success) {
-                    routeModel = routeMapper.getView(
-                        r.model.distance,
-                        r.model.polyLines,
-                        trip.base.from,
-                        trip.base.to!!,
-                        tripModel.base.from.point!!,
-                        tripModel.base.to!!.point!!,
-                        trip.base.dateTime
-                    )
+                val baseTripInfo = tripInfo.base
+                if (baseTripInfo.to != null && baseTripInfo.to!!.point != null) {
+                    val r = utils.asyncAwait { routeInteractor.getRouteInfo(baseTripInfo.from.point!!, baseTripInfo.to!!.point!!, true, false) }
+                    if (r.error == null) {
+                        setRouteTransfer(baseTripInfo,r.model)
+                    }
+                } else if (baseTripInfo.duration != null) {
+                   setHourlyTransfer(baseTripInfo)
                 }
             }
             viewState.blockInterface(false)
         }
+    }
+
+    private fun setRouteTransfer(baseTrip: CarrierTripBase, route: RouteInfo) {
+        routeModel = routeMapper.getView(
+                route.distance,
+                route.polyLines,
+                baseTrip.from.name!!,
+                baseTrip.to!!.name!!,
+                baseTrip.from.point!!,
+                baseTrip.to!!.point!!,
+                tripModel.base.dateTime
+        )
+        routeModel?.let {
+            polyline = Utils.getPolyline(it)
+            track = polyline!!.track
+            viewState.setRoute(polyline!!, it)
+        }
+    }
+
+    private fun setHourlyTransfer(baseTripInfo: CarrierTripBase) {
+        val point = LatLng(baseTripInfo.from.point!!.latitude, baseTripInfo.from.point!!.longitude)
+        track = Utils.getCameraUpdateForPin(point)
+        viewState.setPinHourlyTransfer(
+                tripModel.base.from,
+                tripModel.base.dateTime,
+                point,
+                track!!
+        )
     }
 
     fun onCenterRouteClick() { track?.let { viewState.centerRoute(it) } }

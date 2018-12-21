@@ -22,7 +22,7 @@ open class CarrierTripBaseMapper : Mapper<CarrierTripBaseModel, CarrierTripBase>
             to                    = type.to?.name,
             dateTime              = SystemUtils.formatDateTime(type.dateLocal),
             duration              = type.duration,
-            distance              = type.distance ?: Mapper.checkDistance(type.from.point!!, type.to!!.point!!),
+            distance              = type.distance ?: Mapper.checkDistance(type.from.point!!, type.to!!.point),
             time                  = type.time,
             countChild            = type.childSeats,
             childSeatsInfant      = type.childSeatsInfant,
@@ -41,9 +41,9 @@ open class CarrierTripBaseMapper : Mapper<CarrierTripBaseModel, CarrierTripBase>
 
     companion object {
         private fun getTripStatus(timeToTransfer: Int, time: Int?, duration: Int?) = when {
-            timeToTransfer > 0                       -> CarrierTripBaseModel.FUTURE_TRIP
-            timeToTransfer + (time?: duration!!) > 0 -> CarrierTripBaseModel.IN_PROGRESS_TRIP
-            else                                     -> CarrierTripBaseModel.PAST_TRIP
+            timeToTransfer > 0                         -> CarrierTripBaseModel.FUTURE_TRIP
+            timeToTransfer + (time?: duration?: 0) > 0 -> CarrierTripBaseModel.IN_PROGRESS_TRIP
+            else                                       -> CarrierTripBaseModel.PAST_TRIP
         }
     }
 }
