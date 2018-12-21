@@ -125,7 +125,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         initInfoView(transfer)
         initAboutRequestView(transfer, userProfile)
         val status = transfer.statusCategory
-        if(status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_UNFINISHED) {
+        if (status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_UNFINISHED) {
             initTableLayoutTransportTypes(transfer.transportTypes)
             flexboxLayoutTransportTypes.isVisible = true
         }
