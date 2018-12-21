@@ -20,6 +20,7 @@ import com.kg.gettransfer.cache.cacheModule
 import com.kg.gettransfer.data.dataModule
 import com.kg.gettransfer.di.*
 import com.kg.gettransfer.presentation.FileLoggingTree
+import com.kg.gettransfer.remote.remoteMappersModule
 import com.kg.gettransfer.remote.remoteModule
 
 import com.squareup.leakcanary.LeakCanary
@@ -97,6 +98,7 @@ class GTApplication : MultiDexApplication() {
         FirebaseMessaging.getInstance().subscribeToTopic("offers").addOnCompleteListener { subscribed ->
             Timber.d("subscribed: ${subscribed.isSuccessful}")
 
+            /*
             // Get token
             FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener(OnCompleteListener {
                 if (!it.isSuccessful) {
@@ -105,6 +107,7 @@ class GTApplication : MultiDexApplication() {
                 }
                 Timber.d("[FCM token]: ${it.result?.token}")
             })
+            */
         }
     }
 }

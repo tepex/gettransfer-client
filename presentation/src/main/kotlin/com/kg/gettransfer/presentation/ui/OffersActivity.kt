@@ -1,5 +1,10 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+
 import android.graphics.Paint
 
 import android.os.Bundle
@@ -10,8 +15,8 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
-import android.view.MotionEvent
 
+import android.view.MotionEvent
 import android.view.View
 
 import android.widget.ImageView
@@ -34,8 +39,6 @@ import com.kg.gettransfer.presentation.presenter.OffersPresenter
 
 import com.kg.gettransfer.presentation.view.OffersView
 
-import com.kg.gettransfer.service.OfferServiceConnection
-
 import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_DETAILS_RATING
 
 import kotlinx.android.synthetic.main.activity_offers.*
@@ -44,6 +47,8 @@ import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
 
 import org.koin.android.ext.android.inject
+
+import timber.log.Timber
 
 class OffersActivity : BaseActivity(), OffersView {
 
@@ -57,12 +62,20 @@ class OffersActivity : BaseActivity(), OffersView {
 
     override fun getPresenter(): OffersPresenter = presenter
 
-    private val offerServiceConnection: OfferServiceConnection by inject()
+    //private val offerServiceConnection: OfferServiceConnection by inject()
+    private val receiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val v = intent.getStringExtra("Data")
+            Timber.d("new offer: $v")
+        }
+    }
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.transferId = intent.getLongExtra(OffersView.EXTRA_TRANSFER_ID, 0)
+
+        Timber.d("Start OffersActivity: transfer id: ${presenter.transferId}")
 
         setContentView(R.layout.activity_offers)
 
@@ -99,12 +112,14 @@ class OffersActivity : BaseActivity(), OffersView {
     @CallSuper
     protected override fun onResume() {
         super.onResume()
-        offerServiceConnection.connect(systemInteractor.endpoint, systemInteractor.accessToken) { presenter.onNewOffer(it) }
+        //offerServiceConnection.connect(systemInteractor.endpoint, systemInteractor.accessToken) { presenter.onNewOffer(it) }
+        registerReceiver(receiver, IntentFilter().apply { addAction(ACTION_NEW_OFFER) })
     }
 
     @CallSuper
     protected override fun onPause() {
-        offerServiceConnection.disconnect()
+        //offerServiceConnection.disconnect()
+        unregisterReceiver(receiver)
         super.onPause()
     }
 
@@ -248,4 +263,8 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun addNewOffer(offer: OfferModel) { (rvOffers.adapter as OffersRVAdapter).add(offer) }
+
+    companion object {
+        val ACTION_NEW_OFFER = "${OffersActivity::class.java.name}.offer"
+    }
 }

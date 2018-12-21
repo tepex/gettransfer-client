@@ -36,8 +36,6 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
     protected val analytics: Analytics by inject()
     protected val systemInteractor: SystemInteractor by inject()
 
-    private var pushToken: String? = null
-
     open fun onBackCommandClick() {
         val map = mutableMapOf<String, Any>()
         map[Analytics.PARAM_KEY_NAME] = Analytics.BACK_CLICKED
@@ -93,15 +91,16 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
     protected fun registerPushToken() {
         FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener(OnCompleteListener {
             if (it.isSuccessful) {
-                pushToken = it.result?.token
-                Timber.d("[FCM token]: $pushToken")
-                pushToken?.let { utils.runAlien { systemInteractor.registerPushToken(it) } }
+                it.result?.token?.let {
+                    Timber.d("[FCM token]: $it")
+                    utils.runAlien { systemInteractor.registerPushToken(it) }
+                }
             } else Timber.w("getInstanceId failed", it.exception)
         })
     }
 
     protected fun unregisterPushToken() {
-        pushToken?.let { t -> utils.runAlien { systemInteractor.unregisterPushToken(t) } }
+        utils.runAlien { systemInteractor.unregisterPushToken() }
     }
 
     companion object AnalyticProps {

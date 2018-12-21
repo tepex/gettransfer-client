@@ -11,17 +11,41 @@ import android.media.RingtoneManager
 
 import android.os.Build
 
+import android.support.annotation.CallSuper
 import android.support.v4.app.NotificationCompat
 
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.ui.AboutActivity
+
+import com.kg.gettransfer.domain.AsyncUtils
+import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.interactor.SystemInteractor
+
+import com.kg.gettransfer.presentation.ui.OffersActivity
+import com.kg.gettransfer.presentation.view.OffersView
+
+import kotlinx.coroutines.Job
+
+import org.koin.standalone.get
+import org.koin.standalone.inject
+import org.koin.standalone.KoinComponent
 
 import timber.log.Timber
 
-class OffersPushService : FirebaseMessagingService() {
+class OffersPushService : KoinComponent, FirebaseMessagingService() {
+    protected val compositeDisposable = Job()
+    protected val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
+    protected val systemInteractor: SystemInteractor by inject()
+
+    @CallSuper
+    override fun onDestroy() {
+        compositeDisposable.cancel()
+        super.onDestroy()
+    }
 
     /**
      * Called when message is received.
@@ -43,6 +67,8 @@ class OffersPushService : FirebaseMessagingService() {
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Timber.d("From: ${remoteMessage?.from}")
+        Timber.d("collapse key: ${remoteMessage?.collapseKey}")
+        Timber.d("message type: ${remoteMessage?.messageType}")
 
         // Check if message contains a data payload.
         remoteMessage?.data?.isNotEmpty()?.let {
@@ -54,6 +80,18 @@ class OffersPushService : FirebaseMessagingService() {
         // Check if message contains a notification payload.
         remoteMessage?.notification?.let {
             Timber.d("Message Notification Body: ${it.body}")
+            Timber.d("URL: ${it.link}")
+            Timber.d("Tag: ${it.tag}")
+            Timber.d("Title: ${it.title}")
+            Timber.d("Body key: ${it.bodyLocalizationKey}")
+
+            sendNotification(it.body!!, it.title!!)
+            sendBroadcast(
+                Intent().apply {
+                    setAction(OffersActivity.ACTION_NEW_OFFER)
+                    putExtra("Data", it.body)
+                }
+            )
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
@@ -69,11 +107,14 @@ class OffersPushService : FirebaseMessagingService() {
      */
     override fun onNewToken(token: String?) {
         Timber.d("Refreshed token: $token")
-
-        // If you want to send messages to this application instance or
-        // manage this apps subscriptions on the server side, send the
-        // Instance ID token to your app server.
-        sendRegistrationToServer(token)
+        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener(OnCompleteListener {
+            if (it.isSuccessful) {
+                it.result?.token?.let {
+                    Timber.d("[FCM token]: $it")
+                    utils.runAlien { systemInteractor.registerPushToken(it) }
+                }
+            } else Timber.w("getInstanceId failed", it.exception)
+        })
     }
     // [END on_new_token]
 
@@ -85,32 +126,22 @@ class OffersPushService : FirebaseMessagingService() {
     }
 
     /**
-     * Persist token to third-party servers.
-     *
-     * Modify this method to associate the user's FCM InstanceID token with any server-side account
-     * maintained by your application.
-     *
-     * @param token The new token.
-     */
-    private fun sendRegistrationToServer(token: String?) {
-        // TODO: Implement this method to send token to your app server.
-    }
-
-    /**
      * Create and show a simple notification containing the received FCM message.
      *
      * @param messageBody FCM message body received.
      */
-    private fun sendNotification(messageBody: String) {
-        val intent = Intent(this, AboutActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+    private fun sendNotification(messageBody: String, title: String) {
+        val intent = Intent(this, OffersActivity::class.java).apply {
+            putExtra(OffersView.EXTRA_TRANSFER_ID, -555L)
+        }
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT)
 
         val channelId = getString(R.string.new_offer_notification_channel_id)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle("My title")
+                .setContentTitle(title)
                 .setContentText(messageBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)

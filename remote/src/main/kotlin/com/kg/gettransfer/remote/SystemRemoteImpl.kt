@@ -76,22 +76,13 @@ class SystemRemoteImpl : SystemRemote {
     }
 
     override suspend fun registerPushToken(provider: String, token: String) {
-        try {
-            val response = core.api.registerPushToken(provider, token).await()
-            log.debug("register token: ${response.data}")
-        } catch (e: Exception) {
-            log.error("register token error", e)
-        }
+        core.api.registerPushToken(provider, token).await()
+        //val resposeData: String = response.data
+        //log.debug("register token: ${response.data}") : String
     }
 
     override suspend fun unregisterPushToken(token: String) {
-        try {
-            val response = core.api.unregisterPushToken(token).await()
-            log.debug("unregister token: ${response.data}")
-        }
-        catch (e: Exception) {
-            log.error("unregister token error", e)
-        }
+        core.api.unregisterPushToken(token).await()
     }
 
     override fun changeEndpoint(endpoint: EndpointEntity) = core.changeEndpoint(endpointMapper.toRemote(endpoint))
