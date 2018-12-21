@@ -31,6 +31,7 @@ import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.PaypalCredentials
 import com.kg.gettransfer.domain.model.Profile
+import com.kg.gettransfer.domain.model.PushTokenType
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.User
@@ -153,12 +154,12 @@ class SystemRepositoryImpl(
         return Result(account)
     }
 
-    override suspend fun registerPushToken(provider: String) {
-        factory.retrieveRemoteDataStore().registerPushToken(provider, accessToken)
+    override suspend fun registerPushToken(provider: PushTokenType, token: String) {
+        factory.retrieveRemoteDataStore().registerPushToken(provider.toString(), token)
     }
 
-    override suspend fun unregisterPushToken() {
-        factory.retrieveRemoteDataStore().unregisterPushToken(accessToken)
+    override suspend fun unregisterPushToken(token: String) {
+        factory.retrieveRemoteDataStore().unregisterPushToken(token)
     }
 
     override fun accessTokenChanged(accessToken: String) {

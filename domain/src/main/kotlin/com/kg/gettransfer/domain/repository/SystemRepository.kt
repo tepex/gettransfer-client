@@ -7,6 +7,7 @@ import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.PushTokenType
 import com.kg.gettransfer.domain.model.Result
 
 interface SystemRepository {
@@ -28,8 +29,8 @@ interface SystemRepository {
     suspend fun putAccount(account: Account): Result<Account>
     suspend fun login(email: String, password: String): Result<Account>
     fun logout(): Result<Account>
-    suspend fun registerPushToken(provider: String)
-    suspend fun unregisterPushToken()
+    suspend fun registerPushToken(provider: PushTokenType, token: String)
+    suspend fun unregisterPushToken(token: String)
 
     fun addListener(listener: SystemListener)
     fun removeListener(listener: SystemListener)

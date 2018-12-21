@@ -54,7 +54,7 @@ class AboutActivity : BaseActivity(), AboutView {
         // [START handle_data_extras]
         intent.extras?.let {
             for (key in it.keySet()) {
-                val value = intent.extras.get(key)
+                val value = it.get(key)
                 Timber.d("Key: $key Value: $value")
             }
         }

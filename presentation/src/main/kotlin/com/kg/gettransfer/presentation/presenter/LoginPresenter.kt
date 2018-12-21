@@ -42,7 +42,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
                         Screens.CARRIER_MODE   -> router.navigateTo(Screens.ChangeMode(checkCarrierMode()))
                         Screens.PASSENGER_MODE -> router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
                         Screens.OFFERS         -> {
-                            if (transferId != null) router.navigateTo(Screens.Offers(transferId)) else router.exit()
+                            if (transferId != null) router.navigateTo(Screens.Offers(transferId!!)) else router.exit()
                         }
                     }
                 }

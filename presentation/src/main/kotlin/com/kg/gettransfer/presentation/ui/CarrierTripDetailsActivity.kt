@@ -107,7 +107,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         } else {
            trip.passengerAccount?.profileModel?.let { initAboutPassengerLayout(it) }
         }*/
-        trip.passenger.profile?.let { initAboutPassengerLayout(it) }
+        initAboutPassengerLayout(trip.passenger.profile)
     }
 
     private fun initMoreInfoLayout(trip: CarrierTripModel) {
