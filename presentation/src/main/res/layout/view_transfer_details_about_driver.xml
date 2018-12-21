@@ -25,7 +25,7 @@
         android:layout_height="@dimen/activity_transfer_details_horizontal_divider_height"
         android:background="@color/color_transfer_details_horizontal_divider"/>
 
-    <com.kg.gettransfer.presentation.ui.TransferDetailsField
+    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/carrier_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         app:input_transfer_details="made 343 transfers"
         app:icon_img_transfer_details="@drawable/ic_driver"/>
 
-    <com.kg.gettransfer.presentation.ui.TransferDetailsField
+    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/driver_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
 
         android:visibility="gone"/>
 
-    <com.kg.gettransfer.presentation.ui.TransferDetailsField
+    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/driver_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
         android:layout_height="@dimen/activity_transfer_details_horizontal_divider_height"
         android:background="@color/color_transfer_details_horizontal_divider"/>
 
-    <com.kg.gettransfer.presentation.ui.TransferDetailsField
+    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/carrier_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -139,7 +139,7 @@
 
         android:visibility="gone"/>
 
-    <com.kg.gettransfer.presentation.ui.TransferDetailsField
+    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/carrier_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

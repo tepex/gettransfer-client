@@ -192,4 +192,5 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
         analytics.logEvent(Analytics.EVENT_OFFERS, createStringBundle(Analytics.PARAM_KEY_FILTER, value), map)
     }
+
 }

@@ -7,7 +7,7 @@ data class TransferNew(
     val dest: Dest<CityPoint, Int>,
     val tripTo: Trip,
     val tripReturn: Trip?,
-    val transportTypeIds: List<String>,
+    val transportTypeIds: List<TransportType.ID>,
     val pax: Int,
     val childSeats: Int?,
     val passengerOfferedPrice: Int?, // x 100 (in cents)
@@ -17,4 +17,7 @@ data class TransferNew(
     val paypalOnly: Boolean
 )
 
-data class Trip(val dateTime: Date, val flightNumber: String?)
+data class Trip(
+    val dateTime: Date,
+    val flightNumber: String?
+)

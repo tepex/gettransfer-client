@@ -59,7 +59,7 @@ class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
                 OfferModel.FULL_PRICE -> {
                     payFullPriceButton.isVisible = true
                     payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.FULL_PRICE)
-                    fullPrice.text = offer.price.base.default
+                    fullPrice.text = offer.price.base.def
                     payFullPriceButton.setOnClickListener { changePaymentSettings(it) }
                 }
                 OfferModel.PRICE_30 -> {

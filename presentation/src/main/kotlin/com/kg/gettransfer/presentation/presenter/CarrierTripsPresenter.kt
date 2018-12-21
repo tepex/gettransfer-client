@@ -8,10 +8,10 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 
-import com.kg.gettransfer.presentation.mapper.CarrierTripMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
+import com.kg.gettransfer.presentation.mapper.CarrierTripsRVItemsListMapper
 
-import com.kg.gettransfer.presentation.model.CarrierTripModel
+import com.kg.gettransfer.presentation.model.CarrierTripsRVItemModel
 
 import com.kg.gettransfer.presentation.view.CarrierTripsView
 import com.kg.gettransfer.presentation.view.Screens
@@ -22,9 +22,10 @@ import org.koin.standalone.inject
 class CarrierTripsPresenter : BasePresenter<CarrierTripsView>() {
     private val carrierTripInteractor: CarrierTripInteractor by inject()
 
-    private val carrierTripMapper: CarrierTripMapper by inject()
+    private val carrierTripsRVItemsListMapper: CarrierTripsRVItemsListMapper by inject()
     private val profileMapper: ProfileMapper by inject()
-    private var trips: List<CarrierTripModel>? = null
+
+    private var tripsRVItems: List<CarrierTripsRVItemModel>? = null
 
     override fun onFirstViewAttach() {
         checkLoggedIn()
@@ -34,9 +35,10 @@ class CarrierTripsPresenter : BasePresenter<CarrierTripsView>() {
             val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrips() }
             if (result.error != null) viewState.setError(result.error!!)
             else {
-                trips = result.model.map { carrierTripMapper.toView(it) }
+                val carrierTripsRVItemsList = carrierTripsRVItemsListMapper.toRecyclerView(result.model)
+                tripsRVItems = carrierTripsRVItemsList.itemsList
                 viewState.initNavigation(profileMapper.toView(systemInteractor.account.user.profile))
-                viewState.setTrips(trips!!)
+                viewState.setTrips(tripsRVItems!!, carrierTripsRVItemsList.startTodayPosition, carrierTripsRVItemsList.endTodayPosition)
             }
             viewState.blockInterface(false)
         }
@@ -48,7 +50,7 @@ class CarrierTripsPresenter : BasePresenter<CarrierTripsView>() {
         checkLoggedIn()
     }
 
-    fun onTripSelected(tripId: Long) = router.navigateTo(Screens.TripDetails(tripId))
+    fun onTripSelected(tripId: Long, transferId: Long) = router.navigateTo(Screens.TripDetails(tripId, transferId))
 
     fun checkLoggedIn() {
         if(!systemInteractor.account.user.loggedIn) router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))

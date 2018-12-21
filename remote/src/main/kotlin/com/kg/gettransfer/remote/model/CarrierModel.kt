@@ -6,8 +6,8 @@ import com.google.gson.annotations.SerializedName
 import com.kg.gettransfer.data.model.CarrierEntity
 import com.kg.gettransfer.data.model.ProfileEntity
 
-class CarrierModel(
-    @SerializedName(ProfileEntity.ID) @Expose val id: Long,
+data class CarrierModel(
+    @SerializedName(CarrierEntity.ID) @Expose val id: Long,
     @SerializedName(ProfileEntity.TITLE) @Expose val title: String?,
     @SerializedName(ProfileEntity.EMAIL) @Expose val email: String?,
     @SerializedName(ProfileEntity.PHONE) @Expose val phone: String?,

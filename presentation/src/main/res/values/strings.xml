@@ -41,6 +41,7 @@
     <string name="logs">Logs</string>
     <string name="search">Search</string>
     <string name="reset_onboarding">Reset onboarding</string>
+    <string name="reset_rate">Reset play market rate</string>
 
     <string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
     <string name="activity_carrier_transfer_details_title">Trip details</string> <!-- Title, which not used in new design -->
@@ -56,6 +57,9 @@
     <string name="send_email">Send mail...</string>
     <string name="no_email_apps">There are no email apps installed.</string>
     <string name="driver_not_number">Driver has not a phone number</string>
+
+    <string name="market_link">market://details?id=</string>
+    <string name="app_package">com.gettransfer</string>
 
 
     <string name="LNG_MISKO">TEST</string>
@@ -241,6 +245,7 @@
     <string name="LNG_DATE_NOW">Now</string>
     <string name="LNG_DATE_IN_HOURS">In</string>
     <string name="LNG_RIDE_FROM">from:</string>
+    <string name="LNG_RIDE_YOU_HAPPY_TRANSFER">Are you satisfied with the ride?</string>
     <string name="LNG_PAYMENT_SETTINGS">Payment options</string>
     <string name="LNG_PAYMENT_TERMS">Terms</string>
     <string name="LNG_PAYMENT_TERM_NOW">Pay %s%% now</string>
@@ -351,6 +356,13 @@
     <string name="LNG_PAYMENT_CALL">Call</string>
     <string name="LNG_PAYMENT_CHAT">Chat</string>
     <string name="LNG_PAYMENT_EMAIL_TITLE">Transfer support</string>
+    <string name="LNG_PAYMENT_PUNCTUALITY">Punctuality</string>
+    <string name="LNG_PAYMENT_SPECIFY_YOUR_RATING">You can specify your rating:</string>
+    <string name="LNG_PAYMENT_PROFFESSIONALISM">professionalism</string>
+    <string name="LNG_PAYMENT_ARRIVAL_TIME">arrival time</string>
+    <string name="LNG_PAYMENT_CAR_CONDITIONAL">car condition</string>
+    <string name="LNG_PAYMENT_ADD_COMMENT_YOUR_TRANSFER">Add some comment about your transfer</string>
+    <string name="LNG_PAYMENT_THANK_RATING">Thank you for rating!</string>
     <string name="LNG_PAYMENT_TRANSFER_NUMBER">Transfer number</string>
     <string name="LNG_TRANSFER_TITLE">Transfer paid</string>
     <string name="LNG_RIDE_ABOUT_REQUEST">About request</string>
@@ -363,12 +375,36 @@
     <string name="LNG_DRIVER_EMAIL">Email</string>
     <string name="LNG_RIDE_FLIGHT_NUMBER">Flight number</string>
     <string name="LNG_RIDE_NOT_PAID">Not paid</string>
+    <string name="LNG_SEND">Send</string>
     <string name="LNG_TRANSFER_START">Transfer will start</string>
     <string name="LNG_TRANSFER">Transfer</string>
+    <string name="LNG_RATE_TRANSFER">Rate your transfer</string>
+    <string name="LNG_ENJOING_GTR">Enjoying GetTransfer?</string>
+    <string name="LNG_REVIEW_REQUEST_ANDROID">You can review GetTransfer on Play Market</string>
+    <string name="LNG_REVIEW_REQUEST_CONTINUE">Review</string>
+    <string name="LNG_REVIEW_REQUEST_LATER">Later</string>
     <string name="LNG_RIDE_REQUEST_FOR">Request for</string>
     <string name="LNG_RIDE_TRANSFER_CANCELLED">transfer cancelled</string>
     <string name="LNG_ERROR_PASSENGERS">Number of passenger must be greater than zero</string>
     <string name="LNG_TRANSFER_IN_PROGRESS">Transfer in progress</string>
     <string name="LNG_EMAIL_SUBJECT">Get help</string>
-
+    <string name="LNG_TRIPS_TODAY">Today</string>
+    <string name="LNG_TRIPS_ALL">All</string>
+    <string name="LNG_TRIPS_COMPLETED">Completed</string>
+    <string name="LNG_SCROLL_TO_SEE">Scroll to see other days</string>
+    <string name="LNG_IN_PROGRESS">in progress</string>
+    <string name="LNG_WILL_START_IN">will start in</string>
+    <string name="LNG_HAVE_NO_TRIPS_TODAY">You have no scheduled trips today</string>
+    <string name="LNG_TRIP_DETAILS">Transfer details</string>
+    <string name="LNG_TOTAL_PRICE">Total price</string>
+    <string name="LNG_ABOUT_PASSENGER">About passenger</string>
+    <string name="LNG_ABOUT_CAR">About car</string>
+    <string name="LNG_MORE_INFO">More info</string>
+    <string name="LNG_EMAIL">Email</string>
+    <string name="LNG_PHONE">Phone</string>
+    <string name="LNG_TRIP_ON_MY_WAY">On my way</string>
+    <!-- tags for api params-->
+    <string name="VEHICLE">vehicle</string>
+    <string name="DRIVER">driver</string>
+    <string name="PUNCTUALITY">fair</string>
 </resources>

@@ -8,8 +8,17 @@ import com.kg.gettransfer.remote.model.PassengerAccountModel
 /**
  * Map a [PassengerAccountModel] from a [PassengerAccountEntity] instance when data is moving between this later and the Data layer.
  */
-open class PassengerAccountMapper(): EntityMapper<PassengerAccountModel, PassengerAccountEntity> {
+open class PassengerAccountMapper : EntityMapper<PassengerAccountModel, PassengerAccountEntity> {
     override fun fromRemote(type: PassengerAccountModel) =
-        PassengerAccountEntity(ProfileEntity(0L, type.fullName, type.email, type.phone), type.lastSeen)
+        PassengerAccountEntity(
+            profile = ProfileEntity(
+                fullName = type.fullName,
+                email = type.email,
+                phone = type.phone
+            ),
+            id = type.id,
+            lastSeen = type.lastSeen
+        )
+
     override fun toRemote(type: PassengerAccountEntity): PassengerAccountModel { throw UnsupportedOperationException() }
 }

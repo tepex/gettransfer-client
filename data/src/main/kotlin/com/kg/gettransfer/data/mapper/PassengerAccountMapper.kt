@@ -11,10 +11,21 @@ import org.koin.standalone.get
 /**
  * Map a [PassengerAccountEntity] to and from a [PassengerAccount] instance when data is moving between this later and the Domain layer.
  */
-open class PassengerAccountMapper: Mapper<PassengerAccountEntity, PassengerAccount> {
+open class PassengerAccountMapper : Mapper<PassengerAccountEntity, PassengerAccount> {
     private val profileMapper = get<ProfileMapper>()
     private val dateFormat    = get<ThreadLocal<DateFormat>>("iso_date")
 
-    override fun fromEntity(type: PassengerAccountEntity) = PassengerAccount(profileMapper.fromEntity(type.profile), dateFormat.get().parse(type.lastSeen))
-    override fun toEntity(type: PassengerAccount) = PassengerAccountEntity(profileMapper.toEntity(type.profile), dateFormat.get().format(type.lastSeen))
+    override fun fromEntity(type: PassengerAccountEntity) =
+        PassengerAccount(
+            id = type.id,
+            profile = profileMapper.fromEntity(type.profile),
+            lastSeen = dateFormat.get().parse(type.lastSeen)
+        )
+
+    override fun toEntity(type: PassengerAccount) =
+        PassengerAccountEntity(
+            id = type.id,
+            profile = profileMapper.toEntity(type.profile),
+            lastSeen = dateFormat.get().format(type.lastSeen)
+        )
 }

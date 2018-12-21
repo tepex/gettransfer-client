@@ -8,4 +8,5 @@ import com.kg.gettransfer.presentation.model.RouteModel
 interface RouteView {
     fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean = false)
     fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate)
+    fun centerRoute(cameraUpdate: CameraUpdate)
 }

@@ -16,12 +16,17 @@ open class CarrierMapper : EntityMapper<CarrierModel, CarrierEntity> {
 
     override fun fromRemote(type: CarrierModel) =
         CarrierEntity(
-            ProfileEntity(type.id, type.title, type.email, type.phone),
-            type.approved,
-            type.completedTransfers,
-            type.languages.map { localeMapper.fromRemote(it) },
-            ratingsMapper.fromRemote(type.ratings),
-            type.canUpdateOffers
+            id = type.id,
+            profile = ProfileEntity(
+                fullName = type.title,
+                email = type.email,
+                phone = type.phone
+            ),
+            approved = type.approved,
+            completedTransfers = type.completedTransfers,
+            languages = type.languages.map { localeMapper.fromRemote(it) },
+            ratings = ratingsMapper.fromRemote(type.ratings),
+            canUpdateOffers = type.canUpdateOffers
         )
 
     override fun toRemote(type: CarrierEntity): CarrierModel { throw UnsupportedOperationException() }

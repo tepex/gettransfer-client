@@ -7,7 +7,13 @@ import com.kg.gettransfer.remote.model.TransportTypeModel
 /**
  * Map a [TransportTypeEntity] from a [TransportTypeModel] instance when data is moving between this later and the Data layer.
  */
-open class TransportTypeMapper(): EntityMapper<TransportTypeModel, TransportTypeEntity> {
-    override fun fromRemote(type: TransportTypeModel) = TransportTypeEntity(type.id, type.paxMax, type.luggageMax)
+open class TransportTypeMapper : EntityMapper<TransportTypeModel, TransportTypeEntity> {
+    override fun fromRemote(type: TransportTypeModel) =
+        TransportTypeEntity(
+            id = type.id,
+            paxMax = type.paxMax,
+            luggageMax = type.luggageMax
+        )
+
     override fun toRemote(type: TransportTypeEntity): TransportTypeModel { throw UnsupportedOperationException() }
 }

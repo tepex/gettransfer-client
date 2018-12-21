@@ -7,6 +7,7 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.interactor.ReviewInteractor
 
 import com.kg.gettransfer.presentation.mapper.CurrencyMapper
 import com.kg.gettransfer.presentation.mapper.DistanceUnitMapper
@@ -40,6 +41,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private val currencyMapper     = get<CurrencyMapper>()
     private val distanceUnitMapper = get<DistanceUnitMapper>()
     private val endpointMapper     = get<EndpointMapper>()
+    private val reviewInteractor = get<ReviewInteractor>()
 
     private var localeWasChanged = false
     private var restart = true
@@ -124,6 +126,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     fun onResetOnboardingClicked() { systemInteractor.isOnboardingShowed = false }
 
+    fun onResetRateClicked() { reviewInteractor.shouldAskRateInMarket = true }
+
     private fun saveAccount() = utils.launchSuspend {
         viewState.blockInterface(true)
         val result = utils.asyncAwait { systemInteractor.putAccount() }
@@ -135,7 +139,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 //        localeWasChanged = false
         if(localeWasChanged) {
             localeWasChanged = false
-            router.navigateTo(Screens.Main)
+            router.navigateTo(Screens.ChangeMode(systemInteractor.lastMode))
         }
         else super.onBackCommandClick()
     }

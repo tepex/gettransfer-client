@@ -153,7 +153,7 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun showBottomSheetOfferDetails(offer: OfferModel) {
-        carrierId.text = getString(R.string.LNG_CARRIER).plus(" ").plus(offer.carrier.profile?.id ?: "")
+        carrierId.text = getString(R.string.LNG_CARRIER).plus(" ").plus(offer.carrier.id)
 
         Utils.initCarrierLanguages(layoutCarrierLanguages, offer.carrier.languages)
 
@@ -170,7 +170,7 @@ class OffersActivity : BaseActivity(), OffersView {
         offer.vehicle.color?.let { colorVehicle.setImageDrawable(Utils.getVehicleColorFormRes(this, it)) }
         colorVehicle.isVisible = offer.vehicle.color != null
 
-        vehicleName.text = offer.vehicle.vehicleBase.name
+        vehicleName.text = offer.vehicle.name
         vehicleType.text = getString(offer.vehicle.transportType.nameId!!)
         sheetOfferDetails.tvCountPersons.text = Utils.formatPersons(this, offer.vehicle.transportType.paxMax)
         sheetOfferDetails.tvCountBaggage.text = Utils.formatLuggage(this, offer.vehicle.transportType.luggageMax)
@@ -178,7 +178,7 @@ class OffersActivity : BaseActivity(), OffersView {
         imgFreeWater.isVisible = offer.refreshments
         imgFreeWiFi.isVisible = offer.wifi
 
-        offerPrice.text = offer.price.base.default
+        offerPrice.text = offer.price.base.def
 
         offer.price.base.preferred?.let { offerPricePreferred.text = Utils.formatPrice(this, it) }
         offerPricePreferred.isVisible = offer.price.base.preferred != null
@@ -186,7 +186,7 @@ class OffersActivity : BaseActivity(), OffersView {
         offer.price.withoutDiscount?.let {
             with(offerPriceWithoutDiscountDefault) {
                 paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                text = it.default
+                text = it.def
             }
             it.preferred?.let { preferred ->
                 with(offerPriceWithoutDiscountPreferred) {
@@ -226,6 +226,7 @@ class OffersActivity : BaseActivity(), OffersView {
             presenter.logEvent(OFFER_DETAILS_RATING)
         }
         bsOfferDetails.state = BottomSheetBehavior.STATE_EXPANDED
+
     }
 
     private fun checkNumberOfPhoto(currentPos: Int, size: Int) {

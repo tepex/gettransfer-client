@@ -42,6 +42,7 @@ class LoginPresenter: BasePresenter<LoginView>() {
                 if(!screenForReturn.isNullOrEmpty()) {
                     when(screenForReturn) {
                         Screens.CARRIER_MODE   -> router.navigateTo(Screens.ChangeMode(checkCarrierMode()))
+                        Screens.PASSENGER_MODE -> router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
                         Screens.OFFERS         -> {
                             if(transferId != 0L) router.navigateTo(Screens.Offers(transferId!!))
                             else router.exit()

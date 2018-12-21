@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:gravity="center_horizontal"
+    android:background="@drawable/back_rounded"
+    android:padding="@dimen/rate_container_dialog_padding"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_thanks_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="@string/LNG_CLOSE"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:padding="28dp"
+        android:background="@drawable/back_circle_thanks_rate"
+        android:src="@drawable/ic_thanks_for_rate"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"
+        android:textColor="@color/colorTextBlack"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:textSize="17sp"
+        android:text="@string/LNG_PAYMENT_THANK_RATING"/>
+
+</LinearLayout>

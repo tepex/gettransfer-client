@@ -1,12 +1,6 @@
 package com.kg.gettransfer.remote
 
-import com.kg.gettransfer.data.CarrierTripRemote
-import com.kg.gettransfer.data.OfferRemote
-import com.kg.gettransfer.data.PaymentRemote
-import com.kg.gettransfer.data.PromoRemote
-import com.kg.gettransfer.data.RouteRemote
-import com.kg.gettransfer.data.SystemRemote
-import com.kg.gettransfer.data.TransferRemote
+import com.kg.gettransfer.data.*
 
 import com.kg.gettransfer.remote.mapper.*
 
@@ -16,9 +10,11 @@ import org.slf4j.LoggerFactory
 
 val remoteMappersModule = module {
     single { AccountMapper() }
+    single { BookNowOfferMapper() }
 
     single { CardGatewaysMapper() }
     single { CarrierMapper() }
+    single { CarrierTripBaseMapper() }
     single { CarrierTripMapper() }
     single { CityPointMapper() }
     single { ConfigsMapper() }
@@ -31,6 +27,9 @@ val remoteMappersModule = module {
     single { OfferMapper() }
 
     single { PassengerAccountMapper() }
+
+    single { RateMapper() }
+
     single { PaymentMapper() }
     single { PaymentRequestMapper() }
     single { PaymentStatusMapper() }
@@ -50,7 +49,7 @@ val remoteMappersModule = module {
     single { TripMapper() }
 
     single { UserMapper() }
-    single { VehicleBaseMapper() }
+    single { VehicleInfoMapper() }
     single { VehicleMapper() }
 }
 
@@ -65,4 +64,6 @@ val remoteModule = module {
     single<OfferRemote> { OfferRemoteImpl() }
     single<PaymentRemote> { PaymentRemoteImpl() }
     single<PromoRemote> { PromoRemoteImpl() }
+
+    single<ReviewRemote> { ReviewRemoteImpl() }
 }

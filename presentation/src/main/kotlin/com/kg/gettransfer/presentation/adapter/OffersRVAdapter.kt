@@ -45,18 +45,18 @@ class OffersRVAdapter(
 
     class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(item: OfferModel, listener: SelectOfferClickListener) = with(containerView) {
-            tvCarrierId.text = "#".plus(item.carrier.profile?.id ?: "")
+            tvCarrierId.text = "#${item.carrier.id}"
             //           tvCompletedTransfers.text = context.getString(R.string.LNG_MADE).plus(" ${item.carrier.completedTransfers} ").plus(context.getString(R.string.LNG_RIDES))
             tvCompletedTransfers.text =
                     String.format(context.resources.getString(R.string.LNG_MADE_RIDES), item.carrier.completedTransfers)
-            tvCostDefault.text = item.price.base.default
+            tvCostDefault.text = item.price.base.def
             item.price.base.preferred?.let {
                 tvCostPreferred.text = Utils.formatPrice(context, it)
                 tvCostPreferred.isVisible = true
             }
             item.price.withoutDiscount?.let {
                 tvCostWithoutDiscountDefault.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                tvCostWithoutDiscountDefault.text = it.default
+                tvCostWithoutDiscountDefault.text = it.def
                 if (it.preferred != null) with(tvCostWithoutDiscountPreferred) {
                     paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
                     text = Utils.formatPrice(context, it.preferred)
@@ -105,12 +105,12 @@ class OffersRVAdapter(
 
         private fun setTexts(layout: View, textViewPax: TextView, textViewBaggage: TextView, item: OfferModel) {
             layout.tvVehicleName.text =
-                    if (item.vehicle.color == null) item.vehicle.vehicleBase.name
-                    else Utils.getVehicleNameWithColor(
-                        layout.context,
-                        item.vehicle.vehicleBase.name,
-                        item.vehicle.color
-                    )
+                if (item.vehicle.color == null) item.vehicle.name
+                else Utils.getVehicleNameWithColor(
+                    layout.context,
+                    item.vehicle.name,
+                    item.vehicle.color
+                )
             layout.imgOptionFreeWiFi.isVisible = item.wifi
             layout.imgOptionFreeWater.isVisible = item.refreshments
 

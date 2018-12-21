@@ -4,6 +4,8 @@ import android.arch.persistence.room.ColumnInfo
 
 import com.kg.gettransfer.data.model.ProfileEntity
 
-open class ProfileCached(@ColumnInfo(name = ProfileEntity.FULL_NAME) val fullName: String?,
-                         @ColumnInfo(name = ProfileEntity.EMAIL) val email: String?,
-                         @ColumnInfo(name = ProfileEntity.PHONE) val phone: String?)
+open class ProfileCached(
+    @ColumnInfo(name = ProfileEntity.FULL_NAME) val fullName: String?,
+    @ColumnInfo(name = ProfileEntity.EMAIL) val email: String?,
+    @ColumnInfo(name = ProfileEntity.PHONE) val phone: String?
+)

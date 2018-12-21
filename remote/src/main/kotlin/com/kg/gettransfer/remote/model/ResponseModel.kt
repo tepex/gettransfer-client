@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 class ResponseModel<T> {
-	@SerializedName("result")
+    @SerializedName("result")
     @Expose
     lateinit var result: String
 
@@ -19,8 +19,8 @@ class ResponseModel<T> {
 
 class ErrorModel {
     @Expose
-	@SerializedName("type")
-	lateinit var type: String
+    @SerializedName("type")
+    lateinit var type: String
 
     @Expose
     @SerializedName("details")

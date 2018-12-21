@@ -7,7 +7,16 @@ import com.kg.gettransfer.remote.model.PaymentStatusModel
 /**
  * Map a [PaymentStatusModel] from an [PaymentStatusEntity] instance when data is moving between this later and the Data layer.
  */
-open class PaymentStatusMapper(): EntityMapper<PaymentStatusModel, PaymentStatusEntity> {
-    override fun fromRemote(type: PaymentStatusModel) = PaymentStatusEntity(type.id, type.status)
-    override fun toRemote(type: PaymentStatusEntity) = PaymentStatusModel(type.id, type.status)
+open class PaymentStatusMapper : EntityMapper<PaymentStatusModel, PaymentStatusEntity> {
+    override fun fromRemote(type: PaymentStatusModel) =
+        PaymentStatusEntity(
+            id = type.id,
+            status = type.status
+        )
+
+    override fun toRemote(type: PaymentStatusEntity) =
+        PaymentStatusModel(
+            id = type.id,
+            status = type.status
+        )
 }

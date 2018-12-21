@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/views_carrier_trips_info_layout_padding_top_bottom"
+    android:paddingEnd="@dimen/views_carrier_trips_info_layout_padding_end"
+    android:paddingStart="0dp">
+
+    <TextView
+        android:id="@+id/transferId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:text="Transfer #1234 cancelled"
+        android:textAllCaps="true"
+        android:textColor="@color/color_driver_mode_text_gray"
+        android:textSize="@dimen/views_carrier_trips_info_layout_text_size_11sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="@dimen/views_carrier_trips_info_layout_items_margin_start_16dp"/>
+
+    <TextView
+        android:id="@+id/tripDateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/views_carrier_trips_info_layout_date_margin_top"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:text="6 Окт. 2019, 2:00"
+        android:textAllCaps="true"
+        android:textColor="@color/color_driver_mode_text_gray"
+        android:textSize="@dimen/views_carrier_trips_info_layout_text_size_14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/transferId"
+        android:paddingStart="@dimen/views_carrier_trips_info_layout_items_margin_start_16dp"
+        android:paddingEnd="@dimen/views_carrier_trips_info_layout_date_padding_end"
+        android:paddingTop="@dimen/views_carrier_trips_info_layout_date_padding_top_bottom"
+        android:paddingBottom="@dimen/views_carrier_trips_info_layout_date_padding_top_bottom"/>
+
+    <TextView
+        android:id="@+id/tripPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:text="$200.00"
+        android:textColor="@color/color_driver_mode_text_gray"
+        android:textSize="@dimen/views_carrier_trips_info_layout_text_size_14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tripDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/views_carrier_trips_info_layout_distance_margin_top"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:text="1932км"
+        android:textColor="@color/color_driver_mode_text_gray"
+        android:textSize="@dimen/views_carrier_trips_info_layout_text_size_14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tripPrice" />
+
+    <TextView
+        android:id="@+id/tvTripFrom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/views_carrier_trips_info_layout_fields_from_to_margin_start"
+        android:layout_marginTop="@dimen/views_carrier_trips_info_layout_fields_from_to_margin_top"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/views_carrier_trips_info_layout_fields_from_to_min_height"
+        android:text="Аэропорт Пулково, Пулковское"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/views_carrier_trips_info_layout_text_size_17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvMarkerFrom"
+        app:layout_constraintTop_toBottomOf="@+id/tripDateTime" />
+
+    <View
+        android:id="@+id/addressDivider"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/views_carrier_trips_info_divider_height"
+        android:layout_marginTop="@dimen/views_carrier_trips_info_layout_address_divider_margin_top_bottom"
+        android:background="@color/color_driver_mode_address_divider"
+        app:layout_constraintEnd_toEndOf="@+id/tvTripFrom"
+        app:layout_constraintStart_toStartOf="@+id/tvTripFrom"
+        app:layout_constraintTop_toBottomOf="@+id/tvTripFrom" />
+
+    <TextView
+        android:id="@+id/tvTripTo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/views_carrier_trips_info_layout_fields_from_to_margin_start"
+        android:layout_marginTop="@dimen/views_carrier_trips_info_layout_address_divider_margin_top_bottom"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/views_carrier_trips_info_layout_fields_from_to_min_height"
+        android:text="Новинский бульвар, 25"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/views_carrier_trips_info_layout_text_size_17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvMarkerFrom"
+        app:layout_constraintTop_toBottomOf="@+id/addressDivider" />
+
+    <TextView
+        android:id="@+id/tvMarkerFrom"
+        android:layout_width="@dimen/views_carrier_trips_info_layout_markers_size"
+        android:layout_height="@dimen/views_carrier_trips_info_layout_markers_size"
+        android:background="@drawable/back_circle_marker_filled"
+        android:gravity="center"
+        android:text="@string/transfer_start_sign"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/transfer_start_end_sign_marker_text_size"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        app:layout_constraintBottom_toBottomOf="@+id/tvTripFrom"
+        app:layout_constraintStart_toStartOf="@+id/transferId"
+        app:layout_constraintTop_toTopOf="@+id/tvTripFrom" />
+
+    <ImageView
+        android:id="@+id/ivMarkersLine"
+        android:layout_width="@dimen/views_carrier_trips_info_layout_markers_line_width"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/views_carrier_trips_info_layout_markers_line_margin_top_bottom"
+        android:layout_marginBottom="@dimen/views_carrier_trips_info_layout_markers_line_margin_top_bottom"
+        android:layerType="software"
+        app:layout_constraintBottom_toTopOf="@+id/fl_bottom_point_view"
+        app:layout_constraintEnd_toEndOf="@+id/tvMarkerFrom"
+        app:layout_constraintStart_toStartOf="@+id/tvMarkerFrom"
+        app:layout_constraintTop_toBottomOf="@+id/tvMarkerFrom"
+        app:srcCompat="@drawable/a_b_group" />
+
+    <FrameLayout
+        android:id="@+id/fl_bottom_point_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/tvTripTo"
+        app:layout_constraintStart_toStartOf="@+id/transferId"
+        app:layout_constraintTop_toTopOf="@+id/tvTripTo">
+
+        <TextView
+            android:id="@+id/tvMarkerTo"
+            android:layout_width="@dimen/views_carrier_trips_info_layout_markers_size"
+            android:layout_height="@dimen/views_carrier_trips_info_layout_markers_size"
+            android:background="@drawable/back_circle_marker_filled"
+            android:gravity="center"
+            android:text="@string/transfer_end_sign"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="@dimen/transfer_start_end_sign_marker_text_size"
+            android:fontFamily="@font/sf_pro_text_semibold"
+            android:visibility="visible" />
+
+        <RelativeLayout
+            android:id="@+id/rl_hourly_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/views_carrier_trips_info_layout_hourly_duration_text_height"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/views_carrier_trips_info_layout_hourly_duration_text_margin_start"
+                android:layout_toEndOf="@+id/ivHourlyPoint"
+                android:background="@drawable/back_hours_info"
+                android:fontFamily="@font/sf_pro_text_semibold"
+                android:gravity="center"
+                android:paddingStart="@dimen/views_carrier_trips_info_layout_hourly_duration_text_padding_start"
+                android:paddingEnd="@dimen/views_carrier_trips_info_layout_hourly_duration_text_padding_end"
+                android:paddingBottom="@dimen/views_carrier_trips_info_layout_hourly_duration_text_padding_bottom"
+                android:text="8 hours"
+                android:textColor="@color/colorTextBlack" />
+
+            <ImageView
+                android:id="@+id/ivHourlyPoint"
+                android:layout_width="@dimen/views_carrier_trips_info_layout_markers_hourly_size"
+                android:layout_height="@dimen/views_carrier_trips_info_layout_markers_hourly_size"
+                android:background="@drawable/back_stroke_img"
+                android:gravity="center"
+                android:src="@drawable/ic_hourly" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layoutVehicleInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tvTripTo"
+        app:layout_constraintStart_toStartOf="@+id/transferId"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/views_carrier_trips_info_layout_vehicle_info_margin_top"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/vehicleName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/views_carrier_trips_info_layout_vehicle_name_margin_end"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:text="Mercedes- Benz E-Class Station"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="@dimen/views_carrier_trips_info_layout_text_size_14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/layoutImages"/>
+
+        <TextView
+            android:id="@+id/vehicleNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf_pro_text_semibold"
+            android:text="C875AM"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="@dimen/views_carrier_trips_info_layout_text_size_14sp"
+            app:layout_constraintTop_toBottomOf="@+id/vehicleName" />
+
+        <LinearLayout
+            android:id="@+id/layoutImages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/imgChildSeats"
+                android:layout_width="@dimen/views_carrier_trips_info_layout_images_size"
+                android:layout_height="@dimen/views_carrier_trips_info_layout_images_size"
+                android:background="@drawable/back_carrier_trips_items_imgs"
+                android:padding="@dimen/views_carrier_trips_info_layout_images_padding"
+                app:srcCompat="@drawable/ic_child_seat" />
+
+            <ImageView
+                android:id="@+id/imgComment"
+                android:layout_width="@dimen/views_carrier_trips_info_layout_images_size"
+                android:layout_height="@dimen/views_carrier_trips_info_layout_images_size"
+                android:background="@drawable/back_carrier_trips_items_imgs"
+                android:padding="@dimen/views_carrier_trips_info_layout_images_padding"
+                android:layout_marginStart="@dimen/views_carrier_trips_info_layout_image_comment_margin_start"
+                app:srcCompat="@drawable/ic_comment" />
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutDistanceDurationPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tvTripTo"
+        app:layout_constraintStart_toStartOf="@+id/transferId"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/views_carrier_trips_info_layout_trip_info_margin_top"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/bsLayoutDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingEnd="@dimen/bottom_sheet_carrier_trip_element_padding_16dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="@dimen/bottom_sheet_carrier_trip_element_padding_16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/titleDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/views_carrier_trips_info_layout_text_size_11sp"
+                    android:textColor="@color/color_driver_mode_text_gray"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textAllCaps="true"
+                    android:text="@string/LNG_RIDE_DISTANCE"/>
+
+                <TextView
+                    android:id="@+id/bsTvDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/views_carrier_trips_info_layout_distance_duration_price_items_margin"
+                    android:textSize="@dimen/views_carrier_trips_info_layout_text_size_17sp"
+                    android:textColor="@color/colorTextBlack"
+                    android:fontFamily="@font/sf_pro_text_semibold"
+                    android:text="3942km"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="@dimen/views_carrier_trips_info_divider_height"
+                android:layout_height="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@color/color_carrier_trip_details_activity_divider"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/bsLayoutDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingEnd="@dimen/bottom_sheet_carrier_trip_element_padding_16dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="@dimen/bottom_sheet_carrier_trip_element_padding_16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/titleDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/views_carrier_trips_info_layout_text_size_11sp"
+                    android:textColor="@color/color_driver_mode_text_gray"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textAllCaps="true"
+                    android:text="@string/LNG_RIDE_DURATION"/>
+
+                <TextView
+                    android:id="@+id/bsTvDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/views_carrier_trips_info_layout_distance_duration_price_items_margin"
+                    android:textSize="@dimen/views_carrier_trips_info_layout_text_size_17sp"
+                    android:textColor="@color/colorTextBlack"
+                    android:fontFamily="@font/sf_pro_text_semibold"
+                    android:text="12h 45m"/>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/verticalDividerDurationLayout"
+                android:layout_width="@dimen/views_carrier_trips_info_divider_height"
+                android:layout_height="0dp"
+                android:background="@color/color_carrier_trip_details_activity_divider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/bsLayoutPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/bsTvPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/views_carrier_trips_info_layout_text_size_17sp"
+                android:textColor="@color/color_driver_mode_text_green"
+                android:fontFamily="@font/sf_pro_text_semibold"
+                android:text="$300"/>
+
+            <TextView
+                android:id="@+id/bsTvTotalPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/views_carrier_trips_info_layout_text_size_11sp"
+                android:textColor="@color/color_driver_mode_text_gray"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:textAllCaps="true"
+                android:text="Total price: $1000 \n(30% not paid)"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

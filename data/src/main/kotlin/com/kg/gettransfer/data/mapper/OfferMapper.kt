@@ -32,19 +32,19 @@ open class OfferMapper : Mapper<OfferEntity, Offer> {
      */
     override fun fromEntity(type: OfferEntity) =
         Offer(
-            type.id,
-            type.transferId!!,
-            type.status,
-            type.wifi,
-            type.refreshments,
-            dateFormat.get().parse(type.createdAt),
-            type.updatedAt?.let { dateFormat.get().parse(it) },
-            priceMapper.fromEntity(type.price),
-            type.ratings?.let { ratingsMapper.fromEntity(it) },
-            type.passengerFeedback,
-            carrierMapper.fromEntity(type.carrier),
-            vehicleMapper.fromEntity(type.vehicle),
-            type.driver?.let { profileMapper.fromEntity(it) }
+            id                = type.id,
+            transferId        = type.transferId!!,
+            status            = type.status,
+            wifi              = type.wifi,
+            refreshments      = type.refreshments,
+            createdAt         = dateFormat.get().parse(type.createdAt),
+            updatedAt         = type.updatedAt?.let { dateFormat.get().parse(it) },
+            price             = priceMapper.fromEntity(type.price),
+            ratings           = type.ratings?.let { ratingsMapper.fromEntity(it) },
+            passengerFeedback = type.passengerFeedback,
+            carrier           = carrierMapper.fromEntity(type.carrier),
+            vehicle           = vehicleMapper.fromEntity(type.vehicle),
+            driver            = type.driver?.let { profileMapper.fromEntity(it) }
         )
 
     /**

@@ -39,7 +39,7 @@ val dataModule = module {
     single { LocaleMapper() }
     single { RatingsMapper() }
     single { MoneyMapper() }
-    single { VehicleBaseMapper() }
+    single { VehicleInfoMapper() }
     single { TransportTypeMapper() }
     single { CarrierMapper() }
     single { PriceMapper() }
@@ -70,6 +70,7 @@ val dataModule = module {
 
     single { RouteInfoMapper() }
     single { PointMapper() }
+    single { TransportTypePriceMapper() }
     single { RouteDataStoreCache() }
     single { RouteDataStoreRemote() }
     single<RouteRepository> { RouteRepositoryImpl(DataStoreFactory<RouteDataStore, RouteDataStoreCache, RouteDataStoreRemote>(get(), get())) }
@@ -77,11 +78,13 @@ val dataModule = module {
     single { CityPointMapper() }
     single { DestMapper() }
     single { PassengerAccountMapper() }
+    single { CarrierTripBaseMapper() }
     single { CarrierTripMapper() }
     single { CarrierTripDataStoreCache() }
     single { CarrierTripDataStoreRemote() }
     single<CarrierTripRepository> { CarrierTripRepositoryImpl(DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>(get(), get())) }
 
+    single { BookNowOfferMapper() }
     single { TripMapper() }
     single { TransferMapper() }
     single { TransferNewMapper() }
@@ -93,4 +96,7 @@ val dataModule = module {
     single { PromoDataStoreCache() }
     single { PromoDataStoreRemote() }
     single<PromoRepository> { PromoRepositoryImpl(DataStoreFactory<PromoDataStore, PromoDataStoreCache, PromoDataStoreRemote>(get(), get())) }
+
+    single { ReviewDataStoreRemote() }
+    single<ReviewRepository> { ReviewRepositoryImpl(get()) }
 }

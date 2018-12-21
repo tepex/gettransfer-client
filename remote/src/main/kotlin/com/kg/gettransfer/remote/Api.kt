@@ -19,6 +19,8 @@ interface Api {
         const val API_TRANSFERS          = "/api/transfers"
         const val API_CREATE_NEW_PAYMENT = "/api/payments"
         const val API_PROMO              = "/api/promo_codes/search"
+        const val API_RATE_OFFER         = "/api/offers/rate"
+        const val API_FEEDBACK           = "/api/offers"
     }
 
     @GET(API_ACCESS_TOKEN)
@@ -49,7 +51,7 @@ interface Api {
                      @Query("return_way") returnWay: Boolean): Deferred<ResponseModel<RouteInfoModel>>
 
     @GET(API_CARRIER_TRIPS)
-    fun getCarrierTrips(): Deferred<ResponseModel<CarrierTripsModel>>
+    fun getCarrierTrips(): Deferred<ResponseModel<CarrierTripsBaseModel>>
 
     @GET("$API_CARRIER_TRIPS/{id}")
     fun getCarrierTrip(@Path("id") id: Long): Deferred<ResponseModel<CarrierTripModelWrapper>>
@@ -85,4 +87,11 @@ interface Api {
     fun changePaymentStatus(@Path("status") status: String,
                             @Query("pg_order_id") pgOrderId: Long,
                             @Query("without_redirect") withoutRedirect: Boolean): Deferred<ResponseModel<PaymentStatusWrapperModel>>
+
+     @POST("$API_RATE_OFFER/{id}/{type}")
+     fun rateOffer(@Path("id") id: Long,
+                   @Path("type") type: String, @Body ratingModel: RateToRemote): Deferred<ResponseModel<RateModel>>
+
+    @POST("$API_FEEDBACK/{id}/feedback")
+    fun sendFeedBack(@Path("id") id: Long, @Body passengerComment: FeedBackToRemote): Deferred<ResponseModel<OfferModel>>
 }

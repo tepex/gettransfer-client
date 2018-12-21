@@ -3,6 +3,7 @@ package com.kg.gettransfer.data.mapper
 import com.kg.gettransfer.data.model.CarrierTripEntity
 
 import com.kg.gettransfer.domain.model.CarrierTrip
+import com.kg.gettransfer.domain.model.CarrierTripBase
 import com.kg.gettransfer.domain.model.PassengerAccount
 
 import java.text.DateFormat
@@ -15,7 +16,7 @@ import org.koin.standalone.get
  */
 open class CarrierTripMapper : Mapper<CarrierTripEntity, CarrierTrip> {
     private val cityPointMapper        = get<CityPointMapper>()
-    private val vehicleBaseMapper      = get<VehicleBaseMapper>()
+    private val vehicleInfoMapper      = get<VehicleInfoMapper>()
     private val passengerAccountMapper = get<PassengerAccountMapper>()
     private val dateFormat             = get<ThreadLocal<DateFormat>>("iso_date")
 
@@ -24,26 +25,31 @@ open class CarrierTripMapper : Mapper<CarrierTripEntity, CarrierTrip> {
      */
     override fun fromEntity(type: CarrierTripEntity) =
         CarrierTrip(
-            type.id,
-            type.transferId,
-            cityPointMapper.fromEntity(type.from),
-            cityPointMapper.fromEntity(type.to),
-            dateFormat.get().parse(type.dateLocal),
-            type.duration,
-            type.distance,
-            type.time,
-            type.childSeats,
-            type.comment,
-            type.waterTaxi,
-            type.price,
-            vehicleBaseMapper.fromEntity(type.vehicleBase),
-            type.pax,
-            type.nameSign,
-            type.flightNumber,
-            type.paidSum,
-            type.remainToPay,
-            type.paidPercentage,
-            type.passengerAccount?.let { passengerAccountMapper.fromEntity(it) }
+            base = CarrierTripBase(
+                id                    = type.id,
+                transferId            = type.transferId,
+                from                  = cityPointMapper.fromEntity(type.from),
+                to                    = type.to?.let { cityPointMapper.fromEntity(it) },
+                dateLocal             = dateFormat.get().parse(type.dateLocal),
+                duration              = type.duration,
+                distance              = type.distance,
+                time                  = type.time,
+                childSeats            = type.childSeats,
+                childSeatsInfant      = type.childSeatsInfant,
+                childSeatsConvertible = type.childSeatsConvertible,
+                childSeatsBooster     = type.childSeatsBooster,
+                comment               = type.comment,
+                waterTaxi             = type.waterTaxi,
+                price                 = type.price,
+                vehicle               = vehicleInfoMapper.fromEntity(type.vehicle)
+            ),
+            pax              = type.pax,
+            nameSign         = type.nameSign,
+            flightNumber     = type.flightNumber,
+            paidSum          = type.paidSum,
+            remainsToPay     = type.remainsToPay,
+            paidPercentage   = type.paidPercentage,
+            passengerAccount = passengerAccountMapper.fromEntity(type.passengerAccount)
         )
 
     /**

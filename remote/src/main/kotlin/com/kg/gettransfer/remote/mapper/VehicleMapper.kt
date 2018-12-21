@@ -1,7 +1,6 @@
 package com.kg.gettransfer.remote.mapper
 
 import com.kg.gettransfer.data.model.TransportTypeEntity
-import com.kg.gettransfer.data.model.VehicleBaseEntity
 import com.kg.gettransfer.data.model.VehicleEntity
 
 import com.kg.gettransfer.remote.model.VehicleModel
@@ -12,12 +11,15 @@ import com.kg.gettransfer.remote.model.VehicleModel
 open class VehicleMapper : EntityMapper<VehicleModel, VehicleEntity> {
     override fun fromRemote(type: VehicleModel) =
         VehicleEntity(
-            type.id,
-            VehicleBaseEntity(type.name, type.registrationNumber),
-            type.year,
-            type.color,
-            TransportTypeEntity(type.transportTypeId, type.paxMax, type.luggageMax),
-            type.photos
+            id                 = type.id,
+            name               = type.name,
+            registrationNumber = type.registrationNumber,
+            year               = type.year,
+            color              = type.color,
+            transportTypeId    = type.transportTypeId,
+            paxMax             = type.paxMax,
+            luggageMax         = type.luggageMax,
+            photos             = type.photos
         )
 
     override fun toRemote(type: VehicleEntity): VehicleModel { throw UnsupportedOperationException() }

@@ -9,7 +9,7 @@ import org.koin.standalone.KoinComponent
  * @param <M> the remote model input type
  * @param <E> the entity model output type
  */
-interface EntityMapper<M, E>: KoinComponent {
+interface EntityMapper<M, E> : KoinComponent {
     fun fromRemote(type: M): E
     fun toRemote(type: E): M
 }

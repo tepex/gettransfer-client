@@ -13,12 +13,13 @@ open class CarrierMapper : Mapper<CarrierModel, Carrier> {
 
     override fun toView(type: Carrier) =
         CarrierModel(
-            type.profile?.let { profileMapper.toView(it) },
-            type.approved,
-            type.completedTransfers,
-            type.languages.map { localeMapper.toView(it) },
-            ratingsMapper.toView(type.ratings),
-            type.canUpdateOffers
+            id                 = type.id,
+            profile            = type.profile?.let { profileMapper.toView(it) },
+            approved           = type.approved,
+            completedTransfers = type.completedTransfers,
+            languages          = type.languages.map { localeMapper.toView(it) },
+            ratings            = ratingsMapper.toView(type.ratings),
+            canUpdateOffers    = type.canUpdateOffers
         )
 
     override fun fromView(type: CarrierModel): Carrier { throw UnsupportedOperationException() }

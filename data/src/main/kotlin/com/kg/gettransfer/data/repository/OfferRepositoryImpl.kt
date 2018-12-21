@@ -21,7 +21,6 @@ import com.kg.gettransfer.domain.model.Ratings
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.Vehicle
-import com.kg.gettransfer.domain.model.VehicleBase
 
 import com.kg.gettransfer.domain.repository.OfferRepository
 

@@ -8,16 +8,22 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.interactor.OfferInteractor
+import com.kg.gettransfer.domain.interactor.ReviewInteractor
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
-
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Point
-import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
+import com.kg.gettransfer.presentation.mapper.TransferMapper
+
+import com.kg.gettransfer.domain.model.Transfer.Companion.filterCompleted
+import com.kg.gettransfer.presentation.mapper.RouteMapper
+import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.ui.SystemUtils
+import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.Screens
@@ -31,9 +37,14 @@ import timber.log.Timber
 @InjectViewState
 class MainPresenter : BasePresenter<MainView>() {
     private val routeInteractor: RouteInteractor by inject()
+    private val reviewInteractor: ReviewInteractor by inject()
+    private val transferInteractor: TransferInteractor by inject()
+    private val offerInteractor: OfferInteractor by inject()
 
     private val pointMapper: PointMapper by inject()
     private val profileMapper: ProfileMapper by inject()
+    private val transferMapper: TransferMapper by inject()
+    private val routeMapper: RouteMapper by inject()
 
     private lateinit var lastAddressPoint: LatLng
     private var lastPoint: LatLng? = null
@@ -58,6 +69,11 @@ class MainPresenter : BasePresenter<MainView>() {
         systemInteractor.initGeocoder()
         if (routeInteractor.from != null) setLastLocation()
         else utils.launchSuspend { updateCurrentLocationAsync().apply { error?.let { Timber.e(it) } } }
+
+        reviewInteractor.apply {
+            if (!isReviewSuggested) showRateForLastTrip()
+            else if (shouldAskRateInMarket) viewState.askRateInPlayMarket()
+        }
 
         // Создать листенер для обновления текущей локации
         // https://developer.android.com/training/location/receive-location-updates
@@ -252,7 +268,7 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     fun onLoginClick() {
-        login("", "")
+        login(Screens.PASSENGER_MODE, "")
         logEvent(Analytics.LOGIN_CLICKED)
     }
 
@@ -278,10 +294,74 @@ class MainPresenter : BasePresenter<MainView>() {
         return latDiff < criteria && lngDiff < criteria
     }
 
+    private fun showRateForLastTrip() {     //get all completed transfers -> get last transfer -> get offer -> showRate view
+        utils.launchSuspend {
+            utils.asyncAwait { transferInteractor.getAllTransfers() }
+                    .isNotError()
+                    ?.let { getLastTransfer(it.filterCompleted())
+                            ?.let { transfer -> checkToShowReview(transfer) }
+            }
+        }
+    }
+
+    private fun getLastTransfer(transfers: List<Transfer>) =
+        transfers.filter { it.status.checkOffers }
+            .sortedByDescending { it.dateToLocal }
+            .firstOrNull()
+
+    private suspend fun checkToShowReview(transfer: Transfer) =
+        utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
+            .isNotError()
+            ?.firstOrNull()
+            ?.let { offer ->
+                if (!offer.isRated()) {
+                    val routeModel = createRouteModel(transfer)
+                    reviewInteractor.offerIdForReview = offer.id
+                    viewState.openReviewForLastTrip(
+                        transfer.id,
+                        transfer.dateToLocal.toString(),
+                        offer.vehicle.name,
+                        offer.vehicle.color?:"",
+                        routeModel
+                    )
+                }
+            }
+
+    fun onReviewCanceled() {
+        reviewInteractor.rateCanceled()
+        viewState.cancelReview()
+    }
+
+    fun onRateClicked(rate: Float) {
+        if (rate.toInt() == ReviewInteractor.MAX_RATE) {
+            reviewInteractor.apply {
+                utils.launchSuspend{ sendTopRate() }
+                if (shouldAskRateInMarket) viewState.askRateInPlayMarket() else viewState.thanksForRate()
+            }
+        } else viewState.showDetailedReview(rate)
+    }
+
+    fun sendReview(mapOfRates: HashMap<String, Int>, comment: String) {
+        utils.launchSuspend {
+            val result = utils.asyncAwait{ reviewInteractor.sendRates(mapOfRates, comment) }
+            if (result.error != null) {
+                /* some error for analytics */
+            }
+        }
+        viewState.thanksForRate()
+    }
+
+    fun onRateInStore() {
+        systemInteractor.appEntersForMarketRate = ReviewInteractor.APP_RATED_IN_MARKET
+        viewState.showRateInPlayMarket()
+    }
+
+    fun onTransferDetailsClick(transferId: Long) = router.navigateTo(Screens.Details(transferId))
+
+
     fun logEvent(value: String) {
         val map = mutableMapOf<String, Any>()
         map[Analytics.PARAM_KEY_NAME] = value
-
         analytics.logEvent(Analytics.EVENT_MENU, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
     }
 
@@ -293,12 +373,28 @@ class MainPresenter : BasePresenter<MainView>() {
     fun onShareClick() {
         Timber.d("Share action")
         logEvent(Analytics.SHARE)
+        router.navigateTo(Screens.Share())
+    }
+
+    private suspend fun createRouteModel(transfer: Transfer): RouteModel {
+        val route = routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false).model
+        return routeMapper.getView(
+            route.distance,
+            route.polyLines,
+            transfer.from.name!!,
+            transfer.to!!.name!!,
+            transfer.from.point!!,
+            transfer.to!!.point!!,
+            SystemUtils.formatDateTime(transferMapper.toView(transfer).dateTime)
+        )
+
     }
 
     companion object {
-        @JvmField val FIELD_FROM = "field_from"
-        @JvmField val FIELD_TO   = "field_to"
+        const val FIELD_FROM = "field_from"
+        const val FIELD_TO   = "field_to"
 
-        const val MIN_HOURLY     = 2
+        const val MIN_HOURLY          = 2
+
     }
 }

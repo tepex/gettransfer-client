@@ -2,7 +2,7 @@ package com.kg.gettransfer.presentation.model
 
 import java.util.Currency
 
-class CurrencyModel(val delegate: Currency): CharSequence {
+class CurrencyModel(val delegate: Currency) : CharSequence {
     val name = "${delegate.displayName} ($symbol)"
     override val length = name.length
     val code = delegate.currencyCode

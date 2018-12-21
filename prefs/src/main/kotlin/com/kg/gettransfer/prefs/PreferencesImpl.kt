@@ -19,14 +19,18 @@ import timber.log.Timber
 class PreferencesImpl(context: Context,
                       override val endpoints: List<EndpointEntity>): PreferencesCache {
     companion object {
-        @JvmField val INVALID_TOKEN   = "invalid_token"
-        @JvmField val ACCESS_TOKEN    = "token"
-        @JvmField val LAST_MODE       = "last_mode"
-        @JvmField val FIRST_LAUNCH    = "first_launch"
-        @JvmField val ONBOARDING      = "onboarding"
-        @JvmField val SELECTED_FIELD  = "selected_field"
-        @JvmField val ENDPOINT        = "endpoint"        
-        @JvmField val ADDRESS_HISTORY = "history"
+        @JvmField val INVALID_TOKEN    = "invalid_token"
+        @JvmField val ACCESS_TOKEN     = "token"
+        @JvmField val LAST_MODE        = "last_mode"
+        @JvmField val FIRST_LAUNCH     = "first_launch"
+        @JvmField val ONBOARDING       = "onboarding"
+        @JvmField val SELECTED_FIELD   = "selected_field"
+        @JvmField val ENDPOINT         = "endpoint"
+        @JvmField val ADDRESS_HISTORY  = "history"
+        @JvmField val APP_ENTERS_COUNT = "enters_count"
+
+        const val FIRST_ACCESS         = 0
+        const val IMMUTABLE            = -1   // user did rate app
     }
     
     private val listeners = mutableSetOf<PreferencesListener>()
@@ -115,6 +119,23 @@ class PreferencesImpl(context: Context,
                 putString(ADDRESS_HISTORY, JSON.stringify(GTAddressEntity.serializer().list, value))
                 apply()
             }            
+        }
+
+    override var appEnters: Int
+        get() {
+            var count = accountPrefs.getInt(APP_ENTERS_COUNT, FIRST_ACCESS)
+            if (count == IMMUTABLE) return count
+            appEnters = ++count
+            return count
+        }
+        set(value) {
+            accountPrefs.apply {
+                if (getInt(APP_ENTERS_COUNT, FIRST_ACCESS) != IMMUTABLE)
+                    edit()
+                    .putInt(APP_ENTERS_COUNT, value)
+                    .apply()
+            }
+
         }
         
     override fun logout() {

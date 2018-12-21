@@ -4,7 +4,8 @@ import com.kg.gettransfer.data.model.VehicleEntity
 
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.Vehicle
-import com.kg.gettransfer.domain.model.VehicleBase
+
+import org.koin.standalone.get
 
 import org.koin.standalone.get
 
@@ -12,20 +13,23 @@ import org.koin.standalone.get
  * Map a [VehicleEntity] to and from a [Vehicle] instance when data is moving between this later and the Domain layer.
  */
 open class VehicleMapper : Mapper<VehicleEntity, Vehicle> {
-    private val vehicleBaseMapper   = get<VehicleBaseMapper>()
-    private val transportTypeMapper = get<TransportTypeMapper>()
 
     /**
      * Map a [VehicleEntity] instance to a [Vehicle] instance.
      */
     override fun fromEntity(type: VehicleEntity) =
         Vehicle(
-            type.id,
-            vehicleBaseMapper.fromEntity(type.vehicleBase),
-            type.year,
-            type.color,
-            transportTypeMapper.fromEntity(type.transportType),
-            type.photos
+            id                 = type.id,
+            name               = type.name,
+            registrationNumber = type.registrationNumber,
+            year               = type.year,
+            color              = type.color,
+            transportType      = TransportType(
+                id = TransportType.ID.parse(type.transportTypeId),
+                paxMax = type.paxMax,
+                luggageMax = type.luggageMax
+            ),
+            photos = type.photos
         )
 
     /**
@@ -33,11 +37,14 @@ open class VehicleMapper : Mapper<VehicleEntity, Vehicle> {
      */
     override fun toEntity(type: Vehicle) =
         VehicleEntity(
-            type.id,
-            vehicleBaseMapper.toEntity(type.vehicleBase),
-            type.year,
-            type.color,
-            transportTypeMapper.toEntity(type.transportType),
-            type.photos
+            id = type.id,
+            name = type.name,
+            registrationNumber = type.registrationNumber,
+            year = type.year,
+            color = type.color,
+            transportTypeId = type.transportType.id.toString(),
+            paxMax = type.transportType.paxMax,
+            luggageMax = type.transportType.luggageMax,
+            photos = type.photos
         )
 }

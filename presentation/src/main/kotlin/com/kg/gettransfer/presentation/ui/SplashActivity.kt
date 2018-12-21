@@ -19,9 +19,11 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.interactor.ReviewInteractor
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.presentation.view.AboutView
+import com.kg.gettransfer.presentation.view.Screens
 
 import kotlinx.coroutines.Job
 
@@ -39,6 +41,7 @@ class SplashActivity: AppCompatActivity() {
     private val coroutineContexts: CoroutineContexts by inject()
     private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
     private val systemInteractor: SystemInteractor by inject()
+    private val reviewInteractor: ReviewInteractor by inject()
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,17 +56,14 @@ class SplashActivity: AppCompatActivity() {
                 return
         }
 
+        reviewInteractor.shouldAskRateInMarket = shouldAskForRateApp()
+
         if(checkIsTaskRoot()) return
 
         Timber.d(getString(R.string.title_starting_session))
         Timber.d("Permissions granted!")
         utils.launchSuspend {
             val result = utils.asyncAwait { systemInteractor.coldStart() }
-            /*when(systemInteractor.lastMode) {
-                Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsActivity::class.java))
-                Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-            }*/
 
             if(result.error != null) {
                 Timber.e(result.error!!)
@@ -79,7 +79,14 @@ class SplashActivity: AppCompatActivity() {
                     startActivity(Intent(this@SplashActivity, AboutActivity::class.java)
                             .putExtra(AboutView.EXTRA_OPEN_MAIN, true).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
                 }
-                else startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                else {
+                    //startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                    when(systemInteractor.lastMode) {
+                        Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsActivity::class.java))
+                        Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                        else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                    }
+                }
                 finish()
             }
         }
@@ -115,4 +122,11 @@ class SplashActivity: AppCompatActivity() {
         else finish()
         */
     }
+    private fun shouldAskForRateApp() =
+            when (systemInteractor.appEntersForMarketRate) {
+                3    -> true
+                9    -> true
+                18   -> true
+                else -> false
+            }
 }

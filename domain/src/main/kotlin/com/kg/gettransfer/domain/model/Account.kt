@@ -13,15 +13,6 @@ data class Account(
 ) {
 
     companion object {
-        val NO_ACCOUNT = Account(
-            User(Profile(0, null, null, null)),
-            Locale.getDefault(),
-            Currency.getInstance("USD"),
-            DistanceUnit.km,
-            emptyList<String>(),
-            null
-        )
-
-        @JvmField val GROUP_CARRIER_DRIVER = "carrier/driver"
+        const val GROUP_CARRIER_DRIVER = "carrier/driver"
     }
 }

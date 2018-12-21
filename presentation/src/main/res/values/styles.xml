@@ -7,117 +7,117 @@
         <item name="colorAccent">@color/colorAccent</item>
         <!--<item name="colorPrimaryDark" tools:targetApi="23">@color/colorPrimary</item>
         <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>-->
-		<item name="windowActionBar">false</item>
-		<item name="windowNoTitle">true</item>
-		<item name="android:windowDisablePreview">true</item>
-		<item name="android:windowLightStatusBar">true</item>
-		<item name="android:windowContentTransitions">true</item>
-		<item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
-		<item name="android:timePickerDialogTheme">@style/MyTimePickerDialogTheme</item>
-	</style>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
+        <item name="android:timePickerDialogTheme">@style/MyTimePickerDialogTheme</item>
+    </style>
 
-	<style name="AppThemeTransparentStatusBar" parent="AppTheme">
-		<item name="android:windowLightStatusBar">true</item>
-		<item name="colorPrimaryDark">@color/colorWhite</item>
-	</style>
+    <style name="AppThemeTransparentStatusBar" parent="AppTheme">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="colorPrimaryDark">@color/colorWhite</item>
+    </style>
 
-	<style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
-		<item name="android:datePickerStyle">@style/MyDatePickerStyle</item>
-	</style>
+    <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:datePickerStyle">@style/MyDatePickerStyle</item>
+    </style>
 
-	<style name="MyDatePickerStyle" parent="@android:style/Widget.Material.Light.DatePicker">
-		<item name="android:headerBackground">@color/colorPrimary</item>
-	</style>
+    <style name="MyDatePickerStyle" parent="@android:style/Widget.Material.Light.DatePicker">
+        <item name="android:headerBackground">@color/colorPrimary</item>
+    </style>
 
-	<style name="MyTimePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
-		<item name="android:timePickerStyle">@style/MyTimePickerStyle</item>
-	</style>
+    <style name="MyTimePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:timePickerStyle">@style/MyTimePickerStyle</item>
+    </style>
 
-	<style name="MyTimePickerStyle" parent="@android:style/Widget.Material.Light.TimePicker">
-		<item name="android:headerBackground">@color/colorPrimary</item>
-	</style>
+    <style name="MyTimePickerStyle" parent="@android:style/Widget.Material.Light.TimePicker">
+        <item name="android:headerBackground">@color/colorPrimary</item>
+    </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-	<style name="ProgressBar" parent="ThemeOverlay.AppCompat.Light">
-		<item name="colorAccent">@color/colorWhite</item>
-	</style>
-	
-	<style name="sf_font">
-		<item name="android:textColor">@android:color/black</item>
-		<item name="android:fontFamily">@font/sf_pro_text_regular</item>
-	</style>
-	<style name="sf_font_bold">
-		<item name="android:textColor">@android:color/black</item>
-		<item name="android:fontFamily">@font/sf_pro_text_bold</item>
-	</style>
-	
-	<style name="nav_item">
-		<item name="android:layout_width">match_parent</item>
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:paddingTop">5dp</item>
-		<item name="android:paddingBottom">5dp</item>
-	</style>
-	<style name="nav_item_title" parent="sf_font">
-		<item name="android:layout_width">match_parent</item>
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:textSize">@dimen/nav_item_title_size</item>
-		<item name="android:textColor">@color/colorTextBlack</item>
-		<item name="fontFamily">@font/sf_pro_text_bold</item>
-	</style>
-	<style name="nav_item_subtitle" parent="sf_font">
-		<item name="android:layout_width">match_parent</item>
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:textSize">@dimen/nav_item_subtitle_size</item>
-		<item name="android:textColor">@color/nav_item_subtitle</item>
-		<item name="fontFamily">@font/sf_pro_text_regular</item>
-	</style>
-	<style name="nav_footer_version" parent="sf_font">
-		<item name="android:layout_width">wrap_content</item>
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:textSize">@dimen/nav_footer_version_size</item>
-		<item name="android:textColor">@color/nav_item_subtitle</item>
-	</style>
+    <style name="ProgressBar" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/colorWhite</item>
+    </style>
+
+    <style name="sf_font">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+    <style name="sf_font_bold">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:fontFamily">@font/sf_pro_text_bold</item>
+    </style>
+
+    <style name="nav_item">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
+    <style name="nav_item_title" parent="sf_font">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/nav_item_title_size</item>
+        <item name="android:textColor">@color/colorTextBlack</item>
+        <item name="fontFamily">@font/sf_pro_text_bold</item>
+    </style>
+    <style name="nav_item_subtitle" parent="sf_font">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/nav_item_subtitle_size</item>
+        <item name="android:textColor">@color/nav_item_subtitle</item>
+        <item name="fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+    <style name="nav_footer_version" parent="sf_font">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/nav_footer_version_size</item>
+        <item name="android:textColor">@color/nav_item_subtitle</item>
+    </style>
 
 
-	<style name="ReadMoreDialog" parent="Theme.AppCompat.Light.Dialog">
-		<item name="windowFixedWidthMajor">95%</item>
-		<item name="windowFixedWidthMinor">95%</item>
-		<item name="android:windowTitleStyle">@style/read_more_title</item>
-		<item name="android:textColor">@android:color/black</item>
-		<item name="android:fontFamily">@font/sf_pro_text_regular</item>
-	</style>
-	<style name="read_more_title" parent="sf_font_bold">
-		<item name="android:layout_width">match_parent</item>
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:textSize">@dimen/read_more_title_size</item>
-	</style>
+    <style name="ReadMoreDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="windowFixedWidthMajor">95%</item>
+        <item name="windowFixedWidthMinor">95%</item>
+        <item name="android:windowTitleStyle">@style/read_more_title</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+    <style name="read_more_title" parent="sf_font_bold">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/read_more_title_size</item>
+    </style>
 
-	<style name="read_more_item" parent="sf_font">
-		<item name="android:layout_width">match_parent</item>
-		<item name="android:layout_height">wrap_content</item>
-	</style>
+    <style name="read_more_item" parent="sf_font">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 
-	<!-- Search address -->
-	<style name="address_item" parent="sf_font">
-		<item name="android:textSize">@dimen/address_item_size</item>
-		<item name="android:paddingTop">@dimen/address_item_padding_top</item>
-		<item name="android:paddingStart">@dimen/address_item_padding_start</item>
-	</style>
-	<style name="address_secondary_item" parent="sf_font">
-		<item name="android:textColor">@color/address_item_subtitle</item>
-		<item name="android:textSize">@dimen/address_secondary_item_size</item>
-		<item name="android:paddingStart">@dimen/address_item_padding_start</item>
-	</style>
-	<style name="list_title" parent="sf_font">
-		<item name="android:layout_marginStart">@dimen/left_margin_title</item>
-		<item name="android:textSize">@dimen/title_text_size</item>
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:layout_width">match_parent</item>
-		<item name="android:paddingTop">8dp</item>
-		<item name="android:paddingBottom">8dp</item>
-		<item name="android:textColor">@color/search_list_title</item>
-	</style>
+    <!-- Search address -->
+    <style name="address_item" parent="sf_font">
+        <item name="android:textSize">@dimen/address_item_size</item>
+        <item name="android:paddingTop">@dimen/address_item_padding_top</item>
+        <item name="android:paddingStart">@dimen/address_item_padding_start</item>
+    </style>
+    <style name="address_secondary_item" parent="sf_font">
+        <item name="android:textColor">@color/address_item_subtitle</item>
+        <item name="android:textSize">@dimen/address_secondary_item_size</item>
+        <item name="android:paddingStart">@dimen/address_item_padding_start</item>
+    </style>
+    <style name="list_title" parent="sf_font">
+        <item name="android:layout_marginStart">@dimen/left_margin_title</item>
+        <item name="android:textSize">@dimen/title_text_size</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:textColor">@color/search_list_title</item>
+    </style>
 
     <style name="etField">
         <item name="android:background">@android:color/transparent</item>
@@ -137,17 +137,32 @@
         <item name="layout_constraintEnd_toEndOf">parent</item>
         <item name="layout_constraintStart_toStartOf">parent</item>
     </style>
-	
-	<style name="SwitchCompatStyle" parent="Theme.AppCompat.Light">
-		<item name="colorControlActivated">@color/switch_activated</item>
-	</style>
 
-	<style name="BorderlessBackground">
-		<item name="android:background">?android:attr/selectableItemBackground</item>
-	</style>
+    <style name="SwitchCompatStyle" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/switch_activated</item>
+    </style>
 
+    <style name="BorderlessBackground">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
 
+    <style name="TabLayoutTextStyle">
+        <item name="android:textSize">@dimen/views_carrier_trips_activity_tab_layout_text_size</item>
+        <item name="android:textColor">@color/colorTextBlack</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
 
+    <style name="rate_title" parent="sf_font">
+        <item name="android:textSize">@dimen/title_rating_text_size</item>
+    </style>
+    <style name="rate_sub_title" parent="sf_font">
+        <item name="android:textSize">@dimen/sub_title_rating_text_size</item>
+    </style>
+
+    <style name="tv_rate" parent="sf_font">
+        <item name="android:layout_marginTop">@dimen/vertical_margin_rate_dialog</item>
+    </style>
 
     <!--<style name="etField" parent="Base.V7.Widget.AppCompat.EditText">-->
     <!--<item name="android:background">@android:color/transparent</item>-->

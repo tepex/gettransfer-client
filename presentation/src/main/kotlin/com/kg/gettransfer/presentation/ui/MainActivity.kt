@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
@@ -8,7 +9,6 @@ import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
-import android.support.annotation.DrawableRes
 import android.support.design.widget.BottomSheetBehavior
 
 import android.support.v4.content.ContextCompat
@@ -30,6 +30,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
@@ -39,8 +40,10 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.presentation.model.PolylineModel
 
 import com.kg.gettransfer.presentation.model.ProfileModel
+import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.MainView
@@ -51,8 +54,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
-import kotlinx.android.synthetic.main.view_hourly_picker.view.*
+import kotlinx.android.synthetic.main.view_last_trip_rate.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
+import kotlinx.android.synthetic.main.view_rate_dialog.view.*
+import kotlinx.android.synthetic.main.view_rate_field.*
+import kotlinx.android.synthetic.main.view_rate_in_store.view.*
+import kotlinx.android.synthetic.main.view_thanks_for_rate.*
+import kotlinx.android.synthetic.main.view_thanks_for_rate.view.*
 
 import timber.log.Timber
 
@@ -116,7 +124,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             @CallSuper
             override fun onDrawerStateChanged(newState: Int) {
                 super.onDrawerStateChanged(newState)
-                if(newState == DrawerLayout.STATE_SETTLING) hideKeyboard()
+                if (newState == DrawerLayout.STATE_SETTLING) hideKeyboard()
             }
         })
 
@@ -223,7 +231,8 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             tvCurrent_hours.text = displayedValues[0]
             setOnValueChangedListener { _, _, newVal ->
                 presenter.tripDurationSelected(HourlyValuesHelper.durationValues[newVal])
-                tvCurrent_hours.text = displayedValues[newVal] }
+                tvCurrent_hours.text = displayedValues[newVal]
+            }
         }
         tv_okBtn.setOnClickListener { showNumberPicker(false) }
     }
@@ -276,13 +285,13 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
                 .withStartAction { presenter.isMarkerAnimating = true }
                 .withEndAction {
                     presenter.isMarkerAnimating = false
-                    if(!up) markerShadow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_position_shadow))
+                    if (!up) markerShadow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_position_shadow))
                 }
                 .setDuration(150L)
                 .translationYBy(px)
                 .start()
 
-        if(up) markerShadow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.lifted_marker_shadow))
+        if (up) markerShadow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.lifted_marker_shadow))
     }
 
     override fun moveCenterMarker(point: LatLng) {
@@ -290,14 +299,14 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
-        if(block) searchFrom.text = getString(R.string.search_start)
+        if (block) searchFrom.text = getString(R.string.search_start)
     }
 
     override fun blockSelectedField(block: Boolean, field: String) {
         if (block) {
             when (field) {
                 MainPresenter.FIELD_FROM -> searchFrom.text = getString(R.string.search_start)
-                MainPresenter.FIELD_TO   -> searchTo.text   = getString(R.string.search_start)
+                MainPresenter.FIELD_TO -> searchTo.text = getString(R.string.search_start)
             }
         }
     }
@@ -334,13 +343,15 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     override fun setProfile(profile: ProfileModel) {
-        navHeaderName.isVisible  = profile.isLoggedIn()
-        navHeaderEmail.isVisible = profile.isLoggedIn()
-        navRequests.isVisible    = profile.isLoggedIn()
-        navLogin.isVisible       = !profile.isLoggedIn()
-        if (profile.isLoggedIn()) {
-            navHeaderName.text = profile.name
-            navHeaderEmail.text = profile.email
+        profile.apply {
+            navHeaderName.isVisible  = isLoggedIn()
+            navHeaderEmail.isVisible = isLoggedIn()
+            navRequests.isVisible    = isLoggedIn()
+            navLogin.isVisible       = !isLoggedIn()
+            if(isLoggedIn()){
+                navHeaderName.text = name
+                navHeaderEmail.text = email
+            }
         }
     }
 
@@ -380,11 +391,13 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     override fun changeFields(hourly: Boolean) {
-        rl_hourly.isVisible    = hourly
-        hourly_point.isVisible = hourly
+        hourly.let {
+            rl_hourly.isVisible    = it
+            hourly_point.isVisible = it
+            rl_searchForm.isGone   = it
+            b_point.isGone         = it
+        }
 
-        rl_searchForm.isGone = hourly
-        b_point.isGone       = hourly
         enableBtnNext()
 //        AnimationHelper(this).hourlyAnim(viewOut, imgOut, viewIn, imgIn)
         link_line.isInvisible = hourly
@@ -393,12 +406,89 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     override fun setTripMode(duration: Int?) {
         duration?.let {
             switch_mode.isChecked = true
-            with(HourlyValuesHelper) {
+            with (HourlyValuesHelper) {
                 np_hours.value = durationValues.indexOf(it)
                 tvCurrent_hours.text = getValue(it, this@MainActivity)
             }
         }
     }
+
+    override fun openReviewForLastTrip(transferId: Long, date: String, vehicle: String, color: String, routeModel: RouteModel) {
+        val view = showPopUpWindow(R.layout.view_last_trip_rate, contentMain)
+        mDisMissAction = {
+            _mapView = mapView
+            initMapView(null)
+            view.rate_map.onDestroy()
+            mapView.onResume()
+            presenter.updateCurrentLocation()
+            mDisMissAction = {}
+        }
+
+        view.apply {
+            tv_transfer_details.setOnClickListener {
+                closePopUp()
+                presenter.onTransferDetailsClick(transferId)
+            }
+            tv_close_lastTrip_rate.setOnClickListener { presenter.onReviewCanceled() }
+            tv_transfer_number_rate.apply { text = text.toString().plus(" #$transferId") }
+            tv_transfer_date_rate.text = date
+            tv_vehicle_model_rate.text = vehicle
+            rate_bar_last_trip.setOnRatingChangeListener { _, fl ->
+                closePopUp()
+                presenter.onRateClicked(fl)
+            }
+            carColor_rate.setImageDrawable(Utils.getVehicleColorFormRes(this@MainActivity, color))
+        }
+
+        drawMapForReview(view.rate_map, Utils.getPolyline(routeModel), routeModel)
+
+    }
+
+    private fun drawMapForReview(map: MapView, polyline: PolylineModel, routeModel: RouteModel) {
+        _mapView = map
+        initMapView(null)
+        setPolyline(polyline, routeModel)
+        mapView.onPause()
+        map.onResume()
+    }
+
+    override fun showDetailedReview(tappedRate: Float) {
+        val popUpView = showPopUpWindow(R.layout.view_rate_dialog, contentMain)
+        popUpView.tvCancelRate.setOnClickListener { presenter.onReviewCanceled() }
+        popUpView.send_feedBack.setOnClickListener {
+            closePopUp()
+            presenter.sendReview(Utils.createMapOfDetailedRates(popUpView), popUpView.et_reviewComment.text.toString())
+        }
+        setupDetailRatings(tappedRate, popUpView)
+    }
+
+    private fun setupDetailRatings(rateForFill: Float, v: View) {
+        rateForFill.let {
+            v.apply {
+                main_rate.rating                 = it
+                driver_rate.rate_bar.rating      = it
+                punctuality_rate.rate_bar.rating = it
+                vehicle_rate.rate_bar.rating     = it
+            }
+        }
+    }
+
+    override fun askRateInPlayMarket() {
+        showPopUpWindow(R.layout.view_rate_in_store, contentMain).apply {
+            tv_agree_store.setOnClickListener { presenter.onRateInStore() }
+            tv_reject_store.setOnClickListener { closePopUp() }
+        }
+    }
+
+    override fun thanksForRate() {
+        showPopUpWindow(R.layout.view_thanks_for_rate, contentMain).apply {
+            tv_thanks_close.setOnClickListener { closePopUp() }
+        }
+    }
+
+    override fun showRateInPlayMarket() = redirectToPlayMarket()
+
+    override fun cancelReview() = closePopUp()
 
     companion object {
         @JvmField val MY_LOCATION_BUTTON_INDEX = 2
@@ -408,5 +498,10 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
         const val ALPHA_FULL = 1f
         const val ALPHA_DISABLED = 0.3f
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PLAY_MARKET_RATE) thanksForRate()
     }
 }
