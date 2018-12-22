@@ -1,10 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-
 import android.graphics.Paint
 
 import android.os.Bundle
@@ -62,14 +57,6 @@ class OffersActivity : BaseActivity(), OffersView {
 
     override fun getPresenter(): OffersPresenter = presenter
 
-    //private val offerServiceConnection: OfferServiceConnection by inject()
-    private val receiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            val v = intent.getStringExtra("Data")
-            Timber.d("new offer: $v")
-        }
-    }
-
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,15 +99,8 @@ class OffersActivity : BaseActivity(), OffersView {
     @CallSuper
     protected override fun onResume() {
         super.onResume()
-        //offerServiceConnection.connect(systemInteractor.endpoint, systemInteractor.accessToken) { presenter.onNewOffer(it) }
-        registerReceiver(receiver, IntentFilter().apply { addAction(ACTION_NEW_OFFER) })
-    }
-
-    @CallSuper
-    protected override fun onPause() {
-        //offerServiceConnection.disconnect()
-        unregisterReceiver(receiver)
-        super.onPause()
+        /* New PUSH notification */
+        presenter.checkNewOffers()
     }
 
     private fun navigateBackWithTransition() {

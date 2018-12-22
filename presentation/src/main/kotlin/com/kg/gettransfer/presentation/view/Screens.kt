@@ -125,6 +125,7 @@ object Screens {
 
     data class Offers(val transferId: Long) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, OffersActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             putExtra(OffersView.EXTRA_TRANSFER_ID, transferId)
         }
     }

@@ -78,6 +78,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.OffersActivity"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.RequestsActivity"

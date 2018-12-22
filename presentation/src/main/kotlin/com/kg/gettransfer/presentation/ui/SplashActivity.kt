@@ -63,6 +63,14 @@ class SplashActivity : AppCompatActivity() {
         Timber.d(getString(R.string.title_starting_session))
         Timber.d("Permissions granted!")
 
+        /* Check PUSH notification */
+        intent.extras?.let {
+            if (it.containsKey("new_offer")) {
+                startActivity(Intent(this, RequestsActivity::class.java))
+                return
+            }
+        }
+
         utils.launchSuspend {
             val result = utils.asyncAwait { systemInteractor.coldStart() }
 

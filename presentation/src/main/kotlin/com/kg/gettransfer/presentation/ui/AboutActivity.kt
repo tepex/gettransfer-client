@@ -43,23 +43,6 @@ class AboutActivity : BaseActivity(), AboutView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_about)
 
-        // If a notification message is tapped, any data accompanying the notification
-        // message is available in the intent extras. In this sample the launcher
-        // intent is fired when the notification is tapped, so any accompanying data would
-        // be handled here. If you want a different intent fired, set the click_action
-        // field of the notification message to the desired intent. The launcher intent
-        // is used when no click_action is specified.
-        //
-        // Handle possible data accompanying notification message.
-        // [START handle_data_extras]
-        intent.extras?.let {
-            for (key in it.keySet()) {
-                val value = it.get(key)
-                Timber.d("Key: $key Value: $value")
-            }
-        }
-        // [END handle_data_extras]
-
         presenter.openMain = intent.getBooleanExtra(AboutView.EXTRA_OPEN_MAIN, true)
 
         val adapter = AboutAdapter()

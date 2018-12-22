@@ -10,6 +10,8 @@ import android.content.Intent
 import android.media.RingtoneManager
 
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 
 import android.support.annotation.CallSuper
 import android.support.v4.app.NotificationCompat
@@ -23,10 +25,14 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
+
+import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.presentation.ui.OffersActivity
+
 import com.kg.gettransfer.presentation.view.OffersView
+import com.kg.gettransfer.presentation.view.Screens
 
 import kotlinx.coroutines.Job
 
@@ -34,12 +40,16 @@ import org.koin.standalone.get
 import org.koin.standalone.inject
 import org.koin.standalone.KoinComponent
 
+import ru.terrakok.cicerone.Router
+
 import timber.log.Timber
 
 class OffersPushService : KoinComponent, FirebaseMessagingService() {
-    protected val compositeDisposable = Job()
-    protected val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
-    protected val systemInteractor: SystemInteractor by inject()
+    private val compositeDisposable = Job()
+    private val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
+    private val offerInteractor: OfferInteractor by inject()
+    private val systemInteractor: SystemInteractor by inject()
+    private val router: Router by inject()
 
     @CallSuper
     override fun onDestroy() {
@@ -66,16 +76,10 @@ class OffersPushService : KoinComponent, FirebaseMessagingService() {
 
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
+        // https://stackoverflow.com/questions/37959588/no-notification-sound-when-sending-notification-from-firebase-in-android
         Timber.d("From: ${remoteMessage?.from}")
         Timber.d("collapse key: ${remoteMessage?.collapseKey}")
         Timber.d("message type: ${remoteMessage?.messageType}")
-
-        // Check if message contains a data payload.
-        remoteMessage?.data?.isNotEmpty()?.let {
-            Timber.d("Message data payload: ${remoteMessage.data}")
-
-            handleNow()
-        }
 
         // Check if message contains a notification payload.
         remoteMessage?.notification?.let {
@@ -85,13 +89,8 @@ class OffersPushService : KoinComponent, FirebaseMessagingService() {
             Timber.d("Title: ${it.title}")
             Timber.d("Body key: ${it.bodyLocalizationKey}")
 
-            sendNotification(it.body!!, it.title!!)
-            sendBroadcast(
-                Intent().apply {
-                    setAction(OffersActivity.ACTION_NEW_OFFER)
-                    putExtra("Data", it.body)
-                }
-            )
+            //sendNotification(it.body!!, it.title!!)
+            Handler(Looper.getMainLooper()).post { router.navigateTo(Screens.Offers(offerInteractor.lastTransferId)) }
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
@@ -117,13 +116,6 @@ class OffersPushService : KoinComponent, FirebaseMessagingService() {
         })
     }
     // [END on_new_token]
-
-    /**
-     * Handle time allotted to BroadcastReceivers.
-     */
-    private fun handleNow() {
-        Timber.d("Short lived task is done.")
-    }
 
     /**
      * Create and show a simple notification containing the received FCM message.

@@ -38,15 +38,13 @@ class OffersPresenter : BasePresenter<OffersView>() {
     private val offerMapper: OfferMapper by inject()
     private val transferMapper: TransferMapper by inject()
 
-    /*
-    init {
-        router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
-    }
-    */
-
     internal var transferId = 0L
+        set(value) {
+            field = value
+            offerInteractor.lastTransferId = value
+        }
 
-    private lateinit var transfer: Transfer
+    private var transfer: Transfer? = null
     private lateinit var offers: List<OfferModel>
 
     private var sortCategory: String = SORT_PRICE
@@ -70,51 +68,64 @@ class OffersPresenter : BasePresenter<OffersView>() {
     @CallSuper
     override fun attachView(view: OffersView) {
         super.attachView(view)
+        Timber.d("OffersPresenter.attachView")
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            if(result.error != null) {
-                Timber.e(result.error!!)
-                if(result.error!!.isNotLoggedIn()) viewState.redirectView()
-                else if(result.error!!.code != ApiException.NETWORK_ERROR) viewState.setError(result.error!!)
-            } else if(result.model.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE){
-                router.exit()
+            if (result.error != null) {
+                val err = result.error!!
+                Timber.e(err)
+                if (err.isNotLoggedIn()) viewState.redirectView()
+                else if (err.code != ApiException.NETWORK_ERROR) viewState.setError(err)
             } else {
-                transfer = result.model
-                val transferModel = transferMapper.toView(transfer)
-                viewState.setDate(SystemUtils.formatDateTime(transferModel.dateTime))
-                viewState.setTransfer(transferModel)
-
-                val r = utils.asyncAwait{ offerInteractor.getOffers(result.model.id) }
-                if(r.error == null) {
-                    offers = r.model.map { offerMapper.toView(it) }
-                    //changeSortType(SORT_PRICE)
-                    setOffers()
-                }
+                if (result.model.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE) router.exit()
                 else {
-                    offers = emptyList<OfferModel>()
-                    Timber.e(r.error)
+                    val transferModel = transferMapper.toView(result.model)
+                    viewState.setDate(SystemUtils.formatDateTime(transferModel.dateTime))
+                    viewState.setTransfer(transferModel)
+                    checkNewOffersSuspended(result.model)
                 }
             }
             viewState.blockInterface(false)
         }
     }
 
+    fun checkNewOffers() {
+        transfer?.let { tr -> utils.launchSuspend { checkNewOffersSuspended(tr) } }
+    }
+
+    private suspend fun checkNewOffersSuspended(transfer: Transfer) {
+        this.transfer = transfer
+        val result = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
+        if (result.error != null) {
+            offers = emptyList<OfferModel>()
+            Timber.e(result.error)
+        } else {
+            offers = result.model.map { offer -> offerMapper.toView(offer) }
+            //changeSortType(SORT_PRICE)
+            processOffers()
+        }
+    }
+
+    /*
     fun onNewOffer(offer: Offer) {
         offerInteractor.newOffer(offer)
         offers = offers.toMutableList().apply { add(offerMapper.toView(offer)) }
-        utils.launchSuspend { setOffers() }
+        utils.launchSuspend { processOffers() }
     }
+    */
 
     fun onRequestInfoClicked() { router.navigateTo(Screens.Details(transferId)) }
 
     fun onSelectOfferClicked(offer: OfferModel, isShowingOfferDetails: Boolean) {
-        if(isShowingOfferDetails) {
-            viewState.showBottomSheetOfferDetails(offer)
-            logEvent(Analytics.OFFER_DETAILS)
-        } else {
-            logEvent(Analytics.OFFER_BOOK)
-            router.navigateTo(Screens.PaymentSettings(transfer.id, offer.id, transfer.dateRefund, transfer.paymentPercentages))
+        transfer?.let {
+            if (isShowingOfferDetails) {
+                viewState.showBottomSheetOfferDetails(offer)
+                logEvent(Analytics.OFFER_DETAILS)
+            } else {
+                logEvent(Analytics.OFFER_BOOK)
+                router.navigateTo(Screens.PaymentSettings(it.id, offer.id, it.dateRefund, it.paymentPercentages))
+            }
         }
     }
 
@@ -147,19 +158,19 @@ class OffersPresenter : BasePresenter<OffersView>() {
     }
 
     fun changeSortType(sortType: String) {
-        if(sortCategory == sortType) sortHigherToLower = !sortHigherToLower
+        if (sortCategory == sortType) sortHigherToLower = !sortHigherToLower
         else {
             sortCategory = sortType
-            when(sortType) {
+            when (sortType) {
                 SORT_YEAR   -> sortHigherToLower = true
                 SORT_RATING -> sortHigherToLower = true
                 SORT_PRICE  -> sortHigherToLower = false
             }
         }
-        setOffers()
+        processOffers()
     }
 
-    private fun setOffers() {
+    private fun processOffers() {
         sortOffers()
         viewState.setOffers(offers)
         viewState.setSortState(sortCategory, sortHigherToLower)
