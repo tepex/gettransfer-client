@@ -20,6 +20,7 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.ui.SystemUtils
 
 import com.kg.gettransfer.presentation.view.OffersView
+import com.kg.gettransfer.presentation.view.OffersView.Sort
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
@@ -47,23 +48,8 @@ class OffersPresenter : BasePresenter<OffersView>() {
     private var transfer: Transfer? = null
     private lateinit var offers: List<OfferModel>
 
-    private var sortCategory: String = SORT_PRICE
+    private var sortCategory = Sort.PRICE
     private var sortHigherToLower = false
-
-    companion object {
-        @JvmField val RATING_UP   = "rating_asc"
-        @JvmField val RATING_DOWN = "rating_desc"
-
-        @JvmField val PRICE_UP    = "price_asc"
-        @JvmField val PRICE_DOWN  = "price_desc"
-
-        @JvmField val YEAH_FILTER_UP   = "year_asc"
-        @JvmField val YEAH_FILTER_DOWN = "year_desc"
-
-        @JvmField val SORT_YEAR   = "sort_year"
-        @JvmField val SORT_RATING = "sort_rating"
-        @JvmField val SORT_PRICE  = "sort_price"
-    }
 
     @CallSuper
     override fun attachView(view: OffersView) {
@@ -157,14 +143,14 @@ class OffersPresenter : BasePresenter<OffersView>() {
         }
     }
 
-    fun changeSortType(sortType: String) {
+    fun changeSortType(sortType: Sort) {
         if (sortCategory == sortType) sortHigherToLower = !sortHigherToLower
         else {
             sortCategory = sortType
             when (sortType) {
-                SORT_YEAR   -> sortHigherToLower = true
-                SORT_RATING -> sortHigherToLower = true
-                SORT_PRICE  -> sortHigherToLower = false
+                Sort.YEAR   -> sortHigherToLower = true
+                Sort.RATING -> sortHigherToLower = true
+                Sort.PRICE  -> sortHigherToLower = false
             }
         }
         processOffers()
@@ -177,31 +163,36 @@ class OffersPresenter : BasePresenter<OffersView>() {
     }
 
     private fun sortOffers() {
-        var sortType = ""
-        offers = when(sortCategory) {
-            SORT_YEAR -> {
-                sortType = if(sortHigherToLower) YEAH_FILTER_DOWN else YEAH_FILTER_UP
+        val sortType: SortType
+        offers = when (sortCategory) {
+            Sort.YEAR -> {
+                sortType = if (sortHigherToLower) SortType.YEAR_DESC else SortType.YEAR_ASC
                 offers.sortedWith(compareBy { it.vehicle.year })
             }
-            SORT_RATING -> {
-                sortType = if(sortHigherToLower) RATING_DOWN else RATING_UP
+            Sort.RATING -> {
+                sortType = if (sortHigherToLower) SortType.RATING_DESC else SortType.RATING_ASC
                 offers.sortedWith(compareBy { it.ratings?.average })
             }
-            SORT_PRICE -> {
-                sortType = if(sortHigherToLower) PRICE_DOWN else PRICE_UP
+            Sort.PRICE -> {
+                sortType = if (sortHigherToLower) SortType.PRICE_DESC else SortType.PRICE_ASC
                 offers.sortedWith(compareBy { it.price.amount })
             }
-            else -> offers
         }
-        if(sortHigherToLower) offers = offers.reversed()
+        if (sortHigherToLower) offers = offers.reversed()
         logFilterEvent(sortType)
     }
 
-    private fun logFilterEvent(value: String) {
+    private fun logFilterEvent(sortType: SortType) {
         val map = mutableMapOf<String, Any>()
+        val value = sortType.name.toLowerCase()
         map[Analytics.PARAM_KEY_FILTER] = value
 
         analytics.logEvent(Analytics.EVENT_OFFERS, createStringBundle(Analytics.PARAM_KEY_FILTER, value), map)
     }
 
+    enum class SortType {
+        RATING_ASC, RATING_DESC,
+        PRICE_ASC, PRICE_DESC,
+        YEAR_ASC, YEAR_DESC;
+    }
 }

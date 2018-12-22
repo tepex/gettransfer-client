@@ -33,6 +33,7 @@ import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
 
 import com.kg.gettransfer.presentation.view.OffersView
+import com.kg.gettransfer.presentation.view.OffersView.Sort
 
 import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_DETAILS_RATING
 
@@ -81,9 +82,9 @@ class OffersActivity : BaseActivity(), OffersView {
 
         btnCancelRequest.setOnClickListener               { presenter.onCancelRequestClicked() }
         layoutTransferRequestInfo.setOnClickListener      { presenter.onRequestInfoClicked() }
-        sortYear.setOnClickListener                       { presenter.changeSortType(OffersPresenter.SORT_YEAR) }
-        sortRating.setOnClickListener                     { presenter.changeSortType(OffersPresenter.SORT_RATING) }
-        sortPrice.setOnClickListener                      { presenter.changeSortType(OffersPresenter.SORT_PRICE) }
+        sortYear.setOnClickListener                       { presenter.changeSortType(Sort.YEAR) }
+        sortRating.setOnClickListener                     { presenter.changeSortType(Sort.RATING) }
+        sortPrice.setOnClickListener                      { presenter.changeSortType(Sort.PRICE) }
         (toolbar as Toolbar).setNavigationOnClickListener { navigateBackWithTransition()  }
     }
 
@@ -118,12 +119,12 @@ class OffersActivity : BaseActivity(), OffersView {
         rvOffers.adapter = OffersRVAdapter(offers.toMutableList()) { offer, isShowingOfferDetails -> presenter.onSelectOfferClicked(offer, isShowingOfferDetails) }
     }
 
-    override fun setSortState(sortCategory: String, sortHigherToLower: Boolean) {
+    override fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean) {
         cleanSortState()
         when (sortCategory) {
-            OffersPresenter.SORT_YEAR   -> { selectSort(sortYear, triangleYear, sortHigherToLower) }
-            OffersPresenter.SORT_RATING -> { selectSort(sortRating, triangleRating, sortHigherToLower) }
-            OffersPresenter.SORT_PRICE  -> { selectSort(sortPrice, trianglePrice, sortHigherToLower) }
+            Sort.YEAR   -> selectSort(sortYear, triangleYear, sortHigherToLower)
+            Sort.RATING -> selectSort(sortRating, triangleRating, sortHigherToLower)
+            Sort.PRICE  -> selectSort(sortPrice, trianglePrice, sortHigherToLower)
         }
     }
 

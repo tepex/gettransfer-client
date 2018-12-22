@@ -7,17 +7,21 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface OffersView: BaseView {
-    companion object {
-        val EXTRA_TRANSFER_ID = "${OffersView::class.java.name}.transferId"
-    }
-
+interface OffersView : BaseView {
     fun setTransfer(transferModel: TransferModel)
     fun setDate(date: String)
     fun setOffers(offers: List<OfferModel>)
-    fun setSortState(sortCategory: String, sortHigherToLower: Boolean)
+    fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean)
     fun showAlertCancelRequest()
     fun showBottomSheetOfferDetails(offer: OfferModel)
     fun addNewOffer(offer: OfferModel)
     fun redirectView()
+
+    companion object {
+        val EXTRA_TRANSFER_ID = "${OffersView::class.java.name}.transferId"
+    }
+
+    enum class Sort {
+        YEAR, RATING, PRICE;
+    }
 }
