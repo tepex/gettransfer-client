@@ -75,7 +75,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private var polyline: PolylineModel? = null
     private var track: CameraUpdate? = null
     private var promoCode = ""
-    private var selectedCurrency = -2
+    private var selectedCurrency = INVALID_CURRENCY_INDEX
 
     internal var cost: Double? = null
 
@@ -378,7 +378,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         map[Analytics.PARAM_KEY_RESULT] = value
         bundle.putString(Analytics.PARAM_KEY_RESULT, value)
 
-        if (cost != null) {
+        if (cost != null && selectedCurrency != INVALID_CURRENCY_INDEX) {
             bundle.putString(Analytics.VALUE, cost.toString())
             map[Analytics.VALUE] = cost.toString()
 
@@ -419,5 +419,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     companion object {
         private const val MIN_PASSENGERS = 0
         private const val MIN_CHILDREN   = 0
+
+        private const val INVALID_CURRENCY_INDEX = -1
     }
 }
