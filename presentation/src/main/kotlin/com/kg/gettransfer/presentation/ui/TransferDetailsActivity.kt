@@ -43,7 +43,6 @@ import kotlinx.android.synthetic.main.view_transfer_details_communicate_buttons.
 import kotlinx.android.synthetic.main.view_transfer_details_field.*
 import kotlinx.android.synthetic.main.view_transfer_details_info.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.*
-import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //Don't delete
 
 import android.widget.PopupWindow
 import kotlinx.android.synthetic.main.view_rate_dialog.view.*
@@ -358,7 +357,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         popUpView.tvCancelRate.setOnClickListener { presenter.onReviewCanceled() }
         popUpView.send_feedBack.setOnClickListener {
             closePopUp()
-            presenter.sendReview(Utils.createMapOfDetailedRates(popUpView), popUpView.et_reviewComment.text.toString())
+            presenter.sendReview(Utils.createListOfDetailedRates(popUpView), popUpView.et_reviewComment.text.toString())
         }
         setupDetailRatings(tappedRate, popUpView)
     }

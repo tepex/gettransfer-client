@@ -1,6 +1,9 @@
 package com.kg.gettransfer.data.model
 
-class ReviewRateEntity(val rateType: String, val value: Int) {
+data class ReviewRateEntity(
+    val rateType: String,
+    val value: Int
+) {
 
     companion object {
         const val RATED_OFFER_ID = "offer_id"

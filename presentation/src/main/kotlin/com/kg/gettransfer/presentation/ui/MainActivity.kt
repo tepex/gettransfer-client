@@ -59,7 +59,6 @@ import kotlinx.android.synthetic.main.view_navigation.*
 import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
 import kotlinx.android.synthetic.main.view_rate_in_store.view.*
-import kotlinx.android.synthetic.main.view_thanks_for_rate.*
 import kotlinx.android.synthetic.main.view_thanks_for_rate.view.*
 
 import timber.log.Timber
@@ -460,7 +459,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         popUpView.tvCancelRate.setOnClickListener { presenter.onReviewCanceled() }
         popUpView.send_feedBack.setOnClickListener {
             closePopUp()
-            presenter.sendReview(Utils.createMapOfDetailedRates(popUpView), popUpView.et_reviewComment.text.toString())
+            presenter.sendReview(Utils.createListOfDetailedRates(popUpView), popUpView.et_reviewComment.text.toString())
         }
         setupDetailRatings(tappedRate, popUpView)
     }

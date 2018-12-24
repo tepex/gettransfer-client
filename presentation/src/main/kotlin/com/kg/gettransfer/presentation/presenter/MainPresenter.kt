@@ -340,14 +340,11 @@ class MainPresenter : BasePresenter<MainView>() {
         } else viewState.showDetailedReview(rate)
     }
 
-    fun sendReview(list: List<ReviewRateModel>, comment: String) {
-        utils.launchSuspend {
-           with(utils.asyncAwait {
-                reviewInteractor.sendRates(list.map { reviewRateMapper.fromView(it) }, comment) }) {
-               if(error != null) { /* some error for analytics */ }
-           }
-
+    fun sendReview(list: List<ReviewRateModel>, comment: String) = utils.launchSuspend {
+        val result = utils.asyncAwait {
+            reviewInteractor.sendRates(list.map { reviewRateMapper.fromView(it) }, comment)
         }
+        if (result.error != null) { /* some error for analytics */ }
         viewState.thanksForRate()
     }
 
@@ -358,7 +355,6 @@ class MainPresenter : BasePresenter<MainView>() {
 
     fun onTransferDetailsClick(transferId: Long) = router.navigateTo(Screens.Details(transferId))
 
-
     fun logEvent(value: String) {
         val map = mutableMapOf<String, Any>()
         map[Analytics.PARAM_KEY_NAME] = value
@@ -366,8 +362,7 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     fun onBackClick() {
-        if (systemInteractor.selectedField == FIELD_TO) switchUsedField()
-        else viewState.onBackClick()
+        if (systemInteractor.selectedField == FIELD_TO) switchUsedField() else viewState.onBackClick()
     }
 
     fun onShareClick() {
@@ -387,7 +382,6 @@ class MainPresenter : BasePresenter<MainView>() {
             transfer.to!!.point!!,
             SystemUtils.formatDateTime(transferMapper.toView(transfer).dateTime)
         )
-
     }
 
     companion object {

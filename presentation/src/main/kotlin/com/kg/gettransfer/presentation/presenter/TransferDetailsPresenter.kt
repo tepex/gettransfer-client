@@ -100,15 +100,15 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
         viewState.showAlertCancelRequest()
     }
 
-    private fun setRouteTransfer(transfer: Transfer, route: RouteInfo){
-        routeModel =  routeMapper.getView(
-                route.distance,
-                route.polyLines,
-                transfer.from.name!!,
-                transfer.to!!.name!!,
-                transfer.from.point!!,
-                transfer.to!!.point!!,
-                SystemUtils.formatDateTime(transferModel.dateTime)
+    private fun setRouteTransfer(transfer: Transfer, route: RouteInfo) {
+        routeModel = routeMapper.getView(
+            route.distance,
+            route.polyLines,
+            transfer.from.name!!,
+            transfer.to!!.name!!,
+            transfer.from.point!!,
+            transfer.to!!.point!!,
+            SystemUtils.formatDateTime(transferModel.dateTime)
         )
         routeModel?.let {
             polyline = Utils.getPolyline(it)
@@ -116,15 +116,16 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
             viewState.setRoute(polyline!!, it)
         }
     }
+
     private fun setHourlyTransfer(transfer: Transfer) {
         val from = transfer.from.point!!
         val point = LatLng(from.latitude, from.longitude)
         track = Utils.getCameraUpdateForPin(point)
         viewState.setPinHourlyTransfer(
-                transferModel.from,
-                SystemUtils.formatDateTime(transferModel.dateTime),
-                point,
-                track!!
+            transferModel.from,
+            SystemUtils.formatDateTime(transferModel.dateTime),
+            point,
+            track!!
         )
     }
 
@@ -153,26 +154,22 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
         }
     }
 
-    fun rateTrip(rating: Float){
+    fun rateTrip(rating: Float) {
         if (rating.toInt() == ReviewInteractor.MAX_RATE) {
             reviewInteractor.apply {
                 utils.launchSuspend{ sendTopRate() }
                 viewState.thanksForRate()
                 if (shouldAskRateInMarket) viewState.askRateInPlayMarket()
             }
-        }
-        else viewState.showDetailRate(rating)
+        } else viewState.showDetailRate(rating)
     }
 
-    fun sendReview(list: List<ReviewRateModel>, feedBackComment: String) {
-        utils.launchSuspend {
-            with(utils.asyncAwait { reviewInteractor.sendRates(list.map { reviewRateMapper.fromView(it) }, feedBackComment) }) {
-                if (error != null) {
-                    /* some error for analytics */
-                }
-            }
+    fun sendReview(list: List<ReviewRateModel>, feedBackComment: String) = utils.launchSuspend {
+        val result = utils.asyncAwait {
+            reviewInteractor.sendRates(list.map { reviewRateMapper.fromView(it) }, feedBackComment)
         }
-         viewState.thanksForRate()
+        if (result.error != null) { /* some error for analytics */ }
+        viewState.thanksForRate()
     }
 
     fun onRateInStore() {
@@ -180,11 +177,10 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
         viewState.showRateInPlayMarket()
     }
 
-    fun onReviewCanceled(){
+    fun onReviewCanceled() {
         viewState.closeRateWindow()
         reviewInteractor.rateCanceled()
     }
-
 
     fun logEventGetOffer(key: String, value: String) {
         val map = mutableMapOf<String, Any?>()

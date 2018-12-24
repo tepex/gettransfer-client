@@ -9,8 +9,8 @@ import com.kg.gettransfer.remote.mapper.OfferMapper
 import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.OfferModel
 import com.kg.gettransfer.remote.model.OffersModel
-import org.koin.core.parameter.parametersOf
 
+import org.koin.core.parameter.parametersOf
 import org.koin.standalone.get
 import org.koin.standalone.inject
 

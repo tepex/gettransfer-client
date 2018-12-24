@@ -5,11 +5,11 @@ import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.ReviewRate
 
 class ReviewInteractor(private val repository: ReviewRepository) {
-    var isReviewSuggested: Boolean = false
-    private set
+    var isReviewSuggested = false
+        private set
 
-    var offerIdForReview: Long = 0
-    var shouldAskRateInMarket: Boolean = false
+    var offerIdForReview = 0L
+    var shouldAskRateInMarket = false
 
     fun rateCanceled() { isReviewSuggested = true }
 
@@ -20,10 +20,14 @@ class ReviewInteractor(private val repository: ReviewRepository) {
         return response
     }
 
-    suspend fun sendTopRate () = sendRates(arrayListOf(ReviewRate(ReviewRate.RateType.DRIVER, MAX_RATE),
-                                                       ReviewRate(ReviewRate.RateType.DRIVER, MAX_RATE),
-                                                       ReviewRate(ReviewRate.RateType.DRIVER, MAX_RATE)),
-                                                       EMPTY_COMMENT)
+    suspend fun sendTopRate() =
+        sendRates(
+            arrayListOf(
+                ReviewRate(ReviewRate.RateType.DRIVER, MAX_RATE),
+                ReviewRate(ReviewRate.RateType.DRIVER, MAX_RATE),
+                ReviewRate(ReviewRate.RateType.DRIVER, MAX_RATE)
+            ),
+            EMPTY_COMMENT)
 
     companion object {
         const val MAX_RATE = 5

@@ -413,12 +413,11 @@ object Utils : KoinComponent {
         }
     }
 
-    fun createMapOfDetailedRates(view: View): List<ReviewRateModel> =
-            ArrayList<ReviewRateModel>().apply {
-                add(ReviewRateModel(ReviewRate.RateType.DRIVER, view.driver_rate.rate_bar.rating.toInt()))
-                add(ReviewRateModel(ReviewRate.RateType.PUNCTUALITY, view.punctuality_rate.rate_bar.rating.toInt()))
-                add(ReviewRateModel(ReviewRate.RateType.VEHICLE, view.vehicle_rate.rate_bar.rating.toInt()))
-        }
+    fun createListOfDetailedRates(view: View) = listOf<ReviewRateModel>(
+        ReviewRateModel(ReviewRate.RateType.DRIVER, view.driver_rate.rate_bar.rating.toInt()),
+        ReviewRateModel(ReviewRate.RateType.PUNCTUALITY, view.punctuality_rate.rate_bar.rating.toInt()),
+        ReviewRateModel(ReviewRate.RateType.VEHICLE, view.vehicle_rate.rate_bar.rating.toInt())
+    )
 }
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {

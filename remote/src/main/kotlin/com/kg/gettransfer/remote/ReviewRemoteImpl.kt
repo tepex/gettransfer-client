@@ -4,9 +4,10 @@ import com.kg.gettransfer.data.ReviewRemote
 import com.kg.gettransfer.data.model.ReviewRateEntity
 import com.kg.gettransfer.remote.model.FeedBackToRemote
 import com.kg.gettransfer.remote.model.RateToRemote
+
 import org.koin.standalone.get
 
-class ReviewRemoteImpl: ReviewRemote {
+class ReviewRemoteImpl : ReviewRemote {
 
     private val core = get<ApiCore>()
 
