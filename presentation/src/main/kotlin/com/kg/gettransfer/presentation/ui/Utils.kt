@@ -45,11 +45,13 @@ import com.google.maps.android.PolyUtil
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
+import com.kg.gettransfer.domain.model.ReviewRate
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
 
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.PolylineModel
+import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.model.RouteModel
 
 import com.yandex.metrica.impl.ob.it
@@ -411,13 +413,12 @@ object Utils : KoinComponent {
         }
     }
 
-    fun createMapOfDetailedRates(view: View): HashMap<String, Int> {
-        val map = HashMap<String, Int>()
-        map[ReviewInteractor.DRIVER]      = view.driver_rate.rate_bar.rating.toInt()
-        map[ReviewInteractor.PUNCTUALITY] = view.punctuality_rate.rate_bar.rating.toInt()
-        map[ReviewInteractor.VEHICLE]     = view.vehicle_rate.rate_bar.rating.toInt()
-        return map
-    }
+    fun createMapOfDetailedRates(view: View): List<ReviewRateModel> =
+            ArrayList<ReviewRateModel>().apply {
+                add(ReviewRateModel(ReviewRate.RateType.DRIVER, view.driver_rate.rate_bar.rating.toInt()))
+                add(ReviewRateModel(ReviewRate.RateType.PUNCTUALITY, view.punctuality_rate.rate_bar.rating.toInt()))
+                add(ReviewRateModel(ReviewRate.RateType.VEHICLE, view.vehicle_rate.rate_bar.rating.toInt()))
+        }
 }
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {

@@ -28,7 +28,7 @@ val remoteMappersModule = module {
 
     single { PassengerAccountMapper() }
 
-    single { RateMapper() }
+    single { ReviewRateMapper() }
 
     single { PaymentMapper() }
     single { PaymentRequestMapper() }

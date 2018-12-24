@@ -276,7 +276,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             transportTypes!!.filter { it.checked }.map { it.id },
             passengers,
             children,
-            cost?.let { it.times(100).toInt() },
+            cost?.times(100)?.toInt(),
             comment,
             userMapper.fromView(user),
             promoCode,

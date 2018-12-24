@@ -35,5 +35,7 @@ data class Offer(
         const val STATUS_PERFORMED = "performed"
         const val STATUS_BLOCKED   = "blocked"
         const val STATUS_CANCELED  = "canceled"
+
+        const val NO_RATE          = 0f
     }
 }

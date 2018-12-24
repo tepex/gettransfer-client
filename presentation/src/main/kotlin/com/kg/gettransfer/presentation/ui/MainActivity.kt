@@ -74,6 +74,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     private var isFirst = true
     private var centerMarker: Marker? = null
+    private var isGmTouchEnabled = true
 
     @ProvidePresenter
     fun createMainPresenter() = MainPresenter()
@@ -243,7 +244,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             gm.setMyLocationEnabled(true)
             gm.uiSettings.isMyLocationButtonEnabled = false
         }
-
+        gm.uiSettings.setAllGesturesEnabled(isGmTouchEnabled)
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
         gm.setOnCameraMoveListener        { presenter.onCameraMove(gm.cameraPosition!!.target, true)  }
         gm.setOnCameraIdleListener        { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
@@ -417,6 +418,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         val view = showPopUpWindow(R.layout.view_last_trip_rate, contentMain)
         mDisMissAction = {
             _mapView = mapView
+            isGmTouchEnabled = true
             initMapView(null)
             view.rate_map.onDestroy()
             mapView.onResume()
@@ -446,6 +448,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     private fun drawMapForReview(map: MapView, polyline: PolylineModel, routeModel: RouteModel) {
         _mapView = map
+        isGmTouchEnabled = false
         initMapView(null)
         setPolyline(polyline, routeModel)
         mapView.onPause()

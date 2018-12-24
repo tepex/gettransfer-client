@@ -14,13 +14,10 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.Transfer
-
-import com.kg.gettransfer.presentation.mapper.OfferMapper
-import com.kg.gettransfer.presentation.mapper.ProfileMapper
-import com.kg.gettransfer.presentation.mapper.RouteMapper
-import com.kg.gettransfer.presentation.mapper.TransferMapper
+import com.kg.gettransfer.presentation.mapper.*
 
 import com.kg.gettransfer.presentation.model.PolylineModel
+import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
@@ -46,6 +43,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
     private val profileMapper: ProfileMapper by inject()
     private val routeMapper: RouteMapper by inject()
     private val transferMapper: TransferMapper by inject()
+    private val reviewRateMapper: ReviewRateMapper by inject()
 
     companion object {
         @JvmField val FIELD_EMAIL = "field_email"
@@ -166,11 +164,12 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
         else viewState.showDetailRate(rating)
     }
 
-    fun sendReview(mapOfRates: HashMap<String, Int>, feedBackComment: String) {
+    fun sendReview(list: List<ReviewRateModel>, feedBackComment: String) {
         utils.launchSuspend {
-            val result = utils.asyncAwait { reviewInteractor.sendRates(mapOfRates, feedBackComment) }
-            if (result.error != null) {
-                /* some error for analytics */
+            with(utils.asyncAwait { reviewInteractor.sendRates(list.map { reviewRateMapper.fromView(it) }, feedBackComment) }) {
+                if (error != null) {
+                    /* some error for analytics */
+                }
             }
         }
          viewState.thanksForRate()

@@ -99,6 +99,7 @@ val mappersModule = module {
     single { PriceMapper() }
     single { ProfileMapper() }
     single { RatingsMapper() }
+    single { ReviewRateMapper() }
     single { RouteMapper() }
     single { TransferMapper() }
     single { TransportTypeMapper() }
