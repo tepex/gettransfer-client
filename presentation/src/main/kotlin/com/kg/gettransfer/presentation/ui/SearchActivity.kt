@@ -145,6 +145,8 @@ class SearchActivity : BaseActivity(), SearchView {
         if (address.isNotEmpty()) updateIcon(true)
     }
 
+    override fun changeFocusToDestField() = searchTo.changeFocus()
+
     override fun hideAddressTo() {
         searchTo.isGone  = true
         link_line.isGone = true

@@ -23,4 +23,5 @@ interface SearchView: BaseView {
     fun setSuggestedAddresses(addressesList: List<GTAddress>)
     fun updateIcon(isTo: Boolean)
     fun setFocus(isToField: Boolean)
+    fun changeFocusToDestField()
 }

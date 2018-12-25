@@ -45,9 +45,7 @@ class SearchPresenter: BasePresenter<SearchView>() {
         onSearchFieldEmpty()
     }
 
-    fun onSearchFieldEmpty() {
-        viewState.setSuggestedAddresses(systemInteractor.addressHistory)
-    }
+    fun onSearchFieldEmpty() = viewState.setSuggestedAddresses(systemInteractor.addressHistory)
 
     fun onPopularSelected(selected: PopularPlace) {
         logEvent(Analytics.PREDEFINED_CLICKED + selected.title.toLowerCase())
@@ -71,6 +69,7 @@ class SearchPresenter: BasePresenter<SearchView>() {
         if(placeType == SUITABLE_TYPE || (placeType == ROUTE_TYPE && isDoubleClickOnRoute)) {
             viewState.updateIcon(isTo)
             if(checkFields()) createRouteForOrder()
+            else if (!isTo) viewState.changeFocusToDestField()
         } else {
             val sendRequest = selected.needApproximation() /* dirty hack */
             if(isTo) viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, sendRequest, true)
@@ -85,7 +84,7 @@ class SearchPresenter: BasePresenter<SearchView>() {
         return SUITABLE_TYPE
     }
 
-    private fun checkFields() = routeInteractor.let { it.addressFieldsNotNull() }
+    private fun checkFields() = routeInteractor.addressFieldsNotNull()
 
     private fun createRouteForOrder() = utils.launchSuspend {
         utils.asyncAwait { routeInteractor.updateDestinationPoint() }
