@@ -48,6 +48,8 @@ import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.MainView
 
+import java.util.Date
+
 import kotlinx.android.synthetic.main.a_b_view.*
 import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -62,7 +64,6 @@ import kotlinx.android.synthetic.main.view_rate_in_store.view.*
 import kotlinx.android.synthetic.main.view_thanks_for_rate.view.*
 
 import timber.log.Timber
-import java.util.*
 
 class MainActivity : BaseGoogleMapActivity(), MainView {
     @InjectPresenter
