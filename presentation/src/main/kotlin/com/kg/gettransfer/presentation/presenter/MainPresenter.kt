@@ -318,7 +318,7 @@ class MainPresenter : BasePresenter<MainView>() {
                     reviewInteractor.offerIdForReview = offer.id
                     viewState.openReviewForLastTrip(
                         transfer.id,
-                        transfer.dateToLocal.toString(),
+                        transfer.dateToLocal,
                         offer.vehicle.name,
                         offer.vehicle.color?:"",
                         routeModel

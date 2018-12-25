@@ -225,6 +225,7 @@
     <string name="LNG_RIDE_PHONE_PLACEHOLDER">*Phone</string>
     <string name="LNG_RIDE_CHILDREN">Child seats</string>
     <string name="LNG_RIDE_FLIGHT">Example: BA 2243</string>
+    <string name="LNG_RIDE_FLIGHT_BACK">Flight back</string>
     <string name="LNG_RIDE_FLIGHT_PLACEHOLDER">Flight number or train</string>
     <string name="LNG_RIDE_PROMOCODE">Enter promocode</string>
     <string name="LNG_RIDE_PROMOCODE_PLACEHOLDER">I have a promocode</string>
@@ -351,6 +352,7 @@
     <string name="LNG_RIDE_OFFER_REJECTED">Rejected</string>
     <string name="LNG_RIDE_OFFER_BLOCKED">Blocked</string>
     <string name="LNG_RIDE_OFFER_CANCELED">Canceled</string>
+    <string name="LNG_BACKTRIP">Back</string>
     <string name="LNG_TRANSFER_NOT_PAID">Transfer is not paid</string>
     <string name="LNG_BOOKING_NUMBER">Booking number</string>
     <string name="LNG_PAYMENT_DECLINED">Payment declined</string>

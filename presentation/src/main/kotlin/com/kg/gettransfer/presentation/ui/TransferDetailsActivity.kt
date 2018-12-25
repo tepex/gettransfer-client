@@ -224,6 +224,14 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
             flight_number.field_text.text = it
             flight_number.isVisible = true
         }
+        transfer.dateTimeReturn?.let {
+            back_trip.isVisible = true
+            back_trip.field_text.text = SystemUtils.formatDateTime(it)
+        }
+        transfer.flightNumberReturn?.let {
+            back_flight_number.isVisible = true
+            back_flight_number.field_text.text = it
+        }
         transfer.promoCode?.let {
             promo_code.field_text.text = Utils.getSpannedStringFromHtmlString(it)
             promo_code.isVisible = true

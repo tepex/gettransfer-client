@@ -41,7 +41,7 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
             dateTimeReturn = type.dateReturnLocal,
             flightNumber   = type.flightNumber,
 /* ================================================== */
-            /* flightNumberReturn */
+            flightNumberReturn    = type.flightNumberReturn,
             transportTypes        = systemTransportTypes.filter { type.transportTypeIds.contains(it.id) }.map { transportTypeMapper.toView(it) },
             countPassengers       = type.pax,
             bookNow               = type.bookNow,

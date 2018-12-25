@@ -62,6 +62,7 @@ import kotlinx.android.synthetic.main.view_rate_in_store.view.*
 import kotlinx.android.synthetic.main.view_thanks_for_rate.view.*
 
 import timber.log.Timber
+import java.util.*
 
 class MainActivity : BaseGoogleMapActivity(), MainView {
     @InjectPresenter
@@ -413,7 +414,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         }
     }
 
-    override fun openReviewForLastTrip(transferId: Long, date: String, vehicle: String, color: String, routeModel: RouteModel) {
+    override fun openReviewForLastTrip(transferId: Long, date: Date, vehicle: String, color: String, routeModel: RouteModel) {
         val view = showPopUpWindow(R.layout.view_last_trip_rate, contentMain)
         mDisMissAction = {
             _mapView = mapView
@@ -432,7 +433,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             }
             tv_close_lastTrip_rate.setOnClickListener { presenter.onReviewCanceled() }
             tv_transfer_number_rate.apply { text = text.toString().plus(" #$transferId") }
-            tv_transfer_date_rate.text = date
+            tv_transfer_date_rate.text = SystemUtils.formatDateTime(date)
             tv_vehicle_model_rate.text = vehicle
             rate_bar_last_trip.setOnRatingChangeListener { _, fl ->
                 closePopUp()
@@ -440,7 +441,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             }
             carColor_rate.setImageDrawable(Utils.getVehicleColorFormRes(this@MainActivity, color))
         }
-
         drawMapForReview(view.rate_map, Utils.getPolyline(routeModel), routeModel)
 
     }

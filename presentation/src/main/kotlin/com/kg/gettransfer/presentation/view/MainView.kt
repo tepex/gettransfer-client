@@ -6,6 +6,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.RouteModel
+import java.util.*
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 //interface MainView: MvpView, OnCameraMoveListener
@@ -24,7 +25,7 @@ interface MainView: BaseView {
     fun onBackClick()
     fun showReadMoreDialog()
     fun setTripMode(duration: Int?)
-    fun openReviewForLastTrip(transferId: Long, date: String, vehicle: String, color: String, routeModel: RouteModel)
+    fun openReviewForLastTrip(transferId: Long, date: Date, vehicle: String, color: String, routeModel: RouteModel)
     fun cancelReview()
     fun showDetailedReview(tappedRate: Float)
     fun askRateInPlayMarket()
