@@ -298,7 +298,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
 
     private fun getTextForMinDate() = getString(R.string.LNG_DATE_IN_HOURS)
             .plus(" ")
-            .plus(CreateOrderView.FUTURE_HOUR)
+            .plus(presenter.futureHour)
             .plus(" ")
             .plus(getString(R.string.LNG_HOUR_FEW))
 

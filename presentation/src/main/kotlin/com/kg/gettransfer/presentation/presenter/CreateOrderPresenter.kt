@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import android.util.Patterns
 
@@ -83,6 +82,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private var isAfterMinHours = true
     private var isTimeSetByUser = false
     internal lateinit var currentDate: Calendar
+    internal var futureHour = 0
     internal var date: Date = Date()
 
     private var flightNumber: String? = null
@@ -91,13 +91,13 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     override fun onFirstViewAttach() {
         currentDate = getCurrentDatePlusMinimumHours()
         date = currentDate.time
-        CreateOrderView.FUTURE_HOUR = systemInteractor.mobileConfigs.orderMinimumMinutes / 60
+        futureHour = systemInteractor.mobileConfigs.orderMinimumMinutes / 60
     }
 
     private fun getCurrentDatePlusMinimumHours(): Calendar {
         val calendar = Calendar.getInstance(systemInteractor.locale)
         /* Server must send current locale time */
-        calendar.add(Calendar.HOUR_OF_DAY, CreateOrderView.FUTURE_HOUR)
+        calendar.add(Calendar.HOUR_OF_DAY, futureHour)
         calendar.add(Calendar.MINUTE, CreateOrderView.FUTURE_MINUTE)
         return calendar
     }

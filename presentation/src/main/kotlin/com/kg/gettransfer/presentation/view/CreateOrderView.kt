@@ -16,7 +16,7 @@ import com.kg.gettransfer.presentation.model.UserModel
 import com.kg.gettransfer.utilities.Analytics
 
 @StateStrategyType (OneExecutionStateStrategy::class)
-interface CreateOrderView: BaseView, RouteView {
+interface CreateOrderView : BaseView, RouteView {
     fun setTransportTypes(transportTypes: List<TransportTypeModel>)
     fun setFairPrice(price: String?, time: String?)
     fun setCurrencies(currencies: List<CurrencyModel>)
@@ -45,7 +45,6 @@ interface CreateOrderView: BaseView, RouteView {
 
     companion object {
         /* Пока сервевер не присылает минимальный временной промежуток до заказа */
-        var FUTURE_HOUR         = 4
         const val FUTURE_MINUTE = 5
     }
 }
