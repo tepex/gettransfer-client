@@ -57,7 +57,7 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
     }
 
     private fun showTransfers(transfers: List<Transfer>) {
-        var filtered = when (categoryName) {
+        val filtered = when (categoryName) {
             RequestsView.CATEGORY_ACTIVE    -> transfers.filterActive()
             RequestsView.CATEGORY_COMPLETED -> transfers.filterCompleted()
             else                            -> transfers

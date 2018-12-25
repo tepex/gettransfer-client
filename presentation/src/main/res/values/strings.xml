@@ -10,7 +10,7 @@
     <string name="api_url_prod">https://gettransfer.com</string>
     <string name="api_url_payment">/terms_of_use</string>
 
-    <string name="api_restore_password">https://gettransfer.com/forgot_password</string>
+    <string name="api_restore_password">/forgot_password</string>
 
     <!-- FCM -->
     <string name="new_offer_notification_channel_id" translatable="false">new_offer_channel</string>

@@ -49,10 +49,10 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
         webView.webViewClient = object: WebViewClient() {}
         
         when(intent.getStringExtra(WebPageView.EXTRA_SCREEN)) {
-            WebPageView.SCREEN_LICENSE      -> initActivity(R.string.LNG_RIDE_OFFERT_TITLE, WebPageView.INIT_WITH_STRING, createLicenceUrl())
+            WebPageView.SCREEN_LICENSE      -> initActivity(R.string.LNG_RIDE_OFFERT_TITLE, WebPageView.INIT_WITH_STRING, createLicenceUrl(R.string.api_url_payment))
             WebPageView.SCREEN_REG_CARRIER  -> initActivity(R.string.LNG_RIDE_CREATE_CARRIER, R.string.registration_carrier_url)
             WebPageView.SCREEN_CARRIER      -> initActivity(R.string.LNG_RIDE_CREATE_CARRIER, R.string.carrier_mode)
-            WebPageView.SCREEN_RESTORE_PASS -> initActivity(R.string.LNG_LOGIN_RECOVERY_PASSWORD, R.string.api_restore_password)
+            WebPageView.SCREEN_RESTORE_PASS -> initActivity(R.string.LNG_LOGIN_RECOVERY_PASSWORD, WebPageView.INIT_WITH_STRING, createLicenceUrl(R.string.api_restore_password))
         }
     }
 
@@ -72,9 +72,9 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
         else presenter.onBackCommandClick()
     }
 
-    private fun createLicenceUrl() =
+    private fun createLicenceUrl(apiPath: Int) =
        getString(R.string.api_url_prod)
                 .plus("/" + presenter.getLang())
-                .plus(getString(R.string.api_url_payment))
+                .plus(getString(apiPath))
 
 }
