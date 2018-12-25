@@ -21,19 +21,10 @@ import com.kg.gettransfer.utilities.Analytics
 import org.koin.standalone.inject
 
 @InjectViewState
-class SearchPresenter: BasePresenter<SearchView>() {
+class SearchPresenter : BasePresenter<SearchView>() {
     private val routeInteractor: RouteInteractor by inject()
 
     internal var isTo = false
-
-    companion object {
-        @JvmField val ADDRESS_PREDICTION_SIZE = 3
-
-        const val ROUTE_TYPE          = 1020
-        const val STREET_ADDRESS_TYPE = 1021
-        const val SUITABLE_TYPE       = 0
-        const val NO_TYPE             = -1
-    }
 
     @CallSuper
     override fun attachView(view: SearchView) {
@@ -55,7 +46,7 @@ class SearchPresenter: BasePresenter<SearchView>() {
     fun onAddressSelected(selected: GTAddress) {
         logEvent(Analytics.LAST_PLACE_CLICKED)
         val isDoubleClickOnRoute: Boolean
-        if(isTo) {
+        if (isTo) {
             viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, false, true)
             isDoubleClickOnRoute = routeInteractor.to == selected
             routeInteractor.to = selected
@@ -66,21 +57,20 @@ class SearchPresenter: BasePresenter<SearchView>() {
         }
 
         val placeType = checkPlaceType(selected)
-        if(placeType == SUITABLE_TYPE || (placeType == ROUTE_TYPE && isDoubleClickOnRoute)) {
+        if (placeType == SUITABLE_TYPE || (placeType == ROUTE_TYPE && isDoubleClickOnRoute)) {
             viewState.updateIcon(isTo)
-            if(checkFields()) createRouteForOrder()
-            else if (!isTo) viewState.changeFocusToDestField()
+            if (checkFields()) createRouteForOrder() else if (!isTo) viewState.changeFocusToDestField()
         } else {
             val sendRequest = selected.needApproximation() /* dirty hack */
-            if(isTo) viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, sendRequest, true)
+            if (isTo) viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, sendRequest, true)
             else viewState.setAddressFrom(selected.primary ?: selected.cityPoint.name!!, sendRequest, true)
         }
     }
 
     private fun checkPlaceType(address: GTAddress): Int {
         val placeTypes = address.placeTypes
-        if(placeTypes == null || placeTypes.isEmpty()) return NO_TYPE
-        if(placeTypes.contains(ROUTE_TYPE)) return ROUTE_TYPE
+        if (placeTypes == null || placeTypes.isEmpty()) return NO_TYPE
+        if (placeTypes.contains(ROUTE_TYPE)) return ROUTE_TYPE
         return SUITABLE_TYPE
     }
 
@@ -96,7 +86,7 @@ class SearchPresenter: BasePresenter<SearchView>() {
 
     fun selectFinishPointOnMap() {
         logEvent(Analytics.POINT_ON_MAP_CLICKED)
-        systemInteractor.selectedField = if(isTo) MainPresenter.FIELD_TO else MainPresenter.FIELD_FROM
+        systemInteractor.selectedField = if (isTo) MainPresenter.FIELD_TO else MainPresenter.FIELD_FROM
         router.exit()
     }
 
@@ -121,5 +111,14 @@ class SearchPresenter: BasePresenter<SearchView>() {
         viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false, false)
         viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false, false)
         viewState.setFocus(isTo)
+    }
+
+    companion object {
+        const val ADDRESS_PREDICTION_SIZE = 3
+
+        const val ROUTE_TYPE          = 1020
+        const val STREET_ADDRESS_TYPE = 1021
+        const val SUITABLE_TYPE       = 0
+        const val NO_TYPE             = -1
     }
 }

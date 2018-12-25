@@ -13,8 +13,12 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.content.ContextCompat
 
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+
+import android.widget.ImageView
+import android.widget.PopupWindow
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -45,13 +49,10 @@ import kotlinx.android.synthetic.main.view_transfer_details_info.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //Don't delete
 
-import android.widget.PopupWindow
 import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
 import kotlinx.android.synthetic.main.view_rate_in_store.view.*
 import kotlinx.android.synthetic.main.view_rate_your_transfer.*
-import android.view.MotionEvent
-import android.widget.ImageView
 
 class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
