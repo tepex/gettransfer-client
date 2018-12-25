@@ -36,10 +36,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiCore : KoinComponent {
-    companion object {
-        private val ERROR_PATTERN = Regex("^\\<h1\\>(.+)\\<\\/h1\\>$")
-    }
-
     private val preferences = get<PreferencesCache>()
     private val log: Logger by inject { parametersOf("GTR-remote") }
 
@@ -55,12 +51,18 @@ class ApiCore : KoinComponent {
     private var okHttpClient = OkHttpClient.Builder().apply {
         addInterceptor(HttpLoggingInterceptor(log))
         addInterceptor { chain ->
-            var request = chain.request()
-            if (request.url().encodedPath() != Api.API_ACCESS_TOKEN) request = request.newBuilder()
-                .addHeader(Api.HEADER_TOKEN, preferences.accessToken)
+            val request = chain.request()
+            val url = request.url().newBuilder()
+                .addQueryParameter(PARAM_API_KEY, apiKey)
                 .build()
+
+            val builder = request.newBuilder().url(url)
+            if (url.encodedPath() != Api.API_ACCESS_TOKEN) {
+                log.debug("add header access token: ${preferences.accessToken}")
+                builder.addHeader(Api.HEADER_TOKEN, preferences.accessToken)
+            }
             try {
-                chain.proceed(request)
+                chain.proceed(builder.build())
             } catch (e: Exception) {
                 log.error("Maybe DNS Exception", e)
                 throw IOException(e)
@@ -118,7 +120,7 @@ class ApiCore : KoinComponent {
     */
 
     internal suspend fun updateAccessToken() {
-        val response: ResponseModel<TokenModel> = api.accessToken(apiKey).await()
+        val response: ResponseModel<TokenModel> = api.accessToken().await()
         preferences.accessToken = response.data!!.token
     }
 
@@ -135,5 +137,13 @@ class ApiCore : KoinComponent {
             RemoteException(e.code(), msg ?: e.message!!)
         }
         else -> RemoteException(RemoteException.NOT_HTTP, e.message!!)
+    }
+
+    companion object {
+        private val ERROR_PATTERN = Regex("^\\<h1\\>(.+)\\<\\/h1\\>$")
+
+        private const val PARAM_API_KEY  = "api_key"
+        private const val PARAM_LOCALE   = "locale"
+        private const val PARAM_CURRENCY = "currency"
     }
 }

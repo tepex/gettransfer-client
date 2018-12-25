@@ -30,6 +30,8 @@ import java.util.Locale
 
 import org.koin.standalone.get
 
+import timber.log.Timber
+
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>() {
     private lateinit var currencies: List<CurrencyModel>
@@ -117,9 +119,9 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun onLogout() {
-        utils.runAlien {
-            systemInteractor.logout()
-            unregisterPushToken()
+        utils.launchSuspend {
+            utils.asyncAwait { systemInteractor.unregisterPushToken() }
+            utils.asyncAwait { systemInteractor.logout() }
         }
         router.exit()
         logEvent(Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)

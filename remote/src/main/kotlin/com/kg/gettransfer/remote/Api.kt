@@ -25,7 +25,7 @@ interface Api {
     }
 
     @GET(API_ACCESS_TOKEN)
-    fun accessToken(@Query("api_key") apiKey: String): Deferred<ResponseModel<TokenModel>>
+    fun accessToken(): Deferred<ResponseModel<TokenModel>>
 
     @GET(API_CONFIGS)
     fun getConfigs(): Deferred<ResponseModel<ConfigsModel>>
@@ -34,7 +34,9 @@ interface Api {
     fun getAccount(): Deferred<ResponseModel<AccountModelWrapper>>
 
     @PUT(API_ACCOUNT)
-    fun putAccount(@Body account: AccountModelWrapper): Deferred<ResponseModel<AccountModelWrapper>>
+    fun putAccount(
+        @Body account: AccountModelWrapper
+    ): Deferred<ResponseModel<AccountModelWrapper>>
 
     /* If we are not signed in, don't post request to save account
     @POST("/api/account")
@@ -59,10 +61,14 @@ interface Api {
     fun getCarrierTrips(): Deferred<ResponseModel<CarrierTripsBaseModel>>
 
     @GET("$API_CARRIER_TRIPS/{id}")
-    fun getCarrierTrip(@Path("id") id: Long): Deferred<ResponseModel<CarrierTripModelWrapper>>
+    fun getCarrierTrip(
+        @Path("id") id: Long
+    ): Deferred<ResponseModel<CarrierTripModelWrapper>>
 
     @GET("$API_TRANSFERS/{id}/offers")
-    fun getOffers(@Path("id") id: Long): Deferred<ResponseModel<OffersModel>>
+    fun getOffers(
+        @Path("id") id: Long
+    ): Deferred<ResponseModel<OffersModel>>
 
     @GET(API_TRANSFERS)
     fun getAllTransfers(): Deferred<ResponseModel<TransfersModel>>
@@ -74,10 +80,14 @@ interface Api {
     fun getTransfersActive(): Deferred<ResponseModel<TransfersModel>>
 
     @POST(API_TRANSFERS)
-    fun postTransfer(@Body transfer: TransferNewWrapperModel): Deferred<ResponseModel<TransferWrapperModel>>
+    fun postTransfer(
+        @Body transfer: TransferNewWrapperModel
+    ): Deferred<ResponseModel<TransferWrapperModel>>
 
     @GET("$API_TRANSFERS/{id}")
-    fun getTransfer(@Path("id") id: Long): Deferred<ResponseModel<TransferWrapperModel>>
+    fun getTransfer(
+        @Path("id") id: Long
+    ): Deferred<ResponseModel<TransferWrapperModel>>
 
     @POST("$API_TRANSFERS/{id}/cancel")
     fun cancelTransfer(
@@ -86,10 +96,14 @@ interface Api {
     ): Deferred<ResponseModel<TransferWrapperModel>>
 
     @POST(API_CREATE_NEW_PAYMENT)
-    fun createNewPayment(@Body createPayment: PaymentRequestModel): Deferred<ResponseModel<PaymentModel>>
+    fun createNewPayment(
+        @Body createPayment: PaymentRequestModel
+    ): Deferred<ResponseModel<PaymentModel>>
 
     @GET(API_PROMO)
-    fun getDiscount(@Query("value") code: String): Deferred<ResponseModel<String>>
+    fun getDiscount(
+        @Query("value") code: String
+    ): Deferred<ResponseModel<String>>
 
     @GET("$API_CREATE_NEW_PAYMENT/{status}")
     fun changePaymentStatus(

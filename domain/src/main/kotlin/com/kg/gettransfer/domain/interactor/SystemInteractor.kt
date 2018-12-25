@@ -117,8 +117,9 @@ class SystemInteractor(
         systemRepository.registerPushToken(PushTokenType.FCM, token)
     }
 
-    suspend fun unregisterPushToken() {
+    suspend fun unregisterPushToken(): Result<Unit> {
         pushToken?.let { systemRepository.unregisterPushToken(it) }
+        return Result(Unit)
     }
 
     suspend fun login(email: String, password: String) = systemRepository.login(email, password)

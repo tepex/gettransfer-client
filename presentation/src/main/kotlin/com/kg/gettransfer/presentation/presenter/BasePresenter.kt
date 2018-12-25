@@ -99,10 +99,6 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
         })
     }
 
-    protected fun unregisterPushToken() {
-        utils.runAlien { systemInteractor.unregisterPushToken() }
-    }
-
     companion object AnalyticProps {
         const val SINGLE_CAPACITY = 1
         const val DOUBLE_CAPACITY = 2
