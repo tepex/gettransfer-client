@@ -55,15 +55,15 @@ class TransferRequestItem @JvmOverloads constructor(
             tvTo.text = item.to
             tvDistance.text = SystemUtils.formatDistance(context, item.distance, true)
             changeViewForHourlyTransfer(false)
+            item.dateTimeReturn?.let {
+                ivReturnIcon.isVisible = true
+                ivMarkersLine.isVisible = false
+            }
         } else if (item.duration != null) {
             changeViewForHourlyTransfer(true)
             tv_duration.text = HourlyValuesHelper.getValue(item.duration, context)
         }
         tvOrderDateTime.text = SystemUtils.formatDateTime(item.dateTime)
-        item.dateTimeReturn?.let {
-            ivReturnIcon.isVisible = true
-            ivMarkersLine.isVisible = false
-        }
     }
 
     private fun changeViewForHourlyTransfer(isHourlyTransfer: Boolean) {
