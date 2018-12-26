@@ -59,7 +59,13 @@ class SearchPresenter : BasePresenter<SearchView>() {
         val placeType = checkPlaceType(selected)
         if (placeType == SUITABLE_TYPE || (placeType == ROUTE_TYPE && isDoubleClickOnRoute)) {
             viewState.updateIcon(isTo)
-            if (checkFields()) createRouteForOrder() else if (!isTo) viewState.changeFocusToDestField()
+            if (checkFields() && isTo) createRouteForOrder()
+            else if (!isTo) {
+                viewState.changeFocusToDestField()
+                routeInteractor.to?.let {
+                    viewState.setAddressTo(it.primary ?: it.cityPoint.name!!, true , true)
+                }
+            }
         } else {
             val sendRequest = selected.needApproximation() /* dirty hack */
             if (isTo) viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, sendRequest, true)
