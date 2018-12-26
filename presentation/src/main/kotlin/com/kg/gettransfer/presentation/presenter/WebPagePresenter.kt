@@ -16,11 +16,7 @@ class WebPagePresenter: MvpPresenter<WebPageView>(), KoinComponent {
     val termsUrl: String
     get() = "/${systemInteractor.mobileConfigs.termsUrl}"
 
-
     fun onBackCommandClick() {
         viewState.finish()
     }
-
-    fun getLang(): String = systemInteractor.locale.language
-
 }

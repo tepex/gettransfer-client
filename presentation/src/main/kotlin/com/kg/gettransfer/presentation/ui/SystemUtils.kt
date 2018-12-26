@@ -19,6 +19,7 @@ internal object SystemUtils : KoinComponent {
     private const val DATE_IIME_SHORT_MONTH_PATTERN = "dd MMM yyyy, HH:mm"
     private const val MONTH_PATTERN = "LLLL"
     private const val DAY_MONTH_PATTERN = "dd MMMM, EEEE"
+    private const val SLASH = "/"
 
     fun formatDistance(context: Context, _distance: Int?, withDistanceText: Boolean): String {
         if (_distance == null) return ""
@@ -35,4 +36,9 @@ internal object SystemUtils : KoinComponent {
     fun formatMonth(date: Date) = SimpleDateFormat(MONTH_PATTERN, systemInteractor.locale).format(date)
 
     fun formatDayMonth(date: Date) = SimpleDateFormat(DAY_MONTH_PATTERN, systemInteractor.locale).format(date)
+
+    fun gtUrlWithLocale(context: Context) =
+            context.getString(R.string.api_url_prod)
+            .plus(SLASH)
+            .plus(systemInteractor.locale.language)
 }
