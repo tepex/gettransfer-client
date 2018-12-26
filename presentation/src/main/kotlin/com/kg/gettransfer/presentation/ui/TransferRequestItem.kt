@@ -64,6 +64,11 @@ class TransferRequestItem @JvmOverloads constructor(
             tv_duration.text = HourlyValuesHelper.getValue(item.duration, context)
         }
         tvOrderDateTime.text = SystemUtils.formatDateTime(item.dateTime)
+
+        (item.dateTimeReturn == null).also {
+            ivReturnIcon.isVisible = !it
+            ivMarkersLine.isVisible = it
+        }
     }
 
     private fun changeViewForHourlyTransfer(isHourlyTransfer: Boolean) {
