@@ -78,7 +78,14 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.OffersActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <!--
+            <intent-filter>
+                <action android:name="OffersActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            -->
+        </activity>
         <activity
             android:name=".presentation.ui.RequestsActivity"
             android:screenOrientation="portrait" />
