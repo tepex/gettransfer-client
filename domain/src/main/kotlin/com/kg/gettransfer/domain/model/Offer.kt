@@ -26,7 +26,7 @@ data class Offer(
 
     fun isRated(): Boolean {
         ratings?.apply {
-            return vehicle != null && driver != null && fair != null
+            return vehicle != NO_RATE && driver != NO_RATE && fair != NO_RATE
         }
     }
 
