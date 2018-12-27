@@ -90,8 +90,7 @@ data class Transfer(
         fun List<Transfer>.filterActive() = filter {
             it.status == Status.NEW ||
             it.status == Status.DRAFT ||
-            it.status == Status.PERFORMED ||
-            it.status == Status.PENDING_CONFIRMATION
+            it.status == Status.PERFORMED
         }
 
         fun List<Transfer>.filterCompleted() = filter {
