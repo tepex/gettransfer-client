@@ -90,7 +90,7 @@ android {
             signingConfig signingConfigs.config
 
             versionCode getBuildNumber() as Integer
-            versionName "2.0"
+            versionName System.getenv("VERSION_NAME") ?: "2.0"
 
             manifestPlaceholders = [
                     hockeyAppId   : "1f061f58b7bd42c387ecd8681d30df48",
