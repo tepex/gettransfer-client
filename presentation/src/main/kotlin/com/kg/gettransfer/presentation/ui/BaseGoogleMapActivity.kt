@@ -40,19 +40,13 @@ import timber.log.Timber
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-abstract class BaseGoogleMapActivity: BaseActivity() {
+abstract class BaseGoogleMapActivity : BaseActivity() {
     private lateinit var googleMapJob: Job
     protected lateinit var _mapView: MapView
     private lateinit var googleMap: GoogleMap
 
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
-
-    companion object {
-        @JvmField val MAP_MIN_ZOOM = 13f
-        @JvmField val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
-        private const val LABEL_VERTICAL_POSITION = 12
-    }
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -244,4 +238,10 @@ abstract class BaseGoogleMapActivity: BaseActivity() {
     }
 
     protected fun clearMarkersAndPolylines() = googleMap.clear()
+
+    companion object {
+        const val MAP_MIN_ZOOM = 13f
+        const val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
+        private const val LABEL_VERTICAL_POSITION = 12
+    }
 }

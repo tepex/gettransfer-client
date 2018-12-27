@@ -410,11 +410,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PLAY_MARKET_RATE) thanksForRate()
-    }
-
     companion object {
         const val TRANSPORT_TYPES_COLUMNS = 2
     }

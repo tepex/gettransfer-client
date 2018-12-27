@@ -39,9 +39,8 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
     open fun onBackCommandClick() {
         val map = mutableMapOf<String, Any>()
         map[Analytics.PARAM_KEY_NAME] = Analytics.BACK_CLICKED
-
-        router.exit()
         analytics.logEvent(Analytics.EVENT_MAIN, createStringBundle(Analytics.PARAM_KEY_NAME, Analytics.BACK_CLICKED), map)
+        router.exit()
     }
 
     protected fun login(nextScreen: String, email: String) = router.navigateTo(Screens.Login(nextScreen, email))

@@ -140,14 +140,16 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.blockInterface(false)
     }
 
+    /*
+    @CallSuper
     override fun onBackCommandClick() {
 //        localeWasChanged = false
-        if(localeWasChanged) {
+        if (localeWasChanged) {
             localeWasChanged = false
             router.navigateTo(Screens.ChangeMode(systemInteractor.lastMode))
-        }
-        else super.onBackCommandClick()
+        } else super.onBackCommandClick()
     }
+    */
 
     private fun initConfigs() {
         endpoints = systemInteractor.endpoints.map { endpointMapper.toView(it) }

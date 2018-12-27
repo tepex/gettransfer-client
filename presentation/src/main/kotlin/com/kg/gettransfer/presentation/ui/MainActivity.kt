@@ -465,14 +465,12 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         setupDetailRatings(tappedRate, popUpView)
     }
 
-    private fun setupDetailRatings(rateForFill: Float, v: View) {
-        rateForFill.let {
-            v.apply {
-                main_rate.rating                 = it
-                driver_rate.rate_bar.rating      = it
-                punctuality_rate.rate_bar.rating = it
-                vehicle_rate.rate_bar.rating     = it
-            }
+    private fun setupDetailRatings(rateForFill: Float, view: View) {
+        with(view) {
+            main_rate.rating                 = rateForFill
+            driver_rate.rate_bar.rating      = rateForFill
+            punctuality_rate.rate_bar.rating = rateForFill
+            vehicle_rate.rate_bar.rating     = rateForFill
         }
     }
 
@@ -494,17 +492,12 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     override fun cancelReview() = closePopUp()
 
     companion object {
-        @JvmField val MY_LOCATION_BUTTON_INDEX = 2
-        @JvmField val COMPASS_BUTTON_INDEX = 5
-        @JvmField val FADE_DURATION = 500L
-        @JvmField val MAX_INIT_ZOOM = 2.0f
+        const val MY_LOCATION_BUTTON_INDEX = 2
+        const val COMPASS_BUTTON_INDEX     = 5
+        const val FADE_DURATION = 500L
+        const val MAX_INIT_ZOOM = 2.0f
 
-        const val ALPHA_FULL = 1f
+        const val ALPHA_FULL     = 1f
         const val ALPHA_DISABLED = 0.3f
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PLAY_MARKET_RATE) thanksForRate()
     }
 }
