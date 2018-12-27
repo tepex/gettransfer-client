@@ -106,6 +106,7 @@ class OffersPushService : KoinComponent, FirebaseMessagingService() {
      */
     override fun onNewToken(token: String?) {
         Timber.d("Refreshed token: $token")
+        /*
         FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener(OnCompleteListener {
             if (it.isSuccessful) {
                 it.result?.token?.let {
@@ -114,6 +115,7 @@ class OffersPushService : KoinComponent, FirebaseMessagingService() {
                 }
             } else Timber.w("getInstanceId failed", it.exception)
         })
+        */
     }
     // [END on_new_token]
 
