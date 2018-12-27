@@ -23,9 +23,9 @@ class ReviewInteractor(private val repository: ReviewRepository) {
     suspend fun sendTopRate() =
         sendRates(
             arrayListOf(
-                ReviewRate(ReviewRate.RateType.DRIVER, MAX_RATE),
-                ReviewRate(ReviewRate.RateType.DRIVER, MAX_RATE),
-                ReviewRate(ReviewRate.RateType.DRIVER, MAX_RATE)
+                ReviewRate(ReviewRate.RateType.VEHICLE,     MAX_RATE),
+                ReviewRate(ReviewRate.RateType.DRIVER,      MAX_RATE),
+                ReviewRate(ReviewRate.RateType.PUNCTUALITY, MAX_RATE)
             ),
             EMPTY_COMMENT)
 

@@ -156,10 +156,10 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
 
     fun rateTrip(rating: Float) {
         if (rating.toInt() == ReviewInteractor.MAX_RATE) {
-            reviewInteractor.apply {
-                utils.launchSuspend{ sendTopRate() }
-                viewState.thanksForRate()
+            with(reviewInteractor) {
+                utils.launchSuspend { sendTopRate() }
                 if (shouldAskRateInMarket) viewState.askRateInPlayMarket()
+                else viewState.thanksForRate()
             }
         } else viewState.showDetailRate(rating)
     }

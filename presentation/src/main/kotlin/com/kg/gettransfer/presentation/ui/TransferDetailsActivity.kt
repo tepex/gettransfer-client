@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 
 import android.os.Build
@@ -60,7 +61,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     internal lateinit var presenter: TransferDetailsPresenter
 
     private lateinit var bsTransferDetails: BottomSheetBehavior<View>
-    private lateinit var popupWindowRate: PopupWindow
 
     @ProvidePresenter
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
@@ -408,6 +408,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
                 vehicle_rate.rate_bar.rating     = it
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PLAY_MARKET_RATE) thanksForRate()
     }
 
     companion object {
