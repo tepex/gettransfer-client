@@ -42,16 +42,16 @@ import com.arellomobile.mvp.MvpPresenter
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
-
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.extensions.*
 
+import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.presenter.BasePresenter
-
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
+
 import com.kg.gettransfer.service.OfferServiceConnection
 
 import com.kg.gettransfer.utilities.LocaleManager
@@ -166,10 +166,9 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         super.onResume()
         navigatorHolder.setNavigator(navigator)
         offerServiceConnection.connect(systemInteractor.endpoint, systemInteractor.accessToken) {
-            onNewOffer(it) }
+            getPresenter().onNewOffer(it)
+        }
     }
-
-    private fun onNewOffer(offer: Offer) = getPresenter().onNewOffer(offer)
 
     @CallSuper
     protected override fun onPause() {
@@ -319,6 +318,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
 
     open fun thanksForRate() {}
+    override fun showOffer(offer: OfferModel) {}
 
     protected fun closePopUp() = popupWindowRate.dismiss()
 

@@ -167,7 +167,4 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         val clip = android.content.ClipData.newPlainText("Copied Text", text)
         clipboard.primaryClip = clip
     }
-
-    override fun showOffer(offer: OfferModel) {
-    }
 }

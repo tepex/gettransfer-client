@@ -78,7 +78,7 @@ class MainPresenter : BasePresenter<MainView>() {
         if (routeInteractor.from != null) setLastLocation() else updateCurrentLocation()
 
         with(reviewInteractor) {
-            if (!isReviewSuggested) showRateForLastTrip()
+            if (!isReviewSuggested && systemInteractor.account.user.loggedIn) showRateForLastTrip()
             else if (shouldAskRateInMarket) viewState.askRateInPlayMarket()
         }
         if (systemInteractor.account.user.loggedIn) registerPushToken()
@@ -99,13 +99,8 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     private fun setCountEvents(count: Int) {
-        when(count) {
-            0 -> viewState.showBadge(false)
-            else -> {
-                viewState.showBadge(true)
-                viewState.setCountEvents(count)
-            }
-        }
+        viewState.showBadge(count > 0)
+        if (count > 0) viewState.setCountEvents(count)
     }
 
     override fun onNewOffer(offer: Offer): OfferModel {

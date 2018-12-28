@@ -80,7 +80,4 @@ class LoginActivity : BaseActivity(), LoginView {
     }
 
     override fun onBackPressed() { presenter.onBackCommandClick() }
-
-    override fun showOffer(offer: OfferModel) {
-    }
 }

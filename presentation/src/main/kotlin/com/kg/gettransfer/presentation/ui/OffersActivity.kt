@@ -239,9 +239,6 @@ class OffersActivity : BaseActivity(), OffersView {
 
     override fun addNewOffer(offer: OfferModel) { (rvOffers.adapter as OffersRVAdapter).add(offer) }
 
-    override fun showOffer(offer: OfferModel) {
-    }
-
     companion object {
         val ACTION_NEW_OFFER = "${OffersActivity::class.java.name}.offer"
     }

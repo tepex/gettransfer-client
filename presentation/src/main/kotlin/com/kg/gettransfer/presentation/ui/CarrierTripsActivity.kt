@@ -197,6 +197,4 @@ class CarrierTripsActivity : BaseActivity(), CarrierTripsView {
     override fun showReadMoreDialog() {
         ReadMoreFragment().show(supportFragmentManager, getString(R.string.tag_read_more))
     }
-
-    override fun showOffer(offer: OfferModel) {}
 }

@@ -79,6 +79,10 @@ class AboutActivity : BaseActivity(), AboutView {
         if (viewpager.currentItem == 0) presenter.closeAboutActivity() else viewpager.currentItem = viewpager.currentItem - 1
     }
 
+    override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
+    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
+    override fun setError(e: ApiException) {}
+
     inner class AboutAdapter : PagerAdapter() {
         private val pages = arrayOf<AboutItem>(item_0, item_1, item_2, item_3)
 
@@ -87,9 +91,4 @@ class AboutActivity : BaseActivity(), AboutView {
         override fun instantiateItem(container: ViewGroup, pos: Int) = pages[pos]
         override fun destroyItem(container: ViewGroup, pos: Int, obj: Any) = container.removeView(obj as View)
     }
-
-    override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
-    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
-    override fun setError(e: ApiException) {}
-    override fun showOffer(offer: OfferModel) {}
 }

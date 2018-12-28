@@ -57,7 +57,7 @@ class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
 
     override fun setOffer(offer: OfferModel, paymentPercentages: List<Int>) {
         paymentPercentages.forEach { percentage ->
-            when(percentage){
+            when (percentage) {
                 OfferModel.FULL_PRICE -> {
                     payFullPriceButton.isVisible = true
                     payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.FULL_PRICE)
@@ -84,13 +84,13 @@ class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
 
     private fun changePaymentSettings(view: View?) {
         when (view?.id) {
-            R.id.payFullPriceButton -> PaymentRequestModel.FULL_PRICE
+            R.id.payFullPriceButton    -> PaymentRequestModel.FULL_PRICE
             R.id.payThirdOfPriceButton -> selectPaymentPercentage(PaymentRequestModel.PRICE_30)
         }
     }
 
-    private fun selectPaymentPercentage(selectedPercentage: Int){
-        when(selectedPercentage){
+    private fun selectPaymentPercentage(selectedPercentage: Int) {
+        when (selectedPercentage) {
             PaymentRequestModel.FULL_PRICE -> {
                 fullPriceCheckIcon.isVisible = true
                 thirdOfPriceCheckIcon.isVisible = false
@@ -102,8 +102,5 @@ class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
                 presenter.changePrice(PaymentRequestModel.PRICE_30)
             }
         }
-    }
-
-    override fun showOffer(offer: OfferModel) {
     }
 }

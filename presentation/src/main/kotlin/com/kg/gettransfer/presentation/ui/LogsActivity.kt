@@ -51,7 +51,4 @@ class LogsActivity : BaseActivity(), LogsView {
         textLogs.text = logs
         scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
     }
-
-    override fun showOffer(offer: OfferModel) {
-    }
 }

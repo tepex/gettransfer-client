@@ -46,7 +46,7 @@ class PaymentActivity: BaseActivity(), PaymentView {
         presenter.transferId = intent.getLongExtra(PaymentView.EXTRA_TRANSFER_ID, 0)
         presenter.offerId    = intent.getLongExtra(PaymentView.EXTRA_OFFER_ID, 0)
         presenter.percentage = intent.getIntExtra(PaymentView.EXTRA_PERCENTAGE, 0)
-        
+
         setContentView(R.layout.activity_payment)
 
         setToolbar(toolbar as Toolbar)
@@ -66,7 +66,7 @@ class PaymentActivity: BaseActivity(), PaymentView {
                 return false
             }
         }
-                
+
         webView.loadUrl(intent.getStringExtra(PaymentView.EXTRA_URL))
     }
 
@@ -79,8 +79,5 @@ class PaymentActivity: BaseActivity(), PaymentView {
     private fun changePaymentStatus(uri: Uri?, success: Boolean) {
         val orderId = uri?.getQueryParameter(PG_ORDER_ID)!!.toLong()
         presenter.changePaymentStatus(orderId, success)
-    }
-
-    override fun showOffer(offer: OfferModel) {
     }
 }

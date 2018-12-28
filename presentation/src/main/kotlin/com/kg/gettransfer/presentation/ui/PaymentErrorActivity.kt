@@ -13,7 +13,7 @@ import com.kg.gettransfer.presentation.view.PaymentErrorView
 
 import kotlinx.android.synthetic.main.dialog_payment_error.view.*
 
-class PaymentErrorActivity: BaseActivity(), PaymentErrorView {
+class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
 
     @InjectPresenter
     internal lateinit var presenter: PaymentErrorPresenter
@@ -36,9 +36,6 @@ class PaymentErrorActivity: BaseActivity(), PaymentErrorView {
             btnTryAgain.setOnClickListener { this@PaymentErrorActivity.finish() }
             btnSupport.setOnClickListener  { presenter.sendEmail(null) }
         }
-    }
-
-    override fun showOffer(offer: OfferModel) {
     }
 
     companion object {
