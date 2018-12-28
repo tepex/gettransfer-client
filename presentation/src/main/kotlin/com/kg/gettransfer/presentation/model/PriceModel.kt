@@ -5,5 +5,5 @@ data class PriceModel(
     val withoutDiscount: MoneyModel?,
     val percentage30: String,
     val percentage70: String,
-    val amount: String
+    val amount: Double
 )
