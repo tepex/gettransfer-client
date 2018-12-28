@@ -61,6 +61,7 @@ class OfferServiceConnection : SystemListener, KoinComponent {
 
     override fun connectionChanged(endpoint: Endpoint, accessToken: String) {
         /* Reconnect iff URL or token changed. */
+        //val reconnect = (url != endpoint.url || this.accessToken != accessToken)
         val reconnect = true
         Timber.d("Connecting... options: ${options.path}. Reconect: $reconnect")
         url = endpoint.url

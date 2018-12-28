@@ -70,10 +70,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     }
 
     override fun setRequests(transfers: List<TransferModel>) {
-        /*
-        rvRequests.adapter = RequestsRVAdapter(transfers) { presenter.openTransferDetails(it.id, it.status) }
         noTransfersText.isVisible = transfers.isEmpty()
-        */
         rvAdapter = RequestsRVAdapter(transfers) { presenter.openTransferDetails(it.id, it.status) }
         rvRequests.adapter = rvAdapter
     }
