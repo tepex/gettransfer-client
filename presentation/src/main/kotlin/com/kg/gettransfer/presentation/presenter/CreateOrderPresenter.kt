@@ -151,7 +151,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun setUIWithoutRoute() {
-        transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
+        if (transportTypes == null)
+            transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
         viewState.setTransportTypes(transportTypes!!)
         routeInteractor.from?.let { from ->
             from.cityPoint.point?.let { p ->
@@ -337,7 +338,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             val tripTime = String.format("%d:%d", duration!! / 60, duration!! % 60)
             val checkedTransport = transportTypes?.filter { it.checked }
             if (!checkedTransport.isNullOrEmpty())
-                viewState.setFairPrice(checkedTransport.minBy { it.price!!.minFloat }?.price!!.min, tripTime)
+                viewState.setFairPrice(checkedTransport?.minBy { it.price!!.minFloat }?.price!!.min, tripTime)
             else viewState.setFairPrice(null, null)
         } catch (e: KotlinNullPointerException) { viewState.setFairPrice(null, null) }
     }
