@@ -24,11 +24,10 @@ import com.kg.gettransfer.presentation.view.SettingsView
 
 import com.kg.gettransfer.utilities.Analytics
 
-import com.yandex.metrica.YandexMetrica
-
 import java.util.Locale
 
 import org.koin.standalone.get
+import org.koin.standalone.inject
 
 import timber.log.Timber
 
@@ -43,7 +42,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private val currencyMapper     = get<CurrencyMapper>()
     private val distanceUnitMapper = get<DistanceUnitMapper>()
     private val endpointMapper     = get<EndpointMapper>()
-    private val reviewInteractor = get<ReviewInteractor>()
+    private val reviewInteractor   = get<ReviewInteractor>()
 
     private var localeWasChanged = false
     private var restart = true

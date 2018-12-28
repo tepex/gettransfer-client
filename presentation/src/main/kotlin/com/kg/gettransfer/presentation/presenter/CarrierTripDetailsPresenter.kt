@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
+
 import com.kg.gettransfer.domain.model.CarrierTripBase
 import com.kg.gettransfer.domain.model.RouteInfo
 

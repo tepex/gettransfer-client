@@ -6,6 +6,8 @@ import android.support.v7.app.AlertDialog
 import com.arellomobile.mvp.presenter.InjectPresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.presenter.PaymentErrorPresenter
 import com.kg.gettransfer.presentation.view.PaymentErrorView
 
@@ -34,6 +36,9 @@ class PaymentErrorActivity: BaseActivity(), PaymentErrorView {
             btnTryAgain.setOnClickListener { this@PaymentErrorActivity.finish() }
             btnSupport.setOnClickListener  { presenter.sendEmail(null) }
         }
+    }
+
+    override fun showOffer(offer: OfferModel) {
     }
 
     companion object {

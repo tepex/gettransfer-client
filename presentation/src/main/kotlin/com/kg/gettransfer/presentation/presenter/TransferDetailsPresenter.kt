@@ -4,18 +4,23 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.google.android.gms.maps.CameraUpdate
-
 import com.google.android.gms.maps.model.LatLng
-import com.kg.gettransfer.domain.interactor.ReviewInteractor
 
+import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.presentation.mapper.*
+
+import com.kg.gettransfer.presentation.mapper.ProfileMapper
+import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
+import com.kg.gettransfer.presentation.mapper.RouteMapper
+import com.kg.gettransfer.presentation.mapper.TransferMapper
 
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.ReviewRateModel
@@ -37,21 +42,12 @@ import timber.log.Timber
 class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
     private val routeInteractor: RouteInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
-    private val offerInteractor: OfferInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
 
-    private val offerMapper: OfferMapper by inject()
     private val profileMapper: ProfileMapper by inject()
     private val routeMapper: RouteMapper by inject()
     private val transferMapper: TransferMapper by inject()
     private val reviewRateMapper: ReviewRateMapper by inject()
-
-    companion object {
-        @JvmField val FIELD_EMAIL = "field_email"
-        @JvmField val FIELD_PHONE = "field_phone"
-        @JvmField val OPERATION_COPY = "operation_copy"
-        @JvmField val OPERATION_OPEN = "operation_open"
-    }
 
     private lateinit var transferModel: TransferModel
     private var routeModel: RouteModel? = null
@@ -74,10 +70,10 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
 
                 if (transferModel.status.checkOffers) {
                     val offersResult = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
-                    if(offersResult.error == null && offersResult.model.size == 1){
+                    if (offersResult.error == null && offersResult.model.size == 1){
                         offer = offersResult.model.first()
                         reviewInteractor.offerIdForReview = offer.id
-                        if(!transfer.isCompletedTransfer()) viewState.setOffer(offerMapper.toView(offer), transferModel.countChilds)
+                        if (!transfer.isCompletedTransfer()) viewState.setOffer(offerMapper.toView(offer), transferModel.countChilds)
                     }
                 }
 
@@ -87,7 +83,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
                 if (transfer.to != null) {
                     val r = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, true, false) }
                     if (r.error == null) setRouteTransfer(transfer, r.model)
-                } else if(transfer.duration != null) setHourlyTransfer(transfer)
+                } else if (transfer.duration != null) setHourlyTransfer(transfer)
 
             }
             viewState.blockInterface(false)
@@ -221,4 +217,11 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
             createStringBundle(analytics.requestResult(accepted), ""),
             mapOf(analytics.requestResult(accepted) to "")
         )
+
+    companion object {
+        const val FIELD_EMAIL = "field_email"
+        const val FIELD_PHONE = "field_phone"
+        const val OPERATION_COPY = "operation_copy"
+        const val OPERATION_OPEN = "operation_open"
+    }
 }

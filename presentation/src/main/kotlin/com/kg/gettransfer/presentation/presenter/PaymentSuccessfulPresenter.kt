@@ -19,12 +19,8 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import org.koin.standalone.inject
 
-import java.util.Calendar
-import java.util.Date
-
 @InjectViewState
 class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
-    private val offerInteractor: OfferInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
 

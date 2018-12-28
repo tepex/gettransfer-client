@@ -21,6 +21,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.extensions.*
 
@@ -95,13 +96,6 @@ class OffersActivity : BaseActivity(), OffersView {
             }
         }
         return super.dispatchTouchEvent(event)
-    }
-
-    @CallSuper
-    protected override fun onResume() {
-        super.onResume()
-        /* New PUSH notification */
-        presenter.checkNewOffers()
     }
 
     private fun navigateBackWithTransition() {
@@ -244,6 +238,9 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun addNewOffer(offer: OfferModel) { (rvOffers.adapter as OffersRVAdapter).add(offer) }
+
+    override fun showOffer(offer: OfferModel) {
+    }
 
     companion object {
         val ACTION_NEW_OFFER = "${OffersActivity::class.java.name}.offer"

@@ -16,7 +16,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.extensions.*
+import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.presenter.LogsPresenter
 import com.kg.gettransfer.presentation.view.LogsView
 
@@ -48,5 +50,8 @@ class LogsActivity : BaseActivity(), LogsView {
     override fun setLogs(logs: String) {
         textLogs.text = logs
         scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
+    }
+
+    override fun showOffer(offer: OfferModel) {
     }
 }

@@ -22,10 +22,12 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.presentation.adapter.AddressAdapter
 import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
+import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
@@ -182,5 +184,8 @@ class SearchActivity : BaseActivity(), SearchView {
 
     override fun setFocus(isToField: Boolean) {
         if (isToField) searchTo.changeFocus() else searchFrom.changeFocus()
+    }
+
+    override fun showOffer(offer: OfferModel) {
     }
 }

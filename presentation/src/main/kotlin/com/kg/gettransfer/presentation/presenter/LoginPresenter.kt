@@ -15,15 +15,10 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
+import org.koin.standalone.inject
+
 @InjectViewState
 class LoginPresenter : BasePresenter<LoginView>() {
-    companion object {
-        const val MIN_PASSWORD_LENGTH = 6
-
-        //@JvmField val RESULT_CODE = 33
-        //@JvmField val RESULT_OK   = 1
-    }
-
     private var password: String? = null
 
     internal var email: String? = null
@@ -36,9 +31,9 @@ class LoginPresenter : BasePresenter<LoginView>() {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { systemInteractor.login(email!!, password!!) }
-            if(result.error == null) {
-                if(!screenForReturn.isNullOrEmpty()) {
-                    when(screenForReturn) {
+            if (result.error == null) {
+                if (!screenForReturn.isNullOrEmpty()) {
+                    when (screenForReturn) {
                         Screens.CARRIER_MODE   -> router.navigateTo(Screens.ChangeMode(checkCarrierMode()))
                         Screens.PASSENGER_MODE -> router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
                         Screens.OFFERS         -> {
@@ -84,4 +79,8 @@ class LoginPresenter : BasePresenter<LoginView>() {
         else Screens.REG_CARRIER
 
     fun onPassForgot() = router.navigateTo(Screens.RestorePassword)
+
+    companion object {
+        const val MIN_PASSWORD_LENGTH = 6
+    }
 }

@@ -17,6 +17,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.presenter.PaymentPresenter
 
@@ -77,5 +79,8 @@ class PaymentActivity: BaseActivity(), PaymentView {
     private fun changePaymentStatus(uri: Uri?, success: Boolean) {
         val orderId = uri?.getQueryParameter(PG_ORDER_ID)!!.toLong()
         presenter.changePaymentStatus(orderId, success)
+    }
+
+    override fun showOffer(offer: OfferModel) {
     }
 }

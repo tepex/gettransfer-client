@@ -30,6 +30,11 @@
 				tools:ignore="Overdraw" />
 		</android.support.design.widget.AppBarLayout>-->
 
+		<include
+			android:id="@+id/offerLayout"
+			layout="@layout/notification_offer"
+			android:visibility="gone"/>
+
 		<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">
@@ -95,8 +100,19 @@
 						android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
 						android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end"
 						android:clickable="true"
-						android:focusable="true"
-						android:elevation="2dp"/>
+						android:focusable="true"/>
+
+					<TextView
+						android:id="@+id/tvEventsCount"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textColor="@android:color/white"
+						tools:text="15"
+						android:background="@drawable/bg_circle_red"
+						android:visibility="gone"
+						android:gravity="center"
+						app:layout_constraintEnd_toEndOf="@+id/btnShowDrawerLayout"
+						app:layout_constraintTop_toTopOf="@+id/btnShowDrawerLayout"/>
 
 					<ImageView
 						android:id="@+id/btnBack"
@@ -110,7 +126,6 @@
 						android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end"
 						android:clickable="true"
 						android:focusable="true"
-						android:elevation="2dp"
 						android:visibility="gone"/>
 
 					<ImageView

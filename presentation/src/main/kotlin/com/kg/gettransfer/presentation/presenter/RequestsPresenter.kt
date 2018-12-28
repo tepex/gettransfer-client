@@ -10,12 +10,10 @@ import com.kg.gettransfer.presentation.view.RequestsView
 
 import com.kg.gettransfer.utilities.Analytics
 
-import com.yandex.metrica.YandexMetrica
-
 import org.koin.standalone.inject
 
 @InjectViewState
-class RequestsPresenter: BasePresenter<RequestsView>() {
+class RequestsPresenter : BasePresenter<RequestsView>() {
     private val transferInteractor: TransferInteractor by inject()
 
     @CallSuper

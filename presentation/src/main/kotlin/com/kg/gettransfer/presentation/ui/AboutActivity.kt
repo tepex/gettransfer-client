@@ -16,9 +16,10 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.presenter.AboutPresenter
 import com.kg.gettransfer.presentation.view.AboutView
-import com.kg.gettransfer.utilities.Analytics
 
 import kotlinx.android.synthetic.main.activity_about.*
 
@@ -90,4 +91,5 @@ class AboutActivity : BaseActivity(), AboutView {
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
     override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
     override fun setError(e: ApiException) {}
+    override fun showOffer(offer: OfferModel) {}
 }

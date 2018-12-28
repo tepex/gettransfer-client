@@ -7,6 +7,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.domain.model.sortDescendant
 import com.kg.gettransfer.domain.model.Transfer
@@ -14,6 +15,7 @@ import com.kg.gettransfer.domain.model.Transfer.Companion.filterActive
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterCompleted
 
 import com.kg.gettransfer.presentation.mapper.TransferMapper
+import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.model.TransferModel
 
@@ -29,15 +31,18 @@ import timber.log.Timber
 class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
     private val transferInteractor: TransferInteractor by inject()
     private val transferMapper: TransferMapper by inject()
+
     lateinit var categoryName: String
 
     private var transfers: List<TransferModel>? = null
+    private lateinit var transferIds: List<Long>
 
     @CallSuper
     override fun attachView(view: RequestsFragmentView) {
         super.attachView(view)
         getTransfers()
         transfers?.let { viewState.setRequests(it) }
+        transferIds = systemInteractor.transferIds
     }
 
     fun getTransfers() {
@@ -63,6 +68,7 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
             else                            -> transfers
         }
         viewState.setRequests(filtered.sortDescendant().map { transferMapper.toView(it) })
+        viewState.setCountEvents(transferIds)
     }
 
     fun openTransferDetails(id: Long, status: Transfer.Status) {
@@ -71,5 +77,10 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
             Transfer.Status.NEW -> router.navigateTo(Screens.Offers(id))
             else                -> router.navigateTo(Screens.Details(id))
         }
+    }
+
+    override fun onNewOffer(offer: Offer): OfferModel {
+        utils.launchSuspend{ viewState.setCountEvents(transferIds) }
+        return super.onNewOffer(offer)
     }
 }

@@ -2,6 +2,7 @@ package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.GTAddressEntity
+import com.kg.gettransfer.data.model.OfferEntity
 
 interface PreferencesCache {
     var accessToken: String
@@ -12,7 +13,8 @@ interface PreferencesCache {
     var selectedField: String
     var addressHistory: List<GTAddressEntity>
     var appEnters: Int
-    
+    var eventsCount: Int
+    var transferIds: List<Long>
     val endpoints: List<EndpointEntity>
 
     fun logout()

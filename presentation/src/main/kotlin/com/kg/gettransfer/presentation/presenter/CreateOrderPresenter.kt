@@ -15,7 +15,6 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
 
-import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PromoInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
@@ -57,7 +56,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val routeInteractor: RouteInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
     private val promoInteractor: PromoInteractor by inject()
-    private val offersInteractor: OfferInteractor by inject()
 
     private val currencyMapper = get<CurrencyMapper>()
     private val routeMapper = get<RouteMapper>()

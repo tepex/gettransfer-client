@@ -27,12 +27,14 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.presentation.adapter.CarrierTripsRVAdapter
 
 import com.kg.gettransfer.presentation.model.CarrierTripsRVItemModel
+import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.ProfileModel
 
 import com.kg.gettransfer.presentation.presenter.CarrierTripsPresenter
@@ -60,9 +62,9 @@ class CarrierTripsActivity : BaseActivity(), CarrierTripsView {
 
     private val itemsNavigationViewListener = View.OnClickListener {
         when (it.id) {
-            R.id.navCarrierTrips  -> presenter.onCarrierTripsClick()
-            R.id.navAbout         -> presenter.onAboutClick()
-            R.id.navSettings      -> presenter.onSettingsClick()
+            R.id.navCarrierTrips -> presenter.onCarrierTripsClick()
+            R.id.navAbout -> presenter.onAboutClick()
+            R.id.navSettings -> presenter.onSettingsClick()
             R.id.navPassengerMode -> presenter.onPassengerModeClick()
             else -> Timber.d("No route")
         }
@@ -100,7 +102,7 @@ class CarrierTripsActivity : BaseActivity(), CarrierTripsView {
 
     @CallSuper
     override fun onBackPressed() {
-        if(drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START) else super.onBackPressed()
+        if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START) else super.onBackPressed()
     }
 
     /** @see {@link android.support.v7.app.ActionBarDrawerToggle} */
@@ -132,7 +134,7 @@ class CarrierTripsActivity : BaseActivity(), CarrierTripsView {
         initTabLayout()
     }
 
-    private fun initTabLayout(){
+    private fun initTabLayout() {
         tabsForRecyclerView.addTab(tabsForRecyclerView.newTab().setText(getString(R.string.LNG_TRIPS_TODAY)))
         tabsForRecyclerView.addTab(tabsForRecyclerView.newTab().setText(getString(R.string.LNG_TRIPS_ALL)))
         tabsForRecyclerView.addTab(tabsForRecyclerView.newTab().setText(getString(R.string.LNG_TRIPS_COMPLETED)))
@@ -151,9 +153,9 @@ class CarrierTripsActivity : BaseActivity(), CarrierTripsView {
                 if (isUserScrolling) {
                     val tab = when {
                         itemPosition in startTodayPosition..endTodayPosition -> tabsForRecyclerView.getTabAt(0)
-                        itemPosition > endTodayPosition                      -> tabsForRecyclerView.getTabAt(1)
-                        itemPosition < startTodayPosition                    -> tabsForRecyclerView.getTabAt(2)
-                        else                                                 -> null
+                        itemPosition > endTodayPosition -> tabsForRecyclerView.getTabAt(1)
+                        itemPosition < startTodayPosition -> tabsForRecyclerView.getTabAt(2)
+                        else -> null
                     }
                     tab?.select()
                 }
@@ -162,13 +164,13 @@ class CarrierTripsActivity : BaseActivity(), CarrierTripsView {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 when (newState) {
                     RecyclerView.SCROLL_STATE_DRAGGING -> isUserScrolling = true
-                    RecyclerView.SCROLL_STATE_IDLE     -> isUserScrolling = false
+                    RecyclerView.SCROLL_STATE_IDLE -> isUserScrolling = false
                 }
             }
         })
         tabsForRecyclerView.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(p0: TabLayout.Tab?) {  }
-            override fun onTabUnselected(p0: TabLayout.Tab?) {  }
+            override fun onTabReselected(p0: TabLayout.Tab?) {}
+            override fun onTabUnselected(p0: TabLayout.Tab?) {}
             override fun onTabSelected(tab: TabLayout.Tab) {
                 if (isUserScrolling) return
                 when (tab.position) {
@@ -195,4 +197,6 @@ class CarrierTripsActivity : BaseActivity(), CarrierTripsView {
     override fun showReadMoreDialog() {
         ReadMoreFragment().show(supportFragmentManager, getString(R.string.tag_read_more))
     }
+
+    override fun showOffer(offer: OfferModel) {}
 }

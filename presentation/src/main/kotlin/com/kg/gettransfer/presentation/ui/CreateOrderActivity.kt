@@ -39,16 +39,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.common.BoundTimePickerDialog
+import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
-
-import com.kg.gettransfer.presentation.model.CurrencyModel
-import com.kg.gettransfer.presentation.model.PolylineModel
-import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransportTypeModel
-import com.kg.gettransfer.presentation.model.UserModel
+import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 
@@ -491,4 +487,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     override fun showNotLoggedAlert(withOfferId: Long) =
         Utils.showScreenRedirectingAlert(this, getString(R.string.log_in_requirement_error_title),
                     getString(R.string.log_in_to_see_transfers_and_offers)) { presenter.redirectToLogin(withOfferId) }
+
+    override fun showOffer(offer: OfferModel) {
+    }
 }

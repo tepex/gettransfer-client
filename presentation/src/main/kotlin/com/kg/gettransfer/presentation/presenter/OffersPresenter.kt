@@ -12,7 +12,6 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 
-import com.kg.gettransfer.presentation.mapper.OfferMapper
 import com.kg.gettransfer.presentation.mapper.TransferMapper
 
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -25,8 +24,6 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
-import com.yandex.metrica.YandexMetrica
-
 import org.koin.standalone.inject
 
 import timber.log.Timber
@@ -34,9 +31,7 @@ import timber.log.Timber
 @InjectViewState
 class OffersPresenter : BasePresenter<OffersView>() {
     private val transferInteractor: TransferInteractor by inject()
-    private val offerInteractor: OfferInteractor by inject()
 
-    private val offerMapper: OfferMapper by inject()
     private val transferMapper: TransferMapper by inject()
 
     internal var transferId = 0L
@@ -93,15 +88,16 @@ class OffersPresenter : BasePresenter<OffersView>() {
         }
     }
 
-    /*
-    fun onNewOffer(offer: Offer) {
-        offerInteractor.newOffer(offer)
-        offers = offers.toMutableList().apply { add(offerMapper.toView(offer)) }
+    override fun onNewOffer(offer: Offer): OfferModel {
+        val offerModel = super.onNewOffer(offer)
+        offers = offers.toMutableList().apply { add(offerModel) }
         utils.launchSuspend { processOffers() }
+        return offerModel
     }
-    */
 
-    fun onRequestInfoClicked() { router.navigateTo(Screens.Details(transferId)) }
+    fun onRequestInfoClicked() {
+        router.navigateTo(Screens.Details(transferId))
+    }
 
     fun onSelectOfferClicked(offer: OfferModel, isShowingOfferDetails: Boolean) {
         transfer?.let {
@@ -126,19 +122,20 @@ class OffersPresenter : BasePresenter<OffersView>() {
         viewState.showAlertCancelRequest()
     }
 
-    fun openLoginView() { login("", "") }
+    fun openLoginView() {
+        login("", "")
+    }
 
     fun cancelRequest(isCancel: Boolean) {
-        if(!isCancel) return
+        if (!isCancel) return
         logEvent(Analytics.CANCEL_TRANSFER_BTN)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.cancelTransfer(transferId, "") }
-            if(result.error != null) {
+            if (result.error != null) {
                 Timber.e(result.error!!)
                 viewState.setError(result.error!!)
-            }
-            else onBackCommandClick()
+            } else onBackCommandClick()
             viewState.blockInterface(false)
         }
     }
@@ -148,9 +145,9 @@ class OffersPresenter : BasePresenter<OffersView>() {
         else {
             sortCategory = sortType
             when (sortType) {
-                Sort.YEAR   -> sortHigherToLower = true
+                Sort.YEAR -> sortHigherToLower = true
                 Sort.RATING -> sortHigherToLower = true
-                Sort.PRICE  -> sortHigherToLower = false
+                Sort.PRICE -> sortHigherToLower = false
             }
         }
         processOffers()
@@ -158,8 +155,20 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     private fun processOffers() {
         sortOffers()
+        decreaseCountEvents()
         viewState.setOffers(offers)
         viewState.setSortState(sortCategory, sortHigherToLower)
+    }
+
+    private fun decreaseCountEvents() {
+        var transferIds = systemInteractor.transferIds
+        if (transferIds.isNotEmpty()) {
+            transferIds = transferIds.toMutableList().apply { removeAll { (it == transferId) } }
+            val seenOffers = systemInteractor.transferIds.size - transferIds.size
+            val eventsCount = systemInteractor.eventsCount
+            systemInteractor.eventsCount = eventsCount - seenOffers
+            systemInteractor.transferIds = transferIds
+        }
     }
 
     private fun sortOffers() {

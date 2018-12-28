@@ -27,6 +27,8 @@ import android.widget.TextView
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -40,6 +42,8 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 
 import com.kg.gettransfer.presentation.model.ProfileModel
@@ -53,6 +57,8 @@ import java.util.Date
 import kotlinx.android.synthetic.main.a_b_view.*
 import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.nav_item_requests.view.*
+import kotlinx.android.synthetic.main.notification_offer.*
 import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
@@ -490,6 +496,38 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     override fun showRateInPlayMarket() = redirectToPlayMarket()
 
     override fun cancelReview() = closePopUp()
+
+    override fun showBadge(show: Boolean) {
+        if (show) {
+            tvEventsCount.isVisible = true
+            navRequests.tvEventsCount.isVisible = true
+        } else {
+            tvEventsCount.isVisible = false
+            navRequests.tvEventsCount.isVisible = false
+        }
+    }
+
+    override fun setCountEvents(count: Int) {
+        tvEventsCount.text = count.toString()
+        navRequests.tvEventsCount.text = count.toString()
+    }
+
+    override fun showOffer(offer: OfferModel) {
+        offerLayout.isVisible = true
+        val carName = offer.vehicle.name
+        val carNumber = offer.vehicle.registrationNumber
+        val carColor = offer.vehicle.color
+        val price = offer.price.amount
+        tvCarInfo.text = "$carName $carNumber $carColor $price"
+
+        if (!offer.vehicle.photos.isEmpty()) {
+            Glide.with(this)
+                    .asBitmap()
+                    .load(offer.vehicle.photos.first())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(ivCarPhoto)
+        }
+    }
 
     companion object {
         const val MY_LOCATION_BUTTON_INDEX = 2

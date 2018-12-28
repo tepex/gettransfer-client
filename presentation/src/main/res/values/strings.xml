@@ -203,7 +203,7 @@
     <string name="LNG_TRIP_PICKUP">Confirm pickup</string>
     <string name="LNG_RIDE_CREATE_CARRIER">Become carrier</string>
     <string name="LNG_RIDE_LOGIN_CARRIER">Sign in for сarrier</string>
-    <string name="LNG_NEW_OFFER_MESSAGE">You got new offer on your request.</string>
+    <string name="LNG_NEW_OFFER_MESSAGE">You got new offer on your request</string>
     <string name="LNG_NEW_OFFER_TITLE">New offer</string>
     <string name="LNG_RIDE_SETTINGS_OPTIONAL_CHILD">children</string>
     <string name="LNG_RIDE_SETTINGS_OPTIONAL_PERSON">persons</string>
@@ -419,4 +419,8 @@
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>
     <string name="PUNCTUALITY">fair</string>
+    <string name="offer_channel_name">Offer</string>
+    <string name="offer_channel_description">@string/offer_channel_name</string>
+    <string name="new_offers">New offers</string>
+
 </resources>

@@ -23,6 +23,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.extensions.*
+import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.presenter.SearchAddressPresenter
 import com.kg.gettransfer.presentation.view.SearchAddressView
@@ -183,5 +184,8 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     fun changeFocus() {
         addressField.requestFocus()
         addressField.setSelection(addressField.text.length)
+    }
+
+    override fun showOffer(offer: OfferModel) {
     }
 }

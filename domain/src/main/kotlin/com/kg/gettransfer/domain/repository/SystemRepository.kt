@@ -20,6 +20,8 @@ interface SystemRepository {
     var endpoint: Endpoint
     var addressHistory: List<GTAddress>
     var appEnters: Int
+    var eventsCount : Int
+    var transferIds: List<Long>
 
     suspend fun coldStart(): Result<Account>
     suspend fun putAccount(account: Account): Result<Account>

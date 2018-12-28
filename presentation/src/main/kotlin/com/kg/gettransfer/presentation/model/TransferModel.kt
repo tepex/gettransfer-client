@@ -61,5 +61,6 @@ data class TransferModel(
 /* ================================================== */
 /* ================================================== */
     val statusCategory: String,
-    val timeToTransfer: Int
+    val timeToTransfer: Int,
+    var eventsCount: Int = 0
 )

@@ -18,6 +18,7 @@ open class OfferMapper : Mapper<OfferModel, Offer> {
     override fun toView(type: Offer) =
         OfferModel(
             type.id,
+            type.transferId,
             type.status,
             type.wifi,
             type.refreshments,

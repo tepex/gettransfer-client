@@ -44,6 +44,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.extensions.*
 
@@ -51,6 +52,7 @@ import com.kg.gettransfer.presentation.presenter.BasePresenter
 
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.service.OfferServiceConnection
 
 import com.kg.gettransfer.utilities.LocaleManager
 
@@ -71,6 +73,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     internal val router: Router by inject()
     protected val navigatorHolder: NavigatorHolder by inject()
     protected val localeManager: LocaleManager by inject()
+    private val offerServiceConnection: OfferServiceConnection by inject()
 
     private var rootView: View? = null
     private var rootViewHeight: Int? = null
@@ -162,11 +165,16 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     protected override fun onResume() {
         super.onResume()
         navigatorHolder.setNavigator(navigator)
+        offerServiceConnection.connect(systemInteractor.endpoint, systemInteractor.accessToken) {
+            onNewOffer(it) }
     }
+
+    private fun onNewOffer(offer: Offer) = getPresenter().onNewOffer(offer)
 
     @CallSuper
     protected override fun onPause() {
         navigatorHolder.removeNavigator()
+        offerServiceConnection.disconnect()
         super.onPause()
     }
 

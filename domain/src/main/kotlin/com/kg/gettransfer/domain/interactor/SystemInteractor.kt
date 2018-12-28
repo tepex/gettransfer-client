@@ -106,6 +106,14 @@ class SystemInteractor(
         get() = account.distanceUnit
         set(value) { account.distanceUnit = value }
 
+    var eventsCount: Int
+        get() = systemRepository.eventsCount
+        set(value) {systemRepository.eventsCount = value}
+
+    var transferIds: List<Long>
+        get() = systemRepository.transferIds
+        set(value) { systemRepository.transferIds = value }
+
     suspend fun coldStart() = systemRepository.coldStart()
 
     fun initGeocoder() = geoRepository.initGeocoder(locale)

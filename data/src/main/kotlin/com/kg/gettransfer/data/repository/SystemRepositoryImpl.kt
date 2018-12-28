@@ -92,6 +92,14 @@ class SystemRepositoryImpl(
         get() = preferencesCache.addressHistory.map { addressMapper.fromEntity(it) }
         set(value) { preferencesCache.addressHistory = value.map { addressMapper.toEntity(it) } }
 
+    override var eventsCount: Int
+        get() = preferencesCache.eventsCount
+        set(value) { preferencesCache.eventsCount = value }
+
+    override var transferIds: List<Long>
+        get() = preferencesCache.transferIds
+        set(value) { preferencesCache.transferIds = value }
+
     override suspend fun coldStart(): Result<Account> {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
 

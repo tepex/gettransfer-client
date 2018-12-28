@@ -13,6 +13,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.extensions.*
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
@@ -101,5 +102,8 @@ class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
                 presenter.changePrice(PaymentRequestModel.PRICE_30)
             }
         }
+    }
+
+    override fun showOffer(offer: OfferModel) {
     }
 }

@@ -27,9 +27,8 @@ import org.koin.standalone.inject
 import timber.log.Timber
 
 @InjectViewState
-class PaymentPresenter: BasePresenter<PaymentView>() {
+class PaymentPresenter : BasePresenter<PaymentView>() {
     private val paymentInteractor: PaymentInteractor by inject()
-    private val offerInteractor: OfferInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
     private val mapper: PaymentStatusRequestMapper by inject()
 
@@ -44,12 +43,12 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
             viewState.blockInterface(true)
             val model = PaymentStatusRequestModel(null, orderId, true, success)
             val result = utils.asyncAwait { paymentInteractor.changeStatusPayment(mapper.fromView(model)) }
-            if(result.error != null) {
+            if (result.error != null) {
                 Timber.e(result.error!!)
                 viewState.setError(result.error!!)
                 router.exit()
             } else {
-                if(result.model.success) {
+                if (result.model.success) {
                     router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
                     router.navigateTo(Screens.PaymentSuccess(transferId, offerId))
                     offer = offerInteractor.getOffer(offerId)!!
@@ -74,7 +73,7 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
 
         var price = offer.price.amount
 
-        when(percentage) {
+        when (percentage) {
             OfferModel.FULL_PRICE -> {
                 bundle.putDouble(Analytics.VALUE, price)
                 map[Analytics.VALUE] = price

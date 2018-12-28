@@ -17,13 +17,10 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.extensions.*
-
-import com.kg.gettransfer.presentation.model.CurrencyModel
-import com.kg.gettransfer.presentation.model.DistanceUnitModel
-import com.kg.gettransfer.presentation.model.EndpointModel
-import com.kg.gettransfer.presentation.model.LocaleModel
+import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 
@@ -100,4 +97,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
     }
 
     override fun onBackPressed() { presenter.onBackCommandClick() }
+
+    override fun showOffer(offer: OfferModel) {
+    }
 }

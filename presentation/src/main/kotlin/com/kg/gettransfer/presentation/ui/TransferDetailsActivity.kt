@@ -31,9 +31,16 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.*
-import com.kg.gettransfer.presentation.model.*
+
+import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.PolylineModel
+import com.kg.gettransfer.presentation.model.ProfileModel
+import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
 import com.kg.gettransfer.presentation.view.TransferDetailsView
@@ -408,6 +415,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
                 vehicle_rate.rate_bar.rating     = it
             }
         }
+    }
+
+    override fun showOffer(offer: OfferModel) {
     }
 
     companion object {

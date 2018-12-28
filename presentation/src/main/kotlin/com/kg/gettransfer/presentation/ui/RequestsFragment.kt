@@ -22,6 +22,7 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.adapter.RequestsRVAdapter
+import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.RequestsFragmentPresenter
 
@@ -41,6 +42,8 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
     @ProvidePresenter
     fun createRequestsFragmentPresenter() = RequestsFragmentPresenter()
+
+    private lateinit var rvAdapter: RequestsRVAdapter
 
     companion object {
         @JvmField val CATEGORY = "category"
@@ -67,8 +70,12 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     }
 
     override fun setRequests(transfers: List<TransferModel>) {
+        /*
         rvRequests.adapter = RequestsRVAdapter(transfers) { presenter.openTransferDetails(it.id, it.status) }
         noTransfersText.isVisible = transfers.isEmpty()
+        */
+        rvAdapter = RequestsRVAdapter(transfers) { presenter.openTransferDetails(it.id, it.status) }
+        rvRequests.adapter = rvAdapter
     }
 
     private fun getCategoryRequestsNoTransfersText(category: String): String {
@@ -86,5 +93,14 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}", e)
         Utils.showError(context!!, false, getString(R.string.err_server, e.message))
+    }
+
+    override fun setCountEvents(transferIds: List<Long>) {
+        if (transferIds.isNotEmpty()) {
+            rvAdapter.updateEvents(transferIds)
+        }
+    }
+
+    override fun showOffer(offer: OfferModel) {
     }
 }

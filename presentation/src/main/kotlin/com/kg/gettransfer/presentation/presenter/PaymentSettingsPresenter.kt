@@ -14,7 +14,6 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Offer
 
-import com.kg.gettransfer.presentation.mapper.OfferMapper
 import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
 
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -31,15 +30,9 @@ import timber.log.Timber
 
 @InjectViewState
 class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
-    companion object {
-        @JvmField val PRICE_30 = 0.3
-    }
-
-    private val offerInteractor: OfferInteractor by inject()
     private val paymentInteractor: PaymentInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
 
-    private val offerMapper: OfferMapper by inject()
     private val paymentRequestMapper: PaymentRequestMapper by inject()
 
     private var offer: Offer? = null
@@ -71,7 +64,7 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
         viewState.blockInterface(true)
 
         val result = utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentRequest)) }
-        if(result.error != null) {
+        if (result.error != null) {
             Timber.e(result.error!!)
             viewState.setError(result.error!!)
         } else {
@@ -111,4 +104,8 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
     fun changePrice(price: Int)        { paymentRequest.percentage = price }
     fun changePayment(payment: String) { paymentRequest.gatewayId  = payment }
     fun onAgreementClicked() = router.navigateTo(Screens.LicenceAgree)
+
+    companion object {
+        const val PRICE_30 = 0.3
+    }
 }

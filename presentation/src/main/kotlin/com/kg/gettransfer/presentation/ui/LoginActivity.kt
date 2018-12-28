@@ -11,7 +11,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.extensions.*
+import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.presenter.LoginPresenter
 
@@ -78,4 +80,7 @@ class LoginActivity : BaseActivity(), LoginView {
     }
 
     override fun onBackPressed() { presenter.onBackCommandClick() }
+
+    override fun showOffer(offer: OfferModel) {
+    }
 }

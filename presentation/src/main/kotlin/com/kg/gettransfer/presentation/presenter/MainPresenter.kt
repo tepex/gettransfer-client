@@ -9,22 +9,31 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
-
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterCompleted
-import com.kg.gettransfer.presentation.mapper.*
+
+import com.kg.gettransfer.presentation.mapper.PointMapper
+import com.kg.gettransfer.presentation.mapper.ProfileMapper
+import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
+import com.kg.gettransfer.presentation.mapper.RouteMapper
+import com.kg.gettransfer.presentation.mapper.TransferMapper
+import com.kg.gettransfer.presentation.model.OfferModel
+
 import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.model.RouteModel
+
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.service.OfferServiceConnection
 
 import com.kg.gettransfer.utilities.Analytics
 
@@ -37,7 +46,7 @@ class MainPresenter : BasePresenter<MainView>() {
     private val routeInteractor: RouteInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
-    private val offerInteractor: OfferInteractor by inject()
+    private val offerServiceConnection: OfferServiceConnection by inject()
 
     private val pointMapper: PointMapper by inject()
     private val profileMapper: ProfileMapper by inject()
@@ -66,8 +75,7 @@ class MainPresenter : BasePresenter<MainView>() {
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         systemInteractor.selectedField = FIELD_FROM
         systemInteractor.initGeocoder()
-        if (routeInteractor.from != null) setLastLocation()
-        else utils.launchSuspend { updateCurrentLocationAsync().apply { error?.let { Timber.e(it) } } }
+        if (routeInteractor.from != null) setLastLocation() else updateCurrentLocation()
 
         with(reviewInteractor) {
             if (!isReviewSuggested) showRateForLastTrip()
@@ -87,7 +95,24 @@ class MainPresenter : BasePresenter<MainView>() {
         changeUsedField(systemInteractor.selectedField)
         routeInteractor.from?.address?.let { viewState.setAddressFrom(it) }
         viewState.setTripMode(routeInteractor.hourlyDuration)
+        setCountEvents(systemInteractor.eventsCount)
     }
+
+    private fun setCountEvents(count: Int) {
+        when(count) {
+            0 -> viewState.showBadge(false)
+            else -> {
+                viewState.showBadge(true)
+                viewState.setCountEvents(count)
+            }
+        }
+    }
+
+    override fun onNewOffer(offer: Offer): OfferModel {
+        utils.launchSuspend{ setCountEvents(offerServiceConnection.countEvents) }
+        return super.onNewOffer(offer)
+    }
+
 
     @CallSuper
     override fun systemInitialized() {
@@ -123,8 +148,7 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     fun updateCurrentLocation() = utils.launchSuspend {
-        val result = updateCurrentLocationAsync()
-        result.error?.let { viewState.setError(it) }
+        updateCurrentLocationAsync().error?.let { viewState.setError(it) }
         logEvent(Analytics.MY_PLACE_CLICKED)
     }
 
@@ -423,6 +447,5 @@ class MainPresenter : BasePresenter<MainView>() {
         const val FIELD_TO   = "field_to"
 
         const val MIN_HOURLY          = 2
-
     }
 }
