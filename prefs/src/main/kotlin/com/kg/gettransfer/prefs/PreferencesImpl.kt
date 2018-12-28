@@ -21,17 +21,18 @@ import timber.log.Timber
 class PreferencesImpl(context: Context,
                       override val endpoints: List<EndpointEntity>): PreferencesCache {
     companion object {
-        @JvmField val INVALID_TOKEN    = "invalid_token"
-        @JvmField val ACCESS_TOKEN     = "token"
-        @JvmField val LAST_MODE        = "last_mode"
-        @JvmField val FIRST_LAUNCH     = "first_launch"
-        @JvmField val ONBOARDING       = "onboarding"
-        @JvmField val SELECTED_FIELD   = "selected_field"
-        @JvmField val ENDPOINT         = "endpoint"
-        @JvmField val ADDRESS_HISTORY  = "history"
-        @JvmField val APP_ENTERS_COUNT = "enters_count"
-        @JvmField val EVENTS_COUNT     = "events_count"
-        @JvmField val TRANSFER_IDS     = "transfer_ids"
+        @JvmField val INVALID_TOKEN     = "invalid_token"
+        @JvmField val ACCESS_TOKEN      = "token"
+        @JvmField val LAST_MODE         = "last_mode"
+        @JvmField val CARRIER_TYPE_VIEW = "last_carrier_trips_type_view"
+        @JvmField val FIRST_LAUNCH      = "first_launch"
+        @JvmField val ONBOARDING        = "onboarding"
+        @JvmField val SELECTED_FIELD    = "selected_field"
+        @JvmField val ENDPOINT          = "endpoint"
+        @JvmField val ADDRESS_HISTORY   = "history"
+        @JvmField val APP_ENTERS_COUNT  = "enters_count"
+        @JvmField val EVENTS_COUNT      = "events_count"
+        @JvmField val TRANSFER_IDS      = "transfer_ids"
 
         const val FIRST_ACCESS         = 0
         const val IMMUTABLE            = -1   // user did rate app
@@ -65,6 +66,15 @@ class PreferencesImpl(context: Context,
         set(value) {
             with(configsPrefs.edit()) {
                 putString(LAST_MODE, value)
+                apply()
+            }
+        }
+
+    override var lastCarrierTripsTypeView: String
+        get() = configsPrefs.getString(CARRIER_TYPE_VIEW, "")!!
+        set(value) {
+            with(configsPrefs.edit()){
+                putString(CARRIER_TYPE_VIEW, value)
                 apply()
             }
         }
@@ -164,7 +174,7 @@ class PreferencesImpl(context: Context,
                 apply()
             }
         }
-        
+
     override fun logout() {
         _accessToken = INVALID_TOKEN
         configsPrefs.edit().apply { remove(ACCESS_TOKEN) }.apply()

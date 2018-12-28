@@ -78,7 +78,7 @@
     <color name="sfproTextSemibold">#98b71b</color>
 
     <!--offers_card-->
-    <color name="colorOfferBack">#f6f6f6</color>
+    <color name="colorBackgroundGray">#f6f6f6</color>
     <color name="colorOfferStroke">#dfdfdf</color>
     <color name="colorSortOffersStroke">#cacace</color>
     <color name="colorLayoutsOnImageBack">#60000000</color>

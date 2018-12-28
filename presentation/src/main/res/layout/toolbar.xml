@@ -48,4 +48,33 @@
 
 	</LinearLayout>
 
+	<LinearLayout
+		android:id="@+id/carrierTripsChangingTypeViewButtons"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:orientation="horizontal"
+		android:layout_gravity="end"
+		android:gravity="center_vertical"
+		android:layout_marginEnd="@dimen/toolbar_buttons_margin_end"
+		android:visibility="gone">
+
+		<TextView
+			android:id="@+id/buttonListView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="@dimen/activity_carrier_trips_main_toolbar_list_text_size"
+			android:textColor="@color/colorTextBlack"
+			android:fontFamily="@font/sf_pro_text_regular"
+			android:text="@string/list_carrier_trips_mode"
+			android:visibility="gone"/>
+
+		<ImageView
+			android:id="@+id/buttonCalendarView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:srcCompat="@drawable/ic_calendar"
+			android:visibility="gone"/>
+
+	</LinearLayout>
+
 </android.support.v7.widget.Toolbar>

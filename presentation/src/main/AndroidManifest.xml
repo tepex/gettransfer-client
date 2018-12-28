@@ -102,9 +102,8 @@
             android:name=".presentation.ui.TransferDetailsActivity"
             android:screenOrientation="portrait"
             android:resizeableActivity="false"/>
-        <activity android:name=".presentation.ui.CarrierTripsActivity"
-            android:screenOrientation="portrait"
-            android:resizeableActivity="false"/>
+        <activity android:name=".presentation.ui.CarrierTripsMainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.CarrierTripDetailsActivity"
             android:screenOrientation="portrait"

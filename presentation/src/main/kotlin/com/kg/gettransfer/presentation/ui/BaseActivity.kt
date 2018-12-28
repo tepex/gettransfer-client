@@ -164,14 +164,18 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     abstract fun getPresenter(): BasePresenter<*>
 
-    protected fun setToolbar(toolbar: Toolbar, @StringRes titleId: Int = TOOLBAR_NO_TITLE, hasBackAction: Boolean = true) {
+    protected fun setToolbar(toolbar: Toolbar, @StringRes titleId: Int = TOOLBAR_NO_TITLE, hasBackAction: Boolean = true, firstLetterToUpperCase: Boolean = false) {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(false)
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
-        if (titleId != TOOLBAR_NO_TITLE) toolbar.toolbar_title.setText(titleId)
+        if (titleId != TOOLBAR_NO_TITLE) {
+            val title = getString(titleId)
+            toolbar.toolbar_title.text =
+                if (!firstLetterToUpperCase) title else title.substring(0, 1).toUpperCase().plus(title.substring(1))
+        }
         if (hasBackAction) toolbar.setNavigationOnClickListener { getPresenter().onBackCommandClick() }
     }
 

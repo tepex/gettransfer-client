@@ -435,6 +435,7 @@
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>
     <string name="PUNCTUALITY">fair</string>
+
     <string name="offer_channel_name">Offer</string>
     <string name="offer_channel_description">@string/offer_channel_name</string>
     <string name="new_offers">New offers</string>
@@ -455,4 +456,5 @@
         <item quantity="other">@string/LNG_HOURS</item>
     </plurals>
 
+    <string name="list_carrier_trips_mode"><u>List</u></string> //Need change to text from Crowdin
 </resources>

@@ -20,6 +20,7 @@ open class CarrierTripBaseMapper : Mapper<CarrierTripBaseModel, CarrierTripBase>
             transferId            = type.transferId,
             from                  = type.from.name!!,
             to                    = type.to?.name,
+            dateLocal             = type.dateLocal,
             dateTime              = SystemUtils.formatDateTime(type.dateLocal),
             duration              = type.duration,
             distance              = type.distance ?: Mapper.checkDistance(type.from.point!!, type.to!!.point),

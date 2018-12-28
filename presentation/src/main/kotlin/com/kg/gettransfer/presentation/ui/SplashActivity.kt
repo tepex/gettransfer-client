@@ -100,11 +100,11 @@ class SplashActivity : AppCompatActivity() {
         }
         else {
             startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-            /*when (systemInteractor.lastMode) {
+            when (systemInteractor.lastMode) {
                 Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsActivity::class.java))
                 Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-            }*/
+            }
         }
     }
 

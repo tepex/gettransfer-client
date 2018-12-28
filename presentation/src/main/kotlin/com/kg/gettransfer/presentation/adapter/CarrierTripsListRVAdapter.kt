@@ -12,7 +12,7 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 import com.kg.gettransfer.presentation.model.CarrierTripsRVItemModel
 import com.kg.gettransfer.presentation.model.CarrierTripsRVItemModel.Type
-import com.kg.gettransfer.presentation.presenter.CarrierTripsPresenter
+import com.kg.gettransfer.presentation.presenter.CarrierTripsListFragmentPresenter
 
 import kotlinx.android.extensions.LayoutContainer
 
@@ -22,8 +22,8 @@ import kotlinx.android.synthetic.main.view_carrier_trips_subtitle.view.*
 import kotlinx.android.synthetic.main.view_carrier_trips_title.view.*
 
 class CarrierTripsRVAdapter(
-    private val presenter: CarrierTripsPresenter,
-    private var tripsItems: List<CarrierTripsRVItemModel>
+        private val presenter: CarrierTripsListFragmentPresenter,
+        private var tripsItems: List<CarrierTripsRVItemModel>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemCount() = tripsItems.size
