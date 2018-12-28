@@ -88,7 +88,4 @@ class RequestsActivity: BaseActivity(), RequestsView {
             }
         })
     }
-
-    override fun showOffer(offer: OfferModel) {
-    }
 }

@@ -417,9 +417,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         }
     }
 
-    override fun showOffer(offer: OfferModel) {
-    }
-
     companion object {
         const val TRANSPORT_TYPES_COLUMNS = 2
     }

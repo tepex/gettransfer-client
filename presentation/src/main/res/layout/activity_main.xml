@@ -30,11 +30,6 @@
 				tools:ignore="Overdraw" />
 		</android.support.design.widget.AppBarLayout>-->
 
-		<include
-			android:id="@+id/offerLayout"
-			layout="@layout/notification_offer"
-			android:visibility="gone"/>
-
 		<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">

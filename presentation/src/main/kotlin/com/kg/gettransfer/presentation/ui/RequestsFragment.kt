@@ -100,7 +100,4 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
             rvAdapter.updateEvents(transferIds)
         }
     }
-
-    override fun showOffer(offer: OfferModel) {
-    }
 }

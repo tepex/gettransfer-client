@@ -185,7 +185,4 @@ class SearchActivity : BaseActivity(), SearchView {
     override fun setFocus(isToField: Boolean) {
         if (isToField) searchTo.changeFocus() else searchFrom.changeFocus()
     }
-
-    override fun showOffer(offer: OfferModel) {
-    }
 }

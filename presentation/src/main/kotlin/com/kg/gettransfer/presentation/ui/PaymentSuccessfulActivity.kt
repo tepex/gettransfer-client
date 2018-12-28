@@ -67,9 +67,6 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         dialogView.tvRemainTime.text = getString(R.string.LNG_TRANSFER_WILL_START).plus(": $time")
     }
 
-    override fun showOffer(offer: OfferModel) {
-    }
-
     companion object {
         const val TRANSFER_ID = "transferId"
         const val OFFER_ID = "offerId"

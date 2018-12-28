@@ -109,7 +109,6 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
         offerInteractor.newOffer(offer)
         val offerModel = offerMapper.toView(offer)
         notificationManager.showOfferNotification(offerModel)
-        utils.launchSuspend { viewState.showOffer(offerModel) }
         return offerModel
     }
 

@@ -88,10 +88,6 @@ class NotificationManager(val context: Context) : KoinComponent {
                 .setGroup(OFFER_GROUP)
                 .setGroupSummary(true)
                 .setAutoCancel(true)
-                .setPriority(NotificationManagerCompat.IMPORTANCE_HIGH)
-                .setDefaults(NotificationCompat.DEFAULT_SOUND)
-                .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
-                .setVibrate(longArrayOf(0))
                 .build()
     }
 

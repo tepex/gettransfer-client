@@ -512,22 +512,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         navRequests.tvEventsCount.text = count.toString()
     }
 
-    override fun showOffer(offer: OfferModel) {
-        offerLayout.isVisible = true
-        val carName = offer.vehicle.name
-        val carNumber = offer.vehicle.registrationNumber
-        val carColor = offer.vehicle.color
-        val price = offer.price.amount
-        tvCarInfo.text = "$carName $carNumber $carColor $price"
-
-        if (!offer.vehicle.photos.isEmpty()) {
-            Glide.with(this)
-                    .load(offer.vehicle.photos.first())
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(ivCarPhoto)
-        }
-    }
-
     companion object {
         const val MY_LOCATION_BUTTON_INDEX = 2
         const val COMPASS_BUTTON_INDEX     = 5

@@ -97,7 +97,4 @@ class SettingsActivity : BaseActivity(), SettingsView {
     }
 
     override fun onBackPressed() { presenter.onBackCommandClick() }
-
-    override fun showOffer(offer: OfferModel) {
-    }
 }

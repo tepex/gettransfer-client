@@ -318,7 +318,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
 
     open fun thanksForRate() {}
-    override fun showOffer(offer: OfferModel) {}
 
     protected fun closePopUp() = popupWindowRate.dismiss()
 

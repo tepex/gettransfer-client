@@ -185,7 +185,4 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         addressField.requestFocus()
         addressField.setSelection(addressField.text.length)
     }
-
-    override fun showOffer(offer: OfferModel) {
-    }
 }
