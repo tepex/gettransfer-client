@@ -196,12 +196,13 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
     }
 
     private fun logAverageRate(rate: Double) =
-        analytics.logEvent(Analytics.REVIEW_AVERAGE,
-                createStringBundle(Analytics.REVIEW,
-                rate.toString()),
-                mapOf(Analytics.REVIEW to rate))
+        analytics.logEvent(
+            Analytics.REVIEW_AVERAGE,
+            createStringBundle(Analytics.REVIEW,rate.toString()),
+            mapOf(Analytics.REVIEW to rate)
+        )
 
-    private fun logDetailRate(list: List<ReviewRateModel>, comment: String){
+    private fun logDetailRate(list: List<ReviewRateModel>, comment: String) {
         val map = mutableMapOf<String, String?>()
         val bundle = Bundle()
         list.forEach {
@@ -213,8 +214,11 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
         bundle.putString(Analytics.REVIEW_COMMENT, comment)
         analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_DETAILED, bundle, map)
     }
+
     private fun logReviewRequest(accepted: Boolean) =
-            analytics.logEvent(Analytics.EVENT_APP_REVIEW_REQUESTED,
-                    createStringBundle(analytics.requestResult(accepted), ""),
-                    mapOf(analytics.requestResult(accepted) to ""))
+        analytics.logEvent(
+            Analytics.EVENT_APP_REVIEW_REQUESTED,
+            createStringBundle(analytics.requestResult(accepted), ""),
+            mapOf(analytics.requestResult(accepted) to "")
+        )
 }
