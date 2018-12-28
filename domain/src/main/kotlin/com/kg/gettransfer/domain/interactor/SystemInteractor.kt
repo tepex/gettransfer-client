@@ -70,6 +70,10 @@ class SystemInteractor(
         get() = systemRepository.lastMode
         set(value) { systemRepository.lastMode = value }
 
+    var lastCarrierTripsTypeView: String
+        get() = systemRepository.lastCarrierTripsTypeView
+        set(value) { systemRepository.lastCarrierTripsTypeView = value }
+
     var isFirstLaunch: Boolean
         get() = systemRepository.isFirstLaunch
         set(value) { systemRepository.isFirstLaunch = value }

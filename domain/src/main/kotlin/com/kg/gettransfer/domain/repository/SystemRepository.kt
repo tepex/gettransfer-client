@@ -19,6 +19,7 @@ interface SystemRepository {
     val mobileConfig: MobileConfig
 
     var lastMode: String
+    var lastCarrierTripsTypeView: String
     var isFirstLaunch: Boolean
     var isOnboardingShowed: Boolean
     var selectedField: String

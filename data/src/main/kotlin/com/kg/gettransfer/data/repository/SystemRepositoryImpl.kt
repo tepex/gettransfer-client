@@ -81,6 +81,10 @@ class SystemRepositoryImpl(
         get() = preferencesCache.lastMode
         set(value) { preferencesCache.lastMode = value }
 
+    override var lastCarrierTripsTypeView: String
+        get() = preferencesCache.lastCarrierTripsTypeView
+        set(value) { preferencesCache.lastCarrierTripsTypeView = value }
+
     override var isFirstLaunch: Boolean
         get() = preferencesCache.isFirstLaunch
         set(value) { preferencesCache.isFirstLaunch = value }

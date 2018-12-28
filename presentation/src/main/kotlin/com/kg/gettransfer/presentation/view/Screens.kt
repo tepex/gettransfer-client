@@ -33,6 +33,9 @@ object Screens {
     @JvmField val REG_CARRIER = "registration_carrier"
     @JvmField val PASSENGER_MODE = "passenger_mode"
 
+    @JvmField val CARRIER_TRIPS_TYPE_VIEW_CALENDAR = "carrier_trips_type_calendar"
+    @JvmField val CARRIER_TRIPS_TYPE_VIEW_LIST     = "carrier_trips_type_list"
+
     private const val EMAIL_DATA = "mailto:"
     private const val DIAL_SCHEME = "tel"
     private const val NEW_LINE = "\n"
@@ -97,13 +100,13 @@ object Screens {
 
     data class ChangeMode(val mode: String) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = when (mode) {
-            CARRIER_MODE -> Intent(context, WebPageActivity()::class.java).apply {
+            /*CARRIER_MODE -> Intent(context, WebPageActivity()::class.java).apply {
                 putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_CARRIER)
-            }
-            /*CARRIER_MODE -> Intent(context, CarrierTripsActivity()::class.java).apply {
+            }*/
+            CARRIER_MODE -> Intent(context, CarrierTripsMainActivity()::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            }*/
+            }
             REG_CARRIER -> Intent(context, WebPageActivity()::class.java).apply {
                 putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_REG_CARRIER)
             }

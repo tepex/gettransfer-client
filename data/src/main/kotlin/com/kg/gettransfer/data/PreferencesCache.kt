@@ -7,6 +7,7 @@ import com.kg.gettransfer.data.model.OfferEntity
 interface PreferencesCache {
     var accessToken: String
     var lastMode: String
+    var lastCarrierTripsTypeView: String
     var isFirstLaunch: Boolean
     var isOnboardingShowed: Boolean
     var endpoint: EndpointEntity

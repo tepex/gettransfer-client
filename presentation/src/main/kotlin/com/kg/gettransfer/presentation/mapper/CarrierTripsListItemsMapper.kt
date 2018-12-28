@@ -17,7 +17,7 @@ import java.util.Date
 import org.koin.standalone.get
 import org.koin.standalone.KoinComponent
 
-open class CarrierTripsRVItemsListMapper : KoinComponent {
+open class CarrierTripsListItemsMapper: KoinComponent {
     private val carrierTripBaseMapper = get<CarrierTripBaseMapper>()
 
     fun toRecyclerView(type: List<CarrierTripBase>): CarrierTripsRVItemsListModel {
@@ -35,7 +35,7 @@ open class CarrierTripsRVItemsListMapper : KoinComponent {
             var itemDate = trip.dateLocal
             isToday = DateUtils.isToday(itemDate.time)
 
-            if (isToday) startTodayPosition = rvItemsList.size
+            if(startTodayPosition == null && isToday) startTodayPosition = rvItemsList.size
             if (startTodayPosition == null && dateNow.before(itemDate)) { // if today there are no trips
                 startTodayPosition = rvItemsList.size
                 isToday = true
