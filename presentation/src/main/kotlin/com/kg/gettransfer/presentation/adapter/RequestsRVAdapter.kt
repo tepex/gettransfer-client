@@ -30,9 +30,7 @@ class RequestsRVAdapter(
 
     fun updateEvents(transferIds: List<Long>) {
         transfers.forEach { transfer ->
-            run {
-                transfer.eventsCount = transferIds.filter { transfer.id == it }.size
-            }
+            transfer.eventsCount = transferIds.filter { transfer.id == it }.size
         }
         notifyDataSetChanged()
     }

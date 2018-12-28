@@ -72,6 +72,10 @@ class NotificationManager(val context: Context) : KoinComponent {
                 .setAutoCancel(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setGroup(OFFER_GROUP)
+                .setPriority(NotificationManagerCompat.IMPORTANCE_HIGH)
+                .setDefaults(NotificationCompat.DEFAULT_SOUND)
+                .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
+                .setVibrate(longArrayOf(0))
                 .build()
     }
 
@@ -84,6 +88,10 @@ class NotificationManager(val context: Context) : KoinComponent {
                 .setGroup(OFFER_GROUP)
                 .setGroupSummary(true)
                 .setAutoCancel(true)
+                .setPriority(NotificationManagerCompat.IMPORTANCE_HIGH)
+                .setDefaults(NotificationCompat.DEFAULT_SOUND)
+                .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
+                .setVibrate(longArrayOf(0))
                 .build()
     }
 
@@ -99,9 +107,11 @@ class NotificationManager(val context: Context) : KoinComponent {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = context.getString(R.string.offer_channel_name)
             val descriptionText = context.getString(R.string.offer_channel_description)
-            val importance = android.app.NotificationManager.IMPORTANCE_DEFAULT
+            val importance = android.app.NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(OFFER_CHANEL_ID, name, importance).apply {
                 description = descriptionText
+                setShowBadge(true)
+                lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
             }
 
             val notificationManager: android.app.NotificationManager =

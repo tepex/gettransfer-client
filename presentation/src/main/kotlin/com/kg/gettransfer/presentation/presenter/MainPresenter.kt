@@ -104,7 +104,7 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     override fun onNewOffer(offer: Offer): OfferModel {
-        utils.launchSuspend{ setCountEvents(offerServiceConnection.countEvents) }
+        utils.launchSuspend{ setCountEvents(systemInteractor.eventsCount) }
         return super.onNewOffer(offer)
     }
 

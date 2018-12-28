@@ -522,7 +522,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
         if (!offer.vehicle.photos.isEmpty()) {
             Glide.with(this)
-                    .asBitmap()
                     .load(offer.vehicle.photos.first())
                     .apply(RequestOptions.circleCropTransform())
                     .into(ivCarPhoto)

@@ -43,8 +43,6 @@ class OfferServiceConnection : SystemListener, KoinComponent {
     private val systemInteractor: SystemInteractor by inject()
     private val offerMapper: OfferMapper by inject()
 
-    var countEvents: Int = 0
-
     fun connect(endpoint: Endpoint, accessToken: String, handler: OfferModelHandler) {
         this.handler = handler
         systemInteractor.addListener(this)
@@ -145,7 +143,6 @@ class OfferServiceConnection : SystemListener, KoinComponent {
     private fun increaseEventsCounter(transferId: Long) {
         var count = systemInteractor.eventsCount
         systemInteractor.eventsCount = ++count
-        countEvents = count
 
         var transferIds = systemInteractor.transferIds
         transferIds = transferIds.toMutableList().apply { add(transferId) }
