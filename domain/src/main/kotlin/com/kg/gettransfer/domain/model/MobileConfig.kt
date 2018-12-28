@@ -8,8 +8,6 @@ data class MobileConfig(
 ) {
 
     companion object {
-        val LAST_KNOWN_CONFIGS = MobileConfig(5, 120, "terms_of_use")
-
         const val FROM_REMOTE = true
     }
 }

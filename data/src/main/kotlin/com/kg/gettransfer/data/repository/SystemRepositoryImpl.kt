@@ -8,7 +8,13 @@ import com.kg.gettransfer.data.SystemDataStore
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.SystemDataStoreCache
 import com.kg.gettransfer.data.ds.SystemDataStoreRemote
-import com.kg.gettransfer.data.mapper.*
+
+import com.kg.gettransfer.data.mapper.AccountMapper
+import com.kg.gettransfer.data.mapper.AddressMapper
+import com.kg.gettransfer.data.mapper.ConfigsMapper
+import com.kg.gettransfer.data.mapper.EndpointMapper
+import com.kg.gettransfer.data.mapper.ExceptionMapper
+import com.kg.gettransfer.data.mapper.MobileConfigMapper
 
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
@@ -17,8 +23,8 @@ import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.SystemListener
-import com.kg.gettransfer.domain.model.*
 
+import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
@@ -51,9 +57,8 @@ class SystemRepositoryImpl(
         private set
     override var account = NO_ACCOUNT
         private set
-    override var mobileConfig = MobileConfig.LAST_KNOWN_CONFIGS
+    override var mobileConfig = MOBILE_CONFIGS_DEFAULT
         private set
-
 
     override var lastMode: String
         get() = preferencesCache.lastMode
@@ -90,23 +95,25 @@ class SystemRepositoryImpl(
     override suspend fun coldStart(): Result<Account> {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
 
-        if(configs === CONFIGS_DEFAULT) {
+        if (configs === CONFIGS_DEFAULT) {
             val result: ResultEntity<ConfigsEntity?> = retrieveEntity { fromRemote ->
                 factory.retrieveDataStore(fromRemote).getConfigs() }
             result.entity?.let {
                 /* Save to cache only fresh data from remote */
-                if(result.error == null) factory.retrieveCacheDataStore().setConfigs(it)
+                if (result.error == null) factory.retrieveCacheDataStore().setConfigs(it)
                 configs = configsMapper.fromEntity(it)
                 accountMapper.configs = configs
             }
             /* No chance to go further */
-            if(result.error != null) return Result(account, ExceptionMapper.map(result.error))
+            if (result.error != null) return Result(account, ExceptionMapper.map(result.error))
         }
 
-        if (mobileConfig === MobileConfig.LAST_KNOWN_CONFIGS) {
-            retrieveEntity { factory.retrieveRemoteDataStore().getMobileConfig() }.let {
-                it.entity?.let { c -> mobileConfig = mobileConfMapper.fromEntity(c) }
+        if (mobileConfig === MOBILE_CONFIGS_DEFAULT) {
+            val result: Result<MobileConfig> = retrieveRemoteModel(mobileConfMapper, MOBILE_CONFIGS_DEFAULT) {
+                factory.retrieveRemoteDataStore().getMobileConfig()
             }
+            mobileConfig = result.model
+            if (result.error != null) return Result(account, result.error)
         }
 
         var error: ApiException? = null
@@ -191,6 +198,11 @@ class SystemRepositoryImpl(
             distanceUnit = DistanceUnit.km,
             groups       = emptyList<String>(),
             carrierId    = null
+        )
+        private val MOBILE_CONFIGS_DEFAULT = MobileConfig(
+            pushShowDelay       = 5,
+            orderMinimumMinutes = 120,
+            termsUrl            = "terms_of_use"
         )
     }
 }

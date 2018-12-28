@@ -58,7 +58,6 @@ class ApiCore : KoinComponent {
 
             val builder = request.newBuilder().url(url)
             if (url.encodedPath() != Api.API_ACCESS_TOKEN) {
-                log.debug("add header access token: ${preferences.accessToken}")
                 builder.addHeader(Api.HEADER_TOKEN, preferences.accessToken)
             }
             try {
