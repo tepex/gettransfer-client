@@ -13,6 +13,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.adapter.CarrierTripsCalendarRVAdapter
 import com.kg.gettransfer.presentation.adapter.CarrierTripsCalendarMonthPagerAdapter
 import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
@@ -82,6 +83,7 @@ class CarrierTripsCalendarFragment : MvpAppCompatFragment(), CarrierTripsCalenda
 
     override fun setItemsInRVDailyTrips(items: List<CarrierTripBaseModel>, selectedDate: String) {
         rvCarrierTrips.adapter = CarrierTripsCalendarRVAdapter(presenter, items)
+        textNoTrips.isVisible = items.isEmpty()
         selectDate(selectedDate)
     }
 
