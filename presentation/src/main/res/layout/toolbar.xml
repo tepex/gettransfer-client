@@ -65,7 +65,7 @@
 			android:textSize="@dimen/activity_carrier_trips_main_toolbar_list_text_size"
 			android:textColor="@color/colorTextBlack"
 			android:fontFamily="@font/sf_pro_text_regular"
-			android:text="@string/list_carrier_trips_mode"
+			android:text="@string/LNG_LIST"
 			android:visibility="gone"/>
 
 		<ImageView
