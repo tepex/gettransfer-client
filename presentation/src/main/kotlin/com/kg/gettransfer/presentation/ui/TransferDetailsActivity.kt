@@ -375,7 +375,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     override fun askRateInPlayMarket() {
         view_rate_ride.isGone = true
         showPopUpWindow(R.layout.view_rate_in_store, transferDetailsParent).apply {
-            tv_reject_store.setOnClickListener { closePopUp() }
+            tv_reject_store.setOnClickListener { closePopUp(); presenter.onRateInStoreRejected() }
             tv_agree_store.setOnClickListener { presenter.onRateInStore() }
         }
 

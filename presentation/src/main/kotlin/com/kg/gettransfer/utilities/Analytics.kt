@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.kg.gettransfer.domain.model.ReviewRate
 import com.yandex.metrica.YandexMetrica
 import java.math.BigDecimal
 import java.util.*
@@ -17,20 +18,21 @@ class Analytics(private val firebase: FirebaseAnalytics,
         @JvmField val EVENT_ADD_TO_CART = "add_to_cart"
         @JvmField val EVENT_SELECT_OFFER = "select_offer"
         @JvmField val EVENT_MAKE_PAYMENT = "make_payment"
-        @JvmField val EVENT_MENU = "menu"
-        @JvmField val EVENT_MAIN = "main"
-        @JvmField val EVENT_BUTTONS = "buttons"
-        @JvmField val EVENT_SETTINGS = "settings"
-        @JvmField val EVENT_ONBOARDING = "onboarding"
-        @JvmField val EVENT_TRANSFERS   = "transfers"
-        @JvmField val EVENT_OFFERS = "offers"
-        @JvmField val EVENT_TRANSFER_SETTINGS = "transfer_settings"
-        @JvmField val EVENT_BEGIN_CHECKOUT = "begin_checkout"
+        @JvmField val EVENT_MENU         = "menu"
+        @JvmField val EVENT_MAIN         = "main"
+        @JvmField val EVENT_BUTTONS      = "buttons"
+        @JvmField val EVENT_SETTINGS     = "settings"
+        @JvmField val EVENT_ONBOARDING   = "onboarding"
+        @JvmField val EVENT_TRANSFERS    = "transfers"
+        @JvmField val EVENT_OFFERS       = "offers"
+        @JvmField val EVENT_TRANSFER_SETTINGS  = "transfer_settings"
+        @JvmField val EVENT_BEGIN_CHECKOUT     = "begin_checkout"
         @JvmField val EVENT_ECOMMERCE_PURCHASE = "ecommerce_purchase"
-        @JvmField val EVENT_GET_OFFER = "get_offer"
-        @JvmField val PASSWORD_RESTORE = "password_restore"
-        @JvmField val EVENT_TRANSFER_REVIEW = "transfer_review"
+        @JvmField val EVENT_GET_OFFER          = "get_offer"
+        @JvmField val PASSWORD_RESTORE         = "password_restore"
+        @JvmField val EVENT_TRANSFER_REVIEW    = "transfer_review"
         @JvmField val EVENT_TRANSFER_REVIEW_DETAILED = "transfer_review_detailed"
+        @JvmField val EVENT_APP_REVIEW_REQUESTED     = "app_review_requested"
 
         @JvmField val STATUS = "status"
         @JvmField val PARAM_KEY_NAME = "name"
@@ -101,6 +103,10 @@ class Analytics(private val firebase: FirebaseAnalytics,
         @JvmField val CURRENCY = "currency"
 
         @JvmField val REVIEW = "review"
+        @JvmField val REVIEW_AVERAGE = "transfer_review"
+        @JvmField val REVIEW_COMMENT = "comment"
+        @JvmField val REVIEW_APP_REJECTED = "rejected"
+        @JvmField val REVIEW_APP_ACCEPTED = "accepted"
 
         @JvmField val PUNCTUALITY = "punctuality"
         @JvmField val DRIVER = "driver"
@@ -144,5 +150,14 @@ class Analytics(private val firebase: FirebaseAnalytics,
         logEventToFirebase(event, bundle)
         facebook.logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT, price, bundle)
         logEventToYandex(event, map)
+    }
+
+    fun requestResult(positive: Boolean) =
+            if (positive) REVIEW_APP_ACCEPTED else REVIEW_APP_REJECTED
+
+    fun reviewDetailKey(value: String) = when (value) {
+        ReviewRate.RateType.PUNCTUALITY.type -> "punctuality"
+        ReviewRate.RateType.VEHICLE.type     -> "vehicle"
+        else                                 -> "driver"
     }
 }

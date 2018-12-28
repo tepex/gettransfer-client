@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.os.Bundle
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
@@ -158,6 +159,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
         if (rating.toInt() == ReviewInteractor.MAX_RATE) {
             with(reviewInteractor) {
                 utils.launchSuspend { sendTopRate() }
+                logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
                 if (shouldAskRateInMarket) viewState.askRateInPlayMarket()
                 else viewState.thanksForRate()
             }
@@ -168,14 +170,19 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
         val result = utils.asyncAwait {
             reviewInteractor.sendRates(list.map { reviewRateMapper.fromView(it) }, feedBackComment)
         }
+        logAverageRate(list.map { it.rateValue }.average())
+        logDetailRate(list, feedBackComment)
         if (result.error != null) { /* some error for analytics */ }
         viewState.thanksForRate()
     }
 
     fun onRateInStore() {
+        logReviewRequest(true)
         systemInteractor.appEntersForMarketRate = ReviewInteractor.APP_RATED_IN_MARKET
         viewState.showRateInPlayMarket()
     }
+
+    fun onRateInStoreRejected() = logReviewRequest(false)
 
     fun onReviewCanceled() {
         viewState.closeRateWindow()
@@ -187,4 +194,27 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
         map[key] = value
         analytics.logEvent(Analytics.EVENT_GET_OFFER, createStringBundle(key, value), map)
     }
+
+    private fun logAverageRate(rate: Double) =
+        analytics.logEvent(Analytics.REVIEW_AVERAGE,
+                createStringBundle(Analytics.REVIEW,
+                rate.toString()),
+                mapOf(Analytics.REVIEW to rate))
+
+    private fun logDetailRate(list: List<ReviewRateModel>, comment: String){
+        val map = mutableMapOf<String, String?>()
+        val bundle = Bundle()
+        list.forEach {
+            val key = analytics.reviewDetailKey(it.rateType.type)
+            bundle.putInt(key, it.rateValue)
+            map[key] = it.rateValue.toString()
+        }
+        map[Analytics.REVIEW_COMMENT] = comment
+        bundle.putString(Analytics.REVIEW_COMMENT, comment)
+        analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_DETAILED, bundle, map)
+    }
+    private fun logReviewRequest(accepted: Boolean) =
+            analytics.logEvent(Analytics.EVENT_APP_REVIEW_REQUESTED,
+                    createStringBundle(analytics.requestResult(accepted), ""),
+                    mapOf(analytics.requestResult(accepted) to ""))
 }

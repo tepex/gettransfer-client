@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.os.Bundle
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
@@ -333,6 +334,7 @@ class MainPresenter : BasePresenter<MainView>() {
 
     fun onRateClicked(rate: Float) {
         if (rate.toInt() == ReviewInteractor.MAX_RATE) {
+            logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
             reviewInteractor.apply {
                 utils.launchSuspend { sendTopRate() }
                 if (shouldAskRateInMarket) viewState.askRateInPlayMarket() else viewState.thanksForRate()
@@ -344,14 +346,19 @@ class MainPresenter : BasePresenter<MainView>() {
         val result = utils.asyncAwait {
             reviewInteractor.sendRates(list.map { reviewRateMapper.fromView(it) }, comment)
         }
+        logAverageRate(list.map { it.rateValue }.average())
+        logDetailRate(list, comment)
         if (result.error != null) { /* some error for analytics */ }
         viewState.thanksForRate()
     }
 
     fun onRateInStore() {
+        logReviewRequest(true)
         systemInteractor.appEntersForMarketRate = ReviewInteractor.APP_RATED_IN_MARKET
         viewState.showRateInPlayMarket()
     }
+
+    fun onRateInStoreRejected() = logReviewRequest(false)
 
     fun onTransferDetailsClick(transferId: Long) = router.navigateTo(Screens.Details(transferId))
 
@@ -383,6 +390,29 @@ class MainPresenter : BasePresenter<MainView>() {
             SystemUtils.formatDateTime(transferMapper.toView(transfer).dateTime)
         )
     }
+
+    private fun logAverageRate(rate: Double) =
+            analytics.logEvent(Analytics.REVIEW_AVERAGE,
+                    createStringBundle(Analytics.REVIEW,
+                            rate.toString()),
+                    mapOf(Analytics.REVIEW to rate))
+
+    private fun logDetailRate(list: List<ReviewRateModel>, comment: String){
+        val map = mutableMapOf<String, String?>()
+        val bundle = Bundle()
+        list.forEach {
+            val key = analytics.reviewDetailKey(it.rateType.type)
+            bundle.putInt(key, it.rateValue)
+            map[key] = it.rateValue.toString()
+        }
+        map[Analytics.REVIEW_COMMENT] = comment
+        bundle.putString(Analytics.REVIEW_COMMENT, comment)
+        analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_DETAILED, bundle, map)
+    }
+    private fun logReviewRequest(accepted: Boolean) =
+            analytics.logEvent(Analytics.EVENT_APP_REVIEW_REQUESTED,
+                    createStringBundle(analytics.requestResult(accepted), ""),
+                    mapOf(analytics.requestResult(accepted) to ""))
 
     companion object {
         const val FIELD_FROM = "field_from"
