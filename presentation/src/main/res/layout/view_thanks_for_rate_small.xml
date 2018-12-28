@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/activity_transfer_details_title_height"
         android:background="@color/color_transfer_details_background_gray"
-        android:text="Rate your transfer"
+        android:text="@string/LNG_RATE_TRANSFER"
         android:textAllCaps="true"
         android:textSize="@dimen/activity_transfer_details_text_size_13sp"
         android:fontFamily="@font/sf_pro_text_semibold"
@@ -41,6 +41,6 @@
         android:textColor="@color/colorTextBlack"
         android:fontFamily="@font/sf_pro_text_semibold"
         android:textSize="17sp"
-        android:text="Спасибо за оцнку!"/>
+        android:text="@string/LNG_PAYMENT_THANK_RATING"/>
 
 </LinearLayout>

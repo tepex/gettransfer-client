@@ -104,7 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:gravity="top"
-            android:inputType="text"
+            android:inputType="textMultiLine"
             android:background="@null"
             android:padding="6dp"
             android:hint="@string/LNG_PAYMENT_ADD_COMMENT_YOUR_TRANSFER" />

@@ -288,7 +288,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
             setOnDismissListener { clearDim(window.decorView.rootView as  ViewGroup)
                 mDisMissAction()
             }
-            softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+            softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
             inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
 
         }
