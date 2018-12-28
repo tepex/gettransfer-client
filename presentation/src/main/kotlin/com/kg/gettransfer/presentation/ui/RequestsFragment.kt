@@ -19,6 +19,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.adapter.RequestsRVAdapter
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -61,11 +62,19 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        noTransfersText.text = getCategoryRequestsNoTransfersText(presenter.categoryName)
         rvRequests.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
     override fun setRequests(transfers: List<TransferModel>) {
         rvRequests.adapter = RequestsRVAdapter(transfers) { presenter.openTransferDetails(it.id, it.status) }
+        noTransfersText.isVisible = transfers.isEmpty()
+    }
+
+    private fun getCategoryRequestsNoTransfersText(category: String): String {
+        val nameRes = R.string::class.members.find( { it.name == "LNG_TRIPS_EMPTY_${category.toUpperCase()}" } )
+        val stringRes: Int? = (nameRes?.call() as Int?)
+        return stringRes?.let { getString(stringRes) } ?: ""
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) =

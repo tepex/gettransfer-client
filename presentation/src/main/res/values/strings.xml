@@ -412,6 +412,9 @@
     <string name="LNG_EMAIL">Email</string>
     <string name="LNG_PHONE">Phone</string>
     <string name="LNG_TRIP_ON_MY_WAY">On my way</string>
+    <string name="LNG_TRIPS_EMPTY_ACTIVE">you have no active transfers</string>
+    <string name="LNG_TRIPS_EMPTY_ALL">you have no transfers</string>
+    <string name="LNG_TRIPS_EMPTY_COMPLETED">you have no completed transfers</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>
