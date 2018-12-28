@@ -12,7 +12,7 @@
         android:id="@+id/textNoTripsToday"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:textColor="@color/color_driver_mode_text_gray"
+        android:textColor="@color/colorTextBlack"
         android:textSize="14sp"
         android:fontFamily="@font/sf_pro_text_semibold"
         android:textAllCaps="true"
