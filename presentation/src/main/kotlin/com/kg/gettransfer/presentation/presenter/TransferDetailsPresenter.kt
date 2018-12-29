@@ -219,9 +219,11 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
         )
 
     fun logTransferReviewRequested() =
-            analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED,
-                    createStringBundle("",""),
-                    mapOf())
+        analytics.logEvent(
+            Analytics.EVENT_TRANSFER_REVIEW_REQUESTED,
+            createStringBundle("", ""),
+            mapOf()
+        )
 
     companion object {
         const val FIELD_EMAIL = "field_email"

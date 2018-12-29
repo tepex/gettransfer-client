@@ -318,11 +318,10 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     private fun checkReview() =
-        with(reviewInteractor){
+        with(reviewInteractor) {
             if (!isReviewSuggested) showRateForLastTrip()
-            else if (shouldAskRateInMarket)
-                Handler().postDelayed( { viewState.askRateInPlayMarket() },
-                        ONE_SEC_DELAY) }
+            else if (shouldAskRateInMarket) Handler().postDelayed({ viewState.askRateInPlayMarket() }, ONE_SEC_DELAY)
+        }
 
     private fun getLastTransfer(transfers: List<Transfer>) =
         transfers.filter { it.status.checkOffers }
