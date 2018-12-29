@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.ui.custom
 import com.kg.gettransfer.R
 import android.content.Context
 import android.support.constraint.ConstraintLayout
+import android.support.v4.content.ContextCompat
 import android.text.InputType
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -23,7 +24,8 @@ class CreateOrderField @JvmOverloads constructor(
                 field_input.hint        = ta.getString(R.styleable.CreateOrderField_hint)
                 field_input.isFocusable = ta.getBoolean(R.styleable.CreateOrderField_isFocusable, true)
                 field_input.inputType   = ta.getInteger(R.styleable.CreateOrderField_inputType, InputType.TYPE_CLASS_TEXT)
-                field_icon.setImageDrawable(ta.getDrawable(R.styleable.CreateOrderField_icon_img))
+                val drawableResId = ta.getResourceId(R.styleable.CreateOrderField_icon_img, -1)
+                field_icon.setImageDrawable(ContextCompat.getDrawable(context, drawableResId))
                 ta.recycle()
             }
         }

@@ -37,6 +37,7 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.common.BoundDatePickerDialog
 
 import com.kg.gettransfer.common.BoundTimePickerDialog
 import com.kg.gettransfer.domain.model.Offer
@@ -243,7 +244,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     private fun showDatePickerDialog() {
         val currentDate = presenter.currentDate
         calendar.time = presenter.date
-        val datePickerDialog = DatePickerDialog(this, { _, year, monthOfYear, dayOfMonth ->
+
+        val boundDatePickerDialog = BoundDatePickerDialog(this, DatePickerDialog.OnDateSetListener{ _, year, monthOfYear, dayOfMonth ->
             calendar.set(year, monthOfYear, dayOfMonth)
             presenter.date = calendar.time
 
@@ -262,8 +264,13 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
 
-        datePickerDialog.datePicker.minDate = currentDate.timeInMillis
-        datePickerDialog.show()
+        if(Build.VERSION.SDK_INT < 21) {
+            boundDatePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
+            boundDatePickerDialog.setMin(currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DAY_OF_MONTH))
+        } else {
+            boundDatePickerDialog.datePicker.minDate = currentDate.timeInMillis
+        }
+        boundDatePickerDialog.show()
     }
 
     private fun showTimePickerDialog(minHour: Int, minMinute: Int, setHour: Int, setMinute: Int) {

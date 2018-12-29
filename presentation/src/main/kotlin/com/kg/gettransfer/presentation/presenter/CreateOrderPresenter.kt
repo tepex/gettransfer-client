@@ -87,9 +87,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private var comment: String? = null
 
     override fun onFirstViewAttach() {
+        futureHour = systemInteractor.mobileConfigs.orderMinimumMinutes / 60
         currentDate = getCurrentDatePlusMinimumHours()
         date = currentDate.time
-        futureHour = systemInteractor.mobileConfigs.orderMinimumMinutes / 60
     }
 
     private fun getCurrentDatePlusMinimumHours(): Calendar {
