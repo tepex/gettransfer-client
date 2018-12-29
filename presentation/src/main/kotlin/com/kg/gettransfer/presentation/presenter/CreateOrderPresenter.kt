@@ -391,15 +391,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     private fun logEventAddToCart(value: String) {
         val bundle = Bundle()
+        val fbBundle = Bundle()
         val map = mutableMapOf<String, Any?>()
-
-        if (cost != null) {
-            bundle.putString(Analytics.VALUE, cost.toString())
-            map[Analytics.VALUE] = cost.toString()
-
-            bundle.putString(Analytics.CURRENCY, currencies[selectedCurrency].name)
-            map[Analytics.CURRENCY] = currencies[selectedCurrency].name
-        }
 
         bundle.putInt(Analytics.NUMBER_OF_PASSENGERS, passengers)
         map[Analytics.NUMBER_OF_PASSENGERS] = passengers
@@ -412,8 +405,19 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         bundle.putString(Analytics.TRAVEL_CLASS, transportTypes?.filter { it.checked }?.joinToString())
         map[Analytics.TRAVEL_CLASS] = transportTypes?.filter { it.checked }?.joinToString()
 
+        fbBundle.putAll(bundle)
+
+        if (cost != null) {
+            bundle.putString(Analytics.VALUE, cost.toString())
+            map[Analytics.VALUE] = cost.toString()
+
+            bundle.putString(Analytics.CURRENCY, currencies[selectedCurrency].name)
+            fbBundle.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, currencies[selectedCurrency].name)
+            map[Analytics.CURRENCY] = currencies[selectedCurrency].name
+        }
+
         analytics.logEventToFirebase(value, bundle)
-        analytics.logEventToFacebook(AppEventsConstants.EVENT_NAME_ADDED_TO_CART, bundle)
+        analytics.logEventToFacebook(AppEventsConstants.EVENT_NAME_ADDED_TO_CART, fbBundle)
         analytics.logEventToYandex(value, map)
     }
 

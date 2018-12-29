@@ -4,7 +4,6 @@ import android.os.Bundle
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
@@ -66,7 +65,14 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
 
     private fun logEventEcommercePurchase() {
         val bundle = Bundle()
+        val fbBundle = Bundle()
         val map = mutableMapOf<String, Any?>()
+
+        bundle.putString(Analytics.TRANSACTION_ID, transferId.toString())
+        map[Analytics.TRANSACTION_ID] = transferId.toString()
+        bundle.putString(Analytics.PROMOCODE, transferInteractor.transferNew?.promoCode)
+        map[Analytics.PROMOCODE] = transferInteractor.transferNew?.promoCode
+        fbBundle.putAll(bundle)
 
         map[Analytics.CURRENCY] = systemInteractor.currency.currencyCode
         bundle.putString(Analytics.CURRENCY, systemInteractor.currency.currencyCode)
@@ -85,13 +91,8 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
             }
         }
 
-        bundle.putString(Analytics.TRANSACTION_ID, transferId.toString())
-        map[Analytics.TRANSACTION_ID] = transferId.toString()
-        bundle.putString(Analytics.PROMOCODE, transferInteractor.transferNew?.promoCode)
-        map[Analytics.PROMOCODE] = transferInteractor.transferNew?.promoCode
-
-        analytics.logEventEcommercePurchase(Analytics.EVENT_ECOMMERCE_PURCHASE, bundle, map,
-                price.toBigDecimal(), systemInteractor.currency)
+        analytics.logEventEcommerce(Analytics.EVENT_ECOMMERCE_PURCHASE, bundle, map)
+        analytics.logEventEcommercePurchaseFB(fbBundle, price.toBigDecimal(), systemInteractor.currency)
     }
 
     fun logEvent(value: String) {

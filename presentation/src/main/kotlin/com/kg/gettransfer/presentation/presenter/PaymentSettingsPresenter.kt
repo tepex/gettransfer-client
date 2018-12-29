@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
+import com.facebook.appevents.AppEventsConstants
 
 import com.kg.gettransfer.domain.ApiException
 
@@ -76,9 +77,17 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
 
     private fun logEventBeginCheckout() {
         val bundle = Bundle()
+        val fbBundle = Bundle()
         val map = mutableMapOf<String, Any?>()
 
+        bundle.putInt(Analytics.SHARE, paymentRequest.percentage)
+        map[Analytics.SHARE] = paymentRequest.percentage
+        bundle.putString(Analytics.PROMOCODE, transferInteractor.transferNew?.promoCode)
+        map[Analytics.PROMOCODE] = transferInteractor.transferNew?.promoCode
+        fbBundle.putAll(bundle)
+
         bundle.putString(Analytics.CURRENCY, systemInteractor.currency.currencyCode)
+        fbBundle.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, systemInteractor.currency.currencyCode)
         map[Analytics.CURRENCY] = systemInteractor.currency.currencyCode
 
         var price = offer!!.price.amount
@@ -93,12 +102,9 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
                 map[Analytics.VALUE] = price
             }
         }
-        bundle.putInt(Analytics.SHARE, paymentRequest.percentage)
-        map[Analytics.SHARE] = paymentRequest.percentage
-        bundle.putString(Analytics.PROMOCODE, transferInteractor.transferNew?.promoCode)
-        map[Analytics.PROMOCODE] = transferInteractor.transferNew?.promoCode
 
-        analytics.logEventBeginCheckout(Analytics.EVENT_BEGIN_CHECKOUT, bundle, map, price)
+        analytics.logEventEcommerce(Analytics.EVENT_BEGIN_CHECKOUT, bundle, map)
+        analytics.logEventBeginCheckoutFB(fbBundle, price)
     }
 
     fun changePrice(price: Int)        { paymentRequest.percentage = price }

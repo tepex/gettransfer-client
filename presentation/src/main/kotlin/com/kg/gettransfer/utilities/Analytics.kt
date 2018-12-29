@@ -148,22 +148,16 @@ class Analytics(
         YandexMetrica.reportEvent(event, data)
     }
 
-    fun logEventEcommercePurchase(
-        event: String,
-        bundle: Bundle,
-        map: Map<String, Any?>,
-        price: BigDecimal, currency: Currency
-    ) {
+    fun logEventEcommerce(event: String, bundle: Bundle, map: Map<String, Any?>) {
         logEventToFirebase(event, bundle)
-        facebook.logPurchase(price, currency, bundle)
         logEventToYandex(event, map)
     }
 
-    fun logEventBeginCheckout(event: String, bundle: Bundle, map: Map<String, Any?>, price: Double) {
-        logEventToFirebase(event, bundle)
+    fun logEventEcommercePurchaseFB(bundle: Bundle, price: BigDecimal, currency: Currency)
+            = facebook.logPurchase(price, currency, bundle)
+
+    fun logEventBeginCheckoutFB(bundle: Bundle, price: Double) =
         facebook.logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT, price, bundle)
-        logEventToYandex(event, map)
-    }
 
     fun requestResult(positive: Boolean) =
         if (positive) REVIEW_APP_ACCEPTED else REVIEW_APP_REJECTED
