@@ -138,7 +138,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
             flexboxLayoutTransportTypes.isVisible = true
         }
         btnCancel.isVisible      = status == Transfer.STATUS_CATEGORY_ACTIVE
-        view_rate_ride.isVisible = status == Transfer.STATUS_CATEGORY_FINISHED && showRate
+        (status == Transfer.STATUS_CATEGORY_FINISHED && showRate).let {
+            view_rate_ride.isVisible = it
+            if (it) presenter.logTransferReviewRequested()
+        }
     }
 
     private fun initInfoView(transfer: TransferModel) {

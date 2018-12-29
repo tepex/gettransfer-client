@@ -39,9 +39,9 @@ class Analytics(
         const val EVENT_ECOMMERCE_PURCHASE = "ecommerce_purchase"
         const val EVENT_GET_OFFER          = "get_offer"
         const val PASSWORD_RESTORE         = "password_restore"
-        const val EVENT_TRANSFER_REVIEW    = "transfer_review"
-        const val EVENT_TRANSFER_REVIEW_DETAILED = "transfer_review_detailed"
-        const val EVENT_APP_REVIEW_REQUESTED     = "app_review_requested"
+        const val EVENT_TRANSFER_REVIEW_REQUESTED = "transfer_review_requested"
+        const val EVENT_TRANSFER_REVIEW_DETAILED  = "transfer_review_detailed"
+        const val EVENT_APP_REVIEW_REQUESTED      = "app_review_requested"
 
         const val STATUS = "status"
         const val PARAM_KEY_NAME = "name"

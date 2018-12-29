@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
@@ -10,7 +11,6 @@ import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
@@ -29,7 +29,6 @@ import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.model.RouteModel
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
-import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.Screens
@@ -76,12 +75,7 @@ class MainPresenter : BasePresenter<MainView>() {
         systemInteractor.selectedField = FIELD_FROM
         systemInteractor.initGeocoder()
         if (routeInteractor.from != null) setLastLocation() else updateCurrentLocation()
-
-        with(reviewInteractor) {
-            if (!isReviewSuggested && systemInteractor.account.user.loggedIn) showRateForLastTrip()
-            else if (shouldAskRateInMarket) viewState.askRateInPlayMarket()
-        }
-        if (systemInteractor.account.user.loggedIn) registerPushToken()
+        if (systemInteractor.account.user.loggedIn) registerPushToken(); checkReview()
 
         // Создать листенер для обновления текущей локации
         // https://developer.android.com/training/location/receive-location-updates
@@ -323,6 +317,13 @@ class MainPresenter : BasePresenter<MainView>() {
         }
     }
 
+    private fun checkReview() =
+        with(reviewInteractor){
+            if (!isReviewSuggested) showRateForLastTrip()
+            else if (shouldAskRateInMarket)
+                Handler().postDelayed( { viewState.askRateInPlayMarket() },
+                        ONE_SEC_DELAY) }
+
     private fun getLastTransfer(transfers: List<Transfer>) =
         transfers.filter { it.status.checkOffers }
             .sortedByDescending { it.dateToLocal }
@@ -343,6 +344,7 @@ class MainPresenter : BasePresenter<MainView>() {
                         offer.vehicle.color?:"",
                         routeModel
                     )
+                    logTransferReviewRequested()
                 }
             }
 
@@ -372,12 +374,12 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     fun onRateInStore() {
-        logReviewRequest(true)
+        logAppReviewRequest(true)
         systemInteractor.appEntersForMarketRate = ReviewInteractor.APP_RATED_IN_MARKET
         viewState.showRateInPlayMarket()
     }
 
-    fun onRateInStoreRejected() = logReviewRequest(false)
+    fun onRateInStoreRejected() = logAppReviewRequest(false)
 
     fun onTransferDetailsClick(transferId: Long) = router.navigateTo(Screens.Details(transferId))
 
@@ -430,7 +432,12 @@ class MainPresenter : BasePresenter<MainView>() {
         analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_DETAILED, bundle, map)
     }
 
-    private fun logReviewRequest(accepted: Boolean) =
+    private fun logTransferReviewRequested() =
+            analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED,
+                    createStringBundle("",""),
+                    mapOf())
+
+    private fun logAppReviewRequest(accepted: Boolean) =
         analytics.logEvent(
             Analytics.EVENT_APP_REVIEW_REQUESTED,
             createStringBundle(analytics.requestResult(accepted), ""),
@@ -442,5 +449,6 @@ class MainPresenter : BasePresenter<MainView>() {
         const val FIELD_TO   = "field_to"
 
         const val MIN_HOURLY          = 2
+        const val ONE_SEC_DELAY       = 1000L
     }
 }

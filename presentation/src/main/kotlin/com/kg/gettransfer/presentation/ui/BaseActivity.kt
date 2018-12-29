@@ -190,7 +190,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
 
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-        var errMessage = getString(errId, *args)
+        val errMessage = getString(errId, *args)
         Timber.e(RuntimeException(errMessage))
         Utils.showError(this, finish, errMessage)
     }
