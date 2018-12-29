@@ -5,11 +5,13 @@ import android.content.Context
 import android.widget.DatePicker
 import java.util.Calendar
 
-class BoundDatePickerDialog(context: Context,
-                            onDateSetListener: DatePickerDialog.OnDateSetListener,
-                            year: Int,
-                            month: Int,
-                            dayOfMonth: Int): DatePickerDialog(context, onDateSetListener, year, month, dayOfMonth) {
+class BoundDatePickerDialog(
+    context: Context,
+    onDateSetListener: DatePickerDialog.OnDateSetListener,
+    year: Int,
+    month: Int,
+    dayOfMonth: Int
+) : DatePickerDialog(context, onDateSetListener, year, month, dayOfMonth) {
 
     private var minYear: Int? = null
     private var minMonth: Int? = null
@@ -20,7 +22,7 @@ class BoundDatePickerDialog(context: Context,
     private var currentMonth = month
     private var currentDayOfMonth = dayOfMonth
 
-    fun setMin(year: Int, month: Int, dayOfMonth: Int){
+    fun setMin(year: Int, month: Int, dayOfMonth: Int) {
         minYear = year
         minMonth = month
         minDayOfMonth = dayOfMonth
@@ -31,13 +33,13 @@ class BoundDatePickerDialog(context: Context,
     override fun onDateChanged(view: DatePicker, year: Int, month: Int, dayOfMonth: Int) {
         super.onDateChanged(view, year, month, dayOfMonth)
 
-        if(calendarMin != null && (currentYear != year || currentMonth != month || currentDayOfMonth != month)){
+        if(calendarMin != null && (currentYear != year || currentMonth != month || currentDayOfMonth != month)) {
             val calendarSelected = Calendar.getInstance()
             calendarSelected.set(year, month, dayOfMonth)
 
             val validDate = calendarSelected.after(calendarMin)
 
-            if(validDate){
+            if (validDate) {
                 currentYear = year
                 currentMonth = month
                 currentDayOfMonth = dayOfMonth
