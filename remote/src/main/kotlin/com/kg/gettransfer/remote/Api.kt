@@ -56,7 +56,8 @@ interface Api {
     fun getRouteInfo(
         @Query("points[]") points: Array<String>,
         @Query("with_prices") withPrices: Boolean,
-        @Query("return_way") returnWay: Boolean
+        @Query("return_way") returnWay: Boolean,
+        @Query("currency") currency: String
     ): Deferred<ResponseModel<RouteInfoModel>>
 
     @GET(API_CARRIER_TRIPS)

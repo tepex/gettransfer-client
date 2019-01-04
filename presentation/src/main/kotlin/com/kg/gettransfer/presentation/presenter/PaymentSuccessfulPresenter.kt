@@ -51,7 +51,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                 if (result.model.to != null) {
                     val r = utils.asyncAwait {
                         routeInteractor
-                            .getRouteInfo(result.model.from.point!!, result.model.to!!.point!!, false, false)
+                            .getRouteInfo(result.model.from.point!!, result.model.to!!.point!!, false, false, systemInteractor.currency.currencyCode)
                     }
                     if (r.error == null) {
                         val routeModel = routeMapper.getView(

@@ -132,13 +132,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     fun onResetRateClicked() { reviewInteractor.shouldAskRateInMarket = true }
 
-    private fun saveAccount() = utils.launchSuspend {
-        viewState.blockInterface(true)
-        val result = utils.asyncAwait { systemInteractor.putAccount() }
-        result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
-        viewState.blockInterface(false)
-    }
-
     @CallSuper
     override fun onBackCommandClick() {
 //        localeWasChanged = false

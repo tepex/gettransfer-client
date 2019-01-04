@@ -112,6 +112,13 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
         return offerModel
     }
 
+    fun saveAccount() = utils.launchSuspend {
+        viewState.blockInterface(true)
+        val result = utils.asyncAwait { systemInteractor.putAccount() }
+        result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
+        viewState.blockInterface(false)
+    }
+
     companion object AnalyticProps {
         const val SINGLE_CAPACITY = 1
         const val DOUBLE_CAPACITY = 2

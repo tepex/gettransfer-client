@@ -16,7 +16,7 @@ import org.koin.standalone.inject
 open class RouteDataStoreCache: RouteDataStore {
     private val cache: RouteCache by inject()
     
-    override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean): RouteInfoEntity {
+    override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean, currency: String): RouteInfoEntity {
         throw UnsupportedOperationException()
     }
 }

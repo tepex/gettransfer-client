@@ -399,7 +399,7 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     private suspend fun createRouteModel(transfer: Transfer): RouteModel {
-        val route = routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false).model
+        val route = routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false, systemInteractor.currency.currencyCode).model
         return routeMapper.getView(
             route.distance,
             route.polyLines,

@@ -30,13 +30,14 @@ class RouteRepositoryImpl(
     private val routeInfoMapper = get<RouteInfoMapper>()
     private val pointMapper     = get<PointMapper>()
 
-    override suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean): Result<RouteInfo> =
+    override suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean, currency: String): Result<RouteInfo> =
         retrieveRemoteModel<RouteInfoEntity, RouteInfo>(routeInfoMapper, DEFAULT) {
             factory.retrieveRemoteDataStore().getRouteInfo(
                 pointMapper.toEntity(from),
                 pointMapper.toEntity(to),
                 withPrices,
-                returnWay
+                returnWay,
+                currency
             )
     }
 

@@ -81,7 +81,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
                 viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile), showRate)
 
                 if (transfer.to != null) {
-                    val r = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, true, false) }
+                    val r = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, true, false, systemInteractor.currency.currencyCode) }
                     if (r.error == null) setRouteTransfer(transfer, r.model)
                 } else if (transfer.duration != null) setHourlyTransfer(transfer)
 

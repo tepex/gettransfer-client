@@ -11,6 +11,6 @@ import org.koin.standalone.inject
 open class RouteDataStoreRemote: RouteDataStore {
     private val remote: RouteRemote by inject()
     
-    override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean) =
-        remote.getRouteInfo(from, to, withPrices, returnWay)
+    override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean, currency: String) =
+        remote.getRouteInfo(from, to, withPrices, returnWay, currency)
 }

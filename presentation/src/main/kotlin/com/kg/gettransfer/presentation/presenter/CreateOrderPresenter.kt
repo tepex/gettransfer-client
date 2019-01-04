@@ -23,6 +23,8 @@ import com.kg.gettransfer.domain.model.DestDuration
 import com.kg.gettransfer.domain.model.DestPoint
 import com.kg.gettransfer.domain.model.TransferNew
 import com.kg.gettransfer.domain.model.Trip
+import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.model.TransportTypePrice
 
 import com.kg.gettransfer.presentation.mapper.CurrencyMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper
@@ -121,16 +123,14 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
         utils.launchSuspend {
             viewState.blockInterface(true)
-            val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
+            val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.currencyCode) }
             if (result.error != null) viewState.setError(result.error!!)
             else {
                 val route = result.model
                 duration = route.duration
 
-                transportTypeMapper.prices = result.model.prices.mapValues { transportTypePriceMapper.toView(it.value) }
-                if (transportTypes == null)
-                    transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
-                viewState.setTransportTypes(transportTypes!!)
+                setTransportTypePrices(result.model.prices)
+
                 routeModel = routeMapper.getView(
                     route.distance,
                     route.polyLines,
@@ -148,6 +148,27 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             }
             viewState.blockInterface(false)
         }
+    }
+
+    private fun initPrices(){
+        val from = routeInteractor.from!!.cityPoint
+        val to = routeInteractor.to!!.cityPoint
+        if (from.point == null || to.point == null) {
+            Timber.w("NPE! from: $from, to: $to")
+            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) or `To` {$to} is not set"))
+            return
+        }
+        utils.launchSuspend {
+            val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.currencyCode) }
+            if (result.error != null) viewState.setError(result.error!!)
+            else setTransportTypePrices(result.model.prices)
+        }
+    }
+
+    private fun setTransportTypePrices(prices: Map<TransportType.ID, TransportTypePrice>){
+        transportTypeMapper.prices = prices.mapValues { transportTypePriceMapper.toView(it.value) }
+        transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
+        viewState.setTransportTypes(transportTypes!!)
     }
 
     private fun setUIWithoutRoute() {
@@ -185,7 +206,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         super.attachView(view)
         viewState.setCurrencies(currencies)
         val i = systemInteractor.currentCurrencyIndex
-        if (i != -1) changeCurrency(i)
+        if (i != -1) setCurrency(i)
 
         viewState.setUser(user, systemInteractor.account.user.loggedIn)
         viewState.setHintForDateTimeTransfer()
@@ -193,6 +214,16 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun changeCurrency(selected: Int) {
+        if (selected < currencies.size) {
+            val currencyModel = currencies[selected]
+            systemInteractor.currency = currencyModel.delegate
+            setCurrency(selected)
+            saveAccount()
+            initPrices()
+        }
+    }
+
+    private fun setCurrency(selected: Int){
         if (selected < currencies.size) {
             selectedCurrency = selected
             viewState.setCurrency(currencies[selected].symbol)

@@ -53,8 +53,8 @@ class RouteInteractor(private val geoRepository: GeoRepository, private val rout
         return Result(from!!.cityPoint.point!!)
     }
 
-    suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean) =
-        routeRepository.getRouteInfo(from, to, withPrices, returnWay)
+    suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean, currency: String) =
+        routeRepository.getRouteInfo(from, to, withPrices, returnWay, currency)
 
     fun addressFieldsNotNull() = (from != null && to != null && from != to)
 }
