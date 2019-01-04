@@ -121,8 +121,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         utils.launchSuspend {
             utils.asyncAwait { systemInteractor.unregisterPushToken() }
             utils.asyncAwait { systemInteractor.logout() }
+            router.exit()
         }
-        router.exit()
         logEvent(Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)
     }
 
