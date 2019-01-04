@@ -163,9 +163,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
         //bottom left
         if (transfer.statusCategory == Transfer.STATUS_CATEGORY_ACTIVE || transfer.statusCategory == Transfer.STATUS_CATEGORY_UNFINISHED) {
-            if (transfer.price != null) {
+            if (transfer.passengerOfferedPrice != null) {
                 layoutYourPrice.isVisible = true
-                tvYourPrice.text = transfer.price
+                tvYourPrice.text = transfer.passengerOfferedPrice
             }
             else {
                 verticalDivider2.isVisible = false
