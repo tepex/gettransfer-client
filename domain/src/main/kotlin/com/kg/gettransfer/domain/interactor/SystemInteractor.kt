@@ -143,7 +143,7 @@ class SystemInteractor(
     fun removeListener(listener: SystemListener) { systemRepository.removeListener(listener) }
 
     companion object {
-        private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBR", "CNY", "EUR" )
+        private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )
         private val localesFilterList = arrayOf("en", "ru")
     }
 }
