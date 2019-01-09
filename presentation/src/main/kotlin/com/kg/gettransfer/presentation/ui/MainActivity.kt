@@ -251,7 +251,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             gm.setMyLocationEnabled(true)
             gm.uiSettings.isMyLocationButtonEnabled = false
         }
-        gm.uiSettings.setAllGesturesEnabled(isGmTouchEnabled)
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
         gm.setOnCameraMoveListener        { presenter.onCameraMove(gm.cameraPosition!!.target, true)  }
         gm.setOnCameraIdleListener        { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
