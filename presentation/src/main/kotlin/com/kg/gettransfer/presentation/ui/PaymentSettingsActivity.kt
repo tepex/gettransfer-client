@@ -13,6 +13,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.extensions.*
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
@@ -43,6 +44,7 @@ class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
         setCommission()
 
         setToolbar(toolbar as Toolbar, R.string.LNG_PAYMENT_SETTINGS)
+        tv_payment_agreement.setOnClickListener { presenter.onAgreementClicked() }
     }
 
     private fun setButton() {
@@ -55,7 +57,7 @@ class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
 
     override fun setOffer(offer: OfferModel, paymentPercentages: List<Int>) {
         paymentPercentages.forEach { percentage ->
-            when(percentage){
+            when (percentage) {
                 OfferModel.FULL_PRICE -> {
                     payFullPriceButton.isVisible = true
                     payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.FULL_PRICE)
@@ -82,13 +84,13 @@ class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
 
     private fun changePaymentSettings(view: View?) {
         when (view?.id) {
-            R.id.payFullPriceButton -> PaymentRequestModel.FULL_PRICE
+            R.id.payFullPriceButton    -> PaymentRequestModel.FULL_PRICE
             R.id.payThirdOfPriceButton -> selectPaymentPercentage(PaymentRequestModel.PRICE_30)
         }
     }
 
-    private fun selectPaymentPercentage(selectedPercentage: Int){
-        when(selectedPercentage){
+    private fun selectPaymentPercentage(selectedPercentage: Int) {
+        when (selectedPercentage) {
             PaymentRequestModel.FULL_PRICE -> {
                 fullPriceCheckIcon.isVisible = true
                 thirdOfPriceCheckIcon.isVisible = false

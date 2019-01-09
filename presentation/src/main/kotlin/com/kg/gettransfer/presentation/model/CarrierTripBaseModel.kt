@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.model
 
-import java.util.Date
-
 data class CarrierTripBaseModel(
     val id: Long,
     val transferId: Long,

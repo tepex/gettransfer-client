@@ -15,7 +15,7 @@ open class PriceMapper : Mapper<PriceModel, Price> {
             type.withoutDiscount?.let { moneyMapper.toView(it) },
             type.percentage30,
             type.percentage70,
-            "%.2f".format(type.amount)
+            type.amount
         )
 
     override fun fromView(type: PriceModel): Price { throw UnsupportedOperationException() }

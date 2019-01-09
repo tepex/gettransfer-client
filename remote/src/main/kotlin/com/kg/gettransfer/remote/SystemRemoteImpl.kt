@@ -6,23 +6,32 @@ import com.kg.gettransfer.data.SystemRemote
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
+import com.kg.gettransfer.data.model.MobileConfigEntity
 
 import com.kg.gettransfer.remote.mapper.AccountMapper
 import com.kg.gettransfer.remote.mapper.ConfigsMapper
 import com.kg.gettransfer.remote.mapper.EndpointMapper
+import com.kg.gettransfer.remote.mapper.MobileConfigMapper
+import com.kg.gettransfer.remote.model.*
 
-import com.kg.gettransfer.remote.model.AccountModel
-import com.kg.gettransfer.remote.model.AccountModelWrapper
-import com.kg.gettransfer.remote.model.ConfigsModel
-import com.kg.gettransfer.remote.model.ResponseModel
+import org.koin.core.parameter.parametersOf
 
 import org.koin.standalone.get
+import org.koin.standalone.inject
+
+import org.slf4j.Logger
 
 class SystemRemoteImpl : SystemRemote {
     private val core           = get<ApiCore>()
     private val configsMapper  = get<ConfigsMapper>()
     private val accountMapper  = get<AccountMapper>()
     private val endpointMapper = get<EndpointMapper>()
+    private val mobileConfigMapper = get<MobileConfigMapper>()
+
+    private val log: Logger by inject { parametersOf("GTR-remote") }
+
+
+
 
     override suspend fun getConfigs(): ConfigsEntity {
         val response: ResponseModel<ConfigsModel> = core.tryTwice { core.api.getConfigs() }
@@ -69,5 +78,20 @@ class SystemRemoteImpl : SystemRemote {
         }
     }
 
+    override suspend fun registerPushToken(provider: String, token: String) {
+        core.api.registerPushToken(provider, token).await()
+        //val resposeData: String = response.data
+        //log.debug("register token: ${response.data}") : String
+    }
+
+    override suspend fun unregisterPushToken(token: String) {
+        core.api.unregisterPushToken(token).await()
+    }
+
     override fun changeEndpoint(endpoint: EndpointEntity) = core.changeEndpoint(endpointMapper.toRemote(endpoint))
+
+    override suspend fun getMobileConfig(): MobileConfigEntity {
+        val response: MobileConfig = core.tryTwice { core.api.getMobileConfigs() }
+        return mobileConfigMapper.fromRemote(response)
+    }
 }

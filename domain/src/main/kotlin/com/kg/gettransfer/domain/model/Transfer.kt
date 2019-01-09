@@ -79,6 +79,8 @@ data class Transfer(
         OUTDATED(false);
     }
 
+    fun isCompletedTransfer() = status == Status.NOT_COMPLETED || status == Status.COMPLETED
+
     companion object {
         const val STATUS_CATEGORY_ACTIVE     = "active_status"
         const val STATUS_CATEGORY_CONFIRMED  = "confirmed_status"
@@ -88,8 +90,7 @@ data class Transfer(
         fun List<Transfer>.filterActive() = filter {
             it.status == Status.NEW ||
             it.status == Status.DRAFT ||
-            it.status == Status.PERFORMED ||
-            it.status == Status.PENDING_CONFIRMATION
+            it.status == Status.PERFORMED
         }
 
         fun List<Transfer>.filterCompleted() = filter {

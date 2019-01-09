@@ -47,13 +47,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorWhite"
-            android:textSize="12sp"
+            android:textSize="@dimen/activity_requests_text_size_12sp"
             android:fontFamily="@font/sf_pro_text_regular"
             android:gravity="center"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginStart="@dimen/activity_requests_text_network_availability_margin_start_end"
+            android:layout_marginEnd="@dimen/activity_requests_text_network_availability_margin_start_end"
+            android:layout_marginTop="@dimen/activity_requests_text_network_availability_margin_top_bottom"
+            android:layout_marginBottom="@dimen/activity_requests_text_network_availability_margin_top_bottom"
             android:text="@string/LNG_OFFLINE_MESSAGE"
             android:visibility="gone"/>
 

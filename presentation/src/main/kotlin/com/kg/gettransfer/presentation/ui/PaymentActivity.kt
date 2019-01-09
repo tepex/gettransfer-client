@@ -17,6 +17,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.presenter.PaymentPresenter
 
@@ -44,7 +46,7 @@ class PaymentActivity: BaseActivity(), PaymentView {
         presenter.transferId = intent.getLongExtra(PaymentView.EXTRA_TRANSFER_ID, 0)
         presenter.offerId    = intent.getLongExtra(PaymentView.EXTRA_OFFER_ID, 0)
         presenter.percentage = intent.getIntExtra(PaymentView.EXTRA_PERCENTAGE, 0)
-        
+
         setContentView(R.layout.activity_payment)
 
         setToolbar(toolbar as Toolbar)
@@ -64,7 +66,7 @@ class PaymentActivity: BaseActivity(), PaymentView {
                 return false
             }
         }
-                
+
         webView.loadUrl(intent.getStringExtra(PaymentView.EXTRA_URL))
     }
 

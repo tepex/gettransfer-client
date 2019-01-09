@@ -12,7 +12,6 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 
-import com.kg.gettransfer.presentation.mapper.OfferMapper
 import com.kg.gettransfer.presentation.mapper.TransferMapper
 
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -20,11 +19,10 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.ui.SystemUtils
 
 import com.kg.gettransfer.presentation.view.OffersView
+import com.kg.gettransfer.presentation.view.OffersView.Sort
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
-
-import com.yandex.metrica.YandexMetrica
 
 import org.koin.standalone.inject
 
@@ -33,88 +31,83 @@ import timber.log.Timber
 @InjectViewState
 class OffersPresenter : BasePresenter<OffersView>() {
     private val transferInteractor: TransferInteractor by inject()
-    private val offerInteractor: OfferInteractor by inject()
 
-    private val offerMapper: OfferMapper by inject()
     private val transferMapper: TransferMapper by inject()
 
-    /*
-    init {
-        router.setResultListener(LoginPresenter.RESULT_CODE, { _ -> onFirstViewAttach() })
-    }
-    */
-
     internal var transferId = 0L
+        set(value) {
+            field = value
+            offerInteractor.lastTransferId = value
+        }
 
-    private lateinit var transfer: Transfer
+    private var transfer: Transfer? = null
     private lateinit var offers: List<OfferModel>
 
-    private var sortCategory: String = SORT_PRICE
+    private var sortCategory = Sort.PRICE
     private var sortHigherToLower = false
-
-    companion object {
-        @JvmField val RATING_UP   = "rating_asc"
-        @JvmField val RATING_DOWN = "rating_desc"
-
-        @JvmField val PRICE_UP    = "price_asc"
-        @JvmField val PRICE_DOWN  = "price_desc"
-
-        @JvmField val YEAH_FILTER_UP   = "year_asc"
-        @JvmField val YEAH_FILTER_DOWN = "year_desc"
-
-        @JvmField val SORT_YEAR   = "sort_year"
-        @JvmField val SORT_RATING = "sort_rating"
-        @JvmField val SORT_PRICE  = "sort_price"
-    }
 
     @CallSuper
     override fun attachView(view: OffersView) {
         super.attachView(view)
+        Timber.d("OffersPresenter.attachView")
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            if(result.error != null) {
-                Timber.e(result.error!!)
-                if(result.error!!.isNotLoggedIn()) viewState.redirectView()
-                else if(result.error!!.code != ApiException.NETWORK_ERROR) viewState.setError(result.error!!)
-            } else if(result.model.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE){
-                router.exit()
+            if (result.error != null) {
+                val err = result.error!!
+                Timber.e(err)
+                if (err.isNotLoggedIn()) viewState.redirectView()
+                else if (err.code != ApiException.NETWORK_ERROR) viewState.setError(err)
             } else {
-                transfer = result.model
-                val transferModel = transferMapper.toView(transfer)
-                viewState.setDate(SystemUtils.formatDateTime(transferModel.dateTime))
-                viewState.setTransfer(transferModel)
-
-                val r = utils.asyncAwait{ offerInteractor.getOffers(result.model.id) }
-                if(r.error == null) {
-                    offers = r.model.map { offerMapper.toView(it) }
-                    //changeSortType(SORT_PRICE)
-                    setOffers()
-                }
+                if (result.model.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE) router.exit()
                 else {
-                    offers = emptyList<OfferModel>()
-                    Timber.e(r.error)
+                    val transferModel = transferMapper.toView(result.model)
+                    viewState.setDate(SystemUtils.formatDateTime(transferModel.dateTime))
+                    viewState.setTransfer(transferModel)
+                    checkNewOffersSuspended(result.model)
                 }
             }
             viewState.blockInterface(false)
         }
     }
 
-    fun onNewOffer(offer: Offer) {
-        offerInteractor.newOffer(offer)
-        offers = offers.toMutableList().apply { add(offerMapper.toView(offer)) }
-        utils.launchSuspend { setOffers() }
+    fun checkNewOffers() {
+        transfer?.let { tr -> utils.launchSuspend { checkNewOffersSuspended(tr) } }
     }
 
-    fun onRequestInfoClicked() { router.navigateTo(Screens.Details(transferId)) }
+    private suspend fun checkNewOffersSuspended(transfer: Transfer) {
+        this.transfer = transfer
+        val result = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
+        if (result.error != null) {
+            offers = emptyList<OfferModel>()
+            Timber.e(result.error)
+        } else {
+            offers = result.model.map { offer -> offerMapper.toView(offer) }
+            //changeSortType(SORT_PRICE)
+            processOffers()
+        }
+    }
+
+    override fun onNewOffer(offer: Offer): OfferModel {
+        val offerModel = super.onNewOffer(offer)
+        offers = offers.toMutableList().apply { add(offerModel) }
+        utils.launchSuspend { processOffers() }
+        return offerModel
+    }
+
+    fun onRequestInfoClicked() {
+        router.navigateTo(Screens.Details(transferId))
+    }
 
     fun onSelectOfferClicked(offer: OfferModel, isShowingOfferDetails: Boolean) {
-        if(isShowingOfferDetails) {
-            viewState.showBottomSheetOfferDetails(offer)
-            logEvent(Analytics.OFFER_DETAILS)
-        } else {
-            logEvent(Analytics.OFFER_BOOK)
-            router.navigateTo(Screens.PaymentSettings(transfer.id, offer.id, transfer.dateRefund, transfer.paymentPercentages))
+        transfer?.let {
+            if (isShowingOfferDetails) {
+                viewState.showBottomSheetOfferDetails(offer)
+                logEvent(Analytics.OFFER_DETAILS)
+            } else {
+                logEvent(Analytics.OFFER_BOOK)
+                router.navigateTo(Screens.PaymentSettings(it.id, offer.id, it.dateRefund, it.paymentPercentages))
+            }
         }
     }
 
@@ -129,68 +122,86 @@ class OffersPresenter : BasePresenter<OffersView>() {
         viewState.showAlertCancelRequest()
     }
 
-    fun openLoginView() { login("", "") }
+    fun openLoginView() {
+        login("", "")
+    }
 
     fun cancelRequest(isCancel: Boolean) {
-        if(!isCancel) return
+        if (!isCancel) return
         logEvent(Analytics.CANCEL_TRANSFER_BTN)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.cancelTransfer(transferId, "") }
-            if(result.error != null) {
+            if (result.error != null) {
                 Timber.e(result.error!!)
                 viewState.setError(result.error!!)
-            }
-            else onBackCommandClick()
+            } else onBackCommandClick()
             viewState.blockInterface(false)
         }
     }
 
-    fun changeSortType(sortType: String) {
-        if(sortCategory == sortType) sortHigherToLower = !sortHigherToLower
+    fun changeSortType(sortType: Sort) {
+        if (sortCategory == sortType) sortHigherToLower = !sortHigherToLower
         else {
             sortCategory = sortType
-            when(sortType) {
-                SORT_YEAR   -> sortHigherToLower = true
-                SORT_RATING -> sortHigherToLower = true
-                SORT_PRICE  -> sortHigherToLower = false
+            when (sortType) {
+                Sort.YEAR -> sortHigherToLower = true
+                Sort.RATING -> sortHigherToLower = true
+                Sort.PRICE -> sortHigherToLower = false
             }
         }
-        setOffers()
+        processOffers()
     }
 
-    private fun setOffers() {
+    private fun processOffers() {
         sortOffers()
+        decreaseCountEvents()
         viewState.setOffers(offers)
         viewState.setSortState(sortCategory, sortHigherToLower)
     }
 
+    private fun decreaseCountEvents() {
+        var transferIds = systemInteractor.transferIds
+        if (transferIds.isNotEmpty()) {
+            transferIds = transferIds.toMutableList().apply { removeAll { (it == transferId) } }
+            val seenOffers = systemInteractor.transferIds.size - transferIds.size
+            val eventsCount = systemInteractor.eventsCount
+            systemInteractor.eventsCount = eventsCount - seenOffers
+            systemInteractor.transferIds = transferIds
+        }
+    }
+
     private fun sortOffers() {
-        var sortType = ""
-        offers = when(sortCategory) {
-            SORT_YEAR -> {
-                sortType = if(sortHigherToLower) YEAH_FILTER_DOWN else YEAH_FILTER_UP
+        val sortType: SortType
+        offers = when (sortCategory) {
+            Sort.YEAR -> {
+                sortType = if (sortHigherToLower) SortType.YEAR_DESC else SortType.YEAR_ASC
                 offers.sortedWith(compareBy { it.vehicle.year })
             }
-            SORT_RATING -> {
-                sortType = if(sortHigherToLower) RATING_DOWN else RATING_UP
+            Sort.RATING -> {
+                sortType = if (sortHigherToLower) SortType.RATING_DESC else SortType.RATING_ASC
                 offers.sortedWith(compareBy { it.ratings?.average })
             }
-            SORT_PRICE -> {
-                sortType = if(sortHigherToLower) PRICE_DOWN else PRICE_UP
+            Sort.PRICE -> {
+                sortType = if (sortHigherToLower) SortType.PRICE_DESC else SortType.PRICE_ASC
                 offers.sortedWith(compareBy { it.price.amount })
             }
-            else -> offers
         }
-        if(sortHigherToLower) offers = offers.reversed()
+        if (sortHigherToLower) offers = offers.reversed()
         logFilterEvent(sortType)
     }
 
-    private fun logFilterEvent(value: String) {
+    private fun logFilterEvent(sortType: SortType) {
         val map = mutableMapOf<String, Any>()
+        val value = sortType.name.toLowerCase()
         map[Analytics.PARAM_KEY_FILTER] = value
 
         analytics.logEvent(Analytics.EVENT_OFFERS, createStringBundle(Analytics.PARAM_KEY_FILTER, value), map)
     }
 
+    enum class SortType {
+        RATING_ASC, RATING_DESC,
+        PRICE_ASC, PRICE_DESC,
+        YEAR_ASC, YEAR_DESC;
+    }
 }

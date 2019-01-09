@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 
 import android.os.Build
@@ -13,9 +14,12 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.content.ContextCompat
 
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 
+import android.widget.ImageView
+import android.widget.PopupWindow
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -27,9 +31,16 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.*
-import com.kg.gettransfer.presentation.model.*
+
+import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.PolylineModel
+import com.kg.gettransfer.presentation.model.ProfileModel
+import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
 import com.kg.gettransfer.presentation.view.TransferDetailsView
@@ -46,13 +57,10 @@ import kotlinx.android.synthetic.main.view_transfer_details_info.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //Don't delete
 
-import android.widget.PopupWindow
 import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
 import kotlinx.android.synthetic.main.view_rate_in_store.view.*
 import kotlinx.android.synthetic.main.view_rate_your_transfer.*
-import android.view.MotionEvent
-import android.widget.ImageView
 
 class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
@@ -60,7 +68,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     internal lateinit var presenter: TransferDetailsPresenter
 
     private lateinit var bsTransferDetails: BottomSheetBehavior<View>
-    private lateinit var popupWindowRate: PopupWindow
 
     @ProvidePresenter
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
@@ -117,7 +124,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     private fun setClickListeners() {
         btnBack.setOnClickListener          { presenter.onBackCommandClick() }
         btnCenterRoute.setOnClickListener   { presenter.onCenterRouteClick() }
-        btnSupportTop.setOnClickListener    { presenter.sendEmail(null) }
         btnSupportBottom.setOnClickListener { presenter.sendEmail(null) }
         btnCancel.setOnClickListener        { presenter.onCancelRequestClicked() }
         tripRate.setOnRatingChangeListener  { _, fl -> disableRate(); presenter.rateTrip(fl) }
@@ -127,17 +133,15 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         initInfoView(transfer)
         initAboutRequestView(transfer, userProfile)
         val status = transfer.statusCategory
-        if(status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_UNFINISHED) {
+        if (status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_UNFINISHED) {
             initTableLayoutTransportTypes(transfer.transportTypes)
             flexboxLayoutTransportTypes.isVisible = true
         }
-        layoutButtonSupportTop.isVisible   = status == Transfer.STATUS_CATEGORY_FINISHED
-        layoutCommunicateButtons.isVisible = status == Transfer.STATUS_CATEGORY_CONFIRMED
-
-        btnsLayoutBottom.isVisible = status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_CONFIRMED
-        btnSupportBottom.isVisible = status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_CONFIRMED
-        btnCancel.isVisible        = status == Transfer.STATUS_CATEGORY_ACTIVE
-        view_rate_ride.isVisible   = status == Transfer.STATUS_CATEGORY_FINISHED && showRate
+        btnCancel.isVisible      = status == Transfer.STATUS_CATEGORY_ACTIVE
+        (status == Transfer.STATUS_CATEGORY_FINISHED && showRate).let {
+            view_rate_ride.isVisible = it
+            if (it) presenter.logTransferReviewRequested()
+        }
     }
 
     private fun initInfoView(transfer: TransferModel) {
@@ -182,6 +186,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         //bottom right
         when (transfer.statusCategory) {
             Transfer.STATUS_CATEGORY_UNFINISHED -> {
+                tvTransferCancelled.text = transfer.statusName?.let {
+                    getString(R.string.LNG_TRANSFER_WAS)
+                            .plus(" ")
+                            .plus(getString(transfer.statusName).toLowerCase())
+                }
                 tvTransferCancelled.isVisible = true
             }
             Transfer.STATUS_CATEGORY_ACTIVE -> {
@@ -227,8 +236,16 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
             flight_number.field_text.text = it
             flight_number.isVisible = true
         }
+        transfer.dateTimeReturn?.let {
+            back_trip.isVisible = true
+            back_trip.field_text.text = SystemUtils.formatDateTime(it)
+        }
+        transfer.flightNumberReturn?.let {
+            back_flight_number.isVisible = true
+            back_flight_number.field_text.text = it
+        }
         transfer.promoCode?.let {
-            promo_code.field_text.text = it
+            promo_code.field_text.text = Utils.getSpannedStringFromHtmlString(it)
             promo_code.isVisible = true
         }
         transfer.comment?.let {
@@ -360,7 +377,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         popUpView.tvCancelRate.setOnClickListener { presenter.onReviewCanceled() }
         popUpView.send_feedBack.setOnClickListener {
             closePopUp()
-            presenter.sendReview(Utils.createMapOfDetailedRates(popUpView), popUpView.et_reviewComment.text.toString())
+            presenter.sendReview(Utils.createListOfDetailedRates(popUpView), popUpView.et_reviewComment.text.toString())
         }
         setupDetailRatings(tappedRate, popUpView)
     }
@@ -368,7 +385,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     override fun askRateInPlayMarket() {
         view_rate_ride.isGone = true
         showPopUpWindow(R.layout.view_rate_in_store, transferDetailsParent).apply {
-            tv_reject_store.setOnClickListener { closePopUp() }
+            tv_reject_store.setOnClickListener { closePopUp(); presenter.onRateInStoreRejected() }
             tv_agree_store.setOnClickListener { presenter.onRateInStore() }
         }
 

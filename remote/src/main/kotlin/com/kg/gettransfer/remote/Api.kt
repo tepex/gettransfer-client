@@ -21,10 +21,13 @@ interface Api {
         const val API_PROMO              = "/api/promo_codes/search"
         const val API_RATE_OFFER         = "/api/offers/rate"
         const val API_FEEDBACK           = "/api/offers"
+        const val API_WEBPUSH_TOKENS     = "/api/webpush_tokens"
+
+        const val MOBILE_CONFIGS         = "/mobile/mobile.conf"
     }
 
     @GET(API_ACCESS_TOKEN)
-    fun accessToken(@Query("api_key") apiKey: String): Deferred<ResponseModel<TokenModel>>
+    fun accessToken(): Deferred<ResponseModel<TokenModel>>
 
     @GET(API_CONFIGS)
     fun getConfigs(): Deferred<ResponseModel<ConfigsModel>>
@@ -33,7 +36,9 @@ interface Api {
     fun getAccount(): Deferred<ResponseModel<AccountModelWrapper>>
 
     @PUT(API_ACCOUNT)
-    fun putAccount(@Body account: AccountModelWrapper): Deferred<ResponseModel<AccountModelWrapper>>
+    fun putAccount(
+        @Body account: AccountModelWrapper
+    ): Deferred<ResponseModel<AccountModelWrapper>>
 
     /* If we are not signed in, don't post request to save account
     @POST("/api/account")
@@ -42,22 +47,30 @@ interface Api {
 
     @POST(API_LOGIN)
     @FormUrlEncoded
-    fun login(@Field("email") email: String,
-              @Field("password") password: String): Deferred<ResponseModel<AccountModelWrapper>>
+    fun login(
+        @Field("email") email: String,
+        @Field("password") password: String
+    ): Deferred<ResponseModel<AccountModelWrapper>>
 
     @GET(API_ROUTE_INFO)
-    fun getRouteInfo(@Query("points[]") points: Array<String>,
-                     @Query("with_prices") withPrices: Boolean,
-                     @Query("return_way") returnWay: Boolean): Deferred<ResponseModel<RouteInfoModel>>
+    fun getRouteInfo(
+        @Query("points[]") points: Array<String>,
+        @Query("with_prices") withPrices: Boolean,
+        @Query("return_way") returnWay: Boolean
+    ): Deferred<ResponseModel<RouteInfoModel>>
 
     @GET(API_CARRIER_TRIPS)
     fun getCarrierTrips(): Deferred<ResponseModel<CarrierTripsBaseModel>>
 
     @GET("$API_CARRIER_TRIPS/{id}")
-    fun getCarrierTrip(@Path("id") id: Long): Deferred<ResponseModel<CarrierTripModelWrapper>>
+    fun getCarrierTrip(
+        @Path("id") id: Long
+    ): Deferred<ResponseModel<CarrierTripModelWrapper>>
 
     @GET("$API_TRANSFERS/{id}/offers")
-    fun getOffers(@Path("id") id: Long): Deferred<ResponseModel<OffersModel>>
+    fun getOffers(
+        @Path("id") id: Long
+    ): Deferred<ResponseModel<OffersModel>>
 
     @GET(API_TRANSFERS)
     fun getAllTransfers(): Deferred<ResponseModel<TransfersModel>>
@@ -69,29 +82,62 @@ interface Api {
     fun getTransfersActive(): Deferred<ResponseModel<TransfersModel>>
 
     @POST(API_TRANSFERS)
-    fun postTransfer(@Body transfer: TransferNewWrapperModel): Deferred<ResponseModel<TransferWrapperModel>>
+    fun postTransfer(
+        @Body transfer: TransferNewWrapperModel
+    ): Deferred<ResponseModel<TransferWrapperModel>>
 
     @GET("$API_TRANSFERS/{id}")
-    fun getTransfer(@Path("id") id: Long): Deferred<ResponseModel<TransferWrapperModel>>
+    fun getTransfer(
+        @Path("id") id: Long
+    ): Deferred<ResponseModel<TransferWrapperModel>>
 
     @POST("$API_TRANSFERS/{id}/cancel")
-    fun cancelTransfer(@Path("id") id: Long, @Body reason: ReasonModel): Deferred<ResponseModel<TransferWrapperModel>>
+    fun cancelTransfer(
+        @Path("id") id: Long,
+        @Body reason: ReasonModel
+    ): Deferred<ResponseModel<TransferWrapperModel>>
 
     @POST(API_CREATE_NEW_PAYMENT)
-    fun createNewPayment(@Body createPayment: PaymentRequestModel): Deferred<ResponseModel<PaymentModel>>
+    fun createNewPayment(
+        @Body createPayment: PaymentRequestModel
+    ): Deferred<ResponseModel<PaymentModel>>
 
     @GET(API_PROMO)
-    fun getDiscount(@Query("value") code: String): Deferred<ResponseModel<String>>
+    fun getDiscount(
+        @Query("value") code: String
+    ): Deferred<ResponseModel<String>>
 
     @GET("$API_CREATE_NEW_PAYMENT/{status}")
-    fun changePaymentStatus(@Path("status") status: String,
-                            @Query("pg_order_id") pgOrderId: Long,
-                            @Query("without_redirect") withoutRedirect: Boolean): Deferred<ResponseModel<PaymentStatusWrapperModel>>
+    fun changePaymentStatus(
+        @Path("status") status: String,
+        @Query("pg_order_id") pgOrderId: Long,
+        @Query("without_redirect") withoutRedirect: Boolean
+    ): Deferred<ResponseModel<PaymentStatusWrapperModel>>
 
-     @POST("$API_RATE_OFFER/{id}/{type}")
-     fun rateOffer(@Path("id") id: Long,
-                   @Path("type") type: String, @Body ratingModel: RateToRemote): Deferred<ResponseModel<RateModel>>
+    @POST("$API_RATE_OFFER/{id}/{type}")
+    fun rateOffer(
+        @Path("id") id: Long,
+        @Path("type") type: String,
+        @Body ratingModel: RateToRemote
+    ): Deferred<ResponseModel<RateModel>>
 
     @POST("$API_FEEDBACK/{id}/feedback")
-    fun sendFeedBack(@Path("id") id: Long, @Body passengerComment: FeedBackToRemote): Deferred<ResponseModel<OfferModel>>
+    fun sendFeedBack(
+        @Path("id") id: Long,
+        @Body passengerComment: FeedBackToRemote
+    ): Deferred<ResponseModel<OfferModel>>
+
+    @PUT("$API_WEBPUSH_TOKENS/{provider}/{id}")
+    fun registerPushToken(
+        @Path("provider") provider: String,
+        @Path("id") id: String
+    ): Deferred<ResponseModel<String>>
+
+    @DELETE("$API_WEBPUSH_TOKENS/{id}")
+    fun unregisterPushToken(
+        @Path("id") token: String
+    ): Deferred<ResponseModel<String>>
+
+    @GET(MOBILE_CONFIGS)
+    fun getMobileConfigs(): Deferred<MobileConfig>
 }

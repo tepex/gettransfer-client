@@ -16,6 +16,7 @@ import io.socket.client.Socket
 
 import io.socket.engineio.client.Socket as EngineSocket
 import io.socket.engineio.client.Transport
+import io.socket.engineio.client.transports.WebSocket
 import io.socket.parser.Packet
 
 import kotlinx.serialization.json.JSON
@@ -31,6 +32,7 @@ class OfferServiceConnection : SystemListener, KoinComponent {
     private val options = IO.Options().apply {
         path = "/api/socket"
         forceNew = true
+        transports = arrayOf(WebSocket.NAME)
     }
 
     private var handler: OfferModelHandler? = null
@@ -59,7 +61,8 @@ class OfferServiceConnection : SystemListener, KoinComponent {
 
     override fun connectionChanged(endpoint: Endpoint, accessToken: String) {
         /* Reconnect iff URL or token changed. */
-        val reconnect = (url != endpoint.url || this.accessToken != accessToken)
+        //val reconnect = (url != endpoint.url || this.accessToken != accessToken)
+        val reconnect = true
         Timber.d("Connecting... options: ${options.path}. Reconect: $reconnect")
         url = endpoint.url
         this.accessToken = accessToken
@@ -127,15 +130,26 @@ class OfferServiceConnection : SystemListener, KoinComponent {
     private fun onReceiveOffer(transferId: Long, offerJson: String) {
         Timber.d("onReceiveOffer: $offerJson")
         try {
-            val offerEntity = JSON.parse(OfferEntity.serializer(), offerJson).apply { this.transferId = transferId }
+            val offerEntity = JSON.nonstrict.parse(OfferEntity.serializer(), offerJson).apply { this.transferId = transferId }
             val offer = offerMapper.fromEntity(offerEntity)
             offer.vehicle.photos = offer.vehicle.photos.map { photo -> systemInteractor.endpoint.url.plus(photo) }
+            increaseEventsCounter(transferId)
             handler?.invoke(offer)
         } catch (e: Exception) {
             Timber.e(e)
             throw e
         }
     }
+
+    private fun increaseEventsCounter(transferId: Long) {
+        var count = systemInteractor.eventsCount
+        systemInteractor.eventsCount = ++count
+
+        var transferIds = systemInteractor.transferIds
+        transferIds = transferIds.toMutableList().apply { add(transferId) }
+        systemInteractor.transferIds = transferIds
+    }
+
 
     companion object {
         @JvmField val INTENT_OFFER  = "offer"

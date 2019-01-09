@@ -10,6 +10,7 @@
 
 	<!--Rating stars-->
 	<integer name="stars_number">5</integer>
-	<integer name="stars_minimum">1</integer>
+	<integer name="stars_minimum">0</integer>
+	<integer name="default_stars_num">0</integer>
 
 </resources>

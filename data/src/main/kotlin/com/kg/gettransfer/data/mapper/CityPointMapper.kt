@@ -16,7 +16,7 @@ open class CityPointMapper : Mapper<CityPointEntity, CityPoint> {
     override fun fromEntity(type: CityPointEntity) =
         CityPoint(
             name = type.name,
-            point = pointMapper.fromEntity(type.point),
+            point = type.point?.let { pointMapper.fromEntity(type.point) },
             placeId = type.placeId
         )
 

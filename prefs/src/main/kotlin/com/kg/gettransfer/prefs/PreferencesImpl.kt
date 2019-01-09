@@ -13,6 +13,8 @@ import com.kg.gettransfer.data.model.GTAddressEntity
 
 import kotlinx.serialization.list
 import kotlinx.serialization.json.JSON
+import kotlinx.serialization.parseList
+import kotlinx.serialization.serializer
 
 import timber.log.Timber
 
@@ -28,6 +30,8 @@ class PreferencesImpl(context: Context,
         @JvmField val ENDPOINT         = "endpoint"
         @JvmField val ADDRESS_HISTORY  = "history"
         @JvmField val APP_ENTERS_COUNT = "enters_count"
+        @JvmField val EVENTS_COUNT     = "events_count"
+        @JvmField val TRANSFER_IDS     = "transfer_ids"
 
         const val FIRST_ACCESS         = 0
         const val IMMUTABLE            = -1   // user did rate app
@@ -136,6 +140,27 @@ class PreferencesImpl(context: Context,
                     .apply()
             }
 
+        }
+
+    override var eventsCount: Int
+        get() = configsPrefs.getInt(EVENTS_COUNT, 0)
+        set(value) {
+            with(configsPrefs.edit()) {
+                putInt(EVENTS_COUNT, value)
+                apply()
+            }
+        }
+
+    override var transferIds: List<Long>
+        get() {
+            val json = configsPrefs.getString(TRANSFER_IDS, null)
+            return if (json != null) JSON.parse(Long.serializer().list, json) else emptyList()
+        }
+        set(value) {
+            with(configsPrefs.edit()) {
+                putString(TRANSFER_IDS, JSON.stringify(Long.serializer().list, value))
+                apply()
+            }
         }
         
     override fun logout() {

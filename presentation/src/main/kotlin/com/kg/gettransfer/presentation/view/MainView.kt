@@ -2,10 +2,14 @@ package com.kg.gettransfer.presentation.view
 
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+
 import com.google.android.gms.maps.model.LatLng
+
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.RouteModel
+
+import java.util.Date
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 //interface MainView: MvpView, OnCameraMoveListener
@@ -24,10 +28,12 @@ interface MainView: BaseView {
     fun onBackClick()
     fun showReadMoreDialog()
     fun setTripMode(duration: Int?)
-    fun openReviewForLastTrip(transferId: Long, date: String, vehicle: String, color: String, routeModel: RouteModel)
+    fun openReviewForLastTrip(transferId: Long, date: Date, vehicle: String, color: String, routeModel: RouteModel)
     fun cancelReview()
     fun showDetailedReview(tappedRate: Float)
     fun askRateInPlayMarket()
     fun showRateInPlayMarket()
     fun thanksForRate()
+    fun showBadge(show: Boolean)
+    fun setCountEvents(count: Int)
 }

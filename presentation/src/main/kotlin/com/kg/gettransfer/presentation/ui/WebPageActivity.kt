@@ -34,7 +34,7 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContentView(R.layout.activity_web_page)
 
         setSupportActionBar(toolbar as Toolbar)
@@ -47,17 +47,23 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
 
         webView.settings.javaScriptEnabled = true
         webView.webViewClient = object: WebViewClient() {}
-        
+
         when(intent.getStringExtra(WebPageView.EXTRA_SCREEN)) {
-            WebPageView.SCREEN_LICENSE     -> initActivity(R.string.LNG_RIDE_OFFERT_TITLE, R.string.licence_agreement_url)
-            WebPageView.SCREEN_REG_CARRIER -> initActivity(R.string.LNG_RIDE_CREATE_CARRIER, R.string.registration_carrier_url)
-            WebPageView.SCREEN_CARRIER     -> initActivity(R.string.LNG_RIDE_CREATE_CARRIER, R.string.carrier_mode)
-            WebPageView.SCREEN_RESTORE_PASS     -> initActivity(R.string.LNG_LOGIN_RECOVERY_PASSWORD, R.string.api_restore_password)
+            WebPageView.SCREEN_LICENSE      -> initActivity(R.string.LNG_RIDE_OFFERT_TITLE, WebPageView.INIT_WITH_STRING, createLicenceUrl())
+            WebPageView.SCREEN_REG_CARRIER  -> initActivity(R.string.LNG_RIDE_CREATE_CARRIER, R.string.registration_carrier_url)
+            WebPageView.SCREEN_CARRIER      -> initActivity(R.string.LNG_RIDE_CREATE_CARRIER, R.string.carrier_mode)
+            WebPageView.SCREEN_RESTORE_PASS -> initActivity(R.string.LNG_LOGIN_RECOVERY_PASSWORD, WebPageView.INIT_WITH_STRING, createRestorePassUrl())
         }
     }
 
-    override fun initActivity(@StringRes title: Int, @StringRes url: Int) {
+
+
+    override fun initActivity(@StringRes title: Int, @StringRes url: Int, strUrl: String?) {
         (toolbar as Toolbar).toolbar_title.text = getString(title)
+        strUrl?.let {
+            webView.loadUrl(it)
+            return
+        }
         webView.loadUrl(getString(url))
     }
 
@@ -65,4 +71,13 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
         if(webView.canGoBack()) webView.goBack()
         else presenter.onBackCommandClick()
     }
+
+    private fun createLicenceUrl() =
+            SystemUtils.gtUrlWithLocale(this)
+                    .plus(presenter.termsUrl)
+
+    private fun createRestorePassUrl() =
+            SystemUtils.gtUrlWithLocale(this)
+                    .plus(getString(R.string.api_restore_password))
+
 }

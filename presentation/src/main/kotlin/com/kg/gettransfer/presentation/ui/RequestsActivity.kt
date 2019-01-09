@@ -16,6 +16,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.presenter.RequestsPresenter
 import com.kg.gettransfer.presentation.view.RequestsView

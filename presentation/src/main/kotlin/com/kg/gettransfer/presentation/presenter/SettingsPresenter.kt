@@ -24,11 +24,12 @@ import com.kg.gettransfer.presentation.view.SettingsView
 
 import com.kg.gettransfer.utilities.Analytics
 
-import com.yandex.metrica.YandexMetrica
-
 import java.util.Locale
 
 import org.koin.standalone.get
+import org.koin.standalone.inject
+
+import timber.log.Timber
 
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>() {
@@ -41,7 +42,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private val currencyMapper     = get<CurrencyMapper>()
     private val distanceUnitMapper = get<DistanceUnitMapper>()
     private val endpointMapper     = get<EndpointMapper>()
-    private val reviewInteractor = get<ReviewInteractor>()
+    private val reviewInteractor   = get<ReviewInteractor>()
 
     private var localeWasChanged = false
     private var restart = true
@@ -117,7 +118,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun onLogout() {
-        utils.runAlien { systemInteractor.logout() }
+        utils.launchSuspend {
+            utils.asyncAwait { systemInteractor.unregisterPushToken() }
+            utils.asyncAwait { systemInteractor.logout() }
+        }
         router.exit()
         logEvent(Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)
     }
@@ -135,13 +139,13 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.blockInterface(false)
     }
 
+    @CallSuper
     override fun onBackCommandClick() {
 //        localeWasChanged = false
-        if(localeWasChanged) {
+        if (localeWasChanged) {
             localeWasChanged = false
             router.navigateTo(Screens.ChangeMode(systemInteractor.lastMode))
-        }
-        else super.onBackCommandClick()
+        } else super.onBackCommandClick()
     }
 
     private fun initConfigs() {

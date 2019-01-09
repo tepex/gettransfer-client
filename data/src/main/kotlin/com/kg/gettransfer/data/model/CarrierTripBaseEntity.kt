@@ -27,7 +27,7 @@ open class CarrierTripBaseEntity(
         const val TRANSFER_ID             = "transfer_id"
         const val FROM                    = "from"
         const val TO                      = "to"
-        const val DATE_LOCAL              = "local"
+        const val DATE_LOCAL              = "date_local"
         const val DURATION                = "duration"
         const val DISTANCE                = "distance"
         const val TIME                    = "time"

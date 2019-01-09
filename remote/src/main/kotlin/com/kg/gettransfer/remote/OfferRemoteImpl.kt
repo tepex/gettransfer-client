@@ -1,22 +1,16 @@
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.data.OfferRemote
-import com.kg.gettransfer.data.RemoteException
 
 import com.kg.gettransfer.data.model.OfferEntity
-import com.kg.gettransfer.data.model.RateEntity
 
 import com.kg.gettransfer.remote.mapper.OfferMapper
-import com.kg.gettransfer.remote.mapper.RateMapper
 
 import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.OfferModel
 import com.kg.gettransfer.remote.model.OffersModel
-import com.kg.gettransfer.remote.model.RateModel
-import org.koin.core.parameter.parametersOf
 
 import org.koin.core.parameter.parametersOf
-
 import org.koin.standalone.get
 import org.koin.standalone.inject
 

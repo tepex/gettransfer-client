@@ -6,12 +6,14 @@ import android.support.v7.app.AlertDialog
 import com.arellomobile.mvp.presenter.InjectPresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.presenter.PaymentErrorPresenter
 import com.kg.gettransfer.presentation.view.PaymentErrorView
 
 import kotlinx.android.synthetic.main.dialog_payment_error.view.*
 
-class PaymentErrorActivity: BaseActivity(), PaymentErrorView {
+class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
 
     @InjectPresenter
     internal lateinit var presenter: PaymentErrorPresenter

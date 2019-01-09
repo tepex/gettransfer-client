@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.os.Bundle
+import android.os.Handler
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
@@ -8,25 +10,29 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.interactor.OfferInteractor
-import com.kg.gettransfer.domain.interactor.ReviewInteractor
 
+import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.*
 
+import com.kg.gettransfer.domain.model.Transfer.Companion.filterCompleted
+
 import com.kg.gettransfer.presentation.mapper.PointMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
-import com.kg.gettransfer.presentation.mapper.TransferMapper
-
-import com.kg.gettransfer.domain.model.Transfer.Companion.filterCompleted
+import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper
+import com.kg.gettransfer.presentation.mapper.TransferMapper
+import com.kg.gettransfer.presentation.model.OfferModel
+
+import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.model.RouteModel
+
 import com.kg.gettransfer.presentation.ui.SystemUtils
-import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.service.OfferServiceConnection
 
 import com.kg.gettransfer.utilities.Analytics
 
@@ -39,12 +45,13 @@ class MainPresenter : BasePresenter<MainView>() {
     private val routeInteractor: RouteInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
-    private val offerInteractor: OfferInteractor by inject()
+    private val offerServiceConnection: OfferServiceConnection by inject()
 
     private val pointMapper: PointMapper by inject()
     private val profileMapper: ProfileMapper by inject()
     private val transferMapper: TransferMapper by inject()
     private val routeMapper: RouteMapper by inject()
+    private val reviewRateMapper: ReviewRateMapper by inject()
 
     private lateinit var lastAddressPoint: LatLng
     private var lastPoint: LatLng? = null
@@ -67,13 +74,8 @@ class MainPresenter : BasePresenter<MainView>() {
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         systemInteractor.selectedField = FIELD_FROM
         systemInteractor.initGeocoder()
-        if (routeInteractor.from != null) setLastLocation()
-        else utils.launchSuspend { updateCurrentLocationAsync().apply { error?.let { Timber.e(it) } } }
-
-        reviewInteractor.apply {
-            if (!isReviewSuggested) showRateForLastTrip()
-            else if (shouldAskRateInMarket) viewState.askRateInPlayMarket()
-        }
+        if (routeInteractor.from != null) setLastLocation() else updateCurrentLocation()
+        if (systemInteractor.account.user.loggedIn) registerPushToken(); checkReview()
 
         // Создать листенер для обновления текущей локации
         // https://developer.android.com/training/location/receive-location-updates
@@ -87,7 +89,19 @@ class MainPresenter : BasePresenter<MainView>() {
         changeUsedField(systemInteractor.selectedField)
         routeInteractor.from?.address?.let { viewState.setAddressFrom(it) }
         viewState.setTripMode(routeInteractor.hourlyDuration)
+        setCountEvents(systemInteractor.eventsCount)
     }
+
+    private fun setCountEvents(count: Int) {
+        viewState.showBadge(count > 0)
+        if (count > 0) viewState.setCountEvents(count)
+    }
+
+    override fun onNewOffer(offer: Offer): OfferModel {
+        utils.launchSuspend{ setCountEvents(systemInteractor.eventsCount) }
+        return super.onNewOffer(offer)
+    }
+
 
     @CallSuper
     override fun systemInitialized() {
@@ -123,8 +137,7 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     fun updateCurrentLocation() = utils.launchSuspend {
-        val result = updateCurrentLocationAsync()
-        result.error?.let { viewState.setError(it) }
+        updateCurrentLocationAsync().error?.let { viewState.setError(it) }
         logEvent(Analytics.MY_PLACE_CLICKED)
     }
 
@@ -304,6 +317,12 @@ class MainPresenter : BasePresenter<MainView>() {
         }
     }
 
+    private fun checkReview() =
+        with(reviewInteractor) {
+            if (!isReviewSuggested) showRateForLastTrip()
+            else if (shouldAskRateInMarket) Handler().postDelayed({ viewState.askRateInPlayMarket() }, ONE_SEC_DELAY)
+        }
+
     private fun getLastTransfer(transfers: List<Transfer>) =
         transfers.filter { it.status.checkOffers }
             .sortedByDescending { it.dateToLocal }
@@ -319,11 +338,12 @@ class MainPresenter : BasePresenter<MainView>() {
                     reviewInteractor.offerIdForReview = offer.id
                     viewState.openReviewForLastTrip(
                         transfer.id,
-                        transfer.dateToLocal.toString(),
+                        transfer.dateToLocal,
                         offer.vehicle.name,
                         offer.vehicle.color?:"",
                         routeModel
                     )
+                    logTransferReviewRequested()
                 }
             }
 
@@ -334,30 +354,33 @@ class MainPresenter : BasePresenter<MainView>() {
 
     fun onRateClicked(rate: Float) {
         if (rate.toInt() == ReviewInteractor.MAX_RATE) {
+            logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
             reviewInteractor.apply {
-                utils.launchSuspend{ sendTopRate() }
+                utils.launchSuspend { sendTopRate() }
                 if (shouldAskRateInMarket) viewState.askRateInPlayMarket() else viewState.thanksForRate()
             }
         } else viewState.showDetailedReview(rate)
     }
 
-    fun sendReview(mapOfRates: HashMap<String, Int>, comment: String) {
-        utils.launchSuspend {
-            val result = utils.asyncAwait{ reviewInteractor.sendRates(mapOfRates, comment) }
-            if (result.error != null) {
-                /* some error for analytics */
-            }
+    fun sendReview(list: List<ReviewRateModel>, comment: String) = utils.launchSuspend {
+        val result = utils.asyncAwait {
+            reviewInteractor.sendRates(list.map { reviewRateMapper.fromView(it) }, comment)
         }
+        logAverageRate(list.map { it.rateValue }.average())
+        logDetailRate(list, comment)
+        if (result.error != null) { /* some error for analytics */ }
         viewState.thanksForRate()
     }
 
     fun onRateInStore() {
+        logAppReviewRequest(true)
         systemInteractor.appEntersForMarketRate = ReviewInteractor.APP_RATED_IN_MARKET
         viewState.showRateInPlayMarket()
     }
 
-    fun onTransferDetailsClick(transferId: Long) = router.navigateTo(Screens.Details(transferId))
+    fun onRateInStoreRejected() = logAppReviewRequest(false)
 
+    fun onTransferDetailsClick(transferId: Long) = router.navigateTo(Screens.Details(transferId))
 
     fun logEvent(value: String) {
         val map = mutableMapOf<String, Any>()
@@ -366,8 +389,7 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     fun onBackClick() {
-        if (systemInteractor.selectedField == FIELD_TO) switchUsedField()
-        else viewState.onBackClick()
+        if (systemInteractor.selectedField == FIELD_TO) switchUsedField() else viewState.onBackClick()
     }
 
     fun onShareClick() {
@@ -387,14 +409,45 @@ class MainPresenter : BasePresenter<MainView>() {
             transfer.to!!.point!!,
             SystemUtils.formatDateTime(transferMapper.toView(transfer).dateTime)
         )
-
     }
+
+    private fun logAverageRate(rate: Double) =
+        analytics.logEvent(
+            Analytics.REVIEW_AVERAGE,
+            createStringBundle(Analytics.REVIEW, rate.toString()),
+            mapOf(Analytics.REVIEW to rate)
+        )
+
+    private fun logDetailRate(list: List<ReviewRateModel>, comment: String) {
+        val map = mutableMapOf<String, String?>()
+        val bundle = Bundle()
+        list.forEach {
+            val key = analytics.reviewDetailKey(it.rateType.type)
+            bundle.putInt(key, it.rateValue)
+            map[key] = it.rateValue.toString()
+        }
+        map[Analytics.REVIEW_COMMENT] = comment
+        bundle.putString(Analytics.REVIEW_COMMENT, comment)
+        analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_DETAILED, bundle, map)
+    }
+
+    private fun logTransferReviewRequested() =
+            analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED,
+                    createStringBundle("",""),
+                    mapOf())
+
+    private fun logAppReviewRequest(accepted: Boolean) =
+        analytics.logEvent(
+            Analytics.EVENT_APP_REVIEW_REQUESTED,
+            createStringBundle(analytics.requestResult(accepted), ""),
+            mapOf(analytics.requestResult(accepted) to "")
+        )
 
     companion object {
         const val FIELD_FROM = "field_from"
         const val FIELD_TO   = "field_to"
 
         const val MIN_HOURLY          = 2
-
+        const val ONE_SEC_DELAY       = 1000L
     }
 }

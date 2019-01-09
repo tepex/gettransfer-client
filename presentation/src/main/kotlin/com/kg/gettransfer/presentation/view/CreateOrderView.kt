@@ -16,7 +16,7 @@ import com.kg.gettransfer.presentation.model.UserModel
 import com.kg.gettransfer.utilities.Analytics
 
 @StateStrategyType (OneExecutionStateStrategy::class)
-interface CreateOrderView: BaseView, RouteView {
+interface CreateOrderView : BaseView, RouteView {
     fun setTransportTypes(transportTypes: List<TransportTypeModel>)
     fun setFairPrice(price: String?, time: String?)
     fun setCurrencies(currencies: List<CurrencyModel>)
@@ -24,7 +24,8 @@ interface CreateOrderView: BaseView, RouteView {
     fun setPassengers(count: Int)
     fun setChildren(count: Int)
     fun setCurrency(currency: String)
-    fun setDateTimeTransfer(dateTimeString: String, isAfter4Hours: Boolean)
+    fun setDateTimeTransfer(dateTimeString: String, isAfterMinHours: Boolean)
+    fun setHintForDateTimeTransfer()
     fun setComment(comment: String)
     fun setGetTransferEnabled(enabled: Boolean)
     fun setPromoResult(discountInfo: String?)
@@ -38,12 +39,12 @@ interface CreateOrderView: BaseView, RouteView {
         TRANSPORT_FIELD(Analytics.NO_TRANSPORT_TYPE, R.string.LNG_RIDE_CHOOSE_TRANSPORT),
         TERMS_ACCEPTED_FIELD(Analytics.LICENSE_NOT_ACCEPTED, R.string.LNG_RIDE_OFFERT_ERROR),
         PASSENGERS_COUNT(Analytics.PASSENGERS_NOT_CHOSEN, R.string.LNG_ERROR_PASSENGERS),
+        TIME_NOT_SELECTED(Analytics.PASSENGERS_NOT_CHOSEN, R.string.LNG_ERROR_DATE),
         UNKNOWN("no_param", R.string.LNG_RIDE_CANT_CREATE);
     }
 
     companion object {
         /* Пока сервевер не присылает минимальный временной промежуток до заказа */
-        const val FUTURE_HOUR   = 4
         const val FUTURE_MINUTE = 5
     }
 }

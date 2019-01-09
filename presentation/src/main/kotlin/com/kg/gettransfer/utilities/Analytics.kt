@@ -1,118 +1,133 @@
 package com.kg.gettransfer.utilities
 
 import android.os.Bundle
+
 import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
+
 import com.google.firebase.analytics.FirebaseAnalytics
+
+import com.kg.gettransfer.domain.model.ReviewRate
+
 import com.yandex.metrica.YandexMetrica
+
 import java.math.BigDecimal
-import java.util.*
-class Analytics(private val firebase: FirebaseAnalytics,
-                private val facebook: AppEventsLogger) {
+
+import java.util.Currency
+
+class Analytics(
+    private val firebase: FirebaseAnalytics,
+    private val facebook: AppEventsLogger
+) {
 
     /** [см. табл.][https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0] */
     companion object {
-        @JvmField val EVENT_LOGIN      = "login"
-        @JvmField val EVENT_TRANSFER = "create_transfer"
-        @JvmField val EVENT_ADD_TO_CART = "add_to_cart"
-        @JvmField val EVENT_SELECT_OFFER = "select_offer"
-        @JvmField val EVENT_MAKE_PAYMENT = "make_payment"
-        @JvmField val EVENT_MENU = "menu"
-        @JvmField val EVENT_MAIN = "main"
-        @JvmField val EVENT_BUTTONS = "buttons"
-        @JvmField val EVENT_SETTINGS = "settings"
-        @JvmField val EVENT_ONBOARDING = "onboarding"
-        @JvmField val EVENT_TRANSFERS   = "transfers"
-        @JvmField val EVENT_OFFERS = "offers"
-        @JvmField val EVENT_TRANSFER_SETTINGS = "transfer_settings"
-        @JvmField val EVENT_BEGIN_CHECKOUT = "begin_checkout"
-        @JvmField val EVENT_ECOMMERCE_PURCHASE = "ecommerce_purchase"
-        @JvmField val EVENT_GET_OFFER = "get_offer"
-        @JvmField val PASSWORD_RESTORE = "password_restore"
-        @JvmField val EVENT_TRANSFER_REVIEW = "transfer_review"
-        @JvmField val EVENT_TRANSFER_REVIEW_DETAILED = "transfer_review_detailed"
+        const val EVENT_LOGIN      = "login"
+        const val EVENT_TRANSFER = "create_transfer"
+        const val EVENT_ADD_TO_CART = "add_to_cart"
+        const val EVENT_SELECT_OFFER = "select_offer"
+        const val EVENT_MAKE_PAYMENT = "make_payment"
+        const val EVENT_MENU         = "menu"
+        const val EVENT_MAIN         = "main"
+        const val EVENT_BUTTONS      = "buttons"
+        const val EVENT_SETTINGS     = "settings"
+        const val EVENT_ONBOARDING   = "onboarding"
+        const val EVENT_TRANSFERS    = "transfers"
+        const val EVENT_OFFERS       = "offers"
+        const val EVENT_TRANSFER_SETTINGS  = "transfer_settings"
+        const val EVENT_BEGIN_CHECKOUT     = "begin_checkout"
+        const val EVENT_ECOMMERCE_PURCHASE = "ecommerce_purchase"
+        const val EVENT_GET_OFFER          = "get_offer"
+        const val PASSWORD_RESTORE         = "password_restore"
+        const val EVENT_TRANSFER_REVIEW_REQUESTED = "transfer_review_requested"
+        const val EVENT_TRANSFER_REVIEW_DETAILED  = "transfer_review_detailed"
+        const val EVENT_APP_REVIEW_REQUESTED      = "app_review_requested"
 
-        @JvmField val STATUS = "status"
-        @JvmField val PARAM_KEY_NAME = "name"
+        const val STATUS = "status"
+        const val PARAM_KEY_NAME = "name"
 
-        @JvmField val TRIPS_CLICKED      = "trips"
-        @JvmField val SETTINGS_CLICKED   = "settings"
-        @JvmField val ABOUT_CLICKED      = "about"
-        @JvmField val DRIVER_CLICKED     = "driver"
-        @JvmField val CUSTOMER_CLICKED   = "customer"
-        @JvmField val BEST_PRICE_CLICKED = "best_price"
-        @JvmField val SHARE_CLICKED      = "share"
-        @JvmField val TRANSFER_CLICKED   = "transfers"
-        @JvmField val LOGIN_CLICKED      = "login"
+        const val TRIPS_CLICKED      = "trips"
+        const val SETTINGS_CLICKED   = "settings"
+        const val ABOUT_CLICKED      = "about"
+        const val DRIVER_CLICKED     = "driver"
+        const val CUSTOMER_CLICKED   = "customer"
+        const val BEST_PRICE_CLICKED = "best_price"
+        const val SHARE_CLICKED      = "share"
+        const val TRANSFER_CLICKED   = "transfers"
+        const val LOGIN_CLICKED      = "login"
 
-        @JvmField val MY_PLACE_CLICKED      = "my_place"
-        @JvmField val SHOW_ROUTE_CLICKED    = "show_route"
-        @JvmField val CAR_INFO_CLICKED      = "car_info"
-        @JvmField val BACK_CLICKED          = "back"
-        @JvmField val POINT_ON_MAP_CLICKED  = "point_on_map"
-        @JvmField val PREDEFINED_CLICKED    = "predefined_"
-        @JvmField val LAST_PLACE_CLICKED    = "last_place"
-        @JvmField val SWAP_CLICKED          = "swap"
-        @JvmField val REQUEST_FORM          = "request_form"
-        @JvmField val OFFER_DETAILS         = "offer_details"
-        @JvmField val OFFER_DETAILS_RATING  = "offer_details_rating"
-        @JvmField val OFFER_BOOK            = "offer_book"
-        @JvmField val CANCEL_TRANSFER_BTN   = "cancel_transfer_btn"
+        const val MY_PLACE_CLICKED      = "my_place"
+        const val SHOW_ROUTE_CLICKED    = "show_route"
+        const val CAR_INFO_CLICKED      = "car_info"
+        const val BACK_CLICKED          = "back"
+        const val POINT_ON_MAP_CLICKED  = "point_on_map"
+        const val PREDEFINED_CLICKED    = "predefined_"
+        const val LAST_PLACE_CLICKED    = "last_place"
+        const val SWAP_CLICKED          = "swap"
+        const val REQUEST_FORM          = "request_form"
+        const val OFFER_DETAILS         = "offer_details"
+        const val OFFER_DETAILS_RATING  = "offer_details_rating"
+        const val OFFER_BOOK            = "offer_book"
+        const val CANCEL_TRANSFER_BTN   = "cancel_transfer_btn"
 
-        @JvmField val INVALID_EMAIL         = "invalid_email"
-        @JvmField val INVALID_PHONE         = "invalid_phone"
-        @JvmField val INVALID_NAME          = "invalid_name"
-        @JvmField val NO_TRANSPORT_TYPE     = "no_transport_type"
-        @JvmField val LICENSE_NOT_ACCEPTED  = "license_not_accepted"
-        @JvmField val PASSENGERS_NOT_CHOSEN = "passengers"
-        @JvmField val SERVER_ERROR          = "server_error"
+        const val INVALID_EMAIL         = "invalid_email"
+        const val INVALID_PHONE         = "invalid_phone"
+        const val INVALID_NAME          = "invalid_name"
+        const val NO_TRANSPORT_TYPE     = "no_transport_type"
+        const val LICENSE_NOT_ACCEPTED  = "license_not_accepted"
+        const val PASSENGERS_NOT_CHOSEN = "passengers"
+        const val SERVER_ERROR          = "server_error"
 
-        @JvmField val CURRENCY_PARAM = "currency"
-        @JvmField val UNITS_PARAM    = "units"
-        @JvmField val LANGUAGE_PARAM = "language"
-        @JvmField val LOG_OUT_PARAM  = "logout"
+        const val CURRENCY_PARAM = "currency"
+        const val UNITS_PARAM    = "units"
+        const val LANGUAGE_PARAM = "language"
+        const val LOG_OUT_PARAM  = "logout"
 
-        @JvmField val PARAM_KEY_FIELD  = "field"
-        @JvmField val PARAM_KEY_RESULT = "result"
+        const val PARAM_KEY_FIELD  = "field"
+        const val PARAM_KEY_RESULT = "result"
 
-        @JvmField val PARAM_KEY_FILTER  = "filter"
+        const val PARAM_KEY_FILTER  = "filter"
 
-        @JvmField val NUMBER_OF_PASSENGERS = "number_of_passengers"
-        @JvmField val ORIGIN = "origin"
-        @JvmField val DESTINATION = "destination"
-        @JvmField val TRAVEL_CLASS = "travel_class"
-        @JvmField val TRANSACTION_ID = "transaction_id"
-        @JvmField val BEGIN_IN_HOURS = "begin_in_hours"
-        @JvmField val PROMOCODE = "promocode"
+        const val NUMBER_OF_PASSENGERS = "number_of_passengers"
+        const val ORIGIN = "origin"
+        const val DESTINATION = "destination"
+        const val TRAVEL_CLASS = "travel_class"
+        const val TRANSACTION_ID = "transaction_id"
+        const val BEGIN_IN_HOURS = "begin_in_hours"
+        const val PROMOCODE = "promocode"
 
-        @JvmField val OFFER_TYPE = "offer_type"
+        const val OFFER_TYPE = "offer_type"
 
-        @JvmField val OFFER_PRICE_FOCUSED = "offer_price"
-        @JvmField val DATE_TIME_CHANGED   = "date_time"
-        @JvmField val PASSENGERS_ADDED    = "pax"
-        @JvmField val FLIGHT_NUMBER_ADDED = "flight_number"
-        @JvmField val CHILDREN_ADDED      = "children"
-        @JvmField val COMMENT_INPUT       = "comment"
+        const val OFFER_PRICE_FOCUSED = "offer_price"
+        const val DATE_TIME_CHANGED   = "date_time"
+        const val PASSENGERS_ADDED    = "pax"
+        const val FLIGHT_NUMBER_ADDED = "flight_number"
+        const val CHILDREN_ADDED      = "children"
+        const val COMMENT_INPUT       = "comment"
 
-        @JvmField val SHARE = "share"
+        const val SHARE = "share"
 
-        @JvmField val RATING = "rating"
-        @JvmField val VALUE = "value"
-        @JvmField val CURRENCY = "currency"
+        const val RATING = "rating"
+        const val VALUE = "value"
+        const val CURRENCY = "currency"
 
-        @JvmField val REVIEW = "review"
+        const val REVIEW = "review"
+        const val REVIEW_AVERAGE = "transfer_review"
+        const val REVIEW_COMMENT = "comment"
+        const val REVIEW_APP_REJECTED = "rejected"
+        const val REVIEW_APP_ACCEPTED = "accepted"
 
-        @JvmField val PUNCTUALITY = "punctuality"
-        @JvmField val DRIVER = "driver"
-        @JvmField val VEHICLE = "vehicle"
-        @JvmField val COMMENT = "comment"
+        const val PUNCTUALITY = "punctuality"
+        const val DRIVER = "driver"
+        const val VEHICLE = "vehicle"
+        const val COMMENT = "comment"
 
-        @JvmField val EXIT_STEP = "exit_step"
+        const val EXIT_STEP = "exit_step"
 
-        @JvmField val EMPTY_VALUE = ""
+        const val EMPTY_VALUE = ""
 
-        @JvmField val RESULT_SUCCESS   = "success"
-        @JvmField val RESULT_FAIL      = "fail"
+        const val RESULT_SUCCESS   = "success"
+        const val RESULT_FAIL      = "fail"
     }
 
     fun logEvent(event: String, bundle: Bundle, map: Map<String, Any?>) {
@@ -133,16 +148,23 @@ class Analytics(private val firebase: FirebaseAnalytics,
         YandexMetrica.reportEvent(event, data)
     }
 
-    fun logEventEcommercePurchase(event: String, bundle: Bundle, map: Map<String, Any?>,
-                                  price: BigDecimal, currency: Currency) {
+    fun logEventEcommerce(event: String, bundle: Bundle, map: Map<String, Any?>) {
         logEventToFirebase(event, bundle)
-        facebook.logPurchase(price, currency, bundle)
         logEventToYandex(event, map)
     }
 
-    fun logEventBeginCheckout(event: String, bundle: Bundle, map: Map<String, Any?>, price: Double) {
-        logEventToFirebase(event, bundle)
+    fun logEventEcommercePurchaseFB(bundle: Bundle, price: BigDecimal, currency: Currency)
+            = facebook.logPurchase(price, currency, bundle)
+
+    fun logEventBeginCheckoutFB(bundle: Bundle, price: Double) =
         facebook.logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT, price, bundle)
-        logEventToYandex(event, map)
+
+    fun requestResult(positive: Boolean) =
+        if (positive) REVIEW_APP_ACCEPTED else REVIEW_APP_REJECTED
+
+    fun reviewDetailKey(value: String) = when (value) {
+        ReviewRate.RateType.PUNCTUALITY.type -> "punctuality"
+        ReviewRate.RateType.VEHICLE.type     -> "vehicle"
+        else                                 -> "driver"
     }
 }

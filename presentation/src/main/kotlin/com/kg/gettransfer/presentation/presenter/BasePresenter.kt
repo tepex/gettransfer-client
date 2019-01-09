@@ -5,16 +5,25 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.MvpPresenter
 
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
+
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.domain.model.Offer
+
+import com.kg.gettransfer.presentation.mapper.OfferMapper
+import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.NotificationManager
 
-import com.yandex.metrica.YandexMetrica
+import kotlinx.coroutines.Job
 
 import org.koin.standalone.get
 import org.koin.standalone.inject
@@ -22,7 +31,7 @@ import org.koin.standalone.KoinComponent
 
 import ru.terrakok.cicerone.Router
 
-import kotlinx.coroutines.Job
+import timber.log.Timber
 
 open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
     protected val compositeDisposable = Job()
@@ -30,13 +39,15 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
     protected val router: Router by inject()
     protected val analytics: Analytics by inject()
     protected val systemInteractor: SystemInteractor by inject()
+    protected val offerMapper: OfferMapper by inject()
+    protected val notificationManager: NotificationManager by inject()
+    protected val offerInteractor: OfferInteractor by inject()
 
     open fun onBackCommandClick() {
         val map = mutableMapOf<String, Any>()
         map[Analytics.PARAM_KEY_NAME] = Analytics.BACK_CLICKED
-
-        router.exit()
         analytics.logEvent(Analytics.EVENT_MAIN, createStringBundle(Analytics.PARAM_KEY_NAME, Analytics.BACK_CLICKED), map)
+        router.exit()
     }
 
     protected fun login(nextScreen: String, email: String) = router.navigateTo(Screens.Login(nextScreen, email))
@@ -83,8 +94,26 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
         router.navigateTo(Screens.CallPhone(phone))
     }
 
+    protected fun registerPushToken() {
+        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener(OnCompleteListener {
+            if (it.isSuccessful) {
+                it.result?.token?.let {
+                    Timber.d("[FCM token]: $it")
+                    utils.runAlien { systemInteractor.registerPushToken(it) }
+                }
+            } else Timber.w("getInstanceId failed", it.exception)
+        })
+    }
+
+    open fun onNewOffer(offer: Offer): OfferModel {
+        offerInteractor.newOffer(offer)
+        val offerModel = offerMapper.toView(offer)
+        notificationManager.showOfferNotification(offerModel)
+        return offerModel
+    }
+
     companion object AnalyticProps {
-        @JvmField val SINGLE_CAPACITY = 1
-        @JvmField val DOUBLE_CAPACITY = 2
+        const val SINGLE_CAPACITY = 1
+        const val DOUBLE_CAPACITY = 2
     }
 }

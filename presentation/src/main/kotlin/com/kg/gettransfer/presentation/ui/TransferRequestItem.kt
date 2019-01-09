@@ -46,20 +46,29 @@ class TransferRequestItem @JvmOverloads constructor(
         }
         tvTransferRequestStatus.setTextColor(ContextCompat.getColor(context,
                 when (item.status) {
-                    Transfer.Status.OUTDATED -> R.color.color_transfer_details_text_red
+                    Transfer.Status.OUTDATED  -> R.color.color_transfer_details_text_red
                     Transfer.Status.PERFORMED -> R.color.color_transfer_details_text_green
-                    else -> R.color.colorTransferRequestText
+                    else                      -> R.color.colorTransferRequestText
                 }))
         tvFrom.text = item.from
         if (item.to != null) {
             tvTo.text = item.to
             tvDistance.text = SystemUtils.formatDistance(context, item.distance, true)
             changeViewForHourlyTransfer(false)
+            item.dateTimeReturn?.let {
+                ivReturnIcon.isVisible = true
+                ivMarkersLine.isVisible = false
+            }
         } else if (item.duration != null) {
             changeViewForHourlyTransfer(true)
             tv_duration.text = HourlyValuesHelper.getValue(item.duration, context)
         }
         tvOrderDateTime.text = SystemUtils.formatDateTime(item.dateTime)
+
+        (item.dateTimeReturn == null).also {
+            ivReturnIcon.isVisible = !it
+            ivMarkersLine.isVisible = it
+        }
     }
 
     private fun changeViewForHourlyTransfer(isHourlyTransfer: Boolean) {

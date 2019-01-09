@@ -51,11 +51,10 @@
         android:gravity="start|bottom"
         android:hint="450"
         android:textColorHint="@color/black_a10"
-        android:imeOptions="actionDone"
+        android:imeOptions="actionNext"
         android:singleLine="true"
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/create_transfer_additionals_top_text_size"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/field_icon"

@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.view
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
+
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 

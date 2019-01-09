@@ -22,10 +22,12 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.presentation.adapter.AddressAdapter
 import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
+import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
@@ -144,6 +146,8 @@ class SearchActivity : BaseActivity(), SearchView {
         searchTo.initText(address, sendRequest, isEditing)
         if (address.isNotEmpty()) updateIcon(true)
     }
+
+    override fun changeFocusToDestField() = searchTo.changeFocus()
 
     override fun hideAddressTo() {
         searchTo.isGone  = true

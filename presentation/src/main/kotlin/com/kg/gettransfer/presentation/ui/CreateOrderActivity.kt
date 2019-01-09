@@ -37,18 +37,15 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.common.BoundDatePickerDialog
 
 import com.kg.gettransfer.common.BoundTimePickerDialog
+import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
-
-import com.kg.gettransfer.presentation.model.CurrencyModel
-import com.kg.gettransfer.presentation.model.PolylineModel
-import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransportTypeModel
-import com.kg.gettransfer.presentation.model.UserModel
+import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 
@@ -247,27 +244,53 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     private fun showDatePickerDialog() {
         val currentDate = presenter.currentDate
         calendar.time = presenter.date
-        val datePickerDialog = DatePickerDialog(this, { _, year, monthOfYear, dayOfMonth ->
-            calendar.set(year, monthOfYear, dayOfMonth)
-            presenter.date = calendar.time
 
-            val calendarWithoutTime = Calendar.getInstance()
-            calendarWithoutTime.set(year, monthOfYear, dayOfMonth, 0, 0)
-            when {
-                calendarWithoutTime.time.after(currentDate.time) -> {
-                    showTimePickerDialog(-1, 24, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
-                }
-                calendar.time.after(currentDate.time) -> {
-                    showTimePickerDialog(currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE),
-                                         calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
-                }
-                else -> showTimePickerDialog(currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE),
-                                             currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE))
-            }
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+        val boundDatePickerDialog = BoundDatePickerDialog(
+            this,
+            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                calendar.set(year, monthOfYear, dayOfMonth)
+                presenter.date = calendar.time
 
-        datePickerDialog.datePicker.minDate = currentDate.timeInMillis
-        datePickerDialog.show()
+                val calendarWithoutTime = Calendar.getInstance()
+                calendarWithoutTime.set(year, monthOfYear, dayOfMonth, 0, 0)
+                when {
+                    calendarWithoutTime.time.after(currentDate.time) -> showTimePickerDialog(
+                        -1,
+                        24,
+                        calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE)
+                    )
+
+                    calendar.time.after(currentDate.time) -> showTimePickerDialog(
+                        currentDate.get(Calendar.HOUR_OF_DAY),
+                        currentDate.get(Calendar.MINUTE),
+                        calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE)
+                    )
+
+                    else -> showTimePickerDialog(
+                        currentDate.get(Calendar.HOUR_OF_DAY),
+                        currentDate.get(Calendar.MINUTE),
+                        currentDate.get(Calendar.HOUR_OF_DAY),
+                        currentDate.get(Calendar.MINUTE)
+                    )
+                }
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
+        )
+
+        if (Build.VERSION.SDK_INT < 21) {
+            boundDatePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
+            boundDatePickerDialog.setMin(
+                currentDate.get(Calendar.YEAR),
+                currentDate.get(Calendar.MONTH),
+                currentDate.get(Calendar.DAY_OF_MONTH)
+            )
+        } else {
+            boundDatePickerDialog.datePicker.minDate = currentDate.timeInMillis
+        }
+        boundDatePickerDialog.show()
     }
 
     private fun showTimePickerDialog(minHour: Int, minMinute: Int, setHour: Int, setMinute: Int) {
@@ -278,26 +301,38 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true)
         timePickerDialog.show() */
 
-        val boundTimePickerDialog = BoundTimePickerDialog(this, { _, hour, minute ->
-            calendar.set(Calendar.HOUR_OF_DAY, hour)
-            calendar.set(Calendar.MINUTE, minute)
-            presenter.changeDate(calendar.time)
-        }, setHour, setMinute, true)
-        boundTimePickerDialog.setMin(minHour, minMinute)
-        boundTimePickerDialog.show()
+        BoundTimePickerDialog(
+            this,
+            { _, hour, minute ->
+                calendar.set(Calendar.HOUR_OF_DAY, hour)
+                calendar.set(Calendar.MINUTE, minute)
+                presenter.changeDate(calendar.time)
+            },
+            setHour,
+            setMinute,
+            true
+        ).apply {
+            setMin(minHour, minMinute)
+            show()
+        }
     }
 
-    override fun setDateTimeTransfer(dateTimeString: String, isAfter4Hours: Boolean) {
-        if (isAfter4Hours) transfer_date_time_field.field_input.setText(
-            getString(R.string.LNG_DATE_IN_HOURS)
-                    .plus(" ")
-                    .plus(CreateOrderView.FUTURE_HOUR)
-                    .plus(" ")
-                    .plus(getString(R.string.LNG_HOUR_FEW)))
+    override fun setDateTimeTransfer(dateTimeString: String, isAfterMinHours: Boolean) {
+        if (isAfterMinHours) transfer_date_time_field.field_input.setText(getTextForMinDate())
         else transfer_date_time_field.field_input.setText(dateTimeString)
     }
 
-    private fun checkMinusButton(count: Int, minimum: Int, view: ImageView) {
+    override fun setHintForDateTimeTransfer() {
+        transfer_date_time_field.field_input.hint = getTextForMinDate()
+    }
+
+    private fun getTextForMinDate() = getString(R.string.LNG_DATE_IN_HOURS)
+            .plus(" ")
+            .plus(presenter.futureHour)
+            .plus(" ")
+            .plus(getString(R.string.LNG_HOUR_FEW))
+
+            private fun checkMinusButton(count: Int, minimum: Int, view: ImageView) {
         val imgRes = if (count == minimum) R.drawable.ic_circle_minus else R.drawable.ic_minus_enabled
         view.setImageDrawable(ContextCompat.getDrawable(this, imgRes))
     }
@@ -306,10 +341,12 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         passengers_seats.person_count.text = count.toString()
         checkMinusButton(count, 0, passengers_seats.img_minus_seat)
     }
+
     override fun setChildren(count: Int) {
         child_seats.person_count.text = count.toString()
         checkMinusButton(count, 0, child_seats.img_minus_seat)
     }
+
     override fun setCurrency(currency: String) { tv_currency.text = currency }
     override fun setComment(comment: String)   { comment_field.field_input.setText(comment) }
 
@@ -402,10 +439,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
             else                                                    -> super.onBackPressed()
         }
     }
-
-
-
-
 
     //TODO create custom view for new bottom sheet
     private fun initFieldsViews() {

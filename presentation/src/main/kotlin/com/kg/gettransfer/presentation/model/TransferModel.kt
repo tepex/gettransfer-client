@@ -22,7 +22,7 @@ data class TransferModel(
     val dateTimeReturn: Date?,
     val flightNumber: String?,
 /* ================================================== */
-/*  flightNumberReturn not used */
+    val flightNumberReturn: String?,
     val transportTypes: List<TransportTypeModel>,
     val countPassengers: Int,
     val bookNow: TransportType.ID?,
@@ -61,5 +61,6 @@ data class TransferModel(
 /* ================================================== */
 /* ================================================== */
     val statusCategory: String,
-    val timeToTransfer: Int
+    val timeToTransfer: Int,
+    var eventsCount: Int = 0
 )

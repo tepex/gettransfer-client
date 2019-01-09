@@ -4,7 +4,6 @@ import android.os.Bundle
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
@@ -27,9 +26,8 @@ import org.koin.standalone.inject
 import timber.log.Timber
 
 @InjectViewState
-class PaymentPresenter: BasePresenter<PaymentView>() {
+class PaymentPresenter : BasePresenter<PaymentView>() {
     private val paymentInteractor: PaymentInteractor by inject()
-    private val offerInteractor: OfferInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
     private val mapper: PaymentStatusRequestMapper by inject()
 
@@ -44,12 +42,12 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
             viewState.blockInterface(true)
             val model = PaymentStatusRequestModel(null, orderId, true, success)
             val result = utils.asyncAwait { paymentInteractor.changeStatusPayment(mapper.fromView(model)) }
-            if(result.error != null) {
+            if (result.error != null) {
                 Timber.e(result.error!!)
                 viewState.setError(result.error!!)
                 router.exit()
             } else {
-                if(result.model.success) {
+                if (result.model.success) {
                     router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
                     router.navigateTo(Screens.PaymentSuccess(transferId, offerId))
                     offer = offerInteractor.getOffer(offerId)!!
@@ -67,14 +65,21 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
 
     private fun logEventEcommercePurchase() {
         val bundle = Bundle()
+        val fbBundle = Bundle()
         val map = mutableMapOf<String, Any?>()
+
+        bundle.putString(Analytics.TRANSACTION_ID, transferId.toString())
+        map[Analytics.TRANSACTION_ID] = transferId.toString()
+        bundle.putString(Analytics.PROMOCODE, transferInteractor.transferNew?.promoCode)
+        map[Analytics.PROMOCODE] = transferInteractor.transferNew?.promoCode
+        fbBundle.putAll(bundle)
 
         map[Analytics.CURRENCY] = systemInteractor.currency.currencyCode
         bundle.putString(Analytics.CURRENCY, systemInteractor.currency.currencyCode)
 
         var price = offer.price.amount
 
-        when(percentage) {
+        when (percentage) {
             OfferModel.FULL_PRICE -> {
                 bundle.putDouble(Analytics.VALUE, price)
                 map[Analytics.VALUE] = price
@@ -86,13 +91,8 @@ class PaymentPresenter: BasePresenter<PaymentView>() {
             }
         }
 
-        bundle.putString(Analytics.TRANSACTION_ID, transferId.toString())
-        map[Analytics.TRANSACTION_ID] = transferId.toString()
-        bundle.putString(Analytics.PROMOCODE, transferInteractor.transferNew?.promoCode)
-        map[Analytics.PROMOCODE] = transferInteractor.transferNew?.promoCode
-
-        analytics.logEventEcommercePurchase(Analytics.EVENT_ECOMMERCE_PURCHASE, bundle, map,
-                price.toBigDecimal(), systemInteractor.currency)
+        analytics.logEventEcommerce(Analytics.EVENT_ECOMMERCE_PURCHASE, bundle, map)
+        analytics.logEventEcommercePurchaseFB(fbBundle, price.toBigDecimal(), systemInteractor.currency)
     }
 
     fun logEvent(value: String) {

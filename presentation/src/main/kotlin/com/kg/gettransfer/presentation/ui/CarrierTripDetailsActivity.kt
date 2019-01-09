@@ -22,14 +22,10 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isVisible
-
-import com.kg.gettransfer.presentation.model.CarrierTripModel
-import com.kg.gettransfer.presentation.model.ProfileModel
-import com.kg.gettransfer.presentation.model.PolylineModel
-import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.VehicleInfoModel
+import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.presenter.CarrierTripDetailsPresenter
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
@@ -107,7 +103,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         } else {
            trip.passengerAccount?.profileModel?.let { initAboutPassengerLayout(it) }
         }*/
-        trip.passenger.profile?.let { initAboutPassengerLayout(it) }
+        initAboutPassengerLayout(trip.passenger.profile)
     }
 
     private fun initMoreInfoLayout(trip: CarrierTripModel) {

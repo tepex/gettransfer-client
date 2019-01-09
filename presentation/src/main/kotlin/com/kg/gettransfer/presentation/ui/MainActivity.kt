@@ -27,6 +27,8 @@ import android.widget.TextView
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -40,6 +42,8 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 
 import com.kg.gettransfer.presentation.model.ProfileModel
@@ -48,9 +52,13 @@ import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.MainView
 
+import java.util.Date
+
 import kotlinx.android.synthetic.main.a_b_view.*
 import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.nav_item_requests.view.*
+import kotlinx.android.synthetic.main.notification_offer.*
 import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
@@ -59,7 +67,6 @@ import kotlinx.android.synthetic.main.view_navigation.*
 import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
 import kotlinx.android.synthetic.main.view_rate_in_store.view.*
-import kotlinx.android.synthetic.main.view_thanks_for_rate.*
 import kotlinx.android.synthetic.main.view_thanks_for_rate.view.*
 
 import timber.log.Timber
@@ -74,6 +81,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     private var isFirst = true
     private var centerMarker: Marker? = null
+    private var isGmTouchEnabled = true
 
     @ProvidePresenter
     fun createMainPresenter() = MainPresenter()
@@ -243,7 +251,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             gm.setMyLocationEnabled(true)
             gm.uiSettings.isMyLocationButtonEnabled = false
         }
-
+        gm.uiSettings.setAllGesturesEnabled(isGmTouchEnabled)
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
         gm.setOnCameraMoveListener        { presenter.onCameraMove(gm.cameraPosition!!.target, true)  }
         gm.setOnCameraIdleListener        { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
@@ -413,10 +421,11 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         }
     }
 
-    override fun openReviewForLastTrip(transferId: Long, date: String, vehicle: String, color: String, routeModel: RouteModel) {
+    override fun openReviewForLastTrip(transferId: Long, date: Date, vehicle: String, color: String, routeModel: RouteModel) {
         val view = showPopUpWindow(R.layout.view_last_trip_rate, contentMain)
         mDisMissAction = {
             _mapView = mapView
+            isGmTouchEnabled = true
             initMapView(null)
             view.rate_map.onDestroy()
             mapView.onResume()
@@ -431,7 +440,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             }
             tv_close_lastTrip_rate.setOnClickListener { presenter.onReviewCanceled() }
             tv_transfer_number_rate.apply { text = text.toString().plus(" #$transferId") }
-            tv_transfer_date_rate.text = date
+            tv_transfer_date_rate.text = SystemUtils.formatDateTime(date)
             tv_vehicle_model_rate.text = vehicle
             rate_bar_last_trip.setOnRatingChangeListener { _, fl ->
                 closePopUp()
@@ -439,13 +448,13 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             }
             carColor_rate.setImageDrawable(Utils.getVehicleColorFormRes(this@MainActivity, color))
         }
-
         drawMapForReview(view.rate_map, Utils.getPolyline(routeModel), routeModel)
 
     }
 
     private fun drawMapForReview(map: MapView, polyline: PolylineModel, routeModel: RouteModel) {
         _mapView = map
+        isGmTouchEnabled = false
         initMapView(null)
         setPolyline(polyline, routeModel)
         mapView.onPause()
@@ -457,25 +466,23 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         popUpView.tvCancelRate.setOnClickListener { presenter.onReviewCanceled() }
         popUpView.send_feedBack.setOnClickListener {
             closePopUp()
-            presenter.sendReview(Utils.createMapOfDetailedRates(popUpView), popUpView.et_reviewComment.text.toString())
+            presenter.sendReview(Utils.createListOfDetailedRates(popUpView), popUpView.et_reviewComment.text.toString())
         }
         setupDetailRatings(tappedRate, popUpView)
     }
 
-    private fun setupDetailRatings(rateForFill: Float, v: View) {
-        rateForFill.let {
-            v.apply {
-                main_rate.rating                 = it
-                driver_rate.rate_bar.rating      = it
-                punctuality_rate.rate_bar.rating = it
-                vehicle_rate.rate_bar.rating     = it
-            }
+    private fun setupDetailRatings(rateForFill: Float, view: View) {
+        with(view) {
+            main_rate.rating                 = rateForFill
+            driver_rate.rate_bar.rating      = rateForFill
+            punctuality_rate.rate_bar.rating = rateForFill
+            vehicle_rate.rate_bar.rating     = rateForFill
         }
     }
 
     override fun askRateInPlayMarket() {
         showPopUpWindow(R.layout.view_rate_in_store, contentMain).apply {
-            tv_agree_store.setOnClickListener { presenter.onRateInStore() }
+            tv_agree_store.setOnClickListener { presenter.onRateInStore(); presenter.onRateInStoreRejected() }
             tv_reject_store.setOnClickListener { closePopUp() }
         }
     }
@@ -490,18 +497,28 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     override fun cancelReview() = closePopUp()
 
-    companion object {
-        @JvmField val MY_LOCATION_BUTTON_INDEX = 2
-        @JvmField val COMPASS_BUTTON_INDEX = 5
-        @JvmField val FADE_DURATION = 500L
-        @JvmField val MAX_INIT_ZOOM = 2.0f
-
-        const val ALPHA_FULL = 1f
-        const val ALPHA_DISABLED = 0.3f
+    override fun showBadge(show: Boolean) {
+        if (show) {
+            tvEventsCount.isVisible = true
+            navRequests.tvEventsCount.isVisible = true
+        } else {
+            tvEventsCount.isVisible = false
+            navRequests.tvEventsCount.isVisible = false
+        }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PLAY_MARKET_RATE) thanksForRate()
+    override fun setCountEvents(count: Int) {
+        tvEventsCount.text = count.toString()
+        navRequests.tvEventsCount.text = count.toString()
+    }
+
+    companion object {
+        const val MY_LOCATION_BUTTON_INDEX = 2
+        const val COMPASS_BUTTON_INDEX     = 5
+        const val FADE_DURATION = 500L
+        const val MAX_INIT_ZOOM = 2.0f
+
+        const val ALPHA_FULL     = 1f
+        const val ALPHA_DISABLED = 0.3f
     }
 }

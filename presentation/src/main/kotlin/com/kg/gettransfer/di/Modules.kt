@@ -30,6 +30,7 @@ import com.kg.gettransfer.service.OfferServiceConnection
 import com.kg.gettransfer.utilities.Analytics
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import com.kg.gettransfer.utilities.NotificationManager
 
 import kotlinx.coroutines.Dispatchers
 
@@ -99,6 +100,7 @@ val mappersModule = module {
     single { PriceMapper() }
     single { ProfileMapper() }
     single { RatingsMapper() }
+    single { ReviewRateMapper() }
     single { RouteMapper() }
     single { TransferMapper() }
     single { TransportTypeMapper() }
@@ -116,6 +118,7 @@ val androidModule = module {
     single { AppEventsLogger.newLogger(androidApplication().applicationContext) }
     single { Analytics(get(), get()) }
     single { PhoneNumberUtil.createInstance(get<Context>()) }
+    single { NotificationManager(androidApplication().applicationContext) }
 }
 
 val testModule = module {

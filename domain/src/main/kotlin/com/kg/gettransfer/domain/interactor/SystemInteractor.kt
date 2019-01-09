@@ -7,8 +7,10 @@ import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.PushTokenType
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.LoggingRepository
@@ -57,6 +59,12 @@ class SystemInteractor(
     val currencies: List<Currency> /* Dirty hack. GAA-298 */
         get() = systemRepository.configs.supportedCurrencies.filter { currenciesFilterList.contains(it.currencyCode) }
 
+    var pushToken: String? = null
+        private set
+
+    val mobileConfigs: MobileConfig
+        get() = systemRepository.mobileConfig
+
     /* Read-write properties */
 
     var lastMode: String
@@ -98,6 +106,14 @@ class SystemInteractor(
         get() = account.distanceUnit
         set(value) { account.distanceUnit = value }
 
+    var eventsCount: Int
+        get() = systemRepository.eventsCount
+        set(value) {systemRepository.eventsCount = value}
+
+    var transferIds: List<Long>
+        get() = systemRepository.transferIds
+        set(value) { systemRepository.transferIds = value }
+
     suspend fun coldStart() = systemRepository.coldStart()
 
     fun initGeocoder() = geoRepository.initGeocoder(locale)
@@ -107,6 +123,17 @@ class SystemInteractor(
         set(value) { systemRepository.appEnters = value }
 
     fun logout() = systemRepository.logout()
+
+    suspend fun registerPushToken(token: String) {
+        pushToken = token
+        systemRepository.registerPushToken(PushTokenType.FCM, token)
+    }
+
+    suspend fun unregisterPushToken(): Result<Unit> {
+        pushToken?.let { systemRepository.unregisterPushToken(it) }
+        return Result(Unit)
+    }
+
     suspend fun login(email: String, password: String) = systemRepository.login(email, password)
     suspend fun putAccount() = systemRepository.putAccount(account)
 

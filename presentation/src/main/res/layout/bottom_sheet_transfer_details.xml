@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/back_top_rounded"
     app:behavior_hideable="false"
@@ -37,50 +37,12 @@
             <include
                 android:id="@+id/view_rate_ride"
                 layout="@layout/view_rate_your_transfer"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
             <include
                 android:id="@+id/thanks_for_rate"
                 layout="@layout/view_thanks_for_rate_small"
                 android:visibility="gone"/>
-
-            <LinearLayout
-                android:id="@+id/layoutButtonSupportTop"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/color_transfer_details_background_gray"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:id="@+id/btnSupportTop"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/bottom_sheet_transfer_details_buttons_height"
-                    android:background="@drawable/bg_yellow_button_customer_support"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/bottom_sheet_transfer_details_support_top_button_margin_top"
-                    android:layout_marginStart="@dimen/bottom_sheet_transfer_details_buttons_margin_start_end"
-                    android:layout_marginEnd="@dimen/bottom_sheet_transfer_details_buttons_margin_start_end">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/bottom_sheet_transfer_details_support_buttons_img_margin_end"
-                        app:srcCompat="@drawable/ic_support"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/LNG_CUSTOMER_SUPPORT"
-                        android:textColor="@color/colorTextBlack"
-                        android:textSize="@dimen/activity_transfer_details_text_size_17sp"
-                        android:fontFamily="@font/sf_pro_text_regular"
-                        android:textAllCaps="true"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
 
             <include
                 android:id="@+id/layoutCommunicateButtons"
@@ -109,7 +71,7 @@
                 android:orientation="vertical"
                 android:background="@color/color_transfer_details_background_gray"
                 android:paddingBottom="@dimen/bottom_sheet_transfer_details_support_bottom_layout_buttons_padding_bottom"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <com.google.android.flexbox.FlexboxLayout
                     android:id="@+id/flexboxLayoutTransportTypes"
@@ -133,7 +95,7 @@
                     android:layout_marginBottom="@dimen/bottom_sheet_transfer_details_buttons_margin_top_bottom"
                     android:layout_marginStart="@dimen/bottom_sheet_transfer_details_buttons_margin_start_end"
                     android:layout_marginEnd="@dimen/bottom_sheet_transfer_details_buttons_margin_start_end"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <ImageView
                         android:layout_width="wrap_content"

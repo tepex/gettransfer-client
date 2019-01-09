@@ -1,12 +1,13 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.annotation.SuppressLint
+
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Color
 
+import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 
@@ -17,16 +18,21 @@ import android.support.annotation.CallSuper
 import android.support.annotation.IdRes
 import android.support.annotation.NonNull
 import android.support.annotation.StringRes
-import android.support.design.widget.BottomSheetBehavior
 
+import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
-import android.util.DisplayMetrics
-import android.view.*
 
+import android.util.DisplayMetrics
+
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 
@@ -36,15 +42,17 @@ import com.arellomobile.mvp.MvpPresenter
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
-
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.extensions.*
 
+import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.presenter.BasePresenter
-
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
+
+import com.kg.gettransfer.service.OfferServiceConnection
 
 import com.kg.gettransfer.utilities.LocaleManager
 
@@ -58,20 +66,14 @@ import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 import timber.log.Timber
 
-abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
-    companion object {
-        const val TOOLBAR_NO_TITLE = 0
-
-        const val DIM_AMOUNT = 0.5f
-
-        const val PLAY_MARKET_RATE = 42
-    }
+abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     internal val systemInteractor: SystemInteractor by inject()
 
     internal val router: Router by inject()
     protected val navigatorHolder: NavigatorHolder by inject()
     protected val localeManager: LocaleManager by inject()
+    private val offerServiceConnection: OfferServiceConnection by inject()
 
     private var rootView: View? = null
     private var rootViewHeight: Int? = null
@@ -148,8 +150,8 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
-        if(titleId != TOOLBAR_NO_TITLE) toolbar.toolbar_title.setText(titleId)
-        if(hasBackAction) toolbar.setNavigationOnClickListener { getPresenter().onBackCommandClick() }
+        if (titleId != TOOLBAR_NO_TITLE) toolbar.toolbar_title.setText(titleId)
+        if (hasBackAction) toolbar.setNavigationOnClickListener { getPresenter().onBackCommandClick() }
     }
 
     @CallSuper
@@ -163,11 +165,15 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     protected override fun onResume() {
         super.onResume()
         navigatorHolder.setNavigator(navigator)
+        offerServiceConnection.connect(systemInteractor.endpoint, systemInteractor.accessToken) {
+            getPresenter().onNewOffer(it)
+        }
     }
 
     @CallSuper
     protected override fun onPause() {
         navigatorHolder.removeNavigator()
+        offerServiceConnection.disconnect()
         super.onPause()
     }
 
@@ -178,14 +184,13 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
-        if(block) {
+        if (block) {
             if(useSpinner) showLoading()
-        }
-        else hideLoading()
+        } else hideLoading()
     }
 
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-        var errMessage = getString(errId, *args)
+        val errMessage = getString(errId, *args)
         Timber.e(RuntimeException(errMessage))
         Utils.showError(this, finish, errMessage)
     }
@@ -215,7 +220,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
 
     //здесь лучше ничего не трогать
     private fun countDifference(): Boolean {
-        if(rootViewHeight == null) rootViewHeight = rootView!!.rootView.height
+        if (rootViewHeight == null) rootViewHeight = rootView!!.rootView.height
 
         val visibleRect = Rect().also { rootView!!.getWindowVisibleDisplayFrame(it) }
         return (rootViewHeight!! - visibleRect.bottom) < rootViewHeight!! * 0.15
@@ -225,11 +230,10 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
         rootView = findViewById(android.R.id.content)
         rootView!!.viewTreeObserver.addOnGlobalLayoutListener {
             val state = countDifference()
-            if(!state && !isKeyBoardOpened){
+            if (!state && !isKeyBoardOpened){
                 isKeyBoardOpened = true
                 checkKeyBoardState(isKeyBoardOpened)
-            }
-            else if (state && isKeyBoardOpened){
+            } else if (state && isKeyBoardOpened){
                 isKeyBoardOpened = false
                 checkKeyBoardState(isKeyBoardOpened)
             }
@@ -239,12 +243,12 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
     //protected fun openScreen(screen: String) { router.navigateTo(screen) }
 
     override fun attachBaseContext(newBase: Context?) {
-        if(newBase != null) super.attachBaseContext(localeManager.updateResources(newBase, systemInteractor.locale))
+        if (newBase != null) super.attachBaseContext(localeManager.updateResources(newBase, systemInteractor.locale))
         else super.attachBaseContext(null)
     }
 
     private fun showLoading() {
-        if(loadingFragment.isAdded) return
+        if (loadingFragment.isAdded) return
         supportFragmentManager.beginTransaction().apply {
             add(android.R.id.content, loadingFragment)
             commit()
@@ -284,7 +288,7 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
             setOnDismissListener { clearDim(window.decorView.rootView as  ViewGroup)
                 mDisMissAction()
             }
-            softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+            softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
             inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
 
         }
@@ -295,14 +299,32 @@ abstract class BaseActivity: MvpAppCompatActivity(), BaseView {
 
     protected var mDisMissAction = { }    // used in popup dismiss event, need later init, when view with map would be created
 
-    protected fun redirectToPlayMarket() =
-        Intent(Intent.ACTION_VIEW).let {
-            closePopUp()
-            it.data = Uri.parse(getString(R.string.market_link) + getString(R.string.app_package))
-            it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            startActivityForResult(it, PLAY_MARKET_RATE)
-        }
+    protected fun redirectToPlayMarket() {
+        val url = getString(R.string.market_link) + getString(R.string.app_package)
+        startActivityForResult(
+            Intent(Intent.ACTION_VIEW).apply {
+                closePopUp()
+                data = Uri.parse(url)
+                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            },
+            PLAY_MARKET_RATE
+        )
+    }
 
+    @CallSuper
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PLAY_MARKET_RATE) thanksForRate()
+    }
+
+    open fun thanksForRate() {}
 
     protected fun closePopUp() = popupWindowRate.dismiss()
+
+    companion object {
+        const val TOOLBAR_NO_TITLE = 0
+        const val PLAY_MARKET_RATE = 42
+
+        const val DIM_AMOUNT = 0.5f
+    }
 }

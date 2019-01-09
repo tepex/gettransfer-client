@@ -10,8 +10,8 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
-import android.view.MotionEvent
 
+import android.view.MotionEvent
 import android.view.View
 
 import android.widget.ImageView
@@ -21,6 +21,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.extensions.*
 
@@ -33,8 +34,7 @@ import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
 
 import com.kg.gettransfer.presentation.view.OffersView
-
-import com.kg.gettransfer.service.OfferServiceConnection
+import com.kg.gettransfer.presentation.view.OffersView.Sort
 
 import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_DETAILS_RATING
 
@@ -44,6 +44,8 @@ import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
 
 import org.koin.android.ext.android.inject
+
+import timber.log.Timber
 
 class OffersActivity : BaseActivity(), OffersView {
 
@@ -57,12 +59,12 @@ class OffersActivity : BaseActivity(), OffersView {
 
     override fun getPresenter(): OffersPresenter = presenter
 
-    private val offerServiceConnection: OfferServiceConnection by inject()
-
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.transferId = intent.getLongExtra(OffersView.EXTRA_TRANSFER_ID, 0)
+
+        Timber.d("Start OffersActivity: transfer id: ${presenter.transferId}")
 
         setContentView(R.layout.activity_offers)
 
@@ -81,9 +83,9 @@ class OffersActivity : BaseActivity(), OffersView {
 
         btnCancelRequest.setOnClickListener               { presenter.onCancelRequestClicked() }
         layoutTransferRequestInfo.setOnClickListener      { presenter.onRequestInfoClicked() }
-        sortYear.setOnClickListener                       { presenter.changeSortType(OffersPresenter.SORT_YEAR) }
-        sortRating.setOnClickListener                     { presenter.changeSortType(OffersPresenter.SORT_RATING) }
-        sortPrice.setOnClickListener                      { presenter.changeSortType(OffersPresenter.SORT_PRICE) }
+        sortYear.setOnClickListener                       { presenter.changeSortType(Sort.YEAR) }
+        sortRating.setOnClickListener                     { presenter.changeSortType(Sort.RATING) }
+        sortPrice.setOnClickListener                      { presenter.changeSortType(Sort.PRICE) }
         (toolbar as Toolbar).setNavigationOnClickListener { navigateBackWithTransition()  }
     }
 
@@ -94,18 +96,6 @@ class OffersActivity : BaseActivity(), OffersView {
             }
         }
         return super.dispatchTouchEvent(event)
-    }
-
-    @CallSuper
-    protected override fun onResume() {
-        super.onResume()
-        offerServiceConnection.connect(systemInteractor.endpoint, systemInteractor.accessToken) { presenter.onNewOffer(it) }
-    }
-
-    @CallSuper
-    protected override fun onPause() {
-        offerServiceConnection.disconnect()
-        super.onPause()
     }
 
     private fun navigateBackWithTransition() {
@@ -123,12 +113,12 @@ class OffersActivity : BaseActivity(), OffersView {
         rvOffers.adapter = OffersRVAdapter(offers.toMutableList()) { offer, isShowingOfferDetails -> presenter.onSelectOfferClicked(offer, isShowingOfferDetails) }
     }
 
-    override fun setSortState(sortCategory: String, sortHigherToLower: Boolean) {
+    override fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean) {
         cleanSortState()
         when (sortCategory) {
-            OffersPresenter.SORT_YEAR   -> { selectSort(sortYear, triangleYear, sortHigherToLower) }
-            OffersPresenter.SORT_RATING -> { selectSort(sortRating, triangleRating, sortHigherToLower) }
-            OffersPresenter.SORT_PRICE  -> { selectSort(sortPrice, trianglePrice, sortHigherToLower) }
+            Sort.YEAR   -> selectSort(sortYear, triangleYear, sortHigherToLower)
+            Sort.RATING -> selectSort(sortRating, triangleRating, sortHigherToLower)
+            Sort.PRICE  -> selectSort(sortPrice, trianglePrice, sortHigherToLower)
         }
     }
 
@@ -248,4 +238,8 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun addNewOffer(offer: OfferModel) { (rvOffers.adapter as OffersRVAdapter).add(offer) }
+
+    companion object {
+        val ACTION_NEW_OFFER = "${OffersActivity::class.java.name}.offer"
+    }
 }

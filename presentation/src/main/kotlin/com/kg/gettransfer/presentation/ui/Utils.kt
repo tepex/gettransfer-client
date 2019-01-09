@@ -18,6 +18,7 @@ import android.support.v7.app.AlertDialog
 
 import android.telephony.TelephonyManager
 
+import android.text.Html
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -44,11 +45,13 @@ import com.google.maps.android.PolyUtil
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
+import com.kg.gettransfer.domain.model.ReviewRate
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
 
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.PolylineModel
+import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.model.RouteModel
 
 import com.yandex.metrica.impl.ob.it
@@ -256,6 +259,11 @@ object Utils : KoinComponent {
         append(context.getString(R.string.LNG_M))
     }
 
+    fun getSpannedStringFromHtmlString(htmlString: String): Spanned {
+        return if (Build.VERSION.SDK_INT >= 24) Html.fromHtml(htmlString, Html.FROM_HTML_MODE_LEGACY)
+               else Html.fromHtml(htmlString)
+    }
+
         /*fun setPins(activity: Activity, googleMap: GoogleMap, routeModel: RouteModel) {
 
             //Создание пинов с информацией
@@ -405,13 +413,11 @@ object Utils : KoinComponent {
         }
     }
 
-    fun createMapOfDetailedRates(view: View): HashMap<String, Int> {
-        val map = HashMap<String, Int>()
-        map[ReviewInteractor.DRIVER]      = view.driver_rate.rate_bar.rating.toInt()
-        map[ReviewInteractor.PUNCTUALITY] = view.punctuality_rate.rate_bar.rating.toInt()
-        map[ReviewInteractor.VEHICLE]     = view.vehicle_rate.rate_bar.rating.toInt()
-        return map
-    }
+    fun createListOfDetailedRates(view: View) = listOf<ReviewRateModel>(
+        ReviewRateModel(ReviewRate.RateType.DRIVER, view.driver_rate.rate_bar.rating.toInt()),
+        ReviewRateModel(ReviewRate.RateType.PUNCTUALITY, view.punctuality_rate.rate_bar.rating.toInt()),
+        ReviewRateModel(ReviewRate.RateType.VEHICLE, view.vehicle_rate.rate_bar.rating.toInt())
+    )
 }
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {

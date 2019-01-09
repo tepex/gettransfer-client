@@ -47,6 +47,15 @@
         android:background="@color/color_transfer_details_horizontal_divider"/>
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
+        android:id="@+id/back_trip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:input_transfer_details="04 Apr 2018 at 23:40"
+        app:title_transfer_details="@string/LNG_BACKTRIP"
+        app:icon_img_transfer_details="@drawable/ic_change_route"/>
+
+    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/booking_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -95,6 +104,17 @@
 
         app:title_transfer_details="@string/LNG_RIDE_FLIGHT_NUMBER"
         app:input_transfer_details="BA 2243"
+        app:icon_img_transfer_details="@drawable/ic_flight"
+
+        android:visibility="gone"/>
+
+    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
+        android:id="@+id/back_flight_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:title_transfer_details="@string/LNG_RIDE_FLIGHT_BACK"
+        app:input_transfer_details="BA 2255"
         app:icon_img_transfer_details="@drawable/ic_flight"
 
         android:visibility="gone"/>

@@ -7,14 +7,7 @@ import com.kg.gettransfer.domain.model.GTAddress
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 //interface MainView: MvpView, OnCameraMoveListener
-interface SearchView: BaseView {
-    companion object {
-        val EXTRA_ADDRESS_FROM = "${SearchView::class.java.name}.address_from"
-        val EXTRA_ADDRESS_TO   = "${SearchView::class.java.name}.address_to"
-        val EXTRA_IS_CLICK_TO  = "${SearchView::class.java.name}.to_click"
-        val EXTRA_BOUNDS  = "${SearchView::class.java.name}.bounds"
-    }
-
+interface SearchView : BaseView {
     fun setAddressListByAutoComplete(list: List<GTAddress>)
     fun onFindPopularPlace(isTo: Boolean, place: String)
     fun setAddressFrom(address: String, sendRequest: Boolean, isEditing: Boolean)
@@ -23,4 +16,12 @@ interface SearchView: BaseView {
     fun setSuggestedAddresses(addressesList: List<GTAddress>)
     fun updateIcon(isTo: Boolean)
     fun setFocus(isToField: Boolean)
+    fun changeFocusToDestField()
+
+    companion object {
+        val EXTRA_ADDRESS_FROM = "${SearchView::class.java.name}.address_from"
+        val EXTRA_ADDRESS_TO   = "${SearchView::class.java.name}.address_to"
+        val EXTRA_IS_CLICK_TO  = "${SearchView::class.java.name}.to_click"
+        val EXTRA_BOUNDS       = "${SearchView::class.java.name}.bounds"
+    }
 }

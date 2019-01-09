@@ -35,9 +35,11 @@ class RouteInteractor(private val geoRepository: GeoRepository, private val rout
         if (result.error != null) return result
 
         if (to!!.cityPoint.point == null) {
-            result = geoRepository.getLatLngByPlaceId(to!!.cityPoint.placeId!!)
-            if (result.error != null) return result
-            to!!.cityPoint.point = result.model
+            to!!.cityPoint.placeId?.let { // GAA-479 TODO: Check this case!
+                result = geoRepository.getLatLngByPlaceId(it)
+                if (result.error != null) return result
+                to!!.cityPoint.point = result.model
+            }
         }
         return result
     }

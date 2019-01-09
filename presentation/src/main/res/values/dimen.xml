@@ -550,7 +550,11 @@
 	<dimen name="btn_call_chat_text_size">17sp</dimen>
 	<dimen name="btn_next_main_margin_16dp">16dp</dimen>
 
-
+	<!-- activity_requests -->
+	<dimen name="activity_requests_text_size_14sp">14sp</dimen>
+	<dimen name="activity_requests_text_size_12sp">12sp</dimen>
+	<dimen name="activity_requests_text_network_availability_margin_start_end">8sp</dimen>
+	<dimen name="activity_requests_text_network_availability_margin_top_bottom">12sp</dimen>
 
 
 

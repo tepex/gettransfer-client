@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 import com.kg.gettransfer.data.model.CarrierTripEntity
 import com.kg.gettransfer.data.model.PassengerAccountEntity
 
-data class CarrierTripModelWrapper(@SerializedName(CarrierTripEntity.ENTITY_NAME) @Expose val trip: CarrierTripModel)
+data class CarrierTripModelWrapper(@SerializedName("trip") @Expose val trip: CarrierTripModel)
 
 class CarrierTripModel(
     id: Long,

@@ -9,3 +9,4 @@ data class RouteInfo(
     val polyLines: List<String>,
     val overviewPolyline: String?
 )
+
