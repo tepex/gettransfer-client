@@ -30,15 +30,15 @@ class FileLoggingTree(private val context: Context): Timber.DebugTree() {
         text.forEach {
             when(it) {
                 '{', '[' -> {
-                    append("\n${indentString}${it}\n")
+                    append("\n$indentString$it\n")
                     indentString += "\t"
                     append(indentString)
                 }
                 '}', ']' -> {
                     indentString = indentString.replaceFirst("\t".toRegex(), "")
-                    append("\n${indentString}${it}")
+                    append("\n$indentString$it")
                 }
-                ','  -> append("${it}\n${indentString}")
+                ','  -> append("$it\n$indentString")
                 else -> append(it)
             }
         }

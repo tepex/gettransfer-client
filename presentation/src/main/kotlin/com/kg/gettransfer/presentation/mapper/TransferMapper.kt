@@ -37,7 +37,7 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
             status         = type.status,
 
             statusName     = getTransferStatusNameId(type.status),
-            from           = type.from.name!!,
+            from           = type.from.name ?: "",
             to             = type.to?.name,
             dateTime       = type.dateToLocal,
             dateTimeReturn = type.dateReturnLocal,
