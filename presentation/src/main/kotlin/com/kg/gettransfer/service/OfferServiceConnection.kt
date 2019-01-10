@@ -33,6 +33,7 @@ class OfferServiceConnection : SystemListener, KoinComponent {
         path = "/api/socket"
         forceNew = true
         transports = arrayOf(WebSocket.NAME)
+        timeout = -1
     }
 
     private var handler: OfferModelHandler? = null
