@@ -343,7 +343,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             !isTimeSetByUser                        -> FieldError.TIME_NOT_SELECTED
             !Utils.checkEmail(user.profile.email)   -> FieldError.EMAIL_FIELD
             !Utils.checkPhone(user.profile.phone!!) -> FieldError.PHONE_FIELD
-            !transportTypes!!.any { it.checked }    -> FieldError.TRANSPORT_FIELD
+            transportTypes!!.none { it.checked }    -> FieldError.TRANSPORT_FIELD
             passengers == 0                         -> FieldError.PASSENGERS_COUNT
             !user.termsAccepted                     -> FieldError.TERMS_ACCEPTED_FIELD
             else                                    -> FieldError.UNKNOWN
@@ -371,7 +371,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             val tripTime = String.format("%d:%d", duration!! / 60, duration!! % 60)
             val checkedTransport = transportTypes?.filter { it.checked }
             if (!checkedTransport.isNullOrEmpty())
-                viewState.setFairPrice(checkedTransport?.minBy { it.price!!.minFloat }?.price!!.min, tripTime)
+                viewState.setFairPrice(checkedTransport.minBy { it.price!!.minFloat }?.price!!.min, tripTime)
             else viewState.setFairPrice(null, null)
         } catch (e: KotlinNullPointerException) { viewState.setFairPrice(null, null) }
     }

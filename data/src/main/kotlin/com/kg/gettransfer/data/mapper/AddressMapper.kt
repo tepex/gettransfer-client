@@ -11,7 +11,7 @@ class AddressMapper : Mapper<GTAddressEntity, GTAddress> {
         GTAddress(
             cityPoint = CityPoint(
                 name = type.address,
-                point = type.lat?.let { lat -> type.lon?.let { lon -> Point(lat, lon) } },
+                point = type.lat?.let { lat -> type.lon?.let { lon -> Point(lat, lon) } } ?: Point(0.0,0.0),
                 placeId = null),
             placeTypes = type.placeTypes,
             address = type.address,

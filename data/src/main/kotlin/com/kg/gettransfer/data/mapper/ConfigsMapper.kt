@@ -26,7 +26,7 @@ open class ConfigsMapper : Mapper<ConfigsEntity, Configs> {
             transportTypes = type.transportTypes.map { transportTypeMapper.fromEntity(it) },
             paypalCredentials = paypalCredentialsMapper.fromEntity(type.paypalCredentials),
             availableLocales = locales,
-            preferredLocale = locales.find { it.language == type.preferredLocale }!!,
+            preferredLocale = locales.find { it.language == type.preferredLocale },
             supportedCurrencies = type.supportedCurrencies.map { currencyMapper.fromEntity(it) },
             supportedDistanceUnits = type.supportedDistanceUnits.map { DistanceUnit.valueOf(it) },
             cardGateways = cardGatewaysMapper.fromEntity(type.cardGateways),

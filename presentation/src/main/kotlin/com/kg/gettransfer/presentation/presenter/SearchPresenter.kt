@@ -84,7 +84,6 @@ class SearchPresenter : BasePresenter<SearchView>() {
 
     private fun createRouteForOrder() = utils.launchSuspend {
         utils.asyncAwait { routeInteractor.updateDestinationPoint() }
-        utils.asyncAwait { routeInteractor.updateStartPoint() }
         systemInteractor.addressHistory = listOf(routeInteractor.from!!, routeInteractor.to!!)
         router.replaceScreen(Screens.CreateOrder)
         logEvent(Analytics.REQUEST_FORM)
