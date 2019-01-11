@@ -50,10 +50,12 @@ class SearchPresenter : BasePresenter<SearchView>() {
             viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, false, true)
             isDoubleClickOnRoute = routeInteractor.to == selected
             routeInteractor.to = selected
+            utils.launchSuspend { utils.asyncAwait { routeInteractor.updateDestinationPoint() }}
         } else {
             viewState.setAddressFrom(selected.primary ?: selected.cityPoint.name!!, false, true)
             isDoubleClickOnRoute = routeInteractor.from == selected
             routeInteractor.from = selected
+            utils.launchSuspend { utils.asyncAwait { routeInteractor.updateStartPoint() }}
         }
 
         val placeType = checkPlaceType(selected)
@@ -82,8 +84,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
 
     private fun checkFields() = routeInteractor.addressFieldsNotNull()
 
-    private fun createRouteForOrder() = utils.launchSuspend {
-        utils.asyncAwait { routeInteractor.updateDestinationPoint() }
+    private fun createRouteForOrder() {
         systemInteractor.addressHistory = listOf(routeInteractor.from!!, routeInteractor.to!!)
         router.replaceScreen(Screens.CreateOrder)
         logEvent(Analytics.REQUEST_FORM)

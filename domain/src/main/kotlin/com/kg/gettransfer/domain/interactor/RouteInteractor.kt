@@ -44,7 +44,7 @@ class RouteInteractor(private val geoRepository: GeoRepository, private val rout
         return result
     }
 
-    private fun updateStartPoint(): Result<Point> {
+    fun updateStartPoint(): Result<Point> {
         if (from!!.cityPoint.point == null) {
             val result = geoRepository.getLatLngByPlaceId(from!!.cityPoint.placeId!!)
             if (result.error != null) return result
