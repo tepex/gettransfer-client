@@ -8,6 +8,7 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.mapper.CurrencyMapper
 import com.kg.gettransfer.presentation.mapper.DistanceUnitMapper
@@ -43,6 +44,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private val distanceUnitMapper = get<DistanceUnitMapper>()
     private val endpointMapper     = get<EndpointMapper>()
     private val reviewInteractor   = get<ReviewInteractor>()
+
+    private val transferInteractor: TransferInteractor by inject()
 
     private var localeWasChanged = false
     private var restart = true
@@ -121,6 +124,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         utils.launchSuspend {
             utils.asyncAwait { systemInteractor.unregisterPushToken() }
             utils.asyncAwait { systemInteractor.logout() }
+            utils.asyncAwait { transferInteractor.clearTransfersCache() }
+            utils.asyncAwait { offerInteractor.clearOffersCache() }
             router.exit()
         }
         logEvent(Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)

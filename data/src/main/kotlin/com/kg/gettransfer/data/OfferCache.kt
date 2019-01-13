@@ -5,5 +5,10 @@ import com.kg.gettransfer.data.model.OfferEntity
 import org.koin.standalone.KoinComponent
 
 interface OfferCache: KoinComponent {
-    suspend fun getOffers(id: Long): List<OfferEntity>
+    fun setOffer(offer: OfferEntity)
+    fun setOffers(offers: List<OfferEntity>)
+
+    fun getOffers(id: Long): List<OfferEntity>
+
+    fun deleteAllOffers()
 }

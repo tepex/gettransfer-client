@@ -12,4 +12,5 @@ interface TransferDataStore: KoinComponent {
     suspend fun getAllTransfers(): List<TransferEntity>
     suspend fun getTransfersArchive(): List<TransferEntity>
     suspend fun getTransfersActive(): List<TransferEntity>
+    fun clearTransfersCache()
 }

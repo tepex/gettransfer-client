@@ -6,6 +6,7 @@ import com.kg.gettransfer.data.TransferDataStore
 import com.kg.gettransfer.data.model.TransferNewEntity
 
 import org.koin.standalone.inject
+import java.lang.UnsupportedOperationException
 
 /**
  * Implementation of the [TransferDataStore] interface to provide a means of communicating with the remote data source.
@@ -15,8 +16,11 @@ open class TransferDataStoreRemote: TransferDataStore {
     
     override suspend fun createTransfer(transferNew: TransferNewEntity) = remote.createTransfer(transferNew)
     override suspend fun cancelTransfer(id: Long, reason: String) = remote.cancelTransfer(id, reason)
+
     override suspend fun getTransfer(id: Long) = remote.getTransfer(id)
     override suspend fun getAllTransfers() = remote.getAllTransfers()
     override suspend fun getTransfersArchive() = remote.getTransfersArchive()
     override suspend fun getTransfersActive() = remote.getTransfersActive()
+
+    override fun clearTransfersCache() { throw UnsupportedOperationException() }
 }

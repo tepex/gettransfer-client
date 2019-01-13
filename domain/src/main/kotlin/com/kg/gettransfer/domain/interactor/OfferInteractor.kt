@@ -16,4 +16,9 @@ class OfferInteractor(private val repository: OfferRepository) {
         val newOffer = repository.newOffer(offer)
         offers = offers.toMutableList().apply { add(newOffer.model) }
     }
+
+    fun clearOffersCache(): Result<Unit> {
+        repository.clearOffersCache()
+        return Result(Unit)
+    }
 }
