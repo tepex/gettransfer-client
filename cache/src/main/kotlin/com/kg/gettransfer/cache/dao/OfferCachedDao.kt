@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
+import android.arch.persistence.room.Transaction
 
 import com.kg.gettransfer.cache.model.OfferCached
 import com.kg.gettransfer.data.model.OfferEntity
@@ -24,4 +25,13 @@ interface OfferCachedDao {
 
     @Query("DELETE FROM ${OfferEntity.ENTITY_NAME}")
     fun deleteAll()
+
+    @Query("DELETE FROM ${OfferEntity.ENTITY_NAME} WHERE ${OfferEntity.TRANSFER_ID} = :transferId")
+    fun deleteForTransfer(transferId: Long)
+
+    @Transaction
+    fun updateOffersForTransfer(offers: List<OfferCached>) {
+        deleteForTransfer(offers.firstOrNull()?.transferId!!)
+        insertAllOffers(offers)
+    }
 }
