@@ -16,8 +16,8 @@ open class RatingsMapper : Mapper<RatingsEntity, Ratings> {
         Ratings(
             average = type.average,
             vehicle = type.vehicle,
-            driver = type.driver,
-            fair = type.fair
+            driver  = type.driver,
+            fair    = type.fair
         )
     /**
      * Map a [Ratings] instance to a [RatingsEntity] instance.
@@ -26,7 +26,7 @@ open class RatingsMapper : Mapper<RatingsEntity, Ratings> {
         RatingsEntity(
             average = type.average,
             vehicle = type.vehicle,
-            driver = type.driver,
-            fair = type.fair
+            driver  = type.driver,
+            fair    = type.fair
         )
 }

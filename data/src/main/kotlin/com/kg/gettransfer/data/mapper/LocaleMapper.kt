@@ -10,5 +10,5 @@ import java.util.Locale
  */
 open class LocaleMapper : Mapper<LocaleEntity, Locale> {
     override fun fromEntity(type: LocaleEntity) = Locale(type.code)
-    override fun toEntity(type: Locale): LocaleEntity { throw UnsupportedOperationException() }
+    override fun toEntity(type: Locale) = LocaleEntity(type.language.toUpperCase(), type.displayLanguage)
 }

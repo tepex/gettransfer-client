@@ -29,7 +29,7 @@ open class VehicleMapper : Mapper<VehicleEntity, Vehicle> {
                 paxMax = type.paxMax,
                 luggageMax = type.luggageMax
             ),
-            photos = type.photos
+            photos             = type.photos
         )
 
     /**
@@ -37,14 +37,14 @@ open class VehicleMapper : Mapper<VehicleEntity, Vehicle> {
      */
     override fun toEntity(type: Vehicle) =
         VehicleEntity(
-            id = type.id,
-            name = type.name,
+            id                 = type.id,
+            name               = type.name,
             registrationNumber = type.registrationNumber,
-            year = type.year,
-            color = type.color,
-            transportTypeId = type.transportType.id.toString(),
-            paxMax = type.transportType.paxMax,
-            luggageMax = type.transportType.luggageMax,
-            photos = type.photos
+            year               = type.year,
+            color              = type.color,
+            transportTypeId    = type.transportType.id.toString(),
+            paxMax             = type.transportType.paxMax,
+            luggageMax         = type.transportType.luggageMax,
+            photos             = type.photos
         )
 }

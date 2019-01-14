@@ -50,5 +50,20 @@ open class OfferMapper : Mapper<OfferEntity, Offer> {
     /**
      * Map a [Offer] instance to a [OfferEntity] instance.
      */
-    override fun toEntity(type: Offer): OfferEntity { throw UnsupportedOperationException() }
+    override fun toEntity(type: Offer) =
+            OfferEntity(
+                    id                = type.id,
+                    transferId        = type.transferId,
+                    status            = type.status,
+                    wifi              = type.wifi,
+                    refreshments      = type.refreshments,
+                    createdAt         = dateFormat.get().format(type.createdAt),
+                    updatedAt         = type.updatedAt?.let { dateFormat.get().format(it) },
+                    price             = priceMapper.toEntity(type.price),
+                    ratings           = type.ratings?.let { ratingsMapper.toEntity(it) },
+                    passengerFeedback = type.passengerFeedback,
+                    carrier           = carrierMapper.toEntity(type.carrier),
+                    vehicle           = vehicleMapper.toEntity(type.vehicle),
+                    driver            = type.driver?.let { profileMapper.toEntity(it) }
+            )
 }

@@ -31,7 +31,7 @@ interface OfferCachedDao {
 
     @Transaction
     fun updateOffersForTransfer(offers: List<OfferCached>) {
-        deleteForTransfer(offers.firstOrNull()?.transferId!!)
+        offers.firstOrNull()?.transferId?.let { deleteForTransfer(it) }
         insertAllOffers(offers)
     }
 }
