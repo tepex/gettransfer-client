@@ -110,7 +110,7 @@ class OffersActivity : BaseActivity(), OffersView {
     override fun setDate(date: String) { tvOrderDateTime.text = date }
 
     override fun setOffers(offers: List<OfferModel>) {
-        rvOffers.adapter = OffersRVAdapter(offers.toMutableList()) { offer, isShowingOfferDetails -> presenter.onSelectOfferClicked(offer, isShowingOfferDetails) }
+        rvOffers.adapter = OffersRVAdapter(offers.toMutableList()) { offer, isShowingOfferDetails -> presenter.onSelectOfferClicked(offer, isShowingOfferDetails, textNetworkNotAvailable.isVisible) }
     }
 
     override fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean) {
@@ -189,7 +189,7 @@ class OffersActivity : BaseActivity(), OffersView {
         layoutOfferPriceWithoutDiscount.isVisible = offer.price.withoutDiscount != null
 
         btnBook.setOnClickListener {
-            presenter.onSelectOfferClicked(offer, false)
+            presenter.onSelectOfferClicked(offer, false, textNetworkNotAvailable.isVisible)
             hideSheetOfferDetails()
         }
 
@@ -238,6 +238,8 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun addNewOffer(offer: OfferModel) { (rvOffers.adapter as OffersRVAdapter).add(offer) }
+
+    override fun showAllertCheckInternetConnection() { Utils.showError(this@OffersActivity, false, getString(R.string.LNG_NETWORK_ERROR)) }
 
     companion object {
         val ACTION_NEW_OFFER = "${OffersActivity::class.java.name}.offer"
