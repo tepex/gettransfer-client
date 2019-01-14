@@ -412,10 +412,12 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         map[Analytics.PARAM_KEY_RESULT] = value
         bundle.putString(Analytics.PARAM_KEY_RESULT, value)
 
-        if (cost != null && selectedCurrency != INVALID_CURRENCY_INDEX) {
+        if (cost != null) {
             bundle.putString(Analytics.VALUE, cost.toString())
             map[Analytics.VALUE] = cost.toString()
+        }
 
+        if (selectedCurrency != INVALID_CURRENCY_INDEX) {
             bundle.putString(Analytics.CURRENCY, currencies[selectedCurrency].name)
             map[Analytics.CURRENCY] = currencies[selectedCurrency].name
         }
@@ -443,7 +445,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         if (cost != null) {
             bundle.putString(Analytics.VALUE, cost.toString())
             map[Analytics.VALUE] = cost.toString()
+        }
 
+        if (selectedCurrency != INVALID_CURRENCY_INDEX) {
             bundle.putString(Analytics.CURRENCY, currencies[selectedCurrency].name)
             fbBundle.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, currencies[selectedCurrency].name)
             map[Analytics.CURRENCY] = currencies[selectedCurrency].name
