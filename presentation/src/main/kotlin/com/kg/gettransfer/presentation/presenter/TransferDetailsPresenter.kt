@@ -82,7 +82,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
 
                 if (transfer.to != null) {
                     val r = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, true, false, systemInteractor.currency.currencyCode) }
-                    if (r.error == null) setRouteTransfer(transfer, r.model)
+                    setRouteTransfer(transfer, r.model)
                 } else if (transfer.duration != null) setHourlyTransfer(transfer)
 
             }

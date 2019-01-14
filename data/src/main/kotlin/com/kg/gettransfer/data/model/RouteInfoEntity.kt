@@ -11,11 +11,16 @@ data class RouteInfoEntity(
 ) {
 
     companion object {
-        const val SUCCESS   = "success"
-        const val DISTANCE  = "distance"
-        const val DURATION  = "duration"
-        const val PRICES    = "prices"
-        const val WATERTAXI = "watertaxi"
-        const val ROUTES    = "routes"
+        const val ENTITY_NAME       = "route_info"
+        const val SUCCESS           = "success"
+        const val DISTANCE          = "distance"
+        const val DURATION          = "duration"
+        const val PRICES            = "prices"
+        const val WATERTAXI         = "watertaxi"
+        const val ROUTES            = "routes"
+        const val POLYLINES         = "polylines"
+        const val OVERVIEW_POLYLINE = "overview_polyline"
+        const val FROM_POINT        = "from_point"
+        const val TO_POINT          = "to_point"
     }
 }

@@ -4,6 +4,7 @@ import android.arch.persistence.room.Room
 
 import com.kg.gettransfer.cache.mapper.*
 import com.kg.gettransfer.data.OfferCache
+import com.kg.gettransfer.data.RouteCache
 
 import com.kg.gettransfer.data.SystemCache
 import com.kg.gettransfer.data.TransferCache
@@ -38,7 +39,9 @@ val cacheModule = module {
     single { ProfileEntityMapper() }
     single { VehicleEntityMapper() }
     single { OfferEntityMapper() }
+    single { RouteInfoEntityMapper() }
     single<SystemCache> { SystemCacheImpl() }
     single<TransferCache> { TransferCacheImpl() }
     single<OfferCache> { OfferCacheImpl() }
+    single<RouteCache> { RouteCacheImpl() }
 }

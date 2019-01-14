@@ -10,6 +10,7 @@ import com.kg.gettransfer.data.ds.RouteDataStoreRemote
 import com.kg.gettransfer.data.mapper.ExceptionMapper
 import com.kg.gettransfer.data.mapper.PointMapper
 import com.kg.gettransfer.data.mapper.RouteInfoMapper
+import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.data.model.RouteInfoEntity
 
@@ -30,15 +31,25 @@ class RouteRepositoryImpl(
     private val routeInfoMapper = get<RouteInfoMapper>()
     private val pointMapper     = get<PointMapper>()
 
-    override suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean, currency: String): Result<RouteInfo> =
-        retrieveRemoteModel<RouteInfoEntity, RouteInfo>(routeInfoMapper, DEFAULT) {
-            factory.retrieveRemoteDataStore().getRouteInfo(
-                pointMapper.toEntity(from),
-                pointMapper.toEntity(to),
-                withPrices,
-                returnWay,
-                currency
-            )
+    override suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean, currency: String): Result<RouteInfo> {
+            val fromEntity = pointMapper.toEntity(from)
+            val toEntity = pointMapper.toEntity(to)
+            val result: ResultEntity<RouteInfoEntity?> = retrieveEntity/*(routeInfoMapper, DEFAULT)*/ { fromRemote ->
+                factory.retrieveDataStore(fromRemote).getRouteInfo(
+                        pointMapper.toEntity(from),
+                        pointMapper.toEntity(to),
+                        withPrices,
+                        returnWay,
+                        currency
+                )
+            }
+            result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().setRouteInfo(fromEntity, toEntity, it) }
+            return if (result.error != null) {
+                val routeFromCache: RouteInfoEntity? = factory.retrieveCacheDataStore().getRouteInfo(fromEntity, toEntity)
+                if(routeFromCache != null) Result(routeFromCache.let { routeInfoMapper.fromEntity(it) })
+                else Result(DEFAULT, ExceptionMapper.map(result.error))
+            }
+            else Result(result.entity?.let { routeInfoMapper.fromEntity(it) } ?: DEFAULT)
     }
 
     companion object {

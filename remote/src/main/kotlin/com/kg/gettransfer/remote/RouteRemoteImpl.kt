@@ -18,8 +18,12 @@ class RouteRemoteImpl : RouteRemote {
     private val mapper = get<RouteInfoMapper>()
 
     override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean, currency: String): RouteInfoEntity {
-        val response: ResponseModel<RouteInfoModel> = tryGetRouteInfo(arrayOf(from, to), withPrices, returnWay, currency)
-        return mapper.fromRemote(response.data!!)
+        try {
+            val response: ResponseModel<RouteInfoModel> = tryGetRouteInfo(arrayOf(from, to), withPrices, returnWay, currency)
+            return mapper.fromRemote(response.data!!)
+        } catch (e: Exception) {
+            throw core.remoteException(e)
+        }
     }
 
     private suspend fun tryGetRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean, currency: String):

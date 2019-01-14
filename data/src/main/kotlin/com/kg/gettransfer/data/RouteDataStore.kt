@@ -5,5 +5,6 @@ import com.kg.gettransfer.data.model.RouteInfoEntity
 import org.koin.standalone.KoinComponent
 
 interface RouteDataStore: KoinComponent {
-    suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean, currency: String): RouteInfoEntity
+    suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean? = null, returnWay: Boolean? = null, currency: String? = null): RouteInfoEntity?
+    fun setRouteInfo(from: String, to: String, routeInfo: RouteInfoEntity)
 }
