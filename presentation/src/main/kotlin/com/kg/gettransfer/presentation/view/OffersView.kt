@@ -13,7 +13,6 @@ interface OffersView : BaseView {
     fun setOffers(offers: List<OfferModel>)
     fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean)
     fun showAlertCancelRequest()
-    fun showAllertCheckInternetConnection()
     fun showBottomSheetOfferDetails(offer: OfferModel)
     fun addNewOffer(offer: OfferModel)
     fun redirectView()

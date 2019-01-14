@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Context
 import android.graphics.Paint
 
 import android.os.Bundle
@@ -98,6 +99,11 @@ class OffersActivity : BaseActivity(), OffersView {
         return super.dispatchTouchEvent(event)
     }
 
+    override fun setNetworkAvailability(context: Context){
+        super.setNetworkAvailability(context)
+        presenter.checkNewOffers()
+    }
+
     private fun navigateBackWithTransition() {
         presenter.onBackCommandClick()
         overridePendingTransition(R.anim.transition_l2r, R.anim.transition_r2l)
@@ -110,7 +116,8 @@ class OffersActivity : BaseActivity(), OffersView {
     override fun setDate(date: String) { tvOrderDateTime.text = date }
 
     override fun setOffers(offers: List<OfferModel>) {
-        rvOffers.adapter = OffersRVAdapter(offers.toMutableList()) { offer, isShowingOfferDetails -> presenter.onSelectOfferClicked(offer, isShowingOfferDetails, textNetworkNotAvailable.isVisible) }
+        rvOffers.adapter = OffersRVAdapter(offers.toMutableList(), textNetworkNotAvailable.isVisible) { offer, isShowingOfferDetails ->
+            presenter.onSelectOfferClicked(offer, isShowingOfferDetails) }
     }
 
     override fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean) {
@@ -189,7 +196,7 @@ class OffersActivity : BaseActivity(), OffersView {
         layoutOfferPriceWithoutDiscount.isVisible = offer.price.withoutDiscount != null
 
         btnBook.setOnClickListener {
-            presenter.onSelectOfferClicked(offer, false, textNetworkNotAvailable.isVisible)
+            presenter.onSelectOfferClicked(offer, false)
             hideSheetOfferDetails()
         }
 
@@ -238,8 +245,6 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun addNewOffer(offer: OfferModel) { (rvOffers.adapter as OffersRVAdapter).add(offer) }
-
-    override fun showAllertCheckInternetConnection() { Utils.showError(this@OffersActivity, false, getString(R.string.LNG_NETWORK_ERROR)) }
 
     companion object {
         val ACTION_NEW_OFFER = "${OffersActivity::class.java.name}.offer"

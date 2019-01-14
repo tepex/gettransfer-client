@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.view_offer_car_name_and_options.view.*
 
 class OffersRVAdapter(
     private val offers: MutableList<OfferModel>,
+    private val isViewNetworkNotAvailableVisible: Boolean,
     private val listener: SelectOfferClickListener
 ) : RecyclerView.Adapter<OffersRVAdapter.ViewHolder>() {
 
@@ -35,7 +36,7 @@ class OffersRVAdapter(
         OffersRVAdapter.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_offer, parent, false))
 
     override fun onBindViewHolder(holder: OffersRVAdapter.ViewHolder, pos: Int) {
-        holder.bind(offers.get(pos), listener)
+        holder.bind(offers.get(pos), isViewNetworkNotAvailableVisible, listener)
     }
 
     fun add(offer: OfferModel) {
@@ -44,7 +45,7 @@ class OffersRVAdapter(
     }
 
     class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(item: OfferModel, listener: SelectOfferClickListener) = with(containerView) {
+        fun bind(item: OfferModel, isViewNetworkNotAvailableVisible: Boolean, listener: SelectOfferClickListener) = with(containerView) {
             tvCarrierId.text = "#${item.carrier.id}"
             //           tvCompletedTransfers.text = context.getString(R.string.LNG_MADE).plus(" ${item.carrier.completedTransfers} ").plus(context.getString(R.string.LNG_RIDES))
             tvCompletedTransfers.text =
@@ -98,9 +99,14 @@ class OffersRVAdapter(
                 layoutLanguages.addView(layout, row)
             }
 
-            setOnClickListener { listener(item, false) }
-            btnSelect.setOnClickListener { listener(item, false) }
             column1.setOnClickListener { listener(item, true) }
+
+            if (isViewNetworkNotAvailableVisible) {
+                btnSelect.isEnabled = false
+            } else {
+                setOnClickListener { listener(item, false) }
+                btnSelect.setOnClickListener { listener(item, false) }
+            }
         }
 
         private fun setTexts(layout: View, textViewPax: TextView, textViewBaggage: TextView, item: OfferModel) {

@@ -99,15 +99,14 @@ class OffersPresenter : BasePresenter<OffersView>() {
         router.navigateTo(Screens.Details(transferId))
     }
 
-    fun onSelectOfferClicked(offer: OfferModel, isShowingOfferDetails: Boolean, isViewNetworkNotAvailableVisible: Boolean) {
+    fun onSelectOfferClicked(offer: OfferModel, isShowingOfferDetails: Boolean) {
         transfer?.let {
             if (isShowingOfferDetails) {
                 viewState.showBottomSheetOfferDetails(offer)
                 logEvent(Analytics.OFFER_DETAILS)
             } else {
                 logEvent(Analytics.OFFER_BOOK)
-                if (isViewNetworkNotAvailableVisible) viewState.showAllertCheckInternetConnection()
-                else router.navigateTo(Screens.PaymentSettings(it.id, offer.id, it.dateRefund, it.paymentPercentages))
+                router.navigateTo(Screens.PaymentSettings(it.id, offer.id, it.dateRefund, it.paymentPercentages))
             }
         }
     }

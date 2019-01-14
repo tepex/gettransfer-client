@@ -125,13 +125,12 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
 
     private val inetReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) = setNetworkAvailability(context)
+        override fun onReceive(context: Context, intent: Intent) = setNetworkAvailability(context) }
 
-        fun setNetworkAvailability(context: Context) {
-            val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val available = cm.activeNetworkInfo?.let { it.isConnected } ?: false
-            viewNetworkNotAvailable?.let { it.isGone = available }
-        }
+    protected open fun setNetworkAvailability(context: Context) {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val available = cm.activeNetworkInfo?.let { it.isConnected } ?: false
+        viewNetworkNotAvailable?.let { it.isGone = available }
     }
 
     private val loadingFragment by lazy { LoadingFragment() }
@@ -158,7 +157,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     protected override fun onStart() {
         super.onStart()
         registerReceiver(inetReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        inetReceiver.setNetworkAvailability(this)
+        setNetworkAvailability(this)
     }
 
     @CallSuper
