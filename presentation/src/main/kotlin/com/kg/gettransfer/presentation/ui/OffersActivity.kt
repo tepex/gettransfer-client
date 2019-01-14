@@ -102,6 +102,7 @@ class OffersActivity : BaseActivity(), OffersView {
     override fun setNetworkAvailability(context: Context){
         super.setNetworkAvailability(context)
         presenter.checkNewOffers()
+        btnBook.isEnabled = !textNetworkNotAvailable.isVisible
     }
 
     private fun navigateBackWithTransition() {
