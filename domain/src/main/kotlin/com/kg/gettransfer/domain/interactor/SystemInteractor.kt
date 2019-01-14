@@ -126,7 +126,8 @@ class SystemInteractor(
 
     suspend fun registerPushToken(token: String) {
         pushToken = token
-        systemRepository.registerPushToken(PushTokenType.FCM, token)
+        try { systemRepository.registerPushToken(PushTokenType.FCM, token) }
+        catch (e: ApiException) { throw e }
     }
 
     suspend fun unregisterPushToken(): Result<Unit> {

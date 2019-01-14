@@ -7,6 +7,7 @@ import com.arellomobile.mvp.MvpPresenter
 
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
+import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
@@ -95,14 +96,17 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
     }
 
     protected fun registerPushToken() {
-        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener(OnCompleteListener {
+        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener {
             if (it.isSuccessful) {
                 it.result?.token?.let {
                     Timber.d("[FCM token]: $it")
-                    utils.runAlien { systemInteractor.registerPushToken(it) }
+                    utils.runAlien {
+                        try { systemInteractor.registerPushToken(it) }
+                        catch (e: ApiException) { viewState.setError(e) }
+                    }
                 }
             } else Timber.w("getInstanceId failed", it.exception)
-        })
+        }
     }
 
     open fun onNewOffer(offer: Offer): OfferModel {

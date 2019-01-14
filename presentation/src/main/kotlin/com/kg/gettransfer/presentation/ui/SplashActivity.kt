@@ -79,25 +79,29 @@ class SplashActivity : AppCompatActivity() {
                 val msg = if (result.error!!.code == ApiException.NETWORK_ERROR)
                     getString(R.string.LNG_NETWORK_ERROR) else getString(R.string.err_server, result.error!!.details)
                 Utils.showError(this@SplashActivity, true, msg) {
-                    startActivity(Intent(this@SplashActivity, SettingsActivity::class.java))
+                    openNextScreen()
                 }
             }
             else {
-                if (!systemInteractor.isOnboardingShowed) {
-                    systemInteractor.isOnboardingShowed = true
-                    startActivity(Intent(this@SplashActivity, AboutActivity::class.java)
-                            .putExtra(AboutView.EXTRA_OPEN_MAIN, true).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
-                }
-                else {
-                    startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                    /*when (systemInteractor.lastMode) {
-                        Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsActivity::class.java))
-                        Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                        else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                    }*/
-                }
+                openNextScreen()
                 finish()
             }
+        }
+    }
+
+    private fun openNextScreen(){
+        if (!systemInteractor.isOnboardingShowed) {
+            systemInteractor.isOnboardingShowed = true
+            startActivity(Intent(this@SplashActivity, AboutActivity::class.java)
+                    .putExtra(AboutView.EXTRA_OPEN_MAIN, true).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
+        }
+        else {
+            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            /*when (systemInteractor.lastMode) {
+                Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsActivity::class.java))
+                Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            }*/
         }
     }
 

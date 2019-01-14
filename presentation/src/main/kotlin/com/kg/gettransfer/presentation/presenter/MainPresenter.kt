@@ -309,10 +309,12 @@ class MainPresenter : BasePresenter<MainView>() {
 
     private fun showRateForLastTrip() {     //get all completed transfers -> get last transfer -> get offer -> showRate view
         utils.launchSuspend {
-            utils.asyncAwait { transferInteractor.getAllTransfers() }
-                    .isNotError()
-                    ?.let { getLastTransfer(it.filterCompleted())
-                            ?.let { transfer -> checkToShowReview(transfer) }
+            val result = utils.asyncAwait { transferInteractor.getAllTransfers() }
+
+            if (result.error != null) viewState.setError(result.error!!)
+            else result.isNotError()?.let {
+                getLastTransfer(it.filterCompleted())
+                        ?.let { transfer -> checkToShowReview(transfer) }
             }
         }
     }

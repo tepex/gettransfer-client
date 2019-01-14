@@ -89,7 +89,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}", e)
-        Utils.showError(context!!, false, getString(R.string.err_server, e.message))
+        if(e.code != ApiException.NETWORK_ERROR) Utils.showError(context!!, false, getString(R.string.err_server, e.message))
     }
 
     override fun setCountEvents(transferIds: List<Long>) {

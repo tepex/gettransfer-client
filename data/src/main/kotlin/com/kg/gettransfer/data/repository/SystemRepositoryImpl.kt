@@ -113,7 +113,13 @@ class SystemRepositoryImpl(
                 accountMapper.configs = configs
             }
             /* No chance to go further */
-            if (result.error != null) return Result(account, ExceptionMapper.map(result.error))
+            //if (result.error != null) return Result(account, ExceptionMapper.map(result.error))
+
+            if (result.error != null) {
+                configs = factory.retrieveCacheDataStore().getConfigs()?.let { configsMapper.fromEntity(it) }?: CONFIGS_DEFAULT
+                account = factory.retrieveCacheDataStore().getAccount()?.let { accountMapper.fromEntity(it) }?: NO_ACCOUNT
+                return Result(account, ExceptionMapper.map(result.error))
+            }
         }
 
         if (mobileConfig === MOBILE_CONFIGS_DEFAULT) {
@@ -164,7 +170,8 @@ class SystemRepositoryImpl(
     }
 
     override suspend fun registerPushToken(provider: PushTokenType, token: String) {
-        factory.retrieveRemoteDataStore().registerPushToken(provider.toString(), token)
+        try { factory.retrieveRemoteDataStore().registerPushToken(provider.toString(), token) }
+        catch (e: RemoteException) { throw ExceptionMapper.map(e) }
     }
 
     override suspend fun unregisterPushToken(token: String) {

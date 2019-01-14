@@ -197,7 +197,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}", e)
-        Utils.showError(this, false, getString(R.string.LNG_ERROR) + ": " + e.message)
+        if (e.code != ApiException.NETWORK_ERROR) Utils.showError(this, false, getString(R.string.LNG_ERROR) + ": " + e.message)
     }
 
     protected fun showKeyboard() {
