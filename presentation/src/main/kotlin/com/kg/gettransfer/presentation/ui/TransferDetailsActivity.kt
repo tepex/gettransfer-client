@@ -52,6 +52,7 @@ import kotlinx.android.synthetic.main.view_transfer_details_communicate_buttons.
 import kotlinx.android.synthetic.main.view_transfer_details_field.*
 import kotlinx.android.synthetic.main.view_transfer_details_info.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.*
+import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //don't delete
 
 import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
