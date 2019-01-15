@@ -13,7 +13,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.extensions.*
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
@@ -45,6 +45,7 @@ class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
 
         setToolbar(toolbar as Toolbar, R.string.LNG_PAYMENT_SETTINGS)
         tv_payment_agreement.setOnClickListener { presenter.onAgreementClicked() }
+        btnGetPayment.setOnClickListener { presenter.getPayment() }
     }
 
     private fun setButton() {
@@ -73,7 +74,14 @@ class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
             }
         }
         selectPaymentPercentage(paymentPercentages.first())
-        btnGetPayment.setOnClickListener { presenter.getPayment() }
+    }
+
+    override fun setBookNowOffer(bookNowOffer: BookNowOffer?) {
+        payFullPriceButton.isVisible = true
+        payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.FULL_PRICE)
+        fullPriceCheckIcon.isVisible = false
+        payThirdOfPriceButton.isVisible = false
+        fullPrice.text = bookNowOffer?.base?.def
     }
 
     private fun setCommission() {

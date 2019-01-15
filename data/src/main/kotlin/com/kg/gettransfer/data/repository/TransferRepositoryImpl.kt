@@ -68,7 +68,7 @@ class TransferRepositoryImpl(
             factory.retrieveDataStore(fromRemote).createTransfer(transferNewMapper.toEntity(transferNew))
         }
         return if (result.error == null){
-            result.entity?.let { factory.retrieveCacheDataStore().addTransfer(result.entity) }
+//            result.entity?.let { factory.retrieveCacheDataStore().addTransfer(result.entity) }
             Result(result.entity?.let { transferMapper.fromEntity(it) }?: DEFAULT)
         } else Result(DEFAULT, ExceptionMapper.map(result.error))
     }

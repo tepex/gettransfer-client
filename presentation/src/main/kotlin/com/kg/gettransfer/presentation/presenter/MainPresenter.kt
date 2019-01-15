@@ -75,7 +75,8 @@ class MainPresenter : BasePresenter<MainView>() {
         systemInteractor.selectedField = FIELD_FROM
         systemInteractor.initGeocoder()
         if (routeInteractor.from != null) setLastLocation() else updateCurrentLocation()
-        if (systemInteractor.account.user.loggedIn) registerPushToken(); checkReview()
+        if (systemInteractor.account.user.loggedIn) registerPushToken()
+//        checkReview()
 
         // Создать листенер для обновления текущей локации
         // https://developer.android.com/training/location/receive-location-updates

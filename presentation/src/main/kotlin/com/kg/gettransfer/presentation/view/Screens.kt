@@ -146,23 +146,25 @@ object Screens {
             }
     }
 
-    data class Payment(val transferId: Long, val offerId: Long, val url: String, val percentage: Int) :
+    data class Payment(val transferId: Long, val offerId: Long?, val url: String, val percentage: Int,
+                       val bookNowTransportId: String?) :
         SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, PaymentActivity::class.java).apply {
             putExtra(PaymentView.EXTRA_TRANSFER_ID, transferId)
             putExtra(PaymentView.EXTRA_OFFER_ID, offerId)
             putExtra(PaymentView.EXTRA_URL, url)
             putExtra(PaymentView.EXTRA_PERCENTAGE, percentage)
+            putExtra(PaymentView.EXTRA_BOOK_NOW_TRANSPORT_ID, bookNowTransportId)
         }
     }
 
-    data class PaymentSettings(val transferId: Long, val offerId: Long, val dateRefund: Date?, val paymentPercentages: List<Int>) : SupportAppScreen() {
+    data class PaymentSettings(val transferId: Long, val offerId: Long?, val dateRefund: Date?, val paymentPercentages: List<Int>, val bookNowTransportId: String?) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, PaymentSettingsActivity::class.java).apply {
             putExtra(
                 PaymentSettingsView.EXTRA_PARAMS,
                 JSON.stringify(
                     PaymentSettingsView.Params.serializer(),
-                    PaymentSettingsView.Params(dateRefund, transferId, offerId, paymentPercentages)
+                    PaymentSettingsView.Params(dateRefund, transferId, offerId, paymentPercentages, bookNowTransportId)
                 )
             )
         }
@@ -174,7 +176,7 @@ object Screens {
         }
     }
 
-    data class PaymentSuccess(val transferId: Long, val offerId: Long) : SupportAppScreen() {
+    data class PaymentSuccess(val transferId: Long, val offerId: Long?) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) =
             Intent(context, PaymentSuccessfulActivity::class.java).apply {
                 putExtra(PaymentSuccessfulActivity.TRANSFER_ID, transferId)

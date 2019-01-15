@@ -10,5 +10,6 @@ interface PaymentView: BaseView {
         val EXTRA_OFFER_ID    = "${PaymentView::class.java.name}.offerId"
         val EXTRA_URL         = "${PaymentView::class.java.name}.url"
         val EXTRA_PERCENTAGE  = "${PaymentView::class.java.name}.percentage"
+        val EXTRA_BOOK_NOW_TRANSPORT_ID = "${PaymentView::class.java.name}.bookNowTransportId"
     }
 }

@@ -22,15 +22,14 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.presentation.adapter.OffersRVAdapter
 import com.kg.gettransfer.presentation.adapter.VehiclePhotosVPAdapter
-
-import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
+import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
 
@@ -47,6 +46,7 @@ import kotlinx.android.synthetic.main.view_transfer_request_info.*
 import org.koin.android.ext.android.inject
 
 import timber.log.Timber
+import java.util.*
 
 class OffersActivity : BaseActivity(), OffersView {
 
@@ -116,8 +116,8 @@ class OffersActivity : BaseActivity(), OffersView {
 
     override fun setDate(date: String) { tvOrderDateTime.text = date }
 
-    override fun setOffers(offers: List<OfferModel>) {
-        rvOffers.adapter = OffersRVAdapter(offers.toMutableList(), textNetworkNotAvailable.isVisible) { offer, isShowingOfferDetails ->
+    override fun setOffers(offers: List<OfferItem>) {
+        rvOffers.adapter = OffersRVAdapter(offers.toMutableList()) { offer, isShowingOfferDetails ->
             presenter.onSelectOfferClicked(offer, isShowingOfferDetails) }
     }
 
@@ -150,57 +150,84 @@ class OffersActivity : BaseActivity(), OffersView {
         Utils.showAlertCancelRequest(this) { presenter.cancelRequest(it) }
     }
 
-    override fun showBottomSheetOfferDetails(offer: OfferModel) {
-        carrierId.text = getString(R.string.LNG_CARRIER).plus(" ").plus(offer.carrier.id)
+    override fun showBottomSheetOfferDetails(offer: OfferItem) {
+        when(offer) {
+            is OfferModel -> {
+                setCarrierId(offer.carrier.id.toString())
+                Utils.initCarrierLanguages(layoutCarrierLanguages, offer.carrier.languages)
+                setLikeDriver(offer.carrier.approved)
+                setRatings(offer)
+                setVehicleColor(offer)
+                setVehicleName(offer.vehicle.name)
+                setVehicleType(offer.vehicle.transportType.nameId!!)
+                setPassengers(offer.vehicle.transportType.paxMax)
+                setBaggage(offer.vehicle.transportType.luggageMax)
 
-        Utils.initCarrierLanguages(layoutCarrierLanguages, offer.carrier.languages)
+                imgFreeWater.isVisible = offer.refreshments
+                imgFreeWiFi.isVisible = offer.wifi
 
-        ivLikeDriver.isVisible = offer.carrier.approved
+                setPrice(offer.price.base.def)
+                setPricePreferred(offer.price.base.def)
+                offer.price.withoutDiscount?.let { setWithoutDiscount(it) }
 
-        offer.carrier.ratings.average?.let { ratingBarAverage.rating     = it }
-        offer.carrier.approved.let         { tvTopSelection.isGone       = !it
-                                             ivLikeDriver.isGone         = !it }
-        offer.carrier.ratings.driver?.let  { ratingBarDriver.rating      = it }
-        offer.carrier.ratings.fair?.let    { ratingBarPunctuality.rating = it }
-        offer.carrier.ratings.vehicle?.let { ratingBarVehicle.rating     = it }
-        ratingBarAverage.isVisible = true
-
-        offer.vehicle.color?.let { colorVehicle.setImageDrawable(Utils.getVehicleColorFormRes(this, it)) }
-        colorVehicle.isVisible = offer.vehicle.color != null
-
-        vehicleName.text = offer.vehicle.name
-        vehicleType.text = getString(offer.vehicle.transportType.nameId!!)
-        sheetOfferDetails.tvCountPersons.text = Utils.formatPersons(this, offer.vehicle.transportType.paxMax)
-        sheetOfferDetails.tvCountBaggage.text = Utils.formatLuggage(this, offer.vehicle.transportType.luggageMax)
-
-        imgFreeWater.isVisible = offer.refreshments
-        imgFreeWiFi.isVisible = offer.wifi
-
-        offerPrice.text = offer.price.base.def
-
-        offer.price.base.preferred?.let { offerPricePreferred.text = Utils.formatPrice(this, it) }
-        offerPricePreferred.isVisible = offer.price.base.preferred != null
-
-        offer.price.withoutDiscount?.let {
-            with(offerPriceWithoutDiscountDefault) {
-                paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                text = it.def
+                setOfferCarPhoto(offer)
             }
-            it.preferred?.let { preferred ->
-                with(offerPriceWithoutDiscountPreferred) {
-                    paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                    text = Utils.formatPrice(this@OffersActivity, preferred)
-                }
+            is BookNowOfferModel -> {
+                setCarrierId("")
+                Utils.initCarrierLanguages(layoutCarrierLanguages, listOf(LocaleModel(Locale.ENGLISH)))
+                setLikeDriver(true)
+                setBookNowRatings()
+                setVehicleType(TransportTypeMapper.getNameById(offer.transportType.id))
+                setPassengers(offer.transportType.paxMax)
+                setBaggage(offer.transportType.luggageMax)
+                setPrice(offer.base.def)
+                setPricePreferred(offer.base.preferred)
+                offer.withoutDiscount?.let { setWithoutDiscount(it) }
+                setBookNowPhoto(offer.transportType.id)
+                setVehicleName(getString(TransportTypeMapper.getDescriptionById(offer.transportType.id)))
+                colorVehicle.isVisible = false
             }
-            offerPriceWithoutDiscountPreferred.isVisible = it.preferred != null
         }
-        layoutOfferPriceWithoutDiscount.isVisible = offer.price.withoutDiscount != null
-
+        setRatings()
         btnBook.setOnClickListener {
             presenter.onSelectOfferClicked(offer, false)
             hideSheetOfferDetails()
         }
+        bsOfferDetails.state = BottomSheetBehavior.STATE_EXPANDED
+    }
 
+
+    private fun setRatings() {
+        layoutSomeRatings.isVisible = false
+        layoutRatingAverage.setOnClickListener {
+            layoutSomeRatings.apply { isVisible = !isVisible }
+            ratingBarAverage.isVisible = layoutSomeRatings.isVisible
+            presenter.logEvent(OFFER_DETAILS_RATING)
+        }
+    }
+
+    private fun setWithoutDiscount(withoutDiscount: MoneyModel) {
+        with(offerPriceWithoutDiscountDefault) {
+            paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+            text = withoutDiscount.def
+        }
+        withoutDiscount.preferred?.let { preferred ->
+            with(offerPriceWithoutDiscountPreferred) {
+                paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+                text = Utils.formatPrice(this@OffersActivity, preferred)
+            }
+        }
+        offerPriceWithoutDiscountPreferred.isVisible = withoutDiscount.preferred != null
+        layoutOfferPriceWithoutDiscount.isVisible = true
+    }
+
+    private fun setBookNowPhoto(transportTypeId: TransportType.ID) {
+        constraintPhotos.visibility = View.GONE
+        ivBookNowPhoto.visibility = View.VISIBLE
+        ivBookNowPhoto.setImageResource(TransportTypeMapper.getImageById(transportTypeId))
+    }
+
+    private fun setOfferCarPhoto(offer: OfferModel) {
         if (offer.vehicle.photos.isNotEmpty()) {
             vpVehiclePhotos.adapter = VehiclePhotosVPAdapter(supportFragmentManager, offer.vehicle.photos)
             checkNumberOfPhoto(0, offer.vehicle.photos.size)
@@ -216,15 +243,64 @@ class OffersActivity : BaseActivity(), OffersView {
             }
         }
         layoutPhotos.isVisible = offer.vehicle.photos.isNotEmpty()
+    }
 
-        layoutSomeRatings.isVisible = false
-        layoutRatingAverage.setOnClickListener {
-            layoutSomeRatings.apply { isVisible = !isVisible }
-            ratingBarAverage.apply { isVisible = !isVisible }
-            presenter.logEvent(OFFER_DETAILS_RATING)
+    private fun setPricePreferred(price: String?) {
+        price?.let { offerPricePreferred.text = Utils.formatPrice(this, it) }
+        offerPricePreferred.isVisible = price != null
+    }
+
+    private fun setPrice(price: String) {
+        offerPrice.text = price
+    }
+
+    private fun setBaggage(count: Int) {
+        sheetOfferDetails.tvCountBaggage.text = Utils.formatLuggage(this, count)
+    }
+
+    private fun setPassengers(count: Int) {
+        sheetOfferDetails.tvCountPersons.text = Utils.formatPersons(this, count)
+    }
+
+    private fun setVehicleType(nameId: Int) {
+        vehicleType.text = getString(nameId)
+    }
+
+    private fun setVehicleName(name: String) {
+        vehicleName.text = name
+    }
+
+    private fun setVehicleColor(offer: OfferModel) {
+        offer.vehicle.color?.let { colorVehicle.setImageDrawable(Utils.getVehicleColorFormRes(this, it)) }
+        colorVehicle.isVisible = offer.vehicle.color != null
+    }
+
+    private fun setBookNowRatings() {
+        ratingBarAverage.rating = 4f
+        ratingBarDriver.rating = 4f
+        ratingBarPunctuality.rating = 4f
+        ratingBarVehicle.rating = 4f
+        ratingBarAverage.isVisible = true
+    }
+
+    private fun setRatings(offer: OfferModel) {
+        offer.carrier.ratings.average?.let { ratingBarAverage.rating = it }
+        offer.carrier.approved.let {
+            tvTopSelection.isGone = !it
+            ivLikeDriver.isGone = !it
         }
-        bsOfferDetails.state = BottomSheetBehavior.STATE_EXPANDED
+        offer.carrier.ratings.driver?.let { ratingBarDriver.rating = it }
+        offer.carrier.ratings.fair?.let { ratingBarPunctuality.rating = it }
+        offer.carrier.ratings.vehicle?.let { ratingBarVehicle.rating = it }
+        ratingBarAverage.isVisible = true
+    }
 
+    private fun setLikeDriver(approved: Boolean) {
+        ivLikeDriver.isVisible = approved
+    }
+
+    private fun setCarrierId(id: String) {
+        carrierId.text = getString(R.string.LNG_CARRIER).plus(" ").plus(id)
     }
 
     private fun checkNumberOfPhoto(currentPos: Int, size: Int) {

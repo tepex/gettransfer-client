@@ -34,8 +34,7 @@
                 android:id="@+id/carPhoto"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_offer_car_photo_height"
-                android:background="@color/colorCarImageBackground"
-                android:scaleType="centerCrop"/>
+                android:background="@color/colorCarImageBackground" />
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
