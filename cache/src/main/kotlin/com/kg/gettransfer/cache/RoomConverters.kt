@@ -30,11 +30,11 @@ object RoomConverters {
 
     @TypeConverter
     @JvmStatic
-    fun fromStringMap(map: BookNowOfferCachedMap?): String? = map?.let { JSON.stringify(BookNowOfferCachedMap.serializer(), it) }
+    fun fromBookNowOfferCachedMap(map: BookNowOfferCachedMap?): String? = map?.let { JSON.stringify(BookNowOfferCachedMap.serializer(), it) }
 
     @TypeConverter
     @JvmStatic
-    fun toStringMap(s: String?): BookNowOfferCachedMap? = s?.let { JSON.parse(BookNowOfferCachedMap.serializer(), it) }
+    fun toBookNowOfferCachedMap(s: String?): BookNowOfferCachedMap? = s?.let { JSON.parse(BookNowOfferCachedMap.serializer(), it) }
 
     @TypeConverter
     @JvmStatic
