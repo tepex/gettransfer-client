@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 
 import android.os.Build
@@ -19,7 +18,6 @@ import android.view.View
 import android.view.WindowManager
 
 import android.widget.ImageView
-import android.widget.PopupWindow
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -31,7 +29,6 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.*
 
@@ -55,7 +52,6 @@ import kotlinx.android.synthetic.main.view_transfer_details_communicate_buttons.
 import kotlinx.android.synthetic.main.view_transfer_details_field.*
 import kotlinx.android.synthetic.main.view_transfer_details_info.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.*
-import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //Don't delete
 
 import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*

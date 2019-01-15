@@ -13,6 +13,7 @@ import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.presentation.mapper.OfferMapper
@@ -43,6 +44,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
     protected val offerMapper: OfferMapper by inject()
     protected val notificationManager: NotificationManager by inject()
     protected val offerInteractor: OfferInteractor by inject()
+    private val transferInteractor: TransferInteractor by inject()
 
     open fun onBackCommandClick() {
         val map = mutableMapOf<String, Any>()
@@ -83,12 +85,20 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
     }
 
     internal fun sendEmail(emailCarrier: String?) {
-        router.navigateTo(
-            Screens.SendEmail(
-                emailCarrier,
-                if (emailCarrier == null) systemInteractor.logsFile else null
-            )
-        )
+        utils.launchSuspend {
+            val transfers = utils.asyncAwait { transferInteractor.getAllTransfers() }
+            var transferId: Long? = null
+            if (transfers.model.isNotEmpty()) {
+                transferId = transfers.model.first().id
+            }
+
+            router.navigateTo(
+                    Screens.SendEmail(
+                            emailCarrier,
+                            systemInteractor.logsFile,
+                            transferId,
+                            systemInteractor.account.user.profile.email))
+        }
     }
 
     internal fun callPhone(phone: String) {

@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.support.v4.content.FileProvider
 
 import com.google.android.gms.maps.model.LatLngBounds
+import com.kg.gettransfer.BuildConfig
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.ui.*
@@ -19,7 +21,6 @@ import java.util.Date
 import org.jetbrains.anko.toast
 
 import ru.terrakok.cicerone.android.support.SupportAppScreen
-import java.util.*
 
 
 object Screens {
@@ -33,8 +34,9 @@ object Screens {
     @JvmField val PASSENGER_MODE = "passenger_mode"
 
     private const val EMAIL_DATA = "mailto:"
-    private const val EMAIL_TYPE = "text/*"
     private const val DIAL_SCHEME = "tel"
+    private const val NEW_LINE = "\n"
+    private const val UNDERSCORE = "_"
 
     private var canSendEmail: Boolean? = null
 
@@ -180,16 +182,27 @@ object Screens {
             }
     }
 
-    data class SendEmail(val emailCarrier: String?, val logsFile: File?) : SupportAppScreen() {
+    data class SendEmail(val emailCarrier: String?, val logsFile: File?,
+                         val transferId: Long?, val userEmail: String?) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?): Intent? {
-            val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                type = EMAIL_TYPE
+            val emailSelectorIntent = Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse(EMAIL_DATA)
+            }
+
+            val emailIntent = Intent(Intent.ACTION_SEND).apply {
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 if (emailCarrier != null) putExtra(Intent.EXTRA_EMAIL, arrayOf(emailCarrier))
                 else {
                     putExtra(Intent.EXTRA_EMAIL, arrayOf(context!!.getString(R.string.email_support)))
-                    putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.LNG_EMAIL_SUBJECT))
+
+                    val subject = context.getString(R.string.LNG_EMAIL_SUBJECT)
+                            .plus(if (transferId != null) " #$transferId" else "")
+                    putExtra(Intent.EXTRA_SUBJECT, subject)
+
+                    putExtra(Intent.EXTRA_TEXT, createSignature())
+
+                    selector = emailSelectorIntent
+
                     logsFile?.let {
                         putExtra(
                             Intent.EXTRA_STREAM,
@@ -203,7 +216,18 @@ object Screens {
                 context.getString(R.string.send_email)
             ) else null
         }
+
+        private fun createSignature(): String =
+                NEW_LINE.plus(UNDERSCORE)
+                .plus(UNDERSCORE).plus(NEW_LINE)
+                .plus(Build.DEVICE).plus(" ")
+                .plus(Build.MODEL).plus(NEW_LINE)
+                .plus(BuildConfig.VERSION_NAME).plus(NEW_LINE)
+                .plus(transferId ?: "")
+                .plus(NEW_LINE)
+                .plus(userEmail ?: "")
     }
+
 
     class Share() : SupportAppScreen() {
         override fun getActivityIntent(context: Context?): Intent {

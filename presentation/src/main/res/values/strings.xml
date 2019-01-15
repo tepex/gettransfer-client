@@ -396,7 +396,7 @@
     <string name="LNG_RIDE_TRANSFER_CANCELLED">transfer cancelled</string>
     <string name="LNG_ERROR_PASSENGERS">Number of passenger must be greater than zero</string>
     <string name="LNG_TRANSFER_IN_PROGRESS">Transfer in progress</string>
-    <string name="LNG_EMAIL_SUBJECT">Get help</string>
+    <string name="LNG_EMAIL_SUBJECT">Need help</string>
     <string name="LNG_TRIPS_TODAY">Today</string>
     <string name="LNG_TRIPS_ALL">All</string>
     <string name="LNG_TRIPS_COMPLETED">Completed</string>
