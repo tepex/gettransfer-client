@@ -68,6 +68,7 @@ class GTApplication : MultiDexApplication() {
         //setUpLeakCanary()
         setupFcm()
         setupAppMetrica()
+        //for test mr
     }
 
     private fun setUpLeakCanary() {
