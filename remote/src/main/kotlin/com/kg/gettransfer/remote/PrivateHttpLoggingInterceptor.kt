@@ -20,8 +20,8 @@ import java.net.HttpURLConnection.HTTP_NO_CONTENT
 import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
 
-class ProdHttpLoggingInterceptor(): Interceptor, KoinComponent {
-
+class PrivateHttpLoggingInterceptor(): Interceptor, KoinComponent {         //same as HttpLoggingInterceptor except logging
+                                                                            //header with password, line 52
     private val UTF8 = Charset.forName("UTF-8")
     private val peekBodySize: Long = java.lang.Long.MAX_VALUE
 

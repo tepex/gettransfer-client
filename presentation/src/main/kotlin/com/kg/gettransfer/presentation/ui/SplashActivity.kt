@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 
 import android.support.v7.app.AppCompatActivity
+import com.kg.gettransfer.BuildConfig
 
 import com.kg.gettransfer.R
 
@@ -26,6 +27,8 @@ import com.kg.gettransfer.presentation.view.AboutView
 import com.kg.gettransfer.presentation.view.Screens
 
 import kotlinx.coroutines.Job
+import net.hockeyapp.android.CrashManager
+import net.hockeyapp.android.CrashManagerListener
 
 import org.koin.android.ext.android.inject
 
@@ -46,6 +49,12 @@ class SplashActivity : AppCompatActivity() {
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (!BuildConfig.DEBUG) {
+            CrashManager.register(applicationContext, object : CrashManagerListener() {
+                override fun getDescription() = systemInteractor.logs
+            })
+        }
 
         reviewInteractor.shouldAskRateInMarket = shouldAskForRateApp()
 

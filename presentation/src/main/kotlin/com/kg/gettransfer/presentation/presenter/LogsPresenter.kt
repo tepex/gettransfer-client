@@ -14,7 +14,7 @@ class LogsPresenter : BasePresenter<LogsView>() {
 
     fun clearLogs() {
         systemInteractor.clearLogs()
-        viewState.setLogs(systemInteractor.logs)
+        viewState.setLogs("")
     }
 
     fun onShareClicked() {
