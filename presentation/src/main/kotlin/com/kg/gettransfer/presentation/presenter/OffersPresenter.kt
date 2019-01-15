@@ -41,7 +41,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
         }
 
     private var transfer: Transfer? = null
-    private lateinit var offers: List<OfferModel>
+    private var offers: List<OfferModel> = emptyList()
 
     private var sortCategory = Sort.PRICE
     private var sortHigherToLower = false
@@ -79,7 +79,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
         this.transfer = transfer
         val result = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
         if (result.error != null) {
-            offers = emptyList<OfferModel>()
+            offers = emptyList()
             Timber.e(result.error)
         } else {
             offers = result.model.map { offer -> offerMapper.toView(offer) }
