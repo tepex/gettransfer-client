@@ -167,7 +167,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     private fun setTransportTypePrices(prices: Map<TransportType.ID, TransportTypePrice>){
         transportTypeMapper.prices = prices.mapValues { transportTypePriceMapper.toView(it.value) }
-        transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
+        val newTransportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
+        if(transportTypes != null) newTransportTypes.forEach { type -> type.checked = transportTypes?.find { old -> old.id == type.id }?.checked ?: false }
+        transportTypes = newTransportTypes
         viewState.setTransportTypes(transportTypes!!)
     }
 
