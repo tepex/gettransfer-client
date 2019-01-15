@@ -46,15 +46,6 @@ class SplashActivity : AppCompatActivity() {
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.d("Permissions: ${systemInteractor.locationPermissionsGranted}")
-        if (systemInteractor.locationPermissionsGranted == null &&
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-            (!check(Manifest.permission.ACCESS_FINE_LOCATION) || !check(Manifest.permission.ACCESS_COARSE_LOCATION))) {
-                ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_REQUEST)
-                // show splash
-                Timber.d("Splash screen")
-                return
-        }
 
         reviewInteractor.shouldAskRateInMarket = shouldAskForRateApp()
 
@@ -118,22 +109,6 @@ class SplashActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    private fun check(permission: String) =
-        ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (requestCode != PERMISSION_REQUEST) return
-        systemInteractor.locationPermissionsGranted = (grantResults.size == 2 &&
-                                                       grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-                                                       grantResults[1] == PackageManager.PERMISSION_GRANTED)
-        recreate()
-        /*
-        if(grantResults.size == 2 &&
-           grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-           grantResults[1] == PackageManager.PERMISSION_GRANTED) recreate()
-        else finish()
-        */
-    }
     private fun shouldAskForRateApp() =
             when (systemInteractor.appEntersForMarketRate) {
                 3    -> true
