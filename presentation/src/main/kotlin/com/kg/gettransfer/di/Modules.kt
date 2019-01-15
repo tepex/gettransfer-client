@@ -67,8 +67,21 @@ val prefsModule = module {
 }
 
 val loggingModule = module {
-    single { LoggingRepositoryImpl(androidContext(), androidContext().getString(R.string.logs_file_name)) as LoggingRepository }
+    single { LoggingRepositoryImpl(androidContext(), androidContext().getString(R.string.limited_logs_file_name)) as LoggingRepository }
 }
+
+//const val FILE_LIMIT = 1024 * 1024  //1 Mb
+//const val FILES_COUNT = 1
+//val fileModule = module {
+//    single {
+//        Logger.getLogger(androidContext().filesDir.path.toString() + androidContext().getString(R.string.limited_logs_file_name)).also { l ->
+//            Log.i("FindFknPaths", l.name)
+//
+//       FileHandler(androidContext().getString(R.string.limited_logs_file_name), FILE_LIMIT, FILES_COUNT, true).also { h ->
+//           l.addHandler(h)
+//
+//       } } }
+//}
 
 val domainModule = module {
     single { OfferInteractor(get()) }

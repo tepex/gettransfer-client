@@ -49,7 +49,7 @@ class ApiCore : KoinComponent {
             .create()
 
     private var okHttpClient = OkHttpClient.Builder().apply {
-        addInterceptor(HttpLoggingInterceptor(log))
+        addInterceptor(ProdHttpLoggingInterceptor())
         addInterceptor { chain ->
             val request = chain.request()
             val url = request.url().newBuilder()
