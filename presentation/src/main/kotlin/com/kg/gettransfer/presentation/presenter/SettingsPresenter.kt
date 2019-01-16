@@ -22,9 +22,8 @@ import com.kg.gettransfer.presentation.view.SettingsView
 
 import com.kg.gettransfer.utilities.Analytics
 
-import java.util.Locale
-
 import org.koin.standalone.get
+import java.util.*
 
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>() {
@@ -41,6 +40,12 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private var localeWasChanged = false
     private var restart = true
+
+    companion object {
+        private const val CURRENCY_GBP = "GBP"
+        private const val LOCALE_RU = "ru"
+        private const val GBP_RU = "Фунт стерлингов"
+    }
 
     @CallSuper
     override fun attachView(view: SettingsView) {
@@ -140,7 +145,14 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private fun initConfigs() {
         endpoints = systemInteractor.endpoints.map { endpointMapper.toView(it) }
-        currencies = systemInteractor.currencies.map { currencyMapper.toView(it) }
+        currencies = systemInteractor.currencies.map {
+            currencyMapper.toView(it).apply {
+                if (it.currencyCode == CURRENCY_GBP) {
+                    if (systemInteractor.locale.language == LOCALE_RU)
+                        this.name = "$GBP_RU ($symbol)"
+                }
+            }
+        }
         locales = systemInteractor.locales.map { localeMapper.toView(it) }
         distanceUnits = systemInteractor.distanceUnits.map { distanceUnitMapper.toView(it) }
         restart = false
