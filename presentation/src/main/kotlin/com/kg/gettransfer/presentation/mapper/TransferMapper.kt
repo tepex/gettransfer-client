@@ -7,7 +7,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.presentation.model.TransferModel
 
@@ -17,17 +16,13 @@ import kotlin.math.absoluteValue
 
 import org.koin.standalone.get
 
-
-
-
-
 open class TransferMapper : Mapper<TransferModel, Transfer> {
     private val bookNowOfferMapper  = get<BookNowOfferMapper>()
     private val transportTypeMapper  = get<TransportTypeMapper>()
     private val systemTransportTypes = get<SystemInteractor>().transportTypes
 
     override fun toView(type: Transfer): TransferModel {
-        val transportTypesModels = systemTransportTypes.map { transportTypeMapper.toView(it) }
+        val transportTypesModels = systemTransportTypes.filter { type.transportTypeIds.contains(it.id) }.map { transportTypeMapper.toView(it) }
 
         return TransferModel(
             id             = type.id,
