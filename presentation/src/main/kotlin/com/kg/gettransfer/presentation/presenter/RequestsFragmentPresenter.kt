@@ -6,7 +6,6 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.domain.model.sortDescendant
@@ -29,7 +28,6 @@ import timber.log.Timber
 
 @InjectViewState
 class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
-    private val transferInteractor: TransferInteractor by inject()
     private val transferMapper: TransferMapper by inject()
 
     lateinit var categoryName: String

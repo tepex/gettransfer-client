@@ -117,7 +117,7 @@ class OffersActivity : BaseActivity(), OffersView {
     override fun setDate(date: String) { tvOrderDateTime.text = date }
 
     override fun setOffers(offers: List<OfferItem>) {
-        rvOffers.adapter = OffersRVAdapter(offers.toMutableList()) { offer, isShowingOfferDetails ->
+        rvOffers.adapter = OffersRVAdapter(offers.toMutableList(), textNetworkNotAvailable.isVisible) { offer, isShowingOfferDetails ->
             presenter.onSelectOfferClicked(offer, isShowingOfferDetails) }
     }
 

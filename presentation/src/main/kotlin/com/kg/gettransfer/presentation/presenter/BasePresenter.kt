@@ -44,7 +44,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
     protected val offerMapper: OfferMapper by inject()
     protected val notificationManager: NotificationManager by inject()
     protected val offerInteractor: OfferInteractor by inject()
-    private val transferInteractor: TransferInteractor by inject()
+    protected val transferInteractor: TransferInteractor by inject()
 
     open fun onBackCommandClick() {
         val map = mutableMapOf<String, Any>()

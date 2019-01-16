@@ -39,7 +39,7 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
             flightNumber   = type.flightNumber,
 /* ================================================== */
             flightNumberReturn    = type.flightNumberReturn,
-            transportTypes        = transportTypesModels,
+            transportTypes        = transportTypesModels.filter { type.transportTypeIds.contains(it.id) },
             countPassengers       = type.pax,
             bookNow               = type.bookNow,
             time                  = type.time,

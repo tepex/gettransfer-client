@@ -30,6 +30,7 @@ import java.util.*
 
 class OffersRVAdapter(
         private val offers: MutableList<OfferItem>,
+        private val isViewNetworkNotAvailableVisible: Boolean,
         private val listener: SelectOfferClickListener
 ) : RecyclerView.Adapter<OffersRVAdapter.ViewHolder>() {
 
@@ -39,7 +40,7 @@ class OffersRVAdapter(
         OffersRVAdapter.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_offer, parent, false))
 
     override fun onBindViewHolder(holder: OffersRVAdapter.ViewHolder, pos: Int) {
-        holder.bind(offers[pos], listener)
+        holder.bind(offers[pos], isViewNetworkNotAvailableVisible, listener)
     }
 
     override fun getItemViewType(position: Int) = when (offers[position]) {
@@ -53,7 +54,7 @@ class OffersRVAdapter(
     }
 
     class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(item: OfferItem, listener: SelectOfferClickListener) = with(containerView) {
+        fun bind(item: OfferItem, isViewNetworkNotAvailableVisible: Boolean, listener: SelectOfferClickListener) = with(containerView) {
             when (item) {
                 is OfferModel -> {
                     tvCarrierId.text = "#${item.carrier.id}"
@@ -77,8 +78,12 @@ class OffersRVAdapter(
                 }
             }
 
-            setOnClickListener { listener(item, false) }
-            btnSelect.setOnClickListener { listener(item, false) }
+            if (isViewNetworkNotAvailableVisible) {
+                btnSelect.isEnabled = false
+            } else {
+                setOnClickListener { listener(item, false) }
+                btnSelect.setOnClickListener { listener(item, false) }
+            }
             column1.setOnClickListener { listener(item, true) }
         }
 

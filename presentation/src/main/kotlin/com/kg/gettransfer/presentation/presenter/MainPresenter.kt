@@ -13,7 +13,6 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterCompleted
@@ -45,7 +44,6 @@ import timber.log.Timber
 class MainPresenter : BasePresenter<MainView>() {
     private val routeInteractor: RouteInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
-    private val transferInteractor: TransferInteractor by inject()
     private val offerServiceConnection: OfferServiceConnection by inject()
 
     private val pointMapper: PointMapper by inject()

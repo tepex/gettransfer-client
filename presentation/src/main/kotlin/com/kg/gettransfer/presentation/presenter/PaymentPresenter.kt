@@ -5,7 +5,6 @@ import android.os.Bundle
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.domain.model.Offer
@@ -29,7 +28,6 @@ import timber.log.Timber
 @InjectViewState
 class PaymentPresenter : BasePresenter<PaymentView>() {
     private val paymentInteractor: PaymentInteractor by inject()
-    private val transferInteractor: TransferInteractor by inject()
     private val mapper: PaymentStatusRequestMapper by inject()
 
     private var offer: Offer? = null
