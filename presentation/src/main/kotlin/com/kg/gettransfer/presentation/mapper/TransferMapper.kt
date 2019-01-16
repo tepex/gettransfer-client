@@ -21,67 +21,70 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
     private val transportTypeMapper  = get<TransportTypeMapper>()
     private val systemTransportTypes = get<SystemInteractor>().transportTypes
 
-    override fun toView(type: Transfer) =
-            TransferModel(
-                    id             = type.id,
-                    createdAt      = type.createdAt,
-                    duration       = type.duration,
-                    distance       = type.to?.let { type.distance ?: Mapper.checkDistance(type.from.point!!, type.to!!.point!!) },
-                    status         = type.status,
+    override fun toView(type: Transfer): TransferModel {
+        val transportTypesModels = systemTransportTypes.map { transportTypeMapper.toView(it) }
 
-                    statusName     = getTransferStatusNameId(type.status),
-                    from           = type.from.name ?: "",
-                    to             = type.to?.name,
-                    dateTime       = type.dateToLocal,
-                    dateTimeReturn = type.dateReturnLocal,
-                    flightNumber   = type.flightNumber,
+        return TransferModel(
+            id             = type.id,
+            createdAt      = type.createdAt,
+            duration       = type.duration,
+            distance       = type.to?.let { type.distance ?: Mapper.checkDistance(type.from.point!!, type.to!!.point!!) },
+            status         = type.status,
+
+            statusName     = getTransferStatusNameId(type.status),
+            from           = type.from.name ?: "",
+            to             = type.to?.name,
+            dateTime       = type.dateToLocal,
+            dateTimeReturn = type.dateReturnLocal,
+            flightNumber   = type.flightNumber,
 /* ================================================== */
-                    flightNumberReturn    = type.flightNumberReturn,
-                    transportTypes        = systemTransportTypes.filter { type.transportTypeIds.contains(it.id) }.map { transportTypeMapper.toView(it) },
-                    countPassengers       = type.pax,
-                    bookNow               = type.bookNow,
-                    time                  = type.time,
-                    nameSign              = type.nameSign,
-                    comment               = type.comment,
-                    countChilds           = type.childSeats,
-                    childSeatsInfant      = type.childSeatsInfant,
-                    childSeatsConvertible = type.childSeatsConvertible,
+            flightNumberReturn    = type.flightNumberReturn,
+            transportTypes        = transportTypesModels.filter { type.transportTypeIds.contains(it.id) },
+            countPassengers       = type.pax,
+            bookNow               = type.bookNow,
+            time                  = type.time,
+            nameSign              = type.nameSign,
+            comment               = type.comment,
+            countChilds           = type.childSeats,
+            childSeatsInfant      = type.childSeatsInfant,
+            childSeatsConvertible = type.childSeatsConvertible,
 /* ================================================== */
-                    childSeatsBooster     = type.childSeatsBooster,
-                    promoCode             = type.promoCode,
-                    passengerOfferedPrice = type.passengerOfferedPrice,
-                    price                 = type.price?.def,
-                    paidSum               = type.paidSum?.def,
-                    remainsToPay          = type.remainsToPay?.def,
-                    paidPercentage        = type.paidPercentage,
-                    watertaxi             = type.watertaxi,
-                    bookNowOffers         = type.bookNowOffers.map { entry ->
-                        bookNowOfferMapper.toView(entry.value).apply {
-                            transportType = transportTypeMapper.toView(systemTransportTypes.find { type.transportTypeIds.contains(entry.key) }!!)
-                        }
-                    },
-                    offersCount           = type.offersCount,
+            childSeatsBooster     = type.childSeatsBooster,
+            promoCode             = type.promoCode,
+            passengerOfferedPrice = type.passengerOfferedPrice,
+            price                 = type.price?.def,
+            paidSum               = type.paidSum?.def,
+            remainsToPay          = type.remainsToPay?.def,
+            paidPercentage        = type.paidPercentage,
+            watertaxi             = type.watertaxi,
+            bookNowOffers         = type.bookNowOffers?.map { entry ->
+                bookNowOfferMapper.toView(entry.value).apply {
+                    transportType = transportTypesModels.find { it.id === entry.key }!!
+                }
+            },
+            offersCount           = type.offersCount,
 /* ================================================== */
-                    relevantCarriersCount = type.relevantCarriersCount,
-                    /* offersUpdatedAt */
-                    dateRefund            = type.dateRefund,
-                    paypalOnly            = type.paypalOnly,
-                    carrierMainPhone      = type.carrierMainPhone,
-                    pendingPaymentId      = type.pendingPaymentId,
-                    analyticsSent         = type.analyticsSent,
-                    rubPrice              = type.rubPrice,
-                    refundedPrice         = type.refundedPrice?.def,
-                    campaign              = type.campaign,
+            relevantCarriersCount = type.relevantCarriersCount,
+            /* offersUpdatedAt */
+            dateRefund            = type.dateRefund,
+            paypalOnly            = type.paypalOnly,
+            carrierMainPhone      = type.carrierMainPhone,
+            pendingPaymentId      = type.pendingPaymentId,
+            analyticsSent         = type.analyticsSent,
+            rubPrice              = type.rubPrice,
+            refundedPrice         = type.refundedPrice?.def,
+            campaign              = type.campaign,
 /* ================================================== */
-                    editableFields        = type.editableFields,
-                    airlineCard           = type.airlineCard,
-                    paymentPercentages    = type.paymentPercentages,
+            editableFields        = type.editableFields,
+            airlineCard           = type.airlineCard,
+            paymentPercentages    = type.paymentPercentages,
 /* ================================================== */
 /* ================================================== */
-                    statusCategory = type.checkStatusCategory(),
-                    timeToTransfer = (type.dateToLocal.time - Calendar.getInstance().timeInMillis).toInt().absoluteValue / 60_000
-                    //checkOffers = type.checkOffers
-            )
+            statusCategory = type.checkStatusCategory(),
+            timeToTransfer = (type.dateToLocal.time - Calendar.getInstance().timeInMillis).toInt().absoluteValue / 60_000
+            //checkOffers = type.checkOffers
+        )
+    }
 
     override fun fromView(type: TransferModel): Transfer { throw UnsupportedOperationException() }
 
