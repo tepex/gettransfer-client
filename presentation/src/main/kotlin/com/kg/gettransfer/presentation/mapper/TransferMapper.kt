@@ -22,7 +22,7 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
     private val systemTransportTypes = get<SystemInteractor>().transportTypes
 
     override fun toView(type: Transfer): TransferModel {
-        val transportTypesModels = systemTransportTypes.filter { type.transportTypeIds.contains(it.id) }.map { transportTypeMapper.toView(it) }
+        val transportTypesModels = systemTransportTypes.map { transportTypeMapper.toView(it) }
 
         return TransferModel(
             id             = type.id,

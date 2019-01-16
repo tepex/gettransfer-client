@@ -117,7 +117,7 @@ class OffersRVAdapter(
         private fun setBookNowCarPhoto(context: Context, bookNow: BookNowOfferModel) {
             layoutWithCarImage.isVisible = true
             bookNow.transportType.id.let { TransportTypeMapper.getImageById(it) }.let { carPhoto.setImageResource(it) }
-            carPhoto.layoutParams.height = 400
+            carPhoto.layoutParams.height = 250
             carPhoto.requestLayout()
             ratingBar.rating = 4f
             ivLike.isVisible = true
