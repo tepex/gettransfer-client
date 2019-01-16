@@ -196,7 +196,7 @@
                 app:inputType="@integer/inputType_Email"
                 app:title="@string/LNG_RIDE_EMAIL_PLACEHOLDER"
                 app:hint="@string/LNG_RIDE_EMAIL"
-                app:icon_img="@drawable/ic_mail"/>
+                app:icon_img="@drawable/ic_email"/>
 
             <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
                 android:id="@+id/phone_field"
