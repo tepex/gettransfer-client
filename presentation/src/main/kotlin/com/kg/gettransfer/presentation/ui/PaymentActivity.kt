@@ -45,11 +45,11 @@ class PaymentActivity: BaseActivity(), PaymentView {
         presenter.transferId = intent.getLongExtra(PaymentView.EXTRA_TRANSFER_ID, 0)
         presenter.offerId    = intent.getLongExtra(PaymentView.EXTRA_OFFER_ID, 0)
         presenter.percentage = intent.getIntExtra(PaymentView.EXTRA_PERCENTAGE, 0)
-        presenter.bookNowTransportId    = intent.getStringExtra(PaymentView.EXTRA_BOOK_NOW_TRANSPORT_ID)
+        presenter.bookNowTransportId = intent.getStringExtra(PaymentView.EXTRA_BOOK_NOW_TRANSPORT_ID)
 
         setContentView(R.layout.activity_payment)
 
-        setToolbar(toolbar as Toolbar)
+        setToolbar(toolbar as Toolbar, R.string.LNG_PAYMENT)
         webView.settings.javaScriptEnabled = true
         webView.webViewClient = object: WebViewClient() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
