@@ -329,6 +329,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 logCreateTransfer(Analytics.SERVER_ERROR)
                 when {
                     result.error!!.details == "{phone=[taken]}" -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
+                    result.error!!.code == ApiException.NETWORK_ERROR -> viewState.setError(false, R.string.LNG_NETWORK_ERROR)
                     else -> viewState.setError(result.error!!)
                 }
             } else if (logResult.error != null) viewState.showNotLoggedAlert(result.model.id)

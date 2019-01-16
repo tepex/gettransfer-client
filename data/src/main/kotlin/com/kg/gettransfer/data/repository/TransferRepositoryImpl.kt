@@ -64,8 +64,8 @@ class TransferRepositoryImpl(
         }*/
 
     override suspend fun createTransfer(transferNew: TransferNew): Result<Transfer> {
-        val result: ResultEntity<TransferEntity?> = retrieveEntity { fromRemote ->
-            factory.retrieveDataStore(fromRemote).createTransfer(transferNewMapper.toEntity(transferNew))
+        val result: ResultEntity<TransferEntity?> = retrieveRemoteEntity {
+            factory.retrieveRemoteDataStore().createTransfer(transferNewMapper.toEntity(transferNew))
         }
         return if (result.error == null){
             result.entity?.let { factory.retrieveCacheDataStore().addTransfer(result.entity) }
@@ -74,8 +74,8 @@ class TransferRepositoryImpl(
     }
 
     override suspend fun cancelTransfer(id: Long, reason: String): Result<Transfer> {
-        val result: ResultEntity<TransferEntity?> = retrieveEntity { fromRemote ->
-            factory.retrieveDataStore(fromRemote).cancelTransfer(id, reason)
+        val result: ResultEntity<TransferEntity?> = retrieveRemoteEntity {
+            factory.retrieveRemoteDataStore().cancelTransfer(id, reason)
         }
         return if (result.error == null){
             result.entity?.let { factory.retrieveCacheDataStore().addTransfer(result.entity) }
