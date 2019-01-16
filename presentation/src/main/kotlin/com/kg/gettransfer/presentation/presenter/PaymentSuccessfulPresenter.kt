@@ -2,14 +2,10 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.mapper.TransferMapper
-
-import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
@@ -21,7 +17,6 @@ import org.koin.standalone.inject
 
 @InjectViewState
 class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
-    private val transferInteractor: TransferInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
 
     private val routeMapper: RouteMapper by inject()

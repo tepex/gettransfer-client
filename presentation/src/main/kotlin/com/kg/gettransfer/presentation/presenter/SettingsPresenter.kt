@@ -1,14 +1,11 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.content.Intent
-import android.net.Uri
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.presentation.mapper.CurrencyMapper
 import com.kg.gettransfer.presentation.mapper.DistanceUnitMapper
@@ -28,9 +25,6 @@ import com.kg.gettransfer.utilities.Analytics
 import java.util.Locale
 
 import org.koin.standalone.get
-import org.koin.standalone.inject
-
-import timber.log.Timber
 
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>() {
@@ -44,8 +38,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private val distanceUnitMapper = get<DistanceUnitMapper>()
     private val endpointMapper     = get<EndpointMapper>()
     private val reviewInteractor   = get<ReviewInteractor>()
-
-    private val transferInteractor: TransferInteractor by inject()
 
     private var localeWasChanged = false
     private var restart = true

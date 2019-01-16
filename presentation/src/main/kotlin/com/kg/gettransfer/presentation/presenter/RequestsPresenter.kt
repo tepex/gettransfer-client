@@ -4,17 +4,12 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.domain.interactor.TransferInteractor
-
 import com.kg.gettransfer.presentation.view.RequestsView
 
 import com.kg.gettransfer.utilities.Analytics
 
-import org.koin.standalone.inject
-
 @InjectViewState
 class RequestsPresenter : BasePresenter<RequestsView>() {
-    private val transferInteractor: TransferInteractor by inject()
 
     @CallSuper
     override fun attachView(view: RequestsView) {

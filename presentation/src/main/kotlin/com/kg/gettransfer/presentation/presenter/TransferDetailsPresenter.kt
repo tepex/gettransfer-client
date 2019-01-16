@@ -10,7 +10,6 @@ import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.RouteInfo
@@ -40,7 +39,6 @@ import timber.log.Timber
 @InjectViewState
 class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
     private val routeInteractor: RouteInteractor by inject()
-    private val transferInteractor: TransferInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
 
     private val profileMapper: ProfileMapper by inject()

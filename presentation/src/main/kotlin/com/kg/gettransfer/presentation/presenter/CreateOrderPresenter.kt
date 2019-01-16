@@ -17,7 +17,6 @@ import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.interactor.PromoInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 
 import com.kg.gettransfer.domain.model.DestDuration
 import com.kg.gettransfer.domain.model.DestPoint
@@ -56,7 +55,6 @@ import timber.log.Timber
 @InjectViewState
 class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val routeInteractor: RouteInteractor by inject()
-    private val transferInteractor: TransferInteractor by inject()
     private val promoInteractor: PromoInteractor by inject()
 
     private val currencyMapper = get<CurrencyMapper>()

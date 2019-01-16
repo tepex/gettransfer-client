@@ -9,9 +9,7 @@ import com.facebook.appevents.AppEventsConstants
 
 import com.kg.gettransfer.domain.ApiException
 
-import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.domain.model.Offer
@@ -33,7 +31,6 @@ import timber.log.Timber
 @InjectViewState
 class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
     private val paymentInteractor: PaymentInteractor by inject()
-    private val transferInteractor: TransferInteractor by inject()
 
     private val paymentRequestMapper: PaymentRequestMapper by inject()
 
