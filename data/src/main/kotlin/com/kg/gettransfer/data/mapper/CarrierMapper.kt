@@ -30,5 +30,14 @@ open class CarrierMapper : Mapper<CarrierEntity, Carrier> {
     /**
      * Map a [Carrier] instance to a [CarrierEntity] instance.
      */
-    override fun toEntity(type: Carrier): CarrierEntity { throw UnsupportedOperationException() }
+    override fun toEntity(type: Carrier) =
+            CarrierEntity(
+                    id                 = type.id,
+                    profile            = type.profile?.let { profileMapper.toEntity(it) },
+                    approved           = type.approved,
+                    completedTransfers = type.completedTransfers,
+                    languages          = type.languages.map { localeMapper.toEntity(it) },
+                    ratings            = ratingsMapper.toEntity(type.ratings),
+                    canUpdateOffers    = type.canUpdateOffers
+            )
 }

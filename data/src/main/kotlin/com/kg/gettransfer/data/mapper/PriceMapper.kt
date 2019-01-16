@@ -18,21 +18,21 @@ open class PriceMapper : Mapper<PriceEntity, Price> {
      */
     override fun fromEntity(type: PriceEntity) =
         Price(
-            base = moneyMapper.fromEntity(type.base),
+            base            = moneyMapper.fromEntity(type.base),
             withoutDiscount = type.withoutDiscount?.let { moneyMapper.fromEntity(it) },
-            percentage30 = type.percentage30,
-            percentage70 = type.percentage70,
-            amount = type.amount
+            percentage30    = type.percentage30,
+            percentage70    = type.percentage70,
+            amount          = type.amount
         )
     /**
      * Map a [Price] instance to a [PriceEntity] instance.
      */
     override fun toEntity(type: Price) =
         PriceEntity(
-            base = moneyMapper.toEntity(type.base),
+            base            = moneyMapper.toEntity(type.base),
             withoutDiscount = type.withoutDiscount?.let { moneyMapper.toEntity(it) },
-            percentage30 = type.percentage30,
-            percentage70 = type.percentage70,
-            amount = type.amount
+            percentage30    = type.percentage30,
+            percentage70    = type.percentage70,
+            amount          = type.amount
         )
 }

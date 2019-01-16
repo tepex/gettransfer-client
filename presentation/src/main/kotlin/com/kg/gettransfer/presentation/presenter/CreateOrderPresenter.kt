@@ -23,6 +23,8 @@ import com.kg.gettransfer.domain.model.DestDuration
 import com.kg.gettransfer.domain.model.DestPoint
 import com.kg.gettransfer.domain.model.TransferNew
 import com.kg.gettransfer.domain.model.Trip
+import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.model.TransportTypePrice
 
 import com.kg.gettransfer.presentation.mapper.CurrencyMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper
@@ -121,16 +123,14 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
         utils.launchSuspend {
             viewState.blockInterface(true)
-            val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false) }
+            val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.currencyCode) }
             if (result.error != null) viewState.setError(result.error!!)
             else {
                 val route = result.model
                 duration = route.duration
 
-                transportTypeMapper.prices = result.model.prices.mapValues { transportTypePriceMapper.toView(it.value) }
-                if (transportTypes == null)
-                    transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
-                viewState.setTransportTypes(transportTypes!!)
+                setTransportTypePrices(result.model.prices)
+
                 routeModel = routeMapper.getView(
                     route.distance,
                     route.polyLines,
@@ -148,6 +148,29 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             }
             viewState.blockInterface(false)
         }
+    }
+
+    private fun initPrices(){
+        val from = routeInteractor.from!!.cityPoint
+        val to = routeInteractor.to!!.cityPoint
+        if (from.point == null || to.point == null) {
+            Timber.w("NPE! from: $from, to: $to")
+            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) or `To` {$to} is not set"))
+            return
+        }
+        utils.launchSuspend {
+            val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.currencyCode) }
+            if (result.error != null) viewState.setError(result.error!!)
+            else setTransportTypePrices(result.model.prices)
+        }
+    }
+
+    private fun setTransportTypePrices(prices: Map<TransportType.ID, TransportTypePrice>){
+        transportTypeMapper.prices = prices.mapValues { transportTypePriceMapper.toView(it.value) }
+        val newTransportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
+        if(transportTypes != null) newTransportTypes.forEach { type -> type.checked = transportTypes?.find { old -> old.id == type.id }?.checked ?: false }
+        transportTypes = newTransportTypes
+        viewState.setTransportTypes(transportTypes!!)
     }
 
     private fun setUIWithoutRoute() {
@@ -185,7 +208,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         super.attachView(view)
         viewState.setCurrencies(currencies)
         val i = systemInteractor.currentCurrencyIndex
-        if (i != -1) changeCurrency(i)
+        if (i != -1) setCurrency(i)
 
         viewState.setUser(user, systemInteractor.account.user.loggedIn)
         viewState.setHintForDateTimeTransfer()
@@ -193,6 +216,16 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun changeCurrency(selected: Int) {
+        if (selected < currencies.size) {
+            val currencyModel = currencies[selected]
+            systemInteractor.currency = currencyModel.delegate
+            setCurrency(selected)
+            saveAccount()
+            initPrices()
+        }
+    }
+
+    private fun setCurrency(selected: Int){
         if (selected < currencies.size) {
             selectedCurrency = selected
             viewState.setCurrency(currencies[selected].symbol)
@@ -310,7 +343,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             !isTimeSetByUser                        -> FieldError.TIME_NOT_SELECTED
             !Utils.checkEmail(user.profile.email)   -> FieldError.EMAIL_FIELD
             !Utils.checkPhone(user.profile.phone!!) -> FieldError.PHONE_FIELD
-            !transportTypes!!.any { it.checked }    -> FieldError.TRANSPORT_FIELD
+            transportTypes!!.none { it.checked }    -> FieldError.TRANSPORT_FIELD
             passengers == 0                         -> FieldError.PASSENGERS_COUNT
             !user.termsAccepted                     -> FieldError.TERMS_ACCEPTED_FIELD
             else                                    -> FieldError.UNKNOWN
@@ -338,7 +371,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             val tripTime = String.format("%d:%d", duration!! / 60, duration!! % 60)
             val checkedTransport = transportTypes?.filter { it.checked }
             if (!checkedTransport.isNullOrEmpty())
-                viewState.setFairPrice(checkedTransport?.minBy { it.price!!.minFloat }?.price!!.min, tripTime)
+                viewState.setFairPrice(checkedTransport.minBy { it.price!!.minFloat }?.price!!.min, tripTime)
             else viewState.setFairPrice(null, null)
         } catch (e: KotlinNullPointerException) { viewState.setFairPrice(null, null) }
     }
@@ -379,10 +412,12 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         map[Analytics.PARAM_KEY_RESULT] = value
         bundle.putString(Analytics.PARAM_KEY_RESULT, value)
 
-        if (cost != null && selectedCurrency != INVALID_CURRENCY_INDEX) {
+        if (cost != null) {
             bundle.putString(Analytics.VALUE, cost.toString())
             map[Analytics.VALUE] = cost.toString()
+        }
 
+        if (selectedCurrency != INVALID_CURRENCY_INDEX) {
             bundle.putString(Analytics.CURRENCY, currencies[selectedCurrency].name)
             map[Analytics.CURRENCY] = currencies[selectedCurrency].name
         }
@@ -410,7 +445,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         if (cost != null) {
             bundle.putString(Analytics.VALUE, cost.toString())
             map[Analytics.VALUE] = cost.toString()
+        }
 
+        if (selectedCurrency != INVALID_CURRENCY_INDEX) {
             bundle.putString(Analytics.CURRENCY, currencies[selectedCurrency].name)
             fbBundle.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, currencies[selectedCurrency].name)
             map[Analytics.CURRENCY] = currencies[selectedCurrency].name

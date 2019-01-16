@@ -22,6 +22,7 @@ import com.kg.gettransfer.domain.repository.*
 import com.kg.gettransfer.geo.GeoRepositoryImpl
 
 import com.kg.gettransfer.prefs.PreferencesImpl
+import com.kg.gettransfer.presentation.FileLoggingTree
 
 import com.kg.gettransfer.presentation.mapper.*
 
@@ -41,6 +42,9 @@ import org.koin.dsl.module.module
 
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Router
+import java.util.logging.FileHandler
+import java.util.logging.Logger
+import java.util.logging.SimpleFormatter
 
 /**
  * Koin main module
@@ -67,7 +71,19 @@ val prefsModule = module {
 }
 
 val loggingModule = module {
-    single { LoggingRepositoryImpl(androidContext(), androidContext().getString(R.string.logs_file_name)) as LoggingRepository }
+    single { LoggingRepositoryImpl(androidContext(), FileLoggingTree.LOGGER_NAME) as LoggingRepository }
+}
+
+const val FILE_LIMIT = 1024 * 1024  //1 Mb
+const val FILES_COUNT = 1
+val fileModule = module {
+    single {
+        Logger.getLogger(FileLoggingTree.LOGGER_NAME).also { l ->
+        FileHandler(androidContext().filesDir.path.toString().plus("/${l.name}"), FILE_LIMIT, FILES_COUNT, true).also { h ->
+            h.formatter = SimpleFormatter()
+
+            l.addHandler(h)
+       } } }
 }
 
 val domainModule = module {

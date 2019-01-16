@@ -7,7 +7,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.presentation.model.TransferModel
 
@@ -17,17 +16,15 @@ import kotlin.math.absoluteValue
 
 import org.koin.standalone.get
 
-
-
-
-
 open class TransferMapper : Mapper<TransferModel, Transfer> {
     private val bookNowOfferMapper  = get<BookNowOfferMapper>()
     private val transportTypeMapper  = get<TransportTypeMapper>()
     private val systemTransportTypes = get<SystemInteractor>().transportTypes
 
-    override fun toView(type: Transfer) =
-        TransferModel(
+    override fun toView(type: Transfer): TransferModel {
+        val transportTypesModels = systemTransportTypes.filter { type.transportTypeIds.contains(it.id) }.map { transportTypeMapper.toView(it) }
+
+        return TransferModel(
             id             = type.id,
             createdAt      = type.createdAt,
             duration       = type.duration,
@@ -35,14 +32,14 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
             status         = type.status,
 
             statusName     = getTransferStatusNameId(type.status),
-            from           = type.from.name!!,
+            from           = type.from.name ?: "",
             to             = type.to?.name,
             dateTime       = type.dateToLocal,
             dateTimeReturn = type.dateReturnLocal,
             flightNumber   = type.flightNumber,
 /* ================================================== */
             flightNumberReturn    = type.flightNumberReturn,
-            transportTypes        = systemTransportTypes.filter { type.transportTypeIds.contains(it.id) }.map { transportTypeMapper.toView(it) },
+            transportTypes        = transportTypesModels,
             countPassengers       = type.pax,
             bookNow               = type.bookNow,
             time                  = type.time,
@@ -60,7 +57,11 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
             remainsToPay          = type.remainsToPay?.def,
             paidPercentage        = type.paidPercentage,
             watertaxi             = type.watertaxi,
-            bookNowOffers         = type.bookNowOffers.map { bookNowOfferMapper.toView(it.value).apply { transportTypeId = it.key } },
+            bookNowOffers         = type.bookNowOffers?.map { entry ->
+                bookNowOfferMapper.toView(entry.value).apply {
+                    transportType = transportTypesModels.find { it.id === entry.key }!!
+                }
+            },
             offersCount           = type.offersCount,
 /* ================================================== */
             relevantCarriersCount = type.relevantCarriersCount,
@@ -83,6 +84,7 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
             timeToTransfer = (type.dateToLocal.time - Calendar.getInstance().timeInMillis).toInt().absoluteValue / 60_000
             //checkOffers = type.checkOffers
         )
+    }
 
     override fun fromView(type: TransferModel): Transfer { throw UnsupportedOperationException() }
 

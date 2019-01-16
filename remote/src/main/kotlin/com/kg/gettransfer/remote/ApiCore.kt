@@ -13,10 +13,7 @@ import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.TokenModel
 import com.kg.gettransfer.remote.model.TransportTypesWrapperModel
 
-import devcsrj.okhttp3.logging.HttpLoggingInterceptor
-
 import java.io.IOException
-import java.util.concurrent.TimeoutException
 
 import kotlinx.coroutines.Deferred
 
@@ -49,7 +46,7 @@ class ApiCore : KoinComponent {
             .create()
 
     private var okHttpClient = OkHttpClient.Builder().apply {
-        addInterceptor(HttpLoggingInterceptor(log))
+        addInterceptor(PrivateHttpLoggingInterceptor())
         addInterceptor { chain ->
             val request = chain.request()
             val url = request.url().newBuilder()

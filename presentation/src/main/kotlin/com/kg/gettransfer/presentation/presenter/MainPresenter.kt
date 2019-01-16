@@ -17,6 +17,7 @@ import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterCompleted
+import com.kg.gettransfer.prefs.PreferencesImpl
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
@@ -75,7 +76,7 @@ class MainPresenter : BasePresenter<MainView>() {
         systemInteractor.selectedField = FIELD_FROM
         systemInteractor.initGeocoder()
         if (routeInteractor.from != null) setLastLocation() else updateCurrentLocation()
-        if (systemInteractor.account.user.loggedIn) registerPushToken(); checkReview()
+        if (systemInteractor.account.user.loggedIn) { registerPushToken(); checkReview() }
 
         // Создать листенер для обновления текущей локации
         // https://developer.android.com/training/location/receive-location-updates
@@ -309,10 +310,12 @@ class MainPresenter : BasePresenter<MainView>() {
 
     private fun showRateForLastTrip() {     //get all completed transfers -> get last transfer -> get offer -> showRate view
         utils.launchSuspend {
-            utils.asyncAwait { transferInteractor.getAllTransfers() }
-                    .isNotError()
-                    ?.let { getLastTransfer(it.filterCompleted())
-                            ?.let { transfer -> checkToShowReview(transfer) }
+            val result = utils.asyncAwait { transferInteractor.getAllTransfers() }
+
+            if (result.error != null) viewState.setError(result.error!!)
+            else result.isNotError()?.let {
+                getLastTransfer(it.filterCompleted())
+                        ?.let { transfer -> checkToShowReview(transfer) }
             }
         }
     }
@@ -357,7 +360,8 @@ class MainPresenter : BasePresenter<MainView>() {
             logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
             reviewInteractor.apply {
                 utils.launchSuspend { sendTopRate() }
-                if (shouldAskRateInMarket) viewState.askRateInPlayMarket() else viewState.thanksForRate()
+                if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE)
+                    viewState.askRateInPlayMarket() else viewState.thanksForRate()
             }
         } else viewState.showDetailedReview(rate)
     }
@@ -399,7 +403,7 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     private suspend fun createRouteModel(transfer: Transfer): RouteModel {
-        val route = routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false).model
+        val route = routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false, systemInteractor.currency.currencyCode).model
         return routeMapper.getView(
             route.distance,
             route.polyLines,

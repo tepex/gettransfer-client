@@ -9,7 +9,6 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
-import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 
@@ -81,8 +80,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
                 viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile), showRate)
 
                 if (transfer.to != null) {
-                    val r = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, true, false) }
-                    if (r.error == null) setRouteTransfer(transfer, r.model)
+                    val r = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, true, false, systemInteractor.currency.currencyCode) }
+                    setRouteTransfer(transfer, r.model)
                 } else if (transfer.duration != null) setHourlyTransfer(transfer)
 
             }

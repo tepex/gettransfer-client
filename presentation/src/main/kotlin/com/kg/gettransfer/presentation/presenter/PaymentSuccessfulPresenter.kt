@@ -30,18 +30,6 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
     internal var offerId = 0L
     internal var transferId = 0L
 
-    private lateinit var transferModel: TransferModel
-
-    override fun attachView(view: PaymentSuccessfulView?) {
-        super.attachView(view)
-        utils.launchSuspend {
-            val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            transferModel = transferMapper.toView(result.model)
-            val (days, hours, minutes) = Utils.convertDuration(transferModel.timeToTransfer)
-            viewState.setRemainTime(days, hours, minutes)
-        }
-    }
-
     fun setMapRoute() {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
@@ -51,9 +39,13 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                 if (result.model.to != null) {
                     val r = utils.asyncAwait {
                         routeInteractor
-                            .getRouteInfo(result.model.from.point!!, result.model.to!!.point!!, false, false)
+                            .getRouteInfo(result.model.from.point!!, result.model.to!!.point!!, false, false, systemInteractor.currency.currencyCode)
                     }
                     if (r.error == null) {
+                        val transferModel = transferMapper.toView(result.model)
+                        val (days, hours, minutes) = Utils.convertDuration(transferModel.timeToTransfer)
+                        viewState.setRemainTime(days, hours, minutes)
+
                         val routeModel = routeMapper.getView(
                             r.model.distance,
                             r.model.polyLines,

@@ -126,7 +126,8 @@ class SystemInteractor(
 
     suspend fun registerPushToken(token: String) {
         pushToken = token
-        systemRepository.registerPushToken(PushTokenType.FCM, token)
+        try { systemRepository.registerPushToken(PushTokenType.FCM, token) }
+        catch (e: ApiException) { throw e }
     }
 
     suspend fun unregisterPushToken(): Result<Unit> {
@@ -143,7 +144,7 @@ class SystemInteractor(
     fun removeListener(listener: SystemListener) { systemRepository.removeListener(listener) }
 
     companion object {
-        private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBR", "CNY", "EUR" )
+        private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )
         private val localesFilterList = arrayOf("en", "ru")
     }
 }

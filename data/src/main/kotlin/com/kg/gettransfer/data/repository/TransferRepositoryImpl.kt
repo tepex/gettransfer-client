@@ -5,9 +5,11 @@ import com.kg.gettransfer.data.TransferDataStore
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.TransferDataStoreCache
 import com.kg.gettransfer.data.ds.TransferDataStoreRemote
+import com.kg.gettransfer.data.mapper.ExceptionMapper
 
 import com.kg.gettransfer.data.mapper.TransferMapper
 import com.kg.gettransfer.data.mapper.TransferNewMapper
+import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.data.model.TransferEntity
 
@@ -31,7 +33,7 @@ class TransferRepositoryImpl(
     private val transferNewMapper = get<TransferNewMapper>()
     private val transferMapper = get<TransferMapper>()
 
-    override suspend fun createTransfer(transferNew: TransferNew) =
+    /*override suspend fun createTransfer(transferNew: TransferNew) =
         retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, DEFAULT) {
             factory.retrieveRemoteDataStore().createTransfer(transferNewMapper.toEntity(transferNew))
         }
@@ -59,7 +61,67 @@ class TransferRepositoryImpl(
     override suspend fun getTransfersActive(): Result<List<Transfer>> =
         retrieveRemoteListModel<TransferEntity, Transfer>(transferMapper) {
             factory.retrieveRemoteDataStore().getTransfersActive()
+        }*/
+
+    override suspend fun createTransfer(transferNew: TransferNew): Result<Transfer> {
+        val result: ResultEntity<TransferEntity?> = retrieveEntity { fromRemote ->
+            factory.retrieveDataStore(fromRemote).createTransfer(transferNewMapper.toEntity(transferNew))
         }
+        return if (result.error == null){
+            result.entity?.let { factory.retrieveCacheDataStore().addTransfer(result.entity) }
+            Result(result.entity?.let { transferMapper.fromEntity(it) }?: DEFAULT)
+        } else Result(DEFAULT, ExceptionMapper.map(result.error))
+    }
+
+    override suspend fun cancelTransfer(id: Long, reason: String): Result<Transfer> {
+        val result: ResultEntity<TransferEntity?> = retrieveEntity { fromRemote ->
+            factory.retrieveDataStore(fromRemote).cancelTransfer(id, reason)
+        }
+        return if (result.error == null){
+            result.entity?.let { factory.retrieveCacheDataStore().addTransfer(result.entity) }
+            Result(result.entity?.let { transferMapper.fromEntity(it) }?: DEFAULT)
+        } else Result(DEFAULT, ExceptionMapper.map(result.error))
+    }
+
+    override suspend fun getTransfer(id: Long): Result<Transfer> {
+        val result: ResultEntity<TransferEntity?> = retrieveEntity { fromRemote ->
+            factory.retrieveDataStore(fromRemote).getTransfer(id)
+        }
+        result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addTransfer(result.entity) }
+        return if(result.error != null) Result(factory.retrieveCacheDataStore().getTransfer(id).let { transferMapper.fromEntity(it) })
+        else Result(result.entity?.let { transferMapper.fromEntity(it) }?: DEFAULT)
+    }
+
+    override suspend fun getAllTransfers(): Result<List<Transfer>> {
+        val result: ResultEntity<List<TransferEntity>?> = retrieveEntity { fromRemote ->
+            factory.retrieveDataStore(fromRemote).getAllTransfers()
+        }
+        result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addAllTransfers(result.entity) }
+        return if(result.error != null) Result(factory.retrieveCacheDataStore().getAllTransfers().map { transferMapper.fromEntity(it) })
+        else Result(result.entity?.map { transferMapper.fromEntity(it) }?: emptyList())
+    }
+
+    override suspend fun getTransfersArchive(): Result<List<Transfer>> {
+        val result: ResultEntity<List<TransferEntity>?> = retrieveEntity { fromRemote ->
+            factory.retrieveDataStore(fromRemote).getTransfersArchive()
+        }
+        result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addAllTransfers(result.entity) }
+        return if(result.error != null) Result(factory.retrieveCacheDataStore().getTransfersArchive().map { transferMapper.fromEntity(it) })
+        else Result(result.entity?.map { transferMapper.fromEntity(it) }?: emptyList())
+    }
+
+    override suspend fun getTransfersActive(): Result<List<Transfer>> {
+        val result: ResultEntity<List<TransferEntity>?> = retrieveEntity { fromRemote ->
+            factory.retrieveDataStore(fromRemote).getTransfersActive()
+        }
+        result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addAllTransfers(result.entity) }
+        return if(result.error != null) Result(factory.retrieveCacheDataStore().getTransfersActive().map { transferMapper.fromEntity(it) })
+        else Result(result.entity?.map { transferMapper.fromEntity(it) }?: emptyList())
+    }
+
+    override fun clearTransfersCache() {
+        factory.retrieveCacheDataStore().clearTransfersCache()
+    }
 
     companion object {
         private val DEFAULT =

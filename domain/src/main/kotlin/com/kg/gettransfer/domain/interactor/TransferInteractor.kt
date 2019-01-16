@@ -27,6 +27,11 @@ class TransferInteractor(private val repository: TransferRepository) {
 
     suspend fun getAllTransfers() = repository.getAllTransfers().apply { if(!isError() && allTransfers == null) allTransfers = model}
 
+    fun clearTransfersCache(): Result<Unit> {
+        repository.clearTransfersCache()
+        return Result(Unit)
+    }
+
     fun deleteAllTransfersList() { allTransfers = null }
 
     suspend fun getActiveTransfers(): Result<List<Transfer>> {

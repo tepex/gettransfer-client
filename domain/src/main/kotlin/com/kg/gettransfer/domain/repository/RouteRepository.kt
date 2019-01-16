@@ -5,5 +5,5 @@ import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.RouteInfo
 
 interface RouteRepository {
-    suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean): Result<RouteInfo>
+    suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean, currency: String): Result<RouteInfo>
 }

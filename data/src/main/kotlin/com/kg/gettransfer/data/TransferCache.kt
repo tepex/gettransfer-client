@@ -6,10 +6,13 @@ import com.kg.gettransfer.data.model.TransferNewEntity
 import org.koin.standalone.KoinComponent
 
 interface TransferCache: KoinComponent {
-    suspend fun createTransfer(transferNew: TransferNewEntity): TransferEntity
-    suspend fun cancelTransfer(id: Long, reason: String): TransferEntity
-    suspend fun getTransfer(id: Long): TransferEntity
-    suspend fun getAllTransfers(): List<TransferEntity>
-    suspend fun getTransfersArchive(): List<TransferEntity>
-    suspend fun getTransfersActive(): List<TransferEntity>
+    fun insertAllTransfers(transfers: List<TransferEntity>)
+    fun insertTransfer(transfer: TransferEntity)
+
+    fun getTransfer(id: Long): TransferEntity
+    fun getAllTransfers(): List<TransferEntity>
+    fun getTransfersArchive(): List<TransferEntity>
+    fun getTransfersActive(): List<TransferEntity>
+
+    fun deleteAllTransfers()
 }

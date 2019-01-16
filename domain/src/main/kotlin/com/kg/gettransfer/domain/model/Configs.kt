@@ -7,7 +7,7 @@ data class Configs(
     val transportTypes: List<TransportType>,
     val paypalCredentials: PaypalCredentials,
     val availableLocales: List<Locale>,
-    val preferredLocale: Locale,
+    val preferredLocale: Locale? = null,   //не используется, но может прийти null с сервера
     val supportedCurrencies: List<Currency>,
     val supportedDistanceUnits: List<DistanceUnit>,
     val cardGateways: CardGateways,

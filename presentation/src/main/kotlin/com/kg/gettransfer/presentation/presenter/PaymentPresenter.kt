@@ -6,6 +6,7 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.domain.model.Offer
 
@@ -31,11 +32,14 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
     private val transferInteractor: TransferInteractor by inject()
     private val mapper: PaymentStatusRequestMapper by inject()
 
-    private lateinit var offer: Offer
+    private var offer: Offer? = null
+    private var bookNowOffer: BookNowOffer? = null
 
     internal var transferId = 0L
     internal var offerId    = 0L
     internal var percentage = 0
+    internal var bookNowTransportId = ""
+
 
     fun changePaymentStatus(orderId: Long, success: Boolean) {
         utils.launchSuspend {
@@ -50,7 +54,6 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
                 if (result.model.success) {
                     router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
                     router.navigateTo(Screens.PaymentSuccess(transferId, offerId))
-                    offer = offerInteractor.getOffer(offerId)!!
                     logEventEcommercePurchase()
                     logEvent(Analytics.RESULT_SUCCESS)
                 } else {
@@ -77,7 +80,18 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
         map[Analytics.CURRENCY] = systemInteractor.currency.currencyCode
         bundle.putString(Analytics.CURRENCY, systemInteractor.currency.currencyCode)
 
-        var price = offer.price.amount
+        offer = offerInteractor.getOffer(offerId)
+        utils.launchSuspend {
+            val result = utils.asyncAwait {
+                transferInteractor.getTransfer(transferId)
+            }
+            if (result.error == null) {
+                bookNowOffer = result.model.bookNowOffers?.filterKeys { it.name == bookNowTransportId }?.values?.first()
+            }
+        }
+
+        var price: Double = if (offer != null) offer!!.price.amount
+        else bookNowOffer!!.amount
 
         when (percentage) {
             OfferModel.FULL_PRICE -> {

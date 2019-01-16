@@ -10,7 +10,6 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 
-import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 
@@ -18,12 +17,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdate
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.*
 

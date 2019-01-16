@@ -47,7 +47,8 @@
         <activity
             android:name=".presentation.ui.SplashActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:resizeableActivity="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -58,27 +59,34 @@
             android:name=".presentation.ui.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeTransparentStatusBar"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:resizeableActivity="false"/>
         <activity
             android:name=".presentation.ui.AboutActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:resizeableActivity="false"/>
         <activity
             android:name=".presentation.ui.SearchActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeTransparentStatusBar" />
+            android:theme="@style/AppThemeTransparentStatusBar"
+            android:resizeableActivity="false"/>
         <activity
             android:name=".presentation.ui.CreateOrderActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
+            android:resizeableActivity="false"/>
         <activity
             android:name=".presentation.ui.WebPageActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:resizeableActivity="false"/>
         <activity
             android:name=".presentation.ui.SettingsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:resizeableActivity="false"/>
         <activity
             android:name=".presentation.ui.OffersActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:resizeableActivity="false">
             <!--
             <intent-filter>
                 <action android:name="OffersActivity" />
@@ -88,34 +96,44 @@
         </activity>
         <activity
             android:name=".presentation.ui.RequestsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:resizeableActivity="false"/>
         <activity
             android:name=".presentation.ui.TransferDetailsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:resizeableActivity="false"/>
         <activity android:name=".presentation.ui.CarrierTripsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:resizeableActivity="false"/>
         <activity
             android:name=".presentation.ui.CarrierTripDetailsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:resizeableActivity="false"/>
         <activity
             android:name=".presentation.ui.LogsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:resizeableActivity="false"/>
         <activity
             android:name=".presentation.ui.LoginActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateUnchanged|adjustResize" />
+            android:windowSoftInputMode="stateUnchanged|adjustResize"
+            android:resizeableActivity="false"/>
         <activity
             android:name=".presentation.ui.PaymentActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:resizeableActivity="false"/>
         <activity
             android:name=".presentation.ui.PaymentSettingsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:resizeableActivity="false"/>
         <activity android:name=".presentation.ui.PaymentErrorActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:resizeableActivity="false"/>
         <activity android:name=".presentation.ui.PaymentSuccessfulActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:resizeableActivity="false"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

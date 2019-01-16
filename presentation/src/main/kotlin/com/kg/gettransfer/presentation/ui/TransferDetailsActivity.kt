@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 
 import android.os.Build
@@ -19,7 +18,6 @@ import android.view.View
 import android.view.WindowManager
 
 import android.widget.ImageView
-import android.widget.PopupWindow
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -31,7 +29,6 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.*
 
@@ -55,7 +52,7 @@ import kotlinx.android.synthetic.main.view_transfer_details_communicate_buttons.
 import kotlinx.android.synthetic.main.view_transfer_details_field.*
 import kotlinx.android.synthetic.main.view_transfer_details_info.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.*
-import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //Don't delete
+import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //don't delete
 
 import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
@@ -137,6 +134,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
             initTableLayoutTransportTypes(transfer.transportTypes)
             flexboxLayoutTransportTypes.isVisible = true
         }
+        btnCenterRoute.isVisible = status == Transfer.STATUS_CATEGORY_ACTIVE
         btnCancel.isVisible      = status == Transfer.STATUS_CATEGORY_ACTIVE
         (status == Transfer.STATUS_CATEGORY_FINISHED && showRate).let {
             view_rate_ride.isVisible = it
@@ -163,9 +161,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
         //bottom left
         if (transfer.statusCategory == Transfer.STATUS_CATEGORY_ACTIVE || transfer.statusCategory == Transfer.STATUS_CATEGORY_UNFINISHED) {
-            if (transfer.price != null) {
+            if (transfer.passengerOfferedPrice != null) {
                 layoutYourPrice.isVisible = true
-                tvYourPrice.text = transfer.price
+                tvYourPrice.text = transfer.passengerOfferedPrice
             }
             else {
                 verticalDivider2.isVisible = false

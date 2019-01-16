@@ -18,6 +18,7 @@
 
     <!-- logs -->
     <string name="logs_file_name">Logs.txt</string>
+    <string name="limited_logs_file_name">LimitedLogFile.txt</string>
     <string name="file_provider_authority" translatable="false">com.kg.gettransfer.fileprovider</string>
     <string name="share_extra_subject">GTR Logs</string>
     <string name="title_starting_session">/////////////////////////////////////////////////////\n//////////////////// NEW SESSION ////////////////////\n/////////////////////////////////////////////////////</string>
@@ -396,7 +397,7 @@
     <string name="LNG_RIDE_TRANSFER_CANCELLED">transfer cancelled</string>
     <string name="LNG_ERROR_PASSENGERS">Number of passenger must be greater than zero</string>
     <string name="LNG_TRANSFER_IN_PROGRESS">Transfer in progress</string>
-    <string name="LNG_EMAIL_SUBJECT">Get help</string>
+    <string name="LNG_EMAIL_SUBJECT">Need help</string>
     <string name="LNG_TRIPS_TODAY">Today</string>
     <string name="LNG_TRIPS_ALL">All</string>
     <string name="LNG_TRIPS_COMPLETED">Completed</string>

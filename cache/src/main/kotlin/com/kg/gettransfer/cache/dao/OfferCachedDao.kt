@@ -4,20 +4,34 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
+import android.arch.persistence.room.Transaction
 
-//import com.kg.gettransfer.cache.model.OfferCached
-//import com.kg.gettransfer.cache.model.TABLE_OFFER
+import com.kg.gettransfer.cache.model.OfferCached
+import com.kg.gettransfer.data.model.OfferEntity
 
 @Dao
 interface OfferCachedDao {
-    /*
-    @Query("SELECT * FROM $TABLE_OFFER WHERE id = :id")
+    @Query("SELECT * FROM ${OfferEntity.ENTITY_NAME} WHERE ${OfferEntity.ID} = :id")
     fun getOffer(id: Long): OfferCached
 
-    @Query("SELECT * FROM $TABLE_OFFER WHERE transferId = :transferId")
+    @Query("SELECT * FROM ${OfferEntity.ENTITY_NAME} WHERE ${OfferEntity.TRANSFER_ID} = :transferId")
     fun getOffers(transferId: Long): List<OfferCached>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOffer(offer: OfferCached)
-    */
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAllOffers(offers: List<OfferCached>)
+
+    @Query("DELETE FROM ${OfferEntity.ENTITY_NAME}")
+    fun deleteAll()
+
+    @Query("DELETE FROM ${OfferEntity.ENTITY_NAME} WHERE ${OfferEntity.TRANSFER_ID} = :transferId")
+    fun deleteForTransfer(transferId: Long)
+
+    @Transaction
+    fun updateOffersForTransfer(offers: List<OfferCached>) {
+        offers.firstOrNull()?.transferId?.let { deleteForTransfer(it) }
+        insertAllOffers(offers)
+    }
 }

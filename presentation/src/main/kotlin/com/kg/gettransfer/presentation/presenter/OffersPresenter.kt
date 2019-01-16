@@ -13,8 +13,12 @@ import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.mapper.TransferMapper
+import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
+import com.kg.gettransfer.presentation.model.BookNowOfferModel
+import com.kg.gettransfer.presentation.model.OfferItem
 
 import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 
@@ -33,6 +37,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
     private val transferInteractor: TransferInteractor by inject()
 
     private val transferMapper: TransferMapper by inject()
+    private val transportTypeMapper: TransportTypeMapper by inject()
 
     internal var transferId = 0L
         set(value) {
@@ -41,7 +46,8 @@ class OffersPresenter : BasePresenter<OffersView>() {
         }
 
     private var transfer: Transfer? = null
-    private lateinit var offers: List<OfferModel>
+    private var offers: List<OfferItem> = emptyList()
+    private lateinit var transportTypes: List<TransportTypeModel>
 
     private var sortCategory = Sort.PRICE
     private var sortHigherToLower = false
@@ -64,6 +70,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
                     val transferModel = transferMapper.toView(result.model)
                     viewState.setDate(SystemUtils.formatDateTime(transferModel.dateTime))
                     viewState.setTransfer(transferModel)
+                    transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
                     checkNewOffersSuspended(result.model)
                 }
             }
@@ -78,14 +85,18 @@ class OffersPresenter : BasePresenter<OffersView>() {
     private suspend fun checkNewOffersSuspended(transfer: Transfer) {
         this.transfer = transfer
         val result = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
+        val transferModel = transferMapper.toView(transfer)
         if (result.error != null) {
-            offers = emptyList<OfferModel>()
+            offers = emptyList()
             Timber.e(result.error)
         } else {
-            offers = result.model.map { offer -> offerMapper.toView(offer) }
-            //changeSortType(SORT_PRICE)
-            processOffers()
+            offers = mutableListOf<OfferItem>().apply {
+                addAll(result.model.map { offerMapper.toView(it) })
+                transferModel.bookNowOffers?.let { addAll(it) }
+            }
         }
+        //changeSortType(SORT_PRICE)
+        processOffers()
     }
 
     override fun onNewOffer(offer: Offer): OfferModel {
@@ -99,14 +110,29 @@ class OffersPresenter : BasePresenter<OffersView>() {
         router.navigateTo(Screens.Details(transferId))
     }
 
-    fun onSelectOfferClicked(offer: OfferModel, isShowingOfferDetails: Boolean) {
+    fun onSelectOfferClicked(offer: OfferItem, isShowingOfferDetails: Boolean) {
         transfer?.let {
             if (isShowingOfferDetails) {
                 viewState.showBottomSheetOfferDetails(offer)
                 logEvent(Analytics.OFFER_DETAILS)
             } else {
                 logEvent(Analytics.OFFER_BOOK)
-                router.navigateTo(Screens.PaymentSettings(it.id, offer.id, it.dateRefund, it.paymentPercentages))
+                when(offer) {
+                    is OfferModel -> router.navigateTo(Screens.PaymentSettings(
+                        it.id,
+                        offer.id,
+                        it.dateRefund,
+                        it.paymentPercentages,
+                        null
+                    ))
+                    is BookNowOfferModel -> router.navigateTo(Screens.PaymentSettings(
+                        it.id,
+                        null,
+                        it.dateRefund,
+                        it.paymentPercentages,
+                        offer.transportType.id.name
+                    ))
+                }
             }
         }
     }
@@ -176,15 +202,30 @@ class OffersPresenter : BasePresenter<OffersView>() {
         offers = when (sortCategory) {
             Sort.YEAR -> {
                 sortType = if (sortHigherToLower) SortType.YEAR_DESC else SortType.YEAR_ASC
-                offers.sortedWith(compareBy { it.vehicle.year })
+                offers.sortedWith(compareBy {
+                    when (it) {
+                        is OfferModel -> it.vehicle.year
+                        else -> 0
+                    }
+                })
             }
             Sort.RATING -> {
                 sortType = if (sortHigherToLower) SortType.RATING_DESC else SortType.RATING_ASC
-                offers.sortedWith(compareBy { it.ratings?.average })
+                offers.sortedWith(compareBy {
+                    when (it) {
+                        is OfferModel -> it.ratings?.average
+                        else -> 0
+                    }
+                })
             }
             Sort.PRICE -> {
                 sortType = if (sortHigherToLower) SortType.PRICE_DESC else SortType.PRICE_ASC
-                offers.sortedWith(compareBy { it.price.amount })
+                offers.sortedWith(compareBy {
+                    when (it) {
+                        is OfferModel -> it.price.amount
+                        is BookNowOfferModel -> it.amount
+                    }
+                })
             }
         }
         if (sortHigherToLower) offers = offers.reversed()

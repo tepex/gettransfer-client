@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Intent
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
@@ -10,6 +11,7 @@ import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.app.ActivityCompat
 
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
@@ -27,8 +29,6 @@ import android.widget.TextView
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -42,8 +42,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.presentation.model.OfferModel
+
 import com.kg.gettransfer.presentation.model.PolylineModel
 
 import com.kg.gettransfer.presentation.model.ProfileModel
@@ -82,6 +81,8 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     private var isFirst = true
     private var centerMarker: Marker? = null
     private var isGmTouchEnabled = true
+
+    private lateinit var map: GoogleMap
 
     @ProvidePresenter
     fun createMainPresenter() = MainPresenter()
@@ -247,11 +248,10 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     protected override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
-        if (systemInteractor.locationPermissionsGranted ?: true) {
-            gm.setMyLocationEnabled(true)
-            gm.uiSettings.isMyLocationButtonEnabled = false
-        }
-        gm.uiSettings.setAllGesturesEnabled(isGmTouchEnabled)
+        Timber.d("Permissions: ${systemInteractor.locationPermissionsGranted}")
+
+        map = gm
+        if (isPermissionGranted()) return
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
         gm.setOnCameraMoveListener        { presenter.onCameraMove(gm.cameraPosition!!.target, true)  }
         gm.setOnCameraIdleListener        { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
@@ -261,6 +261,34 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
                 gm.setOnCameraMoveStartedListener(null)
             }
         }
+    }
+
+    private fun isPermissionGranted(): Boolean {
+        if (systemInteractor.locationPermissionsGranted == null &&
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                (!check(Manifest.permission.ACCESS_FINE_LOCATION) || !check(Manifest.permission.ACCESS_COARSE_LOCATION))) {
+            ActivityCompat.requestPermissions(this, SplashActivity.PERMISSIONS, SplashActivity.PERMISSION_REQUEST)
+            return true
+        }
+        return false
+    }
+
+    private fun check(permission: String) =
+            ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode != SplashActivity.PERMISSION_REQUEST) return
+        if(grantResults.size == 2 &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+
+            systemInteractor.locationPermissionsGranted = true
+            map.isMyLocationEnabled = true
+            map.uiSettings.isMyLocationButtonEnabled = false
+        } else {
+            systemInteractor.locationPermissionsGranted = false
+        }
+        recreate()
     }
 
     /* MainView */

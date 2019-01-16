@@ -6,6 +6,8 @@ import com.kg.gettransfer.cache.model.CurrencyCachedList
 import com.kg.gettransfer.cache.model.LocaleCachedList
 import com.kg.gettransfer.cache.model.StringList
 import com.kg.gettransfer.cache.model.TransportTypesCachedList
+import com.kg.gettransfer.cache.model.IntList
+import com.kg.gettransfer.cache.model.BookNowOfferCachedMap
 
 import kotlinx.serialization.json.JSON
 
@@ -17,7 +19,23 @@ object RoomConverters {
     @TypeConverter
     @JvmStatic
     fun toStringList(s: String?): StringList? = s?.let { JSON.parse(StringList.serializer(), it) }
-    
+
+    @TypeConverter
+    @JvmStatic
+    fun fromIntList(list: IntList?): String? = list?.let { JSON.stringify(IntList.serializer(), it) }
+
+    @TypeConverter
+    @JvmStatic
+    fun toIntList(s: String?): IntList? = s?.let { JSON.parse(IntList.serializer(), it) }
+
+    @TypeConverter
+    @JvmStatic
+    fun fromBookNowOfferCachedMap(map: BookNowOfferCachedMap?): String? = map?.let { JSON.stringify(BookNowOfferCachedMap.serializer(), it) }
+
+    @TypeConverter
+    @JvmStatic
+    fun toBookNowOfferCachedMap(s: String?): BookNowOfferCachedMap? = s?.let { JSON.parse(BookNowOfferCachedMap.serializer(), it) }
+
     @TypeConverter
     @JvmStatic
     fun fromTransportTypesCachedList(list: TransportTypesCachedList?): String? = list?.let { JSON.stringify(TransportTypesCachedList.serializer(), it) }

@@ -5,19 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
-import android.support.v4.app.MemoryLeakUtils
 import android.support.v7.widget.Toolbar
-
-import android.view.View
-
-import android.widget.Toast
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.extensions.*
 import com.kg.gettransfer.presentation.model.*
@@ -27,9 +21,6 @@ import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.view.SettingsView
 
 import kotlinx.android.synthetic.main.activity_settings.*
-import kotlinx.android.synthetic.main.toolbar.view.*
-
-import timber.log.Timber
 
 class SettingsActivity : BaseActivity(), SettingsView {
 

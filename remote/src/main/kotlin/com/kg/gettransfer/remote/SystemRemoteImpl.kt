@@ -79,7 +79,8 @@ class SystemRemoteImpl : SystemRemote {
     }
 
     override suspend fun registerPushToken(provider: String, token: String) {
-        core.api.registerPushToken(provider, token).await()
+        try{ core.api.registerPushToken(provider, token).await() }
+        catch (e: Exception) { throw core.remoteException(e) }
         //val resposeData: String = response.data
         //log.debug("register token: ${response.data}") : String
     }

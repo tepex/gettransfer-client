@@ -27,7 +27,7 @@
         android:layout_marginStart="@dimen/bottom_sheet_offer_details_elements_margin_start"
         android:layout_marginTop="@dimen/bottom_sheet_offer_details_carrier_id_margin_top"
         android:fontFamily="@font/sf_pro_text_bold"
-        android:text="Carrier #4242"
+        tools:text="Carrier #4242"
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -257,13 +257,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/sf_pro_text_bold"
-            android:text="Mercedes-Benz S-Class, 2013"
+            tools:text="Mercedes-Benz S-Class, 2013"
             android:textColor="@color/colorTextBlack"
             android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/colorVehicle"/>
+            app:layout_constraintEnd_toStartOf="@+id/colorVehicle"
+            android:ellipsize="end"
+            android:maxLines="2"/>
 
         <ImageView
             android:id="@+id/colorVehicle"
@@ -375,9 +377,11 @@
         android:id="@+id/layoutPhotos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/layoutVehicleInfo">
+        app:layout_constraintTop_toBottomOf="@+id/layoutVehicleInfo"
+        android:orientation="vertical">
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintPhotos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -424,6 +428,14 @@
                 android:text="1/7"/>
 
         </android.support.constraint.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/ivBookNowPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_transport_type_business"
+            app:layout_constraintTop_toBottomOf="@+id/layoutVehicleInfo"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

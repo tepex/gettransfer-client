@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.model
 
-data class PaymentRequestModel(val transferId: Long, val offerId: Long) {
+data class PaymentRequestModel(val transferId: Long, val offerId: Long?,
+                               val bookNowTransportType: String?) {
     companion object {
         const val FULL_PRICE = 100
         const val PRICE_30   = 30

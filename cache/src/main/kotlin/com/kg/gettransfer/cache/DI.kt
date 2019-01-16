@@ -3,8 +3,11 @@ package com.kg.gettransfer.cache
 import android.arch.persistence.room.Room
 
 import com.kg.gettransfer.cache.mapper.*
+import com.kg.gettransfer.data.OfferCache
+import com.kg.gettransfer.data.RouteCache
 
 import com.kg.gettransfer.data.SystemCache
+import com.kg.gettransfer.data.TransferCache
 
 import org.koin.dsl.module.module
 
@@ -26,5 +29,19 @@ val cacheModule = module {
     single { TransportTypeEntityMapper() }
     single { ConfigsEntityMapper() }
     single { AccountEntityMapper() }
+    single { TransferEntityMapper() }
+    single { BookNowOfferEntityMapper() }
+    single { CityPointEntityMapper() }
+    single { MoneyEntityMapper() }
+    single { PriceEntityMapper() }
+    single { RatingsEntityMapper() }
+    single { CarrierEntityMapper() }
+    single { ProfileEntityMapper() }
+    single { VehicleEntityMapper() }
+    single { OfferEntityMapper() }
+    single { RouteInfoEntityMapper() }
     single<SystemCache> { SystemCacheImpl() }
+    single<TransferCache> { TransferCacheImpl() }
+    single<OfferCache> { OfferCacheImpl() }
+    single<RouteCache> { RouteCacheImpl() }
 }

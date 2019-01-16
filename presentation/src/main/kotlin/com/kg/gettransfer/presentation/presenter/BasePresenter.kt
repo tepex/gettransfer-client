@@ -7,11 +7,13 @@ import com.arellomobile.mvp.MvpPresenter
 
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
+import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.presentation.mapper.OfferMapper
@@ -42,6 +44,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
     protected val offerMapper: OfferMapper by inject()
     protected val notificationManager: NotificationManager by inject()
     protected val offerInteractor: OfferInteractor by inject()
+    private val transferInteractor: TransferInteractor by inject()
 
     open fun onBackCommandClick() {
         val map = mutableMapOf<String, Any>()
@@ -82,12 +85,20 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
     }
 
     internal fun sendEmail(emailCarrier: String?) {
-        router.navigateTo(
-            Screens.SendEmail(
-                emailCarrier,
-                if (emailCarrier == null) systemInteractor.logsFile else null
-            )
-        )
+        utils.launchSuspend {
+            val transfers = utils.asyncAwait { transferInteractor.getAllTransfers() }
+            var transferId: Long? = null
+            if (transfers.model.isNotEmpty()) {
+                transferId = transfers.model.first().id
+            }
+
+            router.navigateTo(
+                    Screens.SendEmail(
+                            emailCarrier,
+                            systemInteractor.logsFile,
+                            transferId,
+                            systemInteractor.account.user.profile.email))
+        }
     }
 
     internal fun callPhone(phone: String) {
@@ -95,14 +106,17 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
     }
 
     protected fun registerPushToken() {
-        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener(OnCompleteListener {
+        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener {
             if (it.isSuccessful) {
                 it.result?.token?.let {
                     Timber.d("[FCM token]: $it")
-                    utils.runAlien { systemInteractor.registerPushToken(it) }
+                    utils.runAlien {
+                        try { systemInteractor.registerPushToken(it) }
+                        catch (e: ApiException) { viewState.setError(e) }
+                    }
                 }
             } else Timber.w("getInstanceId failed", it.exception)
-        })
+        }
     }
 
     open fun onNewOffer(offer: Offer): OfferModel {
@@ -110,6 +124,13 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
         val offerModel = offerMapper.toView(offer)
         notificationManager.showOfferNotification(offerModel)
         return offerModel
+    }
+
+    fun saveAccount() = utils.launchSuspend {
+        viewState.blockInterface(true)
+        val result = utils.asyncAwait { systemInteractor.putAccount() }
+        result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
+        viewState.blockInterface(false)
     }
 
     companion object AnalyticProps {

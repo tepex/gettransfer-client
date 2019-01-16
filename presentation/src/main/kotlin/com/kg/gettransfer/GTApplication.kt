@@ -41,11 +41,11 @@ class GTApplication : MultiDexApplication() {
         super.onCreate()
         // Display some logs
         if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
+ //           Timber.plant(Timber.DebugTree())
             System.setProperty("kotlinx.coroutines.debug", "on")
-        } else CrashManager.register(this)
+        }
         if (BuildConfig.FLAVOR == "dev") {
-            Timber.plant(FileLoggingTree(applicationContext))
+ //           Timber.plant(FileLoggingTree(applicationContext))
             System.setProperty("kotlinx.coroutines.debug", "on")
             //DELETE CrashManager.register(this)
         }
@@ -55,6 +55,7 @@ class GTApplication : MultiDexApplication() {
             geoModule,
             prefsModule,
             loggingModule,
+            fileModule,
             remoteMappersModule,
             remoteModule,
             cacheModule,
@@ -64,10 +65,10 @@ class GTApplication : MultiDexApplication() {
             androidModule
         ))
 
-
         //setUpLeakCanary()
         setupFcm()
         setupAppMetrica()
+        Timber.plant(FileLoggingTree())
     }
 
     private fun setUpLeakCanary() {

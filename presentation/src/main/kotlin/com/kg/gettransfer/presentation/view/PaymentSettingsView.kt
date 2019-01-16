@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.view
 
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.presentation.model.OfferModel
 
@@ -15,6 +16,7 @@ import kotlinx.serialization.Serializable
 interface PaymentSettingsView : BaseView {
 
     fun setOffer(offer: OfferModel, paymentPercentages: List<Int>)
+    fun setBookNowOffer(bookNowOffer: BookNowOffer?)
 
     companion object {
         val EXTRA_PARAMS = "${PaymentSettingsView::class.java.name}.params"
@@ -24,7 +26,8 @@ interface PaymentSettingsView : BaseView {
     data class Params(
         @Serializable(with = DateSerializer::class) val dateRefund: Date?,
         val transferId: Long,
-        val offerId: Long,
-        val paymentPercentages: List<Int>
+        val offerId: Long?,
+        val paymentPercentages: List<Int>,
+        val bookNowTransportId: String?
     )
 }
