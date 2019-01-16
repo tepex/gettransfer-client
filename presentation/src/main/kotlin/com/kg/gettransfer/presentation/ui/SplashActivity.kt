@@ -2,15 +2,10 @@ package com.kg.gettransfer.presentation.ui
 
 import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 
-import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
-
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 
 import android.support.v7.app.AppCompatActivity
 import com.kg.gettransfer.BuildConfig
@@ -101,7 +96,7 @@ class SplashActivity : AppCompatActivity() {
         else {
             startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             when (systemInteractor.lastMode) {
-                Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsActivity::class.java))
+                Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsMainActivity::class.java))
                 Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             }
