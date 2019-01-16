@@ -19,9 +19,18 @@ abstract class BaseRepository : KoinComponent {
 
     protected suspend fun <E> retrieveEntity(getEntity: suspend (Boolean) -> E?): ResultEntity<E?> {
         /* First, try retrieve from remote */
-        try { return ResultEntity(getEntity(true)) }
+        return try { ResultEntity(getEntity(true)) }
         /* If error, get from cache */
-        catch (e: RemoteException) { return ResultEntity(getEntity(false), e) }
+        catch (e: RemoteException) {
+            ResultEntity(getEntity(false), e)
+        }
+    }
+
+    protected suspend fun <E> retrieveRemoteEntity(getEntity: suspend () -> E): ResultEntity<E?> {
+        return try { ResultEntity(getEntity())
+        } catch (e: RemoteException) {
+            ResultEntity(null, e)
+        }
     }
 
     protected suspend fun <E, M> retrieveRemoteModel(mapper: Mapper<E, M>, defaultModel: M, getEntity: suspend () -> E): Result<M> {
