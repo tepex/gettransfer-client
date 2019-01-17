@@ -157,6 +157,17 @@
                 app:title="@string/LNG_RIDE_DATE"
                 app:icon_img="@drawable/ic_calendar_triangle"/>
 
+            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                android:id="@+id/transfer_return_date_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+            app:inputType="@integer/inputType_NoSuggestion"
+            app:isFocusable="false"
+            app:title="Return transfer"
+            app:hint="I want to oerder return transfer"
+            app:icon_img="@drawable/ic_calendar_triangle"/>
+
             <LinearLayout
                 android:id="@+id/ll_seats"
                 android:layout_width="match_parent"

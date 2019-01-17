@@ -54,6 +54,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
             isDoubleClickOnRoute = routeInteractor.from == selected
             routeInteractor.from = selected
         }
+        utils.launchSuspend { utils.asyncAwait { routeInteractor.updatePoint(isTo) }}
 
 
         val placeType = checkPlaceType(selected)

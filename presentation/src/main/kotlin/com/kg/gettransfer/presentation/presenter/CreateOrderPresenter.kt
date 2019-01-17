@@ -34,6 +34,7 @@ import com.kg.gettransfer.presentation.mapper.UserMapper
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.TripDate
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
@@ -41,6 +42,7 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.remote.model.TripDate
 
 import com.kg.gettransfer.utilities.Analytics
 
@@ -81,7 +83,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private var isTimeSetByUser = false
     internal lateinit var currentDate: Calendar
     internal var futureHour = 0
-    internal var date: Date = Date()
+    internal var startDate: TripDate = TripDate(Date())
+    internal var returnDate: TripDate? = null
 
     private var flightNumber: String? = null
     private var comment: String? = null
@@ -89,7 +92,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     override fun onFirstViewAttach() {
         futureHour = systemInteractor.mobileConfigs.orderMinimumMinutes / 60
         currentDate = getCurrentDatePlusMinimumHours()
-        date = currentDate.time
+        startDate.date = currentDate.time
     }
 
     private fun getCurrentDatePlusMinimumHours(): Calendar {
@@ -136,7 +139,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                     to.name!!,
                     from.point!!,
                     to.point!!,
-                    SystemUtils.formatDateTime(date)
+                    SystemUtils.formatDateTime(startDate.date)
                 )
             }
             routeModel?.let {
@@ -184,19 +187,19 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
     }
 
-    fun changeDate(newDate: Date) {
-        isTimeSetByUser = true
+    fun changeDate(newDate: Date, isStartDate: Boolean) {
+        val fieldDate = if (isStartDate) startDate.also { isTimeSetByUser = true } else returnDate!!            //enable get transfer only if startDate was set manually
         currentDate = getCurrentDatePlusMinimumHours()
         if (newDate.after(currentDate.time)) {
             isAfterMinHours = false
-            date = newDate
+            fieldDate.date = newDate
         } else {
             isAfterMinHours = true
-            date = currentDate.time
+            fieldDate.date = currentDate.time
         }
-        viewState.setDateTimeTransfer(SystemUtils.formatDateTime(date), isAfterMinHours)
-        routeModel?.let {
-            it.dateTime = SystemUtils.formatDateTime(date)
+        viewState.setDateTimeTransfer(SystemUtils.formatDateTime(fieldDate.date), isAfterMinHours, isStartDate)
+        if (isStartDate) routeModel?.let {
+            it.dateTime = SystemUtils.formatDateTime(fieldDate.date)
             viewState.setRoute(polyline!!, it, true)
         }
     }
@@ -294,7 +297,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun onGetTransferClick() {
         currentDate = getCurrentDatePlusMinimumHours()
-        if (currentDate.time.after(date)) date = currentDate.time
+        if (currentDate.time.after(startDate.date)) startDate.date = currentDate.time
 
         if (!checkFieldsForRequest()) return
 
@@ -303,8 +306,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val transferNew = TransferNew(
             from.cityPoint,
             if (routeInteractor.hourlyDuration != null) DestDuration(routeInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint),
-            Trip(date, flightNumber),
-            null,
+            Trip(startDate.date, flightNumber),
+            returnDate?.let { Trip(it.date, null) },
             transportTypes!!.filter { it.checked }.map { it.id },
             passengers,
             children,
