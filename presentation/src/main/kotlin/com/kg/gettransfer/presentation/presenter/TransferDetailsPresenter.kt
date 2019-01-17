@@ -14,6 +14,7 @@ import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.prefs.PreferencesImpl
 
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
@@ -153,7 +154,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
             with(reviewInteractor) {
                 utils.launchSuspend { sendTopRate() }
                 logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
-                if (shouldAskRateInMarket) viewState.askRateInPlayMarket()
+                if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) viewState.askRateInPlayMarket()
                 else viewState.thanksForRate()
             }
         } else viewState.showDetailRate(rating)
