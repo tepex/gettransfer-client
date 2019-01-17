@@ -87,8 +87,18 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
                 if (result.model.bookNowOffers.isNotEmpty()) {
                     bookNowOffer = result.model.bookNowOffers.filterKeys { it.name == bookNowTransportId }.values.first()
                 }
+                when {
+                    result.model.duration        != null -> Analytics.TRIP_HOURLY
+                    result.model.dateReturnLocal != null -> Analytics.TRIP_ROUND
+                    else                                 -> Analytics.TRIP_DESTINATION
+                }.let {
+                    bundle.putString(Analytics.TRIP_TYPE, it)
+                    map[Analytics.TRIP_TYPE] = it
+                }
+
             }
         }
+
 
         var price: Double = if (offer != null) offer!!.price.amount
         else bookNowOffer!!.amount

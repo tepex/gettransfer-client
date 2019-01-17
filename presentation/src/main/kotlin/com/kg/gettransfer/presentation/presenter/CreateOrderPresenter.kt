@@ -130,7 +130,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 val route = result.model
                 duration = route.duration
 
-                setTransportTypePrices(result.model.prices)
+                setTransportTypePrices(route.prices)
 
                 routeModel = routeMapper.getView(
                     route.distance,
@@ -151,7 +151,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
     }
 
-    private fun initPrices(){
+    private fun initPrices(returnWay: Boolean){
         val from = routeInteractor.from!!.cityPoint
         val to = routeInteractor.to!!.cityPoint
         if (from.point == null || to.point == null) {
@@ -160,7 +160,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             return
         }
         utils.launchSuspend {
-            val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.currencyCode) }
+            val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, returnWay, systemInteractor.currency.currencyCode) }
             if (result.error != null) viewState.setError(result.error!!)
             else setTransportTypePrices(result.model.prices)
         }
@@ -188,7 +188,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun changeDate(newDate: Date, isStartDate: Boolean) {
-        if (!isStartDate && returnDate == null) returnDate = TripDate(Date())
+        if (!isStartDate && returnDate == null) {
+            returnDate = TripDate(Date())
+            initPrices(true)
+        }
         val fieldDate = if (isStartDate) startDate.also { isTimeSetByUser = true } else { returnDate!!}         //enable get transfer only if startDate was set manually
         currentDate = getCurrentDatePlusMinimumHours()
         if (newDate.after(currentDate.time)) {
@@ -208,6 +211,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     fun clearReturnDate() {
         returnDate = null
         flightNumberReturn = null
+        initPrices(false)
     }
 
     @CallSuper
@@ -228,7 +232,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             systemInteractor.currency = currencyModel.delegate
             setCurrency(selected)
             saveAccount()
-            initPrices()
+            initPrices(returnDate != null)
         }
     }
 
@@ -449,6 +453,16 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
         bundle.putString(Analytics.TRAVEL_CLASS, transportTypes?.filter { it.checked }?.joinToString())
         map[Analytics.TRAVEL_CLASS] = transportTypes?.filter { it.checked }?.joinToString()
+
+
+        when {
+            duration != null -> Analytics.TRIP_HOURLY
+            returnDate != null -> Analytics.TRIP_ROUND
+            else -> Analytics.TRIP_DESTINATION
+        }.let {
+            bundle.putString(Analytics.TRIP_TYPE, it)
+            map[Analytics.TRIP_TYPE] = it
+        }
 
         fbBundle.putAll(bundle)
 
