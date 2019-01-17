@@ -8,6 +8,7 @@ import com.kg.gettransfer.cache.model.StringList
 import com.kg.gettransfer.cache.model.TransportTypesCachedList
 import com.kg.gettransfer.cache.model.IntList
 import com.kg.gettransfer.cache.model.BookNowOfferCachedMap
+import com.kg.gettransfer.cache.model.ChatAccountsCachedMap
 
 import kotlinx.serialization.json.JSON
 
@@ -59,4 +60,12 @@ object RoomConverters {
     @TypeConverter
     @JvmStatic
     fun toCurrencyCachedList(s: String?): CurrencyCachedList? = s?.let { JSON.parse(CurrencyCachedList.serializer(), it) }
+
+    @TypeConverter
+    @JvmStatic
+    fun fromChatAccountCachedMap(map: ChatAccountsCachedMap?): String? = map?.let { JSON.stringify(ChatAccountsCachedMap.serializer(), it) }
+
+    @TypeConverter
+    @JvmStatic
+    fun toChatAccountCachedMap(s: String?): ChatAccountsCachedMap? = s?.let { JSON.parse(ChatAccountsCachedMap.serializer(), it) }
 }

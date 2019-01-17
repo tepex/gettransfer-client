@@ -57,6 +57,10 @@ val remoteMappersModule = module {
     single { VehicleInfoMapper() }
     single { VehicleMapper() }
 
+    single { ChatAccountMapper() }
+    single { MessageMapper() }
+    single { ChatMapper() }
+
     single { LocationMapper() }
 }
 

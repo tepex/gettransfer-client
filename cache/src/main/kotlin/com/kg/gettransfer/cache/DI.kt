@@ -45,6 +45,9 @@ val cacheModule = module {
     single { CarrierTripBaseEntityMapper() }
     single { PassengerAccountEntityMapper() }
     single { CarrierTripEntityMapper() }
+    single { ChatAccountEntityMapper() }
+    single { ChatEntityMapper() }
+    single { MessageEntityMapper() }
     single<SystemCache> { SystemCacheImpl() }
     single<TransferCache> { TransferCacheImpl() }
     single<OfferCache> { OfferCacheImpl() }
