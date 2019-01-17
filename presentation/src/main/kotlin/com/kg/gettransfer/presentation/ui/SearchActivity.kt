@@ -86,7 +86,9 @@ class SearchActivity : BaseActivity(), SearchView {
 
         initSearchFields()
         predefinedPopularPlaces = initPredefinedPopularPlaces()
-        ivInverseWay.setOnClickListener { presenter.inverseWay() }
+
+        if (presenter.isHourly()) fl_inverse.isVisible = false
+        else ivInverseWay.setOnClickListener { presenter.inverseWay() }
         pointOnMap.setOnClickListener { presenter.selectFinishPointOnMap() }
     }
 
