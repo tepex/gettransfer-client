@@ -42,7 +42,6 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.presentation.view.Screens
-import com.kg.gettransfer.remote.model.TripDate
 
 import com.kg.gettransfer.utilities.Analytics
 
@@ -87,6 +86,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     internal var returnDate: TripDate? = null
 
     private var flightNumber: String? = null
+    private var flightNumberReturn: String? = null
     private var comment: String? = null
 
     override fun onFirstViewAttach() {
@@ -188,7 +188,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun changeDate(newDate: Date, isStartDate: Boolean) {
-        val fieldDate = if (isStartDate) startDate.also { isTimeSetByUser = true } else returnDate!!            //enable get transfer only if startDate was set manually
+        if (!isStartDate && returnDate == null) returnDate = TripDate(Date())
+        val fieldDate = if (isStartDate) startDate.also { isTimeSetByUser = true } else { returnDate!!}         //enable get transfer only if startDate was set manually
         currentDate = getCurrentDatePlusMinimumHours()
         if (newDate.after(currentDate.time)) {
             isAfterMinHours = false
@@ -204,6 +205,11 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
     }
 
+    fun clearReturnDate() {
+        returnDate = null
+        flightNumberReturn = null
+    }
+
     @CallSuper
     override fun attachView(view: CreateOrderView) {
         super.attachView(view)
@@ -212,7 +218,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         if (i != -1) setCurrency(i)
 
         viewState.setUser(user, systemInteractor.account.user.loggedIn)
-        viewState.setHintForDateTimeTransfer()
+        viewState.setHintForDateTimeTransfer(routeInteractor.hourlyDuration == null)
         transportTypes?.let { viewState.setTransportTypes(it) }
     }
 
@@ -262,8 +268,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         logTransferSettingsEvent(Analytics.CHILDREN_ADDED)
     }
 
-    fun setFlightNumber(flightNumber: String) {
-        if (flightNumber.isEmpty()) this.flightNumber = null else this.flightNumber = flightNumber
+    fun setFlightNumber(flightNumber: String, returnWay: Boolean) {
+        (if (flightNumber.isEmpty()) null else flightNumber).let {
+            if (returnWay) flightNumberReturn = it
+            else this.flightNumber = it }
         logTransferSettingsEvent(Analytics.FLIGHT_NUMBER_ADDED)
     }
 
@@ -298,7 +306,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     fun onGetTransferClick() {
         currentDate = getCurrentDatePlusMinimumHours()
         if (currentDate.time.after(startDate.date)) startDate.date = currentDate.time
-
         if (!checkFieldsForRequest()) return
 
         val from = routeInteractor.from!!
@@ -307,7 +314,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             from.cityPoint,
             if (routeInteractor.hourlyDuration != null) DestDuration(routeInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint),
             Trip(startDate.date, flightNumber),
-            returnDate?.let { Trip(it.date, null) },
+            returnDate?.let { Trip(if (it.date.after(startDate.date)) it.date else Date(startDate.date.time + DATE_OFFSET) , flightNumberReturn) },
             transportTypes!!.filter { it.checked }.map { it.id },
             passengers,
             children,
@@ -342,13 +349,14 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     private fun checkFieldsForRequest(): Boolean {
         val errorField = when {
-            !isTimeSetByUser                        -> FieldError.TIME_NOT_SELECTED
-            !Utils.checkEmail(user.profile.email)   -> FieldError.EMAIL_FIELD
-            !Utils.checkPhone(user.profile.phone!!) -> FieldError.PHONE_FIELD
-            transportTypes!!.none { it.checked }    -> FieldError.TRANSPORT_FIELD
-            passengers == 0                         -> FieldError.PASSENGERS_COUNT
-            !user.termsAccepted                     -> FieldError.TERMS_ACCEPTED_FIELD
-            else                                    -> FieldError.UNKNOWN
+            !isTimeSetByUser                                  -> FieldError.TIME_NOT_SELECTED
+            returnDate?.date?.before(startDate.date) ?:false  -> FieldError.RETURN_TIME
+            !Utils.checkEmail(user.profile.email)             -> FieldError.EMAIL_FIELD
+            !Utils.checkPhone(user.profile.phone!!)           -> FieldError.PHONE_FIELD
+            transportTypes!!.none { it.checked }              -> FieldError.TRANSPORT_FIELD
+            passengers == 0                                   -> FieldError.PASSENGERS_COUNT
+            !user.termsAccepted                               -> FieldError.TERMS_ACCEPTED_FIELD
+            else                                              -> FieldError.UNKNOWN
         }
         if (errorField == FieldError.UNKNOWN) return true
         logCreateTransfer(errorField.value)
@@ -465,5 +473,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         private const val MIN_CHILDREN   = 0
 
         private const val INVALID_CURRENCY_INDEX = -1
+        private const val DATE_OFFSET = 1000 * 60 * 5 // 5 minutes
     }
 }

@@ -85,6 +85,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
 
         const val FIELD_START  = true
         const val FIELD_RETURN = false
+
+        const val SHOW = true
+        const val HIDE = false
     }
 
     @ProvidePresenter
@@ -245,7 +248,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
 
 
     private fun showDatePickerDialog(field: Boolean) {
-        val tripDate = if (field) presenter.startDate else presenter.returnDate
         val currentDate = presenter.currentDate
         calendar.time = presenter.startDate.date
 
@@ -326,12 +328,15 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun setDateTimeTransfer(dateTimeString: String, isAfterMinHours: Boolean, startField: Boolean) {
-        if (isAfterMinHours) transfer_date_time_field.field_input.setText(getTextForMinDate())
-        else transfer_date_time_field.field_input.setText(dateTimeString)
+        (if (startField) transfer_date_time_field else transfer_return_date_field.also { showReturnFlight(SHOW) }).let {
+            if (isAfterMinHours) it.field_input.setText(getTextForMinDate())
+            else it.field_input.setText(dateTimeString)
+        }
     }
 
-    override fun setHintForDateTimeTransfer() {
+    override fun setHintForDateTimeTransfer(withReturnWay: Boolean) {
         transfer_date_time_field.field_input.hint = getTextForMinDate()
+        rl_returnWayTime.isVisible = withReturnWay
     }
 
     private fun getTextForMinDate() = getString(R.string.LNG_DATE_IN_HOURS)
@@ -480,8 +485,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
             presenter.setPhone("+".plus(it.replace(Regex("\\D"), "")))
         }
         phone_field.field_input.addTextChangedListener(PhoneNumberFormattingTextWatcher())
-        flight_number_field.field_input.onTextChanged    { presenter.setFlightNumber(it.trim()) }
-        promo_field.field_input.onTextChanged            { presenter.setPromo(promo_field.field_input.text.toString()) }
+        flight_number_field.field_input.onTextChanged         { presenter.setFlightNumber(it.trim(), false) }
+        flight_numberReturn_field.field_input.onTextChanged   { presenter.setFlightNumber(it.trim(), true) }
+        promo_field.field_input.onTextChanged                 { presenter.setPromo(promo_field.field_input.text.toString()) }
     }
 
     private fun initClickListeners() {
@@ -499,8 +505,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
             transfer_return_date_field.setOnClickListener(it)
             transfer_return_date_field.field_input.setOnClickListener(it)
         }
-
-
+        fl_DeleteReturnDate.setOnClickListener              { presenter.clearReturnDate(); showReturnFlight(HIDE) }
         passengers_seats.img_plus_seat.setOnClickListener   { presenter.changePassengers(1) }
         passengers_seats.img_minus_seat.setOnClickListener  { presenter.changePassengers(-1) }
         child_seats.img_minus_seat.setOnClickListener       { presenter.changeChildren(-1) }
@@ -537,4 +542,16 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     override fun showNotLoggedAlert(withOfferId: Long) =
         Utils.showScreenRedirectingAlert(this, getString(R.string.log_in_requirement_error_title),
                     getString(R.string.log_in_to_see_transfers_and_offers)) { presenter.redirectToLogin(withOfferId) }
+
+    val showReturnFlight: (show: Boolean) -> Unit = { show ->
+        flight_numberReturn_field.isVisible = show
+        fl_DeleteReturnDate.isVisible       = show
+        flight_divider.isVisible            = show
+        flight_numberReturn_field.field_divider.isVisible = !show
+        flight_number_field.field_divider.isVisible = !show
+        if (!show) {
+            transfer_return_date_field.field_input.text.clear()
+            flight_numberReturn_field.field_input.text.clear()
+        }
+    }
 }

@@ -25,7 +25,7 @@ interface CreateOrderView : BaseView, RouteView {
     fun setChildren(count: Int)
     fun setCurrency(currency: String)
     fun setDateTimeTransfer(dateTimeString: String, isAfterMinHours: Boolean, startField: Boolean)
-    fun setHintForDateTimeTransfer()
+    fun setHintForDateTimeTransfer(withReturnWay: Boolean)
     fun setComment(comment: String)
     fun setGetTransferEnabled(enabled: Boolean)
     fun setPromoResult(discountInfo: String?)
@@ -40,6 +40,7 @@ interface CreateOrderView : BaseView, RouteView {
         TERMS_ACCEPTED_FIELD(Analytics.LICENSE_NOT_ACCEPTED, R.string.LNG_RIDE_OFFERT_ERROR),
         PASSENGERS_COUNT(Analytics.PASSENGERS_NOT_CHOSEN, R.string.LNG_ERROR_PASSENGERS),
         TIME_NOT_SELECTED(Analytics.PASSENGERS_NOT_CHOSEN, R.string.LNG_ERROR_DATE),
+        RETURN_TIME(Analytics.PASSENGERS_NOT_CHOSEN, R.string.LNG_ERROR_RETURN_DATE),
         UNKNOWN("no_param", R.string.LNG_RIDE_CANT_CREATE);
     }
 
