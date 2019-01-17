@@ -108,6 +108,8 @@ class SearchPresenter : BasePresenter<SearchView>() {
         analytics.logEvent(Analytics.EVENT_BUTTONS, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
     }
 
+    fun isHourly() = routeInteractor.hourlyDuration != null
+
     @CallSuper
     override fun onBackCommandClick() {
         super.onBackCommandClick()

@@ -84,7 +84,9 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
                 transferInteractor.getTransfer(transferId)
             }
             if (result.error == null) {
-                bookNowOffer = result.model.bookNowOffers?.filterKeys { it.name == bookNowTransportId }?.values?.first()
+                if (result.model.bookNowOffers.isNotEmpty()) {
+                    bookNowOffer = result.model.bookNowOffers.filterKeys { it.name == bookNowTransportId }.values.first()
+                }
             }
         }
 
