@@ -55,7 +55,9 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
             }
             if (result.error == null) {
                 paymentRequest = PaymentRequestModel(params.transferId, null, params.bookNowTransportId)
-                bookNowOffer = result.model.bookNowOffers?.filterKeys { it.name == params.bookNowTransportId }?.values?.first()
+                if (result.model.bookNowOffers.isNotEmpty()) {
+                    bookNowOffer = result.model.bookNowOffers?.filterKeys { it.name == params.bookNowTransportId }?.values?.first()
+                }
                 viewState.setBookNowOffer(bookNowOffer)
             } else {
                 viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${params.offerId}] not found!"))
