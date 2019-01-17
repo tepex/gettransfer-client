@@ -118,7 +118,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
                         offer.id,
                         it.dateRefund,
                         it.paymentPercentages,
-                        null
+                        ""
                     ))
                     is BookNowOfferModel -> router.navigateTo(Screens.PaymentSettings(
                         it.id,

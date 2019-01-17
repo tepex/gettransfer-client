@@ -53,6 +53,19 @@ class RouteInteractor(private val geoRepository: GeoRepository, private val rout
         return Result(from!!.cityPoint.point!!)
     }
 
+    fun updatePoint(isTo: Boolean): Result<Point> {
+        (if (isTo) to else from).let {
+            if (it!!.cityPoint.point == null)
+                return geoRepository
+                        .getLatLngByPlaceId(it.cityPoint.placeId!!)
+                        .also { pointResult ->
+                            it.cityPoint.point = pointResult.model
+                        }
+        }
+
+        return Result(Point())
+    }
+
     suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean, currency: String) =
         routeRepository.getRouteInfo(from, to, withPrices, returnWay, currency)
 

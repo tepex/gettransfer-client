@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
-import android.support.v4.content.ContextCompat
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -50,28 +49,34 @@ class SearchPresenter : BasePresenter<SearchView>() {
             viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, false, true)
             isDoubleClickOnRoute = routeInteractor.to == selected
             routeInteractor.to = selected
-            utils.launchSuspend { utils.asyncAwait { routeInteractor.updateDestinationPoint() }}
         } else {
             viewState.setAddressFrom(selected.primary ?: selected.cityPoint.name!!, false, true)
             isDoubleClickOnRoute = routeInteractor.from == selected
             routeInteractor.from = selected
-            utils.launchSuspend { utils.asyncAwait { routeInteractor.updateStartPoint() }}
         }
+
 
         val placeType = checkPlaceType(selected)
         if (placeType == SUITABLE_TYPE || (placeType == ROUTE_TYPE && isDoubleClickOnRoute)) {
             viewState.updateIcon(isTo)
-            if (checkFields() && isTo) createRouteForOrder()
-            else if (!isTo) {
-                viewState.changeFocusToDestField()
-                routeInteractor.to?.let {
-                    viewState.setAddressTo(it.primary ?: it.cityPoint.name!!, true , true)
-                }
+            utils.launchSuspend {
+                utils.async { routeInteractor.updatePoint(isTo) }.await()
+                pointReady()
             }
         } else {
             val sendRequest = selected.needApproximation() /* dirty hack */
             if (isTo) viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, sendRequest, true)
             else viewState.setAddressFrom(selected.primary ?: selected.cityPoint.name!!, sendRequest, true)
+        }
+    }
+
+    private fun pointReady() {
+        if (checkFields() && isTo) createRouteForOrder()
+        else if (!isTo) {
+            viewState.changeFocusToDestField()
+            routeInteractor.to?.let {
+                viewState.setAddressTo(it.primary ?: it.cityPoint.name!!, true , true)
+            }
         }
     }
 
