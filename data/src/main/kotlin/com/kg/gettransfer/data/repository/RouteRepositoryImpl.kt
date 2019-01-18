@@ -1,5 +1,6 @@
 package com.kg.gettransfer.data.repository
 
+import com.kg.gettransfer.data.CacheException
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.RouteDataStore
 
@@ -43,7 +44,11 @@ class RouteRepositoryImpl(
                         currency
                 )
             }
-            result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().setRouteInfo(fromEntity, toEntity, it) }
+            try {
+                result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().setRouteInfo(fromEntity, toEntity, it) }
+            } catch (e: CacheException){
+                return Result(result.entity?.let { routeInfoMapper.fromEntity(it) } ?: DEFAULT, null, ExceptionMapper.map(e))
+            }
             return if (result.error != null) {
                 val routeFromCache: RouteInfoEntity? = factory.retrieveCacheDataStore().getRouteInfo(fromEntity, toEntity)
                 if(routeFromCache != null) Result(routeFromCache.let { routeInfoMapper.fromEntity(it) })
