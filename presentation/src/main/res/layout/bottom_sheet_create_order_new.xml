@@ -134,7 +134,7 @@
 
 
                 <View
-                    android:id="@+id/field_divider"
+                    android:id="@+id/price_divider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/create_transfer_divider_height"
 
@@ -156,6 +156,41 @@
                 app:isFocusable="false"
                 app:title="@string/LNG_RIDE_DATE"
                 app:icon_img="@drawable/ic_calendar_triangle"/>
+            <RelativeLayout
+                    android:id="@+id/rl_returnWayTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                        android:id="@+id/transfer_return_date_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        app:inputType="@integer/inputType_NoSuggestion"
+                        app:isFocusable="false"
+                        app:title="Return transfer"
+                        app:hint="I want to oerder return transfer"
+                        app:icon_img="@drawable/ic_calendar_triangle"/>
+
+                <FrameLayout
+                        android:id="@+id/fl_DeleteReturnDate"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentEnd="true"
+                        android:visibility="gone"
+                        android:layout_marginEnd="24dp">
+                    <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="center"
+                            app:srcCompat="@drawable/return_cross"
+                    />
+
+                </FrameLayout>
+            </RelativeLayout>
+
+
 
             <LinearLayout
                 android:id="@+id/ll_seats"
@@ -207,15 +242,42 @@
                 app:title="@string/LNG_RIDE_PHONE_PLACEHOLDER"
                 app:hint="@string/LNG_RIDE_PHONE"
                 app:icon_img="@drawable/ic_phone"/>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+            android:orientation="horizontal">
+                <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                        android:id="@+id/flight_number_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
 
-            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
-                android:id="@+id/flight_number_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                        app:title="@string/LNG_RIDE_FLIGHT_PLACEHOLDER"
+                        app:hint="@string/LNG_RIDE_FLIGHT"
+                        app:icon_img="@drawable/ic_flight"/>
+                <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                        android:id="@+id/flight_numberReturn_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="gone"
 
-                app:title="@string/LNG_RIDE_FLIGHT_PLACEHOLDER"
-                app:hint="@string/LNG_RIDE_FLIGHT"
-                app:icon_img="@drawable/ic_flight"/>
+                        app:title="@string/LNG_RIDE_FLIGHT_PLACEHOLDER"
+                        app:hint="@string/LNG_RIDE_FLIGHT"
+                        app:icon_img="@drawable/ic_flight"/>
+
+
+            </LinearLayout>
+
+            <View
+                  android:id="@+id/flight_divider"
+                  android:layout_width="match_parent"
+                  android:layout_height="@dimen/create_transfer_divider_height"
+                  android:layout_marginStart="16dp"
+                  android:layout_marginEnd="20dp"
+                  android:visibility="gone"
+                  android:background="@color/create_order_fields_divider"/>
+
 
             <RelativeLayout
                 android:layout_width="wrap_content"

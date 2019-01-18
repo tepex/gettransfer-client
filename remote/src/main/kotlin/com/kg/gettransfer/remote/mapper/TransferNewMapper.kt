@@ -57,6 +57,7 @@ open class TransferNewMapper : EntityMapper<TransferNewBase, TransferNewEntity> 
             from                  = cityPointMapper.toRemote(type.from),
             to                    = cityPointMapper.toRemote(_to),
             tripTo                = tripMapper.toRemote(type.tripTo),
+            tripReturn            = type.tripReturn?.let { tripMapper.toRemote(it) },
             transportTypeIds      = type.transportTypeIds,
             pax                   = type.pax,
             childSeats            = type.childSeats,

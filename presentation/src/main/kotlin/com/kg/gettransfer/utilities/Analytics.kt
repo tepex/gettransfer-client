@@ -92,9 +92,14 @@ class Analytics(
         const val ORIGIN = "origin"
         const val DESTINATION = "destination"
         const val TRAVEL_CLASS = "travel_class"
+        const val TRIP_TYPE = "request_type"
         const val TRANSACTION_ID = "transaction_id"
         const val BEGIN_IN_HOURS = "begin_in_hours"
         const val PROMOCODE = "promocode"
+
+        const val TRIP_HOURLY = "hourly"
+        const val TRIP_DESTINATION = "destination"
+        const val TRIP_ROUND = "roundtrip"
 
         const val OFFER_TYPE = "offer_type"
 

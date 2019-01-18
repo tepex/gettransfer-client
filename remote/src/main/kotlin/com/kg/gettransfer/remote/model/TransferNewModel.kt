@@ -20,12 +20,14 @@ open class TransferNewBase(
     @SerializedName(TransferNewEntity.COMMENT) @Expose val comment: String?,
     @SerializedName(TransferNewEntity.PASSENGER_ACCOUNT) @Expose val user: UserModel,
     @SerializedName(TransferNewEntity.PROMO_CODE) @Expose val promoCode: String?
+
 )
 
 class TransferPointToPointNewModel(
     from: CityPointModel,
     to: CityPointModel,
     tripTo: TripModel,
+    @SerializedName(TransferNewEntity.TRIP_RETURN) @Expose val tripReturn: TripModel? = null,
     transportTypeIds: List<String>,
     pax: Int,
     childSeats: Int?,
@@ -34,9 +36,9 @@ class TransferPointToPointNewModel(
     comment: String?,
     user: UserModel,
     promoCode: String?
+
 /* Not used now
-    @SerializedName("paypal_only") @Expose val paypalOnly: Boolean
-    @SerializedName(TransferNewEntity.TRIP_RETURN) @Expose val tripReturn: TripModel? = null*/
+    @SerializedName("paypal_only") @Expose val paypalOnly: Boolean */
 ) : TransferNewBase(from, to, tripTo, transportTypeIds, pax, childSeats, passengerOfferedPrice, nameSign, comment, user, promoCode)
 
 class TransferHourlyNewModel(
