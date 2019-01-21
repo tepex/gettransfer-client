@@ -55,6 +55,8 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.service.OfferServiceConnection
 
 import com.kg.gettransfer.utilities.LocaleManager
+import io.sentry.Sentry
+import io.sentry.event.BreadcrumbBuilder
 
 import kotlinx.android.synthetic.main.toolbar.view.*
 
@@ -196,6 +198,8 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}", e)
+        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
+        Sentry.capture(e)
         if (e.code != ApiException.NETWORK_ERROR) Utils.showError(this, false, getString(R.string.LNG_ERROR) + ": " + e.message)
     }
 

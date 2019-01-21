@@ -27,6 +27,8 @@ import com.squareup.leakcanary.LeakCanary
 
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
+import io.sentry.Sentry
+import io.sentry.android.AndroidSentryClientFactory
 
 import net.hockeyapp.android.CrashManager
 
@@ -68,7 +70,12 @@ class GTApplication : MultiDexApplication() {
         //setUpLeakCanary()
         setupFcm()
         setupAppMetrica()
+        setupSentry()
         Timber.plant(FileLoggingTree())
+    }
+
+    private fun setupSentry() {
+        Sentry.init(getString(R.string.sentryDsn), AndroidSentryClientFactory(applicationContext))
     }
 
     private fun setUpLeakCanary() {
