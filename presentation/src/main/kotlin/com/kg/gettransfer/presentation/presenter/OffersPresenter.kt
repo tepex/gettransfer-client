@@ -109,9 +109,9 @@ class OffersPresenter : BasePresenter<OffersView>() {
         transfer?.let {
             if (isShowingOfferDetails) {
                 viewState.showBottomSheetOfferDetails(offer)
-                logEvent(Analytics.OFFER_DETAILS)
+                logButtons(Analytics.OFFER_DETAILS)
             } else {
-                logEvent(Analytics.OFFER_BOOK)
+                logButtons(Analytics.OFFER_BOOK)
                 when(offer) {
                     is OfferModel -> router.navigateTo(Screens.PaymentSettings(
                         it.id,
@@ -132,11 +132,9 @@ class OffersPresenter : BasePresenter<OffersView>() {
         }
     }
 
-    fun logEvent(value: String) {
-        val map = mutableMapOf<String, Any>()
-        map[Analytics.PARAM_KEY_NAME] = value
-
-        analytics.logEvent(Analytics.EVENT_BUTTONS, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
+    fun logButtons(event: String) {
+        analytics.logEventToFirebase(event, null)
+        analytics.logEventToYandex(event, null)
     }
 
     fun onCancelRequestClicked() {
@@ -149,7 +147,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     fun cancelRequest(isCancel: Boolean) {
         if (!isCancel) return
-        logEvent(Analytics.CANCEL_TRANSFER_BTN)
+        logButtons(Analytics.CANCEL_TRANSFER_BTN)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.cancelTransfer(transferId, "") }

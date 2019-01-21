@@ -10,6 +10,7 @@ import com.facebook.appevents.AppEventsConstants
 import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
+import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.domain.model.Offer
@@ -31,6 +32,7 @@ import timber.log.Timber
 @InjectViewState
 class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
     private val paymentInteractor: PaymentInteractor by inject()
+    private val routeInteractor: RouteInteractor by inject()
 
     private val paymentRequestMapper: PaymentRequestMapper by inject()
 
@@ -56,7 +58,7 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
             if (result.error == null) {
                 paymentRequest = PaymentRequestModel(params.transferId, null, params.bookNowTransportId)
                 if (result.model.bookNowOffers.isNotEmpty()) {
-                    bookNowOffer = result.model.bookNowOffers?.filterKeys { it.name == params.bookNowTransportId }?.values?.first()
+                    bookNowOffer = result.model.bookNowOffers.filterKeys { it.name == params.bookNowTransportId }.values.first()
                 }
                 viewState.setBookNowOffer(bookNowOffer)
             } else {
@@ -97,6 +99,12 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
         map[Analytics.SHARE] = paymentRequest.percentage
         bundle.putString(Analytics.PROMOCODE, transferInteractor.transferNew?.promoCode)
         map[Analytics.PROMOCODE] = transferInteractor.transferNew?.promoCode
+        routeInteractor.duration?.let { bundle.putInt(Analytics.HOURS, it) }
+        routeInteractor.duration?.let { map[Analytics.HOURS] = it }
+
+        val offerType = if (offer != null ) Analytics.REGULAR else Analytics.NOW
+        bundle.putString(Analytics.OFFER_TYPE, offerType)
+        map[Analytics.OFFER_TYPE] = offerType
         fbBundle.putAll(bundle)
 
         bundle.putString(Analytics.CURRENCY, systemInteractor.currency.currencyCode)

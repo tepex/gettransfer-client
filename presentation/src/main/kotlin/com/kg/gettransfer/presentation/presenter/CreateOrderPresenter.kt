@@ -393,7 +393,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun onCenterRouteClick() {
         track?.let { viewState.centerRoute(it) }
-        logEventMain(Analytics.SHOW_ROUTE_CLICKED)
+        logButtons(Analytics.SHOW_ROUTE_CLICKED)
     }
 
     fun onBackClick() = onBackCommandClick()
@@ -401,16 +401,14 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     override fun onBackCommandClick() {
  //       router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
         router.exit()
-        logEventMain(Analytics.BACK_CLICKED)
+        logButtons(Analytics.BACK_TO_MAP)
     }
 
     fun redirectToLogin(id: Long) = router.replaceScreen(Screens.LoginToGetOffers(id, user.profile.email))
 
-    fun logEventMain(value: String) {
-        val map = mutableMapOf<String, Any>()
-        map[Analytics.PARAM_KEY_NAME] = value
-
-        analytics.logEvent(Analytics.EVENT_MAIN, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
+    fun logButtons(event: String) {
+        analytics.logEventToFirebase(event, null)
+        analytics.logEventToYandex(event, null)
     }
 
     fun logTransferSettingsEvent(value: String) {
@@ -436,6 +434,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             bundle.putString(Analytics.CURRENCY, currencies[selectedCurrency].name)
             map[Analytics.CURRENCY] = currencies[selectedCurrency].name
         }
+        duration?.let { bundle.putInt(Analytics.HOURS, it) }
+        duration?.let { map[Analytics.HOURS] =  it }
+
         analytics.logEvent(Analytics.EVENT_TRANSFER, bundle, map)
     }
 
@@ -455,6 +456,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         bundle.putString(Analytics.TRAVEL_CLASS, transportTypes?.filter { it.checked }?.joinToString())
         map[Analytics.TRAVEL_CLASS] = transportTypes?.filter { it.checked }?.joinToString()
 
+        duration?.let { bundle.putInt(Analytics.HOURS, it) }
+        duration?.let { map[Analytics.HOURS] =  it }
 
         when {
             duration != null -> Analytics.TRIP_HOURLY

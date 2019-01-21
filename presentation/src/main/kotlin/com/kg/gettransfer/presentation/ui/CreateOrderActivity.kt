@@ -431,7 +431,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     private fun transportTypeClicked(transportType: TransportTypeModel) {
         bsTransport.state = BottomSheetBehavior.STATE_EXPANDED
         showTransportInfo(transportType)
-        presenter.logEventMain(CAR_INFO_CLICKED)
+        presenter.logButtons(CAR_INFO_CLICKED)
     }
 
     private fun showTransportInfo(transportType: TransportTypeModel) {

@@ -137,7 +137,7 @@ class MainPresenter : BasePresenter<MainView>() {
 
     fun updateCurrentLocation() = utils.launchSuspend {
         updateCurrentLocationAsync().error?.let { viewState.setError(it) }
-        logEvent(Analytics.MY_PLACE_CLICKED)
+        logButtons(Analytics.MY_PLACE_CLICKED)
     }
 
     private fun setLastLocation() {
@@ -384,10 +384,15 @@ class MainPresenter : BasePresenter<MainView>() {
 
     fun onTransferDetailsClick(transferId: Long) = router.navigateTo(Screens.Details(transferId))
 
-    fun logEvent(value: String) {
+    private fun logEvent(value: String) {
         val map = mutableMapOf<String, Any>()
         map[Analytics.PARAM_KEY_NAME] = value
         analytics.logEvent(Analytics.EVENT_MENU, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
+    }
+
+    private fun logButtons(event: String) {
+        analytics.logEventToFirebase(event, null)
+        analytics.logEventToYandex(event, null)
     }
 
     fun onBackClick() {

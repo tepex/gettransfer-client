@@ -39,12 +39,12 @@ class SearchPresenter : BasePresenter<SearchView>() {
     fun onSearchFieldEmpty() = viewState.setSuggestedAddresses(systemInteractor.addressHistory)
 
     fun onPopularSelected(selected: PopularPlace) {
-        logEvent(Analytics.PREDEFINED_CLICKED + selected.title.toLowerCase())
+        logButtons(Analytics.PREDEFINED_CLICKED + selected.title.toLowerCase())
         viewState.onFindPopularPlace(isTo, selected.title)
     }
 
     fun onAddressSelected(selected: GTAddress) {
-        logEvent(Analytics.LAST_PLACE_CLICKED)
+        logButtons(Analytics.LAST_PLACE_CLICKED)
         val isDoubleClickOnRoute: Boolean
         if (isTo) {
             viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, false, true)
@@ -98,20 +98,18 @@ class SearchPresenter : BasePresenter<SearchView>() {
     private fun createRouteForOrder() {
         systemInteractor.addressHistory = listOf(routeInteractor.from!!, routeInteractor.to!!)
         router.replaceScreen(Screens.CreateOrder)
-        logEvent(Analytics.REQUEST_FORM)
+        logButtons(Analytics.REQUEST_FORM)
     }
 
     fun selectFinishPointOnMap() {
-        logEvent(Analytics.POINT_ON_MAP_CLICKED)
+        logButtons(Analytics.POINT_ON_MAP_CLICKED)
         systemInteractor.selectedField = if (isTo) MainPresenter.FIELD_TO else MainPresenter.FIELD_FROM
         router.exit()
     }
 
-    private fun logEvent(value: String) {
-        val map = mutableMapOf<String, Any>()
-        map[Analytics.PARAM_KEY_NAME] = value
-
-        analytics.logEvent(Analytics.EVENT_BUTTONS, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
+    private fun logButtons(event: String) {
+        analytics.logEventToFirebase(event, null)
+        analytics.logEventToYandex(event, null)
     }
 
     fun isHourly() = routeInteractor.hourlyDuration != null
@@ -122,7 +120,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
     }
 
     fun inverseWay() {
-        logEvent(Analytics.SWAP_CLICKED)
+        logButtons(Analytics.SWAP_CLICKED)
         isTo = !isTo
         val copyTo = routeInteractor.to
         routeInteractor.to = routeInteractor.from
