@@ -9,8 +9,6 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.google.android.gms.maps.GoogleMap
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
@@ -63,8 +61,8 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     override fun setRoute(polyline: PolylineModel) = setPolylineWithoutInfo(polyline)
 
     override fun setRemainTime(days: Int, hours: Int, minutes: Int) {
-        val time = "$days d $hours h $minutes m"
-        dialogView.tvRemainTime.text = getString(R.string.LNG_TRANSFER_WILL_START).plus(": $time")
+        val time = "${days}D:${hours}H:${minutes}M"
+        dialogView.tvRemainTime.text = time
     }
 
     companion object {
