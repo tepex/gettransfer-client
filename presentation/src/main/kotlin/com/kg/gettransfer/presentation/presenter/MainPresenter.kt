@@ -115,7 +115,7 @@ class MainPresenter : BasePresenter<MainView>() {
         }
     }
 
-    fun changeUsedField(field: String) {
+    private fun changeUsedField(field: String) {
         systemInteractor.selectedField = field
 
         val pointSelectedField: Point? = when (field) {
@@ -136,7 +136,7 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     fun updateCurrentLocation() = utils.launchSuspend {
-        updateCurrentLocationAsync().error?.let { viewState.setError(it) }
+        updateCurrentLocationAsync()
         logButtons(Analytics.MY_PLACE_CLICKED)
     }
 
@@ -148,9 +148,12 @@ class MainPresenter : BasePresenter<MainView>() {
     private suspend fun updateCurrentLocationAsync(): Result<GTAddress> {
         //viewState.blockInterface(true)
         viewState.blockSelectedField(true, systemInteractor.selectedField)
-        val result = utils.asyncAwait { routeInteractor.getCurrentAddress() }
-        if (result.error == null) setPointAddress(result.model)
-        return result
+        utils.asyncAwait { routeInteractor.getCurrentAddress() }.also {
+            if (it.error != null) viewState.setError(it.error!!)
+            else setPointAddress(it.model)
+            return it
+        }
+
     }
 
     private fun setPointAddress(currentAddress: GTAddress) {
