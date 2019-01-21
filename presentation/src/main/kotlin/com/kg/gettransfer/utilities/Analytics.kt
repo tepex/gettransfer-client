@@ -29,7 +29,6 @@ class Analytics(
         const val EVENT_MAKE_PAYMENT = "make_payment"
         const val EVENT_MENU         = "menu"
         const val EVENT_MAIN         = "main"
-        const val EVENT_BUTTONS      = "buttons"
         const val EVENT_SETTINGS     = "settings"
         const val EVENT_ONBOARDING   = "onboarding"
         const val EVENT_TRANSFERS    = "transfers"
@@ -52,7 +51,6 @@ class Analytics(
         const val DRIVER_CLICKED     = "driver"
         const val CUSTOMER_CLICKED   = "customer"
         const val BEST_PRICE_CLICKED = "best_price"
-        const val SHARE_CLICKED      = "share"
         const val TRANSFER_CLICKED   = "transfers"
         const val LOGIN_CLICKED      = "login"
 
@@ -60,6 +58,7 @@ class Analytics(
         const val SHOW_ROUTE_CLICKED    = "show_route"
         const val CAR_INFO_CLICKED      = "car_info"
         const val BACK_CLICKED          = "back"
+        const val BACK_TO_MAP           = "back_to_map"
         const val POINT_ON_MAP_CLICKED  = "point_on_map"
         const val PREDEFINED_CLICKED    = "predefined_"
         const val LAST_PLACE_CLICKED    = "last_place"
@@ -102,6 +101,8 @@ class Analytics(
         const val TRIP_ROUND = "roundtrip"
 
         const val OFFER_TYPE = "offer_type"
+        const val REGULAR = "regular"
+        const val NOW = "now"
 
         const val OFFER_PRICE_FOCUSED = "offer_price"
         const val DATE_TIME_CHANGED   = "date_time"
@@ -115,6 +116,7 @@ class Analytics(
         const val RATING = "rating"
         const val VALUE = "value"
         const val CURRENCY = "currency"
+        const val HOURS = "hours"
 
         const val REVIEW = "review"
         const val REVIEW_AVERAGE = "transfer_review"
@@ -141,7 +143,7 @@ class Analytics(
         logEventToYandex(event, map)
     }
 
-    fun logEventToFirebase(event: String, data: Bundle) {
+    fun logEventToFirebase(event: String, data: Bundle?) {
         firebase.logEvent(event, data)
     }
 
@@ -149,7 +151,7 @@ class Analytics(
         facebook.logEvent(event, data)
     }
 
-    fun logEventToYandex(event: String, data: Map<String, Any?>) {
+    fun logEventToYandex(event: String, data: Map<String, Any?>?) {
         YandexMetrica.reportEvent(event, data)
     }
 

@@ -12,6 +12,7 @@ class RouteInteractor(private val geoRepository: GeoRepository, private val rout
     var from: GTAddress?     = null
     var to: GTAddress?       = null
     var hourlyDuration: Int? = null   //nullable to check if transfer is hourly
+    var duration: Int?       = null
 
     var noPointPlaces: List<GTAddress> = emptyList()
 
@@ -68,8 +69,11 @@ class RouteInteractor(private val geoRepository: GeoRepository, private val rout
         }
     }
 
-    suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean, currency: String) =
-        routeRepository.getRouteInfo(from, to, withPrices, returnWay, currency)
+    suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean, currency: String): Result<RouteInfo> {
+        val routeInfo = routeRepository.getRouteInfo(from, to, withPrices, returnWay, currency)
+        duration = routeInfo.model.duration
+        return routeInfo
+    }
 
     fun addressFieldsNotNull() = (from != null && to != null && from != to)
 }

@@ -43,8 +43,6 @@ import kotlinx.android.synthetic.main.bottom_sheet_offer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
 
-import org.koin.android.ext.android.inject
-
 import timber.log.Timber
 import java.util.*
 
@@ -202,7 +200,7 @@ class OffersActivity : BaseActivity(), OffersView {
         layoutRatingAverage.setOnClickListener {
             layoutSomeRatings.apply { isVisible = !isVisible }
             ratingBarAverage.isVisible = layoutSomeRatings.isVisible
-            presenter.logEvent(OFFER_DETAILS_RATING)
+            presenter.logButtons(OFFER_DETAILS_RATING)
         }
     }
 

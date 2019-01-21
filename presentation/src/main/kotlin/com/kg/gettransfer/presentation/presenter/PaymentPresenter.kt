@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
+import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.domain.model.Offer
@@ -29,6 +30,7 @@ import timber.log.Timber
 class PaymentPresenter : BasePresenter<PaymentView>() {
     private val paymentInteractor: PaymentInteractor by inject()
     private val mapper: PaymentStatusRequestMapper by inject()
+    private val routeInteractor: RouteInteractor by inject()
 
     private var offer: Offer? = null
     private var bookNowOffer: BookNowOffer? = null
@@ -73,6 +75,12 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
         map[Analytics.TRANSACTION_ID] = transferId.toString()
         bundle.putString(Analytics.PROMOCODE, transferInteractor.transferNew?.promoCode)
         map[Analytics.PROMOCODE] = transferInteractor.transferNew?.promoCode
+        routeInteractor.duration?.let { bundle.putInt(Analytics.HOURS, it) }
+        routeInteractor.duration?.let { map[Analytics.HOURS] = it }
+
+        val offerType = if (offer != null ) Analytics.REGULAR else Analytics.NOW
+        bundle.putString(Analytics.OFFER_TYPE, offerType)
+        map[Analytics.OFFER_TYPE] = offerType
         fbBundle.putAll(bundle)
 
         map[Analytics.CURRENCY] = systemInteractor.currency.currencyCode
