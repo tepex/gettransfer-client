@@ -9,6 +9,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.model.PopularPlace
 
@@ -54,15 +55,16 @@ class SearchPresenter : BasePresenter<SearchView>() {
             isDoubleClickOnRoute = routeInteractor.from == selected
             routeInteractor.from = selected
         }
-        utils.launchSuspend { utils.asyncAwait { routeInteractor.updatePoint(isTo) }}
-
 
         val placeType = checkPlaceType(selected)
         if (placeType == SUITABLE_TYPE || (placeType == ROUTE_TYPE && isDoubleClickOnRoute)) {
             viewState.updateIcon(isTo)
             utils.launchSuspend {
-                utils.async { routeInteractor.updatePoint(isTo) }.await()
-                pointReady()
+                utils.async { routeInteractor.updatePoint(isTo) }
+                        .await()
+                        .model.also {
+                    pointReady(checkZeroPoint(it, selected)) }
+
             }
         } else {
             val sendRequest = selected.needApproximation() /* dirty hack */
@@ -71,22 +73,25 @@ class SearchPresenter : BasePresenter<SearchView>() {
         }
     }
 
-    private fun pointReady() {
+    private fun pointReady(notZeroPoint: Boolean) {
+        if (!notZeroPoint) return
         if (checkFields() && isTo) createRouteForOrder()
         else if (!isTo) {
-            viewState.changeFocusToDestField()
+            viewState.setFocus(true)
             routeInteractor.to?.let {
                 viewState.setAddressTo(it.primary ?: it.cityPoint.name!!, true , true)
             }
         }
     }
 
-    private fun checkPlaceType(address: GTAddress): Int {
-        val placeTypes = address.placeTypes
-        if (placeTypes == null || placeTypes.isEmpty()) return NO_TYPE
-        if (placeTypes.contains(ROUTE_TYPE)) return ROUTE_TYPE
-        return SUITABLE_TYPE
-    }
+    private fun checkPlaceType(address: GTAddress) =
+            address.placeTypes.let {
+                when {
+                    it.isNullOrEmpty()       -> NO_TYPE
+                    it.contains(ROUTE_TYPE)  -> ROUTE_TYPE
+                    else                     -> SUITABLE_TYPE
+                }
+            }
 
     private fun checkFields() = routeInteractor.addressFieldsNotNull()
 
@@ -127,6 +132,16 @@ class SearchPresenter : BasePresenter<SearchView>() {
         viewState.setFocus(isTo)
     }
 
+    private fun checkZeroPoint(point: Point, address: GTAddress): Boolean {
+        if (point.latitude == NO_POINT && point.longitude == NO_POINT) {
+            routeInteractor.noPointPlaces += address
+            if (isTo) routeInteractor.to else routeInteractor.from = null
+            viewState.onAddressError(R.string.LNG_LOOKUP_ERROR, address, isTo)
+            return false
+        }
+        return true
+    }
+
     companion object {
         const val ADDRESS_PREDICTION_SIZE = 3
 
@@ -134,5 +149,6 @@ class SearchPresenter : BasePresenter<SearchView>() {
         const val STREET_ADDRESS_TYPE = 1021
         const val SUITABLE_TYPE       = 0
         const val NO_TYPE             = -1
+        const val NO_POINT            = 0.0
     }
 }

@@ -3,7 +3,6 @@ package com.kg.gettransfer.domain.interactor
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.domain.model.RouteInfo
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.RouteRepository
@@ -13,6 +12,8 @@ class RouteInteractor(private val geoRepository: GeoRepository, private val rout
     var from: GTAddress?     = null
     var to: GTAddress?       = null
     var hourlyDuration: Int? = null   //nullable to check if transfer is hourly
+
+    var noPointPlaces: List<GTAddress> = emptyList()
 
     //suspend fun getCurrentLocation() = geoRepository.getCurrentLocation()
 
@@ -28,8 +29,10 @@ class RouteInteractor(private val geoRepository: GeoRepository, private val rout
     fun isConcreteObjects() = from?.isConcreteObject() ?: false && to?.isConcreteObject() ?: false
 
     fun getAutocompletePredictions(prediction: String, pointsPair: Pair<Point, Point>?) =
-        geoRepository.getAutocompletePredictions(prediction, pointsPair)
-
+            Result(geoRepository.
+                    getAutocompletePredictions(prediction, pointsPair)
+                    .model.filter { noPointPlaces.none { n -> it.cityPoint.placeId == n.cityPoint.placeId }}) // if result has addresses without point,
+                                                                                                              // exclude such from result
     fun updateDestinationPoint(): Result<Point> {
         var result = updateStartPoint()
         if (result.error != null) return result
@@ -55,15 +58,14 @@ class RouteInteractor(private val geoRepository: GeoRepository, private val rout
 
     fun updatePoint(isTo: Boolean): Result<Point> {
         (if (isTo) to else from).let {
-            if (it!!.cityPoint.point == null)
-                return geoRepository
+            return if (it!!.cityPoint.point == null)
+                geoRepository
                         .getLatLngByPlaceId(it.cityPoint.placeId!!)
                         .also { pointResult ->
                             it.cityPoint.point = pointResult.model
                         }
+            else Result(it.cityPoint.point!!)
         }
-
-        return Result(Point())
     }
 
     suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean, currency: String) =

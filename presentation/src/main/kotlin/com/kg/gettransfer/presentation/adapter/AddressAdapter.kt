@@ -58,6 +58,14 @@ class AddressAdapter(
         notifyDataSetChanged()
     }
 
+    fun removeItem(item: GTAddress) {
+        list.indexOf(item).also {
+            list.minusElement(item)
+            notifyItemRemoved(it)
+        }
+
+    }
+
     companion object {
         private var selected = RecyclerView.NO_POSITION
     }

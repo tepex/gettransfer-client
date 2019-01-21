@@ -13,6 +13,7 @@ import android.transition.Fade
 import android.transition.Slide
 
 import android.view.View
+import android.widget.Toast
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -186,5 +187,11 @@ class SearchActivity : BaseActivity(), SearchView {
 
     override fun setFocus(isToField: Boolean) {
         if (isToField) searchTo.changeFocus() else searchFrom.changeFocus()
+    }
+
+    override fun onAddressError(message: Int, address: GTAddress, fieldTo: Boolean) {
+        (rv_addressList.adapter as AddressAdapter).removeItem(address)
+        Toast.makeText(this, message, Toast.LENGTH_LONG)
+                .show()
     }
 }

@@ -232,7 +232,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             systemInteractor.currency = currencyModel.delegate
             setCurrency(selected)
             saveAccount()
-            initPrices(returnDate != null)
+            if (routeInteractor.hourlyDuration == null)
+                initPrices(returnDate != null)
         }
     }
 

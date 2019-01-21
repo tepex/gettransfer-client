@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.view
 
+import android.support.annotation.StringRes
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
@@ -17,6 +18,7 @@ interface SearchView : BaseView {
     fun updateIcon(isTo: Boolean)
     fun setFocus(isToField: Boolean)
     fun changeFocusToDestField()
+    fun onAddressError(@StringRes message: Int, address: GTAddress, fieldTo: Boolean)
 
     companion object {
         val EXTRA_ADDRESS_FROM = "${SearchView::class.java.name}.address_from"

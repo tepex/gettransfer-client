@@ -82,6 +82,7 @@
     <string name="LNG_ERROR">Error</string>
     <string name="LNG_ERROR_DATE">Please select transfer date</string>
     <string name="LNG_ERROR_RETURN_DATE">Invalid return date</string>
+    <string name="LNG_LOOKUP_ERROR">Can\'t choose this address</string>
     <string name="LNG_SUCCESS">Success</string>
     <string name="LNG_ACCOUNT">Account</string>
     <string name="LNG_NOT_FOUND">not found</string>
