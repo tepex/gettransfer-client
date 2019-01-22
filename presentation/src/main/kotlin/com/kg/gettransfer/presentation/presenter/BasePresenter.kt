@@ -7,6 +7,7 @@ import com.arellomobile.mvp.MvpPresenter
 
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
+import com.kg.gettransfer.data.model.OfferEntity
 import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.AsyncUtils
@@ -26,6 +27,7 @@ import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.NotificationManager
 
 import kotlinx.coroutines.Job
+import kotlinx.serialization.json.JSON
 
 import org.koin.standalone.get
 import org.koin.standalone.inject
@@ -42,6 +44,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
     protected val analytics: Analytics by inject()
     protected val systemInteractor: SystemInteractor by inject()
     protected val offerMapper: OfferMapper by inject()
+    protected val offerEntityMapper: com.kg.gettransfer.data.mapper.OfferMapper by inject()
     protected val notificationManager: NotificationManager by inject()
     protected val offerInteractor: OfferInteractor by inject()
     protected val transferInteractor: TransferInteractor by inject()
@@ -119,11 +122,18 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
         }
     }
 
+    fun onOfferJsonReceived(jsonOffer: String, transferId: Long) =
+            JSON.nonstrict.parse(OfferEntity.serializer(), jsonOffer)
+                    .also { it.transferId = transferId }
+                    .let  { offerEntityMapper.fromEntity(it) }
+                    .also { it.vehicle.photos = it.vehicle.photos
+                            .map { photo -> systemInteractor.endpoint.url.plus(photo) } }
+                    .also { onNewOffer(it) }
+
     open fun onNewOffer(offer: Offer): OfferModel {
-        offerInteractor.newOffer(offer)
-        val offerModel = offerMapper.toView(offer)
-        notificationManager.showOfferNotification(offerModel)
-        return offerModel
+        utils.launchSuspend { utils.asyncAwait { offerInteractor.newOffer(offer) } }
+        return offerMapper.toView(offer)
+                .also { notificationManager.showOfferNotification(it) }
     }
 
     fun saveAccount() = utils.launchSuspend {

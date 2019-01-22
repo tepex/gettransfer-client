@@ -13,6 +13,8 @@ import android.graphics.drawable.ColorDrawable
 
 import android.net.ConnectivityManager
 import android.net.Uri
+import android.os.Bundle
+import android.os.PersistableBundle
 
 import android.support.annotation.CallSuper
 import android.support.annotation.IdRes
@@ -20,6 +22,7 @@ import android.support.annotation.NonNull
 import android.support.annotation.StringRes
 
 import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 
@@ -37,22 +40,21 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 
 import com.arellomobile.mvp.MvpAppCompatActivity
-import com.arellomobile.mvp.MvpPresenter
+import com.kg.gettransfer.GTApplication
 
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.interactor.SystemInteractor
-import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.extensions.*
 
-import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.service.OfferServiceConnection
+import com.kg.gettransfer.service.OfferServiceConnection.Companion.ACTION_OFFER
 
 import com.kg.gettransfer.utilities.LocaleManager
 import io.sentry.Sentry
@@ -125,9 +127,15 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         if (event.action == MotionEvent.ACTION_MOVE) hideKeyboardWithoutClearFocus(this, view)
         else return@OnTouchListener false
     }
-
+    /* BroadCast receivers */
     private val inetReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) = setNetworkAvailability(context) }
+
+    private val offerReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            intent?.apply { getStringExtra(OFFER_JSON)
+                    .let { getPresenter().onOfferJsonReceived(it, getLongExtra(OFFER_ID, 0L)) } } } }
+
 
     protected open fun setNetworkAvailability(context: Context) {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -155,8 +163,26 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         if (hasBackAction) toolbar.setNavigationOnClickListener { getPresenter().onBackCommandClick() }
     }
 
+
+
+    /********************************************************************************************************/
+    /************************************************ Life cycles *******************************************/
+    /********************************************************************************************************/
+
+    @CallSuper
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
+    }
+
     @CallSuper
     protected override fun onStart() {
+        GTApplication.onStart++
+        with(offerServiceConnection) {
+            if (!statusOpened)
+                offerServiceConnection.connect(systemInteractor.endpoint, systemInteractor.accessToken) { json, id ->
+                    LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(Intent(ACTION_OFFER)
+                            .apply { putExtra(OFFER_JSON, json)
+                                     putExtra(OFFER_ID, id) }) } }
         super.onStart()
         registerReceiver(inetReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         setNetworkAvailability(this)
@@ -165,23 +191,27 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     @CallSuper
     protected override fun onResume() {
         super.onResume()
+        LocalBroadcastManager.getInstance(this).registerReceiver(offerReceiver, IntentFilter(ACTION_OFFER))
         navigatorHolder.setNavigator(navigator)
-        offerServiceConnection.connect(systemInteractor.endpoint, systemInteractor.accessToken) {
-            getPresenter().onNewOffer(it)
-        }
     }
 
     @CallSuper
     protected override fun onPause() {
         navigatorHolder.removeNavigator()
-        offerServiceConnection.disconnect()
         super.onPause()
     }
 
     @CallSuper
     protected override fun onStop() {
+        if (--GTApplication.onStart == NO_FOREGROUNDED_ACTIVITIES) offerServiceConnection.disconnect()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(offerReceiver)
         unregisterReceiver(inetReceiver)
         super.onStop()
+    }
+
+    @CallSuper
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
@@ -284,7 +314,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     protected fun showPopUpWindow(@IdRes res: Int, parent: View): View {
         applyDim(window.decorView.rootView as  ViewGroup, DIM_AMOUNT)
         val layoutPopUp = LayoutInflater.from(this).inflate(res, null)
-//        val widthPx = Utils.convertDpToPixels(this, 350f).toInt()
         val widthPx = getScreenSide(false) - 40
 
         popupWindowRate = PopupWindow(layoutPopUp, widthPx, LinearLayout.LayoutParams.WRAP_CONTENT, true).apply {
@@ -309,9 +338,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
                 closePopUp()
                 data = Uri.parse(url)
                 addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            },
-            PLAY_MARKET_RATE
-        )
+            }, PLAY_MARKET_RATE)
     }
 
     @CallSuper
@@ -329,5 +356,9 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         const val PLAY_MARKET_RATE = 42
 
         const val DIM_AMOUNT = 0.5f
+
+        const val OFFER_JSON = "offerAsJson"
+        const val OFFER_ID   = "offerId"
+        const val NO_FOREGROUNDED_ACTIVITIES = 0
     }
 }

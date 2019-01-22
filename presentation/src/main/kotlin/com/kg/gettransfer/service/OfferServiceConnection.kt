@@ -30,27 +30,34 @@ import timber.log.Timber
 
 class OfferServiceConnection : SystemListener, KoinComponent {
     private val options = IO.Options().apply {
-        path = "/api/socket"
-        forceNew = true
-        transports = arrayOf(WebSocket.NAME)
-        timeout = -1
+        path        = "/api/socket"
+        forceNew    = true
+        transports  = arrayOf(WebSocket.NAME)
+        timeout     = -1
     }
 
-    private var handler: OfferModelHandler? = null
-    private var socket: Socket? = null
-    private var url: String? = null
-    private var accessToken: String? = null
+    var statusOpened:   Boolean = false
+    var shouldReconnect         = false
+
+    private var handler:     OfferModelHandler? = null
+    private var socket:      Socket?            = null
+    private var url:         String?            = null
+    private var accessToken: String?            = null
 
     private val systemInteractor: SystemInteractor by inject()
     private val offerMapper: OfferMapper by inject()
 
     fun connect(endpoint: Endpoint, accessToken: String, handler: OfferModelHandler) {
+        statusOpened = true
         this.handler = handler
         systemInteractor.addListener(this)
         connectionChanged(endpoint, accessToken)
+
     }
 
     fun disconnect() {
+        statusOpened    = false
+        shouldReconnect = false
         Timber.d("Unbinding from service")
         systemInteractor.removeListener(this)
         socket?.let {
@@ -64,6 +71,7 @@ class OfferServiceConnection : SystemListener, KoinComponent {
         /* Reconnect iff URL or token changed. */
         //val reconnect = (url != endpoint.url || this.accessToken != accessToken)
         val reconnect = true
+        shouldReconnect = true
         Timber.d("Connecting... options: ${options.path}. Reconect: $reconnect")
         url = endpoint.url
         this.accessToken = accessToken
@@ -71,14 +79,16 @@ class OfferServiceConnection : SystemListener, KoinComponent {
             Timber.d("closing previous socket [${socket?.id()}]")
             socket?.off()
             socket?.close()
-            socket = null
+
         }
-        if (socket == null) {
-            Timber.d("Create socket $url")
-            socket = IO.socket(url, options)
-            addSocketHandlers()
-            socket!!.connect()
-        }
+        if (socket == null) startSocket()
+    }
+
+    private fun startSocket() {
+        Timber.d("Create socket $url")
+        socket = IO.socket(url, options)
+        addSocketHandlers()
+        socket!!.connect()
     }
 
     private fun addSocketHandlers() {
@@ -95,7 +105,11 @@ class OfferServiceConnection : SystemListener, KoinComponent {
 
             on(Manager.EVENT_CONNECT_ERROR) { args -> Timber.e("socket connect error: $args") }
             on(Manager.EVENT_OPEN) { _ -> Timber.d("socket open [${socket?.id()}]") }
-            on(Manager.EVENT_CLOSE) { _ -> Timber.d("socket close [${socket?.id()}]") }
+            on(Manager.EVENT_CLOSE) { _ -> Timber.d("socket close [${socket?.id()}]")
+            if (shouldReconnect) {
+                shouldReconnect = false
+                Timber.d("socket reconnected ")
+                startSocket() } }
             on(Manager.EVENT_RECONNECTING) { _ -> Timber.d("EVENT_RECONNECTING [${socket?.id()}]") }
 
             on(Manager.EVENT_CONNECT_TIMEOUT) { _ -> Timber.w("socket timeout") }
@@ -135,7 +149,7 @@ class OfferServiceConnection : SystemListener, KoinComponent {
             val offer = offerMapper.fromEntity(offerEntity)
             offer.vehicle.photos = offer.vehicle.photos.map { photo -> systemInteractor.endpoint.url.plus(photo) }
             increaseEventsCounter(transferId)
-            handler?.invoke(offer)
+            handler?.invoke(offerJson, transferId)
         } catch (e: Exception) {
             Timber.e(e)
             throw e
@@ -156,7 +170,8 @@ class OfferServiceConnection : SystemListener, KoinComponent {
         @JvmField val INTENT_OFFER  = "offer"
         @JvmField val MESSAGE_OFFER = "new_offer"
         @JvmField val NEW_OFFER_RE = Regex("^newOffer/(\\d+)$")
+        const val ACTION_OFFER = "gt.socket_offerEvent"
     }
 }
 
-typealias OfferModelHandler = (Offer) -> Unit
+typealias OfferModelHandler = (String, Long) -> Unit
