@@ -129,7 +129,7 @@ class OffersRVAdapter(
             tvCountPersonsOnCarImage.text = bookNow.transportType.paxMax.let { Utils.formatPersons(bottomLayoutForImage.context, it) }
             tvCountBaggageOnCarImage.text = bookNow.transportType.luggageMax.let { Utils.formatLuggage(bottomLayoutForImage.context, it) }
             bottomLayoutForImage.tvVehicleName.text = bookNow.transportType.id.toString()
-                    .plus("\n").plus(bookNow.transportType.id.let { TransportTypeMapper.getDescriptionById(it) }.let { context.getString(it) })
+                    .plus("\n").plus(bookNow.transportType.id.let { TransportTypeMapper.getModelsById(it) }.let { context.getString(it) })
         }
 
         private fun setOfferCarPhoto(view: View, item: OfferModel) {

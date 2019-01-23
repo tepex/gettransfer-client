@@ -281,6 +281,7 @@
     <string name="LNG_RIDE_NUMBER">Transfer request #</string>
     <string name="LNG_TOP_RATED">Top selection</string>
     <string name="LNG_TRANSPORT_ECONOMY">Economy</string>
+    <string name="LNG_TRANSPORT_COMFORT">Comfort</string>
     <string name="LNG_TRANSPORT_PREMIUM">Premium</string>
     <string name="LNG_TRANSPORT_SUV">Suv</string>
     <string name="LNG_TRANSPORT_MINIBUS">Minibus</string>
@@ -289,7 +290,18 @@
     <string name="LNG_TRANSPORT_LIMOUSINE">Limousine</string>
     <string name="LNG_TRANSPORT_BUSINESS">Business</string>
     <string name="LNG_TRANSPORT_VAN">Van</string>
+    <string name="LNG_TRANSPORT_ECONOMY_MODELS">Economy</string>
+    <string name="LNG_TRANSPORT_COMFORT_MODELS">Comfort</string>
+    <string name="LNG_TRANSPORT_PREMIUM_MODELS">Premium</string>
+    <string name="LNG_TRANSPORT_SUV_MODELS">Suv</string>
+    <string name="LNG_TRANSPORT_MINIBUS_MODELS">Minibus</string>
+    <string name="LNG_TRANSPORT_BUS_MODELS">Bus</string>
+    <string name="LNG_TRANSPORT_HELICOPTER_MODELS">Helicopter</string>
+    <string name="LNG_TRANSPORT_LIMOUSINE_MODELS">Limousine</string>
+    <string name="LNG_TRANSPORT_BUSINESS_MODELS">Business</string>
+    <string name="LNG_TRANSPORT_VAN_MODELS">Van</string>
     <string name="LNG_TRANSPORT_EXAMPLES_ECONOMY"><b>Ford Focus, VW Jetta, Kia Rio, Hyundai Solaris, Chevrolet Cruze, LADA Granta, Honda Civic, Skoda rapid, Opel Astra and BMW 1-series.</b>\nFor a comfortable trip in any city of the world at the best price.\n- Personal driver \n- Fixed price\n- Without extra payment for luggage</string>
+    <string name="LNG_TRANSPORT_EXAMPLES_COMFORT"><b>Ford Mondeo, Skoda Octavia, KIA Optima, Toyota Camry</b>\n-For taking people from any airport or station, safe transferring in cities and suburbs. \n- Spacious luggage compartment \n- Fixed price \n- Spacious passenger compartment</string>
     <string name="LNG_TRANSPORT_EXAMPLES_PREMIUM"><b>Mercedes V-class, Viano, Vito, Opel Vivaro, Renault Traffic and others.</b>\n- Dress-code for the driver\n- Fixed price\n- Without extra payment for luggage</string>
     <string name="LNG_TRANSPORT_EXAMPLES_MINIBUS"><b>Volkswagen Transporter, Nissan Elgrand, Mercedes-Benz V-Class, Ford Transit</b>\nFor meeting corporate clients and tourist groups.\n- Conditioner\n- Spacious luggage compartment</string>
     <string name="LNG_TRANSPORT_EXAMPLES_BUS"><b>Mercedes-Benz Travego, Volvo 9700, Iveco FBI 83 LR, Toyota Coaster, Mercedes-Benz Intouro</b>\nFor safe transferring of big groups of people to events, conferences and weddings, as well as for taking people from airports and railway stations.\n- Conditioner\n- Spacious luggage compartment</string>
