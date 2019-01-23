@@ -94,11 +94,11 @@ object Utils : KoinComponent {
         getAlertDialogBuilder(context).apply {
             setTitle(R.string.LNG_ERROR)
             setMessage(message)
-            setPositiveButton(android.R.string.ok, { dialog, _ ->
+            setPositiveButton(android.R.string.ok) { dialog, _ ->
                 dialog.dismiss()
                 if (finish) (context as Activity).finish()
                 onClose?.invoke()
-            })
+            }
             setIcon(android.R.drawable.ic_dialog_alert)
             show()
         }

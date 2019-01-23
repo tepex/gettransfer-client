@@ -12,9 +12,10 @@ class OfferInteractor(private val repository: OfferRepository) {
     suspend fun getOffers(transferId: Long) = repository.getOffers(transferId).also { offers = it .model }
     fun getOffer(id: Long) = offers.find { it.id == id }
 
-    fun newOffer(offer: Offer) {
+    fun newOffer(offer: Offer): Result<Offer> {
         val newOffer = repository.newOffer(offer)
         offers = offers.toMutableList().apply { add(newOffer.model) }
+        return newOffer
     }
 
     fun clearOffersCache(): Result<Unit> {
