@@ -73,7 +73,6 @@ class MainPresenter : BasePresenter<MainView>() {
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         systemInteractor.selectedField = FIELD_FROM
         systemInteractor.initGeocoder()
-        if (routeInteractor.from != null) setLastLocation() else updateCurrentLocation()
         if (systemInteractor.account.user.loggedIn) { registerPushToken(); checkReview() }
 
         // Создать листенер для обновления текущей локации
@@ -84,6 +83,7 @@ class MainPresenter : BasePresenter<MainView>() {
     override fun attachView(view: MainView) {
         super.attachView(view)
         Timber.d("MainPresenter.is user logged in: ${systemInteractor.account.user.loggedIn}")
+        if (routeInteractor.from != null) setLastLocation() else updateCurrentLocation()
         viewState.setProfile(profileMapper.toView(systemInteractor.account.user.profile))
         changeUsedField(systemInteractor.selectedField)
         routeInteractor.from?.address?.let { viewState.setAddressFrom(it) }
@@ -149,11 +149,23 @@ class MainPresenter : BasePresenter<MainView>() {
         //viewState.blockInterface(true)
         viewState.blockSelectedField(true, systemInteractor.selectedField)
         utils.asyncAwait { routeInteractor.getCurrentAddress() }.also {
-            if (it.error != null) viewState.setError(it.error!!)
+            if (it.error != null) {
+                viewState.setError(it.error!!)
+                val location = utils.asyncAwait { systemInteractor.getMyLocation() }.model
+                setLocation(location)
+            }
             else setPointAddress(it.model)
             return it
         }
 
+    }
+
+    private suspend fun setLocation(location: Location) {
+        val point = Point(location.latitude!!, location.longitude!!)
+        val lngBounds = LatLngBounds.builder().include(LatLng(location.latitude!!, location.longitude!!)).build()
+        val latLonPair = getLatLonPair(lngBounds)
+        val result = utils.asyncAwait { routeInteractor.getAddressByLocation(true, point, latLonPair) }
+        setPointAddress(result.model)
     }
 
     private fun setPointAddress(currentAddress: GTAddress) {
@@ -194,10 +206,7 @@ class MainPresenter : BasePresenter<MainView>() {
             */
 
             lastAddressPoint = lastPoint!!
-            val latLonPair: Pair<Point, Point>
-            val nePoint = Point(latLngBounds.northeast.latitude, latLngBounds.northeast.longitude)
-            val swPoint = Point(latLngBounds.southwest.latitude, latLngBounds.southwest.longitude)
-            latLonPair = Pair(nePoint, swPoint)
+            val latLonPair: Pair<Point, Point> = getLatLonPair(latLngBounds)
 
             utils.launchSuspend {
                 val result = utils.asyncAwait {
@@ -220,6 +229,14 @@ class MainPresenter : BasePresenter<MainView>() {
             idleAndMoveCamera = true
             setAddressFields()
         }
+    }
+
+    private fun getLatLonPair(latLngBounds: LatLngBounds): Pair<Point, Point> {
+        val latLonPair: Pair<Point, Point>
+        val nePoint = Point(latLngBounds.northeast.latitude, latLngBounds.northeast.longitude)
+        val swPoint = Point(latLngBounds.southwest.latitude, latLngBounds.southwest.longitude)
+        latLonPair = Pair(nePoint, swPoint)
+        return latLonPair
     }
 
     private fun setAddressInSelectedField(address: String) {

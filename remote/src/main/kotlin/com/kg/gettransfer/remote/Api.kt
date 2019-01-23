@@ -24,6 +24,8 @@ interface Api {
         const val API_WEBPUSH_TOKENS     = "/api/webpush_tokens"
 
         const val MOBILE_CONFIGS         = "/mobile/mobile.conf"
+
+        const val API_LOCATION           = "/json"
     }
 
     @GET(API_ACCESS_TOKEN)
@@ -141,4 +143,7 @@ interface Api {
 
     @GET(MOBILE_CONFIGS)
     fun getMobileConfigs(): Deferred<MobileConfig>
+
+    @GET(API_LOCATION)
+    fun getMyLocation(): Deferred<LocationModel>
 }

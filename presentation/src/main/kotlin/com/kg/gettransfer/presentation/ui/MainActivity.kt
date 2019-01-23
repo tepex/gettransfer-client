@@ -289,6 +289,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             systemInteractor.locationPermissionsGranted = false
         }
         recreate()
+        presenter.updateCurrentLocation()
     }
 
     /* MainView */

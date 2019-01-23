@@ -52,6 +52,8 @@ val remoteMappersModule = module {
     single { UserMapper() }
     single { VehicleInfoMapper() }
     single { VehicleMapper() }
+
+    single { LocationMapper() }
 }
 
 val remoteModule = module {

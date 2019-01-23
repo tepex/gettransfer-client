@@ -8,13 +8,7 @@ import com.kg.gettransfer.data.SystemDataStore
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.SystemDataStoreCache
 import com.kg.gettransfer.data.ds.SystemDataStoreRemote
-
-import com.kg.gettransfer.data.mapper.AccountMapper
-import com.kg.gettransfer.data.mapper.AddressMapper
-import com.kg.gettransfer.data.mapper.ConfigsMapper
-import com.kg.gettransfer.data.mapper.EndpointMapper
-import com.kg.gettransfer.data.mapper.ExceptionMapper
-import com.kg.gettransfer.data.mapper.MobileConfigMapper
+import com.kg.gettransfer.data.mapper.*
 
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
@@ -43,6 +37,7 @@ class SystemRepositoryImpl(
     private val endpointMapper   = get<EndpointMapper>()
     private val addressMapper    = get<AddressMapper>()
     private val mobileConfMapper = get<MobileConfigMapper>()
+    private val locationMapper   = get<LocationMapper>()
 
     private val listeners = mutableSetOf<SystemListener>()
 
@@ -191,6 +186,13 @@ class SystemRepositoryImpl(
         get() = preferencesCache.appEnters
         set(value) { preferencesCache.appEnters = value }
 
+    override suspend fun getMyLocation(): Result<Location> {
+        factory.retrieveRemoteDataStore().changeEndpoint(EndpointEntity("", "", API_URL_LOCATION))
+        val locationEntity = factory.retrieveRemoteDataStore().getMyLocation()
+        factory.retrieveRemoteDataStore().changeEndpoint(preferencesCache.endpoint)
+        return Result(locationMapper.fromEntity(locationEntity))
+    }
+
     override fun addListener(listener: SystemListener)    { listeners.add(listener) }
     override fun removeListener(listener: SystemListener) { listeners.add(listener) }
 
@@ -219,5 +221,6 @@ class SystemRepositoryImpl(
             orderMinimumMinutes = 120,
             termsUrl            = "terms_of_use"
         )
+        private const val API_URL_LOCATION = "https://ipapi.co"
     }
 }

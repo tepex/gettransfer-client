@@ -2,16 +2,9 @@ package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.SystemRemote
+import com.kg.gettransfer.data.model.*
+import com.kg.gettransfer.remote.mapper.*
 
-import com.kg.gettransfer.data.model.AccountEntity
-import com.kg.gettransfer.data.model.ConfigsEntity
-import com.kg.gettransfer.data.model.EndpointEntity
-import com.kg.gettransfer.data.model.MobileConfigEntity
-
-import com.kg.gettransfer.remote.mapper.AccountMapper
-import com.kg.gettransfer.remote.mapper.ConfigsMapper
-import com.kg.gettransfer.remote.mapper.EndpointMapper
-import com.kg.gettransfer.remote.mapper.MobileConfigMapper
 import com.kg.gettransfer.remote.model.*
 
 import org.koin.core.parameter.parametersOf
@@ -27,6 +20,7 @@ class SystemRemoteImpl : SystemRemote {
     private val accountMapper  = get<AccountMapper>()
     private val endpointMapper = get<EndpointMapper>()
     private val mobileConfigMapper = get<MobileConfigMapper>()
+    private val locationMapper = get<LocationMapper>()
 
     private val log: Logger by inject { parametersOf("GTR-remote") }
 
@@ -95,4 +89,7 @@ class SystemRemoteImpl : SystemRemote {
         val response: MobileConfig = core.tryTwice { core.api.getMobileConfigs() }
         return mobileConfigMapper.fromRemote(response)
     }
+
+    override suspend fun getMyLocation(): LocationEntity =
+            locationMapper.fromRemote(core.api.getMyLocation().await())
 }
