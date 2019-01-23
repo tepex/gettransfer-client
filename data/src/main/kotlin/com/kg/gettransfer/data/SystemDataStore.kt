@@ -1,9 +1,6 @@
 package com.kg.gettransfer.data
 
-import com.kg.gettransfer.data.model.AccountEntity
-import com.kg.gettransfer.data.model.ConfigsEntity
-import com.kg.gettransfer.data.model.EndpointEntity
-import com.kg.gettransfer.data.model.MobileConfigEntity
+import com.kg.gettransfer.data.model.*
 
 import org.koin.standalone.KoinComponent
 
@@ -15,5 +12,5 @@ interface SystemDataStore: KoinComponent {
     fun clearAccount()
     suspend fun login(email: String, password: String): AccountEntity
     fun changeEndpoint(endpoint: EndpointEntity)
-
+    suspend fun getMyLocation(): LocationEntity
 }

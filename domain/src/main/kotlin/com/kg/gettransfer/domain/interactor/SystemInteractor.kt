@@ -140,6 +140,8 @@ class SystemInteractor(
 
     fun clearLogs() = loggingRepository.clearLogs()
 
+    suspend fun getMyLocation() = systemRepository.getMyLocation()
+
     fun addListener(listener: SystemListener)    { systemRepository.addListener(listener) }
     fun removeListener(listener: SystemListener) { systemRepository.removeListener(listener) }
 

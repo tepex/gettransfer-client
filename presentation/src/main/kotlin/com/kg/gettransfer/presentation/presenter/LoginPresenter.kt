@@ -79,8 +79,4 @@ class LoginPresenter : BasePresenter<LoginView>() {
         else Screens.REG_CARRIER
 
     fun onPassForgot() = router.navigateTo(Screens.RestorePassword)
-
-    companion object {
-        const val MIN_PASSWORD_LENGTH = 6
-    }
 }

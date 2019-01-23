@@ -6,6 +6,7 @@ import com.kg.gettransfer.data.SystemDataStore
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
+import com.kg.gettransfer.data.model.LocationEntity
 
 import org.koin.standalone.inject
 
@@ -23,4 +24,5 @@ open class SystemDataStoreCache : SystemDataStore {
 
     override suspend fun login(email: String, password: String): AccountEntity { throw UnsupportedOperationException() }
     override fun changeEndpoint(endpoint: EndpointEntity) { throw UnsupportedOperationException() }
+    override suspend fun getMyLocation(): LocationEntity { throw UnsupportedOperationException()}
 }

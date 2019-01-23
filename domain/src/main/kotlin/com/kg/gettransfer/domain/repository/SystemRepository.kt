@@ -29,6 +29,7 @@ interface SystemRepository {
     fun logout(): Result<Account>
     suspend fun registerPushToken(provider: PushTokenType, token: String)
     suspend fun unregisterPushToken(token: String)
+    suspend fun getMyLocation(): Result<Location>
 
     fun addListener(listener: SystemListener)
     fun removeListener(listener: SystemListener)
