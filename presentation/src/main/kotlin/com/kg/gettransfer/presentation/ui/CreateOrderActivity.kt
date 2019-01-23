@@ -251,44 +251,40 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         val currentDate = presenter.currentDate
         calendar.time = presenter.startDate.date
 
-        val boundDatePickerDialog = BoundDatePickerDialog(
-            this,
-            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                calendar.set(year, monthOfYear, dayOfMonth)
-                presenter.startDate.date = calendar.time
+        val boundDatePickerDialog = BoundDatePickerDialog(this,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH),
+                DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                    calendar.set(year, monthOfYear, dayOfMonth)
+                    if (field)
+                        presenter.startDate.date = calendar.time
+                    else presenter.returnDate?.let { it.date = calendar.time }
+                    val calendarWithoutTime = Calendar.getInstance()
+                    calendarWithoutTime.set(year, monthOfYear, dayOfMonth, 0, 0)
+                    when {
+                        calendarWithoutTime.time.after(currentDate.time) -> showTimePickerDialog(
+                                -1,
+                                24,
+                                calendar.get(Calendar.HOUR_OF_DAY),
+                                calendar.get(Calendar.MINUTE),
+                                field)
 
-                val calendarWithoutTime = Calendar.getInstance()
-                calendarWithoutTime.set(year, monthOfYear, dayOfMonth, 0, 0)
-                when {
+                        calendar.time.after(currentDate.time) ->
+                            showTimePickerDialog(currentDate.get(Calendar.HOUR_OF_DAY),
+                                    currentDate.get(Calendar.MINUTE),
+                                    calendar.get(Calendar.HOUR_OF_DAY),
+                                    calendar.get(Calendar.MINUTE),
+                                    field)
 
-                    calendarWithoutTime.time.after(currentDate.time) -> showTimePickerDialog(
-                        -1,
-                        24,
-                        calendar.get(Calendar.HOUR_OF_DAY),
-                        calendar.get(Calendar.MINUTE),
-                        field
-                    )
-
-                    calendar.time.after(currentDate.time) -> showTimePickerDialog(
-                        currentDate.get(Calendar.HOUR_OF_DAY),
-                        currentDate.get(Calendar.MINUTE),
-                        calendar.get(Calendar.HOUR_OF_DAY),
-                        calendar.get(Calendar.MINUTE),
-                        field
-                    )
-
-                    else -> showTimePickerDialog(
-                        currentDate.get(Calendar.HOUR_OF_DAY),
-                        currentDate.get(Calendar.MINUTE),
-                        currentDate.get(Calendar.HOUR_OF_DAY),
-                        currentDate.get(Calendar.MINUTE),
-                        field
-                    )
-                }
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
-        )
+                        else -> showTimePickerDialog(
+                                currentDate.get(Calendar.HOUR_OF_DAY),
+                                currentDate.get(Calendar.MINUTE),
+                                currentDate.get(Calendar.HOUR_OF_DAY),
+                                currentDate.get(Calendar.MINUTE),
+                                field)
+                    }
+                })
 
         if (Build.VERSION.SDK_INT < 21) {
             boundDatePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000

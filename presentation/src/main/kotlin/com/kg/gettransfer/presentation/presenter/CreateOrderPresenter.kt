@@ -189,7 +189,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun changeDate(newDate: Date, isStartDate: Boolean) {
         if (!isStartDate && returnDate == null) {
-            returnDate = TripDate(Date())
+            returnDate = TripDate(startDate.date).apply { date.time + DATE_OFFSET }
             initPrices(true)
         }
         val fieldDate = if (isStartDate) startDate.also { isTimeSetByUser = true } else { returnDate!!}         //enable get transfer only if startDate was set manually
