@@ -511,7 +511,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     override fun askRateInPlayMarket() {
         showPopUpWindow(R.layout.view_rate_in_store, contentMain).apply {
-            tv_agree_store.setOnClickListener { presenter.onRateInStore(); presenter.onRateInStoreRejected() }
+            tv_agree_store.setOnClickListener  { presenter.onRateInStore() }
             tv_reject_store.setOnClickListener { closePopUp() }
         }
     }
