@@ -396,7 +396,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_map_label_empty))
         switchButtons(false)
         setAlpha(ALPHA_FULL)
-        ivSelectFieldTo.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(this, R.color.colorTextBlack), PorterDuff.Mode.SRC_IN)
+        ivSelectFieldTo.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_pin_default))
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.START)
     }
 
@@ -404,7 +404,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_map_label_b))
         switchButtons(true)
         setAlpha(ALPHA_DISABLED)
-        ivSelectFieldTo.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(this, R.color.colorBtnGreen), PorterDuff.Mode.SRC_IN)
+        ivSelectFieldTo.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_pin_chosen))
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END)
     }
 

@@ -53,11 +53,12 @@
 
                 <ImageView
                     android:id="@+id/ivSelectFieldTo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/pin_clickable_width"
+                    android:layout_height="@dimen/pin_clickable_height"
+                    android:padding="@dimen/pin_iv_padding"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    app:srcCompat="@drawable/ic_dark_arrow"/>
+                    app:srcCompat="@drawable/ic_pin_default"/>
 
             </RelativeLayout>
             <RelativeLayout
