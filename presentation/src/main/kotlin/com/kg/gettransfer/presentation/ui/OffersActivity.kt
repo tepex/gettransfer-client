@@ -39,6 +39,7 @@ import com.kg.gettransfer.presentation.view.OffersView.Sort
 import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_DETAILS_RATING
 
 import kotlinx.android.synthetic.main.activity_offers.*
+import kotlinx.android.synthetic.main.activity_offers.view.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
@@ -110,6 +111,10 @@ class OffersActivity : BaseActivity(), OffersView {
 
     override fun setTransfer(transferModel: TransferModel) {
         layoutTransferRequestInfo.setInfo(transferModel)
+        fl_drivers_count_text.apply {
+            isVisible = true
+            fl_drivers_count_text.tv_drivers_count.text = getString(R.string.LNG_RIDE_CONNECT_CARRIERS, transferModel.relevantCarriersCount)
+        }
     }
 
     override fun setDate(date: String) { tvOrderDateTime.text = date }
@@ -117,6 +122,10 @@ class OffersActivity : BaseActivity(), OffersView {
     override fun setOffers(offers: List<OfferItem>) {
         rvOffers.adapter = OffersRVAdapter(offers.toMutableList(), textNetworkNotAvailable.isVisible) { offer, isShowingOfferDetails ->
             presenter.onSelectOfferClicked(offer, isShowingOfferDetails) }
+        if (offers.isNotEmpty()) {
+            fl_drivers_count_text.isVisible = false
+            cl_fixPrice.isVisible = true
+        }
     }
 
     override fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean) {

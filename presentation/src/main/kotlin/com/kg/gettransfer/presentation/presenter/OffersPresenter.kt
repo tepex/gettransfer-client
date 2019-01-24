@@ -163,10 +163,10 @@ class OffersPresenter : BasePresenter<OffersView>() {
         if (sortCategory == sortType) sortHigherToLower = !sortHigherToLower
         else {
             sortCategory = sortType
-            when (sortType) {
-                Sort.YEAR -> sortHigherToLower = true
-                Sort.RATING -> sortHigherToLower = true
-                Sort.PRICE -> sortHigherToLower = false
+            sortHigherToLower = when (sortType) {
+                Sort.YEAR   -> true
+                Sort.RATING -> true
+                Sort.PRICE  -> false
             }
         }
         processOffers()
