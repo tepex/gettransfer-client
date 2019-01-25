@@ -32,6 +32,7 @@ ext {
     sentry_version             = "1.7.16"
     appsflyer_version          = "4.8.19"
     installreferrer_version    = "1.0"
+    life_cycle_version         = "1.1.1"
 }
 
 android {
@@ -188,6 +189,7 @@ dependencies {
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
     implementation "com.android.support:multidex:$multidex_version"
     implementation "com.android.support:multidex-instrumentation:$multidex_version"
+    implementation "android.arch.lifecycle:extensions:$life_cycle_version"
     // Maps
     implementation libs.psLocation
     implementation libs.psPlaces
