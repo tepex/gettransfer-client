@@ -17,6 +17,6 @@ open class PaymentRequestMapper : Mapper<PaymentRequestEntity, PaymentRequest> {
             transferId = type.transferId,
             offerId = type.offerId,
             gatewayId = type.gatewayId,
-            percentage = type.percentage
-        )
+            percentage = type.percentage,
+            bookNowTransportType = type.bookNowTransportType)
 }

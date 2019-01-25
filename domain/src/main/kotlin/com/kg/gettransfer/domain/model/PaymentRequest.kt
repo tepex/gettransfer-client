@@ -4,5 +4,6 @@ data class PaymentRequest(
     val transferId: Long,
     val offerId: Long?,
     val gatewayId: String,
-    val percentage: Int
+    val percentage: Int,
+    val bookNowTransportType: String?
 )

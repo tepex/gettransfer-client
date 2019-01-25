@@ -58,7 +58,7 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
             if (result.error == null) {
                 paymentRequest = PaymentRequestModel(params.transferId, null, params.bookNowTransportId)
                 if (result.model.bookNowOffers.isNotEmpty()) {
-                    bookNowOffer = result.model.bookNowOffers.filterKeys { it.name == params.bookNowTransportId }.values.first()
+                    bookNowOffer = result.model.bookNowOffers.filterKeys { it.toString() == params.bookNowTransportId }.values.first()
                 }
                 viewState.setBookNowOffer(bookNowOffer)
             } else {
