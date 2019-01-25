@@ -85,6 +85,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         systemInteractor.locale = localeModel.delegate
         viewState.setLocale(localeModel.name)
         if (systemInteractor.account.user.loggedIn) saveAccount()
+        else saveNoAccount()
         logEvent(Analytics.LANGUAGE_PARAM, localeModel.name)
 
         Locale.setDefault(systemInteractor.locale)
@@ -92,6 +93,13 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setCurrencies(currencies)
 
         return systemInteractor.locale
+    }
+
+    private fun saveNoAccount() = utils.launchSuspend {
+        viewState.blockInterface(true)
+        val result = utils.asyncAwait { systemInteractor.putNoAccount() }
+        result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
+        viewState.blockInterface(false)
     }
 
     fun changeDistanceUnit(selected: Int) {
@@ -136,7 +144,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     @CallSuper
     override fun onBackCommandClick() {
-//        localeWasChanged = false
         if (localeWasChanged) {
             localeWasChanged = false
             router.navigateTo(Screens.ChangeMode(systemInteractor.lastMode))
