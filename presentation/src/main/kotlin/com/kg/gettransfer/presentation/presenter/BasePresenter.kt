@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import com.arellomobile.mvp.MvpPresenter
 
@@ -143,6 +144,10 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
         val result = utils.asyncAwait { systemInteractor.putAccount() }
         result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
         viewState.blockInterface(false)
+    }
+
+    fun onAppStateChanged(isForeGround: Boolean) {
+        Log.i("FindState", "$isForeGround")
     }
 
     companion object AnalyticProps {
