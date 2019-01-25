@@ -35,6 +35,7 @@ class PreferencesImpl(context: Context,
 
         const val FIRST_ACCESS         = 0
         const val IMMUTABLE            = -1   // user did rate app
+              var counterUpdated       = false
     }
     
     private val listeners = mutableSetOf<PreferencesListener>()
@@ -128,7 +129,8 @@ class PreferencesImpl(context: Context,
     override var appEnters: Int
         get() {
             var count = accountPrefs.getInt(APP_ENTERS_COUNT, FIRST_ACCESS)
-            if (count == IMMUTABLE) return count
+            if (count == IMMUTABLE || counterUpdated) return count
+            counterUpdated = true
             appEnters = ++count
             return count
         }

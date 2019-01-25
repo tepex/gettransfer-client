@@ -44,5 +44,11 @@ open class TransportTypeMapper : Mapper<TransportTypeModel, TransportType> {
             val nameRes = R.string::class.members.find( { it.name == "LNG_TRANSPORT_EXAMPLES_${id.name}" } )
             return (nameRes?.call() as Int?) ?: R.string.LNG_TRANSPORT_EXAMPLES_ECONOMY
         }
+
+        @StringRes
+        fun getModelsById(id: TransportType.ID): Int {
+            val modelRes = R.string::class.members.find({it.name == "LNG_TRANSPORT_${id.name}_MODELS"})
+            return (modelRes?.call() as Int?) ?: R.string.LNG_TRANSPORT_ECONOMY_MODELS
+        }
     }
 }

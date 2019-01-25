@@ -378,8 +378,11 @@ class MainPresenter : BasePresenter<MainView>() {
             logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
             reviewInteractor.apply {
                 utils.launchSuspend { sendTopRate() }
-                if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE)
-                    viewState.askRateInPlayMarket() else viewState.thanksForRate()
+                if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
+                    viewState.askRateInPlayMarket()
+                    logAppReviewRequest()
+                }
+                else viewState.thanksForRate()
             }
         } else viewState.showDetailedReview(rate)
     }
@@ -395,12 +398,9 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     fun onRateInStore() {
-        logAppReviewRequest(true)
         systemInteractor.appEntersForMarketRate = ReviewInteractor.APP_RATED_IN_MARKET
         viewState.showRateInPlayMarket()
     }
-
-    fun onRateInStoreRejected() = logAppReviewRequest(false)
 
     fun onTransferDetailsClick(transferId: Long) = router.navigateTo(Screens.Details(transferId))
 
@@ -460,14 +460,14 @@ class MainPresenter : BasePresenter<MainView>() {
 
     private fun logTransferReviewRequested() =
             analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED,
-                    createStringBundle("",""),
-                    mapOf())
+                    createEmptyBundle(),
+                    emptyMap())
 
-    private fun logAppReviewRequest(accepted: Boolean) =
+    private fun logAppReviewRequest() =
         analytics.logEvent(
             Analytics.EVENT_APP_REVIEW_REQUESTED,
-            createStringBundle(analytics.requestResult(accepted), ""),
-            mapOf(analytics.requestResult(accepted) to "")
+            createEmptyBundle(),
+            emptyMap()
         )
 
     companion object {

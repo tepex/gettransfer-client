@@ -7,7 +7,7 @@ data class TransportType(
 ) {
 
     enum class ID {
-        ECONOMY, PREMIUM, MINIBUS, BUS, HELICOPTER, LIMOUSINE, BUSINESS, VAN, SUV, UNKNOWN;
+        ECONOMY, COMFORT, PREMIUM, MINIBUS, BUS, HELICOPTER, LIMOUSINE, BUSINESS, VAN, SUV, UNKNOWN;
 
         override fun toString() = name.toLowerCase()
 

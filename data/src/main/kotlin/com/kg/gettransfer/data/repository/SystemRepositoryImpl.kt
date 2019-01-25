@@ -110,9 +110,9 @@ class SystemRepositoryImpl(
             /* No chance to go further */
             //if (result.error != null) return Result(account, ExceptionMapper.map(result.error))
 
+            account = factory.retrieveCacheDataStore().getAccount()?.let { accountMapper.fromEntity(it) }?: NO_ACCOUNT
             if (result.error != null) {
                 configs = factory.retrieveCacheDataStore().getConfigs()?.let { configsMapper.fromEntity(it) }?: CONFIGS_DEFAULT
-                account = factory.retrieveCacheDataStore().getAccount()?.let { accountMapper.fromEntity(it) }?: NO_ACCOUNT
                 return Result(account, ExceptionMapper.map(result.error))
             }
         }
@@ -146,6 +146,11 @@ class SystemRepositoryImpl(
         factory.retrieveCacheDataStore().setAccount(accountEntity)
         this.account = accountMapper.fromEntity(accountEntity)
         return Result(this.account)
+    }
+
+    override suspend fun putNoAccount(account: Account): Result<Account> {
+        factory.retrieveCacheDataStore().setAccount(accountMapper.toEntity(account))
+        return Result(account)
     }
 
     override suspend fun login(email: String, password: String): Result<Account> {

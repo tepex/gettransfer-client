@@ -7,10 +7,10 @@ import java.util.Calendar
 
 class BoundDatePickerDialog(
     context: Context,
-    onDateSetListener: DatePickerDialog.OnDateSetListener,
     year: Int,
     month: Int,
-    dayOfMonth: Int
+    dayOfMonth: Int,
+    onDateSetListener: DatePickerDialog.OnDateSetListener
 ) : DatePickerDialog(context, onDateSetListener, year, month, dayOfMonth) {
 
     private var minYear: Int? = null

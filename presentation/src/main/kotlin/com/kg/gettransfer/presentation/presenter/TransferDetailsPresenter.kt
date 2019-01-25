@@ -154,7 +154,10 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
             with(reviewInteractor) {
                 utils.launchSuspend { sendTopRate() }
                 logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
-                if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) viewState.askRateInPlayMarket()
+                if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
+                    viewState.askRateInPlayMarket()
+                    logReviewRequest()
+                }
                 else viewState.thanksForRate()
             }
         } else viewState.showDetailRate(rating)
@@ -171,12 +174,9 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
     }
 
     fun onRateInStore() {
-        logReviewRequest(true)
         systemInteractor.appEntersForMarketRate = ReviewInteractor.APP_RATED_IN_MARKET
         viewState.showRateInPlayMarket()
     }
-
-    fun onRateInStoreRejected() = logReviewRequest(false)
 
     fun onReviewCanceled() {
         viewState.closeRateWindow()
@@ -209,17 +209,17 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
         analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_DETAILED, bundle, map)
     }
 
-    private fun logReviewRequest(accepted: Boolean) =
+    private fun logReviewRequest() =
         analytics.logEvent(
             Analytics.EVENT_APP_REVIEW_REQUESTED,
-            createStringBundle(analytics.requestResult(accepted), ""),
-            mapOf(analytics.requestResult(accepted) to "")
+            createEmptyBundle(),
+            mapOf()
         )
 
     fun logTransferReviewRequested() =
         analytics.logEvent(
             Analytics.EVENT_TRANSFER_REVIEW_REQUESTED,
-            createStringBundle("", ""),
+            createEmptyBundle(),
             mapOf()
         )
 

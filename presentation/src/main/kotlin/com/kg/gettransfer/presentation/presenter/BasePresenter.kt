@@ -75,6 +75,8 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
 
     protected open fun systemInitialized() {}
 
+    protected fun createEmptyBundle() = createStringBundle("", "")
+
     protected fun createStringBundle(key: String, value: String): Bundle {
         val bundle = Bundle(SINGLE_CAPACITY)
         bundle.putString(key, value)

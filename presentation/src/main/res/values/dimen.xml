@@ -81,8 +81,9 @@
 	<dimen name="search_main_paddingBottom">8dp</dimen>
 	<dimen name="search_main_clear_paddingBottom">@dimen/search_main_paddingBottom</dimen>
 
-	<dimen name="arrow_fl_width">37dp</dimen>
-	<dimen name="arrow_fl_height">44dp</dimen>
+	<dimen name="pin_clickable_width">44dp</dimen>
+	<dimen name="pin_clickable_height">44dp</dimen>
+	<dimen name="pin_iv_padding">10dp</dimen>
 	<dimen name="clear_fl_width">25dp</dimen>
 	<dimen name="clear_fl_height">55dp</dimen>
 
@@ -437,6 +438,7 @@
 	<dimen name="activity_offers_excellent_price_text_size">12sp</dimen>
 	<dimen name="activity_offers_excellent_price_layout_margin_start">9dp</dimen>
 	<dimen name="activity_offers_excellent_price_layout_height">56dp</dimen>
+	<dimen name="activity_offers_drivers_connecting_text_height">56dp</dimen>
 	<dimen name="activity_offers_iv_lock_width">19dp</dimen>
 	<dimen name="activity_offers_iv_lock_height">25dp</dimen>
 	<dimen name="activity_offers_iv_lock_margin_start">20dp</dimen>

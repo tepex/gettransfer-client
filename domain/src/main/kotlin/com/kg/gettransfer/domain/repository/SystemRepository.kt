@@ -25,6 +25,7 @@ interface SystemRepository {
 
     suspend fun coldStart(): Result<Account>
     suspend fun putAccount(account: Account): Result<Account>
+    suspend fun putNoAccount(account: Account): Result<Account>
     suspend fun login(email: String, password: String): Result<Account>
     fun logout(): Result<Account>
     suspend fun registerPushToken(provider: PushTokenType, token: String)
