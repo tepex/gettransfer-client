@@ -18,14 +18,12 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.setUserAgent
-import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.presenter.PaymentPresenter
 
 import com.kg.gettransfer.presentation.view.PaymentView
 
 import kotlinx.android.synthetic.main.activity_payment.*
-import timber.log.Timber
 
 class PaymentActivity: BaseActivity(), PaymentView {
     companion object {

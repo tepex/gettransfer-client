@@ -8,7 +8,6 @@ import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
 
 import android.support.v7.widget.Toolbar
-import android.webkit.WebView
 
 import android.webkit.WebViewClient
 
@@ -24,8 +23,6 @@ import com.kg.gettransfer.presentation.view.WebPageView
 
 import kotlinx.android.synthetic.main.activity_web_page.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-import timber.log.Timber
-import java.lang.StringBuilder
 
 class WebPageActivity: MvpAppCompatActivity(), WebPageView {
     @InjectPresenter
