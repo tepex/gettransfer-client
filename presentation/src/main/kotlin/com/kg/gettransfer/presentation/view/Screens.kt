@@ -158,7 +158,7 @@ object Screens {
         }
     }
 
-    data class PaymentSettings(val transferId: Long, val offerId: Long?, val dateRefund: Date?, val paymentPercentages: List<Int>, val bookNowTransportId: String) : SupportAppScreen() {
+    data class PaymentSettings(val transferId: Long, val offerId: Long?, val dateRefund: Date?, val paymentPercentages: List<Int>, val bookNowTransportId: String?) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, PaymentSettingsActivity::class.java).apply {
             putExtra(
                 PaymentSettingsView.EXTRA_PARAMS,

@@ -28,6 +28,6 @@ interface PaymentSettingsView : BaseView {
         val transferId: Long,
         val offerId: Long?,
         val paymentPercentages: List<Int>,
-        val bookNowTransportId: String = ""
+        val bookNowTransportId: String?
     )
 }
