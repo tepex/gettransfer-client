@@ -61,7 +61,6 @@ class SettingsActivity : BaseActivity(), SettingsView {
     override fun setLocales(locales: List<LocaleModel>) =
         Utils.setLocalesDialogListener(this, layoutSettingsLanguage, locales) {
             localeManager.updateResources(this, presenter.changeLocale(it))
-            recreate()
         }
 
     override fun setDistanceUnits(distanceUnits: List<DistanceUnitModel>) =
@@ -80,11 +79,12 @@ class SettingsActivity : BaseActivity(), SettingsView {
     }
 
     override fun restartApp() {
-        baseContext.packageManager.getLaunchIntentForPackage(baseContext.packageName)?.let {
-            it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        packageManager.getLaunchIntentForPackage(packageName)?.let {
+            it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(it)
         }
         finish()
+        Runtime.getRuntime().exit(0)
     }
 
     override fun onBackPressed() { presenter.onBackCommandClick() }
