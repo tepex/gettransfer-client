@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 
 import android.util.Patterns
+import com.appsflyer.AFInAppEventParameterName
+import com.appsflyer.AFInAppEventType
 
 import com.arellomobile.mvp.InjectViewState
 import com.facebook.appevents.AppEventsConstants
@@ -444,6 +446,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val bundle = Bundle()
         val fbBundle = Bundle()
         val map = mutableMapOf<String, Any?>()
+        val afMap = mutableMapOf<String, Any?>()
 
         bundle.putInt(Analytics.NUMBER_OF_PASSENGERS, passengers)
         map[Analytics.NUMBER_OF_PASSENGERS] = passengers
@@ -469,6 +472,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
 
         fbBundle.putAll(bundle)
+        afMap.putAll(map)
 
         if (cost != null) {
             bundle.putString(Analytics.VALUE, cost.toString())
@@ -476,14 +480,17 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
 
         if (selectedCurrency != INVALID_CURRENCY_INDEX) {
-            bundle.putString(Analytics.CURRENCY, currencies[selectedCurrency].name)
-            fbBundle.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, currencies[selectedCurrency].name)
-            map[Analytics.CURRENCY] = currencies[selectedCurrency].name
+            val currency = currencies[selectedCurrency].name
+            bundle.putString(Analytics.CURRENCY, currency)
+            fbBundle.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, currency)
+            map[Analytics.CURRENCY] = currency
+            afMap[AFInAppEventParameterName.CURRENCY] = currency
         }
 
         analytics.logEventToFirebase(value, bundle)
         analytics.logEventToFacebook(AppEventsConstants.EVENT_NAME_ADDED_TO_CART, fbBundle)
         analytics.logEventToYandex(value, map)
+        analytics.logEventToAppsFlyer(AFInAppEventType.ADD_TO_CART, afMap)
     }
 
     companion object {

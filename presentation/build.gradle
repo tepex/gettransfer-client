@@ -30,6 +30,8 @@ ext {
     flexbox_layout_version     = "1.0.0"
     pageindicator_version      = "1.0.2"
     sentry_version             = "1.7.16"
+    appsflyer_version          = "4.8.19"
+    installreferrer_version    = "1.0"
 }
 
 android {
@@ -249,6 +251,10 @@ dependencies {
 
     //sentry
     implementation "io.sentry:sentry-android:$sentry_version"
+
+    //appsflyer
+    implementation "com.appsflyer:af-android-sdk:$appsflyer_version@aar"
+    implementation "com.android.installreferrer:installreferrer:$installreferrer_version"
 }
 
 def getBuildNumber() {
