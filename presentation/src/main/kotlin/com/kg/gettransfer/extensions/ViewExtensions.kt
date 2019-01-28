@@ -4,10 +4,12 @@ import android.content.Context
 
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.webkit.WebView
 
 import android.widget.Toast
 
 import com.kg.gettransfer.common.DebouncingOnClickListener
+import kotlin.text.StringBuilder
 
 inline var View.isVisible: Boolean
     get() = visibility == View.VISIBLE
@@ -43,4 +45,11 @@ fun View.doOnClick(clickAction: (view: View) -> Unit) {
 
 fun View.markAsNotImplemented(): Unit {
     this.setOnClickListener { Toast.makeText(context, "Not implemented yet", Toast.LENGTH_SHORT).show() }
+}
+
+fun WebView.setUserAgent() {
+    val userAgent = this.settings.userAgentString
+    val wvIndex = userAgent.indexOf("wv")
+    val sbAgent = StringBuilder(userAgent).insert(wvIndex + 2, "; GetTransfer")
+    this.settings.userAgentString = sbAgent.toString()
 }

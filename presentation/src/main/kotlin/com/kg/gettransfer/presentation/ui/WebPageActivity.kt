@@ -8,6 +8,7 @@ import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
 
 import android.support.v7.widget.Toolbar
+import android.webkit.WebView
 
 import android.webkit.WebViewClient
 
@@ -16,12 +17,15 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.setUserAgent
 
 import com.kg.gettransfer.presentation.presenter.WebPagePresenter
 import com.kg.gettransfer.presentation.view.WebPageView
 
 import kotlinx.android.synthetic.main.activity_web_page.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+import timber.log.Timber
+import java.lang.StringBuilder
 
 class WebPageActivity: MvpAppCompatActivity(), WebPageView {
     @InjectPresenter
@@ -46,6 +50,7 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 
         webView.settings.javaScriptEnabled = true
+        webView.setUserAgent()
         webView.webViewClient = object: WebViewClient() {}
 
         when(intent.getStringExtra(WebPageView.EXTRA_SCREEN)) {
