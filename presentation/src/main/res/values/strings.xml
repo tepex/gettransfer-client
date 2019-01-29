@@ -438,5 +438,6 @@
     <string name="offer_channel_name">Offer</string>
     <string name="offer_channel_description">@string/offer_channel_name</string>
     <string name="new_offers">New offers</string>
+    <string name="offer_was_canceled">Offer was canceled</string>
 
 </resources>

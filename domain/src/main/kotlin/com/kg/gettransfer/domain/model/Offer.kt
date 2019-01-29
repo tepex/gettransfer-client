@@ -28,6 +28,7 @@ data class Offer(
         ratings?.apply {
             return vehicle != NO_RATE && driver != NO_RATE && fair != NO_RATE
         }
+        return false
     }
 
     companion object {
