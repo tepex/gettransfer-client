@@ -106,7 +106,7 @@
     <string name="LNG_HOURS">hours</string>
     <string name="LNG_HOUR_FEW">hours</string>
     <string name="LNG_DAY">day</string>
-    <string name="LNG_DAYS_FEW">days</string>
+    <string name="LNG_DAY_FEW">days</string>
     <string name="LNG_FIELD_DURATION_TRIP">Duration of the trip</string>
     <string name="LNG_FIELD_PER_HOUSE">Select the duration of the trip</string>
     <string name="LNG_PER_HOUR">Per hour</string>
@@ -439,5 +439,17 @@
     <string name="offer_channel_description">@string/offer_channel_name</string>
     <string name="new_offers">New offers</string>
     <string name="LNG_RIDE_OFFER_CANCELLED">Offer was canceled</string>
+
+    <plurals name="days">
+        <item quantity="one">@string/LNG_DAY</item>
+        <item quantity="few">@string/LNG_DAY_FEW</item>
+        <item quantity="many">@string/LNG_DAYS</item>
+    </plurals>
+
+    <plurals name="hours">
+        <item quantity="one">@string/LNG_HOUR</item>
+        <item quantity="few">@string/LNG_HOUR_FEW</item>
+        <item quantity="many">@string/LNG_HOURS</item>
+    </plurals>
 
 </resources>
