@@ -1,6 +1,7 @@
 package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.ds.*
+import com.kg.gettransfer.data.eventListeners.TransferDataStoreReceiver
 import com.kg.gettransfer.data.mapper.*
 import com.kg.gettransfer.data.repository.*
 
@@ -12,8 +13,6 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 import org.koin.dsl.module.module
-
-import org.slf4j.LoggerFactory
 
 val dataModule = module {
     single<ThreadLocal<DateFormat>>("iso_date") {
@@ -70,7 +69,8 @@ val dataModule = module {
 
     single { SystemDataStoreCache() }
     single { SystemDataStoreRemote() }
-    single<SystemRepository> { SystemRepositoryImpl(DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>(get(), get())) }
+    single { SystemDataStoreIO(get()) }
+    single<SystemRepository> { SystemRepositoryImpl(DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>(get(), get()), get()) }
 
     single { RouteInfoMapper() }
     single { PointMapper() }
@@ -94,6 +94,7 @@ val dataModule = module {
     single { TransferNewMapper() }
     single { TransferDataStoreCache() }
     single { TransferDataStoreRemote() }
+    single<TransferDataStoreReceiver> { TransferDataStoreIO(get()) }
     single<TransferRepository> { TransferRepositoryImpl(DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>(get(), get())) }
 
     single { PromoDiscountMapper() }

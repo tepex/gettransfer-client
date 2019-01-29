@@ -26,6 +26,7 @@ import com.kg.gettransfer.di.*
 import com.kg.gettransfer.presentation.FileLoggingTree
 import com.kg.gettransfer.remote.remoteMappersModule
 import com.kg.gettransfer.remote.remoteModule
+import com.kg.gettransfer.remote.socketModule
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
 
 import com.squareup.leakcanary.LeakCanary
@@ -69,7 +70,8 @@ class GTApplication : MultiDexApplication() {
             dataModule,
             domainModule,
             mappersModule,
-            androidModule
+            androidModule,
+            socketModule
         ))
 
         //setUpLeakCanary()

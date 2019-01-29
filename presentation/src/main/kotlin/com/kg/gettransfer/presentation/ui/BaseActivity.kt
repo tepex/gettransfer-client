@@ -27,6 +27,7 @@ import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 
 import android.util.DisplayMetrics
+import android.util.Log
 
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -139,6 +140,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     private val appStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            Log.i("FindState", "got it")
             intent?.let { if (it.action == AppLifeCycleObserver.APP_STATE)
                               it.getBooleanExtra(AppLifeCycleObserver.STATUS, false)
                               .also { state -> getPresenter().onAppStateChanged(state) } } }
@@ -187,13 +189,15 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     @CallSuper
     protected override fun onStart() {
         GTApplication.onStart++
-        with(offerServiceConnection) {
-            if (!statusOpened)
-                connect(systemInteractor.endpoint, systemInteractor.accessToken) { json, id ->
-                    LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(Intent(ACTION_OFFER)
-                            .apply { putExtra(OFFER_JSON, json)
-                                     putExtra(OFFER_ID, id) }) } }
+//        with(offerServiceConnection) {
+//            if (!statusOpened)
+//                connect(systemInteractor.endpoint, systemInteractor.accessToken) { json, id ->
+//                    LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(Intent(ACTION_OFFER)
+//                            .apply { putExtra(OFFER_JSON, json)
+//                                     putExtra(OFFER_ID, id) }) } }
         super.onStart()
+        LocalBroadcastManager.getInstance(applicationContext)
+                .registerReceiver(appStateReceiver, IntentFilter(AppLifeCycleObserver.APP_STATE))
         registerReceiver(inetReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         setNetworkAvailability(this)
     }

@@ -7,6 +7,7 @@ import com.kg.gettransfer.data.SystemDataStore
 
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.SystemDataStoreCache
+import com.kg.gettransfer.data.ds.SystemDataStoreIO
 import com.kg.gettransfer.data.ds.SystemDataStoreRemote
 import com.kg.gettransfer.data.mapper.*
 
@@ -28,7 +29,8 @@ import java.util.Locale
 import org.koin.standalone.get
 
 class SystemRepositoryImpl(
-    private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>
+    private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>,
+    private val socketDataStore: SystemDataStoreIO
 ) : BaseRepository(), SystemRepository, PreferencesListener {
 
     private val preferencesCache = get<PreferencesCache>()
@@ -138,6 +140,17 @@ class SystemRepositoryImpl(
         isInitialized = true
         return Result(account, error)
     }
+
+    override fun connectSocket() {
+        log.info("MySocketConnect repo")
+        socketDataStore.connectSocket(endpointMapper.toEntity(endpoint), accessToken)
+    }
+
+    override fun connectionChanged() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun disconnectSocket() = socketDataStore.disconnectSocket()
 
     override suspend fun putAccount(account: Account): Result<Account> {
         val accountEntity = try { factory.retrieveRemoteDataStore().setAccount(accountMapper.toEntity(account)) }
