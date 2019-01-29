@@ -43,6 +43,7 @@ import kotlinx.android.synthetic.main.activity_offers.view.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
+import org.jetbrains.anko.toast
 
 import timber.log.Timber
 import java.util.*
@@ -329,6 +330,10 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun addNewOffer(offer: OfferModel) { (rvOffers.adapter as OffersRVAdapter).add(offer) }
+
+    override fun showOfferError() {
+        toast(getString(R.string.LNG_RIDE_OFFER_CANCELLED))
+    }
 
     companion object {
         val ACTION_NEW_OFFER = "${OffersActivity::class.java.name}.offer"

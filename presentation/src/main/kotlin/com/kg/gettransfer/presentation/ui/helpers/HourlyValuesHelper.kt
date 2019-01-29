@@ -9,7 +9,7 @@ object HourlyValuesHelper {
 
 
     fun getHourlyValues(context: Context): ArrayList<String> {
-        val possibleMinutes = intArrayOf(120, 180, 240, 300, 360, 480, 600, 1440, 2880, 4320, 5760, 7200, 14400, 21600)
+        val possibleMinutes = intArrayOf(120, 180, 240, 300, 360, 480, 600, 1440, 2880, 4320, 5760, 7200, 14400, 21600, 43200)
         val displayedValues = ArrayList<String>()
         durationValues = ArrayList()
         possibleMinutes.forEach {
@@ -22,20 +22,12 @@ object HourlyValuesHelper {
     }
 
     fun getValue(hours: Int, context: Context): String {
-        var stringValue = ""
+        var stringValue: String
         hours.let {
-            when (it) {
-                in 2..4  -> stringValue = "$it " + context.getString(R.string.LNG_HOUR_FEW)
-                in 5..10 -> stringValue = "$it " + context.getString(R.string.LNG_HOURS)
-                else  -> {
-                    val days = it / 24
-                    when (days) {
-                        1        -> stringValue = "$days " + context.getString(R.string.LNG_DAY)
-                        in 2..4  -> stringValue = "$days " + context.getString(R.string.LNG_DAYS_FEW)
-                        in 5..15 -> stringValue = "$days " + context.getString(R.string.LNG_DAYS)
-                    }
-
-                }
+            stringValue = "$it " + context.resources.getQuantityString(R.plurals.hours, it, it)
+            if (it > 10) {
+                val days = it / 24
+                stringValue = "$days " + context.resources.getQuantityString(R.plurals.days, days, days)
             }
             return stringValue
         }
