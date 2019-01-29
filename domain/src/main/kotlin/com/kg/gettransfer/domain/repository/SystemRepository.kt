@@ -37,6 +37,11 @@ interface SystemRepository {
     suspend fun unregisterPushToken(token: String): Result<Unit>
     suspend fun getMyLocation(): Result<Location>
 
+    fun connectSocket()
+    fun disconnectSocket()
+    fun connectionChanged()
+
     fun addListener(listener: SystemListener)
     fun removeListener(listener: SystemListener)
+
 }

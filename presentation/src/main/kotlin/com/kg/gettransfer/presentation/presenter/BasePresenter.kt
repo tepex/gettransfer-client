@@ -6,7 +6,6 @@ import android.util.Log
 
 import com.arellomobile.mvp.MvpPresenter
 
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import com.kg.gettransfer.data.model.OfferEntity
 import com.kg.gettransfer.domain.ApiException
@@ -148,6 +147,10 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
 
     fun onAppStateChanged(isForeGround: Boolean) {
         Log.i("FindState", "$isForeGround")
+        with(systemInteractor) {
+            if (isForeGround) openSocketConnection()
+            else closeSocketConnection()
+        }
     }
 
     companion object AnalyticProps {
