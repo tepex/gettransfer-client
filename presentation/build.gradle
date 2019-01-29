@@ -155,6 +155,14 @@ hockeyapp {
     notes = generateChangeLog() // Generates default notes - feel free to change this
     buildServerUrl = System.getenv("JOB_URL") ?: "Unknown"
     repositoryUrl = System.getenv("GIT_URL") ?: "Unknown"
+    variantToApplicationId = [
+            dev:  "1f061f58b7bd42c387ecd8681d30df48",
+            prod:  "62939f09f9e0489c8ada1c25d2f30d9d",
+    ]
+    variantToReleaseType = [
+            dev:  "2",
+            prod:  "1",
+    ]
 }
 
 dependencies {
