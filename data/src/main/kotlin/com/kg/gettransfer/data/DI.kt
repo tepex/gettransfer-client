@@ -48,8 +48,8 @@ val dataModule = module {
     single { OfferMapper() }
     single { OfferDataStoreCache() }
     single { OfferDataStoreRemote() }
-    single<OfferDataStoreReceiver> { OfferDataStoreIO(get()) }
-    single<OfferRepository> { OfferRepositoryImpl(DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>(get(), get())) }
+    single { OfferRepositoryImpl(DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>(get(), get())) } bind OfferRepository::class
+    single<OfferDataStoreReceiver> { OfferDataStoreIO() }
 
     single { PaymentMapper() }
     single { PaymentRequestMapper() }

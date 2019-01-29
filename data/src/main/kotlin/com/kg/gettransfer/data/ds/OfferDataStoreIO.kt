@@ -7,8 +7,8 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.get
 import org.koin.standalone.inject
 
-class OfferDataStoreIO(private val repository: OfferRepositoryImpl): OfferDataStoreReceiver, KoinComponent {
-  //  private val repository: OfferRepositoryImpl by inject()
+class OfferDataStoreIO: OfferDataStoreReceiver, KoinComponent {
+    private val repository: OfferRepositoryImpl by inject()
 
     override fun onNewOffer(offer: OfferEntity) { repository.onNewOfferEvent(offer) }
 }
