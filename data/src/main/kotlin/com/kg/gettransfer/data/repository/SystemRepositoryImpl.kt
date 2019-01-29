@@ -141,6 +141,17 @@ class SystemRepositoryImpl(
         return Result(account, error)
     }
 
+    override fun connectSocket() {
+        log.info("MySocketConnect repo")
+        socketDataStore.connectSocket(endpointMapper.toEntity(endpoint), accessToken)
+    }
+
+    override fun connectionChanged() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun disconnectSocket() = socketDataStore.disconnectSocket()
+
     override suspend fun putAccount(account: Account): Result<Account> {
         val accountEntity = try { factory.retrieveRemoteDataStore().setAccount(accountMapper.toEntity(account)) }
         catch(e: RemoteException) { return Result(account, ExceptionMapper.map(e)) }
