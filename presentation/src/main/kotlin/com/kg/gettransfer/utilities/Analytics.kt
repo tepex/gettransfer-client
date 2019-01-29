@@ -1,6 +1,8 @@
 package com.kg.gettransfer.utilities
 
+import android.content.Context
 import android.os.Bundle
+import com.appsflyer.AppsFlyerLib
 
 import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
@@ -16,8 +18,9 @@ import java.math.BigDecimal
 import java.util.Currency
 
 class Analytics(
-    private val firebase: FirebaseAnalytics,
-    private val facebook: AppEventsLogger
+        private val context: Context,
+        private val firebase: FirebaseAnalytics,
+        private val facebook: AppEventsLogger
 ) {
 
     /** [см. табл.][https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0] */
@@ -143,17 +146,17 @@ class Analytics(
         logEventToYandex(event, map)
     }
 
-    fun logEventToFirebase(event: String, data: Bundle?) {
+    fun logEventToFirebase(event: String, data: Bundle?) =
         firebase.logEvent(event, data)
-    }
 
-    fun logEventToFacebook(event: String, data: Bundle) {
+    fun logEventToFacebook(event: String, data: Bundle) =
         facebook.logEvent(event, data)
-    }
 
-    fun logEventToYandex(event: String, data: Map<String, Any?>?) {
+    fun logEventToYandex(event: String, data: Map<String, Any?>?) =
         YandexMetrica.reportEvent(event, data)
-    }
+
+    fun logEventToAppsFlyer(event: String, data: Map<String, Any?>?) =
+        AppsFlyerLib.getInstance().trackEvent(context, event, data)
 
     fun logEventEcommerce(event: String, bundle: Bundle, map: Map<String, Any?>) {
         logEventToFirebase(event, bundle)

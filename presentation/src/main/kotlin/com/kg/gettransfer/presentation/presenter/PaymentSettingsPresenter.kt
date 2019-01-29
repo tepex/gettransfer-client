@@ -3,6 +3,8 @@ package com.kg.gettransfer.presentation.presenter
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+import com.appsflyer.AFInAppEventParameterName
+import com.appsflyer.AFInAppEventType
 
 import com.arellomobile.mvp.InjectViewState
 import com.facebook.appevents.AppEventsConstants
@@ -94,6 +96,7 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
         val bundle = Bundle()
         val fbBundle = Bundle()
         val map = mutableMapOf<String, Any?>()
+        val afMap = mutableMapOf<String, Any?>()
 
         bundle.putInt(Analytics.SHARE, paymentRequest.percentage)
         map[Analytics.SHARE] = paymentRequest.percentage
@@ -106,10 +109,13 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
         bundle.putString(Analytics.OFFER_TYPE, offerType)
         map[Analytics.OFFER_TYPE] = offerType
         fbBundle.putAll(bundle)
+        afMap.putAll(map)
 
-        bundle.putString(Analytics.CURRENCY, systemInteractor.currency.currencyCode)
-        fbBundle.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, systemInteractor.currency.currencyCode)
-        map[Analytics.CURRENCY] = systemInteractor.currency.currencyCode
+        val currency = systemInteractor.currency.currencyCode
+        bundle.putString(Analytics.CURRENCY, currency)
+        fbBundle.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, currency)
+        map[Analytics.CURRENCY] = currency
+        afMap[AFInAppEventParameterName.CURRENCY] = currency
 
         var price: Double = if (offer != null) offer!!.price.amount
          else bookNowOffer!!.amount
@@ -118,16 +124,20 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
             OfferModel.FULL_PRICE -> {
                 bundle.putDouble(Analytics.VALUE, price)
                 map[Analytics.VALUE] = price
+                afMap[AFInAppEventParameterName.PRICE] = price
+
             }
             OfferModel.PRICE_30 -> {
                 price *= PRICE_30
                 bundle.putDouble(Analytics.VALUE, price)
                 map[Analytics.VALUE] = price
+                afMap[AFInAppEventParameterName.PRICE] = price
             }
         }
 
         analytics.logEventEcommerce(Analytics.EVENT_BEGIN_CHECKOUT, bundle, map)
         analytics.logEventBeginCheckoutFB(fbBundle, price)
+        analytics.logEventToAppsFlyer(AFInAppEventType.INITIATED_CHECKOUT, afMap)
     }
 
     fun changePrice(price: Int)        { paymentRequest.percentage = price }

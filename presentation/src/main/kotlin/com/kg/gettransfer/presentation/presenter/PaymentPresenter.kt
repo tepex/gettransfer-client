@@ -1,6 +1,8 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
+import com.appsflyer.AFInAppEventParameterName
+import com.appsflyer.AFInAppEventType
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -70,6 +72,7 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
         val bundle = Bundle()
         val fbBundle = Bundle()
         val map = mutableMapOf<String, Any?>()
+        val afMap = mutableMapOf<String, Any?>()
 
         bundle.putString(Analytics.TRANSACTION_ID, transferId.toString())
         map[Analytics.TRANSACTION_ID] = transferId.toString()
@@ -77,14 +80,6 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
         map[Analytics.PROMOCODE] = transferInteractor.transferNew?.promoCode
         routeInteractor.duration?.let { bundle.putInt(Analytics.HOURS, it) }
         routeInteractor.duration?.let { map[Analytics.HOURS] = it }
-
-        val offerType = if (offer != null ) Analytics.REGULAR else Analytics.NOW
-        bundle.putString(Analytics.OFFER_TYPE, offerType)
-        map[Analytics.OFFER_TYPE] = offerType
-        fbBundle.putAll(bundle)
-
-        map[Analytics.CURRENCY] = systemInteractor.currency.currencyCode
-        bundle.putString(Analytics.CURRENCY, systemInteractor.currency.currencyCode)
 
         offer = offerInteractor.getOffer(offerId)
         utils.launchSuspend {
@@ -106,7 +101,17 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
 
             }
         }
+        val offerType = if (offer != null ) Analytics.REGULAR else Analytics.NOW
+        bundle.putString(Analytics.OFFER_TYPE, offerType)
+        map[Analytics.OFFER_TYPE] = offerType
 
+        fbBundle.putAll(bundle)
+        afMap.putAll(map)
+
+        val currency = systemInteractor.currency.currencyCode
+        map[Analytics.CURRENCY] = currency
+        afMap[AFInAppEventParameterName.CURRENCY] = currency
+        bundle.putString(Analytics.CURRENCY, currency)
 
         var price: Double = if (offer != null) offer!!.price.amount
         else bookNowOffer!!.amount
@@ -115,16 +120,18 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
             OfferModel.FULL_PRICE -> {
                 bundle.putDouble(Analytics.VALUE, price)
                 map[Analytics.VALUE] = price
+                afMap[AFInAppEventParameterName.REVENUE] = price
             }
             OfferModel.PRICE_30 -> {
                 price *= PRICE_30
                 bundle.putDouble(Analytics.VALUE, price)
                 map[Analytics.VALUE] = price
+                afMap[AFInAppEventParameterName.REVENUE] = price
             }
         }
-
         analytics.logEventEcommerce(Analytics.EVENT_ECOMMERCE_PURCHASE, bundle, map)
         analytics.logEventEcommercePurchaseFB(fbBundle, price.toBigDecimal(), systemInteractor.currency)
+        analytics.logEventToAppsFlyer(AFInAppEventType.PURCHASE, afMap)
     }
 
     fun logEvent(value: String) {

@@ -16,6 +16,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.setUserAgent
 
 import com.kg.gettransfer.presentation.presenter.WebPagePresenter
 import com.kg.gettransfer.presentation.view.WebPageView
@@ -46,6 +47,7 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
         (toolbar as Toolbar).setNavigationOnClickListener { presenter.onBackCommandClick() }
 
         webView.settings.javaScriptEnabled = true
+        webView.setUserAgent()
         webView.webViewClient = object: WebViewClient() {}
 
         when(intent.getStringExtra(WebPageView.EXTRA_SCREEN)) {

@@ -17,7 +17,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.extensions.setUserAgent
 
 import com.kg.gettransfer.presentation.presenter.PaymentPresenter
 
@@ -51,6 +51,7 @@ class PaymentActivity: BaseActivity(), PaymentView {
 
         setToolbar(toolbar as Toolbar, R.string.LNG_PAYMENT)
         webView.settings.javaScriptEnabled = true
+        webView.setUserAgent()
         webView.webViewClient = object: WebViewClient() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {

@@ -132,7 +132,7 @@ val androidModule = module {
     single { FirebaseAnalytics.getInstance(androidApplication().applicationContext) }
     single { LocaleManager() }
     single { AppEventsLogger.newLogger(androidApplication().applicationContext) }
-    single { Analytics(get(), get()) }
+    single { Analytics(androidApplication().applicationContext, get(), get()) }
     single { PhoneNumberUtil.createInstance(get<Context>()) }
     single { NotificationManager(androidApplication().applicationContext) }
 }

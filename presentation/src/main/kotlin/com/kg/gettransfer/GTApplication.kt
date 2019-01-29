@@ -9,6 +9,8 @@ import android.os.Build
 
 import android.support.annotation.CallSuper
 import android.support.multidex.MultiDexApplication
+import com.appsflyer.AppsFlyerConversionListener
+import com.appsflyer.AppsFlyerLib
 
 import com.google.android.gms.tasks.OnCompleteListener
 
@@ -71,7 +73,23 @@ class GTApplication : MultiDexApplication() {
         setupFcm()
         setupAppMetrica()
         setupSentry()
+        setupAppsFlyer()
         Timber.plant(FileLoggingTree())
+    }
+
+    private fun setupAppsFlyer() {
+        val conversionListener = object : AppsFlyerConversionListener {
+            override fun onAppOpenAttribution(p0: MutableMap<String, String>?) {}
+
+            override fun onAttributionFailure(p0: String?) {}
+
+            override fun onInstallConversionDataLoaded(p0: MutableMap<String, String>?) {}
+
+            override fun onInstallConversionFailure(p0: String?) {}
+        }
+        AppsFlyerLib.getInstance().init(getString(R.string.af_dev_key), conversionListener, applicationContext)
+        AppsFlyerLib.getInstance().enableUninstallTracking(getString(R.string.sender_id))
+        AppsFlyerLib.getInstance().startTracking(this)
     }
 
     private fun setupSentry() {

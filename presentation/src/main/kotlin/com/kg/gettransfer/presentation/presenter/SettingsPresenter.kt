@@ -84,7 +84,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         val localeModel = locales.get(selected)
         systemInteractor.locale = localeModel.delegate
         viewState.setLocale(localeModel.name)
-        if (systemInteractor.account.user.loggedIn) saveAccount()
+        if (systemInteractor.account.user.loggedIn) putAccount()
         else saveNoAccount()
         logEvent(Analytics.LANGUAGE_PARAM, localeModel.name)
 
@@ -95,11 +95,17 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         return systemInteractor.locale
     }
 
-    private fun saveNoAccount() = utils.launchSuspend {
+    private fun putAccount() = utils.launchSuspend {
         viewState.blockInterface(true)
-        val result = utils.asyncAwait { systemInteractor.putNoAccount() }
+        val result = utils.asyncAwait { systemInteractor.putAccount() }
         result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
+        if (result.error == null) viewState.restartApp()
         viewState.blockInterface(false)
+    }
+
+    private fun saveNoAccount() = utils.launchSuspend {
+        val result = utils.asyncAwait { systemInteractor.putNoAccount() }
+        if (result.error == null) viewState.restartApp()
     }
 
     fun changeDistanceUnit(selected: Int) {
@@ -121,7 +127,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
             viewState.blockInterface(false)
             restart = true
             router.exit() //Without restarting app
-            //viewState.restartApp() //For restart app
         }
     }
 
