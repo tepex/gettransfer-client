@@ -1,4 +1,4 @@
-package com.kg.gettransfer.data.eventListeners
+package com.kg.gettransfer.data.socket
 
 import com.kg.gettransfer.data.model.PointEntity
 

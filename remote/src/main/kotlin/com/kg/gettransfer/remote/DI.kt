@@ -1,13 +1,12 @@
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.data.*
-import com.kg.gettransfer.data.eventEmitters.SystemDataStoreEmitter
-import com.kg.gettransfer.data.eventEmitters.TransferDataStoreEmitter
+import com.kg.gettransfer.data.socket.ChatEventEmitter
+import com.kg.gettransfer.data.socket.SystemEventEmitter
+import com.kg.gettransfer.data.socket.TransferEventEmitter
 
 import com.kg.gettransfer.remote.mapper.*
-import com.kg.gettransfer.remote.socket.SocketManager
-import com.kg.gettransfer.remote.socket.SystemEventImp
-import com.kg.gettransfer.remote.socket.TransferEventImpl
+import com.kg.gettransfer.remote.socket.*
 
 import org.koin.dsl.module.module
 
@@ -80,7 +79,8 @@ val remoteModule = module {
 val socketModule = module {
     single { SocketManager() }
 
-    single<TransferDataStoreEmitter> { TransferEventImpl(get()) }
-
-    single<SystemDataStoreEmitter> { SystemEventImp(get()) }
+    single<TransferEventEmitter> { TransferEventImpl() }
+    single<SystemEventEmitter> { SystemEventImp() }
+    single { OfferEventImpl(get()) }
+    single<ChatEventEmitter> { ChatEventImpl() }
 }

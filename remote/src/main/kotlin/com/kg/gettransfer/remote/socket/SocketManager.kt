@@ -8,15 +8,21 @@ import io.socket.client.Socket
 import io.socket.engineio.client.Transport
 import io.socket.engineio.client.transports.WebSocket
 import io.socket.parser.Packet
+import kotlinx.serialization.json.JSON
 import org.json.JSONArray
 import org.koin.core.parameter.parametersOf
 import org.koin.standalone.KoinComponent
+import org.koin.standalone.get
 import org.koin.standalone.inject
 import org.slf4j.Logger
 
-class SocketManager: KoinComponent {
+class SocketManager(): KoinComponent {
 
     private val log: Logger by inject { parametersOf("GTR-socket") }
+
+    private val offerEventer: OfferEventImpl       by inject()
+//    private val transferEventer: TransferEventImpl = get()
+//    private val chatEventer: ChatEventImpl         = get()
 
     private var handler:     OfferModelHandler? = null
     private var socket:      Socket?            = null
@@ -56,6 +62,7 @@ class SocketManager: KoinComponent {
         shouldReconnect = true
         url = endpoint.url
         this.accessToken = accessToken
+        log.info("FindAccess DS endpoint ${endpoint.url} : accessToken $accessToken")
         if (reconnect) {
             socket?.off()
             socket?.close()
@@ -123,7 +130,8 @@ class SocketManager: KoinComponent {
     private fun onReceiveOffer(transferId: Long, offerJson: String) {
         log.debug("onReceiveOffer: $offerJson")
         try {
-  //          val offerEntity = JSON.nonstrict.parse(OfferEntity.serializer(), offerJson).apply { this.transferId = transferId }
+            val offerEntity = JSON.nonstrict.parse(OfferEntity.serializer(), offerJson).apply { this.transferId = transferId }
+            offerEventer.onNewOffer(offerEntity)
   //          val offer = offerMapper.fromEntity(offerEntity)
   //          offer.vehicle.photos = offer.vehicle.photos.map { photo -> systemInteractor.endpoint.url.plus(photo) }
    //         increaseEventsCounter(transferId)

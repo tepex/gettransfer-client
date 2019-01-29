@@ -1,4 +1,4 @@
-package com.kg.gettransfer.data.eventEmitters
+package com.kg.gettransfer.data.socket
 
 import com.kg.gettransfer.data.model.OfferEntity
 

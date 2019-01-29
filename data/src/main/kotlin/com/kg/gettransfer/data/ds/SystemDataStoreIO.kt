@@ -1,12 +1,10 @@
 package com.kg.gettransfer.data.ds
 
 import com.kg.gettransfer.data.model.EndpointEntity
-import com.kg.gettransfer.data.eventEmitters.SystemDataStoreEmitter
-import com.kg.gettransfer.data.repository.BaseRepository
-import com.kg.gettransfer.domain.eventEmitters.SystemEmitterGeneral
+import com.kg.gettransfer.data.socket.SystemEventEmitter
 import org.slf4j.LoggerFactory
 
-class SystemDataStoreIO(private val emitter: SystemDataStoreEmitter) {
+class SystemDataStoreIO(private val emitter: SystemEventEmitter) {
      protected val log = LoggerFactory.getLogger("DataStore-IO")
 
      fun connectSocket(endPoint: EndpointEntity, s: String) {

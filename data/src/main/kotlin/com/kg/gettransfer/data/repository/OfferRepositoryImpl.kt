@@ -10,6 +10,7 @@ import com.kg.gettransfer.data.mapper.OfferMapper
 
 import com.kg.gettransfer.data.model.OfferEntity
 import com.kg.gettransfer.data.model.ResultEntity
+import com.kg.gettransfer.domain.interactor.OfferInteractor
 
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Result
@@ -17,11 +18,13 @@ import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.repository.OfferRepository
 
 import org.koin.standalone.get
+import org.koin.standalone.inject
 
 class OfferRepositoryImpl(private val factory: DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>) :
     BaseRepository(), OfferRepository {
 
     private val mapper = get<OfferMapper>()
+    private val offerReceiver: OfferInteractor by inject()
 
     override fun newOffer(offer: Offer): Result<Offer> {
         log.debug("OfferRepository.newOffer: $offer")
@@ -46,6 +49,8 @@ class OfferRepositoryImpl(private val factory: DataStoreFactory<OfferDataStore, 
     override fun clearOffersCache(){
         factory.retrieveCacheDataStore().clearOffersCache()
     }
+
+    internal fun onNewOfferEvent(offer: OfferEntity) = offerReceiver.onNewOfferEvent(mapper.fromEntity(offer))
 
     /*companion object {
         private val DEFAULT =

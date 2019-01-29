@@ -12,6 +12,7 @@ import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.eventListeners.OfferEventListener
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
@@ -37,7 +38,7 @@ import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
-open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
+open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener, KoinComponent {
     protected val compositeDisposable = Job()
     protected val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
     protected val router: Router by inject()
@@ -65,6 +66,11 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
             if(result.error != null) viewState.setError(result.error!!)
             else systemInitialized()
         }
+    }
+
+    override fun attachView(view: BV) {
+        super.attachView(view)
+        offerInteractor.eventReceiver = this
     }
 
     @CallSuper
@@ -136,6 +142,10 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
         utils.launchSuspend { utils.asyncAwait { offerInteractor.newOffer(offer) } }
         return offerMapper.toView(offer)
                 .also { notificationManager.showOfferNotification(it) }
+    }
+
+    override fun onNewOfferEvent(offer: Offer) {
+        Log.i("FindEvent","I've got the offer")
     }
 
     fun saveAccount() = utils.launchSuspend {

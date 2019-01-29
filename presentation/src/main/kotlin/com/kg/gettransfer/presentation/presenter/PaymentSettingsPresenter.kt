@@ -45,7 +45,7 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
     private lateinit var paymentRequest: PaymentRequestModel
 
     @CallSuper
-    override fun attachView(view: PaymentSettingsView?) {
+    override fun attachView(view: PaymentSettingsView) {
         super.attachView(view)
         offer = params.offerId?.let { offerInteractor.getOffer(it) }
         offer?.let {
