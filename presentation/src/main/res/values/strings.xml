@@ -432,6 +432,7 @@
     <string name="LNG_TRIPS_EMPTY_ALL">you have no transfers</string>
     <string name="LNG_TRIPS_EMPTY_COMPLETED">you have no completed transfers</string>
     <string name="LNG_LIST"><u>List</u></string>
+    <string name="LNG_NEW_CHAT_MESSAGE">Write the message</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>

@@ -109,4 +109,11 @@ val dataModule = module {
     single<ReviewRepository> { ReviewRepositoryImpl(get()) }
 
     single<ChatDataStoreReceiver> { ChatDataStoreIO(get()) }
+
+    single { ChatAccountMapper() }
+    single { ChatMapper() }
+    single { MessageMapper() }
+    single { ChatDataStoreCache() }
+    single { ChatDataStoreRemote() }
+    single<ChatRepository> { ChatRepositoryImpl(DataStoreFactory<ChatDataStore, ChatDataStoreCache, ChatDataStoreRemote>(get(), get())) }
 }

@@ -284,6 +284,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         offer.phoneToCall?.let { phone ->
             layoutCommunicateButtons.isVisible = true
             btnCall.setOnClickListener { presenter.callPhone(phone) }
+            btnChat.setOnClickListener { presenter.onChatClick() }
         }
 
         val operations = listOf<Pair<CharSequence, String>>(

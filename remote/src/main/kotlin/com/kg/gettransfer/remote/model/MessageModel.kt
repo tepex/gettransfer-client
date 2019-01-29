@@ -2,7 +2,6 @@ package com.kg.gettransfer.remote.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.kg.gettransfer.data.model.ChatEntity
 import com.kg.gettransfer.data.model.MessageEntity
 
 class MessageModel(
@@ -14,4 +13,4 @@ class MessageModel(
         @SerializedName(MessageEntity.TEXT)        @Expose val text: String
 )
 
-class MessageWrapperModel(@SerializedName(ChatEntity.ENTITY_NAME) @Expose val message: MessageModel)
+class MessageWrapperModel(@SerializedName(MessageEntity.ENTITY_NAME) @Expose val message: MessageModel)

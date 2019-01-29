@@ -12,7 +12,11 @@ class OfferInteractor(private val repository: OfferRepository) {
     var lastTransferId = -1L
     var eventReceiver: OfferEventListener? = null
 
-    suspend fun getOffers(transferId: Long) = repository.getOffers(transferId).also { offers = it .model }
+    suspend fun getOffers(transferId: Long, fromCache: Boolean = false) =
+            when(fromCache){
+                false -> repository.getOffers(transferId)
+                true -> repository.getOffersCached(transferId)
+            }.also { offers = it .model }
     fun getOffer(id: Long) = offers.find { it.id == id }
 
     fun newOffer(offer: Offer): Result<Offer> {

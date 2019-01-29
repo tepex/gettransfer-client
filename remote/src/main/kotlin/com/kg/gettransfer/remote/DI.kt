@@ -75,6 +75,7 @@ val remoteModule = module {
     single<OfferRemote> { OfferRemoteImpl() }
     single<PaymentRemote> { PaymentRemoteImpl() }
     single<PromoRemote> { PromoRemoteImpl() }
+    single<ChatRemote> { ChatRemoteImpl() }
 
     single<ReviewRemote> { ReviewRemoteImpl() }
 

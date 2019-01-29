@@ -12,6 +12,7 @@ import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.eventListeners.OfferEventListener
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
+import com.kg.gettransfer.domain.interactor.ChatInteractor
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
@@ -49,6 +50,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     protected val offerInteractor: OfferInteractor by inject()
     protected val transferInteractor: TransferInteractor by inject()
     protected val carrierTripInteractor: CarrierTripInteractor by inject()
+    protected val chatInteractor: ChatInteractor by inject()
 
     open fun onBackCommandClick() {
         val map = mutableMapOf<String, Any>()
@@ -71,6 +73,10 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     override fun attachView(view: BV) {
         super.attachView(view)
         offerInteractor.eventReceiver = this
+    }
+
+    fun checkNewMessagesCached() {
+        utils.launchSuspend { utils.asyncAwait{ chatInteractor.sendAllNewMessages() } }
     }
 
     @CallSuper
@@ -173,7 +179,6 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                 eventsCount++
                 transferIds = transferIds.toMutableList().apply { add(transferId) }
             }
-
 
     companion object AnalyticProps {
         const val SINGLE_CAPACITY = 1

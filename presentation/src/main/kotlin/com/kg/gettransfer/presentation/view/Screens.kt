@@ -141,6 +141,12 @@ object Screens {
         }
     }
 
+    data class Chat(val transferId: Long) : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, ChatActivity::class.java).apply {
+            putExtra(ChatView.EXTRA_TRANSFER_ID, transferId)
+        }
+    }
+
     data class TripDetails(val tripId: Long, val transferId: Long) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) =
             Intent(context, CarrierTripDetailsActivity::class.java).apply {

@@ -74,6 +74,7 @@ class MainPresenter : BasePresenter<MainView>() {
         systemInteractor.selectedField = FIELD_FROM
         systemInteractor.initGeocoder()
         if (systemInteractor.account.user.loggedIn) { registerPushToken(); checkReview() }
+        checkNewMessagesCached()
 
         // Создать листенер для обновления текущей локации
         // https://developer.android.com/training/location/receive-location-updates

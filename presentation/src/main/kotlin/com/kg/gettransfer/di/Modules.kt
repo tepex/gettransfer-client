@@ -95,6 +95,7 @@ val domainModule = module {
     single { TransferInteractor(get()) }
     single { PromoInteractor(get()) }
     single { ReviewInteractor(get()) }
+    single { ChatInteractor(get()) }
 }
 
 val mappersModule = module {
@@ -125,6 +126,9 @@ val mappersModule = module {
     single { UserMapper() }
     single { VehicleInfoMapper() }
     single { VehicleMapper() }
+    single { MessageMapper() }
+    single { ChatAccountMapper() }
+    single { ChatMapper() }
 }
 
 val androidModule = module {

@@ -9,6 +9,7 @@ import com.kg.gettransfer.data.RouteCache
 import com.kg.gettransfer.data.SystemCache
 import com.kg.gettransfer.data.TransferCache
 import com.kg.gettransfer.data.CarrierTripCache
+import com.kg.gettransfer.data.ChatCache
 
 import org.koin.dsl.module.module
 
@@ -48,9 +49,11 @@ val cacheModule = module {
     single { ChatAccountEntityMapper() }
     single { ChatEntityMapper() }
     single { MessageEntityMapper() }
+    single { NewMessageEntityMapper() }
     single<SystemCache> { SystemCacheImpl() }
     single<TransferCache> { TransferCacheImpl() }
     single<OfferCache> { OfferCacheImpl() }
     single<RouteCache> { RouteCacheImpl() }
     single<CarrierTripCache> { CarrierTripCacheImpl() }
+    single<ChatCache> { ChatCacheImpl() }
 }

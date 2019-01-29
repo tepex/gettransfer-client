@@ -18,6 +18,67 @@
 		android:fontFamily="@font/sf_pro_text_bold"
 		android:textColor="@android:color/black"/>
 
+	<android.support.constraint.ConstraintLayout
+		android:id="@+id/layoutChatTitle"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		android:layout_gravity="center"
+		android:visibility="gone">
+
+		<ImageView
+			android:id="@+id/chatTitleButtonBack"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			app:srcCompat="@drawable/ic_button_back_title"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintStart_toStartOf="parent"/>
+
+		<TextView
+			android:id="@+id/transferFromText"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toTopOf="@+id/transferStartDateText"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			android:gravity="center"
+			android:layout_marginStart="@dimen/toolbar_transfer_from_margin_start_end"
+			android:layout_marginEnd="@dimen/toolbar_transfer_from_margin_start_end"
+			android:textSize="@dimen/toolbar_transfer_from_text_size"
+			android:fontFamily="@font/sf_pro_text_semibold"
+			android:textColor="@color/color_gtr_black"
+			android:lines="1"
+			android:ellipsize="end"/>
+
+		<TextView
+			android:id="@+id/transferStartDateText"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:layout_constraintTop_toBottomOf="@+id/transferFromText"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintStart_toStartOf="@+id/transferFromText"
+			app:layout_constraintEnd_toEndOf="@+id/transferFromText"
+			android:gravity="center"
+			android:textSize="@dimen/toolbar_start_date_text_size"
+			android:fontFamily="@font/sf_pro_text_regular"
+			android:textColor="@color/color_gtr_grey"
+			android:layout_marginTop="@dimen/toolbar_transfer_start_date_margin_top"/>
+
+		<ImageView
+			android:id="@+id/btnCall"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:srcCompat="@drawable/ic_phone_title"
+			android:layout_marginEnd="@dimen/toolbar_transfer_btn_call_margin_end"
+			android:visibility="gone"/>
+
+	</android.support.constraint.ConstraintLayout>
+
 	<LinearLayout
 		android:id="@+id/layoutLogs"
 		android:layout_width="wrap_content"

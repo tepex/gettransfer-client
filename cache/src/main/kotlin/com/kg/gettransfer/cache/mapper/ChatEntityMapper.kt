@@ -5,6 +5,7 @@ import com.kg.gettransfer.cache.model.MessageCached
 import com.kg.gettransfer.cache.model.ChatAccountsCachedMap
 import com.kg.gettransfer.cache.model.ChatAccountCached
 import com.kg.gettransfer.cache.model.StringList
+import com.kg.gettransfer.cache.model.NewMessageCached
 
 import com.kg.gettransfer.data.model.ChatAccountEntity
 import com.kg.gettransfer.data.model.ChatEntity
@@ -15,12 +16,13 @@ import org.koin.standalone.get
 open class ChatEntityMapper : KoinComponent {
     private val chatAccountMapper = get<ChatAccountEntityMapper>()
     private val messageMapper = get<MessageEntityMapper>()
+    private val newMessageMapper = get<NewMessageEntityMapper>()
 
-    fun fromCached(type: ChatCached, messages: List<MessageCached>) =
+    fun fromCached(type: ChatCached, messages: List<MessageCached>, newMessages: List<NewMessageCached>) =
             ChatEntity(
                     accounts         = type.accounts.map.mapValues { chatAccountMapper.fromCached(it.value) },
                     currentAccountId = type.currentAccountId,
-                    messages         = messages.map { messageMapper.fromCached(it) }
+                    messages         = messages.map { messageMapper.fromCached(it) }.plus(newMessages.map { newMessageMapper.fromCached(it) })
             )
 
     fun toCached(type: ChatEntity, transferId: Long) =

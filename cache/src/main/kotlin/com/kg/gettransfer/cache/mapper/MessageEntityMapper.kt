@@ -12,7 +12,8 @@ open class MessageEntityMapper : EntityMapper<MessageCached, MessageEntity> {
                     transferId = type.transferId,
                     createdAt  = type.createdAt,
                     readAt     = type.readAt,
-                    text       = type.text
+                    text       = type.text,
+                    sendAt     = type.sendAt
             )
 
     override fun toCached(type: MessageEntity) =
@@ -22,6 +23,7 @@ open class MessageEntityMapper : EntityMapper<MessageCached, MessageEntity> {
                     transferId = type.transferId,
                     createdAt  = type.createdAt,
                     readAt     = type.readAt,
-                    text       = type.text
+                    text       = type.text,
+                    sendAt     = type.sendAt
             )
 }

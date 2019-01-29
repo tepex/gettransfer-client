@@ -134,6 +134,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:resizeableActivity="false"/>
+        <activity android:name=".presentation.ui.ChatActivity"
+            android:screenOrientation="portrait"
+            android:resizeableActivity="false"/>
+
 
         <provider
             android:name="android.support.v4.content.FileProvider"

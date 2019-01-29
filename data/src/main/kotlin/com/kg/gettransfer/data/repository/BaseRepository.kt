@@ -1,5 +1,6 @@
 package com.kg.gettransfer.data.repository
 
+import com.kg.gettransfer.data.CacheException
 import com.kg.gettransfer.data.RemoteException
 
 import com.kg.gettransfer.data.mapper.ExceptionMapper
@@ -29,6 +30,13 @@ abstract class BaseRepository : KoinComponent {
         return try { ResultEntity(getEntity())
         } catch (e: RemoteException) {
             ResultEntity(null, e)
+        }
+    }
+
+    protected suspend fun <E> retrieveCacheEntity(getEntity: suspend () -> E): ResultEntity<E?> {
+        return try { ResultEntity(getEntity())
+        } catch (e: CacheException) {
+            ResultEntity(null, null, e)
         }
     }
 

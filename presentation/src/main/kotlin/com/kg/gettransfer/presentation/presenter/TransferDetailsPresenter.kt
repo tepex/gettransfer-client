@@ -96,6 +96,10 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
         viewState.showAlertCancelRequest()
     }
 
+    fun onChatClick(){
+        router.navigateTo(Screens.Chat(transferId))
+    }
+
     private fun setRouteTransfer(transfer: Transfer, route: RouteInfo) {
         routeModel = routeMapper.getView(
             route.distance,

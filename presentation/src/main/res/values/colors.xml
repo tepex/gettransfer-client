@@ -133,4 +133,13 @@
 
     <color name="rateCancel">#7d7d7d</color>
     <color name="rate_comment_border">#979797</color>
+    
+    <color name="color_gtr_black">#000000</color>
+    <color name="color_gtr_grey">#B2B2B2</color>
+    <color name="color_gtr_light_grey">#E5E5E5</color>
+    <color name="color_gtr_super_light_grey">#F6F6F6</color>
+    <color name="color_gtr_yellow">#FEDB06</color>
+    <color name="color_gtr_green">#98B71B</color>
+    <color name="color_gtr_blue">#2CAEE9</color>
+    <color name="color_gtr_red">#FF3B30</color>
 </resources>

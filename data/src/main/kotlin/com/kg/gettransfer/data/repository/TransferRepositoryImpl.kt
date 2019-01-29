@@ -81,6 +81,13 @@ class TransferRepositoryImpl(
                 result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
     }
 
+    override suspend fun getTransferCached(id: Long): Result<Transfer> {
+        val result: ResultEntity<TransferEntity?> = retrieveCacheEntity {
+            factory.retrieveCacheDataStore().getTransfer(id)
+        }
+        return Result(result.entity?.let { transferMapper.fromEntity(it) }?: DEFAULT, null, result.cacheError?.let { ExceptionMapper.map(it) })
+    }
+
     override suspend fun getAllTransfers(): Result<List<Transfer>> {
         val result: ResultEntity<List<TransferEntity>?> = retrieveEntity { fromRemote ->
             factory.retrieveDataStore(fromRemote).getAllTransfers()

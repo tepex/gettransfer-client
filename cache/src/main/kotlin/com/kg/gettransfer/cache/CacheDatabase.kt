@@ -15,9 +15,13 @@ import com.kg.gettransfer.cache.model.AccountCached
 import com.kg.gettransfer.cache.model.ConfigsCached
 import com.kg.gettransfer.cache.model.OfferCached
 import com.kg.gettransfer.cache.model.TransferCached
+import com.kg.gettransfer.cache.model.OfferCached
 import com.kg.gettransfer.cache.model.RouteInfoCached
 import com.kg.gettransfer.cache.model.CarrierTripBaseCached
 import com.kg.gettransfer.cache.model.CarrierTripMoreCached
+import com.kg.gettransfer.cache.model.ChatCached
+import com.kg.gettransfer.cache.model.MessageCached
+import com.kg.gettransfer.cache.model.NewMessageCached
 
 @Database(entities = arrayOf(
         ConfigsCached::class,
@@ -26,7 +30,10 @@ import com.kg.gettransfer.cache.model.CarrierTripMoreCached
         OfferCached::class,
         RouteInfoCached::class,
         CarrierTripBaseCached::class,
-        CarrierTripMoreCached::class), version = 3, exportSchema = false)
+        CarrierTripMoreCached::class,
+        ChatCached::class,
+        MessageCached::class,
+        NewMessageCached::class), version = 3, exportSchema = false)
 @TypeConverters(RoomConverters::class)
 abstract class CacheDatabase: RoomDatabase() {
 
@@ -36,4 +43,5 @@ abstract class CacheDatabase: RoomDatabase() {
     abstract fun offersCacheDao(): OfferCachedDao
     abstract fun routeCacheDao(): RouteCacheDao
     abstract fun carrierTripCachedDao(): CarrierTripCacheDao
+    abstract fun chatCacheDao() : ChatCachedDao
 }
