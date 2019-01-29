@@ -1,9 +1,11 @@
 package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.ds.*
-import com.kg.gettransfer.data.eventListeners.TransferDataStoreReceiver
+import com.kg.gettransfer.data.socket.TransferDataStoreReceiver
 import com.kg.gettransfer.data.mapper.*
 import com.kg.gettransfer.data.repository.*
+import com.kg.gettransfer.data.socket.ChatDataStoreReceiver
+import com.kg.gettransfer.data.socket.OfferDataStoreReceiver
 
 import com.kg.gettransfer.domain.repository.*
 
@@ -46,6 +48,7 @@ val dataModule = module {
     single { OfferMapper() }
     single { OfferDataStoreCache() }
     single { OfferDataStoreRemote() }
+    single<OfferDataStoreReceiver> { OfferDataStoreIO(get()) }
     single<OfferRepository> { OfferRepositoryImpl(DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>(get(), get())) }
 
     single { PaymentMapper() }
@@ -104,4 +107,6 @@ val dataModule = module {
 
     single { ReviewDataStoreRemote() }
     single<ReviewRepository> { ReviewRepositoryImpl(get()) }
+
+    single<ChatDataStoreReceiver> { ChatDataStoreIO(get()) }
 }

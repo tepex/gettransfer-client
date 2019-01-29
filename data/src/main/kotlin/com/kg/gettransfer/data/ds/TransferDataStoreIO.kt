@@ -1,15 +1,14 @@
 package com.kg.gettransfer.data.ds
 
-import com.kg.gettransfer.data.eventListeners.TransferDataStoreReceiver
+import com.kg.gettransfer.data.socket.TransferDataStoreReceiver
 import com.kg.gettransfer.data.model.PointEntity
 import com.kg.gettransfer.data.repository.TransferRepositoryImpl
-import com.kg.gettransfer.data.eventEmitters.TransferDataStoreEmitter
-import com.kg.gettransfer.domain.eventEmitters.TransferEmitterGeneral
+import com.kg.gettransfer.data.socket.TransferEventEmitter
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
-class TransferDataStoreIO(private val emitter: TransferDataStoreEmitter) :
-        TransferDataStoreEmitter,
+class TransferDataStoreIO(private val emitter: TransferEventEmitter) :
+        TransferEventEmitter,
         TransferDataStoreReceiver,
         KoinComponent {
 

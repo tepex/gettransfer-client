@@ -1,8 +1,8 @@
-package com.kg.gettransfer.data.eventEmitters
+package com.kg.gettransfer.data.socket
 
 import com.kg.gettransfer.data.model.PointEntity
 
-interface TransferDataStoreEmitter {
+interface TransferEventEmitter {
     fun initLocationReceiving()
     fun sendClientLocation(point: PointEntity)
 }

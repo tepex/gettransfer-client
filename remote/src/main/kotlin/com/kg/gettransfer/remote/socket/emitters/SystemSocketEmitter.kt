@@ -1,5 +1,5 @@
 package com.kg.gettransfer.remote.socket.emitters
 
-import com.kg.gettransfer.data.eventEmitters.SystemDataStoreEmitter
+import com.kg.gettransfer.data.socket.SystemEventEmitter
 
-interface SystemSocketEmitter : SystemDataStoreEmitter
+interface SystemSocketEmitter : SystemEventEmitter

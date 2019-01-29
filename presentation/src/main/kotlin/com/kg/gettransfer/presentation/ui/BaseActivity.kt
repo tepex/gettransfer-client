@@ -188,6 +188,8 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     @CallSuper
     protected override fun onStart() {
+        LocalBroadcastManager.getInstance(applicationContext)
+                .registerReceiver(appStateReceiver, IntentFilter(AppLifeCycleObserver.APP_STATE))
         GTApplication.onStart++
 //        with(offerServiceConnection) {
 //            if (!statusOpened)
@@ -196,8 +198,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 //                            .apply { putExtra(OFFER_JSON, json)
 //                                     putExtra(OFFER_ID, id) }) } }
         super.onStart()
-        LocalBroadcastManager.getInstance(applicationContext)
-                .registerReceiver(appStateReceiver, IntentFilter(AppLifeCycleObserver.APP_STATE))
+
         registerReceiver(inetReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         setNetworkAvailability(this)
     }
@@ -218,7 +219,10 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     @CallSuper
     protected override fun onStop() {
         if (--GTApplication.onStart == NO_FOREGROUNDED_ACTIVITIES) offerServiceConnection.disconnect()
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(offerReceiver)
+        LocalBroadcastManager.getInstance(this).apply {
+            unregisterReceiver(offerReceiver)
+            unregisterReceiver(appStateReceiver)
+        }
         unregisterReceiver(inetReceiver)
         super.onStop()
     }
