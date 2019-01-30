@@ -90,6 +90,8 @@ class SystemRemoteImpl : SystemRemote {
         return mobileConfigMapper.fromRemote(response)
     }
 
-    override suspend fun getMyLocation(): LocationEntity =
-            locationMapper.fromRemote(core.api.getMyLocation().await())
+    override suspend fun getMyLocation(): LocationEntity {
+        return try { locationMapper.fromRemote(core.api.getMyLocation().await()) }
+        catch (e: Exception) { throw core.remoteException(e) }
+    }
 }

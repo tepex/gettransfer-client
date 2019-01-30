@@ -192,10 +192,14 @@ class SystemRepositoryImpl(
         set(value) { preferencesCache.appEnters = value }
 
     override suspend fun getMyLocation(): Result<Location> {
-        factory.retrieveRemoteDataStore().changeEndpoint(EndpointEntity("", "", API_URL_LOCATION))
-        val locationEntity = factory.retrieveRemoteDataStore().getMyLocation()
-        factory.retrieveRemoteDataStore().changeEndpoint(preferencesCache.endpoint)
-        return Result(locationMapper.fromEntity(locationEntity))
+        return try {
+            factory.retrieveRemoteDataStore().changeEndpoint(EndpointEntity("", "", API_URL_LOCATION))
+            val locationEntity = factory.retrieveRemoteDataStore().getMyLocation()
+            factory.retrieveRemoteDataStore().changeEndpoint(preferencesCache.endpoint)
+            Result(locationMapper.fromEntity(locationEntity))
+        } catch (e: RemoteException) {
+            Result(Location(0.0, 0.0), ExceptionMapper.map(e))
+        }
     }
 
     override fun addListener(listener: SystemListener)    { listeners.add(listener) }
