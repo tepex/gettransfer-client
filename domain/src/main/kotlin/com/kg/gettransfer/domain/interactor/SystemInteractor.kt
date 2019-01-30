@@ -138,6 +138,7 @@ class SystemInteractor(
     suspend fun login(email: String, password: String) = systemRepository.login(email, password)
     suspend fun putAccount() = systemRepository.putAccount(account)
     suspend fun putNoAccount() = systemRepository.putNoAccount(account)
+
     fun openSocketConnection() = systemRepository.connectSocket()
     fun closeSocketConnection() = systemRepository.disconnectSocket()
 

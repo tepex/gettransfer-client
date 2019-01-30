@@ -145,7 +145,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     }
 
     override fun onNewOfferEvent(offer: Offer) {
-        Log.i("FindEvent","I've got the offer")
+        onNewOffer(offer.also { it.vehicle.photos = it.vehicle.photos.map { photo -> "${systemInteractor.endpoint.url}$photo" } })
     }
 
     fun saveAccount() = utils.launchSuspend {
@@ -156,7 +156,6 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     }
 
     fun onAppStateChanged(isForeGround: Boolean) {
-        Log.i("FindState", "$isForeGround")
         with(systemInteractor) {
             if (isForeGround) openSocketConnection()
             else closeSocketConnection()

@@ -7,11 +7,9 @@ import com.kg.gettransfer.data.mapper.ExceptionMapper
 
 import com.kg.gettransfer.data.mapper.TransferMapper
 import com.kg.gettransfer.data.mapper.TransferNewMapper
-import com.kg.gettransfer.data.model.PointEntity
 import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.data.model.TransferEntity
-import com.kg.gettransfer.domain.eventListeners.TransferEventListenerGeneral
 import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.TransferRepository
@@ -26,7 +24,7 @@ class TransferRepositoryImpl(
 
     private val transferNewMapper = get<TransferNewMapper>()
     private val transferMapper = get<TransferMapper>()
- //   private val eventListener = get<TransferEventListenerGeneral>()
+ //   private val eventListener = get<TransferEventListener>()
 
     /*override suspend fun createTransfer(transferNew: TransferNew) =
         retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, DEFAULT) {
@@ -117,12 +115,6 @@ class TransferRepositoryImpl(
     override fun clearTransfersCache() {
         factory.retrieveCacheDataStore().clearTransfersCache()
     }
-
- //   fun onLocationReceived(pointEntity: PointEntity) = eventListener.onLocationReceived(Point(0.0, 0.0))
-
-
-
-    /* Socket event*/
 
 
     companion object {
