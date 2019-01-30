@@ -145,7 +145,10 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     }
 
     override fun onNewOfferEvent(offer: Offer) {
-        onNewOffer(offer.also { it.vehicle.photos = it.vehicle.photos.map { photo -> "${systemInteractor.endpoint.url}$photo" } })
+        onNewOffer(offer.also {
+            it.vehicle.photos = it.vehicle.photos.map { photo -> "${systemInteractor.endpoint.url}$photo" }
+            increaseEventsCounter(it.transferId)
+        })
     }
 
     fun saveAccount() = utils.launchSuspend {
@@ -161,6 +164,13 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
             else closeSocketConnection()
         }
     }
+
+    private fun increaseEventsCounter(transferId: Long) =
+            with(systemInteractor) {
+                eventsCount++
+                transferIds = transferIds.toMutableList().apply { add(transferId) }
+            }
+
 
     companion object AnalyticProps {
         const val SINGLE_CAPACITY = 1
