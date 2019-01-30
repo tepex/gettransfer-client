@@ -7,6 +7,7 @@ import com.kg.gettransfer.data.SystemDataStore
 
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.SystemDataStoreCache
+import com.kg.gettransfer.data.ds.SystemDataStoreIO
 import com.kg.gettransfer.data.ds.SystemDataStoreRemote
 import com.kg.gettransfer.data.mapper.*
 
@@ -28,7 +29,8 @@ import java.util.Locale
 import org.koin.standalone.get
 
 class SystemRepositoryImpl(
-    private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>
+    private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>,
+    private val socketDataStore: SystemDataStoreIO
 ) : BaseRepository(), SystemRepository, PreferencesListener {
 
     private val preferencesCache = get<PreferencesCache>()
@@ -179,12 +181,14 @@ class SystemRepositoryImpl(
     }
 
     override fun accessTokenChanged(accessToken: String) {
-        listeners.forEach { it.connectionChanged(endpoint, accessToken) }
+ //       listeners.forEach { it.connectionChanged(endpoint, accessToken) }
+        connectionChanged()
     }
 
     override fun endpointChanged(endpointEntity: EndpointEntity) {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointEntity)
-        listeners.forEach { it.connectionChanged(endpoint, accessToken) }
+ //       listeners.forEach { it.connectionChanged(endpoint, accessToken) }
+        connectionChanged()
     }
 
     override var appEnters: Int
@@ -200,6 +204,12 @@ class SystemRepositoryImpl(
 
     override fun addListener(listener: SystemListener)    { listeners.add(listener) }
     override fun removeListener(listener: SystemListener) { listeners.add(listener) }
+
+    /* Socket */
+
+    override fun connectSocket()     = socketDataStore.connectSocket(endpointMapper.toEntity(endpoint), accessToken)
+    override fun connectionChanged() = socketDataStore.changeConnection(endpointMapper.toEntity(endpoint), accessToken)
+    override fun disconnectSocket()  = socketDataStore.disconnectSocket()
 
     companion object {
         private val CONFIGS_DEFAULT = Configs(

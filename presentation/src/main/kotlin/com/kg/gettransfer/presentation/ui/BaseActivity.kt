@@ -27,6 +27,7 @@ import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 
 import android.util.DisplayMetrics
+import android.util.Log
 
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -55,6 +56,7 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.service.OfferServiceConnection
 import com.kg.gettransfer.service.OfferServiceConnection.Companion.ACTION_OFFER
+import com.kg.gettransfer.utilities.AppLifeCycleObserver
 
 import com.kg.gettransfer.utilities.LocaleManager
 import io.sentry.Sentry
@@ -136,6 +138,16 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
             intent?.apply { getStringExtra(OFFER_JSON)
                     .let { getPresenter().onOfferJsonReceived(it, getLongExtra(OFFER_ID, 0L)) } } } }
 
+    private val appStateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Log.i("FindState", "got it")
+            intent?.let { if (it.action == AppLifeCycleObserver.APP_STATE)
+                              it.getBooleanExtra(AppLifeCycleObserver.STATUS, false)
+                              .also { state -> getPresenter().onAppStateChanged(state) } } }
+
+
+    }
+
 
     protected open fun setNetworkAvailability(context: Context) {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -176,14 +188,17 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     @CallSuper
     protected override fun onStart() {
+        LocalBroadcastManager.getInstance(applicationContext)
+                .registerReceiver(appStateReceiver, IntentFilter(AppLifeCycleObserver.APP_STATE))
         GTApplication.onStart++
-        with(offerServiceConnection) {
-            if (!statusOpened)
-                offerServiceConnection.connect(systemInteractor.endpoint, systemInteractor.accessToken) { json, id ->
-                    LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(Intent(ACTION_OFFER)
-                            .apply { putExtra(OFFER_JSON, json)
-                                     putExtra(OFFER_ID, id) }) } }
+//        with(offerServiceConnection) {
+//            if (!statusOpened)
+//                connect(systemInteractor.endpoint, systemInteractor.accessToken) { json, id ->
+//                    LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(Intent(ACTION_OFFER)
+//                            .apply { putExtra(OFFER_JSON, json)
+//                                     putExtra(OFFER_ID, id) }) } }
         super.onStart()
+
         registerReceiver(inetReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         setNetworkAvailability(this)
     }
@@ -204,7 +219,10 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     @CallSuper
     protected override fun onStop() {
         if (--GTApplication.onStart == NO_FOREGROUNDED_ACTIVITIES) offerServiceConnection.disconnect()
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(offerReceiver)
+        LocalBroadcastManager.getInstance(this).apply {
+            unregisterReceiver(offerReceiver)
+            unregisterReceiver(appStateReceiver)
+        }
         unregisterReceiver(inetReceiver)
         super.onStop()
     }

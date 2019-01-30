@@ -1,5 +1,6 @@
 package com.kg.gettransfer.domain.interactor
 
+import com.kg.gettransfer.domain.eventListeners.TransferEventListener
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew

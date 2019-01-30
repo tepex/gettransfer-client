@@ -2,16 +2,17 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import com.arellomobile.mvp.MvpPresenter
 
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import com.kg.gettransfer.data.model.OfferEntity
 import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.eventListeners.OfferEventListener
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
@@ -37,7 +38,7 @@ import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
-open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
+open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener, KoinComponent {
     protected val compositeDisposable = Job()
     protected val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
     protected val router: Router by inject()
@@ -65,6 +66,11 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
             if(result.error != null) viewState.setError(result.error!!)
             else systemInitialized()
         }
+    }
+
+    override fun attachView(view: BV) {
+        super.attachView(view)
+        offerInteractor.eventReceiver = this
     }
 
     @CallSuper
@@ -138,12 +144,33 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), KoinComponent {
                 .also { notificationManager.showOfferNotification(it) }
     }
 
+    override fun onNewOfferEvent(offer: Offer) {
+        onNewOffer(offer.also {
+            it.vehicle.photos = it.vehicle.photos.map { photo -> "${systemInteractor.endpoint.url}$photo" }
+            increaseEventsCounter(it.transferId)
+        })
+    }
+
     fun saveAccount() = utils.launchSuspend {
         viewState.blockInterface(true)
         val result = utils.asyncAwait { systemInteractor.putAccount() }
         result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
         viewState.blockInterface(false)
     }
+
+    fun onAppStateChanged(isForeGround: Boolean) {
+        with(systemInteractor) {
+            if (isForeGround) openSocketConnection()
+            else closeSocketConnection()
+        }
+    }
+
+    private fun increaseEventsCounter(transferId: Long) =
+            with(systemInteractor) {
+                eventsCount++
+                transferIds = transferIds.toMutableList().apply { add(transferId) }
+            }
+
 
     companion object AnalyticProps {
         const val SINGLE_CAPACITY = 1

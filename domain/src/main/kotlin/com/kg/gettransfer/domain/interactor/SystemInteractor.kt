@@ -139,6 +139,9 @@ class SystemInteractor(
     suspend fun putAccount() = systemRepository.putAccount(account)
     suspend fun putNoAccount() = systemRepository.putNoAccount(account)
 
+    fun openSocketConnection() = systemRepository.connectSocket()
+    fun closeSocketConnection() = systemRepository.disconnectSocket()
+
     fun clearLogs() = loggingRepository.clearLogs()
 
     suspend fun getMyLocation() = systemRepository.getMyLocation()

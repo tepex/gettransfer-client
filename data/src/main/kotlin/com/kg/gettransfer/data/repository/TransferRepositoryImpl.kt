@@ -1,10 +1,8 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.TransferDataStore
+import com.kg.gettransfer.data.ds.*
 
-import com.kg.gettransfer.data.ds.DataStoreFactory
-import com.kg.gettransfer.data.ds.TransferDataStoreCache
-import com.kg.gettransfer.data.ds.TransferDataStoreRemote
 import com.kg.gettransfer.data.mapper.ExceptionMapper
 
 import com.kg.gettransfer.data.mapper.TransferMapper
@@ -12,13 +10,7 @@ import com.kg.gettransfer.data.mapper.TransferNewMapper
 import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.data.model.TransferEntity
-
-import com.kg.gettransfer.domain.model.BookNowOffer
-import com.kg.gettransfer.domain.model.CityPoint
-import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.domain.model.TransferNew
-import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.TransferRepository
 
@@ -32,6 +24,7 @@ class TransferRepositoryImpl(
 
     private val transferNewMapper = get<TransferNewMapper>()
     private val transferMapper = get<TransferMapper>()
+ //   private val eventListener = get<TransferEventListener>()
 
     /*override suspend fun createTransfer(transferNew: TransferNew) =
         retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, DEFAULT) {
@@ -122,6 +115,7 @@ class TransferRepositoryImpl(
     override fun clearTransfersCache() {
         factory.retrieveCacheDataStore().clearTransfersCache()
     }
+
 
     companion object {
         private val DEFAULT =

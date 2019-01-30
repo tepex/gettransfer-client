@@ -1,8 +1,11 @@
 package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.ds.*
+import com.kg.gettransfer.data.socket.TransferDataStoreReceiver
 import com.kg.gettransfer.data.mapper.*
 import com.kg.gettransfer.data.repository.*
+import com.kg.gettransfer.data.socket.ChatDataStoreReceiver
+import com.kg.gettransfer.data.socket.OfferDataStoreReceiver
 
 import com.kg.gettransfer.domain.repository.*
 
@@ -12,8 +15,6 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 import org.koin.dsl.module.module
-
-import org.slf4j.LoggerFactory
 
 val dataModule = module {
     single<ThreadLocal<DateFormat>>("iso_date") {
@@ -47,7 +48,8 @@ val dataModule = module {
     single { OfferMapper() }
     single { OfferDataStoreCache() }
     single { OfferDataStoreRemote() }
-    single<OfferRepository> { OfferRepositoryImpl(DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>(get(), get())) }
+    single { OfferRepositoryImpl(DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>(get(), get())) } bind OfferRepository::class
+    single<OfferDataStoreReceiver> { OfferDataStoreIO() }
 
     single { PaymentMapper() }
     single { PaymentRequestMapper() }
@@ -70,7 +72,8 @@ val dataModule = module {
 
     single { SystemDataStoreCache() }
     single { SystemDataStoreRemote() }
-    single<SystemRepository> { SystemRepositoryImpl(DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>(get(), get())) }
+    single { SystemDataStoreIO(get()) }
+    single<SystemRepository> { SystemRepositoryImpl(DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>(get(), get()), get()) }
 
     single { RouteInfoMapper() }
     single { PointMapper() }
@@ -94,6 +97,7 @@ val dataModule = module {
     single { TransferNewMapper() }
     single { TransferDataStoreCache() }
     single { TransferDataStoreRemote() }
+    single<TransferDataStoreReceiver> { TransferDataStoreIO(get()) }
     single<TransferRepository> { TransferRepositoryImpl(DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>(get(), get())) }
 
     single { PromoDiscountMapper() }
@@ -103,4 +107,6 @@ val dataModule = module {
 
     single { ReviewDataStoreRemote() }
     single<ReviewRepository> { ReviewRepositoryImpl(get()) }
+
+    single<ChatDataStoreReceiver> { ChatDataStoreIO(get()) }
 }
