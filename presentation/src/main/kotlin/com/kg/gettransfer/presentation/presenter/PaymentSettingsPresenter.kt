@@ -86,8 +86,11 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
             viewState.setError(result.error!!)
         } else {
             logEventBeginCheckout()
-            router.navigateTo(Screens.Payment(params.transferId, offer?.id, result.model.url!!,
-                    paymentRequest.percentage, params.bookNowTransportId))
+            router.navigateTo(Screens.Payment(params.transferId,
+                    offer?.id,
+                    result.model.url!!,
+                    paymentRequest.percentage,
+                    params.bookNowTransportId))
         }
         viewState.blockInterface(false)
     }
