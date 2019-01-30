@@ -99,7 +99,7 @@ class SystemInteractor(
         }
 
     var currency: Currency
-        get() = account.currency
+        get() = if (currencies.contains(account.currency)) account.currency else Currency.getInstance("USD")
         set(value) { account.currency = value }
 
     var distanceUnit: DistanceUnit
