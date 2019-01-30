@@ -58,8 +58,6 @@ class OffersRVAdapter(
             when (item) {
                 is OfferModel -> {
                     tvCarrierId.text = "#${item.carrier.id}"
-                    setCompletedTransfers(context.getString(R.string.LNG_MADE)
-                            .plus(" ${item.carrier.completedTransfers} ").plus(context.getString(R.string.LNG_RIDES)))
                     setCostDefault(item.price.base.def)
                     item.price.base.preferred?.let {
                         tvCostPreferred.text = Utils.formatPrice(context, it)
@@ -70,7 +68,6 @@ class OffersRVAdapter(
                     setLanguages(context, item.carrier.languages)
                 }
                 is BookNowOfferModel -> {
-                    setCompletedTransfers(String.format(context.resources.getString(R.string.LNG_MADE_RIDES), 10))
                     setCostDefault(item.base.def)
                     item.withoutDiscount?.let { setWithoutDiscount(it) }
                     setBookNowCarPhoto(context, item)
@@ -160,10 +157,6 @@ class OffersRVAdapter(
 
         private fun setCostDefault(text: String) {
             tvCostDefault.text = text
-        }
-
-        private fun setCompletedTransfers(text: String) {
-            tvCompletedTransfers.text = text
         }
 
         private fun setTexts(layout: View, textViewPax: TextView, textViewBaggage: TextView, item: OfferModel) {
