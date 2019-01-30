@@ -226,7 +226,7 @@ class SystemRepositoryImpl(
         private val NO_ACCOUNT = Account(
             user         = User(Profile(null, null, null)),
             locale       = Locale.getDefault(),
-            currency     = Currency.getInstance("USD"),
+            currency     = Currency.getInstance(Locale.getDefault()),
             distanceUnit = DistanceUnit.km,
             groups       = emptyList<String>(),
             carrierId    = null
