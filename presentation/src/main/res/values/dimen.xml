@@ -599,14 +599,14 @@
     <dimen name="activity_chat_message_item_text_size">17sp</dimen>
     <dimen name="activity_chat_my_message_text_padding">16dp</dimen>
     <dimen name="activity_chat_message_item_date_text_size">12sp</dimen>
-    <dimen name="activity_chat_my_message_date_text_margin">8p</dimen>
+    <dimen name="activity_chat_my_message_date_text_margin">8dp</dimen>
     <dimen name="activity_chat_my_message_indicator_margin_start">16dp</dimen>
     <dimen name="activity_chat_my_message_indicator_margin_end">4dp</dimen>
     <dimen name="activity_chat_not_my_message_margin_end">72dp</dimen>
     <dimen name="activity_chat_not_my_message_margin_start">8dp</dimen>
     <dimen name="activity_chat_not_my_message_margin_top_bottom">4dp</dimen>
     <dimen name="activity_chat_not_my_message_text_padding">16dp</dimen>
-    <dimen name="activity_chat_not_my_message_date_text_margin">8p</dimen>
+    <dimen name="activity_chat_not_my_message_date_text_margin">8dp</dimen>
 
 
 	<!--drawable values-->
