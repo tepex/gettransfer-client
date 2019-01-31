@@ -331,10 +331,6 @@ class OffersActivity : BaseActivity(), OffersView {
 
     override fun addNewOffer(offer: OfferModel) { (rvOffers.adapter as OffersRVAdapter).add(offer) }
 
-    override fun showOfferError() {
-        toast(getString(R.string.LNG_RIDE_OFFER_CANCELLED))
-    }
-
     companion object {
         val ACTION_NEW_OFFER = "${OffersActivity::class.java.name}.offer"
     }
