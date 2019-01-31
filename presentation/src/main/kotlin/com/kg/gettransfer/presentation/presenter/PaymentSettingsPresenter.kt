@@ -80,19 +80,27 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
     fun getPayment() = utils.launchSuspend {
         viewState.blockInterface(true)
 
-        val result = utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentRequest)) }
-        if (result.error != null) {
-            Timber.e(result.error!!)
-            viewState.setError(result.error!!)
-        } else {
-            logEventBeginCheckout()
-            router.navigateTo(Screens.Payment(params.transferId,
-                    offer?.id,
-                    result.model.url!!,
-                    paymentRequest.percentage,
-                    params.bookNowTransportId))
+        val result = utils.asyncAwait { offerInteractor.getOffers(params.transferId) }
+        if (result.error == null) {
+            offer = params.offerId?.let { offerInteractor.getOffer(it) }
+
+            offer?.let {
+                val result = utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentRequest)) }
+                if (result.error != null) {
+                    Timber.e(result.error!!)
+                    viewState.setError(result.error!!)
+                } else {
+                    logEventBeginCheckout()
+                    router.navigateTo(Screens.Payment(params.transferId,
+                            offer?.id,
+                            result.model.url!!,
+                            paymentRequest.percentage,
+                            params.bookNowTransportId))
+                }
+                viewState.blockInterface(false)
+            }
+            if (offer == null) viewState.showOfferError()
         }
-        viewState.blockInterface(false)
     }
 
     private fun logEventBeginCheckout() {

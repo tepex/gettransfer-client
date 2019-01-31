@@ -113,19 +113,14 @@ class OffersPresenter : BasePresenter<OffersView>() {
             } else {
                 logButtons(Analytics.OFFER_BOOK)
                 when(offer) {
-                    is OfferModel -> {
-                        if (offer.status == Offer.STATUS_BLOCKED || offer.status == Offer.STATUS_CANCELED) {
-                            viewState.showOfferError()
-                        } else {
-                            router.navigateTo(Screens.PaymentSettings(
-                                    it.id,
-                                    offer.id,
-                                    it.dateRefund,
-                                    it.paymentPercentages,
-                                    null
-                            ))
-                        }
-                    }
+                    is OfferModel ->
+                        router.navigateTo(Screens.PaymentSettings(
+                                it.id,
+                                offer.id,
+                                it.dateRefund,
+                                it.paymentPercentages,
+                                null
+                        ))
                     is BookNowOfferModel -> router.navigateTo(Screens.PaymentSettings(
                         it.id,
                         null,
