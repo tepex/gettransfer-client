@@ -29,9 +29,9 @@ class SearchPresenter : BasePresenter<SearchView>() {
     @CallSuper
     override fun attachView(view: SearchView) {
         super.attachView(view)
-        viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false, !isTo)
+        viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", true, !isTo)
         if (routeInteractor.hourlyDuration == null)
-            viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false, isTo)
+            viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", true, isTo)
         else viewState.hideAddressTo()
         onSearchFieldEmpty()
     }
@@ -45,25 +45,25 @@ class SearchPresenter : BasePresenter<SearchView>() {
 
     fun onAddressSelected(selected: GTAddress) {
         logButtons(Analytics.LAST_PLACE_CLICKED)
+        val placeType = checkPlaceType(selected)
         val isDoubleClickOnRoute: Boolean
         if (isTo) {
-            viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, false, true)
+            viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, placeType == ROUTE_TYPE, true)
             isDoubleClickOnRoute = routeInteractor.to == selected
             routeInteractor.to = selected
         } else {
-            viewState.setAddressFrom(selected.primary ?: selected.cityPoint.name!!, false, true)
+            viewState.setAddressFrom(selected.primary ?: selected.cityPoint.name!!, placeType == ROUTE_TYPE, true)
             isDoubleClickOnRoute = routeInteractor.from == selected
             routeInteractor.from = selected
         }
 
-        val placeType = checkPlaceType(selected)
-        if (placeType == SUITABLE_TYPE || (placeType == ROUTE_TYPE && isDoubleClickOnRoute)) {
+        if (placeType != NO_TYPE) {
             viewState.updateIcon(isTo)
             utils.launchSuspend {
                 utils.async { routeInteractor.updatePoint(isTo) }
                         .await()
                         .model.also {
-                    pointReady(checkZeroPoint(it, selected)) }
+                    pointReady(checkZeroPoint(it, selected), isDoubleClickOnRoute, placeType == SUITABLE_TYPE) }
 
             }
         } else {
@@ -73,13 +73,15 @@ class SearchPresenter : BasePresenter<SearchView>() {
         }
     }
 
-    private fun pointReady(notZeroPoint: Boolean) {
+    private fun pointReady(notZeroPoint: Boolean, isDoubleClickOnRoute: Boolean, isSuitableType: Boolean) {
         if (!notZeroPoint) return
-        if (checkFields() && isTo) createRouteForOrder()
-        else if (!isTo) {
-            viewState.setFocus(true)
-            routeInteractor.to?.let {
-                viewState.setAddressTo(it.primary ?: it.cityPoint.name!!, true , true)
+        if(isSuitableType || isDoubleClickOnRoute) {
+            if (checkFields() && isTo) createRouteForOrder()
+            else if (!isTo) {
+                viewState.setFocus(true)
+                routeInteractor.to?.let {
+                    viewState.setAddressTo(it.primary ?: it.cityPoint.name!!, true, true)
+                }
             }
         }
     }
