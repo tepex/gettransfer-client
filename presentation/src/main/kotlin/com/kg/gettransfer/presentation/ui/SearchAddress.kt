@@ -90,6 +90,11 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
             else {
                 setClearButtonVisibility()
                 parent.presenter.isTo = isTo
+                if(text.trim().length >= SearchAddressPresenter.ADDRESS_PREDICTION_SIZE) {
+                    presenter.requestAddressListByPrediction(text.trim())
+                } else {
+                    parent.onSearchFieldEmpty(isTo)
+                }
             }
         }
         addressField.addTextChangedListener(this)
@@ -162,7 +167,11 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
     override fun afterTextChanged(s: Editable?) {
         setClearButtonVisibility()
-        if (!blockRequest) presenter.requestAddressListByPrediction(text.trim())
+        if (!blockRequest && text.trim().length >= SearchAddressPresenter.ADDRESS_PREDICTION_SIZE) {
+            presenter.requestAddressListByPrediction(text.trim())
+        } else {
+            parent.onSearchFieldEmpty(isTo)
+        }
         if (s.isNullOrBlank() && addressField.hasFocus()) {
             parent.onSearchFieldEmpty(isTo)
             presenter.onClearAddress(isTo)
