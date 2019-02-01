@@ -121,9 +121,9 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
             if (it.isSuccessful) {
                 it.result?.token?.let {
                     Timber.d("[FCM token]: $it")
-                    utils.runAlien {
-                        try { systemInteractor.registerPushToken(it) }
-                        catch (e: ApiException) { viewState.setError(e) }
+                    utils.launchSuspend {
+                        val result = utils.asyncAwait { systemInteractor.registerPushToken(it) }
+                        if (result.error != null) viewState.setError(result.error!!)
                     }
                 }
             } else Timber.w("getInstanceId failed", it.exception)

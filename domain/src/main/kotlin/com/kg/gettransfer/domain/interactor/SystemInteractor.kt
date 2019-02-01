@@ -124,10 +124,11 @@ class SystemInteractor(
 
     fun logout() = systemRepository.logout()
 
-    suspend fun registerPushToken(token: String) {
+    suspend fun registerPushToken(token: String): Result<Unit> {
         pushToken = token
         try { systemRepository.registerPushToken(PushTokenType.FCM, token) }
         catch (e: ApiException) { throw e }
+        return Result(Unit)
     }
 
     suspend fun unregisterPushToken(): Result<Unit> {
