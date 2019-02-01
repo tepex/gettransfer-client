@@ -165,7 +165,7 @@ class MainPresenter : BasePresenter<MainView>() {
         val lngBounds = LatLngBounds.builder().include(LatLng(location.latitude!!, location.longitude!!)).build()
         val latLonPair = getLatLonPair(lngBounds)
         val result = utils.asyncAwait { routeInteractor.getAddressByLocation(true, point, latLonPair) }
-        setPointAddress(result.model)
+        if (result.error == null && result.model.cityPoint.point != null) setPointAddress(result.model)
     }
 
     private fun setPointAddress(currentAddress: GTAddress) {
