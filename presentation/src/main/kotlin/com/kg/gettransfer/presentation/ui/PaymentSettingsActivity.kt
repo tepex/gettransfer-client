@@ -25,6 +25,7 @@ import com.kg.gettransfer.presentation.view.PaymentSettingsView
 import kotlinx.android.synthetic.main.activity_payment_settings.*
 
 import kotlinx.serialization.json.JSON
+import org.jetbrains.anko.toast
 
 class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
     @InjectPresenter
@@ -82,6 +83,10 @@ class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
         fullPriceCheckIcon.isVisible = false
         payThirdOfPriceButton.isVisible = false
         fullPrice.text = bookNowOffer?.base?.def
+    }
+
+    override fun showOfferError() {
+        toast(getString(R.string.LNG_RIDE_OFFER_CANCELLED))
     }
 
     private fun setCommission() {

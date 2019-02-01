@@ -17,6 +17,7 @@ interface PaymentSettingsView : BaseView {
 
     fun setOffer(offer: OfferModel, paymentPercentages: List<Int>)
     fun setBookNowOffer(bookNowOffer: BookNowOffer?)
+    fun showOfferError()
 
     companion object {
         val EXTRA_PARAMS = "${PaymentSettingsView::class.java.name}.params"
