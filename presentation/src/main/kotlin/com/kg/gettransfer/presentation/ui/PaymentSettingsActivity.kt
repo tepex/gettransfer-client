@@ -97,7 +97,7 @@ class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
 
     private fun changePaymentSettings(view: View?) {
         when (view?.id) {
-            R.id.payFullPriceButton    -> PaymentRequestModel.FULL_PRICE
+            R.id.payFullPriceButton    -> selectPaymentPercentage(PaymentRequestModel.FULL_PRICE)
             R.id.payThirdOfPriceButton -> selectPaymentPercentage(PaymentRequestModel.PRICE_30)
         }
     }
