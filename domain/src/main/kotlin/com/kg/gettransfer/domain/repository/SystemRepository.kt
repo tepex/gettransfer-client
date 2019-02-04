@@ -28,7 +28,7 @@ interface SystemRepository {
     suspend fun putNoAccount(account: Account): Result<Account>
     suspend fun login(email: String, password: String): Result<Account>
     fun logout(): Result<Account>
-    suspend fun registerPushToken(provider: PushTokenType, token: String)
+    suspend fun registerPushToken(provider: PushTokenType, token: String): Result<Unit>
     suspend fun unregisterPushToken(token: String)
     suspend fun getMyLocation(): Result<Location>
 
