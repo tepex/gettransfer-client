@@ -2,13 +2,11 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import com.arellomobile.mvp.MvpPresenter
 
 import com.google.firebase.iid.FirebaseInstanceId
 import com.kg.gettransfer.data.model.OfferEntity
-import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
@@ -95,19 +93,22 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
         return bundle
     }
 
-    internal fun sendEmail(emailCarrier: String?) {
+    internal fun sendEmail(emailCarrier: String?, transferId: Long?) {
         utils.launchSuspend {
-            val transfers = utils.asyncAwait { transferInteractor.getAllTransfers() }
-            var transferId: Long? = null
-            if (transfers.model.isNotEmpty()) {
-                transferId = transfers.model.first().id
-            }
+            var transferID: Long? = null
+            if (transferId == null) {
+
+                val transfers = utils.asyncAwait { transferInteractor.getAllTransfers() }
+                if (transfers.model.isNotEmpty()) {
+                    transferID = transfers.model.first().id
+                }
+            } else transferID = transferId
 
             router.navigateTo(
                     Screens.SendEmail(
                             emailCarrier,
                             systemInteractor.logsFile,
-                            transferId,
+                            transferID,
                             systemInteractor.account.user.profile.email))
         }
     }

@@ -144,7 +144,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
             OPERATION_OPEN -> {
                 when (field) {
                     FIELD_PHONE -> callPhone(text)
-                    FIELD_EMAIL -> sendEmail(text)
+                    FIELD_EMAIL -> sendEmail(text, transferId)
                 }
             }
         }

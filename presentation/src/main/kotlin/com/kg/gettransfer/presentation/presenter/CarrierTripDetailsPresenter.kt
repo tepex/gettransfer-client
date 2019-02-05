@@ -44,6 +44,7 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
 
     private lateinit var tripModel: CarrierTripModel
     internal var tripId = 0L
+    internal var transferId = 0L
 
     override fun onFirstViewAttach() {
         utils.launchSuspend {
@@ -105,7 +106,7 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
             OPERATION_OPEN -> {
                 when (field) {
                     FIELD_PHONE -> callPhone(text)
-                    FIELD_EMAIL -> sendEmail(text)
+                    FIELD_EMAIL -> sendEmail(text, transferId)
                 }
             }
         }

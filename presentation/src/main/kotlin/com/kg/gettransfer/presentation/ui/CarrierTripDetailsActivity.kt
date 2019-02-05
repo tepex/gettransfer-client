@@ -50,7 +50,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.tripId = intent.getLongExtra(CarrierTripDetailsView.EXTRA_TRIP_ID, 0)
-        val transferId = intent.getLongExtra(CarrierTripDetailsView.EXTRA_TRANSFER_ID, 0)
+        presenter.transferId = intent.getLongExtra(CarrierTripDetailsView.EXTRA_TRANSFER_ID, 0)
 
         setContentView(R.layout.activity_carrier_trip_details)
 
@@ -67,7 +67,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         initMapView(savedInstanceState)
         setToolbar(toolbar as Toolbar, TOOLBAR_NO_TITLE)
         //(toolbar as Toolbar).toolbar_title.text = getString(R.string.LNG_TRANSFER).plus(" #$transferId")
-        (toolbar as Toolbar).toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS).plus(" #$transferId")
+        (toolbar as Toolbar).toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS).plus(" #${presenter.transferId}")
 
         //_tintBackground = tintBackground
         bsCarrierTripDetails = BottomSheetBehavior.from(sheetCarrierTripDetails)
@@ -87,7 +87,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
 
     private fun setOnClickListeners() {
         btnCenterRoute.setOnClickListener { presenter.onCenterRouteClick() }
-        btnSupport.setOnClickListener { presenter.sendEmail(null) }
+        btnSupport.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
     }
 
     override fun setTripInfo(trip: CarrierTripModel) {
@@ -135,8 +135,8 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
             passengerEmail.text = email
             Utils.setSelectOperationListener(this, layoutPassengerEmail, operationsName, R.string.LNG_DRIVER_EMAIL) {
                 presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
-            btnSendEmailPassenger.setOnClickListener { presenter.sendEmail(email) }
-            btnChat.setOnClickListener { presenter.sendEmail(email) }
+            btnSendEmailPassenger.setOnClickListener { presenter.sendEmail(email, presenter.transferId) }
+            btnChat.setOnClickListener { presenter.sendEmail(email, presenter.transferId) }
         }
         passenger.phone?.let { phone ->
             passengerPhone.text = phone
