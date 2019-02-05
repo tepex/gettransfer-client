@@ -200,7 +200,7 @@ class SystemRepositoryImpl(
             factory.retrieveRemoteDataStore().changeEndpoint(preferencesCache.endpoint)
             Result(locationMapper.fromEntity(locationEntity))
         } catch (e: RemoteException) {
-            Result(Location(0.0, 0.0), ExceptionMapper.map(e))
+            Result(Location(null, null), ExceptionMapper.map(e))
         }
     }
 
