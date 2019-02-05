@@ -32,6 +32,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             val transfer = result.model
+            val transferModel = transferMapper.toView(transfer)
             if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
                 if (transfer.to != null) {
@@ -40,10 +41,6 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                             .getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false, systemInteractor.currency.currencyCode)
                     }
                     if (r.error == null || (r.error != null && r.fromCache)) {
-                        val transferModel = transferMapper.toView(transfer)
-                        val (days, hours, minutes) = Utils.convertDuration(transferModel.timeToTransfer)
-                        viewState.setRemainTime(days, hours, minutes)
-
                         val routeModel = routeMapper.getView(
                                 r.model.distance,
                                 r.model.polyLines,
@@ -59,6 +56,8 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                     if (transfer.duration != null)
                         setHourlyTransfer(transfer)
                 }
+                val (days, hours, minutes) = Utils.convertDuration(transferModel.timeToTransfer)
+                viewState.setRemainTime(days, hours, minutes)
             }
             viewState.blockInterface(false)
         }
