@@ -20,9 +20,12 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
 
     override fun getPresenter(): PaymentErrorPresenter = presenter
 
+    private var transferId: Long? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_error)
+        transferId = intent.getLongExtra(TRANSFER_ID, 0L)
         showPaymentDialog()
     }
 
@@ -31,10 +34,10 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
         AlertDialog.Builder(this).apply { setView(dialogView) }.show().setCanceledOnTouchOutside(false)
 
         with(dialogView) {
-            tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER).plus(" ${intent.getLongExtra(TRANSFER_ID, 0L)}")
+            tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER).plus(" $transferId")
             tvClose.setOnClickListener     { this@PaymentErrorActivity.finish() }
             btnTryAgain.setOnClickListener { this@PaymentErrorActivity.finish() }
-            btnSupport.setOnClickListener  { presenter.sendEmail(null) }
+            btnSupport.setOnClickListener  { presenter.sendEmail(null, transferId) }
         }
     }
 

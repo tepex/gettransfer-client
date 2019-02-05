@@ -43,7 +43,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
         btnSignOut.setOnClickListener { presenter.onLogout() }
         layoutSettingsLogs.setOnClickListener { presenter.onLogsClicked() }
         layoutSettingsResetOnboarding.setOnClickListener { presenter.onResetOnboardingClicked() }
-        btnSupport.setOnClickListener { presenter.sendEmail(null) }
+        btnSupport.setOnClickListener { presenter.sendEmail(null, null) }
         rlResetMarketRate.setOnClickListener { presenter.onResetRateClicked() }
 
         //Not showing some layouts in release

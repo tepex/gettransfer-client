@@ -48,7 +48,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
             //btnChat.setOnClickListener   { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
 
             tvDone.setOnClickListener { finish() }
-            btnSupport.setOnClickListener { presenter.sendEmail(null) }
+            btnSupport.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
         }
     }
 

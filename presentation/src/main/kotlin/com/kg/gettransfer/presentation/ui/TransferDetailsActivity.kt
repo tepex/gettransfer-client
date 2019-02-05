@@ -121,7 +121,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     private fun setClickListeners() {
         btnBack.setOnClickListener          { presenter.onBackCommandClick() }
         btnCenterRoute.setOnClickListener   { presenter.onCenterRouteClick() }
-        btnSupportBottom.setOnClickListener { presenter.sendEmail(null) }
+        btnSupportBottom.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
         btnCancel.setOnClickListener        { presenter.onCancelRequestClicked() }
         tripRate.setOnRatingChangeListener  { _, fl -> disableRate(); presenter.rateTrip(fl) }
     }
