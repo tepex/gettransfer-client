@@ -5,8 +5,10 @@ import android.support.v7.app.AlertDialog
 import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.google.android.gms.maps.CameraUpdate
 
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.PolylineModel
@@ -68,5 +70,9 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     companion object {
         const val TRANSFER_ID = "transferId"
         const val OFFER_ID = "offerId"
+    }
+
+    override fun setPinHourlyTransfer(point: LatLng, cameraUpdate: CameraUpdate) {
+        processGoogleMap(false) { setPinForHourlyWithoutInfo(point, cameraUpdate) }
     }
 }
