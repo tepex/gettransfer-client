@@ -194,23 +194,21 @@ object Screens {
             val emailIntent = Intent(Intent.ACTION_SEND).apply {
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 if (emailCarrier != null) putExtra(Intent.EXTRA_EMAIL, arrayOf(emailCarrier))
-                else {
-                    putExtra(Intent.EXTRA_EMAIL, arrayOf(context!!.getString(R.string.email_support)))
+                else putExtra(Intent.EXTRA_EMAIL, arrayOf(context!!.getString(R.string.email_support)))
 
-                    val subject = context.getString(R.string.LNG_EMAIL_SUBJECT)
-                            .plus(if (transferId != null) " #$transferId" else "")
-                    putExtra(Intent.EXTRA_SUBJECT, subject)
+                val subject = context?.getString(R.string.LNG_EMAIL_SUBJECT)
+                        .plus(if (transferId != null) " #$transferId" else "")
+                putExtra(Intent.EXTRA_SUBJECT, subject)
 
-                    putExtra(Intent.EXTRA_TEXT, createSignature())
+                putExtra(Intent.EXTRA_TEXT, createSignature())
 
-                    selector = emailSelectorIntent
+                selector = emailSelectorIntent
 
-                    logsFile?.let {
-                        putExtra(
+                logsFile?.let {
+                    putExtra(
                             Intent.EXTRA_STREAM,
-                            FileProvider.getUriForFile(context, context.getString(R.string.file_provider_authority), it)
-                        )
-                    }
+                            FileProvider.getUriForFile(context!!, context.getString(R.string.file_provider_authority), it)
+                    )
                 }
             }
             return if (checkEmailIntent(context!!, emailIntent)) Intent.createChooser(
