@@ -74,7 +74,7 @@ class SplashActivity : AppCompatActivity() {
         utils.launchSuspend {
             val result = utils.asyncAwait { systemInteractor.coldStart() }
 
-            if (result.error != null) {
+            /*if (result.error != null) {
                 Timber.e(result.error!!)
                 val msg = if (result.error!!.code == ApiException.NETWORK_ERROR)
                     getString(R.string.LNG_NETWORK_ERROR) else getString(R.string.err_server, result.error!!.details)
@@ -85,7 +85,10 @@ class SplashActivity : AppCompatActivity() {
             else {
                 openNextScreen()
                 finish()
-            }
+            }*/
+
+            openNextScreen()
+            finish()
         }
     }
 

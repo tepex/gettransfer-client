@@ -5,6 +5,7 @@ import com.kg.gettransfer.data.OfferDataStore
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.OfferDataStoreCache
 import com.kg.gettransfer.data.ds.OfferDataStoreRemote
+import com.kg.gettransfer.data.mapper.ExceptionMapper
 
 import com.kg.gettransfer.data.mapper.OfferMapper
 
@@ -39,8 +40,8 @@ class OfferRepositoryImpl(private val factory: DataStoreFactory<OfferDataStore, 
             factory.retrieveDataStore(fromRemote).getOffers(id)
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().setOffers(result.entity) }
-        return if(result.error != null) Result(factory.retrieveCacheDataStore().getOffers(id).map { mapper.fromEntity(it) })
-        else Result(result.entity?.map { mapper.fromEntity(it) }?: emptyList())
+        return Result(result.entity?.map { mapper.fromEntity(it) }?: emptyList(),
+                result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
     }
 
     override fun clearOffersCache(){

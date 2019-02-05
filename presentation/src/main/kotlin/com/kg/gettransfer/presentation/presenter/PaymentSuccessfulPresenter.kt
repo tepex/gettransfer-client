@@ -29,14 +29,14 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            if (result.error != null) viewState.setError(result.error!!)
+            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
                 if (result.model.to != null) {
                     val r = utils.asyncAwait {
                         routeInteractor
                             .getRouteInfo(result.model.from.point!!, result.model.to!!.point!!, false, false, systemInteractor.currency.currencyCode)
                     }
-                    if (r.error == null) {
+                    if (r.error == null || (r.error != null && r.fromCache)) {
                         val transferModel = transferMapper.toView(result.model)
                         val (days, hours, minutes) = Utils.convertDuration(transferModel.timeToTransfer)
                         viewState.setRemainTime(days, hours, minutes)

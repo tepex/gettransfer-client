@@ -7,7 +7,6 @@ import com.kg.gettransfer.data.mapper.Mapper
 
 import com.kg.gettransfer.data.model.ResultEntity
 
-import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Result
 
 import org.koin.standalone.KoinComponent

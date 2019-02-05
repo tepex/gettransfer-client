@@ -58,8 +58,9 @@ class OffersPresenter : BasePresenter<OffersView>() {
                 val err = result.error!!
                 Timber.e(err)
                 if (err.isNotLoggedIn()) viewState.redirectView()
-                else if (err.code != ApiException.NETWORK_ERROR) viewState.setError(err)
-            } else {
+                //else if (err.code != ApiException.NETWORK_ERROR) viewState.setError(err)
+            }
+            if(result.error == null || (result.error != null && result.fromCache)) {
                 if (result.model.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE) router.exit()
                 else {
                     val transferModel = transferMapper.toView(result.model)
@@ -81,7 +82,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
         this.transfer = transfer
         val result = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
         val transferModel = transferMapper.toView(transfer)
-        if (result.error != null) {
+        if (result.error != null && !result.fromCache) {
             offers = emptyList()
             Timber.e(result.error)
         } else {
