@@ -1,6 +1,5 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.SystemListener
 
 import com.kg.gettransfer.domain.model.Account
@@ -10,7 +9,7 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.PushTokenType
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.TransportType
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.MobileConfig
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.LoggingRepository
@@ -126,14 +125,12 @@ class SystemInteractor(
 
     suspend fun registerPushToken(token: String): Result<Unit> {
         pushToken = token
-        try { systemRepository.registerPushToken(PushTokenType.FCM, token) }
-        catch (e: ApiException) { throw e }
-        return Result(Unit)
+        return systemRepository.registerPushToken(PushTokenType.FCM, token)
     }
 
-    suspend fun unregisterPushToken(): Result<Unit> {
-        pushToken?.let { systemRepository.unregisterPushToken(it) }
-        return Result(Unit)
+    suspend fun unregisterPushToken(): Result<Boolean> {
+        val result = pushToken?.let { systemRepository.unregisterPushToken(it) }
+        return Result(result != null && result.error == null, result?.error)
     }
 
     suspend fun login(email: String, password: String) = systemRepository.login(email, password)

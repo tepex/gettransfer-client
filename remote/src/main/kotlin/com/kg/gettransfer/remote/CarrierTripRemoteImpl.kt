@@ -1,7 +1,6 @@
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.data.CarrierTripRemote
-import com.kg.gettransfer.data.RemoteException
 
 import com.kg.gettransfer.data.model.CarrierTripBaseEntity
 import com.kg.gettransfer.data.model.CarrierTripEntity
@@ -29,7 +28,7 @@ class CarrierTripRemoteImpl : CarrierTripRemote {
     }
 
     override suspend fun getCarrierTrip(id: Long): CarrierTripEntity {
-        val response: ResponseModel<CarrierTripModelWrapper> = core.tryTwice(id, { _id -> core.api.getCarrierTrip(_id) })
+        val response: ResponseModel<CarrierTripModelWrapper> = core.tryTwice(id) { _id -> core.api.getCarrierTrip(_id) }
         val carrierTrip: CarrierTripModel = response.data!!.trip
         return carrierTripMapper.fromRemote(carrierTrip)
     }

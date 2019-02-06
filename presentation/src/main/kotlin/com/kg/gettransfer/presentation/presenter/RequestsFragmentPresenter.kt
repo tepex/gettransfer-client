@@ -43,7 +43,7 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
         transferIds = systemInteractor.transferIds
     }
 
-    fun getTransfers() {
+    private fun getTransfers() {
         utils.launchSuspend {
             viewState.blockInterface(true)
             /*
@@ -54,7 +54,7 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
             }
             */
             val result = utils.asyncAwait { transferInteractor.getAllTransfers() }
-            if (result.error != null) viewState.setError(result.error!!) else showTransfers(result.model)
+            if (result.error != null && !result.fromCache) viewState.setError(result.error!!) else showTransfers(result.model)
             viewState.blockInterface(false)
         }
     }

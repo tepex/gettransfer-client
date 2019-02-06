@@ -28,6 +28,7 @@ import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
+import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.presentation.view.TransferDetailsView
 
@@ -60,7 +61,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            if (result.error != null) viewState.setError(result.error!!)
+            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
                 val transfer = result.model
                 transferModel = transferMapper.toView(transfer)
@@ -68,7 +69,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
 
                 if (transferModel.status.checkOffers) {
                     val offersResult = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
-                    if (offersResult.error == null && offersResult.model.size == 1){
+                    if ((offersResult.error == null || (offersResult.error != null && offersResult.fromCache)) && offersResult.model.size == 1){
                         offer = offersResult.model.first()
                         reviewInteractor.offerIdForReview = offer.id
                         if (!transfer.isCompletedTransfer()) viewState.setOffer(offerMapper.toView(offer), transferModel.countChilds)

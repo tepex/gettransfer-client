@@ -127,7 +127,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         utils.launchSuspend {
             viewState.blockInterface(true)
             val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.currencyCode) }
-            if (result.error != null) viewState.setError(result.error!!)
+            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
                 val route = result.model
                 duration = route.duration
@@ -163,7 +163,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
         utils.launchSuspend {
             val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, returnWay, systemInteractor.currency.currencyCode) }
-            if (result.error != null) viewState.setError(result.error!!)
+            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else setTransportTypePrices(result.model.prices)
         }
     }

@@ -9,7 +9,14 @@ import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.SystemDataStoreCache
 import com.kg.gettransfer.data.ds.SystemDataStoreIO
 import com.kg.gettransfer.data.ds.SystemDataStoreRemote
-import com.kg.gettransfer.data.mapper.*
+
+import com.kg.gettransfer.data.mapper.ConfigsMapper
+import com.kg.gettransfer.data.mapper.AccountMapper
+import com.kg.gettransfer.data.mapper.EndpointMapper
+import com.kg.gettransfer.data.mapper.AddressMapper
+import com.kg.gettransfer.data.mapper.MobileConfigMapper
+import com.kg.gettransfer.data.mapper.LocationMapper
+import com.kg.gettransfer.data.mapper.ExceptionMapper
 
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
@@ -19,7 +26,20 @@ import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.SystemListener
 
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.Endpoint
+import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.MobileConfig
+import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.PushTokenType
+import com.kg.gettransfer.domain.model.Location
+import com.kg.gettransfer.domain.model.Configs
+import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.model.PaypalCredentials
+import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.domain.model.CardGateways
+import com.kg.gettransfer.domain.model.User
+import com.kg.gettransfer.domain.model.Profile
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
@@ -142,12 +162,23 @@ class SystemRepositoryImpl(
     }
 
     override suspend fun putAccount(account: Account): Result<Account> {
-        val accountEntity = try { factory.retrieveRemoteDataStore().setAccount(accountMapper.toEntity(account)) }
+        /*val accountEntity = try { factory.retrieveRemoteDataStore().setAccount(accountMapper.toEntity(account)) }
         catch(e: RemoteException) { return Result(account, ExceptionMapper.map(e)) }
 
         factory.retrieveCacheDataStore().setAccount(accountEntity)
         this.account = accountMapper.fromEntity(accountEntity)
-        return Result(this.account)
+        return Result(this.account)*/
+
+        val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
+            factory.retrieveRemoteDataStore().setAccount(accountMapper.toEntity(account))
+        }
+        result.entity?.let {
+            if(result.error == null) {
+                factory.retrieveCacheDataStore().setAccount(it)
+                this.account = accountMapper.fromEntity(it)
+            }
+        }
+        return Result(this.account, result.error?.let { ExceptionMapper.map(it) })
     }
 
     override suspend fun putNoAccount(account: Account): Result<Account> {
@@ -156,12 +187,23 @@ class SystemRepositoryImpl(
     }
 
     override suspend fun login(email: String, password: String): Result<Account> {
-        val accountEntity = try { factory.retrieveRemoteDataStore().login(email, password) }
+        /*val accountEntity = try { factory.retrieveRemoteDataStore().login(email, password) }
         catch(e: RemoteException) { return Result(account, ExceptionMapper.map(e)) }
 
         factory.retrieveCacheDataStore().setAccount(accountEntity)
         account = accountMapper.fromEntity(accountEntity)
-        return Result(account)
+        return Result(account)*/
+
+        val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
+            factory.retrieveRemoteDataStore().login(email, password)
+        }
+        result.entity?.let {
+            if(result.error == null) {
+                factory.retrieveCacheDataStore().setAccount(it)
+                account = accountMapper.fromEntity(it)
+            }
+        }
+        return Result(account, result.error?.let { ExceptionMapper.map(it) })
     }
 
     override fun logout(): Result<Account> {
@@ -171,13 +213,18 @@ class SystemRepositoryImpl(
         return Result(account)
     }
 
-    override suspend fun registerPushToken(provider: PushTokenType, token: String) {
-        try { factory.retrieveRemoteDataStore().registerPushToken(provider.toString(), token) }
-        catch (e: RemoteException) { throw ExceptionMapper.map(e) }
+    override suspend fun registerPushToken(provider: PushTokenType, token: String): Result<Unit> {
+        return try {
+            factory.retrieveRemoteDataStore().registerPushToken(provider.toString(), token)
+            Result(Unit)
+        } catch (e: RemoteException) { Result(Unit, ExceptionMapper.map(e)) }
     }
 
-    override suspend fun unregisterPushToken(token: String) {
-        factory.retrieveRemoteDataStore().unregisterPushToken(token)
+    override suspend fun unregisterPushToken(token: String): Result<Unit> {
+        return try {
+            factory.retrieveRemoteDataStore().unregisterPushToken(token)
+            Result(Unit)
+        } catch (e: RemoteException) { Result(Unit, ExceptionMapper.map(e)) }
     }
 
     override fun accessTokenChanged(accessToken: String) {
@@ -196,10 +243,14 @@ class SystemRepositoryImpl(
         set(value) { preferencesCache.appEnters = value }
 
     override suspend fun getMyLocation(): Result<Location> {
-        factory.retrieveRemoteDataStore().changeEndpoint(EndpointEntity("", "", API_URL_LOCATION))
-        val locationEntity = factory.retrieveRemoteDataStore().getMyLocation()
-        factory.retrieveRemoteDataStore().changeEndpoint(preferencesCache.endpoint)
-        return Result(locationMapper.fromEntity(locationEntity))
+        return try {
+            factory.retrieveRemoteDataStore().changeEndpoint(EndpointEntity("", "", API_URL_LOCATION))
+            val locationEntity = factory.retrieveRemoteDataStore().getMyLocation()
+            factory.retrieveRemoteDataStore().changeEndpoint(preferencesCache.endpoint)
+            Result(locationMapper.fromEntity(locationEntity))
+        } catch (e: RemoteException) {
+            Result(Location(null, null), ExceptionMapper.map(e))
+        }
     }
 
     override fun addListener(listener: SystemListener)    { listeners.add(listener) }

@@ -33,14 +33,14 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             val transfer = result.model
             val transferModel = transferMapper.toView(transfer)
-            if (result.error != null) viewState.setError(result.error!!)
+            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
                 if (transfer.to != null) {
                     val r = utils.asyncAwait {
                         routeInteractor
                             .getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false, systemInteractor.currency.currencyCode)
                     }
-                    if (r.error == null) {
+                    if (r.error == null || (r.error != null && r.fromCache)) {
                         val routeModel = routeMapper.getView(
                                 r.model.distance,
                                 r.model.polyLines,

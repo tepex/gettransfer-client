@@ -151,8 +151,10 @@ class MainPresenter : BasePresenter<MainView>() {
         utils.asyncAwait { routeInteractor.getCurrentAddress() }.also {
             if (it.error != null) {
                 viewState.setError(it.error!!)
-                val location = utils.asyncAwait { systemInteractor.getMyLocation() }.model
-                setLocation(location)
+                val locationResult = utils.asyncAwait { systemInteractor.getMyLocation() }
+                if (locationResult.error == null
+                        && locationResult.model.latitude != null
+                        && locationResult.model.longitude != null) setLocation(locationResult.model)
             }
             else setPointAddress(it.model)
             return it
