@@ -6,9 +6,8 @@ import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew
 
 import com.kg.gettransfer.domain.repository.TransferRepository
-import java.awt.Point
 
-class TransferInteractor(private val repository: TransferRepository): TransferEventListenerGeneral {
+class TransferInteractor(private val repository: TransferRepository) {
     private var transfer: Transfer? = null
     var transferNew: TransferNew? = null
 
@@ -69,10 +68,6 @@ class TransferInteractor(private val repository: TransferRepository): TransferEv
                     it.status != Transfer.Status.NOT_COMPLETED
         }
         return Result(archivedTransfers!!)
-    }
-
-    override fun <P> onLocationReceived(point: P) {
-
     }
 
     /*private fun insertNewTransfer() {
