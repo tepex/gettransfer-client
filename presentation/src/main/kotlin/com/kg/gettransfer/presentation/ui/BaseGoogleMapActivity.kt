@@ -202,6 +202,16 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
         googleMap.moveCamera(cameraUpdate)
     }
 
+    protected fun setPinForHourlyWithoutInfo(point: LatLng, cameraUpdate: CameraUpdate) {
+        val bmPinA = getPinBitmapWithoutInfo(R.drawable.ic_map_label_a)
+        val startMakerOptions = MarkerOptions()
+                .position(point)
+                .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
+        googleMap.addMarker(startMakerOptions)
+        googleMap.moveCamera(cameraUpdate)
+    }
+
+
     private fun getPinBitmap(placeName: String, info: String, drawable: Int): Bitmap {
         val pinLayout = layoutInflater.inflate(R.layout.view_maps_pin, null)
         pinLayout.tvPlace.text = placeName

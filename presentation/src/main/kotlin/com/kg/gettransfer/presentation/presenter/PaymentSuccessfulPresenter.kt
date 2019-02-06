@@ -1,8 +1,10 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.mapper.TransferMapper
@@ -29,33 +31,42 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
+            val transfer = result.model
+            val transferModel = transferMapper.toView(transfer)
             if (result.error != null) viewState.setError(result.error!!)
             else {
-                if (result.model.to != null) {
+                if (transfer.to != null) {
                     val r = utils.asyncAwait {
                         routeInteractor
-                            .getRouteInfo(result.model.from.point!!, result.model.to!!.point!!, false, false, systemInteractor.currency.currencyCode)
+                            .getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false, systemInteractor.currency.currencyCode)
                     }
                     if (r.error == null) {
-                        val transferModel = transferMapper.toView(result.model)
-                        val (days, hours, minutes) = Utils.convertDuration(transferModel.timeToTransfer)
-                        viewState.setRemainTime(days, hours, minutes)
-
                         val routeModel = routeMapper.getView(
-                            r.model.distance,
-                            r.model.polyLines,
-                            result.model.from.name!!,
-                            result.model.to!!.name!!,
-                            result.model.from.point!!,
-                            result.model.to!!.point!!,
-                            SystemUtils.formatDateTime(transferModel.dateTime)
+                                r.model.distance,
+                                r.model.polyLines,
+                                transfer.from.name!!,
+                                transfer.to!!.name!!,
+                                transfer.from.point!!,
+                                transfer.to!!.point!!,
+                                SystemUtils.formatDateTime(transferModel.dateTime)
                         )
                         viewState.setRoute(Utils.getPolyline(routeModel))
                     }
+                } else {
+                    if (transfer.duration != null)
+                        setHourlyTransfer(transfer)
                 }
+                val (days, hours, minutes) = Utils.convertDuration(transferModel.timeToTransfer)
+                viewState.setRemainTime(days, hours, minutes)
             }
             viewState.blockInterface(false)
         }
+    }
+
+    private fun setHourlyTransfer(transfer: Transfer) {
+        val from = transfer.from.point!!
+        val point = LatLng(from.latitude, from.longitude)
+        viewState.setPinHourlyTransfer(point, Utils.getCameraUpdateForPin(point))
     }
 
     fun onCallClick() {
