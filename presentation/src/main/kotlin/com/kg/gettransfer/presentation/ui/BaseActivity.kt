@@ -198,6 +198,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 //                            .apply { putExtra(OFFER_JSON, json)
 //                                     putExtra(OFFER_ID, id) }) } }
         super.onStart()
+
         registerReceiver(inetReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         setNetworkAvailability(this)
     }
