@@ -20,6 +20,8 @@ interface TransferDetailsView: BaseView, RouteView {
     fun showRateInPlayMarket()
     fun thanksForRate()
 
+    fun moveMarker()
+
     companion object {
         val EXTRA_TRANSFER_ID = "${TransferDetailsView::class.java.name}.transferId"
     }

@@ -6,10 +6,10 @@ import kotlinx.serialization.SerialName
 
 @Serializable
 data class RatingsEntity(
-        @SerialName(AVERAGE)           val average: Float?,
-        @Optional @SerialName(VEHICLE) val vehicle: Float? = null,
-        @Optional @SerialName(DRIVER)  val driver: Float? = null,
-        @Optional @SerialName(FAIR)    val fair: Float? = null
+        @Optional@SerialName(AVERAGE) val average: Float? = null,
+        @Optional@SerialName(VEHICLE) val vehicle: Float? = null,
+        @Optional@SerialName(DRIVER) val driver:   Float? = null,
+        @Optional@SerialName(FAIR) val fair:       Float? = null
 ) {
 
     companion object {

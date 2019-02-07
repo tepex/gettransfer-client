@@ -3,6 +3,7 @@ package com.kg.gettransfer.remote.socket
 import com.kg.gettransfer.data.model.ChatBadgeEventEntity
 import com.kg.gettransfer.data.model.MessageEntity
 import com.kg.gettransfer.data.model.MessageReadEventEntity
+import com.kg.gettransfer.data.model.CoordinateEntity
 import com.kg.gettransfer.data.model.OfferEntity
 import com.kg.gettransfer.remote.model.EndpointModel
 import io.socket.client.IO
@@ -23,6 +24,7 @@ class SocketManager(): KoinComponent {
 
     private val log: Logger by inject { parametersOf("GTR-socket") }
     private val SOCKET_TAG = "socket"
+    private val SOCKET_PP = "socket_PP"
 
     private val offerEventer: OfferSocketImpl       by inject()
     private val transferEventer: TransferSocketImpl by inject()
@@ -120,9 +122,8 @@ class SocketManager(): KoinComponent {
                             if (id != null) onReceiveOffer(id, packet.get(1).toString()) else log.error("Cant parse transfer id: $mayBeTransferId")
                         }
                         NEW_LOCATION_RE.matches(event) -> {
-                            val mayBeTransferId = NEW_OFFER_RE.find(event)!!.groupValues.get(1)
-                            val id = mayBeTransferId.toLongOrNull()
-                            if (id != null) onReceiveLocation(id, packet[1].toString()) else log.error("Cant parse location transferId: $mayBeTransferId")
+                            val id = event.split("/").last().toLongOrNull()
+                            if (id != null) onReceiveLocation(id, packet[1].toString()) else log.error("Cant parse location transferId: $id")
                         }
 
                         NEW_MESSAGE_RE.matches(event) -> { onReceiveMessage(packet[1].toString()) }
@@ -146,19 +147,22 @@ class SocketManager(): KoinComponent {
     }
 
     private fun onReceiveOffer(transferId: Long, offerJson: String) {
-        log.debug("$SOCKET_TAG onReceiveOffer: $offerJson")
-        try {
-            val offerEntity = JSON.nonstrict.parse(OfferEntity.serializer(), offerJson).apply { this.transferId = transferId }
-            offerEventer.onNewOffer(offerEntity)
-        } catch (e: Exception) {
-            log.error(e.toString())
-            throw e
+        log.info("$SOCKET_TAG onReceiveOffer: $offerJson")
+        tryParse {
+            JSON.nonstrict.parse(OfferEntity.serializer(), offerJson)
+                    .apply { this.transferId = transferId }
+                    .also { offerEventer.onNewOffer(it) }
         }
     }
 
-    private fun onReceiveLocation(transferId: Long, coordinatesJson: String) {
-        transferEventer.onLocationUpdated(coordinatesJson)
-        log.debug("$SOCKET_TAG onLocation: $coordinatesJson")
+    private fun onReceiveLocation(mTransferId: Long,coordinatesJson: String) {
+        log.info("$SOCKET_TAG onLocation: $coordinatesJson")
+        tryParse {
+            JSON.nonstrict.parse(CoordinateEntity.serializer(), coordinatesJson)
+                    .apply { transferId = mTransferId }
+                    .also { transferEventer.onLocationUpdated(it) }
+        }
+
     }
 
     private fun onReceiveMessage(messageJson: String) {
@@ -193,15 +197,26 @@ class SocketManager(): KoinComponent {
         }
     }
 
-    fun emitEvent(eventName: String, arg: Any) {
 
+    private fun <T> tryParse(block: () -> T): T {
+        return try { block.invoke() }
+        catch (e: Exception) {
+            log.error("can't parse data: see previous log note")
+            throw e
+        }
+    }
+
+    fun emitEvent(eventName: String, arg: Array<out Any>) {
         when {
             socket == null        -> { log.error("event $eventName was not emit: $SOCKET_TAG is null" ); return }
             !socket!!.connected() -> { log.error("event $eventName was not emit: $SOCKET_TAG is not connected" ); return }
-            else                  -> {
-                socket!!.emit(eventName, arg)
-                log.error("event $eventName was emit: $SOCKET_TAG is connected" )
-            }
+            else                  -> { socket!!.emit(eventName, arg) }
+        }
+    }
+
+    fun emitAck(event: String, arg: Array<out Any>){
+        socket!!.emit(event, arg) {
+            log.info("EventComes wow!!")
         }
     }
 

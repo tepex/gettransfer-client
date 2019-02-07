@@ -1,15 +1,19 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
+import com.kg.gettransfer.delegate.DriverCoordinate
+import com.kg.gettransfer.domain.eventListeners.TransferEventListener
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.model.Coordinate
 
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.RouteInfo
@@ -39,7 +43,7 @@ import org.koin.standalone.inject
 import timber.log.Timber
 
 @InjectViewState
-class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
+class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferEventListener {
     private val routeInteractor: RouteInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
 
@@ -54,10 +58,12 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
     private var track: CameraUpdate? = null
 
     internal var transferId = 0L
+    private lateinit var driverCoordinate: DriverCoordinate
 
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
+        initCoordinates()
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
@@ -227,6 +233,17 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
             createEmptyBundle(),
             mapOf()
         )
+
+    private fun initCoordinates() {
+        driverCoordinate = DriverCoordinate(Handler()) { draw() }
+        transferInteractor.transferEventListener = this
+    }
+
+    override fun onLocationReceived(coordinate: Coordinate) {
+        driverCoordinate.prop = coordinate
+    }
+
+    fun draw(){}
 
     companion object {
         const val FIELD_EMAIL = "field_email"

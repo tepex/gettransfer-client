@@ -1,5 +1,6 @@
 package com.kg.gettransfer.domain.repository
 
+import com.kg.gettransfer.domain.model.Coordinate
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew
@@ -13,4 +14,7 @@ interface TransferRepository {
     suspend fun createTransfer(transferNew: TransferNew): Result<Transfer>
     suspend fun cancelTransfer(id: Long, reason: String): Result<Transfer>
     fun clearTransfersCache()
+
+    fun sendOwnCoordinate(coordinate: Coordinate)
+    fun initCoordinateReceiving()
 }

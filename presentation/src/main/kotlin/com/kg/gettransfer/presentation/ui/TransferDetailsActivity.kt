@@ -27,6 +27,7 @@ import com.bumptech.glide.Glide
 import com.google.android.gms.maps.CameraUpdate
 
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.Transfer
@@ -71,6 +72,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
 
     override fun getPresenter(): TransferDetailsPresenter = presenter
+    lateinit var driverCarMarker: Marker
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
@@ -425,6 +427,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
                 vehicle_rate.rate_bar.rating     = it
             }
         }
+    }
+
+    override fun moveMarker() {
+        moveDriverCar()
     }
 
     companion object {

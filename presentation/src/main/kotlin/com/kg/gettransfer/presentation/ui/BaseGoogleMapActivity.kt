@@ -250,6 +250,10 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
 
     protected fun clearMarkersAndPolylines() = googleMap.clear()
 
+    protected fun moveDriverCar(){
+
+    }
+
     companion object {
         const val MAP_MIN_ZOOM = 13f
         const val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"

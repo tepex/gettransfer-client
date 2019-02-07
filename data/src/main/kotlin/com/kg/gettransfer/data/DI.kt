@@ -97,8 +97,9 @@ val dataModule = module {
     single { TransferNewMapper() }
     single { TransferDataStoreCache() }
     single { TransferDataStoreRemote() }
-    single<TransferDataStoreReceiver> { TransferDataStoreIO(get()) }
-    single<TransferRepository> { TransferRepositoryImpl(DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>(get(), get())) }
+    single { CoordinateMapper() }
+    single { TransferDataStoreIO(get()) } bind TransferDataStoreReceiver::class
+    single { TransferRepositoryImpl(DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>(get(), get()), get()) } bind TransferRepository::class
 
     single { PromoDiscountMapper() }
     single { PromoDataStoreCache() }

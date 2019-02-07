@@ -1,7 +1,7 @@
 package com.kg.gettransfer.data.socket
 
-import com.kg.gettransfer.data.model.PointEntity
+import com.kg.gettransfer.data.model.CoordinateEntity
 
 interface TransferDataStoreReceiver {
-    fun onLocationReceived(point: PointEntity)
+    fun onLocationReceived(coordinate: CoordinateEntity)
 }
