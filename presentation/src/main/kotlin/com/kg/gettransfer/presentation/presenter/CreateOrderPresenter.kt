@@ -177,6 +177,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun setUIWithoutRoute() {
+        transportTypeMapper.prices = null
         if (transportTypes == null)
             transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
         viewState.setTransportTypes(transportTypes!!)
