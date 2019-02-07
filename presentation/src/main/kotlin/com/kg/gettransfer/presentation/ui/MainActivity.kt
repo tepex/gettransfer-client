@@ -47,6 +47,7 @@ import com.kg.gettransfer.presentation.model.PolylineModel
 
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.MainView
@@ -450,7 +451,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         }
     }
 
-    override fun openReviewForLastTrip(transferId: Long, date: Date, vehicle: String, color: String, routeModel: RouteModel) {
+    override fun openReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?) {
         val view = showPopUpWindow(R.layout.view_last_trip_rate, contentMain)
         mDisMissAction = {
             _mapView = mapView
@@ -465,11 +466,11 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         view.apply {
             tv_transfer_details.setOnClickListener {
                 closePopUp()
-                presenter.onTransferDetailsClick(transferId)
+                presenter.onTransferDetailsClick(transfer.id)
             }
             tv_close_lastTrip_rate.setOnClickListener { presenter.onReviewCanceled() }
-            tv_transfer_number_rate.apply { text = text.toString().plus(" #$transferId") }
-            tv_transfer_date_rate.text = SystemUtils.formatDateTime(date)
+            tv_transfer_number_rate.apply { text = text.toString().plus(" #${transfer.id}") }
+            tv_transfer_date_rate.text = SystemUtils.formatDateTime(transfer.dateTime)
             tv_vehicle_model_rate.text = vehicle
             rate_bar_last_trip.setOnRatingChangeListener { _, fl ->
                 closePopUp()
@@ -477,15 +478,20 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             }
             carColor_rate.setImageDrawable(Utils.getVehicleColorFormRes(this@MainActivity, color))
         }
-        drawMapForReview(view.rate_map, Utils.getPolyline(routeModel), routeModel)
-
+        drawMapForReview(view.rate_map, routeModel, transfer.from, startPoint)
     }
 
-    private fun drawMapForReview(map: MapView, polyline: PolylineModel, routeModel: RouteModel) {
+    private fun drawMapForReview(map: MapView,  routeModel: RouteModel?, from: String, startPoint: LatLng) {
         _mapView = map
         isGmTouchEnabled = false
         initMapView(null)
-        setPolyline(polyline, routeModel)
+        if(routeModel != null){
+            setPolyline(Utils.getPolyline(routeModel), routeModel)
+        } else {
+            processGoogleMap(false) {
+                setPinForHourlyTransfer(from, "", startPoint, Utils.getCameraUpdateForPin(startPoint))
+            }
+        }
         mapView.onPause()
         map.onResume()
     }

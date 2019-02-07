@@ -357,11 +357,11 @@ class MainPresenter : BasePresenter<MainView>() {
             ?.firstOrNull()
             ?.let { offer ->
                 if (!offer.isRated()) {
-                    val routeModel = createRouteModel(transfer)
+                    val routeModel = if(transfer.to != null) createRouteModel(transfer) else null
                     reviewInteractor.offerIdForReview = offer.id
                     viewState.openReviewForLastTrip(
-                        transfer.id,
-                        transfer.dateToLocal,
+                        transferMapper.toView(transfer),
+                        LatLng(transfer.from.point!!.latitude, transfer.from.point!!.longitude),
                         offer.vehicle.name,
                         offer.vehicle.color?:"",
                         routeModel
