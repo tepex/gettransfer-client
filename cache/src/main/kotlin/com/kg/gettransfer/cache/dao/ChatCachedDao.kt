@@ -18,6 +18,9 @@ interface ChatCachedDao {
     @Query("SELECT * FROM ${MessageEntity.ENTITY_NAME} WHERE ${MessageEntity.TRANSFER_ID} = :transferId")
     fun getMessages(transferId: Long): List<MessageCached>?
 
+    @Query("SELECT * FROM ${MessageEntity.ENTITY_NAME} WHERE ${MessageEntity.ID} = :messageId")
+    fun getMessage(messageId: Long): MessageCached?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertChat(chat: ChatCached)
 

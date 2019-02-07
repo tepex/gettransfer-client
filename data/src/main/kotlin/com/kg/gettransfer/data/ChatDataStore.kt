@@ -6,6 +6,7 @@ import org.koin.standalone.KoinComponent
 
 interface ChatDataStore : KoinComponent {
     suspend fun getChat(transferId: Long): ChatEntity?
+    fun getMessage(messageId: Long): MessageEntity?
     suspend fun newMessage(transferId: Long, text: String): MessageEntity
     suspend fun readMessage(messageId: Long): Boolean
 

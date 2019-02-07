@@ -12,6 +12,7 @@ class ChatDataStoreCache: ChatDataStore {
     private val cache: ChatCache by inject()
 
     override suspend fun getChat(transferId: Long) = cache.getChat(transferId)
+    override fun getMessage(messageId: Long) = cache.getMessage(messageId)
     override fun addChat(transferId: Long, chat: ChatEntity) = cache.setChat(transferId, chat)
     override fun addMessage(message: MessageEntity) = cache.setMessage(message)
 

@@ -10,4 +10,7 @@ interface ChatRepository {
     suspend fun newMessage(message: Message): Result<Chat>
     suspend fun sendAllNewMessages(transferId: Long? = null): Result<Unit>
     suspend fun readMessage(messageId: Long): Result<Unit>
+
+    fun onJoinRoom(transferId: Long)
+    fun onLeaveRoom(transferId: Long)
 }

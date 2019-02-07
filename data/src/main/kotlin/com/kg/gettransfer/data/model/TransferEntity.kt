@@ -54,7 +54,8 @@ open class TransferEntity(
 /* ================================================== */
     @SerialName(EDITABLE_FIELDS)         val editableFields: List<String>,
     @SerialName(AIRLINE_CARD)            val airlineCard: String?,
-    @SerialName(PAYMENT_PERCENTAGES)     val paymentPercentages: List<Int>
+    @SerialName(PAYMENT_PERCENTAGES)     val paymentPercentages: List<Int>,
+    @SerialName(UNREAD_MESSAGES_COUNT)   val unreadMessagesCount: Int
 ) {
     companion object {
         const val ENTITY_NAME             = "transfer"
@@ -105,5 +106,6 @@ open class TransferEntity(
         const val EDITABLE_FIELDS         = "editable_fields"
         const val AIRLINE_CARD            = "airlineCard"
         const val PAYMENT_PERCENTAGES     = "payment_percentages"
+        const val UNREAD_MESSAGES_COUNT   = "unread_messages_count"
     }
 }

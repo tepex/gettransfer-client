@@ -19,7 +19,8 @@ import java.lang.IllegalArgumentException
 
 
 class ChatAdapter(
-        private var chatItems: ChatModel
+        private var chatItems: ChatModel,
+        private val listener: MessageReadListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     fun changeModel(chatItems: ChatModel){
@@ -36,7 +37,7 @@ class ChatAdapter(
         val message = chatItems.messages[pos]
         when(chatItems.getMessageType(pos)){
             Type.CURRENT_ACCOUNT_MESSAGE     -> (holder as ViewHolderMyMessage).bind(message)
-            Type.NOT_CURRENT_ACCOUNT_MESSAGE -> (holder as ViewHolderNotMyMessage).bind(message)
+            Type.NOT_CURRENT_ACCOUNT_MESSAGE -> (holder as ViewHolderNotMyMessage).bind(message, listener)
         }
     }
 
@@ -68,9 +69,12 @@ class ChatAdapter(
             RecyclerView.ViewHolder(containerView),
             LayoutContainer {
 
-        fun bind(message: MessageModel) = with(containerView) {
+        fun bind(message: MessageModel, listener: MessageReadListener) = with(containerView) {
             notMyMessageText.text = message.text
             notMyMessageTimeText.text = SystemUtils.formatTime(message.createdAt)
+            if(message.readAt == null) listener(message.id)
         }
     }
 }
+
+typealias MessageReadListener = (Long) -> Unit

@@ -42,21 +42,23 @@ class ChatActivity : BaseActivity(), ChatView {
                 messageText.setText("")
             }
         }
-        rvMessages.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        /*rvMessages.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 (rvMessages.layoutManager as LinearLayoutManager).let { presenter.readMessages(it.findFirstVisibleItemPosition(), it.findLastVisibleItemPosition()) }
             }
-        })
+        })*/
     }
 
-    override fun initToolbar(transfer: TransferModel, offer: OfferModel) {
+    override fun initToolbar(transfer: TransferModel?, offer: OfferModel?) {
         (toolbar as Toolbar).apply {
             layoutChatTitle.isVisible = true
-            transferFromText.text = transfer.from
-            transferStartDateText.text = SystemUtils.formatDateTimeWithShortMonth(transfer.dateTime)
+            transfer?.let {
+                transferFromText.text = it.from
+                transferStartDateText.text = SystemUtils.formatDateTimeWithShortMonth(it.dateTime)
+            }
             chatTitleButtonBack.setOnClickListener { presenter.onBackCommandClick() }
-            offer.phoneToCall?.let { phone ->
+            offer?.phoneToCall?.let { phone ->
                 btnCall.isVisible = true
                 btnCall.setOnClickListener { presenter.callPhone(phone) }
             }
@@ -67,7 +69,7 @@ class ChatActivity : BaseActivity(), ChatView {
         val oldMessagesSize = rvMessages.adapter?.itemCount
         rvMessages.apply {
             if(adapter == null){
-                adapter = ChatAdapter(chat)
+                adapter = ChatAdapter(chat) { presenter.readMessage(it) }
             } else {
                 (adapter as ChatAdapter).changeModel(chat)
                 rvMessages.adapter?.notifyDataSetChanged()
@@ -77,6 +79,6 @@ class ChatActivity : BaseActivity(), ChatView {
     }
 
     override fun scrollToEnd() {
-        rvMessages.adapter?.let { rvMessages.scrollToPosition(it.itemCount - 1)  }
+        runOnUiThread { rvMessages.adapter?.let { rvMessages.scrollToPosition(it.itemCount - 1)  } }
     }
 }

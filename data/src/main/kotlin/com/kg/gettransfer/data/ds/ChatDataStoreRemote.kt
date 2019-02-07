@@ -34,4 +34,8 @@ class ChatDataStoreRemote: ChatDataStore {
     override fun deleteNewMessageFromCache(messageId: Long) {
         throw UnsupportedOperationException()
     }
+
+    override fun getMessage(messageId: Long): MessageEntity? {
+        throw UnsupportedOperationException()
+    }
 }

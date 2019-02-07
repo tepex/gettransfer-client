@@ -87,5 +87,6 @@ val socketModule = module {
     single<TransferEventEmitter> { TransferSocketImpl() }
     single<SystemEventEmitter> { SystemSocketImp() }
     single { OfferSocketImpl(get()) }
+    single { ChatSocketImpl() }
     single<ChatEventEmitter> { ChatSocketImpl() }
 }

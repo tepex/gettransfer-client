@@ -1,5 +1,8 @@
 package com.kg.gettransfer.remote.socket
 
+import com.kg.gettransfer.data.model.ChatBadgeEventEntity
+import com.kg.gettransfer.data.model.MessageEntity
+import com.kg.gettransfer.data.model.MessageReadEventEntity
 import com.kg.gettransfer.data.model.OfferEntity
 import com.kg.gettransfer.remote.model.EndpointModel
 import io.socket.client.IO
@@ -9,8 +12,8 @@ import io.socket.engineio.client.Transport
 import io.socket.engineio.client.transports.WebSocket
 import io.socket.parser.Packet
 import kotlinx.serialization.json.JSON
+import kotlinx.serialization.serializer
 import org.json.JSONArray
-import org.json.JSONObject
 import org.koin.core.parameter.parametersOf
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -23,6 +26,7 @@ class SocketManager(): KoinComponent {
 
     private val offerEventer: OfferSocketImpl       by inject()
     private val transferEventer: TransferSocketImpl by inject()
+    private val chatEventer: ChatSocketImpl         by inject()
 //    private val chatEventer: ChatSocketImpl         = get()
 
     private var handler:     OfferModelHandler? = null
@@ -117,6 +121,10 @@ class SocketManager(): KoinComponent {
                             val id = mayBeTransferId.toLongOrNull()
                             if (id != null) onReceiveLocation(id, packet[1].toString()) else log.error("Cant parse location transferId: $mayBeTransferId")
                         }
+
+                        NEW_MESSAGE_RE.matches(event) -> { onReceiveMessage(packet[1].toString()) }
+                        MESSAGE_READ_RE.matches(event) -> { onReceiveMessageRead(packet[1].toString().toLong()) }
+                        CHAT_BADGE_RE.matches(event) -> { onReceiveChatBadge(packet[1].toString()) }
                     }
 
                 }
@@ -145,9 +153,41 @@ class SocketManager(): KoinComponent {
         }
     }
 
-    private fun onReceiveLocation(transferId: Long,coordinatesJson: String) {
+    private fun onReceiveLocation(transferId: Long, coordinatesJson: String) {
         transferEventer.onLocationUpdated(coordinatesJson)
         log.debug("$SOCKET_TAG onLocation: $coordinatesJson")
+    }
+
+    private fun onReceiveMessage(messageJson: String) {
+        log.debug("$SOCKET_TAG onMessage: $messageJson")
+        try {
+            val messageEntity = JSON.nonstrict.parse(MessageEntity.serializer(), messageJson)
+            chatEventer.onMessageEvent(messageEntity)
+        } catch (e: Exception) {
+            log.error(e.toString())
+            throw e
+        }
+    }
+
+    private fun onReceiveMessageRead(messageId: Long) {
+        log.debug("$SOCKET_TAG onMessageRead: $messageId")
+        try {
+            chatEventer.onMessageReadEvent(messageId)
+        } catch (e: Exception) {
+            log.error(e.toString())
+            throw e
+        }
+    }
+
+    private fun onReceiveChatBadge(messageJson: String) {
+        log.debug("$SOCKET_TAG onChatBadge: $messageJson")
+        try {
+            val chatBadge = JSON.nonstrict.parse(ChatBadgeEventEntity.serializer(), messageJson)
+            chatEventer.onChatBadgeChangedEvent(chatBadge)
+        } catch (e: Exception) {
+            log.error(e.toString())
+            throw e
+        }
     }
 
     fun emitEvent(eventName: String, arg: Any) {
@@ -163,6 +203,9 @@ class SocketManager(): KoinComponent {
         @JvmField val MESSAGE_OFFER = "new_offer"
         @JvmField val NEW_OFFER_RE    = Regex("^newOffer/(\\d+)$")
         @JvmField val NEW_LOCATION_RE = Regex("^carrier-position/(\\d+)$")
+        @JvmField val NEW_MESSAGE_RE  = Regex("^chat.new-message$")
+        @JvmField val MESSAGE_READ_RE = Regex("^chat.message-read$")
+        @JvmField val CHAT_BADGE_RE   = Regex("^chat.set-badge$")
         const val ACTION_OFFER = "gt.socket_offerEvent"
     }
 }

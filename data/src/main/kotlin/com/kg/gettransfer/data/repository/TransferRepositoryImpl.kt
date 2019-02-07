@@ -167,9 +167,10 @@ class TransferRepositoryImpl(
                 refundedPrice         = null,
                 campaign              = null,
 /* ================================================== */
-                editableFields     = emptyList<String>(),
-                airlineCard        = null,
-                paymentPercentages = emptyList<Int>()
+                editableFields      = emptyList<String>(),
+                airlineCard         = null,
+                paymentPercentages  = emptyList<Int>(),
+                unreadMessagesCount = 0
             )
     }
 }

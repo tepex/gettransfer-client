@@ -72,9 +72,10 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
             refundedPrice         = type.refundedPrice?.let { moneyMapper.fromEntity(it) },
             campaign              = type.campaign,
 /* ================================================== */
-            editableFields     = type.editableFields,
-            airlineCard        = type.airlineCard,
-            paymentPercentages = type.paymentPercentages
+            editableFields      = type.editableFields,
+            airlineCard         = type.airlineCard,
+            paymentPercentages  = type.paymentPercentages,
+            unreadMessagesCount = type.unreadMessagesCount
         )
 
     /**

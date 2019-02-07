@@ -21,6 +21,7 @@ class ChatCacheImpl: ChatCache, KoinComponent {
         val newMessagesCached = db.chatCacheDao().getNewMessagesForTransfer(transferId) ?: emptyList()
         return chatCached?.let { chatMapper.fromCached(it, messagesCached, newMessagesCached) }
     }
+    override fun getMessage(messageId: Long) = db.chatCacheDao().getMessage(messageId)?.let { messageMapper.fromCached(it) }
     override fun setChat(transferId: Long, chat: ChatEntity) {
         db.chatCacheDao().insertChat(chatMapper.toCached(chat, transferId))
         db.chatCacheDao().insertMessages(chat.messages.map { messageMapper.toCached(it) })

@@ -10,12 +10,15 @@ import com.kg.gettransfer.data.model.OfferEntity
 
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.eventListeners.ChatBadgeEventListener
 import com.kg.gettransfer.domain.eventListeners.OfferEventListener
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 import com.kg.gettransfer.domain.interactor.ChatInteractor
 import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.ChatBadgeEvent
 import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.presentation.mapper.OfferMapper
@@ -38,7 +41,7 @@ import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
-open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener, KoinComponent {
+open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener, ChatBadgeEventListener, KoinComponent {
     protected val compositeDisposable = Job()
     protected val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
     protected val router: Router by inject()
@@ -73,6 +76,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     override fun attachView(view: BV) {
         super.attachView(view)
         offerInteractor.eventReceiver = this
+        chatInteractor.eventChatBadgeReceiver = this
     }
 
     fun checkNewMessagesCached() {
@@ -158,6 +162,18 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
             it.vehicle.photos = it.vehicle.photos.map { photo -> "${systemInteractor.endpoint.url}$photo" }
             increaseEventsCounter(it.transferId)
         })
+    }
+
+    override fun onChatBadgeChangedEvent(chatBadgeEvent: ChatBadgeEvent) {
+        utils.launchSuspend {
+            val result = utils.asyncAwait { transferInteractor.getTransfer(chatBadgeEvent.transferId) }
+            if(result.error == null && result.model.unreadMessagesCount != 0) {
+                notificationManager.showNewMessageNotification(
+                        chatBadgeEvent.transferId,
+                        result.model.unreadMessagesCount,
+                        systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) < 0)
+            }
+        }
     }
 
     fun saveAccount() = utils.launchSuspend {

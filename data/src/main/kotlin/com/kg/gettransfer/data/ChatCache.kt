@@ -6,6 +6,7 @@ import org.koin.standalone.KoinComponent
 
 interface ChatCache : KoinComponent {
     fun getChat(transferId: Long): ChatEntity?
+    fun getMessage(messageId: Long): MessageEntity?
     fun setChat(transferId: Long, chat: ChatEntity)
     fun setMessage(message: MessageEntity)
     fun setMessages(messages: List<MessageEntity>)

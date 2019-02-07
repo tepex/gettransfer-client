@@ -7,7 +7,7 @@ data class Message(
         val accountId: Long,
         val transferId: Long,
         val createdAt: Date,
-        val readAt: Date?,
+        var readAt: Date?,
         val text: String,
         val sendAt: Long? = null
 ) : Entity()

@@ -8,7 +8,7 @@ import com.kg.gettransfer.presentation.model.TransferModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface ChatView : BaseView {
-    fun initToolbar(transfer: TransferModel, offer: OfferModel)
+    fun initToolbar(transfer: TransferModel?, offer: OfferModel?)
     fun setChat(chat: ChatModel, withScrollDown: Boolean)
     fun scrollToEnd()
 

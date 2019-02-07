@@ -433,6 +433,9 @@
     <string name="LNG_TRIPS_EMPTY_COMPLETED">you have no completed transfers</string>
     <string name="LNG_LIST"><u>List</u></string>
     <string name="LNG_NEW_CHAT_MESSAGE">Write the message</string>
+    <string name="LNG_NEW_PASSENGER_CHAT_TITLE">Passenger message</string>
+    <string name="LNG_NEW_DRIVER_CHAT_TITLE">Carrier message</string>
+    <string name="LNG_UNREAD_MESSAGES_COUNT">%s unread messages</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>
