@@ -85,7 +85,8 @@ class TransferRepositoryImpl(
         val result: ResultEntity<TransferEntity?> = retrieveCacheEntity {
             factory.retrieveCacheDataStore().getTransfer(id)
         }
-        return Result(result.entity?.let { transferMapper.fromEntity(it) }?: DEFAULT, null, result.cacheError?.let { ExceptionMapper.map(it) })
+        return Result(result.entity?.let { transferMapper.fromEntity(it) }?: DEFAULT, null,
+                result.error != null && result.entity != null, result.cacheError?.let { ExceptionMapper.map(it) })
     }
 
     override suspend fun getAllTransfers(): Result<List<Transfer>> {

@@ -46,7 +46,8 @@ class ChatRepositoryImpl(
         val result: ResultEntity<ChatEntity?> = retrieveCacheEntity {
             factory.retrieveCacheDataStore().getChat(transferId)
         }
-        return Result(result.entity?.let { chatMapper.fromEntity(it) } ?: DEFAULT_CHAT, null, result.cacheError?.let { ExceptionMapper.map(it) })
+        return Result(result.entity?.let { chatMapper.fromEntity(it) } ?: DEFAULT_CHAT, null,
+                result.error != null && result.entity != null ,result.cacheError?.let { ExceptionMapper.map(it) })
     }
 
     override suspend fun newMessage(message: Message): Result<Chat>{

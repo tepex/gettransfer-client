@@ -51,7 +51,8 @@ class OfferRepositoryImpl(private val factory: DataStoreFactory<OfferDataStore, 
         val result: ResultEntity<List<OfferEntity>?> = retrieveCacheEntity {
             factory.retrieveCacheDataStore().getOffers(id)
         }
-        return Result(result.entity?.map { mapper.fromEntity(it) }?: emptyList(), null, result.cacheError?.let { ExceptionMapper.map(it) })
+        return Result(result.entity?.map { mapper.fromEntity(it) }?: emptyList(), null,
+                result.error != null && result.entity != null, result.cacheError?.let { ExceptionMapper.map(it) })
     }
 
     override fun clearOffersCache(){
