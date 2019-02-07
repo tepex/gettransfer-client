@@ -55,14 +55,14 @@ class CarrierTripsCalendarMonthFragment: Fragment() {
         val firstDayOfTheMonth = mCal.get(Calendar.DAY_OF_WEEK) - 1
         mCal.add(Calendar.DAY_OF_MONTH, -firstDayOfTheMonth)
         var i = 0
-        layoutDaysOfWeek.removeAllViews()
+        if(layoutDaysOfWeek != null && layoutDaysOfWeek.childCount > 0) layoutDaysOfWeek.removeAllViews()
         while (dayValueInCells.size < MAX_CALENDAR_COLUMN) {
             if(i < 7){
                 val textViewDayOfWeek = TextView(context)
                 textViewDayOfWeek.text = SystemUtils.formatShortNameDayOfWeek(mCal.time).toUpperCase()
                 textViewDayOfWeek.gravity = Gravity.CENTER
                 TextViewCompat.setTextAppearance(textViewDayOfWeek, R.style.calendar_item_days_of_week)
-                layoutDaysOfWeek.addView(textViewDayOfWeek)
+                layoutDaysOfWeek?.addView(textViewDayOfWeek)
                 textViewDayOfWeek.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
                 i++
             }
@@ -71,9 +71,9 @@ class CarrierTripsCalendarMonthFragment: Fragment() {
         }
 
         val monthYear = SystemUtils.formatMonthYear(cal.time)
-        monthAndYear.text = monthYear.substring(0, 1).toUpperCase().plus(monthYear.substring(1))
+        monthAndYear?.text = monthYear.substring(0, 1).toUpperCase().plus(monthYear.substring(1))
         mAdapterCarrierTripsCalendar = CarrierTripsCalendarGridAdapter(context!!, dayValueInCells, selectedDate, cal, calendarItems, listener)
-        gridViewCalendar.adapter = mAdapterCarrierTripsCalendar
+        gridViewCalendar?.adapter = mAdapterCarrierTripsCalendar
     }
 
     fun selectDate(selectedDate: String){
