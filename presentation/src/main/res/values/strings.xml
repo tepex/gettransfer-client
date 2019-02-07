@@ -455,6 +455,4 @@
         <item quantity="many">@string/LNG_HOURS</item>
         <item quantity="other">@string/LNG_HOURS</item>
     </plurals>
-
-    <string name="list_carrier_trips_mode"><u>List</u></string> //Need change to text from Crowdin
 </resources>
