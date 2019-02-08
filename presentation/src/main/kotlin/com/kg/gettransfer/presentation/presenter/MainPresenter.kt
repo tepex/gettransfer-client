@@ -254,6 +254,7 @@ class MainPresenter : BasePresenter<MainView>() {
         routeInteractor.apply {
             hourlyDuration = if (hourly) hourlyDuration?: MIN_HOURLY else null
         }
+        if(systemInteractor.selectedField == FIELD_TO) changeUsedField(FIELD_FROM)
         viewState.changeFields(hourly)
     }
 
