@@ -68,7 +68,10 @@ class SystemInteractor(
 
     var lastMode: String
         get() = systemRepository.lastMode
-        set(value) { systemRepository.lastMode = value }
+        set(value) { systemRepository.lastMode = value
+            if (value == CARRIER_MODE) carrierModeListener?.startSendingCoordinates()
+            else carrierModeListener?.stopSendingCoordinates()
+        }
 
     var lastCarrierTripsTypeView: String
         get() = systemRepository.lastCarrierTripsTypeView
@@ -151,8 +154,17 @@ class SystemInteractor(
     fun addListener(listener: SystemListener)    { systemRepository.addListener(listener) }
     fun removeListener(listener: SystemListener) { systemRepository.removeListener(listener) }
 
+    var carrierModeListener: CarrierModeListener? = null
+
+    interface CarrierModeListener {
+        fun startSendingCoordinates()
+        fun stopSendingCoordinates()
+    }
+
     companion object {
         private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )
         private val localesFilterList = arrayOf("en", "ru", "de")
+
+        const val CARRIER_MODE = "carrier_mode"
     }
 }

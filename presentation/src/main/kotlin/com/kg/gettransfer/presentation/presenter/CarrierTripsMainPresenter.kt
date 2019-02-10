@@ -8,7 +8,7 @@ import com.kg.gettransfer.presentation.view.Screens
 import org.koin.standalone.inject
 
 @InjectViewState
-class CarrierTripsMainPresenter : BasePresenter<CarrierTripsMainView>() {
+class CarrierTripsMainPresenter : CarrierPresenter<CarrierTripsMainView>() {
     private val profileMapper: ProfileMapper by inject()
 
     override fun onFirstViewAttach() {

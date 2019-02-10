@@ -11,6 +11,7 @@ import android.support.annotation.CallSuper
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.content.ContextCompat
+import android.util.Log
 
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -28,6 +29,7 @@ import com.google.android.gms.maps.CameraUpdate
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.Transfer
@@ -72,7 +74,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
 
     override fun getPresenter(): TransferDetailsPresenter = presenter
-    lateinit var driverCarMarker: Marker
+    private lateinit var mCarMarker: Marker
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
@@ -280,6 +282,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
         layoutAboutRequestTitle.isVisible = true
         layoutAboutTransport.isVisible = true
+
+        initCarMarker(offer)
     }
 
     private fun initAboutDriverView(offer: OfferModel) {
@@ -429,8 +433,19 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         }
     }
 
-    override fun moveMarker() {
-        moveDriverCar()
+    private fun initCarMarker(offer: OfferModel) {
+        processGoogleMap(false) {
+            mCarMarker = addCarToMap(presenter.getMarkerIcon(offer))
+            presenter.initCoordinates() }
+    }
+
+    override fun moveCarMarker(bearing: Float, latLon: LatLng, show: Boolean) {
+        mCarMarker.apply {
+            position = latLon
+            rotation = bearing
+            isVisible = show
+            isFlat = true
+        }
     }
 
     companion object {
