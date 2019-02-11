@@ -82,22 +82,21 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
         if (offersResult.error == null || (offersResult.error != null && offersResult.fromCache)) {
             offer = params.offerId?.let { offerInteractor.getOffer(it) }
 
-            offer?.let {
-                val paymentResult = utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentRequest)) }
-                if (paymentResult.error != null) {
-                    Timber.e(paymentResult.error!!)
-                    viewState.setError(paymentResult.error!!)
-                } else {
-                    logEventBeginCheckout()
-                    router.navigateTo(Screens.Payment(params.transferId,
-                            offer?.id,
-                            paymentResult.model.url!!,
-                            paymentRequest.percentage,
-                            params.bookNowTransportId))
-                }
-                viewState.blockInterface(false)
+            val paymentResult = utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentRequest)) }
+            if (paymentResult.error != null) {
+                Timber.e(paymentResult.error!!)
+                viewState.setError(paymentResult.error!!)
+            } else {
+                logEventBeginCheckout()
+                router.navigateTo(Screens.Payment(params.transferId,
+                        offer?.id,
+                        paymentResult.model.url!!,
+                        paymentRequest.percentage,
+                        params.bookNowTransportId))
             }
-            if (offer == null) viewState.showOfferError()
+            viewState.blockInterface(false)
+
+            if (offer == null && bookNowOffer == null) viewState.showOfferError()
         }
     }
 
