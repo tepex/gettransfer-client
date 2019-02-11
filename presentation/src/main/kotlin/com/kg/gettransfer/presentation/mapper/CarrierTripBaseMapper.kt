@@ -34,7 +34,7 @@ open class CarrierTripBaseMapper : Mapper<CarrierTripBaseModel, CarrierTripBase>
             price                 = type.price,
             vehicle               = vehicleInfoMapper.toView(type.vehicle),
             timeToTransfer        = tr,
-            tripStatus            = getTripStatus(tr, type.time, type.duration)
+            tripStatus            = getTripStatus(tr, type.time, type.duration?.times(60))
         )
     }
 
