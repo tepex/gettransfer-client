@@ -26,7 +26,7 @@ class CarrierTripInfoItem @JvmOverloads constructor(
 
     override val containerView = LayoutInflater.from(context).inflate(R.layout.view_carrier_trip_info_layout, this, true)
 
-    fun setInfo(item: CarrierTripBaseModel, totalPrice: TotalPriceModel?) {
+    fun setInfo(item: CarrierTripBaseModel, totalPrice: TotalPriceModel? = null, showDetails: Boolean? = false) {
         val transferStatus = when (item.tripStatus) {
             CarrierTripBaseModel.FUTURE_TRIP -> context.getString(R.string.LNG_WILL_START_IN).plus(" ")
                     .plus(Utils.durationToString(context, Utils.convertDuration(item.timeToTransfer)))

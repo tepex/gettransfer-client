@@ -23,7 +23,7 @@ import com.kg.gettransfer.presentation.view.SettingsView
 import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.standalone.get
-import java.util.*
+import java.util.Locale
 
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>() {
@@ -134,8 +134,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         utils.launchSuspend {
             utils.asyncAwait { systemInteractor.unregisterPushToken() }
             utils.asyncAwait { systemInteractor.logout() }
+
             utils.asyncAwait { transferInteractor.clearTransfersCache() }
             utils.asyncAwait { offerInteractor.clearOffersCache() }
+            utils.asyncAwait { carrierTripInteractor.clearCarrierTripsCache() }
             router.exit()
         }
         logEvent(Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)

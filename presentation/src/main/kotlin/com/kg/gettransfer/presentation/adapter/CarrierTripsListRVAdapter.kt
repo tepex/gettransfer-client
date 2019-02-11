@@ -72,7 +72,7 @@ class CarrierTripsRVAdapter(
             LayoutContainer {
 
         fun bind(item: CarrierTripBaseModel, listener: ClickOnCarrierTripHandler) = with(containerView) {
-            layoutCarrierTripInfo.setInfo(item, null)
+            layoutCarrierTripInfo.setInfo(item)
             setOnClickListener { listener(item.id, item.transferId) }
         }
     }

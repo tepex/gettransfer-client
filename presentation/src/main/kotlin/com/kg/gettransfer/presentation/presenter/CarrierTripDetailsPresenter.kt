@@ -25,7 +25,6 @@ import org.koin.standalone.inject
 
 @InjectViewState
 class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
-    private val carrierTripInteractor: CarrierTripInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
 
     private val carrierTripMapper: CarrierTripMapper by inject()
@@ -50,7 +49,7 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
         utils.launchSuspend {
             viewState.blockInterface(true)
             val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(tripId) }
-            if (result.error != null) viewState.setError(result.error!!)
+            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
                 val tripInfo = result.model
                 tripModel = carrierTripMapper.toView(tripInfo)
