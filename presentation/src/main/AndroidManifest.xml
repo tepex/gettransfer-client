@@ -168,5 +168,10 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
+        <service android:name=".service.CoordinateService">
+            <intent-filter>
+                <action android:name="com.kg.gettransfer.service.CoordinateService"/>
+            </intent-filter>
+        </service>
     </application>
 </manifest>

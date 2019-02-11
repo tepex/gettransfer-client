@@ -1,0 +1,70 @@
+package com.kg.gettransfer.service
+
+import android.app.Service
+import android.content.Intent
+import android.os.IBinder
+import android.util.Log
+import com.kg.gettransfer.domain.AsyncUtils
+import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.model.Coordinate
+import kotlinx.coroutines.*
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.get
+import org.koin.standalone.inject
+
+class CoordinateService: Service(), KoinComponent {
+    private val compositeDisposable = Job()
+    private val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
+    private val transferInteractor: TransferInteractor by inject()
+    private val routeInteractor: RouteInteractor by inject()
+    private var serviceAlive = false
+
+
+    override fun onBind(intent: Intent?): IBinder? {
+        return null
+    }
+
+    override fun onCreate() {
+        Log.i(TAG, "createed")
+        super.onCreate()
+        serviceAlive = true
+        coordinateProcess()
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i(TAG, "destroyed")
+        serviceAlive = false
+    }
+
+
+//    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+//        return START_STICKY
+//    }
+
+    private fun coordinateProcess(){
+        if (serviceAlive) {
+            utils.launchSuspend {
+                utils.asyncAwait { routeInteractor.getCurrentAddress() }
+                        .isNotError()
+                        ?.let { it.cityPoint.point }
+                        .also {
+                            Log.i(TAG, "sending")
+                            transferInteractor.sendOwnCoordinates(Coordinate(lat = it!!.latitude, lon = it.longitude))
+
+
+                        }
+                delay(DELAY)
+                coordinateProcess()
+            }
+        }
+    }
+
+    companion object {
+        const val TAG = "CoordinateService"
+        const val DELAY = 15000L
+    }
+}

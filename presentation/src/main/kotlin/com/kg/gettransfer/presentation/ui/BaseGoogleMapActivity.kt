@@ -259,7 +259,7 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
 
     private fun createViewWithCar(res: Int): View {
         val view = layoutInflater.inflate(R.layout.view_car_pin, null)
-        view.imgCarPin.setImageResource(res)
+ //       view.imgCarPin.setImageResource(res)
         return view
     }
 

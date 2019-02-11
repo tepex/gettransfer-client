@@ -1,19 +1,22 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView
 import com.kg.gettransfer.presentation.view.Screens
+import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
 @InjectViewState
-class CarrierTripsMainPresenter : CarrierPresenter<CarrierTripsMainView>() {
+class CarrierTripsMainPresenter: CarrierBasePresenter<CarrierTripsMainView>(), KoinComponent {
     private val profileMapper: ProfileMapper by inject()
 
+    @CallSuper
     override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
         checkLoggedIn()
-        systemInteractor.lastMode = Screens.CARRIER_MODE
         viewState.initNavigation(profileMapper.toView(systemInteractor.account.user.profile))
         changeTypeView(systemInteractor.lastCarrierTripsTypeView)
     }

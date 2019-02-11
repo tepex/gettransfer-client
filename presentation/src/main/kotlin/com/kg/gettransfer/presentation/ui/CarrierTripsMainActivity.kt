@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
 import timber.log.Timber
 
-class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
+class CarrierTripsMainActivity : CarrierBaseActivity(), CarrierTripsMainView {
     @InjectPresenter
     internal lateinit var presenter: CarrierTripsMainPresenter
 
@@ -73,6 +73,10 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
         (toolbar as Toolbar).buttonListView.setOnClickListener { presenter.changeTypeView(Screens.CARRIER_TRIPS_TYPE_VIEW_LIST) }
         (toolbar as Toolbar).buttonCalendarView.setOnClickListener { presenter.changeTypeView(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR) }
         initNavigation()
+        if (!appStart) {
+ //           startService(Intent(this, CoordinateService::class.java))
+            appStart = true
+        }
     }
 
     @CallSuper

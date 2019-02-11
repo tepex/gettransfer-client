@@ -1,11 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.annotation.SuppressLint
-
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 
 import android.graphics.Color
 import android.graphics.Rect
@@ -143,7 +139,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     private val appStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            Log.i("FindState", "got it")
             intent?.let { if (it.action == AppLifeCycleObserver.APP_STATE)
                               it.getBooleanExtra(AppLifeCycleObserver.STATUS, false)
                               .also { state -> getPresenter().onAppStateChanged(state) } } }
@@ -356,6 +351,9 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         return layoutPopUp
     }
 
+
+
+
     protected var mDisMissAction = { }    // used in popup dismiss event, need later init, when view with map would be created
 
     protected fun redirectToPlayMarket() {
@@ -387,5 +385,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         const val OFFER_JSON = "offerAsJson"
         const val OFFER_ID   = "offerId"
         const val NO_FOREGROUNDED_ACTIVITIES = 0
+
+        var appStart = false
     }
 }
