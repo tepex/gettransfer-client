@@ -58,6 +58,7 @@ import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
 import kotlinx.android.synthetic.main.view_rate_in_store.view.*
 import kotlinx.android.synthetic.main.view_rate_your_transfer.*
+import java.util.Calendar
 
 class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
@@ -107,7 +108,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     }
 
     private fun initTextFields() {
-        tvTransferCancelled.text = getString(R.string.LNG_RIDE_REQUEST_FOR).plus(" ").plus(getString(R.string.LNG_RIDE_TRANSFER_CANCELLED))
+        tvTransferCancelledOrInProgress.text = getString(R.string.LNG_RIDE_REQUEST_FOR).plus(" ").plus(getString(R.string.LNG_RIDE_TRANSFER_CANCELLED))
         textTransferWillStartTime.text = getString(R.string.LNG_TRANSFER_START).plus(":")
         textRequestSentOrCompletedDate.text = getString(R.string.LNG_RIDE_REQUEST_WAS_SENT).plus(":")
         textYourPrice.text = getString(R.string.LNG_RIDE_PRICE_YOUR).plus(":")
@@ -184,12 +185,13 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         //bottom right
         when (transfer.statusCategory) {
             Transfer.STATUS_CATEGORY_UNFINISHED -> {
-                tvTransferCancelled.text = transfer.statusName?.let {
+                tvTransferCancelledOrInProgress.text = transfer.statusName?.let {
                     getString(R.string.LNG_TRANSFER_WAS)
                             .plus(" ")
                             .plus(getString(transfer.statusName).toLowerCase())
                 }
-                tvTransferCancelled.isVisible = true
+                tvTransferCancelledOrInProgress.setTextColor(ContextCompat.getColor(this, R.color.color_transfer_details_text_red))
+                tvTransferCancelledOrInProgress.isVisible = true
             }
             Transfer.STATUS_CATEGORY_ACTIVE -> {
                 layoutRequestSentOrCompletedDate.isVisible = true
@@ -208,8 +210,14 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
                         .plus(transferCreateDateTimePair.second)
             }
             Transfer.STATUS_CATEGORY_CONFIRMED -> {
-                layoutTransferWillStartTime.isVisible = true
-                tvTransferWillStartTime.text = Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer))
+                if(transfer.dateTime.after(Calendar.getInstance().time)){
+                    layoutTransferWillStartTime.isVisible = true
+                    tvTransferWillStartTime.text = Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer))
+                } else {
+                    tvTransferCancelledOrInProgress.text = getString(R.string.LNG_TRANSFER_IN_PROGRESS)
+                    tvTransferCancelledOrInProgress.setTextColor(ContextCompat.getColor(this, R.color.color_transfer_details_text_green))
+                    tvTransferCancelledOrInProgress.isVisible = true
+                }
             }
         }
     }

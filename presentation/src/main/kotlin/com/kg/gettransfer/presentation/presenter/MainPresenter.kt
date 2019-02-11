@@ -151,8 +151,10 @@ class MainPresenter : BasePresenter<MainView>() {
         utils.asyncAwait { routeInteractor.getCurrentAddress() }.also {
             if (it.error != null) {
                 viewState.setError(it.error!!)
-                val location = utils.asyncAwait { systemInteractor.getMyLocation() }.model
-                setLocation(location)
+                val locationResult = utils.asyncAwait { systemInteractor.getMyLocation() }
+                if (locationResult.error == null
+                        && locationResult.model.latitude != null
+                        && locationResult.model.longitude != null) setLocation(locationResult.model)
             }
             else setPointAddress(it.model)
             return it
@@ -252,6 +254,7 @@ class MainPresenter : BasePresenter<MainView>() {
         routeInteractor.apply {
             hourlyDuration = if (hourly) hourlyDuration?: MIN_HOURLY else null
         }
+        if(systemInteractor.selectedField == FIELD_TO) changeUsedField(FIELD_FROM)
         viewState.changeFields(hourly)
     }
 
@@ -355,11 +358,11 @@ class MainPresenter : BasePresenter<MainView>() {
             ?.firstOrNull()
             ?.let { offer ->
                 if (!offer.isRated()) {
-                    val routeModel = createRouteModel(transfer)
+                    val routeModel = if(transfer.to != null) createRouteModel(transfer) else null
                     reviewInteractor.offerIdForReview = offer.id
                     viewState.openReviewForLastTrip(
-                        transfer.id,
-                        transfer.dateToLocal,
+                        transferMapper.toView(transfer),
+                        LatLng(transfer.from.point!!.latitude, transfer.from.point!!.longitude),
                         offer.vehicle.name,
                         offer.vehicle.color?:"",
                         routeModel

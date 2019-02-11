@@ -72,7 +72,7 @@ import org.koin.standalone.KoinComponent
 import timber.log.Timber
 
 object Utils : KoinComponent {
-    private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
+    //private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
     private val EMAIL_PATTERN = Patterns.EMAIL_ADDRESS
 
     @JvmField val DATE_PATTERN = "dd MMM yyyy"
@@ -184,8 +184,9 @@ object Utils : KoinComponent {
 
     fun checkPhone(phone: String): Boolean {
         try {
-            return if(!PHONE_PATTERN.matcher(phone.trim()).matches()) false
-            else phoneUtil.isValidNumber(phoneUtil.parse(phone, null))
+            /*return if(!PHONE_PATTERN.matcher(phone.trim()).matches()) false
+            else phoneUtil.isValidNumber(phoneUtil.parse(phone, null))*/
+            return phoneUtil.isValidNumber(phoneUtil.parse(phone, null))
         } catch (e: Exception) {
             Timber.w("phone parse error: $phone", e)
             return false

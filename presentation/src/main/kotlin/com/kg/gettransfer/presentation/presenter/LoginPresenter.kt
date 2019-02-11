@@ -44,7 +44,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
                 logLoginEvent(Analytics.RESULT_SUCCESS)
                 registerPushToken()
             } else {
-                viewState.showError(true, result.error!!.message)
+                if(result.error!!.isNoUser()) viewState.showError(true, result.error!!.message)
                 logLoginEvent(Analytics.RESULT_FAIL)
             }
             viewState.blockInterface(false)

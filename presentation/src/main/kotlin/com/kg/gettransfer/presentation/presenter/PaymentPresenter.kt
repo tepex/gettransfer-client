@@ -83,10 +83,8 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
 
         offer = offerInteractor.getOffer(offerId)
         utils.launchSuspend {
-            val result = utils.asyncAwait {
-                transferInteractor.getTransfer(transferId)
-            }
-            if (result.error == null) {
+            val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
+            if (result.error == null || (result.error != null && result.fromCache)) {
                 if (result.model.bookNowOffers.isNotEmpty()) {
                     bookNowOffer = result.model.bookNowOffers.filterKeys { it.name == bookNowTransportId }.values.first()
                 }
