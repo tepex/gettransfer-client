@@ -290,8 +290,7 @@
                     android:layout_marginTop="@dimen/views_carrier_trips_info_layout_distance_duration_price_items_margin"
                     android:textSize="@dimen/views_carrier_trips_info_layout_text_size_17sp"
                     android:textColor="@color/colorTextBlack"
-                    android:fontFamily="@font/sf_pro_text_semibold"
-                    android:text="3942km"/>
+                    android:fontFamily="@font/sf_pro_text_semibold"/>
 
             </LinearLayout>
 
@@ -339,8 +338,7 @@
                     android:layout_marginTop="@dimen/views_carrier_trips_info_layout_distance_duration_price_items_margin"
                     android:textSize="@dimen/views_carrier_trips_info_layout_text_size_17sp"
                     android:textColor="@color/colorTextBlack"
-                    android:fontFamily="@font/sf_pro_text_semibold"
-                    android:text="12h 45m"/>
+                    android:fontFamily="@font/sf_pro_text_semibold"/>
 
             </LinearLayout>
 
@@ -367,8 +365,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/views_carrier_trips_info_layout_text_size_17sp"
                 android:textColor="@color/color_driver_mode_text_green"
-                android:fontFamily="@font/sf_pro_text_semibold"
-                android:text="$300"/>
+                android:fontFamily="@font/sf_pro_text_semibold"/>
 
             <TextView
                 android:id="@+id/bsTvTotalPrice"
@@ -377,8 +374,7 @@
                 android:textSize="@dimen/views_carrier_trips_info_layout_text_size_11sp"
                 android:textColor="@color/color_driver_mode_text_gray"
                 android:fontFamily="@font/sf_pro_text_regular"
-                android:textAllCaps="true"
-                android:text="Total price: $1000 \n(30% not paid)"/>
+                android:textAllCaps="true"/>
 
         </LinearLayout>
 
