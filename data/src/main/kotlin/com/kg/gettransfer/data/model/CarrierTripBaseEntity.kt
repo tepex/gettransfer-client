@@ -22,7 +22,7 @@ open class CarrierTripBaseEntity(
 ) {
 
     companion object {
-        const val ENTITY_NAME             = "trip"
+        const val ENTITY_NAME             = "base_trip"
         const val ID                      = "id"
         const val TRANSFER_ID             = "transfer_id"
         const val FROM                    = "from"

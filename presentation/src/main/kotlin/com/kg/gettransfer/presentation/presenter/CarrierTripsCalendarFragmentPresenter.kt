@@ -12,8 +12,6 @@ import java.util.Calendar
 
 @InjectViewState
 class CarrierTripsCalendarFragmentPresenter : BasePresenter<CarrierTripsCalendarFragmentView>() {
-    private val carrierTripInteractor: CarrierTripInteractor by inject()
-
     private val carrierTripsCalendarItemsMapper: CarrierTripsCalendarItemsMapper by inject()
 
     private var carrierTripsCalendarItems: Map<String, List<CarrierTripBaseModel>>? = null
@@ -24,7 +22,7 @@ class CarrierTripsCalendarFragmentPresenter : BasePresenter<CarrierTripsCalendar
         utils.launchSuspend {
             viewState.blockInterface(true)
             val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrips() }
-            if (result.error != null) viewState.setError(result.error!!)
+            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
                 carrierTripsCalendarItems = carrierTripsCalendarItemsMapper.toCalendarView(result.model)
                 viewState.setCalendarIndicators(carrierTripsCalendarItems!!)

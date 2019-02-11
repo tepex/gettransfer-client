@@ -23,7 +23,7 @@ open class CarrierTripBaseMapper : Mapper<CarrierTripBaseModel, CarrierTripBase>
             dateLocal             = type.dateLocal,
             dateTime              = SystemUtils.formatDateTime(type.dateLocal),
             duration              = type.duration,
-            distance              = type.distance ?: Mapper.checkDistance(type.from.point!!, type.to!!.point),
+            distance              = type.distance ?: Mapper.checkDistance(type.from.point!!, type.to?.point),
             time                  = type.time,
             countChild            = type.childSeats,
             childSeatsInfant      = type.childSeatsInfant,
