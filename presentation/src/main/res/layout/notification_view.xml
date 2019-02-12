@@ -36,7 +36,6 @@
         android:layout_below="@+id/ltTitle"
         android:layout_alignStart="@+id/ltTitle"
         android:layout_marginTop="8dp"
-        android:text="@string/LNG_NEW_OFFER_MESSAGE"
         style="@style/TextAppearance.Compat.Notification"/>
 
     <ImageView

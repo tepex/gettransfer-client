@@ -82,7 +82,7 @@ class NotificationManager(val context: Context) : KoinComponent {
 
         layout.setViewVisibility(R.id.tvCarInfo, View.GONE)
         layout.setTextViewText(R.id.tvTitle, context.getString( if(isMessageByDriver) R.string.LNG_NEW_DRIVER_CHAT_TITLE else R.string.LNG_NEW_PASSENGER_CHAT_TITLE))
-        layout.setTextViewText(R.id.tvContent, context.getString(R.string.LNG_UNREAD_MESSAGES_COUNT, countNewMessages.toString()))
+        if (countNewMessages > 0) layout.setTextViewText(R.id.tvContent, context.getString(R.string.LNG_UNREAD_MESSAGES_COUNT, countNewMessages.toString()))
 
         /*if (!offer.vehicle.photos.isEmpty()) {
             utils.launchSuspend {

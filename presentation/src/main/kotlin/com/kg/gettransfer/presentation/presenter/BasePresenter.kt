@@ -165,6 +165,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     }
 
     override fun onChatBadgeChangedEvent(chatBadgeEvent: ChatBadgeEvent) {
+        if(!chatBadgeEvent.clearBadge) {
             utils.launchSuspend {
                 val result = utils.asyncAwait { transferInteractor.getTransfer(chatBadgeEvent.transferId) }
                 utils.asyncAwait { offerInteractor.getOffers(chatBadgeEvent.transferId) }
