@@ -10,7 +10,7 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
 @InjectViewState
-class CarrierTripsMainPresenter: CarrierBasePresenter<CarrierTripsMainView>(), KoinComponent {
+class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComponent {
     private val profileMapper: ProfileMapper by inject()
 
     @CallSuper
@@ -25,6 +25,11 @@ class CarrierTripsMainPresenter: CarrierBasePresenter<CarrierTripsMainView>(), K
     override fun attachView(view: CarrierTripsMainView) {
         super.attachView(view)
         checkLoggedIn()
+    }
+
+    @CallSuper
+    override fun detachView(view: CarrierTripsMainView?) {
+        super.detachView(view)
     }
 
     fun changeTypeView(type: String){

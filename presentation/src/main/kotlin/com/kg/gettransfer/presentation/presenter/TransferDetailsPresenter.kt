@@ -3,11 +3,13 @@ package com.kg.gettransfer.presentation.presenter
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.PolyUtil
 import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 import com.kg.gettransfer.domain.eventListeners.TransferEventListener
 
@@ -21,11 +23,8 @@ import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.prefs.PreferencesImpl
 import com.kg.gettransfer.presentation.ui.icons.CarIconResourceProvider
 import com.kg.gettransfer.presentation.delegate.CoordinateRequester
+import com.kg.gettransfer.presentation.mapper.*
 
-import com.kg.gettransfer.presentation.mapper.ProfileMapper
-import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
-import com.kg.gettransfer.presentation.mapper.RouteMapper
-import com.kg.gettransfer.presentation.mapper.TransferMapper
 import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
@@ -48,6 +47,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferE
     private val routeMapper: RouteMapper by inject()
     private val transferMapper: TransferMapper by inject()
     private val reviewRateMapper: ReviewRateMapper by inject()
+    private val pointMapper: PointMapper by inject()
 
     private lateinit var transferModel: TransferModel
     private var routeModel: RouteModel? = null
@@ -56,7 +56,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferE
 
     internal var transferId = 0L
     private var driverCoordinate: DriverCoordinate? = null
-    var carImageResource: Int? = null
+    private var isCameraUpdatedForCoordinates = false
+    private var startCoordinate: LatLng? = null
 
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
@@ -67,6 +68,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferE
             if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
                 val transfer = result.model
+                transfer.from.point?.let { startCoordinate = pointMapper.toView(it) }
                 transferModel = transferMapper.toView(transfer)
                 var offer: Offer? = null
 
@@ -93,15 +95,11 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferE
         }
     }
 
-//    @CallSuper
-//    override fun detachView(view: TransferDetailsView?) {
-//        super.detachView(view)
-//        driverCoordinate = null  // assign null to avoid drawing marker in detached screen
-//    }
-
     @CallSuper
-    override fun detachView(view: TransferDetailsView) {
+    override fun detachView(view: TransferDetailsView?) {
         super.detachView(view)
+        driverCoordinate = null  // assign null to avoid drawing marker in detached screen
+        isCameraUpdatedForCoordinates = true
     }
 
     fun onCenterRouteClick() { track?.let { viewState.centerRoute(it) } }
@@ -241,8 +239,9 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferE
         )
 
     fun initCoordinates() {
-        driverCoordinate = DriverCoordinate(Handler(), this) { d, t -> viewState.moveCarMarker(d, t, SHOW_MARKER) }
-        driverCoordinate!!.prop = Coordinate(0, driverCoordinate!!.list[1].first, driverCoordinate!!.list[1].second)
+        driverCoordinate = DriverCoordinate(Handler(), this) { bearing, coordinates, show ->
+            viewState.moveCarMarker(bearing, coordinates, show) }
+//        driverCoordinate!!.property = Coordinate(0, driverCoordinate!!.list[1].first, driverCoordinate!!.list[1].second)
         transferInteractor.transferEventListener = this
     }
 
@@ -250,7 +249,15 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferE
     /*
     When detached - no need to update, so call coordinate delegate safely
      */
-    override fun onLocationReceived(coordinate: Coordinate) { driverCoordinate?.prop = coordinate }
+    override fun onLocationReceived(coordinate: Coordinate) {
+        driverCoordinate?.property = coordinate
+        with(coordinate) {
+            if(!isCameraUpdatedForCoordinates) {
+                viewState.updateCamera(mutableListOf(LatLng(lat, lon)).also { list -> startCoordinate?.let { list.add(it) } })
+                isCameraUpdatedForCoordinates = true
+            }
+        }
+    }
 
     fun getMarkerIcon(offerModel: OfferModel) = CarIconResourceProvider.getCarIcon(offerModel.vehicle)
 
@@ -259,7 +266,5 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferE
         const val FIELD_PHONE = "field_phone"
         const val OPERATION_COPY = "operation_copy"
         const val OPERATION_OPEN = "operation_open"
-
-        const val SHOW_MARKER = true
     }
 }

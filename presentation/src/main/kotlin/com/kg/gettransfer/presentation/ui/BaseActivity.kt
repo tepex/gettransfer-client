@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.os.PersistableBundle
 
 import android.support.annotation.CallSuper
@@ -23,7 +24,6 @@ import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 
 import android.util.DisplayMetrics
-import android.util.Log
 
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -222,13 +222,15 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     @CallSuper
     protected override fun onStop() {
-        if (--GTApplication.onStart == NO_FOREGROUNDED_ACTIVITIES) offerServiceConnection.disconnect()
-        LocalBroadcastManager.getInstance(this).apply {
-            unregisterReceiver(offerReceiver)
-            unregisterReceiver(appStateReceiver)
-        }
-        unregisterReceiver(inetReceiver)
         super.onStop()
+        Handler().postDelayed({
+            LocalBroadcastManager.getInstance(this).apply {
+                unregisterReceiver(offerReceiver)
+                unregisterReceiver(appStateReceiver)
+            }
+        }, 2000)
+        unregisterReceiver(inetReceiver)
+
     }
 
     @CallSuper

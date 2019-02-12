@@ -1,30 +1,32 @@
 package com.kg.gettransfer.presentation.ui.icons
 
+import com.kg.gettransfer.R
+
 object SuvTransport: TransportColor(){
     override val white: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = R.drawable.suv_white
     override val silver: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = R.drawable.suv_silver
     override val grey: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = R.drawable.suv_grey
     override val black: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = R.drawable.suv_black
     override val brown: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = R.drawable.suv_brown
     override val beige: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = R.drawable.suv_beige
     override val yellow: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = R.drawable.suv_yellow
     override val gold: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = R.drawable.suv_gold
     override val orange: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = R.drawable.suv_orange
     override val red: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = R.drawable.suv_red
     override val purple: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = R.drawable.suv_purpur
     override val blue: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = R.drawable.suv_blue
     override val green: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = R.drawable.suv_green
 }

@@ -1,9 +1,14 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import com.kg.gettransfer.R
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.support.annotation.CallSuper
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
@@ -11,6 +16,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
@@ -28,7 +34,7 @@ import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
 import timber.log.Timber
 
-class CarrierTripsMainActivity : CarrierBaseActivity(), CarrierTripsMainView {
+class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
     @InjectPresenter
     internal lateinit var presenter: CarrierTripsMainPresenter
 
@@ -73,16 +79,19 @@ class CarrierTripsMainActivity : CarrierBaseActivity(), CarrierTripsMainView {
         (toolbar as Toolbar).buttonListView.setOnClickListener { presenter.changeTypeView(Screens.CARRIER_TRIPS_TYPE_VIEW_LIST) }
         (toolbar as Toolbar).buttonCalendarView.setOnClickListener { presenter.changeTypeView(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR) }
         initNavigation()
-        if (!appStart) {
- //           startService(Intent(this, CoordinateService::class.java))
-            appStart = true
-        }
+        startCoordinateService()
     }
 
     @CallSuper
     protected override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         toggle.syncState()
+    }
+
+    @CallSuper
+    override fun onDestroy() {
+        super.onDestroy()
+        stopCoordinateService()
     }
 
     @CallSuper
@@ -158,5 +167,33 @@ class CarrierTripsMainActivity : CarrierBaseActivity(), CarrierTripsMainView {
     private fun changeButtonModeInTitle(isCalendarMode: Boolean){
         (toolbar as Toolbar).buttonListView.isVisible = isCalendarMode
         (toolbar as Toolbar).buttonCalendarView.isVisible = !isCalendarMode
+    }
+
+    /* Service */
+
+    private val connectionService = object : ServiceConnection {
+        override fun onServiceDisconnected(name: ComponentName?) {}
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {}
+    }
+
+    private fun startCoordinateService() {
+        Intent(SERVICE_ACTION).also {
+            it.setPackage(PACKAGE)
+            startService(it)
+            bindService(it, connectionService, Context.BIND_AUTO_CREATE)
+        }
+    }
+
+    private fun stopCoordinateService() {
+        Intent(SERVICE_ACTION).also {
+            it.setPackage(PACKAGE)
+            unbindService(connectionService)
+            stopService(it)
+        }
+    }
+
+    companion object {
+        const val SERVICE_ACTION = "com.kg.gettransfer.service.CoordinateService"
+        const val PACKAGE        = "com.kg.gettransfer"
     }
 }

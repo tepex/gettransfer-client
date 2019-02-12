@@ -21,29 +21,18 @@ class CoordinateService: Service(), KoinComponent {
     private val routeInteractor: RouteInteractor by inject()
     private var serviceAlive = false
 
-
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-    }
+    override fun onBind(intent: Intent?) = null
 
     override fun onCreate() {
-        Log.i(TAG, "createed")
         super.onCreate()
         serviceAlive = true
         coordinateProcess()
-
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.i(TAG, "destroyed")
         serviceAlive = false
     }
-
-
-//    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-//        return START_STICKY
-//    }
 
     private fun coordinateProcess(){
         if (serviceAlive) {
@@ -51,12 +40,7 @@ class CoordinateService: Service(), KoinComponent {
                 utils.asyncAwait { routeInteractor.getCurrentAddress() }
                         .isNotError()
                         ?.let { it.cityPoint.point }
-                        .also {
-                            Log.i(TAG, "sending")
-                            transferInteractor.sendOwnCoordinates(Coordinate(lat = it!!.latitude, lon = it.longitude))
-
-
-                        }
+                        .also { transferInteractor.sendOwnCoordinates(Coordinate(lat = it!!.latitude, lon = it.longitude)) }
                 delay(DELAY)
                 coordinateProcess()
             }
@@ -64,7 +48,6 @@ class CoordinateService: Service(), KoinComponent {
     }
 
     companion object {
-        const val TAG = "CoordinateService"
-        const val DELAY = 15000L
+        const val DELAY = 15_000L  // 15 sec
     }
 }

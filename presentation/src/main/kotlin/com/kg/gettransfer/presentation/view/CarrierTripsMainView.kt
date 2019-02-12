@@ -5,7 +5,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.kg.gettransfer.presentation.model.ProfileModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface CarrierTripsMainView : CarrierBaseView{
+interface CarrierTripsMainView : BaseView{
     fun changeTypeView(type: String)
     fun initNavigation(profile: ProfileModel)
     fun showReadMoreDialog()

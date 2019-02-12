@@ -28,6 +28,7 @@ import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 
 import kotlinx.android.synthetic.main.view_maps_pin.view.* //don't delete
+import kotlinx.android.synthetic.main.view_car_pin.view.*  //don't delete
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -192,6 +193,10 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
         }
     }
 
+    protected fun moveCameraWithDriverCoordinate(cameraUpdate: CameraUpdate) {
+        googleMap.moveCamera(cameraUpdate)
+    }
+
     protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
         val bmPinA = getPinBitmap(placeName, info, R.drawable.ic_map_label_a)
         val startMakerOptions = MarkerOptions()
@@ -259,7 +264,7 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
 
     private fun createViewWithCar(res: Int): View {
         val view = layoutInflater.inflate(R.layout.view_car_pin, null)
- //       view.imgCarPin.setImageResource(res)
+        view.imgCarPin.setImageResource(res)
         return view
     }
 

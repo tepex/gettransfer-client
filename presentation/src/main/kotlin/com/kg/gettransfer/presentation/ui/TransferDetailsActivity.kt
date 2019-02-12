@@ -26,6 +26,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.bumptech.glide.Glide
 
 import com.google.android.gms.maps.CameraUpdate
+import com.google.android.gms.maps.CameraUpdateFactory
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
@@ -100,6 +101,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
         initTextFields()
         setClickListeners()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        clearMarker()
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -446,6 +452,15 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
             isVisible = show
             isFlat = true
         }
+    }
+
+    override fun updateCamera(latLngList: List<LatLng>) {
+        runOnUiThread {
+            moveCameraWithDriverCoordinate(Utils.getCameraUpdate(latLngList)) }
+    }
+
+    private fun clearMarker() {
+        mCarMarker.remove()
     }
 
     companion object {

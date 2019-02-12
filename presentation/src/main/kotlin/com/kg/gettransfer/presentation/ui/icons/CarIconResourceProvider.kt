@@ -13,15 +13,15 @@ object CarIconResourceProvider {
 private fun getType(id: TransportType.ID) =
         when (id) {
             TransportType.ID.BUS         -> BusTransport
-            TransportType.ID.BUSINESS    -> BusinessTransport
-            TransportType.ID.COMFORT     -> ComfortTransport
-            TransportType.ID.HELICOPTER  -> HelicopterTransport
+            TransportType.ID.BUSINESS,
+            TransportType.ID.ECONOMY,
+            TransportType.ID.COMFORT,
+            TransportType.ID.PREMIUM     -> SedanTransport
             TransportType.ID.LIMOUSINE   -> LimousineTransport
-            TransportType.ID.MINIBUS     -> MinibusTransport
-            TransportType.ID.PREMIUM     -> PremiumTransport
+            TransportType.ID.MINIBUS,
+            TransportType.ID.VAN         -> MinibusTransport
             TransportType.ID.SUV         -> SuvTransport
-            TransportType.ID.VAN         -> VanTransport
-            else                         -> EconomyTransport
+            else                         -> SedanTransport
         }
 
 abstract class TransportColor {

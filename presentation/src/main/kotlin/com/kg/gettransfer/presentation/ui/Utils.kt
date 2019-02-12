@@ -227,6 +227,12 @@ object Utils : KoinComponent {
         return PolylineModel(mPoints.firstOrNull(), mPoints.getOrNull(mPoints.size - 1), line, track)
     }
 
+    fun getCameraUpdate(list: List<LatLng>): CameraUpdate  =
+        LatLngBounds.Builder()
+                .also { b -> list.forEach { b.include(it) } }
+                .build()
+                .let { CameraUpdateFactory.newLatLngBounds(it, 150) }
+
     fun getCameraUpdateForPin(point: LatLng) = CameraUpdateFactory.newLatLngZoom(point, BaseGoogleMapActivity.MAP_MIN_ZOOM)
 
 

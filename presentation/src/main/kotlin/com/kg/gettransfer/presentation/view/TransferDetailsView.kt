@@ -22,6 +22,7 @@ interface TransferDetailsView: BaseView, RouteView {
     fun thanksForRate()
 
     fun moveCarMarker(bearing: Float, latLon: LatLng, show: Boolean)
+    fun updateCamera(latLngList: List<LatLng>)
 
     companion object {
         val EXTRA_TRANSFER_ID = "${TransferDetailsView::class.java.name}.transferId"

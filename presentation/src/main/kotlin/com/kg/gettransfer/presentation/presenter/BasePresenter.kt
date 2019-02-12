@@ -199,7 +199,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     fun onAppStateChanged(isForeGround: Boolean) {
         with(systemInteractor) {
             if (isForeGround) openSocketConnection()
-            else closeSocketConnection()
+            else if(lastMode != Screens.CARRIER_MODE) closeSocketConnection()
         }
     }
 
@@ -210,6 +210,9 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                 eventsCount++
                 transferIds = transferIds.toMutableList().apply { add(transferId) }
             }
+    
+    fun onDriverModeExit() =
+        with(systemInteractor) { if (lastMode == Screens.CARRIER_MODE) closeSocketConnection() }
 
     companion object AnalyticProps {
         const val SINGLE_CAPACITY = 1
