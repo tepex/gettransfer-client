@@ -210,7 +210,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                 eventsCount++
                 transferIds = transferIds.toMutableList().apply { add(transferId) }
             }
-    
+
     fun onDriverModeExit() =
         with(systemInteractor) { if (lastMode == Screens.CARRIER_MODE) closeSocketConnection() }
 

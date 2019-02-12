@@ -13,7 +13,7 @@ class TransferDataStoreIO(private val emitter: TransferEventEmitter) :
 
     private val repository: TransferRepositoryImpl by inject()
 
-    fun initLocationReceiving() = emitter.initLocationReceiving()
+    fun initLocationReceiving(transferId: Long) = emitter.initLocationReceiving(transferId)
 
     fun sendOwnLocation(coordinate: CoordinateEntity) = emitter.sendOwnLocation(coordinate)
 

@@ -137,7 +137,7 @@ class TransferRepositoryImpl(
         socketDataStore.sendOwnLocation(coordinateMapper.toEntity(coordinate))
     }
 
-    override fun initCoordinateReceiving() = socketDataStore.initLocationReceiving()
+    override fun initCoordinateReceiving(transferId: Long) = socketDataStore.initLocationReceiving(transferId)
 
 
 

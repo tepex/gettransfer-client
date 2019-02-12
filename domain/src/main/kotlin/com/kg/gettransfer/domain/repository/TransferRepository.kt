@@ -16,5 +16,5 @@ interface TransferRepository {
     fun clearTransfersCache()
 
     fun sendOwnCoordinate(coordinate: Coordinate)
-    fun initCoordinateReceiving()
+    fun initCoordinateReceiving(transferId: Long)
 }

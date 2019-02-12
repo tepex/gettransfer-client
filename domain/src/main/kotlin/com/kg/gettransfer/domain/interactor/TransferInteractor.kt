@@ -79,7 +79,7 @@ class TransferInteractor(private val repository: TransferRepository) {
     }
 
     fun onCoordinateReceived(coordinate: Coordinate) = transferEventListener?.onLocationReceived(coordinate)
-    fun initCoordinatesReceiving() = repository.initCoordinateReceiving()
+    fun initCoordinatesReceiving(transferId: Long) = repository.initCoordinateReceiving(transferId)
     fun sendOwnCoordinates(coordinate: Coordinate) = repository.sendOwnCoordinate(coordinate)
 
 

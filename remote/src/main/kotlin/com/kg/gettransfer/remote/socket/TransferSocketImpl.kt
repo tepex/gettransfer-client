@@ -19,7 +19,7 @@ class TransferSocketImpl: TransferSocketEmitter, KoinComponent {
     private val socketManager: SocketManager = get()
     private val log: Logger by inject { parametersOf("GTR-socket") }
 
-    override fun initLocationReceiving() = socketManager.emitAck(INIT_LOCATION_EVENTS, arrayOf(2227))
+    override fun initLocationReceiving(transferId: Long) = socketManager.emitAck(INIT_LOCATION_EVENTS, arrayOf(transferId))
 
 //    override fun sendOwnLocation(coordinate: CoordinateEntity) = socketManager.emitEvent(OWN_LOCATION, arrayOf(coordinate))
     override fun sendOwnLocation(coordinate: CoordinateEntity) {

@@ -29,6 +29,7 @@ import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
+import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.presentation.view.TransferDetailsView
 
@@ -245,7 +246,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferE
         transferInteractor.transferEventListener = this
     }
 
-    override fun request() { transferInteractor.initCoordinatesReceiving() }
+    override fun request() { transferInteractor.initCoordinatesReceiving(transferId) }
     /*
     When detached - no need to update, so call coordinate delegate safely
      */
