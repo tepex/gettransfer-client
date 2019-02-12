@@ -55,7 +55,7 @@ open class CarrierTripsListItemsMapper: KoinComponent {
                     endTodayPosition = addViewEndOfToday(rvItemsList)
                 } else {
                     addViewItem(rvItemsList, carrierTripBaseMapper.toView(trip))
-                    if (isToday && i + 1 < rvItemsList.size && !DateUtils.isToday(type[i + 1].dateLocal.time)) { //
+                    if (isToday && (i == type.size - 1 || i + 1 < rvItemsList.size && !DateUtils.isToday(type[i + 1].dateLocal.time))) { //
                         endTodayPosition = addViewEndOfToday(rvItemsList)
                     }
                     i++
