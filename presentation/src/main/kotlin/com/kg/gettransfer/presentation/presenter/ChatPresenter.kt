@@ -81,7 +81,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
 
     fun onSentClick(text: String){
         val time = Calendar.getInstance().time
-        val newMessage = MessageModel(0, chatModel!!.currentAccountId, transferModel!!.id, time, null, text, time.time)
+        val newMessage = MessageModel(0, chatModel!!.currentAccountId, transferId, time, null, text, time.time)
         chatModel!!.messages = chatModel!!.messages.plus(newMessage)
         viewState.scrollToEnd()
         utils.launchSuspend {
@@ -91,20 +91,9 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
         }
     }
 
-    /*fun readMessages(firstVisibleElement: Int, lastVisibleElement: Int){
-        if(chatModel != null){
-            val elements = chatModel!!.messages.subList(firstVisibleElement, lastVisibleElement + 1)
-            elements.forEach {
-                if(it.accountId != chatModel!!.currentAccountId && it.readAt == null){
-                    utils.launchSuspend {
-                        utils.asyncAwait { chatInteractor.readMessage(it.id) }
-                    }
-                }
-            }
-        }
-    }*/
-
-    fun readMessage(messageId: Long) = utils.launchSuspend { utils.asyncAwait { chatInteractor.readMessage(messageId) } }
+    fun readMessage(messageId: Long) {
+        utils.launchSuspend { utils.asyncAwait { chatInteractor.readMessage(messageId) } }
+    }
 
     override fun onNewMessageEvent(message: Message) {
         chatModel!!.messages = chatModel!!.messages.plus(messageMapper.toView(message))
