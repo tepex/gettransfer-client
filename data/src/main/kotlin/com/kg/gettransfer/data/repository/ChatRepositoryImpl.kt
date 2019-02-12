@@ -75,8 +75,10 @@ class ChatRepositoryImpl(
     }
 
     override suspend fun readMessage(messageId: Long): Result<Unit> {
-        factory.retrieveRemoteDataStore().readMessage(messageId)
-        return Result(Unit)
+        val result: ResultEntity<Boolean?> = retrieveRemoteEntity{
+            factory.retrieveRemoteDataStore().readMessage(messageId)
+        }
+        return Result(Unit, result.error?.let { ExceptionMapper.map(it) })
     }
 
     override fun onJoinRoom(transferId: Long) = chatDataStoreIO.onJoinRoomEmit(transferId)
