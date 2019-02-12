@@ -14,7 +14,7 @@ class ChatInteractor(private val repository: ChatRepository) {
 
     suspend fun getChat(transferId: Long, fromCache: Boolean = false) =
             when(fromCache){
-                false -> repository.getChat(transferId)
+                false -> repository.getChatRemote(transferId)
                 true -> repository.getChatCached(transferId)
             }//.apply { if(!isError()) chat = model }
     suspend fun newMessage(message: Message) = repository.newMessage(message)//.apply { if(!isError()) chat?.messages!!.toMutableList().add(model) }

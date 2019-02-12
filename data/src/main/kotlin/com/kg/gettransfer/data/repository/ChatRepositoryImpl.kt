@@ -34,12 +34,12 @@ class ChatRepositoryImpl(
     private val chatBadgeEventMapper = get<ChatBadgeEventMapper>()
     private val chatReceiver: ChatInteractor by inject()
 
-    override suspend fun getChat(transferId: Long): Result<Chat> {
+    override suspend fun getChatRemote(transferId: Long): Result<Chat> {
         val result: ResultEntity<ChatEntity?> = retrieveRemoteEntity {
             factory.retrieveRemoteDataStore().getChat(transferId)
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addChat(transferId, it) }
-        return getChatCached(transferId)
+        return Result(result.entity?.let { chatMapper.fromEntity(it) } ?: DEFAULT_CHAT, result.error?.let { ExceptionMapper.map(it) })
     }
 
     override suspend fun getChatCached(transferId: Long): Result<Chat> {
@@ -47,7 +47,7 @@ class ChatRepositoryImpl(
             factory.retrieveCacheDataStore().getChat(transferId)
         }
         return Result(result.entity?.let { chatMapper.fromEntity(it) } ?: DEFAULT_CHAT, null,
-                result.error != null && result.entity != null ,result.cacheError?.let { ExceptionMapper.map(it) })
+                result.entity != null, result.cacheError?.let { ExceptionMapper.map(it) })
     }
 
     override suspend fun newMessage(message: Message): Result<Chat>{

@@ -30,7 +30,6 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
     @CallSuper
     override fun attachView(view: ChatView) {
         super.attachView(view)
-        getChatFromRemote()
         utils.launchSuspend {
             val transferCachedResult = utils.asyncAwait { transferInteractor.getTransfer(transferId, true) }
             val offerCachedResult = utils.asyncAwait { offerInteractor.getOffers(transferId, true) }
@@ -38,15 +37,15 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
 
             transferModel = transferMapper.toView(transferCachedResult.model)
             offerModel = offerCachedResult.model.firstOrNull()?.let { offerMapper.toView(it) }
-            chatModel = chatMapper.toView(chatCachedResult.model)
+            if(chatCachedResult.fromCache) chatModel = chatMapper.toView(chatCachedResult.model)
 
             initToolbar()
             chatModel?.let { viewState.setChat(it, true) }
         }
-        checkNewMessagesCached()
-        //startTimerForUpdateChatHistory()
+        getChatFromRemote()
         chatInteractor.eventChatReceiver = this
         chatInteractor.onJoinRoom(transferId)
+        checkNewMessagesCached()
     }
 
     @CallSuper
