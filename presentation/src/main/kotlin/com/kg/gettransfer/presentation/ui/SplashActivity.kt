@@ -94,7 +94,6 @@ class SplashActivity : AppCompatActivity() {
                     .putExtra(AboutView.EXTRA_OPEN_MAIN, true).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
         }
         else {
-            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             when (systemInteractor.lastMode) {
                 Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsMainActivity::class.java))
                 Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
