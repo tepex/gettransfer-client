@@ -87,4 +87,8 @@ class ChatActivity : BaseActivity(), ChatView {
     override fun scrollToEnd() {
         runOnUiThread { rvMessages.adapter?.let { rvMessages.scrollToPosition(it.itemCount - 1)  } }
     }
+
+    override fun notifyData() {
+        runOnUiThread { rvMessages.adapter?.apply { notifyDataSetChanged() } }
+    }
 }

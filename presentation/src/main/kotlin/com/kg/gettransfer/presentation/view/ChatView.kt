@@ -11,6 +11,7 @@ interface ChatView : BaseView {
     fun initToolbar(transfer: TransferModel?, offer: OfferModel?, name: String)
     fun setChat(chat: ChatModel, withScrollDown: Boolean)
     fun scrollToEnd()
+    fun notifyData()
 
     companion object {
         val EXTRA_TRANSFER_ID = "${ChatView::class.java.name}.transferId"

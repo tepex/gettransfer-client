@@ -113,5 +113,6 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
 
     override fun onMessageReadEvent(message: Message) {
         chatModel!!.messages.find { it.id == message.id }?.readAt = message.readAt
+        viewState.notifyData()
     }
 }
