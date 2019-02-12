@@ -10,12 +10,12 @@ import com.kg.gettransfer.cache.dao.OfferCachedDao
 import com.kg.gettransfer.cache.dao.TransferCachedDao
 import com.kg.gettransfer.cache.dao.RouteCacheDao
 import com.kg.gettransfer.cache.dao.CarrierTripCacheDao
+import com.kg.gettransfer.cache.dao.ChatCachedDao
 
 import com.kg.gettransfer.cache.model.AccountCached
 import com.kg.gettransfer.cache.model.ConfigsCached
 import com.kg.gettransfer.cache.model.OfferCached
 import com.kg.gettransfer.cache.model.TransferCached
-import com.kg.gettransfer.cache.model.OfferCached
 import com.kg.gettransfer.cache.model.RouteInfoCached
 import com.kg.gettransfer.cache.model.CarrierTripBaseCached
 import com.kg.gettransfer.cache.model.CarrierTripMoreCached

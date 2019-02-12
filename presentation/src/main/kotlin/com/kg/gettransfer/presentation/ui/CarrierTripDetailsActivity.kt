@@ -147,7 +147,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
             Utils.setSelectOperationListener(this, layoutPassengerEmail, operationsName, R.string.LNG_DRIVER_EMAIL) {
                 presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
             btnSendEmailPassenger.setOnClickListener { presenter.sendEmail(email, presenter.transferId) }
-            btnChat.setOnClickListener { presenter.sendEmail(email, presenter.transferId) }
+            btnChat.setOnClickListener { presenter.onChatClick() }
         }
         passenger.phone?.let { phone ->
             passengerPhone.text = phone

@@ -50,12 +50,18 @@ class ChatActivity : BaseActivity(), ChatView {
         })*/
     }
 
-    override fun initToolbar(transfer: TransferModel?, offer: OfferModel?) {
+    override fun initToolbar(transfer: TransferModel?, offer: OfferModel?, name: String) {
         (toolbar as Toolbar).apply {
             layoutChatTitle.isVisible = true
             transfer?.let {
-                transferFromText.text = it.from
-                transferStartDateText.text = SystemUtils.formatDateTimeWithShortMonth(it.dateTime)
+                if(transfer.from.isNotEmpty()){
+                    transferFromOrNameText.text = it.from
+                    transferStartDateText.text = SystemUtils.formatDateTimeWithShortMonth(it.dateTime)
+                    transferStartDateText.isVisible = true
+                } else {
+                    transferFromOrNameText.text = name
+                    transferFromOrNameText.textSize = 17f
+                }
             }
             chatTitleButtonBack.setOnClickListener { presenter.onBackCommandClick() }
             offer?.phoneToCall?.let { phone ->

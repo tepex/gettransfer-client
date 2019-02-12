@@ -20,6 +20,7 @@ import com.kg.gettransfer.presentation.model.RouteModel
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
+import com.kg.gettransfer.presentation.view.Screens
 
 import org.koin.standalone.inject
 
@@ -109,5 +110,9 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
                 }
             }
         }
+    }
+
+    fun onChatClick(){
+        router.navigateTo(Screens.Chat(transferId))
     }
 }

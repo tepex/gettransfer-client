@@ -15,7 +15,6 @@ import com.kg.gettransfer.presentation.view.ChatView
 import org.koin.standalone.inject
 import java.util.Calendar
 
-
 @InjectViewState
 class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
     private val transferMapper: TransferMapper by inject()
@@ -41,7 +40,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
             offerModel = offerCachedResult.model.firstOrNull()?.let { offerMapper.toView(it) }
             chatModel = chatMapper.toView(chatCachedResult.model)
 
-            viewState.initToolbar(transferModel, offerModel)
+            initToolbar()
             chatModel?.let { viewState.setChat(it, true) }
         }
         checkNewMessagesCached()
@@ -56,6 +55,12 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
         chatInteractor.onLeaveRoom(transferId)
     }
 
+    private fun initToolbar(){
+        val accountIds = chatModel?.accounts?.keys?.filter { it != chatModel!!.currentAccountId }
+        val name = chatModel?.accounts?.get(accountIds?.firstOrNull())?.fullName
+        viewState.initToolbar(transferModel, offerModel, name?: "")
+    }
+
     private fun getChatFromRemote() {
         utils.launchSuspend {
             val chatRemoteResult = utils.asyncAwait { chatInteractor.getChat(transferId) }
@@ -63,6 +68,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
             else {
                 if(chatModel == null){
                     chatModel = chatMapper.toView(chatRemoteResult.model)
+                    initToolbar()
                     viewState.setChat(chatModel!!, true)
                 } else {
                     val oldMessagesSize = chatModel!!.messages.size

@@ -165,9 +165,9 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     }
 
     override fun onChatBadgeChangedEvent(chatBadgeEvent: ChatBadgeEvent) {
-        utils.launchSuspend {
-            val result = utils.asyncAwait { transferInteractor.getTransfer(chatBadgeEvent.transferId) }
-            if(result.error == null && result.model.unreadMessagesCount != 0) {
+            utils.launchSuspend {
+                val result = utils.asyncAwait { transferInteractor.getTransfer(chatBadgeEvent.transferId) }
+                utils.asyncAwait { offerInteractor.getOffers(chatBadgeEvent.transferId) }
                 notificationManager.showNewMessageNotification(
                         chatBadgeEvent.transferId,
                         result.model.unreadMessagesCount,
