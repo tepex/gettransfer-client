@@ -45,9 +45,12 @@ class SocketManager(): KoinComponent {
     }
 
     fun connect(endpoint: EndpointModel, accessToken: String, handler: OfferModelHandler = {k, l -> }) {
-        statusOpened = true
+        //statusOpened = true
         this.handler = handler
-        connectionChanged(endpoint, accessToken)
+        if(!statusOpened) {
+            statusOpened = true
+            connectionChanged(endpoint, accessToken)
+        }
     }
 
     fun disconnect() {

@@ -202,6 +202,8 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
         }
     }
 
+    fun openSocketConnection() { systemInteractor.openSocketConnection() }
+
     private fun increaseEventsCounter(transferId: Long) =
             with(systemInteractor) {
                 eventsCount++
