@@ -56,22 +56,24 @@ class ChatRepositoryImpl(
         return getChatCached(message.transferId)
     }
 
-    override suspend fun sendAllNewMessages(transferId: Long?): Result<Unit> {
+    override suspend fun sendAllNewMessages(transferId: Long?): Result<Int> {
         val newMessages =
                 if(transferId != null) factory.retrieveCacheDataStore().getNewMessagesForTransfer(transferId)
                 else factory.retrieveCacheDataStore().getAllNewMessages()
+        var sendedMessagesCount = 0
         for (i in 0 until newMessages.size){
             val result: ResultEntity<MessageEntity?> = retrieveRemoteEntity {
                 factory.retrieveRemoteDataStore().newMessage(newMessages[i].transferId, newMessages[i].text)
             }
             if (result.error == null){
+                sendedMessagesCount++
                 result.entity?.let { factory.retrieveCacheDataStore().addMessage(result.entity) }
                 factory.retrieveCacheDataStore().deleteNewMessageFromCache(newMessages[i].id)
             } else {
-                return Result(Unit)
+                return Result(sendedMessagesCount)
             }
         }
-        return Result(Unit)
+        return Result(sendedMessagesCount)
     }
 
     override suspend fun readMessage(messageId: Long): Result<Unit> {

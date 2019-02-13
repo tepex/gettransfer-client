@@ -55,6 +55,8 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     protected val carrierTripInteractor: CarrierTripInteractor by inject()
     protected val chatInteractor: ChatInteractor by inject()
 
+    private var sendingMessagesNow = false
+
     open fun onBackCommandClick() {
         val map = mutableMapOf<String, Any>()
         map[Analytics.PARAM_KEY_NAME] = Analytics.BACK_CLICKED
@@ -80,8 +82,17 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     }
 
     fun checkNewMessagesCached() {
-        utils.launchSuspend { utils.asyncAwait{ chatInteractor.sendAllNewMessages() } }
+        if(!sendingMessagesNow) {
+            utils.launchSuspend {
+                sendingMessagesNow = true
+                val result = utils.asyncAwait { chatInteractor.sendAllNewMessages() }
+                if (result.model > 0) doingSomethingAfterSendingNewMessagesCached()
+                sendingMessagesNow = false
+            }
+        }
     }
+
+    open fun doingSomethingAfterSendingNewMessagesCached() {}
 
     @CallSuper
     override fun onDestroy() {

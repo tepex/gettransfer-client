@@ -48,7 +48,6 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
             chatModel?.let { viewState.setChat(it, true) }
         }
         getChatFromRemote()
-        checkNewMessagesCached()
         chatInteractor.eventChatReceiver = this
         chatInteractor.onJoinRoom(transferId)
     }
@@ -63,6 +62,11 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
         val accountIds = chatModel?.accounts?.keys?.filter { it != chatModel!!.currentAccountId }
         val name = chatModel?.accounts?.get(accountIds?.firstOrNull())?.fullName
         viewState.initToolbar(transferModel, offerModel, name?: "")
+    }
+
+    override fun doingSomethingAfterSendingNewMessagesCached() {
+        getChatFromRemote()
+        viewState.scrollToEnd()
     }
 
     private fun getChatFromRemote() {

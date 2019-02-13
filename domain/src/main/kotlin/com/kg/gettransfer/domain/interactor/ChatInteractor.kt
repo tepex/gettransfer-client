@@ -20,7 +20,7 @@ class ChatInteractor(private val repository: ChatRepository) {
     suspend fun newMessage(message: Message) = repository.newMessage(message)//.apply { if(!isError()) chat?.messages!!.toMutableList().add(model) }
     suspend fun readMessage(messageId: Long) = repository.readMessage(messageId)
 
-    suspend fun sendAllNewMessages() = repository.sendAllNewMessages()
+    suspend fun sendAllNewMessages(transferId: Long? = null) = repository.sendAllNewMessages(transferId)
 
     fun onJoinRoom(transferId: Long) = repository.onJoinRoom(transferId)
     fun onNewMessageEvent(message: Message) = eventChatReceiver?.onNewMessageEvent(message)

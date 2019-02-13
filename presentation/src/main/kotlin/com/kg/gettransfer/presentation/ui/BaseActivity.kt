@@ -131,7 +131,10 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
     /* BroadCast receivers */
     private val inetReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) = setNetworkAvailability(context) }
+        override fun onReceive(context: Context, intent: Intent) {
+            if(setNetworkAvailability(context)) getPresenter().checkNewMessagesCached()
+        }
+    }
 
     private val offerReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -149,11 +152,11 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
 
 
-    protected open fun setNetworkAvailability(context: Context) {
+    protected open fun setNetworkAvailability(context: Context): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val available = cm.activeNetworkInfo?.let { it.isConnected } ?: false
-        if(available) getPresenter().checkNewMessagesCached()
         viewNetworkNotAvailable?.let { it.isGone = available }
+        return available
     }
 
     private val loadingFragment by lazy { LoadingFragment() }
