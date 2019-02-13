@@ -191,10 +191,14 @@ class SocketManager(): KoinComponent {
     }
 
     fun emitEvent(eventName: String, arg: Any) {
+
         when {
             socket == null        -> { log.error("event $eventName was not emit: $SOCKET_TAG is null" ); return }
             !socket!!.connected() -> { log.error("event $eventName was not emit: $SOCKET_TAG is not connected" ); return }
-            else                  -> socket!!.emit(eventName, arg)
+            else                  -> {
+                socket!!.emit(eventName, arg)
+                log.error("event $eventName was emit: $SOCKET_TAG is connected" )
+            }
         }
     }
 

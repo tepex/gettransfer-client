@@ -12,11 +12,16 @@ import com.kg.gettransfer.presentation.model.MessageModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.view.ChatView
+import org.koin.core.parameter.parametersOf
 import org.koin.standalone.inject
 import java.util.Calendar
+import org.slf4j.Logger
+import kotlin.math.log
 
 @InjectViewState
 class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
+    private val log: Logger by inject { parametersOf("GTR-socket") }
+
     private val transferMapper: TransferMapper by inject()
     private val chatMapper: ChatMapper by inject()
     private val messageMapper: MessageMapper by inject()
@@ -43,9 +48,9 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
             chatModel?.let { viewState.setChat(it, true) }
         }
         getChatFromRemote()
+        checkNewMessagesCached()
         chatInteractor.eventChatReceiver = this
         chatInteractor.onJoinRoom(transferId)
-        checkNewMessagesCached()
     }
 
     @CallSuper
@@ -96,6 +101,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
     }
 
     override fun onNewMessageEvent(message: Message) {
+        log.error("new message: id = ${message.id}")
         chatModel!!.messages = chatModel!!.messages.plus(messageMapper.toView(message))
         viewState.scrollToEnd()
     }
