@@ -13,7 +13,6 @@ import io.socket.engineio.client.Transport
 import io.socket.engineio.client.transports.WebSocket
 import io.socket.parser.Packet
 import kotlinx.serialization.json.JSON
-import kotlinx.serialization.serializer
 import org.json.JSONArray
 import org.koin.core.parameter.parametersOf
 import org.koin.standalone.KoinComponent
@@ -23,7 +22,7 @@ import org.slf4j.Logger
 class SocketManager(): KoinComponent {
 
     private val log: Logger by inject { parametersOf("GTR-socket") }
-    private val SOCKET_TAG = "socket"
+    private val SOCKET_TAG = "socketManager"
     private val SOCKET_PP = "socket_PP"
 
     private val offerEventer: OfferSocketImpl       by inject()

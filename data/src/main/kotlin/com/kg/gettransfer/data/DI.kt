@@ -1,11 +1,13 @@
 package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.ds.*
+import com.kg.gettransfer.data.ds.IO.*
 import com.kg.gettransfer.data.socket.TransferDataStoreReceiver
 import com.kg.gettransfer.data.mapper.*
 import com.kg.gettransfer.data.repository.*
 import com.kg.gettransfer.data.socket.ChatDataStoreReceiver
 import com.kg.gettransfer.data.socket.OfferDataStoreReceiver
+import com.kg.gettransfer.data.socket.SystemDataStoreReceiver
 
 import com.kg.gettransfer.domain.repository.*
 
@@ -49,7 +51,7 @@ val dataModule = module {
     single { OfferDataStoreCache() }
     single { OfferDataStoreRemote() }
     single { OfferRepositoryImpl(DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>(get(), get())) } bind OfferRepository::class
-    single<OfferDataStoreReceiver> { OfferDataStoreIO() }
+    single<OfferDataStoreReceiver> { OfferSocketDataStoreInput() }
 
     single { PaymentMapper() }
     single { PaymentRequestMapper() }
@@ -72,7 +74,8 @@ val dataModule = module {
 
     single { SystemDataStoreCache() }
     single { SystemDataStoreRemote() }
-    single { SystemDataStoreIO(get()) }
+    single { SystemSocketDataStoreOutput(get()) }
+    single <SystemDataStoreReceiver> { SystemSocketDataStoreInput() }
     single<SystemRepository> { SystemRepositoryImpl(DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>(get(), get()), get()) }
 
     single { RouteInfoMapper() }
@@ -98,7 +101,8 @@ val dataModule = module {
     single { TransferDataStoreCache() }
     single { TransferDataStoreRemote() }
     single { CoordinateMapper() }
-    single { TransferDataStoreIO(get()) } bind TransferDataStoreReceiver::class
+    single { TransferSocketDataStoreOutput(get()) }
+    single <TransferDataStoreReceiver> { TransferSocketDataStoreInput() }
     single { TransferRepositoryImpl(DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>(get(), get()), get()) } bind TransferRepository::class
 
     single { PromoDiscountMapper() }

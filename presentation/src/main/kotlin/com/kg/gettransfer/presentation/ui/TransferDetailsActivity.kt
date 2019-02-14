@@ -75,7 +75,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
 
     override fun getPresenter(): TransferDetailsPresenter = presenter
-    private lateinit var mCarMarker: Marker
+    private var mCarMarker: Marker? = null
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
@@ -414,7 +414,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         thanks_for_rate.isVisible = true
         thanks_for_rate.apply {
             isVisible = true
-            Handler().postDelayed( { isVisible = false }, 3000)
+            Handler().postDelayed( { isVisible = false }, THANKS_DELAY)
         }
 
     }
@@ -446,7 +446,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     }
 
     override fun moveCarMarker(bearing: Float, latLon: LatLng, show: Boolean) {
-        mCarMarker.apply {
+        mCarMarker?.apply {
             position = latLon
             rotation = bearing
             isVisible = show
@@ -456,14 +456,17 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
     override fun updateCamera(latLngList: List<LatLng>) {
         runOnUiThread {
-            moveCameraWithDriverCoordinate(Utils.getCameraUpdate(latLngList)) }
+            moveCameraWithDriverCoordinate(Utils.getCameraUpdate(latLngList))
+        }
     }
 
     private fun clearMarker() {
-        mCarMarker.remove()
+        mCarMarker?.remove()
     }
 
     companion object {
         const val TRANSPORT_TYPES_COLUMNS = 2
+
+        const val THANKS_DELAY = 3000L
     }
 }

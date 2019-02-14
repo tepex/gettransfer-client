@@ -146,7 +146,4 @@ class GTApplication : MultiDexApplication() {
             */
         }
     }
-    companion object {
-        var onStart         = 0
-    }
 }

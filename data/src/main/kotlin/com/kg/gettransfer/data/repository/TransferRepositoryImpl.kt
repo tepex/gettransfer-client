@@ -2,6 +2,7 @@ package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.TransferDataStore
 import com.kg.gettransfer.data.ds.*
+import com.kg.gettransfer.data.ds.IO.TransferSocketDataStoreOutput
 import com.kg.gettransfer.data.mapper.CoordinateMapper
 
 import com.kg.gettransfer.data.mapper.ExceptionMapper
@@ -24,7 +25,7 @@ import org.koin.standalone.inject
 
 class TransferRepositoryImpl(
     private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>,
-    private val socketDataStore: TransferDataStoreIO
+    private val socketDataStore: TransferSocketDataStoreOutput
 ) : BaseRepository(), TransferRepository {
 
     private val transferNewMapper = get<TransferNewMapper>()

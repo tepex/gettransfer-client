@@ -10,6 +10,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.PolyUtil
+import com.kg.gettransfer.domain.eventListeners.SystemEventListener
 import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 import com.kg.gettransfer.domain.eventListeners.TransferEventListener
 
@@ -40,7 +41,7 @@ import org.koin.standalone.inject
 import timber.log.Timber
 
 @InjectViewState
-class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferEventListener, CoordinateRequester {
+class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferEventListener, SystemEventListener {
     private val routeInteractor: RouteInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
 
@@ -63,6 +64,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferE
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
+        systemInteractor.addListener(this)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
@@ -101,6 +103,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferE
         super.detachView(view)
         driverCoordinate = null  // assign null to avoid drawing marker in detached screen
         isCameraUpdatedForCoordinates = true
+        systemInteractor.removeListener(this)
     }
 
     fun onCenterRouteClick() { track?.let { viewState.centerRoute(it) } }
@@ -239,14 +242,17 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferE
             mapOf()
         )
 
+    private val coordinateRequester = object : CoordinateRequester {
+        override fun request() = transferInteractor.initCoordinatesReceiving(transferId)
+    }
+
     fun initCoordinates() {
-        driverCoordinate = DriverCoordinate(Handler(), this) { bearing, coordinates, show ->
+        driverCoordinate = DriverCoordinate(Handler(), coordinateRequester) { bearing, coordinates, show ->
             viewState.moveCarMarker(bearing, coordinates, show) }
 //        driverCoordinate!!.property = Coordinate(0, driverCoordinate!!.list[1].first, driverCoordinate!!.list[1].second)
         transferInteractor.transferEventListener = this
     }
 
-    override fun request() { transferInteractor.initCoordinatesReceiving(transferId) }
     /*
     When detached - no need to update, so call coordinate delegate safely
      */
@@ -261,6 +267,12 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferE
     }
 
     fun getMarkerIcon(offerModel: OfferModel) = CarIconResourceProvider.getCarIcon(offerModel.vehicle)
+
+    override fun onSocketConnected() {
+        coordinateRequester.request()
+    }
+
+    override fun onSocketDisconnected() {}
 
     companion object {
         const val FIELD_EMAIL = "field_email"

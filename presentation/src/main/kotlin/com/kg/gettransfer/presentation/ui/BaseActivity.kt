@@ -193,8 +193,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     protected override fun onStart() {
         LocalBroadcastManager.getInstance(applicationContext)
                 .registerReceiver(appStateReceiver, IntentFilter(AppLifeCycleObserver.APP_STATE))
-        getPresenter().openSocketConnection()
-        GTApplication.onStart++
 //        with(offerServiceConnection) {
 //            if (!statusOpened)
 //                connect(systemInteractor.endpoint, systemInteractor.accessToken) { json, id ->

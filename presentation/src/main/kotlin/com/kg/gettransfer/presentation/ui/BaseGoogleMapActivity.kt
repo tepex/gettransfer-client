@@ -194,7 +194,7 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
     }
 
     protected fun moveCameraWithDriverCoordinate(cameraUpdate: CameraUpdate) {
-        googleMap.moveCamera(cameraUpdate)
+        processGoogleMap(false) { googleMap.moveCamera(cameraUpdate) }
     }
 
     protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {

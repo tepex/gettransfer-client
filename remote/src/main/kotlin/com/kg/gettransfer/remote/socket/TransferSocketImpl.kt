@@ -7,7 +7,6 @@ import com.kg.gettransfer.remote.socket.emitters.TransferSocketEmitter
 import com.kg.gettransfer.remote.socket.emitters.TransferSocketEmitter.Companion.INIT_LOCATION_EVENTS
 import com.kg.gettransfer.remote.socket.emitters.TransferSocketEmitter.Companion.OWN_LOCATION
 import kotlinx.serialization.json.JSON
-import kotlinx.serialization.stringify
 import org.koin.core.parameter.parametersOf
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.get

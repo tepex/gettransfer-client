@@ -1,6 +1,7 @@
 package com.kg.gettransfer.domain.repository
 
 import com.kg.gettransfer.domain.SystemListener
+import com.kg.gettransfer.domain.eventListeners.SystemEventListener
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Endpoint
@@ -42,7 +43,8 @@ interface SystemRepository {
     fun disconnectSocket()
     fun connectionChanged()
 
-    fun addListener(listener: SystemListener)
-    fun removeListener(listener: SystemListener)
+    fun addListener(listener: SystemEventListener)
+    fun removeListener(listener: SystemEventListener)
+    fun checkSocketStatus(): Int
 
 }

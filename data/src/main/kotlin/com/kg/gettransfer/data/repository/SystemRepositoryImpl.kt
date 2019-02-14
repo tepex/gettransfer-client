@@ -7,7 +7,7 @@ import com.kg.gettransfer.data.SystemDataStore
 
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.SystemDataStoreCache
-import com.kg.gettransfer.data.ds.SystemDataStoreIO
+import com.kg.gettransfer.data.ds.IO.SystemSocketDataStoreOutput
 import com.kg.gettransfer.data.ds.SystemDataStoreRemote
 
 import com.kg.gettransfer.data.mapper.ConfigsMapper
@@ -24,7 +24,7 @@ import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.SystemListener
+import com.kg.gettransfer.domain.eventListeners.SystemEventListener
 
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
@@ -50,7 +50,7 @@ import org.koin.standalone.get
 
 class SystemRepositoryImpl(
     private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>,
-    private val socketDataStore: SystemDataStoreIO
+    private val socketDataStore: SystemSocketDataStoreOutput
 ) : BaseRepository(), SystemRepository, PreferencesListener {
 
     private val preferencesCache = get<PreferencesCache>()
@@ -61,7 +61,7 @@ class SystemRepositoryImpl(
     private val mobileConfMapper = get<MobileConfigMapper>()
     private val locationMapper   = get<LocationMapper>()
 
-    private val listeners = mutableSetOf<SystemListener>()
+    private val listeners = mutableSetOf<SystemEventListener>()
 
     init {
         preferencesCache.addListener(this)
@@ -257,14 +257,21 @@ class SystemRepositoryImpl(
         }
     }
 
-    override fun addListener(listener: SystemListener)    { listeners.add(listener) }
-    override fun removeListener(listener: SystemListener) { listeners.add(listener) }
+    override fun addListener(listener: SystemEventListener)    { listeners.add(listener) }
+    override fun removeListener(listener: SystemEventListener) { listeners.remove(listener) }
 
     /* Socket */
 
     override fun connectSocket()     = socketDataStore.connectSocket(endpointMapper.toEntity(endpoint), accessToken)
     override fun connectionChanged() = socketDataStore.changeConnection(endpointMapper.toEntity(endpoint), accessToken)
     override fun disconnectSocket()  = socketDataStore.disconnectSocket()
+    override fun checkSocketStatus() = socketDataStore.getSocketStatus()
+
+    fun notifyAboutConnection()    = listeners.forEach { it.onSocketConnected() }
+    fun notifyAboutDisconnection() = listeners.forEach { it.onSocketDisconnected() }
+
+
+
 
     companion object {
         private val CONFIGS_DEFAULT = Configs(

@@ -1,6 +1,6 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.SystemListener
+import com.kg.gettransfer.domain.eventListeners.SystemEventListener
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.DistanceUnit
@@ -148,8 +148,8 @@ class SystemInteractor(
 
     suspend fun getMyLocation() = systemRepository.getMyLocation()
 
-    fun addListener(listener: SystemListener)    { systemRepository.addListener(listener) }
-    fun removeListener(listener: SystemListener) { systemRepository.removeListener(listener) }
+    fun addListener(listener: SystemEventListener)    { systemRepository.addListener(listener) }
+    fun removeListener(listener: SystemEventListener) { systemRepository.removeListener(listener) }
 
     companion object {
         private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )
