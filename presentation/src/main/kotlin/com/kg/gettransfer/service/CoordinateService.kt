@@ -40,7 +40,7 @@ class CoordinateService: Service(), KoinComponent {
                 utils.asyncAwait { routeInteractor.getCurrentAddress() }
                         .isNotError()
                         ?.let { it.cityPoint.point }
-                        .also { transferInteractor.sendOwnCoordinates(Coordinate(lat = it!!.latitude, lon = it.longitude)) }
+                        ?.let { transferInteractor.sendOwnCoordinates(Coordinate(lat = it.latitude, lon = it.longitude)) }
                 delay(DELAY)
                 coordinateProcess()
             }
