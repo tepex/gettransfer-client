@@ -45,6 +45,4 @@ interface SystemRepository {
 
     fun addListener(listener: SystemEventListener)
     fun removeListener(listener: SystemEventListener)
-    fun checkSocketStatus(): Int
-
 }

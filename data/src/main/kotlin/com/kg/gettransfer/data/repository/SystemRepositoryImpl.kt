@@ -265,7 +265,6 @@ class SystemRepositoryImpl(
     override fun connectSocket()     = socketDataStore.connectSocket(endpointMapper.toEntity(endpoint), accessToken)
     override fun connectionChanged() = socketDataStore.changeConnection(endpointMapper.toEntity(endpoint), accessToken)
     override fun disconnectSocket()  = socketDataStore.disconnectSocket()
-    override fun checkSocketStatus() = socketDataStore.getSocketStatus()
 
     fun notifyAboutConnection()    = listeners.forEach { it.onSocketConnected() }
     fun notifyAboutDisconnection() = listeners.forEach { it.onSocketDisconnected() }

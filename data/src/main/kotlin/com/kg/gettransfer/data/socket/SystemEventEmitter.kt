@@ -6,5 +6,4 @@ interface SystemEventEmitter {
     fun changeConnection(endPoint: EndpointEntity, token: String)
     fun connectSocket(endPoint: EndpointEntity, token: String)
     fun disconnectSocket()
-    fun getSocketStatus(): Int
 }
