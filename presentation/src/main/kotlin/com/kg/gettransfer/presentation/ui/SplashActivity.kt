@@ -2,37 +2,24 @@ package com.kg.gettransfer.presentation.ui
 
 import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
-
 import android.os.Build
 import android.os.Bundle
-
 import android.support.annotation.CallSuper
-
-import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-
 import android.support.v7.app.AppCompatActivity
 import com.kg.gettransfer.BuildConfig
-
-import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
-
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.presentation.view.AboutView
-import com.kg.gettransfer.presentation.view.Screens
-
 import kotlinx.coroutines.Job
 import net.hockeyapp.android.CrashManager
 import net.hockeyapp.android.CrashManagerListener
-
 import org.koin.android.ext.android.inject
-
 import timber.log.Timber
+import com.kg.gettransfer.R
 
 class SplashActivity : AppCompatActivity() {
     companion object {
@@ -49,6 +36,11 @@ class SplashActivity : AppCompatActivity() {
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_splash)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+        }
 
         if (!BuildConfig.DEBUG) {
             CrashManager.register(applicationContext, object : CrashManagerListener() {

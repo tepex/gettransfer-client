@@ -28,7 +28,7 @@
                 android:layout_marginTop="@dimen/nav_header_logo_top"
                 android:layout_marginBottom="@dimen/nav_header_logo_bottom"
                 android:contentDescription="Header logo"
-                app:srcCompat="@drawable/nav_header_logo" />
+                app:srcCompat="@drawable/logo" />
 
             <ImageView
                 android:id="@+id/navHeaderShare"
