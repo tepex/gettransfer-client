@@ -102,7 +102,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferE
     override fun detachView(view: TransferDetailsView?) {
         super.detachView(view)
         driverCoordinate = null  // assign null to avoid drawing marker in detached screen
-        isCameraUpdatedForCoordinates = true
+        isCameraUpdatedForCoordinates = false
         systemInteractor.removeListener(this)
     }
 

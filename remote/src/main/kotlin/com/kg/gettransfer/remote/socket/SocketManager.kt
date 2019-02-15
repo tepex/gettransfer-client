@@ -28,9 +28,8 @@ class SocketManager(): KoinComponent {
     private val offerEventer: OfferSocketImpl       by inject()
     private val transferEventer: TransferSocketImpl by inject()
     private val chatEventer: ChatSocketImpl         by inject()
-//    private val chatEventer: ChatSocketImpl         = get()
+    private val systemEventer: SystemSocketImp      by inject()
 
-    private var handler:     OfferModelHandler? = null
     private var socket:      Socket?            = null
     private var url:         String?            = null
     private var accessToken: String?            = null
@@ -45,43 +44,35 @@ class SocketManager(): KoinComponent {
         timeout     = -1
     }
 
-    fun connect(endpoint: EndpointModel, accessToken: String, handler: OfferModelHandler = {k, l -> }) {
-        //statusOpened = true
-        this.handler = handler
-        if(!statusOpened) {
-            statusOpened = true
-            connectionChanged(endpoint, accessToken)
-        }
+    fun startConnection(endpoint: EndpointModel, accessToken: String){
+        prepareSocket(endpoint, accessToken, false)
     }
 
-    fun disconnect() {
+    fun changeConnection(endpoint: EndpointModel, accessToken: String) {
+        prepareSocket(endpoint, accessToken, true)
+    }
+
+    private fun prepareSocket(endpoint: EndpointModel, accessToken: String, withReconnect: Boolean){
+        url = endpoint.url
+        this.accessToken = accessToken
+        if (withReconnect) disconnect(true)
+        else openSocket()
+    }
+
+    private fun openSocket(){
+        socket = IO.socket(url, options)
+        addSocketHandlers()
+        socket?.connect()
+        log.info("$SOCKET_TAG connection started")
+    }
+
+    fun disconnect(withReconnect: Boolean) {
         statusOpened    = false
-        shouldReconnect = false
+        shouldReconnect = withReconnect
         socket?.let {
             it.off()
             it.close()
         }
-    }
-
-    fun connectionChanged(endpoint: EndpointModel, accessToken: String) {
-        /* Reconnect iff URL or token changed. */
-        //val reconnect = (url != endpoint.url || this.accessToken != accessToken)
-        val reconnect = true
-        shouldReconnect = true
-        url = endpoint.url
-        this.accessToken = accessToken
-        if (reconnect) {
-            socket?.off()
-            socket?.close()
-        }
-        if (socket == null) startSocket()
-    }
-
-    private fun startSocket() {
-        socket = IO.socket(url, options)
-        addSocketHandlers()
-        socket!!.connect()
-        log.info("$SOCKET_TAG connection started")
     }
 
     private fun addSocketHandlers() {
@@ -94,16 +85,18 @@ class SocketManager(): KoinComponent {
                     headers.put("Cookie", listOf("rack.session=$accessToken"))
                 }
             }
-
             on(Manager.EVENT_CONNECT_ERROR) { args -> log.error("$SOCKET_TAG connect error: $args") }
-            on(Manager.EVENT_OPEN) { _ -> log.debug("$SOCKET_TAG open [${socket?.id()}]") }
+            on(Manager.EVENT_OPEN) { _ -> log.debug("$SOCKET_TAG open [${socket?.id()}]")
+                systemEventer.onConnected()
+            }
             on(Manager.EVENT_CLOSE) { _ -> log.debug("$SOCKET_TAG close [${socket?.id()}]")
                 if (shouldReconnect) {
                     shouldReconnect = false
                     log.debug("$SOCKET_TAG reconnected ")
-                    startSocket() } }
+                    openSocket() }
+                else systemEventer.onDisconnected()
+            }
             on(Manager.EVENT_RECONNECTING) { _ -> log.debug("EVENT_RECONNECTING [${socket?.id()}]") }
-
             on(Manager.EVENT_CONNECT_TIMEOUT) { _ -> log.warn("$SOCKET_TAG timeout") }
             on(Manager.EVENT_ERROR) { args ->
                 val msg = if(args.first() is Exception) (args.first() as Exception).message else args.first().toString()
@@ -216,8 +209,8 @@ class SocketManager(): KoinComponent {
     fun emitAck(event: String, arg: Array<out Any>){
         when {
             socket == null        -> { log.error("event $event was not emit: $SOCKET_TAG is null" ); return }
-            !socket!!.connected() -> { log.error("event $event was not emit: $SOCKET_TAG is not connected" ); return }
-            else                  -> { socket!!.emit(event, arg) { log.info("Event received") } }
+//            !socket!!.connected() -> { log.error("event $event was not emit: $SOCKET_TAG is not connected" ); return }
+            else                  -> { socket!!.emit(event, arg) { log.info("Event received") }; log.info("SOCKET_MANAGER: $event emit - $arg") }
         }
     }
 
@@ -232,5 +225,3 @@ class SocketManager(): KoinComponent {
         const val ACTION_OFFER = "gt.socket_offerEvent"
     }
 }
-
-typealias OfferModelHandler = (String, Long) -> Unit

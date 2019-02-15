@@ -194,7 +194,9 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
     }
 
     protected fun moveCameraWithDriverCoordinate(cameraUpdate: CameraUpdate) {
-        processGoogleMap(false) { googleMap.moveCamera(cameraUpdate) }
+        processGoogleMap(false) {
+            googleMap.setMaxZoomPreference(17f)
+            googleMap.moveCamera(cameraUpdate) }
     }
 
     protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {

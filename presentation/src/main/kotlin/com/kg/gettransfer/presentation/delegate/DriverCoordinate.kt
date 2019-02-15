@@ -30,7 +30,6 @@ class DriverCoordinate(private val handler: Handler,
     }
 
     var property: Coordinate by Delegates.observable(Coordinate(0, ZERO_COORDINATE, ZERO_COORDINATE)) { p, old, new ->
-//        count++
         with(old) {
             if (lat != ZERO_COORDINATE && lon != ZERO_COORDINATE) showMoving = true
         }
@@ -42,7 +41,6 @@ class DriverCoordinate(private val handler: Handler,
                 }.run()
             }
             postDelayed({ requestCoordinates() }, REQUEST_PERIOD)
-      //      if (count < list.size) postDelayed({ property = Coordinate(0, list[count].first, list[count].second) }, REQUEST_PERIOD)
         }
 
     }

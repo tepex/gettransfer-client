@@ -76,7 +76,7 @@ val dataModule = module {
     single { SystemDataStoreRemote() }
     single { SystemSocketDataStoreOutput(get()) }
     single <SystemDataStoreReceiver> { SystemSocketDataStoreInput() }
-    single<SystemRepository> { SystemRepositoryImpl(DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>(get(), get()), get()) }
+    single { SystemRepositoryImpl(DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>(get(), get()), get()) } bind SystemRepository::class
 
     single { RouteInfoMapper() }
     single { PointMapper() }
