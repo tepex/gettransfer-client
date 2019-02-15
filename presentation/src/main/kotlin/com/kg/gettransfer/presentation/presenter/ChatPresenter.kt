@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.presenter
 import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.eventListeners.ChatEventListener
+import com.kg.gettransfer.domain.eventListeners.SystemEventListener
 import com.kg.gettransfer.domain.model.Message
 import com.kg.gettransfer.presentation.mapper.ChatMapper
 import com.kg.gettransfer.presentation.mapper.MessageMapper
@@ -19,7 +20,7 @@ import org.slf4j.Logger
 import kotlin.math.log
 
 @InjectViewState
-class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
+class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventListener {
     private val log: Logger by inject { parametersOf("GTR-socket") }
 
     private val transferMapper: TransferMapper by inject()
@@ -35,6 +36,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
     @CallSuper
     override fun attachView(view: ChatView) {
         super.attachView(view)
+        systemInteractor.addListener(this)
         utils.launchSuspend {
             val transferCachedResult = utils.asyncAwait { transferInteractor.getTransfer(transferId, true) }
             val offerCachedResult = utils.asyncAwait { offerInteractor.getOffers(transferId, true) }
@@ -48,14 +50,19 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
             chatModel?.let { viewState.setChat(it, true) }
         }
         getChatFromRemote()
-        chatInteractor.eventChatReceiver = this
-        chatInteractor.onJoinRoom(transferId)
+        onJoinRoom()
     }
 
     @CallSuper
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun detachView(view: ChatView?) {
+        super.detachView(view)
         chatInteractor.onLeaveRoom(transferId)
+        systemInteractor.removeListener(this)
+    }
+
+    private fun onJoinRoom(){
+        chatInteractor.eventChatReceiver = this
+        chatInteractor.onJoinRoom(transferId)
     }
 
     private fun initToolbar(){
@@ -115,4 +122,10 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
         chatModel!!.messages.find { it.id == message.id }?.readAt = message.readAt
         viewState.notifyData()
     }
+
+    override fun onSocketConnected() {
+        onJoinRoom()
+    }
+
+    override fun onSocketDisconnected() {}
 }
