@@ -22,6 +22,7 @@ class CarrierTripsCalendarFragmentPresenter : BasePresenter<CarrierTripsCalendar
         utils.launchSuspend {
             viewState.blockInterface(true)
             val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrips() }
+            result.error?.let { checkResultError(it) }
             if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
                 carrierTripsCalendarItems = carrierTripsCalendarItemsMapper.toCalendarView(result.model)

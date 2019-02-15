@@ -55,6 +55,7 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
         }
         utils.launchSuspend {
             val result = utils.asyncAwait { transferInteractor.getTransfer(params.transferId) }
+            result.error?.let { checkResultError(it) }
             if (result.error == null || (result.error != null && result.fromCache)) {
                 paymentRequest = PaymentRequestModel(params.transferId, null, params.bookNowTransportId)
                 if (result.model.bookNowOffers.isNotEmpty()) {
@@ -79,6 +80,7 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
         viewState.blockInterface(true)
 
         val offersResult = utils.asyncAwait { offerInteractor.getOffers(params.transferId) }
+        offersResult.error?.let { checkResultError(it) }
         if (offersResult.error == null || (offersResult.error != null && offersResult.fromCache)) {
             offer = params.offerId?.let { offerInteractor.getOffer(it) }
 

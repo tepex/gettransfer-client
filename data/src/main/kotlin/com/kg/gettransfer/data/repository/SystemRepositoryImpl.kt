@@ -97,8 +97,17 @@ class SystemRepositoryImpl(
         get() = preferencesCache.selectedField
         set(value) { preferencesCache.selectedField = value }
 
-    override val accessToken: String
+    override var accessToken: String
         get() = preferencesCache.accessToken
+        set(value) { preferencesCache.accessToken = value }
+
+    override var userEmail: String
+        get() = preferencesCache.userEmail
+        set(value) { preferencesCache.userEmail = value }
+
+    override var userPassword: String
+        get() = preferencesCache.userPassword
+        set(value) { preferencesCache.userPassword = value }
 
     override val endpoints = preferencesCache.endpoints.map { endpointMapper.fromEntity(it) }
 
@@ -210,7 +219,7 @@ class SystemRepositoryImpl(
         return Result(account, result.error?.let { ExceptionMapper.map(it) })
     }
 
-    override fun logout(): Result<Account> {
+    override suspend fun logout(): Result<Account> {
         account = NO_ACCOUNT
         factory.retrieveCacheDataStore().clearAccount()
         preferencesCache.logout()

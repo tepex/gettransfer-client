@@ -50,6 +50,7 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
         utils.launchSuspend {
             viewState.blockInterface(true)
             val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(tripId) }
+            result.error?.let { checkResultError(it) }
             if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
                 val tripInfo = result.model

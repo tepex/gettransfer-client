@@ -8,6 +8,7 @@ import com.arellomobile.mvp.MvpPresenter
 
 import com.google.firebase.iid.FirebaseInstanceId
 import com.kg.gettransfer.data.model.OfferEntity
+import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
@@ -57,6 +58,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     protected val chatInteractor: ChatInteractor by inject()
 
     private var sendingMessagesNow = false
+    private var openedLoginScreenForUnauthorizedUser = false
 
     open fun onBackCommandClick() {
         val map = mutableMapOf<String, Any>()
@@ -65,7 +67,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
         router.exit()
     }
 
-    protected fun login(nextScreen: String, email: String) = router.navigateTo(Screens.Login(nextScreen, email))
+    protected fun login(nextScreen: String, email: String?, noHistory: Boolean = true) = router.navigateTo(Screens.Login(nextScreen, email, noHistory))
 
     override fun onFirstViewAttach() {
         if (systemInteractor.isInitialized) return
@@ -80,6 +82,27 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
         super.attachView(view)
         offerInteractor.eventReceiver = this
         chatInteractor.eventChatBadgeReceiver = this
+    }
+
+    protected fun checkResultError(error: ApiException) {
+        if (!openedLoginScreenForUnauthorizedUser && error.isNotLoggedIn()) {
+            openedLoginScreenForUnauthorizedUser = true
+            login(Screens.CLOSE_AFTER_LOGIN, systemInteractor.account.user.profile.email, false)
+        } else if (openedLoginScreenForUnauthorizedUser) {
+            logout()
+        }
+    }
+
+    private fun logout(){
+        utils.launchSuspend {
+            utils.asyncAwait { systemInteractor.unregisterPushToken() }
+            utils.asyncAwait { systemInteractor.logout() }
+
+            utils.asyncAwait { transferInteractor.clearTransfersCache() }
+            utils.asyncAwait { offerInteractor.clearOffersCache() }
+            utils.asyncAwait { carrierTripInteractor.clearCarrierTripsCache() }
+            router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+        }
     }
 
     fun checkNewMessagesCached() {

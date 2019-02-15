@@ -149,6 +149,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     fun onResetRateClicked() { reviewInteractor.shouldAskRateInMarket = true }
 
+    fun onClearAccessTokenClicked() { systemInteractor.accessToken = "" }
+
     @CallSuper
     override fun onBackCommandClick() {
         if (localeWasChanged) {

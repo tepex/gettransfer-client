@@ -32,6 +32,7 @@ object Screens {
     @JvmField val CARRIER_MODE = "carrier_mode"
     @JvmField val REG_CARRIER = "registration_carrier"
     @JvmField val PASSENGER_MODE = "passenger_mode"
+    @JvmField val CLOSE_AFTER_LOGIN = "close_after_login"
 
     @JvmField val CARRIER_TRIPS_TYPE_VIEW_CALENDAR = "carrier_trips_type_calendar"
     @JvmField val CARRIER_TRIPS_TYPE_VIEW_LIST     = "carrier_trips_type_list"
@@ -75,9 +76,10 @@ object Screens {
         override fun getActivityIntent(context: Context?) = Intent(context, CreateOrderActivity::class.java)
     }
 
-    open class Login(val nextScreen: String, val email: String?) : SupportAppScreen() {
+    open class Login(val nextScreen: String, val email: String?, val noHistory: Boolean) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+            if (noHistory) addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+            else addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             putExtra(LoginView.EXTRA_SCREEN_FOR_RETURN, nextScreen)
             putExtra(LoginView.EXTRA_EMAIL_TO_LOGIN, email)
         }

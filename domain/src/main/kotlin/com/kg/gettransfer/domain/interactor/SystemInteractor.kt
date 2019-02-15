@@ -34,8 +34,17 @@ class SystemInteractor(
     val isInitialized: Boolean
         get() = systemRepository.isInitialized
 
-    val accessToken: String
+    var accessToken: String
         get() = systemRepository.accessToken
+        set(value) { systemRepository.accessToken = value }
+
+    var userEmail: String
+        get() = systemRepository.userEmail
+        set(value) { systemRepository.userEmail = value }
+
+    var userPassword: String
+        get() = systemRepository.userPassword
+        set(value) { systemRepository.userPassword = value }
 
     val account: Account
         get() = systemRepository.account
@@ -125,7 +134,7 @@ class SystemInteractor(
         get()  = systemRepository.appEnters
         set(value) { systemRepository.appEnters = value }
 
-    fun logout() = systemRepository.logout()
+    suspend fun logout() = systemRepository.logout()
 
     suspend fun registerPushToken(token: String): Result<Unit> {
         pushToken = token
@@ -137,7 +146,14 @@ class SystemInteractor(
         return Result(result != null && result.error == null, result?.error)
     }
 
-    suspend fun login(email: String, password: String) = systemRepository.login(email, password)
+    suspend fun login(email: String, password: String): Result<Account> {
+        val result = systemRepository.login(email, password)
+        if (result.error == null) {
+            this.userEmail = email
+            this.userPassword = password
+        }
+        return result
+    }
     suspend fun putAccount() = systemRepository.putAccount(account)
     suspend fun putNoAccount() = systemRepository.putNoAccount(account)
 

@@ -48,6 +48,7 @@
     <string name="search">Search</string>
     <string name="reset_onboarding">Reset onboarding</string>
     <string name="reset_rate">Reset play market rate</string>
+    <string name="clear_access_token">Clear access token</string>
 
     <string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
     <string name="activity_carrier_transfer_details_title">Trip details</string> <!-- Title, which not used in new design -->

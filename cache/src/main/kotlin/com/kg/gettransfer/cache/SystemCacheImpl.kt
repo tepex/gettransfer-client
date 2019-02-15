@@ -29,5 +29,5 @@ class SystemCacheImpl: SystemCache, KoinComponent {
         return account
     }
     
-    override fun clearAccount() = db.accountCachedDao().deleteAll()
+    override suspend fun clearAccount() = db.accountCachedDao().deleteAll()
 }

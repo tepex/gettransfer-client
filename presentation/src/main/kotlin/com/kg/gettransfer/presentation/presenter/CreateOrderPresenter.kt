@@ -351,6 +351,23 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                     else -> viewState.setError(result.error!!)
                 }
             } else if (logResult.error != null) viewState.showNotLoggedAlert(result.model.id)
+
+            //404 - есть акк, но не выполнен вход
+            //500 - нет акка
+
+            /*val logResult = utils.asyncAwait { systemInteractor.putAccount() }
+            if (result.error == null && logResult.error == null) {
+                logCreateTransfer(Analytics.RESULT_SUCCESS)
+                logEventAddToCart(Analytics.EVENT_ADD_TO_CART)
+                router.replaceScreen(Screens.Offers(result.model.id))
+            } else if (result.error != null) {
+                logCreateTransfer(Analytics.SERVER_ERROR)
+                when {
+                    result.error!!.details == "{phone=[taken]}" -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
+                    result.error!!.code == ApiException.NETWORK_ERROR -> viewState.setError(false, R.string.LNG_NETWORK_ERROR)
+                    else -> viewState.setError(result.error!!)
+                }
+            } else if (logResult.error != null) viewState.showNotLoggedAlert(result.model.id)*/
             viewState.blockInterface(false)
         }
     }

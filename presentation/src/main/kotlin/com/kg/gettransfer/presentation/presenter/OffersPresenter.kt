@@ -54,10 +54,11 @@ class OffersPresenter : BasePresenter<OffersView>() {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
+            result.error?.let { checkResultError(it) }
             if (result.error != null) {
-                val err = result.error!!
+                /*val err = result.error!!
                 Timber.e(err)
-                if (err.isNotLoggedIn()) viewState.redirectView()
+                if (err.isNotLoggedIn()) viewState.redirectView()*/
                 //else if (err.code != ApiException.NETWORK_ERROR) viewState.setError(err)
             }
             if(result.error == null || (result.error != null && result.fromCache)) {
@@ -143,9 +144,9 @@ class OffersPresenter : BasePresenter<OffersView>() {
         viewState.showAlertCancelRequest()
     }
 
-    fun openLoginView() {
+    /*fun openLoginView() {
         login("", "")
-    }
+    }*/
 
     fun cancelRequest(isCancel: Boolean) {
         if (!isCancel) return

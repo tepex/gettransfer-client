@@ -25,6 +25,7 @@ class CarrierTripsListFragmentPresenter : BasePresenter<CarrierTripsListFragment
         utils.launchSuspend {
             viewState.blockInterface(true)
             val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrips() }
+            result.error?.let { checkResultError(it) }
             if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
                 val carrierTripsRVItemsList = carrierTripsListItemsMapper.toRecyclerView(result.model)

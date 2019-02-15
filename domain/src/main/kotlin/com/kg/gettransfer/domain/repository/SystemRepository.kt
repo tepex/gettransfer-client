@@ -15,7 +15,9 @@ interface SystemRepository {
     val isInitialized: Boolean
     val configs: Configs
     val account: Account
-    val accessToken: String
+    var accessToken: String
+    var userEmail: String
+    var userPassword: String
     val endpoints: List<Endpoint>
     val mobileConfig: MobileConfig
 
@@ -34,7 +36,7 @@ interface SystemRepository {
     suspend fun putAccount(account: Account): Result<Account>
     suspend fun putNoAccount(account: Account): Result<Account>
     suspend fun login(email: String, password: String): Result<Account>
-    fun logout(): Result<Account>
+    suspend fun logout(): Result<Account>
     suspend fun registerPushToken(provider: PushTokenType, token: String): Result<Unit>
     suspend fun unregisterPushToken(token: String): Result<Unit>
     suspend fun getMyLocation(): Result<Location>

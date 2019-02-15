@@ -72,6 +72,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener{
     private fun getChatFromRemote() {
         utils.launchSuspend {
             val chatRemoteResult = utils.asyncAwait { chatInteractor.getChat(transferId) }
+            chatRemoteResult.error?.let { checkResultError(it) }
             if (chatRemoteResult.error != null) viewState.setError(chatRemoteResult.error!!)
             else {
                 if(chatModel == null){

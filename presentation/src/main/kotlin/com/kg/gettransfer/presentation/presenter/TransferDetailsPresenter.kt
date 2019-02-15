@@ -68,6 +68,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferE
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
+            result.error?.let { checkResultError(it) }
             if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
                 val transfer = result.model

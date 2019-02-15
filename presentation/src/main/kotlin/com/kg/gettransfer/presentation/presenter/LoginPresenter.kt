@@ -39,6 +39,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
                         Screens.OFFERS         -> {
                             if (transferId != null) router.navigateTo(Screens.Offers(transferId!!)) else router.exit()
                         }
+                        Screens.CLOSE_AFTER_LOGIN -> router.exit()
                     }
                 }
                 logLoginEvent(Analytics.RESULT_SUCCESS)

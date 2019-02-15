@@ -45,6 +45,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
         layoutSettingsResetOnboarding.setOnClickListener { presenter.onResetOnboardingClicked() }
         btnSupport.setOnClickListener { presenter.sendEmail(null, null) }
         rlResetMarketRate.setOnClickListener { presenter.onResetRateClicked() }
+        rlClearAccessToken.setOnClickListener { presenter.onClearAccessTokenClicked() }
 
         //Not showing some layouts in release
         if (BuildConfig.FLAVOR != "dev") {

@@ -6,6 +6,8 @@ import com.kg.gettransfer.data.model.OfferEntity
 
 interface PreferencesCache {
     var accessToken: String
+    var userEmail: String
+    var userPassword: String
     var lastMode: String
     var lastCarrierTripsTypeView: String
     var isFirstLaunch: Boolean
