@@ -115,7 +115,11 @@ class OffersActivity : BaseActivity(), OffersView {
         layoutTransferRequestInfo.setInfo(transferModel)
         fl_drivers_count_text.apply {
             isVisible = true
-            fl_drivers_count_text.tv_drivers_count.text = getString(R.string.LNG_RIDE_CONNECT_CARRIERS, transferModel.relevantCarriersCount)
+            tv_drivers_count.text =
+                    if (transferModel.relevantCarriersCount?:0 > 4)
+                        getString(R.string.LNG_RIDE_CONNECT_CARRIERS, transferModel.relevantCarriersCount)
+                    else
+                        getString(R.string.LNG_RIDE_CONNECT_CARRIERS_NONUM)
         }
     }
 

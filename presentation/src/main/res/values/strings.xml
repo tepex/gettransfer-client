@@ -242,6 +242,7 @@
     <string name="LNG_RIDE_REPEAT">Repeat</string>
     <string name="LNG_RIDE_PAYMENT">Payment in progress</string>
     <string name="LNG_RIDE_CONNECT_CARRIERS">Connecting to nearest %s carriers</string>
+    <string name="LNG_RIDE_CONNECT_CARRIERS_NONUM">Connecting with nearby carriers</string>
     <string name="LNG_RIDE_CARRIERS">Carrier\'s offers</string>
     <string name="LNG_RIDE_COMPLETED">Completed transfers: %s</string>
     <string name="LNG_RIDE_CREATION_SPINNER">Please wait, connecting...</string>
