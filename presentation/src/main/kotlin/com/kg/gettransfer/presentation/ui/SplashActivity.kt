@@ -2,18 +2,12 @@ package com.kg.gettransfer.presentation.ui
 
 import android.Manifest
 import android.content.Intent
-<<<<<<< HEAD
 
-=======
 import android.os.Build
->>>>>>> 21ea0a2... added logo for splash screen
 import android.os.Bundle
 import android.support.annotation.CallSuper
-<<<<<<< HEAD
 
-=======
 import android.support.v4.content.ContextCompat
->>>>>>> 21ea0a2... added logo for splash screen
 import android.support.v7.app.AppCompatActivity
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.domain.ApiException
@@ -28,6 +22,7 @@ import net.hockeyapp.android.CrashManagerListener
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.view.Screens
 
 class SplashActivity : AppCompatActivity() {
     companion object {
