@@ -103,7 +103,7 @@ class SystemRemoteImpl : SystemRemote {
         /*return try { locationMapper.fromRemote(core.api.getMyLocation().await()) }
         catch (e: Exception) { throw core.remoteException(e) }*/
 
-        val response: LocationModel = core.tryTwice { core.api.getMyLocation() }
+        val response: LocationModel = core.tryTwice { core.ipApi.getMyLocation() }
         return locationMapper.fromRemote(response)
     }
 }

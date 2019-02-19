@@ -49,12 +49,15 @@ class ApiCore : KoinComponent {
         addInterceptor(PrivateHttpLoggingInterceptor())
         addInterceptor { chain ->
             val request = chain.request()
-            val url = request.url().newBuilder()
-                .addQueryParameter(PARAM_API_KEY, apiKey)
-                .build()
+            val urlBuilder = request.url().newBuilder()
+            if(request.url().host() != IP_API_HOST_NAME) urlBuilder.addQueryParameter(PARAM_API_KEY, apiKey)
+            /*val url = request.url().newBuilder()
+                    .addQueryParameter(PARAM_API_KEY, apiKey)
+                    .build()*/
+            val url = urlBuilder.build()
 
             val builder = request.newBuilder().url(url)
-            if (url.encodedPath() != Api.API_ACCESS_TOKEN) {
+            if (url.encodedPath() != Api.API_ACCESS_TOKEN && url.host() != IP_API_HOST_NAME) {
                 builder.addHeader(Api.HEADER_TOKEN, preferences.accessToken)
             }
             try {
@@ -66,6 +69,13 @@ class ApiCore : KoinComponent {
         }
         .cookieJar(CookieJar.NO_COOKIES)
     }.build()
+
+    internal var ipApi = Retrofit.Builder().apply {
+        baseUrl(IP_API_SCHEME + IP_API_HOST_NAME)
+        client(okHttpClient)
+        addConverterFactory(GsonConverterFactory.create())
+        addCallAdapterFactory(CoroutineCallAdapterFactory())
+    }.build().create(Api::class.java)
 
     fun changeEndpoint(endpoint: EndpointModel) {
         apiKey = endpoint.key
@@ -140,6 +150,9 @@ class ApiCore : KoinComponent {
     }
 
     companion object {
+        private const val IP_API_SCHEME = "https://"
+        private const val IP_API_HOST_NAME = "ipapi.co"
+
         private val ERROR_PATTERN = Regex("^\\<h1\\>(.+)\\<\\/h1\\>$")
 
         private const val PARAM_API_KEY  = "api_key"

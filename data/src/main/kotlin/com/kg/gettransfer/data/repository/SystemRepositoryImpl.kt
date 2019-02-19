@@ -257,9 +257,9 @@ class SystemRepositoryImpl(
 
     override suspend fun getMyLocation(): Result<Location> {
         return try {
-            factory.retrieveRemoteDataStore().changeEndpoint(EndpointEntity("", "", API_URL_LOCATION))
+            //factory.retrieveRemoteDataStore().changeEndpoint(EndpointEntity("", "", API_URL_LOCATION))
             val locationEntity = factory.retrieveRemoteDataStore().getMyLocation()
-            factory.retrieveRemoteDataStore().changeEndpoint(preferencesCache.endpoint)
+            //factory.retrieveRemoteDataStore().changeEndpoint(preferencesCache.endpoint)
             Result(locationMapper.fromEntity(locationEntity))
         } catch (e: RemoteException) {
             Result(Location(null, null), ExceptionMapper.map(e))
@@ -306,6 +306,6 @@ class SystemRepositoryImpl(
             orderMinimumMinutes = 120,
             termsUrl            = "terms_of_use"
         )
-        private const val API_URL_LOCATION = "https://ipapi.co"
+        //private const val API_URL_LOCATION = "https://ipapi.co"
     }
 }
