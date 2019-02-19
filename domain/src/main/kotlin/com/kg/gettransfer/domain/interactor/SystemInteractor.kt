@@ -138,12 +138,13 @@ class SystemInteractor(
 
     suspend fun registerPushToken(token: String): Result<Unit> {
         pushToken = token
-        return systemRepository.registerPushToken(PushTokenType.FCM, token)
+        systemRepository.registerPushToken(PushTokenType.FCM, token)
+        return Result(Unit)
     }
 
-    suspend fun unregisterPushToken(): Result<Boolean> {
-        val result = pushToken?.let { systemRepository.unregisterPushToken(it) }
-        return Result(result != null && result.error == null, result?.error)
+    suspend fun unregisterPushToken(): Result<Unit> {
+        pushToken?.let { systemRepository.unregisterPushToken(it) } ?: Result(Unit)
+        return Result(Unit)
     }
 
     suspend fun login(email: String, password: String): Result<Account> {
