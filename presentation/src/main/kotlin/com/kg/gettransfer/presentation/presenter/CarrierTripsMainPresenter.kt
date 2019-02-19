@@ -16,6 +16,7 @@ class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComp
     @CallSuper
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+        systemInteractor.lastMode = Screens.CARRIER_MODE
         checkLoggedIn()
         viewState.initNavigation(profileMapper.toView(systemInteractor.account.user.profile))
         changeTypeView(systemInteractor.lastCarrierTripsTypeView)
