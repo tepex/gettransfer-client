@@ -26,6 +26,7 @@ import com.kg.gettransfer.domain.model.TransferNew
 import com.kg.gettransfer.domain.model.Trip
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.TransportTypePrice
+import com.kg.gettransfer.domain.model.RouteInfo
 
 import com.kg.gettransfer.presentation.mapper.CurrencyMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper
@@ -126,24 +127,25 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
         utils.launchSuspend {
             viewState.blockInterface(true)
+            var route: RouteInfo? = null
             val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.currencyCode) }
             if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
-                val route = result.model
+                route = result.model
                 duration = route.duration
+            }
+            setTransportTypePrices(route?.prices ?: emptyMap())
 
-                setTransportTypePrices(route.prices)
-
-                routeModel = routeMapper.getView(
-                    route.distance,
-                    route.polyLines,
+            routeModel = routeMapper.getView(
+                    route?.distance,
+                    route?.polyLines,
                     from.name!!,
                     to.name!!,
                     from.point!!,
                     to.point!!,
                     SystemUtils.formatDateTime(startDate.date)
-                )
-            }
+            )
+
             routeModel?.let {
                 polyline = Utils.getPolyline(it)
                 track = polyline!!.track
