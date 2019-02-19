@@ -16,6 +16,6 @@ open class RouteDataStoreCache: RouteDataStore {
     override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean?, returnWay: Boolean?, currency: String?) =
             cache.getRouteInfo(from, to)
 
-    override fun setRouteInfo(from: String, to: String, routeInfo: RouteInfoEntity) =
+    override suspend fun setRouteInfo(from: String, to: String, routeInfo: RouteInfoEntity) =
             cache.setRouteInfo(from, to, routeInfo)
 }
