@@ -264,7 +264,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/bottom_sheet_carrier_trip_btn_support_img_margin_end"
-                        app:srcCompat="@drawable/ic_support"/>
+                        app:srcCompat="@drawable/ic_question"/>
 
                     <TextView
                         android:layout_width="wrap_content"
