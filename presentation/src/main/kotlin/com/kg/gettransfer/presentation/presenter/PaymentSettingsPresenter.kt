@@ -131,8 +131,7 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
         map[Analytics.CURRENCY] = currency
         afMap[AFInAppEventParameterName.CURRENCY] = currency
 
-        var price: Double = if (offer != null) offer!!.price.amount
-         else bookNowOffer!!.amount
+        var price: Double = if (offer != null) offer!!.price.amount else bookNowOffer!!.amount
 
         when (paymentRequest.percentage) {
             OfferModel.FULL_PRICE -> {
