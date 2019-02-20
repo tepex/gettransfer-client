@@ -81,7 +81,7 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
 /* ================================================== */
 /* ================================================== */
             statusCategory = type.checkStatusCategory(),
-            timeToTransfer = (type.dateToLocal.time - Calendar.getInstance().timeInMillis).toInt().absoluteValue / 60_000
+            timeToTransfer = ((type.dateToLocal.time - Calendar.getInstance().timeInMillis).absoluteValue / 60_000).toInt()
             //checkOffers = type.checkOffers
         )
     }
