@@ -87,6 +87,10 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
             if (result.error == null || (result.error != null && result.fromCache)) {
                 if (result.model.bookNowOffers.isNotEmpty()) {
                     bookNowOffer = result.model.bookNowOffers.filterKeys { it.name == bookNowTransportId }.values.first()
+
+                    val offerType = if (offer != null ) Analytics.REGULAR else Analytics.NOW
+                    bundle.putString(Analytics.OFFER_TYPE, offerType)
+                    map[Analytics.OFFER_TYPE] = offerType
                 }
                 when {
                     result.model.duration        != null -> Analytics.TRIP_HOURLY
@@ -98,38 +102,34 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
                 }
 
             }
-        }
-        val offerType = if (offer != null ) Analytics.REGULAR else Analytics.NOW
-        bundle.putString(Analytics.OFFER_TYPE, offerType)
-        map[Analytics.OFFER_TYPE] = offerType
 
-        fbBundle.putAll(bundle)
-        afMap.putAll(map)
+            fbBundle.putAll(bundle)
+            afMap.putAll(map)
 
-        val currency = systemInteractor.currency.currencyCode
-        map[Analytics.CURRENCY] = currency
-        afMap[AFInAppEventParameterName.CURRENCY] = currency
-        bundle.putString(Analytics.CURRENCY, currency)
+            val currency = systemInteractor.currency.currencyCode
+            map[Analytics.CURRENCY] = currency
+            afMap[AFInAppEventParameterName.CURRENCY] = currency
+            bundle.putString(Analytics.CURRENCY, currency)
 
-        var price: Double = if (offer != null) offer!!.price.amount
-        else bookNowOffer!!.amount
+            var price: Double = if (offer != null) offer!!.price.amount else bookNowOffer!!.amount
 
-        when (percentage) {
-            OfferModel.FULL_PRICE -> {
-                bundle.putDouble(Analytics.VALUE, price)
-                map[Analytics.VALUE] = price
-                afMap[AFInAppEventParameterName.REVENUE] = price
+            when (percentage) {
+                OfferModel.FULL_PRICE -> {
+                    bundle.putDouble(Analytics.VALUE, price)
+                    map[Analytics.VALUE] = price
+                    afMap[AFInAppEventParameterName.REVENUE] = price
+                }
+                OfferModel.PRICE_30 -> {
+                    price *= PRICE_30
+                    bundle.putDouble(Analytics.VALUE, price)
+                    map[Analytics.VALUE] = price
+                    afMap[AFInAppEventParameterName.REVENUE] = price
+                }
             }
-            OfferModel.PRICE_30 -> {
-                price *= PRICE_30
-                bundle.putDouble(Analytics.VALUE, price)
-                map[Analytics.VALUE] = price
-                afMap[AFInAppEventParameterName.REVENUE] = price
-            }
+            analytics.logEventEcommerce(Analytics.EVENT_ECOMMERCE_PURCHASE, bundle, map)
+            analytics.logEventEcommercePurchaseFB(fbBundle, price.toBigDecimal(), systemInteractor.currency)
+            analytics.logEventToAppsFlyer(AFInAppEventType.PURCHASE, afMap)
         }
-        analytics.logEventEcommerce(Analytics.EVENT_ECOMMERCE_PURCHASE, bundle, map)
-        analytics.logEventEcommercePurchaseFB(fbBundle, price.toBigDecimal(), systemInteractor.currency)
-        analytics.logEventToAppsFlyer(AFInAppEventType.PURCHASE, afMap)
     }
 
     fun logEvent(value: String) {
