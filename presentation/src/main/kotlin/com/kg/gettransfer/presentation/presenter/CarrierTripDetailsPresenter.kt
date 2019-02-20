@@ -60,6 +60,7 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
                 val baseTripInfo = tripInfo.base
                 if (baseTripInfo.to != null && baseTripInfo.to!!.point != null) {
                     val r = utils.asyncAwait { routeInteractor.getRouteInfo(baseTripInfo.from.point!!, baseTripInfo.to!!.point!!, true, false, systemInteractor.currency.currencyCode) }
+                    r.cacheError?.let { viewState.setError(it) }
                     if (r.error == null || (r.error != null && r.fromCache)) {
                         setRouteTransfer(baseTripInfo,r.model)
                     }

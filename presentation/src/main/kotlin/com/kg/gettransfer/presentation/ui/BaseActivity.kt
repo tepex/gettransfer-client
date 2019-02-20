@@ -42,6 +42,7 @@ import com.kg.gettransfer.GTApplication
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.extensions.*
@@ -253,6 +254,11 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
         if (e.code != ApiException.NETWORK_ERROR) Utils.showError(this, false, getString(R.string.LNG_ERROR) + ": " + e.message)
+    }
+
+    override fun setError(e: DatabaseException) {
+        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage("CacheError: ${e.details}").build())
+        Sentry.capture(e)
     }
 
     protected fun showKeyboard() {

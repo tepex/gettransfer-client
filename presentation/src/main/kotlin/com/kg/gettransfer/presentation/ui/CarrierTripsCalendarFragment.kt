@@ -13,6 +13,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.adapter.CarrierTripsCalendarRVAdapter
 import com.kg.gettransfer.presentation.adapter.CarrierTripsCalendarMonthPagerAdapter
@@ -97,4 +98,7 @@ class CarrierTripsCalendarFragment : MvpAppCompatFragment(), CarrierTripsCalenda
         Timber.e("code: ${e.code}", e)
         Utils.showError(context!!, false, getString(R.string.err_server, e.message))
     }
+
+    override fun setError(e: DatabaseException) =
+            (activity as BaseView).setError(e)
 }
