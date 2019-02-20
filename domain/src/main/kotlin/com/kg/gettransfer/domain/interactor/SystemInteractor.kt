@@ -149,6 +149,6 @@ class SystemInteractor(
 
     companion object {
         private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )
-        private val localesFilterList = arrayOf("en", "ru", "de")
+        private val localesFilterList = arrayOf("en", "ru", "de", "es", "it", "pt", "fr")
     }
 }
