@@ -153,6 +153,7 @@ class MainPresenter : BasePresenter<MainView>() {
             if (it.error != null) {
                 viewState.setError(it.error!!)
                 val locationResult = utils.asyncAwait { systemInteractor.getMyLocation() }
+                logIpapiRequest()
                 if (locationResult.error == null
                         && locationResult.model.latitude != null
                         && locationResult.model.longitude != null) setLocation(locationResult.model)
@@ -472,6 +473,13 @@ class MainPresenter : BasePresenter<MainView>() {
             Analytics.EVENT_APP_REVIEW_REQUESTED,
             createEmptyBundle(),
             emptyMap()
+        )
+
+    private fun logIpapiRequest() =
+        analytics.logEvent(
+                Analytics.EVENT_IPAPI_REQUEST,
+                createEmptyBundle(),
+                mapOf()
         )
 
     companion object {
