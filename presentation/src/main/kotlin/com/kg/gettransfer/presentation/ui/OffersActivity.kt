@@ -22,6 +22,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.extensions.*
@@ -338,5 +339,9 @@ class OffersActivity : BaseActivity(), OffersView {
 
     companion object {
         val ACTION_NEW_OFFER = "${OffersActivity::class.java.name}.offer"
+    }
+
+    override fun setError(e: ApiException) {
+        Utils.showError(this, true, e.details)
     }
 }

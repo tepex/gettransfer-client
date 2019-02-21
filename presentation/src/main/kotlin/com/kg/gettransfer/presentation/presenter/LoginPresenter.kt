@@ -60,6 +60,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
                                 }
                             }
                         }
+                        Screens.RATE_TRANSFER -> router.navigateTo(Screens.Splash(transferId, rate, true))
                     }
                 }
                 logLoginEvent(Analytics.RESULT_SUCCESS)

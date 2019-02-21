@@ -99,8 +99,7 @@ class SplashActivity : AppCompatActivity() {
         else {
             when (systemInteractor.lastMode) {
                 Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsMainActivity::class.java))
-                Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                else -> {
+                Screens.PASSENGER_MODE -> {
                     val transferId = intent.getLongExtra(SplashActivity.EXTRA_TRANSFER_ID, 0)
                     val rate = intent.getIntExtra(SplashActivity.EXTRA_RATE, 0)
                     val showRate = intent.getBooleanExtra(SplashActivity.EXTRA_SHOW_RATE, false)
@@ -111,8 +110,8 @@ class SplashActivity : AppCompatActivity() {
                                 putExtra(EXTRA_RATE, rate)
                                 putExtra(EXTRA_SHOW_RATE, showRate)
                             })
-
                 }
+                else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             }
         }
     }

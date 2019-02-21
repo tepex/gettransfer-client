@@ -4,6 +4,8 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
+import com.kg.gettransfer.domain.ApiException
+
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 
@@ -54,10 +56,11 @@ class OffersPresenter : BasePresenter<OffersView>() {
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             result.error?.let { checkResultError(it) }
             if (result.error != null) {
-                /*val err = result.error!!
+                val err = result.error!!
                 Timber.e(err)
-                if (err.isNotLoggedIn()) viewState.redirectView()*/
+                //if (err.isNotLoggedIn()) viewState.redirectView()
                 //else if (err.code != ApiException.NETWORK_ERROR) viewState.setError(err)
+                if (err.isNotFound()) viewState.setError(ApiException(ApiException.NOT_FOUND, "Transfer $transferId not found!"))
             }
             if(result.error == null || (result.error != null && result.fromCache)) {
                 if (result.model.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE) router.exit()
