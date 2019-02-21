@@ -33,6 +33,9 @@ import com.kg.gettransfer.utilities.GTNotificationManager
 
 import kotlinx.coroutines.Job
 
+import kotlinx.serialization.json.JSON
+import com.kg.gettransfer.domain.model.Result
+
 import org.koin.standalone.get
 import org.koin.standalone.inject
 import org.koin.standalone.KoinComponent
@@ -82,13 +85,16 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
         chatInteractor.eventChatBadgeReceiver = this
     }
 
-    protected fun checkResultError(error: ApiException) {
+    protected fun checkResultError(error: ApiException): Boolean {
         if (!openedLoginScreenForUnauthorizedUser && (error.isNotLoggedIn() || error.isNoUser() )) {
             openedLoginScreenForUnauthorizedUser = true
             login(Screens.CLOSE_AFTER_LOGIN, systemInteractor.account.user.profile.email, false)
+            return false
         } else if (openedLoginScreenForUnauthorizedUser) {
             logout()
+            return false
         }
+        return true
     }
 
     private fun logout(){
@@ -237,8 +243,30 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                 transferIds = transferIds.toMutableList().apply { add(transferId) }
             }
 
-    companion object AnalyticProps {
+
+    fun onDriverModeExit() =
+        with(systemInteractor) { if (lastMode == Screens.CARRIER_MODE) closeSocketConnection() }
+
+    protected suspend fun <M>fetchResult(processError: Boolean = false, block: suspend () -> Result<M>) =
+        utils.asyncAwait { block() }
+                .also { it.error
+                        ?.let { e -> checkResultError(e) }
+                        ?.let { handle ->
+                            if (handle && !processError) viewState.setError(it.error!!) } }
+
+
+    protected suspend fun <D>fetchData(block: suspend () -> Result<D>) =
+            fetchResult { block() }
+                    .isNotError()
+
+
+
+    companion object {
+
         const val SINGLE_CAPACITY = 1
         const val DOUBLE_CAPACITY = 2
+
+        const val SHOW_ERROR = true
     }
+
 }

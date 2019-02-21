@@ -73,6 +73,13 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             result.error?.let { checkResultError(it) }
+//            fetchData { transferInteractor.getTransfer(transferId) }
+//                    ?.let { Log.i("LogData", it.toString()) }
+//            fetchResult { transferInteractor.getTransfer(transferId) }
+//                    .let { Log.i("LogData", it.toString()) }
+//            fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }
+//                    .let { Log.i("LogData", it.toString()) }
+
             if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
                 val transfer = result.model
