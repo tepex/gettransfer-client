@@ -58,23 +58,25 @@ class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
     }
 
     override fun setOffer(offer: OfferModel, paymentPercentages: List<Int>) {
-        paymentPercentages.forEach { percentage ->
-            when (percentage) {
-                OfferModel.FULL_PRICE -> {
-                    payFullPriceButton.isVisible = true
-                    payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.FULL_PRICE)
-                    fullPrice.text = offer.price.base.def
-                    payFullPriceButton.setOnClickListener { changePaymentSettings(it) }
-                }
-                OfferModel.PRICE_30 -> {
-                    payThirdOfPriceButton.isVisible = true
-                    payThirdOfPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.PRICE_30)
-                    thirdOfPrice.text = getString(R.string.LNG_PAYMENT_TERM_LATER, OfferModel.PRICE_70, offer.price.percentage30)
-                    payThirdOfPriceButton.setOnClickListener { changePaymentSettings(it) }
+        if (paymentPercentages.isNotEmpty()) {
+            paymentPercentages.forEach { percentage ->
+                when (percentage) {
+                    OfferModel.FULL_PRICE -> {
+                        payFullPriceButton.isVisible = true
+                        payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.FULL_PRICE)
+                        fullPrice.text = offer.price.base.def
+                        payFullPriceButton.setOnClickListener { changePaymentSettings(it) }
+                    }
+                    OfferModel.PRICE_30 -> {
+                        payThirdOfPriceButton.isVisible = true
+                        payThirdOfPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.PRICE_30)
+                        thirdOfPrice.text = getString(R.string.LNG_PAYMENT_TERM_LATER, OfferModel.PRICE_70, offer.price.percentage30)
+                        payThirdOfPriceButton.setOnClickListener { changePaymentSettings(it) }
+                    }
                 }
             }
+            selectPaymentPercentage(paymentPercentages.first())
         }
-        selectPaymentPercentage(paymentPercentages.first())
     }
 
     override fun setBookNowOffer(bookNowOffer: BookNowOffer?) {
