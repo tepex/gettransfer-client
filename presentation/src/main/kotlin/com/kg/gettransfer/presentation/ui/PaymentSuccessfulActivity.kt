@@ -11,6 +11,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.isGone
+import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
@@ -45,11 +47,15 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         with(dialogView) {
             tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER).plus(" ${presenter.transferId}")
             tvDetails.setOnClickListener { presenter.onDetailsClick() }
-            btnCall.setOnClickListener { presenter.onCallClick() }
-            //tvVoucher.setOnClickListener { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
-            //btnChat.setOnClickListener   { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
 
-            tvDone.setOnClickListener { finish() }
+            if (presenter.offerId == 0L) {
+                tvBookNowSuccess.isVisible = true
+                btnCall.isGone = true
+                tvSupport.text = getString(R.string.LNG_OFFERS_SUPPORT)
+                tvCall.isGone = true
+            }
+            btnCall.setOnClickListener { presenter.onCallClick() }
+            ivClose.setOnClickListener { finish() }
             btnSupport.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
         }
     }
