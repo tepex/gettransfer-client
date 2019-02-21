@@ -4,8 +4,6 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.domain.ApiException
-
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 
@@ -116,14 +114,14 @@ class OffersPresenter : BasePresenter<OffersView>() {
                 logButtons(Analytics.OFFER_BOOK)
                 when(offer) {
                     is OfferModel ->
-                        router.navigateTo(Screens.PaymentSettings(
+                        router.navigateTo(Screens.PaymentOffer(
                                 it.id,
                                 offer.id,
                                 it.dateRefund,
                                 it.paymentPercentages,
                                 null
                         ))
-                    is BookNowOfferModel -> router.navigateTo(Screens.PaymentSettings(
+                    is BookNowOfferModel -> router.navigateTo(Screens.PaymentOffer(
                         it.id,
                         null,
                         it.dateRefund,

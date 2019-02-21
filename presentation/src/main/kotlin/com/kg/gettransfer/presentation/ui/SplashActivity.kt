@@ -28,6 +28,9 @@ class SplashActivity : AppCompatActivity() {
     companion object {
         @JvmField val PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
         @JvmField val PERMISSION_REQUEST = 2211
+        val EXTRA_TRANSFER_ID = "transfer_id"
+        val EXTRA_RATE = "rate"
+        val EXTRA_SHOW_RATE = "show_rate"
     }
 
     private val compositeDisposable = Job()
@@ -97,7 +100,19 @@ class SplashActivity : AppCompatActivity() {
             when (systemInteractor.lastMode) {
                 Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsMainActivity::class.java))
                 Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                else -> {
+                    val transferId = intent.getLongExtra(SplashActivity.EXTRA_TRANSFER_ID, 0)
+                    val rate = intent.getIntExtra(SplashActivity.EXTRA_RATE, 0)
+                    val showRate = intent.getBooleanExtra(SplashActivity.EXTRA_SHOW_RATE, false)
+
+                    startActivity(Intent(this@SplashActivity, MainActivity::class.java)
+                            .apply {
+                                putExtra(EXTRA_TRANSFER_ID, transferId)
+                                putExtra(EXTRA_RATE, rate)
+                                putExtra(EXTRA_SHOW_RATE, showRate)
+                            })
+
+                }
             }
         }
     }

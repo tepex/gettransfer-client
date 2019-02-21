@@ -98,6 +98,7 @@ android {
 
             manifestPlaceholders = [
                     hockeyAppId   : "1f061f58b7bd42c387ecd8681d30df48",
+                    assetlinks    : "[{ \\\"include\\\": \\\"https://stgtr.org/.well-known/assetlinks.json\\\" }]"
             ]
 
             dimension "type"
@@ -113,6 +114,7 @@ android {
 
             manifestPlaceholders = [
                     hockeyAppId   : "62939f09f9e0489c8ada1c25d2f30d9d",
+                    assetlinks    : "[{ \\\"include\\\": \\\"https://gettransfer.com/.well-known/assetlinks.json\\\" }]"
             ]
 
             dimension "type"

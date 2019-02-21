@@ -21,6 +21,10 @@
         android:roundIcon="@mipmap/launcher_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="asset_statements"
+            android:value="${assetlinks}" />
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -137,6 +141,25 @@
         <activity android:name=".presentation.ui.ChatActivity"
             android:screenOrientation="portrait"
             android:resizeableActivity="false"/>
+        <activity android:name=".presentation.ui.HandleUrlActivity">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="gettransfer.com"
+                    android:pathPattern=".*" />
+
+                <data
+                    android:scheme="https"
+                    android:host="stgtr.org"
+                    android:pathPattern=".*" />
+
+            </intent-filter>
+        </activity>
 
 
         <provider
