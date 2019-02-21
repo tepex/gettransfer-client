@@ -11,6 +11,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
@@ -481,6 +482,38 @@ class MainPresenter : BasePresenter<MainView>() {
                 createEmptyBundle(),
                 mapOf()
         )
+
+    fun rateTransfer(transferId: Long, rate: Int) {
+        utils.launchSuspend {
+            val transferResult = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
+            if (transferResult.error != null) {
+                val err = transferResult.error!!
+                if (err.isNotFound()) {
+                    viewState.setError(ApiException(ApiException.NOT_FOUND, "Transfer $transferId not found!"))
+                } else viewState.setError(err)
+            }
+            else {
+                val transfer = transferResult.model
+                val transferModel = transferMapper.toView(transfer)
+
+                if (transferModel.status.checkOffers) {
+                    val offersResult = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
+                    if (offersResult.error == null && offersResult.model.size == 1) {
+                        val offer = offersResult.model.first()
+                        reviewInteractor.offerIdForReview = offer.id
+                        if (rate == ReviewInteractor.MAX_RATE) {
+                            reviewInteractor.apply {
+                                sendTopRate()
+                                viewState.thanksForRate()
+                            }
+                        } else {
+                            viewState.showDetailedReview(rate.toFloat())
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     companion object {
         const val FIELD_FROM = "field_from"
