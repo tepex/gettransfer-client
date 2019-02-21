@@ -15,7 +15,8 @@ import kotlinx.serialization.json.JSON
 import kotlinx.serialization.serializer
 
 class PreferencesImpl(context: Context,
-                      override val endpoints: List<EndpointEntity>): PreferencesCache {
+                      override val endpoints: List<EndpointEntity>,
+                      private val encryptPass: EncryptPass): PreferencesCache {
     companion object {
         @JvmField val INVALID_TOKEN     = "invalid_token"
         @JvmField val ACCESS_TOKEN      = "token"
@@ -80,13 +81,13 @@ class PreferencesImpl(context: Context,
     override var userPassword: String
         get() {
             if(_userPassword == INVALID_PASSWORD)
-                _userPassword = configsPrefs.getString(USER_PASSWORD, INVALID_PASSWORD)!!
+                _userPassword = configsPrefs.getString(USER_PASSWORD, INVALID_PASSWORD)!!.let { encryptPass.encryptDecrypt(it) }
             return _userPassword
         }
         set(value) {
             _userPassword = value
             with(configsPrefs.edit()) {
-                putString(USER_PASSWORD, value)
+                putString(USER_PASSWORD, encryptPass.encryptDecrypt(value))
                 apply()
             }
         }

@@ -68,6 +68,7 @@ class GTApplication : MultiDexApplication() {
             remoteModule,
             cacheModule,
             dataModule,
+            encryptModule,
             domainModule,
             mappersModule,
             androidModule,
