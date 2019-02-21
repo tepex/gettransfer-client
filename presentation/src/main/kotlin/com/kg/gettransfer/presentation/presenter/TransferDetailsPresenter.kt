@@ -3,16 +3,15 @@ package com.kg.gettransfer.presentation.presenter
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.PolyUtil
 import com.kg.gettransfer.domain.eventListeners.SystemEventListener
 import com.kg.gettransfer.presentation.delegate.DriverCoordinate
-import com.kg.gettransfer.domain.eventListeners.TransferEventListener
+import com.kg.gettransfer.domain.eventListeners.CoordinateEventListener
+import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
@@ -41,9 +40,10 @@ import org.koin.standalone.inject
 import timber.log.Timber
 
 @InjectViewState
-class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferEventListener, SystemEventListener {
+class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SystemEventListener {
     private val routeInteractor: RouteInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
+    private val coordinateInteractor: CoordinateInteractor by inject()
 
     private val profileMapper: ProfileMapper by inject()
     private val routeMapper: RouteMapper by inject()
@@ -245,14 +245,13 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), TransferE
         )
 
     private val coordinateRequester = object : CoordinateRequester {
-        override fun request() = transferInteractor.initCoordinatesReceiving(transferId)
+        override fun request() = coordinateInteractor.initCoordinatesReceiving(transferId)
     }
 
     fun initCoordinates() {
         driverCoordinate = DriverCoordinate(Handler(), coordinateRequester) { bearing, coordinates, show ->
             viewState.moveCarMarker(bearing, coordinates, show) }
-//        driverCoordinate!!.property = Coordinate(0, driverCoordinate!!.list[1].first, driverCoordinate!!.list[1].second)
-        transferInteractor.transferEventListener = this
+        coordinateInteractor.coordinateEventListener = this
     }
 
     /*

@@ -2,7 +2,7 @@ package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.ds.*
 import com.kg.gettransfer.data.ds.IO.*
-import com.kg.gettransfer.data.socket.TransferDataStoreReceiver
+import com.kg.gettransfer.data.socket.CoordinateDataStoreReceiver
 import com.kg.gettransfer.data.mapper.*
 import com.kg.gettransfer.data.repository.*
 import com.kg.gettransfer.data.socket.ChatDataStoreReceiver
@@ -92,7 +92,7 @@ val dataModule = module {
     single { CarrierTripMapper() }
     single { CarrierTripDataStoreCache() }
     single { CarrierTripDataStoreRemote() }
-    single<CarrierTripRepository> { CarrierTripRepositoryImpl(DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>(get(), get())) }
+    single<CarrierTripRepository> { CarrierTripRepositoryImpl(DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>(get(), get()), get()) }
 
     single { BookNowOfferMapper() }
     single { TripMapper() }
@@ -100,10 +100,7 @@ val dataModule = module {
     single { TransferNewMapper() }
     single { TransferDataStoreCache() }
     single { TransferDataStoreRemote() }
-    single { CoordinateMapper() }
-    single { TransferSocketDataStoreOutput(get()) }
-    single <TransferDataStoreReceiver> { TransferSocketDataStoreInput() }
-    single { TransferRepositoryImpl(DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>(get(), get()), get()) } bind TransferRepository::class
+    single { TransferRepositoryImpl(DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>(get(), get())) } bind TransferRepository::class
 
     single { PromoDiscountMapper() }
     single { PromoDataStoreCache() }
@@ -122,4 +119,9 @@ val dataModule = module {
     single { ChatDataStoreIO(get()) }
     single { ChatRepositoryImpl(DataStoreFactory<ChatDataStore, ChatDataStoreCache, ChatDataStoreRemote>(get(), get()), get()) } bind ChatRepository::class
     single<ChatDataStoreReceiver> { ChatDataStoreIO(get()) }
+
+    single { CoordinateMapper() }
+    single { CoordinateSocketDataStoreOutput(get()) }
+    single <CoordinateDataStoreReceiver> { CoordinateSocketDataStoreInput() }
+    single { CoordinateRepositoryImpl(get()) } bind CoordinateRepository::class
 }

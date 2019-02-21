@@ -1,7 +1,5 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.eventListeners.TransferEventListener
-import com.kg.gettransfer.domain.model.Coordinate
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew
@@ -10,8 +8,6 @@ import com.kg.gettransfer.domain.repository.TransferRepository
 
 class TransferInteractor(private val repository: TransferRepository) {
     var transfer: Transfer? = null
-    var transferEventListener: TransferEventListener? = null
-
     var transferNew: TransferNew? = null
 
     private var allTransfers: List<Transfer>? = null
@@ -77,11 +73,6 @@ class TransferInteractor(private val repository: TransferRepository) {
         }
         return Result(archivedTransfers!!)
     }
-
-    fun onCoordinateReceived(coordinate: Coordinate) = transferEventListener?.onLocationReceived(coordinate)
-    fun initCoordinatesReceiving(transferId: Long) = repository.initCoordinateReceiving(transferId)
-    fun sendOwnCoordinates(coordinate: Coordinate) = repository.sendOwnCoordinate(coordinate)
-
 
     /*private fun insertNewTransfer() {
         if(allTransfers == null || transfer == null || allTransfers!!.firstOrNull()?.id == transfer!!.id) return

@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import com.arellomobile.mvp.MvpPresenter
 
@@ -27,6 +26,7 @@ import com.kg.gettransfer.presentation.mapper.OfferMapper
 import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.view.BaseView
+import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_COORDINATES_REJECTED
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
@@ -222,7 +222,12 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     fun onAppStateChanged(isForeGround: Boolean) {
         with(systemInteractor) {
             if (isForeGround) openSocketConnection()
-            else if(lastMode != Screens.CARRIER_MODE) closeSocketConnection()
+            else {
+                when {
+                    lastMode != Screens.CARRIER_MODE -> closeSocketConnection()
+                    carrierTripInteractor.bgCoordinatesPermission == BG_COORDINATES_REJECTED -> closeSocketConnection()
+                }
+            }
         }
     }
 
@@ -233,9 +238,6 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                 eventsCount++
                 transferIds = transferIds.toMutableList().apply { add(transferId) }
             }
-
-    fun onDriverModeExit() =
-        with(systemInteractor) { if (lastMode == Screens.CARRIER_MODE) closeSocketConnection() }
 
     companion object AnalyticProps {
         const val SINGLE_CAPACITY = 1

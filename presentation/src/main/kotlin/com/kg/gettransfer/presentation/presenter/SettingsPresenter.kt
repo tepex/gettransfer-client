@@ -151,6 +151,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     fun onClearAccessTokenClicked() { systemInteractor.accessToken = "" }
 
+    fun onDriverCoordinatesSwitched(checked: Boolean) {
+
+    }
+
     @CallSuper
     override fun onBackCommandClick() {
         if (localeWasChanged) {

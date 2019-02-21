@@ -1,6 +1,7 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.CarrierTripDataStore
+import com.kg.gettransfer.data.PreferencesCache
 
 import com.kg.gettransfer.data.ds.CarrierTripDataStoreCache
 import com.kg.gettransfer.data.ds.CarrierTripDataStoreRemote
@@ -29,10 +30,15 @@ import java.util.Date
 import org.koin.standalone.get
 
 class CarrierTripRepositoryImpl(
-    private val factory: DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>
+    private val factory: DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>,
+    private val preferencesCache: PreferencesCache
 ) : BaseRepository(), CarrierTripRepository {
     private val carrierTripMapper     = get<CarrierTripMapper>()
     private val carrierTripBaseMapper = get<CarrierTripBaseMapper>()
+
+    override var backGroundCoordinates: Int
+        get() = preferencesCache.driverCoordinatesInBackGround
+        set(value) { preferencesCache.driverCoordinatesInBackGround = value }
 
     override suspend fun getCarrierTrips(): Result<List<CarrierTripBase>> {
         /*retrieveRemoteListModel<CarrierTripBaseEntity, CarrierTripBase>(carrierTripBaseMapper) {
@@ -58,7 +64,7 @@ class CarrierTripRepositoryImpl(
                 result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
     }
 
-    override suspend fun claerCarrierTripsCache() {
+    override suspend fun clearCarrierTripsCache() {
         factory.retrieveCacheDataStore().clearCariierTripsCache()
     }
 

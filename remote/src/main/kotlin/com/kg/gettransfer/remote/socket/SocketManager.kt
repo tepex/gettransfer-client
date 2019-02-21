@@ -2,7 +2,6 @@ package com.kg.gettransfer.remote.socket
 
 import com.kg.gettransfer.data.model.ChatBadgeEventEntity
 import com.kg.gettransfer.data.model.MessageEntity
-import com.kg.gettransfer.data.model.MessageReadEventEntity
 import com.kg.gettransfer.data.model.CoordinateEntity
 import com.kg.gettransfer.data.model.OfferEntity
 import com.kg.gettransfer.remote.model.EndpointModel
@@ -26,7 +25,7 @@ class SocketManager(): KoinComponent {
     private val SOCKET_PP = "socket_PP"
 
     private val offerEventer: OfferSocketImpl       by inject()
-    private val transferEventer: TransferSocketImpl by inject()
+    private val transferEventer: CoordinateSocketImpl by inject()
     private val chatEventer: ChatSocketImpl         by inject()
     private val systemEventer: SystemSocketImp      by inject()
 

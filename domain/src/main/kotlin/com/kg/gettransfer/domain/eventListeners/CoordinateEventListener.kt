@@ -2,6 +2,6 @@ package com.kg.gettransfer.domain.eventListeners
 
 import com.kg.gettransfer.domain.model.Coordinate
 
-interface TransferEventListener {
+interface CoordinateEventListener {
     fun onLocationReceived(coordinate: Coordinate)
 }

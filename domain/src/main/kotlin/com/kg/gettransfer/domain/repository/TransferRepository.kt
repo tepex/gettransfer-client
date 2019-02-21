@@ -14,7 +14,4 @@ interface TransferRepository {
     suspend fun createTransfer(transferNew: TransferNew): Result<Transfer>
     suspend fun cancelTransfer(id: Long, reason: String): Result<Transfer>
     fun clearTransfersCache()
-
-    fun sendOwnCoordinate(coordinate: Coordinate)
-    fun initCoordinateReceiving(transferId: Long)
 }

@@ -9,4 +9,11 @@ interface CarrierTripsMainView : BaseView{
     fun changeTypeView(type: String)
     fun initNavigation(profile: ProfileModel)
     fun showReadMoreDialog()
+    fun askForBackGroundCoordinates()
+
+    companion object {
+        const val BG_COORDINATES_NOT_ASKED = 0
+        const val BG_COORDINATES_ACCEPTED  = 1
+        const val BG_COORDINATES_REJECTED  = -1
+    }
 }

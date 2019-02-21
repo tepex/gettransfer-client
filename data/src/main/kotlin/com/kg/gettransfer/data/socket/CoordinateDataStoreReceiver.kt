@@ -2,6 +2,6 @@ package com.kg.gettransfer.data.socket
 
 import com.kg.gettransfer.data.model.CoordinateEntity
 
-interface TransferDataStoreReceiver {
+interface CoordinateDataStoreReceiver {
     fun onLocationReceived(coordinate: CoordinateEntity)
 }

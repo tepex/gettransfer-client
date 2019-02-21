@@ -2,14 +2,11 @@ package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.TransferDataStore
 import com.kg.gettransfer.data.ds.*
-import com.kg.gettransfer.data.ds.IO.TransferSocketDataStoreOutput
-import com.kg.gettransfer.data.mapper.CoordinateMapper
 
 import com.kg.gettransfer.data.mapper.ExceptionMapper
 
 import com.kg.gettransfer.data.mapper.TransferMapper
 import com.kg.gettransfer.data.mapper.TransferNewMapper
-import com.kg.gettransfer.data.model.CoordinateEntity
 import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.data.model.TransferEntity
@@ -24,16 +21,11 @@ import org.koin.standalone.get
 import org.koin.standalone.inject
 
 class TransferRepositoryImpl(
-    private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>,
-    private val socketDataStore: TransferSocketDataStoreOutput
-) : BaseRepository(), TransferRepository {
+    private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>)
+    : BaseRepository(), TransferRepository {
 
     private val transferNewMapper = get<TransferNewMapper>()
     private val transferMapper = get<TransferMapper>()
-    private val coordinateMapper: CoordinateMapper = get()
-
-    private val transferInteractor: TransferInteractor by inject()
- //   private val eventListener = get<TransferEventListener>()
 
     /*override suspend fun createTransfer(transferNew: TransferNew) =
         retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, DEFAULT) {
@@ -128,20 +120,6 @@ class TransferRepositoryImpl(
     override fun clearTransfersCache() {
         factory.retrieveCacheDataStore().clearTransfersCache()
     }
-
-    /* Socket's methods */
-
-    fun onCoordinateReceived(coordinateEntity: CoordinateEntity) =
-            transferInteractor.onCoordinateReceived(coordinateMapper.fromEntity(coordinateEntity))
-
-    override fun sendOwnCoordinate(coordinate: Coordinate) {
-        socketDataStore.sendOwnLocation(coordinateMapper.toEntity(coordinate))
-    }
-
-    override fun initCoordinateReceiving(transferId: Long) = socketDataStore.initLocationReceiving(transferId)
-
-
-
 
     companion object {
         private val DEFAULT =

@@ -179,6 +179,16 @@ object Utils : KoinComponent {
         }
     }
 
+    fun showBackGroundPermissionDialog(context: Context, clickResult: (result: Boolean) -> Unit){
+        getAlertDialogBuilder(context).apply {
+            setMessage("Даете ли вы разрешение на отправку координат в свернутом режиме?")
+            setTitle("Разрешение на работу в фоновом режиме")
+            setNegativeButton("Нет") { _, _ -> clickResult(false)}
+            setPositiveButton("Да") { _, _ -> clickResult(true)}
+            show()
+        }
+    }
+
     fun checkEmail(email: String?) = EMAIL_PATTERN.matcher(email ?: "").matches()
         //fun checkPhone(phone: String?) = PHONE_PATTERN.matcher(phone?.trim() ?: "").matches()
 

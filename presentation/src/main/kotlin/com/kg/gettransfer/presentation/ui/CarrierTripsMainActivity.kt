@@ -165,8 +165,16 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
     }
 
     private fun changeButtonModeInTitle(isCalendarMode: Boolean){
-        (toolbar as Toolbar).buttonListView.isVisible = isCalendarMode
-        (toolbar as Toolbar).buttonCalendarView.isVisible = !isCalendarMode
+        with((toolbar as Toolbar)) {
+            buttonListView.isVisible = isCalendarMode
+            buttonCalendarView.isVisible = !isCalendarMode
+        }
+    }
+
+    override fun askForBackGroundCoordinates() {
+        Utils.showBackGroundPermissionDialog(this) { result ->
+            presenter.permissionResult(result)
+        }
     }
 
     /* Service */

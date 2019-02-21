@@ -6,6 +6,7 @@ import android.os.IBinder
 import android.util.Log
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.Coordinate
@@ -17,7 +18,7 @@ import org.koin.standalone.inject
 class CoordinateService: Service(), KoinComponent {
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
-    private val transferInteractor: TransferInteractor by inject()
+    private val coordinateInteractor: CoordinateInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
     private var serviceAlive = false
 
@@ -40,7 +41,7 @@ class CoordinateService: Service(), KoinComponent {
                 utils.asyncAwait { routeInteractor.getCurrentAddress() }
                         .isNotError()
                         ?.let { it.cityPoint.point }
-                        ?.let { transferInteractor.sendOwnCoordinates(Coordinate(lat = it.latitude, lon = it.longitude)) }
+                        ?.let { coordinateInteractor.sendOwnCoordinates(Coordinate(lat = it.latitude, lon = it.longitude)) }
                 delay(DELAY)
                 coordinateProcess()
             }

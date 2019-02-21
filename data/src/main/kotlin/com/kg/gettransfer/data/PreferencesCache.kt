@@ -19,6 +19,7 @@ interface PreferencesCache {
     var eventsCount: Int
     var transferIds: List<Long>
     val endpoints: List<EndpointEntity>
+    var driverCoordinatesInBackGround: Int
 
     fun logout()
     fun addListener(listener: PreferencesListener)
