@@ -448,6 +448,8 @@
     <string name="new_offers">New offers</string>
     <string name="LNG_RIDE_OFFER_CANCELLED">Offer was canceled</string>
     <string name="LNG_RIDE_DATE_RETURN_PLACEHOLDER">I want to order a return transfer</string>
+    <string name="LNG_OFFERS_SUPPORT">GetTransfer Support</string>
+    <string name="LNG_BOOK_NOW_PAYMENT_SUCCEESS">We\'ll send you email with data of carrier soon</string>
 
     <plurals name="days">
         <item quantity="one">@string/LNG_DAY</item>

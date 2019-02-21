@@ -15,25 +15,22 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="@font/sf_pro_text_regular"
         android:text="@string/LNG_PAYMENT_DETAILS"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:textColor="@color/colorGreen"
         android:textSize="17sp"
-        android:fontFamily="@font/sf_pro_text_regular"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvDone"
+    <ImageView
+        android:id="@+id/ivClose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/LNG_DONE"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvDetails"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@color/colorGreen"
-        android:textSize="17sp"
-        android:fontFamily="@font/sf_pro_text_regular"/>
+        app:layout_constraintTop_toTopOf="@+id/tvDetails"
+        app:srcCompat="@drawable/ic_close_x" />
 
     <TextView
         android:id="@+id/tvPaidSuccessfully"
@@ -66,19 +63,6 @@
         app:layout_constraintTop_toBottomOf="@+id/tvPaidSuccessfully"
         tools:text="Booking number 100500" />
 
-    <!--<TextView-->
-        <!--android:id="@+id/tvVoucher"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:text="@string/LNG_DOWNLOAD_BOOKING_VOUCHER"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/tvBookingNumber"-->
-        <!--android:textColor="@color/colorGreen"-->
-        <!--android:textSize="17sp"-->
-        <!--android:fontFamily="@font/sf_pro_text_regular"/>-->
-
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapViewRoute"
         android:layout_width="0dp"
@@ -88,72 +72,126 @@
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvBookingNumber" />
-
-    <include
-        android:id="@+id/btnCall"
-        layout="@layout/btn_layout_call_passenger"
-        android:layout_width="126dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mapViewRoute" />
-
-    <!--<include-->
-        <!--android:id="@+id/btnChat"-->
-        <!--layout="@layout/btn_layout_chat_passenger"-->
-        <!--android:layout_width="126dp"-->
-        <!--android:layout_height="44dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--app:layout_constraintEnd_toEndOf="@+id/btnCall"-->
-        <!--app:layout_constraintStart_toStartOf="@+id/btnCall"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/btnCall" />-->
+        app:layout_constraintTop_toBottomOf="@+id/tvBookNowSuccess" />
 
     <TextView
         android:id="@+id/tvWillStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/sf_pro_text_regular"
         android:text="@string/LNG_TRANSFER_WILL_START"
         android:textColor="@android:color/black"
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCall" />
+        app:layout_constraintTop_toBottomOf="@+id/mapViewRoute" />
 
     <TextView
         android:id="@+id/tvRemainTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/sf_pro_text_semibold"
         android:textColor="@android:color/black"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tvWillStart"
+        app:layout_constraintStart_toStartOf="@+id/tvWillStart"
         app:layout_constraintTop_toBottomOf="@+id/tvWillStart"
         tools:text="2D:14H:38M" />
 
-    <include
-        android:id="@+id/btnSupport"
-        layout="@layout/btn_layout_support"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_activity_height_layouts"
-        android:layout_marginStart="8dp"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnCall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="?android:attr/selectableItemBackground"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:fabSize="normal"
+        app:layout_constraintEnd_toStartOf="@+id/btnChat"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvRemainTime"
+        app:srcCompat="@drawable/ic_call" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnChat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:fabSize="normal"
+        app:layout_constraintEnd_toStartOf="@+id/btnSupport"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnCall"
+        app:layout_constraintTop_toTopOf="@+id/btnCall"
+        app:srcCompat="@drawable/ic_chat_yellow"
+        android:visibility="gone"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnSupport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:backgroundTint="@color/colorPrimary"
+        app:fabSize="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnChat"
+        app:layout_constraintTop_toBottomOf="@+id/tvRemainTime"
+        app:srcCompat="@drawable/ic_support" />
+
+    <TextView
+        android:id="@+id/tvCall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/LNG_PAYMENT_CALL"
+        app:layout_constraintEnd_toEndOf="@+id/btnCall"
+        app:layout_constraintStart_toStartOf="@+id/btnCall"
+        app:layout_constraintTop_toBottomOf="@+id/btnCall" />
+
+    <TextView
+        android:id="@+id/tvChat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/LNG_PAYMENT_CHAT"
+        app:layout_constraintEnd_toEndOf="@+id/btnChat"
+        app:layout_constraintStart_toStartOf="@+id/btnChat"
+        app:layout_constraintTop_toBottomOf="@+id/btnChat"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tvSupport"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:lines="2"
+        android:maxLines="2"
+        android:text="@string/LNG_CUSTOMER_SUPPORT"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btnSupport"
+        app:layout_constraintStart_toStartOf="@+id/btnSupport"
+        app:layout_constraintTop_toBottomOf="@+id/btnSupport" />
+
+    <TextView
+        android:id="@+id/tvBookNowSuccess"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/LNG_BOOK_NOW_PAYMENT_SUCCEESS"
+        app:layout_constraintBottom_toTopOf="@+id/mapViewRoute"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvRemainTime" />
+        app:layout_constraintTop_toBottomOf="@+id/tvBookingNumber"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:textColor="@color/colorGreen"
+        android:textSize="17sp"
+        android:gravity="center"
+        android:visibility="gone"/>
+
 </android.support.constraint.ConstraintLayout>
