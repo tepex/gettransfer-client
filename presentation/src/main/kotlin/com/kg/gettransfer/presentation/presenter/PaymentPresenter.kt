@@ -11,6 +11,7 @@ import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.mapper.PaymentStatusRequestMapper
 
@@ -36,12 +37,26 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
 
     private var offer: Offer? = null
     private var bookNowOffer: BookNowOffer? = null
+    private lateinit var transfer: Transfer
 
     internal var transferId = 0L
     internal var offerId    = 0L
     internal var percentage = 0
     internal var bookNowTransportId = ""
 
+    override fun attachView(view: PaymentView) {
+        super.attachView(view)
+        offer = offerInteractor.getOffer(offerId)
+        utils.launchSuspend {
+            val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
+            if (result.error == null || (result.error != null && result.fromCache)) {
+                transfer = result.model
+                if (transfer.bookNowOffers.isNotEmpty()) {
+                    bookNowOffer = transfer.bookNowOffers.filterKeys { it.toString() == bookNowTransportId }.values.first()
+                }
+            }
+        }
+    }
 
     fun changePaymentStatus(orderId: Long, success: Boolean) {
         utils.launchSuspend {
@@ -81,55 +96,45 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
         routeInteractor.duration?.let { bundle.putInt(Analytics.HOURS, it) }
         routeInteractor.duration?.let { map[Analytics.HOURS] = it }
 
-        offer = offerInteractor.getOffer(offerId)
-        utils.launchSuspend {
-            val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            if (result.error == null || (result.error != null && result.fromCache)) {
-                if (result.model.bookNowOffers.isNotEmpty()) {
-                    bookNowOffer = result.model.bookNowOffers.filterKeys { it.name == bookNowTransportId }.values.first()
+        val offerType = if (offer != null) Analytics.REGULAR else Analytics.NOW
+        bundle.putString(Analytics.OFFER_TYPE, offerType)
+        map[Analytics.OFFER_TYPE] = offerType
 
-                    val offerType = if (offer != null ) Analytics.REGULAR else Analytics.NOW
-                    bundle.putString(Analytics.OFFER_TYPE, offerType)
-                    map[Analytics.OFFER_TYPE] = offerType
-                }
-                when {
-                    result.model.duration        != null -> Analytics.TRIP_HOURLY
-                    result.model.dateReturnLocal != null -> Analytics.TRIP_ROUND
-                    else                                 -> Analytics.TRIP_DESTINATION
-                }.let {
-                    bundle.putString(Analytics.TRIP_TYPE, it)
-                    map[Analytics.TRIP_TYPE] = it
-                }
-
-            }
-
-            fbBundle.putAll(bundle)
-            afMap.putAll(map)
-
-            val currency = systemInteractor.currency.currencyCode
-            map[Analytics.CURRENCY] = currency
-            afMap[AFInAppEventParameterName.CURRENCY] = currency
-            bundle.putString(Analytics.CURRENCY, currency)
-
-            var price: Double = if (offer != null) offer!!.price.amount else bookNowOffer!!.amount
-
-            when (percentage) {
-                OfferModel.FULL_PRICE -> {
-                    bundle.putDouble(Analytics.VALUE, price)
-                    map[Analytics.VALUE] = price
-                    afMap[AFInAppEventParameterName.REVENUE] = price
-                }
-                OfferModel.PRICE_30 -> {
-                    price *= PRICE_30
-                    bundle.putDouble(Analytics.VALUE, price)
-                    map[Analytics.VALUE] = price
-                    afMap[AFInAppEventParameterName.REVENUE] = price
-                }
-            }
-            analytics.logEventEcommerce(Analytics.EVENT_ECOMMERCE_PURCHASE, bundle, map)
-            analytics.logEventEcommercePurchaseFB(fbBundle, price.toBigDecimal(), systemInteractor.currency)
-            analytics.logEventToAppsFlyer(AFInAppEventType.PURCHASE, afMap)
+        when {
+            transfer.duration != null -> Analytics.TRIP_HOURLY
+            transfer.dateReturnLocal != null -> Analytics.TRIP_ROUND
+            else -> Analytics.TRIP_DESTINATION
+        }.let {
+            bundle.putString(Analytics.TRIP_TYPE, it)
+            map[Analytics.TRIP_TYPE] = it
         }
+
+        fbBundle.putAll(bundle)
+        afMap.putAll(map)
+
+        val currency = systemInteractor.currency.currencyCode
+        map[Analytics.CURRENCY] = currency
+        afMap[AFInAppEventParameterName.CURRENCY] = currency
+        bundle.putString(Analytics.CURRENCY, currency)
+
+        var price: Double = if (offer != null) offer!!.price.amount else bookNowOffer!!.amount
+
+        when (percentage) {
+            OfferModel.FULL_PRICE -> {
+                bundle.putDouble(Analytics.VALUE, price)
+                map[Analytics.VALUE] = price
+                afMap[AFInAppEventParameterName.REVENUE] = price
+            }
+            OfferModel.PRICE_30 -> {
+                price *= PRICE_30
+                bundle.putDouble(Analytics.VALUE, price)
+                map[Analytics.VALUE] = price
+                afMap[AFInAppEventParameterName.REVENUE] = price
+            }
+        }
+        analytics.logEventEcommerce(Analytics.EVENT_ECOMMERCE_PURCHASE, bundle, map)
+        analytics.logEventEcommercePurchaseFB(fbBundle, price.toBigDecimal(), systemInteractor.currency)
+        analytics.logEventToAppsFlyer(AFInAppEventType.PURCHASE, afMap)
     }
 
     fun logEvent(value: String) {

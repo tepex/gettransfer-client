@@ -69,11 +69,12 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
         viewState.setCountEvents(transferIds)
     }
 
-    fun openTransferDetails(id: Long, status: Transfer.Status) {
+    fun openTransferDetails(id: Long, status: Transfer.Status, paidPercentage: Int) {
         Timber.d("Open Transfer details. id: $id")
-        when (status) {
-            Transfer.Status.NEW -> router.navigateTo(Screens.Offers(id))
-            else                -> router.navigateTo(Screens.Details(id))
+        if (status == Transfer.Status.NEW && paidPercentage == 0) {
+            router.navigateTo(Screens.Offers(id))
+        } else {
+            router.navigateTo(Screens.Details(id))
         }
     }
 
