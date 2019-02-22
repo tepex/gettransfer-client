@@ -213,8 +213,8 @@ object Screens {
             }
             return if (checkEmailIntent(context!!, emailIntent)) Intent.createChooser(
                 emailIntent,
-                context.getString(R.string.send_email)
-            ) else null
+                context.getString(R.string.send_email))
+            else Intent()
         }
 
         private fun createSignature(): String =
