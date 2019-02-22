@@ -69,7 +69,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     override fun setRoute(polyline: PolylineModel) = setPolylineWithoutInfo(polyline)
 
     override fun setRemainTime(days: Int, hours: Int, minutes: Int) {
-        val time = "${days}D:${hours}H:${minutes}M"
+        val time = "$days${getString(R.string.LNG_D)}:$hours${getString(R.string.LNG_H)}:$minutes${getString(R.string.LNG_M)}"
         dialogView.tvRemainTime.text = time
     }
 
