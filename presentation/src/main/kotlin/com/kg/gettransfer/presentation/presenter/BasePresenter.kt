@@ -247,6 +247,13 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     fun onDriverModeExit() =
         with(systemInteractor) { if (lastMode == Screens.CARRIER_MODE) closeSocketConnection() }
 
+
+    /*
+    First - work with error: check login error. CheckResultError returns
+    false if error is handled and no need to show info to user.
+    Next - show error for user with default viewState method. We can do it
+    in child presenter if indicate "processError" = true (use "SHOW_ERROR" from Companion)
+     */
     protected suspend fun <M>fetchResult(processError: Boolean = false, block: suspend () -> Result<M>) =
         utils.asyncAwait { block() }
                 .also { it.error
@@ -255,6 +262,10 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                             if (handle && !processError) viewState.setError(it.error!!) } }
 
 
+    /*
+    Method to fetch only data without result if no need to have error object in client class.
+    As we unwrap return data safely in client class, so it's possible to use it without care.
+     */
     protected suspend fun <D>fetchData(block: suspend () -> Result<D>) =
             fetchResult { block() }
                     .isNotError()
