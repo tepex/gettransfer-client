@@ -48,6 +48,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
             layoutSettingsLogs.isVisible = false
             layoutSettingsResetOnboarding.isVisible = false
             rlResetMarketRate.isVisible = false
+            rlClearAccessToken.isVisible = false
         }
         layoutDriverBackground.isVisible = presenter.isDriverMode
     }

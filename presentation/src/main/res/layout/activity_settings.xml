@@ -248,16 +248,17 @@
 
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/create_transfer_divider_height"
-            android:background="@color/colorDividerGray" />
-
         <RelativeLayout
             android:id="@+id/layoutSettingsLogs"
             android:layout_width="match_parent"
             android:layout_height="@dimen/settings_activity_height_layouts"
             android:background="@drawable/back_clicked_layouts">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:background="@color/colorDividerGray"
+                android:layout_alignParentTop="true"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -282,16 +283,17 @@
 
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/create_transfer_divider_height"
-            android:background="@color/colorDividerGray" />
-
         <RelativeLayout
             android:id="@+id/layoutSettingsResetOnboarding"
             android:layout_width="match_parent"
             android:layout_height="@dimen/settings_activity_height_layouts"
             android:background="@drawable/back_clicked_layouts">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:background="@color/colorDividerGray"
+                android:layout_alignParentTop="true"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -316,16 +318,17 @@
 
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/create_transfer_divider_height"
-            android:background="@color/colorDividerGray" />
-
         <RelativeLayout
             android:id="@+id/rlResetMarketRate"
             android:layout_width="match_parent"
             android:layout_height="@dimen/settings_activity_height_layouts"
             android:background="@drawable/back_clicked_layouts">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:background="@color/colorDividerGray"
+                android:layout_alignParentTop="true"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -350,16 +353,17 @@
 
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/create_transfer_divider_height"
-            android:background="@color/colorDividerGray" />
-
         <RelativeLayout
             android:id="@+id/rlClearAccessToken"
             android:layout_width="match_parent"
             android:layout_height="@dimen/settings_activity_height_layouts"
             android:background="@drawable/back_clicked_layouts">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:background="@color/colorDividerGray"
+                android:layout_alignParentTop="true"/>
 
             <TextView
                 android:layout_width="match_parent"
