@@ -2,18 +2,19 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.presenter.PaymentErrorPresenter
 import com.kg.gettransfer.presentation.view.PaymentErrorView
 
 import kotlinx.android.synthetic.main.dialog_payment_error.view.*
 
 class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
+
+    private lateinit var dialogView: View
 
     @InjectPresenter
     internal lateinit var presenter: PaymentErrorPresenter
@@ -30,7 +31,7 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
     }
 
     private fun showPaymentDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_payment_error, null)
+        dialogView = layoutInflater.inflate(R.layout.dialog_payment_error, null)
         AlertDialog.Builder(this).apply { setView(dialogView) }.show().setCanceledOnTouchOutside(false)
 
         with(dialogView) {
