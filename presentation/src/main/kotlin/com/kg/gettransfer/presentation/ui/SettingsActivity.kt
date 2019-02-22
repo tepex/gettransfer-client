@@ -48,8 +48,8 @@ class SettingsActivity : BaseActivity(), SettingsView {
             layoutSettingsLogs.isVisible = false
             layoutSettingsResetOnboarding.isVisible = false
             rlResetMarketRate.isVisible = false
-            layoutDriverBackground.isVisible = false
         }
+        layoutDriverBackground.isVisible = presenter.isDriverMode
     }
 
     private fun initClickListeners() {
@@ -65,8 +65,11 @@ class SettingsActivity : BaseActivity(), SettingsView {
                 presenter.onDriverCoordinatesSwitched(isChecked)
             }
         }
-        switch_bg_coordinates.setOnCheckedChangeListener { buttonView, isChecked ->
-            presenter.onDriverCoordinatesSwitched(isChecked)
+        switch_bg_coordinates.apply {
+            isChecked = presenter.isBackGroundAccepted
+            setOnCheckedChangeListener { _, isChecked ->
+                presenter.onDriverCoordinatesSwitched(isChecked)
+            }
         }
     }
 

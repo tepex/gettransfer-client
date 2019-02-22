@@ -13,7 +13,6 @@ interface CarrierTripsMainView : BaseView{
 
     companion object {
         const val BG_COORDINATES_NOT_ASKED = 0
-        const val BG_COORDINATES_ACCEPTED  = 1
         const val BG_COORDINATES_REJECTED  = -1
     }
 }

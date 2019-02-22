@@ -4,9 +4,7 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView
-import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_COORDINATES_ACCEPTED
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_COORDINATES_NOT_ASKED
-import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_COORDINATES_REJECTED
 import com.kg.gettransfer.presentation.view.Screens
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -55,9 +53,6 @@ class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComp
         if (carrierTripInteractor.bgCoordinatesPermission == BG_COORDINATES_NOT_ASKED)
             viewState.askForBackGroundCoordinates()
     }
-    fun permissionResult(accepted: Boolean) {
-        carrierTripInteractor.bgCoordinatesPermission =
-                if (accepted) BG_COORDINATES_ACCEPTED
-                else BG_COORDINATES_REJECTED
-    }
+    fun permissionResult(accepted: Boolean) =
+        carrierTripInteractor.permissionChanged(accepted)
 }
