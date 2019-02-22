@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -99,10 +100,26 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     override fun onNewOffer(offer: Offer): OfferModel {
         val offerModel = super.onNewOffer(offer)
-        offers = offers.toMutableList().apply { add(offerModel) }
+        if (transferId != offer.transferId) return offerModel
+        if (!checkDuplicated(offerModel))
+            offers = offers.toMutableList().apply { add(offerModel) }
         utils.launchSuspend { processOffers() }
         return offerModel
     }
+
+    private fun checkDuplicated(offer: OfferModel): Boolean {
+        var duplicated: Boolean = false
+        offers.forEach {
+            if (it is OfferModel && it.id == offer.id) {
+                offers = offers.toMutableList().apply { set(indexOf(it), offer) }
+                duplicated = true
+            }
+        }
+        return duplicated
+    }
+
+
+
 
     fun onRequestInfoClicked() {
         router.navigateTo(Screens.Details(transferId))

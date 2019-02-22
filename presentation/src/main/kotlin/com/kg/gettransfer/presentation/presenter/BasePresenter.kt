@@ -178,13 +178,13 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
         }
     }
 
-    fun onOfferJsonReceived(jsonOffer: String, transferId: Long) =
-            JSON.nonstrict.parse(OfferEntity.serializer(), jsonOffer)
-                    .also { it.transferId = transferId }
-                    .let  { offerEntityMapper.fromEntity(it) }
-                    .also { it.vehicle.photos = it.vehicle.photos
-                            .map { photo -> systemInteractor.endpoint.url.plus(photo) } }
-                    .also { onNewOffer(it) }
+//    fun onOfferJsonReceived(jsonOffer: String, transferId: Long) =
+//            JSON.nonstrict.parse(OfferEntity.serializer(), jsonOffer)
+//                    .also { it.transferId = transferId }
+//                    .let  { offerEntityMapper.fromEntity(it) }
+//                    .also { it.vehicle.photos = it.vehicle.photos
+//                            .map { photo -> systemInteractor.endpoint.url.plus(photo) } }
+//                    .also { onNewOffer(it) }
 
     open fun onNewOffer(offer: Offer): OfferModel {
         utils.launchSuspend { utils.asyncAwait { offerInteractor.newOffer(offer) } }

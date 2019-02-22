@@ -133,10 +133,10 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         }
     }
 
-    private val offerReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            intent?.apply { getStringExtra(OFFER_JSON)
-                    .let { getPresenter().onOfferJsonReceived(it, getLongExtra(OFFER_ID, 0L)) } } } }
+//    private val offerReceiver = object : BroadcastReceiver() {
+//        override fun onReceive(context: Context?, intent: Intent?) {
+//            intent?.apply { getStringExtra(OFFER_JSON)
+//                    .let { getPresenter().onOfferJsonReceived(it, getLongExtra(OFFER_ID, 0L)) } } } }
 
     private val appStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -209,7 +209,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     @CallSuper
     protected override fun onResume() {
         super.onResume()
-        LocalBroadcastManager.getInstance(this).registerReceiver(offerReceiver, IntentFilter(ACTION_OFFER))
+     //   LocalBroadcastManager.getInstance(this).registerReceiver(offerReceiver, IntentFilter(ACTION_OFFER))
         navigatorHolder.setNavigator(navigator)
     }
 
@@ -224,7 +224,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         super.onStop()
         Handler().postDelayed({
             LocalBroadcastManager.getInstance(this).apply {
-                unregisterReceiver(offerReceiver)
+    //            unregisterReceiver(offerReceiver)
                 unregisterReceiver(appStateReceiver)
             }
         }, 2000)

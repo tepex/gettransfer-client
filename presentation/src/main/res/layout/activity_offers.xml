@@ -65,7 +65,7 @@
                             android:indeterminateDrawable="@drawable/progress_rotate"
                             android:indeterminateDuration="1200"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginStart="41dp"/>
+                            android:layout_marginStart="16dp"/>
                     <TextView
                             android:id="@+id/tv_drivers_count"
                             android:layout_width="match_parent"
