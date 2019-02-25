@@ -25,6 +25,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     internal lateinit var presenter: PaymentSuccessfulPresenter
 
     private lateinit var dialogView: View
+    private lateinit var dialog: AlertDialog
 
     override fun getPresenter(): PaymentSuccessfulPresenter = presenter
 
@@ -38,7 +39,8 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
 
     private fun showPaymentDialog(savedInstanceState: Bundle?) {
         dialogView = layoutInflater.inflate(R.layout.dialog_payment_successful, null)
-        AlertDialog.Builder(this).apply { setView(dialogView) }.show().setCanceledOnTouchOutside(false)
+        dialog = AlertDialog.Builder(this).apply { setView(dialogView) }.show()
+        dialog.setCanceledOnTouchOutside(false)
 
         _mapView = dialogView.mapViewRoute
         initMapView(savedInstanceState)
@@ -58,6 +60,11 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
             ivClose.setOnClickListener { finish() }
             btnSupport.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        dialog.dismiss()
     }
 
     override suspend fun customizeGoogleMaps(gm: GoogleMap) {
