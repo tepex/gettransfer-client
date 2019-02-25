@@ -58,7 +58,10 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
             if (result.error == null || (result.error != null && result.fromCache)) {
                 paymentRequest = PaymentRequestModel(params.transferId, null, params.bookNowTransportId)
                 if (result.model.bookNowOffers.isNotEmpty()) {
-                    bookNowOffer = result.model.bookNowOffers.filterKeys { it.toString() == params.bookNowTransportId }.values.first()
+                    val filteredBookNow = result.model.bookNowOffers.filterKeys { it.toString() == params.bookNowTransportId }
+                    if (filteredBookNow.isNotEmpty()) {
+                        bookNowOffer = filteredBookNow.values.first()
+                    }
                 }
                 viewState.setBookNowOffer(bookNowOffer)
             } else {
