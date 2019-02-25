@@ -13,8 +13,7 @@ class RouteCacheImpl: RouteCache, KoinComponent {
 
     override suspend fun getRouteInfo(from: String, to: String): RouteInfoEntity? {
         try {
-            db.routeCacheDao().getRouteInfo(from, to)?.let { routeInfoMapper.fromCached(it) }
-            throw IllegalStateException()
+            return db.routeCacheDao().getRouteInfo(from, to)?.let { routeInfoMapper.fromCached(it) }
         } catch (e: IllegalStateException) {
             throw CacheException(CacheException.ILLEGAL_STATE, e.message ?: "IllegalStateException")
         }
@@ -23,7 +22,6 @@ class RouteCacheImpl: RouteCache, KoinComponent {
     override suspend fun setRouteInfo(from: String, to: String, routeInfo: RouteInfoEntity){
         try {
             db.routeCacheDao().insert(routeInfoMapper.toCached(from, to, routeInfo))
-            throw IllegalStateException()
         } catch (e: IllegalStateException) {
             throw CacheException(CacheException.ILLEGAL_STATE, e.message ?: "IllegalStateException")
         }

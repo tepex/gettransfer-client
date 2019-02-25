@@ -22,10 +22,11 @@ abstract class BaseRepository : KoinComponent {
         return try { ResultEntity(getEntity(true)) }
         /* If error, get from cache */
         catch (e: RemoteException) {
-            ResultEntity(getEntity(false), e)
-        }
-        catch (e: CacheException) {
-            ResultEntity(getEntity(false), null, e)
+            try {
+                ResultEntity(getEntity(false), e)
+            } catch (cacheE: CacheException) {
+                ResultEntity(null, e, cacheE)
+            }
         }
     }
 
