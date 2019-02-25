@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.dialog_payment_error.view.*
 class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
 
     private lateinit var dialogView: View
+    private lateinit var dialog: AlertDialog
 
     @InjectPresenter
     internal lateinit var presenter: PaymentErrorPresenter
@@ -32,7 +33,8 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
 
     private fun showPaymentDialog() {
         dialogView = layoutInflater.inflate(R.layout.dialog_payment_error, null)
-        AlertDialog.Builder(this).apply { setView(dialogView) }.show().setCanceledOnTouchOutside(false)
+        dialog = AlertDialog.Builder(this).apply { setView(dialogView) }.show()
+        dialog.setCanceledOnTouchOutside(false)
 
         with(dialogView) {
             tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER).plus(" $transferId")
@@ -40,6 +42,11 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
             btnTryAgain.setOnClickListener { this@PaymentErrorActivity.finish() }
             btnSupport.setOnClickListener  { presenter.sendEmail(null, transferId) }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        dialog.dismiss()
     }
 
     companion object {
