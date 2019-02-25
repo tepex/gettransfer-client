@@ -47,11 +47,11 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
     override fun attachView(view: PaymentView) {
         super.attachView(view)
         offer = offerInteractor.getOffer(offerId)
-        if (offer == null) {
-            utils.launchSuspend {
-                val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-                if (result.error == null || (result.error != null && result.fromCache)) {
-                    transfer = result.model
+        utils.launchSuspend {
+            val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
+            if (result.error == null || (result.error != null && result.fromCache)) {
+                transfer = result.model
+                if (offer == null) {
                     if (transfer.bookNowOffers.isNotEmpty()) {
                         if (bookNowTransportId.isNotEmpty()) {
                             val filteredBookNow = transfer.bookNowOffers.filterKeys { it.toString() == bookNowTransportId }
