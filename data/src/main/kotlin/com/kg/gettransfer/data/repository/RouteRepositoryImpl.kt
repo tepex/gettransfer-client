@@ -49,7 +49,8 @@ class RouteRepositoryImpl(
                 return Result(result.entity?.let { routeInfoMapper.fromEntity(it) } ?: DEFAULT, null, false, ExceptionMapper.map(e))
             }
             return Result(result.entity?.let { routeInfoMapper.fromEntity(it) } ?: DEFAULT,
-                    result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
+                    result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null,
+                    result.cacheError?.let { ExceptionMapper.map(it) })
     }
 
     companion object {

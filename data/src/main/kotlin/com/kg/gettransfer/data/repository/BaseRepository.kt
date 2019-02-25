@@ -24,6 +24,9 @@ abstract class BaseRepository : KoinComponent {
         catch (e: RemoteException) {
             ResultEntity(getEntity(false), e)
         }
+        catch (e: CacheException) {
+            ResultEntity(getEntity(false), null, e)
+        }
     }
 
     protected suspend fun <E> retrieveRemoteEntity(getEntity: suspend () -> E): ResultEntity<E?> {

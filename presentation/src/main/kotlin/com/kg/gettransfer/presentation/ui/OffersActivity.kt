@@ -343,6 +343,6 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun setError(e: ApiException) {
-        Utils.showError(this, true, e.details)
+        if (e.code != ApiException.NETWORK_ERROR) Utils.showError(this, true, e.details)
     }
 }
