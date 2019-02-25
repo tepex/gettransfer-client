@@ -16,6 +16,7 @@ import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.DistanceUnitModel
 import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
+import com.kg.gettransfer.presentation.view.CarrierTripsMainView
 
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
@@ -23,7 +24,7 @@ import com.kg.gettransfer.presentation.view.SettingsView
 import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.standalone.get
-import java.util.*
+import java.util.Locale
 
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>() {
@@ -40,6 +41,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private var localeWasChanged = false
     private var restart = true
+    val isDriverMode get() =
+        systemInteractor.lastMode == Screens.CARRIER_MODE
+    val isBackGroundAccepted get() =
+        carrierTripInteractor.bgCoordinatesPermission != CarrierTripsMainView.BG_COORDINATES_REJECTED
 
     companion object {
         private const val CURRENCY_GBP = "GBP"
@@ -134,8 +139,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         utils.launchSuspend {
             utils.asyncAwait { systemInteractor.unregisterPushToken() }
             utils.asyncAwait { systemInteractor.logout() }
+
             utils.asyncAwait { transferInteractor.clearTransfersCache() }
             utils.asyncAwait { offerInteractor.clearOffersCache() }
+            utils.asyncAwait { carrierTripInteractor.clearCarrierTripsCache() }
             router.exit()
         }
         logEvent(Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)
@@ -146,6 +153,11 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     fun onResetOnboardingClicked() { systemInteractor.isOnboardingShowed = false }
 
     fun onResetRateClicked() { reviewInteractor.shouldAskRateInMarket = true }
+
+    fun onClearAccessTokenClicked() { systemInteractor.accessToken = "" }
+
+    fun onDriverCoordinatesSwitched(checked: Boolean) =
+            carrierTripInteractor.permissionChanged(checked)
 
     @CallSuper
     override fun onBackCommandClick() {

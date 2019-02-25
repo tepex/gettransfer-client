@@ -7,7 +7,7 @@ import com.kg.gettransfer.data.SystemDataStore
 
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.SystemDataStoreCache
-import com.kg.gettransfer.data.ds.SystemDataStoreIO
+import com.kg.gettransfer.data.ds.IO.SystemSocketDataStoreOutput
 import com.kg.gettransfer.data.ds.SystemDataStoreRemote
 
 import com.kg.gettransfer.data.mapper.ConfigsMapper
@@ -24,7 +24,7 @@ import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.SystemListener
+import com.kg.gettransfer.domain.eventListeners.SystemEventListener
 
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
@@ -50,7 +50,7 @@ import org.koin.standalone.get
 
 class SystemRepositoryImpl(
     private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>,
-    private val socketDataStore: SystemDataStoreIO
+    private val socketDataStore: SystemSocketDataStoreOutput
 ) : BaseRepository(), SystemRepository, PreferencesListener {
 
     private val preferencesCache = get<PreferencesCache>()
@@ -61,10 +61,11 @@ class SystemRepositoryImpl(
     private val mobileConfMapper = get<MobileConfigMapper>()
     private val locationMapper   = get<LocationMapper>()
 
-    private val listeners = mutableSetOf<SystemListener>()
+    private val listeners = mutableSetOf<SystemEventListener>()
 
     init {
         preferencesCache.addListener(this)
+        accountMapper.configs = CONFIGS_DEFAULT
     }
 
     override var isInitialized = false
@@ -81,6 +82,10 @@ class SystemRepositoryImpl(
         get() = preferencesCache.lastMode
         set(value) { preferencesCache.lastMode = value }
 
+    override var lastCarrierTripsTypeView: String
+        get() = preferencesCache.lastCarrierTripsTypeView
+        set(value) { preferencesCache.lastCarrierTripsTypeView = value }
+
     override var isFirstLaunch: Boolean
         get() = preferencesCache.isFirstLaunch
         set(value) { preferencesCache.isFirstLaunch = value }
@@ -93,8 +98,17 @@ class SystemRepositoryImpl(
         get() = preferencesCache.selectedField
         set(value) { preferencesCache.selectedField = value }
 
-    override val accessToken: String
+    override var accessToken: String
         get() = preferencesCache.accessToken
+        set(value) { preferencesCache.accessToken = value }
+
+    override var userEmail: String
+        get() = preferencesCache.userEmail
+        set(value) { preferencesCache.userEmail = value }
+
+    override var userPassword: String
+        get() = preferencesCache.userPassword
+        set(value) { preferencesCache.userPassword = value }
 
     override val endpoints = preferencesCache.endpoints.map { endpointMapper.fromEntity(it) }
 
@@ -206,7 +220,7 @@ class SystemRepositoryImpl(
         return Result(account, result.error?.let { ExceptionMapper.map(it) })
     }
 
-    override fun logout(): Result<Account> {
+    override suspend fun logout(): Result<Account> {
         account = NO_ACCOUNT
         factory.retrieveCacheDataStore().clearAccount()
         preferencesCache.logout()
@@ -228,13 +242,11 @@ class SystemRepositoryImpl(
     }
 
     override fun accessTokenChanged(accessToken: String) {
- //       listeners.forEach { it.connectionChanged(endpoint, accessToken) }
         connectionChanged()
     }
 
     override fun endpointChanged(endpointEntity: EndpointEntity) {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointEntity)
- //       listeners.forEach { it.connectionChanged(endpoint, accessToken) }
         connectionChanged()
     }
 
@@ -244,17 +256,17 @@ class SystemRepositoryImpl(
 
     override suspend fun getMyLocation(): Result<Location> {
         return try {
-            factory.retrieveRemoteDataStore().changeEndpoint(EndpointEntity("", "", API_URL_LOCATION))
+            //factory.retrieveRemoteDataStore().changeEndpoint(EndpointEntity("", "", API_URL_LOCATION))
             val locationEntity = factory.retrieveRemoteDataStore().getMyLocation()
-            factory.retrieveRemoteDataStore().changeEndpoint(preferencesCache.endpoint)
+            //factory.retrieveRemoteDataStore().changeEndpoint(preferencesCache.endpoint)
             Result(locationMapper.fromEntity(locationEntity))
         } catch (e: RemoteException) {
             Result(Location(null, null), ExceptionMapper.map(e))
         }
     }
 
-    override fun addListener(listener: SystemListener)    { listeners.add(listener) }
-    override fun removeListener(listener: SystemListener) { listeners.add(listener) }
+    override fun addListener(listener: SystemEventListener)    { listeners.add(listener) }
+    override fun removeListener(listener: SystemEventListener) { listeners.remove(listener) }
 
     /* Socket */
 
@@ -262,18 +274,15 @@ class SystemRepositoryImpl(
     override fun connectionChanged() = socketDataStore.changeConnection(endpointMapper.toEntity(endpoint), accessToken)
     override fun disconnectSocket()  = socketDataStore.disconnectSocket()
 
+    fun notifyAboutConnection()    = listeners.forEach { it.onSocketConnected() }
+    fun notifyAboutDisconnection() = listeners.forEach { it.onSocketDisconnected() }
+
+
+
+
     companion object {
-        private val CONFIGS_DEFAULT = Configs(
-            transportTypes         = emptyList<TransportType>(),
-            paypalCredentials      = PaypalCredentials("", ""),
-            availableLocales       = emptyList<Locale>(),
-            preferredLocale        = Locale.getDefault(),
-            supportedCurrencies    = emptyList<Currency>(),
-            supportedDistanceUnits = emptyList<DistanceUnit>(),
-            cardGateways           = CardGateways("", null),
-            officePhone            = "",
-            baseUrl                = ""
-        )
+        private val CONFIGS_DEFAULT = Configs.DEFAULT_CONFIGS
+
         private val NO_ACCOUNT = Account(
             user         = User(Profile(null, null, null)),
             locale       = Locale.getDefault(),
@@ -287,6 +296,6 @@ class SystemRepositoryImpl(
             orderMinimumMinutes = 120,
             termsUrl            = "terms_of_use"
         )
-        private const val API_URL_LOCATION = "https://ipapi.co"
+        //private const val API_URL_LOCATION = "https://ipapi.co"
     }
 }

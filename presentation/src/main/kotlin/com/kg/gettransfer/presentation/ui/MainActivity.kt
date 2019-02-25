@@ -58,7 +58,7 @@ import kotlinx.android.synthetic.main.a_b_view.*
 import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_item_requests.view.*
-import kotlinx.android.synthetic.main.notification_offer.*
+import kotlinx.android.synthetic.main.notification_view.*
 import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
@@ -148,6 +148,12 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         isFirst = savedInstanceState == null
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) window.exitTransition = Fade().apply { duration = FADE_DURATION }
+
+        if (intent.getBooleanExtra(SplashActivity.EXTRA_SHOW_RATE, false)) {
+            val transferId = intent.getLongExtra(SplashActivity.EXTRA_TRANSFER_ID, 0)
+            val rate = intent.getIntExtra(SplashActivity.EXTRA_RATE, 0)
+            presenter.rateTransfer(transferId, rate)
+        }
     }
 
     @CallSuper
@@ -351,6 +357,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     override fun setError(e: ApiException) {
         searchFrom.text = getString(R.string.search_nothing)
+        if (e.isNotFound()) super.setError(e)
     }
 
     override fun initSearchForm() {

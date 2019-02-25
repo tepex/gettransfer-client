@@ -68,6 +68,7 @@ class GTApplication : MultiDexApplication() {
             remoteModule,
             cacheModule,
             dataModule,
+            encryptModule,
             domainModule,
             mappersModule,
             androidModule,
@@ -145,8 +146,5 @@ class GTApplication : MultiDexApplication() {
             })
             */
         }
-    }
-    companion object {
-        var onStart         = 0
     }
 }

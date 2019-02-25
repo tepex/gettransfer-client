@@ -77,15 +77,19 @@ class SystemRemoteImpl : SystemRemote {
     }*/
 
     override suspend fun registerPushToken(provider: String, token: String) {
-        try{ core.api.registerPushToken(provider, token).await() }
-        catch (e: Exception) { throw core.remoteException(e) }
+        core.tryTwice { core.api.registerPushToken(provider, token) }
+
+        /*try{ core.api.registerPushToken(provider, token).await() }
+        catch (e: Exception) { throw core.remoteException(e) }*/
         //val resposeData: String = response.data
         //log.debug("register token: ${response.data}") : String
     }
 
     override suspend fun unregisterPushToken(token: String) {
-        try { core.api.unregisterPushToken(token).await() }
-        catch (e: Exception) { throw core.remoteException(e) }
+        core.tryTwice { core.api.unregisterPushToken(token) }
+
+        /*try { core.api.unregisterPushToken(token).await() }
+        catch (e: Exception) { throw core.remoteException(e) }*/
     }
 
     override fun changeEndpoint(endpoint: EndpointEntity) = core.changeEndpoint(endpointMapper.toRemote(endpoint))
@@ -99,7 +103,7 @@ class SystemRemoteImpl : SystemRemote {
         /*return try { locationMapper.fromRemote(core.api.getMyLocation().await()) }
         catch (e: Exception) { throw core.remoteException(e) }*/
 
-        val response: LocationModel = core.tryTwice { core.api.getMyLocation() }
+        val response: LocationModel = core.tryTwice { core.ipApi.getMyLocation() }
         return locationMapper.fromRemote(response)
     }
 }

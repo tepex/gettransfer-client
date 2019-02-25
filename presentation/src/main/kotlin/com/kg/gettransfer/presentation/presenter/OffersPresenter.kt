@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -54,11 +55,13 @@ class OffersPresenter : BasePresenter<OffersView>() {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
+            result.error?.let { checkResultError(it) }
             if (result.error != null) {
                 val err = result.error!!
                 Timber.e(err)
-                if (err.isNotLoggedIn()) viewState.redirectView()
+                //if (err.isNotLoggedIn()) viewState.redirectView()
                 //else if (err.code != ApiException.NETWORK_ERROR) viewState.setError(err)
+                if (err.isNotFound()) viewState.setError(ApiException(ApiException.NOT_FOUND, "Transfer $transferId not found!"))
             }
             if(result.error == null || (result.error != null && result.fromCache)) {
                 if (result.model.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE) router.exit()
@@ -97,10 +100,26 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     override fun onNewOffer(offer: Offer): OfferModel {
         val offerModel = super.onNewOffer(offer)
-        offers = offers.toMutableList().apply { add(offerModel) }
+        if (transferId != offer.transferId) return offerModel
+        if (!checkDuplicated(offerModel))
+            offers = offers.toMutableList().apply { add(offerModel) }
         utils.launchSuspend { processOffers() }
         return offerModel
     }
+
+    private fun checkDuplicated(offer: OfferModel): Boolean {
+        var duplicated: Boolean = false
+        offers.forEach {
+            if (it is OfferModel && it.id == offer.id) {
+                offers = offers.toMutableList().apply { set(indexOf(it), offer) }
+                duplicated = true
+            }
+        }
+        return duplicated
+    }
+
+
+
 
     fun onRequestInfoClicked() {
         router.navigateTo(Screens.Details(transferId))
@@ -115,14 +134,14 @@ class OffersPresenter : BasePresenter<OffersView>() {
                 logButtons(Analytics.OFFER_BOOK)
                 when(offer) {
                     is OfferModel ->
-                        router.navigateTo(Screens.PaymentSettings(
+                        router.navigateTo(Screens.PaymentOffer(
                                 it.id,
                                 offer.id,
                                 it.dateRefund,
                                 it.paymentPercentages,
                                 null
                         ))
-                    is BookNowOfferModel -> router.navigateTo(Screens.PaymentSettings(
+                    is BookNowOfferModel -> router.navigateTo(Screens.PaymentOffer(
                         it.id,
                         null,
                         it.dateRefund,
@@ -143,9 +162,9 @@ class OffersPresenter : BasePresenter<OffersView>() {
         viewState.showAlertCancelRequest()
     }
 
-    fun openLoginView() {
+    /*fun openLoginView() {
         login("", "")
-    }
+    }*/
 
     fun cancelRequest(isCancel: Boolean) {
         if (!isCancel) return

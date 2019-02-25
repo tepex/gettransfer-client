@@ -19,12 +19,19 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.setUserAgent
 
 import com.kg.gettransfer.presentation.presenter.WebPagePresenter
+import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.WebPageView
 
 import kotlinx.android.synthetic.main.activity_web_page.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+import org.koin.android.ext.android.inject
+import ru.terrakok.cicerone.NavigatorHolder
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 class WebPageActivity: MvpAppCompatActivity(), WebPageView {
+    var navigator = SupportAppNavigator(this, Screens.NOT_USED)
+    val navigatorHolder: NavigatorHolder by inject()
+
     @InjectPresenter
     internal lateinit var presenter: WebPagePresenter
 
@@ -58,7 +65,17 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
         }
     }
 
+    @CallSuper
+    override fun onResume() {
+        super.onResume()
+        navigatorHolder.setNavigator(navigator)
+    }
 
+    @CallSuper
+    override fun onPause() {
+        navigatorHolder.removeNavigator()
+        super.onPause()
+    }
 
     override fun initActivity(@StringRes title: Int, @StringRes url: Int, strUrl: String?) {
         (toolbar as Toolbar).toolbar_title.text = getString(title)

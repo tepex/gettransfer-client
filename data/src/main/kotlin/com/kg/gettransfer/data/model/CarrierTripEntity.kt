@@ -1,7 +1,5 @@
 package com.kg.gettransfer.data.model
 
-
-
 data class CarrierTripEntity(
     override val id: Long,
     override val transferId: Long,
@@ -19,13 +17,13 @@ data class CarrierTripEntity(
     override val waterTaxi: Boolean,
     override val price: String,
     override val vehicle: VehicleInfoEntity,
-    val pax: Int, /* passengers count */
+    val pax: Int?, /* passengers count */ /*may be null only from cache*/
     val nameSign: String?,
     val flightNumber: String?,
-    val paidSum: String, /* formatted */
-    val remainsToPay: String, /* formatted */
-    val paidPercentage: Int,
-    val passengerAccount: PassengerAccountEntity
+    val paidSum: String?, /* formatted */ /*may be null only from cache*/
+    val remainsToPay: String?, /* formatted */ /*may be null only from cache*/
+    val paidPercentage: Int?, /*may be null only from cache*/
+    val passengerAccount: PassengerAccountEntity? /*may be null only from cache*/
 ) : CarrierTripBaseEntity(
     id,
     transferId,
@@ -46,6 +44,7 @@ data class CarrierTripEntity(
 ) {
 
     companion object {
+        const val ENTITY_NAME_MORE  = "more_trip"
         const val PAX               = "pax"
         const val NAME_SIGN         = "name_sign"
         const val FLIGHT_NUMBER     = "flight_number"
@@ -64,6 +63,7 @@ data class PassengerAccountEntity(
 
     companion object {
         const val ID        = "id"
+        const val PROFILE   = "profile"
         const val LAST_SEEN = "last_seen"
     }
 }

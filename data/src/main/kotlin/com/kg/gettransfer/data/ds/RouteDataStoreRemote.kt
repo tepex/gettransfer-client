@@ -16,7 +16,7 @@ open class RouteDataStoreRemote: RouteDataStore {
     override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean?, returnWay: Boolean?, currency: String?) =
         remote.getRouteInfo(from, to, withPrices!!, returnWay!!, currency!!)
 
-    override fun setRouteInfo(from: String, to: String, routeInfo: RouteInfoEntity) {
+    override suspend fun setRouteInfo(from: String, to: String, routeInfo: RouteInfoEntity) {
         throw UnsupportedOperationException()
     }
 }

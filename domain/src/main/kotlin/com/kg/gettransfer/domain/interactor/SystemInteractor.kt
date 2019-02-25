@@ -1,6 +1,6 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.SystemListener
+import com.kg.gettransfer.domain.eventListeners.SystemEventListener
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.DistanceUnit
@@ -34,8 +34,17 @@ class SystemInteractor(
     val isInitialized: Boolean
         get() = systemRepository.isInitialized
 
-    val accessToken: String
+    var accessToken: String
         get() = systemRepository.accessToken
+        set(value) { systemRepository.accessToken = value }
+
+    var userEmail: String
+        get() = systemRepository.userEmail
+        set(value) { systemRepository.userEmail = value }
+
+    var userPassword: String
+        get() = systemRepository.userPassword
+        set(value) { systemRepository.userPassword = value }
 
     val account: Account
         get() = systemRepository.account
@@ -69,6 +78,10 @@ class SystemInteractor(
     var lastMode: String
         get() = systemRepository.lastMode
         set(value) { systemRepository.lastMode = value }
+
+    var lastCarrierTripsTypeView: String
+        get() = systemRepository.lastCarrierTripsTypeView
+        set(value) { systemRepository.lastCarrierTripsTypeView = value }
 
     var isFirstLaunch: Boolean
         get() = systemRepository.isFirstLaunch
@@ -121,19 +134,27 @@ class SystemInteractor(
         get()  = systemRepository.appEnters
         set(value) { systemRepository.appEnters = value }
 
-    fun logout() = systemRepository.logout()
+    suspend fun logout() = systemRepository.logout()
 
     suspend fun registerPushToken(token: String): Result<Unit> {
         pushToken = token
-        return systemRepository.registerPushToken(PushTokenType.FCM, token)
+        systemRepository.registerPushToken(PushTokenType.FCM, token)
+        return Result(Unit)
     }
 
-    suspend fun unregisterPushToken(): Result<Boolean> {
-        val result = pushToken?.let { systemRepository.unregisterPushToken(it) }
-        return Result(result != null && result.error == null, result?.error)
+    suspend fun unregisterPushToken(): Result<Unit> {
+        pushToken?.let { systemRepository.unregisterPushToken(it) } ?: Result(Unit)
+        return Result(Unit)
     }
 
-    suspend fun login(email: String, password: String) = systemRepository.login(email, password)
+    suspend fun login(email: String, password: String): Result<Account> {
+        val result = systemRepository.login(email, password)
+        if (result.error == null) {
+            this.userEmail = email
+            this.userPassword = password
+        }
+        return result
+    }
     suspend fun putAccount() = systemRepository.putAccount(account)
     suspend fun putNoAccount() = systemRepository.putNoAccount(account)
 
@@ -144,8 +165,8 @@ class SystemInteractor(
 
     suspend fun getMyLocation() = systemRepository.getMyLocation()
 
-    fun addListener(listener: SystemListener)    { systemRepository.addListener(listener) }
-    fun removeListener(listener: SystemListener) { systemRepository.removeListener(listener) }
+    fun addListener(listener: SystemEventListener)    { systemRepository.addListener(listener) }
+    fun removeListener(listener: SystemEventListener) { systemRepository.removeListener(listener) }
 
     companion object {
         private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )

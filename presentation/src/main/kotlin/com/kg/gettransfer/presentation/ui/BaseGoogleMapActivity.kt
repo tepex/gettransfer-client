@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
 
 import android.os.Bundle
 
@@ -9,6 +10,7 @@ import android.support.annotation.CallSuper
 import android.support.v4.content.ContextCompat
 
 import android.view.View
+import android.widget.ImageView
 
 import android.widget.RelativeLayout
 
@@ -16,10 +18,7 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
@@ -29,6 +28,7 @@ import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 
 import kotlinx.android.synthetic.main.view_maps_pin.view.* //don't delete
+import kotlinx.android.synthetic.main.view_car_pin.view.*  //don't delete
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -193,6 +193,12 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
         }
     }
 
+    protected fun moveCameraWithDriverCoordinate(cameraUpdate: CameraUpdate) {
+        processGoogleMap(false) {
+            googleMap.setMaxZoomPreference(17f)
+            googleMap.moveCamera(cameraUpdate) }
+    }
+
     protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
         val bmPinA = getPinBitmap(placeName, info, R.drawable.ic_map_label_a)
         val startMakerOptions = MarkerOptions()
@@ -250,9 +256,27 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
 
     protected fun clearMarkersAndPolylines() = googleMap.clear()
 
+    protected fun addCarToMap(resource: Int): Marker =
+            MarkerOptions()
+                    .visible(DEFAULT_VISIBILITY)
+                    .position(DEFAULT_POSITION)
+                    .icon(BitmapDescriptorFactory
+                            .fromBitmap(createBitmapFromView(createViewWithCar(resource))))
+                    .let { googleMap.addMarker(it) }
+
+    private fun createViewWithCar(res: Int): View {
+        val view = layoutInflater.inflate(R.layout.view_car_pin, null)
+        view.imgCarPin.setImageResource(res)
+        return view
+    }
+
+
     companion object {
         const val MAP_MIN_ZOOM = 13f
         const val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
         private const val LABEL_VERTICAL_POSITION = 12
+
+        const val DEFAULT_VISIBILITY = false
+        val DEFAULT_POSITION = LatLng(0.0, 0.0)
     }
 }

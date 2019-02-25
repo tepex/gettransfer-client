@@ -26,6 +26,7 @@ import com.kg.gettransfer.domain.model.TransferNew
 import com.kg.gettransfer.domain.model.Trip
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.TransportTypePrice
+import com.kg.gettransfer.domain.model.RouteInfo
 
 import com.kg.gettransfer.presentation.mapper.CurrencyMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper
@@ -126,24 +127,26 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
         utils.launchSuspend {
             viewState.blockInterface(true)
+            var route: RouteInfo? = null
             val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.currencyCode) }
+            result.cacheError?.let { viewState.setError(it) }
             if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
-                val route = result.model
+                route = result.model
                 duration = route.duration
+            }
+            setTransportTypePrices(route?.prices ?: emptyMap())
 
-                setTransportTypePrices(route.prices)
-
-                routeModel = routeMapper.getView(
-                    route.distance,
-                    route.polyLines,
+            routeModel = routeMapper.getView(
+                    route?.distance,
+                    route?.polyLines,
                     from.name!!,
                     to.name!!,
                     from.point!!,
                     to.point!!,
                     SystemUtils.formatDateTime(startDate.date)
-                )
-            }
+            )
+
             routeModel?.let {
                 polyline = Utils.getPolyline(it)
                 track = polyline!!.track
@@ -163,6 +166,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
         utils.launchSuspend {
             val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, returnWay, systemInteractor.currency.currencyCode) }
+            result.cacheError?.let { viewState.setError(it) }
             if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else setTransportTypePrices(result.model.prices)
         }
@@ -351,6 +355,23 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                     else -> viewState.setError(result.error!!)
                 }
             } else if (logResult.error != null) viewState.showNotLoggedAlert(result.model.id)
+
+            //404 - есть акк, но не выполнен вход
+            //500 - нет акка
+
+            /*val logResult = utils.asyncAwait { systemInteractor.putAccount() }
+            if (result.error == null && logResult.error == null) {
+                logCreateTransfer(Analytics.RESULT_SUCCESS)
+                logEventAddToCart(Analytics.EVENT_ADD_TO_CART)
+                router.replaceScreen(Screens.Offers(result.model.id))
+            } else if (result.error != null) {
+                logCreateTransfer(Analytics.SERVER_ERROR)
+                when {
+                    result.error!!.details == "{phone=[taken]}" -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
+                    result.error!!.code == ApiException.NETWORK_ERROR -> viewState.setError(false, R.string.LNG_NETWORK_ERROR)
+                    else -> viewState.setError(result.error!!)
+                }
+            } else if (logResult.error != null) viewState.showNotLoggedAlert(result.model.id)*/
             viewState.blockInterface(false)
         }
     }

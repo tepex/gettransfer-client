@@ -169,9 +169,11 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     }
 
     private fun initPromoSection() {
-        promo_field.field_input.filters = arrayOf(InputFilter.AllCaps())
-        promo_field.field_input.setOnFocusChangeListener { _, hasFocus -> if (!hasFocus) presenter.checkPromoCode() }
-        defaultPromoText = promo_field.field_title.text.toString()
+        with(promo_field) {
+            field_input.filters = arrayOf(InputFilter.AllCaps())
+            field_input.setOnFocusChangeListener { _, hasFocus -> if (!hasFocus) presenter.checkPromoCode() }
+            defaultPromoText = field_title.text.toString()
+        }
     }
 
     private fun initKeyBoardListener() {

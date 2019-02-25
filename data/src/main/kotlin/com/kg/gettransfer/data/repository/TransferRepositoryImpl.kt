@@ -10,6 +10,7 @@ import com.kg.gettransfer.data.mapper.TransferNewMapper
 import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.data.model.TransferEntity
+import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.TransferRepository
@@ -17,14 +18,14 @@ import com.kg.gettransfer.domain.repository.TransferRepository
 import java.util.Date
 
 import org.koin.standalone.get
+import org.koin.standalone.inject
 
 class TransferRepositoryImpl(
-    private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>
-) : BaseRepository(), TransferRepository {
+    private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>)
+    : BaseRepository(), TransferRepository {
 
     private val transferNewMapper = get<TransferNewMapper>()
     private val transferMapper = get<TransferMapper>()
- //   private val eventListener = get<TransferEventListener>()
 
     /*override suspend fun createTransfer(transferNew: TransferNew) =
         retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, DEFAULT) {
@@ -81,6 +82,14 @@ class TransferRepositoryImpl(
                 result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
     }
 
+    override suspend fun getTransferCached(id: Long): Result<Transfer> {
+        val result: ResultEntity<TransferEntity?> = retrieveCacheEntity {
+            factory.retrieveCacheDataStore().getTransfer(id)
+        }
+        return Result(result.entity?.let { transferMapper.fromEntity(it) }?: DEFAULT, null,
+                result.error != null && result.entity != null, result.cacheError?.let { ExceptionMapper.map(it) })
+    }
+
     override suspend fun getAllTransfers(): Result<List<Transfer>> {
         val result: ResultEntity<List<TransferEntity>?> = retrieveEntity { fromRemote ->
             factory.retrieveDataStore(fromRemote).getAllTransfers()
@@ -111,7 +120,6 @@ class TransferRepositoryImpl(
     override fun clearTransfersCache() {
         factory.retrieveCacheDataStore().clearTransfersCache()
     }
-
 
     companion object {
         private val DEFAULT =
@@ -160,9 +168,10 @@ class TransferRepositoryImpl(
                 refundedPrice         = null,
                 campaign              = null,
 /* ================================================== */
-                editableFields     = emptyList<String>(),
-                airlineCard        = null,
-                paymentPercentages = emptyList<Int>()
+                editableFields      = emptyList<String>(),
+                airlineCard         = null,
+                paymentPercentages  = emptyList<Int>(),
+                unreadMessagesCount = 0
             )
     }
 }

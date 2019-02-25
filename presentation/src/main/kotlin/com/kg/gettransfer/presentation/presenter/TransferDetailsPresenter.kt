@@ -1,30 +1,31 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
+import com.kg.gettransfer.domain.eventListeners.SystemEventListener
+import com.kg.gettransfer.presentation.delegate.DriverCoordinate
+import com.kg.gettransfer.domain.eventListeners.CoordinateEventListener
+import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.model.Coordinate
 
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.prefs.PreferencesImpl
+import com.kg.gettransfer.presentation.ui.icons.CarIconResourceProvider
+import com.kg.gettransfer.presentation.delegate.CoordinateRequester
+import com.kg.gettransfer.presentation.mapper.*
 
-import com.kg.gettransfer.presentation.mapper.ProfileMapper
-import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
-import com.kg.gettransfer.presentation.mapper.RouteMapper
-import com.kg.gettransfer.presentation.mapper.TransferMapper
-
-import com.kg.gettransfer.presentation.model.PolylineModel
-import com.kg.gettransfer.presentation.model.ReviewRateModel
-import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
@@ -39,14 +40,16 @@ import org.koin.standalone.inject
 import timber.log.Timber
 
 @InjectViewState
-class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
+class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SystemEventListener {
     private val routeInteractor: RouteInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
+    private val coordinateInteractor: CoordinateInteractor by inject()
 
     private val profileMapper: ProfileMapper by inject()
     private val routeMapper: RouteMapper by inject()
     private val transferMapper: TransferMapper by inject()
     private val reviewRateMapper: ReviewRateMapper by inject()
+    private val pointMapper: PointMapper by inject()
 
     private lateinit var transferModel: TransferModel
     private var routeModel: RouteModel? = null
@@ -54,16 +57,22 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
     private var track: CameraUpdate? = null
 
     internal var transferId = 0L
+    private var driverCoordinate: DriverCoordinate? = null
+    private var isCameraUpdatedForCoordinates = false
+    private var startCoordinate: LatLng? = null
 
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
+        systemInteractor.addListener(this)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
+            result.error?.let { checkResultError(it) }
             if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
                 val transfer = result.model
+                transfer.from.point?.let { startCoordinate = pointMapper.toView(it) }
                 transferModel = transferMapper.toView(transfer)
                 var offer: Offer? = null
 
@@ -81,6 +90,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
 
                 if (transfer.to != null) {
                     val r = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, true, false, systemInteractor.currency.currencyCode) }
+                    r.cacheError?.let { viewState.setError(it) }
                     setRouteTransfer(transfer, r.model)
                 } else if (transfer.duration != null) setHourlyTransfer(transfer)
 
@@ -90,10 +100,20 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
         }
     }
 
+    @CallSuper
+    override fun detachView(view: TransferDetailsView?) {
+        super.detachView(view)
+        driverCoordinate = null  // assign null to avoid drawing marker in detached screen
+        isCameraUpdatedForCoordinates = false
+        systemInteractor.removeListener(this)
+    }
+
     fun onCenterRouteClick() { track?.let { viewState.centerRoute(it) } }
 
-    fun onCancelRequestClicked() {
-        viewState.showAlertCancelRequest()
+    fun onCancelRequestClicked() { viewState.showAlertCancelRequest() }
+
+    fun onChatClick(){
+        router.navigateTo(Screens.Chat(transferId))
     }
 
     private fun setRouteTransfer(transfer: Transfer, route: RouteInfo) {
@@ -223,6 +243,37 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>() {
             createEmptyBundle(),
             mapOf()
         )
+
+    private val coordinateRequester = object : CoordinateRequester {
+        override fun request() = coordinateInteractor.initCoordinatesReceiving(transferId)
+    }
+
+    fun initCoordinates() {
+        driverCoordinate = DriverCoordinate(Handler(), coordinateRequester) { bearing, coordinates, show ->
+            viewState.moveCarMarker(bearing, coordinates, show) }
+        coordinateInteractor.coordinateEventListener = this
+    }
+
+    /*
+    When detached - no need to update, so call coordinate delegate safely
+     */
+    override fun onLocationReceived(coordinate: Coordinate) {
+        driverCoordinate?.property = coordinate
+        with(coordinate) {
+            if(!isCameraUpdatedForCoordinates) {
+                viewState.updateCamera(mutableListOf(LatLng(lat, lon)).also { list -> startCoordinate?.let { list.add(it) } })
+                isCameraUpdatedForCoordinates = true
+            }
+        }
+    }
+
+    fun getMarkerIcon(offerModel: OfferModel) = CarIconResourceProvider.getCarIcon(offerModel.vehicle)
+
+    override fun onSocketConnected() {
+        coordinateRequester.request()
+    }
+
+    override fun onSocketDisconnected() {}
 
     companion object {
         const val FIELD_EMAIL = "field_email"
