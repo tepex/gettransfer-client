@@ -65,6 +65,7 @@ class SystemRepositoryImpl(
 
     init {
         preferencesCache.addListener(this)
+        accountMapper.configs = CONFIGS_DEFAULT
     }
 
     override var isInitialized = false
@@ -241,13 +242,11 @@ class SystemRepositoryImpl(
     }
 
     override fun accessTokenChanged(accessToken: String) {
- //       listeners.forEach { it.connectionChanged(endpoint, accessToken) }
         connectionChanged()
     }
 
     override fun endpointChanged(endpointEntity: EndpointEntity) {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointEntity)
- //       listeners.forEach { it.connectionChanged(endpoint, accessToken) }
         connectionChanged()
     }
 
@@ -282,17 +281,7 @@ class SystemRepositoryImpl(
 
 
     companion object {
-        private val CONFIGS_DEFAULT = Configs(
-                transportTypes         = emptyList<TransportType>(),
-                paypalCredentials      = PaypalCredentials("", ""),
-                availableLocales       = emptyList<Locale>(),
-                preferredLocale        = Locale.getDefault(),
-                supportedCurrencies    = emptyList<Currency>(),
-                supportedDistanceUnits = emptyList<DistanceUnit>(),
-                cardGateways           = CardGateways("", null),
-                officePhone            = "",
-                baseUrl                = ""
-        )
+        private val CONFIGS_DEFAULT = Configs.DEFAULT_CONFIGS
 
         private val NO_ACCOUNT = Account(
             user         = User(Profile(null, null, null)),

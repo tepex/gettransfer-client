@@ -15,45 +15,12 @@ data class Configs(
     val baseUrl: String
 ) {
     companion object {
-//        val DEFAULT_CONFIGS = Configs(
-//                transportTypes         = TransportType.DEFAULT_TRANSPORT_TYPES,
-//                paypalCredentials      = PaypalCredentials("", ""),
-//                availableLocales       = Configs.DEFAULT_LOCALES,
-//                preferredLocale        = Locale.getDefault(),
-//                supportedCurrencies    = Configs.DEFAULT_CURRENCIES,
-//                supportedDistanceUnits = DistanceUnit.DEFAULT_DISTANCE_UNITS,
-//                cardGateways           = CardGateways("", null),
-//                officePhone            = "+74994040505",
-//                baseUrl                = "https://gettransfer.com"
-//        )
-
-//        private val DEFAULT_LOCALES = listOf(Locale("en"),
-//                Locale("ru"),
-//                Locale("de"),
-//                Locale("fr"),
-//                Locale("it"),
-//                Locale("es"),
-//                Locale("pt"),
-//                Locale("zh"),
-//                Locale("ar"),
-//                Locale("tr"),
-//                Locale("pl"),
-//                Locale("hu"),
-//                Locale("cs"),
-//                Locale("el"),
-//                Locale("sk"),
-//                Locale("he"),
-//                Locale("sv"),
-//                Locale("fi"),
-//                Locale("no"),
-//                Locale("ja"),
-//                Locale("nl"))
-//        private val DEFAULT_CURRENCIES = listOf(Currency.getInstance("RUB"),
-//                Currency.getInstance("THB"),
-//                Currency.getInstance("USD"),
-//                Currency.getInstance("GBP"),
-//                Currency.getInstance("CNY"),
-//                Currency.getInstance("EUR"),
+        private val DEFAULT_CURRENCIES = listOf(Currency.getInstance("RUB"),
+                Currency.getInstance("THB"),
+                Currency.getInstance("USD"),
+                Currency.getInstance("GBP"),
+                Currency.getInstance("CNY"),
+                Currency.getInstance("EUR"))
 //                Currency.getInstance("AUD"),
 //                Currency.getInstance("AZN"),
 //                Currency.getInstance("ARS"),
@@ -98,6 +65,40 @@ data class Configs(
 //                Currency.getInstance("ZAR"),
 //                Currency.getInstance("KRW"),
 //                Currency.getInstance("JPY"))
+
+        private val DEFAULT_LOCALES = listOf(Locale("en"),
+                Locale("ru"),
+                Locale("de"),
+                Locale("fr"),
+                Locale("it"),
+                Locale("es"),
+                Locale("pt"))
+//                Locale("zh"),
+//                Locale("ar"),
+//                Locale("tr"),
+//                Locale("pl"),
+//                Locale("hu"),
+//                Locale("cs"),
+//                Locale("el"),
+//                Locale("sk"),
+//                Locale("he"),
+//                Locale("sv"),
+//                Locale("fi"),
+//                Locale("no"),
+//                Locale("ja"),
+//                Locale("nl"))
+
+        val DEFAULT_CONFIGS = Configs(
+                transportTypes         = TransportType.DEFAULT_TRANSPORT_TYPES,
+                paypalCredentials      = PaypalCredentials("", ""),
+                availableLocales       = DEFAULT_LOCALES,
+                preferredLocale        = Locale.getDefault(),
+                supportedCurrencies    = DEFAULT_CURRENCIES,
+                supportedDistanceUnits = DistanceUnit.DEFAULT_DISTANCE_UNITS,
+                cardGateways           = CardGateways("", null),
+                officePhone            = "+74994040505",
+                baseUrl                = "https://gettransfer.com"
+        )
     }
 }
 
