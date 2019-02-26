@@ -40,6 +40,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                         routeInteractor
                             .getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false, systemInteractor.currency.currencyCode)
                     }
+                    r.cacheError?.let { viewState.setError(it) }
                     if (r.error == null || (r.error != null && r.fromCache)) {
                         val routeModel = routeMapper.getView(
                                 r.model.distance,

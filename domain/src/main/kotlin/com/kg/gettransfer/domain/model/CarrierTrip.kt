@@ -4,13 +4,13 @@ import java.util.Date
 
 data class CarrierTrip(
     val base: CarrierTripBase,
-    val pax: Int,
+    val pax: Int?, /*may be null only from cache*/
     val nameSign: String?,
     val flightNumber: String?,
-    val paidSum: String,
-    val remainsToPay: String,
-    val paidPercentage: Int,
-    val passengerAccount: PassengerAccount
+    val paidSum: String?, /*may be null only from cache*/
+    val remainsToPay: String?, /*may be null only from cache*/
+    val paidPercentage: Int?, /*may be null only from cache*/
+    val passengerAccount: PassengerAccount? /*may be null only from cache*/
 )
 
 data class PassengerAccount(

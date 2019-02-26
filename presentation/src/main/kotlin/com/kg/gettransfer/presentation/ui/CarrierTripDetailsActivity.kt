@@ -91,7 +91,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
     }
 
     override fun setTripInfo(trip: CarrierTripModel) {
-        layoutCarrierTripInfo.setInfo(trip.base, trip.totalPrice)
+        layoutCarrierTripInfo.setInfo(trip.base, trip.totalPrice, true)
         initMoreInfoLayout(trip)
         initAboutCarLayout(trip.base.vehicle)
         /*if(trip.tripStatus == CarrierTripModel.PAST_TRIP){
@@ -99,23 +99,34 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         } else {
            trip.passengerAccount?.profileModel?.let { initAboutPassengerLayout(it) }
         }*/
-        initAboutPassengerLayout(trip.passenger.profile)
+        trip.passenger?.let {
+            layoutAboutPassenger.isVisible = true
+            initAboutPassengerLayout(it.profile)
+        }
     }
 
     private fun initMoreInfoLayout(trip: CarrierTripModel) {
+        var isShowLayoutMoreInfo = false
+        trip.countPassengers?.let {
+            isShowLayoutMoreInfo = true
+            countPassengers.numberIndicator.text = it.toString()
+        }
         trip.base.comment?.let {
+            isShowLayoutMoreInfo = true
             tvComment.text = it
             layoutMoreInfoComment.isVisible = true
         }
         trip.flightNumber?.let {
+            isShowLayoutMoreInfo = true
             tvFlightNumber.text = it
             layoutFlightNumber.isVisible = true
         }
-        countPassengers.numberIndicator.text = trip.countPassengers.toString()
         if (trip.base.countChild > 0) {
+            isShowLayoutMoreInfo = true
             layoutCountChild.isVisible = true
             childSeats.numberIndicator.text = trip.base.countChild.toString()
         }
+        layoutMoreInfo.isVisible = isShowLayoutMoreInfo
     }
 
     private fun initAboutCarLayout(vehicle: VehicleInfoModel) {
@@ -136,7 +147,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
             Utils.setSelectOperationListener(this, layoutPassengerEmail, operationsName, R.string.LNG_DRIVER_EMAIL) {
                 presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
             btnSendEmailPassenger.setOnClickListener { presenter.sendEmail(email, presenter.transferId) }
-            btnChat.setOnClickListener { presenter.sendEmail(email, presenter.transferId) }
+            btnChat.setOnClickListener { presenter.onChatClick() }
         }
         passenger.phone?.let { phone ->
             passengerPhone.text = phone

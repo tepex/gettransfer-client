@@ -15,7 +15,7 @@ interface OffersView : BaseView {
     fun showAlertCancelRequest()
     fun showBottomSheetOfferDetails(offer: OfferItem)
     fun addNewOffer(offer: OfferModel)
-    fun redirectView()
+    //fun redirectView()
 
     companion object {
         val EXTRA_TRANSFER_ID = "${OffersView::class.java.name}.transferId"

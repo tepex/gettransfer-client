@@ -267,6 +267,7 @@
 	<dimen name="view_transfer_details_communicate_buttons_padding_top">16dp</dimen>
 	<dimen name="view_transfer_details_communicate_buttons_padding_bottom">8dp</dimen>
 	<dimen name="view_transfer_details_communicate_buttons_padding_start_end">24dp</dimen>
+    <dimen name="view_transfer_details_communicate_buttons_margin">12dp</dimen>
 
 	<dimen name="view_transfer_details_about_driver_languages_layout_height">44dp</dimen>
 
@@ -432,6 +433,27 @@
 	<dimen name="views_carrier_trips_info_layout_about_car_license_plate_margin_top">11dp</dimen>
 	<dimen name="views_carrier_trips_info_layout_about_car_number_margin_top_bottom">6dp</dimen>
 	<dimen name="views_carrier_trips_info_layout_about_car_number_margin_start_end">9dp</dimen>
+
+	<dimen name="activity_carrier_trips_main_toolbar_list_text_size">17sp</dimen>
+	<dimen name="carrier_trips_calendar_fragment_view_pager_height">330dp</dimen>
+	<dimen name="carrier_trips_calendar_fragment_gradient_height">5dp</dimen>
+	<dimen name="carrier_trips_calendar_fragment_rv_margin_top">12dp</dimen>
+	<dimen name="carrier_trips_month_fragment_month_name_size">17dp</dimen>
+	<dimen name="carrier_trips_month_fragment_month_text_view_height">44dp</dimen>
+	<dimen name="carrier_trips_month_fragment_days_of_week_height">38dp</dimen>
+	<dimen name="carrier_trips_month_fragments_lines_height">40dp</dimen>
+	<dimen name="carrier_trips_month_fragments_items_select_date_indicator_size">44dp</dimen>
+	<dimen name="carrier_trips_month_fragments_items_count_trips_indicator_size">4dp</dimen>
+	<dimen name="carrier_trips_month_fragments_items_count_trips_indicator_margin_top">1dp</dimen>
+	<dimen name="carrier_trips_month_fragments_rv_items_texts_size">17sp</dimen>
+	<dimen name="carrier_trips_month_fragments_rv_items_duration_text_size">14sp</dimen>
+	<dimen name="carrier_trips_month_fragments_rv_items_margin">8dp</dimen>
+	<dimen name="carrier_trips_month_fragments_rv_items_radius">5dp</dimen>
+	<dimen name="carrier_trips_month_fragments_rv_items_elevation">4dp</dimen>
+	<dimen name="carrier_trips_month_fragments_rv_items_min_height">80dp</dimen>
+	<dimen name="carrier_trips_month_fragments_rv_items_duration_width">24dp</dimen>
+	<dimen name="carrier_trips_month_fragments_rv_items_texts_layout_padding">8dp</dimen>
+	<dimen name="carrier_trips_month_fragments_rv_items_from_text_margin_top">8dp</dimen>
 	
 	<!--activity_offers-->
 	<dimen name="activity_offers_divider_height">0.5dp</dimen>
@@ -488,8 +510,13 @@
 	<dimen name="rounded_rectangle_height">5dp</dimen>
 
 	<dimen name="toolbar_title_text_size">18sp</dimen>
+	<dimen name="toolbar_transfer_from_text_size">15sp</dimen>
+	<dimen name="toolbar_start_date_text_size">12sp</dimen>
 	<dimen name="toolbar_buttons_text_size">18sp</dimen>
 	<dimen name="toolbar_buttons_margin_end">12dp</dimen>
+    <dimen name="toolbar_transfer_from_margin_start_end">36dp</dimen>
+    <dimen name="toolbar_transfer_start_date_margin_top">2dp</dimen>
+    <dimen name="toolbar_transfer_btn_call_margin_end">2dp</dimen>
 
 	<!--bottom_sheet_offer_details-->
 	<dimen name="bottom_sheet_offer_details_top_view_width">100dp</dimen>
@@ -559,6 +586,27 @@
 	<dimen name="activity_requests_text_network_availability_margin_start_end">8sp</dimen>
 	<dimen name="activity_requests_text_network_availability_margin_top_bottom">12sp</dimen>
 
+    <!-- activity_chat -->
+    <dimen name="activity_chat_message_text_size">17sp</dimen>
+    <dimen name="activity_chat_message_margin_start_top_bottom">8dp</dimen>
+    <dimen name="activity_chat_message_margin_end">72dp</dimen>
+    <dimen name="activity_chat_message_padding_start_end">14dp</dimen>
+    <dimen name="activity_chat_divider_height">1dp</dimen>
+    <dimen name="activity_chat_layout_message_min_height">56dp</dimen>
+    <dimen name="activity_chat_my_message_margin_start">72dp</dimen>
+    <dimen name="activity_chat_my_message_margin_end">8dp</dimen>
+    <dimen name="activity_chat_my_message_margin_top_bottom">4dp</dimen>
+    <dimen name="activity_chat_message_item_text_size">17sp</dimen>
+    <dimen name="activity_chat_my_message_text_padding">16dp</dimen>
+    <dimen name="activity_chat_message_item_date_text_size">12sp</dimen>
+    <dimen name="activity_chat_my_message_date_text_margin">8dp</dimen>
+    <dimen name="activity_chat_my_message_indicator_margin_start">16dp</dimen>
+    <dimen name="activity_chat_my_message_indicator_margin_end">4dp</dimen>
+    <dimen name="activity_chat_not_my_message_margin_end">72dp</dimen>
+    <dimen name="activity_chat_not_my_message_margin_start">8dp</dimen>
+    <dimen name="activity_chat_not_my_message_margin_top_bottom">4dp</dimen>
+    <dimen name="activity_chat_not_my_message_text_padding">16dp</dimen>
+    <dimen name="activity_chat_not_my_message_date_text_margin">8dp</dimen>
 
 
 	<!--drawable values-->

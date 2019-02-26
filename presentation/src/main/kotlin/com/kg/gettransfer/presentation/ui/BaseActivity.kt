@@ -1,11 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.annotation.SuppressLint
-
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 
 import android.graphics.Color
 import android.graphics.Rect
@@ -14,6 +10,7 @@ import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.os.PersistableBundle
 
 import android.support.annotation.CallSuper
@@ -27,7 +24,6 @@ import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 
 import android.util.DisplayMetrics
-import android.util.Log
 
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -46,6 +42,7 @@ import com.kg.gettransfer.GTApplication
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.extensions.*
@@ -131,16 +128,18 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
     /* BroadCast receivers */
     private val inetReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) = setNetworkAvailability(context) }
+        override fun onReceive(context: Context, intent: Intent) {
+            if(setNetworkAvailability(context)) getPresenter().checkNewMessagesCached()
+        }
+    }
 
-    private val offerReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            intent?.apply { getStringExtra(OFFER_JSON)
-                    .let { getPresenter().onOfferJsonReceived(it, getLongExtra(OFFER_ID, 0L)) } } } }
+//    private val offerReceiver = object : BroadcastReceiver() {
+//        override fun onReceive(context: Context?, intent: Intent?) {
+//            intent?.apply { getStringExtra(OFFER_JSON)
+//                    .let { getPresenter().onOfferJsonReceived(it, getLongExtra(OFFER_ID, 0L)) } } } }
 
     private val appStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            Log.i("FindState", "got it")
             intent?.let { if (it.action == AppLifeCycleObserver.APP_STATE)
                               it.getBooleanExtra(AppLifeCycleObserver.STATUS, false)
                               .also { state -> getPresenter().onAppStateChanged(state) } } }
@@ -149,10 +148,11 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
 
 
-    protected open fun setNetworkAvailability(context: Context) {
+    protected open fun setNetworkAvailability(context: Context): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val available = cm.activeNetworkInfo?.let { it.isConnected } ?: false
         viewNetworkNotAvailable?.let { it.isGone = available }
+        return available
     }
 
     private val loadingFragment by lazy { LoadingFragment() }
@@ -164,14 +164,18 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     abstract fun getPresenter(): BasePresenter<*>
 
-    protected fun setToolbar(toolbar: Toolbar, @StringRes titleId: Int = TOOLBAR_NO_TITLE, hasBackAction: Boolean = true) {
+    protected fun setToolbar(toolbar: Toolbar, @StringRes titleId: Int = TOOLBAR_NO_TITLE, hasBackAction: Boolean = true, firstLetterToUpperCase: Boolean = false) {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(false)
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
-        if (titleId != TOOLBAR_NO_TITLE) toolbar.toolbar_title.setText(titleId)
+        if (titleId != TOOLBAR_NO_TITLE) {
+            val title = getString(titleId)
+            toolbar.toolbar_title.text =
+                if (!firstLetterToUpperCase) title else title.substring(0, 1).toUpperCase().plus(title.substring(1))
+        }
         if (hasBackAction) toolbar.setNavigationOnClickListener { getPresenter().onBackCommandClick() }
     }
 
@@ -190,7 +194,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     protected override fun onStart() {
         LocalBroadcastManager.getInstance(applicationContext)
                 .registerReceiver(appStateReceiver, IntentFilter(AppLifeCycleObserver.APP_STATE))
-        GTApplication.onStart++
 //        with(offerServiceConnection) {
 //            if (!statusOpened)
 //                connect(systemInteractor.endpoint, systemInteractor.accessToken) { json, id ->
@@ -206,7 +209,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     @CallSuper
     protected override fun onResume() {
         super.onResume()
-        LocalBroadcastManager.getInstance(this).registerReceiver(offerReceiver, IntentFilter(ACTION_OFFER))
+     //   LocalBroadcastManager.getInstance(this).registerReceiver(offerReceiver, IntentFilter(ACTION_OFFER))
         navigatorHolder.setNavigator(navigator)
     }
 
@@ -218,13 +221,15 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     @CallSuper
     protected override fun onStop() {
-        if (--GTApplication.onStart == NO_FOREGROUNDED_ACTIVITIES) offerServiceConnection.disconnect()
-        LocalBroadcastManager.getInstance(this).apply {
-            unregisterReceiver(offerReceiver)
-            unregisterReceiver(appStateReceiver)
-        }
-        unregisterReceiver(inetReceiver)
         super.onStop()
+        Handler().postDelayed({
+            LocalBroadcastManager.getInstance(this).apply {
+    //            unregisterReceiver(offerReceiver)
+                unregisterReceiver(appStateReceiver)
+            }
+        }, 2000)
+        unregisterReceiver(inetReceiver)
+
     }
 
     @CallSuper
@@ -249,6 +254,11 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
         if (e.code != ApiException.NETWORK_ERROR) Utils.showError(this, false, getString(R.string.LNG_ERROR) + ": " + e.message)
+    }
+
+    override fun setError(e: DatabaseException) {
+        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage("CacheError: ${e.details}").build())
+        Sentry.capture(e)
     }
 
     protected fun showKeyboard() {
@@ -347,6 +357,9 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         return layoutPopUp
     }
 
+
+
+
     protected var mDisMissAction = { }    // used in popup dismiss event, need later init, when view with map would be created
 
     protected fun redirectToPlayMarket() {
@@ -378,5 +391,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         const val OFFER_JSON = "offerAsJson"
         const val OFFER_ID   = "offerId"
         const val NO_FOREGROUNDED_ACTIVITIES = 0
+
+        var appStart = false
     }
 }

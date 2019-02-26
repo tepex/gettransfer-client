@@ -50,7 +50,7 @@ class OfferServiceConnection : SystemListener, KoinComponent {
     fun connect(endpoint: Endpoint, accessToken: String, handler: OfferModelHandler) {
         statusOpened = true
         this.handler = handler
-        systemInteractor.addListener(this)
+//        systemInteractor.addListener(this)
         connectionChanged(endpoint, accessToken)
 
     }
@@ -59,7 +59,7 @@ class OfferServiceConnection : SystemListener, KoinComponent {
         statusOpened    = false
         shouldReconnect = false
         Timber.d("Unbinding from service")
-        systemInteractor.removeListener(this)
+ //       systemInteractor.removeListener(this)
         socket?.let {
             Timber.d("closeSocketSession [${it.id()}]")
             it.off()

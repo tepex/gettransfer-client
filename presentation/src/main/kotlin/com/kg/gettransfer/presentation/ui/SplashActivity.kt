@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.CallSuper
+
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import com.kg.gettransfer.BuildConfig
@@ -20,11 +21,15 @@ import net.hockeyapp.android.CrashManagerListener
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.view.Screens
 
 class SplashActivity : AppCompatActivity() {
     companion object {
         @JvmField val PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
         @JvmField val PERMISSION_REQUEST = 2211
+        val EXTRA_TRANSFER_ID = "transfer_id"
+        val EXTRA_RATE = "rate"
+        val EXTRA_SHOW_RATE = "show_rate"
     }
 
     private val compositeDisposable = Job()
@@ -64,9 +69,9 @@ class SplashActivity : AppCompatActivity() {
         }
 
         utils.launchSuspend {
-            val result = utils.asyncAwait { systemInteractor.coldStart() }
+            /*val result = utils.asyncAwait { systemInteractor.coldStart() }
 
-            /*if (result.error != null) {
+            if (result.error != null) {
                 Timber.e(result.error!!)
                 val msg = if (result.error!!.code == ApiException.NETWORK_ERROR)
                     getString(R.string.LNG_NETWORK_ERROR) else getString(R.string.err_server, result.error!!.details)
@@ -78,7 +83,7 @@ class SplashActivity : AppCompatActivity() {
                 openNextScreen()
                 finish()
             }*/
-
+            utils.asyncAwait { systemInteractor.coldStart() }
             openNextScreen()
             finish()
         }
@@ -91,12 +96,22 @@ class SplashActivity : AppCompatActivity() {
                     .putExtra(AboutView.EXTRA_OPEN_MAIN, true).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
         }
         else {
-            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-            /*when (systemInteractor.lastMode) {
-                Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsActivity::class.java))
-                Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            when (systemInteractor.lastMode) {
+                Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsMainActivity::class.java))
+                Screens.PASSENGER_MODE -> {
+                    val transferId = intent.getLongExtra(SplashActivity.EXTRA_TRANSFER_ID, 0)
+                    val rate = intent.getIntExtra(SplashActivity.EXTRA_RATE, 0)
+                    val showRate = intent.getBooleanExtra(SplashActivity.EXTRA_SHOW_RATE, false)
+
+                    startActivity(Intent(this@SplashActivity, MainActivity::class.java)
+                            .apply {
+                                putExtra(EXTRA_TRANSFER_ID, transferId)
+                                putExtra(EXTRA_RATE, rate)
+                                putExtra(EXTRA_SHOW_RATE, showRate)
+                            })
+                }
                 else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-            }*/
+            }
         }
     }
 

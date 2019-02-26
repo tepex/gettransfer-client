@@ -22,6 +22,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.extensions.*
@@ -99,10 +100,11 @@ class OffersActivity : BaseActivity(), OffersView {
         return super.dispatchTouchEvent(event)
     }
 
-    override fun setNetworkAvailability(context: Context){
-        super.setNetworkAvailability(context)
+    override fun setNetworkAvailability(context: Context): Boolean{
+        val available = super.setNetworkAvailability(context)
         presenter.checkNewOffers()
         btnBook.isEnabled = !textNetworkNotAvailable.isVisible
+        return available
     }
 
     private fun navigateBackWithTransition() {
@@ -114,13 +116,18 @@ class OffersActivity : BaseActivity(), OffersView {
         layoutTransferRequestInfo.setInfo(transferModel)
         fl_drivers_count_text.apply {
             isVisible = true
-            fl_drivers_count_text.tv_drivers_count.text = getString(R.string.LNG_RIDE_CONNECT_CARRIERS, transferModel.relevantCarriersCount)
+            tv_drivers_count.text =
+                    if (transferModel.relevantCarriersCount?:0 > 4)
+                        getString(R.string.LNG_RIDE_CONNECT_CARRIERS, transferModel.relevantCarriersCount)
+                    else
+                        getString(R.string.LNG_RIDE_CONNECT_CARRIERS_NONUM)
         }
     }
 
     override fun setDate(date: String) { tvOrderDateTime.text = date }
 
     override fun setOffers(offers: List<OfferItem>) {
+        hideSheetOfferDetails()
         rvOffers.adapter = OffersRVAdapter(offers.toMutableList(), textNetworkNotAvailable.isVisible) { offer, isShowingOfferDetails ->
             presenter.onSelectOfferClicked(offer, isShowingOfferDetails) }
         if (offers.isNotEmpty()) {
@@ -320,9 +327,9 @@ class OffersActivity : BaseActivity(), OffersView {
 
     private fun hideSheetOfferDetails() { bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN }
 
-    override fun redirectView() =
+    /*override fun redirectView() =
         Utils.showScreenRedirectingAlert(this, getString(R.string.log_in_requirement_error_title),
-            getString(R.string.log_in_to_see_transfers_and_offers)) { presenter.openLoginView() }
+            getString(R.string.log_in_to_see_transfers_and_offers)) { presenter.openLoginView() }*/
 
     @CallSuper
     override fun onBackPressed() {
@@ -333,5 +340,9 @@ class OffersActivity : BaseActivity(), OffersView {
 
     companion object {
         val ACTION_NEW_OFFER = "${OffersActivity::class.java.name}.offer"
+    }
+
+    override fun setError(e: ApiException) {
+        if (e.code != ApiException.NETWORK_ERROR) Utils.showError(this, true, e.details)
     }
 }

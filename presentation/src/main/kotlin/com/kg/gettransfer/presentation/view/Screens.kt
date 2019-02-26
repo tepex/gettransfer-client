@@ -32,6 +32,13 @@ object Screens {
     @JvmField val CARRIER_MODE = "carrier_mode"
     @JvmField val REG_CARRIER = "registration_carrier"
     @JvmField val PASSENGER_MODE = "passenger_mode"
+    @JvmField val CLOSE_AFTER_LOGIN = "close_after_login"
+
+    @JvmField val CARRIER_TRIPS_TYPE_VIEW_CALENDAR = "carrier_trips_type_calendar"
+    @JvmField val CARRIER_TRIPS_TYPE_VIEW_LIST     = "carrier_trips_type_list"
+
+    @JvmField val PAYMENT_OFFER = "payment_offer"
+    @JvmField val RATE_TRANSFER = "rate_transfer"
 
     private const val EMAIL_DATA = "mailto:"
     private const val DIAL_SCHEME = "tel"
@@ -42,6 +49,16 @@ object Screens {
 
     object Main : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, MainActivity::class.java)
+    }
+
+    data class Splash(val transferId: Long?, val rate: Int?, val showRate: Boolean) : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, SplashActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            putExtra(SplashActivity.EXTRA_TRANSFER_ID, transferId)
+            putExtra(SplashActivity.EXTRA_RATE, rate)
+            putExtra(SplashActivity.EXTRA_SHOW_RATE, showRate)
+        }
     }
 
     object ShareLogs : SupportAppScreen() {
@@ -72,9 +89,10 @@ object Screens {
         override fun getActivityIntent(context: Context?) = Intent(context, CreateOrderActivity::class.java)
     }
 
-    open class Login(val nextScreen: String, val email: String?) : SupportAppScreen() {
+    open class Login(val nextScreen: String, val email: String?, val noHistory: Boolean) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+            if (noHistory) addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+            else addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             putExtra(LoginView.EXTRA_SCREEN_FOR_RETURN, nextScreen)
             putExtra(LoginView.EXTRA_EMAIL_TO_LOGIN, email)
         }
@@ -88,22 +106,43 @@ object Screens {
 
     data class LoginToGetOffers(val id: Long, val email: String?) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             putExtra(LoginView.EXTRA_TRANSFER_ID, id)
             putExtra(LoginView.EXTRA_SCREEN_FOR_RETURN, Screens.OFFERS)
             putExtra(LoginView.EXTRA_EMAIL_TO_LOGIN, email)
         }
     }
 
+    data class LoginToPaymentOffer(val transferId: Long, val offerId: Long?) : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            putExtra(LoginView.EXTRA_TRANSFER_ID, transferId)
+            putExtra(LoginView.EXTRA_OFFER_ID, offerId)
+            putExtra(LoginView.EXTRA_SCREEN_FOR_RETURN, Screens.PAYMENT_OFFER)
+        }
+    }
+
+    data class LoginToRateTransfer(val transferId: Long, val rate: Int) : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?): Intent = Intent(context, LoginActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            putExtra(LoginView.EXTRA_TRANSFER_ID, transferId)
+            putExtra(LoginView.EXTRA_RATE, rate)
+            putExtra(LoginView.EXTRA_SCREEN_FOR_RETURN, Screens.RATE_TRANSFER)
+        }
+    }
+
     data class ChangeMode(val mode: String) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = when (mode) {
-            CARRIER_MODE -> Intent(context, WebPageActivity()::class.java).apply {
+            /*CARRIER_MODE -> Intent(context, WebPageActivity()::class.java).apply {
                 putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_CARRIER)
-            }
-            /*CARRIER_MODE -> Intent(context, CarrierTripsActivity()::class.java).apply {
+            }*/
+            CARRIER_MODE -> Intent(context, CarrierTripsMainActivity()::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            }*/
+            }
             REG_CARRIER -> Intent(context, WebPageActivity()::class.java).apply {
                 putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_REG_CARRIER)
             }
@@ -138,6 +177,12 @@ object Screens {
         }
     }
 
+    data class Chat(val transferId: Long) : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, ChatActivity::class.java).apply {
+            putExtra(ChatView.EXTRA_TRANSFER_ID, transferId)
+        }
+    }
+
     data class TripDetails(val tripId: Long, val transferId: Long) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) =
             Intent(context, CarrierTripDetailsActivity::class.java).apply {
@@ -158,7 +203,7 @@ object Screens {
         }
     }
 
-    data class PaymentSettings(val transferId: Long, val offerId: Long?, val dateRefund: Date?, val paymentPercentages: List<Int>, val bookNowTransportId: String?) : SupportAppScreen() {
+    data class PaymentOffer(val transferId: Long, val offerId: Long?, val dateRefund: Date?, val paymentPercentages: List<Int>, val bookNowTransportId: String?) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, PaymentSettingsActivity::class.java).apply {
             putExtra(
                 PaymentSettingsView.EXTRA_PARAMS,

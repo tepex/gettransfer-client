@@ -44,6 +44,7 @@ class Analytics(
         const val EVENT_TRANSFER_REVIEW_REQUESTED = "transfer_review_requested"
         const val EVENT_TRANSFER_REVIEW_DETAILED  = "transfer_review_detailed"
         const val EVENT_APP_REVIEW_REQUESTED      = "app_review_requested"
+        const val EVENT_IPAPI_REQUEST = "ipapi_request"
 
         const val STATUS = "status"
         const val PARAM_KEY_NAME = "name"

@@ -48,6 +48,7 @@
     <string name="search">Search</string>
     <string name="reset_onboarding">Reset onboarding</string>
     <string name="reset_rate">Reset play market rate</string>
+    <string name="clear_access_token">Clear access token</string>
 
     <string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
     <string name="activity_carrier_transfer_details_title">Trip details</string> <!-- Title, which not used in new design -->
@@ -241,6 +242,7 @@
     <string name="LNG_RIDE_REPEAT">Repeat</string>
     <string name="LNG_RIDE_PAYMENT">Payment in progress</string>
     <string name="LNG_RIDE_CONNECT_CARRIERS">Connecting to nearest %s carriers</string>
+    <string name="LNG_RIDE_CONNECT_CARRIERS_NONUM">Connecting with nearby carriers</string>
     <string name="LNG_RIDE_CARRIERS">Carrier\'s offers</string>
     <string name="LNG_RIDE_COMPLETED">Completed transfers: %s</string>
     <string name="LNG_RIDE_CREATION_SPINNER">Please wait, connecting...</string>
@@ -431,10 +433,16 @@
     <string name="LNG_TRIPS_EMPTY_ACTIVE">you have no active transfers</string>
     <string name="LNG_TRIPS_EMPTY_ALL">you have no transfers</string>
     <string name="LNG_TRIPS_EMPTY_COMPLETED">you have no completed transfers</string>
+    <string name="LNG_LIST"><u>List</u></string>
+    <string name="LNG_NEW_CHAT_MESSAGE">Write the message</string>
+    <string name="LNG_NEW_PASSENGER_CHAT_TITLE">Passenger message</string>
+    <string name="LNG_NEW_DRIVER_CHAT_TITLE">Carrier message</string>
+    <string name="LNG_UNREAD_MESSAGES_COUNT">%s unread messages</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>
     <string name="PUNCTUALITY">fair</string>
+
     <string name="offer_channel_name">Offer</string>
     <string name="offer_channel_description">@string/offer_channel_name</string>
     <string name="new_offers">New offers</string>
@@ -456,5 +464,4 @@
         <item quantity="many">@string/LNG_HOURS</item>
         <item quantity="other">@string/LNG_HOURS</item>
     </plurals>
-
 </resources>
