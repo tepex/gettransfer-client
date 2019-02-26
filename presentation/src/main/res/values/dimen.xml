@@ -243,6 +243,8 @@
 	<dimen name="view_transfer_info_btn_cancel_request_margin_end">11dp</dimen>
 	<dimen name="view_transfer_info_btn_cancel_request_padding_top_bottom">5dp</dimen>
 
+	<dimen name="transfer_main_info_container_vertical_padding">10dp</dimen>
+
 	<!--activity_transfer_details-->
 	<dimen name="activity_transfer_details_behaviour_peek_height">385dp</dimen>
 	<dimen name="activity_transfer_details_text_size_17sp">17sp</dimen>
@@ -301,6 +303,8 @@
 	<dimen name="view_transfer_details_info_padding_top_bottom_6dp">6dp</dimen>
 	<dimen name="view_transfer_details_info_padding_top_bottom_10dp">10dp</dimen>
 	<dimen name="view_transfer_details_info_items_margin_start_end">16dp</dimen>
+	<dimen name="view_transfer_details_header_container_padding_horizontal">16dp</dimen>
+	<dimen name="view_transfer_details_header_container_padding_top">11dp</dimen>
 	<dimen name="view_transfer_details_info_transfer_date_margin_start">5dp</dimen>
 	<dimen name="view_transfer_details_info_texts_margin_start_3dp">3dp</dimen>
 	<dimen name="view_transfer_details_info_texts_margin_top_5dp">5dp</dimen>
@@ -327,6 +331,8 @@
 	<dimen name="view_trips_info_iv_comment_width">20dp</dimen>
 	<dimen name="view_trips_info_iv_comment_height">18dp</dimen>
 	<dimen name="view_trips_info_iv_comment_margin_end">11dp</dimen>
+
+	<dimen name="booking_number_margin_top">2dp</dimen>
 
 
 	<!-- Carrier trip details activity -->
@@ -612,7 +618,7 @@
 
 
 	<!--drawable values-->
-	<dimen name="panels_corner_radius">5dp</dimen>
+	<dimen name="panels_corner_radius">10dp</dimen>
 	<dimen name="hourly_icon_borders">2dp</dimen>
 
 	<!-- empty offers-->

@@ -169,6 +169,21 @@
         <item name="android:layout_marginTop">@dimen/vertical_margin_rate_dialog</item>
     </style>
 
+    <style name="tv_transfer_details_header_main">
+        <item name="android:textColor">@color/colorTextBlack</item>
+        <item name="android:textSize">@dimen/bottom_sheet_offer_details_text_size_17sp</item>
+        <item name="android:fontFamily">@font/sf_pro_text_semibold</item>
+    </style>
+    <style name="tv_transfer_details_header_sub">
+        <item name="android:textColor">@color/colorGrey</item>
+        <item name="android:textSize">@dimen/bottom_sheet_offer_details_text_size_12sp</item>
+        <item name="android:fontFamily">@font/sf_pro_text_semibold</item>
+    </style>
+    <style name="transfer_main_info_divider">
+        <item name="android:layout_width">@dimen/activity_transfer_details_vertical_divider_width</item>
+        <item name="android:background">@color/color_transfer_details_vertical_divider</item>
+    </style>
+
     <!--<style name="etField" parent="Base.V7.Widget.AppCompat.EditText">-->
     <!--<item name="android:background">@android:color/transparent</item>-->
 

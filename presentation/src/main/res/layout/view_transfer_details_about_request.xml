@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/activity_transfer_details_title_height"
         android:background="@color/color_transfer_details_background_gray"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/tvTitleAboutRequest"
@@ -46,14 +46,7 @@
         android:layout_height="@dimen/activity_transfer_details_horizontal_divider_height"
         android:background="@color/color_transfer_details_horizontal_divider"/>
 
-    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
-        android:id="@+id/back_trip"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:input_transfer_details="04 Apr 2018 at 23:40"
-        app:title_transfer_details="@string/LNG_BACKTRIP"
-        app:icon_img_transfer_details="@drawable/ic_change_route"/>
+
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/booking_number"
@@ -73,7 +66,7 @@
         app:input_transfer_details="Smith Family"
         app:icon_img_transfer_details="@drawable/ic_passport"
 
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/passenger_email"
@@ -84,7 +77,7 @@
         app:input_transfer_details="example@gmail.com"
         app:icon_img_transfer_details="@drawable/ic_email"
 
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/passenger_phone"
@@ -95,7 +88,7 @@
         app:input_transfer_details="+7 900 123 56 78"
         app:icon_img_transfer_details="@drawable/ic_phone"
 
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/flight_number"
@@ -106,7 +99,7 @@
         app:input_transfer_details="BA 2243"
         app:icon_img_transfer_details="@drawable/ic_flight"
 
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/back_flight_number"
@@ -117,7 +110,7 @@
         app:input_transfer_details="BA 2255"
         app:icon_img_transfer_details="@drawable/ic_flight"
 
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/promo_code"
@@ -128,7 +121,7 @@
         app:input_transfer_details="WINTER7, 7%"
         app:icon_img_transfer_details="@drawable/ic_percentage"
 
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/comment"
@@ -138,6 +131,6 @@
         app:title_transfer_details="@string/LNG_RIDE_SETTINGS_OPTIONAL_COMMENT"
         app:input_transfer_details="Need car to back exit"
         app:icon_img_transfer_details="@drawable/ic_comment"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
 </LinearLayout>

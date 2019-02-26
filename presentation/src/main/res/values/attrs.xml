@@ -39,4 +39,13 @@
         <attr name="rate_sub_title" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="TransferMainInfoView">
+        <attr name="distance" format="string"/>
+        <attr name="distance_title" format="string"/>
+        <attr name="time" format="string"/>
+        <attr name="time_title" format="string"/>
+        <attr name="price" format="string"/>
+        <attr name="price_title" format="string"/>
+    </declare-styleable>
+
 </resources>

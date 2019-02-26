@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/view_transfer_details_header_container_padding_top"
+                android:paddingStart="@dimen/view_transfer_details_header_container_padding_horizontal"
+                android:paddingEnd="@dimen/view_transfer_details_header_container_padding_horizontal">
+
+    <TextView
+            android:id="@+id/tvTransferDate1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/tv_transfer_details_header_main"
+            android:text="22 Мая 2019"/>
+    <TextView
+            android:id="@+id/tvTransferTime1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/tv_transfer_details_header_main"
+            android:layout_alignParentEnd="true"
+            android:text="14:20"/>
+    <TextView
+            android:id="@+id/booking_number1"
+            android:text="Заявка #12349890 выберите перевозчика"
+            android:layout_below="@id/tvTransferDate1"
+            android:layout_marginTop="@dimen/booking_number_margin_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>
