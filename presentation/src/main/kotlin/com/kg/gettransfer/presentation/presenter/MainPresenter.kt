@@ -34,7 +34,6 @@ import com.kg.gettransfer.presentation.ui.SystemUtils
 
 import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.Screens
-import com.kg.gettransfer.service.OfferServiceConnection
 
 import com.kg.gettransfer.utilities.Analytics
 
@@ -46,7 +45,6 @@ import timber.log.Timber
 class MainPresenter : BasePresenter<MainView>() {
     private val routeInteractor: RouteInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
-    private val offerServiceConnection: OfferServiceConnection by inject()
 
     private val pointMapper: PointMapper by inject()
     private val profileMapper: ProfileMapper by inject()
