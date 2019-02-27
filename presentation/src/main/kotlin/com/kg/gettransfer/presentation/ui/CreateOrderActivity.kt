@@ -475,9 +475,13 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         user_name_field.field_input.onTextChanged        { presenter.setName(it.trim()) }
         email_field.field_input.onTextChanged            { presenter.setEmail(it.trim()) }
         phone_field.field_input.onTextChanged            {
+            if (it.isEmpty()) {
+                phone_field.field_input.setText("+")
+                phone_field.field_input.setSelection(1)
+            }
             presenter.setPhone("+".plus(it.replace(Regex("\\D"), "")))
         }
-        phone_field.field_input.addTextChangedListener(PhoneNumberFormatter(phone_field.field_input))
+        phone_field.field_input.addTextChangedListener(PhoneNumberFormatter())
         flight_number_field.field_input.onTextChanged         { presenter.setFlightNumber(it.trim(), false) }
         flight_numberReturn_field.field_input.onTextChanged   { presenter.setFlightNumber(it.trim(), true) }
         promo_field.field_input.onTextChanged                 { presenter.setPromo(promo_field.field_input.text.toString()) }

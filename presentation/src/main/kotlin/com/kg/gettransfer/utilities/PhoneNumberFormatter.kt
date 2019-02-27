@@ -11,7 +11,7 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import java.util.*
 
-class PhoneNumberFormatter(var editText: EditText) : TextWatcher, KoinComponent {
+class PhoneNumberFormatter : TextWatcher, KoinComponent {
 
     private val phoneUtil: PhoneNumberUtil by inject()
 
@@ -43,10 +43,6 @@ class PhoneNumberFormatter(var editText: EditText) : TextWatcher, KoinComponent 
     }
 
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if (s.toString().isEmpty()) {
-            editText.setText("+")
-            editText.setSelection(1)
-        }
 
         if (mSelfChange || mStopFormatting) {
             return
