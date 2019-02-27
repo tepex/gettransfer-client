@@ -56,8 +56,8 @@
     <string name="passenger_number_default">0</string>
     <string name="child_number_default">0</string>
 
-    <string name="log_in_to_see_transfers_and_offers">Log in to see transfers and offers</string>
-    <string name="log_in_requirement_error_title">You are not logged in</string>
+    <string name="LNG_LOGIN_LOGIN_TO_CONTINUE">Log in to see transfers and offers</string>
+    <string name="LNG_LOGIN_NOT_LOGGED_IN">You are not logged in</string>
 
     <string name="tag_read_more" translatable="false">read_more_dialog</string>
     <string name="email_support" translatable="false">info@gettransfer.com</string>

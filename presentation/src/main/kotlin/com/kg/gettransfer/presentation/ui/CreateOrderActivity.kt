@@ -537,8 +537,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun showNotLoggedAlert(withOfferId: Long) =
-        Utils.showScreenRedirectingAlert(this, getString(R.string.log_in_requirement_error_title),
-                    getString(R.string.log_in_to_see_transfers_and_offers)) { presenter.redirectToLogin(withOfferId) }
+        Utils.showScreenRedirectingAlert(this, getString(R.string.LNG_LOGIN_NOT_LOGGED_IN),
+                    getString(R.string.LNG_LOGIN_LOGIN_TO_CONTINUE)) { presenter.redirectToLogin(withOfferId) }
 
     val showReturnFlight: (show: Boolean) -> Unit = { show ->
         flight_numberReturn_field.isVisible = show
