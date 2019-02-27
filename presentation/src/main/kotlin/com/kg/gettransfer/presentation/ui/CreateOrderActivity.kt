@@ -17,8 +17,6 @@ import android.support.v4.content.ContextCompat
 
 import android.support.v7.widget.LinearLayoutManager
 
-import android.telephony.PhoneNumberFormattingTextWatcher
-
 import android.text.InputFilter
 import android.text.InputType //don't delete
 import android.text.TextUtils //don't delete
@@ -55,6 +53,7 @@ import com.kg.gettransfer.utilities.Analytics.Companion.CAR_INFO_CLICKED
 import com.kg.gettransfer.utilities.Analytics.Companion.COMMENT_INPUT
 import com.kg.gettransfer.utilities.Analytics.Companion.DATE_TIME_CHANGED
 import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_PRICE_FOCUSED
+import com.kg.gettransfer.utilities.PhoneNumberFormatter
 
 import java.util.Calendar
 
@@ -482,7 +481,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
             }
             presenter.setPhone("+".plus(it.replace(Regex("\\D"), "")))
         }
-        phone_field.field_input.addTextChangedListener(PhoneNumberFormattingTextWatcher())
+        phone_field.field_input.addTextChangedListener(PhoneNumberFormatter())
         flight_number_field.field_input.onTextChanged         { presenter.setFlightNumber(it.trim(), false) }
         flight_numberReturn_field.field_input.onTextChanged   { presenter.setFlightNumber(it.trim(), true) }
         promo_field.field_input.onTextChanged                 { presenter.setPromo(promo_field.field_input.text.toString()) }
@@ -538,8 +537,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun showNotLoggedAlert(withOfferId: Long) =
-        Utils.showScreenRedirectingAlert(this, getString(R.string.log_in_requirement_error_title),
-                    getString(R.string.log_in_to_see_transfers_and_offers)) { presenter.redirectToLogin(withOfferId) }
+        Utils.showScreenRedirectingAlert(this, getString(R.string.LNG_LOGIN_NOT_LOGGED_IN),
+                    getString(R.string.LNG_LOGIN_LOGIN_TO_CONTINUE)) { presenter.redirectToLogin(withOfferId) }
 
     val showReturnFlight: (show: Boolean) -> Unit = { show ->
         flight_numberReturn_field.isVisible = show

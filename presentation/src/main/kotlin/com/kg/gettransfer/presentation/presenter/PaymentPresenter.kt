@@ -24,6 +24,7 @@ import com.kg.gettransfer.presentation.view.PaymentView
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
+import io.sentry.Sentry
 
 import org.koin.standalone.inject
 
@@ -37,7 +38,7 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
 
     private var offer: Offer? = null
     private var bookNowOffer: BookNowOffer? = null
-    private lateinit var transfer: Transfer
+    private var transfer: Transfer? = null
 
     internal var transferId = 0L
     internal var offerId    = 0L
@@ -52,15 +53,19 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
             if (result.error == null || (result.error != null && result.fromCache)) {
                 transfer = result.model
                 if (offer == null) {
-                    if (transfer.bookNowOffers.isNotEmpty()) {
-                        if (bookNowTransportId.isNotEmpty()) {
-                            val filteredBookNow = transfer.bookNowOffers.filterKeys { it.toString() == bookNowTransportId }
-                            if (filteredBookNow.isNotEmpty()) {
-                                bookNowOffer = filteredBookNow.values.first()
+                    transfer?.let {
+                        if (transfer!!.bookNowOffers.isNotEmpty()) {
+                            if (bookNowTransportId.isNotEmpty()) {
+                                val filteredBookNow = transfer!!.bookNowOffers.filterKeys { it.toString() == bookNowTransportId }
+                                if (filteredBookNow.isNotEmpty()) {
+                                    bookNowOffer = filteredBookNow.values.first()
+                                }
                             }
                         }
                     }
                 }
+            } else {
+                Sentry.capture(result.error)
             }
         }
     }
@@ -108,8 +113,8 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
         map[Analytics.OFFER_TYPE] = offerType
 
         when {
-            transfer.duration != null -> Analytics.TRIP_HOURLY
-            transfer.dateReturnLocal != null -> Analytics.TRIP_ROUND
+            transfer?.duration != null -> Analytics.TRIP_HOURLY
+            transfer?.dateReturnLocal != null -> Analytics.TRIP_ROUND
             else -> Analytics.TRIP_DESTINATION
         }.let {
             bundle.putString(Analytics.TRIP_TYPE, it)
