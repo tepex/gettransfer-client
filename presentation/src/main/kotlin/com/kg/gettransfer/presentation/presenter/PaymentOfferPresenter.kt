@@ -22,7 +22,7 @@ import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
-import com.kg.gettransfer.presentation.view.PaymentSettingsView
+import com.kg.gettransfer.presentation.view.PaymentOfferView
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
@@ -32,7 +32,7 @@ import org.koin.standalone.inject
 import timber.log.Timber
 
 @InjectViewState
-class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
+class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private val paymentInteractor: PaymentInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
 
@@ -40,12 +40,12 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
 
     private var offer: Offer? = null
     private var bookNowOffer: BookNowOffer? = null
-    internal lateinit var params: PaymentSettingsView.Params
+    internal lateinit var params: PaymentOfferView.Params
 
     private lateinit var paymentRequest: PaymentRequestModel
 
     @CallSuper
-    override fun attachView(view: PaymentSettingsView) {
+    override fun attachView(view: PaymentOfferView) {
         super.attachView(view)
         utils.launchSuspend {
             val resultOffers = utils.asyncAwait { offerInteractor.getOffers(params.transferId) }
@@ -84,7 +84,7 @@ class PaymentSettingsPresenter : BasePresenter<PaymentSettingsView>() {
     */
 
     fun getPayment() = utils.launchSuspend {
-        viewState.blockInterface(true)
+        viewState.blockInterface(true, true)
 
         val offersResult = utils.asyncAwait { offerInteractor.getOffers(params.transferId) }
         offersResult.error?.let { checkResultError(it) }

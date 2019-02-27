@@ -13,14 +13,14 @@ import java.util.Date
 import kotlinx.serialization.Serializable
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface PaymentSettingsView : BaseView {
+interface PaymentOfferView : BaseView {
 
     fun setOffer(offer: OfferModel, paymentPercentages: List<Int>)
     fun setBookNowOffer(bookNowOffer: BookNowOffer?)
     fun showOfferError()
 
     companion object {
-        val EXTRA_PARAMS = "${PaymentSettingsView::class.java.name}.params"
+        val EXTRA_PARAMS = "${PaymentOfferView::class.java.name}.params"
     }
 
     @Serializable

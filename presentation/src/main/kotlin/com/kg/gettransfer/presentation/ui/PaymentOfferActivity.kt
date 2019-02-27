@@ -18,27 +18,27 @@ import com.kg.gettransfer.extensions.*
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
-import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter
+import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
 
-import com.kg.gettransfer.presentation.view.PaymentSettingsView
+import com.kg.gettransfer.presentation.view.PaymentOfferView
 
 import kotlinx.android.synthetic.main.activity_payment_settings.*
 
 import kotlinx.serialization.json.JSON
 import org.jetbrains.anko.toast
 
-class PaymentSettingsActivity : BaseActivity(), PaymentSettingsView {
+class PaymentOfferActivity : BaseActivity(), PaymentOfferView {
     @InjectPresenter
-    internal lateinit var presenter: PaymentSettingsPresenter
+    internal lateinit var presenter: PaymentOfferPresenter
 
-    override fun getPresenter(): PaymentSettingsPresenter = presenter
+    override fun getPresenter(): PaymentOfferPresenter = presenter
 
     @ProvidePresenter
-    fun createPaymentSettingsPresenter() = PaymentSettingsPresenter()
+    fun createPaymentSettingsPresenter() = PaymentOfferPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter.params = JSON.parse(PaymentSettingsView.Params.serializer(), intent.getStringExtra(PaymentSettingsView.EXTRA_PARAMS))
+        presenter.params = JSON.parse(PaymentOfferView.Params.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
 
         setContentView(R.layout.activity_payment_settings)
         setButton()

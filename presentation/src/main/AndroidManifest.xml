@@ -127,7 +127,7 @@
             android:screenOrientation="portrait"
             android:resizeableActivity="false"/>
         <activity
-            android:name=".presentation.ui.PaymentSettingsActivity"
+            android:name=".presentation.ui.PaymentOfferActivity"
             android:screenOrientation="portrait"
             android:resizeableActivity="false"/>
         <activity android:name=".presentation.ui.PaymentErrorActivity"
