@@ -15,21 +15,24 @@
         android:textSize="@dimen/about_item_title_text_size"
         android:textColor="@color/colorTextBlack"
         android:fontFamily="@font/sf_pro_text_semibold"
-        android:text="@string/LNG_PRESENTATION_TITLE_0"/>
+        android:text="@string/LNG_PRESENTATION_TITLE_0"
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/field_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorTextBlack"
-        android:textSize="@dimen/about_item_description_text_size"
+        android:layout_marginStart="@dimen/about_item_description_margin_start"
+        android:layout_marginTop="@dimen/about_item_description_margin_top"
+        android:layout_marginEnd="@dimen/about_item_description_margin_end"
         android:fontFamily="@font/sf_pro_text_regular"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@+id/field_title"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/LNG_PRESENTATION_DESC_0"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/about_item_description_text_size"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/about_item_description_margin_top"
-        android:text="@string/LNG_PRESENTATION_DESC_0"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/field_title" />
 
     <ImageView
         android:id="@+id/field_img"
