@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:paddingEnd="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
+            android:id="@+id/conveniences_field"
+            app:title_transfer_details="Business class"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <LinearLayout
+            android:id="@+id/conveniences_items"
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        <ImageView
+                android:id="@+id/carColor"
+                android:layout_width="@dimen/view_transfer_details_about_transport_car_color_image_size"
+                android:layout_height="@dimen/view_transfer_details_about_transport_car_color_image_size"
+                android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_circle_car_color_indicator"
+                android:background="@drawable/border_car_color_indicator"/>
+
+        <ImageView
+                android:id="@+id/imgFreeWiFi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
+                app:srcCompat="@drawable/ic_wifi"
+                android:visibility="gone"/>
+
+        <ImageView
+                android:id="@+id/imgFreeWater"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
+                app:srcCompat="@drawable/ic_free_water"
+                android:visibility="gone"/>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -68,6 +68,8 @@
     <string name="market_link">market://details?id=</string>
     <string name="app_package">com.gettransfer</string>
 
+    <string name="X_SIGN">X</string>
+
 
     <string name="LNG_MISKO">TEST</string>
     <string name="LNG_OK">OK</string>
@@ -371,6 +373,7 @@
     <string name="LNG_RIDE_OFFER_BLOCKED">Blocked</string>
     <string name="LNG_RIDE_OFFER_CANCELED">Canceled</string>
     <string name="LNG_BACKTRIP">Back</string>
+    <string name="LNG_RIDE_RETURN_TRANSFER">Return transfer</string>
     <string name="LNG_TRANSFER_NOT_PAID">Transfer is not paid</string>
     <string name="LNG_BOOKING_NUMBER">Booking number</string>
     <string name="LNG_PAYMENT_DECLINED">Payment declined</string>

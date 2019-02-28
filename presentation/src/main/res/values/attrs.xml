@@ -20,7 +20,6 @@
     <declare-styleable name="TransferDetailsField" parent="EditableView">
         <attr name="title_transfer_details" format="string" />
         <attr name="input_transfer_details" format="string"/>
-        <attr name="icon_img_transfer_details" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="AboutItem" parent="EditableView">
@@ -46,6 +45,11 @@
         <attr name="time_title" format="string"/>
         <attr name="price" format="string"/>
         <attr name="price_title" format="string"/>
+    </declare-styleable>
+    
+    <declare-styleable name="SeatsView">
+        <attr name="passenger_seats" format="string"/>
+        <attr name="child_seats" format="string"/>
     </declare-styleable>
 
 </resources>

@@ -7,13 +7,13 @@
                 android:paddingEnd="@dimen/view_transfer_details_header_container_padding_horizontal">
 
     <TextView
-            android:id="@+id/tvTransferDate1"
+            android:id="@+id/tvTransferDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/tv_transfer_details_header_main"
             android:text="22 Мая 2019"/>
     <TextView
-            android:id="@+id/tvTransferTime1"
+            android:id="@+id/tvTransferTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/tv_transfer_details_header_main"
@@ -22,7 +22,7 @@
     <TextView
             android:id="@+id/booking_number1"
             android:text="Заявка #12349890 выберите перевозчика"
-            android:layout_below="@id/tvTransferDate1"
+            android:layout_below="@id/tvTransferDate"
             android:layout_marginTop="@dimen/booking_number_margin_top"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

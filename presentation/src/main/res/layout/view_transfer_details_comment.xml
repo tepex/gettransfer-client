@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/view_transfer_details_comment_container_vertical_padding"
+                android:paddingBottom="@dimen/view_transfer_details_comment_container_vertical_padding"
+                android:paddingEnd="@dimen/view_transfer_details_field_container_horizontal_padding"
+                android:paddingStart="@dimen/view_transfer_details_field_container_horizontal_padding">
+
+    <TextView
+            android:id="@+id/tv_comment_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:textColor="@color/colorGrey"
+            android:textSize="@dimen/activity_transfer_details_text_size_17sp"
+            android:text="Ваш комментарий"/>
+
+    <TextView
+            android:id="@+id/tv_comment_text"
+            android:layout_below="@id/tv_comment_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/activity_transfer_details_text_size_17sp"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:textColor="@color/colorTextBlack"
+            android:layout_marginTop="10dp"
+            android:lines="2"
+            android:ellipsize="end"
+            android:text="We have 3 snowboards and ski with us. And we need the car, which all our equipment can take with us and get us comfortable"/>
+
+</RelativeLayout>

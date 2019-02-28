@@ -5,27 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/rate_your_transfer_height">
 
-    <View android:background="@color/color_transfer_details_horizontal_divider"
-        android:layout_height="0.5dp"
-        android:layout_width="match_parent"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/activity_transfer_details_title_height"
-        android:background="@color/color_transfer_details_background_gray"
-        android:text="@string/LNG_RATE_TRANSFER"
-        android:textAllCaps="true"
-        android:textSize="@dimen/activity_transfer_details_text_size_13sp"
-        android:fontFamily="@font/sf_pro_text_semibold"
-        android:textColor="@color/color_transfer_details_header_text_color"
-        android:paddingStart="@dimen/activity_transfer_details_margin_start_end_16dp"
-        android:paddingEnd="@dimen/activity_transfer_details_margin_start_end_16dp"
-        android:gravity="center_vertical"/>
-
-    <View android:background="@color/color_transfer_details_horizontal_divider"
-        android:layout_height="0.5dp"
-        android:layout_width="match_parent"/>
-
-
     <com.willy.ratingbar.ScaleRatingBar
         android:id="@+id/tripRate"
         android:layout_width="match_parent"
@@ -49,8 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/LNG_RIDE_YOU_HAPPY_TRANSFER"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:textSize="@dimen/rate_question_text_size"
+        style="@style/transfer_details_main_text"
         android:gravity="center"
         android:layout_weight="1"/>
 

@@ -169,11 +169,14 @@
         <item name="android:layout_marginTop">@dimen/vertical_margin_rate_dialog</item>
     </style>
 
-    <style name="tv_transfer_details_header_main">
+    <style name="transfer_details_main_text">
         <item name="android:textColor">@color/colorTextBlack</item>
         <item name="android:textSize">@dimen/bottom_sheet_offer_details_text_size_17sp</item>
         <item name="android:fontFamily">@font/sf_pro_text_semibold</item>
     </style>
+
+    <style name="tv_transfer_details_header_main" parent="transfer_details_main_text"/>
+
     <style name="tv_transfer_details_header_sub">
         <item name="android:textColor">@color/colorGrey</item>
         <item name="android:textSize">@dimen/bottom_sheet_offer_details_text_size_12sp</item>

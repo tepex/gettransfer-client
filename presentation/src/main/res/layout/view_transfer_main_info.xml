@@ -1,83 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:gravity="center"
-              android:paddingTop="@dimen/transfer_main_info_container_vertical_padding"
-              android:paddingBottom="@dimen/transfer_main_info_container_vertical_padding"
-              android:layout_height="wrap_content">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:paddingTop="@dimen/transfer_main_info_container_vertical_padding"
+                android:layout_height="wrap_content">
 
     <LinearLayout
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
-        <TextView
-                android:id="@+id/tv_distance"
-                style="@style/tv_transfer_details_header_main"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2042km"/>
-        <TextView
-                android:id="@+id/tv_distance_title"
-                style="@style/tv_transfer_details_header_sub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Расстояние"/>
+            android:id="@+id/transfer_mainInfo_container"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+        <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+            <TextView
+                    android:id="@+id/tv_distance"
+                    style="@style/tv_transfer_details_header_main"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2042km"/>
+            <TextView
+                    android:id="@+id/tv_distance_title"
+                    style="@style/tv_transfer_details_header_sub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Расстояние"/>
+
+        </LinearLayout>
+
+        <View
+                style="@style/transfer_main_info_divider"
+                android:layout_height="match_parent"
+        />
+        <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+            <TextView
+                    android:id="@+id/tv_time"
+                    style="@style/tv_transfer_details_header_main"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12h 57m"/>
+            <TextView
+                    android:id="@+id/tv_time_title"
+                    style="@style/tv_transfer_details_header_sub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Длительность"/>
+
+        </LinearLayout>
+        <View
+                style="@style/transfer_main_info_divider"
+                android:layout_height="match_parent"/>
+
+        <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+            <TextView
+                    android:id="@+id/tv_price"
+                    style="@style/tv_transfer_details_header_main"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="120700р"/>
+            <TextView
+                    android:id="@+id/tv_price_title"
+                    style="@style/tv_transfer_details_header_sub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ваша цена"/>
+
+        </LinearLayout>
     </LinearLayout>
 
-    <View
-            style="@style/transfer_main_info_divider"
-            android:layout_height="match_parent"
-    />
-    <LinearLayout
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+    <include
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/transfer_mainInfo_container"
+            layout="@layout/view_divider_horizontal"/>
 
-        <TextView
-                android:id="@+id/tv_time"
-                style="@style/tv_transfer_details_header_main"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="12h 57m"/>
-        <TextView
-                android:id="@+id/tv_time_title"
-                style="@style/tv_transfer_details_header_sub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Длительность"/>
-
-    </LinearLayout>
-    <View
-            style="@style/transfer_main_info_divider"
-            android:layout_height="match_parent"/>
-
-    <LinearLayout
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
-
-        <TextView
-                android:id="@+id/tv_price"
-                style="@style/tv_transfer_details_header_main"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="120700р"/>
-        <TextView
-                android:id="@+id/tv_price_title"
-                style="@style/tv_transfer_details_header_sub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ваша цена"/>
-
-    </LinearLayout>
+    <!--<View android:layout_width="match_parent"-->
+          <!--android:layout_below="@+id/transfer_mainInfo_container"-->
+          <!--android:layout_marginTop="20dp"-->
+          <!---->
+          <!--android:background="@color/color_transfer_details_horizontal_divider_new"-->
+          <!--android:layout_height="1dp"/>-->
 
 
-</LinearLayout>
+</RelativeLayout>
