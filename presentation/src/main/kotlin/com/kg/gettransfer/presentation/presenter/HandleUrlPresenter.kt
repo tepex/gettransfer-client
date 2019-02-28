@@ -71,4 +71,8 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
     }
 
     private fun isLoggedIn() = systemInteractor.userEmail != PreferencesImpl.INVALID_EMAIL
+
+    fun openMainScreen() {
+        router.replaceScreen(Screens.ChangeMode(Screens.PASSENGER_MODE))
+    }
 }

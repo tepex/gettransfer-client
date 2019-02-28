@@ -1,14 +1,21 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.annotation.TargetApi
+import android.app.DownloadManager
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.webkit.*
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.presentation.presenter.HandleUrlPresenter
 import com.kg.gettransfer.presentation.view.HandleUrlView
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.extensions.setUserAgent
+import kotlinx.android.synthetic.main.activity_handle_url.*
 import org.jetbrains.anko.longToast
 
 class HandleUrlActivity : BaseActivity(), HandleUrlView {
@@ -25,6 +32,7 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView {
         const val PASSENGER_CABINET = "/passenger/cabinet"
         const val PASSENGER_RATE = "/passenger/rate"
         const val CARRIER_CABINET = "/carrier/cabinet"
+        const val VOUCHER = "/transfers/voucher"
         const val CHOOSE_OFFER_ID = "choose_offer_id"
         const val OPEN_CHAT = "open_chat"
         const val TRANSFERS = "transfers"
@@ -74,9 +82,43 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView {
                     presenter.rateTransfer(transferId!!, rate!!)
                     return
                 }
-                else -> finish()
+                path.contains(VOUCHER) -> {
+                    presenter.openMainScreen()
+                    showWebView(appLinkData.toString())
+                }
+                else -> showWebView(appLinkData.toString())
             }
         }
+    }
+
+    private fun showWebView(url: String) {
+        webView.settings.javaScriptEnabled = true
+        webView.setUserAgent()
+        webView.webViewClient = object: WebViewClient() {
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                view?.loadUrl(request?.url.toString())
+                return true
+            }
+
+            // for pre-lollipop
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                view?.loadUrl(url)
+                return true;            }
+        }
+        webView.setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
+            val request = DownloadManager.Request(Uri.parse(url)).apply {
+                allowScanningByMediaScanner()
+                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                setDestinationInExternalPublicDir(
+                        Environment.DIRECTORY_DOWNLOADS,
+                        URLUtil.guessFileName(url, contentDisposition, mimetype))
+            }
+            val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+            dm.enqueue(request)
+            longToast("Downloading file")
+        }
+        webView.loadUrl(url)
     }
 
     override fun setError(e: ApiException) {
