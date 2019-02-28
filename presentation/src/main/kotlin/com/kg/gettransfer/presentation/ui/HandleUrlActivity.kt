@@ -106,20 +106,23 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
             showWebView(url)
         } else EasyPermissions.requestPermissions(
                 this,
-                "Allow to download the voucher?",
+                getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
                 RC_WRITE_FILE, *perms)
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
-        presenter.openMainScreen()
-        toast("Allow access to download the voucher")
+        onPermissionDenied()
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {}
 
     override fun onRationaleDenied(requestCode: Int) {
+        onPermissionDenied()
+    }
+
+    private fun onPermissionDenied() {
         presenter.openMainScreen()
-        toast("Allow access to download the voucher")
+        toast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
     }
 
     override fun onRationaleAccepted(requestCode: Int) {}
@@ -149,7 +152,7 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
             }
             val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
             dm.enqueue(request)
-            longToast("Downloading voucher")
+            longToast(getString(R.string.LNG_DOWNLOADING))
         }
         webView.loadUrl(url)
     }

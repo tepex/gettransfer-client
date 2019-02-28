@@ -450,6 +450,9 @@
     <string name="LNG_RIDE_DATE_RETURN_PLACEHOLDER">I want to order a return transfer</string>
     <string name="LNG_OFFERS_SUPPORT">GetTransfer Support</string>
     <string name="LNG_BOOK_NOW_PAYMENT_SUCCEESS">We\'ll send you email with data of carrier soon</string>
+    <string name="LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION">Download booking voucher?</string>
+    <string name="LNG_DOWNLOADING">Downloading</string>
+    <string name="LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS">Allow access to download the voucher</string>
 
     <plurals name="days">
         <item quantity="one">@string/LNG_DAY</item>
