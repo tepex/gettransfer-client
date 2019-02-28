@@ -74,9 +74,7 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView {
                     presenter.rateTransfer(transferId!!, rate!!)
                     return
                 }
-                path.equals(CARRIER_CABINET) -> {
-
-                }
+                else -> finish()
             }
         }
     }
