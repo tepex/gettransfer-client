@@ -17,8 +17,12 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.extensions.setUserAgent
 import kotlinx.android.synthetic.main.activity_handle_url.*
 import org.jetbrains.anko.longToast
+import org.jetbrains.anko.toast
+import pub.devrel.easypermissions.AfterPermissionGranted
+import pub.devrel.easypermissions.EasyPermissions
 
-class HandleUrlActivity : BaseActivity(), HandleUrlView {
+class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.PermissionCallbacks,
+        EasyPermissions.RationaleCallbacks {
 
     @InjectPresenter
     internal lateinit var presenter: HandleUrlPresenter
@@ -28,7 +32,10 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView {
     @ProvidePresenter
     fun createHandleUrlPresenter() = HandleUrlPresenter()
 
+    private lateinit var url: String
+
     companion object {
+        const val RC_WRITE_FILE = 111
         const val PASSENGER_CABINET = "/passenger/cabinet"
         const val PASSENGER_RATE = "/passenger/rate"
         const val CARRIER_CABINET = "/carrier/cabinet"
@@ -56,6 +63,7 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView {
     private fun handleIntent(intent: Intent?) {
         val appLinkAction = intent?.action
         val appLinkData : Uri? = intent?.data
+        url = appLinkData.toString()
         if (Intent.ACTION_VIEW == appLinkAction) {
             val path = appLinkData?.path
             when {
@@ -83,13 +91,38 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView {
                     return
                 }
                 path.contains(VOUCHER) -> {
-                    presenter.openMainScreen()
-                    showWebView(appLinkData.toString())
+                    checkPermissionForWrite()
                 }
-                else -> showWebView(appLinkData.toString())
+                else -> showWebView(url)
             }
         }
     }
+
+    @AfterPermissionGranted(RC_WRITE_FILE)
+    private fun checkPermissionForWrite() {
+        val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (EasyPermissions.hasPermissions(this, *perms)) {
+            presenter.openMainScreen()
+            showWebView(url)
+        } else EasyPermissions.requestPermissions(
+                this,
+                "Allow to download the voucher?",
+                RC_WRITE_FILE, *perms)
+    }
+
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+        presenter.openMainScreen()
+        toast("Allow access to download the voucher")
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {}
+
+    override fun onRationaleDenied(requestCode: Int) {
+        presenter.openMainScreen()
+        toast("Allow access to download the voucher")
+    }
+
+    override fun onRationaleAccepted(requestCode: Int) {}
 
     private fun showWebView(url: String) {
         webView.settings.javaScriptEnabled = true
@@ -116,7 +149,7 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView {
             }
             val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
             dm.enqueue(request)
-            longToast("Downloading file")
+            longToast("Downloading voucher")
         }
         webView.loadUrl(url)
     }
@@ -124,5 +157,10 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView {
     override fun setError(e: ApiException) {
         longToast(e.details)
         finish()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 }
