@@ -53,7 +53,7 @@
 			android:layout_height="match_parent"
 
 			app:title_about_item="@string/LNG_PRESENTATION_TITLE_2"
-			app:text_about_item="@string/LNG_PRESENTATION_DESC_2"
+			app:text_about_item="Мы предоставляем 60 минут бесплатного ожидания в аэропортах и 15 минут по всем другим адресам"
 			app:img_about_item="@drawable/img_onboarding_2"/>
 
 		<com.kg.gettransfer.presentation.ui.AboutItem
