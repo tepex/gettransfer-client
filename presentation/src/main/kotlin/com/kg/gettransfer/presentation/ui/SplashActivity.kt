@@ -25,8 +25,6 @@ import com.kg.gettransfer.presentation.view.Screens
 
 class SplashActivity : AppCompatActivity() {
     companion object {
-        @JvmField val PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-        @JvmField val PERMISSION_REQUEST = 2211
         val EXTRA_TRANSFER_ID = "transfer_id"
         val EXTRA_RATE = "rate"
         val EXTRA_SHOW_RATE = "show_rate"
