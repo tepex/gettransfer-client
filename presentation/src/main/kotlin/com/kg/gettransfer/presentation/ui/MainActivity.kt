@@ -1,17 +1,13 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 
 import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
-import android.support.v4.app.ActivityCompat
 
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
@@ -43,8 +39,6 @@ import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.domain.ApiException
 
-import com.kg.gettransfer.presentation.model.PolylineModel
-
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -52,13 +46,10 @@ import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.MainView
 
-import java.util.Date
-
 import kotlinx.android.synthetic.main.a_b_view.*
 import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_item_requests.view.*
-import kotlinx.android.synthetic.main.notification_view.*
 import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
@@ -68,10 +59,11 @@ import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
 import kotlinx.android.synthetic.main.view_rate_in_store.view.*
 import kotlinx.android.synthetic.main.view_thanks_for_rate.view.*
+import pub.devrel.easypermissions.EasyPermissions
 
 import timber.log.Timber
 
-class MainActivity : BaseGoogleMapActivity(), MainView {
+class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.PermissionCallbacks {
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
 
@@ -258,7 +250,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         Timber.d("Permissions: ${systemInteractor.locationPermissionsGranted}")
 
         map = gm
-        if (isPermissionGranted()) return
+        checkPermission()
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
         gm.setOnCameraMoveListener        { presenter.onCameraMove(gm.cameraPosition!!.target, true)  }
         gm.setOnCameraIdleListener        { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
@@ -270,32 +262,27 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         }
     }
 
-    private fun isPermissionGranted(): Boolean {
-        if (systemInteractor.locationPermissionsGranted == null &&
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                (!check(Manifest.permission.ACCESS_FINE_LOCATION) || !check(Manifest.permission.ACCESS_COARSE_LOCATION))) {
-            ActivityCompat.requestPermissions(this, SplashActivity.PERMISSIONS, SplashActivity.PERMISSION_REQUEST)
-            return true
-        }
-        return false
+    private fun checkPermission() {
+        if (!EasyPermissions.hasPermissions(this, *PERMISSIONS))
+            EasyPermissions.requestPermissions(
+                this,
+                getString(R.string.LNG_LOCATION_ACCESS),
+                PERMISSION_REQUEST, *PERMISSIONS)
     }
 
-    private fun check(permission: String) =
-            ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+        systemInteractor.locationPermissionsGranted = false
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+        systemInteractor.locationPermissionsGranted = true
+        map.isMyLocationEnabled = true
+        map.uiSettings.isMyLocationButtonEnabled = false
+    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (requestCode != SplashActivity.PERMISSION_REQUEST) return
-        if(grantResults.size == 2 &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-                grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-
-            systemInteractor.locationPermissionsGranted = true
-            map.isMyLocationEnabled = true
-            map.uiSettings.isMyLocationButtonEnabled = false
-        } else {
-            systemInteractor.locationPermissionsGranted = false
-        }
-        recreate()
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
         presenter.updateCurrentLocation()
     }
 
@@ -555,8 +542,8 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     companion object {
-        const val MY_LOCATION_BUTTON_INDEX = 2
-        const val COMPASS_BUTTON_INDEX     = 5
+        @JvmField val PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+        @JvmField val PERMISSION_REQUEST = 2211
         const val FADE_DURATION = 500L
         const val MAX_INIT_ZOOM = 2.0f
 

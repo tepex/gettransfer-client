@@ -453,6 +453,7 @@
     <string name="LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION">Download booking voucher?</string>
     <string name="LNG_DOWNLOADING">Downloading</string>
     <string name="LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS">Allow access to download the voucher</string>
+    <string name="LNG_LOCATION_ACCESS">Allow access to your location</string>
 
     <plurals name="days">
         <item quantity="one">@string/LNG_DAY</item>

@@ -22,7 +22,7 @@ import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
 
 import com.kg.gettransfer.presentation.view.PaymentOfferView
 
-import kotlinx.android.synthetic.main.activity_payment_settings.*
+import kotlinx.android.synthetic.main.activity_payment_offer.*
 
 import kotlinx.serialization.json.JSON
 import org.jetbrains.anko.toast
@@ -36,11 +36,13 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView {
     @ProvidePresenter
     fun createPaymentSettingsPresenter() = PaymentOfferPresenter()
 
+    private var selectedPercentage = PaymentRequestModel.FULL_PRICE
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.params = JSON.parse(PaymentOfferView.Params.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
 
-        setContentView(R.layout.activity_payment_settings)
+        setContentView(R.layout.activity_payment_offer)
         setButton()
         setCommission()
 
@@ -75,7 +77,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView {
                     }
                 }
             }
-            selectPaymentPercentage(paymentPercentages.first())
+            selectPaymentPercentage(selectedPercentage)
         }
     }
 
@@ -117,5 +119,6 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView {
                 presenter.changePrice(PaymentRequestModel.PRICE_30)
             }
         }
+        this.selectedPercentage = selectedPercentage
     }
 }
