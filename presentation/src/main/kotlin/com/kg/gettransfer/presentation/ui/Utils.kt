@@ -268,8 +268,10 @@ object Utils : KoinComponent {
     fun durationToString(context: Context, duration: Triple<Int, Int, Int>) = buildString {
         val (days: Int, hours: Int, minutes: Int) = duration
         context.getString(R.string.LNG_DATE_IN_HOURS)
-        append(" $days")
-        append(context.getString(R.string.LNG_D))
+        if (days != 0) {
+            append(" $days")
+            append(context.getString(R.string.LNG_D))
+        }
         append(" ${hours % 24}")
         append(context.getString(R.string.LNG_H))
         append(" ${minutes % 60}")

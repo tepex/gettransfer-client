@@ -45,6 +45,17 @@
                     android:layout_marginTop="14dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
+            <TextView
+                    android:id="@+id/tv_bookNow_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="17sp"
+                    android:visibility="gone"
+                    android:textColor="@color/color_transfer_details_text_green"
+                    android:layout_marginTop="8dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+            android:text="Мы отправим вам e-mail с данными перевозчика в ближайшее время"/>
 
             <include
                     android:id="@+id/view_rate_ride"

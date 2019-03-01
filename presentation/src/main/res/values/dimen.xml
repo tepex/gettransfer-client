@@ -293,7 +293,7 @@
 
 	<dimen name="bottom_sheet_transfer_details_swiped_view_width">110dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_swiped_view_height">5dp</dimen>
-	<dimen name="bottom_sheet_transfer_details_swiped_view_margin_top_bottom">8dp</dimen>
+	<dimen name="bottom_sheet_transfer_details_swiped_view_margin_top_bottom">11dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_buttons_height">44dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_buttons_margin_top_bottom">8dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_buttons_margin_start_end">30dp</dimen>
@@ -626,7 +626,7 @@
 
 
 	<!--drawable values-->
-	<dimen name="panels_corner_radius">10dp</dimen>
+	<dimen name="panels_corner_radius">16dp</dimen>
 	<dimen name="hourly_icon_borders">2dp</dimen>
 
 	<!-- empty offers-->

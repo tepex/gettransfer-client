@@ -173,25 +173,28 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
             transfer_details_main.tv_distance.text = SystemUtils.formatDistance(this, transfer.distance, false)
             transfer_details_main.tv_time.text = Utils.durationToString(this, Utils.convertDuration(transfer.time ?: 0))
         } else {
-            textDistance.text = getString(R.string.LNG_TIME_RIDE)
-            tvDuration.text = Utils.formatDuration(this, transfer.duration!!)
-            tvTransferWillStartTime.text = Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer))
+            transfer_details_main.tv_distance.text = getString(R.string.LNG_TIME_RIDE)
+            transfer_details_main.tv_time.text = getString(R.string.LNG_TIME_RIDE)
+          //  textDistance.text = getString(R.string.LNG_TIME_RIDE)
+          //  tvDuration.text = Utils.formatDuration(this, transfer.duration!!)
+          //  tvTransferWillStartTime.text = Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer))
         }
  //       if (transfer.statusCategory == Transfer.STATUS_CATEGORY_ACTIVE || transfer.statusCategory == Transfer.STATUS_CATEGORY_UNFINISHED)
         transfer_details_main.tv_price.text = transfer.price
         if (transfer.remainsToPay != null)
             transfer_details_main.tv_price_title.text = transfer.remainsToPay
+        setBookNow(transfer)
+        setTransferStatus(transfer)
 
-        //bottom right
 //        when (transfer.statusCategory) {
 //            Transfer.STATUS_CATEGORY_UNFINISHED -> {
-//                tvTransferCancelledOrInProgress.text = transfer.statusName?.let {
+//                transfer_details_header.booking_info.text = transfer.statusName?.let {
 //                    getString(R.string.LNG_TRANSFER_WAS)
 //                            .plus(" ")
 //                            .plus(getString(transfer.statusName).toLowerCase())
 //                }
-//                tvTransferCancelledOrInProgress.setTextColor(ContextCompat.getColor(this, R.color.color_transfer_details_text_red))
-//                tvTransferCancelledOrInProgress.isVisible = true
+//                transfer_details_header.booking_info.setTextColor(ContextCompat.getColor(this, R.color.color_transfer_details_text_red))
+//               // tvTransferCancelledOrInProgress.isVisible = true
 //            }
 //            Transfer.STATUS_CATEGORY_ACTIVE -> {
 //                layoutRequestSentOrCompletedDate.isVisible = true
@@ -220,6 +223,47 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 //                }
 //            }
 //        }
+    }
+
+    private fun setBookNow(transfer: TransferModel){
+        if (transfer.bookNowOffers.isNotEmpty()) {
+            tv_bookNow_info.isVisible = true
+        }
+    }
+
+    private fun setTransferStatus(transfer: TransferModel) {
+        with(transfer_details_header.booking_info) {
+            when (transfer.status) {
+                Transfer.Status.NEW -> {
+                    text = "Заявка #"
+                            .plus(transfer.id)
+                            .plus(" выберите перевозчика")
+                }
+                Transfer.Status.REJECTED -> {
+                    setTextColor(ContextCompat.getColor(this@TransferDetailsActivity, R.color.color_transfer_details_text_red))
+                    text = "Заявка #"
+                            .plus(transfer.id)
+                            .plus(" отменена")
+                }
+                Transfer.Status.PERFORMED -> {
+                    text = "Трансфер #"
+                            .plus(transfer.id)
+                            .plus(" начнется через ")
+                            .plus(Utils.durationToString(this@TransferDetailsActivity, Utils.convertDuration(transfer.timeToTransfer)))
+                }
+                Transfer.Status.PENDING_CONFIRMATION -> {
+                    text = "Трансфер #"
+                            .plus(transfer.id)
+                            .plus(" выполняется")
+                }
+                Transfer.Status.CANCELED -> {
+                    text = "Трансфер #"
+                            .plus(transfer.id)
+                            .plus(" завершен")
+                }
+                else -> return
+            }
+        }
     }
 
     private fun initAboutRequestView(transfer: TransferModel, userProfile: ProfileModel) {
@@ -289,8 +333,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     private fun initAboutDriverView(offer: OfferModel) {
         offer.phoneToCall?.let { phone ->
       //      layoutCommunicateButtons.isVisible = true
-            btnCall.setOnClickListener { presenter.callPhone(phone) }
-            btnChat.setOnClickListener { presenter.onChatClick() }
+      //      btnCall.setOnClickListener { presenter.callPhone(phone) }
+      //      btnChat.setOnClickListener { presenter.onChatClick() }
         }
 
         val operations = listOf<Pair<CharSequence, String>>(

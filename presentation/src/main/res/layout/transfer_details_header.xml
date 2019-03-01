@@ -20,7 +20,7 @@
             android:layout_alignParentEnd="true"
             android:text="14:20"/>
     <TextView
-            android:id="@+id/booking_number1"
+            android:id="@+id/booking_info"
             android:text="Заявка #12349890 выберите перевозчика"
             android:layout_below="@id/tvTransferDate"
             android:layout_marginTop="@dimen/booking_number_margin_top"
