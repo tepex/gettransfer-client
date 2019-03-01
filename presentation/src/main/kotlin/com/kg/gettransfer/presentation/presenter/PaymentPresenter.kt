@@ -18,7 +18,7 @@ import com.kg.gettransfer.presentation.mapper.PaymentStatusRequestMapper
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
 
-import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter.Companion.PRICE_30
+import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter.Companion.PRICE_30
 
 import com.kg.gettransfer.presentation.view.PaymentView
 import com.kg.gettransfer.presentation.view.Screens

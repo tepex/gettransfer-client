@@ -1,17 +1,28 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.annotation.TargetApi
+import android.app.DownloadManager
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.webkit.*
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.presentation.presenter.HandleUrlPresenter
 import com.kg.gettransfer.presentation.view.HandleUrlView
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.extensions.setUserAgent
+import kotlinx.android.synthetic.main.activity_handle_url.*
 import org.jetbrains.anko.longToast
+import org.jetbrains.anko.toast
+import pub.devrel.easypermissions.AfterPermissionGranted
+import pub.devrel.easypermissions.EasyPermissions
 
-class HandleUrlActivity : BaseActivity(), HandleUrlView {
+class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.PermissionCallbacks,
+        EasyPermissions.RationaleCallbacks {
 
     @InjectPresenter
     internal lateinit var presenter: HandleUrlPresenter
@@ -21,10 +32,14 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView {
     @ProvidePresenter
     fun createHandleUrlPresenter() = HandleUrlPresenter()
 
+    private lateinit var url: String
+
     companion object {
+        const val RC_WRITE_FILE = 111
         const val PASSENGER_CABINET = "/passenger/cabinet"
         const val PASSENGER_RATE = "/passenger/rate"
         const val CARRIER_CABINET = "/carrier/cabinet"
+        const val VOUCHER = "/transfers/voucher"
         const val CHOOSE_OFFER_ID = "choose_offer_id"
         const val OPEN_CHAT = "open_chat"
         const val TRANSFERS = "transfers"
@@ -48,6 +63,7 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView {
     private fun handleIntent(intent: Intent?) {
         val appLinkAction = intent?.action
         val appLinkData : Uri? = intent?.data
+        url = appLinkData.toString()
         if (Intent.ACTION_VIEW == appLinkAction) {
             val path = appLinkData?.path
             when {
@@ -74,15 +90,80 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView {
                     presenter.rateTransfer(transferId!!, rate!!)
                     return
                 }
-                path.equals(CARRIER_CABINET) -> {
-
+                path.contains(VOUCHER) -> {
+                    checkPermissionForWrite()
                 }
+                else -> showWebView(url)
             }
         }
+    }
+
+    @AfterPermissionGranted(RC_WRITE_FILE)
+    private fun checkPermissionForWrite() {
+        val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (EasyPermissions.hasPermissions(this, *perms)) {
+            presenter.openMainScreen()
+            showWebView(url)
+        } else EasyPermissions.requestPermissions(
+                this,
+                getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
+                RC_WRITE_FILE, *perms)
+    }
+
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+        onPermissionDenied()
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {}
+
+    override fun onRationaleDenied(requestCode: Int) {
+        onPermissionDenied()
+    }
+
+    private fun onPermissionDenied() {
+        presenter.openMainScreen()
+        toast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
+    }
+
+    override fun onRationaleAccepted(requestCode: Int) {}
+
+    private fun showWebView(url: String) {
+        webView.settings.javaScriptEnabled = true
+        webView.setUserAgent()
+        webView.webViewClient = object: WebViewClient() {
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                view?.loadUrl(request?.url.toString())
+                return true
+            }
+
+            // for pre-lollipop
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                view?.loadUrl(url)
+                return true;            }
+        }
+        webView.setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
+            val request = DownloadManager.Request(Uri.parse(url)).apply {
+                allowScanningByMediaScanner()
+                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                setDestinationInExternalPublicDir(
+                        Environment.DIRECTORY_DOWNLOADS,
+                        URLUtil.guessFileName(url, contentDisposition, mimetype))
+            }
+            val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+            dm.enqueue(request)
+            longToast(getString(R.string.LNG_DOWNLOADING))
+        }
+        webView.loadUrl(url)
     }
 
     override fun setError(e: ApiException) {
         longToast(e.details)
         finish()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 }

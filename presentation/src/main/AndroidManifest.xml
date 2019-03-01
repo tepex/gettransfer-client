@@ -127,7 +127,7 @@
             android:screenOrientation="portrait"
             android:resizeableActivity="false"/>
         <activity
-            android:name=".presentation.ui.PaymentSettingsActivity"
+            android:name=".presentation.ui.PaymentOfferActivity"
             android:screenOrientation="portrait"
             android:resizeableActivity="false"/>
         <activity android:name=".presentation.ui.PaymentErrorActivity"
@@ -141,7 +141,8 @@
         <activity android:name=".presentation.ui.ChatActivity"
             android:screenOrientation="portrait"
             android:resizeableActivity="false"/>
-        <activity android:name=".presentation.ui.HandleUrlActivity">
+        <activity android:name=".presentation.ui.HandleUrlActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 

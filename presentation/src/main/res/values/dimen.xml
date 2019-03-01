@@ -106,7 +106,9 @@
 	<dimen name="about_item_title_text_size">22sp</dimen>
 	<dimen name="about_item_description_text_size">17sp</dimen>
 	<dimen name="about_item_description_margin_top">24dp</dimen>
-	
+	<dimen name="about_item_description_margin_start">8dp</dimen>
+	<dimen name="about_item_description_margin_end">8dp</dimen>
+
 	<!-- Read more -->
 	<dimen name="read_more_content_margin">10dp</dimen>
 	<dimen name="read_more_close_margin">20dp</dimen>

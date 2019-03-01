@@ -204,12 +204,12 @@ object Screens {
     }
 
     data class PaymentOffer(val transferId: Long, val offerId: Long?, val dateRefund: Date?, val paymentPercentages: List<Int>, val bookNowTransportId: String?) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, PaymentSettingsActivity::class.java).apply {
+        override fun getActivityIntent(context: Context?) = Intent(context, PaymentOfferActivity::class.java).apply {
             putExtra(
-                PaymentSettingsView.EXTRA_PARAMS,
+                PaymentOfferView.EXTRA_PARAMS,
                 JSON.stringify(
-                    PaymentSettingsView.Params.serializer(),
-                    PaymentSettingsView.Params(dateRefund, transferId, offerId, paymentPercentages, bookNowTransportId)
+                    PaymentOfferView.Params.serializer(),
+                    PaymentOfferView.Params(dateRefund, transferId, offerId, paymentPercentages, bookNowTransportId)
                 )
             )
         }
