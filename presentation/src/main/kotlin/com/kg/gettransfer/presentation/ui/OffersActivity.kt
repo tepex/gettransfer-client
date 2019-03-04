@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
 import android.graphics.Paint
+import android.graphics.drawable.Animatable
 
 import android.os.Bundle
 
@@ -133,7 +134,14 @@ class OffersActivity : BaseActivity(), OffersView {
         if (offers.isNotEmpty()) {
             fl_drivers_count_text.isVisible = false
             cl_fixPrice.isVisible = true
+        } else {
+            setAnimation()
         }
+    }
+
+    private fun setAnimation() {
+        val drawable = ivClock.drawable
+        if (drawable is Animatable) drawable.start()
     }
 
     override fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean) {
