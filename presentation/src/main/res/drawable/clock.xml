@@ -25,22 +25,31 @@
         android:pathData="M6.1,6.502l0.43,-0.38 -0.986,-0.856 3.293,-3.293a0.5,0.5 0,0 0,-0.175 -0.82C5.783,0.048 3.59,0.348 1.981,2.02 0.374,3.692 0.069,5.894 1.092,8.711a0.5,0.5 0,0 0,0.824 0.183l3.35,-3.35 0.834,0.958zM31.883,6.502l-0.43,-0.38 0.986,-0.856 -3.293,-3.293a0.5,0.5 0,0 1,0.175 -0.82C32.2,0.048 34.394,0.348 36.002,2.02c1.607,1.671 1.912,3.873 0.889,6.69a0.5,0.5 0,0 1,-0.824 0.183l-3.35,-3.35 -0.834,0.958z"
         android:strokeWidth="1"
         android:strokeColor="#000" />
+    |
+    <path
+        android:fillType="evenOdd"
+        android:pathData="M19,19m-2.5,0a2.5,2.5 0,1 1,5 0a2.5,2.5 0,1 1,-5 0"
+        android:strokeWidth="1"
+        android:strokeColor="#000" />
 
-    <group android:name="arrows">
+    <group
+        android:name="rotate_hourly"
+        android:pivotX="50"
+        android:pivotY="50">
+
         <path
-            android:fillType="evenOdd"
-            android:pathData="M19,19m-2.5,0a2.5,2.5 0,1 1,5 0a2.5,2.5 0,1 1,-5 0"
-            android:strokeWidth="1"
-            android:strokeColor="#000" />
-        <path
-            android:name="rotate_hourly"
             android:fillColor="#00000000"
             android:fillType="evenOdd"
             android:pathData="M22.04,18.95v0.3h4.9a0.1,0.1 0,0 0,0.1 -0.1v-0.1a0.1,0.1 0,0 0,-0.1 -0.1h-4.9z"
             android:strokeWidth="1"
             android:strokeColor="#000" />
+    </group>
+
+    <group
+        android:name="rotate_minute"
+        android:pivotX="50"
+        android:pivotY="50">
         <path
-            android:name="rotate_minute"
             android:fillColor="#00000000"
             android:fillType="evenOdd"
             android:pathData="M18.9,9.4L18.9,15.4A0.5,0.5 0,0 1,18.4 15.9L18.4,15.9A0.5,0.5 0,0 1,17.9 15.4L17.9,9.4A0.5,0.5 0,0 1,18.4 8.9L18.4,8.9A0.5,0.5 0,0 1,18.9 9.4z"

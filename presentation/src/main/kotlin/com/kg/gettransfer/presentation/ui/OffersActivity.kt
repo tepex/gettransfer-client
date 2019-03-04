@@ -1,13 +1,20 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Paint
 import android.graphics.drawable.Animatable
+import android.graphics.drawable.AnimatedVectorDrawable
+import android.graphics.drawable.Drawable
+import android.os.Build
 
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
+import android.support.graphics.drawable.Animatable2Compat
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat
+import android.support.v4.content.ContextCompat
 
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.LinearLayoutManager
@@ -140,8 +147,17 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     private fun setAnimation() {
-        val drawable = ivClock.drawable
-        if (drawable is Animatable) drawable.start()
+        val drawable = ivClock.drawable as Animatable
+        drawable.start()
+
+//        val avd = AnimatedVectorDrawableCompat.create(this, R.drawable.anim_arrows)
+//        val clock = ivClock.apply { setImageDrawable(avd) }
+//        avd?.registerAnimationCallback(object : Animatable2Compat.AnimationCallback() {
+//            override fun onAnimationEnd(drawable: Drawable?) {
+//                clock.post { avd.start() }
+//            }
+//        })
+//        avd?.start()
     }
 
     override fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean) {
