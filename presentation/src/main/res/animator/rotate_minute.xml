@@ -4,6 +4,7 @@
         android:duration="16000"
         android:repeatCount="infinite"
         android:valueFrom="0"
-        android:valueTo="360"
-        android:propertyName="rotation" />
+        android:valueTo="1440"
+        android:propertyName="rotation"
+        android:interpolator="@android:anim/linear_interpolator"/>
 </set>

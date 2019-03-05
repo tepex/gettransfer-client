@@ -34,8 +34,8 @@
 
     <group
         android:name="rotate_hourly"
-        android:pivotX="50"
-        android:pivotY="50">
+        android:pivotX="20"
+        android:pivotY="20">
 
         <path
             android:fillColor="#00000000"
@@ -47,8 +47,8 @@
 
     <group
         android:name="rotate_minute"
-        android:pivotX="50"
-        android:pivotY="50">
+        android:pivotX="20"
+        android:pivotY="20">
         <path
             android:fillColor="#00000000"
             android:fillType="evenOdd"
