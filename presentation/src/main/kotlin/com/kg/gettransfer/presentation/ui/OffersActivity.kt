@@ -1,20 +1,13 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Paint
 import android.graphics.drawable.Animatable
-import android.graphics.drawable.AnimatedVectorDrawable
-import android.graphics.drawable.Drawable
-import android.os.Build
 
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
-import android.support.graphics.drawable.Animatable2Compat
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat
-import android.support.v4.content.ContextCompat
 
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.LinearLayoutManager
@@ -51,8 +44,8 @@ import kotlinx.android.synthetic.main.activity_offers.*
 import kotlinx.android.synthetic.main.activity_offers.view.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
+import kotlinx.android.synthetic.main.card_empty_offers.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
-import org.jetbrains.anko.toast
 
 import timber.log.Timber
 import java.util.*
@@ -139,6 +132,7 @@ class OffersActivity : BaseActivity(), OffersView {
         rvOffers.adapter = OffersRVAdapter(offers.toMutableList(), textNetworkNotAvailable.isVisible) { offer, isShowingOfferDetails ->
             presenter.onSelectOfferClicked(offer, isShowingOfferDetails) }
         if (offers.isNotEmpty()) {
+            noOffers.isVisible = false
             fl_drivers_count_text.isVisible = false
             cl_fixPrice.isVisible = true
         } else {
@@ -147,6 +141,7 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     private fun setAnimation() {
+        noOffers.isVisible = true
         val drawable = ivClock.drawable as Animatable
         drawable.start()
     }

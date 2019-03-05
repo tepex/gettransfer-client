@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/ivClock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/anim_arrows"
+            android:layout_marginTop="24dp"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            tools:text="Please, wait"
+            android:textSize="15sp"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center"
+            android:fontFamily="@font/sf_pro_text_semibold"
+            android:text="@string/LNG_PLEASE_WAIT"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="32dp"
+            android:layout_marginLeft="44dp"
+            android:layout_marginRight="44dp"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            tools:text="Скоро предложения от перевозчиков будут здесь"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/LNG_PLEASE_WAIT_OFFERS"
+            android:fontFamily="@font/sf_pro_text_regular"/>
+    </LinearLayout>
+
+</android.support.design.card.MaterialCardView>
