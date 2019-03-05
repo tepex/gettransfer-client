@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        app:title_transfer_details="@string/LNG_RIDE_FLIGHT_NUMBER"
+        app:title_transfer_details="@string/LNG_RIDE_FLIGHT_PLACEHOLDER"
         app:input_transfer_details="BA 2243"
 
         android:visibility="gone"/>

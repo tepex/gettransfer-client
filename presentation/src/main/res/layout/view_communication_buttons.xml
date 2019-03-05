@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
+        android:id="@+id/btnSupport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:btn_name="@string/LNG_CUSTOMER_SUPPORT"
+        app:btn_img="@drawable/ic_support"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnCall" />
+
+    <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
+        android:id="@+id/btnCall"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:btn_name="@string/LNG_PAYMENT_CALL"
+        app:btn_img="@drawable/ic_call"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnSupport"
+        app:layout_constraintEnd_toStartOf="@+id/btnChat"/>
+
+    <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
+        android:id="@+id/btnChat"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:btn_name="@string/LNG_PAYMENT_CHAT"
+        app:btn_img="@drawable/ic_chat_yellow"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnCall"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

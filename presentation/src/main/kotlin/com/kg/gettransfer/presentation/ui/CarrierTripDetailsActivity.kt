@@ -1,17 +1,19 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.app.ActionBar
 import android.content.Context
 
 import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
-import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.content.ContextCompat
+import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.Toolbar
 
 import android.view.View
 import android.view.WindowManager
+import android.widget.LinearLayout
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -21,19 +23,25 @@ import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior
 import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.presenter.CarrierTripDetailsPresenter
+import com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
+import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
 
 import kotlinx.android.synthetic.main.activity_carrier_trip_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_carrier_trip_details.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-
-import kotlinx.android.synthetic.main.view_carrier_trip_details_layout_about_car.*
-import kotlinx.android.synthetic.main.view_carrier_trip_details_layout_about_passenger.*
-import kotlinx.android.synthetic.main.view_carrier_trip_details_layout_more_info.*
-import kotlinx.android.synthetic.main.view_icon_with_number_indicator.view.*
+import kotlinx.android.synthetic.main.transfer_details_header.*
+import kotlinx.android.synthetic.main.view_about_item.*
+import kotlinx.android.synthetic.main.view_communication_buttons.view.*
+import kotlinx.android.synthetic.main.view_seats_number.*
+import kotlinx.android.synthetic.main.view_transfer_details_about_request.*
+import kotlinx.android.synthetic.main.view_transfer_details_comment.view.*
+import kotlinx.android.synthetic.main.view_transfer_main_info.*
+import kotlinx.android.synthetic.main.view_communication_button.*
 
 class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsView {
     @InjectPresenter
@@ -44,7 +52,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
 
     override fun getPresenter(): CarrierTripDetailsPresenter = presenter
 
-    private lateinit var bsCarrierTripDetails: BottomSheetBehavior<View>
+    private lateinit var bsCarrierTripDetails: BottomSheetTripleStatesBehavior<View>
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,8 +62,9 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
 
         setContentView(R.layout.activity_carrier_trip_details)
 
-        titleComment.text = getString(R.string.LNG_RIDE_SETTINGS_OPTIONAL_COMMENT).substring(0, 1).toUpperCase()
-                .plus(getString(R.string.LNG_RIDE_SETTINGS_OPTIONAL_COMMENT).substring(1))
+        passenger_name.field_title.text = getString(R.string.LNG_RIDE_CLIENT_NAME)
+        topCommunicationButtons.btnSupport.btnName.text = getString(R.string.LNG_CUSTOMER_SUPPORT).replace(" ", "\n")
+        bottomCommunicationButtons.btnSupport.btnName.text = getString(R.string.LNG_CUSTOMER_SUPPORT).replace(" ", "\n")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
@@ -66,100 +75,97 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         _mapView = mapView
         initMapView(savedInstanceState)
         setToolbar(toolbar as Toolbar, TOOLBAR_NO_TITLE)
-        //(toolbar as Toolbar).toolbar_title.text = getString(R.string.LNG_TRANSFER).plus(" #$transferId")
         (toolbar as Toolbar).toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS).plus(" #${presenter.transferId}")
 
-        //_tintBackground = tintBackground
-        bsCarrierTripDetails = BottomSheetBehavior.from(sheetCarrierTripDetails)
-        //bsCarrierTripDetails.setBottomSheetCallback(bottomSheetCallback)
-        bsCarrierTripDetails.state = BottomSheetBehavior.STATE_EXPANDED
+        bsCarrierTripDetails = BottomSheetTripleStatesBehavior.from(sheetCarrierTripDetails)
+        bsCarrierTripDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
         setOnClickListeners()
     }
 
-    /*override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            if (bsCarrierTripDetails.state == BottomSheetBehavior.STATE_EXPANDED) {
-                if(hideBottomSheet(bsCarrierTripDetails, sheetCarrierTripDetails, BottomSheetBehavior.STATE_COLLAPSED, event)) return true
-            }
-        }
-        return super.dispatchTouchEvent(event)
-    }*/
-
     private fun setOnClickListeners() {
+        btnBack.setOnClickListener { presenter.onBackCommandClick() }
         btnCenterRoute.setOnClickListener { presenter.onCenterRouteClick() }
-        btnSupport.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
     }
 
     override fun setTripInfo(trip: CarrierTripModel) {
-        layoutCarrierTripInfo.setInfo(trip.base, trip.totalPrice, true)
-        initMoreInfoLayout(trip)
-        initAboutCarLayout(trip.base.vehicle)
-        /*if(trip.tripStatus == CarrierTripModel.PAST_TRIP){
-            layoutAboutPassenger.isVisible = false
+        initInfoView(trip)
+        initAboutTripInfo(trip)
+        topCommunicationButtons.btnSupport.setOnClickListener { presenter.sendEmail(null, trip.base.transferId) }
+        bottomCommunicationButtons.btnSupport.setOnClickListener { presenter.sendEmail(null, trip.base.transferId) }
+    }
+
+    private fun initInfoView(item: CarrierTripModel){
+        val transferDateTimePair = Utils.getDateTimeTransferDetails(systemInteractor.locale, item.base.dateLocal, true)
+        transfer_details_header.apply {
+            tvTransferDate.text = transferDateTimePair.first
+            tvTransferTime.text = transferDateTimePair.second
+        }
+        val transferStatus = when (item.base.tripStatus) {
+            CarrierTripBaseModel.FUTURE_TRIP -> getString(R.string.LNG_WILL_START_IN).plus(" ")
+                    .plus(Utils.durationToString(this, Utils.convertDuration(item.base.timeToTransfer)))
+            CarrierTripBaseModel.IN_PROGRESS_TRIP -> getString(R.string.LNG_IN_PROGRESS)
+            CarrierTripBaseModel.PAST_TRIP -> getString(R.string.LNG_RIDE_STATUS_CANCELED)
+            else -> ""
+        }
+        booking_info.text = getString(R.string.LNG_TRANSFER).plus(" #${item.base.transferId}").plus(" ${transferStatus?: ""}")
+
+        layoutCarrierTripInfo.setInfo(item.base)
+
+        if (item.base.to != null) {
+            transfer_details_main.tv_distance.text = SystemUtils.formatDistance(this, item.base.distance, false)
+            transfer_details_main.tv_time.text = Utils.durationToString(this, Utils.convertDuration(item.base.time ?: 0))
+            transfer_details_main.tv_distance_dash.isVisible = false
         } else {
-           trip.passengerAccount?.profileModel?.let { initAboutPassengerLayout(it) }
-        }*/
-        trip.passenger?.let {
-            layoutAboutPassenger.isVisible = true
-            initAboutPassengerLayout(it.profile)
+            transfer_details_main.tv_time.text = HourlyValuesHelper.getValue(item.base.duration ?: 0, this)
+        }
+        transfer_details_main.tv_price_title.text = getString(R.string.LNG_TOTAL_PRICE).plus(" ${item.base.price}")
+        item.totalPrice?.let {
+            transfer_details_main.tv_price.text = it.remainsToPay
+            transfer_details_main.tv_price_dash.isVisible = false
         }
     }
 
-    private fun initMoreInfoLayout(trip: CarrierTripModel) {
-        var isShowLayoutMoreInfo = false
-        trip.countPassengers?.let {
-            isShowLayoutMoreInfo = true
-            countPassengers.numberIndicator.text = it.toString()
+    private fun initAboutTripInfo(item: CarrierTripModel){
+        with(item){
+            base.comment?.let {
+                comment_view.tv_comment_text.text = it
+                comment_view.isVisible = true
+            }
+            with(transfer_details_view_seats) {
+                tv_countPassengers.text = getString(R.string.X_SIGN).plus("${item.countPassengers}")
+                if(item.base.countChild > 0) {
+                    tvCountChildren.text = getString(R.string.X_SIGN).plus("${item.base.countChild}")
+                } else {
+                    imgBaggage.isVisible = false
+                    tvCountChildren.isVisible = false
+                }
+            }
+            flightNumber?.let { initField(flight_number, it) }
+            passenger?.profile?.let { profile ->
+                profile.name?.let { initField(passenger_name, it) }
+                profile.email?.let {email ->
+                    initField(passenger_email, email)
+                    topCommunicationButtons.btnChat.setOnClickListener { presenter.sendEmail(email, null) }
+                    bottomCommunicationButtons.btnChat.setOnClickListener { presenter.sendEmail(email, null) }
+                }
+                profile.phone?.let { phone ->
+                    initField(passenger_phone, phone)
+                    topCommunicationButtons.btnCall.setOnClickListener { presenter.callPhone(phone) }
+                    bottomCommunicationButtons.btnCall.setOnClickListener { presenter.callPhone(phone) }
+                }
+            }
+            base.vehicle.let { initField(car_model_field, it.registrationNumber, it.name) }
         }
-        trip.base.comment?.let {
-            isShowLayoutMoreInfo = true
-            tvComment.text = it
-            layoutMoreInfoComment.isVisible = true
-        }
-        trip.flightNumber?.let {
-            isShowLayoutMoreInfo = true
-            tvFlightNumber.text = it
-            layoutFlightNumber.isVisible = true
-        }
-        if (trip.base.countChild > 0) {
-            isShowLayoutMoreInfo = true
-            layoutCountChild.isVisible = true
-            childSeats.numberIndicator.text = trip.base.countChild.toString()
-        }
-        layoutMoreInfo.isVisible = isShowLayoutMoreInfo
     }
 
-    private fun initAboutCarLayout(vehicle: VehicleInfoModel) {
-        carName.text = vehicle.name
-        carNumber.text = vehicle.registrationNumber
-    }
-
-    private fun initAboutPassengerLayout(passenger: ProfileModel) {
-        passengerName.text = passenger.name
-
-        val operations = listOf<Pair<CharSequence, String>>(
-                Pair(getString(R.string.LNG_COPY), CarrierTripDetailsPresenter.OPERATION_COPY),
-                Pair(getString(R.string.LNG_OPEN), CarrierTripDetailsPresenter.OPERATION_OPEN))
-        val operationsName: List<CharSequence> = operations.map { it.first }
-
-        passenger.email?.let { email ->
-            passengerEmail.text = email
-            Utils.setSelectOperationListener(this, layoutPassengerEmail, operationsName, R.string.LNG_DRIVER_EMAIL) {
-                presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
-            btnSendEmailPassenger.setOnClickListener { presenter.sendEmail(email, presenter.transferId) }
-            btnChat.setOnClickListener { presenter.onChatClick() }
-        }
-        passenger.phone?.let { phone ->
-            passengerPhone.text = phone
-            Utils.setSelectOperationListener(this, layoutPassengerPhone, operationsName, R.string.LNG_DRIVER_PHONE) {
-                presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
-            btnCallPassenger.setOnClickListener { presenter.callPhone(phone) }
-            btnCall.setOnClickListener { presenter.callPhone(phone) }
-        }
+    private fun initField(field: TransferDetailsField, text: String, title: String? = null){
+        title?.let { field.field_title.text = title }
+        field.field_text.text = text
+        field.isVisible = true
     }
 
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) =
-        setPolyline(polyline, routeModel)
+            setPolyline(polyline, routeModel)
 
     override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
         processGoogleMap(false) {

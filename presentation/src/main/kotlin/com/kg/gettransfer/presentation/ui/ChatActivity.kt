@@ -65,8 +65,8 @@ class ChatActivity : BaseActivity(), ChatView {
             }
             chatTitleButtonBack.setOnClickListener { presenter.onBackCommandClick() }
             offer?.phoneToCall?.let { phone ->
-                btnCall.isVisible = true
-                btnCall.setOnClickListener { presenter.callPhone(phone) }
+                titleBtnCall.isVisible = true
+                titleBtnCall.setOnClickListener { presenter.callPhone(phone) }
             }
         }
     }

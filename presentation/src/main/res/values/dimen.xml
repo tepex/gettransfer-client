@@ -640,4 +640,28 @@
 	<dimen name="text_bottom_margin_left">44dp</dimen>
 	<dimen name="text_bottom_margin_right">44dp</dimen>
 
+
+	<!--new dimens-->
+	<dimen name="black_dash_width">27dp</dimen>
+	<dimen name="black_dash_height">2dp</dimen>
+
+	<dimen name="view_transfer_main_info_divider_margins">16dp</dimen>
+	<dimen name="view_transfer_main_info_divider_height">1dp</dimen>
+
+	<dimen name="view_transfer_details_comment_text_margin_top">10dp</dimen>
+	<dimen name="view_transfer_details_comment_divider_margin_top">20dp</dimen>
+
+	<dimen name="view_communication_button_name_margins">8dp</dimen>
+	<dimen name="view_communication_button_img_size">64dp</dimen>
+
+	<dimen name="activity_carrier_trip_details_top_buttons_margin_bottom">8dp</dimen>
+	<dimen name="activity_carrier_trip_bottom_buttons_layout_shadow_height">5dp</dimen>
+
+	<dimen name="bottom_sheet_carrier_trip_details_bs_peek_height">92dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_details_bs_anchor_point">333dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_details_trip_info_item_margin_top">20dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_details_trip_info_item_margin_bottom">24dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_details_view_seats_margin_end">16dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_details_free_space_height">110dp</dimen>
+
 </resources>

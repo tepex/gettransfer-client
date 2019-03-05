@@ -46,10 +46,25 @@
         <attr name="price" format="string"/>
         <attr name="price_title" format="string"/>
     </declare-styleable>
-    
+
     <declare-styleable name="SeatsView">
         <attr name="passenger_seats" format="string"/>
         <attr name="child_seats" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="CommunicationButton">
+        <attr name="btn_img" format="reference"/>
+        <attr name="btn_name" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="CustomBottomSheetBehavior">
+        <attr name="anchorPoint" format="dimension"/>
+        <attr name="defaultCustomState" format="enum">
+            <enum name="stateAnchorPoint" value="3" />
+            <enum name="stateExpanded" value="4"/>
+            <enum name="stateCollapsed" value="5"/>
+            <enum name="stateHidden" value="6"/>
+        </attr>
     </declare-styleable>
 
 </resources>

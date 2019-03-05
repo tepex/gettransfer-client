@@ -1,286 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:clipToPadding="true"
+    android:layout_marginTop="?android:attr/actionBarSize"
+    app:anchorPoint="@dimen/bottom_sheet_carrier_trip_details_bs_anchor_point"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="@dimen/activity_carrier_trips_details_behaviour_peek_height"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-    android:orientation="vertical">
+    app:behavior_peekHeight="@dimen/bottom_sheet_carrier_trip_details_bs_peek_height"
+    app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior"
+    android:fitsSystemWindows="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_for_area_behind_rounded_corners">
-
-        <View
-            android:id="@+id/viewGradient"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/activity_main_gradient_layout_height"
-            android:background="@drawable/back_bottom_sheet_bar_gradient"
-            android:layout_gravity="bottom"/>
-
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/bottom_sheet_carrier_trip_buttons_layout_margin_bottom">
+            android:orientation="vertical"
+            android:background="@drawable/back_top_rounded"
+            android:gravity="center_horizontal">
 
-            <LinearLayout
-                android:id="@+id/layoutBtnOnMyWay"
-                android:layout_width="wrap_content"
+            <View
+                android:layout_width="@dimen/bottom_sheet_transfer_details_swiped_view_width"
+                android:layout_height="@dimen/bottom_sheet_transfer_details_swiped_view_height"
+                android:layout_marginTop="@dimen/bottom_sheet_transfer_details_swiped_view_margin_top_bottom"
+                android:layout_marginBottom="@dimen/bottom_sheet_transfer_details_swiped_view_margin_top_bottom"
+                android:background="@drawable/rectangle_swipe_down" />
+
+            <include
+                android:id="@+id/transfer_details_header"
+                layout="@layout/transfer_details_header"/>
+
+            <com.kg.gettransfer.presentation.ui.TripAddressesInfoView
+                android:id="@+id/layoutCarrierTripInfo"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/layoutBtnCall"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:layout_weight="1">
+                android:layout_marginTop="@dimen/bottom_sheet_carrier_trip_details_trip_info_item_margin_top"
+                android:layout_marginBottom="@dimen/bottom_sheet_carrier_trip_details_trip_info_item_margin_bottom"/>
 
-                <ImageView
-                    android:id="@+id/btnOnMyWay"
-                    android:layout_width="wrap_content"
+            <com.kg.gettransfer.presentation.ui.custom.TransferMainInfoView
+                android:id="@+id/transfer_details_main"
+                app:distance_title="@string/LNG_RIDE_DISTANCE"
+                app:time_title="@string/LNG_RIDE_TIME"
+                app:price_title="@string/LNG_RIDE_PAYMENT_COST"
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <include
+                android:id="@+id/comment_view"
+                layout="@layout/view_transfer_details_comment"
+                android:visibility="gone"/>
+
+            <RelativeLayout
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_on_my_way_carrier_trip_details"
-                    android:elevation="@dimen/bottom_sheet_carrier_trip_buttons_elevation"/>
+                    app:title_transfer_details="@string/LNG_RIDE_PASSENGERS"
+                    app:input_transfer_details=""/>
 
-                <TextView
+                <com.kg.gettransfer.presentation.ui.custom.SeatsView
+                    android:id="@+id/transfer_details_view_seats"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/bottom_sheet_carrier_trip_details_view_seats_margin_end"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/bottom_sheet_carrier_trip_buttons_text_margin_top"
-                    android:textSize="@dimen/bottom_sheet_carrier_trip_texts_size_12sp"
-                    android:textColor="@color/colorTextBlack"
-                    android:fontFamily="@font/sf_pro_text_semibold"
-                    android:textAllCaps="true"
-                    android:text="@string/LNG_TRIP_ON_MY_WAY"/>
+                    android:layout_height="wrap_content"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/layoutBtnCall"
-                android:layout_width="wrap_content"
+            <include
+                android:id="@+id/layoutAboutRequest"
+                layout="@layout/view_transfer_details_about_request"
+                android:visibility="visible"/>
+
+            <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
+                android:id="@+id/car_model_field"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@+id/layoutBtnOnMyWay"
-                app:layout_constraintEnd_toStartOf="@+id/layoutBtnChat"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/btnCall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_call_carrier_trip_details"
-                    android:elevation="@dimen/bottom_sheet_carrier_trip_buttons_elevation"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/bottom_sheet_carrier_trip_buttons_text_margin_top"
-                    android:textSize="@dimen/bottom_sheet_carrier_trip_texts_size_12sp"
-                    android:textColor="@color/colorTextBlack"
-                    android:fontFamily="@font/sf_pro_text_semibold"
-                    android:textAllCaps="true"
-                    android:text="@string/LNG_PAYMENT_CALL"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layoutBtnChat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@+id/layoutBtnCall"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/btnChat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_chat_carrier_trip_details"
-                    android:elevation="@dimen/bottom_sheet_carrier_trip_buttons_elevation"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/bottom_sheet_carrier_trip_buttons_text_margin_top"
-                    android:textSize="@dimen/bottom_sheet_carrier_trip_texts_size_12sp"
-                    android:textColor="@color/colorTextBlack"
-                    android:fontFamily="@font/sf_pro_text_semibold"
-                    android:textAllCaps="true"
-                    android:text="@string/LNG_PAYMENT_CHAT"/>
-
-            </LinearLayout>
-
-        </android.support.constraint.ConstraintLayout>
-
-    </FrameLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/back_rounded"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
-
-        <View
-            android:layout_width="@dimen/bottom_sheet_carrier_trip_details_swiped_view_width"
-            android:layout_height="@dimen/bottom_sheet_carrier_trip_details_swiped_view_height"
-            android:layout_marginTop="@dimen/bottom_sheet_carrier_trip_details_swiped_view_margin_top_bottom"
-            android:layout_marginBottom="@dimen/bottom_sheet_carrier_trip_details_swiped_view_margin_top_bottom"
-            android:background="@drawable/rectangle_swipe_down" />
-
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/scrollContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fillViewport="true">
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="@dimen/bottom_sheet_carrier_trip_details_free_space_height"/>
 
-                <com.kg.gettransfer.presentation.ui.CarrierTripInfoItem
-                    android:id="@+id/layoutCarrierTripInfo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+        </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/layoutMoreInfo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/bottom_sheet_carrier_trip_layouts_card_view_padding_top"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/bottom_sheet_carrier_trip_element_padding_16dp"
-                        android:textSize="@dimen/bottom_sheet_carrier_trip_texts_size_12sp"
-                        android:fontFamily="@font/sf_pro_text_regular"
-                        android:textColor="@color/color_driver_mode_text_gray"
-                        android:textAllCaps="true"
-                        android:text="@string/LNG_MORE_INFO"/>
-
-                    <android.support.v7.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/bottom_sheet_carrier_trip_layouts_card_view_margin"
-                        app:cardElevation="@dimen/bottom_sheet_carrier_trip_layouts_card_view_elevation"
-                        app:cardCornerRadius="@dimen/bottom_sheet_carrier_trip_layouts_card_view_radius">
-
-                        <include
-                            layout="@layout/view_carrier_trip_details_layout_more_info"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-
-                    </android.support.v7.widget.CardView>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layoutAboutCar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/bottom_sheet_carrier_trip_layouts_card_view_padding_top"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/bottom_sheet_carrier_trip_element_padding_16dp"
-                        android:textSize="@dimen/bottom_sheet_carrier_trip_texts_size_12sp"
-                        android:fontFamily="@font/sf_pro_text_regular"
-                        android:textColor="@color/color_driver_mode_text_gray"
-                        android:textAllCaps="true"
-                        android:text="@string/LNG_ABOUT_CAR"/>
-
-                    <android.support.v7.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/bottom_sheet_carrier_trip_layouts_card_view_margin"
-                        app:cardElevation="@dimen/bottom_sheet_carrier_trip_layouts_card_view_elevation"
-                        app:cardCornerRadius="@dimen/bottom_sheet_carrier_trip_layouts_card_view_radius">
-
-                        <include
-                            layout="@layout/view_carrier_trip_details_layout_about_car"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-
-                    </android.support.v7.widget.CardView>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layoutAboutPassenger"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/bottom_sheet_carrier_trip_layouts_card_view_padding_top"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/bottom_sheet_carrier_trip_element_padding_16dp"
-                        android:textSize="@dimen/bottom_sheet_carrier_trip_texts_size_12sp"
-                        android:fontFamily="@font/sf_pro_text_regular"
-                        android:textColor="@color/color_driver_mode_text_gray"
-                        android:textAllCaps="true"
-                        android:text="@string/LNG_ABOUT_PASSENGER"/>
-
-                    <android.support.v7.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/bottom_sheet_carrier_trip_layouts_card_view_margin"
-                        app:cardElevation="@dimen/bottom_sheet_carrier_trip_layouts_card_view_elevation"
-                        app:cardCornerRadius="@dimen/bottom_sheet_carrier_trip_layouts_card_view_radius">
-
-                        <include
-                            layout="@layout/view_carrier_trip_details_layout_about_passenger"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-
-                    </android.support.v7.widget.CardView>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/btnSupport"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/bottom_sheet_carrier_trip_btn_support_height"
-                    android:background="@drawable/bg_yellow_button_customer_support"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/bottom_sheet_carrier_trip_btn_support_margin_top"
-                    android:layout_marginBottom="@dimen/bottom_sheet_carrier_trip_btn_support_margin_bottom"
-                    android:layout_marginStart="@dimen/bottom_sheet_carrier_trip_btn_support_margin_start_end"
-                    android:layout_marginEnd="@dimen/bottom_sheet_carrier_trip_btn_support_margin_start_end">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/bottom_sheet_carrier_trip_btn_support_img_margin_end"
-                        app:srcCompat="@drawable/ic_question"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/LNG_CUSTOMER_SUPPORT"
-                        android:textColor="@color/colorTextBlack"
-                        android:textSize="@dimen/bottom_sheet_carrier_trip_texts_size_17sp"
-                        android:fontFamily="@font/sf_pro_text_regular"
-                        android:textAllCaps="true"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </android.support.v4.widget.NestedScrollView>
-
-    </LinearLayout>
-
-</LinearLayout>
+</android.support.v4.widget.NestedScrollView>

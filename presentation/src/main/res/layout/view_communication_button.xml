@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_weight="1"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabCustomSize="@dimen/view_communication_button_img_size"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:srcCompat="@drawable/ic_call"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="@dimen/view_communication_button_name_margins"/>
+
+    <TextView
+        android:id="@+id/btnName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/bottom_sheet_carrier_trip_texts_size_12sp"
+        app:layout_constraintTop_toBottomOf="@id/btnImg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/view_communication_button_name_margins"
+        android:gravity="center_horizontal"
+        android:textColor="@color/color_gtr_grey"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:text="@string/LNG_PAYMENT_CHAT"/>
+
+</android.support.constraint.ConstraintLayout>
