@@ -615,5 +615,15 @@
 	<dimen name="panels_corner_radius">5dp</dimen>
 	<dimen name="hourly_icon_borders">2dp</dimen>
 
+	<!-- empty offers-->
+	<dimen name="card_no_offers_margin">8dp</dimen>
+	<dimen name="card_corner_radius">8dp</dimen>
+	<dimen name="card_elevation">3dp</dimen>
+	<dimen name="clock_margin_top">24dp</dimen>
+	<dimen name="text_top_margin_top">17dp</dimen>
+	<dimen name="text_bottom_margin_top">8dp</dimen>
+	<dimen name="text_bottom_margin_bottom">32dp</dimen>
+	<dimen name="text_bottom_margin_left">44dp</dimen>
+	<dimen name="text_bottom_margin_right">44dp</dimen>
 
 </resources>
