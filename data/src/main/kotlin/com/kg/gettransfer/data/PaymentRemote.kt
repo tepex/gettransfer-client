@@ -1,9 +1,6 @@
 package com.kg.gettransfer.data
 
-import com.kg.gettransfer.data.model.PaymentEntity
-import com.kg.gettransfer.data.model.PaymentRequestEntity
-import com.kg.gettransfer.data.model.PaymentStatusEntity
-import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
+import com.kg.gettransfer.data.model.*
 
 import org.koin.standalone.KoinComponent
 

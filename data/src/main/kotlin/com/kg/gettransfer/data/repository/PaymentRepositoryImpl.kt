@@ -1,20 +1,14 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PaymentDataStore
-
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.PaymentDataStoreCache
 import com.kg.gettransfer.data.ds.PaymentDataStoreRemote
 import com.kg.gettransfer.data.mapper.*
-
-import com.kg.gettransfer.data.model.BraintreeTokenEntity
-
 import com.kg.gettransfer.data.model.PaymentEntity
 import com.kg.gettransfer.data.model.PaymentStatusEntity
 import com.kg.gettransfer.domain.model.*
-
 import com.kg.gettransfer.domain.repository.PaymentRepository
-
 import org.koin.standalone.get
 
 class PaymentRepositoryImpl(private val factory: DataStoreFactory<PaymentDataStore, PaymentDataStoreCache, PaymentDataStoreRemote>):

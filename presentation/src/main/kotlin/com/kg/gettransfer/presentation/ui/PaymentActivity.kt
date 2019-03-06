@@ -15,32 +15,17 @@ import android.webkit.WebViewClient
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.braintreepayments.api.BraintreeFragment
-import com.braintreepayments.api.PayPal
-import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
-import com.braintreepayments.api.models.PaymentMethodNonce
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.setUserAgent
-import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
 import com.kg.gettransfer.presentation.presenter.PaymentPresenter
 
 import com.kg.gettransfer.presentation.view.PaymentView
 
 import kotlinx.android.synthetic.main.activity_payment.*
-import com.braintreepayments.api.exceptions.ErrorWithResponse
-import com.braintreepayments.api.exceptions.InvalidArgumentException
 
-import com.braintreepayments.api.interfaces.BraintreeErrorListener
-import com.braintreepayments.api.models.PayPalRequest
-import io.sentry.Sentry
-import java.lang.Exception
-import timber.log.Timber
-
-
-class PaymentActivity: BaseActivity(), PaymentView, PaymentMethodNonceCreatedListener,
-        BraintreeErrorListener {
+class PaymentActivity: BaseActivity(), PaymentView {
     companion object {
         private const val PAYMENT_RESULT_SUCCESSFUL = "/api/payments/successful"
         private const val PAYMENT_RESULT_FAILED = "/api/payments/failed"
@@ -66,39 +51,25 @@ class PaymentActivity: BaseActivity(), PaymentView, PaymentMethodNonceCreatedLis
         setContentView(R.layout.activity_payment)
 
         setToolbar(toolbar as Toolbar, R.string.LNG_PAYMENT)
-        if (presenter.gatewayId == PaymentRequestModel.PAYPAL) {
-            presenter.getBraintreeToken()
-        } else {
-            webView.settings.javaScriptEnabled = true
-            webView.setUserAgent()
-            webView.webViewClient = object: WebViewClient() {
-                @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-                override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                    if(view?.url == null) return true
-                    handleUri(request!!.url)
-                    return false
-                }
-
-                // for pre-lollipop
-                override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                    if(view == null || url == null) return true
-                    handleUri(Uri.parse(url))
-                    return false
-                }
+        webView.settings.javaScriptEnabled = true
+        webView.setUserAgent()
+        webView.webViewClient = object: WebViewClient() {
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                if(view?.url == null) return true
+                handleUri(request!!.url)
+                return false
             }
-            webView.loadUrl(intent.getStringExtra(PaymentView.EXTRA_URL))
-        }
-    }
 
-    override fun setupBraintree(amount: String?, currency: String?) {
-        try {
-            val fragment = BraintreeFragment.newInstance(this, presenter.braintreeToken)
-            val paypal = PayPalRequest(amount)
-                    .currencyCode(currency).intent(PayPalRequest.INTENT_AUTHORIZE)
-            PayPal.requestOneTimePayment(fragment, paypal)
-        } catch (e: InvalidArgumentException) {
-            Sentry.capture(e)
+            // for pre-lollipop
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                if(view == null || url == null) return true
+                handleUri(Uri.parse(url))
+                return false
+            }
         }
+
+        webView.loadUrl(intent.getStringExtra(PaymentView.EXTRA_URL))
     }
 
     private fun handleUri(uri: Uri?) {
@@ -110,24 +81,5 @@ class PaymentActivity: BaseActivity(), PaymentView, PaymentMethodNonceCreatedLis
     private fun changePaymentStatus(uri: Uri?, success: Boolean) {
         val orderId = uri?.getQueryParameter(PG_ORDER_ID)!!.toLong()
         presenter.changePaymentStatus(orderId, success)
-    }
-
-    override fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce?) {
-        val nonce = paymentMethodNonce?.nonce ?: ""
-        presenter.confirmPayment(nonce)
-    }
-
-    override fun onError(error: Exception?) {
-        if (error is ErrorWithResponse) {
-            val cardErrors = error.errorFor("creditCard")
-            if (cardErrors != null) {
-                // There is an issue with the credit card.
-                val expirationMonthError = cardErrors.errorFor("expirationMonth")
-                if (expirationMonthError != null) {
-                    // There is an issue with the expiration month.
-                    Timber.e(expirationMonthError.message)
-                }
-            }
-        }
     }
 }
