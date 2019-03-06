@@ -172,13 +172,13 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     private fun setPointAddress(currentAddress: GTAddress) {
-        lastAddressPoint = pointMapper.toView(currentAddress.cityPoint.point!!)
+        lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)
         onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
         viewState.setMapPoint(lastAddressPoint, true)
         //viewState.setAddressFrom(currentAddress.cityPoint.name!!)
         setAddressInSelectedField(currentAddress.cityPoint.name!!)
 
-        lastAddressPoint = pointMapper.toView(currentAddress.cityPoint.point!!)
+        lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)
     }
 
     fun onCameraMove(lastPoint: LatLng, animateMarker: Boolean) {
@@ -215,7 +215,7 @@ class MainPresenter : BasePresenter<MainView>() {
                 val result = utils.asyncAwait {
                     routeInteractor.getAddressByLocation(
                         systemInteractor.selectedField == FIELD_FROM,
-                        pointMapper.fromView(lastPoint!!),
+                        pointMapper.fromLatLng(lastPoint!!),
                         latLonPair
                     )
                 }
@@ -279,7 +279,7 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     fun onNextClick() {
-        if (routeInteractor.from?.cityPoint != null && (routeInteractor.to?.cityPoint != null || routeInteractor.hourlyDuration != null))
+        if (routeInteractor.isCanCreateOrder())
             router.navigateTo(Screens.CreateOrder)
     }
 

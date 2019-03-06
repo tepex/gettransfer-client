@@ -301,8 +301,8 @@
 	<dimen name="bottom_sheet_transfer_details_support_top_button_margin_top">16dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_support_bottom_button_margin_top_bottom">8dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_support_bottom_layout_buttons_padding_bottom">8dp</dimen>
-	<dimen name="bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom">6dp</dimen>
-	<dimen name="bottom_sheet_transfer_details_table_layout_transport_types_margin_start_end">4dp</dimen>
+	<dimen name="bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom">4dp</dimen>
+	<dimen name="bottom_sheet_transfer_details_table_layout_transport_types_margin_start_end">12dp</dimen>
 
 	<dimen name="view_transfer_details_info_line_min_height">60dp</dimen>
 	<dimen name="view_transfer_details_info_padding_top_bottom_6dp">6dp</dimen>

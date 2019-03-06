@@ -1,74 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/transferDetailsParent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/transferDetailsParent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorWhite">
 
-    <FrameLayout
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_anchor="@+id/sheetTransferDetails"
+        app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.MapCollapseBehavior" />
+
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_for_area_behind_rounded_corners">
-
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/mapView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_transfer_details_behaviour_peek_height"/>
-
-        <View
-            android:id="@+id/viewGradient"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/activity_main_gradient_layout_height"
-            android:background="@drawable/back_status_bar_gradient"
-            android:layout_gravity="top"/>
+        android:layout_gravity="top"
+        android:layout_marginTop="@dimen/activity_main_buttons_margin_top">
 
         <ImageView
             android:id="@+id/btnBack"
             android:layout_width="@dimen/activity_main_buttons_size"
             android:layout_height="@dimen/activity_main_buttons_size"
-            android:layout_gravity="top|start"
-            android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
             android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end"
-            android:clickable="true"
-            android:focusable="true"
-            app:srcCompat="@drawable/ic_circle_back"
             android:background="@drawable/back_circle_white_buttons"
-            android:elevation="2dp"/>
+            android:clickable="true"
+            android:elevation="2dp"
+            android:focusable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_circle_back" />
 
         <ImageView
             android:id="@+id/btnCenterRoute"
             android:layout_width="@dimen/activity_main_buttons_size"
             android:layout_height="@dimen/activity_main_buttons_size"
-            android:layout_gravity="top|end"
-            android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
             android:layout_marginEnd="@dimen/activity_main_buttons_margin_start_end"
-            android:clickable="true"
-            android:focusable="true"
-            app:srcCompat="@drawable/ic_change_route"
             android:background="@drawable/back_circle_white_buttons"
-            android:elevation="2dp"/>
+            android:clickable="true"
+            android:elevation="2dp"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_change_route" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@+id/sheetTransferDetails"
+        app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.CommunicationButtonsLayoutAboveBottomSheetBehavior">
 
         <View
-            android:id="@+id/tintBackground"
+            android:id="@+id/viewGradient"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#99000000"
-            android:visibility="gone"/>
+            android:layout_height="@dimen/activity_main_gradient_layout_height"
+            android:layout_gravity="bottom"
+            android:background="@drawable/back_bottom_sheet_bar_gradient" />
+
+        <include
+            android:id="@+id/topCommunicationButtons"
+            layout="@layout/view_communication_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_carrier_trip_details_top_buttons_margin_bottom" />
 
     </FrameLayout>
 
-    <android.support.design.widget.CoordinatorLayout
+    <include
+        android:id="@+id/sheetTransferDetails"
+        layout="@layout/bottom_sheet_transfer_details"
+        android:visibility="visible" />
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/expended_sheet_order_height">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:elevation="0dp"
+        app:layout_anchor="@+id/sheetTransferDetails"
+        app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.TitleBarBehavior">
 
         <include
-            android:id="@+id/sheetTransferDetails"
-            layout="@layout/bottom_sheet_transfer_details"
-            android:visibility="visible" />
-    </android.support.design.widget.CoordinatorLayout>
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true" />
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:orientation="vertical"
+        app:layout_anchor="@+id/sheetTransferDetails"
+        app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.BottomCommunicationButtonsLayoutBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/activity_carrier_trip_bottom_buttons_layout_shadow_height"
+            android:background="@drawable/shadow" />
+
+        <include
+            android:id="@+id/bottomCommunicationButtons"
+            layout="@layout/view_communication_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.app.ActionBar
 import android.content.Context
 
 import android.os.Build
@@ -8,12 +7,10 @@ import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.v4.content.ContextCompat
-import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.Toolbar
 
 import android.view.View
 import android.view.WindowManager
-import android.widget.LinearLayout
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -136,7 +133,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
                 if(item.base.countChild > 0) {
                     tvCountChildren.text = getString(R.string.X_SIGN).plus("${item.base.countChild}")
                 } else {
-                    imgBaggage.isVisible = false
+                    imgChildSeats.isVisible = false
                     tvCountChildren.isVisible = false
                 }
             }
@@ -146,12 +143,16 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
                 profile.email?.let {email ->
                     initField(passenger_email, email)
                     topCommunicationButtons.btnChat.setOnClickListener { presenter.sendEmail(email, null) }
+                    topCommunicationButtons.btnChat.isVisible = true
                     bottomCommunicationButtons.btnChat.setOnClickListener { presenter.sendEmail(email, null) }
+                    bottomCommunicationButtons.btnChat.isVisible = true
                 }
                 profile.phone?.let { phone ->
                     initField(passenger_phone, phone)
                     topCommunicationButtons.btnCall.setOnClickListener { presenter.callPhone(phone) }
+                    topCommunicationButtons.btnCall.isVisible = true
                     bottomCommunicationButtons.btnCall.setOnClickListener { presenter.callPhone(phone) }
+                    bottomCommunicationButtons.btnCall.isVisible = true
                 }
             }
             base.vehicle.let { initField(car_model_field, it.registrationNumber, it.name) }

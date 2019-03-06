@@ -55,6 +55,7 @@
     <declare-styleable name="CommunicationButton">
         <attr name="btn_img" format="reference"/>
         <attr name="btn_name" format="string"/>
+        <attr name="btn_color" format="color"/>
     </declare-styleable>
 
     <declare-styleable name="CustomBottomSheetBehavior">

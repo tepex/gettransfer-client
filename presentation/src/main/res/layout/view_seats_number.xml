@@ -23,7 +23,7 @@
             android:text=" X 3"/>
 
     <ImageView
-            android:id="@+id/imgBaggage"
+            android:id="@+id/imgChildSeats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"

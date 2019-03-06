@@ -14,7 +14,7 @@ data class GTAddress(
      */
 
     fun isConcreteObject() = if (placeTypes == null || placeTypes.isEmpty()) false
-        else placeTypes.any { (it > 0 && it < 1000) || it == TYPE_STREET_ADDRESS }
+        else placeTypes.any { (it in 1..999) || it == TYPE_STREET_ADDRESS }
 
     fun needApproximation() = if (placeTypes == null || placeTypes.isEmpty()) false
         else placeTypes.any { it == TYPE_ADMINISTRATIVE_AREA_LEVEL_1 || it == TYPE_LOCALITY }

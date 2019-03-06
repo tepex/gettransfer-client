@@ -222,8 +222,8 @@ object Utils : KoinComponent {
                 latLngBuilder.include(mPoints.get(i))
             }
         } else {
-            mPoints.add(pointMapper.toView(routeModel.fromPoint))
-            mPoints.add(pointMapper.toView(routeModel.toPoint))
+            mPoints.add(pointMapper.toLatLng(routeModel.fromPoint))
+            mPoints.add(pointMapper.toLatLng(routeModel.toPoint))
 
             for (i in mPoints.indices) latLngBuilder.include(mPoints.get(i))
         }

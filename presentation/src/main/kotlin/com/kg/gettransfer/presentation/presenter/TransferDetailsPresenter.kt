@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation.presenter
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -16,11 +15,8 @@ import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.model.Coordinate
+import com.kg.gettransfer.domain.model.*
 
-import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.domain.model.RouteInfo
-import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.prefs.PreferencesImpl
 import com.kg.gettransfer.presentation.ui.icons.CarIconResourceProvider
 import com.kg.gettransfer.presentation.delegate.CoordinateRequester
@@ -50,12 +46,17 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private val routeMapper: RouteMapper by inject()
     private val transferMapper: TransferMapper by inject()
     private val reviewRateMapper: ReviewRateMapper by inject()
+    private val cityPointMapper: CityPointMapper by inject()
     private val pointMapper: PointMapper by inject()
 
     private lateinit var transferModel: TransferModel
     private var routeModel: RouteModel? = null
     private var polyline: PolylineModel? = null
     private var track: CameraUpdate? = null
+
+    private var fromPoint: CityPointModel? = null
+    private var toPoint: CityPointModel? = null
+    private var hourlyDuration: Int? = null
 
     internal var transferId = 0L
     private var driverCoordinate: DriverCoordinate? = null
@@ -73,7 +74,11 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
                 val transfer = result.model
-                transfer.from.point?.let { startCoordinate = pointMapper.toView(it) }
+                transfer.from.point?.let { startCoordinate = pointMapper.toLatLng(it) }
+                transfer.from.let { fromPoint = cityPointMapper.toView(it) }
+                transfer.to?.let { toPoint = cityPointMapper.toView(it) }
+                hourlyDuration = transfer.duration
+
                 transferModel = transferMapper.toView(transfer)
                 var offer: Offer? = null
 
@@ -112,6 +117,14 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     fun onCenterRouteClick() { track?.let { viewState.centerRoute(it) } }
 
     fun onCancelRequestClicked() { viewState.showAlertCancelRequest() }
+
+    fun onRepeatTransferClicked() {
+        fromPoint?.let { routeInteractor.from = GTAddress(cityPointMapper.fromView(it), null, null, null, null) }
+        toPoint?.let { routeInteractor.to = GTAddress(cityPointMapper.fromView(it), null, null, null, null) }
+        hourlyDuration?.let { routeInteractor.hourlyDuration = it }
+
+        if (routeInteractor.isCanCreateOrder()) router.navigateTo(Screens.CreateOrder)
+    }
 
     fun onChatClick(){
         router.navigateTo(Screens.Chat(transferId))

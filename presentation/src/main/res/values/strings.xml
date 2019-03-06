@@ -442,6 +442,7 @@
     <string name="LNG_NEW_DRIVER_CHAT_TITLE">Carrier message</string>
     <string name="LNG_UNREAD_MESSAGES_COUNT">%s unread messages</string>
     <string name="LNG_RIDE_CLIENT_NAME">Name</string>
+    <string name="LNG_DETAILS_REPEAT_ROUTE">Repeat transfer</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>
@@ -453,7 +454,7 @@
     <string name="LNG_RIDE_OFFER_CANCELLED">Offer was canceled</string>
     <string name="LNG_RIDE_DATE_RETURN_PLACEHOLDER">I want to order a return transfer</string>
     <string name="LNG_OFFERS_SUPPORT">GetTransfer Support</string>
-    <string name="LNG_BOOK_NOW_PAYMENT_SUCCEESS">We\'ll send you email with data of carrier soon</string>
+    <string name="LNG_BOOK_NOW_PAYMENT_SUCCEESS">We will send you e-mail with carrier information</string>
     <string name="LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION">Download booking voucher?</string>
     <string name="LNG_DOWNLOADING">Downloading</string>
     <string name="LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS">Allow access to download the voucher</string>

@@ -135,6 +135,7 @@ val mappersModule = module {
     single { MessageMapper() }
     single { ChatAccountMapper() }
     single { ChatMapper() }
+    single { CityPointMapper() }
 }
 
 val androidModule = module {

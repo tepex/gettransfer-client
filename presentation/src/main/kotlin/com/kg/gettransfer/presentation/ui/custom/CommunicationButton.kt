@@ -23,6 +23,7 @@ class CommunicationButton @JvmOverloads constructor(
             btnName.text = ta.getString(R.styleable.CommunicationButton_btn_name)
             val drawableResId = ta.getResourceId(R.styleable.CommunicationButton_btn_img, -1)
             btnImg.setImageDrawable(ContextCompat.getDrawable(context, drawableResId))
+            btnImg.backgroundTintList = ta.getColorStateList(R.styleable.CommunicationButton_btn_color)
             ta.recycle()
         }
     }

@@ -77,4 +77,6 @@ class RouteInteractor(private val geoRepository: GeoRepository, private val rout
     }
 
     fun addressFieldsNotNull() = (from != null && to != null && from != to)
+
+    fun isCanCreateOrder() = (from?.cityPoint != null && (to?.cityPoint != null || hourlyDuration != null))
 }
