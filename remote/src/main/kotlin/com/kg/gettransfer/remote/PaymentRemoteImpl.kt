@@ -1,21 +1,9 @@
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.data.PaymentRemote
-
-import com.kg.gettransfer.data.model.PaymentEntity
-import com.kg.gettransfer.data.model.PaymentRequestEntity
-import com.kg.gettransfer.data.model.PaymentStatusEntity
-import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
-
-import com.kg.gettransfer.remote.mapper.PaymentMapper
-import com.kg.gettransfer.remote.mapper.PaymentRequestMapper
-import com.kg.gettransfer.remote.mapper.PaymentStatusMapper
-import com.kg.gettransfer.remote.mapper.PaymentStatusRequestMapper
-
-import com.kg.gettransfer.remote.model.PaymentModel
-import com.kg.gettransfer.remote.model.PaymentStatusRequestModel
-import com.kg.gettransfer.remote.model.PaymentStatusWrapperModel
-import com.kg.gettransfer.remote.model.ResponseModel
+import com.kg.gettransfer.data.model.*
+import com.kg.gettransfer.remote.mapper.*
+import com.kg.gettransfer.remote.model.*
 
 import org.koin.standalone.get
 
