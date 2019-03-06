@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
               android:orientation="horizontal"
               android:gravity="center_vertical"
               android:layout_width="match_parent"
@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="13sp"
                 style="@style/black_semiBold"
-                android:text="5"/>
+                tools:text="5"/>
         <TextView
                 android:id="@+id/tv_number_suffix"
                 android:layout_toEndOf="@+id/tv_years"
@@ -30,7 +30,7 @@
                 android:textSize="9sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="yr"/>
+                tools:text="yr"/>
     </RelativeLayout>
 
 

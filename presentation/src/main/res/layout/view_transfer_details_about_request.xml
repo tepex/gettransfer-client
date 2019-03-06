@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical">
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/flight_number"
@@ -12,8 +12,8 @@
         android:layout_height="wrap_content"
 
         app:title_transfer_details="@string/LNG_RIDE_FLIGHT_PLACEHOLDER"
-        app:input_transfer_details="BA 2243"
-
+        tools:input_transfer_details="BA 2243"
+        tools:visibility="visible"
         android:visibility="gone"/>
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
@@ -22,8 +22,8 @@
         android:layout_height="wrap_content"
 
         app:title_transfer_details="@string/LNG_RIDE_FLIGHT_BACK"
-        app:input_transfer_details="BA 2255"
-
+        tools:input_transfer_details="BA 2255"
+        tools:visibility="visible"
         android:visibility="gone"/>
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
@@ -32,8 +32,8 @@
             android:layout_height="wrap_content"
 
             app:title_transfer_details="@string/LNG_RIDE_NAME"
-            app:input_transfer_details="Smith Family"
-
+            tools:input_transfer_details="Smith Family"
+            tools:visibility="visible"
             android:visibility="gone"/>
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
@@ -42,8 +42,8 @@
             android:layout_height="wrap_content"
 
             app:title_transfer_details="@string/LNG_DRIVER_EMAIL"
-            app:input_transfer_details="example@gmail.com"
-
+            tools:input_transfer_details="example@gmail.com"
+            tools:visibility="visible"
             android:visibility="gone"/>
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
@@ -52,8 +52,8 @@
             android:layout_height="wrap_content"
 
             app:title_transfer_details="@string/LNG_DRIVER_PHONE"
-            app:input_transfer_details="+7 900 123 56 78"
-
+            tools:input_transfer_details="+7 900 123 56 78"
+            tools:visibility="visible"
             android:visibility="gone"/>
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
@@ -62,8 +62,8 @@
         android:layout_height="wrap_content"
 
         app:title_transfer_details="@string/LNG_MENU_TITLE_PROMO"
-        app:input_transfer_details="WINTER7, 7%"
-
+        tools:input_transfer_details="WINTER7, 7%"
+        tools:visibility="visible"
         android:visibility="gone"/>
 
 </LinearLayout>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                                    xmlns:tools="http://schemas.android.com/tools"
                                     android:orientation="horizontal"
                                     style="@style/offerCard"
                                     android:padding="0dp"
@@ -17,7 +18,7 @@
 
         <TextView
                 android:id="@+id/tv_car_model_tiny"
-                android:text="Mercedes-Benz E-Class"
+                tools:text="Mercedes-Benz E-Class"
                 style="@style/black_semiBold"
                 android:textSize="16sp"
                 android:layout_marginStart="8dp"
@@ -39,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:textSize="12sp"
-                android:text="Business"
+                tools:text="Business"
                 style="@style/black_regular"
                 android:layout_below="@id/tv_car_model_tiny"
                 android:layout_toEndOf="@id/img_car_photo_tiny"
@@ -82,7 +83,7 @@
                 android:layout_height="wrap_content">
             <TextView
                     android:id="@+id/tv_price_no_discount"
-                    android:text="(330.00p)"
+                    tools:text="(330.00p)"
                     android:visibility="invisible"
 
                     android:textSize="10sp"
@@ -90,13 +91,10 @@
                     android:layout_height="wrap_content"/>
             <TextView
                     android:id="@+id/tv_price_final"
-                    android:text="220.00p"
+                    tools:text="220.00p"
                     style="@style/black_semiBold"
                     android:textSize="15sp"
                     android:layout_marginStart="12dp"
-
-
-                    android:layout_toEndOf="@id/tv_price_no_discount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
         </LinearLayout>

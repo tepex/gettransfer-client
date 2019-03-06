@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:clipToPadding="true"
-    android:background="@color/colorWhite"
-    android:layout_marginTop="?android:attr/actionBarSize"
-    app:anchorPoint="@dimen/bottom_sheet_carrier_trip_details_bs_anchor_point"
-    app:behavior_hideable="false"
-    app:behavior_peekHeight="@dimen/bottom_sheet_carrier_trip_details_bs_peek_height"
-    app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior"
-    android:fitsSystemWindows="true"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:clipToPadding="true"
+        android:background="@color/colorWhite"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        app:anchorPoint="@dimen/bottom_sheet_carrier_trip_details_bs_anchor_point"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="@dimen/bottom_sheet_carrier_trip_details_bs_peek_height"
+        app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior"
+        android:fitsSystemWindows="true"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -73,11 +73,13 @@
         <include
             android:id="@+id/layoutAboutTransport"
             layout="@layout/view_transfer_details_about_transport_new"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
         <include
             android:id="@+id/layoutAboutDriver"
             layout="@layout/view_transfer_details_about_driver"
+            tools:visibility="visible"
             android:visibility="gone"/>
 
         <RelativeLayout
@@ -104,6 +106,7 @@
         <include
             android:id="@+id/comment_view"
             layout="@layout/view_transfer_details_comment"
+            tools:visibility="visible"
             android:visibility="gone"/>
 
         <include

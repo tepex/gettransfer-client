@@ -13,11 +13,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.PersistableBundle
-
-import android.support.annotation.CallSuper
-import android.support.annotation.IdRes
-import android.support.annotation.NonNull
-import android.support.annotation.StringRes
+import android.support.annotation.*
 
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.content.LocalBroadcastManager
@@ -329,8 +325,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     protected fun clearDim(parent: ViewGroup) = parent.overlay.clear()
 
-    @SuppressLint("ResourceType")
-    protected fun showPopUpWindow(@IdRes res: Int, parent: View): View {
+    protected fun showPopUpWindow(@LayoutRes res: Int, parent: View): View {
         applyDim(window.decorView.rootView as  ViewGroup, DIM_AMOUNT)
         val layoutPopUp = LayoutInflater.from(this).inflate(res, null)
         val widthPx = getScreenSide(false) - 40
