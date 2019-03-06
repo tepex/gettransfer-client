@@ -10,12 +10,15 @@
 
     <color name="nav_item_subtitle">#9b9b9b</color>
 
+    <color name="toolbar_bg">#FBFBFB</color>
+
     <color name="aboutToolbar">#d1f8f8f8</color>
     <color name="ic_selected">#101010</color>
     <color name="ic_unselected">#bbbbbb</color>
 
     <color name="address_item_subtitle">#9b9b9b</color>
     <color name="search_list_title">#9b9b9b</color>
+    <color name="rating_bg">#59181818</color>
 
     <color name="colorBGSecondary">#eeeeee</color>
     <color name="colorBG">#fcfcfc</color>

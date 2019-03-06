@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.adapter
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,7 +53,7 @@ class OffersAdapter(private val offer: List<OfferItem>,
                 when (itemViewType) {
                     OFFER_EXPANDED -> {
                         OfferItemBindDelegate.bindOfferExpanded(this, offerItem)
-                        hangListeners(offer_bottom, imgOffer_mainPhoto, clickListener, offerItem)
+                        hangListeners(offer_bottom.btn_book, imgOffer_mainPhoto, clickListener, offerItem)
                     }
                     OFFER_NO_PHOTO -> {
                         OfferItemBindDelegate.bindOfferNoPhoto(this, offerItem as OfferModel)

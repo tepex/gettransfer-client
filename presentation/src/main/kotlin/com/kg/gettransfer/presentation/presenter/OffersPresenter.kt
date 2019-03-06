@@ -73,7 +73,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
                 if (result.model.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE) router.exit()
                 else {
                     val transferModel = transferMapper.toView(result.model)
-                    viewState.setDate(SystemUtils.formatDateTime(transferModel.dateTime))
                     viewState.setTransfer(transferModel)
                     transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
                     checkNewOffersSuspended(result.model)

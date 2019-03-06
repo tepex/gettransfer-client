@@ -18,6 +18,7 @@ import android.view.View
 
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -46,6 +47,7 @@ import kotlinx.android.synthetic.main.activity_offers.view.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
 import kotlinx.android.synthetic.main.card_empty_offers.*
+import kotlinx.android.synthetic.main.toolbar_nav.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
 
 import timber.log.Timber
@@ -67,14 +69,9 @@ class OffersActivity : BaseActivity(), OffersView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.transferId = intent.getLongExtra(OffersView.EXTRA_TRANSFER_ID, 0)
-
         Timber.d("Start OffersActivity: transfer id: ${presenter.transferId}")
-
         setContentView(R.layout.activity_offers)
-
-        setToolbar(toolbar as Toolbar, R.string.LNG_RIDE_CARRIERS)
-
-        btnCancelRequest.isVisible = true
+        initToolBar()
         initAdapter()
 
 
@@ -87,12 +84,11 @@ class OffersActivity : BaseActivity(), OffersView {
         viewNetworkNotAvailable = textNetworkNotAvailable
 
         initClickListeners()
-        (toolbar as Toolbar).setNavigationOnClickListener { navigateBackWithTransition()  }
+  //      (toolbar as Toolbar).setNavigationOnClickListener { navigateBackWithTransition()  }
     }
 
     private fun initClickListeners() {
-        btnCancelRequest.setOnClickListener               { presenter.onCancelRequestClicked() }
-        layoutTransferRequestInfo.setOnClickListener      { presenter.onRequestInfoClicked() }
+    //    btnCancelRequest.setOnClickListener               { presenter.onCancelRequestClicked() }
         sortYear.setOnClickListener                       { presenter.changeSortType(Sort.YEAR) }
         sortRating.setOnClickListener                     { presenter.changeSortType(Sort.RATING) }
         sortPrice.setOnClickListener                      { presenter.changeSortType(Sort.PRICE) }
@@ -100,6 +96,21 @@ class OffersActivity : BaseActivity(), OffersView {
             presenter.itemsExpanded = !presenter.itemsExpanded!!
             changeViewType()
         }
+    }
+
+    private fun initToolBar() =
+            with(toolbar) {
+                setSupportActionBar(this as Toolbar)
+                btn_back.setOnClickListener { navigateBackWithTransition() }
+                btn_forward.setOnClickListener { presenter.onRequestInfoClicked() }
+            }
+
+
+    private fun initBottomSheet() {
+        bsOfferDetails = BottomSheetBehavior.from(sheetOfferDetails)
+        bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN
+        _tintBackground = tintBackground
+        bsOfferDetails.setBottomSheetCallback(bottomSheetCallback)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -124,18 +135,25 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun setTransfer(transferModel: TransferModel) {
-        layoutTransferRequestInfo.setInfo(transferModel)
+//        layoutTransferRequestInfo.setInfo(transferModel)
+        toolbar.tv_title.text =
+                transferModel.from
+                        .getShortAddress()
+                        .let { from ->
+                            transferModel.to
+                                    ?.let {
+                                        from.plus(" - ").plus(it.getShortAddress())
+                                    } ?: from
+                        }
+        toolbar.tv_subtitle.text = SystemUtils.formatDateTime(transferModel.dateTime)
         fl_drivers_count_text.apply {
-            isVisible = true
             tv_drivers_count.text =
-                    if (transferModel.relevantCarriersCount?:0 > 4)
+                    if (transferModel.relevantCarriersCount ?: 0 > 4)
                         getString(R.string.LNG_RIDE_CONNECT_CARRIERS, transferModel.relevantCarriersCount)
                     else
                         getString(R.string.LNG_RIDE_CONNECT_CARRIERS_NONUM)
         }
     }
-
-    override fun setDate(date: String) { tvOrderDateTime.text = date }
 
     private fun initAdapter() {
         rvOffers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -154,6 +172,7 @@ class OffersActivity : BaseActivity(), OffersView {
             cl_fixPrice.isVisible = true
         } else {
             setAnimation()
+            fl_drivers_count_text.isVisible = true
         }
     }
 
@@ -183,12 +202,12 @@ class OffersActivity : BaseActivity(), OffersView {
         sortRating.isSelected = false
         sortPrice.isSelected  = false
 
-        triangleYear.isVisible   = false
-        triangleRating.isVisible = false
-        trianglePrice.isVisible  = false
+        triangleYear.isInvisible   = true
+        triangleRating.isInvisible = true
+        trianglePrice.isInvisible  = true
     }
 
-    private fun selectSort(layout: LinearLayout, triangleImage: ImageView, higherToLower: Boolean) {
+    private fun selectSort(layout: RelativeLayout, triangleImage: ImageView, higherToLower: Boolean) {
         layout.isSelected = true
         triangleImage.isVisible = true
         if (!higherToLower) triangleImage.rotation = 180f else triangleImage.rotation = 0f

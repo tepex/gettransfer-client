@@ -11,14 +11,20 @@
             android:orientation="vertical">
 
         <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <ImageView
                     android:id="@+id/imgOffer_mainPhoto"
                     android:layout_width="160dp"
-                    android:layout_height="112dp"
-                    android:background="@color/black_a30"
-                    app:srcCompat="@drawable/ic_transport_type_comfort"/>
+                    android:layout_height="112dp"/>
+
+            <View
+                  android:id="@+id/offer_rating_bg"
+                  android:layout_width="160dp"
+                  android:layout_height="24dp"
+                  android:visibility="gone"
+                  android:background="@drawable/bg_offer_rating"
+                  android:layout_alignBottom="@id/imgOffer_mainPhoto"/>
 
             <include
                     android:id="@+id/view_offer_rate"

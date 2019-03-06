@@ -4,6 +4,10 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.bumptech.glide.Glide
+import com.bumptech.glide.GlideBuilder
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.strikeText
@@ -38,10 +42,10 @@ object OfferItemBindDelegate {
                 tv_car_class.text = offer.vehicle.transportType.nameId?.let { context.getString(it) } ?: ""
                 bindCapacity(offer_conditions.view_capacity, offer.vehicle.transportType)
                 bindConveniences(offer_conditions.vehicle_conveniences, offer)
-                bindRating(view_offer_rate, offer.carrier.ratings, offer.carrier.approved)
+                bindRating(view_offer_rate, offer.carrier.ratings, offer.carrier.approved).also { offer_rating_bg.isVisible = it }
                 bindLanguages(singleLineContainer = driver_abilities.languages_container, languages = offer.carrier.languages)
                 bindPrice(offer_bottom, offer.price.base, offer.price.withoutDiscount)
-                bindMainPhoto(imgOffer_mainPhoto, view, offer.vehicle.photos.first())
+                bindMainPhoto(imgOffer_mainPhoto, view, path = offer.vehicle.photos.first())
             }
 
     private fun bindBookNow(offer: BookNowOfferModel, view: View) {
@@ -51,7 +55,8 @@ object OfferItemBindDelegate {
             bindLanguages(singleLineContainer = driver_abilities.languages_container, languages = listOf(LocaleModel.ENG_LOCALE))
             bindRating(view_offer_rate, RatingsModel.BOOK_NOW_RATING)
             bindPrice(offer_bottom, offer.base)
-            imgOffer_mainPhoto.setImageResource(TransportTypeMapper.getImageById(offer.transportType.id))
+     //       imgOffer_mainPhoto.setImageResource(TransportTypeMapper.getImageById(offer.transportType.id))
+            bindMainPhoto(imgOffer_mainPhoto, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
         }
     }
 
@@ -77,8 +82,8 @@ object OfferItemBindDelegate {
             tv_car_class_tiny.text = offer.vehicle.transportType.nameId?.let { context.getString(it) ?: "" }
             offer.vehicle.photos.firstOrNull()
                     .also {
-                        if (it != null) bindMainPhoto(img_car_photo_tiny, view, it)
-                        else img_car_photo_tiny.setImageResource(R.drawable.ic_empty_car)
+                        if (it != null) bindMainPhoto(img_car_photo_tiny, view, path = it)
+                        else bindMainPhoto(img_car_photo_tiny, view, resource = R.drawable.ic_empty_car)
                     }
             bindRating(view_rat_tiny, offer.carrier.ratings, offer.carrier.approved)
             bindLanguages(multiLineContainer = languages_container_tiny, languages = offer.carrier.languages)
@@ -102,14 +107,16 @@ object OfferItemBindDelegate {
                 /* imgGreen.isVisible = offer.green */
             }
 
-    private fun bindRating(rateView: View, rating: RatingsModel, approved: Boolean = false) =
+    private fun bindRating(rateView: View, rating: RatingsModel, approved: Boolean = false): Boolean =
             with(rateView) {
                 if (rating.average != null && rating.average != NO_RATING) {
                     imgApproved.isVisible     = approved
                     tv_drivers_rate.text      = "(".plus(rating.average).plus(")")
                     tv_drivers_rate.isVisible = true
                     imgStar.isVisible         = true
+                    return@with RATE_SHOWN
                 }
+                return@with !RATE_SHOWN
             }
 
     private fun bindLanguages(singleLineContainer: LinearLayout? = null, multiLineContainer: LinearLayout? = null, languages: List<LocaleModel>) {
@@ -131,9 +138,16 @@ object OfferItemBindDelegate {
                 }
             }
 
-    private fun bindMainPhoto(view: ImageView, parent: View, photo: String) =
-            Glide.with(parent).load(photo).into(view)
+    private fun bindMainPhoto(view: ImageView, parent: View, path: String? = null, resource: Int = 0) =
+            Glide.with(parent)
+                    .let {
+                        if (path != null) it.load(path)
+                        else it.load(resource) }
+                    .apply(RequestOptions().transforms(CenterCrop(), RoundedCorners(Utils.dpToPxInt(parent.context, PHOTO_CORNER))))
+                    .into(view)
 
 
     private const val NO_RATING     = 0.0F
+    private const val PHOTO_CORNER  = 8F
+    private const val RATE_SHOWN    = true
 }
