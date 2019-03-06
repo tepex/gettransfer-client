@@ -11,6 +11,7 @@ import com.kg.gettransfer.presentation.model.OfferItem
 import com.kg.gettransfer.presentation.model.OfferModel
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.offer_expanded.view.*
+import kotlinx.android.synthetic.main.offer_expanded_no_photo.view.*
 import kotlinx.android.synthetic.main.offer_tiny.view.*
 import kotlinx.android.synthetic.main.view_offer_bottom.view.*
 
@@ -57,7 +58,7 @@ class OffersAdapter(private val offer: List<OfferItem>,
                     }
                     OFFER_NO_PHOTO -> {
                         OfferItemBindDelegate.bindOfferNoPhoto(this, offerItem as OfferModel)
-                        containerView.offer_bottom.btn_book.setOnClickListener { clickListener(offerItem, false) }
+                        containerView.offer_bottom_noPhoto.btn_book.setOnClickListener { clickListener(offerItem, false) }
                         /*  set listener to view to open bottom sheet  */
                     }
                     else           -> {
@@ -65,7 +66,7 @@ class OffersAdapter(private val offer: List<OfferItem>,
                         hangListeners(btn_book_tiny, img_car_photo_tiny, clickListener, offerItem)
                     }
                 }
-                setOnClickListener { clickListener(offerItem, false) }
+                setOnClickListener { clickListener(offerItem, true) }
             }
         }
 

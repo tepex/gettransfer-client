@@ -181,6 +181,7 @@ class OffersActivity : BaseActivity(), OffersView {
         noOffers.isVisible = true
         val drawable = ivClock.drawable as Animatable
         drawable.start()
+    }
 
     private fun changeViewType() {
         (rvOffers.adapter as OffersAdapter).changeItemRepresentation()
@@ -389,10 +390,6 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun addNewOffer(offer: OfferModel) { (rvOffers.adapter as OffersRVAdapter).add(offer) }
-
-    companion object {
-        val ACTION_NEW_OFFER = "${OffersActivity::class.java.name}.offer"
-    }
 
     override fun setError(e: ApiException) {
         if (e.code != ApiException.NETWORK_ERROR) Utils.showError(this, true, e.details)

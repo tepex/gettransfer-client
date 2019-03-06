@@ -4,7 +4,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.bumptech.glide.Glide
-import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -24,7 +23,6 @@ import kotlinx.android.synthetic.main.view_offer_conditions.view.*
 import kotlinx.android.synthetic.main.view_offer_driver_info.view.*
 import kotlinx.android.synthetic.main.view_offer_header.view.*
 import kotlinx.android.synthetic.main.view_offer_rating.view.*
-import kotlinx.android.synthetic.main.view_transfer_details_about_transport_new.view.*
 import kotlinx.android.synthetic.main.view_transport_capacity.view.*
 
 object OfferItemBindDelegate {
@@ -65,7 +63,7 @@ object OfferItemBindDelegate {
             offer_header_noPhoto.tv_car_model_.text = offer.vehicle.name
             tv_transport_class.text = offer.vehicle.transportType.nameId?.let { context.getString(it) } ?: ""
             bindCapacity(offer_conditions_noPhoto.view_capacity, offer.vehicle.transportType)
-            bindConveniences(offer_conditions_noPhoto.view_conveniences, offer)
+            bindConveniences(offer_conditions_noPhoto.vehicle_conveniences, offer)
             bindRating(view_offer_rate_noPhoto, offer.carrier.ratings, offer.carrier.approved)
             bindLanguages(singleLineContainer = driver_abilities_noPhoto.languages_container, languages = offer.carrier.languages)
             bindPrice(offer_bottom_noPhoto, offer.price.base, offer.price.withoutDiscount)
