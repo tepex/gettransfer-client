@@ -25,6 +25,7 @@ class PaymentRemoteImpl : PaymentRemote {
     private val paymentMapper              = get<PaymentMapper>()
     private val paymentStatusRequestMapper = get<PaymentStatusRequestMapper>()
     private val paymentStatusMapper        = get<PaymentStatusMapper>()
+    private val braintreeTokenMapper       = get<BraintreeTokenMapper>()
 
     override suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity {
         //val response: ResponseModel<PaymentModel> = tryCreatePayment(paymentRequestMapper.toRemote(paymentRequest))
@@ -51,6 +52,18 @@ class PaymentRemoteImpl : PaymentRemote {
         val paymentStatusRequestRemote = paymentStatusRequestMapper.toRemote(paymentStatusRequest)
         val response: ResponseModel<PaymentStatusWrapperModel> = core.tryTwice {
             core.api.changePaymentStatus(status, paymentStatusRequestRemote.pgOrderId!!, paymentStatusRequestRemote.withoutRedirect!!)
+        }
+        return paymentStatusMapper.fromRemote(response.data!!.payment)
+    }
+
+    override suspend fun getBraintreeToken(): BraintreeTokenEntity {
+        val responce: ResponseModel<BraintreeTokenModel> = core.tryTwice { core.api.getBraintreeToken() }
+        return braintreeTokenMapper.fromRemote(responce.data!!)
+    }
+
+    override suspend fun confirmPaypal(paymentId: Long, nonce: String): PaymentStatusEntity {
+        val response: ResponseModel<PaymentStatusWrapperModel> = core.tryTwice {
+            core.api.confirmPaypal(paymentId, nonce)
         }
         return paymentStatusMapper.fromRemote(response.data!!.payment)
     }

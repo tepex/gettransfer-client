@@ -10,4 +10,6 @@ import org.koin.standalone.KoinComponent
 interface PaymentDataStore: KoinComponent {
     suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity
     suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequestEntity): PaymentStatusEntity
+    suspend fun getBraintreeToken() : BraintreeTokenEntity
+    suspend fun confirmPaypal(paymentId: Long, nonce: String): PaymentStatusEntity
 }
