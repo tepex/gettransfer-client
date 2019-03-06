@@ -8,4 +8,6 @@ interface OfferRepository {
     suspend fun getOffersCached(id: Long): Result<List<Offer>>
     fun newOffer(offer: Offer): Result<Offer>
     fun clearOffersCache()
+
+    var offerViewExpanded: Boolean
 }

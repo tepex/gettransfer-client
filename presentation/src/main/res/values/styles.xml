@@ -187,6 +187,21 @@
         <item name="android:background">@color/color_transfer_details_vertical_divider</item>
     </style>
 
+    <!-- OFFERS -->
+    <style name="black_semiBold">
+        <item name="android:textColor">@color/colorTextBlack</item>
+        <item name="android:fontFamily">@font/sf_pro_text_semibold</item>
+    </style>
+    <style name="black_regular">
+        <item name="android:textColor">@color/colorTextBlack</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+
+    <style name="offerCard" parent="Base.CardView">
+        <item name="android:layout_margin">@dimen/card_view_margin</item>
+        <item name="cardCornerRadius">@dimen/card_view_corners</item>
+    </style>
+
     <!--<style name="etField" parent="Base.V7.Widget.AppCompat.EditText">-->
     <!--<item name="android:background">@android:color/transparent</item>-->
 

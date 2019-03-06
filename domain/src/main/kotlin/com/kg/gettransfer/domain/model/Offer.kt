@@ -8,6 +8,7 @@ data class Offer(
     val status: String,
     val wifi: Boolean,
     val refreshments: Boolean,
+    val charger: Boolean,
     val createdAt: Date,
     val updatedAt: Date?,
     val price: Price,

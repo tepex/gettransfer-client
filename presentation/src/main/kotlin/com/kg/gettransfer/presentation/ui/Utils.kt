@@ -404,6 +404,9 @@ object Utils : KoinComponent {
     fun convertDpToPixels(context: Context, dp: Float) =
         dp * context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT
 
+    fun dpToPxInt(context: Context, dp: Float) =
+            convertDpToPixels(context, dp).toInt()
+
 /*
         fun isConnectedToInternet(context: Context?): Boolean {
             try {

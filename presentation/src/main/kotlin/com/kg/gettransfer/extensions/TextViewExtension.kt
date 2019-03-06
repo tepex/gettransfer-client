@@ -1,0 +1,11 @@
+package com.kg.gettransfer.extensions
+
+import android.graphics.Paint
+import android.widget.TextView
+
+inline var TextView.strikeText: String
+    get() = text.toString()
+    set(value) {
+        paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        text = value
+    }

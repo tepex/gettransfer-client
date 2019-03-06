@@ -56,6 +56,7 @@ import kotlinx.android.synthetic.main.view_transfer_details_about_request.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_transport.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //don't delete
 
+
 import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
 import kotlinx.android.synthetic.main.view_rate_in_store.view.*
@@ -274,7 +275,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     }
 
     private fun setBookNow(transfer: TransferModel){
-        if (transfer.bookNowOffers.isNotEmpty()) {
+        if (transfer.paidPercentage != 0 && transfer.bookNow != null) {
             tv_bookNow_info.isVisible = true
         }
     }

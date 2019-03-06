@@ -1,6 +1,7 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.OfferDataStore
+import com.kg.gettransfer.data.PreferencesCache
 
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.OfferDataStoreCache
@@ -25,7 +26,12 @@ class OfferRepositoryImpl(private val factory: DataStoreFactory<OfferDataStore, 
     BaseRepository(), OfferRepository {
 
     private val mapper = get<OfferMapper>()
+    private val preferencesCache = get<PreferencesCache>()
     private val offerReceiver: OfferInteractor by inject()
+
+    override var offerViewExpanded: Boolean
+        get() = preferencesCache.offerViewExpanded
+        set(value) { preferencesCache.offerViewExpanded = value }
 
     override fun newOffer(offer: Offer): Result<Offer> {
         log.debug("OfferRepository.newOffer: $offer")

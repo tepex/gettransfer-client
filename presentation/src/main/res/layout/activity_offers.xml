@@ -134,24 +134,34 @@
                 </android.support.constraint.ConstraintLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/activity_offers_sorted_layout_height"
-                    android:background="@color/colorBack"
-                    android:orientation="horizontal"
-                    android:paddingStart="@dimen/activity_offers_sorted_layout_padding_start_end"
-                    android:paddingTop="@dimen/activity_offers_sorted_layout_padding_top_bottom"
-                    android:paddingEnd="@dimen/activity_offers_sorted_layout_padding_start_end"
-                    android:paddingBottom="@dimen/activity_offers_sorted_layout_padding_top_bottom">
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/activity_offers_sorted_layout_height"
+                        android:orientation="horizontal"
+                        android:background="@color/colorBack"
+                        android:paddingTop="@dimen/activity_offers_sorted_layout_padding_top_bottom"
+                        android:paddingBottom="@dimen/activity_offers_sorted_layout_padding_top_bottom"
+                        android:paddingStart="@dimen/activity_offers_sorted_layout_padding_start"
+                        android:paddingEnd="@dimen/activity_offers_sorted_layout_padding_start_end">
+
+                    <ImageView
+                            android:id="@+id/img_changeListType"
+                            android:layout_width="30dp"
+                            android:layout_height="25dp"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:layout_gravity="center_vertical"
+                            app:srcCompat="@drawable/ic_offers_expanded"/>
 
                     <LinearLayout
-                        android:id="@+id/sortYear"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="@dimen/activity_offers_sorted_layout_left_right_elements_margin_side"
-                        android:layout_weight="1"
-                        android:background="@drawable/back_sorted_layouts"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+                            android:id="@+id/sortYear"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="@dimen/activity_offers_sorted_layout_left_right_elements_margin_side"
+                            android:layout_marginStart="10dp"
+                            android:gravity="center"
+                            android:background="@drawable/back_sorted_layouts">
 
                         <TextView
                             android:layout_width="wrap_content"

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                                    android:orientation="horizontal"
+                                    style="@style/offerCard"
+                                    android:padding="0dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    android:paddingTop="8dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/btn_container">
+
+        <TextView
+                android:id="@+id/tv_car_model_tiny"
+                android:text="Mercedes-Benz E-Class"
+                style="@style/black_semiBold"
+                android:textSize="16sp"
+                android:layout_marginStart="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <ImageView
+                android:id="@+id/img_car_photo_tiny"
+                android:layout_width="72dp"
+                android:layout_marginStart="-3dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/tv_car_model_tiny"
+                android:layout_marginTop="5dp"
+                app:srcCompat="@drawable/ic_transport_type_comfort"/>
+
+        <TextView
+                android:id="@+id/tv_car_class_tiny"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textSize="12sp"
+                android:text="Business"
+                style="@style/black_regular"
+                android:layout_below="@id/tv_car_model_tiny"
+                android:layout_toEndOf="@id/img_car_photo_tiny"
+        />
+
+        <LinearLayout
+                android:id="@+id/languages_container_tiny"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/tv_car_class_tiny"
+                android:layout_alignTop="@+id/tv_car_class_tiny"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="6dp"
+                android:orientation="vertical"/>
+
+        <include
+            android:id="@+id/view_rat_tiny"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@id/img_car_photo_tiny"
+            android:layout_below="@id/tv_car_class_tiny"
+            layout="@layout/view_offer_rating"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+            android:id="@+id/btn_container"
+            android:layout_width="146dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+
+            android:layout_alignParentEnd="true">
+        <LinearLayout
+                android:id="@+id/ll_prices"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:id="@+id/tv_price_no_discount"
+                    android:text="(330.00p)"
+                    android:visibility="invisible"
+
+                    android:textSize="10sp"
+                    android:layout_width="45dp"
+                    android:layout_height="wrap_content"/>
+            <TextView
+                    android:id="@+id/tv_price_final"
+                    android:text="220.00p"
+                    style="@style/black_semiBold"
+                    android:textSize="15sp"
+                    android:layout_marginStart="12dp"
+
+
+                    android:layout_toEndOf="@id/tv_price_no_discount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <include
+                android:id="@+id/btn_book_tiny"
+                layout="@layout/btn_book"
+                android:layout_marginTop="4dp"
+                android:layout_below="@id/ll_prices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+    </RelativeLayout>
+  </RelativeLayout>
+</android.support.v7.widget.CardView>

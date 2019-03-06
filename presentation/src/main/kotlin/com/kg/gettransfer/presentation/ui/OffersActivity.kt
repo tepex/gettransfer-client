@@ -27,6 +27,7 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.extensions.*
+import com.kg.gettransfer.presentation.adapter.OffersAdapter
 
 import com.kg.gettransfer.presentation.adapter.OffersRVAdapter
 import com.kg.gettransfer.presentation.adapter.VehiclePhotosVPAdapter
@@ -74,7 +75,8 @@ class OffersActivity : BaseActivity(), OffersView {
         setToolbar(toolbar as Toolbar, R.string.LNG_RIDE_CARRIERS)
 
         btnCancelRequest.isVisible = true
-        rvOffers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        initAdapter()
+
 
         bsOfferDetails = BottomSheetBehavior.from(sheetOfferDetails)
         bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN
@@ -84,12 +86,20 @@ class OffersActivity : BaseActivity(), OffersView {
 
         viewNetworkNotAvailable = textNetworkNotAvailable
 
+        initClickListeners()
+        (toolbar as Toolbar).setNavigationOnClickListener { navigateBackWithTransition()  }
+    }
+
+    private fun initClickListeners() {
         btnCancelRequest.setOnClickListener               { presenter.onCancelRequestClicked() }
         layoutTransferRequestInfo.setOnClickListener      { presenter.onRequestInfoClicked() }
         sortYear.setOnClickListener                       { presenter.changeSortType(Sort.YEAR) }
         sortRating.setOnClickListener                     { presenter.changeSortType(Sort.RATING) }
         sortPrice.setOnClickListener                      { presenter.changeSortType(Sort.PRICE) }
-        (toolbar as Toolbar).setNavigationOnClickListener { navigateBackWithTransition()  }
+        img_changeListType.setOnClickListener             {
+            presenter.itemsExpanded = !presenter.itemsExpanded!!
+            changeViewType()
+        }
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -127,10 +137,17 @@ class OffersActivity : BaseActivity(), OffersView {
 
     override fun setDate(date: String) { tvOrderDateTime.text = date }
 
+    private fun initAdapter() {
+        rvOffers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        OffersAdapter.viewType =
+                if (presenter.itemsExpanded!!) OffersAdapter.Companion.PRESENTATION.EXPANDED
+                else OffersAdapter.Companion.PRESENTATION.TINY
+    }
     override fun setOffers(offers: List<OfferItem>) {
         hideSheetOfferDetails()
-        rvOffers.adapter = OffersRVAdapter(offers.toMutableList(), textNetworkNotAvailable.isVisible) { offer, isShowingOfferDetails ->
-            presenter.onSelectOfferClicked(offer, isShowingOfferDetails) }
+        rvOffers.adapter = OffersAdapter(offers.toMutableList()) { offer, showDetails -> presenter.onSelectOfferClicked(offer, showDetails) }
+//        rvOffers.adapter = OffersRVAdapter(offers.toMutableList(), textNetworkNotAvailable.isVisible) { offer, isShowingOfferDetails ->
+//            presenter.onSelectOfferClicked(offer, isShowingOfferDetails) }
         if (offers.isNotEmpty()) {
             noOffers.isVisible = false
             fl_drivers_count_text.isVisible = false
@@ -140,10 +157,16 @@ class OffersActivity : BaseActivity(), OffersView {
         }
     }
 
+
     private fun setAnimation() {
         noOffers.isVisible = true
         val drawable = ivClock.drawable as Animatable
         drawable.start()
+
+    private fun changeViewType() {
+        (rvOffers.adapter as OffersAdapter).changeItemRepresentation()
+        (if (presenter.itemsExpanded!!) R.drawable.ic_offers_expanded
+        else R.drawable.ic_offers_tiny).also { img_changeListType.setImageResource(it) }
     }
 
     override fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean) {

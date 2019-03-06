@@ -6,19 +6,20 @@ import kotlinx.serialization.SerialName
 
 @Serializable
 data class OfferEntity(
-    @SerialName(ID) val id: Long,
+    @SerialName(ID)                    val id: Long,
     @Optional @SerialName(TRANSFER_ID) var transferId: Long? = null,
-    @SerialName(STATUS) val status: String,
-    @SerialName(WIFI) val wifi: Boolean,
-    @SerialName(REFRESHMENTS) val refreshments: Boolean,
-    @SerialName(CREATED_AT) val createdAt: String,
-    @SerialName(UPDATED_AT) val updatedAt: String?,
-    @SerialName(PRICE) val price: PriceEntity,
-    @SerialName(RATINGS) val ratings: RatingsEntity?,
+    @SerialName(STATUS)                val status: String,
+    @SerialName(WIFI)                  val wifi: Boolean,
+    @SerialName(REFRESHMENTS)          val refreshments: Boolean,
+    @SerialName(CHARGER)               val charger: Boolean,
+    @SerialName(CREATED_AT)            val createdAt: String,
+    @SerialName(UPDATED_AT)            val updatedAt: String?,
+    @SerialName(PRICE)                 val price: PriceEntity,
+    @SerialName(RATINGS)               val ratings: RatingsEntity?,
     @Optional @SerialName(PASSENGER_FEEDBACK) val passengerFeedback: String? = null,
-    @SerialName(CARRIER) val carrier: CarrierEntity,
-    @SerialName(VEHICLE) val vehicle: VehicleEntity,
-    @Optional @SerialName(DRIVER) val driver: ProfileEntity? = null
+    @SerialName(CARRIER)               val carrier: CarrierEntity,
+    @SerialName(VEHICLE)               val vehicle: VehicleEntity,
+    @Optional @SerialName(DRIVER)      val driver: ProfileEntity? = null
 ) {
 
     companion object {
@@ -36,5 +37,6 @@ data class OfferEntity(
         const val CARRIER            = "carrier"
         const val VEHICLE            = "vehicle"
         const val DRIVER             = "driver"
+        const val CHARGER            = "charger"
     }
 }

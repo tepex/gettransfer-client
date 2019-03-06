@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                                    style="@style/offerCard"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <ImageView
+                    android:id="@+id/imgOffer_mainPhoto"
+                    android:layout_width="160dp"
+                    android:layout_height="112dp"
+                    android:background="@color/black_a30"
+                    app:srcCompat="@drawable/ic_transport_type_comfort"/>
+
+            <include
+                    android:id="@+id/view_offer_rate"
+                    layout="@layout/view_offer_rating"
+                    android:layout_alignBottom="@id/imgOffer_mainPhoto"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/tv_car_model"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginStart="9dp"
+                    android:textSize="15sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/black_semiBold"
+                    android:layout_toEndOf="@id/imgOffer_mainPhoto"
+                    android:text="Ma best Mercedes"/>
+            <TextView
+                    android:id="@+id/tv_car_class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="9dp"
+                    android:layout_marginTop="7dp"
+                    android:text="Business"
+                    android:textSize="12sp"
+                    android:layout_above="@id/offer_conditions"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    style="@style/black_semiBold"
+                    android:layout_toEndOf="@id/imgOffer_mainPhoto"/>
+
+            <include
+                    android:id="@+id/offer_conditions"
+                    layout="@layout/view_offer_conditions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="9dp"
+                    android:layout_alignBottom="@+id/imgOffer_mainPhoto"
+                    android:layout_toEndOf="@+id/imgOffer_mainPhoto"/>
+
+
+        </RelativeLayout>
+
+        <include
+                android:id="@+id/driver_abilities"
+                layout="@layout/view_offer_driver_info"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <include
+                android:id="@+id/offer_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                layout="@layout/view_offer_bottom"/>
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

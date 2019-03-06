@@ -1,0 +1,139 @@
+package com.kg.gettransfer.presentation.delegate
+
+import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import com.bumptech.glide.Glide
+import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.strikeText
+import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
+import com.kg.gettransfer.presentation.model.*
+import com.kg.gettransfer.presentation.ui.Utils
+import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
+import kotlinx.android.synthetic.main.offer_expanded.view.*
+import kotlinx.android.synthetic.main.offer_expanded_no_photo.view.*
+import kotlinx.android.synthetic.main.offer_tiny.view.*
+import kotlinx.android.synthetic.main.vehicle_items.view.*
+import kotlinx.android.synthetic.main.view_offer_bottom.view.*
+import kotlinx.android.synthetic.main.view_offer_conditions.view.*
+import kotlinx.android.synthetic.main.view_offer_driver_info.view.*
+import kotlinx.android.synthetic.main.view_offer_header.view.*
+import kotlinx.android.synthetic.main.view_offer_rating.view.*
+import kotlinx.android.synthetic.main.view_transfer_details_about_transport_new.view.*
+import kotlinx.android.synthetic.main.view_transport_capacity.view.*
+
+object OfferItemBindDelegate {
+
+    fun bindOfferExpanded(view: View, offer: OfferItem) {
+        if (offer is OfferModel) bindOfferModel(offer, view)
+        if (offer is BookNowOfferModel) bindBookNow(offer, view)
+    }
+
+    private fun bindOfferModel(offer: OfferModel, view: View) =
+            with(view) {
+                tv_car_model.text =
+                        if (offer.vehicle.color != null) Utils.getVehicleNameWithColor(context, offer.vehicle.name, offer.vehicle.color)
+                        else offer.vehicle.name
+                tv_car_class.text = offer.vehicle.transportType.nameId?.let { context.getString(it) } ?: ""
+                bindCapacity(offer_conditions.view_capacity, offer.vehicle.transportType)
+                bindConveniences(offer_conditions.vehicle_conveniences, offer)
+                bindRating(view_offer_rate, offer.carrier.ratings, offer.carrier.approved)
+                bindLanguages(singleLineContainer = driver_abilities.languages_container, languages = offer.carrier.languages)
+                bindPrice(offer_bottom, offer.price.base, offer.price.withoutDiscount)
+                bindMainPhoto(imgOffer_mainPhoto, view, offer.vehicle.photos.first())
+            }
+
+    private fun bindBookNow(offer: BookNowOfferModel, view: View) {
+        with(view) {
+            tv_car_model.text = context.getString(TransportTypeMapper.getModelsById(offer.transportType.id))
+            tv_car_class.text = offer.transportType.nameId?.let { context.getString(it) } ?: ""
+            bindLanguages(singleLineContainer = driver_abilities.languages_container, languages = listOf(LocaleModel.ENG_LOCALE))
+            bindRating(view_offer_rate, RatingsModel.BOOK_NOW_RATING)
+            bindPrice(offer_bottom, offer.base)
+            imgOffer_mainPhoto.setImageResource(TransportTypeMapper.getImageById(offer.transportType.id))
+        }
+    }
+
+    fun bindOfferNoPhoto(view: View, offer: OfferModel) {
+        with(view) {
+            offer_header_noPhoto.tv_car_model_.text = offer.vehicle.name
+            tv_transport_class.text = offer.vehicle.transportType.nameId?.let { context.getString(it) } ?: ""
+            bindCapacity(offer_conditions_noPhoto.view_capacity, offer.vehicle.transportType)
+            bindConveniences(offer_conditions_noPhoto.view_conveniences, offer)
+            bindRating(view_offer_rate_noPhoto, offer.carrier.ratings, offer.carrier.approved)
+            bindLanguages(singleLineContainer = driver_abilities_noPhoto.languages_container, languages = offer.carrier.languages)
+            bindPrice(offer_bottom_noPhoto, offer.price.base, offer.price.withoutDiscount)
+        }
+
+    }
+
+
+    fun bindOfferTiny(view: View, offer: OfferModel) {
+        with(view) {
+            tv_car_model_tiny.text =
+                    if (offer.vehicle.color != null) Utils.getVehicleNameWithColor(view.context, offer.vehicle.name, offer.vehicle.color)
+                    else offer.vehicle.name
+            tv_car_class_tiny.text = offer.vehicle.transportType.nameId?.let { context.getString(it) ?: "" }
+            offer.vehicle.photos.firstOrNull()
+                    .also {
+                        if (it != null) bindMainPhoto(img_car_photo_tiny, view, it)
+                        else img_car_photo_tiny.setImageResource(R.drawable.ic_empty_car)
+                    }
+            bindRating(view_rat_tiny, offer.carrier.ratings, offer.carrier.approved)
+            bindLanguages(multiLineContainer = languages_container_tiny, languages = offer.carrier.languages)
+            offer.price.withoutDiscount?.let { tv_price_no_discount.strikeText = it.preferred ?: it.def }
+            tv_price_final.text = offer.price.base.preferred ?: offer.price.base.def
+        }
+    }
+
+
+    private fun bindCapacity(capacityView: View, transportTypeModel: TransportTypeModel) =
+            with(capacityView) {
+                transportType_сountPassengers.text = "x".plus(transportTypeModel.paxMax)
+                transportType_сountBaggage.text    = "x".plus(transportTypeModel.luggageMax)
+            }
+
+    private fun bindConveniences(conveniencesView: View, offer: OfferModel) =
+            with(conveniencesView) {
+                imgFreeWiFi.isVisible  = offer.wifi
+                imgCharge.isVisible    = offer.charger
+                imgFreeWater.isVisible = offer.refreshments
+                /* imgGreen.isVisible = offer.green */
+            }
+
+    private fun bindRating(rateView: View, rating: RatingsModel, approved: Boolean = false) =
+            with(rateView) {
+                if (rating.average != null && rating.average != NO_RATING) {
+                    imgApproved.isVisible     = approved
+                    tv_drivers_rate.text      = "(".plus(rating.average).plus(")")
+                    tv_drivers_rate.isVisible = true
+                    imgStar.isVisible         = true
+                }
+            }
+
+    private fun bindLanguages(singleLineContainer: LinearLayout? = null, multiLineContainer: LinearLayout? = null, languages: List<LocaleModel>) {
+
+        if (singleLineContainer == null && multiLineContainer == null)
+            throw IllegalArgumentException("One of containers must not be null in ${this::class.java.name}")
+
+        if (singleLineContainer != null) LanguageDrawer.drawSingleLine(singleLineContainer, languages = languages)
+        else LanguageDrawer.drawMultipleLine(multiLineContainer!!, languages = languages)
+
+    }
+
+    private fun bindPrice(viewWithPrice: View, base: MoneyModel, withoutDiscount: MoneyModel? = null) =
+            with(viewWithPrice) {
+                tv_current_price.text = base.preferred ?: base.def
+                withoutDiscount?.let {
+                    tv_old_price.strikeText = it.preferred ?: it.def
+                    tv_old_price.isVisible = true
+                }
+            }
+
+    private fun bindMainPhoto(view: ImageView, parent: View, photo: String) =
+            Glide.with(parent).load(photo).into(view)
+
+
+    private const val NO_RATING     = 0.0F
+}

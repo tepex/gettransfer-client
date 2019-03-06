@@ -47,6 +47,12 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     private var sortCategory = Sort.PRICE
     private var sortHigherToLower = false
+    var itemsExpanded: Boolean? = null
+        get() = field ?: offerInteractor.offerViewExpanded
+    set(value) {
+        field = value
+        offerInteractor.offerViewExpanded = value!!
+    }
 
     @CallSuper
     override fun attachView(view: OffersView) {
