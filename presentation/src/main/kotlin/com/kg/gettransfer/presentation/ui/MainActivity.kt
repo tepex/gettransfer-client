@@ -214,6 +214,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.Permissi
                 String.format(getString(R.string.nav_footer_version), versionName, versionCode)
         //navFooterReadMore.text = Html.fromHtml(Utils.convertMarkdownToHtml(getString(R.string.LNG_READMORE)))
         setViewColor(navViewHeader, R.color.colorPrimary)
+        navViewHeader.navHeaderMode.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
         navViewHeader.navHeaderName.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
         navViewHeader.navHeaderEmail.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
 
@@ -380,6 +381,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.Permissi
 
     override fun setProfile(profile: ProfileModel) {
         profile.apply {
+            navHeaderMode.text = getString(R.string.LNG_MENU_TITLE_PASSENGER)
             navHeaderName.isVisible  = isLoggedIn()
             navHeaderEmail.isVisible = isLoggedIn()
             navRequests.isVisible    = isLoggedIn()

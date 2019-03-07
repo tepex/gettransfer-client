@@ -132,11 +132,13 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
         navCarrierTransfers.setOnClickListener(itemsNavigationViewListener)
 
         setViewColor(navViewHeader, R.color.primaryDriver)
+        navViewHeader.navHeaderMode.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
         navViewHeader.navHeaderName.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
         navViewHeader.navHeaderEmail.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
     }
 
     override fun initNavigation(profile: ProfileModel) {
+        navHeaderMode.text = getString(R.string.LNG_MENU_TITLE_DRIVE)
         navHeaderName.isVisible = true
         navHeaderEmail.isVisible = true
         navHeaderName.text = profile.name
@@ -148,6 +150,10 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
         navPassengerMode.isVisible = true
         navCarrierTrips.isVisible  = true
         navCarrierTransfers.isVisible = true
+
+        navFooterStamp.isVisible = false
+        navMessage.isVisible = false
+        navFooterReadMore.isVisible = false
     }
 
     override fun showReadMoreDialog() {

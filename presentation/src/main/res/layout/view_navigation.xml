@@ -43,11 +43,20 @@
                 app:srcCompat="@android:drawable/ic_menu_share" />
 
             <TextView
+                android:id="@+id/navHeaderMode"
+                style="@style/nav_item_subtitle"
+                android:layout_marginStart="@dimen/nav_header_logo_start"
+                android:layout_below="@+id/navHeaderLogo"
+                android:textSize="12sp"
+                android:visibility="visible"
+                android:text="Driver mode"/>
+
+            <TextView
                 android:id="@+id/navHeaderName"
                 style="@style/nav_item_title"
                 android:layout_marginStart="@dimen/nav_header_logo_start"
                 android:visibility="visible"
-                android:layout_below="@+id/navHeaderLogo"
+                android:layout_below="@+id/navHeaderMode"
                 android:text="Maluta Skuratov"/>
 
             <TextView
