@@ -128,7 +128,7 @@
 	<dimen name="create_transfer_cb_size">15dp</dimen>
 	<dimen name="create_transfer_agreement_text_size">13sp</dimen>
 	<dimen name="create_transfer_agreement_text_margin_start">55dp</dimen>
-	<dimen name="create_transfer_agreement_text_margin_end">17dp</dimen>
+	<dimen name="create_transfer_agreement_text_margin_end">8dp</dimen>
 	<dimen name="create_transfer_map_height">208dp</dimen>
 	<dimen name="create_transfer_additionals_end_margin">25dp</dimen>
 	<dimen name="create_transfer_additionals_start_margin">57dp</dimen>
