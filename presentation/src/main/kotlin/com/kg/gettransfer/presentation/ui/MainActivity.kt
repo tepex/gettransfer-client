@@ -55,6 +55,7 @@ import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
 import kotlinx.android.synthetic.main.view_last_trip_rate.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
+import kotlinx.android.synthetic.main.view_navigation.view.*
 import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
 import kotlinx.android.synthetic.main.view_rate_in_store.view.*
@@ -212,6 +213,9 @@ class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.Permissi
         (navFooterVersion as TextView).text =
                 String.format(getString(R.string.nav_footer_version), versionName, versionCode)
         //navFooterReadMore.text = Html.fromHtml(Utils.convertMarkdownToHtml(getString(R.string.LNG_READMORE)))
+        setViewColor(navViewHeader, R.color.colorPrimary)
+        navViewHeader.navHeaderName.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
+        navViewHeader.navHeaderEmail.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
 
         readMoreListener.let {
             navFooterStamp.setOnClickListener   (it)

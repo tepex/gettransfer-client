@@ -85,6 +85,12 @@ object Screens {
         }
     }
 
+    object CarrierTransfers: SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, WebPageActivity()::class.java).apply {
+            putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_TRANSFERS)
+        }
+    }
+
     object CreateOrder : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, CreateOrderActivity::class.java)
     }

@@ -48,6 +48,7 @@ class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComp
     fun readMoreClick()         = viewState.showReadMoreDialog()
     fun onSettingsClick()       = router.navigateTo(Screens.Settings)
     fun onPassengerModeClick()  = router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+    fun onTransfersClick()      = router.navigateTo(Screens.CarrierTransfers)
 
     private fun checkBackGroundCoordinateAcceptance() {
         if (carrierTripInteractor.bgCoordinatesPermission == BG_COORDINATES_NOT_ASKED)

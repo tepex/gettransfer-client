@@ -13,6 +13,7 @@ import com.kg.gettransfer.presentation.model.MessageModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.view.ChatView
+import com.kg.gettransfer.utilities.Analytics
 import org.koin.core.parameter.parametersOf
 import org.koin.standalone.inject
 import java.util.Calendar
@@ -107,6 +108,8 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
         chatModel!!.messages = chatModel!!.messages.plus(newMessage)
         viewState.scrollToEnd()
         utils.launchSuspend { utils.asyncAwait { chatInteractor.newMessage(messageMapper.fromView(newMessage)) } }
+        sendAnalytics(MESSAGE_OUT)
+
     }
 
     fun readMessage(messageId: Long) = chatInteractor.readMessage(transferId, messageId)
@@ -121,6 +124,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
                 if(message.accountId != chatModel!!.currentAccountId) viewState.scrollToEnd()
             }
         }
+        if (isIdValid(message)) sendAnalytics(MESSAGE_IN)
     }
 
     override fun onMessageReadEvent(message: Message) {
@@ -134,5 +138,19 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
 
     override fun onSocketDisconnected() {
         sendMessagesAfterReconnect = true
+    }
+
+    private fun sendAnalytics(event: String) =
+        analytics.logEvent(event, createEmptyBundle(), emptyMap())
+
+    private fun isIdValid(message: Message) =
+            message.accountId != chatModel!!.currentAccountId &&
+                    chatModel!!.currentAccountId != NO_ID
+
+    companion object {
+        const val MESSAGE_IN  = "message_in"
+        const val MESSAGE_OUT = "message_out"
+
+        const val NO_ID       = 0L
     }
 }

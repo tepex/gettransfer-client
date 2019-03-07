@@ -66,13 +66,14 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+            window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
         }
 
         _mapView = mapView
         initMapView(savedInstanceState)
         setToolbar(toolbar as Toolbar, TOOLBAR_NO_TITLE)
         (toolbar as Toolbar).toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS).plus(" #${presenter.transferId}")
+        setViewColor((toolbar as Toolbar), R.color.colorWhite)
 
         bsCarrierTripDetails = BottomSheetTripleStatesBehavior.from(sheetCarrierTripDetails)
         bsCarrierTripDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
@@ -169,11 +170,11 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
     }
 
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) =
-            setPolyline(polyline, routeModel)
+            setPolyline(polyline, routeModel, true)
 
     override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
         processGoogleMap(false) {
-            setPinForHourlyTransfer(placeName, info, point, cameraUpdate)
+            setPinForHourlyTransfer(placeName, info, point, cameraUpdate, true)
         }
     }
 

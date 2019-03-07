@@ -9,6 +9,7 @@
     <string name="api_key_prod">3fe0f9208622274f1a21e78037eea83e</string>
     <string name="api_url_prod">https://gettransfer.com</string>
     <string name="api_url_payment">/terms_of_use</string>
+    <string name="api_url_transfers">/carrier/cabinet/transfers</string>
 
     <string name="api_restore_password">/forgot_password</string>
 
@@ -142,7 +143,9 @@
     <string name="LNG_MENU_SUBTITLE_DRIVE">Switch to driver mode</string>
     <string name="LNG_MENU_TITLE_PASSENGER">Passenger mode</string>
     <string name="LNG_MENU_SUBTITLE_PASSENGER">Passenger mode</string>
-    <string name="LNG_MENU_TITLE_TRIPS">Upcoming transfers</string>
+    <string name="LNG_MENU_TITLE_TRIPS">Calendar</string>
+    <string name="LNG_MENU_TITLE_TRANSFERS">Transfers</string>
+    <string name="LNG_MENU_SUBTITLE_TRANSFERS">Make offer</string>
     <string name="LNG_MENU_SUBTITLE_TRIPS">Upcoming transfers</string>
     <string name="LNG_READMORE"><u>Read more</u></string>
     <string name="LNG_BESTPRICES">Best prices for transfers\nbetween airports and cities\nworldwide</string>

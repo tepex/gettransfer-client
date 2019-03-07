@@ -75,7 +75,7 @@ class Analytics(
 
         const val INVALID_EMAIL         = "invalid_email"
         const val INVALID_PHONE         = "invalid_phone"
-        const val INVALID_NAME          = "invalid_name"
+        const val INVALID_NAME          = "ic_hourly_driver"
         const val NO_TRANSPORT_TYPE     = "no_transport_type"
         const val LICENSE_NOT_ACCEPTED  = "license_not_accepted"
         const val PASSENGERS_NOT_CHOSEN = "passengers"

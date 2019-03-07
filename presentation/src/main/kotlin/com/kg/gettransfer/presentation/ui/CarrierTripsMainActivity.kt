@@ -32,6 +32,7 @@ import com.kg.gettransfer.presentation.view.Screens
 import kotlinx.android.synthetic.main.activity_carrier_trips_main.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
+import kotlinx.android.synthetic.main.view_navigation.view.*
 import timber.log.Timber
 
 class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
@@ -47,14 +48,17 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
     private val itemsNavigationViewListener = View.OnClickListener {
-        when (it.id) {
-            R.id.navCarrierTrips  -> presenter.onCarrierTripsClick()
-            R.id.navAbout         -> presenter.onAboutClick()
-            R.id.navSettings      -> presenter.onSettingsClick()
-            R.id.navPassengerMode -> presenter.onPassengerModeClick()
-            else -> Timber.d("No route")
+        with(presenter) {
+            when (it.id) {
+                R.id.navCarrierTrips     -> onCarrierTripsClick()
+                R.id.navAbout            -> onAboutClick()
+                R.id.navSettings         -> onSettingsClick()
+                R.id.navPassengerMode    -> onPassengerModeClick()
+                R.id.navCarrierTransfers -> onTransfersClick()
+                else -> Timber.d("No route")
+            }
+            drawer.closeDrawer(GravityCompat.START)
         }
-        drawer.closeDrawer(GravityCompat.START)
     }
 
     override fun getPresenter(): CarrierTripsMainPresenter = presenter
@@ -68,7 +72,7 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+            window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
         }
 
         setToolbar(toolbar as Toolbar, R.string.LNG_RIDES, false, true)
@@ -78,6 +82,7 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
         (toolbar as Toolbar).carrierTripsChangingTypeViewButtons.isVisible = true
         (toolbar as Toolbar).buttonListView.setOnClickListener { presenter.changeTypeView(Screens.CARRIER_TRIPS_TYPE_VIEW_LIST) }
         (toolbar as Toolbar).buttonCalendarView.setOnClickListener { presenter.changeTypeView(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR) }
+        setViewColor((toolbar as Toolbar), R.color.colorWhite)
         initNavigation()
         startCoordinateService()
     }
@@ -124,6 +129,11 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
         navSettings.setOnClickListener(itemsNavigationViewListener)
         navAbout.setOnClickListener(itemsNavigationViewListener)
         navPassengerMode.setOnClickListener(itemsNavigationViewListener)
+        navCarrierTransfers.setOnClickListener(itemsNavigationViewListener)
+
+        setViewColor(navViewHeader, R.color.primaryDriver)
+        navViewHeader.navHeaderName.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
+        navViewHeader.navHeaderEmail.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
     }
 
     override fun initNavigation(profile: ProfileModel) {
@@ -136,6 +146,8 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
         navCarrierTrips.isVisible = true
         navBecomeACarrier.isVisible = false
         navPassengerMode.isVisible = true
+        navCarrierTrips.isVisible  = true
+        navCarrierTransfers.isVisible = true
     }
 
     override fun showReadMoreDialog() {
