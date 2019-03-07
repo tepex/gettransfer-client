@@ -29,8 +29,6 @@ import com.kg.gettransfer.encrypt.EncryptPassImpl
 
 import com.kg.gettransfer.presentation.mapper.*
 
-import com.kg.gettransfer.service.OfferServiceConnection
-
 import com.kg.gettransfer.utilities.Analytics
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
@@ -137,10 +135,10 @@ val mappersModule = module {
     single { MessageMapper() }
     single { ChatAccountMapper() }
     single { ChatMapper() }
+    single { CityPointMapper() }
 }
 
 val androidModule = module {
-    single { OfferServiceConnection() }
     single { CoroutineContexts(Dispatchers.Main, Dispatchers.IO) }
     single { FirebaseAnalytics.getInstance(androidApplication().applicationContext) }
     single { LocaleManager() }

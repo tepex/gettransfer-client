@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/card_no_offers_margin"
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="@dimen/card_elevation"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/ivClock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/anim_arrows"
+            android:layout_marginTop="@dimen/clock_margin_top"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/text_top_margin_top"
+            tools:text="Please, wait"
+            android:textSize="15sp"
+            android:layout_gravity="center"
+            android:text="@string/LNG_PLEASE_WAIT"
+            style="@style/sf_font_semi_bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/text_bottom_margin_top"
+            android:layout_marginBottom="@dimen/text_bottom_margin_bottom"
+            android:layout_marginStart="@dimen/text_bottom_margin_left"
+            android:layout_marginEnd="@dimen/text_bottom_margin_right"
+            android:textSize="14sp"
+            tools:text="Скоро предложения от перевозчиков будут здесь"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/LNG_PLEASE_WAIT_OFFERS"
+            style="@style/sf_font"/>
+    </LinearLayout>
+
+</android.support.design.card.MaterialCardView>

@@ -51,6 +51,11 @@
         <item name="android:textColor">@android:color/black</item>
         <item name="android:fontFamily">@font/sf_pro_text_bold</item>
     </style>
+    <style name="sf_font_semi_bold">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:fontFamily">@font/sf_pro_text_semibold</item>
+    </style>
+
 
     <style name="nav_item">
         <item name="android:layout_width">match_parent</item>
@@ -162,6 +167,39 @@
 
     <style name="tv_rate" parent="sf_font">
         <item name="android:layout_marginTop">@dimen/vertical_margin_rate_dialog</item>
+    </style>
+
+    <style name="transfer_details_main_text">
+        <item name="android:textColor">@color/colorTextBlack</item>
+        <item name="android:textSize">@dimen/bottom_sheet_offer_details_text_size_17sp</item>
+        <item name="android:fontFamily">@font/sf_pro_text_semibold</item>
+    </style>
+
+    <style name="tv_transfer_details_header_main" parent="transfer_details_main_text"/>
+
+    <style name="tv_transfer_details_header_sub">
+        <item name="android:textColor">@color/colorGrey</item>
+        <item name="android:textSize">@dimen/bottom_sheet_offer_details_text_size_12sp</item>
+        <item name="android:fontFamily">@font/sf_pro_text_semibold</item>
+    </style>
+    <style name="transfer_main_info_divider">
+        <item name="android:layout_width">@dimen/activity_transfer_details_vertical_divider_width</item>
+        <item name="android:background">@color/color_transfer_details_vertical_divider</item>
+    </style>
+
+    <!-- OFFERS -->
+    <style name="black_semiBold">
+        <item name="android:textColor">@color/colorTextBlack</item>
+        <item name="android:fontFamily">@font/sf_pro_text_semibold</item>
+    </style>
+    <style name="black_regular">
+        <item name="android:textColor">@color/colorTextBlack</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+
+    <style name="offerCard" parent="Base.CardView">
+        <item name="android:layout_margin">@dimen/card_view_margin</item>
+        <item name="cardCornerRadius">@dimen/card_view_corners</item>
     </style>
 
     <!--<style name="etField" parent="Base.V7.Widget.AppCompat.EditText">-->

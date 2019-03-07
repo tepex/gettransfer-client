@@ -222,8 +222,8 @@ object Utils : KoinComponent {
                 latLngBuilder.include(mPoints.get(i))
             }
         } else {
-            mPoints.add(pointMapper.toView(routeModel.fromPoint))
-            mPoints.add(pointMapper.toView(routeModel.toPoint))
+            mPoints.add(pointMapper.toLatLng(routeModel.fromPoint))
+            mPoints.add(pointMapper.toLatLng(routeModel.toPoint))
 
             for (i in mPoints.indices) latLngBuilder.include(mPoints.get(i))
         }
@@ -268,8 +268,10 @@ object Utils : KoinComponent {
     fun durationToString(context: Context, duration: Triple<Int, Int, Int>) = buildString {
         val (days: Int, hours: Int, minutes: Int) = duration
         context.getString(R.string.LNG_DATE_IN_HOURS)
-        append(" $days")
-        append(context.getString(R.string.LNG_D))
+        if (days != 0) {
+            append(" $days")
+            append(context.getString(R.string.LNG_D))
+        }
         append(" ${hours % 24}")
         append(context.getString(R.string.LNG_H))
         append(" ${minutes % 60}")
@@ -401,6 +403,9 @@ object Utils : KoinComponent {
 
     fun convertDpToPixels(context: Context, dp: Float) =
         dp * context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT
+
+    fun dpToPxInt(context: Context, dp: Float) =
+            convertDpToPixels(context, dp).toInt()
 
 /*
         fun isConnectedToInternet(context: Context?): Boolean {

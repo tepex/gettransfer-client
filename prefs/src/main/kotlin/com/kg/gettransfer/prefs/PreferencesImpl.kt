@@ -33,6 +33,7 @@ class PreferencesImpl(context: Context,
         @JvmField val EVENTS_COUNT      = "events_count"
         @JvmField val TRANSFER_IDS      = "transfer_ids"
         @JvmField val DRIVER_IN_BG      = "back_ground_coordinates"
+        @JvmField val OFFERS_VIEW       = "offers_view"
 
         const val FIRST_ACCESS         = 0
         const val IMMUTABLE            = -1   // user did rate app
@@ -223,6 +224,15 @@ class PreferencesImpl(context: Context,
         set(value) {
             driverPrefs.edit()
                     .putInt(DRIVER_IN_BG, value)
+                    .apply()
+        }
+
+    override var offerViewExpanded: Boolean
+        get() = accountPrefs.getBoolean(OFFERS_VIEW, true)
+        set(value) {
+            accountPrefs
+                    .edit()
+                    .putBoolean(OFFERS_VIEW, value)
                     .apply()
         }
         

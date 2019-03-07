@@ -10,4 +10,8 @@ class LocaleModel(val delegate: Locale) : CharSequence {
     override fun toString(): String = name
     override operator fun get(index: Int): Char = name.get(index)
     override fun subSequence(startIndex: Int, endIndex: Int): CharSequence = name.subSequence(startIndex, endIndex)
+
+    companion object {
+        val ENG_LOCALE = LocaleModel(Locale("en"))
+    }
 }

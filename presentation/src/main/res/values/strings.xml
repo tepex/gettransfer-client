@@ -68,6 +68,8 @@
     <string name="market_link">market://details?id=</string>
     <string name="app_package">com.gettransfer</string>
 
+    <string name="X_SIGN">X</string>
+
 
     <string name="LNG_MISKO">TEST</string>
     <string name="LNG_OK">OK</string>
@@ -241,7 +243,7 @@
     <string name="LNG_RIDE_OFFERS">Show offers</string>
     <string name="LNG_RIDE_REPEAT">Repeat</string>
     <string name="LNG_RIDE_PAYMENT">Payment in progress</string>
-    <string name="LNG_RIDE_CONNECT_CARRIERS">Connecting to nearest %s carriers</string>
+    <string name="LNG_RIDE_CONNECT_CARRIERS">Connecting to nearest %d carriers</string>
     <string name="LNG_RIDE_CONNECT_CARRIERS_NONUM">Connecting with nearby carriers</string>
     <string name="LNG_RIDE_CARRIERS">Carrier\'s offers</string>
     <string name="LNG_RIDE_COMPLETED">Completed transfers: %s</string>
@@ -371,6 +373,7 @@
     <string name="LNG_RIDE_OFFER_BLOCKED">Blocked</string>
     <string name="LNG_RIDE_OFFER_CANCELED">Canceled</string>
     <string name="LNG_BACKTRIP">Back</string>
+    <string name="LNG_RIDE_RETURN_TRANSFER">Return transfer</string>
     <string name="LNG_TRANSFER_NOT_PAID">Transfer is not paid</string>
     <string name="LNG_BOOKING_NUMBER">Booking number</string>
     <string name="LNG_PAYMENT_DECLINED">Payment declined</string>
@@ -438,6 +441,8 @@
     <string name="LNG_NEW_PASSENGER_CHAT_TITLE">Passenger message</string>
     <string name="LNG_NEW_DRIVER_CHAT_TITLE">Carrier message</string>
     <string name="LNG_UNREAD_MESSAGES_COUNT">%s unread messages</string>
+    <string name="LNG_RIDE_CLIENT_NAME">Name</string>
+    <string name="LNG_DETAILS_REPEAT_ROUTE">Repeat transfer</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>
@@ -449,11 +454,14 @@
     <string name="LNG_RIDE_OFFER_CANCELLED">Offer was canceled</string>
     <string name="LNG_RIDE_DATE_RETURN_PLACEHOLDER">I want to order a return transfer</string>
     <string name="LNG_OFFERS_SUPPORT">GetTransfer Support</string>
-    <string name="LNG_BOOK_NOW_PAYMENT_SUCCEESS">We\'ll send you email with data of carrier soon</string>
+    <string name="LNG_BOOK_NOW_PAYMENT_SUCCEESS">We will send you e-mail with carrier information</string>
     <string name="LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION">Download booking voucher?</string>
     <string name="LNG_DOWNLOADING">Downloading</string>
     <string name="LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS">Allow access to download the voucher</string>
     <string name="LNG_LOCATION_ACCESS">Allow access to your location</string>
+    <string name="LNG_PLEASE_WAIT_OFFERS">Soon offers from carriers will be here</string>
+    <string name="LNG_PLEASE_WAIT">Please wait</string>
+
 
     <plurals name="days">
         <item quantity="one">@string/LNG_DAY</item>

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.*
 
 import android.graphics.Color
+import android.graphics.Point
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 
@@ -12,11 +13,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.PersistableBundle
-
-import android.support.annotation.CallSuper
-import android.support.annotation.IdRes
-import android.support.annotation.NonNull
-import android.support.annotation.StringRes
+import android.support.annotation.*
 
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.content.LocalBroadcastManager
@@ -37,7 +34,6 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 
 import com.arellomobile.mvp.MvpAppCompatActivity
-import com.kg.gettransfer.GTApplication
 
 import com.kg.gettransfer.R
 
@@ -51,8 +47,6 @@ import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
 
-import com.kg.gettransfer.service.OfferServiceConnection
-import com.kg.gettransfer.service.OfferServiceConnection.Companion.ACTION_OFFER
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
 
 import com.kg.gettransfer.utilities.LocaleManager
@@ -76,7 +70,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     internal val router: Router by inject()
     protected val navigatorHolder: NavigatorHolder by inject()
     protected val localeManager: LocaleManager by inject()
-    private val offerServiceConnection: OfferServiceConnection by inject()
 
     private var rootView: View? = null
     private var rootViewHeight: Int? = null
@@ -132,11 +125,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
             if(setNetworkAvailability(context)) getPresenter().checkNewMessagesCached()
         }
     }
-
-//    private val offerReceiver = object : BroadcastReceiver() {
-//        override fun onReceive(context: Context?, intent: Intent?) {
-//            intent?.apply { getStringExtra(OFFER_JSON)
-//                    .let { getPresenter().onOfferJsonReceived(it, getLongExtra(OFFER_ID, 0L)) } } } }
 
     private val appStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -194,12 +182,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     protected override fun onStart() {
         LocalBroadcastManager.getInstance(applicationContext)
                 .registerReceiver(appStateReceiver, IntentFilter(AppLifeCycleObserver.APP_STATE))
-//        with(offerServiceConnection) {
-//            if (!statusOpened)
-//                connect(systemInteractor.endpoint, systemInteractor.accessToken) { json, id ->
-//                    LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(Intent(ACTION_OFFER)
-//                            .apply { putExtra(OFFER_JSON, json)
-//                                     putExtra(OFFER_ID, id) }) } }
         super.onStart()
 
         registerReceiver(inetReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
@@ -209,7 +191,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     @CallSuper
     protected override fun onResume() {
         super.onResume()
-     //   LocalBroadcastManager.getInstance(this).registerReceiver(offerReceiver, IntentFilter(ACTION_OFFER))
         navigatorHolder.setNavigator(navigator)
     }
 
@@ -322,6 +303,12 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
             commit()
         }
     }
+    /*
+    Use this method to fix UI, which depends on screen size.
+    Returns Point, that has x = display width, y = display height
+     */
+    protected open fun fixUIDependedOnScreenSize() =
+            Point().also { windowManager.defaultDisplay.getSize(it) }
 
     protected fun getScreenSide(height: Boolean): Int {
         val displayMetrics = DisplayMetrics()
@@ -338,8 +325,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     protected fun clearDim(parent: ViewGroup) = parent.overlay.clear()
 
-    @SuppressLint("ResourceType")
-    protected fun showPopUpWindow(@IdRes res: Int, parent: View): View {
+    protected fun showPopUpWindow(@LayoutRes res: Int, parent: View): View {
         applyDim(window.decorView.rootView as  ViewGroup, DIM_AMOUNT)
         val layoutPopUp = LayoutInflater.from(this).inflate(res, null)
         val widthPx = getScreenSide(false) - 40
@@ -387,11 +373,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         const val PLAY_MARKET_RATE = 42
 
         const val DIM_AMOUNT = 0.5f
-
-        const val OFFER_JSON = "offerAsJson"
-        const val OFFER_ID   = "offerId"
-        const val NO_FOREGROUNDED_ACTIVITIES = 0
-
-        var appStart = false
+        const val SCREEN_WIDTH_REQUIRING_SMALL_TEXT_SIZE = 768
     }
 }

@@ -166,7 +166,7 @@
                 android:layout_marginTop="@dimen/settings_activity_top_margin_layouts"
                 android:background="@drawable/back_clicked_layouts">
             <TextView
-                    android:text="Отправлять координаты в свернутом режиме"
+                    android:text="Send coordinates from background"
                     android:layout_centerVertical="true"
                     android:textSize="12sp"
                     android:fontFamily="@font/sf_pro_text_regular"

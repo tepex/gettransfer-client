@@ -47,6 +47,12 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     private var sortCategory = Sort.PRICE
     private var sortHigherToLower = false
+    var itemsExpanded: Boolean? = null
+        get() = field ?: offerInteractor.offerViewExpanded
+    set(value) {
+        field = value
+        offerInteractor.offerViewExpanded = value!!
+    }
 
     @CallSuper
     override fun attachView(view: OffersView) {
@@ -67,7 +73,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
                 if (result.model.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE) router.exit()
                 else {
                     val transferModel = transferMapper.toView(result.model)
-                    viewState.setDate(SystemUtils.formatDateTime(transferModel.dateTime))
                     viewState.setTransfer(transferModel)
                     transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
                     checkNewOffersSuspended(result.model)

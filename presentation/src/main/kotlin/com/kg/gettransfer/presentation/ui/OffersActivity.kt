@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
 import android.graphics.Paint
+import android.graphics.drawable.Animatable
 
 import android.os.Bundle
 
@@ -17,6 +18,7 @@ import android.view.View
 
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -26,6 +28,7 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.extensions.*
+import com.kg.gettransfer.presentation.adapter.OffersAdapter
 
 import com.kg.gettransfer.presentation.adapter.OffersRVAdapter
 import com.kg.gettransfer.presentation.adapter.VehiclePhotosVPAdapter
@@ -43,8 +46,9 @@ import kotlinx.android.synthetic.main.activity_offers.*
 import kotlinx.android.synthetic.main.activity_offers.view.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
+import kotlinx.android.synthetic.main.card_empty_offers.*
+import kotlinx.android.synthetic.main.toolbar_nav.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
-import org.jetbrains.anko.toast
 
 import timber.log.Timber
 import java.util.*
@@ -65,15 +69,11 @@ class OffersActivity : BaseActivity(), OffersView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.transferId = intent.getLongExtra(OffersView.EXTRA_TRANSFER_ID, 0)
-
         Timber.d("Start OffersActivity: transfer id: ${presenter.transferId}")
-
         setContentView(R.layout.activity_offers)
+        initToolBar()
+        initAdapter()
 
-        setToolbar(toolbar as Toolbar, R.string.LNG_RIDE_CARRIERS)
-
-        btnCancelRequest.isVisible = true
-        rvOffers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         bsOfferDetails = BottomSheetBehavior.from(sheetOfferDetails)
         bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN
@@ -83,12 +83,34 @@ class OffersActivity : BaseActivity(), OffersView {
 
         viewNetworkNotAvailable = textNetworkNotAvailable
 
-        btnCancelRequest.setOnClickListener               { presenter.onCancelRequestClicked() }
-        layoutTransferRequestInfo.setOnClickListener      { presenter.onRequestInfoClicked() }
+        initClickListeners()
+  //      (toolbar as Toolbar).setNavigationOnClickListener { navigateBackWithTransition()  }
+    }
+
+    private fun initClickListeners() {
+    //    btnCancelRequest.setOnClickListener               { presenter.onCancelRequestClicked() }
         sortYear.setOnClickListener                       { presenter.changeSortType(Sort.YEAR) }
         sortRating.setOnClickListener                     { presenter.changeSortType(Sort.RATING) }
         sortPrice.setOnClickListener                      { presenter.changeSortType(Sort.PRICE) }
-        (toolbar as Toolbar).setNavigationOnClickListener { navigateBackWithTransition()  }
+        img_changeListType.setOnClickListener             {
+            presenter.itemsExpanded = !presenter.itemsExpanded!!
+            changeViewType()
+        }
+    }
+
+    private fun initToolBar() =
+            with(toolbar) {
+                setSupportActionBar(this as Toolbar)
+                btn_back.setOnClickListener { navigateBackWithTransition() }
+                btn_forward.setOnClickListener { presenter.onRequestInfoClicked() }
+            }
+
+
+    private fun initBottomSheet() {
+        bsOfferDetails = BottomSheetBehavior.from(sheetOfferDetails)
+        bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN
+        _tintBackground = tintBackground
+        bsOfferDetails.setBottomSheetCallback(bottomSheetCallback)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -113,27 +135,58 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun setTransfer(transferModel: TransferModel) {
-        layoutTransferRequestInfo.setInfo(transferModel)
+//        layoutTransferRequestInfo.setInfo(transferModel)
+        toolbar.tv_title.text =
+                transferModel.from
+                        .getShortAddress()
+                        .let { from ->
+                            transferModel.to
+                                    ?.let {
+                                        from.plus(" - ").plus(it.getShortAddress())
+                                    } ?: from
+                        }
+        toolbar.tv_subtitle.text = SystemUtils.formatDateTime(transferModel.dateTime)
         fl_drivers_count_text.apply {
-            isVisible = true
             tv_drivers_count.text =
-                    if (transferModel.relevantCarriersCount?:0 > 4)
+                    if (transferModel.relevantCarriersCount ?: 0 > 4)
                         getString(R.string.LNG_RIDE_CONNECT_CARRIERS, transferModel.relevantCarriersCount)
                     else
                         getString(R.string.LNG_RIDE_CONNECT_CARRIERS_NONUM)
         }
     }
 
-    override fun setDate(date: String) { tvOrderDateTime.text = date }
-
+    private fun initAdapter() {
+        rvOffers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        OffersAdapter.viewType =
+                if (presenter.itemsExpanded!!) OffersAdapter.Companion.PRESENTATION.EXPANDED
+                else OffersAdapter.Companion.PRESENTATION.TINY
+    }
     override fun setOffers(offers: List<OfferItem>) {
         hideSheetOfferDetails()
-        rvOffers.adapter = OffersRVAdapter(offers.toMutableList(), textNetworkNotAvailable.isVisible) { offer, isShowingOfferDetails ->
-            presenter.onSelectOfferClicked(offer, isShowingOfferDetails) }
+        rvOffers.adapter = OffersAdapter(offers.toMutableList()) { offer, showDetails -> presenter.onSelectOfferClicked(offer, showDetails) }
+//        rvOffers.adapter = OffersRVAdapter(offers.toMutableList(), textNetworkNotAvailable.isVisible) { offer, isShowingOfferDetails ->
+//            presenter.onSelectOfferClicked(offer, isShowingOfferDetails) }
         if (offers.isNotEmpty()) {
+            noOffers.isVisible = false
             fl_drivers_count_text.isVisible = false
             cl_fixPrice.isVisible = true
+        } else {
+            setAnimation()
+            fl_drivers_count_text.isVisible = true
         }
+    }
+
+
+    private fun setAnimation() {
+        noOffers.isVisible = true
+        val drawable = ivClock.drawable as Animatable
+        drawable.start()
+    }
+
+    private fun changeViewType() {
+        (rvOffers.adapter as OffersAdapter).changeItemRepresentation()
+        (if (presenter.itemsExpanded!!) R.drawable.ic_offers_expanded
+        else R.drawable.ic_offers_tiny).also { img_changeListType.setImageResource(it) }
     }
 
     override fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean) {
@@ -150,12 +203,12 @@ class OffersActivity : BaseActivity(), OffersView {
         sortRating.isSelected = false
         sortPrice.isSelected  = false
 
-        triangleYear.isVisible   = false
-        triangleRating.isVisible = false
-        trianglePrice.isVisible  = false
+        triangleYear.isInvisible   = true
+        triangleRating.isInvisible = true
+        trianglePrice.isInvisible  = true
     }
 
-    private fun selectSort(layout: LinearLayout, triangleImage: ImageView, higherToLower: Boolean) {
+    private fun selectSort(layout: RelativeLayout, triangleImage: ImageView, higherToLower: Boolean) {
         layout.isSelected = true
         triangleImage.isVisible = true
         if (!higherToLower) triangleImage.rotation = 180f else triangleImage.rotation = 0f
@@ -337,10 +390,6 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun addNewOffer(offer: OfferModel) { (rvOffers.adapter as OffersRVAdapter).add(offer) }
-
-    companion object {
-        val ACTION_NEW_OFFER = "${OffersActivity::class.java.name}.offer"
-    }
 
     override fun setError(e: ApiException) {
         if (e.code != ApiException.NETWORK_ERROR) Utils.showError(this, true, e.details)

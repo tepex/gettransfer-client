@@ -272,6 +272,10 @@ dependencies {
 
     //EasyPermissions
     implementation "pub.devrel:easypermissions:$easy_permissions_version"
+
+    //Vector drawable
+    implementation "com.android.support:support-vector-drawable:$support_version"
+    implementation "com.android.support:animated-vector-drawable:$support_version"
 }
 
 def getBuildNumber() {

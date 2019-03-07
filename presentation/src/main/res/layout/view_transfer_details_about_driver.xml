@@ -1,153 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <TextView
-        android:id="@+id/tvTitleAboutDriver"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/activity_transfer_details_title_height"
-        android:background="@color/color_transfer_details_background_gray"
-        android:text="@string/LNG_RIDE_ABOUT_DRIVER"
-        android:textAllCaps="true"
-        android:textSize="@dimen/activity_transfer_details_text_size_13sp"
-        android:fontFamily="@font/sf_pro_text_semibold"
-        android:textColor="@color/color_transfer_details_header_text_color"
-        android:paddingStart="@dimen/activity_transfer_details_margin_start_end_16dp"
-        android:paddingEnd="@dimen/activity_transfer_details_margin_start_end_16dp"
-        android:gravity="center_vertical"/>
+        android:layout_height="wrap_content" xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/activity_transfer_details_horizontal_divider_height"
-        android:background="@color/color_transfer_details_horizontal_divider"/>
+    <include
+            android:id="@+id/view_driver_languages"
+            layout="@layout/view_transfer_details_driver_languages"/>
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
-        android:id="@+id/carrier_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+            android:id="@+id/driver_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title_transfer_details="@string/LNG_DRIVER_EMAIL"
+            android:visibility="gone"
 
-        app:title_transfer_details="@string/LNG_DRIVER"
-        app:input_transfer_details="made 343 transfers"
-        app:icon_img_transfer_details="@drawable/ic_driver"/>
+            tools:input_transfer_details="driver@gmail.com"
+            tools:visibility="visible"
+            />
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/driver_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         app:title_transfer_details="@string/LNG_DRIVER_PHONE"
-        app:input_transfer_details="+7 900 123 56 78"
-        app:icon_img_transfer_details="@drawable/ic_phone"
+        android:visibility="gone"
 
-        android:visibility="gone"/>
+        tools:input_transfer_details="+7 900 123 56 78"
+        tools:visibility="visible"/>
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
-        android:id="@+id/driver_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        app:title_transfer_details="@string/LNG_DRIVER_EMAIL"
-        app:input_transfer_details="example@gmail.com"
-        app:icon_img_transfer_details="@drawable/ic_email"
-
-        android:visibility="gone"/>
-
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/view_transfer_details_about_driver_languages_layout_height">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/activity_transfer_details_text_size_17sp"
-            android:textColor="@color/colorTextBlack"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:text="@string/LNG_LANGUAGES"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"/>
-
-        <LinearLayout
-            android:id="@+id/layoutCarrierLanguages"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="@dimen/activity_transfer_details_margin_start_end_16dp"/>
-
-    </android.support.constraint.ConstraintLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/activity_transfer_details_horizontal_divider_height"
-        android:background="@color/color_transfer_details_horizontal_divider"/>
-
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="44dp">
-        
-        <TextView
-            android:id="@+id/textCarrier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:text="@string/LNG_CARRIER"
-            android:textColor="@color/colorTextBlack"
-            android:textSize="@dimen/activity_transfer_details_text_size_17sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"/>
-
-        <TextView
             android:id="@+id/carrier_name"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/view_transfer_details_field_text_margin_start"
-            android:layout_marginEnd="@dimen/view_transfer_details_field_text_margin_end"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:gravity="end"
-            android:textColor="@color/color_transfer_details_text_gray"
-            android:textSize="@dimen/activity_transfer_details_text_size_17sp"
-            app:layout_constraintStart_toEndOf="@+id/textCarrier"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-        
-    </android.support.constraint.ConstraintLayout>
+            app:title_transfer_details="@string/LNG_CARRIER"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/activity_transfer_details_horizontal_divider_height"
-        android:background="@color/color_transfer_details_horizontal_divider"/>
+    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
+            android:id="@+id/carrier_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            app:title_transfer_details="@string/LNG_DRIVER_EMAIL"
+            tools:input_transfer_details="carriere@gmail.com"
+            android:visibility="gone"
+
+            tools:visibility="visible"/>
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/carrier_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         app:title_transfer_details="@string/LNG_DRIVER_PHONE"
-        app:input_transfer_details="+7 900 123 56 78"
-        app:icon_img_transfer_details="@drawable/ic_phone"
+        android:visibility="gone"
 
-        android:visibility="gone"/>
+        tools:input_transfer_details="+7 900 123 56 78"
+        tools:visibility="visible"/>
 
-    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
-        android:id="@+id/carrier_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
 
-        app:title_transfer_details="@string/LNG_DRIVER_EMAIL"
-        app:input_transfer_details="example@gmail.com"
-        app:icon_img_transfer_details="@drawable/ic_email"
-
-        android:visibility="gone"/>
 
 </LinearLayout>
