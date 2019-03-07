@@ -342,7 +342,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="@dimen/create_transfer_agreement_text_margin_end"
                     android:fontFamily="@font/sf_pro_text_regular"
                     android:text="@string/LNG_RIDE_OFFERT"
                     android:textColor="@color/colorTextLightGray"
