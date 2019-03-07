@@ -124,6 +124,10 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
     }
 
     private fun initAboutTripInfo(item: CarrierTripModel){
+        val operations = listOf<Pair<CharSequence, String>>(
+                Pair(getString(R.string.LNG_COPY), CarrierTripDetailsPresenter.OPERATION_COPY),
+                Pair(getString(R.string.LNG_OPEN), CarrierTripDetailsPresenter.OPERATION_OPEN))
+        val operationsName: List<CharSequence> = operations.map { it.first }
         with(item) {
             base.comment?.let {
                 comment_view.tv_comment_text.text = it
@@ -150,6 +154,8 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
                     topCommunicationButtons.btnChat.isVisible = true
                     bottomCommunicationButtons.btnChat.setOnClickListener { /*presenter.sendEmail(email, null)*/ presenter.onChatClick() }
                     bottomCommunicationButtons.btnChat.isVisible = true
+                    Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
+                        presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
                 }
                 profile.phone?.let { phone ->
                     initField(passenger_phone, phone)
@@ -157,6 +163,8 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
                     topCommunicationButtons.btnCall.isVisible = true
                     bottomCommunicationButtons.btnCall.setOnClickListener { presenter.callPhone(phone) }
                     bottomCommunicationButtons.btnCall.isVisible = true
+                    Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_phone, operationsName, R.string.LNG_DRIVER_PHONE) {
+                        presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
                 }
             }
             base.vehicle.let { initField(car_model_field, it.registrationNumber, it.name) }
