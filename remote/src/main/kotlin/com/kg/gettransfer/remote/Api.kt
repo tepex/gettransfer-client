@@ -23,6 +23,8 @@ interface Api {
         const val API_FEEDBACK           = "/api/offers"
         const val API_WEBPUSH_TOKENS     = "/api/webpush_tokens"
         const val API_MESSAGES           = "/api/messages"
+        const val API_BRAINTREE_TOKEN    = "/payments/braintree/client_token"
+        const val API_BRAINTREE_CONFIRM  = "/payments/braintree/confirm"
 
         const val MOBILE_CONFIGS         = "/mobile/mobile.conf"
 
@@ -163,4 +165,13 @@ interface Api {
 
     @GET(API_LOCATION)
     fun getMyLocation(): Deferred<LocationModel>
+
+    @GET(API_BRAINTREE_TOKEN)
+    fun getBraintreeToken(): Deferred<ResponseModel<BraintreeTokenModel>>
+
+    @POST(API_BRAINTREE_CONFIRM)
+    @FormUrlEncoded
+    fun confirmPaypal(
+            @Field("payment_id") paymentId: Long,
+            @Field("nonce") nonce: String) : Deferred<ResponseModel<PaymentStatusWrapperModel>>
 }
