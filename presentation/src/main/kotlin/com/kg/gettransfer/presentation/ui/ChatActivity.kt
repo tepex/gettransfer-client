@@ -32,6 +32,7 @@ class ChatActivity : BaseActivity(), ChatView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.transferId = intent.getLongExtra(ChatView.EXTRA_TRANSFER_ID, 0)
+        presenter.onJoinRoom(presenter.sendMessagesAfterReconnect)
 
         setContentView(R.layout.activity_chat)
 
@@ -48,6 +49,12 @@ class ChatActivity : BaseActivity(), ChatView {
                 (rvMessages.layoutManager as LinearLayoutManager).let { presenter.readMessages(it.findFirstVisibleItemPosition(), it.findLastVisibleItemPosition()) }
             }
         })*/
+    }
+
+    @CallSuper
+    override fun onPause() {
+        presenter.onLeaveRoom()
+        super.onPause()
     }
 
     override fun initToolbar(transfer: TransferModel?, offer: OfferModel?, name: String) {

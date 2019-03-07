@@ -76,19 +76,35 @@ class ChatRepositoryImpl(
         return Result(sendedMessagesCount)
     }
 
-    override suspend fun readMessage(messageId: Long): Result<Unit> {
-        val result: ResultEntity<Boolean?> = retrieveRemoteEntity{
-            factory.retrieveRemoteDataStore().readMessage(messageId)
+    override suspend fun sendAllNewMessagesSocket(transferId: Long?): Result<Int> {
+        val newMessages =
+                if(transferId != null) factory.retrieveCacheDataStore().getNewMessagesForTransfer(transferId)
+                else factory.retrieveCacheDataStore().getAllNewMessages()
+        var sendedMessagesCount = 0
+        for (i in 0 until newMessages.size){
+            val newMessage = newMessages[i]
+            if (chatDataStoreIO.onSendMessageEmit(newMessage.transferId, newMessage.text)){
+                sendedMessagesCount++
+            } else {
+                return Result(sendedMessagesCount)
+            }
         }
-        return Result(Unit, result.error?.let { ExceptionMapper.map(it) })
+        return Result(sendedMessagesCount)
     }
 
     override fun onJoinRoom(transferId: Long) = chatDataStoreIO.onJoinRoomEmit(transferId)
-
     override fun onLeaveRoom(transferId: Long) = chatDataStoreIO.onLeaveRoomEmit(transferId)
+    override suspend fun onSendMessage(message: Message): Result<Int> {
+        factory.retrieveCacheDataStore().newMessageToCache(messageMapper.toEntity(message))
+        return sendAllNewMessagesSocket(message.transferId)
+    }
+    override fun onReadMessage(transferId: Long, messageId: Long) = chatDataStoreIO.onReadMessageEmit(transferId, messageId)
 
     internal fun onNewMessageEvent(message: MessageEntity) {
         factory.retrieveCacheDataStore().addMessage(message)
+        val newMessages = factory.retrieveCacheDataStore().getNewMessagesForTransfer(message.transferId)
+        val messageFromCache = newMessages.find { it.accountId == message.accountId && it.text == message.text }
+        messageFromCache?.let { factory.retrieveCacheDataStore().deleteNewMessageFromCache(it.id) }
         chatReceiver.onNewMessageEvent(messageMapper.fromEntity(message))
     }
 

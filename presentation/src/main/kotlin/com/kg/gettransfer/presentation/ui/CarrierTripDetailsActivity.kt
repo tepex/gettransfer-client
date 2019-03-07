@@ -145,9 +145,9 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
                 profile.name?.let { initField(passenger_name, it) }
                 profile.email?.let {email ->
                     initField(passenger_email, email)
-                    topCommunicationButtons.btnChat.setOnClickListener { presenter.sendEmail(email, null) }
+                    topCommunicationButtons.btnChat.setOnClickListener { /*presenter.sendEmail(email, null)*/ presenter.onChatClick() }
                     topCommunicationButtons.btnChat.isVisible = true
-                    bottomCommunicationButtons.btnChat.setOnClickListener { presenter.sendEmail(email, null) }
+                    bottomCommunicationButtons.btnChat.setOnClickListener { /*presenter.sendEmail(email, null)*/ presenter.onChatClick() }
                     bottomCommunicationButtons.btnChat.isVisible = true
                 }
                 profile.phone?.let { phone ->

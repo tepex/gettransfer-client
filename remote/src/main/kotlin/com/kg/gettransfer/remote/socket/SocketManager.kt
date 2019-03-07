@@ -40,7 +40,7 @@ class SocketManager(): KoinComponent {
         path        = "/api/socket"
         forceNew    = true
         transports  = arrayOf(WebSocket.NAME)
-        timeout     = -1
+        timeout     = 2000
     }
 
     fun startConnection(endpoint: EndpointModel, accessToken: String){
@@ -197,11 +197,11 @@ class SocketManager(): KoinComponent {
         }
     }
 
-    fun emitEvent(eventName: String, arg: Any) {
-        when {
-            socket == null        -> { log.error("event $eventName was not emit: $SOCKET_TAG is null" ); return }
-            !socket!!.connected() -> { log.error("event $eventName was not emit: $SOCKET_TAG is not connected" ); return }
-            else                  -> { socket!!.emit(eventName, arg) }
+    fun emitEvent(eventName: String, arg: Any): Boolean {
+        return when {
+            socket == null        -> { log.error("event $eventName was not emit: $SOCKET_TAG is null" ); false }
+//            !socket!!.connected() -> { log.error("event $eventName was not emit: $SOCKET_TAG is not connected" ); false }
+            else                  -> { socket!!.emit(eventName, arg); true }
         }
     }
 

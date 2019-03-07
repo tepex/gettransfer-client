@@ -399,8 +399,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
                 driver_email.isVisible = true
                 Utils.setSelectOperationListener(this, driver_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
                     presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
-                topCommunicationButtons.btnChat.setOnClickListener { presenter.sendEmail(email, null) }
-                bottomCommunicationButtons.btnChat.setOnClickListener { presenter.sendEmail(email, null) }
+                topCommunicationButtons.btnChat.setOnClickListener { /*presenter.sendEmail(email, null)*/ presenter.onChatClick() }
+                bottomCommunicationButtons.btnChat.setOnClickListener { /*presenter.sendEmail(email, null)*/ presenter.onChatClick() }
                 topCommunicationButtons.btnChat.isVisible = true
                 bottomCommunicationButtons.btnChat.isVisible = true
             }
