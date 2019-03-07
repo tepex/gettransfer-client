@@ -228,7 +228,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
           //  tvTransferWillStartTime.text = Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer))
         }
  //       if (transfer.statusCategory == Transfer.STATUS_CATEGORY_ACTIVE || transfer.statusCategory == Transfer.STATUS_CATEGORY_UNFINISHED)
-        transfer_details_main.tv_price_title.text = getString(R.string.LNG_TOTAL_PRICE).plus(" ${transfer.price}")
+        transfer_details_main.tv_price_title.text = getString(R.string.LNG_TOTAL_PRICE).plus(" ${transfer.price?:""}")
         transfer.remainsToPay?.let {
             transfer_details_main.tv_price.text = transfer.remainsToPay
             transfer_details_main.tv_price_dash.isVisible = false
@@ -436,6 +436,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
                 conveniences_field.field_title.text = getString(offerModel.vehicle.transportType.nameId!!)
                 imgFreeWater.isVisible = offerModel.refreshments
                 imgFreeWiFi.isVisible  = offerModel.wifi
+                imgCharge.isVisible    = offerModel.charger
 
                 offerModel.vehicle.color?.let{
                     carColor.isVisible = true

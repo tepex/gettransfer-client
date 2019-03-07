@@ -123,18 +123,21 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
     }
 
     private fun initAboutTripInfo(item: CarrierTripModel){
-        with(item){
+        with(item) {
             base.comment?.let {
                 comment_view.tv_comment_text.text = it
                 comment_view.isVisible = true
             }
             with(transfer_details_view_seats) {
-                tv_countPassengers.text = getString(R.string.X_SIGN).plus("${item.countPassengers}")
+                item.countPassengers?.let {
+                    tv_countPassengers.text = getString(R.string.X_SIGN).plus("$it")
+                    imgPassengers.isVisible = true
+                    tv_countPassengers.isVisible = true
+                }
                 if(item.base.countChild > 0) {
                     tvCountChildren.text = getString(R.string.X_SIGN).plus("${item.base.countChild}")
-                } else {
-                    imgChildSeats.isVisible = false
-                    tvCountChildren.isVisible = false
+                    imgChildSeats.isVisible = true
+                    tvCountChildren.isVisible = true
                 }
             }
             flightNumber?.let { initField(flight_number, it) }

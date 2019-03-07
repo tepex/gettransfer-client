@@ -26,7 +26,9 @@
                 android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
                 android:visibility="gone"
                 app:srcCompat="@drawable/ic_circle_car_color_indicator"
-                android:background="@drawable/border_car_color_indicator"/>
+                android:background="@drawable/border_car_color_indicator"
+
+                tools:visibility="visible"/>
 
         <ImageView
                 android:id="@+id/imgFreeWiFi"
@@ -34,7 +36,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
                 app:srcCompat="@drawable/ic_wifi"
-                android:visibility="gone"/>
+                android:visibility="visible"
+
+                tools:visibility="visible"/>
+
+        <ImageView
+                android:id="@+id/imgCharge"
+                android:layout_width="22dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
+                app:srcCompat="@drawable/ic_charge"
+                android:visibility="gone"
+
+                tools:visibility="visible"/>
 
         <ImageView
                 android:id="@+id/imgFreeWater"
@@ -42,7 +56,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
                 app:srcCompat="@drawable/ic_free_water"
-                android:visibility="gone"/>
+                android:visibility="gone"
+
+                tools:visibility="visible"/>
 
 
     </LinearLayout>
