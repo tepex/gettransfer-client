@@ -47,6 +47,7 @@ import com.kg.gettransfer.presentation.view.TransferDetailsView
 import kotlinx.android.synthetic.main.activity_transfer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_transfer_details.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+import kotlinx.android.synthetic.main.transfer_details_header.*
 import kotlinx.android.synthetic.main.transfer_details_header.view.*
 import kotlinx.android.synthetic.main.view_about_item.*
 import kotlinx.android.synthetic.main.view_communication_button.*
@@ -171,7 +172,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         topCommunicationButtons.btnSupport.setOnClickListener { presenter.sendEmail(null, transfer.id) }
         bottomCommunicationButtons.btnSupport.setOnClickListener { presenter.sendEmail(null, transfer.id) }
 
-        when (transfer.status) {
+        booking_info.text = when (transfer.status) {
             Transfer.Status.NEW -> {
                 if (transfer.offersCount > 0) getString(R.string.LNG_BOOK_OFFER)
                 else getString(R.string.LNG_WAIT_FOR_OFFERS)
