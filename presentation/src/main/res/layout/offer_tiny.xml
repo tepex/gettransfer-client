@@ -57,7 +57,7 @@
                 android:orientation="vertical"/>
 
         <include
-            android:id="@+id/view_rat_tiny"
+            android:id="@+id/view_rating_tiny"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

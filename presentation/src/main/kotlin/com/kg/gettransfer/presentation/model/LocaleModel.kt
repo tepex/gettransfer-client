@@ -12,6 +12,6 @@ class LocaleModel(val delegate: Locale) : CharSequence {
     override fun subSequence(startIndex: Int, endIndex: Int): CharSequence = name.subSequence(startIndex, endIndex)
 
     companion object {
-        val ENG_LOCALE = LocaleModel(Locale("en"))
+        val BOOK_NOW_LOCALE_DEFAULT = LocaleModel(Locale("en"))
     }
 }

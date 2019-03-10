@@ -27,30 +27,33 @@ import kotlinx.android.synthetic.main.view_transport_capacity.view.*
 
 object OfferItemBindDelegate {
 
-    fun bindOfferExpanded(view: View, offer: OfferItem) {
-        if (offer is OfferModel) bindOfferModel(offer, view)
-        if (offer is BookNowOfferModel) bindBookNow(offer, view)
+    fun bindOfferExpanded(view: View, offer: OfferItem) =
+            when (offer) {
+                is OfferModel         -> bindOfferModel(offer, view)
+                is BookNowOfferModel  -> bindBookNow(offer, view)
     }
 
     private fun bindOfferModel(offer: OfferModel, view: View) =
-            with(view) {
-                tv_car_model.text =
-                        if (offer.vehicle.color != null) Utils.getVehicleNameWithColor(context, offer.vehicle.name, offer.vehicle.color)
-                        else offer.vehicle.name
-                tv_car_class.text = offer.vehicle.transportType.nameId?.let { context.getString(it) } ?: ""
-                bindCapacity(offer_conditions.view_capacity, offer.vehicle.transportType)
-                bindConveniences(offer_conditions.vehicle_conveniences, offer)
-                bindRating(view_offer_rate, offer.carrier.ratings, offer.carrier.approved).also { offer_rating_bg.isVisible = it }
-                bindLanguages(singleLineContainer = driver_abilities.languages_container, languages = offer.carrier.languages)
-                bindPrice(offer_bottom, offer.price.base, offer.price.withoutDiscount)
-                bindMainPhoto(imgOffer_mainPhoto, view, path = offer.vehicle.photos.first())
-            }
+        with(view) {
+            tv_car_model.text =
+                    if (offer.vehicle.color != null) Utils.getVehicleNameWithColor(context, offer.vehicle.name, offer.vehicle.color)
+                    else offer.vehicle.name
+            tv_car_class.text = offer.vehicle.transportType.nameId?.let { context.getString(it) } ?: ""
+            bindCapacity(offer_conditions.view_capacity, offer.vehicle.transportType)
+            bindConveniences(offer_conditions.vehicle_conveniences, offer)
+            bindRating(view_offer_rate, offer.carrier.ratings, offer.carrier.approved).also { offer_rating_bg.isVisible = it }
+            bindLanguages(singleLineContainer = driver_abilities.languages_container, languages = offer.carrier.languages)
+            bindPrice(offer_bottom, offer.price.base, offer.price.withoutDiscount)
+            bindMainPhoto(imgOffer_mainPhoto, view, path = offer.vehicle.photos.first())
+            return@with
+        }
+
 
     private fun bindBookNow(offer: BookNowOfferModel, view: View) {
         with(view) {
             tv_car_model.text = context.getString(TransportTypeMapper.getModelsById(offer.transportType.id))
             tv_car_class.text = offer.transportType.nameId?.let { context.getString(it) } ?: ""
-            bindLanguages(singleLineContainer = driver_abilities.languages_container, languages = listOf(LocaleModel.ENG_LOCALE))
+            bindLanguages(singleLineContainer = driver_abilities.languages_container, languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
             bindRating(view_offer_rate, RatingsModel.BOOK_NOW_RATING)
             bindPrice(offer_bottom, offer.base)
      //       imgOffer_mainPhoto.setImageResource(TransportTypeMapper.getImageById(offer.transportType.id))
@@ -72,7 +75,14 @@ object OfferItemBindDelegate {
     }
 
 
-    fun bindOfferTiny(view: View, offer: OfferModel) {
+    fun bindOfferTiny(view: View, offer: OfferItem) {
+        when (offer) {
+            is OfferModel -> bindOfferModelTiny(view, offer)
+            is BookNowOfferModel -> bindBookNowTiny(view, offer)
+        }
+    }
+
+    private fun bindOfferModelTiny(view: View, offer: OfferModel) {
         with(view) {
             tv_car_model_tiny.text =
                     if (offer.vehicle.color != null) Utils.getVehicleNameWithColor(view.context, offer.vehicle.name, offer.vehicle.color)
@@ -83,14 +93,28 @@ object OfferItemBindDelegate {
                         if (it != null) bindMainPhoto(img_car_photo_tiny, view, path = it)
                         else bindMainPhoto(img_car_photo_tiny, view, resource = R.drawable.ic_empty_car)
                     }
-            bindRating(view_rat_tiny, offer.carrier.ratings, offer.carrier.approved)
+            bindRating(view_rating_tiny, offer.carrier.ratings, offer.carrier.approved)
             bindLanguages(multiLineContainer = languages_container_tiny, languages = offer.carrier.languages)
             offer.price.withoutDiscount?.let { tv_price_no_discount.strikeText = it.preferred ?: it.def }
             tv_price_final.text = offer.price.base.preferred ?: offer.price.base.def
         }
     }
 
+    private fun bindBookNowTiny(view: View, offer: BookNowOfferModel) {
+        with(view) {
+            tv_car_model_tiny.text = context.getString(TransportTypeMapper.getModelsById(offer.transportType.id))
+            tv_car_class_tiny.text = offer.transportType.nameId?.let { context.getString(it) } ?: ""
+            bindMainPhoto(img_car_photo_tiny, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
+            bindRating(view_rating_tiny, RatingsModel.BOOK_NOW_RATING)
+            bindLanguages(multiLineContainer = languages_container_tiny, languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
+            offer.withoutDiscount?.let { tv_price_no_discount.strikeText = it.preferred ?: it.def }
+            tv_price_final.text = offer.base.preferred ?: offer.base.def
+        }
+    }
 
+
+
+    /* Common layouts */
     private fun bindCapacity(capacityView: View, transportTypeModel: TransportTypeModel) =
             with(capacityView) {
                 transportType_сountPassengers.text = "x".plus(transportTypeModel.paxMax)
@@ -143,6 +167,8 @@ object OfferItemBindDelegate {
                         else it.load(resource) }
                     .apply(RequestOptions().transforms(CenterCrop(), RoundedCorners(Utils.dpToPxInt(parent.context, PHOTO_CORNER))))
                     .into(view)
+
+
 
 
     private const val NO_RATING     = 0.0F

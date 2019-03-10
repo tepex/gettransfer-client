@@ -62,7 +62,7 @@ class OffersAdapter(private val offer: List<OfferItem>,
                         /*  set listener to view to open bottom sheet  */
                     }
                     else           -> {
-                        OfferItemBindDelegate.bindOfferTiny(this, offerItem as OfferModel)
+                        OfferItemBindDelegate.bindOfferTiny(this, offerItem)
                         hangListeners(btn_book_tiny, img_car_photo_tiny, clickListener, offerItem)
                     }
                 }
