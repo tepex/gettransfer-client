@@ -55,6 +55,8 @@ val dataModule = module {
 
     single { PaymentMapper() }
     single { PaymentRequestMapper() }
+    single { BraintreeTokenMapper() }
+    single { ParamsMapper() }
     single { PaymentDataStoreCache() }
     single { PaymentDataStoreRemote() }
     single<PaymentRepository> { PaymentRepositoryImpl(DataStoreFactory<PaymentDataStore, PaymentDataStoreCache, PaymentDataStoreRemote>(get(), get())) }
