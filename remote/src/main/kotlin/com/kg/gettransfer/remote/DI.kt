@@ -40,6 +40,8 @@ val remoteMappersModule = module {
     single { PaymentStatusMapper() }
     single { PaymentStatusRequestMapper() }
     single { PaypalCredentialsMapper() }
+    single { BraintreeTokenMapper() }
+    single { ParamsMapper() }
     single { PriceMapper() }
     single { ProfileMapper() }
     single { PromoMapper() }
