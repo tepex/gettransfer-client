@@ -113,8 +113,6 @@ object OfferItemBindDelegate {
         }
     }
 
-
-
     /* Common layouts */
     private fun bindCapacity(capacityView: View, transportTypeModel: TransportTypeModel) =
             with(capacityView) {
@@ -166,10 +164,13 @@ object OfferItemBindDelegate {
                     .let {
                         if (path != null) it.load(path)
                         else it.load(resource) }
-                    .apply(RequestOptions().transforms(FitCenter(), RoundedCorners(Utils.dpToPxInt(parent.context, PHOTO_CORNER))))
+                    .apply(RequestOptions().transforms(getTransform(path),
+                            RoundedCorners(Utils.dpToPxInt(parent.context, PHOTO_CORNER))))
                     .into(view)
 
-
+    private fun getTransform(path: String?) =
+            if (path != null) CenterCrop()
+            else FitCenter()
 
 
     private const val NO_RATING     = 0.0F
