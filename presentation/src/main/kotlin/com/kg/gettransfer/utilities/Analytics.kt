@@ -12,6 +12,8 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.kg.gettransfer.domain.model.ReviewRate
 
 import com.yandex.metrica.YandexMetrica
+import com.yandex.metrica.profile.Attribute
+import com.yandex.metrica.profile.UserProfile
 
 import java.math.BigDecimal
 
@@ -139,6 +141,11 @@ class Analytics(
 
         const val RESULT_SUCCESS   = "success"
         const val RESULT_FAIL      = "fail"
+
+        const val USER_TYPE = "usertype"
+        const val DRIVER_TYPE = "driver"
+        const val PASSENGER_TYPE = "passenger"
+        const val CARRIER_TYPE = "carrier"
     }
 
     fun logEvent(event: String, bundle: Bundle, map: Map<String, Any?>) {
@@ -177,5 +184,12 @@ class Analytics(
         ReviewRate.RateType.PUNCTUALITY.type -> "punctuality"
         ReviewRate.RateType.VEHICLE.type     -> "vehicle"
         else                                 -> "driver"
+    }
+
+    fun logProfile(attribute: String) {
+        val userProfile = UserProfile.newBuilder()
+                .apply(Attribute.customString(USER_TYPE).withValue(attribute))
+                .build()
+        YandexMetrica.reportUserProfile(userProfile)
     }
 }
