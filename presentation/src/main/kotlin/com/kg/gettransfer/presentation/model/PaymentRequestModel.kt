@@ -7,7 +7,7 @@ data class PaymentRequestModel(val transferId: Long, val offerId: Long?,
         const val PRICE_30   = 30
         
         const val PLATRON     = "platron"
-        const val PAYPAL      = "paypal"
+        const val PAYPAL      = "braintree"
         const val PAYMENTWALL = "paymentwall"
     }
     
