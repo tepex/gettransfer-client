@@ -46,9 +46,13 @@ import kotlinx.android.synthetic.main.activity_offers.*
 import kotlinx.android.synthetic.main.activity_offers.view.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
+import kotlinx.android.synthetic.main.bottom_sheet_offers.*
 import kotlinx.android.synthetic.main.card_empty_offers.*
 import kotlinx.android.synthetic.main.toolbar_nav.view.*
+import kotlinx.android.synthetic.main.vehicle_items.view.*
+import kotlinx.android.synthetic.main.view_offer_conditions.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.*
+import kotlinx.android.synthetic.main.view_transport_capacity.view.*
 
 import timber.log.Timber
 import java.util.*
@@ -221,18 +225,25 @@ class OffersActivity : BaseActivity(), OffersView {
     override fun showBottomSheetOfferDetails(offer: OfferItem) {
         when(offer) {
             is OfferModel -> {
-                setCarrierId(offer.carrier.id.toString())
-                Utils.initCarrierLanguages(layoutCarrierLanguages, offer.carrier.languages)
-                setLikeDriver(offer.carrier.approved)
-                setRatings(offer)
-                setVehicleColor(offer)
                 setVehicleName(offer.vehicle.name)
-                setVehicleType(offer.vehicle.transportType.nameId!!)
-                setPassengers(offer.vehicle.transportType.paxMax)
-                setBaggage(offer.vehicle.transportType.luggageMax)
+                Utils.initCarrierLanguages(languages_container_bs, offer.carrier.languages)
+                offer_conditions_bs.view_capacity.transportType_сountPassengers.text = "x".plus(offer.vehicle.transportType.paxMax)
+                offer_conditions_bs.view_capacity.transportType_сountBaggage.text = "x".plus(offer.vehicle.transportType.paxMax)
+                offer_conditions_bs.vehicle_conveniences.imgFreeWater.isVisible = offer.refreshments
+                offer_conditions_bs.vehicle_conveniences.imgFreeWiFi.isVisible = offer.wifi
+                offer_conditions_bs.vehicle_conveniences.imgCharge.isVisible = offer.charger
+            //    setCarrierId(offer.carrier.id.toString())
 
-                imgFreeWater.isVisible = offer.refreshments
-                imgFreeWiFi.isVisible = offer.wifi
+           //     setLikeDriver(offer.carrier.approved)
+           //     setRatings(offer)
+          //      setVehicleColor(offer)
+
+         //       setVehicleType(offer.vehicle.transportType.nameId!!)
+         //       setPassengers(offer.vehicle.transportType.paxMax)
+          //      setBaggage(offer.vehicle.transportType.luggageMax)
+
+//                imgFreeWater.isVisible = offer.refreshments
+//                imgFreeWiFi.isVisible = offer.wifi
 
                 setPrice(offer.price.base.def)
                 setPricePreferred(offer.price.base.def)
@@ -241,8 +252,11 @@ class OffersActivity : BaseActivity(), OffersView {
                 setOfferCarPhoto(offer)
             }
             is BookNowOfferModel -> {
-                setCarrierId("")
-                Utils.initCarrierLanguages(layoutCarrierLanguages, listOf(LocaleModel(Locale.ENGLISH)))
+                setVehicleName(getString(TransportTypeMapper.getDescriptionById(offer.transportType.id)))
+                Utils.initCarrierLanguages(layoutCarrierLanguages, listOf(LocaleModel.ENG_LOCALE))
+
+              //  setCarrierId("")
+
                 setLikeDriver(true)
                 setBookNowRatings()
                 setVehicleType(TransportTypeMapper.getNameById(offer.transportType.id))
@@ -252,7 +266,7 @@ class OffersActivity : BaseActivity(), OffersView {
                 setPricePreferred(offer.base.preferred)
                 offer.withoutDiscount?.let { setWithoutDiscount(it) }
                 setBookNowPhoto(offer.transportType.id)
-                setVehicleName(getString(TransportTypeMapper.getDescriptionById(offer.transportType.id)))
+
                 colorVehicle.isVisible = false
             }
         }
@@ -335,7 +349,8 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     private fun setVehicleName(name: String) {
-        vehicleName.text = name
+      //  vehicleName.text = name
+        tv_car_model.text = name
     }
 
     private fun setVehicleColor(offer: OfferModel) {
