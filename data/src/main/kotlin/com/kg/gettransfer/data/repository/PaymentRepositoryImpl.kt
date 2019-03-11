@@ -32,7 +32,7 @@ class PaymentRepositoryImpl(private val factory: DataStoreFactory<PaymentDataSto
     private val paymentStatusMapper        = get<PaymentStatusMapper>()
 
     override suspend fun getPayment(paymentRequest: PaymentRequest): Result<Payment> =
-        retrieveRemoteModel<PaymentEntity, Payment>(paymentMapper, Payment("", null, null)) {
+        retrieveRemoteModel<PaymentEntity, Payment>(paymentMapper, Payment("", null, null, null)) {
             factory.retrieveRemoteDataStore().createPayment(paymentRequestMapper.toEntity(paymentRequest))
         }
 
