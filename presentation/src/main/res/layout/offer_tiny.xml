@@ -30,9 +30,11 @@
                 android:layout_width="72dp"
                 android:layout_marginStart="-3dp"
                 android:layout_height="40dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
                 android:layout_below="@id/tv_car_model_tiny"
                 android:layout_marginTop="5dp"
-                app:srcCompat="@drawable/ic_transport_type_comfort"/>
+                android:src="@drawable/ic_transport_type_comfort"/>
 
         <TextView
                 android:id="@+id/tv_car_class_tiny"
@@ -95,6 +97,7 @@
                     style="@style/black_semiBold"
                     android:textSize="15sp"
                     android:layout_marginStart="12dp"
+                    android:lines="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
         </LinearLayout>

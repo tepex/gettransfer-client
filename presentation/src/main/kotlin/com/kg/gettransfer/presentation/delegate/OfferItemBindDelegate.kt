@@ -5,6 +5,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.kg.gettransfer.R
@@ -54,7 +55,7 @@ object OfferItemBindDelegate {
             tv_car_model.text = context.getString(TransportTypeMapper.getModelsById(offer.transportType.id))
             tv_car_class.text = offer.transportType.nameId?.let { context.getString(it) } ?: ""
             bindLanguages(singleLineContainer = driver_abilities.languages_container, languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
-            bindRating(view_offer_rate, RatingsModel.BOOK_NOW_RATING)
+            bindRating(view_offer_rate, RatingsModel.BOOK_NOW_RATING).also { offer_rating_bg.isVisible = true }
             bindPrice(offer_bottom, offer.base)
      //       imgOffer_mainPhoto.setImageResource(TransportTypeMapper.getImageById(offer.transportType.id))
             bindMainPhoto(imgOffer_mainPhoto, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
@@ -165,7 +166,7 @@ object OfferItemBindDelegate {
                     .let {
                         if (path != null) it.load(path)
                         else it.load(resource) }
-                    .apply(RequestOptions().transforms(CenterCrop(), RoundedCorners(Utils.dpToPxInt(parent.context, PHOTO_CORNER))))
+                    .apply(RequestOptions().transforms(FitCenter(), RoundedCorners(Utils.dpToPxInt(parent.context, PHOTO_CORNER))))
                     .into(view)
 
 
