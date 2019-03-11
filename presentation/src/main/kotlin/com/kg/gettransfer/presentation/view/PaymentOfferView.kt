@@ -19,6 +19,7 @@ interface PaymentOfferView : BaseView {
     fun setBookNowOffer(bookNowOffer: BookNowOffer?)
     fun showOfferError()
     fun setCommission(paymentCommission: String)
+    fun setupBraintree(amount: String?, currency: String?)
 
     companion object {
         val EXTRA_PARAMS = "${PaymentOfferView::class.java.name}.params"
