@@ -66,13 +66,14 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+            window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
         }
 
         _mapView = mapView
         initMapView(savedInstanceState)
         setToolbar(toolbar as Toolbar, TOOLBAR_NO_TITLE)
         (toolbar as Toolbar).toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS).plus(" #${presenter.transferId}")
+        setViewColor((toolbar as Toolbar), R.color.colorWhite)
 
         bsCarrierTripDetails = BottomSheetTripleStatesBehavior.from(sheetCarrierTripDetails)
         bsCarrierTripDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
@@ -123,6 +124,10 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
     }
 
     private fun initAboutTripInfo(item: CarrierTripModel){
+        val operations = listOf<Pair<CharSequence, String>>(
+                Pair(getString(R.string.LNG_COPY), CarrierTripDetailsPresenter.OPERATION_COPY),
+                Pair(getString(R.string.LNG_OPEN), CarrierTripDetailsPresenter.OPERATION_OPEN))
+        val operationsName: List<CharSequence> = operations.map { it.first }
         with(item) {
             base.comment?.let {
                 comment_view.tv_comment_text.text = it
@@ -145,10 +150,12 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
                 profile.name?.let { initField(passenger_name, it) }
                 profile.email?.let {email ->
                     initField(passenger_email, email)
-                    topCommunicationButtons.btnChat.setOnClickListener { presenter.sendEmail(email, null) }
+                    topCommunicationButtons.btnChat.setOnClickListener { /*presenter.sendEmail(email, null)*/ presenter.onChatClick() }
                     topCommunicationButtons.btnChat.isVisible = true
-                    bottomCommunicationButtons.btnChat.setOnClickListener { presenter.sendEmail(email, null) }
+                    bottomCommunicationButtons.btnChat.setOnClickListener { /*presenter.sendEmail(email, null)*/ presenter.onChatClick() }
                     bottomCommunicationButtons.btnChat.isVisible = true
+                    Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
+                        presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
                 }
                 profile.phone?.let { phone ->
                     initField(passenger_phone, phone)
@@ -156,6 +163,8 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
                     topCommunicationButtons.btnCall.isVisible = true
                     bottomCommunicationButtons.btnCall.setOnClickListener { presenter.callPhone(phone) }
                     bottomCommunicationButtons.btnCall.isVisible = true
+                    Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_phone, operationsName, R.string.LNG_DRIVER_PHONE) {
+                        presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
                 }
             }
             base.vehicle.let { initField(car_model_field, it.registrationNumber, it.name) }
@@ -169,11 +178,11 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
     }
 
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) =
-            setPolyline(polyline, routeModel)
+            setPolyline(polyline, routeModel, true)
 
     override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
         processGoogleMap(false) {
-            setPinForHourlyTransfer(placeName, info, point, cameraUpdate)
+            setPinForHourlyTransfer(placeName, info, point, cameraUpdate, true)
         }
     }
 

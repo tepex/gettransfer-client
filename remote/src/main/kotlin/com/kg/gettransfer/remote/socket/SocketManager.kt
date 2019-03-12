@@ -24,10 +24,10 @@ class SocketManager(): KoinComponent {
     private val SOCKET_TAG = "socketManager"
     private val SOCKET_PP = "socket_PP"
 
-    private val offerEventer: OfferSocketImpl       by inject()
+    private val offerEventer: OfferSocketImpl         by inject()
     private val transferEventer: CoordinateSocketImpl by inject()
-    private val chatEventer: ChatSocketImpl         by inject()
-    private val systemEventer: SystemSocketImp      by inject()
+    private val chatEventer: ChatSocketImpl           by inject()
+    private val systemEventer: SystemSocketImp        by inject()
 
     private var socket:      Socket?            = null
     private var url:         String?            = null
@@ -40,7 +40,7 @@ class SocketManager(): KoinComponent {
         path        = "/api/socket"
         forceNew    = true
         transports  = arrayOf(WebSocket.NAME)
-        timeout     = -1
+        timeout     = 2000
     }
 
     fun startConnection(endpoint: EndpointModel, accessToken: String){
@@ -86,9 +86,11 @@ class SocketManager(): KoinComponent {
             }
             on(Manager.EVENT_CONNECT_ERROR) { args -> log.error("$SOCKET_TAG connect error: $args") }
             on(Manager.EVENT_OPEN) { _ -> log.debug("$SOCKET_TAG open [${socket?.id()}]")
+                statusOpened = true
                 systemEventer.onConnected()
             }
             on(Manager.EVENT_CLOSE) { _ -> log.debug("$SOCKET_TAG close [${socket?.id()}]")
+                statusOpened = false
                 if (shouldReconnect) {
                     shouldReconnect = false
                     log.debug("$SOCKET_TAG reconnected ")
@@ -197,11 +199,11 @@ class SocketManager(): KoinComponent {
         }
     }
 
-    fun emitEvent(eventName: String, arg: Any) {
-        when {
-            socket == null        -> { log.error("event $eventName was not emit: $SOCKET_TAG is null" ); return }
-            !socket!!.connected() -> { log.error("event $eventName was not emit: $SOCKET_TAG is not connected" ); return }
-            else                  -> { socket!!.emit(eventName, arg) }
+    fun emitEvent(eventName: String, arg: Any, sendAfterReconnected: Boolean = false): Boolean {
+        return when {
+            socket == null        -> { log.error("event $eventName was not emit: $SOCKET_TAG is null" ); false }
+            !statusOpened && !sendAfterReconnected -> { log.error("event $eventName was not emit: $SOCKET_TAG is not connected" ); false }
+            else                  -> { socket!!.emit(eventName, arg); true }
         }
     }
 

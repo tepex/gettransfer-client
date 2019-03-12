@@ -50,6 +50,12 @@ class ChatActivity : BaseActivity(), ChatView {
         })*/
     }
 
+    @CallSuper
+    override fun onPause() {
+        super.onPause()
+        presenter.onLeaveRoom()
+    }
+
     override fun initToolbar(transfer: TransferModel?, offer: OfferModel?, name: String) {
         (toolbar as Toolbar).apply {
             layoutChatTitle.isVisible = true
@@ -71,7 +77,7 @@ class ChatActivity : BaseActivity(), ChatView {
         }
     }
 
-    override fun setChat(chat: ChatModel, withScrollDown: Boolean) {
+    override fun setChat(chat: ChatModel) {
         val oldMessagesSize = rvMessages.adapter?.itemCount
         rvMessages.apply {
             if(adapter == null){
@@ -81,7 +87,7 @@ class ChatActivity : BaseActivity(), ChatView {
                 rvMessages.adapter?.notifyDataSetChanged()
             }
         }
-        if (withScrollDown || (oldMessagesSize ?: 0 < chat.messages.size && chat.messages.lastOrNull()!!.accountId != chat.currentAccountId)) scrollToEnd()
+        if (oldMessagesSize ?: 0 < chat.messages.size /*&& chat.messages.lastOrNull()!!.accountId != chat.currentAccountId*/) scrollToEnd()
     }
 
     override fun scrollToEnd() {

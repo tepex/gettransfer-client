@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/back_top_rounded"
+              android:clickable="true"
+              android:focusable="true"
+              app:behavior_hideable="true"
+              android:gravity="start"
+              app:behavior_skipCollapsed="true"
+              android:paddingBottom="24dp"
+              app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+    <View
+            android:id="@+id/view"
+            android:layout_width="@dimen/bottom_sheet_offer_details_top_view_width"
+            android:layout_height="@dimen/bottom_sheet_offer_details_top_view_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/rectangle_swipe_down"/>
+
+    <TextView
+            android:id="@+id/tv_car_model_bs"
+            android:layout_marginTop="13dp"
+            android:layout_marginStart="9dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_gravity="start"
+            style="@style/black_semiBold"
+            tools:text="Ma best Mercedes"/>
+
+    <include
+            android:id="@+id/offer_conditions_bs"
+            layout="@layout/view_offer_conditions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="9dp"/>
+
+    <include
+            android:id="@+id/driver_abilities_bs"
+            layout="@layout/view_offer_driver_info"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <ImageView
+            android:id="@+id/offer_bs_main_photo"
+            android:layout_width="328dp"
+            android:layout_height="225dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center_horizontal"/>
+
+    <include
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            layout="@layout/view_divider_horizontal"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="8dp"
+            android:orientation="horizontal">
+
+        <TextView
+                android:text="@string/LNG_LANGUAGES"
+                android:textSize="15dp"
+                style="@style/black_regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <LinearLayout
+                android:id="@+id/languages_container_bs"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="7dp"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
+
+    <include layout="@layout/view_divider_horizontal"/>
+
+    <include
+            android:id="@+id/view_offer_rating_bs"
+            layout="@layout/view_offer_rating_details"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            tools:visibility="visible"/>
+
+    <include
+            android:id="@+id/offer_ratingDivider_bs"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            layout="@layout/view_divider_horizontal"/>
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
+
+        <include
+                android:id="@+id/offer_bottom_bs"
+                layout="@layout/view_offer_bottom"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"/>
+
+    </FrameLayout>
+
+
+</LinearLayout>

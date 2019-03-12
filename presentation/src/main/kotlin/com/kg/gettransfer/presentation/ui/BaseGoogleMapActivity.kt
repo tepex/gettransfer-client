@@ -128,15 +128,17 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
         }
     }
 
-    protected fun setPolyline(polyline: PolylineModel, routeModel: RouteModel) {
+    protected fun setPolyline(polyline: PolylineModel, routeModel: RouteModel, driverMode: Boolean = false) {
         if(polyline.startPoint == null || polyline.finishPoint == null) {
             Timber.w("Polyline model is empty for route: $routeModel")
             return
         }
+        val aBitmap = if (driverMode) R.drawable.ic_map_label_a_driver else R.drawable.ic_map_label_a
+        val bBitmap = if (driverMode) R.drawable.ic_map_label_b_driver else R.drawable.ic_map_label_b
 
         processGoogleMap(false) {
-            val bmPinA = getPinBitmap(routeModel.from, routeModel.dateTime, R.drawable.ic_map_label_a)
-            val bmPinB = getPinBitmap(routeModel.to!!, SystemUtils.formatDistance(this, routeModel.distance, true), R.drawable.ic_map_label_b)
+            val bmPinA = getPinBitmap(routeModel.from, routeModel.dateTime, aBitmap)
+            val bmPinB = getPinBitmap(routeModel.to!!, SystemUtils.formatDistance(this, routeModel.distance, true), bBitmap)
             if(Utils.isValidBitmap(bmPinA) && Utils.isValidBitmap(bmPinB)) {
                 val startMakerOptions = createStartMarker(polyline.startPoint, bmPinA)
                 val endMakerOptions = createEndMarker(polyline.finishPoint, bmPinB)
@@ -147,14 +149,17 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
         }
     }
 
-    protected fun setPolylineWithoutInfo(polyline: PolylineModel) {
+    protected fun setPolylineWithoutInfo(polyline: PolylineModel, driverMode: Boolean = true) {
         if(polyline.startPoint == null || polyline.finishPoint == null) {
             return
         }
 
+        val aBitmap = if (driverMode) R.drawable.ic_map_label_a_driver else R.drawable.ic_map_label_a
+        val bBitmap = if (driverMode) R.drawable.ic_map_label_b_driver else R.drawable.ic_map_label_b
+
         processGoogleMap(false) {
-            val bmPinA = getPinBitmapWithoutInfo(R.drawable.ic_map_label_a)
-            val bmPinB = getPinBitmapWithoutInfo(R.drawable.ic_map_label_b)
+            val bmPinA = getPinBitmapWithoutInfo(aBitmap)
+            val bmPinB = getPinBitmapWithoutInfo(bBitmap)
             if(Utils.isValidBitmap(bmPinA) && Utils.isValidBitmap(bmPinB)) {
                 val startMakerOptions = createStartMarker(polyline.startPoint, bmPinA)
                 val endMakerOptions = createEndMarker(polyline.finishPoint, bmPinB)
@@ -199,8 +204,9 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
             googleMap.moveCamera(cameraUpdate) }
     }
 
-    protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
-        val bmPinA = getPinBitmap(placeName, info, R.drawable.ic_map_label_a)
+    protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate, driver: Boolean = false) {
+        val markerRes = if (driver) R.drawable.ic_map_label_a_driver else R.drawable.ic_map_label_a
+        val bmPinA = getPinBitmap(placeName, info, markerRes)
         val startMakerOptions = MarkerOptions()
                 .position(point)
                 .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))

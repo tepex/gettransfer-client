@@ -10,10 +10,7 @@
             android:id="@+id/imgPassengers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_passenger_without_padding"
-            android:visibility="gone"
-
-            tools:visibility="visible"/>
+            app:srcCompat="@drawable/ic_passenger_without_padding"/>
 
     <TextView
             android:id="@+id/tv_countPassengers"
@@ -23,10 +20,8 @@
             android:textSize="@dimen/activity_transfer_details_text_size_17sp"
             android:textColor="@color/colorTextBlack"
             android:fontFamily="@font/sf_pro_text_regular"
-            android:visibility="gone"
 
-            tools:text=" X 3"
-            tools:visibility="visible"/>
+            tools:text=" X 3"/>
 
     <ImageView
             android:id="@+id/imgChildSeats"

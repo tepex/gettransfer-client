@@ -16,6 +16,8 @@
                 android:layout_height="wrap_content">
             <ImageView
                     android:id="@+id/imgOffer_mainPhoto"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
                     android:layout_width="160dp"
                     android:layout_height="112dp"/>
 

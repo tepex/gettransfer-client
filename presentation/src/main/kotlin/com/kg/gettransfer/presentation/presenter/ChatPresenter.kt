@@ -17,7 +17,6 @@ import org.koin.core.parameter.parametersOf
 import org.koin.standalone.inject
 import java.util.Calendar
 import org.slf4j.Logger
-import kotlin.math.log
 
 @InjectViewState
 class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventListener {
@@ -47,22 +46,26 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
             if(chatCachedResult.fromCache) chatModel = chatMapper.toView(chatCachedResult.model)
 
             initToolbar()
-            chatModel?.let { viewState.setChat(it, true) }
+            chatModel?.let { viewState.setChat(it) }
         }
         getChatFromRemote()
         onJoinRoom()
     }
 
-    @CallSuper
-    override fun detachView(view: ChatView?) {
-        super.detachView(view)
-        chatInteractor.onLeaveRoom(transferId)
-        systemInteractor.removeListener(this)
-    }
-
     private fun onJoinRoom(){
         chatInteractor.eventChatReceiver = this
         chatInteractor.onJoinRoom(transferId)
+        /*utils.launchSuspend {
+            val result = utils.asyncAwait { chatInteractor.sendMessageFromQueue(transferId) }
+            if (result.model > 0) getChatFromRemote()
+        }*/
+        utils.launchSuspend { utils.asyncAwait { chatInteractor.sendMessageFromQueue(transferId) } }
+    }
+
+    fun onLeaveRoom(){
+        chatInteractor.onLeaveRoom(transferId)
+        chatInteractor.eventChatReceiver = null
+        systemInteractor.removeListener(this)
     }
 
     private fun initToolbar(){
@@ -71,10 +74,9 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
         viewState.initToolbar(transferModel, offerModel, name?: "")
     }
 
-    override fun doingSomethingAfterSendingNewMessagesCached() {
+    /*override fun doingSomethingAfterSendingNewMessagesCached() {
         getChatFromRemote()
-        viewState.scrollToEnd()
-    }
+    }*/
 
     private fun getChatFromRemote() {
         utils.launchSuspend {
@@ -85,13 +87,11 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
                 if(chatModel == null){
                     chatModel = chatMapper.toView(chatRemoteResult.model)
                     initToolbar()
-                    viewState.setChat(chatModel!!, true)
                 } else {
-                    val oldMessagesSize = chatModel!!.messages.size
                     chatModel!!.messages = chatRemoteResult.model.messages.map { messageMapper.toView(it) }
-                    viewState.setChat(chatModel!!,
-                            oldMessagesSize < chatModel!!.messages.size && chatModel!!.messages.lastOrNull()!!.accountId != chatModel!!.currentAccountId)
+
                 }
+                viewState.setChat(chatModel!!)
             }
         }
     }
@@ -101,25 +101,28 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
         val newMessage = MessageModel(0, chatModel!!.currentAccountId, transferId, time, null, text, time.time)
         chatModel!!.messages = chatModel!!.messages.plus(newMessage)
         viewState.scrollToEnd()
-        utils.launchSuspend {
-            val chatCachedResult = utils.asyncAwait { chatInteractor.newMessage(messageMapper.fromView(newMessage)) }
-            chatModel = chatMapper.toView(chatCachedResult.model)
-            viewState.setChat(chatModel!!, true)
-        }
+        utils.launchSuspend { utils.asyncAwait { chatInteractor.newMessage(messageMapper.fromView(newMessage)) } }
+        sendAnalytics(MESSAGE_OUT)
+
     }
 
-    fun readMessage(messageId: Long) {
-        utils.launchSuspend { utils.asyncAwait { chatInteractor.readMessage(messageId) } }
-    }
+    fun readMessage(messageId: Long) = chatInteractor.readMessage(transferId, messageId)
 
     override fun onNewMessageEvent(message: Message) {
         log.error("new message: id = ${message.id}")
-        chatModel!!.messages = chatModel!!.messages.plus(messageMapper.toView(message))
-        viewState.scrollToEnd()
+        utils.launchSuspend{
+            val result = utils.asyncAwait{ chatInteractor.getChat(transferId, true) }
+            if(result.fromCache) {
+                chatModel!!.messages = result.model.messages.map { messageMapper.toView(it) }
+                viewState.notifyData()
+                if(message.accountId != chatModel!!.currentAccountId) viewState.scrollToEnd()
+            }
+        }
+        if (isIdValid(message)) sendAnalytics(MESSAGE_IN)
     }
 
     override fun onMessageReadEvent(message: Message) {
-        chatModel!!.messages.find { it.id == message.id }?.readAt = message.readAt
+        chatModel?.messages?.find { it.id == message.id }?.readAt = message.readAt
         viewState.notifyData()
     }
 
@@ -128,4 +131,18 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
     }
 
     override fun onSocketDisconnected() {}
+
+    private fun sendAnalytics(event: String) =
+        analytics.logEvent(event, createEmptyBundle(), emptyMap())
+
+    private fun isIdValid(message: Message) =
+            message.accountId != chatModel!!.currentAccountId &&
+                    chatModel!!.currentAccountId != NO_ID
+
+    companion object {
+        const val MESSAGE_IN  = "message_in"
+        const val MESSAGE_OUT = "message_out"
+
+        const val NO_ID       = 0L
+    }
 }

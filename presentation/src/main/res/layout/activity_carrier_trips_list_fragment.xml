@@ -26,8 +26,8 @@
                 android:id="@+id/tabsForRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/views_carrier_trips_activity_tab_layout_height"
-                android:background="@color/colorPrimary"
-                app:tabIndicatorColor="@color/colorTextBlack"
+                android:background="@color/primaryDriver"
+                app:tabIndicatorColor="@color/colorWhite"
                 app:tabTextAppearance="@style/TabLayoutTextStyle"/>
 
             <android.support.v7.widget.RecyclerView

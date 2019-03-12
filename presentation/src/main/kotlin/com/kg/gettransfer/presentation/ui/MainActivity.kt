@@ -55,6 +55,7 @@ import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
 import kotlinx.android.synthetic.main.view_last_trip_rate.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
+import kotlinx.android.synthetic.main.view_navigation.view.*
 import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
 import kotlinx.android.synthetic.main.view_rate_in_store.view.*
@@ -102,7 +103,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.Permissi
     override fun getPresenter(): MainPresenter = presenter
 
     @CallSuper
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
@@ -149,7 +150,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.Permissi
     }
 
     @CallSuper
-    protected override fun onPostCreate(savedInstanceState: Bundle?) {
+    override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) search_panel.elevation = resources.getDimension(R.dimen.search_elevation)
         searchFrom.setUneditable()
@@ -212,6 +213,11 @@ class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.Permissi
         (navFooterVersion as TextView).text =
                 String.format(getString(R.string.nav_footer_version), versionName, versionCode)
         //navFooterReadMore.text = Html.fromHtml(Utils.convertMarkdownToHtml(getString(R.string.LNG_READMORE)))
+        setViewColor(navViewHeader, R.color.colorPrimary)
+        navViewHeader.navHeaderMode.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
+        navViewHeader.navHeaderName.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
+        navViewHeader.navHeaderEmail.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
+        navHeaderMode.isVisible = false
 
         readMoreListener.let {
             navFooterStamp.setOnClickListener   (it)
@@ -326,7 +332,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.Permissi
     }
 
     override fun moveCenterMarker(point: LatLng) {
-        centerMarker?.let { it.setPosition(point) }
+        centerMarker?.position = point
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
@@ -376,6 +382,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.Permissi
 
     override fun setProfile(profile: ProfileModel) {
         profile.apply {
+            navHeaderMode.text = getString(R.string.LNG_MENU_TITLE_PASSENGER)
             navHeaderName.isVisible  = isLoggedIn()
             navHeaderEmail.isVisible = isLoggedIn()
             navRequests.isVisible    = isLoggedIn()
@@ -543,7 +550,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.Permissi
 
     companion object {
         @JvmField val PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-        @JvmField val PERMISSION_REQUEST = 2211
+        const val PERMISSION_REQUEST = 2211
         const val FADE_DURATION = 500L
         const val MAX_INIT_ZOOM = 2.0f
 

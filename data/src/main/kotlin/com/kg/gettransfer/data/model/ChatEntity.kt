@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class ChatEntity(
         @SerialName(ACCOUNTS)           val accounts: Map<Long, ChatAccountEntity>,
         @SerialName(CURRENT_ACCOUNT_ID) val currentAccountId: Long,
-        @SerialName(MESSAGES)           val messages: List<MessageEntity>
+        @SerialName(MESSAGES)           var messages: List<MessageEntity>
 ){
     companion object {
         const val ENTITY_NAME        = "chat"
@@ -20,7 +20,7 @@ data class ChatEntity(
 @Serializable
 data class ChatAccountEntity(
         @SerialName(EMAIL)     val email: String,
-        @SerialName(FULL_NAME) val fullName: String,
+        @SerialName(FULL_NAME) val fullName: String?,
         @SerialName(ROLES)     val roles: List<String>
 ) {
     companion object {

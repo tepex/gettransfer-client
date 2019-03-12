@@ -39,8 +39,14 @@ class LoginPresenter : BasePresenter<LoginView>() {
             if (result.error == null) {
                 if (!screenForReturn.isNullOrEmpty()) {
                     when (screenForReturn) {
-                        Screens.CARRIER_MODE   -> router.navigateTo(Screens.ChangeMode(checkCarrierMode()))
-                        Screens.PASSENGER_MODE -> router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+                        Screens.CARRIER_MODE   -> {
+                            router.navigateTo(Screens.ChangeMode(checkCarrierMode()))
+                            analytics.logProfile(Analytics.DRIVER_TYPE)
+                        }
+                        Screens.PASSENGER_MODE -> {
+                            router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+                            analytics.logProfile(Analytics.PASSENGER_TYPE)
+                        }
                         Screens.OFFERS         -> {
                             router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
                             router.navigateTo(Screens.Offers(transferId))

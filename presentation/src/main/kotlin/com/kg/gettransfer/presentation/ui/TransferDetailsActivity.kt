@@ -47,6 +47,7 @@ import com.kg.gettransfer.presentation.view.TransferDetailsView
 import kotlinx.android.synthetic.main.activity_transfer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_transfer_details.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+import kotlinx.android.synthetic.main.transfer_details_header.*
 import kotlinx.android.synthetic.main.transfer_details_header.view.*
 import kotlinx.android.synthetic.main.view_about_item.*
 import kotlinx.android.synthetic.main.view_communication_button.*
@@ -171,14 +172,16 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         topCommunicationButtons.btnSupport.setOnClickListener { presenter.sendEmail(null, transfer.id) }
         bottomCommunicationButtons.btnSupport.setOnClickListener { presenter.sendEmail(null, transfer.id) }
 
-        when (transfer.status) {
+        booking_info.text = when (transfer.status) {
             Transfer.Status.NEW -> {
                 if (transfer.offersCount > 0) getString(R.string.LNG_BOOK_OFFER)
                 else getString(R.string.LNG_WAIT_FOR_OFFERS)
             }
             Transfer.Status.PERFORMED -> {
-                if (transfer.dateTime.after(Calendar.getInstance().time)) getString(R.string.LNG_TRANSFER_WILL_START)
-                        .plus("")
+                if (transfer.dateTime.after(Calendar.getInstance().time)) getString(R.string.LNG_TRANSFER)
+                        .plus(" #${transfer.id} ")
+                        .plus(getString(R.string.LNG_WILL_START_IN))
+                        .plus(" ")
                         .plus(Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer)))
                 else getString(R.string.LNG_TRANSFER_IN_PROGRESS)
             }
@@ -339,12 +342,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
         with(transfer_details_view_seats) {
             tv_countPassengers.text = getString(R.string.X_SIGN).plus("${transfer.countPassengers}")
-            if (transfer.countChilds > 0){
-                tvCountChildren.text = getString(R.string.X_SIGN).plus("${transfer.countChilds}")
-            } else {
-                imgChildSeats.isVisible = false
-                tvCountChildren.isVisible = false
-            }
+            tvCountChildren.text = getString(R.string.X_SIGN).plus("${transfer.countChilds}")
+            imgChildSeats.isVisible =  transfer.countChilds > 0
+            tvCountChildren.isVisible = transfer.countChilds > 0
         }
     }
 
@@ -399,8 +399,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
                 driver_email.isVisible = true
                 Utils.setSelectOperationListener(this, driver_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
                     presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
-                topCommunicationButtons.btnChat.setOnClickListener { presenter.sendEmail(email, null) }
-                bottomCommunicationButtons.btnChat.setOnClickListener { presenter.sendEmail(email, null) }
+                topCommunicationButtons.btnChat.setOnClickListener { /*presenter.sendEmail(email, null)*/ presenter.onChatClick() }
+                bottomCommunicationButtons.btnChat.setOnClickListener { /*presenter.sendEmail(email, null)*/ presenter.onChatClick() }
                 topCommunicationButtons.btnChat.isVisible = true
                 bottomCommunicationButtons.btnChat.isVisible = true
             }

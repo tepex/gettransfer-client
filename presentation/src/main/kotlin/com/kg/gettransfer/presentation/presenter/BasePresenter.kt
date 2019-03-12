@@ -57,7 +57,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     protected val carrierTripInteractor: CarrierTripInteractor by inject()
     protected val chatInteractor: ChatInteractor by inject()
 
-    private var sendingMessagesNow = false
+    //private var sendingMessagesNow = false
     private var openedLoginScreenForUnauthorizedUser = false
 
     open fun onBackCommandClick() {
@@ -105,18 +105,18 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
         }
     }
 
-    fun checkNewMessagesCached() {
+    /*fun checkNewMessagesCached() {
         if(!sendingMessagesNow) {
+            sendingMessagesNow = true
             utils.launchSuspend {
-                sendingMessagesNow = true
-                val result = utils.asyncAwait { chatInteractor.sendAllNewMessages() }
+                val result = utils.asyncAwait { chatInteractor.sendAllNewMessagesSocket() }
                 if (result.model > 0) doingSomethingAfterSendingNewMessagesCached()
-                sendingMessagesNow = false
             }
+            sendingMessagesNow = false
         }
-    }
+    }*/
 
-    open fun doingSomethingAfterSendingNewMessagesCached() {}
+    //open fun doingSomethingAfterSendingNewMessagesCached() {}
 
     @CallSuper
     override fun onDestroy() {

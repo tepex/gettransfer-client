@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.NavigationView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/navView"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_gravity="start|top"
-    android:gravity="start">
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/navView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start|top"
+        android:gravity="start">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -43,12 +43,23 @@
                 app:srcCompat="@android:drawable/ic_menu_share" />
 
             <TextView
+                android:id="@+id/navHeaderMode"
+                style="@style/nav_item_subtitle"
+                android:layout_marginStart="@dimen/nav_header_logo_start"
+                android:layout_below="@+id/navHeaderLogo"
+                android:textSize="12sp"
+                android:visibility="gone"
+
+                tools:text="Driver mode"
+                tools:visibility="visible"/>
+
+            <TextView
                 android:id="@+id/navHeaderName"
                 style="@style/nav_item_title"
                 android:layout_marginStart="@dimen/nav_header_logo_start"
                 android:visibility="visible"
-                android:layout_below="@+id/navHeaderLogo"
-                android:text="Maluta Skuratov"/>
+                android:layout_below="@+id/navHeaderMode"
+                tools:text="Maluta Skuratov"/>
 
             <TextView
                 android:id="@+id/navHeaderEmail"
@@ -57,7 +68,7 @@
                 android:layout_marginBottom="6dp"
                 android:layout_marginStart="@dimen/nav_header_logo_start"
                 android:visibility="visible"
-                android:text="android.studio@android.com"/>
+                tools:text="android.studio@android.com"/>
 
         </RelativeLayout>
 
@@ -74,17 +85,30 @@
                 layout="@layout/nav_item_login"
                 android:visibility="visible"/>
 
+            <include
+                android:id="@+id/navCarrierTransfers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/nav_item_transfers"
+                android:visibility="gone"
+
+                tools:visibility="visible"/>
+
             <include android:id="@+id/navRequests"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 layout="@layout/nav_item_requests"
-                android:visibility="gone"/>
+                android:visibility="gone"
+
+                tools:visibility="visible"/>
 
             <include android:id="@+id/navCarrierTrips"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 layout="@layout/nav_item_carrier_trips"
-                android:visibility="gone"/>
+                android:visibility="gone"
+
+                tools:visibility="visible"/>
 
             <include android:id="@+id/navSettings"
                 android:layout_width="match_parent"

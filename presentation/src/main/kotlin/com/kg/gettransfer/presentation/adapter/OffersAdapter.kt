@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.adapter
 
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,13 +14,13 @@ import kotlinx.android.synthetic.main.offer_expanded_no_photo.view.*
 import kotlinx.android.synthetic.main.offer_tiny.view.*
 import kotlinx.android.synthetic.main.view_offer_bottom.view.*
 
-class OffersAdapter(private val offer: List<OfferItem>,
+class OffersAdapter(private val offers: MutableList<OfferItem>,
                     private val clickHandler: OfferClickListener) : RecyclerView.Adapter<OffersAdapter.OfferItemViewHolder>() {
 
 
-    override fun getItemCount() = offer.size
+    override fun getItemCount() = offers.size
     override fun onBindViewHolder(p0: OfferItemViewHolder, p1: Int) =
-            p0.bindOffer(offer[p0.adapterPosition], clickHandler)
+            p0.bindOffer(offers[p0.adapterPosition], clickHandler)
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int) =
         when (p1) {
@@ -38,7 +37,7 @@ class OffersAdapter(private val offer: List<OfferItem>,
     override fun getItemViewType(position: Int) =
             if (viewType == PRESENTATION.TINY) OFFER_TINY
             else
-                with(offer[position]) {
+                with(offers[position]) {
                     when {
                         this is OfferModel -> if (vehicle.photos.isEmpty()) OFFER_NO_PHOTO else OFFER_EXPANDED
                         else -> OFFER_EXPANDED
@@ -62,7 +61,7 @@ class OffersAdapter(private val offer: List<OfferItem>,
                         /*  set listener to view to open bottom sheet  */
                     }
                     else           -> {
-                        OfferItemBindDelegate.bindOfferTiny(this, offerItem as OfferModel)
+                        OfferItemBindDelegate.bindOfferTiny(this, offerItem)
                         hangListeners(btn_book_tiny, img_car_photo_tiny, clickListener, offerItem)
                     }
                 }
@@ -74,6 +73,11 @@ class OffersAdapter(private val offer: List<OfferItem>,
             bookView.setOnClickListener { clickHandler(offerItem, false) }
             initDetails.setOnClickListener { clickHandler(offerItem, true) }
         }
+    }
+
+    fun add(offer: OfferModel) {
+        offers.add(offer)
+        notifyItemInserted(offers.size - 1)
     }
 
     fun changeItemRepresentation() {

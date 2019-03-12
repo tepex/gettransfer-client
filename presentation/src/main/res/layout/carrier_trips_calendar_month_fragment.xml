@@ -12,8 +12,8 @@
         android:gravity="center"
         android:textSize="@dimen/carrier_trips_month_fragment_month_name_size"
         android:fontFamily="@font/sf_pro_text_regular"
-        android:textColor="@color/colorTextBlack"
-        android:background="@color/colorWhite"
+        android:textColor="@color/colorWhite"
+        android:background="@color/primaryDriver"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <View

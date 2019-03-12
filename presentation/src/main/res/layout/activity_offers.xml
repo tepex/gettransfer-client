@@ -255,16 +255,16 @@
 
             </LinearLayout>
 
-            <View
-                android:id="@+id/tintBackground"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#99000000"
-                android:visibility="gone" />
-
         </FrameLayout>
 
     </android.support.v4.widget.NestedScrollView>
+
+    <View
+        android:id="@+id/tintBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:visibility="gone" />
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -273,7 +273,7 @@
 
         <include
             android:id="@+id/sheetOfferDetails"
-            layout="@layout/bottom_sheet_offer_details" />
+            layout="@layout/bottom_sheet_offers" />
 
     </android.support.design.widget.CoordinatorLayout>
 

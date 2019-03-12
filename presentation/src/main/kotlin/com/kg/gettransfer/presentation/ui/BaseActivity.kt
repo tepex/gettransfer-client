@@ -16,6 +16,7 @@ import android.os.PersistableBundle
 import android.support.annotation.*
 
 import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
@@ -54,6 +55,7 @@ import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 
 import kotlinx.android.synthetic.main.toolbar.view.*
+import kotlinx.android.synthetic.main.view_navigation.*
 
 import org.koin.android.ext.android.inject
 
@@ -105,6 +107,10 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         }
     }*/
 
+    protected fun setViewColor(view: View, @ColorRes color: Int) {
+        view.setBackgroundColor(ContextCompat.getColor(this, color))
+    }
+
     protected fun hideBottomSheet(bottomSheet: BottomSheetBehavior<View>, bottomSheetLayout: View, hiddenState: Int, event: MotionEvent): Boolean{
         val outRect = Rect()
         bottomSheetLayout.getGlobalVisibleRect(outRect)
@@ -122,7 +128,8 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     /* BroadCast receivers */
     private val inetReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            if(setNetworkAvailability(context)) getPresenter().checkNewMessagesCached()
+            //if(setNetworkAvailability(context)) getPresenter().checkNewMessagesCached()
+            setNetworkAvailability(context)
         }
     }
 

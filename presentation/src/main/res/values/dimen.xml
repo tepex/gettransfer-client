@@ -65,6 +65,8 @@
 	<dimen name="search_form_array_margin">12dp</dimen>
 	<dimen name="search_form_clear_padding_end">65dp</dimen>
 	<dimen name="search_form_address_margin">10dp</dimen>
+	<dimen name="search_form_title_padding_end">38dp</dimen>
+	<dimen name="search_form_title_padding_start">0dp</dimen>
 	<dimen name="inverse_btn_margin_end">16dp</dimen>
     <dimen name="point_map_icon_margin">10dp</dimen>
     <dimen name="point_map_height">46.6dp</dimen>
@@ -128,7 +130,7 @@
 	<dimen name="create_transfer_cb_size">15dp</dimen>
 	<dimen name="create_transfer_agreement_text_size">13sp</dimen>
 	<dimen name="create_transfer_agreement_text_margin_start">55dp</dimen>
-	<dimen name="create_transfer_agreement_text_margin_end">17dp</dimen>
+	<dimen name="create_transfer_agreement_text_margin_end">8dp</dimen>
 	<dimen name="create_transfer_map_height">208dp</dimen>
 	<dimen name="create_transfer_additionals_end_margin">25dp</dimen>
 	<dimen name="create_transfer_additionals_start_margin">57dp</dimen>
@@ -572,7 +574,7 @@
 	<dimen name="bottom_sheet_offer_details_elements_padding_start_end">16dp</dimen>
 	<dimen name="bottom_sheet_offer_details_layouts_height">45dp</dimen>
 	<dimen name="bottom_sheet_offer_details_layouts_ratings_padding_bottom">12dp</dimen>
-	<dimen name="bottom_sheet_offer_details_ratings_texts_margin_top">4dp</dimen>
+	<dimen name="bottom_sheet_offer_details_ratings_texts_margin_top">10dp</dimen>
 	<dimen name="bottom_sheet_offer_details_prices_margin">5dp</dimen>
 	<dimen name="bottom_sheet_offer_details_dimen1_margin_top">8dp</dimen>
 	<dimen name="bottom_sheet_offer_details_car_color_indicator_size">16dp</dimen>

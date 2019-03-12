@@ -11,4 +11,5 @@ class CarrierTripsCalendarMonthPagerAdapter(fm: FragmentManager) : FragmentPager
 
     override fun getCount() = MONTHS_COUNT
     override fun getItem(position: Int) = CarrierTripsCalendarMonthFragment.newInstance(position)
+
 }

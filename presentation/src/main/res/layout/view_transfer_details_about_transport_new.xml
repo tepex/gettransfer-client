@@ -10,7 +10,7 @@
             android:id="@+id/car_model_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:title_transfer_details="Mercedes-Benz E-Class"
+            tools:title_transfer_details="Mercedes-Benz E-Class "
             tools:input_transfer_details="C786EO77"
     />
 

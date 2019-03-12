@@ -155,7 +155,7 @@ class ApiCore : KoinComponent {
 
         private val ERROR_PATTERN = Regex("^\\<h1\\>(.+)\\<\\/h1\\>$")
 
-        private const val PARAM_API_KEY  = "api_key"
+        const val PARAM_API_KEY  = "api_key"
         private const val PARAM_LOCALE   = "locale"
         private const val PARAM_CURRENCY = "currency"
     }

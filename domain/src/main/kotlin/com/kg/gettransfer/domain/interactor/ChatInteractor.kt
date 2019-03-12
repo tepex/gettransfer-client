@@ -17,10 +17,11 @@ class ChatInteractor(private val repository: ChatRepository) {
                 false -> repository.getChatRemote(transferId)
                 true -> repository.getChatCached(transferId)
             }//.apply { if(!isError()) chat = model }
-    suspend fun newMessage(message: Message) = repository.newMessage(message)//.apply { if(!isError()) chat?.messages!!.toMutableList().add(model) }
-    suspend fun readMessage(messageId: Long) = repository.readMessage(messageId)
+    suspend fun newMessage(message: Message) = repository.onSendMessage(message)//.apply { if(!isError()) chat?.messages!!.toMutableList().add(model) }
+    fun readMessage(transferId: Long, messageId: Long) = repository.onReadMessage(transferId, messageId)
 
     suspend fun sendAllNewMessages(transferId: Long? = null) = repository.sendAllNewMessages(transferId)
+    fun sendMessageFromQueue(transferId: Long) = repository.sendMessageFromQueue(transferId)
 
     fun onJoinRoom(transferId: Long) = repository.onJoinRoom(transferId)
     fun onNewMessageEvent(message: Message) = eventChatReceiver?.onNewMessageEvent(message)

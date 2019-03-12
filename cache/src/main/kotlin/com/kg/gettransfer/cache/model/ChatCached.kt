@@ -18,7 +18,7 @@ data class ChatCached(
 @Serializable
 data class ChatAccountCached(
         @ColumnInfo(name = ChatAccountEntity.EMAIL)     val email: String,
-        @ColumnInfo(name = ChatAccountEntity.FULL_NAME) val fullName: String,
+        @ColumnInfo(name = ChatAccountEntity.FULL_NAME) val fullName: String?,
         @ColumnInfo(name = ChatAccountEntity.ROLES)     val roles: StringList
 )
 

@@ -15,7 +15,8 @@ class MessageMapper : Mapper<MessageEntity, Message> {
                     transferId = type.transferId,
                     createdAt  = dateFormat.get().parse(type.createdAt),
                     readAt     = type.readAt?.let { dateFormat.get().parse(it) },
-                    text       = type.text
+                    text       = type.text,
+                    sendAt     = type.sendAt
             )
 
     override fun toEntity(type: Message) =

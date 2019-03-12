@@ -18,6 +18,6 @@ data class ChatModel(
 
 data class ChatAccountModel(
         val email: String,
-        val fullName: String,
+        val fullName: String?,
         val roles: List<String>
 )

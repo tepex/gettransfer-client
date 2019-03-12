@@ -4,9 +4,11 @@ import android.Manifest
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.support.annotation.CallSuper
 
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.domain.ApiException
@@ -22,6 +24,7 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.utilities.AppLifeCycleObserver
 
 class SplashActivity : AppCompatActivity() {
     companion object {
@@ -82,6 +85,8 @@ class SplashActivity : AppCompatActivity() {
                 finish()
             }*/
             utils.asyncAwait { systemInteractor.coldStart() }
+            val intent = Intent(AppLifeCycleObserver.APP_STATE).apply { putExtra(AppLifeCycleObserver.STATUS, true) }
+            Handler().postDelayed({ LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent) }, 1000)
             openNextScreen()
             finish()
         }

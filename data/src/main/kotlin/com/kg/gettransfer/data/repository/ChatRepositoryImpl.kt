@@ -38,7 +38,21 @@ class ChatRepositoryImpl(
         val result: ResultEntity<ChatEntity?> = retrieveRemoteEntity {
             factory.retrieveRemoteDataStore().getChat(transferId)
         }
+        val resultNewMessages: ResultEntity<List<MessageEntity>?> = retrieveCacheEntity {
+            factory.retrieveCacheDataStore().getNewMessagesForTransfer(transferId)
+        }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addChat(transferId, it) }
+        resultNewMessages.entity?.let {
+            result.entity?.messages?.plus(it)
+        }
+        val chat = result.entity?.let { chatMapper.fromEntity(it) } ?: DEFAULT_CHAT
+        resultNewMessages.entity?.map {
+            val newMessage = messageMapper.fromEntity(it)
+            if (newMessage.accountId == DEFAULT_CHAT.currentAccountId && chat.currentAccountId != DEFAULT_CHAT.currentAccountId) {
+                newMessage.accountId = chat.currentAccountId
+            }
+            chat.messages = chat.messages.plus(newMessage)
+        }
         return Result(result.entity?.let { chatMapper.fromEntity(it) } ?: DEFAULT_CHAT, result.error?.let { ExceptionMapper.map(it) })
     }
 
@@ -76,19 +90,27 @@ class ChatRepositoryImpl(
         return Result(sendedMessagesCount)
     }
 
-    override suspend fun readMessage(messageId: Long): Result<Unit> {
-        val result: ResultEntity<Boolean?> = retrieveRemoteEntity{
-            factory.retrieveRemoteDataStore().readMessage(messageId)
-        }
-        return Result(Unit, result.error?.let { ExceptionMapper.map(it) })
+    override fun sendMessageFromQueue(transferId: Long): Result<Unit> {
+        val newMessages = factory.retrieveCacheDataStore().getNewMessagesForTransfer(transferId)
+        newMessages.firstOrNull()?.let { chatDataStoreIO.onSendMessageEmit(it.transferId, it.text) }
+        return Result(Unit)
     }
 
     override fun onJoinRoom(transferId: Long) = chatDataStoreIO.onJoinRoomEmit(transferId)
-
     override fun onLeaveRoom(transferId: Long) = chatDataStoreIO.onLeaveRoomEmit(transferId)
+    override fun onSendMessage(message: Message): Result<Unit> {
+        factory.retrieveCacheDataStore().newMessageToCache(messageMapper.toEntity(message))
+        sendMessageFromQueue(message.transferId)
+        return Result(Unit)
+    }
+    override fun onReadMessage(transferId: Long, messageId: Long) = chatDataStoreIO.onReadMessageEmit(transferId, messageId)
 
     internal fun onNewMessageEvent(message: MessageEntity) {
         factory.retrieveCacheDataStore().addMessage(message)
+        val newMessages = factory.retrieveCacheDataStore().getNewMessagesForTransfer(message.transferId)
+        val messageFromCache = newMessages.find { it.accountId == message.accountId && it.text == message.text }
+        messageFromCache?.let { factory.retrieveCacheDataStore().deleteNewMessageFromCache(it.id) }
+        sendMessageFromQueue(message.transferId)
         chatReceiver.onNewMessageEvent(messageMapper.fromEntity(message))
     }
 

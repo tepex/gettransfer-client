@@ -12,11 +12,7 @@ import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.mapper.TransferMapper
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
-import com.kg.gettransfer.presentation.model.BookNowOfferModel
-import com.kg.gettransfer.presentation.model.OfferItem
-
-import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 
@@ -259,9 +255,23 @@ class OffersPresenter : BasePresenter<OffersView>() {
         analytics.logEvent(Analytics.EVENT_OFFERS, createStringBundle(Analytics.PARAM_KEY_FILTER, value), map)
     }
 
+    fun hasAnyRate(carrier: CarrierModel) =
+            with(carrier.ratings) {
+                return@with (driver != null && driver != NO_RATE) ||
+                        (vehicle != null && vehicle != NO_RATE) ||
+                        (fair != null && fair != NO_RATE) ||
+                        carrier.approved
+
+
+            }
+
     enum class SortType {
         RATING_ASC, RATING_DESC,
         PRICE_ASC, PRICE_DESC,
         YEAR_ASC, YEAR_DESC;
+    }
+
+    companion object {
+        const val NO_RATE = 0f
     }
 }
