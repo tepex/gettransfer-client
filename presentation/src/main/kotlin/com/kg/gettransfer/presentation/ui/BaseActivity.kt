@@ -128,7 +128,8 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     /* BroadCast receivers */
     private val inetReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            if(setNetworkAvailability(context)) getPresenter().checkNewMessagesCached()
+            //if(setNetworkAvailability(context)) getPresenter().checkNewMessagesCached()
+            setNetworkAvailability(context)
         }
     }
 

@@ -13,7 +13,6 @@ import com.kg.gettransfer.presentation.model.MessageModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.view.ChatView
-import com.kg.gettransfer.utilities.Analytics
 import org.koin.core.parameter.parametersOf
 import org.koin.standalone.inject
 import java.util.Calendar
@@ -33,8 +32,6 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
 
     internal var transferId = 0L
 
-    internal var sendMessagesAfterReconnect = true
-
     @CallSuper
     override fun attachView(view: ChatView) {
         super.attachView(view)
@@ -49,25 +46,25 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
             if(chatCachedResult.fromCache) chatModel = chatMapper.toView(chatCachedResult.model)
 
             initToolbar()
-            chatModel?.let { viewState.setChat(it, true) }
+            chatModel?.let { viewState.setChat(it) }
         }
         getChatFromRemote()
+        onJoinRoom()
     }
 
-    fun onJoinRoom(sendMessages: Boolean){
-        sendMessagesAfterReconnect = false
+    private fun onJoinRoom(){
         chatInteractor.eventChatReceiver = this
         chatInteractor.onJoinRoom(transferId)
-        if(sendMessages) {
-            utils.launchSuspend {
-                val result = utils.asyncAwait { chatInteractor.sendAllNewMessagesSocket() }
-                if (result.model > 0) doingSomethingAfterSendingNewMessagesCached()
-            }
-        }
+        /*utils.launchSuspend {
+            val result = utils.asyncAwait { chatInteractor.sendMessageFromQueue(transferId) }
+            if (result.model > 0) getChatFromRemote()
+        }*/
+        utils.launchSuspend { utils.asyncAwait { chatInteractor.sendMessageFromQueue(transferId) } }
     }
 
     fun onLeaveRoom(){
         chatInteractor.onLeaveRoom(transferId)
+        chatInteractor.eventChatReceiver = null
         systemInteractor.removeListener(this)
     }
 
@@ -77,10 +74,9 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
         viewState.initToolbar(transferModel, offerModel, name?: "")
     }
 
-    override fun doingSomethingAfterSendingNewMessagesCached() {
+    /*override fun doingSomethingAfterSendingNewMessagesCached() {
         getChatFromRemote()
-        viewState.scrollToEnd()
-    }
+    }*/
 
     private fun getChatFromRemote() {
         utils.launchSuspend {
@@ -91,13 +87,11 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
                 if(chatModel == null){
                     chatModel = chatMapper.toView(chatRemoteResult.model)
                     initToolbar()
-                    viewState.setChat(chatModel!!, true)
                 } else {
-                    val oldMessagesSize = chatModel!!.messages.size
                     chatModel!!.messages = chatRemoteResult.model.messages.map { messageMapper.toView(it) }
-                    viewState.setChat(chatModel!!,
-                            oldMessagesSize < chatModel!!.messages.size && chatModel!!.messages.lastOrNull()!!.accountId != chatModel!!.currentAccountId)
+
                 }
+                viewState.setChat(chatModel!!)
             }
         }
     }
@@ -133,12 +127,10 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
     }
 
     override fun onSocketConnected() {
-        onJoinRoom(sendMessagesAfterReconnect)
+        onJoinRoom()
     }
 
-    override fun onSocketDisconnected() {
-        sendMessagesAfterReconnect = true
-    }
+    override fun onSocketDisconnected() {}
 
     private fun sendAnalytics(event: String) =
         analytics.logEvent(event, createEmptyBundle(), emptyMap())

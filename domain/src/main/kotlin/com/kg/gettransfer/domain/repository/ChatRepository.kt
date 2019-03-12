@@ -12,7 +12,7 @@ interface ChatRepository {
 
     fun onJoinRoom(transferId: Long)
     fun onLeaveRoom(transferId: Long)
-    suspend fun onSendMessage(message: Message): Result<Int>
+    fun onSendMessage(message: Message): Result<Unit>
     fun onReadMessage(transferId: Long, messageId: Long)
-    suspend fun sendAllNewMessagesSocket(transferId: Long? = null): Result<Int>
+    fun sendMessageFromQueue(transferId: Long): Result<Unit>
 }

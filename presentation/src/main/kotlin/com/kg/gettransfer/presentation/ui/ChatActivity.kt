@@ -32,7 +32,6 @@ class ChatActivity : BaseActivity(), ChatView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.transferId = intent.getLongExtra(ChatView.EXTRA_TRANSFER_ID, 0)
-        presenter.onJoinRoom(presenter.sendMessagesAfterReconnect)
 
         setContentView(R.layout.activity_chat)
 
@@ -53,8 +52,8 @@ class ChatActivity : BaseActivity(), ChatView {
 
     @CallSuper
     override fun onPause() {
-        presenter.onLeaveRoom()
         super.onPause()
+        presenter.onLeaveRoom()
     }
 
     override fun initToolbar(transfer: TransferModel?, offer: OfferModel?, name: String) {
@@ -78,7 +77,7 @@ class ChatActivity : BaseActivity(), ChatView {
         }
     }
 
-    override fun setChat(chat: ChatModel, withScrollDown: Boolean) {
+    override fun setChat(chat: ChatModel) {
         val oldMessagesSize = rvMessages.adapter?.itemCount
         rvMessages.apply {
             if(adapter == null){
@@ -88,7 +87,7 @@ class ChatActivity : BaseActivity(), ChatView {
                 rvMessages.adapter?.notifyDataSetChanged()
             }
         }
-        if (withScrollDown || (oldMessagesSize ?: 0 < chat.messages.size && chat.messages.lastOrNull()!!.accountId != chat.currentAccountId)) scrollToEnd()
+        if (oldMessagesSize ?: 0 < chat.messages.size /*&& chat.messages.lastOrNull()!!.accountId != chat.currentAccountId*/) scrollToEnd()
     }
 
     override fun scrollToEnd() {

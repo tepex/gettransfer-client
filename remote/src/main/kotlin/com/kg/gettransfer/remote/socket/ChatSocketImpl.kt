@@ -20,7 +20,7 @@ class ChatSocketImpl: ChatSocketEmitter, KoinComponent {
     private val socketManager: SocketManager = get()
 
     override fun onJoinRoomEmit(transferId: Long) { socketManager.emitEvent(JOIN_ROOM_EVENTS, transferId) }
-    override fun onLeaveRoomEmit(transferId: Long) { socketManager.emitEvent(LEAVE_ROOM_EVENTS, transferId) }
+    override fun onLeaveRoomEmit(transferId: Long) { socketManager.emitEvent(LEAVE_ROOM_EVENTS, transferId, true) }
     override fun onSendMessageEmit(transferId: Long, text: String): Boolean {
         JSONObject().apply {
             put(MessageNewSocketModel.ROOM, transferId)

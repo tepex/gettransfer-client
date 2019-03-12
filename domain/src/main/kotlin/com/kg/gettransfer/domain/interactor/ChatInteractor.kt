@@ -21,7 +21,7 @@ class ChatInteractor(private val repository: ChatRepository) {
     fun readMessage(transferId: Long, messageId: Long) = repository.onReadMessage(transferId, messageId)
 
     suspend fun sendAllNewMessages(transferId: Long? = null) = repository.sendAllNewMessages(transferId)
-    suspend fun sendAllNewMessagesSocket(transferId: Long? = null) = repository.sendAllNewMessagesSocket(transferId)
+    fun sendMessageFromQueue(transferId: Long) = repository.sendMessageFromQueue(transferId)
 
     fun onJoinRoom(transferId: Long) = repository.onJoinRoom(transferId)
     fun onNewMessageEvent(message: Message) = eventChatReceiver?.onNewMessageEvent(message)

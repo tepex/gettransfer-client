@@ -4,7 +4,7 @@ import java.util.Date
 
 data class Message(
         override val id: Long,
-        val accountId: Long,
+        var accountId: Long,
         val transferId: Long,
         val createdAt: Date,
         var readAt: Date?,

@@ -105,18 +105,18 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
         }
     }
 
-    fun checkNewMessagesCached() {
-        /*if(!sendingMessagesNow) {
+    /*fun checkNewMessagesCached() {
+        if(!sendingMessagesNow) {
             sendingMessagesNow = true
             utils.launchSuspend {
                 val result = utils.asyncAwait { chatInteractor.sendAllNewMessagesSocket() }
                 if (result.model > 0) doingSomethingAfterSendingNewMessagesCached()
             }
             sendingMessagesNow = false
-        }*/
-    }
+        }
+    }*/
 
-    open fun doingSomethingAfterSendingNewMessagesCached() {}
+    //open fun doingSomethingAfterSendingNewMessagesCached() {}
 
     @CallSuper
     override fun onDestroy() {
