@@ -139,6 +139,7 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
 
     override fun initNavigation(profile: ProfileModel) {
         navHeaderMode.text = getString(R.string.LNG_MENU_TITLE_DRIVE)
+        navHeaderMode.isVisible = true
         navHeaderName.isVisible = true
         navHeaderEmail.isVisible = true
         navHeaderName.text = profile.name

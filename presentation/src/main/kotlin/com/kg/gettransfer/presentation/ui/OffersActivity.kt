@@ -93,6 +93,7 @@ class OffersActivity : BaseActivity(), OffersView {
                 setSupportActionBar(this as Toolbar)
                 btn_back.setOnClickListener { navigateBackWithTransition() }
                 btn_forward.setOnClickListener { presenter.onRequestInfoClicked() }
+                tv_title.isSelected = true
             }
 
 
@@ -125,15 +126,12 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun setTransfer(transferModel: TransferModel) {
-        toolbar.tv_title.text =
-                transferModel.from
-                        .getShortAddress()
-                        .let { from ->
-                            transferModel.to
-                                    ?.let {
-                                        from.plus(" - ").plus(it.getShortAddress())
-                                    } ?: from
-                        }
+        toolbar.tv_title.text = transferModel.from
+                .let { from ->
+                    transferModel.to?.let {
+                        from.plus(" - ").plus(it)
+                    } ?: from
+                }
         toolbar.tv_subtitle.text = SystemUtils.formatDateTime(transferModel.dateTime)
         fl_drivers_count_text.apply {
             tv_drivers_count.text =

@@ -217,6 +217,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.Permissi
         navViewHeader.navHeaderMode.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
         navViewHeader.navHeaderName.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
         navViewHeader.navHeaderEmail.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
+        navHeaderMode.isVisible = false
 
         readMoreListener.let {
             navFooterStamp.setOnClickListener   (it)
