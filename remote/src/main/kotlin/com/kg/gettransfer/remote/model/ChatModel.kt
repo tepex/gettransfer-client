@@ -13,6 +13,6 @@ data class ChatModel(
 
 data class ChatAccountModel(
         @SerializedName(ChatAccountEntity.EMAIL) @Expose     val email: String,
-        @SerializedName(ChatAccountEntity.FULL_NAME) @Expose val fullName: String,
+        @SerializedName(ChatAccountEntity.FULL_NAME) @Expose val fullName: String?,
         @SerializedName(ChatAccountEntity.ROLES) @Expose     val roles: List<String>
 )

@@ -20,7 +20,7 @@ data class ChatEntity(
 @Serializable
 data class ChatAccountEntity(
         @SerialName(EMAIL)     val email: String,
-        @SerialName(FULL_NAME) val fullName: String,
+        @SerialName(FULL_NAME) val fullName: String?,
         @SerialName(ROLES)     val roles: List<String>
 ) {
     companion object {

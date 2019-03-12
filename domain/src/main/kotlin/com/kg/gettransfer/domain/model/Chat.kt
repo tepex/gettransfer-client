@@ -8,6 +8,6 @@ data class Chat(
 
 data class ChatAccount(
         val email: String,
-        val fullName: String,
+        val fullName: String?,
         val roles: List<String>
 )
