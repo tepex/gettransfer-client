@@ -56,7 +56,7 @@ class NotificationManager(val context: Context) : KoinComponent {
         layout.setTextViewText(R.id.tvTitle, context.getString(R.string.LNG_NEW_OFFER_TITLE))
         layout.setTextViewText(R.id.tvContent, context.getString(R.string.LNG_NEW_OFFER_MESSAGE))
 
-        if (!offer.vehicle.photos.isEmpty()) {
+        if (offer.vehicle.photos.isNotEmpty()) {
             utils.launchSuspend {
                 val notificationTarget = NotificationTarget(context, R.id.ivCarPhoto, layout, notification, offer.id.toInt())
                 Glide.with(context)

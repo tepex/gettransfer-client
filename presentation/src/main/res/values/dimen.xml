@@ -65,6 +65,8 @@
 	<dimen name="search_form_array_margin">12dp</dimen>
 	<dimen name="search_form_clear_padding_end">65dp</dimen>
 	<dimen name="search_form_address_margin">10dp</dimen>
+	<dimen name="search_form_title_padding_end">38dp</dimen>
+	<dimen name="search_form_title_padding_start">0dp</dimen>
 	<dimen name="inverse_btn_margin_end">16dp</dimen>
     <dimen name="point_map_icon_margin">10dp</dimen>
     <dimen name="point_map_height">46.6dp</dimen>

@@ -10,9 +10,14 @@
 	<TextView
 		android:id="@+id/sub_title"
 		android:layout_width="0dp"
-		android:text="Pickup location"
+		android:text="Pickup"
+		android:maxLines="1"
+		android:ellipsize="end"
+		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
 		android:layout_marginTop="@dimen/search_sub_title_marginTop"
+		android:paddingEnd="@dimen/search_form_title_padding_end"
+		android:paddingStart="@dimen/search_form_title_padding_start"
 		android:fontFamily="@font/sf_pro_text_regular"
 		android:layout_height="@dimen/search_sub_title_height"
 		android:textSize="@dimen/search_sub_title_textSize"/>
