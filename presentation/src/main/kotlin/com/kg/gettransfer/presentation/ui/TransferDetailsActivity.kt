@@ -178,8 +178,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
                 else getString(R.string.LNG_WAIT_FOR_OFFERS)
             }
             Transfer.Status.PERFORMED -> {
-                if (transfer.dateTime.after(Calendar.getInstance().time)) getString(R.string.LNG_TRANSFER_WILL_START)
-                        .plus("")
+                if (transfer.dateTime.after(Calendar.getInstance().time)) getString(R.string.LNG_TRANSFER)
+                        .plus(" #${transfer.id} ")
+                        .plus(getString(R.string.LNG_WILL_START_IN))
+                        .plus(" ")
                         .plus(Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer)))
                 else getString(R.string.LNG_TRANSFER_IN_PROGRESS)
             }
@@ -340,12 +342,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
         with(transfer_details_view_seats) {
             tv_countPassengers.text = getString(R.string.X_SIGN).plus("${transfer.countPassengers}")
-            if (transfer.countChilds > 0){
-                tvCountChildren.text = getString(R.string.X_SIGN).plus("${transfer.countChilds}")
-            } else {
-                imgChildSeats.isVisible = false
-                tvCountChildren.isVisible = false
-            }
+            tvCountChildren.text = getString(R.string.X_SIGN).plus("${transfer.countChilds}")
+            imgChildSeats.isVisible =  transfer.countChilds > 0
+            tvCountChildren.isVisible = transfer.countChilds > 0
         }
     }
 

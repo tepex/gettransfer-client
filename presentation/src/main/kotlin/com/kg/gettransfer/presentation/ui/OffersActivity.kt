@@ -48,6 +48,7 @@ import kotlinx.android.synthetic.main.toolbar_nav.view.*
 import kotlinx.android.synthetic.main.vehicle_items.view.*
 import kotlinx.android.synthetic.main.view_offer_bottom.view.*
 import kotlinx.android.synthetic.main.view_offer_conditions.view.*
+import kotlinx.android.synthetic.main.view_offer_rating_details.*
 import kotlinx.android.synthetic.main.view_transport_capacity.view.*
 
 import timber.log.Timber
@@ -301,13 +302,22 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     private fun setRating(carrier: CarrierModel) {
+        if (!presenter.hasAnyRate(carrier)) return
         offer_ratingDivider_bs.isVisible = true
         with(carrier) {
             view_offer_rating_bs.isVisible = true
+
             view_offer_rating_bs.ratingBarDriver.visibleRating = ratings.driver ?: NO_RATE
+            ratingDriver.isVisible = view_offer_rating_bs.ratingBarDriver.visibleRating != NO_RATE
+
             view_offer_rating_bs.ratingBarPunctuality.visibleRating = ratings.fair ?: NO_RATE
+            ratingPunctuality.isVisible = view_offer_rating_bs.ratingBarDriver.visibleRating != NO_RATE
+
             view_offer_rating_bs.ratingBarVehicle.visibleRating = ratings.vehicle ?: NO_RATE
+            ratingVehicle.isVisible = view_offer_rating_bs.ratingBarVehicle.visibleRating != NO_RATE
+
             view_offer_rating_bs.ivLikeDriver.isVisible = approved
+            tvTopSelection.isVisible = approved
         }
     }
 

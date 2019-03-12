@@ -19,7 +19,9 @@
             android:id="@+id/ivLikeDriver"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tvTopSelection"
             android:visibility="invisible"
             app:srcCompat="@drawable/ic_like_button" tools:layout_editor_absoluteY="6dp"
             tools:layout_editor_absoluteX="348dp"/>

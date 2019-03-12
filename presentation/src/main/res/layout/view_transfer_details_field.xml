@@ -25,6 +25,10 @@
             android:text="Phone"
             android:textColor="@color/colorGrey"
             android:textSize="@dimen/activity_transfer_details_text_size_17sp"
+            android:maxWidth="220dp"
+            android:lines="1"
+            android:ellipsize="end"
+            app:layout_constraintEnd_toStartOf="@id/field_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 

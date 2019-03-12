@@ -103,7 +103,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.Permissi
     override fun getPresenter(): MainPresenter = presenter
 
     @CallSuper
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
@@ -150,7 +150,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.Permissi
     }
 
     @CallSuper
-    protected override fun onPostCreate(savedInstanceState: Bundle?) {
+    override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) search_panel.elevation = resources.getDimension(R.dimen.search_elevation)
         searchFrom.setUneditable()
@@ -331,7 +331,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.Permissi
     }
 
     override fun moveCenterMarker(point: LatLng) {
-        centerMarker?.let { it.setPosition(point) }
+        centerMarker?.position = point
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
@@ -549,7 +549,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.Permissi
 
     companion object {
         @JvmField val PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-        @JvmField val PERMISSION_REQUEST = 2211
+        const val PERMISSION_REQUEST = 2211
         const val FADE_DURATION = 500L
         const val MAX_INIT_ZOOM = 2.0f
 

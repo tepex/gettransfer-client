@@ -6,7 +6,7 @@ inline var ScaleRatingBar.visibleRating: Float
     get() = rating
     set(value) {
         rating = value
-        isInvisible = value == NO_RATE
+        isVisible = value != NO_RATE
     }
 
 const val NO_RATE = 0f
