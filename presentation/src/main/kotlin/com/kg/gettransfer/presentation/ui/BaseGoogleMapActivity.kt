@@ -116,6 +116,7 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
     protected open suspend fun customizeGoogleMaps(gm: GoogleMap) {
         gm.uiSettings.isRotateGesturesEnabled = false
         gm.uiSettings.isTiltGesturesEnabled = false
+        gm.uiSettings.isMyLocationButtonEnabled = false
         gm.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
         gm.setPadding(0, 0, 0, LABEL_VERTICAL_POSITION)
     }

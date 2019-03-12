@@ -64,7 +64,7 @@ import pub.devrel.easypermissions.EasyPermissions
 
 import timber.log.Timber
 
-class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.PermissionCallbacks {
+class MainActivity : BaseGoogleMapActivity(), MainView {
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
 
@@ -75,8 +75,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.Permissi
     private var isFirst = true
     private var centerMarker: Marker? = null
     private var isGmTouchEnabled = true
-
-    private lateinit var map: GoogleMap
 
     @ProvidePresenter
     fun createMainPresenter() = MainPresenter()
@@ -255,7 +253,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.Permissi
         super.customizeGoogleMaps(gm)
         Timber.d("Permissions: ${systemInteractor.locationPermissionsGranted}")
 
-        map = gm
         checkPermission()
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
         gm.setOnCameraMoveListener        { presenter.onCameraMove(gm.cameraPosition!!.target, true)  }
@@ -274,16 +271,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.Permissi
                 this,
                 getString(R.string.LNG_LOCATION_ACCESS),
                 PERMISSION_REQUEST, *PERMISSIONS)
-    }
-
-    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
-        systemInteractor.locationPermissionsGranted = false
-    }
-
-    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        systemInteractor.locationPermissionsGranted = true
-        map.isMyLocationEnabled = true
-        map.uiSettings.isMyLocationButtonEnabled = false
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
