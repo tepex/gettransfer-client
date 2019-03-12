@@ -1,9 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.os.Bundle
-import com.appsflyer.AFInAppEventParameterName
-import com.appsflyer.AFInAppEventType
-
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
@@ -44,6 +40,7 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
     internal var offerId    = 0L
     internal var percentage = 0
     internal var bookNowTransportId = ""
+    internal var paymentType = ""
 
     override fun attachView(view: PaymentView) {
         super.attachView(view)
@@ -81,78 +78,54 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
                 router.exit()
             } else {
                 if (result.model.success) {
-                    router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
-                    router.navigateTo(Screens.PaymentSuccess(transferId, offerId))
-                    logEventEcommercePurchase()
-                    logEvent(Analytics.RESULT_SUCCESS)
+                    showSuccessfulPayment()
                 } else {
-                    router.exit()
-                    router.navigateTo(Screens.PaymentError(transferId))
-                    logEvent(Analytics.RESULT_FAIL)
+                    showFailedPayment()
                 }
             }
             viewState.blockInterface(false)
         }
     }
 
+    private fun showFailedPayment() {
+        router.exit()
+        router.navigateTo(Screens.PaymentError(transferId))
+        logEvent(Analytics.RESULT_FAIL)
+    }
+
+    private fun showSuccessfulPayment() {
+        router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+        router.navigateTo(Screens.PaymentSuccess(transferId, offerId))
+        logEventEcommercePurchase()
+    }
+
     private fun logEventEcommercePurchase() {
-        val bundle = Bundle()
-        val fbBundle = Bundle()
-        val map = mutableMapOf<String, Any?>()
-        val afMap = mutableMapOf<String, Any?>()
-
-        bundle.putString(Analytics.TRANSACTION_ID, transferId.toString())
-        map[Analytics.TRANSACTION_ID] = transferId.toString()
-        bundle.putString(Analytics.PROMOCODE, transferInteractor.transferNew?.promoCode)
-        map[Analytics.PROMOCODE] = transferInteractor.transferNew?.promoCode
-        routeInteractor.duration?.let { bundle.putInt(Analytics.HOURS, it) }
-        routeInteractor.duration?.let { map[Analytics.HOURS] = it }
-
         val offerType = if (offer != null) Analytics.REGULAR else Analytics.NOW
-        bundle.putString(Analytics.OFFER_TYPE, offerType)
-        map[Analytics.OFFER_TYPE] = offerType
-
-        when {
+        val requestType = when {
             transfer?.duration != null -> Analytics.TRIP_HOURLY
             transfer?.dateReturnLocal != null -> Analytics.TRIP_ROUND
             else -> Analytics.TRIP_DESTINATION
-        }.let {
-            bundle.putString(Analytics.TRIP_TYPE, it)
-            map[Analytics.TRIP_TYPE] = it
         }
-
-        fbBundle.putAll(bundle)
-        afMap.putAll(map)
-
         val currency = systemInteractor.currency.currencyCode
-        map[Analytics.CURRENCY] = currency
-        afMap[AFInAppEventParameterName.CURRENCY] = currency
-        bundle.putString(Analytics.CURRENCY, currency)
-
         var price: Double = if (offer != null) offer!!.price.amount else bookNowOffer!!.amount
+        if (percentage == OfferModel.PRICE_30) price *= PRICE_30
 
-        when (percentage) {
-            OfferModel.FULL_PRICE -> {
-                bundle.putDouble(Analytics.VALUE, price)
-                map[Analytics.VALUE] = price
-                afMap[AFInAppEventParameterName.REVENUE] = price
-            }
-            OfferModel.PRICE_30 -> {
-                price *= PRICE_30
-                bundle.putDouble(Analytics.VALUE, price)
-                map[Analytics.VALUE] = price
-                afMap[AFInAppEventParameterName.REVENUE] = price
-            }
-        }
-        analytics.logEventEcommerce(Analytics.EVENT_ECOMMERCE_PURCHASE, bundle, map)
-        analytics.logEventEcommercePurchaseFB(fbBundle, price.toBigDecimal(), systemInteractor.currency)
-        analytics.logEventToAppsFlyer(AFInAppEventType.PURCHASE, afMap)
+        val purchase = analytics.EcommercePurchase(
+                transferId.toString(),
+                transferInteractor.transferNew?.promoCode,
+                routeInteractor.duration,
+                paymentType,
+                offerType,
+                requestType,
+                systemInteractor.currency,
+                currency,
+                price)
+        purchase.sendAnalytics()
     }
 
-    fun logEvent(value: String) {
+    private fun logEvent(value: String) {
         val map = mutableMapOf<String, Any>()
         map[Analytics.STATUS] = value
-
         analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, createStringBundle(Analytics.STATUS, value), map)
     }
 }
