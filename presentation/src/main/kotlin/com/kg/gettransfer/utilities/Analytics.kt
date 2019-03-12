@@ -18,8 +18,6 @@ import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.profile.Attribute
 import com.yandex.metrica.profile.UserProfile
 
-import java.math.BigDecimal
-
 import java.util.Currency
 
 class Analytics(
