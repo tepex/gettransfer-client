@@ -251,7 +251,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     protected override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
-        Timber.d("Permissions: ${systemInteractor.locationPermissionsGranted}")
 
         checkPermission()
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
