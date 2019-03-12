@@ -22,6 +22,7 @@ open class OfferMapper : Mapper<OfferModel, Offer> {
             type.status,
             type.wifi,
             type.refreshments,
+            type.charger,
             SystemUtils.formatDateTime(type.createdAt),
             priceMapper.toView(type.price),
             type.ratings?.let { ratingsMapper.toView(it) },

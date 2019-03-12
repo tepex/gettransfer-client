@@ -9,13 +9,13 @@ import com.kg.gettransfer.presentation.model.TransferModel
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface OffersView : BaseView {
     fun setTransfer(transferModel: TransferModel)
-    fun setDate(date: String)
+//    fun setDate(date: String)
     fun setOffers(offers: List<OfferItem>)
     fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean)
     fun showAlertCancelRequest()
     fun showBottomSheetOfferDetails(offer: OfferItem)
     fun addNewOffer(offer: OfferModel)
-    fun redirectView()
+    //fun redirectView()
 
     companion object {
         val EXTRA_TRANSFER_ID = "${OffersView::class.java.name}.transferId"

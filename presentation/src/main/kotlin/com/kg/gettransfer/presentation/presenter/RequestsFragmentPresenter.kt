@@ -43,7 +43,7 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
         transferIds = systemInteractor.transferIds
     }
 
-    fun getTransfers() {
+    private fun getTransfers() {
         utils.launchSuspend {
             viewState.blockInterface(true)
             /*
@@ -54,7 +54,8 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
             }
             */
             val result = utils.asyncAwait { transferInteractor.getAllTransfers() }
-            if (result.error != null) viewState.setError(result.error!!) else showTransfers(result.model)
+            result.error?.let { checkResultError(it) }
+            if (result.error != null && !result.fromCache) viewState.setError(result.error!!) else showTransfers(result.model)
             viewState.blockInterface(false)
         }
     }
@@ -69,11 +70,12 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
         viewState.setCountEvents(transferIds)
     }
 
-    fun openTransferDetails(id: Long, status: Transfer.Status) {
+    fun openTransferDetails(id: Long, status: Transfer.Status, paidPercentage: Int) {
         Timber.d("Open Transfer details. id: $id")
-        when (status) {
-            Transfer.Status.NEW -> router.navigateTo(Screens.Offers(id))
-            else                -> router.navigateTo(Screens.Details(id))
+        if (status == Transfer.Status.NEW && paidPercentage == 0) {
+            router.navigateTo(Screens.Offers(id))
+        } else {
+            router.navigateTo(Screens.Details(id))
         }
     }
 

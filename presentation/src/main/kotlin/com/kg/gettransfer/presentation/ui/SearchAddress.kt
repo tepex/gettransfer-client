@@ -21,6 +21,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.extensions.*
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -163,6 +164,10 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
     override fun setError(e: ApiException) {
         if (addressField.isFocused) parent.setError(e)
+    }
+
+    override fun setError(e: DatabaseException) {
+        if(addressField.isFocused) parent.setError(e)
     }
 
     override fun afterTextChanged(s: Editable?) {

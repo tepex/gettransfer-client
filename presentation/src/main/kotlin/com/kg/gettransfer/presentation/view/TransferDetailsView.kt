@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.view
 
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.ProfileModel
@@ -19,6 +20,9 @@ interface TransferDetailsView: BaseView, RouteView {
     fun askRateInPlayMarket()
     fun showRateInPlayMarket()
     fun thanksForRate()
+
+    fun moveCarMarker(bearing: Float, latLon: LatLng, show: Boolean)
+    fun updateCamera(latLngList: List<LatLng>)
 
     companion object {
         val EXTRA_TRANSFER_ID = "${TransferDetailsView::class.java.name}.transferId"

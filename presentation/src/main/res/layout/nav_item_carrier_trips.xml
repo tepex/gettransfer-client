@@ -10,17 +10,17 @@
         android:layout_marginStart="@dimen/nav_icons_margin_start_end"
         android:layout_marginEnd="@dimen/nav_icons_margin_start_end"
         android:layout_centerVertical="true"
-        app:srcCompat="@drawable/ic_menu_route" />
+        app:srcCompat="@drawable/nav_driver_trips" />
 
     <TextView
         android:id="@+id/title"
         style="@style/nav_item_title"
-        android:text="@string/LNG_MENU_TITLE_RIDES"
+        android:text="@string/LNG_MENU_TITLE_TRIPS"
         android:layout_toEndOf="@+id/imgTrips" />
 
     <TextView
         style="@style/nav_item_subtitle"
-        android:text="@string/LNG_MENU_SUBTITLE_RIDES"
+        android:text="@string/LNG_MENU_SUBTITLE_TRIPS"
         android:layout_below="@+id/title"
         android:layout_toEndOf="@+id/imgTrips" />
 </RelativeLayout>

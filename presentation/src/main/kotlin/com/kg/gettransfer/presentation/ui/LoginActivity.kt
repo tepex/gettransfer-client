@@ -41,6 +41,8 @@ class LoginActivity : BaseActivity(), LoginView {
         presenter.email = intent.getStringExtra(LoginView.EXTRA_EMAIL_TO_LOGIN)
         presenter.screenForReturn = intent.getStringExtra(LoginView.EXTRA_SCREEN_FOR_RETURN)
         presenter.transferId = intent.getLongExtra(LoginView.EXTRA_TRANSFER_ID, 0L)
+        presenter.offerId = intent.getLongExtra(LoginView.EXTRA_OFFER_ID, 0L)
+        presenter.rate = intent.getIntExtra(LoginView.EXTRA_RATE, 0)
 
         setContentView(R.layout.activity_login)
 

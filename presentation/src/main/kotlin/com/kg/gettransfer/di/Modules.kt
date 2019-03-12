@@ -20,13 +20,14 @@ import com.kg.gettransfer.domain.interactor.*
 import com.kg.gettransfer.domain.repository.*
 
 import com.kg.gettransfer.geo.GeoRepositoryImpl
+import com.kg.gettransfer.prefs.EncryptPass
 
 import com.kg.gettransfer.prefs.PreferencesImpl
 import com.kg.gettransfer.presentation.FileLoggingTree
 
-import com.kg.gettransfer.presentation.mapper.*
+import com.kg.gettransfer.encrypt.EncryptPassImpl
 
-import com.kg.gettransfer.service.OfferServiceConnection
+import com.kg.gettransfer.presentation.mapper.*
 
 import com.kg.gettransfer.utilities.Analytics
 
@@ -59,6 +60,10 @@ val geoModule = module {
     single<GeoRepository> { GeoRepositoryImpl(get()) }
 }
 
+val encryptModule = module {
+    single<EncryptPass> { EncryptPassImpl() }
+}
+
 val prefsModule = module {
     single<PreferencesCache> {
         val endpoints = if(BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home") listOf(
@@ -66,7 +71,7 @@ val prefsModule = module {
         else listOf(
             EndpointEntity("Demo", androidContext().getString(R.string.api_key_demo), androidContext().getString(R.string.api_url_demo), true),
             EndpointEntity("Prod", androidContext().getString(R.string.api_key_prod), androidContext().getString(R.string.api_url_prod)))
-        PreferencesImpl(androidContext(), endpoints)
+        PreferencesImpl(androidContext(), endpoints, get())
     }
 }
 
@@ -95,6 +100,8 @@ val domainModule = module {
     single { TransferInteractor(get()) }
     single { PromoInteractor(get()) }
     single { ReviewInteractor(get()) }
+    single { ChatInteractor(get()) }
+    single { CoordinateInteractor(get()) }
 }
 
 val mappersModule = module {
@@ -102,7 +109,8 @@ val mappersModule = module {
     single { CarrierMapper() }
     single { CarrierTripBaseMapper() }
     single { CarrierTripMapper() }
-    single { CarrierTripsRVItemsListMapper() }
+    single { CarrierTripsListItemsMapper() }
+    single { CarrierTripsCalendarItemsMapper() }
     single { CurrencyMapper() }
     single { DistanceUnitMapper() }
     single { EndpointMapper() }
@@ -124,10 +132,13 @@ val mappersModule = module {
     single { UserMapper() }
     single { VehicleInfoMapper() }
     single { VehicleMapper() }
+    single { MessageMapper() }
+    single { ChatAccountMapper() }
+    single { ChatMapper() }
+    single { CityPointMapper() }
 }
 
 val androidModule = module {
-    single { OfferServiceConnection() }
     single { CoroutineContexts(Dispatchers.Main, Dispatchers.IO) }
     single { FirebaseAnalytics.getInstance(androidApplication().applicationContext) }
     single { LocaleManager() }

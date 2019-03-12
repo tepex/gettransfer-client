@@ -26,7 +26,7 @@ class CarrierTripInfoItem @JvmOverloads constructor(
 
     override val containerView = LayoutInflater.from(context).inflate(R.layout.view_carrier_trip_info_layout, this, true)
 
-    fun setInfo(item: CarrierTripBaseModel, totalPrice: TotalPriceModel?) {
+    fun setInfo(item: CarrierTripBaseModel, totalPrice: TotalPriceModel? = null, showDetails: Boolean = false) {
         val transferStatus = when (item.tripStatus) {
             CarrierTripBaseModel.FUTURE_TRIP -> context.getString(R.string.LNG_WILL_START_IN).plus(" ")
                     .plus(Utils.durationToString(context, Utils.convertDuration(item.timeToTransfer)))
@@ -41,7 +41,7 @@ class CarrierTripInfoItem @JvmOverloads constructor(
         tvTripFrom.text = item.from
 
         if (item.to != null) {
-            if (totalPrice != null) {
+            if (showDetails) {
                 item.distance?.let {
                     setDistance(bsTvDistance, it)
                     bsLayoutDistance.isVisible = true
@@ -56,7 +56,7 @@ class CarrierTripInfoItem @JvmOverloads constructor(
             tvTripTo.text = item.to
             changeViewForHourlyTransfer(false)
         } else if (item.duration != null) {
-            if (totalPrice != null) {
+            if (showDetails) {
                 setDuration(bsTvDuration, item.duration, true)
                 bsLayoutDuration.isVisible = true
             } else {
@@ -67,7 +67,7 @@ class CarrierTripInfoItem @JvmOverloads constructor(
             changeViewForHourlyTransfer(true)
         }
 
-        if (totalPrice != null) {
+        if (showDetails) {
             setPrice(bsTvPrice, item.price, bsTvTotalPrice, totalPrice)
             tripDistance.isVisible = false
             tripPrice.isVisible = false
@@ -94,13 +94,16 @@ class CarrierTripInfoItem @JvmOverloads constructor(
     }
 
     private fun setPrice(textViewPrice: TextView, price: String, textViewTotalPrice: TextView? = null, totalPrice: TotalPriceModel? = null) {
-        textViewPrice.text = price
-        totalPrice?.let {
-            textViewTotalPrice!!.text = context.getString(R.string.LNG_TOTAL_PRICE).toUpperCase()
-                    .plus(": ${it.remainsToPay} \n")
-                    .plus("(${100 - it.paidPercentage}% ")
-                    .plus(context.getString(R.string.LNG_RIDE_NOT_PAID))
-                    .plus(")")
+        if (textViewTotalPrice != null){
+            var textTotalPrice = context.getString(R.string.LNG_TOTAL_PRICE).toUpperCase().plus(": $price")
+            totalPrice?.let {
+                textViewPrice.text = it.remainsToPay
+                textTotalPrice = textTotalPrice.plus("\n(${100 - it.paidPercentage}% ")
+                        .plus(context.getString(R.string.LNG_RIDE_NOT_PAID)).plus(")")
+            }
+            textViewTotalPrice.text = textTotalPrice
+        } else {
+            textViewPrice.text = price
         }
     }
 

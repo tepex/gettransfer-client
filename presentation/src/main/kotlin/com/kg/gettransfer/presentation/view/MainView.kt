@@ -5,11 +5,9 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 import com.google.android.gms.maps.model.LatLng
 
-import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.RouteModel
-
-import java.util.Date
+import com.kg.gettransfer.presentation.model.TransferModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 //interface MainView: MvpView, OnCameraMoveListener
@@ -28,7 +26,7 @@ interface MainView: BaseView {
     fun onBackClick()
     fun showReadMoreDialog()
     fun setTripMode(duration: Int?)
-    fun openReviewForLastTrip(transferId: Long, date: Date, vehicle: String, color: String, routeModel: RouteModel)
+    fun openReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?)
     fun cancelReview()
     fun showDetailedReview(tappedRate: Float)
     fun askRateInPlayMarket()

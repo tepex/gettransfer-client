@@ -19,6 +19,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.adapter.RequestsRVAdapter
@@ -71,7 +72,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
     override fun setRequests(transfers: List<TransferModel>) {
         noTransfersText.isVisible = transfers.isEmpty()
-        rvAdapter = RequestsRVAdapter(transfers) { presenter.openTransferDetails(it.id, it.status) }
+        rvAdapter = RequestsRVAdapter(transfers) { presenter.openTransferDetails(it.id, it.status, it.paidPercentage) }
         rvRequests.adapter = rvAdapter
     }
 
@@ -91,6 +92,9 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         Timber.e("code: ${e.code}", e)
         if(e.code != ApiException.NETWORK_ERROR) Utils.showError(context!!, false, getString(R.string.err_server, e.message))
     }
+
+    override fun setError(e: DatabaseException) =
+            (activity as BaseView).setError(e)
 
     override fun setCountEvents(transferIds: List<Long>) {
         if (transferIds.isNotEmpty()) {

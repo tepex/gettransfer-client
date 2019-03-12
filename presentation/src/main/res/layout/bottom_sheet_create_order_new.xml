@@ -169,7 +169,7 @@
                         app:inputType="@integer/inputType_NoSuggestion"
                         app:isFocusable="false"
                         app:title="Return transfer"
-                        app:hint="I want to oerder return transfer"
+                        app:hint="@string/LNG_RIDE_DATE_RETURN_PLACEHOLDER"
                         app:icon_img="@drawable/ic_calendar_triangle"/>
 
                 <FrameLayout
@@ -348,6 +348,7 @@
                     android:textColor="@color/colorTextLightGray"
                     android:textSize="@dimen/create_transfer_agreement_text_size"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/switchAgreement"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

@@ -48,7 +48,10 @@ class PrivateHttpLoggingInterceptor(): Interceptor, KoinComponent {         //sa
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val logBody = logger.isDebugEnabled
-        val logHeaders = (logBody || logger.isInfoEnabled) && !(chain.request().url().url().path?.contains(Api.API_LOGIN) ?: false)
+        val path = chain.request().url().url().path
+        val logHeaders = (logBody || logger.isInfoEnabled)
+                && !(path?.contains(Api.API_LOGIN) ?: false)
+                && !(path?.contains(ApiCore.PARAM_API_KEY) ?: false)
 
         val request = chain.request()
 

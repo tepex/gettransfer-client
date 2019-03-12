@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
 
 import android.os.Bundle
 
@@ -9,6 +10,7 @@ import android.support.annotation.CallSuper
 import android.support.v4.content.ContextCompat
 
 import android.view.View
+import android.widget.ImageView
 
 import android.widget.RelativeLayout
 
@@ -16,10 +18,7 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
@@ -29,6 +28,7 @@ import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 
 import kotlinx.android.synthetic.main.view_maps_pin.view.* //don't delete
+import kotlinx.android.synthetic.main.view_car_pin.view.*  //don't delete
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -128,15 +128,17 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
         }
     }
 
-    protected fun setPolyline(polyline: PolylineModel, routeModel: RouteModel) {
+    protected fun setPolyline(polyline: PolylineModel, routeModel: RouteModel, driverMode: Boolean = false) {
         if(polyline.startPoint == null || polyline.finishPoint == null) {
             Timber.w("Polyline model is empty for route: $routeModel")
             return
         }
+        val aBitmap = if (driverMode) R.drawable.ic_map_label_a_driver else R.drawable.ic_map_label_a
+        val bBitmap = if (driverMode) R.drawable.ic_map_label_b_driver else R.drawable.ic_map_label_b
 
         processGoogleMap(false) {
-            val bmPinA = getPinBitmap(routeModel.from, routeModel.dateTime, R.drawable.ic_map_label_a)
-            val bmPinB = getPinBitmap(routeModel.to!!, SystemUtils.formatDistance(this, routeModel.distance, true), R.drawable.ic_map_label_b)
+            val bmPinA = getPinBitmap(routeModel.from, routeModel.dateTime, aBitmap)
+            val bmPinB = getPinBitmap(routeModel.to!!, SystemUtils.formatDistance(this, routeModel.distance, true), bBitmap)
             if(Utils.isValidBitmap(bmPinA) && Utils.isValidBitmap(bmPinB)) {
                 val startMakerOptions = createStartMarker(polyline.startPoint, bmPinA)
                 val endMakerOptions = createEndMarker(polyline.finishPoint, bmPinB)
@@ -147,14 +149,17 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
         }
     }
 
-    protected fun setPolylineWithoutInfo(polyline: PolylineModel) {
+    protected fun setPolylineWithoutInfo(polyline: PolylineModel, driverMode: Boolean = true) {
         if(polyline.startPoint == null || polyline.finishPoint == null) {
             return
         }
 
+        val aBitmap = if (driverMode) R.drawable.ic_map_label_a_driver else R.drawable.ic_map_label_a
+        val bBitmap = if (driverMode) R.drawable.ic_map_label_b_driver else R.drawable.ic_map_label_b
+
         processGoogleMap(false) {
-            val bmPinA = getPinBitmapWithoutInfo(R.drawable.ic_map_label_a)
-            val bmPinB = getPinBitmapWithoutInfo(R.drawable.ic_map_label_b)
+            val bmPinA = getPinBitmapWithoutInfo(aBitmap)
+            val bmPinB = getPinBitmapWithoutInfo(bBitmap)
             if(Utils.isValidBitmap(bmPinA) && Utils.isValidBitmap(bmPinB)) {
                 val startMakerOptions = createStartMarker(polyline.startPoint, bmPinA)
                 val endMakerOptions = createEndMarker(polyline.finishPoint, bmPinB)
@@ -193,14 +198,31 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
         }
     }
 
-    protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
-        val bmPinA = getPinBitmap(placeName, info, R.drawable.ic_map_label_a)
+    protected fun moveCameraWithDriverCoordinate(cameraUpdate: CameraUpdate) {
+        processGoogleMap(false) {
+            googleMap.setMaxZoomPreference(17f)
+            googleMap.moveCamera(cameraUpdate) }
+    }
+
+    protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate, driver: Boolean = false) {
+        val markerRes = if (driver) R.drawable.ic_map_label_a_driver else R.drawable.ic_map_label_a
+        val bmPinA = getPinBitmap(placeName, info, markerRes)
         val startMakerOptions = MarkerOptions()
                 .position(point)
                 .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
         googleMap.addMarker(startMakerOptions)
         googleMap.moveCamera(cameraUpdate)
     }
+
+    protected fun setPinForHourlyWithoutInfo(point: LatLng, cameraUpdate: CameraUpdate) {
+        val bmPinA = getPinBitmapWithoutInfo(R.drawable.ic_map_label_a)
+        val startMakerOptions = MarkerOptions()
+                .position(point)
+                .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
+        googleMap.addMarker(startMakerOptions)
+        googleMap.moveCamera(cameraUpdate)
+    }
+
 
     private fun getPinBitmap(placeName: String, info: String, drawable: Int): Bitmap {
         val pinLayout = layoutInflater.inflate(R.layout.view_maps_pin, null)
@@ -240,9 +262,27 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
 
     protected fun clearMarkersAndPolylines() = googleMap.clear()
 
+    protected fun addCarToMap(resource: Int): Marker =
+            MarkerOptions()
+                    .visible(DEFAULT_VISIBILITY)
+                    .position(DEFAULT_POSITION)
+                    .icon(BitmapDescriptorFactory
+                            .fromBitmap(createBitmapFromView(createViewWithCar(resource))))
+                    .let { googleMap.addMarker(it) }
+
+    private fun createViewWithCar(res: Int): View {
+        val view = layoutInflater.inflate(R.layout.view_car_pin, null)
+        view.imgCarPin.setImageResource(res)
+        return view
+    }
+
+
     companion object {
         const val MAP_MIN_ZOOM = 13f
         const val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
         private const val LABEL_VERTICAL_POSITION = 12
+
+        const val DEFAULT_VISIBILITY = false
+        val DEFAULT_POSITION = LatLng(0.0, 0.0)
     }
 }
