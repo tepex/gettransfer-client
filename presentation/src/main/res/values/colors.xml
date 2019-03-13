@@ -151,5 +151,6 @@
     <color name="color_gtr_yellow">#FEDB06</color>
     <color name="color_gtr_green">#98B71B</color>
     <color name="color_gtr_blue">#2CAEE9</color>
+    <color name="color_gtr_orange">#FF6900</color>
     <color name="color_gtr_red">#FF3B30</color>
 </resources>

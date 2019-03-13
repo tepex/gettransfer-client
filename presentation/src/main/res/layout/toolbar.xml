@@ -124,14 +124,11 @@
 		android:layout_marginEnd="@dimen/toolbar_buttons_margin_end"
 		android:visibility="gone">
 
-		<TextView
+		<ImageView
 			android:id="@+id/buttonListView"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textSize="@dimen/activity_carrier_trips_main_toolbar_list_text_size"
-			android:textColor="@color/colorTextBlack"
-			android:fontFamily="@font/sf_pro_text_regular"
-			android:text="@string/LNG_LIST"
+			app:srcCompat="@drawable/ic_list"
 			android:visibility="gone"/>
 
 		<ImageView

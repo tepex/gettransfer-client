@@ -83,7 +83,7 @@
     <!-- Background Color (white) -->
     <item>
         <shape android:shape="oval">
-            <solid android:color="@android:color/white" />
+            <solid android:color="@color/color_gtr_orange" />
 
             <corners android:radius="3dp" />
         </shape>

@@ -11,7 +11,7 @@
         android:layout_height="@dimen/carrier_trips_month_fragment_month_text_view_height"
         android:gravity="center"
         android:textSize="@dimen/carrier_trips_month_fragment_month_name_size"
-        android:fontFamily="@font/sf_pro_text_regular"
+        android:fontFamily="@font/sf_pro_text_semibold"
         android:textColor="@color/colorWhite"
         android:background="@color/primaryDriver"
         app:layout_constraintTop_toTopOf="parent"/>

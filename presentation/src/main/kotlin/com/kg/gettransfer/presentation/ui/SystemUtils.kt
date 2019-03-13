@@ -16,6 +16,7 @@ import org.koin.standalone.KoinComponent
 internal object SystemUtils : KoinComponent {
     private val systemInteractor = get<SystemInteractor>()
     private const val DATE_TIME_PATTERN = "dd MMMM yyyy, HH:mm"
+    private const val DATE_PATTERN = "dd MMMM yyyy"
     private const val DATE_IIME_SHORT_MONTH_PATTERN = "dd MMM yyyy, HH:mm"
     private const val MONTH_PATTERN = "LLLL"
     private const val DAY_MONTH_PATTERN = "dd MMMM, EEEE"
@@ -34,6 +35,7 @@ internal object SystemUtils : KoinComponent {
     }
 
     fun formatDateTime(date: Date) = getFormattedDate(DATE_TIME_PATTERN, date)
+    fun formatDate(date: Date) = getFormattedDate(DATE_PATTERN, date)
     fun formatDateTimeWithShortMonth(date: Date) = getFormattedDate(DATE_IIME_SHORT_MONTH_PATTERN, date)
     fun formatMonth(date: Date) = getFormattedDate(MONTH_PATTERN, date)
     fun formatDayMonth(date: Date) = getFormattedDate(DAY_MONTH_PATTERN, date)

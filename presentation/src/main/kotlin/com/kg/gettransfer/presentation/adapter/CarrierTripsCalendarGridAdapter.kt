@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.view_carrier_trips_calendar_item.view.*
 import java.util.Calendar
 import java.util.Date
-import android.support.v4.widget.TextViewCompat
 import android.text.format.DateUtils
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
@@ -38,7 +37,7 @@ class CarrierTripsCalendarGridAdapter(context: Context,
 
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
 
-    private val itemsViews = hashMapOf<String, View>()
+    private val itemsViews = hashMapOf<String, MonthItem>() //Pair<dayInCurrentMonth: Boolean, view: View>
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val mDate = monthlyDates[position]
@@ -53,14 +52,7 @@ class CarrierTripsCalendarGridAdapter(context: Context,
         var view = convertView
         if (view == null) view = mInflater.inflate(R.layout.view_carrier_trips_calendar_item, parent, false)
 
-        if (displayMonth == currentMonth && displayYear == currentYear) {
-            TextViewCompat.setTextAppearance(view!!.dayOfMonth, R.style.calendar_item_current_month_days)
-        } else {
-            TextViewCompat.setTextAppearance(view!!.dayOfMonth, R.style.calendar_item_not_current_month_days)
-        }
-
-        if(DateUtils.isToday(mDate.time)) view.dayOfMonth.setTextColor(ContextCompat.getColor(context, R.color.color_driver_mode_text_green))
-        if(dateString == selectedDate) view.selectDateIndicator.isVisible = true
+        view!!
         val size = calendarItems?.get(dateString)?.size?: 0
         when{
             size in TRIPS_INDICATOR_WIDTH_4DP_MIN_COUNT..TRIPS_INDICATOR_WIDTH_4DP_MAX_COUNT -> { setIndicatorWidth(TRIPS_INDICATOR_WIDTH_4DP, view.countTripsIndicator) }
@@ -69,7 +61,9 @@ class CarrierTripsCalendarGridAdapter(context: Context,
         }
         view.dayOfMonth.text = dayValue.toString()
         view.setOnClickListener { listener?.invoke(dateString) }
-        itemsViews[dateString] = view
+        val monthItem = MonthItem(displayMonth == currentMonth && displayYear == currentYear, DateUtils.isToday(mDate.time), view)
+        itemsViews[dateString] = monthItem
+        changeItemView(monthItem, dateString == selectedDate)
         return view
     }
 
@@ -91,9 +85,26 @@ class CarrierTripsCalendarGridAdapter(context: Context,
     }
 
     fun selectDate(selectedDate: String){
-        itemsViews.values.toMutableList().map { it.selectDateIndicator.isVisible = false }
-        itemsViews[selectedDate]?.let { it.selectDateIndicator.isVisible = true }
+        itemsViews.values.toMutableList().map { changeItemView(it, false) }
+        itemsViews[selectedDate]?.let { changeItemView(it, true) }
+    }
+
+    private fun changeItemView(monthItem: MonthItem, isDateSelected: Boolean) {
+        monthItem.view.selectDateIndicator.isVisible = isDateSelected
+        monthItem.view.countTripsIndicator.isActivated = isDateSelected
+        monthItem.view.dayOfMonth.setTextColor(ContextCompat.getColor(context, when {
+            isDateSelected -> R.color.colorWhite
+            monthItem.isToday -> R.color.color_gtr_orange
+            monthItem.isDayInCurrentMonth -> R.color.colorTextBlack
+            else -> R.color.color_driver_mode_text_gray
+        }))
     }
 }
+
+class MonthItem(
+        val isDayInCurrentMonth: Boolean,
+        val isToday: Boolean,
+        val view: View
+)
 
 typealias ClickOnDateHandler = (String) -> Unit
