@@ -24,7 +24,6 @@ object LanguageDrawer {
         val lp = LayoutHelper.createLinearParams(LEFT_MARGIN, TOP_MARGIN, RIGHT_MARGIN, BOTTOM_MARGIN)
         lp.width = Utils.dpToPxInt(container.context, 14f)
         lp.height = Utils.dpToPxInt(container.context, 8f)
-     //   lp.gravity = Gravity.START
         for (row in 0 until languages.size.ceil(rowNumber)) {
             val layout = LayoutHelper.createLinear(container.context)
             for (col in 0 until rowNumber) {

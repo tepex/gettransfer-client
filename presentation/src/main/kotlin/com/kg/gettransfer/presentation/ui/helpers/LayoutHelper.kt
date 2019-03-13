@@ -13,13 +13,9 @@ object LayoutHelper {
                         gravity = Gravity.START
                     }
 
-    fun createLinearParams(l: Int, t: Int, r: Int, b: Int) =
+    fun createLinearParams(l: Int, t: Int, r: Int, b: Int, width: Int? = null, height: Int? = null) =
             LinearLayout.LayoutParams (
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT)
-                    .apply {
-                        setMargins(l, t, r, b)
-                    }
-
-
+                    width ?: LinearLayout.LayoutParams.WRAP_CONTENT,
+                    height ?: LinearLayout.LayoutParams.MATCH_PARENT)
+                    .apply { setMargins(l, t, r, b) }
 }

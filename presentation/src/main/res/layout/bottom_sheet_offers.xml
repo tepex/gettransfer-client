@@ -18,12 +18,12 @@
             android:layout_width="@dimen/bottom_sheet_offer_details_top_view_width"
             android:layout_height="@dimen/bottom_sheet_offer_details_top_view_height"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="25dp"
             android:background="@drawable/rectangle_swipe_down"/>
 
     <TextView
             android:id="@+id/tv_car_model_bs"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="22dp"
             android:layout_marginStart="9dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,6 +37,7 @@
             layout="@layout/view_offer_conditions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:layout_marginStart="9dp"/>
 
     <include
@@ -48,11 +49,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
+    <HorizontalScrollView
+            android:id="@+id/sv_photo"
+            android:layout_marginStart="9dp"
+            android:scrollbars="none"
+            android:layout_marginTop="16dp"
+            android:fillViewport="true"
+            android:layout_width="match_parent"
+            android:layout_height="225dp">
+        <LinearLayout
+                android:id="@+id/photos_container_bs"
+                android:orientation="horizontal"
+                android:gravity="start"
+                android:paddingEnd="12dp"
+                android:paddingStart="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+    </HorizontalScrollView>
+
     <ImageView
             android:id="@+id/offer_bs_main_photo"
             android:layout_width="328dp"
+            android:visibility="gone"
             android:layout_height="225dp"
-            android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:layout_gravity="center_horizontal"/>
 
