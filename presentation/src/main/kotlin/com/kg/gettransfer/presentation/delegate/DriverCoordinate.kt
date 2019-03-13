@@ -15,19 +15,9 @@ import kotlin.properties.Delegates
 class DriverCoordinate(private val handler: Handler,
                        private val coordinateRequester: CoordinateRequester,    // need interface to use in different classes
                        private val callDrawing: (bearing: Float, coordinate: LatLng, show: Boolean) -> Unit) : KoinComponent {
-    val list = ArrayList<Pair<Double, Double>>()
-//    private var count = 0
     var showMoving: Boolean = false
 
-    init {
-        requestCoordinates()
-//        list.add(Pair(55.741038, 37.610102))      // data for debug
-//        list.add(Pair(55.740501, 37.611184))
-//        list.add(Pair(55.741375, 37.612136))
-//        list.add(Pair(55.741381, 37.613194))
-//        list.add(Pair(55.741746, 37.614165))
-//        list.add(Pair(55.741057, 37.614943))
-    }
+    init { requestCoordinates() }
 
     var property: Coordinate by Delegates.observable(Coordinate(0, ZERO_COORDINATE, ZERO_COORDINATE)) { p, old, new ->
         with(old) {
@@ -42,7 +32,6 @@ class DriverCoordinate(private val handler: Handler,
             }
             postDelayed({ requestCoordinates() }, REQUEST_PERIOD)
         }
-
     }
 
     private fun requestCoordinates() = coordinateRequester.request()
@@ -71,13 +60,4 @@ class DriverCoordinate(private val handler: Handler,
         const val PROVIDER = "service Provider"
         const val ZERO_COORDINATE = 0.0
     }
-
-    /*
-    55.741038, 37.610102
-    55.740501, 37.611184
-    55.741375, 37.612136
-    55.741381, 37.613194
-    55.741746, 37.614165
-    55.741057, 37.614943
-     */
 }
