@@ -70,24 +70,27 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
                 path.equals(PASSENGER_CABINET) -> appLinkData?.fragment?.let {
                     if (it.startsWith(TRANSFERS)) {
                         if (it.contains(CHOOSE_OFFER_ID)) {
-                            val transferId = it.substring(it.indexOf(SLASH) + 1, it.indexOf(QUESTION)).toLong()
-                            val offerId = it.substring(it.lastIndexOf(EQUAL) + 1, it.length).toLong()
-                            presenter.openOffer(transferId, offerId)
+                            val transferId = it.substring(it.indexOf(SLASH) + 1, it.indexOf(QUESTION)).toLongOrNull()
+                            val offerId = it.substring(it.lastIndexOf(EQUAL) + 1, it.length).toLongOrNull()
+                            var bookNowTransportId: String? = null
+                            if (offerId == null) bookNowTransportId = it.substring(it.lastIndexOf(EQUAL) + 1, it.length)
+
+                            transferId?.let { id -> presenter.openOffer(id, offerId, bookNowTransportId) }
                             return
                         } else if (it.contains(OPEN_CHAT)) {
                             val chatId = it.substring(it.indexOf(SLASH) + 1, it.indexOf(QUESTION))
                             presenter.openChat(chatId)
                             return
                         }
-                        val transferId = it.substring(it.indexOf(SLASH) + 1).toLong()
-                        presenter.openTransfer(transferId)
+                        val transferId = it.substring(it.indexOf(SLASH) + 1).toLongOrNull()
+                        transferId?.let { id -> presenter.openTransfer(id) }
                         return
                     }
                 }
                 path?.startsWith(PASSENGER_RATE)!! -> {
-                    val transferId = appLinkData.lastPathSegment?.toLong()
-                    val rate = appLinkData.getQueryParameter(RATE)?.toInt()
-                    presenter.rateTransfer(transferId!!, rate!!)
+                    val transferId = appLinkData.lastPathSegment?.toLongOrNull()
+                    val rate = appLinkData.getQueryParameter(RATE)?.toIntOrNull()
+                    if (transferId != null && rate != null) presenter.rateTransfer(transferId, rate)
                     return
                 }
                 path.contains(VOUCHER) -> {

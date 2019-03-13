@@ -13,7 +13,7 @@ import org.koin.standalone.inject
 class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
     private val transferMapper: TransferMapper by inject()
 
-    fun openOffer(transferId: Long, offerId: Long) {
+    fun openOffer(transferId: Long, offerId: Long?, bookNowTransportId: String?) {
         if (!isLoggedIn())
             router.replaceScreen(Screens.LoginToPaymentOffer(transferId, offerId))
         else {
@@ -33,7 +33,7 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
                     router.replaceScreen(Screens.ChangeMode(Screens.PASSENGER_MODE))
                     router.navigateTo(Screens.PaymentOffer(
                             transferId, offerId, transferModel.dateRefund,
-                            transferModel.paymentPercentages, null))
+                            transferModel.paymentPercentages, bookNowTransportId))
                 }
             }
         }
