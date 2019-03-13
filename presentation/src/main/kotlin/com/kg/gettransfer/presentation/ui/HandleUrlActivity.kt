@@ -90,7 +90,7 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
                 path?.startsWith(PASSENGER_RATE)!! -> {
                     val transferId = appLinkData.lastPathSegment?.toLongOrNull()
                     val rate = appLinkData.getQueryParameter(RATE)?.toIntOrNull()
-                    presenter.rateTransfer(transferId!!, rate!!)
+                    if (transferId != null && rate != null) presenter.rateTransfer(transferId, rate)
                     return
                 }
                 path.contains(VOUCHER) -> {
