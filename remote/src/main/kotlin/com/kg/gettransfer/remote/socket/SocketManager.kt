@@ -203,7 +203,7 @@ class SocketManager(): KoinComponent {
         return when {
             socket == null        -> { log.error("event $eventName was not emit: $SOCKET_TAG is null" ); false }
             !statusOpened && !sendAfterReconnected -> { log.error("event $eventName was not emit: $SOCKET_TAG is not connected" ); false }
-            else                  -> { socket!!.emit(eventName, arg); true }
+            else                  -> { socket!!.emit(eventName, arg); log.error("event $eventName was emit: $SOCKET_TAG"); true }
         }
     }
 

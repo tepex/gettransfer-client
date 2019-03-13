@@ -4,6 +4,7 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.eventListeners.ChatEventListener
 import com.kg.gettransfer.domain.eventListeners.SystemEventListener
+import com.kg.gettransfer.domain.model.Chat
 import com.kg.gettransfer.domain.model.Message
 import com.kg.gettransfer.presentation.mapper.ChatMapper
 import com.kg.gettransfer.presentation.mapper.MessageMapper
@@ -84,15 +85,21 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
             chatRemoteResult.error?.let { checkResultError(it) }
             if (chatRemoteResult.error != null) viewState.setError(chatRemoteResult.error!!)
             else {
-                if(chatModel == null){
-                    chatModel = chatMapper.toView(chatRemoteResult.model)
-                    initToolbar()
-                } else {
-                    chatModel!!.messages = chatRemoteResult.model.messages.map { messageMapper.toView(it) }
-
-                }
-                viewState.setChat(chatModel!!)
+                initChatModel(chatRemoteResult.model)
             }
+        }
+    }
+
+    private fun initChatModel(chatResult: Chat){
+        if(chatModel == null) {
+            chatModel = chatMapper.toView(chatResult)
+            initToolbar()
+            viewState.setChat(chatModel!!)
+        } else {
+            val oldMessagesSize = chatModel!!.messages.size
+            chatModel!!.messages = chatResult.messages.map { messageMapper.toView(it) }
+            viewState.notifyData()
+            if(chatResult.messages.size > oldMessagesSize) viewState.scrollToEnd()
         }
     }
 
@@ -103,7 +110,6 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
         viewState.scrollToEnd()
         utils.launchSuspend { utils.asyncAwait { chatInteractor.newMessage(messageMapper.fromView(newMessage)) } }
         sendAnalytics(MESSAGE_OUT)
-
     }
 
     fun readMessage(messageId: Long) = chatInteractor.readMessage(transferId, messageId)
@@ -113,12 +119,10 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
         utils.launchSuspend{
             val result = utils.asyncAwait{ chatInteractor.getChat(transferId, true) }
             if(result.fromCache) {
-                chatModel!!.messages = result.model.messages.map { messageMapper.toView(it) }
-                viewState.notifyData()
-                if(message.accountId != chatModel!!.currentAccountId) viewState.scrollToEnd()
+                initChatModel(result.model)
             }
+            if (isIdValid(message)) sendAnalytics(MESSAGE_IN)
         }
-        if (isIdValid(message)) sendAnalytics(MESSAGE_IN)
     }
 
     override fun onMessageReadEvent(message: Message) {
@@ -136,8 +140,8 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
         analytics.logEvent(event, createEmptyBundle(), emptyMap())
 
     private fun isIdValid(message: Message) =
-            message.accountId != chatModel!!.currentAccountId &&
-                    chatModel!!.currentAccountId != NO_ID
+            message.accountId != chatModel?.currentAccountId &&
+                    chatModel?.currentAccountId != NO_ID
 
     companion object {
         const val MESSAGE_IN  = "message_in"
