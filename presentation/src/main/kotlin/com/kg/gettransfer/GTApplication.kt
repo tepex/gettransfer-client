@@ -2,6 +2,8 @@ package com.kg.gettransfer
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.ProcessLifecycleOwner
 
 import android.content.Intent
 
@@ -24,6 +26,8 @@ import com.kg.gettransfer.di.*
 import com.kg.gettransfer.presentation.FileLoggingTree
 import com.kg.gettransfer.remote.remoteMappersModule
 import com.kg.gettransfer.remote.remoteModule
+import com.kg.gettransfer.remote.socketModule
+import com.kg.gettransfer.utilities.AppLifeCycleObserver
 
 import com.squareup.leakcanary.LeakCanary
 
@@ -64,9 +68,11 @@ class GTApplication : MultiDexApplication() {
             remoteModule,
             cacheModule,
             dataModule,
+            encryptModule,
             domainModule,
             mappersModule,
-            androidModule
+            androidModule,
+            socketModule
         ))
 
         //setUpLeakCanary()
@@ -75,6 +81,11 @@ class GTApplication : MultiDexApplication() {
         setupSentry()
         setupAppsFlyer()
         Timber.plant(FileLoggingTree())
+
+        ProcessLifecycleOwner
+                .get()
+                .lifecycle
+                .addObserver(AppLifeCycleObserver(applicationContext))
     }
 
     private fun setupAppsFlyer() {
@@ -135,8 +146,5 @@ class GTApplication : MultiDexApplication() {
             })
             */
         }
-    }
-    companion object {
-        var onStart         = 0
     }
 }

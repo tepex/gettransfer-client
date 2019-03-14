@@ -1,27 +1,22 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.annotation.SuppressLint
-
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 
 import android.graphics.Color
+import android.graphics.Point
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.os.PersistableBundle
-
-import android.support.annotation.CallSuper
-import android.support.annotation.IdRes
-import android.support.annotation.NonNull
-import android.support.annotation.StringRes
+import android.support.annotation.*
 
 import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
@@ -40,11 +35,11 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 
 import com.arellomobile.mvp.MvpAppCompatActivity
-import com.kg.gettransfer.GTApplication
 
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.extensions.*
@@ -53,14 +48,14 @@ import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
 
-import com.kg.gettransfer.service.OfferServiceConnection
-import com.kg.gettransfer.service.OfferServiceConnection.Companion.ACTION_OFFER
+import com.kg.gettransfer.utilities.AppLifeCycleObserver
 
 import com.kg.gettransfer.utilities.LocaleManager
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 
 import kotlinx.android.synthetic.main.toolbar.view.*
+import kotlinx.android.synthetic.main.view_navigation.*
 
 import org.koin.android.ext.android.inject
 
@@ -77,7 +72,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     internal val router: Router by inject()
     protected val navigatorHolder: NavigatorHolder by inject()
     protected val localeManager: LocaleManager by inject()
-    private val offerServiceConnection: OfferServiceConnection by inject()
 
     private var rootView: View? = null
     private var rootViewHeight: Int? = null
@@ -113,6 +107,10 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         }
     }*/
 
+    protected fun setViewColor(view: View, @ColorRes color: Int) {
+        view.setBackgroundColor(ContextCompat.getColor(this, color))
+    }
+
     protected fun hideBottomSheet(bottomSheet: BottomSheetBehavior<View>, bottomSheetLayout: View, hiddenState: Int, event: MotionEvent): Boolean{
         val outRect = Rect()
         bottomSheetLayout.getGlobalVisibleRect(outRect)
@@ -129,18 +127,27 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
     /* BroadCast receivers */
     private val inetReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) = setNetworkAvailability(context) }
+        override fun onReceive(context: Context, intent: Intent) {
+            //if(setNetworkAvailability(context)) getPresenter().checkNewMessagesCached()
+            setNetworkAvailability(context)
+        }
+    }
 
-    private val offerReceiver = object : BroadcastReceiver() {
+    private val appStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            intent?.apply { getStringExtra(OFFER_JSON)
-                    .let { getPresenter().onOfferJsonReceived(it, getLongExtra(OFFER_ID, 0L)) } } } }
+            intent?.let { if (it.action == AppLifeCycleObserver.APP_STATE)
+                              it.getBooleanExtra(AppLifeCycleObserver.STATUS, false)
+                              .also { state -> getPresenter().onAppStateChanged(state) } } }
 
 
-    protected open fun setNetworkAvailability(context: Context) {
+    }
+
+
+    protected open fun setNetworkAvailability(context: Context): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val available = cm.activeNetworkInfo?.let { it.isConnected } ?: false
         viewNetworkNotAvailable?.let { it.isGone = available }
+        return available
     }
 
     private val loadingFragment by lazy { LoadingFragment() }
@@ -152,14 +159,18 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     abstract fun getPresenter(): BasePresenter<*>
 
-    protected fun setToolbar(toolbar: Toolbar, @StringRes titleId: Int = TOOLBAR_NO_TITLE, hasBackAction: Boolean = true) {
+    protected fun setToolbar(toolbar: Toolbar, @StringRes titleId: Int = TOOLBAR_NO_TITLE, hasBackAction: Boolean = true, firstLetterToUpperCase: Boolean = false) {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(false)
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
-        if (titleId != TOOLBAR_NO_TITLE) toolbar.toolbar_title.setText(titleId)
+        if (titleId != TOOLBAR_NO_TITLE) {
+            val title = getString(titleId)
+            toolbar.toolbar_title.text =
+                if (!firstLetterToUpperCase) title else title.substring(0, 1).toUpperCase().plus(title.substring(1))
+        }
         if (hasBackAction) toolbar.setNavigationOnClickListener { getPresenter().onBackCommandClick() }
     }
 
@@ -176,14 +187,10 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     @CallSuper
     protected override fun onStart() {
-        GTApplication.onStart++
-        with(offerServiceConnection) {
-            if (!statusOpened)
-                offerServiceConnection.connect(systemInteractor.endpoint, systemInteractor.accessToken) { json, id ->
-                    LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(Intent(ACTION_OFFER)
-                            .apply { putExtra(OFFER_JSON, json)
-                                     putExtra(OFFER_ID, id) }) } }
+        LocalBroadcastManager.getInstance(applicationContext)
+                .registerReceiver(appStateReceiver, IntentFilter(AppLifeCycleObserver.APP_STATE))
         super.onStart()
+
         registerReceiver(inetReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         setNetworkAvailability(this)
     }
@@ -191,7 +198,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     @CallSuper
     protected override fun onResume() {
         super.onResume()
-        LocalBroadcastManager.getInstance(this).registerReceiver(offerReceiver, IntentFilter(ACTION_OFFER))
         navigatorHolder.setNavigator(navigator)
     }
 
@@ -203,10 +209,15 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     @CallSuper
     protected override fun onStop() {
-        if (--GTApplication.onStart == NO_FOREGROUNDED_ACTIVITIES) offerServiceConnection.disconnect()
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(offerReceiver)
-        unregisterReceiver(inetReceiver)
         super.onStop()
+        Handler().postDelayed({
+            LocalBroadcastManager.getInstance(this).apply {
+    //            unregisterReceiver(offerReceiver)
+                unregisterReceiver(appStateReceiver)
+            }
+        }, 2000)
+        unregisterReceiver(inetReceiver)
+
     }
 
     @CallSuper
@@ -231,6 +242,11 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
         if (e.code != ApiException.NETWORK_ERROR) Utils.showError(this, false, getString(R.string.LNG_ERROR) + ": " + e.message)
+    }
+
+    override fun setError(e: DatabaseException) {
+        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage("CacheError: ${e.details}").build())
+        Sentry.capture(e)
     }
 
     protected fun showKeyboard() {
@@ -294,6 +310,12 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
             commit()
         }
     }
+    /*
+    Use this method to fix UI, which depends on screen size.
+    Returns Point, that has x = display width, y = display height
+     */
+    protected open fun fixUIDependedOnScreenSize() =
+            Point().also { windowManager.defaultDisplay.getSize(it) }
 
     protected fun getScreenSide(height: Boolean): Int {
         val displayMetrics = DisplayMetrics()
@@ -310,8 +332,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     protected fun clearDim(parent: ViewGroup) = parent.overlay.clear()
 
-    @SuppressLint("ResourceType")
-    protected fun showPopUpWindow(@IdRes res: Int, parent: View): View {
+    protected fun showPopUpWindow(@LayoutRes res: Int, parent: View): View {
         applyDim(window.decorView.rootView as  ViewGroup, DIM_AMOUNT)
         val layoutPopUp = LayoutInflater.from(this).inflate(res, null)
         val widthPx = getScreenSide(false) - 40
@@ -328,6 +349,9 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         popupWindowRate.isOutsideTouchable = false
         return layoutPopUp
     }
+
+
+
 
     protected var mDisMissAction = { }    // used in popup dismiss event, need later init, when view with map would be created
 
@@ -356,9 +380,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         const val PLAY_MARKET_RATE = 42
 
         const val DIM_AMOUNT = 0.5f
-
-        const val OFFER_JSON = "offerAsJson"
-        const val OFFER_ID   = "offerId"
-        const val NO_FOREGROUNDED_ACTIVITIES = 0
+        const val SCREEN_WIDTH_REQUIRING_SMALL_TEXT_SIZE = 768
     }
 }

@@ -11,17 +11,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <include
-        android:id="@+id/btnCall"
-        layout="@layout/btn_layout_call_passenger"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"/>
-
-    <!--<include
         android:id="@+id/btnChat"
         layout="@layout/btn_layout_chat_passenger"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"/>-->
+        android:layout_weight="1"
+        android:layout_marginEnd="@dimen/view_transfer_details_communicate_buttons_margin"/>
+
+    <include
+        android:id="@+id/btnCall"
+        layout="@layout/btn_layout_call_passenger"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/view_transfer_details_communicate_buttons_margin"/>
 
 </LinearLayout>

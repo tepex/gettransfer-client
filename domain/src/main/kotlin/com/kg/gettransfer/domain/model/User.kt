@@ -2,7 +2,7 @@ package com.kg.gettransfer.domain.model
 
 data class User(
     var profile: Profile,
-    var termsAccepted: Boolean = true
+    var termsAccepted: Boolean = false
 ) {
 
     val loggedIn: Boolean

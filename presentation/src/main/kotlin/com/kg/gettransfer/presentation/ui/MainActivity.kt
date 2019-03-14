@@ -1,17 +1,13 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 
 import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
-import android.support.v4.app.ActivityCompat
 
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
@@ -43,34 +39,32 @@ import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.domain.ApiException
 
-import com.kg.gettransfer.presentation.model.PolylineModel
-
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.MainView
-
-import java.util.Date
 
 import kotlinx.android.synthetic.main.a_b_view.*
 import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_item_requests.view.*
-import kotlinx.android.synthetic.main.notification_offer.*
 import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
 import kotlinx.android.synthetic.main.view_last_trip_rate.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
+import kotlinx.android.synthetic.main.view_navigation.view.*
 import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
 import kotlinx.android.synthetic.main.view_rate_in_store.view.*
 import kotlinx.android.synthetic.main.view_thanks_for_rate.view.*
+import pub.devrel.easypermissions.EasyPermissions
 
 import timber.log.Timber
 
-class MainActivity : BaseGoogleMapActivity(), MainView {
+class MainActivity : BaseGoogleMapActivity(), MainView, EasyPermissions.PermissionCallbacks {
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
 
@@ -109,7 +103,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     override fun getPresenter(): MainPresenter = presenter
 
     @CallSuper
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
@@ -147,10 +141,16 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         isFirst = savedInstanceState == null
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) window.exitTransition = Fade().apply { duration = FADE_DURATION }
+
+        if (intent.getBooleanExtra(SplashActivity.EXTRA_SHOW_RATE, false)) {
+            val transferId = intent.getLongExtra(SplashActivity.EXTRA_TRANSFER_ID, 0)
+            val rate = intent.getIntExtra(SplashActivity.EXTRA_RATE, 0)
+            presenter.rateTransfer(transferId, rate)
+        }
     }
 
     @CallSuper
-    protected override fun onPostCreate(savedInstanceState: Bundle?) {
+    override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) search_panel.elevation = resources.getDimension(R.dimen.search_elevation)
         searchFrom.setUneditable()
@@ -213,6 +213,11 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         (navFooterVersion as TextView).text =
                 String.format(getString(R.string.nav_footer_version), versionName, versionCode)
         //navFooterReadMore.text = Html.fromHtml(Utils.convertMarkdownToHtml(getString(R.string.LNG_READMORE)))
+        setViewColor(navViewHeader, R.color.colorPrimary)
+        navViewHeader.navHeaderMode.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
+        navViewHeader.navHeaderName.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
+        navViewHeader.navHeaderEmail.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
+        navHeaderMode.isVisible = false
 
         readMoreListener.let {
             navFooterStamp.setOnClickListener   (it)
@@ -251,7 +256,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         Timber.d("Permissions: ${systemInteractor.locationPermissionsGranted}")
 
         map = gm
-        if (isPermissionGranted()) return
+        checkPermission()
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
         gm.setOnCameraMoveListener        { presenter.onCameraMove(gm.cameraPosition!!.target, true)  }
         gm.setOnCameraIdleListener        { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
@@ -263,32 +268,27 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         }
     }
 
-    private fun isPermissionGranted(): Boolean {
-        if (systemInteractor.locationPermissionsGranted == null &&
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                (!check(Manifest.permission.ACCESS_FINE_LOCATION) || !check(Manifest.permission.ACCESS_COARSE_LOCATION))) {
-            ActivityCompat.requestPermissions(this, SplashActivity.PERMISSIONS, SplashActivity.PERMISSION_REQUEST)
-            return true
-        }
-        return false
+    private fun checkPermission() {
+        if (!EasyPermissions.hasPermissions(this, *PERMISSIONS))
+            EasyPermissions.requestPermissions(
+                this,
+                getString(R.string.LNG_LOCATION_ACCESS),
+                PERMISSION_REQUEST, *PERMISSIONS)
     }
 
-    private fun check(permission: String) =
-            ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+        systemInteractor.locationPermissionsGranted = false
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+        systemInteractor.locationPermissionsGranted = true
+        map.isMyLocationEnabled = true
+        map.uiSettings.isMyLocationButtonEnabled = false
+    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (requestCode != SplashActivity.PERMISSION_REQUEST) return
-        if(grantResults.size == 2 &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-                grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-
-            systemInteractor.locationPermissionsGranted = true
-            map.isMyLocationEnabled = true
-            map.uiSettings.isMyLocationButtonEnabled = false
-        } else {
-            systemInteractor.locationPermissionsGranted = false
-        }
-        recreate()
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
         presenter.updateCurrentLocation()
     }
 
@@ -332,7 +332,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     override fun moveCenterMarker(point: LatLng) {
-        centerMarker?.let { it.setPosition(point) }
+        centerMarker?.position = point
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
@@ -350,6 +350,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     override fun setError(e: ApiException) {
         searchFrom.text = getString(R.string.search_nothing)
+        if (e.isNotFound()) super.setError(e)
     }
 
     override fun initSearchForm() {
@@ -381,6 +382,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     override fun setProfile(profile: ProfileModel) {
         profile.apply {
+            navHeaderMode.text = getString(R.string.LNG_MENU_TITLE_PASSENGER)
             navHeaderName.isVisible  = isLoggedIn()
             navHeaderEmail.isVisible = isLoggedIn()
             navRequests.isVisible    = isLoggedIn()
@@ -450,7 +452,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         }
     }
 
-    override fun openReviewForLastTrip(transferId: Long, date: Date, vehicle: String, color: String, routeModel: RouteModel) {
+    override fun openReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?) {
         val view = showPopUpWindow(R.layout.view_last_trip_rate, contentMain)
         mDisMissAction = {
             _mapView = mapView
@@ -465,11 +467,11 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         view.apply {
             tv_transfer_details.setOnClickListener {
                 closePopUp()
-                presenter.onTransferDetailsClick(transferId)
+                presenter.onTransferDetailsClick(transfer.id)
             }
             tv_close_lastTrip_rate.setOnClickListener { presenter.onReviewCanceled() }
-            tv_transfer_number_rate.apply { text = text.toString().plus(" #$transferId") }
-            tv_transfer_date_rate.text = SystemUtils.formatDateTime(date)
+            tv_transfer_number_rate.apply { text = text.toString().plus(" #${transfer.id}") }
+            tv_transfer_date_rate.text = SystemUtils.formatDateTime(transfer.dateTime)
             tv_vehicle_model_rate.text = vehicle
             rate_bar_last_trip.setOnRatingChangeListener { _, fl ->
                 closePopUp()
@@ -477,15 +479,20 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             }
             carColor_rate.setImageDrawable(Utils.getVehicleColorFormRes(this@MainActivity, color))
         }
-        drawMapForReview(view.rate_map, Utils.getPolyline(routeModel), routeModel)
-
+        drawMapForReview(view.rate_map, routeModel, transfer.from, startPoint)
     }
 
-    private fun drawMapForReview(map: MapView, polyline: PolylineModel, routeModel: RouteModel) {
+    private fun drawMapForReview(map: MapView,  routeModel: RouteModel?, from: String, startPoint: LatLng) {
         _mapView = map
         isGmTouchEnabled = false
         initMapView(null)
-        setPolyline(polyline, routeModel)
+        if(routeModel != null){
+            setPolyline(Utils.getPolyline(routeModel), routeModel)
+        } else {
+            processGoogleMap(false) {
+                setPinForHourlyTransfer(from, "", startPoint, Utils.getCameraUpdateForPin(startPoint))
+            }
+        }
         mapView.onPause()
         map.onResume()
     }
@@ -542,8 +549,8 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     companion object {
-        const val MY_LOCATION_BUTTON_INDEX = 2
-        const val COMPASS_BUTTON_INDEX     = 5
+        @JvmField val PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+        const val PERMISSION_REQUEST = 2211
         const val FADE_DURATION = 500L
         const val MAX_INIT_ZOOM = 2.0f
 

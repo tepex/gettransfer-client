@@ -52,9 +52,10 @@ data class TransferModel(
     @SerializedName(TransferEntity.REFUNDED_PRICE) @Expose          val refundedPrice: MoneyModel?,
     @SerializedName(TransferEntity.CAMPAIGN) @Expose                val campaign: String?,
 /* ================================================== */
-    @SerializedName(TransferEntity.EDITABLE_FIELDS) @Expose     val editableFields: List<String>,
-    @SerializedName(TransferEntity.AIRLINE_CARD) @Expose        val airlineCard: String?,
-    @SerializedName(TransferEntity.PAYMENT_PERCENTAGES) @Expose val paymentPercentages: List<Int>
+    @SerializedName(TransferEntity.EDITABLE_FIELDS) @Expose       val editableFields: List<String>,
+    @SerializedName(TransferEntity.AIRLINE_CARD) @Expose          val airlineCard: String?,
+    @SerializedName(TransferEntity.PAYMENT_PERCENTAGES) @Expose   val paymentPercentages: List<Int>,
+    @SerializedName(TransferEntity.UNREAD_MESSAGES_COUNT) @Expose val unreadMessagesCount: Int
 )
 
 data class TransfersModel(@SerializedName("transfers") @Expose val transfers: List<TransferModel>)

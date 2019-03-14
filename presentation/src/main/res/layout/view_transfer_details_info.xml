@@ -155,7 +155,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginStart="@dimen/view_transfer_details_info_items_margin_start_end"
             android:layout_marginEnd="@dimen/view_transfer_details_info_items_margin_start_end"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/textPrice"
@@ -271,7 +271,7 @@
                 android:layout_marginStart="@dimen/view_transfer_details_info_items_margin_start_end"
                 android:layout_marginEnd="@dimen/view_transfer_details_info_items_margin_start_end"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/textRequestSentOrCompletedDate"
@@ -295,7 +295,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tvTransferCancelled"
+                android:id="@+id/tvTransferCancelledOrInProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/view_transfer_details_info_items_margin_start_end"

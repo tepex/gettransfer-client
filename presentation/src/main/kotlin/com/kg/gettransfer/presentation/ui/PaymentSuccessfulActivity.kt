@@ -5,10 +5,14 @@ import android.support.v7.app.AlertDialog
 import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.google.android.gms.maps.CameraUpdate
 
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.isGone
+import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
@@ -21,6 +25,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     internal lateinit var presenter: PaymentSuccessfulPresenter
 
     private lateinit var dialogView: View
+    private lateinit var dialog: AlertDialog
 
     override fun getPresenter(): PaymentSuccessfulPresenter = presenter
 
@@ -34,7 +39,8 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
 
     private fun showPaymentDialog(savedInstanceState: Bundle?) {
         dialogView = layoutInflater.inflate(R.layout.dialog_payment_successful, null)
-        AlertDialog.Builder(this).apply { setView(dialogView) }.show().setCanceledOnTouchOutside(false)
+        dialog = AlertDialog.Builder(this).apply { setView(dialogView) }.show()
+        dialog.setCanceledOnTouchOutside(false)
 
         _mapView = dialogView.mapViewRoute
         initMapView(savedInstanceState)
@@ -43,13 +49,22 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         with(dialogView) {
             tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER).plus(" ${presenter.transferId}")
             tvDetails.setOnClickListener { presenter.onDetailsClick() }
-            btnCall.setOnClickListener { presenter.onCallClick() }
-            //tvVoucher.setOnClickListener { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
-            //btnChat.setOnClickListener   { toast(getString(com.kg.gettransfer.R.string.coming_soon)) }
 
-            tvDone.setOnClickListener { finish() }
-            btnSupport.setOnClickListener { presenter.sendEmail(null) }
+            if (presenter.offerId == 0L) {
+                tvBookNowSuccess.isVisible = true
+                btnCall.isGone = true
+                tvSupport.text = getString(R.string.LNG_OFFERS_SUPPORT)
+                tvCall.isGone = true
+            }
+            btnCall.setOnClickListener { presenter.onCallClick() }
+            ivClose.setOnClickListener { finish() }
+            btnSupport.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        dialog.dismiss()
     }
 
     override suspend fun customizeGoogleMaps(gm: GoogleMap) {
@@ -61,12 +76,16 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     override fun setRoute(polyline: PolylineModel) = setPolylineWithoutInfo(polyline)
 
     override fun setRemainTime(days: Int, hours: Int, minutes: Int) {
-        val time = "${days}D:${hours}H:${minutes}M"
+        val time = "$days${getString(R.string.LNG_D)}:$hours${getString(R.string.LNG_H)}:$minutes${getString(R.string.LNG_M)}"
         dialogView.tvRemainTime.text = time
     }
 
     companion object {
         const val TRANSFER_ID = "transferId"
         const val OFFER_ID = "offerId"
+    }
+
+    override fun setPinHourlyTransfer(point: LatLng, cameraUpdate: CameraUpdate) {
+        processGoogleMap(false) { setPinForHourlyWithoutInfo(point, cameraUpdate) }
     }
 }

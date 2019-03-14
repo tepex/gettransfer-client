@@ -5,6 +5,8 @@ interface LoginView: BaseView {
         val EXTRA_SCREEN_FOR_RETURN = "${LoginView::class.java.name}.previous_screen"
         val EXTRA_EMAIL_TO_LOGIN    = "${LoginView::class.java.name}.email_to_login"
         val EXTRA_TRANSFER_ID       = "${LoginView::class.java.name}.transfer_id"
+        val EXTRA_OFFER_ID          = "${LoginView::class.java.name}.offer_id"
+        val EXTRA_RATE              = "${LoginView::class.java.name}.rate"
     }
 
     fun enableBtnLogin(enable: Boolean)

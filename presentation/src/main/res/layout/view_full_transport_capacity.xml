@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="horizontal"
+              android:gravity="center_vertical"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
+    
+    <include
+            android:id="@+id/main_capacity"
+        layout="@layout/view_transport_capacity"/>
+
+    <!--<ImageView-->
+            <!--android:layout_width="16dp"-->
+            <!--android:layout_height="20dp"-->
+            <!--app:srcCompat="@drawable/ic_child_seat"/>-->
+
+    <!--<TextView-->
+            <!--android:id="@+id/transportType_child_seats"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textColor="@color/colorTextBlack"-->
+            <!--android:fontFamily="@font/sf_pro_text_regular"-->
+            <!--android:textSize="@dimen/activity_transfer_details_text_size_13sp"-->
+            <!--android:text="x 3"/>-->
+
+</LinearLayout>

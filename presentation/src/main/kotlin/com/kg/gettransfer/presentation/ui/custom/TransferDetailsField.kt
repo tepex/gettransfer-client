@@ -3,15 +3,9 @@ package com.kg.gettransfer.presentation.ui.custom
 import android.content.Context
 
 import android.support.constraint.ConstraintLayout
-import android.support.v4.content.ContextCompat
-
 import android.util.AttributeSet
-
 import android.view.LayoutInflater
-import android.view.View
-
 import com.kg.gettransfer.R
-
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_transfer_details_field.*
 
@@ -28,8 +22,8 @@ class TransferDetailsField @JvmOverloads constructor(
             context.obtainStyledAttributes(attrs, R.styleable.TransferDetailsField).apply {
                 field_title.text = getString(R.styleable.TransferDetailsField_title_transfer_details)
                 field_text.text  = getString(R.styleable.TransferDetailsField_input_transfer_details)
-                val drawableResId = getResourceId(R.styleable.TransferDetailsField_icon_img_transfer_details, -1)
-                field_icon.setImageDrawable(ContextCompat.getDrawable(context, drawableResId))
+           //     val drawableResId = getResourceId(R.styleable.TransferDetailsField_icon_img_transfer_details, -1)
+          //      field_icon.setImageDrawable(ContextCompat.getDrawable(context, drawableResId))
                 recycle()
             }
         }

@@ -1,8 +1,12 @@
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.data.*
+import com.kg.gettransfer.data.socket.ChatEventEmitter
+import com.kg.gettransfer.data.socket.SystemEventEmitter
+import com.kg.gettransfer.data.socket.CoordinateEventEmitter
 
 import com.kg.gettransfer.remote.mapper.*
+import com.kg.gettransfer.remote.socket.*
 
 import org.koin.dsl.module.module
 
@@ -53,6 +57,10 @@ val remoteMappersModule = module {
     single { VehicleInfoMapper() }
     single { VehicleMapper() }
 
+    single { ChatAccountMapper() }
+    single { MessageMapper() }
+    single { ChatMapper() }
+
     single { LocationMapper() }
 }
 
@@ -67,6 +75,18 @@ val remoteModule = module {
     single<OfferRemote> { OfferRemoteImpl() }
     single<PaymentRemote> { PaymentRemoteImpl() }
     single<PromoRemote> { PromoRemoteImpl() }
+    single<ChatRemote> { ChatRemoteImpl() }
 
     single<ReviewRemote> { ReviewRemoteImpl() }
+
+}
+
+val socketModule = module {
+    single { SocketManager() }
+
+    single { CoordinateSocketImpl() } bind CoordinateEventEmitter::class
+    single { SystemSocketImp() } bind SystemEventEmitter::class
+    single { OfferSocketImpl(get()) }
+    single { ChatSocketImpl() }
+    single<ChatEventEmitter> { ChatSocketImpl() }
 }

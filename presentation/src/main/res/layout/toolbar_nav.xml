@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+                                   xmlns:tools="http://schemas.android.com/tools"
+                                   android:layout_width="match_parent" android:layout_height="wrap_content"
+                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                   android:fitsSystemWindows="true"
+                                   app:contentInsetStart="0dp"
+                                   android:elevation="8dp"
+                                   android:background="@color/toolbar_bg"
+                                   android:minHeight="?android:attr/actionBarSize"
+                                   tools:ignore="Overdraw">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_back"/>
+
+
+        <TextView
+                android:id="@+id/tv_title"
+                style="@style/black_semiBold"
+                android:textSize="@dimen/toolbar_nav_title_text_size"
+                android:layout_centerHorizontal="true"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:gravity="center_horizontal"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:scrollHorizontally="true"
+                android:layout_width="296dp"
+                android:layout_height="wrap_content" />
+
+        <TextView
+                android:id="@+id/tv_subtitle"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/tv_title"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:textColor="@color/colorGrey"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <ImageView
+                android:id="@+id/btn_forward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:rotation="180"
+                app:srcCompat="@drawable/ic_back"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.Toolbar>

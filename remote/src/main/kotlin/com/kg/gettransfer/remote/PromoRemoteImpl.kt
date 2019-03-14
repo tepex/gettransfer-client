@@ -1,7 +1,6 @@
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.data.PromoRemote
-import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.model.PromoDiscountEntity
 
 import com.kg.gettransfer.remote.mapper.PromoMapper
@@ -15,11 +14,12 @@ class PromoRemoteImpl : PromoRemote {
     private val mapper = get<PromoMapper>()
 
     override suspend fun getDiscount(code: String): PromoDiscountEntity {
-        val response: ResponseModel<String> = tryGetDiscount(code)
+        //val response: ResponseModel<String> = tryGetDiscount(code)
+        val response: ResponseModel<String> = core.tryTwice { core.api.getDiscount(code) }
         return mapper.fromRemote(response.data!!)
     }
 
-    private suspend fun tryGetDiscount(code: String): ResponseModel<String> {
+    /*private suspend fun tryGetDiscount(code: String): ResponseModel<String> {
         return try { core.api.getDiscount(code).await() }
         catch (e: Exception) {
             if (e is RemoteException) throw e
@@ -28,5 +28,5 @@ class PromoRemoteImpl : PromoRemote {
             try { core.updateAccessToken() } catch (e1: Exception) { throw core.remoteException(e1) }
             try { core.api.getDiscount(code).await() } catch (e2: Exception) { throw core.remoteException(e2) }
         }
-    }
+    }*/
 }

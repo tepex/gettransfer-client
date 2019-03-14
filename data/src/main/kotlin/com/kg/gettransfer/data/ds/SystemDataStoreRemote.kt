@@ -1,11 +1,11 @@
 package com.kg.gettransfer.data.ds
 
-import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.SystemRemote
 import com.kg.gettransfer.data.SystemDataStore
 
-import com.kg.gettransfer.data.mapper.ExceptionMapper
-import com.kg.gettransfer.data.model.*
+import com.kg.gettransfer.data.model.ConfigsEntity
+import com.kg.gettransfer.data.model.AccountEntity
+import com.kg.gettransfer.data.model.EndpointEntity
 
 import org.koin.standalone.inject
 
@@ -25,8 +25,8 @@ open class SystemDataStoreRemote : SystemDataStore {
     override suspend fun login(email: String, password: String) = remote.login(email, password)
     suspend fun registerPushToken(provider: String, token: String) = remote.registerPushToken(provider, token)
     suspend fun unregisterPushToken(token: String) = remote.unregisterPushToken(token)
-    override fun clearAccount() { throw UnsupportedOperationException() }
-    override suspend fun getMyLocation(): LocationEntity = remote.getMyLocation()
+    override suspend fun clearAccount() { throw UnsupportedOperationException() }
+    override suspend fun getMyLocation() = remote.getMyLocation()
 
     override fun changeEndpoint(endpoint: EndpointEntity) = remote.changeEndpoint(endpoint)
 }

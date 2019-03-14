@@ -31,6 +31,7 @@ open class OfferMapper : EntityMapper<OfferModel, OfferEntity> {
             status            = type.status,
             wifi              = type.wifi,
             refreshments      = type.refreshments,
+            charger           = type.charger,
             createdAt         = type.createdAt,
             updatedAt         = type.updatedAt,
             price             = priceMapper.fromRemote(type.price),

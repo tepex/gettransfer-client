@@ -10,5 +10,7 @@ enum class DistanceUnit {
 
     companion object {
         fun km2Mi(km: Int) = (km.toDouble() / 1.609344).roundToInt()
+
+        val DEFAULT_DISTANCE_UNITS = arrayListOf(DistanceUnit.km, DistanceUnit.mi)
     }
 }

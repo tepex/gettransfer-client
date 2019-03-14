@@ -1,37 +1,39 @@
 package com.kg.gettransfer.prefs
 
 import android.content.Context
-import android.content.SharedPreferences
 
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.PreferencesListener
-
-import com.kg.gettransfer.data.model.AccountEntity
-import com.kg.gettransfer.data.model.ConfigsEntity
-import com.kg.gettransfer.data.model.EndpointEntity
-import com.kg.gettransfer.data.model.GTAddressEntity
+import com.kg.gettransfer.data.model.*
+import com.kg.gettransfer.domain.repository.CarrierTripRepository
+import com.kg.gettransfer.domain.repository.CarrierTripRepository.Companion.BG_COORDINATES_NOT_ASKED
 
 import kotlinx.serialization.list
 import kotlinx.serialization.json.JSON
-import kotlinx.serialization.parseList
 import kotlinx.serialization.serializer
 
-import timber.log.Timber
-
 class PreferencesImpl(context: Context,
-                      override val endpoints: List<EndpointEntity>): PreferencesCache {
+                      override val endpoints: List<EndpointEntity>,
+                      private val encryptPass: EncryptPass): PreferencesCache {
     companion object {
-        @JvmField val INVALID_TOKEN    = "invalid_token"
-        @JvmField val ACCESS_TOKEN     = "token"
-        @JvmField val LAST_MODE        = "last_mode"
-        @JvmField val FIRST_LAUNCH     = "first_launch"
-        @JvmField val ONBOARDING       = "onboarding"
-        @JvmField val SELECTED_FIELD   = "selected_field"
-        @JvmField val ENDPOINT         = "endpoint"
-        @JvmField val ADDRESS_HISTORY  = "history"
-        @JvmField val APP_ENTERS_COUNT = "enters_count"
-        @JvmField val EVENTS_COUNT     = "events_count"
-        @JvmField val TRANSFER_IDS     = "transfer_ids"
+        @JvmField val INVALID_TOKEN     = "invalid_token"
+        @JvmField val ACCESS_TOKEN      = "token"
+        @JvmField val INVALID_EMAIL     = ""
+        @JvmField val USER_EMAIL        = "user_email"
+        @JvmField val INVALID_PASSWORD  = ""
+        @JvmField val USER_PASSWORD     = "user_password"
+        @JvmField val LAST_MODE         = "last_mode"
+        @JvmField val CARRIER_TYPE_VIEW = "last_carrier_trips_type_view"
+        @JvmField val FIRST_LAUNCH      = "first_launch"
+        @JvmField val ONBOARDING        = "onboarding"
+        @JvmField val SELECTED_FIELD    = "selected_field"
+        @JvmField val ENDPOINT          = "endpoint"
+        @JvmField val ADDRESS_HISTORY   = "history"
+        @JvmField val APP_ENTERS_COUNT  = "enters_count"
+        @JvmField val EVENTS_COUNT      = "events_count"
+        @JvmField val TRANSFER_IDS      = "transfer_ids"
+        @JvmField val DRIVER_IN_BG      = "back_ground_coordinates"
+        @JvmField val OFFERS_VIEW       = "offers_view"
 
         const val FIRST_ACCESS         = 0
         const val IMMUTABLE            = -1   // user did rate app
@@ -40,9 +42,12 @@ class PreferencesImpl(context: Context,
     
     private val listeners = mutableSetOf<PreferencesListener>()
     
-    private val configsPrefs = context.getSharedPreferences(ConfigsEntity.ENTITY_NAME, Context.MODE_PRIVATE)
-    private val accountPrefs = context.getSharedPreferences(AccountEntity.ENTITY_NAME, Context.MODE_PRIVATE)
-    private var _accessToken = INVALID_TOKEN
+    private val configsPrefs  = context.getSharedPreferences(ConfigsEntity.ENTITY_NAME, Context.MODE_PRIVATE)
+    private val accountPrefs  = context.getSharedPreferences(AccountEntity.ENTITY_NAME, Context.MODE_PRIVATE)
+    private val driverPrefs  = context.getSharedPreferences(CarrierEntity.ENTITY_NAME, Context.MODE_PRIVATE)
+    private var _accessToken  = INVALID_TOKEN
+    private var _userEmail    = INVALID_EMAIL
+    private var _userPassword = INVALID_PASSWORD
     private var _endpoint: EndpointEntity? = null
 
     override var accessToken: String
@@ -60,11 +65,48 @@ class PreferencesImpl(context: Context,
             listeners.forEach { it.accessTokenChanged(value) }
         }
 
+    override var userEmail: String
+        get() {
+            if(_userEmail == INVALID_EMAIL)
+                _userEmail = configsPrefs.getString(USER_EMAIL, INVALID_EMAIL)!!
+            return _userEmail
+        }
+        set(value) {
+            _userEmail = value
+            with(configsPrefs.edit()){
+                putString(USER_EMAIL, value)
+                apply()
+            }
+        }
+
+    override var userPassword: String
+        get() {
+            if(_userPassword == INVALID_PASSWORD)
+                _userPassword = configsPrefs.getString(USER_PASSWORD, INVALID_PASSWORD)!!.let { encryptPass.encryptDecrypt(it) }
+            return _userPassword
+        }
+        set(value) {
+            _userPassword = value
+            with(configsPrefs.edit()) {
+                putString(USER_PASSWORD, encryptPass.encryptDecrypt(value))
+                apply()
+            }
+        }
+
     override var lastMode: String
         get() = configsPrefs.getString(LAST_MODE, "")!!
         set(value) {
             with(configsPrefs.edit()) {
                 putString(LAST_MODE, value)
+                apply()
+            }
+        }
+
+    override var lastCarrierTripsTypeView: String
+        get() = configsPrefs.getString(CARRIER_TYPE_VIEW, "")!!
+        set(value) {
+            with(configsPrefs.edit()){
+                putString(CARRIER_TYPE_VIEW, value)
                 apply()
             }
         }
@@ -164,11 +206,35 @@ class PreferencesImpl(context: Context,
                 apply()
             }
         }
-        
+
     override fun logout() {
-        _accessToken = INVALID_TOKEN
-        configsPrefs.edit().apply { remove(ACCESS_TOKEN) }.apply()
+        _accessToken  = INVALID_TOKEN
+        _userEmail    = INVALID_EMAIL
+        _userPassword = INVALID_PASSWORD
+        with(configsPrefs.edit()){
+            remove(ACCESS_TOKEN)
+            remove(USER_EMAIL)
+            remove(USER_PASSWORD)
+            apply()
+        }
     }
+
+    override var driverCoordinatesInBackGround: Int
+        get() = driverPrefs.getInt(DRIVER_IN_BG, BG_COORDINATES_NOT_ASKED)
+        set(value) {
+            driverPrefs.edit()
+                    .putInt(DRIVER_IN_BG, value)
+                    .apply()
+        }
+
+    override var offerViewExpanded: Boolean
+        get() = accountPrefs.getBoolean(OFFERS_VIEW, true)
+        set(value) {
+            accountPrefs
+                    .edit()
+                    .putBoolean(OFFERS_VIEW, value)
+                    .apply()
+        }
         
     override fun addListener(listener: PreferencesListener)    { listeners.add(listener) }
     override fun removeListener(listener: PreferencesListener) { listeners.remove(listener) }

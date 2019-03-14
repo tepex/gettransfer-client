@@ -11,18 +11,20 @@ import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.mapper.PaymentStatusRequestMapper
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
 
-import com.kg.gettransfer.presentation.presenter.PaymentSettingsPresenter.Companion.PRICE_30
+import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter.Companion.PRICE_30
 
 import com.kg.gettransfer.presentation.view.PaymentView
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
+import io.sentry.Sentry
 
 import org.koin.standalone.inject
 
@@ -36,12 +38,37 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
 
     private var offer: Offer? = null
     private var bookNowOffer: BookNowOffer? = null
+    private var transfer: Transfer? = null
 
     internal var transferId = 0L
     internal var offerId    = 0L
     internal var percentage = 0
     internal var bookNowTransportId = ""
 
+    override fun attachView(view: PaymentView) {
+        super.attachView(view)
+        offer = offerInteractor.getOffer(offerId)
+        utils.launchSuspend {
+            val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
+            if (result.error == null || (result.error != null && result.fromCache)) {
+                transfer = result.model
+                if (offer == null) {
+                    transfer?.let {
+                        if (transfer!!.bookNowOffers.isNotEmpty()) {
+                            if (bookNowTransportId.isNotEmpty()) {
+                                val filteredBookNow = transfer!!.bookNowOffers.filterKeys { it.toString() == bookNowTransportId }
+                                if (filteredBookNow.isNotEmpty()) {
+                                    bookNowOffer = filteredBookNow.values.first()
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                Sentry.capture(result.error)
+            }
+        }
+    }
 
     fun changePaymentStatus(orderId: Long, success: Boolean) {
         utils.launchSuspend {
@@ -81,29 +108,18 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
         routeInteractor.duration?.let { bundle.putInt(Analytics.HOURS, it) }
         routeInteractor.duration?.let { map[Analytics.HOURS] = it }
 
-        offer = offerInteractor.getOffer(offerId)
-        utils.launchSuspend {
-            val result = utils.asyncAwait {
-                transferInteractor.getTransfer(transferId)
-            }
-            if (result.error == null) {
-                if (result.model.bookNowOffers.isNotEmpty()) {
-                    bookNowOffer = result.model.bookNowOffers.filterKeys { it.name == bookNowTransportId }.values.first()
-                }
-                when {
-                    result.model.duration        != null -> Analytics.TRIP_HOURLY
-                    result.model.dateReturnLocal != null -> Analytics.TRIP_ROUND
-                    else                                 -> Analytics.TRIP_DESTINATION
-                }.let {
-                    bundle.putString(Analytics.TRIP_TYPE, it)
-                    map[Analytics.TRIP_TYPE] = it
-                }
-
-            }
-        }
-        val offerType = if (offer != null ) Analytics.REGULAR else Analytics.NOW
+        val offerType = if (offer != null) Analytics.REGULAR else Analytics.NOW
         bundle.putString(Analytics.OFFER_TYPE, offerType)
         map[Analytics.OFFER_TYPE] = offerType
+
+        when {
+            transfer?.duration != null -> Analytics.TRIP_HOURLY
+            transfer?.dateReturnLocal != null -> Analytics.TRIP_ROUND
+            else -> Analytics.TRIP_DESTINATION
+        }.let {
+            bundle.putString(Analytics.TRIP_TYPE, it)
+            map[Analytics.TRIP_TYPE] = it
+        }
 
         fbBundle.putAll(bundle)
         afMap.putAll(map)
@@ -113,8 +129,7 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
         afMap[AFInAppEventParameterName.CURRENCY] = currency
         bundle.putString(Analytics.CURRENCY, currency)
 
-        var price: Double = if (offer != null) offer!!.price.amount
-        else bookNowOffer!!.amount
+        var price: Double = if (offer != null) offer!!.price.amount else bookNowOffer!!.amount
 
         when (percentage) {
             OfferModel.FULL_PRICE -> {
