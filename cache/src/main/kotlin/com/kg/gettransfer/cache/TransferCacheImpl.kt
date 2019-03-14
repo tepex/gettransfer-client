@@ -13,7 +13,7 @@ class TransferCacheImpl: TransferCache, KoinComponent {
     override fun insertAllTransfers(transfers: List<TransferEntity>) = db.transferCacheDao().insertAll(transfers.map { transferMapper.toCached(it) })
     override fun insertTransfer(transfer: TransferEntity) = db.transferCacheDao().insert(transferMapper.toCached(transfer))
 
-    override fun getTransfer(id: Long) = db.transferCacheDao().getTransfer(id)?.let { transferMapper.fromCached(it) }
+    override fun getTransfer(id: Long) = transferMapper.fromCached(db.transferCacheDao().getTransfer(id))
     override fun getAllTransfers() = db.transferCacheDao().getAllTransfers().map { transferMapper.fromCached(it) }
     override fun getTransfersArchive() = db.transferCacheDao().getTransfersCompleted().map { transferMapper.fromCached(it) }
     override fun getTransfersActive() = db.transferCacheDao().getTransfersActive().map { transferMapper.fromCached(it) }

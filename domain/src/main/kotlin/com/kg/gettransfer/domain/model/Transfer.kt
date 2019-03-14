@@ -54,8 +54,7 @@ data class Transfer(
 /* ================================================== */
     val editableFields: List<String>, /* not used */
     val airlineCard: String?,
-    val paymentPercentages: List<Int>,
-    val unreadMessagesCount: Int
+    val paymentPercentages: List<Int>
 ) : Entity() {
 
     fun checkStatusCategory() = when (status) {

@@ -11,5 +11,5 @@ interface SystemCache: KoinComponent {
     
     fun getAccount(): AccountEntity?
     fun setAccount(account: AccountEntity): AccountEntity
-    suspend fun clearAccount()
+    fun clearAccount()
 }

@@ -7,16 +7,8 @@ import com.kg.gettransfer.data.SystemDataStore
 
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.SystemDataStoreCache
-import com.kg.gettransfer.data.ds.IO.SystemSocketDataStoreOutput
 import com.kg.gettransfer.data.ds.SystemDataStoreRemote
-
-import com.kg.gettransfer.data.mapper.ConfigsMapper
-import com.kg.gettransfer.data.mapper.AccountMapper
-import com.kg.gettransfer.data.mapper.EndpointMapper
-import com.kg.gettransfer.data.mapper.AddressMapper
-import com.kg.gettransfer.data.mapper.MobileConfigMapper
-import com.kg.gettransfer.data.mapper.LocationMapper
-import com.kg.gettransfer.data.mapper.ExceptionMapper
+import com.kg.gettransfer.data.mapper.*
 
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
@@ -24,22 +16,9 @@ import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.eventListeners.SystemEventListener
+import com.kg.gettransfer.domain.SystemListener
 
-import com.kg.gettransfer.domain.model.Endpoint
-import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.MobileConfig
-import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.domain.model.PushTokenType
-import com.kg.gettransfer.domain.model.Location
-import com.kg.gettransfer.domain.model.Configs
-import com.kg.gettransfer.domain.model.TransportType
-import com.kg.gettransfer.domain.model.PaypalCredentials
-import com.kg.gettransfer.domain.model.DistanceUnit
-import com.kg.gettransfer.domain.model.CardGateways
-import com.kg.gettransfer.domain.model.User
-import com.kg.gettransfer.domain.model.Profile
+import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
@@ -49,8 +28,7 @@ import java.util.Locale
 import org.koin.standalone.get
 
 class SystemRepositoryImpl(
-    private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>,
-    private val socketDataStore: SystemSocketDataStoreOutput
+    private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>
 ) : BaseRepository(), SystemRepository, PreferencesListener {
 
     private val preferencesCache = get<PreferencesCache>()
@@ -61,11 +39,10 @@ class SystemRepositoryImpl(
     private val mobileConfMapper = get<MobileConfigMapper>()
     private val locationMapper   = get<LocationMapper>()
 
-    private val listeners = mutableSetOf<SystemEventListener>()
+    private val listeners = mutableSetOf<SystemListener>()
 
     init {
         preferencesCache.addListener(this)
-        accountMapper.configs = CONFIGS_DEFAULT
     }
 
     override var isInitialized = false
@@ -82,10 +59,6 @@ class SystemRepositoryImpl(
         get() = preferencesCache.lastMode
         set(value) { preferencesCache.lastMode = value }
 
-    override var lastCarrierTripsTypeView: String
-        get() = preferencesCache.lastCarrierTripsTypeView
-        set(value) { preferencesCache.lastCarrierTripsTypeView = value }
-
     override var isFirstLaunch: Boolean
         get() = preferencesCache.isFirstLaunch
         set(value) { preferencesCache.isFirstLaunch = value }
@@ -98,17 +71,8 @@ class SystemRepositoryImpl(
         get() = preferencesCache.selectedField
         set(value) { preferencesCache.selectedField = value }
 
-    override var accessToken: String
+    override val accessToken: String
         get() = preferencesCache.accessToken
-        set(value) { preferencesCache.accessToken = value }
-
-    override var userEmail: String
-        get() = preferencesCache.userEmail
-        set(value) { preferencesCache.userEmail = value }
-
-    override var userPassword: String
-        get() = preferencesCache.userPassword
-        set(value) { preferencesCache.userPassword = value }
 
     override val endpoints = preferencesCache.endpoints.map { endpointMapper.fromEntity(it) }
 
@@ -176,23 +140,12 @@ class SystemRepositoryImpl(
     }
 
     override suspend fun putAccount(account: Account): Result<Account> {
-        /*val accountEntity = try { factory.retrieveRemoteDataStore().setAccount(accountMapper.toEntity(account)) }
+        val accountEntity = try { factory.retrieveRemoteDataStore().setAccount(accountMapper.toEntity(account)) }
         catch(e: RemoteException) { return Result(account, ExceptionMapper.map(e)) }
 
         factory.retrieveCacheDataStore().setAccount(accountEntity)
         this.account = accountMapper.fromEntity(accountEntity)
-        return Result(this.account)*/
-
-        val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
-            factory.retrieveRemoteDataStore().setAccount(accountMapper.toEntity(account))
-        }
-        result.entity?.let {
-            if(result.error == null) {
-                factory.retrieveCacheDataStore().setAccount(it)
-                this.account = accountMapper.fromEntity(it)
-            }
-        }
-        return Result(this.account, result.error?.let { ExceptionMapper.map(it) })
+        return Result(this.account)
     }
 
     override suspend fun putNoAccount(account: Account): Result<Account> {
@@ -201,26 +154,15 @@ class SystemRepositoryImpl(
     }
 
     override suspend fun login(email: String, password: String): Result<Account> {
-        /*val accountEntity = try { factory.retrieveRemoteDataStore().login(email, password) }
+        val accountEntity = try { factory.retrieveRemoteDataStore().login(email, password) }
         catch(e: RemoteException) { return Result(account, ExceptionMapper.map(e)) }
 
         factory.retrieveCacheDataStore().setAccount(accountEntity)
         account = accountMapper.fromEntity(accountEntity)
-        return Result(account)*/
-
-        val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
-            factory.retrieveRemoteDataStore().login(email, password)
-        }
-        result.entity?.let {
-            if(result.error == null) {
-                factory.retrieveCacheDataStore().setAccount(it)
-                account = accountMapper.fromEntity(it)
-            }
-        }
-        return Result(account, result.error?.let { ExceptionMapper.map(it) })
+        return Result(account)
     }
 
-    override suspend fun logout(): Result<Account> {
+    override fun logout(): Result<Account> {
         account = NO_ACCOUNT
         factory.retrieveCacheDataStore().clearAccount()
         preferencesCache.logout()
@@ -234,20 +176,17 @@ class SystemRepositoryImpl(
         } catch (e: RemoteException) { Result(Unit, ExceptionMapper.map(e)) }
     }
 
-    override suspend fun unregisterPushToken(token: String): Result<Unit> {
-        return try {
-            factory.retrieveRemoteDataStore().unregisterPushToken(token)
-            Result(Unit)
-        } catch (e: RemoteException) { Result(Unit, ExceptionMapper.map(e)) }
+    override suspend fun unregisterPushToken(token: String) {
+        factory.retrieveRemoteDataStore().unregisterPushToken(token)
     }
 
     override fun accessTokenChanged(accessToken: String) {
-        connectionChanged()
+        listeners.forEach { it.connectionChanged(endpoint, accessToken) }
     }
 
     override fun endpointChanged(endpointEntity: EndpointEntity) {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointEntity)
-        connectionChanged()
+        listeners.forEach { it.connectionChanged(endpoint, accessToken) }
     }
 
     override var appEnters: Int
@@ -256,33 +195,30 @@ class SystemRepositoryImpl(
 
     override suspend fun getMyLocation(): Result<Location> {
         return try {
-            //factory.retrieveRemoteDataStore().changeEndpoint(EndpointEntity("", "", API_URL_LOCATION))
+            factory.retrieveRemoteDataStore().changeEndpoint(EndpointEntity("", "", API_URL_LOCATION))
             val locationEntity = factory.retrieveRemoteDataStore().getMyLocation()
-            //factory.retrieveRemoteDataStore().changeEndpoint(preferencesCache.endpoint)
+            factory.retrieveRemoteDataStore().changeEndpoint(preferencesCache.endpoint)
             Result(locationMapper.fromEntity(locationEntity))
         } catch (e: RemoteException) {
             Result(Location(null, null), ExceptionMapper.map(e))
         }
     }
 
-    override fun addListener(listener: SystemEventListener)    { listeners.add(listener) }
-    override fun removeListener(listener: SystemEventListener) { listeners.remove(listener) }
-
-    /* Socket */
-
-    override fun connectSocket()     = socketDataStore.connectSocket(endpointMapper.toEntity(endpoint), accessToken)
-    override fun connectionChanged() = socketDataStore.changeConnection(endpointMapper.toEntity(endpoint), accessToken)
-    override fun disconnectSocket()  = socketDataStore.disconnectSocket()
-
-    fun notifyAboutConnection()    = listeners.forEach { it.onSocketConnected() }
-    fun notifyAboutDisconnection() = listeners.forEach { it.onSocketDisconnected() }
-
-
-
+    override fun addListener(listener: SystemListener)    { listeners.add(listener) }
+    override fun removeListener(listener: SystemListener) { listeners.add(listener) }
 
     companion object {
-        private val CONFIGS_DEFAULT = Configs.DEFAULT_CONFIGS
-
+        private val CONFIGS_DEFAULT = Configs(
+            transportTypes         = emptyList<TransportType>(),
+            paypalCredentials      = PaypalCredentials("", ""),
+            availableLocales       = emptyList<Locale>(),
+            preferredLocale        = Locale.getDefault(),
+            supportedCurrencies    = emptyList<Currency>(),
+            supportedDistanceUnits = emptyList<DistanceUnit>(),
+            cardGateways           = CardGateways("", null),
+            officePhone            = "",
+            baseUrl                = ""
+        )
         private val NO_ACCOUNT = Account(
             user         = User(Profile(null, null, null)),
             locale       = Locale.getDefault(),
@@ -296,6 +232,6 @@ class SystemRepositoryImpl(
             orderMinimumMinutes = 120,
             termsUrl            = "terms_of_use"
         )
-        //private const val API_URL_LOCATION = "https://ipapi.co"
+        private const val API_URL_LOCATION = "https://ipapi.co"
     }
 }

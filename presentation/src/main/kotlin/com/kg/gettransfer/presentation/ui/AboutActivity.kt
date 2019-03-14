@@ -16,7 +16,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.presenter.AboutPresenter
@@ -83,7 +82,6 @@ class AboutActivity : BaseActivity(), AboutView {
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
     override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
     override fun setError(e: ApiException) {}
-    override fun setError(e: DatabaseException) {}
 
     inner class AboutAdapter : PagerAdapter() {
         private val pages = arrayOf<AboutItem>(item_0, item_1, item_2, item_3)

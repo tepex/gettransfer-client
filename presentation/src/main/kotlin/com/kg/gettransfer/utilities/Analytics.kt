@@ -12,8 +12,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.kg.gettransfer.domain.model.ReviewRate
 
 import com.yandex.metrica.YandexMetrica
-import com.yandex.metrica.profile.Attribute
-import com.yandex.metrica.profile.UserProfile
 
 import java.math.BigDecimal
 
@@ -46,7 +44,6 @@ class Analytics(
         const val EVENT_TRANSFER_REVIEW_REQUESTED = "transfer_review_requested"
         const val EVENT_TRANSFER_REVIEW_DETAILED  = "transfer_review_detailed"
         const val EVENT_APP_REVIEW_REQUESTED      = "app_review_requested"
-        const val EVENT_IPAPI_REQUEST = "ipapi_request"
 
         const val STATUS = "status"
         const val PARAM_KEY_NAME = "name"
@@ -77,7 +74,7 @@ class Analytics(
 
         const val INVALID_EMAIL         = "invalid_email"
         const val INVALID_PHONE         = "invalid_phone"
-        const val INVALID_NAME          = "ic_hourly_driver"
+        const val INVALID_NAME          = "invalid_name"
         const val NO_TRANSPORT_TYPE     = "no_transport_type"
         const val LICENSE_NOT_ACCEPTED  = "license_not_accepted"
         const val PASSENGERS_NOT_CHOSEN = "passengers"
@@ -141,11 +138,6 @@ class Analytics(
 
         const val RESULT_SUCCESS   = "success"
         const val RESULT_FAIL      = "fail"
-
-        const val USER_TYPE = "usertype"
-        const val DRIVER_TYPE = "driver"
-        const val PASSENGER_TYPE = "passenger"
-        const val CARRIER_TYPE = "carrier"
     }
 
     fun logEvent(event: String, bundle: Bundle, map: Map<String, Any?>) {
@@ -184,12 +176,5 @@ class Analytics(
         ReviewRate.RateType.PUNCTUALITY.type -> "punctuality"
         ReviewRate.RateType.VEHICLE.type     -> "vehicle"
         else                                 -> "driver"
-    }
-
-    fun logProfile(attribute: String) {
-        val userProfile = UserProfile.newBuilder()
-                .apply(Attribute.customString(USER_TYPE).withValue(attribute))
-                .build()
-        YandexMetrica.reportUserProfile(userProfile)
     }
 }

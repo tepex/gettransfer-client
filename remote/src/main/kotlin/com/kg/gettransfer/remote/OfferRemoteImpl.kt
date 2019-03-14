@@ -10,11 +10,16 @@ import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.OfferModel
 import com.kg.gettransfer.remote.model.OffersModel
 
+import org.koin.core.parameter.parametersOf
 import org.koin.standalone.get
+import org.koin.standalone.inject
+
+import org.slf4j.Logger
 
 class OfferRemoteImpl : OfferRemote {
     private val core   = get<ApiCore>()
     private val mapper = get<OfferMapper>()
+    private val log: Logger by inject { parametersOf("GTR-remote") }
 
     override suspend fun getOffers(id: Long): List<OfferEntity> {
         val response: ResponseModel<OffersModel> = core.tryTwice(id) { _id -> core.api.getOffers(_id) }

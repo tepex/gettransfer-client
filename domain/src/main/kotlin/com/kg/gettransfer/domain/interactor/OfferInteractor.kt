@@ -1,28 +1,15 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.eventListeners.OfferEventListener
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.domain.repository.OfferRepository
 
 class OfferInteractor(private val repository: OfferRepository) {
-
     var offers: List<Offer> = emptyList()
     var lastTransferId = -1L
-    var eventReceiver: OfferEventListener? = null
 
-    var offerViewExpanded: Boolean
-    get() = repository.offerViewExpanded
-    set(value) {
-        repository.offerViewExpanded = value
-    }
-
-    suspend fun getOffers(transferId: Long, fromCache: Boolean = false) =
-            when(fromCache){
-                false -> repository.getOffers(transferId)
-                true -> repository.getOffersCached(transferId)
-            }.also { offers = it .model }
+    suspend fun getOffers(transferId: Long) = repository.getOffers(transferId).also { offers = it .model }
     fun getOffer(id: Long) = offers.find { it.id == id }
 
     fun newOffer(offer: Offer): Result<Offer> {
@@ -35,7 +22,4 @@ class OfferInteractor(private val repository: OfferRepository) {
         repository.clearOffersCache()
         return Result(Unit)
     }
-
-    fun onNewOfferEvent(offer: Offer) = eventReceiver?.onNewOfferEvent(offer)
-
 }

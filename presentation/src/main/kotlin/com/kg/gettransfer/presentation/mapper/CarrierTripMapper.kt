@@ -22,8 +22,8 @@ open class CarrierTripMapper : Mapper<CarrierTripModel, CarrierTrip> {
             nameSign        = type.nameSign,
             flightNumber    = type.flightNumber,
             paidSum         = type.paidSum,
-            totalPrice      = type.remainsToPay?.let { TotalPriceModel(it, type.paidPercentage!!) },
-            passenger       = type.passengerAccount?.let { passengerAccountMapper.toView(it) }
+            totalPrice      = TotalPriceModel(type.remainsToPay, type.paidPercentage),
+            passenger       = passengerAccountMapper.toView(type.passengerAccount)
         )
 
     override fun fromView(type: CarrierTripModel): CarrierTrip { throw UnsupportedOperationException() }

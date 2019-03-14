@@ -12,8 +12,8 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_create_order_field.*
 
 class CreateOrderField @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-        ConstraintLayout(context, attrs, defStyleAttr), LayoutContainer {
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : ConstraintLayout(context, attrs, defStyleAttr), LayoutContainer {
     override val containerView: View
         init {
             containerView = LayoutInflater.from(context).inflate(R.layout.view_create_order_field, this, true)

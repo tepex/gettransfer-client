@@ -17,5 +17,4 @@ class ApiException(val code: Int, val details: String) : RuntimeException(detail
 
     fun isNoUser() = code == NO_USER
     fun isNotLoggedIn() = code == NOT_LOGGED_IN
-    fun isNotFound() = code == NOT_FOUND
 }

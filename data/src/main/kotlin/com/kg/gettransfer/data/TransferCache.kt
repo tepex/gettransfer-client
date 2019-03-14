@@ -9,7 +9,7 @@ interface TransferCache: KoinComponent {
     fun insertAllTransfers(transfers: List<TransferEntity>)
     fun insertTransfer(transfer: TransferEntity)
 
-    fun getTransfer(id: Long): TransferEntity?
+    fun getTransfer(id: Long): TransferEntity
     fun getAllTransfers(): List<TransferEntity>
     fun getTransfersArchive(): List<TransferEntity>
     fun getTransfersActive(): List<TransferEntity>

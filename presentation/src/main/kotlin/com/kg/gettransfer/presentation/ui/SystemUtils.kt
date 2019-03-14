@@ -19,10 +19,6 @@ internal object SystemUtils : KoinComponent {
     private const val DATE_IIME_SHORT_MONTH_PATTERN = "dd MMM yyyy, HH:mm"
     private const val MONTH_PATTERN = "LLLL"
     private const val DAY_MONTH_PATTERN = "dd MMMM, EEEE"
-    private const val DATE_WITHOUT_TIME_PATTERN = "dd/MM/yyyy"
-    private const val DAY_OF_WEEK_PATTERN = "EEE"
-    private const val TIME_PATTERN = "HH:mm"
-    private const val MONTH_YEAR_PATTERN = "LLLL yyyy"
     private const val SLASH = "/"
 
     fun formatDistance(context: Context, _distance: Int?, withDistanceText: Boolean): String {
@@ -33,19 +29,16 @@ internal object SystemUtils : KoinComponent {
         else distance.toString().plus(" ${du.name}")
     }
 
-    fun formatDateTime(date: Date) = getFormattedDate(DATE_TIME_PATTERN, date)
-    fun formatDateTimeWithShortMonth(date: Date) = getFormattedDate(DATE_IIME_SHORT_MONTH_PATTERN, date)
-    fun formatMonth(date: Date) = getFormattedDate(MONTH_PATTERN, date)
-    fun formatDayMonth(date: Date) = getFormattedDate(DAY_MONTH_PATTERN, date)
-    fun formatDateWithoutTime(date: Date) = getFormattedDate(DATE_WITHOUT_TIME_PATTERN, date)
-    fun formatShortNameDayOfWeek(date: Date) = getFormattedDate(DAY_OF_WEEK_PATTERN, date)
-    fun formatTime(date: Date) = getFormattedDate(TIME_PATTERN, date)
-    fun formatMonthYear(date: Date) = getFormattedDate(MONTH_YEAR_PATTERN, date)
+    fun formatDateTime(date: Date) = SimpleDateFormat(DATE_TIME_PATTERN, systemInteractor.locale).format(date)
 
-    private fun getFormattedDate(pattern: String, date: Date) = SimpleDateFormat(pattern, systemInteractor.locale).format(date)
+    fun formatDateTimeWithShortMonth(date: Date) = SimpleDateFormat(DATE_IIME_SHORT_MONTH_PATTERN, systemInteractor.locale).format(date)
+
+    fun formatMonth(date: Date) = SimpleDateFormat(MONTH_PATTERN, systemInteractor.locale).format(date)
+
+    fun formatDayMonth(date: Date) = SimpleDateFormat(DAY_MONTH_PATTERN, systemInteractor.locale).format(date)
 
     fun gtUrlWithLocale(context: Context) =
             context.getString(R.string.api_url_prod)
-                    .plus(SLASH)
-                    .plus(systemInteractor.locale.language)
+            .plus(SLASH)
+            .plus(systemInteractor.locale.language)
 }

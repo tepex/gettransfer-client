@@ -32,8 +32,6 @@ ext {
     sentry_version             = "1.7.16"
     appsflyer_version          = "4.8.19"
     installreferrer_version    = "1.0"
-    life_cycle_version         = "1.1.1"
-    easy_permissions_version   = "2.0.1"
 }
 
 android {
@@ -99,7 +97,6 @@ android {
 
             manifestPlaceholders = [
                     hockeyAppId   : "1f061f58b7bd42c387ecd8681d30df48",
-                    assetlinks    : "[{ \\\"include\\\": \\\"https://stgtr.org/.well-known/assetlinks.json\\\" }]"
             ]
 
             dimension "type"
@@ -115,7 +112,6 @@ android {
 
             manifestPlaceholders = [
                     hockeyAppId   : "62939f09f9e0489c8ada1c25d2f30d9d",
-                    assetlinks    : "[{ \\\"include\\\": \\\"https://gettransfer.com/.well-known/assetlinks.json\\\" }]"
             ]
 
             dimension "type"
@@ -177,7 +173,6 @@ dependencies {
     implementation project(':logging')
     implementation project(":remote")
     implementation project(":cache")
-    implementation project(":encrypt")
     implementation libs.kotlin
     implementation libs.coroutines
     implementation libs.serialization
@@ -193,7 +188,6 @@ dependencies {
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
     implementation "com.android.support:multidex:$multidex_version"
     implementation "com.android.support:multidex-instrumentation:$multidex_version"
-    implementation "android.arch.lifecycle:extensions:$life_cycle_version"
     // Maps
     implementation libs.psLocation
     implementation libs.psPlaces
@@ -269,13 +263,6 @@ dependencies {
     //appsflyer
     implementation "com.appsflyer:af-android-sdk:$appsflyer_version@aar"
     implementation "com.android.installreferrer:installreferrer:$installreferrer_version"
-
-    //EasyPermissions
-    implementation "pub.devrel:easypermissions:$easy_permissions_version"
-
-    //Vector drawable
-    implementation "com.android.support:support-vector-drawable:$support_version"
-    implementation "com.android.support:animated-vector-drawable:$support_version"
 }
 
 def getBuildNumber() {

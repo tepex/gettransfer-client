@@ -6,10 +6,7 @@ import com.kg.gettransfer.data.model.OfferEntity
 
 interface PreferencesCache {
     var accessToken: String
-    var userEmail: String
-    var userPassword: String
     var lastMode: String
-    var lastCarrierTripsTypeView: String
     var isFirstLaunch: Boolean
     var isOnboardingShowed: Boolean
     var endpoint: EndpointEntity
@@ -19,8 +16,6 @@ interface PreferencesCache {
     var eventsCount: Int
     var transferIds: List<Long>
     val endpoints: List<EndpointEntity>
-    var driverCoordinatesInBackGround: Int
-    var offerViewExpanded: Boolean
 
     fun logout()
     fun addListener(listener: PreferencesListener)

@@ -1,6 +1,7 @@
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.data.TransferRemote
+import com.kg.gettransfer.data.RemoteException
 
 import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.data.model.TransferNewEntity
@@ -15,32 +16,37 @@ import com.kg.gettransfer.remote.model.TransferNewWrapperModel
 import com.kg.gettransfer.remote.model.TransfersModel
 import com.kg.gettransfer.remote.model.TransferWrapperModel
 
+import org.koin.core.parameter.parametersOf
+
 import org.koin.standalone.get
+import org.koin.standalone.inject
+
+import org.slf4j.Logger
 
 class TransferRemoteImpl : TransferRemote {
     private val core              = get<ApiCore>()
     private val transferMapper    = get<TransferMapper>()
     private val transferNewMapper = get<TransferNewMapper>()
+    private val log: Logger by inject { parametersOf("GTR-remote") }
 
     override suspend fun createTransfer(transferNew: TransferNewEntity): TransferEntity {
         val wrapper = TransferNewWrapperModel(transferNewMapper.toRemote(transferNew))
-        //val response = tryPostTransfer(wrapper)
-        val response: ResponseModel<TransferWrapperModel> = core.tryTwice { core.api.postTransfer(wrapper) }
+        val response = tryPostTransfer(wrapper)
         return transferMapper.fromRemote(response.data?.transfer!!)
     }
 
-    /*private suspend fun tryPostTransfer(transferNew: TransferNewWrapperModel): ResponseModel<TransferWrapperModel> {
+    private suspend fun tryPostTransfer(transferNew: TransferNewWrapperModel): ResponseModel<TransferWrapperModel> {
         return try { core.api.postTransfer(transferNew).await() }
         catch (e: Exception) {
             log.error("Create transfer error", e)
-            if (e is RemoteException) throw e *//* second invocation *//*
+            if (e is RemoteException) throw e /* second invocation */
             val ae = core.remoteException(e)
             if (!ae.isInvalidToken()) throw ae
 
             try { core.updateAccessToken() } catch (e1: Exception) { throw core.remoteException(e1) }
             return try { core.api.postTransfer(transferNew).await() } catch (e2: Exception) { throw core.remoteException(e2) }
         }
-    }*/
+    }
 
     override suspend fun cancelTransfer(id: Long, reason: String): TransferEntity {
         val response: ResponseModel<TransferWrapperModel> = core.tryTwice(id) { _id -> core.api.cancelTransfer(_id, ReasonModel(reason)) }
@@ -48,7 +54,7 @@ class TransferRemoteImpl : TransferRemote {
     }
 
     override suspend fun getTransfer(id: Long): TransferEntity {
-        val response: ResponseModel<TransferWrapperModel> = core.tryTwice(id) { _id -> core.api.getTransfer(_id) }
+        val response: ResponseModel<TransferWrapperModel> = core.tryTwice(id, { _id -> core.api.getTransfer(_id) })
         return transferMapper.fromRemote(response.data?.transfer!!)
     }
 

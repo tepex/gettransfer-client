@@ -1,18 +1,15 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.OfferDataStore
-import com.kg.gettransfer.data.PreferencesCache
 
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.OfferDataStoreCache
 import com.kg.gettransfer.data.ds.OfferDataStoreRemote
-import com.kg.gettransfer.data.mapper.ExceptionMapper
 
 import com.kg.gettransfer.data.mapper.OfferMapper
 
 import com.kg.gettransfer.data.model.OfferEntity
 import com.kg.gettransfer.data.model.ResultEntity
-import com.kg.gettransfer.domain.interactor.OfferInteractor
 
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Result
@@ -20,18 +17,11 @@ import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.repository.OfferRepository
 
 import org.koin.standalone.get
-import org.koin.standalone.inject
 
 class OfferRepositoryImpl(private val factory: DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>) :
     BaseRepository(), OfferRepository {
 
     private val mapper = get<OfferMapper>()
-    private val preferencesCache = get<PreferencesCache>()
-    private val offerReceiver: OfferInteractor by inject()
-
-    override var offerViewExpanded: Boolean
-        get() = preferencesCache.offerViewExpanded
-        set(value) { preferencesCache.offerViewExpanded = value }
 
     override fun newOffer(offer: Offer): Result<Offer> {
         log.debug("OfferRepository.newOffer: $offer")
@@ -49,23 +39,13 @@ class OfferRepositoryImpl(private val factory: DataStoreFactory<OfferDataStore, 
             factory.retrieveDataStore(fromRemote).getOffers(id)
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().setOffers(result.entity) }
-        return Result(result.entity?.map { mapper.fromEntity(it) }?: emptyList(),
-                result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
-    }
-
-    override suspend fun getOffersCached(id: Long): Result<List<Offer>> {
-        val result: ResultEntity<List<OfferEntity>?> = retrieveCacheEntity {
-            factory.retrieveCacheDataStore().getOffers(id)
-        }
-        return Result(result.entity?.map { mapper.fromEntity(it) }?: emptyList(), null,
-                result.error != null && result.entity != null, result.cacheError?.let { ExceptionMapper.map(it) })
+        return if(result.error != null) Result(factory.retrieveCacheDataStore().getOffers(id).map { mapper.fromEntity(it) })
+        else Result(result.entity?.map { mapper.fromEntity(it) }?: emptyList())
     }
 
     override fun clearOffersCache(){
         factory.retrieveCacheDataStore().clearOffersCache()
     }
-
-    internal fun onNewOfferEvent(offer: OfferEntity) = offerReceiver.onNewOfferEvent(mapper.fromEntity(offer))
 
     /*companion object {
         private val DEFAULT =

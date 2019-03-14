@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="@dimen/create_order_behaviour_peek_height"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="110dp"
+        android:layout_height="5dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rectangle_swipe_down"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvTransferType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorWhite"
+        android:orientation="horizontal"
+        android:layout_below="@+id/view"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:layout_below="@+id/rvTransferType"
+        android:layout_above="@+id/btnGetOffers">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvDateTimeTransfer"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:text="@string/LNG_RIDE_DATE"
+                android:gravity="center_vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ivTransferDate"
+                app:layout_constraintTop_toBottomOf="@+id/view9"
+                app:layout_constraintBottom_toTopOf="@+id/view2"/>
+
+            <TextView
+                android:id="@+id/tvRate"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:gravity="center"
+                android:padding="12dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layoutCurrencyType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/view13">
+
+                <TextView
+                    android:id="@+id/tvCurrencyType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/rub"
+                    android:textColor="@color/colorTextBlack"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <ImageView
+                    android:id="@+id/ivChangeCurrency"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginStart="3dp"
+                    app:layout_constraintStart_toEndOf="@+id/tvCurrencyType"
+                    app:layout_constraintTop_toTopOf="@+id/tvCurrencyType"
+                    app:srcCompat="@drawable/ic_triangle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="16dp"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <EditText
+                android:id="@+id/etYourPrice"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@null"
+                android:hint="@string/LNG_RIDE_PRICE"
+                android:inputType="numberDecimal"
+                android:singleLine="true"
+                app:layout_constraintStart_toEndOf="@+id/layoutCurrencyType"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/layoutCurrencyType"
+                app:layout_constraintBottom_toBottomOf="@+id/layoutCurrencyType"/>
+
+            <View
+                android:id="@+id/view9"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:background="@color/colorDividerGray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutCurrencyType" />
+
+            <View
+                android:id="@+id/view13"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:background="@color/colorDividerGray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvRate"
+                tools:layout_editor_absoluteY="139dp" />
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:layout_marginTop="16dp"
+                android:background="@color/colorDividerGray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ivTransferDate" />
+
+            <View
+                android:id="@+id/view8"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:layout_marginTop="1dp"
+                android:background="@color/colorDividerGray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+            <View
+                android:id="@+id/view11"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:layout_marginTop="1dp"
+                android:background="@color/colorDividerGray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
+            <ImageView
+                android:id="@+id/ivTransferDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view9"
+                app:srcCompat="@drawable/ic_calendar_triangle" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view2">
+
+                <TextView
+                    android:id="@+id/tvCountPerson"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="1"
+                    android:textColor="@color/colorTextBlack"
+                    android:textSize="@dimen/create_transfer_additionals_top_text_size"
+                    app:layout_constraintEnd_toEndOf="@+id/ivPersonsCounterDown"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/LNG_RIDE_PASSENGERS"
+                    android:textColor="@color/colorTextLightGray"
+                    android:textSize="@dimen/create_transfer_additionals_bottom_text_size"
+                    app:layout_constraintEnd_toEndOf="@+id/tvCountPerson"
+                    app:layout_constraintStart_toStartOf="@+id/tvCountPerson"
+                    app:layout_constraintTop_toBottomOf="@+id/tvCountPerson" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/tvCountPerson"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_passenger" />
+
+                <ImageView
+                    android:id="@+id/ivPersonsCounterDown"
+                    android:layout_width="@dimen/circle_plus_height"
+                    android:layout_height="@dimen/circle_plus_height"
+                    android:layout_marginEnd="10dp"
+                    style="@style/BorderlessBackground"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/ivPersonsCounterUp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_circle_minus" />
+
+                <ImageView
+                    android:id="@+id/ivPersonsCounterUp"
+                    android:layout_width="@dimen/circle_plus_height"
+                    android:layout_height="@dimen/circle_plus_height"
+                    android:layout_marginEnd="10dp"
+                    style="@style/BorderlessBackground"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_circle_plus" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+                <EditText
+                    android:id="@+id/etName"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/height_title_sheet_order"
+                    android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
+                    android:background="@null"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:hint="@string/LNG_RIDE_NAME"
+                    android:imeOptions="actionDone"
+                    android:inputType="textCapWords"
+                    android:textColor="@color/colorTextBlack"
+                    android:textSize="@dimen/create_transfer_additionals_top_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/LNG_RIDE_NAME_PLACEHOLDER"
+                    android:textColor="@color/colorTextLightGray"
+                    android:textSize="@dimen/create_transfer_additionals_bottom_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/etName"
+                    app:layout_constraintTop_toBottomOf="@+id/etName" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/etName"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_passport" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+
+                <EditText
+                    android:id="@+id/etEmail"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/height_title_sheet_order"
+                    android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
+                    android:background="@null"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:hint="@string/LNG_RIDE_EMAIL"
+                    android:imeOptions="actionDone"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/colorTextBlack"
+                    android:textSize="@dimen/create_transfer_additionals_top_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvEmail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/LNG_RIDE_EMAIL_PLACEHOLDER"
+                    android:textColor="@color/colorTextLightGray"
+                    android:textSize="@dimen/create_transfer_additionals_bottom_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/etEmail"
+                    app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/etEmail"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_email" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:id="@+id/view4"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:background="@color/colorDividerGray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
+
+                <EditText
+                    android:id="@+id/tvPhone"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/height_title_sheet_order"
+                    android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
+                    android:background="@null"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:hint="@string/LNG_RIDE_PHONE"
+                    android:imeOptions="actionDone"
+                    android:inputType="phone"
+                    android:textColor="@color/colorTextBlack"
+                    android:textSize="@dimen/create_transfer_additionals_top_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/LNG_RIDE_PHONE_PLACEHOLDER"
+                    android:textColor="@color/colorTextLightGray"
+                    android:textSize="@dimen/create_transfer_additionals_bottom_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tvPhone"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPhone" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/tvPhone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_phone" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:id="@+id/view5"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:layout_marginTop="1dp"
+                android:background="@color/colorDividerGray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout4" />
+
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout4">
+
+                <EditText
+                    android:id="@+id/tvFlightOrTrainNumber"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/height_title_sheet_order"
+                    android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
+                    android:background="@null"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:hint="@string/LNG_RIDE_FLIGHT"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"
+                    android:textColor="@color/colorTextBlack"
+                    android:textSize="@dimen/create_transfer_additionals_top_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/LNG_RIDE_FLIGHT_PLACEHOLDER"
+                    android:textColor="@color/colorTextLightGray"
+                    android:textSize="@dimen/create_transfer_additionals_bottom_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tvFlightOrTrainNumber"
+                    app:layout_constraintTop_toBottomOf="@+id/tvFlightOrTrainNumber" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/tvFlightOrTrainNumber"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_flight" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:id="@+id/view6"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:layout_marginTop="1dp"
+                android:background="@color/colorDividerGray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout5" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout6"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_additionals_view_height"
+                android:layout_marginTop="1dp"
+                android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout5">
+
+                <TextView
+                    android:id="@+id/tvCountChild"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="0"
+                    android:textColor="@color/colorTextBlack"
+                    android:textSize="@dimen/create_transfer_additionals_top_text_size"
+                    app:layout_constraintEnd_toEndOf="@+id/ivChildCounterDown"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/LNG_RIDE_CHILDREN"
+                    android:textColor="@color/colorTextLightGray"
+                    android:textSize="@dimen/create_transfer_additionals_bottom_text_size"
+                    app:layout_constraintEnd_toEndOf="@+id/tvCountChild"
+                    app:layout_constraintStart_toStartOf="@+id/tvCountChild"
+                    app:layout_constraintTop_toBottomOf="@+id/tvCountChild" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/tvCountChild"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_child_seat" />
+
+                <ImageView
+                    android:id="@+id/ivChildCounterDown"
+                    android:layout_width="@dimen/circle_plus_height"
+                    android:layout_height="@dimen/circle_plus_height"
+                    android:layout_marginEnd="10dp"
+                    style="@style/BorderlessBackground"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/ivChildCounterUp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_circle_minus" />
+
+                <ImageView
+                    android:id="@+id/ivChildCounterUp"
+                    android:layout_width="@dimen/circle_plus_height"
+                    android:layout_height="@dimen/circle_plus_height"
+                    android:layout_marginEnd="10dp"
+                    style="@style/BorderlessBackground"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_circle_plus" />
+
+            </android.support.constraint.ConstraintLayout>
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout_promo"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_additionals_view_height"
+                android:layout_marginTop="1dp"
+                android:paddingTop="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                android:paddingBottom="@dimen/create_transfer_additionals_top_and_bottom_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout6">
+
+                <EditText
+                    android:id="@+id/etPromo"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/create_transfer_editText_22"
+                    android:layout_marginStart="@dimen/create_transfer_additionals_start_margin"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
+                    android:background="@null"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:hint="@string/LNG_RIDE_PROMOCODE"
+                    android:inputType="text"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorTextBlack"
+                    android:textSize="@dimen/create_transfer_additionals_top_text_size"
+                    app:layout_constraintEnd_toStartOf="@+id/img_okResult"
+                    app:layout_constraintStart_toStartOf="parent"/>
+                <TextView
+                    android:id="@+id/tvPromoResult"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/create_transfer_textView_20"
+                    android:layout_marginEnd="@dimen/create_transfer_additionals_end_margin"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/LNG_RIDE_PROMOCODE_PLACEHOLDER"
+                    android:textColor="@color/colorTextLightGray"
+                    android:textSize="@dimen/create_transfer_additionals_bottom_text_size"
+                    app:layout_constraintEnd_toStartOf="@+id/img_okResult"
+                    app:layout_constraintStart_toStartOf="@+id/etPromo"
+                    app:layout_constraintTop_toBottomOf="@+id/etPromo"/>
+                <ImageView
+                    android:id="@+id/img_promo"
+                    android:padding="4dp"
+                    app:layout_constraintEnd_toStartOf="@+id/etPromo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:srcCompat="@drawable/ic_percentage"
+                    android:layout_width="31dp"
+                    android:layout_height="29dp" />
+
+                <ImageView
+                    android:id="@+id/img_okResult"
+                    android:layout_width="@dimen/circle_plus_height"
+                    android:layout_height="@dimen/circle_plus_height"
+                    android:layout_marginEnd="10dp"
+                    android:visibility="invisible"
+                    style="@style/BorderlessBackground"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_promo_ok" />
+
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:id="@+id/view14"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:layout_marginTop="1dp"
+                android:background="@color/colorDividerGray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout6" />
+
+
+            <View
+                android:id="@+id/view7"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:layout_marginTop="1dp"
+                android:background="@color/colorDividerGray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout_promo" />
+
+            <View
+                android:id="@+id/view12"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+
+                android:background="@color/colorDividerGray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvComments" />
+
+            <View
+                android:id="@+id/view3"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_divider_height"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorDividerGray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutAgreement" />
+
+            <TextView
+                android:id="@+id/tvComments"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/create_transfer_additionals_view_height"
+                android:drawableStart="@drawable/ic_comment_wrapper"
+                android:drawablePadding="15dp"
+                android:hint="@string/LNG_COMMENT_PLACEHOLDER"
+                android:padding="8dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout_promo" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layoutAgreement"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_additionals_view_height"
+                android:layout_marginTop="1dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvComments">
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/switchAgreement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/create_transfer_cb_agreement_margin"
+                    android:layout_marginEnd="@dimen/create_transfer_cb_agreement_margin"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvAgreement1"
+                    app:layout_constraintEnd_toStartOf="@+id/tvAgreement1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvAgreement1"
+                    android:theme="@style/SwitchCompatStyle"/>
+
+                <TextView
+                    android:id="@+id/tvAgreement1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/create_transfer_agreement_text_margin_start"
+                    android:layout_marginEnd="@dimen/create_transfer_agreement_text_margin_end"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/LNG_RIDE_OFFERT"
+                    android:textColor="@color/colorTextLightGray"
+                    android:textSize="@dimen/create_transfer_agreement_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </android.support.constraint.ConstraintLayout>
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/btnGetOffers"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="@dimen/get_offers_btn_height"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/btn_get_transfer"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:srcCompat="@drawable/ic_check_circle" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:text="@string/LNG_RIDE_CREATE"
+            android:textAllCaps="true"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/create_transfer_additionals_top_text_size" />
+    </LinearLayout>
+
+
+</RelativeLayout>

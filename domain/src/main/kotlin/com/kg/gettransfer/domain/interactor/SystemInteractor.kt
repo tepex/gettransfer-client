@@ -1,6 +1,7 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.eventListeners.SystemEventListener
+import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.SystemListener
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.DistanceUnit
@@ -9,7 +10,7 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.PushTokenType
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.TransportType
-import com.kg.gettransfer.domain.model.MobileConfig
+import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.LoggingRepository
@@ -34,17 +35,8 @@ class SystemInteractor(
     val isInitialized: Boolean
         get() = systemRepository.isInitialized
 
-    var accessToken: String
+    val accessToken: String
         get() = systemRepository.accessToken
-        set(value) { systemRepository.accessToken = value }
-
-    var userEmail: String
-        get() = systemRepository.userEmail
-        set(value) { systemRepository.userEmail = value }
-
-    var userPassword: String
-        get() = systemRepository.userPassword
-        set(value) { systemRepository.userPassword = value }
 
     val account: Account
         get() = systemRepository.account
@@ -78,10 +70,6 @@ class SystemInteractor(
     var lastMode: String
         get() = systemRepository.lastMode
         set(value) { systemRepository.lastMode = value }
-
-    var lastCarrierTripsTypeView: String
-        get() = systemRepository.lastCarrierTripsTypeView
-        set(value) { systemRepository.lastCarrierTripsTypeView = value }
 
     var isFirstLaunch: Boolean
         get() = systemRepository.isFirstLaunch
@@ -134,42 +122,31 @@ class SystemInteractor(
         get()  = systemRepository.appEnters
         set(value) { systemRepository.appEnters = value }
 
-    suspend fun logout() = systemRepository.logout()
+    fun logout() = systemRepository.logout()
 
     suspend fun registerPushToken(token: String): Result<Unit> {
         pushToken = token
-        systemRepository.registerPushToken(PushTokenType.FCM, token)
-        return Result(Unit)
+        return systemRepository.registerPushToken(PushTokenType.FCM, token)
     }
 
     suspend fun unregisterPushToken(): Result<Unit> {
-        pushToken?.let { systemRepository.unregisterPushToken(it) } ?: Result(Unit)
+        pushToken?.let { systemRepository.unregisterPushToken(it) }
         return Result(Unit)
     }
 
-    suspend fun login(email: String, password: String): Result<Account> {
-        val result = systemRepository.login(email, password)
-        if (result.error == null) {
-            this.userEmail = email
-            this.userPassword = password
-        }
-        return result
-    }
+    suspend fun login(email: String, password: String) = systemRepository.login(email, password)
     suspend fun putAccount() = systemRepository.putAccount(account)
     suspend fun putNoAccount() = systemRepository.putNoAccount(account)
-
-    fun openSocketConnection() = systemRepository.connectSocket()
-    fun closeSocketConnection() = systemRepository.disconnectSocket()
 
     fun clearLogs() = loggingRepository.clearLogs()
 
     suspend fun getMyLocation() = systemRepository.getMyLocation()
 
-    fun addListener(listener: SystemEventListener)    { systemRepository.addListener(listener) }
-    fun removeListener(listener: SystemEventListener) { systemRepository.removeListener(listener) }
+    fun addListener(listener: SystemListener)    { systemRepository.addListener(listener) }
+    fun removeListener(listener: SystemListener) { systemRepository.removeListener(listener) }
 
     companion object {
         private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )
-        private val localesFilterList = arrayOf("en", "ru", "de", "es", "it", "pt", "fr")
+        private val localesFilterList = arrayOf("en", "ru", "de")
     }
 }

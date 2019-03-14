@@ -1,13 +1,8 @@
 package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.ds.*
-import com.kg.gettransfer.data.ds.IO.*
-import com.kg.gettransfer.data.socket.CoordinateDataStoreReceiver
 import com.kg.gettransfer.data.mapper.*
 import com.kg.gettransfer.data.repository.*
-import com.kg.gettransfer.data.socket.ChatDataStoreReceiver
-import com.kg.gettransfer.data.socket.OfferDataStoreReceiver
-import com.kg.gettransfer.data.socket.SystemDataStoreReceiver
 
 import com.kg.gettransfer.domain.repository.*
 
@@ -17,6 +12,8 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 import org.koin.dsl.module.module
+
+import org.slf4j.LoggerFactory
 
 val dataModule = module {
     single<ThreadLocal<DateFormat>>("iso_date") {
@@ -50,8 +47,7 @@ val dataModule = module {
     single { OfferMapper() }
     single { OfferDataStoreCache() }
     single { OfferDataStoreRemote() }
-    single { OfferRepositoryImpl(DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>(get(), get())) } bind OfferRepository::class
-    single<OfferDataStoreReceiver> { OfferSocketDataStoreInput() }
+    single<OfferRepository> { OfferRepositoryImpl(DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>(get(), get())) }
 
     single { PaymentMapper() }
     single { PaymentRequestMapper() }
@@ -74,9 +70,7 @@ val dataModule = module {
 
     single { SystemDataStoreCache() }
     single { SystemDataStoreRemote() }
-    single { SystemSocketDataStoreOutput(get()) }
-    single <SystemDataStoreReceiver> { SystemSocketDataStoreInput() }
-    single { SystemRepositoryImpl(DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>(get(), get()), get()) } bind SystemRepository::class
+    single<SystemRepository> { SystemRepositoryImpl(DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>(get(), get())) }
 
     single { RouteInfoMapper() }
     single { PointMapper() }
@@ -92,7 +86,7 @@ val dataModule = module {
     single { CarrierTripMapper() }
     single { CarrierTripDataStoreCache() }
     single { CarrierTripDataStoreRemote() }
-    single<CarrierTripRepository> { CarrierTripRepositoryImpl(DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>(get(), get()), get()) }
+    single<CarrierTripRepository> { CarrierTripRepositoryImpl(DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>(get(), get())) }
 
     single { BookNowOfferMapper() }
     single { TripMapper() }
@@ -100,7 +94,7 @@ val dataModule = module {
     single { TransferNewMapper() }
     single { TransferDataStoreCache() }
     single { TransferDataStoreRemote() }
-    single { TransferRepositoryImpl(DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>(get(), get())) } bind TransferRepository::class
+    single<TransferRepository> { TransferRepositoryImpl(DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>(get(), get())) }
 
     single { PromoDiscountMapper() }
     single { PromoDataStoreCache() }
@@ -109,19 +103,4 @@ val dataModule = module {
 
     single { ReviewDataStoreRemote() }
     single<ReviewRepository> { ReviewRepositoryImpl(get()) }
-
-    single { ChatAccountMapper() }
-    single { ChatMapper() }
-    single { MessageMapper() }
-    single { ChatBadgeEventMapper() }
-    single { ChatDataStoreCache() }
-    single { ChatDataStoreRemote() }
-    single { ChatDataStoreIO(get()) }
-    single { ChatRepositoryImpl(DataStoreFactory<ChatDataStore, ChatDataStoreCache, ChatDataStoreRemote>(get(), get()), get()) } bind ChatRepository::class
-    single<ChatDataStoreReceiver> { ChatDataStoreIO(get()) }
-
-    single { CoordinateMapper() }
-    single { CoordinateSocketDataStoreOutput(get()) }
-    single <CoordinateDataStoreReceiver> { CoordinateSocketDataStoreInput() }
-    single { CoordinateRepositoryImpl(get()) } bind CoordinateRepository::class
 }

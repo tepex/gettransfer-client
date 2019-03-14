@@ -23,5 +23,4 @@ open class TransferDataStoreRemote: TransferDataStore {
     override suspend fun getTransfersActive() = remote.getTransfersActive()
 
     override fun clearTransfersCache() { throw UnsupportedOperationException() }
-
 }

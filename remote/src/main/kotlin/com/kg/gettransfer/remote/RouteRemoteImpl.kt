@@ -1,8 +1,10 @@
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.data.RouteRemote
+import com.kg.gettransfer.data.RemoteException
 
 import com.kg.gettransfer.data.model.RouteInfoEntity
+import com.kg.gettransfer.data.model.TransportTypePriceEntity
 
 import com.kg.gettransfer.remote.mapper.RouteInfoMapper
 
@@ -13,30 +15,27 @@ import org.koin.standalone.get
 
 class RouteRemoteImpl : RouteRemote {
     private val core   = get<ApiCore>()
-    private val routeInfoMapper = get<RouteInfoMapper>()
+    private val mapper = get<RouteInfoMapper>()
 
     override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean, currency: String): RouteInfoEntity {
-        /*try {
+        try {
             val response: ResponseModel<RouteInfoModel> = tryGetRouteInfo(arrayOf(from, to), withPrices, returnWay, currency)
             return mapper.fromRemote(response.data!!)
         } catch (e: Exception) {
             throw core.remoteException(e)
-        }*/
-
-        val response: ResponseModel<RouteInfoModel> = core.tryTwice { core.api.getRouteInfo(arrayOf(from, to), withPrices, returnWay, currency) }
-        return routeInfoMapper.fromRemote(response.data!!)
+        }
     }
 
-    /*private suspend fun tryGetRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean, currency: String):
+    private suspend fun tryGetRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean, currency: String):
         ResponseModel<RouteInfoModel> {
         return try { core.api.getRouteInfo(points, withPrices, returnWay, currency).await() }
         catch (e: Exception) {
-            if (e is RemoteException) throw e *//* second invocation *//*
+            if (e is RemoteException) throw e /* second invocation */
             val ae = core.remoteException(e)
             if (!ae.isInvalidToken()) throw ae
 
             try { core.updateAccessToken() } catch (e1: Exception) { throw core.remoteException(e1) }
             return try { core.api.getRouteInfo(points, withPrices, returnWay, currency).await() } catch (e2: Exception) { throw core.remoteException(e2) }
         }
-    }*/
+    }
 }

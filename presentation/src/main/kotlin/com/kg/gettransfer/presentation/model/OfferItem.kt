@@ -17,7 +17,6 @@ data class OfferModel(
         val status: String,
         val wifi: Boolean,
         val refreshments: Boolean,
-        val charger: Boolean,
         val createdAt: String,
         val price: PriceModel,
         val ratings: RatingsModel?,

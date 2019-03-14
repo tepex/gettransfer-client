@@ -5,15 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/ivClose"
+    <TextView
+        android:id="@+id/tvClose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/colorGreen"
+        android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_close_x" />
+        android:text="@string/LNG_CLOSE"
+        android:fontFamily="@font/sf_pro_text_regular"/>
 
     <ImageView
         android:id="@+id/imageView3"
@@ -22,10 +26,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        app:srcCompat="@drawable/ic_block"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivClose"
-        app:srcCompat="@drawable/ic_block" />
+        app:layout_constraintTop_toBottomOf="@+id/tvClose" />
 
     <TextView
         android:id="@+id/textView2"
@@ -34,15 +38,15 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
-        android:fontFamily="@font/sf_pro_text_semibold"
         android:gravity="center_horizontal"
         android:lineSpacingExtra="7sp"
-        android:text="@string/LNG_TRANSFER_NOT_PAID"
         android:textColor="@android:color/black"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        android:text="@string/LNG_TRANSFER_NOT_PAID"
+        android:fontFamily="@font/sf_pro_text_semibold"/>
 
     <TextView
         android:id="@+id/tvBookingNumber"
@@ -51,20 +55,21 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:fontFamily="@font/sf_pro_text_regular"
         android:gravity="center_horizontal"
+        android:textColor="@android:color/black"
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        tools:text="Booking number 100500" />
+        tools:text="Booking number 100500"
+        android:fontFamily="@font/sf_pro_text_regular"/>
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:fontFamily="@font/sf_pro_text_semibold"
         android:gravity="center_horizontal"
@@ -75,34 +80,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvBookingNumber" />
 
-    <android.support.design.widget.FloatingActionButton
+    <Button
         android:id="@+id/btnTryAgain"
-        android:layout_width="wrap_content"
-        android:layout_height="87dp"
-        app:backgroundTint="@color/colorPrimaryDark"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="@+id/btnSupport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_yellow_button_customer_support"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:text="@string/LNG_PAYMENT_TRY_AGAIN"
+        android:textColor="#000000"
+        android:textSize="@dimen/settings_activity_text_size"
+        app:layout_constraintBottom_toTopOf="@+id/btnSupport"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnSupport"
-        app:layout_constraintTop_toTopOf="@+id/btnSupport"
-        app:srcCompat="@drawable/ic_try_again" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btnSupport"
-        android:layout_width="wrap_content"
-        android:layout_height="87dp"
-        android:layout_marginTop="57dp"
-        android:layout_marginBottom="8dp"
-        app:backgroundTint="@color/colorPrimary"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toTopOf="@+id/tvSupport"
-        app:layout_constraintEnd_toEndOf="@+id/tvSupport"
-        app:layout_constraintEnd_toStartOf="@+id/btnTryAgain"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5"
-        app:srcCompat="@drawable/ic_support" />
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <include
+        android:id="@+id/btnSupport"
+        layout="@layout/btn_layout_support"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_activity_height_layouts"
+        android:layout_marginStart="14dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginBottom="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <TextView
@@ -120,32 +127,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-    <TextView
-        android:id="@+id/tvSupport"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:maxLines="2"
-        android:lines="2"
-        android:gravity="center"
-        android:layout_marginBottom="24dp"
-        android:text="@string/LNG_OFFERS_SUPPORT"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/btnSupport"
-        app:layout_constraintStart_toStartOf="@+id/btnSupport" />
-
-    <TextView
-        android:id="@+id/tvTryAgain"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="24dp"
-        android:text="@string/LNG_PAYMENT_TRY_AGAIN"
-        android:maxLines="2"
-        android:lines="2"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/btnTryAgain"
-        app:layout_constraintStart_toStartOf="@+id/btnTryAgain"
-        app:layout_constraintTop_toBottomOf="@+id/btnTryAgain" />
 </android.support.constraint.ConstraintLayout>

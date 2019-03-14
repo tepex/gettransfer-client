@@ -20,7 +20,7 @@ open class SystemDataStoreCache : SystemDataStore {
     override suspend fun setConfigs(configsEntity: ConfigsEntity) = cache.setConfigs(configsEntity)
     override suspend fun getAccount() = cache.getAccount()
     override suspend fun setAccount(accountEntity: AccountEntity) = cache.setAccount(accountEntity)
-    override suspend fun clearAccount() = cache.clearAccount()
+    override fun clearAccount() = cache.clearAccount()
 
     override suspend fun login(email: String, password: String): AccountEntity { throw UnsupportedOperationException() }
     override fun changeEndpoint(endpoint: EndpointEntity) { throw UnsupportedOperationException() }

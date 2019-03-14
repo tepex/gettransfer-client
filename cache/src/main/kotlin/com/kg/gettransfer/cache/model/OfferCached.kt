@@ -13,7 +13,6 @@ data class OfferCached(
         @ColumnInfo(name = OfferEntity.STATUS) val status: String,
         @ColumnInfo(name = OfferEntity.WIFI) val wifi: Boolean,
         @ColumnInfo(name = OfferEntity.REFRESHMENTS) val refreshments: Boolean,
-        @ColumnInfo(name = OfferEntity.CHARGER) val charger: Boolean,
         @ColumnInfo(name = OfferEntity.CREATED_AT) val createdAt: String,
         @ColumnInfo(name = OfferEntity.UPDATED_AT) val updatedAt: String?,
         @Embedded(prefix = OfferEntity.PRICE) val price: PriceCached,

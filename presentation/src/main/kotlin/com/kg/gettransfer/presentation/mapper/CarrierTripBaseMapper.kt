@@ -20,10 +20,9 @@ open class CarrierTripBaseMapper : Mapper<CarrierTripBaseModel, CarrierTripBase>
             transferId            = type.transferId,
             from                  = type.from.name!!,
             to                    = type.to?.name,
-            dateLocal             = type.dateLocal,
             dateTime              = SystemUtils.formatDateTime(type.dateLocal),
             duration              = type.duration,
-            distance              = type.distance ?: Mapper.checkDistance(type.from.point!!, type.to?.point),
+            distance              = type.distance ?: Mapper.checkDistance(type.from.point!!, type.to!!.point),
             time                  = type.time,
             countChild            = type.childSeats,
             childSeatsInfant      = type.childSeatsInfant,
@@ -34,7 +33,7 @@ open class CarrierTripBaseMapper : Mapper<CarrierTripBaseModel, CarrierTripBase>
             price                 = type.price,
             vehicle               = vehicleInfoMapper.toView(type.vehicle),
             timeToTransfer        = tr,
-            tripStatus            = getTripStatus(tr, type.time, type.duration?.times(60))
+            tripStatus            = getTripStatus(tr, type.time, type.duration)
         )
     }
 

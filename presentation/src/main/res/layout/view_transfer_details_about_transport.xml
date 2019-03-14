@@ -199,7 +199,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
                 app:srcCompat="@drawable/ic_wifi"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/imgFreeWater"
@@ -207,7 +207,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
                 app:srcCompat="@drawable/ic_free_water"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
         </LinearLayout>
 
@@ -225,7 +225,8 @@
 
         app:title_transfer_details="@string/LNG_RIDE_CHILDREN"
         app:input_transfer_details="2"
+        app:icon_img_transfer_details="@drawable/ic_child_seat"
 
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
 </LinearLayout>

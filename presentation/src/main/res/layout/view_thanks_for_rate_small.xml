@@ -5,25 +5,25 @@
     android:background="@color/colorWhite"
     android:layout_height="wrap_content">
 
-    <!--<View android:background="@color/color_transfer_details_horizontal_divider"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_width="match_parent"/>-->
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="@dimen/activity_transfer_details_title_height"-->
-        <!--android:background="@color/color_transfer_details_background_gray"-->
-        <!--android:text="@string/LNG_RATE_TRANSFER"-->
-        <!--android:textAllCaps="true"-->
-        <!--android:textSize="@dimen/activity_transfer_details_text_size_13sp"-->
-        <!--android:fontFamily="@font/sf_pro_text_semibold"-->
-        <!--android:textColor="@color/color_transfer_details_header_text_color"-->
-        <!--android:paddingStart="@dimen/activity_transfer_details_margin_start_end_16dp"-->
-        <!--android:paddingEnd="@dimen/activity_transfer_details_margin_start_end_16dp"-->
-        <!--android:gravity="center_vertical"/>-->
+    <View android:background="@color/color_transfer_details_horizontal_divider"
+        android:layout_height="0.5dp"
+        android:layout_width="match_parent"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_transfer_details_title_height"
+        android:background="@color/color_transfer_details_background_gray"
+        android:text="@string/LNG_RATE_TRANSFER"
+        android:textAllCaps="true"
+        android:textSize="@dimen/activity_transfer_details_text_size_13sp"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:textColor="@color/color_transfer_details_header_text_color"
+        android:paddingStart="@dimen/activity_transfer_details_margin_start_end_16dp"
+        android:paddingEnd="@dimen/activity_transfer_details_margin_start_end_16dp"
+        android:gravity="center_vertical"/>
 
-    <!--<View android:background="@color/color_transfer_details_horizontal_divider"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_width="match_parent"/>-->
+    <View android:background="@color/color_transfer_details_horizontal_divider"
+        android:layout_height="0.5dp"
+        android:layout_width="match_parent"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -38,7 +38,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        style="@style/transfer_details_main_text"
+        android:textColor="@color/colorTextBlack"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:textSize="17sp"
         android:text="@string/LNG_PAYMENT_THANK_RATING"/>
 
 </LinearLayout>

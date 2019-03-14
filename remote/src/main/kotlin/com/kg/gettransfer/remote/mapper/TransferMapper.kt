@@ -66,8 +66,7 @@ open class TransferMapper : EntityMapper<TransferModel, TransferEntity> {
 /* ================================================== */
             editableFields        = type.editableFields,
             airlineCard           = type.airlineCard,
-            paymentPercentages    = type.paymentPercentages,
-            unreadMessagesCount   = type.unreadMessagesCount
+            paymentPercentages    = type.paymentPercentages
         )
 
     /**

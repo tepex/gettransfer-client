@@ -35,42 +35,23 @@ class SettingsActivity : BaseActivity(), SettingsView {
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
-        setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_SETTINGS)
-        initClickListeners()
-        //Not showing some layouts in release
-        initVisibility()
-    }
 
-    private fun initVisibility(){
+        setContentView(R.layout.activity_settings)
+
+        setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_SETTINGS)
+
+        btnSignOut.setOnClickListener { presenter.onLogout() }
+        layoutSettingsLogs.setOnClickListener { presenter.onLogsClicked() }
+        layoutSettingsResetOnboarding.setOnClickListener { presenter.onResetOnboardingClicked() }
+        btnSupport.setOnClickListener { presenter.sendEmail(null) }
+        rlResetMarketRate.setOnClickListener { presenter.onResetRateClicked() }
+
+        //Not showing some layouts in release
         if (BuildConfig.FLAVOR != "dev") {
             layoutSettingsEndpoint.isVisible = false
             layoutSettingsLogs.isVisible = false
             layoutSettingsResetOnboarding.isVisible = false
             rlResetMarketRate.isVisible = false
-            rlClearAccessToken.isVisible = false
-        }
-        layoutDriverBackground.isVisible = presenter.isDriverMode
-    }
-
-    private fun initClickListeners() {
-        btnSignOut.setOnClickListener { presenter.onLogout() }
-        layoutSettingsLogs.setOnClickListener { presenter.onLogsClicked() }
-        layoutSettingsResetOnboarding.setOnClickListener { presenter.onResetOnboardingClicked() }
-        btnSupport.setOnClickListener { presenter.sendEmail(null, null) }
-        rlResetMarketRate.setOnClickListener { presenter.onResetRateClicked() }
-        rlClearAccessToken.setOnClickListener { presenter.onClearAccessTokenClicked() }
-        layoutDriverBackground.setOnClickListener {
-            with(switch_bg_coordinates) {
-                isChecked = !isChecked
-                presenter.onDriverCoordinatesSwitched(isChecked)
-            }
-        }
-        switch_bg_coordinates.apply {
-            isChecked = presenter.isBackGroundAccepted
-            setOnCheckedChangeListener { _, isChecked ->
-                presenter.onDriverCoordinatesSwitched(isChecked)
-            }
         }
     }
 

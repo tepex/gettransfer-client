@@ -179,16 +179,6 @@ object Utils : KoinComponent {
         }
     }
 
-    fun showBackGroundPermissionDialog(context: Context, clickResult: (result: Boolean) -> Unit){
-        getAlertDialogBuilder(context).apply {
-            setMessage("Даете ли вы разрешение на отправку координат в свернутом режиме?")
-            setTitle("Разрешение на работу в фоновом режиме")
-            setNegativeButton("Нет") { _, _ -> clickResult(false)}
-            setPositiveButton("Да") { _, _ -> clickResult(true)}
-            show()
-        }
-    }
-
     fun checkEmail(email: String?) = EMAIL_PATTERN.matcher(email ?: "").matches()
         //fun checkPhone(phone: String?) = PHONE_PATTERN.matcher(phone?.trim() ?: "").matches()
 
@@ -222,8 +212,8 @@ object Utils : KoinComponent {
                 latLngBuilder.include(mPoints.get(i))
             }
         } else {
-            mPoints.add(pointMapper.toLatLng(routeModel.fromPoint))
-            mPoints.add(pointMapper.toLatLng(routeModel.toPoint))
+            mPoints.add(pointMapper.toView(routeModel.fromPoint))
+            mPoints.add(pointMapper.toView(routeModel.toPoint))
 
             for (i in mPoints.indices) latLngBuilder.include(mPoints.get(i))
         }
@@ -236,12 +226,6 @@ object Utils : KoinComponent {
         }
         return PolylineModel(mPoints.firstOrNull(), mPoints.getOrNull(mPoints.size - 1), line, track)
     }
-
-    fun getCameraUpdate(list: List<LatLng>): CameraUpdate  =
-        LatLngBounds.Builder()
-                .also { b -> list.forEach { b.include(it) } }
-                .build()
-                .let { CameraUpdateFactory.newLatLngBounds(it, 150) }
 
     fun getCameraUpdateForPin(point: LatLng) = CameraUpdateFactory.newLatLngZoom(point, BaseGoogleMapActivity.MAP_MIN_ZOOM)
 
@@ -268,10 +252,8 @@ object Utils : KoinComponent {
     fun durationToString(context: Context, duration: Triple<Int, Int, Int>) = buildString {
         val (days: Int, hours: Int, minutes: Int) = duration
         context.getString(R.string.LNG_DATE_IN_HOURS)
-        if (days != 0) {
-            append(" $days")
-            append(context.getString(R.string.LNG_D))
-        }
+        append(" $days")
+        append(context.getString(R.string.LNG_D))
         append(" ${hours % 24}")
         append(context.getString(R.string.LNG_H))
         append(" ${minutes % 60}")
@@ -403,9 +385,6 @@ object Utils : KoinComponent {
 
     fun convertDpToPixels(context: Context, dp: Float) =
         dp * context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT
-
-    fun dpToPxInt(context: Context, dp: Float) =
-            convertDpToPixels(context, dp).toInt()
 
 /*
         fun isConnectedToInternet(context: Context?): Boolean {

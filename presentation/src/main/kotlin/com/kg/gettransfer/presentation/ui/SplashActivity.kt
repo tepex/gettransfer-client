@@ -2,35 +2,42 @@ package com.kg.gettransfer.presentation.ui
 
 import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
+
 import android.support.annotation.CallSuper
 
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.LocalBroadcastManager
+
 import android.support.v7.app.AppCompatActivity
 import com.kg.gettransfer.BuildConfig
+
+import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
+
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.presentation.view.AboutView
+import com.kg.gettransfer.presentation.view.Screens
+
 import kotlinx.coroutines.Job
 import net.hockeyapp.android.CrashManager
 import net.hockeyapp.android.CrashManagerListener
+
 import org.koin.android.ext.android.inject
+
 import timber.log.Timber
-import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.view.Screens
-import com.kg.gettransfer.utilities.AppLifeCycleObserver
 
 class SplashActivity : AppCompatActivity() {
     companion object {
-        val EXTRA_TRANSFER_ID = "transfer_id"
-        val EXTRA_RATE = "rate"
-        val EXTRA_SHOW_RATE = "show_rate"
+        @JvmField val PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+        @JvmField val PERMISSION_REQUEST = 2211
     }
 
     private val compositeDisposable = Job()
@@ -42,11 +49,6 @@ class SplashActivity : AppCompatActivity() {
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
-        }
 
         if (!BuildConfig.DEBUG) {
             CrashManager.register(applicationContext, object : CrashManagerListener() {
@@ -70,7 +72,7 @@ class SplashActivity : AppCompatActivity() {
         }
 
         utils.launchSuspend {
-            /*val result = utils.asyncAwait { systemInteractor.coldStart() }
+            val result = utils.asyncAwait { systemInteractor.coldStart() }
 
             if (result.error != null) {
                 Timber.e(result.error!!)
@@ -83,12 +85,7 @@ class SplashActivity : AppCompatActivity() {
             else {
                 openNextScreen()
                 finish()
-            }*/
-            utils.asyncAwait { systemInteractor.coldStart() }
-            val intent = Intent(AppLifeCycleObserver.APP_STATE).apply { putExtra(AppLifeCycleObserver.STATUS, true) }
-            Handler().postDelayed({ LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent) }, 1000)
-            openNextScreen()
-            finish()
+            }
         }
     }
 
@@ -99,22 +96,12 @@ class SplashActivity : AppCompatActivity() {
                     .putExtra(AboutView.EXTRA_OPEN_MAIN, true).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
         }
         else {
-            when (systemInteractor.lastMode) {
-                Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsMainActivity::class.java))
-                Screens.PASSENGER_MODE -> {
-                    val transferId = intent.getLongExtra(SplashActivity.EXTRA_TRANSFER_ID, 0)
-                    val rate = intent.getIntExtra(SplashActivity.EXTRA_RATE, 0)
-                    val showRate = intent.getBooleanExtra(SplashActivity.EXTRA_SHOW_RATE, false)
-
-                    startActivity(Intent(this@SplashActivity, MainActivity::class.java)
-                            .apply {
-                                putExtra(EXTRA_TRANSFER_ID, transferId)
-                                putExtra(EXTRA_RATE, rate)
-                                putExtra(EXTRA_SHOW_RATE, showRate)
-                            })
-                }
+            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            /*when (systemInteractor.lastMode) {
+                Screens.CARRIER_MODE -> startActivity(Intent(this@SplashActivity, CarrierTripsActivity::class.java))
+                Screens.PASSENGER_MODE -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-            }
+            }*/
         }
     }
 

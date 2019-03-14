@@ -8,17 +8,15 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.presentation.view.WebPageView
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import ru.terrakok.cicerone.Router
 
 @InjectViewState
 class WebPagePresenter: MvpPresenter<WebPageView>(), KoinComponent {
     private val systemInteractor: SystemInteractor by inject()
-    protected val router: Router by inject()
 
     val termsUrl: String
     get() = "/${systemInteractor.mobileConfigs.termsUrl}"
 
     fun onBackCommandClick() {
-        router.exit()
+        viewState.finish()
     }
 }

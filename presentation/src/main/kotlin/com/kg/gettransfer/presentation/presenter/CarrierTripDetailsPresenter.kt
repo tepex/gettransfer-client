@@ -20,12 +20,12 @@ import com.kg.gettransfer.presentation.model.RouteModel
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
-import com.kg.gettransfer.presentation.view.Screens
 
 import org.koin.standalone.inject
 
 @InjectViewState
 class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
+    private val carrierTripInteractor: CarrierTripInteractor by inject()
     private val routeInteractor: RouteInteractor by inject()
 
     private val carrierTripMapper: CarrierTripMapper by inject()
@@ -44,14 +44,12 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
 
     private lateinit var tripModel: CarrierTripModel
     internal var tripId = 0L
-    internal var transferId = 0L
 
     override fun onFirstViewAttach() {
         utils.launchSuspend {
             viewState.blockInterface(true)
             val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(tripId) }
-            result.error?.let { checkResultError(it) }
-            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
+            if (result.error != null) viewState.setError(result.error!!)
             else {
                 val tripInfo = result.model
                 tripModel = carrierTripMapper.toView(tripInfo)
@@ -60,8 +58,7 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
                 val baseTripInfo = tripInfo.base
                 if (baseTripInfo.to != null && baseTripInfo.to!!.point != null) {
                     val r = utils.asyncAwait { routeInteractor.getRouteInfo(baseTripInfo.from.point!!, baseTripInfo.to!!.point!!, true, false, systemInteractor.currency.currencyCode) }
-                    r.cacheError?.let { viewState.setError(it) }
-                    if (r.error == null || (r.error != null && r.fromCache)) {
+                    if (r.error == null) {
                         setRouteTransfer(baseTripInfo,r.model)
                     }
                 } else if (baseTripInfo.duration != null) {
@@ -108,13 +105,9 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
             OPERATION_OPEN -> {
                 when (field) {
                     FIELD_PHONE -> callPhone(text)
-                    FIELD_EMAIL -> sendEmail(text, transferId)
+                    FIELD_EMAIL -> sendEmail(text)
                 }
             }
         }
-    }
-
-    fun onChatClick(){
-        router.navigateTo(Screens.Chat(transferId))
     }
 }

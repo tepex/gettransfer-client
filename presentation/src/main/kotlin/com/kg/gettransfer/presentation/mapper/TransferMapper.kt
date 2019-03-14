@@ -28,7 +28,7 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
             id             = type.id,
             createdAt      = type.createdAt,
             duration       = type.duration,
-            distance       = type.to?.let { type.distance ?: Mapper.checkDistance(type.from.point!!, type.to!!.point) },
+            distance       = type.to?.let { type.distance ?: Mapper.checkDistance(type.from.point!!, type.to!!.point!!) },
             status         = type.status,
 
             statusName     = getTransferStatusNameId(type.status),
@@ -81,7 +81,7 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
 /* ================================================== */
 /* ================================================== */
             statusCategory = type.checkStatusCategory(),
-            timeToTransfer = ((type.dateToLocal.time - Calendar.getInstance().timeInMillis).absoluteValue / 60_000).toInt()
+            timeToTransfer = (type.dateToLocal.time - Calendar.getInstance().timeInMillis).toInt().absoluteValue / 60_000
             //checkOffers = type.checkOffers
         )
     }

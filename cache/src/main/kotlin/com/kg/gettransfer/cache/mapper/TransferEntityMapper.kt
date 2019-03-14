@@ -61,8 +61,7 @@ open class TransferEntityMapper : EntityMapper<TransferCached, TransferEntity> {
                     /* ================================================== */
                     editableFields        = type.editableFields.list,
                     airlineCard           = type.airlineCard,
-                    paymentPercentages    = type.paymentPercentages.list,
-                    unreadMessagesCount   = type.unreadMessagesCount
+                    paymentPercentages    = type.paymentPercentages.list
             )
 
     override fun toCached(type: TransferEntity) =
@@ -113,7 +112,6 @@ open class TransferEntityMapper : EntityMapper<TransferCached, TransferEntity> {
                     /* ================================================== */
                     editableFields        = StringList(type.editableFields),
                     airlineCard           = type.airlineCard,
-                    paymentPercentages    = IntList(type.paymentPercentages),
-                    unreadMessagesCount   = type.unreadMessagesCount
+                    paymentPercentages    = IntList(type.paymentPercentages)
             )
 }

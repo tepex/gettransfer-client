@@ -8,7 +8,6 @@ import android.util.AttributeSet
 
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.LinearLayout
 
 import com.kg.gettransfer.R
 
@@ -17,7 +16,7 @@ import kotlinx.android.synthetic.main.view_about_item.*
 
 class AboutItem @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr), LayoutContainer {
+) : ConstraintLayout(context, attrs, defStyleAttr), LayoutContainer {
     override val containerView: View
     init {
         containerView = LayoutInflater.from(context).inflate(R.layout.view_about_item, this, true)

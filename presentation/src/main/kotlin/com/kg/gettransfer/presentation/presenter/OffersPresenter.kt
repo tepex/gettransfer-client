@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -12,7 +11,11 @@ import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.mapper.TransferMapper
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
-import com.kg.gettransfer.presentation.model.*
+import com.kg.gettransfer.presentation.model.BookNowOfferModel
+import com.kg.gettransfer.presentation.model.OfferItem
+
+import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 
@@ -43,12 +46,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     private var sortCategory = Sort.PRICE
     private var sortHigherToLower = false
-    var itemsExpanded: Boolean? = null
-        get() = field ?: offerInteractor.offerViewExpanded
-    set(value) {
-        field = value
-        offerInteractor.offerViewExpanded = value!!
-    }
 
     @CallSuper
     override fun attachView(view: OffersView) {
@@ -57,18 +54,16 @@ class OffersPresenter : BasePresenter<OffersView>() {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            result.error?.let { checkResultError(it) }
             if (result.error != null) {
                 val err = result.error!!
                 Timber.e(err)
-                //if (err.isNotLoggedIn()) viewState.redirectView()
-                //else if (err.code != ApiException.NETWORK_ERROR) viewState.setError(err)
-                if (err.isNotFound()) viewState.setError(ApiException(ApiException.NOT_FOUND, "Transfer $transferId not found!"))
-            }
-            if(result.error == null || (result.error != null && result.fromCache)) {
+                if (err.isNotLoggedIn()) viewState.redirectView()
+                else if (err.code != ApiException.NETWORK_ERROR) viewState.setError(err)
+            } else {
                 if (result.model.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE) router.exit()
                 else {
                     val transferModel = transferMapper.toView(result.model)
+                    viewState.setDate(SystemUtils.formatDateTime(transferModel.dateTime))
                     viewState.setTransfer(transferModel)
                     transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
                     checkNewOffersSuspended(result.model)
@@ -86,7 +81,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
         this.transfer = transfer
         val result = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
         val transferModel = transferMapper.toView(transfer)
-        if (result.error != null && !result.fromCache) {
+        if (result.error != null) {
             offers = emptyList()
             Timber.e(result.error)
         } else {
@@ -101,26 +96,10 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     override fun onNewOffer(offer: Offer): OfferModel {
         val offerModel = super.onNewOffer(offer)
-        if (transferId != offer.transferId) return offerModel
-        if (!checkDuplicated(offerModel))
-            offers = offers.toMutableList().apply { add(offerModel) }
+        offers = offers.toMutableList().apply { add(offerModel) }
         utils.launchSuspend { processOffers() }
         return offerModel
     }
-
-    private fun checkDuplicated(offer: OfferModel): Boolean {
-        var duplicated: Boolean = false
-        offers.forEach {
-            if (it is OfferModel && it.id == offer.id) {
-                offers = offers.toMutableList().apply { set(indexOf(it), offer) }
-                duplicated = true
-            }
-        }
-        return duplicated
-    }
-
-
-
 
     fun onRequestInfoClicked() {
         router.navigateTo(Screens.Details(transferId))
@@ -135,14 +114,14 @@ class OffersPresenter : BasePresenter<OffersView>() {
                 logButtons(Analytics.OFFER_BOOK)
                 when(offer) {
                     is OfferModel ->
-                        router.navigateTo(Screens.PaymentOffer(
+                        router.navigateTo(Screens.PaymentSettings(
                                 it.id,
                                 offer.id,
                                 it.dateRefund,
                                 it.paymentPercentages,
                                 null
                         ))
-                    is BookNowOfferModel -> router.navigateTo(Screens.PaymentOffer(
+                    is BookNowOfferModel -> router.navigateTo(Screens.PaymentSettings(
                         it.id,
                         null,
                         it.dateRefund,
@@ -163,9 +142,9 @@ class OffersPresenter : BasePresenter<OffersView>() {
         viewState.showAlertCancelRequest()
     }
 
-    /*fun openLoginView() {
+    fun openLoginView() {
         login("", "")
-    }*/
+    }
 
     fun cancelRequest(isCancel: Boolean) {
         if (!isCancel) return
@@ -255,23 +234,9 @@ class OffersPresenter : BasePresenter<OffersView>() {
         analytics.logEvent(Analytics.EVENT_OFFERS, createStringBundle(Analytics.PARAM_KEY_FILTER, value), map)
     }
 
-    fun hasAnyRate(carrier: CarrierModel) =
-            with(carrier.ratings) {
-                return@with (driver != null && driver != NO_RATE) ||
-                        (vehicle != null && vehicle != NO_RATE) ||
-                        (fair != null && fair != NO_RATE) ||
-                        carrier.approved
-
-
-            }
-
     enum class SortType {
         RATING_ASC, RATING_DESC,
         PRICE_ASC, PRICE_DESC,
         YEAR_ASC, YEAR_DESC;
-    }
-
-    companion object {
-        const val NO_RATE = 0f
     }
 }

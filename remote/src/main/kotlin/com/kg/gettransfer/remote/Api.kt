@@ -22,7 +22,6 @@ interface Api {
         const val API_RATE_OFFER         = "/api/offers/rate"
         const val API_FEEDBACK           = "/api/offers"
         const val API_WEBPUSH_TOKENS     = "/api/webpush_tokens"
-        const val API_MESSAGES           = "/api/messages"
 
         const val MOBILE_CONFIGS         = "/mobile/mobile.conf"
 
@@ -144,22 +143,6 @@ interface Api {
 
     @GET(MOBILE_CONFIGS)
     fun getMobileConfigs(): Deferred<MobileConfig>
-
-    @GET("$API_MESSAGES/{id}")
-    fun getChat(
-            @Path("id") transferId: Long
-    ): Deferred<ResponseModel<ChatModel>>
-
-    @POST("$API_MESSAGES/{id}")
-    fun newMessage(
-            @Path("id") transferId: Long,
-            @Body message: MessageNewWrapperModel
-    ): Deferred<ResponseModel<MessageWrapperModel>>
-
-    @POST("$API_MESSAGES/read/{id}")
-    fun readMessage(
-            @Path("id") messageId: Long
-    ): Deferred<ResponseModel<MessageWrapperModel>>
 
     @GET(API_LOCATION)
     fun getMyLocation(): Deferred<LocationModel>

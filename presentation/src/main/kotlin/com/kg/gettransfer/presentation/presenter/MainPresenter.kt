@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation.presenter
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -11,7 +10,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
@@ -34,6 +32,7 @@ import com.kg.gettransfer.presentation.ui.SystemUtils
 
 import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.service.OfferServiceConnection
 
 import com.kg.gettransfer.utilities.Analytics
 
@@ -45,6 +44,7 @@ import timber.log.Timber
 class MainPresenter : BasePresenter<MainView>() {
     private val routeInteractor: RouteInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
+    private val offerServiceConnection: OfferServiceConnection by inject()
 
     private val pointMapper: PointMapper by inject()
     private val profileMapper: ProfileMapper by inject()
@@ -152,7 +152,6 @@ class MainPresenter : BasePresenter<MainView>() {
             if (it.error != null) {
                 viewState.setError(it.error!!)
                 val locationResult = utils.asyncAwait { systemInteractor.getMyLocation() }
-                logIpapiRequest()
                 if (locationResult.error == null
                         && locationResult.model.latitude != null
                         && locationResult.model.longitude != null) setLocation(locationResult.model)
@@ -172,13 +171,13 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     private fun setPointAddress(currentAddress: GTAddress) {
-        lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)
+        lastAddressPoint = pointMapper.toView(currentAddress.cityPoint.point!!)
         onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
         viewState.setMapPoint(lastAddressPoint, true)
         //viewState.setAddressFrom(currentAddress.cityPoint.name!!)
         setAddressInSelectedField(currentAddress.cityPoint.name!!)
 
-        lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)
+        lastAddressPoint = pointMapper.toView(currentAddress.cityPoint.point!!)
     }
 
     fun onCameraMove(lastPoint: LatLng, animateMarker: Boolean) {
@@ -215,7 +214,7 @@ class MainPresenter : BasePresenter<MainView>() {
                 val result = utils.asyncAwait {
                     routeInteractor.getAddressByLocation(
                         systemInteractor.selectedField == FIELD_FROM,
-                        pointMapper.fromLatLng(lastPoint!!),
+                        pointMapper.fromView(lastPoint!!),
                         latLonPair
                     )
                 }
@@ -255,7 +254,6 @@ class MainPresenter : BasePresenter<MainView>() {
         routeInteractor.apply {
             hourlyDuration = if (hourly) hourlyDuration?: MIN_HOURLY else null
         }
-        if(systemInteractor.selectedField == FIELD_TO) changeUsedField(FIELD_FROM)
         viewState.changeFields(hourly)
     }
 
@@ -279,7 +277,7 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     fun onNextClick() {
-        if (routeInteractor.isCanCreateOrder())
+        if (routeInteractor.from?.cityPoint != null && (routeInteractor.to?.cityPoint != null || routeInteractor.hourlyDuration != null))
             router.navigateTo(Screens.CreateOrder)
     }
 
@@ -359,11 +357,11 @@ class MainPresenter : BasePresenter<MainView>() {
             ?.firstOrNull()
             ?.let { offer ->
                 if (!offer.isRated()) {
-                    val routeModel = if(transfer.to != null) createRouteModel(transfer) else null
+                    val routeModel = createRouteModel(transfer)
                     reviewInteractor.offerIdForReview = offer.id
                     viewState.openReviewForLastTrip(
-                        transferMapper.toView(transfer),
-                        LatLng(transfer.from.point!!.latitude, transfer.from.point!!.longitude),
+                        transfer.id,
+                        transfer.dateToLocal,
                         offer.vehicle.name,
                         offer.vehicle.color?:"",
                         routeModel
@@ -473,45 +471,6 @@ class MainPresenter : BasePresenter<MainView>() {
             createEmptyBundle(),
             emptyMap()
         )
-
-    private fun logIpapiRequest() =
-        analytics.logEvent(
-                Analytics.EVENT_IPAPI_REQUEST,
-                createEmptyBundle(),
-                mapOf()
-        )
-
-    fun rateTransfer(transferId: Long, rate: Int) {
-        utils.launchSuspend {
-            val transferResult = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            if (transferResult.error != null) {
-                val err = transferResult.error!!
-                if (err.isNotFound()) {
-                    viewState.setError(ApiException(ApiException.NOT_FOUND, "Transfer $transferId not found!"))
-                } else viewState.setError(err)
-            }
-            else {
-                val transfer = transferResult.model
-                val transferModel = transferMapper.toView(transfer)
-
-                if (transferModel.status.checkOffers) {
-                    val offersResult = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
-                    if (offersResult.error == null && offersResult.model.size == 1) {
-                        val offer = offersResult.model.first()
-                        reviewInteractor.offerIdForReview = offer.id
-                        if (rate == ReviewInteractor.MAX_RATE) {
-                            reviewInteractor.apply {
-                                sendTopRate()
-                                viewState.thanksForRate()
-                            }
-                        } else {
-                            viewState.showDetailedReview(rate.toFloat())
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     companion object {
         const val FIELD_FROM = "field_from"

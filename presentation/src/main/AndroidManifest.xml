@@ -21,10 +21,6 @@
         android:roundIcon="@mipmap/launcher_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data
-            android:name="asset_statements"
-            android:value="${assetlinks}" />
-
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -106,7 +102,7 @@
             android:name=".presentation.ui.TransferDetailsActivity"
             android:screenOrientation="portrait"
             android:resizeableActivity="false"/>
-        <activity android:name=".presentation.ui.CarrierTripsMainActivity"
+        <activity android:name=".presentation.ui.CarrierTripsActivity"
             android:screenOrientation="portrait"
             android:resizeableActivity="false"/>
         <activity
@@ -127,7 +123,7 @@
             android:screenOrientation="portrait"
             android:resizeableActivity="false"/>
         <activity
-            android:name=".presentation.ui.PaymentOfferActivity"
+            android:name=".presentation.ui.PaymentSettingsActivity"
             android:screenOrientation="portrait"
             android:resizeableActivity="false"/>
         <activity android:name=".presentation.ui.PaymentErrorActivity"
@@ -138,30 +134,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:resizeableActivity="false"/>
-        <activity android:name=".presentation.ui.ChatActivity"
-            android:screenOrientation="portrait"
-            android:resizeableActivity="false"/>
-        <activity android:name=".presentation.ui.HandleUrlActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:scheme="https"
-                    android:host="gettransfer.com"
-                    android:pathPattern=".*" />
-
-                <data
-                    android:scheme="https"
-                    android:host="stgtr.org"
-                    android:pathPattern=".*" />
-
-            </intent-filter>
-        </activity>
-
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -192,10 +164,5 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-        <service android:name=".service.CoordinateService">
-            <intent-filter>
-                <action android:name="com.kg.gettransfer.service.CoordinateService"/>
-            </intent-filter>
-        </service>
     </application>
 </manifest>

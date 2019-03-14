@@ -20,6 +20,7 @@
     <declare-styleable name="TransferDetailsField" parent="EditableView">
         <attr name="title_transfer_details" format="string" />
         <attr name="input_transfer_details" format="string"/>
+        <attr name="icon_img_transfer_details" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="AboutItem" parent="EditableView">
@@ -36,36 +37,6 @@
     <declare-styleable name="RateField">
         <attr name="rate_title" format="string"/>
         <attr name="rate_sub_title" format="string" />
-    </declare-styleable>
-
-    <declare-styleable name="TransferMainInfoView">
-        <attr name="distance" format="string"/>
-        <attr name="distance_title" format="string"/>
-        <attr name="time" format="string"/>
-        <attr name="time_title" format="string"/>
-        <attr name="price" format="string"/>
-        <attr name="price_title" format="string"/>
-    </declare-styleable>
-
-    <declare-styleable name="SeatsView">
-        <attr name="passenger_seats" format="string"/>
-        <attr name="child_seats" format="string"/>
-    </declare-styleable>
-
-    <declare-styleable name="CommunicationButton">
-        <attr name="btn_img" format="reference"/>
-        <attr name="btn_name" format="string"/>
-        <attr name="btn_color" format="color"/>
-    </declare-styleable>
-
-    <declare-styleable name="CustomBottomSheetBehavior">
-        <attr name="anchorPoint" format="dimension"/>
-        <attr name="defaultCustomState" format="enum">
-            <enum name="stateAnchorPoint" value="3" />
-            <enum name="stateExpanded" value="4"/>
-            <enum name="stateCollapsed" value="5"/>
-            <enum name="stateHidden" value="6"/>
-        </attr>
     </declare-styleable>
 
 </resources>

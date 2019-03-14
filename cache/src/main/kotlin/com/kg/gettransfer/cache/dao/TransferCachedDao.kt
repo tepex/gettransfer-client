@@ -11,7 +11,7 @@ import com.kg.gettransfer.data.model.TransferEntity
 @Dao
 interface TransferCachedDao {
     @Query("SELECT * FROM ${TransferEntity.ENTITY_NAME} WHERE ${TransferEntity.ID} = :id")
-    fun getTransfer(id: Long): TransferCached?
+    fun getTransfer(id: Long): TransferCached
 
     @Query("SELECT * FROM ${TransferEntity.ENTITY_NAME} ORDER BY ${TransferEntity.ID} DESC")
     fun getAllTransfers(): List<TransferCached>

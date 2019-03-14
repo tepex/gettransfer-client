@@ -1,6 +1,5 @@
 package com.kg.gettransfer.data.repository
 
-import com.kg.gettransfer.data.CacheException
 import com.kg.gettransfer.data.RemoteException
 
 import com.kg.gettransfer.data.mapper.ExceptionMapper
@@ -8,6 +7,7 @@ import com.kg.gettransfer.data.mapper.Mapper
 
 import com.kg.gettransfer.data.model.ResultEntity
 
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Result
 
 import org.koin.standalone.KoinComponent
@@ -22,11 +22,7 @@ abstract class BaseRepository : KoinComponent {
         return try { ResultEntity(getEntity(true)) }
         /* If error, get from cache */
         catch (e: RemoteException) {
-            try {
-                ResultEntity(getEntity(false), e)
-            } catch (cacheE: CacheException) {
-                ResultEntity(null, e, cacheE)
-            }
+            ResultEntity(getEntity(false), e)
         }
     }
 
@@ -34,13 +30,6 @@ abstract class BaseRepository : KoinComponent {
         return try { ResultEntity(getEntity())
         } catch (e: RemoteException) {
             ResultEntity(null, e)
-        }
-    }
-
-    protected suspend fun <E> retrieveCacheEntity(getEntity: suspend () -> E): ResultEntity<E?> {
-        return try { ResultEntity(getEntity())
-        } catch (e: CacheException) {
-            ResultEntity(null, null, e)
         }
     }
 

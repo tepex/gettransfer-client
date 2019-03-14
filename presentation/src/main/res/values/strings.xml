@@ -9,7 +9,6 @@
     <string name="api_key_prod">3fe0f9208622274f1a21e78037eea83e</string>
     <string name="api_url_prod">https://gettransfer.com</string>
     <string name="api_url_payment">/terms_of_use</string>
-    <string name="api_url_transfers">/carrier/cabinet/transfers</string>
 
     <string name="api_restore_password">/forgot_password</string>
 
@@ -49,7 +48,6 @@
     <string name="search">Search</string>
     <string name="reset_onboarding">Reset onboarding</string>
     <string name="reset_rate">Reset play market rate</string>
-    <string name="clear_access_token">Clear access token</string>
 
     <string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
     <string name="activity_carrier_transfer_details_title">Trip details</string> <!-- Title, which not used in new design -->
@@ -57,8 +55,8 @@
     <string name="passenger_number_default">0</string>
     <string name="child_number_default">0</string>
 
-    <string name="LNG_LOGIN_LOGIN_TO_CONTINUE">Log in to see transfers and offers</string>
-    <string name="LNG_LOGIN_NOT_LOGGED_IN">You are not logged in</string>
+    <string name="log_in_to_see_transfers_and_offers">Log in to see transfers and offers</string>
+    <string name="log_in_requirement_error_title">You are not logged in</string>
 
     <string name="tag_read_more" translatable="false">read_more_dialog</string>
     <string name="email_support" translatable="false">info@gettransfer.com</string>
@@ -68,8 +66,6 @@
 
     <string name="market_link">market://details?id=</string>
     <string name="app_package">com.gettransfer</string>
-
-    <string name="X_SIGN">X</string>
 
 
     <string name="LNG_MISKO">TEST</string>
@@ -143,9 +139,7 @@
     <string name="LNG_MENU_SUBTITLE_DRIVE">Switch to driver mode</string>
     <string name="LNG_MENU_TITLE_PASSENGER">Passenger mode</string>
     <string name="LNG_MENU_SUBTITLE_PASSENGER">Passenger mode</string>
-    <string name="LNG_MENU_TITLE_TRIPS">Calendar</string>
-    <string name="LNG_MENU_TITLE_TRANSFERS">Transfers</string>
-    <string name="LNG_MENU_SUBTITLE_TRANSFERS">Make offer</string>
+    <string name="LNG_MENU_TITLE_TRIPS">Upcoming transfers</string>
     <string name="LNG_MENU_SUBTITLE_TRIPS">Upcoming transfers</string>
     <string name="LNG_READMORE"><u>Read more</u></string>
     <string name="LNG_BESTPRICES">Best prices for transfers\nbetween airports and cities\nworldwide</string>
@@ -246,8 +240,7 @@
     <string name="LNG_RIDE_OFFERS">Show offers</string>
     <string name="LNG_RIDE_REPEAT">Repeat</string>
     <string name="LNG_RIDE_PAYMENT">Payment in progress</string>
-    <string name="LNG_RIDE_CONNECT_CARRIERS">Connecting to nearest %d carriers</string>
-    <string name="LNG_RIDE_CONNECT_CARRIERS_NONUM">Connecting with nearby carriers</string>
+    <string name="LNG_RIDE_CONNECT_CARRIERS">Connecting to nearest %s carriers</string>
     <string name="LNG_RIDE_CARRIERS">Carrier\'s offers</string>
     <string name="LNG_RIDE_COMPLETED">Completed transfers: %s</string>
     <string name="LNG_RIDE_CREATION_SPINNER">Please wait, connecting...</string>
@@ -376,7 +369,6 @@
     <string name="LNG_RIDE_OFFER_BLOCKED">Blocked</string>
     <string name="LNG_RIDE_OFFER_CANCELED">Canceled</string>
     <string name="LNG_BACKTRIP">Back</string>
-    <string name="LNG_RIDE_RETURN_TRANSFER">Return transfer</string>
     <string name="LNG_TRANSFER_NOT_PAID">Transfer is not paid</string>
     <string name="LNG_BOOKING_NUMBER">Booking number</string>
     <string name="LNG_PAYMENT_DECLINED">Payment declined</string>
@@ -439,32 +431,14 @@
     <string name="LNG_TRIPS_EMPTY_ACTIVE">you have no active transfers</string>
     <string name="LNG_TRIPS_EMPTY_ALL">you have no transfers</string>
     <string name="LNG_TRIPS_EMPTY_COMPLETED">you have no completed transfers</string>
-    <string name="LNG_LIST"><u>List</u></string>
-    <string name="LNG_NEW_CHAT_MESSAGE">Write the message</string>
-    <string name="LNG_NEW_PASSENGER_CHAT_TITLE">Passenger message</string>
-    <string name="LNG_NEW_DRIVER_CHAT_TITLE">Carrier message</string>
-    <string name="LNG_UNREAD_MESSAGES_COUNT">%s unread messages</string>
-    <string name="LNG_RIDE_CLIENT_NAME">Name</string>
-    <string name="LNG_DETAILS_REPEAT_ROUTE">Repeat transfer</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>
     <string name="PUNCTUALITY">fair</string>
-
     <string name="offer_channel_name">Offer</string>
     <string name="offer_channel_description">@string/offer_channel_name</string>
     <string name="new_offers">New offers</string>
     <string name="LNG_RIDE_OFFER_CANCELLED">Offer was canceled</string>
-    <string name="LNG_RIDE_DATE_RETURN_PLACEHOLDER">I want to order a return transfer</string>
-    <string name="LNG_OFFERS_SUPPORT">GetTransfer Support</string>
-    <string name="LNG_BOOK_NOW_PAYMENT_SUCCEESS">We will send you e-mail with carrier information</string>
-    <string name="LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION">Download booking voucher?</string>
-    <string name="LNG_DOWNLOADING">Downloading</string>
-    <string name="LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS">Allow access to download the voucher</string>
-    <string name="LNG_LOCATION_ACCESS">Allow access to your location</string>
-    <string name="LNG_PLEASE_WAIT_OFFERS">Soon offers from carriers will be here</string>
-    <string name="LNG_PLEASE_WAIT">Please wait</string>
-
 
     <plurals name="days">
         <item quantity="one">@string/LNG_DAY</item>
@@ -479,4 +453,5 @@
         <item quantity="many">@string/LNG_HOURS</item>
         <item quantity="other">@string/LNG_HOURS</item>
     </plurals>
+
 </resources>

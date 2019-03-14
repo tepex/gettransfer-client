@@ -4,6 +4,7 @@ import com.kg.gettransfer.data.model.CarrierTripEntity
 
 import com.kg.gettransfer.domain.model.CarrierTrip
 import com.kg.gettransfer.domain.model.CarrierTripBase
+import com.kg.gettransfer.domain.model.PassengerAccount
 
 import java.text.DateFormat
 
@@ -48,7 +49,7 @@ open class CarrierTripMapper : Mapper<CarrierTripEntity, CarrierTrip> {
             paidSum          = type.paidSum,
             remainsToPay     = type.remainsToPay,
             paidPercentage   = type.paidPercentage,
-            passengerAccount = type.passengerAccount?.let { passengerAccountMapper.fromEntity(it) }
+            passengerAccount = passengerAccountMapper.fromEntity(type.passengerAccount)
         )
 
     /**

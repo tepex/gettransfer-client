@@ -11,15 +11,9 @@ class RouteCacheImpl: RouteCache, KoinComponent {
     private val db: CacheDatabase by inject()
     private val routeInfoMapper: RouteInfoEntityMapper by inject()
 
-    override suspend fun getRouteInfo(from: String, to: String): RouteInfoEntity? {
-        try {
-            return db.routeCacheDao().getRouteInfo(from, to)?.let { routeInfoMapper.fromCached(it) }
-        } catch (e: IllegalStateException) {
-            throw CacheException(CacheException.ILLEGAL_STATE, e.message ?: "IllegalStateException")
-        }
-    }
+    override fun getRouteInfo(from: String, to: String) = db.routeCacheDao().getRouteInfo(from, to)?.let { routeInfoMapper.fromCached(it) }
 
-    override suspend fun setRouteInfo(from: String, to: String, routeInfo: RouteInfoEntity){
+    override fun setRouteInfo(from: String, to: String, routeInfo: RouteInfoEntity){
         try {
             db.routeCacheDao().insert(routeInfoMapper.toCached(from, to, routeInfo))
         } catch (e: IllegalStateException) {

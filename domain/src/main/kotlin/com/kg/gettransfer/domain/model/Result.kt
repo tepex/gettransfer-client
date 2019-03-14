@@ -6,7 +6,6 @@ import com.kg.gettransfer.domain.DatabaseException
 data class Result<M>(
     val model: M,
     val error: ApiException? = null,
-    val fromCache: Boolean = false,
     val cacheError: DatabaseException? = null
 ) {
 

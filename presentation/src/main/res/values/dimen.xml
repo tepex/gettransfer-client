@@ -106,9 +106,7 @@
 	<dimen name="about_item_title_text_size">22sp</dimen>
 	<dimen name="about_item_description_text_size">17sp</dimen>
 	<dimen name="about_item_description_margin_top">24dp</dimen>
-	<dimen name="about_item_description_margin_start">8dp</dimen>
-	<dimen name="about_item_description_margin_end">8dp</dimen>
-
+	
 	<!-- Read more -->
 	<dimen name="read_more_content_margin">10dp</dimen>
 	<dimen name="read_more_close_margin">20dp</dimen>
@@ -128,7 +126,7 @@
 	<dimen name="create_transfer_cb_size">15dp</dimen>
 	<dimen name="create_transfer_agreement_text_size">13sp</dimen>
 	<dimen name="create_transfer_agreement_text_margin_start">55dp</dimen>
-	<dimen name="create_transfer_agreement_text_margin_end">8dp</dimen>
+	<dimen name="create_transfer_agreement_text_margin_end">17dp</dimen>
 	<dimen name="create_transfer_map_height">208dp</dimen>
 	<dimen name="create_transfer_additionals_end_margin">25dp</dimen>
 	<dimen name="create_transfer_additionals_start_margin">57dp</dimen>
@@ -243,8 +241,6 @@
 	<dimen name="view_transfer_info_btn_cancel_request_margin_end">11dp</dimen>
 	<dimen name="view_transfer_info_btn_cancel_request_padding_top_bottom">5dp</dimen>
 
-	<dimen name="transfer_main_info_container_vertical_padding">10dp</dimen>
-
 	<!--activity_transfer_details-->
 	<dimen name="activity_transfer_details_behaviour_peek_height">385dp</dimen>
 	<dimen name="activity_transfer_details_text_size_17sp">17sp</dimen>
@@ -252,17 +248,13 @@
 	<dimen name="activity_transfer_details_margin_start_end_16dp">16dp</dimen>
 	<dimen name="activity_transfer_details_title_height">38dp</dimen>
 	<dimen name="activity_transfer_details_horizontal_divider_height">0.5dp</dimen>
-	<dimen name="activity_transfer_details_field_horizontal_divider_height">1dp</dimen>
 	<dimen name="activity_transfer_details_vertical_divider_width">1dp</dimen>
 
 	<dimen name="view_transfer_details_field_title_margin_start">46dp</dimen>
 	<dimen name="view_transfer_details_field_title_margin_top">11dp</dimen>
 	<dimen name="view_transfer_details_field_text_margin_start">20dp</dimen>
 	<dimen name="view_transfer_details_field_text_margin_end">16dp</dimen>
-	<dimen name="view_transfer_details_comment_container_vertical_padding">16dp</dimen>
 	<dimen name="view_transfer_details_field_divider_margin_top">11dp</dimen>
-	<dimen name="view_transfer_details_field_container_horizontal_padding">16dp</dimen>
-	<dimen name="view_transfer_details_field_container_vertical_padding">22dp</dimen>
 
 	<dimen name="view_transfer_details_transport_type_item_padding_start_end">16dp</dimen>
 	<dimen name="view_transfer_details_transport_type_item_padding_top_bottom">11dp</dimen>
@@ -275,14 +267,12 @@
 	<dimen name="view_transfer_details_communicate_buttons_padding_top">16dp</dimen>
 	<dimen name="view_transfer_details_communicate_buttons_padding_bottom">8dp</dimen>
 	<dimen name="view_transfer_details_communicate_buttons_padding_start_end">24dp</dimen>
-    <dimen name="view_transfer_details_communicate_buttons_margin">12dp</dimen>
 
 	<dimen name="view_transfer_details_about_driver_languages_layout_height">44dp</dimen>
 
 	<dimen name="view_transfer_details_about_transport_car_layout_padding">16dp</dimen>
 	<dimen name="view_transfer_details_about_transport_car_photo_width">140dp</dimen>
 	<dimen name="view_transfer_details_about_transport_car_photo_height">104dp</dimen>
-	<dimen name="view_transfer_details_about_transport_car_photo_height_new">208dp</dimen>
 	<dimen name="view_transfer_details_about_transport_image_many_photos_margin">7dp</dimen>
 	<dimen name="view_transfer_details_about_transport_rating_layout_height">24dp</dimen>
 	<dimen name="view_transfer_details_about_transport_license_plate_margin_top">16dp</dimen>
@@ -293,7 +283,7 @@
 
 	<dimen name="bottom_sheet_transfer_details_swiped_view_width">110dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_swiped_view_height">5dp</dimen>
-	<dimen name="bottom_sheet_transfer_details_swiped_view_margin_top_bottom">11dp</dimen>
+	<dimen name="bottom_sheet_transfer_details_swiped_view_margin_top_bottom">8dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_buttons_height">44dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_buttons_margin_top_bottom">8dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_buttons_margin_start_end">30dp</dimen>
@@ -301,20 +291,16 @@
 	<dimen name="bottom_sheet_transfer_details_support_top_button_margin_top">16dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_support_bottom_button_margin_top_bottom">8dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_support_bottom_layout_buttons_padding_bottom">8dp</dimen>
-	<dimen name="bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom">4dp</dimen>
-	<dimen name="bottom_sheet_transfer_details_table_layout_transport_types_margin_start_end">12dp</dimen>
+	<dimen name="bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom">6dp</dimen>
+	<dimen name="bottom_sheet_transfer_details_table_layout_transport_types_margin_start_end">4dp</dimen>
 
 	<dimen name="view_transfer_details_info_line_min_height">60dp</dimen>
 	<dimen name="view_transfer_details_info_padding_top_bottom_6dp">6dp</dimen>
 	<dimen name="view_transfer_details_info_padding_top_bottom_10dp">10dp</dimen>
 	<dimen name="view_transfer_details_info_items_margin_start_end">16dp</dimen>
-	<dimen name="view_transfer_details_header_container_padding_horizontal">16dp</dimen>
-	<dimen name="view_transfer_details_header_container_padding_top">11dp</dimen>
 	<dimen name="view_transfer_details_info_transfer_date_margin_start">5dp</dimen>
 	<dimen name="view_transfer_details_info_texts_margin_start_3dp">3dp</dimen>
 	<dimen name="view_transfer_details_info_texts_margin_top_5dp">5dp</dimen>
-
-	<dimen name="future_transfer_button_width_height">64dp</dimen>
 
 	<!-- view_trips_info -->
 	<dimen name="view_trips_info_big_text_size">13sp</dimen>
@@ -338,9 +324,6 @@
 	<dimen name="view_trips_info_iv_comment_width">20dp</dimen>
 	<dimen name="view_trips_info_iv_comment_height">18dp</dimen>
 	<dimen name="view_trips_info_iv_comment_margin_end">11dp</dimen>
-	<dimen name="transport_type_name_text_size">14sp</dimen>
-
-	<dimen name="booking_number_margin_top">2dp</dimen>
 
 
 	<!-- Carrier trip details activity -->
@@ -449,27 +432,6 @@
 	<dimen name="views_carrier_trips_info_layout_about_car_license_plate_margin_top">11dp</dimen>
 	<dimen name="views_carrier_trips_info_layout_about_car_number_margin_top_bottom">6dp</dimen>
 	<dimen name="views_carrier_trips_info_layout_about_car_number_margin_start_end">9dp</dimen>
-
-	<dimen name="activity_carrier_trips_main_toolbar_list_text_size">17sp</dimen>
-	<dimen name="carrier_trips_calendar_fragment_view_pager_height">330dp</dimen>
-	<dimen name="carrier_trips_calendar_fragment_gradient_height">5dp</dimen>
-	<dimen name="carrier_trips_calendar_fragment_rv_margin_top">12dp</dimen>
-	<dimen name="carrier_trips_month_fragment_month_name_size">17dp</dimen>
-	<dimen name="carrier_trips_month_fragment_month_text_view_height">44dp</dimen>
-	<dimen name="carrier_trips_month_fragment_days_of_week_height">38dp</dimen>
-	<dimen name="carrier_trips_month_fragments_lines_height">40dp</dimen>
-	<dimen name="carrier_trips_month_fragments_items_select_date_indicator_size">44dp</dimen>
-	<dimen name="carrier_trips_month_fragments_items_count_trips_indicator_size">4dp</dimen>
-	<dimen name="carrier_trips_month_fragments_items_count_trips_indicator_margin_top">1dp</dimen>
-	<dimen name="carrier_trips_month_fragments_rv_items_texts_size">17sp</dimen>
-	<dimen name="carrier_trips_month_fragments_rv_items_duration_text_size">14sp</dimen>
-	<dimen name="carrier_trips_month_fragments_rv_items_margin">8dp</dimen>
-	<dimen name="carrier_trips_month_fragments_rv_items_radius">5dp</dimen>
-	<dimen name="carrier_trips_month_fragments_rv_items_elevation">4dp</dimen>
-	<dimen name="carrier_trips_month_fragments_rv_items_min_height">80dp</dimen>
-	<dimen name="carrier_trips_month_fragments_rv_items_duration_width">24dp</dimen>
-	<dimen name="carrier_trips_month_fragments_rv_items_texts_layout_padding">8dp</dimen>
-	<dimen name="carrier_trips_month_fragments_rv_items_from_text_margin_top">8dp</dimen>
 	
 	<!--activity_offers-->
 	<dimen name="activity_offers_divider_height">0.5dp</dimen>
@@ -482,18 +444,13 @@
 	<dimen name="activity_offers_iv_lock_margin_start">20dp</dimen>
 	<dimen name="activity_offers_sorted_layout_height">56dp</dimen>
 	<dimen name="activity_offers_sorted_layout_padding_top_bottom">10dp</dimen>
-	<dimen name="activity_offers_sorted_layout_padding_start">5dp</dimen>
 	<dimen name="activity_offers_sorted_layout_padding_start_end">16dp</dimen>
 	<dimen name="activity_offers_sorted_layout_left_right_elements_margin_side">18dp</dimen>
-	<dimen name="activity_offers_sorted_layout_center_element_margin_side">8dp</dimen>
+	<dimen name="activity_offers_sorted_layout_center_element_margin_side">9dp</dimen>
 	<dimen name="activity_offers_sorted_layout_texts_size">14sp</dimen>
 	<dimen name="activity_offers_sorted_layout_triangle_margin_start">5dp</dimen>
-	<dimen name="sort_buttons_width">96dp</dimen>
 
 	<!--view_offer-->
-	<dimen name="offer_list_rv_padding">4dp</dimen>
-	<dimen name="card_view_margin">4dp</dimen>
-	<dimen name="card_view_corners">8dp</dimen>
 	<dimen name="view_offer_padding_top_bottom">10dp</dimen>
 	<dimen name="view_offer_margin">4dp</dimen>
 	<dimen name="view_offer_min_height">150dp</dimen>
@@ -531,14 +488,8 @@
 	<dimen name="rounded_rectangle_height">5dp</dimen>
 
 	<dimen name="toolbar_title_text_size">18sp</dimen>
-	<dimen name="toolbar_nav_title_text_size">15sp</dimen>
-	<dimen name="toolbar_transfer_from_text_size">15sp</dimen>
-	<dimen name="toolbar_start_date_text_size">12sp</dimen>
 	<dimen name="toolbar_buttons_text_size">18sp</dimen>
 	<dimen name="toolbar_buttons_margin_end">12dp</dimen>
-    <dimen name="toolbar_transfer_from_margin_start_end">36dp</dimen>
-    <dimen name="toolbar_transfer_start_date_margin_top">2dp</dimen>
-    <dimen name="toolbar_transfer_btn_call_margin_end">2dp</dimen>
 
 	<!--bottom_sheet_offer_details-->
 	<dimen name="bottom_sheet_offer_details_top_view_width">100dp</dimen>
@@ -572,7 +523,7 @@
 	<dimen name="bottom_sheet_offer_details_elements_padding_start_end">16dp</dimen>
 	<dimen name="bottom_sheet_offer_details_layouts_height">45dp</dimen>
 	<dimen name="bottom_sheet_offer_details_layouts_ratings_padding_bottom">12dp</dimen>
-	<dimen name="bottom_sheet_offer_details_ratings_texts_margin_top">10dp</dimen>
+	<dimen name="bottom_sheet_offer_details_ratings_texts_margin_top">4dp</dimen>
 	<dimen name="bottom_sheet_offer_details_prices_margin">5dp</dimen>
 	<dimen name="bottom_sheet_offer_details_dimen1_margin_top">8dp</dimen>
 	<dimen name="bottom_sheet_offer_details_car_color_indicator_size">16dp</dimen>
@@ -608,66 +559,11 @@
 	<dimen name="activity_requests_text_network_availability_margin_start_end">8sp</dimen>
 	<dimen name="activity_requests_text_network_availability_margin_top_bottom">12sp</dimen>
 
-    <!-- activity_chat -->
-    <dimen name="activity_chat_message_text_size">17sp</dimen>
-    <dimen name="activity_chat_message_margin_start_top_bottom">8dp</dimen>
-    <dimen name="activity_chat_message_margin_end">72dp</dimen>
-    <dimen name="activity_chat_message_padding_start_end">14dp</dimen>
-    <dimen name="activity_chat_divider_height">1dp</dimen>
-    <dimen name="activity_chat_layout_message_min_height">56dp</dimen>
-    <dimen name="activity_chat_my_message_margin_start">72dp</dimen>
-    <dimen name="activity_chat_my_message_margin_end">8dp</dimen>
-    <dimen name="activity_chat_my_message_margin_top_bottom">4dp</dimen>
-    <dimen name="activity_chat_message_item_text_size">17sp</dimen>
-    <dimen name="activity_chat_my_message_text_padding">16dp</dimen>
-    <dimen name="activity_chat_message_item_date_text_size">12sp</dimen>
-    <dimen name="activity_chat_my_message_date_text_margin">8dp</dimen>
-    <dimen name="activity_chat_my_message_indicator_margin_start">16dp</dimen>
-    <dimen name="activity_chat_my_message_indicator_margin_end">4dp</dimen>
-    <dimen name="activity_chat_not_my_message_margin_end">72dp</dimen>
-    <dimen name="activity_chat_not_my_message_margin_start">8dp</dimen>
-    <dimen name="activity_chat_not_my_message_margin_top_bottom">4dp</dimen>
-    <dimen name="activity_chat_not_my_message_text_padding">16dp</dimen>
-    <dimen name="activity_chat_not_my_message_date_text_margin">8dp</dimen>
 
 
 	<!--drawable values-->
-	<dimen name="panels_corner_radius">16dp</dimen>
+	<dimen name="panels_corner_radius">5dp</dimen>
 	<dimen name="hourly_icon_borders">2dp</dimen>
 
-	<!-- empty offers-->
-	<dimen name="card_no_offers_margin">8dp</dimen>
-	<dimen name="card_corner_radius">8dp</dimen>
-	<dimen name="card_elevation">3dp</dimen>
-	<dimen name="clock_margin_top">24dp</dimen>
-	<dimen name="text_top_margin_top">17dp</dimen>
-	<dimen name="text_bottom_margin_top">8dp</dimen>
-	<dimen name="text_bottom_margin_bottom">32dp</dimen>
-	<dimen name="text_bottom_margin_left">44dp</dimen>
-	<dimen name="text_bottom_margin_right">44dp</dimen>
-
-
-	<!--new dimens-->
-	<dimen name="black_dash_width">27dp</dimen>
-	<dimen name="black_dash_height">2dp</dimen>
-
-	<dimen name="view_transfer_main_info_divider_margins">16dp</dimen>
-	<dimen name="view_transfer_main_info_divider_height">1dp</dimen>
-
-	<dimen name="view_transfer_details_comment_text_margin_top">10dp</dimen>
-	<dimen name="view_transfer_details_comment_divider_margin_top">20dp</dimen>
-
-	<dimen name="view_communication_button_name_margins">8dp</dimen>
-	<dimen name="view_communication_button_img_size">64dp</dimen>
-
-	<dimen name="activity_carrier_trip_details_top_buttons_margin_bottom">8dp</dimen>
-	<dimen name="activity_carrier_trip_bottom_buttons_layout_shadow_height">5dp</dimen>
-
-	<dimen name="bottom_sheet_carrier_trip_details_bs_peek_height">92dp</dimen>
-	<dimen name="bottom_sheet_carrier_trip_details_bs_anchor_point">333dp</dimen>
-	<dimen name="bottom_sheet_carrier_trip_details_trip_info_item_margin_top">20dp</dimen>
-	<dimen name="bottom_sheet_carrier_trip_details_trip_info_item_margin_bottom">24dp</dimen>
-	<dimen name="bottom_sheet_carrier_trip_details_view_seats_margin_end">16dp</dimen>
-	<dimen name="bottom_sheet_carrier_trip_details_free_space_height">110dp</dimen>
 
 </resources>

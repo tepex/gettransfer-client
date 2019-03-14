@@ -14,11 +14,13 @@ import org.koin.standalone.inject
 open class CarrierTripDataStoreCache: CarrierTripDataStore {
     private val cache: CarrierTripCache by inject()
 
-    suspend fun addAllCarrierTrips(trips: List<CarrierTripBaseEntity>) = cache.insertAllBaseCarrierTrips(trips)
-    suspend fun addCarrierTrip(trip: CarrierTripEntity) = cache.insertCarrierTrip(trip)
+    override suspend fun getCarrierTrips(): List<CarrierTripBaseEntity> {
+        /*= cache.getCarrierTrips()*/
+        throw UnsupportedOperationException()
+    }
 
-    override suspend fun getCarrierTrips() = cache.getAllBaseCarrierTrips()
-    override suspend fun getCarrierTrip(id: Long) = cache.getCarrierTrip(id)
-
-    suspend fun clearCariierTripsCache() = cache.deleteAllCarrierTrips()
+    override suspend fun getCarrierTrip(id: Long): CarrierTripEntity {
+        /*= cache.getCarrierTrip(id)*/
+        throw UnsupportedOperationException()
+    }
 }

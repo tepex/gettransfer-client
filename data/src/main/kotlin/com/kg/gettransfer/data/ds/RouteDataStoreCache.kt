@@ -1,6 +1,5 @@
 package com.kg.gettransfer.data.ds
 
-import com.kg.gettransfer.data.CacheException
 import com.kg.gettransfer.data.RouteCache
 import com.kg.gettransfer.data.RouteDataStore
 
@@ -14,15 +13,9 @@ import org.koin.standalone.inject
 open class RouteDataStoreCache: RouteDataStore {
     private val cache: RouteCache by inject()
 
-    override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean?, returnWay: Boolean?, currency: String?): RouteInfoEntity? {
-        return try {
+    override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean?, returnWay: Boolean?, currency: String?) =
             cache.getRouteInfo(from, to)
-        } catch (e: CacheException) { throw e }
-    }
 
-    override suspend fun setRouteInfo(from: String, to: String, routeInfo: RouteInfoEntity) {
-        try {
+    override fun setRouteInfo(from: String, to: String, routeInfo: RouteInfoEntity) =
             cache.setRouteInfo(from, to, routeInfo)
-        } catch (e: CacheException) { throw e }
-    }
 }
