@@ -8,14 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite"
-        android:layout_margin="@dimen/views_carrier_trips_info_item_margin"
+        android:layout_marginTop="@dimen/views_carrier_trips_info_item_margin"
+        android:layout_marginBottom="@dimen/views_carrier_trips_info_item_margin"
         android:elevation="@dimen/views_carrier_trips_info_item_elevation">
 
         <com.kg.gettransfer.presentation.ui.CarrierTripInfoItem
             android:id="@+id/layoutCarrierTripInfo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/views_carrier_trips_info_layout_padding_top_bottom"/>
+            android:layout_height="wrap_content"/>
 
     </android.support.v7.widget.CardView>
 
