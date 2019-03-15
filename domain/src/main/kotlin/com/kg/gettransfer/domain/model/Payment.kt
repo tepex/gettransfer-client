@@ -3,7 +3,8 @@ package com.kg.gettransfer.domain.model
 data class Payment(
     val type: String,
     val url: String?,
-    val id: Long?
+    val id: Long?,
+    val params: Params?
 ) {
 
     companion object {
@@ -11,3 +12,7 @@ data class Payment(
         const val TYPE_WIDGET = "widget"
     }
 }
+
+data class Params(val amount: String,
+                  val currency: String,
+                  val paymentId: Long)
