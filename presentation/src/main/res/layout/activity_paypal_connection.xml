@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.ui.PaypalConnectionActivity"
+    android:animateLayoutChanges="true">
+
+    <ImageView
+        android:id="@+id/ivRec1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/ivGtr"
+        app:layout_constraintStart_toStartOf="@+id/ivGtr"
+        app:layout_constraintTop_toTopOf="@+id/ivGtr"
+        app:srcCompat="@drawable/ic_rectangle_pay_1" />
+
+    <ImageView
+        android:id="@+id/ivRec2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/ivPaypal"
+        app:layout_constraintStart_toStartOf="@+id/ivPaypal"
+        app:layout_constraintTop_toBottomOf="@+id/ivRec1"
+        app:srcCompat="@drawable/ic_rectangle_pay_2" />
+
+    <ImageView
+        android:id="@+id/ivRec3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/ivGtr"
+        app:layout_constraintStart_toStartOf="@+id/ivGtr"
+        app:layout_constraintTop_toBottomOf="@+id/ivRec2"
+        app:srcCompat="@drawable/ic_rectangle_pay_1" />
+
+    <ImageView
+        android:id="@+id/ivRec4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/ivPaypal"
+        app:layout_constraintStart_toStartOf="@+id/ivPaypal"
+        app:layout_constraintTop_toBottomOf="@+id/ivRec3"
+        app:srcCompat="@drawable/ic_rectangle_pay_2" />
+
+    <ImageView
+        android:id="@+id/ivGtr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="121dp"
+        app:layout_constraintEnd_toStartOf="@+id/ivPaypal"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        app:srcCompat="@drawable/ic_gtr" />
+
+    <ImageView
+        android:id="@+id/ivPaypal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/ivGtr"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ivGtr"
+        app:layout_constraintTop_toTopOf="@+id/ivGtr"
+        app:srcCompat="@drawable/ic_pay_pal" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/sf_font_pro_display_regular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPleaseWait"
+        android:text="@string/LNG_PLEASE_WAIT_PAYPAL" />
+
+    <TextView
+        android:id="@+id/tvPleaseWait"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="115dp"
+        android:text="@string/LNG_PLEASE_WAIT"
+        app:layout_constraintEnd_toEndOf="@+id/tvTitle"
+        app:layout_constraintStart_toStartOf="@+id/tvTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/sf_font_pro_display_regular"
+        android:textSize="17sp"/>
+
+</android.support.constraint.ConstraintLayout>
