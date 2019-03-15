@@ -21,6 +21,7 @@
         android:roundIcon="@mipmap/launcher_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <meta-data
             android:name="asset_statements"
             android:value="${assetlinks}" />
@@ -28,7 +29,6 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-
         <uses-library android:name="android.test.runner" />
 
         <meta-data
@@ -40,7 +40,6 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_offer_notification" />
@@ -51,8 +50,8 @@
         <activity
             android:name=".presentation.ui.SplashActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:resizeableActivity="false">
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -61,36 +60,37 @@
         </activity>
         <activity
             android:name=".presentation.ui.MainActivity"
+            android:resizeableActivity="false"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeTransparentStatusBar"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:resizeableActivity="false"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".presentation.ui.AboutActivity"
-            android:screenOrientation="portrait"
-            android:resizeableActivity="false"/>
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.SearchActivity"
+            android:resizeableActivity="false"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeTransparentStatusBar"
-            android:resizeableActivity="false"/>
+            android:theme="@style/AppThemeTransparentStatusBar" />
         <activity
             android:name=".presentation.ui.CreateOrderActivity"
+            android:resizeableActivity="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            android:resizeableActivity="false"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity
             android:name=".presentation.ui.WebPageActivity"
-            android:screenOrientation="portrait"
-            android:resizeableActivity="false"/>
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.SettingsActivity"
-            android:screenOrientation="portrait"
-            android:resizeableActivity="false"/>
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.OffersActivity"
-            android:screenOrientation="portrait"
-            android:resizeableActivity="false">
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait">
+
             <!--
             <intent-filter>
                 <action android:name="OffersActivity" />
@@ -100,48 +100,53 @@
         </activity>
         <activity
             android:name=".presentation.ui.RequestsActivity"
-            android:screenOrientation="portrait"
-            android:resizeableActivity="false"/>
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.TransferDetailsActivity"
-            android:screenOrientation="portrait"
-            android:resizeableActivity="false"/>
-        <activity android:name=".presentation.ui.CarrierTripsMainActivity"
-            android:screenOrientation="portrait"
-            android:resizeableActivity="false"/>
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.ui.CarrierTripsMainActivity"
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.CarrierTripDetailsActivity"
-            android:screenOrientation="portrait"
-            android:resizeableActivity="false"/>
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.LogsActivity"
-            android:screenOrientation="portrait"
-            android:resizeableActivity="false"/>
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.LoginActivity"
+            android:resizeableActivity="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateUnchanged|adjustResize"
-            android:resizeableActivity="false"/>
+            android:windowSoftInputMode="stateUnchanged|adjustResize" />
         <activity
             android:name=".presentation.ui.PaymentActivity"
-            android:screenOrientation="portrait"
-            android:resizeableActivity="false"/>
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.PaymentOfferActivity"
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.ui.PaymentErrorActivity"
+            android:resizeableActivity="false"
             android:screenOrientation="portrait"
-            android:resizeableActivity="false"/>
-        <activity android:name=".presentation.ui.PaymentErrorActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".presentation.ui.PaymentSuccessfulActivity"
+            android:resizeableActivity="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:resizeableActivity="false"/>
-        <activity android:name=".presentation.ui.PaymentSuccessfulActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:resizeableActivity="false"/>
-        <activity android:name=".presentation.ui.ChatActivity"
-            android:screenOrientation="portrait"
-            android:resizeableActivity="false"/>
-        <activity android:name=".presentation.ui.HandleUrlActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".presentation.ui.ChatActivity"
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.ui.HandleUrlActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -150,18 +155,30 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="gettransfer.com"
-                    android:pathPattern=".*" />
-
+                    android:pathPattern=".*"
+                    android:scheme="https" />
                 <data
-                    android:scheme="https"
                     android:host="stgtr.org"
-                    android:pathPattern=".*" />
-
+                    android:pathPattern=".*"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="${applicationId}.braintree" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".presentation.ui.PaypalConnectionActivity"
+            android:resizeableActivity="false">
+        </activity>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -178,24 +195,25 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <service
-            android:name="com.appsflyer.FirebaseInstanceIdListener">
+        <service android:name="com.appsflyer.FirebaseInstanceIdListener">
             <intent-filter>
-                <action
-                    android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-        <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver" android:exported="true">
+        <receiver
+            android:name="com.appsflyer.SingleInstallBroadcastReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
+
         <service android:name=".service.CoordinateService">
             <intent-filter>
-                <action android:name="com.kg.gettransfer.service.CoordinateService"/>
+                <action android:name="com.kg.gettransfer.service.CoordinateService" />
             </intent-filter>
         </service>
     </application>
+
 </manifest>
