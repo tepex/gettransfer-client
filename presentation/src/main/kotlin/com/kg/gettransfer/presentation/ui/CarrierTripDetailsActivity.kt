@@ -133,6 +133,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
                 comment_view.tv_comment_text.text = it
                 comment_view.isVisible = true
             }
+            layoutPassengersChilds.isVisible = item.countPassengers != null || item.base.countChild > 0
             with(transfer_details_view_seats) {
                 item.countPassengers?.let {
                     tv_countPassengers.text = getString(R.string.X_SIGN).plus("$it")

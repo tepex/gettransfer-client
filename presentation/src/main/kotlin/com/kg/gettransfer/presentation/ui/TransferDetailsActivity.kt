@@ -55,7 +55,6 @@ import kotlinx.android.synthetic.main.view_communication_buttons.view.*
 
 import kotlinx.android.synthetic.main.view_transfer_details_about_driver.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_request.*
-import kotlinx.android.synthetic.main.view_transfer_details_about_transport.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //don't delete
 
 
@@ -65,6 +64,7 @@ import kotlinx.android.synthetic.main.view_rate_in_store.view.*
 import kotlinx.android.synthetic.main.view_rate_your_transfer.*
 import kotlinx.android.synthetic.main.view_seats_number.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_driver.view.*
+import kotlinx.android.synthetic.main.view_transfer_details_about_transport_new.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_transport_new.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_comment.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_driver_languages.view.*
@@ -342,9 +342,13 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
         with(transfer_details_view_seats) {
             tv_countPassengers.text = getString(R.string.X_SIGN).plus("${transfer.countPassengers}")
-            tvCountChildren.text = getString(R.string.X_SIGN).plus("${transfer.countChilds}")
-            imgChildSeats.isVisible =  transfer.countChilds > 0
-            tvCountChildren.isVisible = transfer.countChilds > 0
+            imgPassengers.isVisible = true
+            tv_countPassengers.isVisible = true
+            if(transfer.countChilds > 0) {
+                tvCountChildren.text = getString(R.string.X_SIGN).plus("${transfer.countChilds}")
+                imgChildSeats.isVisible =  true
+                tvCountChildren.isVisible = true
+            }
         }
     }
 

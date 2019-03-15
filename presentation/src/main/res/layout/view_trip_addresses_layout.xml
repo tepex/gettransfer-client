@@ -116,7 +116,9 @@
                 android:paddingStart="@dimen/views_carrier_trips_info_layout_hourly_duration_text_padding_start"
                 android:paddingEnd="@dimen/views_carrier_trips_info_layout_hourly_duration_text_padding_end"
                 android:paddingBottom="@dimen/views_carrier_trips_info_layout_hourly_duration_text_padding_bottom"
-                android:textColor="@color/colorTextBlack" />
+                android:textSize="@dimen/views_carrier_trips_info_layout_hourly_duration_text_size"
+                android:textColor="@color/colorWhite"
+                android:text="8 hours"/>
 
             <ImageView
                 android:id="@+id/ivHourlyPoint"

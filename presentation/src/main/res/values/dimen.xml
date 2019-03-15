@@ -37,10 +37,12 @@
 	<dimen name="nav_header_logo_width">56dp</dimen>
 	<dimen name="nav_header_logo_height">35dp</dimen>
 	<dimen name="nav_header_logo_start">16dp</dimen>
-	<dimen name="nav_header_logo_top">16dp</dimen>
+	<dimen name="nav_header_logo_top">10dp</dimen>
 	<dimen name="nav_header_logo_bottom">6dp</dimen>
-	<dimen name="nav_header_share_top">48dp</dimen>
+	<dimen name="nav_header_share_top">10dp</dimen>
 	<dimen name="nav_header_share_end">16dp</dimen>
+	<dimen name="nav_header_mode_text_size">12sp</dimen>
+	<dimen name="nav_header_account_info_layout_padding_top">6dp</dimen>
 
 	<dimen name="nav_header_email_bottom">6dp</dimen>
 
@@ -431,9 +433,10 @@
 	<dimen name="views_carrier_trips_info_layout_markers_line_width">5dp</dimen>
 	<dimen name="views_carrier_trips_info_layout_markers_line_margin_top_bottom">1dp</dimen>
 	<dimen name="views_carrier_trips_info_layout_hourly_duration_text_padding_start">22dp</dimen>
-	<dimen name="views_carrier_trips_info_layout_hourly_duration_text_padding_end">8dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_hourly_duration_text_padding_end">11dp</dimen>
 	<dimen name="views_carrier_trips_info_layout_hourly_duration_text_padding_bottom">1dp</dimen>
 	<dimen name="views_carrier_trips_info_layout_hourly_duration_text_height">25dp</dimen>
+	<dimen name="views_carrier_trips_info_layout_hourly_duration_text_size">14sp</dimen>
 	<dimen name="views_carrier_trips_info_layout_hourly_img_margin_start">-2dp</dimen>
 	<dimen name="views_carrier_trips_info_layout_hourly_duration_text_margin_start">-16dp</dimen>
 	<dimen name="views_carrier_trips_info_layout_vehicle_info_margin_top">14dp</dimen>

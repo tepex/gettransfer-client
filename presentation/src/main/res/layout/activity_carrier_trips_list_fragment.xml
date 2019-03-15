@@ -26,9 +26,13 @@
                 android:id="@+id/tabsForRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/views_carrier_trips_activity_tab_layout_height"
+                app:tabPaddingStart="-1dp"
+                app:tabPaddingEnd="-1dp"
                 android:background="@color/primaryDriver"
                 app:tabIndicatorColor="@color/colorWhite"
                 app:tabTextAppearance="@style/TabLayoutTextStyle"/>
+
+            <!--tabPaddingStart(End) - trick for textSize-->
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvTrips"
@@ -39,9 +43,5 @@
         </RelativeLayout>
 
     </android.support.design.widget.CoordinatorLayout>
-
-    <include
-        android:id="@+id/navView"
-        layout="@layout/view_navigation" />
 
 </android.support.v4.widget.DrawerLayout>

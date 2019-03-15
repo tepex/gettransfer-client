@@ -212,6 +212,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
                 String.format(getString(R.string.nav_footer_version), versionName, versionCode)
         //navFooterReadMore.text = Html.fromHtml(Utils.convertMarkdownToHtml(getString(R.string.LNG_READMORE)))
         setViewColor(navViewHeader, R.color.colorPrimary)
+        setViewColor(layoutAccountInfo, R.color.colorPrimary)
         navViewHeader.navHeaderMode.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
         navViewHeader.navHeaderName.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
         navViewHeader.navHeaderEmail.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
