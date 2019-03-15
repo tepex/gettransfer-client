@@ -70,6 +70,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         }
 
         _mapView = mapView
+        _btnCenter = btnCenterRoute
         initMapView(savedInstanceState)
         setToolbar(toolbar as Toolbar, TOOLBAR_NO_TITLE)
         (toolbar as Toolbar).toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS).plus(" #${presenter.transferId}")
@@ -178,13 +179,14 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         field.isVisible = true
     }
 
-    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) =
-            setPolyline(polyline, routeModel, true)
+    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
+        setPolyline(polyline, routeModel, true)
+        btnCenterRoute.isVisible = false
+    }
 
     override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
-        processGoogleMap(false) {
-            setPinForHourlyTransfer(placeName, info, point, cameraUpdate, true)
-        }
+        processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate, true) }
+        btnCenterRoute.isVisible = false
     }
 
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)

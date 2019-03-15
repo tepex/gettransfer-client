@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.*
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
@@ -44,6 +45,7 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
     private lateinit var googleMapJob: Job
     protected lateinit var _mapView: MapView
     private lateinit var googleMap: GoogleMap
+    protected lateinit var _btnCenter: ImageView
 
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
@@ -119,6 +121,11 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
         gm.uiSettings.isMyLocationButtonEnabled = false
         gm.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
         gm.setPadding(0, 0, 0, LABEL_VERTICAL_POSITION)
+        gm.setOnCameraMoveStartedListener {
+            if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+                _btnCenter.isVisible = true
+            }
+        }
     }
 
     protected fun processGoogleMap(ignore: Boolean, block: (GoogleMap) -> Unit) {
@@ -244,6 +251,7 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
 
     protected fun showTrack (track: CameraUpdate) {
         googleMap.animateCamera(track)
+        _btnCenter.isVisible = false
     }
 
     private fun createBitmapFromView(v: View): Bitmap {

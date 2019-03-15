@@ -113,6 +113,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         }
 
         _mapView = mapView
+        _btnCenter = btnMyLocation
         initMapView(savedInstanceState)
 
         viewNetworkNotAvailable = textNetworkNotAvailable
@@ -255,14 +256,17 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
         checkPermission()
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
-        gm.setOnCameraMoveListener        { presenter.onCameraMove(gm.cameraPosition!!.target, true)  }
+        gm.setOnCameraMoveListener        {
+            presenter.onCameraMove(gm.cameraPosition!!.target, true)
+        }
         gm.setOnCameraIdleListener        { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
-        gm.setOnCameraMoveStartedListener {
+        /*gm.setOnCameraMoveStartedListener {
             if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
                 presenter.enablePinAnimation()
                 gm.setOnCameraMoveStartedListener(null)
             }
-        }
+        }*/
+        presenter.enablePinAnimation()
     }
 
     private fun checkPermission() {
@@ -280,7 +284,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     /* MainView */
-    override fun setMapPoint(point: LatLng, withAnimation: Boolean) {
+    override fun setMapPoint(point: LatLng, withAnimation: Boolean, showBtnMyLocation: Boolean) {
         val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
         processGoogleMap(false) {
             if (centerMarker != null) {
@@ -301,6 +305,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
                 }
             }
         }
+        btnMyLocation.isVisible = false
     }
 
     override fun setMarkerElevation(up: Boolean, elevation: Float) {
