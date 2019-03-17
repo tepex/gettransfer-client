@@ -77,6 +77,7 @@ class OffersActivity : BaseActivity(), OffersView {
         initBottomSheet()
         initClickListeners()
         viewNetworkNotAvailable = textNetworkNotAvailable
+        intent.getStringExtra(OffersView.EXTRA_ORIGIN)?.let { presenter.isViewRoot = true }
     }
 
     private fun initClickListeners() {

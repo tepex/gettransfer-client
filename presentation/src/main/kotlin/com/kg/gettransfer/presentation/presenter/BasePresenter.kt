@@ -6,7 +6,6 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.MvpPresenter
 
 import com.google.firebase.iid.FirebaseInstanceId
-import com.kg.gettransfer.data.model.OfferEntity
 import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.AsyncUtils
@@ -30,10 +29,9 @@ import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_CO
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
-import com.kg.gettransfer.utilities.NotificationManager
+import com.kg.gettransfer.utilities.GTNotificationManager
 
 import kotlinx.coroutines.Job
-import kotlinx.serialization.json.JSON
 
 import org.koin.standalone.get
 import org.koin.standalone.inject
@@ -51,7 +49,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     protected val systemInteractor: SystemInteractor by inject()
     protected val offerMapper: OfferMapper by inject()
     protected val offerEntityMapper: com.kg.gettransfer.data.mapper.OfferMapper by inject()
-    protected val notificationManager: NotificationManager by inject()
+    protected val notificationManager: GTNotificationManager by inject()
     protected val offerInteractor: OfferInteractor by inject()
     protected val transferInteractor: TransferInteractor by inject()
     protected val carrierTripInteractor: CarrierTripInteractor by inject()

@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui.helpers
 
-import android.content.Context
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.kg.gettransfer.presentation.ui.Utils

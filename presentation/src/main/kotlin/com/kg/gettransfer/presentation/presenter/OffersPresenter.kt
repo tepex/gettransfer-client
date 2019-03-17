@@ -49,6 +49,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
         field = value
         offerInteractor.offerViewExpanded = value!!
     }
+    var isViewRoot: Boolean = false
 
     @CallSuper
     override fun attachView(view: OffersView) {
@@ -66,7 +67,13 @@ class OffersPresenter : BasePresenter<OffersView>() {
                 if (err.isNotFound()) viewState.setError(ApiException(ApiException.NOT_FOUND, "Transfer $transferId not found!"))
             }
             if(result.error == null || (result.error != null && result.fromCache)) {
-                if (result.model.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE) router.exit()
+                if (result.model.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE) {
+                    if (isViewRoot) {
+                        isViewRoot = false
+                        router.navigateTo(Screens.Details(transferId))
+                    }
+                    else router.exit()
+                }
                 else {
                     val transferModel = transferMapper.toView(result.model)
                     viewState.setTransfer(transferModel)
@@ -92,7 +99,8 @@ class OffersPresenter : BasePresenter<OffersView>() {
         } else {
             offers = mutableListOf<OfferItem>().apply {
                 addAll(result.model.map { offerMapper.toView(it) })
-                transferModel.bookNowOffers?.let { addAll(it) }
+                notificationManager.clearOffers(result.model.map { it.id.toInt() })
+                addAll(transferModel.bookNowOffers)
             }
         }
         //changeSortType(SORT_PRICE)
@@ -161,6 +169,12 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     fun onCancelRequestClicked() {
         viewState.showAlertCancelRequest()
+    }
+
+    override fun onBackCommandClick() {
+        if (isViewRoot)
+            router.navigateTo(Screens.Main).also { isViewRoot = false }
+        else super.onBackCommandClick()
     }
 
     /*fun openLoginView() {

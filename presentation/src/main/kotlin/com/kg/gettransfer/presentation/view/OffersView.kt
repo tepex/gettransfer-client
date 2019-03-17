@@ -19,6 +19,9 @@ interface OffersView : BaseView {
 
     companion object {
         val EXTRA_TRANSFER_ID = "${OffersView::class.java.name}.transferId"
+        const val EXTRA_ORIGIN      = "source"
+
+        const val SOURCE_NOTIFICATION = "push_tap"
     }
 
     enum class Sort {

@@ -2,8 +2,10 @@ package com.kg.gettransfer.utilities
 
 import android.app.Notification
 import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Build
 import android.support.v4.app.NotificationCompat
@@ -26,19 +28,20 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.get
 import java.lang.UnsupportedOperationException
 
-class NotificationManager(val context: Context) : KoinComponent {
+class GTNotificationManager(val context: Context) : ContextWrapper(context), KoinComponent {
 
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(get(), compositeDisposable)
 
     companion object {
         const val OFFER_CHANEL_ID = "offer_chanel"
-        const val OFFER_GROUP = "offer_group"
-        const val OFFER_GROUP_ID = -1
+        const val OFFER_GROUP     = "offer_group"
+        const val OFFER_TAG       = "com.kg.gettransfer.offers"
+        const val OFFER_GROUP_ID  = -1
 
         const val MESSAGE_CHANEL_ID = "message_chanel"
-        const val MESSAGE_GROUP = "message_group"
-        const val MESSAGE_GROUP_ID = 1
+        const val MESSAGE_GROUP     = "message_group"
+        const val MESSAGE_GROUP_ID  = 1
     }
 
     fun showOfferNotification(offer: OfferModel) {
@@ -71,6 +74,11 @@ class NotificationManager(val context: Context) : KoinComponent {
             notification?.let { notify(offer.id.toInt(), it) }
             groupNotification?.let { notify(OFFER_GROUP_ID, it) }
         }
+    }
+
+    fun clearOffers(offerIds: List<Int>) {
+        val nManager = getManager()
+        offerIds.forEach { nManager.cancel(OFFER_TAG, it) }
     }
 
     fun showNewMessageNotification(transferId: Long, countNewMessages: Int, isMessageByDriver: Boolean) {
@@ -139,6 +147,7 @@ class NotificationManager(val context: Context) : KoinComponent {
         val intent = Intent(context, OffersActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             putExtra(OffersView.EXTRA_TRANSFER_ID, transferId)
+            putExtra(OffersView.EXTRA_ORIGIN, OffersView.SOURCE_NOTIFICATION)
         }
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
@@ -161,10 +170,14 @@ class NotificationManager(val context: Context) : KoinComponent {
                 lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
             }
 
-            val notificationManager: android.app.NotificationManager =
+            val notificationManager: NotificationManager =
                     context.getSystemService(Context.NOTIFICATION_SERVICE)
-                            as android.app.NotificationManager
+                            as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
+
+    private fun getManager() =
+            context.getSystemService(Context.NOTIFICATION_SERVICE)
+                    as NotificationManager
 }
