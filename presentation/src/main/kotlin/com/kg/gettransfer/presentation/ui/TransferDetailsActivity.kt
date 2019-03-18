@@ -7,9 +7,9 @@ import android.os.Bundle
 import android.os.Handler
 
 import android.support.annotation.CallSuper
+import android.support.design.widget.CoordinatorLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
-import android.util.Log
 
 import android.view.LayoutInflater
 import android.view.View
@@ -122,9 +122,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         setToolbar(toolbar as Toolbar, TOOLBAR_NO_TITLE)
         (toolbar as Toolbar).toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS).plus(" #${presenter.transferId}")
 
-        bsTransferDetails = BottomSheetTripleStatesBehavior.from(sheetTransferDetails)
-        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
-
+        initBottomSheetDetails()
         //initTextFields()
         setClickListeners()
     }
@@ -132,6 +130,16 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     override fun onStop() {
         super.onStop()
         clearMarker()
+    }
+
+    private fun initBottomSheetDetails() {
+        bsTransferDetails = BottomSheetTripleStatesBehavior.from(sheetTransferDetails)
+
+        val lp = sheetTransferDetails.layoutParams as CoordinatorLayout.LayoutParams
+        lp.height = getHeightForBottomSheetDetails()
+        sheetTransferDetails.layoutParams = lp
+
+        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
     }
 
     /*override fun dispatchTouchEvent(event: MotionEvent): Boolean {

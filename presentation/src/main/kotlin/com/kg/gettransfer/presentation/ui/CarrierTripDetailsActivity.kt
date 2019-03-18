@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+import android.support.design.widget.CoordinatorLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 
@@ -76,9 +77,18 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         (toolbar as Toolbar).toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS).plus(" #${presenter.transferId}")
         setViewColor((toolbar as Toolbar), R.color.colorWhite)
 
-        bsCarrierTripDetails = BottomSheetTripleStatesBehavior.from(sheetCarrierTripDetails)
-        bsCarrierTripDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
+        initBottomSheetDetails()
         setOnClickListeners()
+    }
+
+    private fun initBottomSheetDetails() {
+        bsCarrierTripDetails = BottomSheetTripleStatesBehavior.from(sheetCarrierTripDetails)
+
+        val lp = sheetCarrierTripDetails.layoutParams as CoordinatorLayout.LayoutParams
+        lp.height = getHeightForBottomSheetDetails()
+        sheetCarrierTripDetails.layoutParams = lp
+
+        bsCarrierTripDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
     }
 
     private fun setOnClickListeners() {

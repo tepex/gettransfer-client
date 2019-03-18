@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 
 import android.util.DisplayMetrics
+import android.util.TypedValue
 
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -331,6 +332,22 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
 
     protected fun clearDim(parent: ViewGroup) = parent.overlay.clear()
+
+    protected fun getHeightForBottomSheetDetails(): Int {
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val screenHeight = displayMetrics.heightPixels
+
+        val tv = TypedValue()
+        val actionBarHeight = if (theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
+        } else 0
+
+        val statusBarResource = resources.getIdentifier("status_bar_height", "dimen", "android")
+        val statusBarHeight = if(statusBarResource > 0) resources.getDimensionPixelSize(statusBarResource) else 0
+
+        return screenHeight - actionBarHeight - statusBarHeight
+    }
 
     protected fun showPopUpWindow(@LayoutRes res: Int, parent: View): View {
         applyDim(window.decorView.rootView as  ViewGroup, DIM_AMOUNT)
