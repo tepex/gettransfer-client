@@ -48,8 +48,8 @@ internal object SystemUtils : KoinComponent {
 
     private fun getFormattedDate(pattern: String, date: Date) = SimpleDateFormat(pattern, systemInteractor.locale).format(date)
 
-    fun gtUrlWithLocale(context: Context) =
-            context.getString(R.string.api_url_prod)
+    fun getUrlWithLocale() =
+            systemInteractor.endpoint.url
                     .plus(SLASH)
                     .plus(systemInteractor.locale.language)
 }
