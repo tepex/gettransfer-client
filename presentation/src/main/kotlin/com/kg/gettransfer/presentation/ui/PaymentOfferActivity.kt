@@ -11,6 +11,15 @@ import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.braintreepayments.api.BraintreeFragment
+import com.braintreepayments.api.PayPal
+import com.braintreepayments.api.exceptions.ErrorWithResponse
+import com.braintreepayments.api.exceptions.InvalidArgumentException
+import com.braintreepayments.api.interfaces.BraintreeCancelListener
+import com.braintreepayments.api.interfaces.BraintreeErrorListener
+import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
+import com.braintreepayments.api.models.PayPalRequest
+import com.braintreepayments.api.models.PaymentMethodNonce
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.BookNowOffer
@@ -21,13 +30,17 @@ import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
 
 import com.kg.gettransfer.presentation.view.PaymentOfferView
+import io.sentry.Sentry
 
 import kotlinx.android.synthetic.main.activity_payment_offer.*
 
 import kotlinx.serialization.json.JSON
 import org.jetbrains.anko.toast
+import timber.log.Timber
+import java.lang.Exception
 
-class PaymentOfferActivity : BaseActivity(), PaymentOfferView {
+class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonceCreatedListener,
+        BraintreeErrorListener, BraintreeCancelListener {
     @InjectPresenter
     internal lateinit var presenter: PaymentOfferPresenter
 
@@ -48,6 +61,23 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView {
         setToolbar(toolbar as Toolbar, R.string.LNG_PAYMENT_SETTINGS)
         tv_payment_agreement.setOnClickListener { presenter.onAgreementClicked() }
         btnGetPayment.setOnClickListener { presenter.getPayment() }
+        creditCardButton.setOnClickListener { changePayment(PaymentRequestModel.PLATRON) }
+        payPalButton.setOnClickListener { changePayment(PaymentRequestModel.PAYPAL) }
+    }
+
+    private fun changePayment(payment: String) {
+        when (payment) {
+            PaymentRequestModel.PLATRON -> {
+                ivCheckCard.isVisible = true
+                ivCheckPayPal.isVisible = false
+            }
+            PaymentRequestModel.PAYPAL -> {
+                ivCheckCard.isVisible = false
+                ivCheckPayPal.isVisible = true
+            }
+        }
+        presenter.selectedPayment = payment
+        presenter.changePayment(payment)
     }
 
     private fun setButton() {
@@ -119,5 +149,41 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView {
             }
         }
         this.selectedPercentage = selectedPercentage
+    }
+
+    override fun setupBraintree(amount: String?, currency: String?) {
+        try {
+            val fragment = BraintreeFragment.newInstance(this, presenter.braintreeToken)
+            val paypal = PayPalRequest(amount)
+                    .currencyCode(currency).intent(PayPalRequest.INTENT_AUTHORIZE)
+            PayPal.requestOneTimePayment(fragment, paypal)
+            blockInterface(true, true)
+        } catch (e: InvalidArgumentException) {
+            Sentry.capture(e)
+        }
+    }
+
+    override fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce?) {
+        val nonce = paymentMethodNonce?.nonce ?: ""
+        presenter.confirmPayment(nonce)
+    }
+
+    override fun onError(error: Exception?) {
+        blockInterface(false)
+        if (error is ErrorWithResponse) {
+            val cardErrors = error.errorFor("creditCard")
+            if (cardErrors != null) {
+                // There is an issue with the credit card.
+                val expirationMonthError = cardErrors.errorFor("expirationMonth")
+                if (expirationMonthError != null) {
+                    // There is an issue with the expiration month.
+                    Timber.e(expirationMonthError.message)
+                }
+            }
+        }
+    }
+
+    override fun onCancel(requestCode: Int) {
+        changePayment(PaymentRequestModel.PAYPAL)
     }
 }
