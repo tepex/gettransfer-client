@@ -112,7 +112,8 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvRemainTime"
-        app:srcCompat="@drawable/ic_call" />
+        app:srcCompat="@drawable/ic_call"
+        android:visibility="gone"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btnChat"
@@ -148,7 +149,8 @@
         android:text="@string/LNG_PAYMENT_CALL"
         app:layout_constraintEnd_toEndOf="@+id/btnCall"
         app:layout_constraintStart_toStartOf="@+id/btnCall"
-        app:layout_constraintTop_toBottomOf="@+id/btnCall" />
+        app:layout_constraintTop_toBottomOf="@+id/btnCall"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/tvChat"

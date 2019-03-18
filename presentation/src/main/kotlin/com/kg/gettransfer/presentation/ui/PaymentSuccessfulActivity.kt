@@ -52,11 +52,8 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
 
             if (presenter.offerId == 0L) {
                 tvBookNowSuccess.isVisible = true
-                btnCall.isGone = true
                 tvSupport.text = getString(R.string.LNG_OFFERS_SUPPORT)
-                tvCall.isGone = true
             }
-            btnCall.setOnClickListener { presenter.onCallClick() }
             ivClose.setOnClickListener { finish() }
             btnSupport.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
         }
@@ -87,5 +84,13 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
 
     override fun setPinHourlyTransfer(point: LatLng, cameraUpdate: CameraUpdate) {
         processGoogleMap(false) { setPinForHourlyWithoutInfo(point, cameraUpdate) }
+    }
+
+    override fun initCallButton() {
+        dialogView.apply {
+            btnCall.isVisible = true
+            tvCall.isVisible = true
+            btnCall.setOnClickListener { presenter.onCallClick() }
+        }
     }
 }
