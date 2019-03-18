@@ -197,8 +197,8 @@ object Screens {
             }
     }
 
-    data class Payment(val transferId: Long, val offerId: Long?, val url: String, val percentage: Int,
-                       val bookNowTransportId: String?) :
+    data class Payment(val transferId: Long, val offerId: Long?, val url: String?, val percentage: Int,
+                       val bookNowTransportId: String?, val paymentType: String) :
         SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, PaymentActivity::class.java).apply {
             putExtra(PaymentView.EXTRA_TRANSFER_ID, transferId)
@@ -206,6 +206,7 @@ object Screens {
             putExtra(PaymentView.EXTRA_URL, url)
             putExtra(PaymentView.EXTRA_PERCENTAGE, percentage)
             putExtra(PaymentView.EXTRA_BOOK_NOW_TRANSPORT_ID, bookNowTransportId ?: "")
+            putExtra(PaymentView.EXTRA_PAYMENT_TYPE, paymentType)
         }
     }
 
@@ -303,5 +304,19 @@ object Screens {
                 context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).isNotEmpty()
         if (!canSendEmail!!) context.toast(context.getString(R.string.no_email_apps))
         return canSendEmail!!
+    }
+
+    data class PayPalConnection(val paymentId: Long, val nonce: String,
+                                val transferId: Long, val offerId: Long?,
+                                val percentage: Int, val bookNowTransportId: String?) : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) =
+                Intent(context, PaypalConnectionActivity::class.java).apply {
+                    putExtra(PaypalConnectionView.EXTRA_PAYMENT_ID, paymentId)
+                    putExtra(PaypalConnectionView.EXTRA_NONCE, nonce)
+                    putExtra(PaypalConnectionView.EXTRA_TRANSFER_ID, transferId)
+                    putExtra(PaypalConnectionView.EXTRA_OFFER_ID, offerId)
+                    putExtra(PaypalConnectionView.EXTRA_PERCENTAGE, percentage)
+                    putExtra(PaypalConnectionView.EXTRA_BOOK_NOW_TRANSPORT_ID, bookNowTransportId)
+                }
     }
 }
