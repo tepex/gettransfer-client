@@ -1,13 +1,8 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.os.Bundle
-
 import android.support.annotation.CallSuper
-import com.appsflyer.AFInAppEventParameterName
-import com.appsflyer.AFInAppEventType
 
 import com.arellomobile.mvp.InjectViewState
-import com.facebook.appevents.AppEventsConstants
 
 import com.kg.gettransfer.domain.ApiException
 
