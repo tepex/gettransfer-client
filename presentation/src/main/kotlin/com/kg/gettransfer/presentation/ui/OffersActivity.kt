@@ -257,7 +257,7 @@ class OffersActivity : BaseActivity(), OffersView {
         sv_photo.isVisible = hasPhotos
         if (hasPhotos) {
             ScrollGalleryInflater.addImageViews(paths.size, photos_container_bs)
-            for (i in 0 .. photos_container_bs.childCount) {
+            for (i in 0 until photos_container_bs.childCount) {
                 Glide.with(this)
                         .load(paths[i])
                         .apply(RequestOptions().transforms(FitCenter(), RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
