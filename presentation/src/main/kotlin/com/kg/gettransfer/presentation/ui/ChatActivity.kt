@@ -56,20 +56,12 @@ class ChatActivity : BaseActivity(), ChatView {
         presenter.onLeaveRoom()
     }
 
-    override fun initToolbar(transfer: TransferModel?, offer: OfferModel?, name: String) {
+    override fun initToolbar(transfer: TransferModel?, offer: OfferModel?) {
         (toolbar as Toolbar).apply {
             layoutChatTitle.isVisible = true
-            transfer?.let {
-                if(transfer.from.isNotEmpty()){
-                    transferFromOrNameText.text = it.from
-                    transferStartDateText.text = SystemUtils.formatDateTimeNoYearShortMonth(it.dateTime)
-                    transferStartDateText.isVisible = true
-                } else {
-                    transferFromOrNameText.text = name
-                    transferFromOrNameText.textSize = 17f
-                }
-            }
             chatTitleButtonBack.setOnClickListener { presenter.onBackCommandClick() }
+            val titleDriverName = offer?.driver?.name?: offer?.carrier?.profile?.name?: ""
+            if(titleDriverName.isNotEmpty()) textDriverName.text = getString(R.string.LNG_CHAT_WITH).plus(" ").plus(titleDriverName)
             offer?.phoneToCall?.let { phone ->
                 titleBtnCall.isVisible = true
                 titleBtnCall.setOnClickListener { presenter.callPhone(phone) }

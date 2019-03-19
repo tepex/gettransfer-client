@@ -53,8 +53,8 @@ class ChatAdapter(
 
         fun bind(message: MessageModel) = with(containerView) {
             myMessageText.text = message.text
-            myMessageTimeText.text = SystemUtils.formatTime(message.createdAt)
-            //indicatorMessageRead.isVisible = message.sendAt == null
+            myMessageTimeText.text = SystemUtils.formatMessageDateTimePattern(message.createdAt).let {
+                it.substring(0, 1).toUpperCase().plus(it.substring(1)) }
             indicatorMessageRead.isVisible = true
             indicatorMessageRead.setImageDrawable(ContextCompat.getDrawable(context,
                     when {
@@ -72,7 +72,8 @@ class ChatAdapter(
 
         fun bind(message: MessageModel, listener: MessageReadListener) = with(containerView) {
             notMyMessageText.text = message.text
-            notMyMessageTimeText.text = SystemUtils.formatTime(message.createdAt)
+            notMyMessageTimeText.text = SystemUtils.formatMessageDateTimePattern(message.createdAt).let {
+                it.substring(0, 1).toUpperCase().plus(it.substring(1)) }
             if(message.readAt == null) listener(message.id)
         }
     }

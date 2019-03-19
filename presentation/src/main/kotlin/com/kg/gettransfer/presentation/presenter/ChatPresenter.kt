@@ -46,7 +46,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
             offerModel = offerCachedResult.model.firstOrNull()?.let { offerMapper.toView(it) }
             if(chatCachedResult.fromCache) chatModel = chatMapper.toView(chatCachedResult.model)
 
-            initToolbar()
+            viewState.initToolbar(transferModel, offerModel)
             chatModel?.let { viewState.setChat(it) }
         }
         getChatFromRemote()
@@ -69,12 +69,6 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
         systemInteractor.removeListener(this)
     }
 
-    private fun initToolbar(){
-        val accountIds = chatModel?.accounts?.keys?.filter { it != chatModel!!.currentAccountId }
-        val name = chatModel?.accounts?.get(accountIds?.firstOrNull())?.fullName
-        viewState.initToolbar(transferModel, offerModel, name?: "")
-    }
-
     /*override fun doingSomethingAfterSendingNewMessagesCached() {
         getChatFromRemote()
     }*/
@@ -93,7 +87,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
     private fun initChatModel(chatResult: Chat){
         if(chatModel == null) {
             chatModel = chatMapper.toView(chatResult)
-            initToolbar()
+            viewState.initToolbar(transferModel, offerModel)
             viewState.setChat(chatModel!!)
         } else {
             val oldMessagesSize = chatModel!!.messages.size

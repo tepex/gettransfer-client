@@ -451,6 +451,7 @@
     <string name="LNG_RIDE_CLIENT_NAME">Name</string>
     <string name="LNG_DETAILS_REPEAT_ROUTE">Repeat transfer</string>
     <string name="LNG_SEND_COORDINATES_IN_BACKGROUND">Send coordinates in background</string>
+    <string name="LNG_CHAT_WITH">Chat with</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>

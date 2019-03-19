@@ -15,6 +15,8 @@ import org.koin.standalone.KoinComponent
 
 internal object SystemUtils : KoinComponent {
     private val systemInteractor = get<SystemInteractor>()
+
+    private const val MESSAGE_DATE_TIME_PATTERN = "MMM dd, yyyy HH:mm"
     private const val DATE_TIME_PATTERN = "dd MMMM yyyy, HH:mm"
     private const val DATE_PATTERN = "dd MMMM yyyy"
     private const val DATE_TIME_SHORT_MONTH_PATTERN = "dd MMM yyyy 'at' HH:mm"
@@ -35,6 +37,7 @@ internal object SystemUtils : KoinComponent {
         else distance.toString().plus(" ${du.name}")
     }
 
+    fun formatMessageDateTimePattern(date: Date) = getFormattedDate(MESSAGE_DATE_TIME_PATTERN, date)
     fun formatDateTime(date: Date) = getFormattedDate(DATE_TIME_PATTERN, date)
     fun formatDate(date: Date) = getFormattedDate(DATE_PATTERN, date)
     fun formatDateTimeWithShortMonth(date: Date) = getFormattedDate(DATE_TIME_SHORT_MONTH_PATTERN, date)
