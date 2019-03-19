@@ -13,7 +13,7 @@ data class ConfigsEntity(
     @SerialName(AVAILABLE_LOCALES) val availableLocales: List<LocaleEntity>,
     @SerialName(PREFERRED_LOCALE) val preferredLocale: String,
     @SerialName(CARD_GATEWAYS) val cardGateways: CardGatewaysEntity,
-    @SerialName(PAYMENT_COMMISSION) val paymentCommission: Double,
+    @SerialName(PAYMENT_COMMISSION) val paymentCommission: Float,
     @SerialName(SUPPORTED_CURRENCIES) val supportedCurrencies: List<CurrencyEntity>,
     @SerialName(SUPPORTED_DISTANCE_UNITS) val supportedDistanceUnits: List<String>,
     @SerialName(OFFICE_PHONE) val officePhone: String,

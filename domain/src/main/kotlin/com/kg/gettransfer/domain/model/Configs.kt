@@ -9,7 +9,7 @@ data class Configs(
     val availableLocales: List<Locale>,
     val preferredLocale: Locale? = null,   //не используется, но может прийти null с сервера
     val cardGateways: CardGateways,
-    val paymentCommission: Double,
+    val paymentCommission: Float,
     val supportedCurrencies: List<Currency>,
     val supportedDistanceUnits: List<DistanceUnit>,
     val officePhone: String,
@@ -95,7 +95,7 @@ data class Configs(
                 availableLocales       = DEFAULT_LOCALES,
                 preferredLocale        = Locale.getDefault(),
                 cardGateways           = CardGateways("", null),
-                paymentCommission      = 2.0,
+                paymentCommission      = 2f,
                 supportedCurrencies    = DEFAULT_CURRENCIES,
                 supportedDistanceUnits = DistanceUnit.DEFAULT_DISTANCE_UNITS,
                 officePhone            = "+74994040505",
