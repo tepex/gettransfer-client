@@ -166,7 +166,7 @@
                 android:layout_marginTop="@dimen/settings_activity_top_margin_layouts"
                 android:background="@drawable/back_clicked_layouts">
             <TextView
-                    android:text="Send coordinates from background"
+                    android:text="@string/LNG_SEND_COORDINATES_IN_BACKGROUND"
                     android:layout_centerVertical="true"
                     android:textSize="12sp"
                     android:fontFamily="@font/sf_pro_text_regular"

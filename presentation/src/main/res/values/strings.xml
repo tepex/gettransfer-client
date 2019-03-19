@@ -276,7 +276,8 @@
     <string name="LNG_PAYMENT_METHOD_CARD">Credit Card</string>
     <string name="LNG_PAYMENT_METHOD_PAYPAL">Pay Pal</string>
     <string name="LNG_SOON">Soon</string>
-    <string name="LNG_PAYMENT_COMISSION">Commission %s%%.\nRefund is available before %s</string>
+    <string name="LNG_PAYMENT_COMISSION">Commission 2%%.\nRefund is available before %s</string>
+    <string name="LNG_PAYMENT_COMISSION2">Commission %s%%.\nRefund is available before %s</string>
     <string name="LNG_PAYMENT_PAY">Pay</string>
     <string name="LNG_RIDE_CANT_CREATE">Can\'t create transfer</string>
     <string name="LNG_RIDES_ACTIVE">Active</string>
@@ -449,6 +450,7 @@
     <string name="LNG_UNREAD_MESSAGES_COUNT">%s unread messages</string>
     <string name="LNG_RIDE_CLIENT_NAME">Name</string>
     <string name="LNG_DETAILS_REPEAT_ROUTE">Repeat transfer</string>
+    <string name="LNG_SEND_COORDINATES_IN_BACKGROUND">Send coordinates in background</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>

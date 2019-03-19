@@ -94,7 +94,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView {
 
     override fun setCommission(paymentCommission: String) {
         presenter.params.dateRefund?.let {
-            commission.text = getString(R.string.LNG_PAYMENT_COMISSION, paymentCommission, SystemUtils.formatDateTime(it))
+            commission.text = getString(R.string.LNG_PAYMENT_COMISSION2, paymentCommission, SystemUtils.formatDateTime(it))
         }
     }
 
