@@ -20,4 +20,6 @@ open class PaymentDataStoreRemote: PaymentDataStore {
     override suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequestEntity) = remote.changeStatusPayment(paymentStatusRequest)
 
     override suspend fun getBraintreeToken(): BraintreeTokenEntity = remote.getBraintreeToken()
+
+    override suspend fun confirmPaypal(paymentId: Long, nonce: String) = remote.confirmPaypal(paymentId, nonce)
 }
