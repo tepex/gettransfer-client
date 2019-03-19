@@ -57,7 +57,6 @@ object OfferItemBindDelegate {
             bindLanguages(singleLineContainer = driver_abilities.languages_container, languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
             bindRating(view_offer_rate, RatingsModel.BOOK_NOW_RATING).also { offer_rating_bg.isVisible = true }
             bindPrice(offer_bottom, offer.base)
-     //       imgOffer_mainPhoto.setImageResource(TransportTypeMapper.getImageById(offer.transportType.id))
             bindMainPhoto(imgOffer_mainPhoto, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
         }
     }

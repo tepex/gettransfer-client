@@ -131,7 +131,8 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
         navPassengerMode.setOnClickListener(itemsNavigationViewListener)
         navCarrierTransfers.setOnClickListener(itemsNavigationViewListener)
 
-        setViewColor(navViewHeader, R.color.primaryDriver)
+        setViewColor(navViewHeader, R.color.colorWhite)
+        setViewColor(layoutAccountInfo, R.color.primaryDriver)
         navViewHeader.navHeaderMode.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
         navViewHeader.navHeaderName.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
         navViewHeader.navHeaderEmail.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))

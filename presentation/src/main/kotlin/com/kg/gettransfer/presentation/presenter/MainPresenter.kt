@@ -168,13 +168,13 @@ class MainPresenter : BasePresenter<MainView>() {
         val lngBounds = LatLngBounds.builder().include(LatLng(location.latitude!!, location.longitude!!)).build()
         val latLonPair = getLatLonPair(lngBounds)
         val result = utils.asyncAwait { routeInteractor.getAddressByLocation(true, point, latLonPair) }
-        if (result.error == null && result.model.cityPoint.point != null) setPointAddress(result.model)
+        if (result.error == null && result.model.cityPoint.point != null) setPointAddress(result.model, false)
     }
 
-    private fun setPointAddress(currentAddress: GTAddress) {
+    private fun setPointAddress(currentAddress: GTAddress, showBtnMyLocation: Boolean = true) {
         lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)
         onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
-        viewState.setMapPoint(lastAddressPoint, true)
+        viewState.setMapPoint(lastAddressPoint, true, showBtnMyLocation)
         //viewState.setAddressFrom(currentAddress.cityPoint.name!!)
         setAddressInSelectedField(currentAddress.cityPoint.name!!)
 

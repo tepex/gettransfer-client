@@ -18,6 +18,9 @@ class WebPagePresenter: MvpPresenter<WebPageView>(), KoinComponent {
     val termsUrl: String
     get() = "/${systemInteractor.mobileConfigs.termsUrl}"
 
+    val baseUrl: String
+    get() = systemInteractor.endpoint.url
+
     fun onBackCommandClick() {
         router.exit()
     }

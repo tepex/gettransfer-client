@@ -13,9 +13,10 @@ data class ConfigsModel(
     @SerializedName(ConfigsEntity.PAYPAL_CREDENTIALS) @Expose val paypalCredentials: PaypalCredentialsModel,
     @SerializedName(ConfigsEntity.AVAILABLE_LOCALES) @Expose val availableLocales: List<LocaleModel>,
     @SerializedName(ConfigsEntity.PREFERRED_LOCALE) @Expose val preferredLocale: String,
+    @SerializedName(ConfigsEntity.CARD_GATEWAYS) @Expose val cardGateways: CardGatewaysModel,
+    @SerializedName(ConfigsEntity.PAYMENT_COMMISSION) @Expose val paymentCommission: Float,
     @SerializedName(ConfigsEntity.SUPPORTED_CURRENCIES) @Expose val supportedCurrencies: List<CurrencyModel>,
     @SerializedName(ConfigsEntity.SUPPORTED_DISTANCE_UNITS) @Expose val supportedDistanceUnits: List<String>,
-    @SerializedName(ConfigsEntity.CARD_GATEWAYS) @Expose val cardGateways: CardGatewaysModel,
     @SerializedName(ConfigsEntity.OFFICE_PHONE) @Expose val officePhone: String,
     @SerializedName(ConfigsEntity.BASE_URL) @Expose val baseUrl: String
 )

@@ -22,9 +22,10 @@ open class ConfigsMapper : EntityMapper<ConfigsModel, ConfigsEntity> {
             paypalCredentials = paypalCredentialsMapper.fromRemote(type.paypalCredentials),
             availableLocales = type.availableLocales.map { localeMapper.fromRemote(it) },
             preferredLocale = type.preferredLocale,
+            cardGateways = cardGatewaysMapper.fromRemote(type.cardGateways),
+            paymentCommission = type.paymentCommission,
             supportedCurrencies = type.supportedCurrencies.map { currencyMapper.fromRemote(it) },
             supportedDistanceUnits = type.supportedDistanceUnits,
-            cardGateways = cardGatewaysMapper.fromRemote(type.cardGateways),
             officePhone = type.officePhone,
             baseUrl = type.baseUrl
         )

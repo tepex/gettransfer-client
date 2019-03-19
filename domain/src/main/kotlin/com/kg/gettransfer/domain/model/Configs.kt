@@ -8,9 +8,10 @@ data class Configs(
     val paypalCredentials: PaypalCredentials,
     val availableLocales: List<Locale>,
     val preferredLocale: Locale? = null,   //не используется, но может прийти null с сервера
+    val cardGateways: CardGateways,
+    val paymentCommission: Float,
     val supportedCurrencies: List<Currency>,
     val supportedDistanceUnits: List<DistanceUnit>,
-    val cardGateways: CardGateways,
     val officePhone: String,
     val baseUrl: String
 ) {
@@ -93,9 +94,10 @@ data class Configs(
                 paypalCredentials      = PaypalCredentials("", ""),
                 availableLocales       = DEFAULT_LOCALES,
                 preferredLocale        = Locale.getDefault(),
+                cardGateways           = CardGateways("", null),
+                paymentCommission      = 2f,
                 supportedCurrencies    = DEFAULT_CURRENCIES,
                 supportedDistanceUnits = DistanceUnit.DEFAULT_DISTANCE_UNITS,
-                cardGateways           = CardGateways("", null),
                 officePhone            = "+74994040505",
                 baseUrl                = "https://gettransfer.com"
         )

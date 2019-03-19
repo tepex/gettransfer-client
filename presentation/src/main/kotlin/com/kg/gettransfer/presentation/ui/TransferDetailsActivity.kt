@@ -7,9 +7,9 @@ import android.os.Bundle
 import android.os.Handler
 
 import android.support.annotation.CallSuper
+import android.support.design.widget.CoordinatorLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
-import android.util.Log
 
 import android.view.LayoutInflater
 import android.view.View
@@ -55,7 +55,6 @@ import kotlinx.android.synthetic.main.view_communication_buttons.view.*
 
 import kotlinx.android.synthetic.main.view_transfer_details_about_driver.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_request.*
-import kotlinx.android.synthetic.main.view_transfer_details_about_transport.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //don't delete
 
 
@@ -65,6 +64,7 @@ import kotlinx.android.synthetic.main.view_rate_in_store.view.*
 import kotlinx.android.synthetic.main.view_rate_your_transfer.*
 import kotlinx.android.synthetic.main.view_seats_number.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_driver.view.*
+import kotlinx.android.synthetic.main.view_transfer_details_about_transport_new.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_transport_new.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_comment.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_driver_languages.view.*
@@ -117,13 +117,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         }
 
         _mapView = mapView
+        _btnCenter = btnCenterRoute
         initMapView(savedInstanceState)
         setToolbar(toolbar as Toolbar, TOOLBAR_NO_TITLE)
         (toolbar as Toolbar).toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS).plus(" #${presenter.transferId}")
 
-        bsTransferDetails = BottomSheetTripleStatesBehavior.from(sheetTransferDetails)
-        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
-
+        initBottomSheetDetails()
         //initTextFields()
         setClickListeners()
     }
@@ -131,6 +130,16 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     override fun onStop() {
         super.onStop()
         clearMarker()
+    }
+
+    private fun initBottomSheetDetails() {
+        bsTransferDetails = BottomSheetTripleStatesBehavior.from(sheetTransferDetails)
+
+        val lp = sheetTransferDetails.layoutParams as CoordinatorLayout.LayoutParams
+        lp.height = getHeightForBottomSheetDetails()
+        sheetTransferDetails.layoutParams = lp
+
+        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
     }
 
     /*override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -342,9 +351,13 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
         with(transfer_details_view_seats) {
             tv_countPassengers.text = getString(R.string.X_SIGN).plus("${transfer.countPassengers}")
-            tvCountChildren.text = getString(R.string.X_SIGN).plus("${transfer.countChilds}")
-            imgChildSeats.isVisible =  transfer.countChilds > 0
-            tvCountChildren.isVisible = transfer.countChilds > 0
+            imgPassengers.isVisible = true
+            tv_countPassengers.isVisible = true
+            if(transfer.countChilds > 0) {
+                tvCountChildren.text = getString(R.string.X_SIGN).plus("${transfer.countChilds}")
+                imgChildSeats.isVisible =  true
+                tvCountChildren.isVisible = true
+            }
         }
     }
 
@@ -461,11 +474,15 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         else carPhoto.setImageDrawable(ContextCompat.getDrawable(this, offerModel.vehicle.transportType.imageId!!))
     }
 
-    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) =
+    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
         setPolyline(polyline, routeModel)
+        btnCenterRoute.isVisible = false
+    }
 
-    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) =
+    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
         processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
+        btnCenterRoute.isVisible = false
+    }
 
     override fun copyText(text: String) {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager

@@ -113,6 +113,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         }
 
         _mapView = mapView
+        _btnCenter = btnMyLocation
         initMapView(savedInstanceState)
 
         viewNetworkNotAvailable = textNetworkNotAvailable
@@ -212,6 +213,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
                 String.format(getString(R.string.nav_footer_version), versionName, versionCode)
         //navFooterReadMore.text = Html.fromHtml(Utils.convertMarkdownToHtml(getString(R.string.LNG_READMORE)))
         setViewColor(navViewHeader, R.color.colorPrimary)
+        setViewColor(layoutAccountInfo, R.color.colorPrimary)
         navViewHeader.navHeaderMode.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
         navViewHeader.navHeaderName.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
         navViewHeader.navHeaderEmail.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
@@ -254,14 +256,17 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
         checkPermission()
         btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
-        gm.setOnCameraMoveListener        { presenter.onCameraMove(gm.cameraPosition!!.target, true)  }
+        gm.setOnCameraMoveListener        {
+            presenter.onCameraMove(gm.cameraPosition!!.target, true)
+        }
         gm.setOnCameraIdleListener        { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
-        gm.setOnCameraMoveStartedListener {
+        /*gm.setOnCameraMoveStartedListener {
             if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
                 presenter.enablePinAnimation()
                 gm.setOnCameraMoveStartedListener(null)
             }
-        }
+        }*/
+        presenter.enablePinAnimation()
     }
 
     private fun checkPermission() {
@@ -279,7 +284,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     /* MainView */
-    override fun setMapPoint(point: LatLng, withAnimation: Boolean) {
+    override fun setMapPoint(point: LatLng, withAnimation: Boolean, showBtnMyLocation: Boolean) {
         val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
         processGoogleMap(false) {
             if (centerMarker != null) {
@@ -300,6 +305,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
                 }
             }
         }
+        btnMyLocation.isVisible = false
     }
 
     override fun setMarkerElevation(up: Boolean, elevation: Float) {

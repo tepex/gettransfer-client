@@ -26,9 +26,10 @@ open class ConfigsEntityMapper : EntityMapper<ConfigsCached, ConfigsEntity> {
             paypalCredentials = paypalCredentialsMapper.fromCached(type.paypalCredentials),
             availableLocales = type.availableLocales.list.map { localeMapper.fromCached(it) },
             preferredLocale = type.preferredLocale,
+            cardGateways = cardGatewaysMapper.fromCached(type.cardGateways),
+            paymentCommission = type.paymentCommission,
             supportedCurrencies = type.supportedCurrencies.list.map { currencyMapper.fromCached(it) },
             supportedDistanceUnits = type.supportedDistanceUnits.list,
-            cardGateways = cardGatewaysMapper.fromCached(type.cardGateways),
             officePhone = type.officePhone,
             baseUrl = type.baseUrl
         )
@@ -39,9 +40,10 @@ open class ConfigsEntityMapper : EntityMapper<ConfigsCached, ConfigsEntity> {
             paypalCredentials = paypalCredentialsMapper.toCached(type.paypalCredentials),
             availableLocales = LocaleCachedList(type.availableLocales.map { localeMapper.toCached(it) }),
             preferredLocale = type.preferredLocale,
+            cardGateways = cardGatewaysMapper.toCached(type.cardGateways),
+            paymentCommission = type.paymentCommission,
             supportedCurrencies = CurrencyCachedList(type.supportedCurrencies.map { currencyMapper.toCached(it) }),
             supportedDistanceUnits = StringList(type.supportedDistanceUnits),
-            cardGateways = cardGatewaysMapper.toCached(type.cardGateways),
             officePhone = type.officePhone,
             baseUrl = type.baseUrl
         )

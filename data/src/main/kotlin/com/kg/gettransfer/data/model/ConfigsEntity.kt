@@ -12,9 +12,10 @@ data class ConfigsEntity(
     @SerialName(PAYPAL_CREDENTIALS) val paypalCredentials: PaypalCredentialsEntity,
     @SerialName(AVAILABLE_LOCALES) val availableLocales: List<LocaleEntity>,
     @SerialName(PREFERRED_LOCALE) val preferredLocale: String,
+    @SerialName(CARD_GATEWAYS) val cardGateways: CardGatewaysEntity,
+    @SerialName(PAYMENT_COMMISSION) val paymentCommission: Float,
     @SerialName(SUPPORTED_CURRENCIES) val supportedCurrencies: List<CurrencyEntity>,
     @SerialName(SUPPORTED_DISTANCE_UNITS) val supportedDistanceUnits: List<String>,
-    @SerialName(CARD_GATEWAYS) val cardGateways: CardGatewaysEntity,
     @SerialName(OFFICE_PHONE) val officePhone: String,
     @SerialName(BASE_URL) val baseUrl: String
 ) {
@@ -25,9 +26,10 @@ data class ConfigsEntity(
         const val PAYPAL_CREDENTIALS       = "paypal_credentials"
         const val AVAILABLE_LOCALES        = "available_locales"
         const val PREFERRED_LOCALE         = "preferred_locale"
+        const val CARD_GATEWAYS            = "card_gateways"
+        const val PAYMENT_COMMISSION       = "payment_commission"
         const val SUPPORTED_CURRENCIES     = "supported_currencies"
         const val SUPPORTED_DISTANCE_UNITS = "supported_distance_units"
-        const val CARD_GATEWAYS            = "card_gateways"
         const val OFFICE_PHONE             = "office_phone"
         const val BASE_URL                 = "base_url"
     }

@@ -109,6 +109,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         }
 
         _mapView = mapView
+        _btnCenter = btnCenterRoute
         initMapView(savedInstanceState)
 
         initFieldsViews()
@@ -391,10 +392,13 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
         if (isDateChanged) clearMarkersAndPolylines()
         setPolyline(polyline, routeModel)
+        btnCenterRoute.isVisible = false
     }
 
-    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) =
+    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
         processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
+        btnCenterRoute.isVisible = false
+    }
 
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
 

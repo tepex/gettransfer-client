@@ -62,7 +62,7 @@ class ChatActivity : BaseActivity(), ChatView {
             transfer?.let {
                 if(transfer.from.isNotEmpty()){
                     transferFromOrNameText.text = it.from
-                    transferStartDateText.text = SystemUtils.formatDateTimeWithShortMonth(it.dateTime)
+                    transferStartDateText.text = SystemUtils.formatDateTimeNoYearShortMonth(it.dateTime)
                     transferStartDateText.isVisible = true
                 } else {
                     transferFromOrNameText.text = name

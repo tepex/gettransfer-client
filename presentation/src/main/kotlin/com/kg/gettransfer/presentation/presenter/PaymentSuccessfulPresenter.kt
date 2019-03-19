@@ -26,6 +26,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
 
     internal var offerId = 0L
     internal var transferId = 0L
+    private var phoneToCall: String? = null
 
     fun setMapRoute() {
         utils.launchSuspend {
@@ -60,6 +61,9 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                 val (days, hours, minutes) = Utils.convertDuration(transferModel.timeToTransfer)
                 viewState.setRemainTime(days, hours, minutes)
             }
+            utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
+            phoneToCall = offerInteractor.getOffer(offerId)?.phoneToCall
+            if (phoneToCall != null) viewState.initCallButton()
             viewState.blockInterface(false)
         }
     }
@@ -71,7 +75,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
     }
 
     fun onCallClick() {
-        offerInteractor.getOffer(offerId)?.phoneToCall?.let { callPhone(it) }
+        phoneToCall?.let { callPhone(it) }
     }
 
     fun onDetailsClick() {

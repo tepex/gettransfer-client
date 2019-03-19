@@ -16,10 +16,8 @@ interface WebPageView: MvpView {
         const val SCREEN_CARRIER       = "carrier_mode"
         const val SCREEN_RESTORE_PASS  = "restore_password"
         const val SCREEN_TRANSFERS     = "carrier_transfers"
-
-        const val INIT_WITH_STRING     = 0
     }
 
-    fun initActivity(@StringRes title: Int, @StringRes url: Int, strUrl: String? = null)
+    fun initActivity(@StringRes title: Int?, strUrl: String, stringTitle: String? = null)
     fun finish()
 }

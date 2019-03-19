@@ -17,6 +17,7 @@ import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.ui.SystemUtils
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
@@ -80,7 +81,7 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
                 baseTrip.to!!.name!!,
                 baseTrip.from.point!!,
                 baseTrip.to!!.point!!,
-                tripModel.base.dateTime
+                SystemUtils.formatDateTime(tripModel.base.dateLocal)
         )
         routeModel?.let {
             polyline = Utils.getPolyline(it)
@@ -94,7 +95,7 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
         track = Utils.getCameraUpdateForPin(point)
         viewState.setPinHourlyTransfer(
                 tripModel.base.from,
-                tripModel.base.dateTime,
+                SystemUtils.formatDateTime(tripModel.base.dateLocal),
                 point,
                 track!!
         )
