@@ -60,6 +60,9 @@ class SystemInteractor(
     val locales: List<Locale>
         get() = systemRepository.configs.availableLocales.filter { localesFilterList.contains(it.language) }
 
+    val paymentCommission: Double
+        get() = systemRepository.configs.paymentCommission
+
     val distanceUnits: List<DistanceUnit>
         get() = systemRepository.configs.supportedDistanceUnits
 

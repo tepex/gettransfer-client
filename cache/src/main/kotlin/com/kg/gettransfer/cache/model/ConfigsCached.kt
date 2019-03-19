@@ -18,9 +18,10 @@ data class ConfigsCached(
     @Embedded(prefix = ConfigsEntity.PAYPAL_CREDENTIALS) val paypalCredentials: PaypalCredentialsCached,
     @ColumnInfo(name = ConfigsEntity.AVAILABLE_LOCALES) val availableLocales: LocaleCachedList,
     @ColumnInfo(name = ConfigsEntity.PREFERRED_LOCALE) val preferredLocale: String,
+    @Embedded(prefix = ConfigsEntity.CARD_GATEWAYS) val cardGateways: CardGatewaysCached,
+    @ColumnInfo(name = ConfigsEntity.PAYMENT_COMMISSION) val paymentCommission: Double,
     @ColumnInfo(name = ConfigsEntity.SUPPORTED_CURRENCIES) val supportedCurrencies: CurrencyCachedList,
     @ColumnInfo(name = ConfigsEntity.SUPPORTED_DISTANCE_UNITS) val supportedDistanceUnits: StringList,
-    @Embedded(prefix = ConfigsEntity.CARD_GATEWAYS) val cardGateways: CardGatewaysCached,
     @ColumnInfo(name = ConfigsEntity.OFFICE_PHONE) val officePhone: String,
     @ColumnInfo(name = ConfigsEntity.BASE_URL) val baseUrl: String,
     @PrimaryKey(autoGenerate = true) val id: Long = 14
