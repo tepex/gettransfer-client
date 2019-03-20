@@ -23,28 +23,30 @@ open class ConfigsEntityMapper : EntityMapper<ConfigsCached, ConfigsEntity> {
     override fun fromCached(type: ConfigsCached) =
         ConfigsEntity(
             transportTypes = type.transportTypes.list.map { transportTypeMapper.fromCached(it) },
-            paypalCredentials = paypalCredentialsMapper.fromCached(type.paypalCredentials),
+            //paypalCredentials = paypalCredentialsMapper.fromCached(type.paypalCredentials),
             availableLocales = type.availableLocales.list.map { localeMapper.fromCached(it) },
-            preferredLocale = type.preferredLocale,
-            cardGateways = cardGatewaysMapper.fromCached(type.cardGateways),
+            //preferredLocale = type.preferredLocale,
+            //cardGateways = cardGatewaysMapper.fromCached(type.cardGateways),
+            //defaultCardGateways = type.defaultCardGateways,
             paymentCommission = type.paymentCommission,
             supportedCurrencies = type.supportedCurrencies.list.map { currencyMapper.fromCached(it) },
-            supportedDistanceUnits = type.supportedDistanceUnits.list,
-            officePhone = type.officePhone,
-            baseUrl = type.baseUrl
+            supportedDistanceUnits = type.supportedDistanceUnits.list
+            //officePhone = type.officePhone,
+            //baseUrl = type.baseUrl
         )
 
     override fun toCached(type: ConfigsEntity) =
         ConfigsCached(
             transportTypes = TransportTypesCachedList(type.transportTypes.map { transportTypeMapper.toCached(it) }),
-            paypalCredentials = paypalCredentialsMapper.toCached(type.paypalCredentials),
+            //paypalCredentials = paypalCredentialsMapper.toCached(type.paypalCredentials),
             availableLocales = LocaleCachedList(type.availableLocales.map { localeMapper.toCached(it) }),
-            preferredLocale = type.preferredLocale,
-            cardGateways = cardGatewaysMapper.toCached(type.cardGateways),
+            //preferredLocale = type.preferredLocale,
+            //cardGateways = cardGatewaysMapper.toCached(type.cardGateways),
+            //defaultCardGateways = type.defaultCardGateways,
             paymentCommission = type.paymentCommission,
             supportedCurrencies = CurrencyCachedList(type.supportedCurrencies.map { currencyMapper.toCached(it) }),
-            supportedDistanceUnits = StringList(type.supportedDistanceUnits),
-            officePhone = type.officePhone,
-            baseUrl = type.baseUrl
+            supportedDistanceUnits = StringList(type.supportedDistanceUnits)
+            //officePhone = type.officePhone,
+            //baseUrl = type.baseUrl
         )
 }

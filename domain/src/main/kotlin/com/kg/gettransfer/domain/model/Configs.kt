@@ -5,15 +5,16 @@ import java.util.Locale
 
 data class Configs(
     val transportTypes: List<TransportType>,
-    val paypalCredentials: PaypalCredentials,
+    //val paypalCredentials: PaypalCredentials,
     val availableLocales: List<Locale>,
-    val preferredLocale: Locale? = null,   //не используется, но может прийти null с сервера
-    val cardGateways: CardGateways,
+    //val preferredLocale: Locale? = null,   //не используется, но может прийти null с сервера
+    //val cardGateways: CardGateways,
+    //val defaultCardGateways: String,
     val paymentCommission: Float,
     val supportedCurrencies: List<Currency>,
-    val supportedDistanceUnits: List<DistanceUnit>,
-    val officePhone: String,
-    val baseUrl: String
+    val supportedDistanceUnits: List<DistanceUnit>
+    //val officePhone: String,
+    //val baseUrl: String
 ) {
     companion object {
         private val DEFAULT_CURRENCIES = listOf(Currency.getInstance("RUB"),
@@ -91,15 +92,16 @@ data class Configs(
 
         val DEFAULT_CONFIGS = Configs(
                 transportTypes         = TransportType.DEFAULT_TRANSPORT_TYPES,
-                paypalCredentials      = PaypalCredentials("", ""),
+                //paypalCredentials      = PaypalCredentials("", ""),
                 availableLocales       = DEFAULT_LOCALES,
-                preferredLocale        = Locale.getDefault(),
-                cardGateways           = CardGateways("", null),
+                //preferredLocale        = Locale.getDefault(),
+                //cardGateways           = CardGateways("", null),
+                //defaultCardGateways    = "",
                 paymentCommission      = 2f,
                 supportedCurrencies    = DEFAULT_CURRENCIES,
-                supportedDistanceUnits = DistanceUnit.DEFAULT_DISTANCE_UNITS,
-                officePhone            = "+74994040505",
-                baseUrl                = "https://gettransfer.com"
+                supportedDistanceUnits = DistanceUnit.DEFAULT_DISTANCE_UNITS
+                //officePhone            = "+74994040505",
+                //baseUrl                = "https://gettransfer.com"
         )
     }
 }

@@ -10,15 +10,16 @@ import com.kg.gettransfer.data.model.PaypalCredentialsEntity
 
 data class ConfigsModel(
     @SerializedName(ConfigsEntity.TRANSPORT_TYPES) @Expose val transportTypes: TransportTypesWrapperModel,
-    @SerializedName(ConfigsEntity.PAYPAL_CREDENTIALS) @Expose val paypalCredentials: PaypalCredentialsModel,
+    //@SerializedName(ConfigsEntity.PAYPAL_CREDENTIALS) @Expose val paypalCredentials: PaypalCredentialsModel,
     @SerializedName(ConfigsEntity.AVAILABLE_LOCALES) @Expose val availableLocales: List<LocaleModel>,
-    @SerializedName(ConfigsEntity.PREFERRED_LOCALE) @Expose val preferredLocale: String,
-    @SerializedName(ConfigsEntity.CARD_GATEWAYS) @Expose val cardGateways: CardGatewaysModel,
+    //@SerializedName(ConfigsEntity.PREFERRED_LOCALE) @Expose val preferredLocale: String,
+    //@SerializedName(ConfigsEntity.CARD_GATEWAYS) @Expose val cardGateways: CardGatewaysModel,
+    //@SerializedName(ConfigsEntity.CARD_GATEWAYS) @Expose val defaultCardGateways: String,
     @SerializedName(ConfigsEntity.PAYMENT_COMMISSION) @Expose val paymentCommission: Float,
     @SerializedName(ConfigsEntity.SUPPORTED_CURRENCIES) @Expose val supportedCurrencies: List<CurrencyModel>,
-    @SerializedName(ConfigsEntity.SUPPORTED_DISTANCE_UNITS) @Expose val supportedDistanceUnits: List<String>,
-    @SerializedName(ConfigsEntity.OFFICE_PHONE) @Expose val officePhone: String,
-    @SerializedName(ConfigsEntity.BASE_URL) @Expose val baseUrl: String
+    @SerializedName(ConfigsEntity.SUPPORTED_DISTANCE_UNITS) @Expose val supportedDistanceUnits: List<String>
+    //@SerializedName(ConfigsEntity.OFFICE_PHONE) @Expose val officePhone: String,
+    //@SerializedName(ConfigsEntity.BASE_URL) @Expose val baseUrl: String
 )
 /**
  * Wrapper is used to intercept API `transport_types` and convert it into List<TransportTypeModel> with origin order.

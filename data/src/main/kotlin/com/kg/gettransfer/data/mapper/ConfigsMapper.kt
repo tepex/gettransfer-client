@@ -1,6 +1,6 @@
 package com.kg.gettransfer.data.mapper
 
-import com.kg.gettransfer.data.model.ConfigsEntity
+import  com.kg.gettransfer.data.model.ConfigsEntity
 
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.DistanceUnit
@@ -24,15 +24,16 @@ open class ConfigsMapper : Mapper<ConfigsEntity, Configs> {
         val locales = type.availableLocales.map { localeMapper.fromEntity(it) }
         return Configs(
             transportTypes = type.transportTypes.map { transportTypeMapper.fromEntity(it) },
-            paypalCredentials = paypalCredentialsMapper.fromEntity(type.paypalCredentials),
+            //paypalCredentials = paypalCredentialsMapper.fromEntity(type.paypalCredentials),
             availableLocales = locales,
-            preferredLocale = locales.find { it.language == type.preferredLocale },
-            cardGateways = cardGatewaysMapper.fromEntity(type.cardGateways),
+            //preferredLocale = locales.find { it.language == type.preferredLocale },
+            //cardGateways = cardGatewaysMapper.fromEntity(type.cardGateways),
+            //defaultCardGateways = type.defaultCardGateways,
             paymentCommission = type.paymentCommission,
             supportedCurrencies = type.supportedCurrencies.map { currencyMapper.fromEntity(it) },
-            supportedDistanceUnits = type.supportedDistanceUnits.map { DistanceUnit.valueOf(it) },
-            officePhone = type.officePhone,
-            baseUrl = type.baseUrl
+            supportedDistanceUnits = type.supportedDistanceUnits.map { DistanceUnit.valueOf(it) }
+            //officePhone = type.officePhone,
+            //baseUrl = type.baseUrl
         )
     }
 
