@@ -9,27 +9,31 @@ import kotlinx.serialization.SerialName
 @Serializable
 data class ConfigsEntity(
     @SerialName(TRANSPORT_TYPES) val transportTypes: List<TransportTypeEntity>,
-    @SerialName(PAYPAL_CREDENTIALS) val paypalCredentials: PaypalCredentialsEntity,
+    //@SerialName(PAYPAL_CREDENTIALS) val paypalCredentials: PaypalCredentialsEntity,
     @SerialName(AVAILABLE_LOCALES) val availableLocales: List<LocaleEntity>,
-    @SerialName(PREFERRED_LOCALE) val preferredLocale: String,
+    //@SerialName(PREFERRED_LOCALE) val preferredLocale: String,
+    //@SerialName(CARD_GATEWAYS) val cardGateways: CardGatewaysEntity,
+    //@SerialName(DEFAULT_CARD_GATEWAYS) val defaultCardGateways: String,
+    @SerialName(PAYMENT_COMMISSION) val paymentCommission: Float,
     @SerialName(SUPPORTED_CURRENCIES) val supportedCurrencies: List<CurrencyEntity>,
-    @SerialName(SUPPORTED_DISTANCE_UNITS) val supportedDistanceUnits: List<String>,
-    @SerialName(CARD_GATEWAYS) val cardGateways: CardGatewaysEntity,
-    @SerialName(OFFICE_PHONE) val officePhone: String,
-    @SerialName(BASE_URL) val baseUrl: String
+    @SerialName(SUPPORTED_DISTANCE_UNITS) val supportedDistanceUnits: List<String>
+    //@SerialName(OFFICE_PHONE) val officePhone: String,
+    //@SerialName(BASE_URL) val baseUrl: String
 ) {
 
     companion object {
         const val ENTITY_NAME              = "configs"
         const val TRANSPORT_TYPES          = "transport_types"
-        const val PAYPAL_CREDENTIALS       = "paypal_credentials"
+        //const val PAYPAL_CREDENTIALS       = "paypal_credentials"
         const val AVAILABLE_LOCALES        = "available_locales"
-        const val PREFERRED_LOCALE         = "preferred_locale"
+        //const val PREFERRED_LOCALE         = "preferred_locale"
+        //const val CARD_GATEWAYS            = "card_gateways"
+        //const val DEFAULT_CARD_GATEWAYS    = "default_card_gateways"
+        const val PAYMENT_COMMISSION       = "payment_commission"
         const val SUPPORTED_CURRENCIES     = "supported_currencies"
         const val SUPPORTED_DISTANCE_UNITS = "supported_distance_units"
-        const val CARD_GATEWAYS            = "card_gateways"
-        const val OFFICE_PHONE             = "office_phone"
-        const val BASE_URL                 = "base_url"
+        //const val OFFICE_PHONE             = "office_phone"
+        //const val BASE_URL                 = "base_url"
     }
 }
 

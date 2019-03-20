@@ -15,14 +15,16 @@ import kotlinx.serialization.Serializable
 @Entity(tableName = ConfigsEntity.ENTITY_NAME)
 data class ConfigsCached(
     @ColumnInfo(name = ConfigsEntity.TRANSPORT_TYPES) val transportTypes: TransportTypesCachedList,
-    @Embedded(prefix = ConfigsEntity.PAYPAL_CREDENTIALS) val paypalCredentials: PaypalCredentialsCached,
+    //@Embedded(prefix = ConfigsEntity.PAYPAL_CREDENTIALS) val paypalCredentials: PaypalCredentialsCached,
     @ColumnInfo(name = ConfigsEntity.AVAILABLE_LOCALES) val availableLocales: LocaleCachedList,
-    @ColumnInfo(name = ConfigsEntity.PREFERRED_LOCALE) val preferredLocale: String,
+    //@ColumnInfo(name = ConfigsEntity.PREFERRED_LOCALE) val preferredLocale: String,
+    //@Embedded(prefix = ConfigsEntity.CARD_GATEWAYS) val cardGateways: CardGatewaysCached,
+    //@ColumnInfo(name = ConfigsEntity.DEFAULT_CARD_GATEWAYS) val defaultCardGateways: String,
+    @ColumnInfo(name = ConfigsEntity.PAYMENT_COMMISSION) val paymentCommission: Float,
     @ColumnInfo(name = ConfigsEntity.SUPPORTED_CURRENCIES) val supportedCurrencies: CurrencyCachedList,
     @ColumnInfo(name = ConfigsEntity.SUPPORTED_DISTANCE_UNITS) val supportedDistanceUnits: StringList,
-    @Embedded(prefix = ConfigsEntity.CARD_GATEWAYS) val cardGateways: CardGatewaysCached,
-    @ColumnInfo(name = ConfigsEntity.OFFICE_PHONE) val officePhone: String,
-    @ColumnInfo(name = ConfigsEntity.BASE_URL) val baseUrl: String,
+    //@ColumnInfo(name = ConfigsEntity.OFFICE_PHONE) val officePhone: String,
+    //@ColumnInfo(name = ConfigsEntity.BASE_URL) val baseUrl: String,
     @PrimaryKey(autoGenerate = true) val id: Long = 14
 )
 

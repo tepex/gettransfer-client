@@ -33,7 +33,7 @@ import com.kg.gettransfer.cache.model.NewMessageCached
         CarrierTripMoreCached::class,
         ChatCached::class,
         MessageCached::class,
-        NewMessageCached::class), version = 5, exportSchema = false)
+        NewMessageCached::class), version = 7, exportSchema = false)
 @TypeConverters(RoomConverters::class)
 abstract class CacheDatabase: RoomDatabase() {
 

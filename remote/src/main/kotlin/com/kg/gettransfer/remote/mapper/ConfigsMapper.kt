@@ -19,14 +19,16 @@ open class ConfigsMapper : EntityMapper<ConfigsModel, ConfigsEntity> {
     override fun fromRemote(type: ConfigsModel) =
         ConfigsEntity(
             transportTypes = type.transportTypes.map { transportTypeMapper.fromRemote(it) },
-            paypalCredentials = paypalCredentialsMapper.fromRemote(type.paypalCredentials),
+            //paypalCredentials = paypalCredentialsMapper.fromRemote(type.paypalCredentials),
             availableLocales = type.availableLocales.map { localeMapper.fromRemote(it) },
-            preferredLocale = type.preferredLocale,
+            //preferredLocale = type.preferredLocale,
+            //cardGateways = cardGatewaysMapper.fromRemote(type.cardGateways),
+            //defaultCardGateways = type.defaultCardGateways,
+            paymentCommission = type.paymentCommission,
             supportedCurrencies = type.supportedCurrencies.map { currencyMapper.fromRemote(it) },
-            supportedDistanceUnits = type.supportedDistanceUnits,
-            cardGateways = cardGatewaysMapper.fromRemote(type.cardGateways),
-            officePhone = type.officePhone,
-            baseUrl = type.baseUrl
+            supportedDistanceUnits = type.supportedDistanceUnits
+            //officePhone = type.officePhone,
+            //baseUrl = type.baseUrl
         )
 
     override fun toRemote(type: ConfigsEntity): ConfigsModel { throw UnsupportedOperationException() }
