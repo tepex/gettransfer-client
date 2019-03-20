@@ -1,4 +1,4 @@
-package com.kg.gettransfer.data.ds.IO
+package com.kg.gettransfer.data.ds.io
 
 import com.kg.gettransfer.data.repository.SystemRepositoryImpl
 import com.kg.gettransfer.data.socket.SystemDataStoreReceiver

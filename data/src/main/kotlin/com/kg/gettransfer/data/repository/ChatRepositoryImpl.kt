@@ -2,9 +2,9 @@ package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.ChatDataStore
 import com.kg.gettransfer.data.ds.ChatDataStoreCache
-import com.kg.gettransfer.data.ds.ChatDataStoreIO
 import com.kg.gettransfer.data.ds.ChatDataStoreRemote
 import com.kg.gettransfer.data.ds.DataStoreFactory
+import com.kg.gettransfer.data.ds.io.ChatSocketDataStoreOutput
 import com.kg.gettransfer.data.mapper.ChatBadgeEventMapper
 import com.kg.gettransfer.data.mapper.ChatMapper
 import com.kg.gettransfer.data.mapper.ExceptionMapper
@@ -26,7 +26,7 @@ import java.util.Date
 
 class ChatRepositoryImpl(
         private val factory: DataStoreFactory<ChatDataStore, ChatDataStoreCache, ChatDataStoreRemote>,
-        private val chatDataStoreIO: ChatDataStoreIO
+        private val chatDataStoreIO: ChatSocketDataStoreOutput
 ) : BaseRepository(), ChatRepository {
 
     private val chatMapper = get<ChatMapper>()

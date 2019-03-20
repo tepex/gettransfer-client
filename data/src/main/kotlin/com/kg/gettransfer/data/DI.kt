@@ -1,7 +1,7 @@
 package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.ds.*
-import com.kg.gettransfer.data.ds.IO.*
+import com.kg.gettransfer.data.ds.io.*
 import com.kg.gettransfer.data.socket.CoordinateDataStoreReceiver
 import com.kg.gettransfer.data.mapper.*
 import com.kg.gettransfer.data.repository.*
@@ -118,9 +118,9 @@ val dataModule = module {
     single { ChatBadgeEventMapper() }
     single { ChatDataStoreCache() }
     single { ChatDataStoreRemote() }
-    single { ChatDataStoreIO(get()) }
+    single <ChatDataStoreReceiver> { ChatSocketDataStoreInput() }
+    single { ChatSocketDataStoreOutput(get()) }
     single { ChatRepositoryImpl(DataStoreFactory<ChatDataStore, ChatDataStoreCache, ChatDataStoreRemote>(get(), get()), get()) } bind ChatRepository::class
-    single<ChatDataStoreReceiver> { ChatDataStoreIO(get()) }
 
     single { CoordinateMapper() }
     single { CoordinateSocketDataStoreOutput(get()) }

@@ -1,4 +1,4 @@
-package com.kg.gettransfer.data.ds.IO
+package com.kg.gettransfer.data.ds.io
 
 import com.kg.gettransfer.data.model.OfferEntity
 import com.kg.gettransfer.data.repository.OfferRepositoryImpl

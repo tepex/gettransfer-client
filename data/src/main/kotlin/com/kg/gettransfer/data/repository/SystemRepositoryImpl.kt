@@ -7,7 +7,7 @@ import com.kg.gettransfer.data.SystemDataStore
 
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.SystemDataStoreCache
-import com.kg.gettransfer.data.ds.IO.SystemSocketDataStoreOutput
+import com.kg.gettransfer.data.ds.io.SystemSocketDataStoreOutput
 import com.kg.gettransfer.data.ds.SystemDataStoreRemote
 
 import com.kg.gettransfer.data.mapper.ConfigsMapper
@@ -34,10 +34,7 @@ import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.PushTokenType
 import com.kg.gettransfer.domain.model.Location
 import com.kg.gettransfer.domain.model.Configs
-import com.kg.gettransfer.domain.model.TransportType
-import com.kg.gettransfer.domain.model.PaypalCredentials
 import com.kg.gettransfer.domain.model.DistanceUnit
-import com.kg.gettransfer.domain.model.CardGateways
 import com.kg.gettransfer.domain.model.User
 import com.kg.gettransfer.domain.model.Profile
 

@@ -1,8 +1,7 @@
-package com.kg.gettransfer.data.ds.IO
+package com.kg.gettransfer.data.ds.io
 
 import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.socket.SystemEventEmitter
-import org.slf4j.LoggerFactory
 
 class SystemSocketDataStoreOutput(private val emitter: SystemEventEmitter) {
 

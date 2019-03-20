@@ -1,4 +1,4 @@
-package com.kg.gettransfer.data.ds.IO
+package com.kg.gettransfer.data.ds.io
 
 import com.kg.gettransfer.data.model.CoordinateEntity
 import com.kg.gettransfer.data.repository.CoordinateRepositoryImpl
