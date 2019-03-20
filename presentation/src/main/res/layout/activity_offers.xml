@@ -141,14 +141,14 @@
                         android:paddingStart="@dimen/activity_offers_sorted_layout_padding_start"
                         android:paddingEnd="@dimen/activity_offers_sorted_layout_padding_start_end">
 
-                    <ImageView
-                            android:id="@+id/img_changeListType"
-                            android:layout_width="30dp"
-                            android:layout_height="25dp"
-                            android:paddingStart="5dp"
-                            android:paddingEnd="5dp"
-                            android:layout_gravity="center_vertical"
-                            app:srcCompat="@drawable/ic_offers_expanded"/>
+                    <!--<ImageView-->
+                            <!--android:id="@+id/img_changeListType"-->
+                            <!--android:layout_width="30dp"-->
+                            <!--android:layout_height="25dp"-->
+                            <!--android:paddingStart="5dp"-->
+                            <!--android:paddingEnd="5dp"-->
+                            <!--android:layout_gravity="center_vertical"-->
+                            <!--app:srcCompat="@drawable/ic_offers_expanded"/>-->
 
 
                     <RelativeLayout

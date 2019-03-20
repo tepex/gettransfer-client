@@ -183,8 +183,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
         booking_info.text = when (transfer.status) {
             Transfer.Status.NEW -> {
-                if (transfer.offersCount > 0) getString(R.string.LNG_BOOK_OFFER)
-                else getString(R.string.LNG_WAIT_FOR_OFFERS)
+                val suff = if (transfer.offersCount > 0) R.string.LNG_BOOK_OFFER
+                else R.string.LNG_WAIT_FOR_OFFERS
+                getString(R.string.LNG_TRANSFER)
+                        .plus(" #${transfer.id} ")
+                        .plus(getString(suff))
             }
             Transfer.Status.PERFORMED -> {
                 if (transfer.dateTime.after(Calendar.getInstance().time)) getString(R.string.LNG_TRANSFER)
@@ -192,7 +195,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
                         .plus(getString(R.string.LNG_WILL_START_IN))
                         .plus(" ")
                         .plus(Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer)))
-                else getString(R.string.LNG_TRANSFER_IN_PROGRESS)
+                else getString(R.string.LNG_TRANSFER)
+                        .plus(" #${transfer.id} ")
+                        .plus(getString(R.string.LNG_IN_PROGRESS))
             }
             else -> transfer.statusName?.let { getString(R.string.LNG_TRANSFER_WAS)
                     .plus(" ")
@@ -203,7 +208,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
             transfer_details_header.booking_info.setTextColor(ContextCompat.getColor(this@TransferDetailsActivity, R.color.color_transfer_details_text_red))
 
         val status = transfer.statusCategory
-        if (status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_UNFINISHED) {
+        if (status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_UNFINISHED || status == Transfer.STATUS_CATEGORY_CONFIRMED) {
             initTableLayoutTransportTypes(transfer.transportTypes)
             layoutTransportTypes.isVisible = true
         }
@@ -213,8 +218,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         }
 
         if (status == Transfer.STATUS_CATEGORY_ACTIVE) {
-            topCommunicationButtons.btnCancel.isVisible = true
-            bottomCommunicationButtons.btnCancel.isVisible = true
+            topCommunicationButtons.btnCancel.isVisible = !transfer.isBookNow()
+            bottomCommunicationButtons.btnCancel.isVisible = !transfer.isBookNow()
         }
         if (status == Transfer.STATUS_CATEGORY_FINISHED || status == Transfer.STATUS_CATEGORY_UNFINISHED) {
             topCommunicationButtons.btnRepeatTransfer.isVisible = true
@@ -288,9 +293,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     }
 
     private fun setBookNow(transfer: TransferModel){
-        if (transfer.paidPercentage != 0 && transfer.bookNow != null) {
-            tv_bookNow_info.isVisible = true
-        }
+        tv_bookNow_info.isVisible = transfer.isBookNow()
     }
 
     /*private fun setTransferStatus(transfer: TransferModel) {

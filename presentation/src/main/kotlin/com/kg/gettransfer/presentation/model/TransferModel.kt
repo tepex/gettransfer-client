@@ -63,4 +63,7 @@ data class TransferModel(
     val statusCategory: String,
     val timeToTransfer: Int,
     var eventsCount: Int = 0
-)
+) {
+    fun isBookNow() = paidPercentage != 0 && bookNow != null
+}
+

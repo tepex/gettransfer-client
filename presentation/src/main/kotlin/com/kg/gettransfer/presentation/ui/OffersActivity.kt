@@ -83,10 +83,10 @@ class OffersActivity : BaseActivity(), OffersView {
         sortYear.setOnClickListener                       { presenter.changeSortType(Sort.YEAR) }
         sortRating.setOnClickListener                     { presenter.changeSortType(Sort.RATING) }
         sortPrice.setOnClickListener                      { presenter.changeSortType(Sort.PRICE) }
-        img_changeListType.setOnClickListener             {
-            presenter.itemsExpanded = !presenter.itemsExpanded!!
-            changeViewType()
-        }
+//        img_changeListType.setOnClickListener             {
+//            presenter.itemsExpanded = !presenter.itemsExpanded!!
+//            changeViewType()
+//        }
     }
 
     private fun initToolBar() =
@@ -145,9 +145,9 @@ class OffersActivity : BaseActivity(), OffersView {
 
     private fun initAdapter() {
         rvOffers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        OffersAdapter.viewType =
-                if (presenter.itemsExpanded!!) PRESENTATION.EXPANDED  //typealias
-                else PRESENTATION.TINY
+//        OffersAdapter.viewType =
+//                if (presenter.itemsExpanded!!) PRESENTATION.EXPANDED  //typealias
+//                else PRESENTATION.TINY
     }
     override fun setOffers(offers: List<OfferItem>) {
         hideSheetOfferDetails()
@@ -170,9 +170,9 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     private fun changeViewType() {
-        (rvOffers.adapter as OffersAdapter).changeItemRepresentation()
-        (if (presenter.itemsExpanded!!) R.drawable.ic_offers_expanded
-        else R.drawable.ic_offers_tiny).also { img_changeListType.setImageResource(it) }
+//        (rvOffers.adapter as OffersAdapter).changeItemRepresentation()
+//        (if (presenter.itemsExpanded!!) R.drawable.ic_offers_expanded
+//        else R.drawable.ic_offers_tiny).also { img_changeListType.setImageResource(it) }
     }
 
     override fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean) {
