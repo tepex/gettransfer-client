@@ -55,53 +55,56 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         super.attachView(view)
         viewState.blockInterface(false)
         utils.launchSuspend {
-            val resultOffers = utils.asyncAwait { offerInteractor.getOffers(params.transferId) }
-            if (resultOffers.error == null) {
-                offer = params.offerId?.let { offerInteractor.getOffer(it) }
-                offer?.let {
-                    paymentRequest = PaymentRequestModel(params.transferId, params.offerId, null)
-                    viewState.setOffer(offerMapper.toView(it), params.paymentPercentages)
-                }
-            }
-
-            val transferResult = utils.asyncAwait { transferInteractor.getTransfer(params.transferId) }
-            transferResult.error?.let { checkResultError(it) }
-            if (transferResult.error == null || (transferResult.error != null && transferResult.fromCache)) {
-                transfer = transferResult.model
-                if (offer == null) {
-                    paymentRequest = PaymentRequestModel(params.transferId, null, params.bookNowTransportId)
-                    if (transferResult.model.bookNowOffers.isNotEmpty()) {
-                        val filteredBookNow = transferResult.model.bookNowOffers.filterKeys { it.toString() == params.bookNowTransportId }
-                        if (filteredBookNow.isNotEmpty()) {
-                            bookNowOffer = filteredBookNow.values.first()
-                        }
-                    }
-                    viewState.setBookNowOffer(bookNowOffer)
-                }
-            } else {
-                viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${params.offerId}] not found!"))
-            }
+            getOffers()
         }
+        getPaymentRequest()
     }
 
-    /*
-    @CallSuper
-    override fun onDestroy() {
-        router.removeResultListener(LoginPresenter.RESULT_CODE)
-        super.onDestroy()
+    private fun getPaymentRequest() {
+        paymentRequest =
+                if (params.bookNowTransportId == null)
+                    PaymentRequestModel(params.transferId, params.offerId, null)
+                else
+                    PaymentRequestModel(params.transferId, null, params.bookNowTransportId)
     }
-    */
 
-    fun getPayment() = utils.launchSuspend {
-        viewState.blockInterface(true, true)
-
+    private suspend fun getOffers() {
         val offersResult = utils.asyncAwait { offerInteractor.getOffers(params.transferId) }
         offersResult.error?.let { checkResultError(it) }
         if (offersResult.error == null || (offersResult.error != null && offersResult.fromCache)) {
             offer = params.offerId?.let { offerInteractor.getOffer(it) }
-            paymentRequest.gatewayId = selectedPayment
-            if (paymentRequest.gatewayId == PaymentRequestModel.PLATRON) {
-                val paymentResult = utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentRequest)) }
+            offer?.let {
+                viewState.setOffer(offerMapper.toView(it), params.paymentPercentages) }
+        }
+        getTransfer()
+    }
+
+    private suspend fun getTransfer() {
+        val transferResult = utils.asyncAwait { transferInteractor.getTransfer(params.transferId) }
+        transferResult.error?.let { checkResultError(it) }
+        if (transferResult.error == null || (transferResult.error != null && transferResult.fromCache)) {
+            transfer = transferResult.model
+            if (params.bookNowTransportId != null) {
+                if (transferResult.model.bookNowOffers.isNotEmpty()) {
+                    val filteredBookNow = transferResult.model.bookNowOffers.filterKeys { it.toString() == params.bookNowTransportId }
+                    if (filteredBookNow.isNotEmpty()) {
+                        bookNowOffer = filteredBookNow.values.first()
+                    }
+                }
+                viewState.setBookNowOffer(bookNowOffer)
+            }
+        } else {
+            viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${params.offerId}] not found!"))
+        }
+    }
+
+    fun getPayment() = utils.launchSuspend {
+        viewState.blockInterface(true, true)
+
+        paymentRequest.let {
+            it.gatewayId = selectedPayment
+            if (it.gatewayId == PaymentRequestModel.PLATRON) {
+                val paymentResult = utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(it)) }
                 if (paymentResult.error != null) {
                     Timber.e(paymentResult.error!!)
                     viewState.setError(paymentResult.error!!)
@@ -114,9 +117,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 getBraintreeToken()
             }
             logEventBeginCheckout()
-
-            if (offer == null && bookNowOffer == null) viewState.showOfferError()
         }
+        if (offer == null && bookNowOffer == null) viewState.showOfferError()
     }
 
     private fun getBraintreeToken() {
@@ -163,7 +165,9 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             transfer?.dateReturnLocal != null -> Analytics.TRIP_ROUND
             else -> Analytics.TRIP_DESTINATION
         }
-        var price: Double = if (offer != null) offer!!.price.amount else bookNowOffer!!.amount
+        var price = 0.0
+        if (offer != null) offer!!.price.amount
+        else if (bookNowOffer != null) bookNowOffer!!.amount
         if (paymentRequest.percentage == OfferModel.PRICE_30) price *= PRICE_30
 
         val beginCheckout = analytics.BeginCheckout(
