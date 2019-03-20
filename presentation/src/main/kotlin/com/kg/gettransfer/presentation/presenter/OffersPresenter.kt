@@ -39,7 +39,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     private var transfer: Transfer? = null
     private var offers: List<OfferItem> = emptyList()
-    private lateinit var transportTypes: List<TransportTypeModel>
 
     private var sortCategory = Sort.PRICE
     private var sortHigherToLower = false
@@ -57,30 +56,27 @@ class OffersPresenter : BasePresenter<OffersView>() {
         Timber.d("OffersPresenter.attachView")
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            result.error?.let { checkResultError(it) }
-            if (result.error != null) {
-                val err = result.error!!
-                Timber.e(err)
-                //if (err.isNotLoggedIn()) viewState.redirectView()
-                //else if (err.code != ApiException.NETWORK_ERROR) viewState.setError(err)
-                if (err.isNotFound()) viewState.setError(ApiException(ApiException.NOT_FOUND, "Transfer $transferId not found!"))
-            }
-            if(result.error == null || (result.error != null && result.fromCache)) {
-                if (result.model.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE) {
-                    if (isViewRoot) {
-                        isViewRoot = false
-                        router.newChain(Screens.Main, Screens.Requests, Screens.Details(transferId))
+            fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }
+                    .also {
+                        it.error?.let { e ->
+                            if (e.isNotFound())
+                                viewState.setError(ApiException(ApiException.NOT_FOUND, "Transfer $transferId not found!"))
+                        }
+
+                        it.hasData()?.let { transfer ->
+                            if (transfer.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE) {
+                                if (isViewRoot) {
+                                    isViewRoot = false
+                                    router.newChain(Screens.Main, Screens.Requests, Screens.Details(transferId))
+                                }
+                                else router.exit()
+                            }
+                            else {
+                                viewState.setTransfer(transferMapper.toView(transfer))
+                                checkNewOffersSuspended(transfer)
+                            }
+                        }
                     }
-                    else router.exit()
-                }
-                else {
-                    val transferModel = transferMapper.toView(result.model)
-                    viewState.setTransfer(transferModel)
-                    transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
-                    checkNewOffersSuspended(result.model)
-                }
-            }
             viewState.blockInterface(false)
         }
     }
@@ -91,18 +87,15 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     private suspend fun checkNewOffersSuspended(transfer: Transfer) {
         this.transfer = transfer
-        val result = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
-        val transferModel = transferMapper.toView(transfer)
-        if (result.error != null && !result.fromCache) {
-            offers = emptyList()
-            Timber.e(result.error)
-        } else {
-            offers = mutableListOf<OfferItem>().apply {
-                addAll(result.model.map { offerMapper.toView(it) })
-                notificationManager.clearOffers(result.model.map { it.id.toInt() })
-                addAll(transferModel.bookNowOffers)
-            }
-        }
+        fetchResult(SHOW_ERROR, withCacheCheck = false, checkLoginError = false) { offerInteractor.getOffers(transfer.id) }
+                .also {
+                    if (it.error == null && !it.fromCache) offers = emptyList()
+                    else {
+                        offers = mutableListOf<OfferItem>().apply {
+                            addAll(it.model.map { offer -> offerMapper.toView(offer) })
+                            notificationManager.clearOffers(it.model.map { offer -> offer.id.toInt() })
+                            addAll(transferMapper.toView(transfer).bookNowOffers) }
+                    } }
         //changeSortType(SORT_PRICE)
         processOffers()
     }
@@ -117,7 +110,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
     }
 
     private fun checkDuplicated(offer: OfferModel): Boolean {
-        var duplicated: Boolean = false
+        var duplicated = false
         offers.forEach {
             if (it is OfferModel && it.id == offer.id) {
                 offers = offers.toMutableList().apply { set(indexOf(it), offer) }
@@ -126,9 +119,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
         }
         return duplicated
     }
-
-
-
 
     fun onRequestInfoClicked() {
         router.navigateTo(Screens.Details(transferId))
@@ -148,15 +138,14 @@ class OffersPresenter : BasePresenter<OffersView>() {
                                 offer.id,
                                 it.dateRefund,
                                 it.paymentPercentages,
-                                null
-                        ))
-                    is BookNowOfferModel -> router.navigateTo(Screens.PaymentOffer(
-                        it.id,
+                                null))
+                    is BookNowOfferModel ->
+                        router.navigateTo(Screens.PaymentOffer(
+                                it.id,
                         null,
-                        it.dateRefund,
-                        it.paymentPercentages,
-                        offer.transportType.id.toString()
-                    ))
+                                it.dateRefund,
+                                it.paymentPercentages,
+                                offer.transportType.id.toString()))
                 }
             }
         }
@@ -186,11 +175,8 @@ class OffersPresenter : BasePresenter<OffersView>() {
         logButtons(Analytics.CANCEL_TRANSFER_BTN)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = utils.asyncAwait { transferInteractor.cancelTransfer(transferId, "") }
-            if (result.error != null) {
-                Timber.e(result.error!!)
-                viewState.setError(result.error!!)
-            } else onBackCommandClick()
+            fetchResult (withCacheCheck = false) { transferInteractor.cancelTransfer(transferId, "") }
+                    .also { it.isSuccess()?.let { onBackCommandClick() } }
             viewState.blockInterface(false)
         }
     }

@@ -21,14 +21,12 @@ class CarrierTripsCalendarFragmentPresenter : BasePresenter<CarrierTripsCalendar
     override fun onFirstViewAttach() {
         utils.launchSuspend {
             viewState.blockInterface(true)
-            val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrips() }
-            result.error?.let { checkResultError(it) }
-            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
-            else {
-                carrierTripsCalendarItems = carrierTripsCalendarItemsMapper.toCalendarView(result.model)
-                viewState.setCalendarIndicators(carrierTripsCalendarItems!!)
-                onDateClick(selectedDate)
-            }
+            fetchData { carrierTripInteractor.getCarrierTrips() }
+                    ?.let {
+                        carrierTripsCalendarItems = carrierTripsCalendarItemsMapper.toCalendarView(it)
+                        viewState.setCalendarIndicators(carrierTripsCalendarItems!!)
+                        onDateClick(selectedDate)
+                    }
             viewState.blockInterface(false)
         }
     }

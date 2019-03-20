@@ -2,13 +2,10 @@ package com.kg.gettransfer.service
 
 import android.app.Service
 import android.content.Intent
-import android.os.IBinder
-import android.util.Log
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.Coordinate
 import kotlinx.coroutines.*
 import org.koin.standalone.KoinComponent
@@ -39,7 +36,7 @@ class CoordinateService: Service(), KoinComponent {
         if (serviceAlive) {
             utils.launchSuspend {
                 utils.asyncAwait { routeInteractor.getCurrentAddress() }
-                        .isNotError()
+                        .isSuccess()
                         ?.let { it.cityPoint.point }
                         ?.let { coordinateInteractor.sendOwnCoordinates(Coordinate(lat = it.latitude, lon = it.longitude)) }
                 delay(DELAY)

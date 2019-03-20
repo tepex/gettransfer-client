@@ -53,9 +53,7 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
                 else                                -> utils.asyncAwait { transferInteractor.getArchivedTransfers() }
             }
             */
-            val result = utils.asyncAwait { transferInteractor.getAllTransfers() }
-            result.error?.let { checkResultError(it) }
-            if (result.error != null && !result.fromCache) viewState.setError(result.error!!) else showTransfers(result.model)
+            fetchData { transferInteractor.getAllTransfers() }?.let { showTransfers(it) }
             viewState.blockInterface(false)
         }
     }

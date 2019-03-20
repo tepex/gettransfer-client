@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import com.arellomobile.mvp.MvpPresenter
 
@@ -43,6 +44,7 @@ import org.koin.standalone.KoinComponent
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
+import kotlin.reflect.jvm.reflect
 
 open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener, ChatBadgeEventListener, KoinComponent {
     protected val compositeDisposable = Job()
@@ -73,9 +75,8 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     override fun onFirstViewAttach() {
         if (systemInteractor.isInitialized) return
         utils.launchSuspend {
-            val result = utils.asyncAwait { systemInteractor.coldStart() }
-            if(result.error != null) viewState.setError(result.error!!)
-            else systemInitialized()
+            fetchData { systemInteractor.coldStart() }
+                    ?.let { systemInitialized() }
         }
     }
 
@@ -84,6 +85,10 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
         offerInteractor.eventReceiver = this
         chatInteractor.eventChatBadgeReceiver = this
     }
+
+    /*
+    return false if error handled, true otherwise
+     */
 
     protected fun checkResultError(error: ApiException): Boolean {
         if (!openedLoginScreenForUnauthorizedUser && (error.isNotLoggedIn() || error.isNoUser() )) {
@@ -148,11 +153,8 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
         utils.launchSuspend {
             var transferID: Long? = null
             if (transferId == null) {
-
-                val transfers = utils.asyncAwait { transferInteractor.getAllTransfers() }
-                if (transfers.model.isNotEmpty()) {
-                    transferID = transfers.model.first().id
-                }
+                fetchData { transferInteractor.getAllTransfers() }
+                        ?.let { if (it.isNotEmpty()) transferID = it.first().id }
             } else transferID = transferId
 
             router.navigateTo(
@@ -174,8 +176,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                 it.result?.token?.let {
                     Timber.d("[FCM token]: $it")
                     utils.launchSuspend {
-                        val result = utils.asyncAwait { systemInteractor.registerPushToken(it) }
-                        if (result.error != null) viewState.setError(result.error!!)
+                        fetchResult { systemInteractor.registerPushToken(it) }
                     }
                 }
             } else Timber.w("getInstanceId failed", it.exception)
@@ -243,7 +244,6 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                 transferIds = transferIds.toMutableList().apply { add(transferId) }
             }
 
-
     fun onDriverModeExit() =
         with(systemInteractor) { if (lastMode == Screens.CARRIER_MODE) closeSocketConnection() }
 
@@ -253,31 +253,57 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     false if error is handled and no need to show info to user.
     Next - show error for user with default viewState method. We can do it
     in child presenter if indicate "processError" = true (use "SHOW_ERROR" from Companion)
+    Default:
+     - DEFAULT_ERROR: if want to call only viewState.setError()
+     - CHECK_CACHE: when want to show error also after check data in cache
      */
-    protected suspend fun <M>fetchResult(processError: Boolean = false, block: suspend () -> Result<M>) =
-        utils.asyncAwait { block() }
-                .also { it.error
-                        ?.let { e -> checkResultError(e) }
-                        ?.let { handle ->
-                            if (handle && !processError) viewState.setError(it.error!!) } }
+    protected suspend fun <M>fetchResult(processError: Boolean = DEFAULT_ERROR,
+                                         withCacheCheck: Boolean = CHECK_CACHE,
+                                         checkLoginError: Boolean = true,
+                                         block: suspend () -> Result<M>) =
+            utils.asyncAwait { block() }
+                .also {
+                    it.error
+                            ?.let { e -> if (checkLoginError) checkResultError(e) else true }
+                            ?.let { handle -> if (!handle) return@also
+                                withCacheCheck && !it.fromCache }
+                            ?.let { resultCheck ->
+                                if (!processError && resultCheck) viewState.setError(it.error!!)
+                                Timber.e(it.error!!) }
+                }
 
 
     /*
     Method to fetch only data without result if no need to have error object in client class.
     As we unwrap return data safely in client class, so it's possible to use it without care.
      */
-    protected suspend fun <D>fetchData(block: suspend () -> Result<D>) =
-            fetchResult { block() }
-                    .isNotError()
+    protected suspend fun <D>fetchData(processError: Boolean = DEFAULT_ERROR,
+                                       withCacheCheck: Boolean = CHECK_CACHE,
+                                       checkLoginError: Boolean = true,
+                                       block: suspend () -> Result<D>) =
+            with(fetchResult(processError, withCacheCheck, checkLoginError) { block() }) {
+                if (error == null || withCacheCheck && fromCache) model else null
+            }
+    /*
+    Optional methods for easy request with only suspend block and without params to handle
+    errors.
+     */
+    protected suspend fun<R>fetchResultOnly(block: suspend () -> Result<R>) =
+            fetchResult(WITHOUT_ERROR, NO_CACHE_CHECK, false) { block() }
 
+    protected suspend fun <D>fetchDataOnly(block: suspend () -> Result<D>) =
+            fetchData(WITHOUT_ERROR, NO_CACHE_CHECK, false) { block() }
 
 
     companion object {
-
         const val SINGLE_CAPACITY = 1
         const val DOUBLE_CAPACITY = 2
 
-        const val SHOW_ERROR = true
+        const val SHOW_ERROR         = true   //when you want to handle error in child presenter
+        const val DEFAULT_ERROR      = false
+        const val WITHOUT_ERROR      = true   //the same as SHOW_ERROR, but when you will not show error even in child presenter
+        const val CHECK_CACHE        = true
+        const val NO_CACHE_CHECK     = false
     }
 
 }

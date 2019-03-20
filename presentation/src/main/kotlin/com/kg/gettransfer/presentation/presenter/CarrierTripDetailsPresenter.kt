@@ -50,25 +50,24 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
     override fun onFirstViewAttach() {
         utils.launchSuspend {
             viewState.blockInterface(true)
-            val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(tripId) }
-            result.error?.let { checkResultError(it) }
-            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
-            else {
-                val tripInfo = result.model
-                tripModel = carrierTripMapper.toView(tripInfo)
-                viewState.setTripInfo(tripModel)
-
-                val baseTripInfo = tripInfo.base
-                if (baseTripInfo.to != null && baseTripInfo.to!!.point != null) {
-                    val r = utils.asyncAwait { routeInteractor.getRouteInfo(baseTripInfo.from.point!!, baseTripInfo.to!!.point!!, true, false, systemInteractor.currency.currencyCode) }
-                    r.cacheError?.let { viewState.setError(it) }
-                    if (r.error == null || (r.error != null && r.fromCache)) {
-                        setRouteTransfer(baseTripInfo,r.model)
+            fetchData { carrierTripInteractor.getCarrierTrip(transferId) }
+                    ?.let {tripInfo ->
+                        tripModel = carrierTripMapper.toView(tripInfo)
+                        viewState.setTripInfo(tripModel)
+                        val baseTripInfo = tripInfo.base
+                        if (baseTripInfo.to != null && baseTripInfo.to!!.point != null) {
+                            fetchData { routeInteractor.getRouteInfo(baseTripInfo.from.point!!,
+                                    baseTripInfo.to!!.point!!,
+                                    true,
+                                    false,
+                                    systemInteractor.currency.currencyCode) }
+                                    ?.let { setRouteTransfer(baseTripInfo, it) }
+                        }
+                        else if (baseTripInfo.duration != null) {
+                            setHourlyTransfer(baseTripInfo)
+                        }
+                        Unit
                     }
-                } else if (baseTripInfo.duration != null) {
-                   setHourlyTransfer(baseTripInfo)
-                }
-            }
             viewState.blockInterface(false)
         }
     }

@@ -24,14 +24,14 @@ class CarrierTripsListFragmentPresenter : BasePresenter<CarrierTripsListFragment
     override fun onFirstViewAttach() {
         utils.launchSuspend {
             viewState.blockInterface(true)
-            val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrips() }
-            result.error?.let { checkResultError(it) }
-            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
-            else {
-                val carrierTripsRVItemsList = carrierTripsListItemsMapper.toRecyclerView(result.model)
-                tripsRVItems = carrierTripsRVItemsList.itemsList
-                viewState.setTrips(tripsRVItems!!, carrierTripsRVItemsList.startTodayPosition, carrierTripsRVItemsList.endTodayPosition)
-            }
+
+            fetchData { carrierTripInteractor.getCarrierTrips() }
+                    ?.let {
+                        val carrierTripsRVItemsList = carrierTripsListItemsMapper.toRecyclerView(it)
+                        tripsRVItems = carrierTripsRVItemsList.itemsList
+                        viewState.setTrips(tripsRVItems!!, carrierTripsRVItemsList.startTodayPosition, carrierTripsRVItemsList.endTodayPosition)
+                    }
+
             viewState.blockInterface(false)
         }
     }

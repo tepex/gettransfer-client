@@ -4,8 +4,6 @@ import android.util.Patterns
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Account.Companion.GROUP_CARRIER_DRIVER
 import com.kg.gettransfer.domain.model.Account.Companion.GROUP_MANAGER_VIEW_TRANSFERS
@@ -37,46 +35,51 @@ class LoginPresenter : BasePresenter<LoginView>() {
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = utils.asyncAwait { systemInteractor.login(email!!, password!!) }
-            if (result.error == null) {
-                if (!screenForReturn.isNullOrEmpty()) {
-                    when (screenForReturn) {
-                        Screens.CARRIER_MODE   -> {
-                            router.navigateTo(Screens.ChangeMode(checkCarrierMode()))
+            fetchResult(SHOW_ERROR, checkLoginError = false) { systemInteractor.login(email!!, password!!) }
+                    .also {
+                        it.error?.let { e ->
+                            if (e.isNoUser())
+                                viewState.showError(true, e.message)
+                            logLoginEvent(Analytics.RESULT_FAIL)
                         }
-                        Screens.PASSENGER_MODE -> {
-                            router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
-                            analytics.logProfile(Analytics.PASSENGER_TYPE)
-                        }
-                        Screens.OFFERS         -> {
-                            router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
-                            router.navigateTo(Screens.Offers(transferId))
-                        }
-                        Screens.CLOSE_AFTER_LOGIN -> router.exit()
-                        Screens.PAYMENT_OFFER -> {
-                            utils.launchSuspend {
-                                val transferResult = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-                                if (transferResult.error != null) viewState.setError(transferResult.error!!)
-                                else {
-                                    val transfer = transferResult.model
-                                    val transferModel = transferMapper.toView(transfer)
 
-                                    router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
-                                    router.navigateTo(Screens.PaymentOffer(transferId, offerId, transferModel.dateRefund,
-                                            transferModel.paymentPercentages, null))
-                                }
-                            }
+                        it.isSuccess()?.let {
+                            if (!screenForReturn.isNullOrEmpty()) openPreviousScreen(screenForReturn)
+                            logLoginEvent(Analytics.RESULT_SUCCESS)
+                            registerPushToken()
                         }
-                        Screens.RATE_TRANSFER -> router.navigateTo(Screens.Splash(transferId, rate, true))
                     }
-                }
-                logLoginEvent(Analytics.RESULT_SUCCESS)
-                registerPushToken()
-            } else {
-                if(result.error!!.isNoUser()) viewState.showError(true, result.error!!.message)
-                logLoginEvent(Analytics.RESULT_FAIL)
-            }
             viewState.blockInterface(false)
+        }
+    }
+
+    private fun openPreviousScreen(screenForReturn: String?) {
+        when (screenForReturn) {
+            Screens.CARRIER_MODE   -> {
+                router.navigateTo(Screens.ChangeMode(checkCarrierMode()))
+            }
+            Screens.PASSENGER_MODE -> {
+                router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+                analytics.logProfile(Analytics.PASSENGER_TYPE)
+            }
+            Screens.OFFERS         -> {
+                router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+                router.navigateTo(Screens.Offers(transferId))
+            }
+            Screens.CLOSE_AFTER_LOGIN -> router.exit()
+            Screens.PAYMENT_OFFER -> {
+                utils.launchSuspend {
+                    fetchData (NO_CACHE_CHECK) { transferInteractor.getTransfer(transferId) }
+                            ?.let { transfer ->
+                                val transferModel = transferMapper.toView(transfer)
+
+                                router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+                                router.navigateTo(Screens.PaymentOffer(transferId, offerId, transferModel.dateRefund,
+                                        transferModel.paymentPercentages, null))
+                            }
+                }
+            }
+            Screens.RATE_TRANSFER -> router.navigateTo(Screens.Splash(transferId, rate, true))
         }
     }
 

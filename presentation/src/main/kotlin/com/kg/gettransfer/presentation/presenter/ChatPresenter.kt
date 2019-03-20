@@ -76,12 +76,14 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
 
     private fun getChatFromRemote() {
         utils.launchSuspend {
-            val chatRemoteResult = utils.asyncAwait { chatInteractor.getChat(transferId) }
-            chatRemoteResult.error?.let { checkResultError(it) }
-            if (chatRemoteResult.error != null) viewState.setError(chatRemoteResult.error!!)
-            else {
-                initChatModel(chatRemoteResult.model)
-            }
+            fetchData(withCacheCheck = NO_CACHE_CHECK) { chatInteractor.getChat(transferId) }
+                    ?.let { initChatModel(it) }
+//            val chatRemoteResult = utils.asyncAwait { chatInteractor.getChat(transferId) }
+//            chatRemoteResult.error?.let { checkResultError(it) }
+//            if (chatRemoteResult.error != null) viewState.setError(chatRemoteResult.error!!)
+//            else {
+//                initChatModel(chatRemoteResult.model)
+//            }
         }
     }
 
@@ -103,7 +105,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
         val newMessage = MessageModel(0, chatModel.currentAccountId, transferId, time, null, text, time.time)
         chatModel.messages = chatModel.messages.plus(newMessage)
         viewState.scrollToEnd()
-        utils.launchSuspend { utils.asyncAwait { chatInteractor.newMessage(messageMapper.fromView(newMessage)) } }
+        utils.launchSuspend { fetchResult { chatInteractor.newMessage(messageMapper.fromView(newMessage)) } }
         sendAnalytics(MESSAGE_OUT)
     }
 
@@ -114,10 +116,8 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
     override fun onNewMessageEvent(message: Message) {
         log.error("new message: id = ${message.id}")
         utils.launchSuspend{
-            val result = utils.asyncAwait{ chatInteractor.getChat(transferId, true) }
-            if(result.fromCache) {
-                initChatModel(result.model)
-            }
+            fetchResult { chatInteractor.getChat(transferId, true) }
+                    .also { if (it.fromCache) initChatModel(it.model) }
             if (isIdValid(message)) sendAnalytics(MESSAGE_IN)
         }
     }

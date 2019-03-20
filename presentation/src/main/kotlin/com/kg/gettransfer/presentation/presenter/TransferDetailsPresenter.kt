@@ -71,48 +71,44 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         systemInteractor.addListener(this)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            result.error?.let { checkResultError(it) }
-//            fetchData { transferInteractor.getTransfer(transferId) }
-//                    ?.let { Log.i("LogData", it.toString()) }
-//            fetchResult { transferInteractor.getTransfer(transferId) }
-//                    .let { Log.i("LogData", it.toString()) }
-//            fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }
-//                    .let { Log.i("LogData", it.toString()) }
+           fetchData { transferInteractor.getTransfer(transferId) }
+                    ?.let{ transfer ->
+                        transfer.from.point?.let { startCoordinate = pointMapper.toLatLng(it) }
+                        transfer.from.let { fromPoint = cityPointMapper.toView(it) }
+                        transfer.to?.let { toPoint = cityPointMapper.toView(it) }
+                        hourlyDuration = transfer.duration
 
-            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
-            else {
-                val transfer = result.model
-                transfer.from.point?.let { startCoordinate = pointMapper.toLatLng(it) }
-                transfer.from.let { fromPoint = cityPointMapper.toView(it) }
-                transfer.to?.let { toPoint = cityPointMapper.toView(it) }
-                hourlyDuration = transfer.duration
+                        transferModel = transferMapper.toView(transfer)
+                        var offer: Offer? = null
 
-                transferModel = transferMapper.toView(transfer)
-                var offer: Offer? = null
+                        if (transferModel.status.checkOffers) {
+                            val offers = fetchData { offerInteractor.getOffers(transfer.id) }
+                            if (offers != null && offers.size == 1) {
+                                offer = offers.first()
+                                offerModel = offerMapper.toView(offer)
+                                reviewInteractor.offerIdForReview = offer.id
+                                if (allowOfferInfo(transferModel)) viewState.setOffer(offerModel, transferModel.countChilds)
+                            }
+                        }
 
-                if (transferModel.status.checkOffers) {
-                    val offersResult = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
-                    if ((offersResult.error == null || (offersResult.error != null && offersResult.fromCache)) && offersResult.model.size == 1){
-                        offer = offersResult.model.first()
-                        offerModel = offerMapper.toView(offer)
-                        reviewInteractor.offerIdForReview = offer.id
-                        if (allowOfferInfo(transferModel)) viewState.setOffer(offerModel, transferModel.countChilds)
+                        val showRate = offer?.isRated()?.not()?:false
+                        viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile), showRate)
+
+                        if (transfer.to != null) {
+                            fetchResult {
+                                routeInteractor.getRouteInfo(transfer.from.point!!,
+                                        transfer.to!!.point!!,
+                                        true,
+                                        false,
+                                        systemInteractor.currency.currencyCode)
+                            }.also {
+                                it.cacheError?.let { e -> viewState.setError(e) }
+                                setRouteTransfer(transfer, it.model)
+                            }
+                        } else if (transfer.duration != null) setHourlyTransfer(transfer)
+                        Unit
                     }
-                }
-
-                val showRate = offer?.isRated()?.not()?:false
-                viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile), showRate)
-
-                if (transfer.to != null) {
-                    val r = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, true, false, systemInteractor.currency.currencyCode) }
-                    r.cacheError?.let { viewState.setError(it) }
-                    setRouteTransfer(transfer, r.model)
-                } else if (transfer.duration != null) setHourlyTransfer(transfer)
-
-            }
-            viewState.blockInterface(false)
-
+                 viewState.blockInterface(false)
         }
     }
 
@@ -192,11 +188,14 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         if (!isCancel) return
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = utils.asyncAwait { transferInteractor.cancelTransfer(transferId, "") }
-            if (result.error != null) {
-                Timber.e(result.error!!)
-                viewState.setError(result.error!!)
-            } else viewState.recreateActivity()
+            fetchData { transferInteractor.cancelTransfer(transferId, "") }
+                    ?.let { viewState.recreateActivity() }
+
+//            val result = utils.asyncAwait { transferInteractor.cancelTransfer(transferId, "") }
+//            if (result.error != null) {
+//                Timber.e(result.error!!)
+//                viewState.setError(result.error!!)
+//            } else viewState.recreateActivity()
             viewState.blockInterface(false)
         }
     }
@@ -228,13 +227,19 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     }
 
     fun sendReview(list: List<ReviewRateModel>, feedBackComment: String) = utils.launchSuspend {
-        val result = utils.asyncAwait {
-            reviewInteractor.sendRates(list.map { reviewRateMapper.fromView(it) }, feedBackComment)
-        }
-        logAverageRate(list.map { it.rateValue }.average())
-        logDetailRate(list, feedBackComment)
-        if (result.error != null) { /* some error for analytics */ }
-        viewState.thanksForRate()
+        fetchResult(WITHOUT_ERROR) {
+            reviewInteractor.sendRates(list.map { reviewRateMapper.fromView(it) },
+                    feedBackComment) }
+                .also {
+                    it.error?.let { /* some error for analytics */ }
+                    logAverageRate(list.map { it.rateValue }.average())
+                    logDetailRate(list, feedBackComment)
+                    viewState.thanksForRate()
+                }
+//        logAverageRate(list.map { it.rateValue }.average())
+//        logDetailRate(list, feedBackComment)
+//        if (result.error != null) { /* some error for analytics */ }
+//        viewState.thanksForRate()
     }
 
     fun onRateInStore() {

@@ -99,6 +99,34 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             }
         } else {
             viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${params.offerId}] not found!"))
+//            fetchData { offerInteractor.getOffers(params.transferId) }
+//                    ?.let {
+//                        params.offerId
+//                                ?.let { id -> offerInteractor.getOffer(id) }
+//                                ?.let { mOffer ->
+//                                    offer = mOffer
+//                                    paymentRequest = PaymentRequestModel(params.transferId, params.offerId, null)
+//                                    viewState.setOffer(offerMapper.toView(mOffer), params.paymentPercentages)
+//                                    return@launchSuspend
+//                                }
+//                    }
+
+//            fetchResult { transferInteractor.getTransfer(params.transferId) }
+//                    .also {
+//                        it.hasData()?.let { transfer ->
+//                            paymentRequest = PaymentRequestModel(params.transferId, null, params.bookNowTransportId)
+//                            if (transfer.bookNowOffers.isNotEmpty()) {
+//                                val filteredBookNow = transfer.bookNowOffers.filterKeys { id -> id.toString() == params.bookNowTransportId }
+//                                if (filteredBookNow.isNotEmpty()) bookNowOffer = filteredBookNow.values.first()
+//                            }
+//                            viewState.setBookNowOffer(bookNowOffer)
+//                        }
+//
+//                        it.isDataError()?.let {
+//                            viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${params.offerId}] not found!"))
+//                        }
+//
+//                    }
         }
     }
 
@@ -123,13 +151,29 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             logEventBeginCheckout()
         }
         if (offer == null && bookNowOffer == null) viewState.showOfferError()
+
+//        fetchDataOnly { offerInteractor.getOffers(params.transferId) }
+//                ?.let {
+//                    offer = params.offerId?.let { offerInteractor.getOffer(it) }
+//                    fetchData(withCacheCheck = false, checkLoginError = false) { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentRequest)) }
+//                            ?.let {
+//                                logEventBeginCheckout()
+//                                router.navigateTo(Screens.Payment(params.transferId,
+//                                        offer?.id,
+//                                        it.url!!,
+//                                        paymentRequest.percentage,
+//                                        params.bookNowTransportId)) } }
+//
+//        viewState.blockInterface(false)
+//        if (offer == null && bookNowOffer == null) viewState.showOfferError()
+
     }
 
     private fun getBraintreeToken() {
         utils.launchSuspend {
             val tokenResult = utils.asyncAwait { paymentInteractor.getBrainTreeToken() }
             if (tokenResult.error != null) viewState.setError(tokenResult.error!!)
-            else braintreeToken = tokenResult.isNotError()?.token ?: ""
+            else braintreeToken = tokenResult.isSuccess()?.token ?: ""
             createNewPayment()
         }
     }

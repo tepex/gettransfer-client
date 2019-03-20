@@ -10,7 +10,6 @@ import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 
-import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
@@ -148,10 +147,10 @@ class MainPresenter : BasePresenter<MainView>() {
     private suspend fun updateCurrentLocationAsync(): Result<GTAddress> {
         //viewState.blockInterface(true)
         viewState.blockSelectedField(true, systemInteractor.selectedField)
-        utils.asyncAwait { routeInteractor.getCurrentAddress() }.also {
+        fetchResultOnly { routeInteractor.getCurrentAddress() }.also {
             if (it.error != null) {
                 viewState.setError(it.error!!)
-                val locationResult = utils.asyncAwait { systemInteractor.getMyLocation() }
+                val locationResult = fetchResultOnly { systemInteractor.getMyLocation() }
                 logIpapiRequest()
                 if (locationResult.error == null
                         && locationResult.model.latitude != null
@@ -167,7 +166,7 @@ class MainPresenter : BasePresenter<MainView>() {
         val point = Point(location.latitude!!, location.longitude!!)
         val lngBounds = LatLngBounds.builder().include(LatLng(location.latitude!!, location.longitude!!)).build()
         val latLonPair = getLatLonPair(lngBounds)
-        val result = utils.asyncAwait { routeInteractor.getAddressByLocation(true, point, latLonPair) }
+        val result = fetchResultOnly { routeInteractor.getAddressByLocation(true, point, latLonPair) }
         if (result.error == null && result.model.cityPoint.point != null) setPointAddress(result.model, false)
     }
 
@@ -212,20 +211,30 @@ class MainPresenter : BasePresenter<MainView>() {
             val latLonPair: Pair<Point, Point> = getLatLonPair(latLngBounds)
 
             utils.launchSuspend {
-                val result = utils.asyncAwait {
-                    routeInteractor.getAddressByLocation(
+                fetchData {                     routeInteractor.getAddressByLocation(
                         systemInteractor.selectedField == FIELD_FROM,
                         pointMapper.fromLatLng(lastPoint!!),
                         latLonPair
-                    )
-                }
-                if (result.error != null) {
-                    Timber.e("getAddressByLocation", result.error!!)
-                    viewState.setError(result.error!!)
-                } else {
-                    currentLocation = result.model.cityPoint.name!!
-                    setAddressInSelectedField(currentLocation)
-                }
+                ) }
+                        ?.let {
+                            currentLocation = it.cityPoint.name!!
+                            setAddressInSelectedField(currentLocation)
+                        }
+
+//                val result = utils.asyncAwait {
+//                    routeInteractor.getAddressByLocation(
+//                        systemInteractor.selectedField == FIELD_FROM,
+//                        pointMapper.fromLatLng(lastPoint!!),
+//                        latLonPair
+//                    )
+//                }
+//                if (result.error != null) {
+//                    Timber.e("getAddressByLocation", result.error!!)
+//                    viewState.setError(result.error!!)
+//                } else {
+//                    currentLocation = result.model.cityPoint.name!!
+//                    setAddressInSelectedField(currentLocation)
+//                }
                 viewState.blockInterface(false)
             }
         } else {
@@ -335,7 +344,7 @@ class MainPresenter : BasePresenter<MainView>() {
             val result = utils.asyncAwait { transferInteractor.getAllTransfers() }
 
             if (result.error != null) viewState.setError(result.error!!)
-            else result.isNotError()?.let {
+            else result.isSuccess()?.let {
                 getLastTransfer(it.filterCompleted())
                         ?.let { transfer -> checkToShowReview(transfer) }
             }
@@ -355,7 +364,7 @@ class MainPresenter : BasePresenter<MainView>() {
 
     private suspend fun checkToShowReview(transfer: Transfer) =
         utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
-            .isNotError()
+            .isSuccess()
             ?.firstOrNull()
             ?.let { offer ->
                 if (!offer.isRated()) {

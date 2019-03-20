@@ -128,13 +128,18 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         utils.launchSuspend {
             viewState.blockInterface(true)
             var route: RouteInfo? = null
-            val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.currencyCode) }
-            result.cacheError?.let { viewState.setError(it) }
-            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
-            else {
-                route = result.model
-                duration = route.duration
-            }
+            fetchData { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.currencyCode) }
+                    ?.let {
+                        route = it
+                        duration = it.duration
+                    }
+//            val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.currencyCode) }
+//            result.cacheError?.let { viewState.setError(it) }
+//            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
+//            else {
+//                route = result.model
+//                duration = route.duration
+//            }
             setTransportTypePrices(route?.prices ?: emptyMap())
 
             routeModel = routeMapper.getView(
@@ -165,10 +170,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             return
         }
         utils.launchSuspend {
-            val result = utils.asyncAwait { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, returnWay, systemInteractor.currency.currencyCode) }
-            result.cacheError?.let { viewState.setError(it) }
-            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
-            else setTransportTypePrices(result.model.prices)
+            fetchData { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, returnWay, systemInteractor.currency.currencyCode) }
+                    ?.let { setTransportTypePrices(it.prices) }
         }
     }
 
@@ -340,9 +343,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = utils.asyncAwait { transferInteractor.createTransfer(transferNew) }
+            val result    = fetchResultOnly { transferInteractor.createTransfer(transferNew) }
+            val logResult = fetchResultOnly { systemInteractor.putAccount() }
 
-            val logResult = utils.asyncAwait { systemInteractor.putAccount() }
             if (result.error == null && logResult.error == null) {
                 logCreateTransfer(Analytics.RESULT_SUCCESS)
                 logEventAddToCart(Analytics.EVENT_ADD_TO_CART)

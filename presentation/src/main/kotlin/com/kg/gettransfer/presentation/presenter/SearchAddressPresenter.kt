@@ -46,15 +46,11 @@ class SearchAddressPresenter : BasePresenter<SearchAddressView>() {
         }
 
         utils.launchSuspend {
-            val result = utils.asyncAwait { routeInteractor.getAutocompletePredictions(prediction, latLonPair) }
-            if (result.error != null) {
-                Timber.e(result.error!!)
-                viewState.setError(result.error!!)
-            } else {
-                lastResult = result.model
-                lastRequest = prediction
-                viewState.setAddressList(result.model)
-            }
+            fetchData(checkLoginError = false){ routeInteractor.getAutocompletePredictions(prediction, latLonPair) }
+                    ?.let {
+                        lastResult = it
+                        lastRequest = prediction
+                        viewState.setAddressList(it) }
         }
     }
 
