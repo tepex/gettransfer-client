@@ -29,7 +29,7 @@ class CarrierTripInfoItem @JvmOverloads constructor(
             CarrierTripBaseModel.FUTURE_TRIP -> context.getString(R.string.LNG_WILL_START_IN).plus(" ")
                     .plus(Utils.durationToString(context, Utils.convertDuration(item.timeToTransfer)))
             CarrierTripBaseModel.IN_PROGRESS_TRIP -> context.getString(R.string.LNG_IN_PROGRESS)
-            CarrierTripBaseModel.PAST_TRIP -> context.getString(R.string.LNG_RIDE_STATUS_CANCELED)
+            CarrierTripBaseModel.PAST_TRIP -> context.getString(R.string.LNG_RIDE_STATUS_COMPLETED)
             else -> ""
         }
         setColorStyle(item.tripStatus)
