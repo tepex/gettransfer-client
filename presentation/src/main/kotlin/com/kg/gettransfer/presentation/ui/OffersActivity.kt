@@ -217,7 +217,7 @@ class OffersActivity : BaseActivity(), OffersView {
                 }
                 setWithoutDiscount(offer.price.withoutDiscount)
                 setPrice(offer.price.base.preferred ?: offer.price.base.def)
-                addPhotos(offer.vehicle.photos)
+                addOfferPhotos(offer.vehicle.photos)
                 setRating(offer.carrier)
             }
             is BookNowOfferModel -> {
@@ -228,11 +228,7 @@ class OffersActivity : BaseActivity(), OffersView {
                 setWithoutDiscount(offer.withoutDiscount)
                 view_offer_rating_bs.isVisible = false
                 offer_ratingDivider_bs.isVisible = false
-                Glide.with(this)
-                        .load(TransportTypeMapper.getImageById(offer.transportType.id))
-                        .apply(RequestOptions().transforms(FitCenter(),
-                                RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
-                        .into(offer_bs_main_photo)
+                addBookNowPhoto(TransportTypeMapper.getImageById(offer.transportType.id))
             }
         }
 
@@ -251,19 +247,35 @@ class OffersActivity : BaseActivity(), OffersView {
         }
     }
 
-    private fun addPhotos(paths: List<String>){
+    private fun addOfferPhotos(paths: List<String>){
         photos_container_bs.removeAllViews()
+        iv_offer_bs_booknow.isVisible = false
         val hasPhotos = paths.isNotEmpty()
         sv_photo.isVisible = hasPhotos
         if (hasPhotos) {
-            ScrollGalleryInflater.addImageViews(paths.size, photos_container_bs)
+            inflatePhotoScrollView(paths.size)
             for (i in 0 until photos_container_bs.childCount) {
                 Glide.with(this)
                         .load(paths[i])
-                        .apply(RequestOptions().transforms(FitCenter(), RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
+                        .apply(RequestOptions().transforms(FitCenter(),
+                                RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
                         .into(photos_container_bs.getChildAt(i) as ImageView)
             }
         }
+    }
+
+    private fun addBookNowPhoto(resId: Int) {
+        sv_photo.isVisible = false
+        iv_offer_bs_booknow.isVisible = true
+        Glide.with(this)
+                .load(resId)
+                .apply(RequestOptions().transforms(FitCenter(),
+                        RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
+                .into(iv_offer_bs_booknow)
+    }
+
+    private fun inflatePhotoScrollView(imagesCount: Int) {
+        ScrollGalleryInflater.addImageViews(imagesCount, photos_container_bs)
     }
 
     private fun setPrice(price: String) {

@@ -57,7 +57,7 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
             remainsToPay          = type.remainsToPay?.def,
             paidPercentage        = type.paidPercentage,
             watertaxi             = type.watertaxi,
-            bookNowOffers         = type.bookNowOffers?.map { entry ->
+            bookNowOffers         = type.bookNowOffers.map { entry ->
                 bookNowOfferMapper.toView(entry.value).apply {
                     transportType = transportTypesModels.find { it.id === entry.key }!!
                 }

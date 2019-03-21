@@ -281,7 +281,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         }
     }
 
-    fun getMarkerIcon(offerModel: OfferModel) = CarIconResourceProvider.getCarIcon(offerModel.vehicle)
+    fun getMarkerIcon(offerModel: OfferModel) = CarIconResourceProvider.getVehicleIcon(offerModel.vehicle)
 
     override fun onSocketConnected() {
         coordinateRequester.request()

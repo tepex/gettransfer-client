@@ -5,8 +5,9 @@ import com.kg.gettransfer.presentation.model.VehicleModel
 
 object CarIconResourceProvider {
 
-    fun getCarIcon(vehicle: VehicleModel) =
-            getType(vehicle.transportType.id).getColor(vehicle.color?: "unknown")
+    fun getVehicleIcon(vehicle: VehicleModel) =
+            if (vehicle.transportType.id == TransportType.ID.HELICOPTER) HelicopterTransport.icon
+            else getType(vehicle.transportType.id).getColor(vehicle.color?: "unknown")
 
 }
 

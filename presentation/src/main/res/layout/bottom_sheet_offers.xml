@@ -54,6 +54,7 @@
             android:layout_marginStart="9dp"
             android:scrollbars="none"
             android:layout_marginTop="16dp"
+            android:visibility="gone"
             android:fillViewport="true"
             android:layout_width="match_parent"
             android:layout_height="225dp">
@@ -68,11 +69,13 @@
     </HorizontalScrollView>
 
     <ImageView
-            android:id="@+id/offer_bs_main_photo"
-            android:layout_width="328dp"
+            android:id="@+id/iv_offer_bs_booknow"
+            android:layout_width="match_parent"
             android:visibility="gone"
             android:layout_height="225dp"
             android:adjustViewBounds="true"
+            android:layout_marginStart="9dp"
+            android:layout_marginEnd="9dp"
             android:layout_gravity="center_horizontal"/>
 
     <include

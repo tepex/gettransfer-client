@@ -80,15 +80,16 @@
             android:layout_alignParentEnd="true">
         <LinearLayout
                 android:id="@+id/ll_prices"
-                android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <TextView
                     android:id="@+id/tv_price_no_discount"
                     tools:text="(330.00p)"
-                    android:visibility="invisible"
-
+                    android:visibility="gone"
+                    android:layout_gravity="center_vertical|start"
                     android:textSize="10sp"
+                    android:layout_weight="1"
                     android:layout_width="45dp"
                     android:layout_height="wrap_content"/>
             <TextView
@@ -96,7 +97,8 @@
                     tools:text="220.00p"
                     style="@style/black_semiBold"
                     android:textSize="15sp"
-                    android:layout_marginStart="12dp"
+                    android:gravity="center"
+                    android:layout_weight="1"
                     android:lines="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
