@@ -102,7 +102,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
             CarrierTripBaseModel.FUTURE_TRIP -> getString(R.string.LNG_WILL_START_IN).plus(" ")
                     .plus(Utils.durationToString(this, Utils.convertDuration(item.base.timeToTransfer)))
             CarrierTripBaseModel.IN_PROGRESS_TRIP -> getString(R.string.LNG_IN_PROGRESS)
-            CarrierTripBaseModel.PAST_TRIP -> getString(R.string.LNG_RIDE_STATUS_CANCELED)
+            CarrierTripBaseModel.PAST_TRIP -> getString(R.string.LNG_RIDE_STATUS_COMPLETED)
             else -> ""
         }
         booking_info.text = getString(R.string.LNG_TRANSFER).plus(" #${item.base.transferId}").plus(" ${transferStatus?: ""}")
