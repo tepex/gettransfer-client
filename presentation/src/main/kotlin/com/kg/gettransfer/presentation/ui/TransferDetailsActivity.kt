@@ -71,7 +71,7 @@ import kotlinx.android.synthetic.main.view_transfer_details_driver_languages.vie
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item_new.view.*
 import kotlinx.android.synthetic.main.view_transfer_main_info.view.*
 import kotlinx.android.synthetic.main.view_transport_conveniences.view.*
-import java.util.Calendar
+import java.util.*
 
 class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
@@ -387,7 +387,16 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         initAboutTransportView(offer, childSeats)
         layoutAboutTransport.isVisible = true
 
+        initChatButton()
+
         initCarMarker(offer)
+    }
+
+    private fun initChatButton() {
+        topCommunicationButtons.btnChat.setOnClickListener { presenter.onChatClick() }
+        bottomCommunicationButtons.btnChat.setOnClickListener { presenter.onChatClick() }
+        topCommunicationButtons.btnChat.isVisible = true
+        bottomCommunicationButtons.btnChat.isVisible = true
     }
 
     private fun initAboutDriverView(offer: OfferModel) {
@@ -415,10 +424,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
                 driver_email.isVisible = true
                 Utils.setSelectOperationListener(this, driver_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
                     presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
-                topCommunicationButtons.btnChat.setOnClickListener { /*presenter.sendEmail(email, null)*/ presenter.onChatClick() }
-                bottomCommunicationButtons.btnChat.setOnClickListener { /*presenter.sendEmail(email, null)*/ presenter.onChatClick() }
-                topCommunicationButtons.btnChat.isVisible = true
-                bottomCommunicationButtons.btnChat.isVisible = true
             }
         }
 

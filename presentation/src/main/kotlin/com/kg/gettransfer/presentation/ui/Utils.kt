@@ -259,6 +259,8 @@ object Utils : KoinComponent {
         return Triple(hours / 24, hours % 24, min % 60)
     }
 
+    fun convertHoursToMinutes(hours: Int) = hours * 60
+
     fun formatDuration(context: Context, duration: Int): String {
         val days = duration / 24
         return if (days > 0) "$days ".plus(context.getString(R.string.LNG_DAYS))

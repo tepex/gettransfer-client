@@ -35,6 +35,7 @@ import com.kg.gettransfer.utilities.Analytics
 import org.koin.standalone.inject
 
 import timber.log.Timber
+import java.util.Calendar
 
 @InjectViewState
 class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SystemEventListener {
@@ -50,6 +51,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private val pointMapper: PointMapper by inject()
 
     private lateinit var transferModel: TransferModel
+    private lateinit var offerModel: OfferModel
     private var routeModel: RouteModel? = null
     private var polyline: PolylineModel? = null
     private var track: CameraUpdate? = null
@@ -86,8 +88,9 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                     val offersResult = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
                     if ((offersResult.error == null || (offersResult.error != null && offersResult.fromCache)) && offersResult.model.size == 1){
                         offer = offersResult.model.first()
+                        offerModel = offerMapper.toView(offer)
                         reviewInteractor.offerIdForReview = offer.id
-                        if (!transfer.isCompletedTransfer()) viewState.setOffer(offerMapper.toView(offer), transferModel.countChilds)
+                        if (allowOfferInfo(transferModel)) viewState.setOffer(offerModel, transferModel.countChilds)
                     }
                 }
 
@@ -112,6 +115,25 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         driverCoordinate = null  // assign null to avoid drawing marker in detached screen
         isCameraUpdatedForCoordinates = false
         systemInteractor.removeListener(this)
+    }
+
+    private fun allowOfferInfo(transfer: TransferModel): Boolean {
+        if(transfer.status != Transfer.Status.NEW &&
+                transfer.status != Transfer.Status.CANCELED &&
+                transfer.status != Transfer.Status.OUTDATED) {
+            val waitDetailsDate = (transfer.dateTimeReturn ?: transfer.dateTime).let {
+                val calendar = Calendar.getInstance()
+                calendar.time = it
+                calendar.apply {
+                    add(Calendar.MINUTE, transfer.time ?: Utils.convertHoursToMinutes(transfer.duration!!))
+                    add(Calendar.MINUTE, Utils.convertHoursToMinutes(24))
+                }
+                calendar.time
+            }
+            if (transfer.status == Transfer.Status.PERFORMED ||
+                    waitDetailsDate.after(Calendar.getInstance().time)) return true
+        }
+        return false
     }
 
     fun onCenterRouteClick() { track?.let { viewState.centerRoute(it) } }
