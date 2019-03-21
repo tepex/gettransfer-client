@@ -12,13 +12,69 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent" />
+    
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layoutTransferInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:background="@color/colorWhite"
+        android:paddingBottom="9dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="8dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/dividerBellowToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/activity_chat_divider_height"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@color/color_gtr_super_light_grey"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/textTransferInfoFrom"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/dividerBellowToolbar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imgChevron"
+            android:layout_marginTop="9dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="12sp"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:textColor="@color/colorTextBlack"/>
+
+        <TextView
+            android:id="@+id/textTransferInfoDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/textTransferInfoFrom"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textTransferInfoFrom"
+            app:layout_constraintEnd_toEndOf="@+id/textTransferInfoFrom"
+            android:layout_marginTop="3dp"
+            android:textSize="12sp"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:textColor="@color/color_gtr_grey"/>
+
+        <ImageView
+            android:id="@+id/imgChevron"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_chevron_right_black"
+            app:layout_constraintTop_toBottomOf="@+id/dividerBellowToolbar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
 
     <LinearLayout
-        android:id="@+id/dividerBellowToolbar"
+        android:id="@+id/dividerBellowTransferInfo"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/activity_chat_divider_height"
-        android:background="@color/color_gtr_super_light_grey"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:layout_height="3dp"
+        android:background="@drawable/shadow_bottom"
+        app:layout_constraintTop_toBottomOf="@+id/layoutTransferInfo"
         android:orientation="vertical" />
 
     <!--<ScrollView
@@ -38,7 +94,7 @@
         android:id="@+id/rvMessages"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/dividerBellowTransferInfo"
         app:layout_constraintBottom_toTopOf="@+id/dividerAboveLayoutMessage"/>
 
     <LinearLayout

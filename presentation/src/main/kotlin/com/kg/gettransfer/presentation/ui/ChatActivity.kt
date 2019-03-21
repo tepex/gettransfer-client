@@ -67,6 +67,16 @@ class ChatActivity : BaseActivity(), ChatView {
                 titleBtnCall.setOnClickListener { presenter.callPhone(phone) }
             }
         }
+        transfer?.let {
+            layoutTransferInfo.apply {
+                isVisible = true
+                textTransferInfoFrom.text = it.from
+                textTransferInfoDate.text = getString(R.string.chat_transfer_date_transfer_id_format,
+                        SystemUtils.formatDateTime(it.dateTime),
+                        getString(R.string.LNG_TRANSFER).plus(" №${it.id}"))
+                setOnClickListener { presenter.onTransferInfoClick() }
+            }
+        }
     }
 
     override fun setChat(chat: ChatModel) {

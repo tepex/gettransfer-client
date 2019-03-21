@@ -14,6 +14,7 @@ import com.kg.gettransfer.presentation.model.MessageModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.view.ChatView
+import com.kg.gettransfer.presentation.view.Screens
 import org.koin.core.parameter.parametersOf
 import org.koin.standalone.inject
 import java.util.Calendar
@@ -105,6 +106,8 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
         utils.launchSuspend { utils.asyncAwait { chatInteractor.newMessage(messageMapper.fromView(newMessage)) } }
         sendAnalytics(MESSAGE_OUT)
     }
+
+    fun onTransferInfoClick(){ router.navigateTo(Screens.Details(transferId)) }
 
     fun readMessage(messageId: Long) = chatInteractor.readMessage(transferId, messageId)
 
