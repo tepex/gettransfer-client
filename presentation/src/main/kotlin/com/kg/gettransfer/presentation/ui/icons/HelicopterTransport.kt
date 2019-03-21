@@ -4,5 +4,5 @@ import com.kg.gettransfer.R
 
 object HelicopterTransport {
     val icon: Int
-    get() = R.drawable.minivan_gold
+    get() = R.drawable.ic_helicopter
 }
