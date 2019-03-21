@@ -76,10 +76,7 @@ class GTNotificationManager(val context: Context) : ContextWrapper(context), Koi
         }
     }
 
-    fun clearOffers(offerIds: List<Int>) {
-        val nManager = getManager()
-        offerIds.forEach { nManager.cancel(OFFER_TAG, it) }
-    }
+    fun clearOffers(offerIds: List<Int>) = offerIds.forEach { getManager().cancel(it) }
 
     fun showNewMessageNotification(transferId: Long, countNewMessages: Int, isMessageByDriver: Boolean) {
         val layout = RemoteViews(context.packageName, R.layout.notification_view)

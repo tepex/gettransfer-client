@@ -70,7 +70,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
                 if (result.model.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE) {
                     if (isViewRoot) {
                         isViewRoot = false
-                        router.navigateTo(Screens.Details(transferId))
+                        router.newChain(Screens.Main, Screens.Requests, Screens.Details(transferId))
                     }
                     else router.exit()
                 }
