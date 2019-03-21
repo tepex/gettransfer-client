@@ -108,7 +108,9 @@ class ChatRepositoryImpl(
     internal fun onNewMessageEvent(message: MessageEntity) {
         factory.retrieveCacheDataStore().addMessage(message)
         val newMessages = factory.retrieveCacheDataStore().getNewMessagesForTransfer(message.transferId)
-        val messageFromCache = newMessages.find { it.accountId == message.accountId && it.text == message.text }
+        val messageFromCache = newMessages.find {
+            (it.accountId == message.accountId || it.accountId == DEFAULT_MESSAGE.accountId) && it.text == message.text
+        }
         messageFromCache?.let { factory.retrieveCacheDataStore().deleteNewMessageFromCache(it.id) }
         sendMessageFromQueue(message.transferId)
         chatReceiver.onNewMessageEvent(messageMapper.fromEntity(message))
