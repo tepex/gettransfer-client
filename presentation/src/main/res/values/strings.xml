@@ -472,6 +472,7 @@
     <string name="LNG_PLEASE_WAIT_OFFERS">Soon offers from carriers will be here</string>
     <string name="LNG_PLEASE_WAIT">Please wait</string>
     <string name="LNG_PLEASE_WAIT_PAYPAL">we are connecting to PayPal…</string>
+    <string name="LNG_PAYMENT_INSTALL_PAYPAL">Install PayPal app or browser to pay</string>
 
 
     <plurals name="days">
