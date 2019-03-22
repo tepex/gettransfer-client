@@ -34,24 +34,6 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
                                         transferModel.paymentPercentages, bookNowTransportId))
                             }
                         }
-
-//                val transferResult = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-//                if (transferResult.error != null) {
-//                    val err = transferResult.error!!
-//                    if (err.isNotFound()) {
-//                        viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer $offerId not found!"))
-//                    }
-//                    router.replaceScreen(Screens.ChangeMode(Screens.PASSENGER_MODE))
-//                }
-//                else {
-//                    val transfer = transferResult.model
-//                    val transferModel = transferMapper.toView(transfer)
-//
-//                    router.replaceScreen(Screens.ChangeMode(Screens.PASSENGER_MODE))
-//                    router.navigateTo(Screens.PaymentOffer(
-//                            transferId, offerId, transferModel.dateRefund,
-//                            transferModel.paymentPercentages, bookNowTransportId))
-//                }
             }
         }
     }

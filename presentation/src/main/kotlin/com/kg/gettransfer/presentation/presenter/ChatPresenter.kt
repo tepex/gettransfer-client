@@ -78,12 +78,6 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
         utils.launchSuspend {
             fetchData(withCacheCheck = NO_CACHE_CHECK) { chatInteractor.getChat(transferId) }
                     ?.let { initChatModel(it) }
-//            val chatRemoteResult = utils.asyncAwait { chatInteractor.getChat(transferId) }
-//            chatRemoteResult.error?.let { checkResultError(it) }
-//            if (chatRemoteResult.error != null) viewState.setError(chatRemoteResult.error!!)
-//            else {
-//                initChatModel(chatRemoteResult.model)
-//            }
         }
     }
 

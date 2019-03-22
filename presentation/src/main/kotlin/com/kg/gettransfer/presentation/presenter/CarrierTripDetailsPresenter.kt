@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.model.CarrierTrip
 
 import com.kg.gettransfer.domain.model.CarrierTripBase
 import com.kg.gettransfer.domain.model.RouteInfo
@@ -22,6 +23,7 @@ import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.remote.model.TripModel
 
 import org.koin.standalone.inject
 
@@ -51,24 +53,30 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
         utils.launchSuspend {
             viewState.blockInterface(true)
             fetchData { carrierTripInteractor.getCarrierTrip(transferId) }
-                    ?.let {tripInfo ->
-                        tripModel = carrierTripMapper.toView(tripInfo)
-                        viewState.setTripInfo(tripModel)
-                        val baseTripInfo = tripInfo.base
-                        if (baseTripInfo.to != null && baseTripInfo.to!!.point != null) {
-                            fetchData { routeInteractor.getRouteInfo(baseTripInfo.from.point!!,
-                                    baseTripInfo.to!!.point!!,
-                                    true,
-                                    false,
-                                    systemInteractor.currency.currencyCode) }
-                                    ?.let { setRouteTransfer(baseTripInfo, it) }
-                        }
-                        else if (baseTripInfo.duration != null) {
-                            setHourlyTransfer(baseTripInfo)
-                        }
-                        Unit
+                    ?.let { tripInfo ->
+                        setTrip(tripInfo)
+                        setTripType(tripInfo.base)
                     }
             viewState.blockInterface(false)
+        }
+    }
+
+    private fun setTrip(trip: CarrierTrip) {
+        tripModel = carrierTripMapper.toView(trip)
+        viewState.setTripInfo(tripModel)
+    }
+
+    private suspend fun setTripType(tripBase: CarrierTripBase) {
+        if (tripBase.to != null && tripBase.to!!.point != null) {
+            fetchData { routeInteractor.getRouteInfo(tripBase.from.point!!,
+                    tripBase.to!!.point!!,
+                    true,
+                    false,
+                    systemInteractor.currency.currencyCode) }
+                    ?.let { setRouteTransfer(tripBase, it) }
+        }
+        else if (tripBase.duration != null) {
+            setHourlyTransfer(tripBase)
         }
     }
 

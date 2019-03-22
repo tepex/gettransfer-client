@@ -147,19 +147,20 @@ class MainPresenter : BasePresenter<MainView>() {
     private suspend fun updateCurrentLocationAsync(): Result<GTAddress> {
         //viewState.blockInterface(true)
         viewState.blockSelectedField(true, systemInteractor.selectedField)
-        fetchResultOnly { routeInteractor.getCurrentAddress() }.also {
-            if (it.error != null) {
-                viewState.setError(it.error!!)
-                val locationResult = fetchResultOnly { systemInteractor.getMyLocation() }
-                logIpapiRequest()
-                if (locationResult.error == null
-                        && locationResult.model.latitude != null
-                        && locationResult.model.longitude != null) setLocation(locationResult.model)
-            }
-            else setPointAddress(it.model)
-            return it
-        }
-
+        fetchResultOnly { routeInteractor.getCurrentAddress() }
+                .also {
+                    if (it.error != null) {
+                        viewState.setError(it.error!!)
+                        val locationResult = fetchResultOnly { systemInteractor.getMyLocation() }
+                        logIpapiRequest()
+                        if (locationResult.error == null
+                                && locationResult.model.latitude != null
+                                && locationResult.model.longitude != null)
+                            setLocation(locationResult.model)
+                    }
+                    else setPointAddress(it.model)
+                    return it
+                }
     }
 
     private suspend fun setLocation(location: Location) {
@@ -211,30 +212,15 @@ class MainPresenter : BasePresenter<MainView>() {
             val latLonPair: Pair<Point, Point> = getLatLonPair(latLngBounds)
 
             utils.launchSuspend {
-                fetchData {                     routeInteractor.getAddressByLocation(
+                fetchData { routeInteractor.getAddressByLocation(
                         systemInteractor.selectedField == FIELD_FROM,
                         pointMapper.fromLatLng(lastPoint!!),
-                        latLonPair
-                ) }
+                        latLonPair) }
                         ?.let {
                             currentLocation = it.cityPoint.name!!
                             setAddressInSelectedField(currentLocation)
                         }
 
-//                val result = utils.asyncAwait {
-//                    routeInteractor.getAddressByLocation(
-//                        systemInteractor.selectedField == FIELD_FROM,
-//                        pointMapper.fromLatLng(lastPoint!!),
-//                        latLonPair
-//                    )
-//                }
-//                if (result.error != null) {
-//                    Timber.e("getAddressByLocation", result.error!!)
-//                    viewState.setError(result.error!!)
-//                } else {
-//                    currentLocation = result.model.cityPoint.name!!
-//                    setAddressInSelectedField(currentLocation)
-//                }
                 viewState.blockInterface(false)
             }
         } else {

@@ -74,7 +74,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
            fetchData { transferInteractor.getTransfer(transferId) }
                     ?.let { transfer ->
                         setTransferFields(transfer)
-
                         var offer: Offer? = null
                         setOffer(transfer.id)
                                 ?.let {
@@ -82,11 +81,9 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                                         offer = it }
                         val showRate = offer?.isRated()?.not() ?: false
                         viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile), showRate)
-
                         setTransferType(transfer)
-
                     }
-                 viewState.blockInterface(false)
+            viewState.blockInterface(false)
         }
     }
 
@@ -110,7 +107,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                                 viewState.setOffer(offerModel, transferModel.countChilds)
                             offer
                         }
-                        else null }
+                        else null
+                    }
 
     private suspend fun setTransferType(transfer: Transfer) {
         if (transfer.to != null) {
@@ -205,12 +203,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             viewState.blockInterface(true, true)
             fetchData { transferInteractor.cancelTransfer(transferId, "") }
                     ?.let { viewState.recreateActivity() }
-
-//            val result = utils.asyncAwait { transferInteractor.cancelTransfer(transferId, "") }
-//            if (result.error != null) {
-//                Timber.e(result.error!!)
-//                viewState.setError(result.error!!)
-//            } else viewState.recreateActivity()
             viewState.blockInterface(false)
         }
     }

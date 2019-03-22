@@ -64,13 +64,8 @@ class OffersPresenter : BasePresenter<OffersView>() {
                         }
 
                         it.hasData()?.let { transfer ->
-                            if (transfer.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE) {
-                                if (isViewRoot) {
-                                    isViewRoot = false
-                                    router.newChain(Screens.Main, Screens.Requests, Screens.Details(transferId))
-                                }
-                                else router.exit()
-                            }
+                            if (transfer.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE)
+                                routeToScreen()
                             else {
                                 viewState.setTransfer(transferMapper.toView(transfer))
                                 checkNewOffersSuspended(transfer)
@@ -79,6 +74,14 @@ class OffersPresenter : BasePresenter<OffersView>() {
                     }
             viewState.blockInterface(false)
         }
+    }
+
+    private fun routeToScreen() {
+        if (isViewRoot) {
+            isViewRoot = false
+            router.newChain(Screens.Main, Screens.Requests, Screens.Details(transferId))
+        }
+        else router.exit()
     }
 
     fun checkNewOffers() {

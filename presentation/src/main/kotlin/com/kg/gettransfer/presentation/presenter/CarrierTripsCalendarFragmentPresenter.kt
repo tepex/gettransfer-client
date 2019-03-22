@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
+import com.kg.gettransfer.domain.model.CarrierTripBase
 import com.kg.gettransfer.presentation.mapper.CarrierTripsCalendarItemsMapper
 import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 import com.kg.gettransfer.presentation.ui.SystemUtils
@@ -22,13 +23,15 @@ class CarrierTripsCalendarFragmentPresenter : BasePresenter<CarrierTripsCalendar
         utils.launchSuspend {
             viewState.blockInterface(true)
             fetchData { carrierTripInteractor.getCarrierTrips() }
-                    ?.let {
-                        carrierTripsCalendarItems = carrierTripsCalendarItemsMapper.toCalendarView(it)
-                        viewState.setCalendarIndicators(carrierTripsCalendarItems!!)
-                        onDateClick(selectedDate)
-                    }
+                    ?.let { setCalendar(it) }
             viewState.blockInterface(false)
         }
+    }
+
+    private fun setCalendar(list: List<CarrierTripBase>) {
+        carrierTripsCalendarItems = carrierTripsCalendarItemsMapper.toCalendarView(list)
+        viewState.setCalendarIndicators(carrierTripsCalendarItems!!)
+        onDateClick(selectedDate)
     }
 
     fun onDateClick(date: String){
