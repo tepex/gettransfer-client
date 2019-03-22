@@ -23,21 +23,21 @@ class CarrierTripsCalendarGridAdapter(context: Context,
                                       private val calendarItems: Map<String, List<CarrierTripBaseModel>>?,
                                       private val listener: ClickOnDateHandler?) : ArrayAdapter<Int>(context, R.layout.view_carrier_trips_calendar_item){
     companion object {
-        const val TRIPS_INDICATOR_WIDTH_4DP = 4f
-        //const val TRIPS_INDICATOR_WIDTH_4DP_MIN_COUNT = 1
-        //const val TRIPS_INDICATOR_WIDTH_4DP_MAX_COUNT = 4
-        const val TRIPS_INDICATOR_WIDTH_4DP_MIN_MINUTES = 1 // >= 1 minute
-        const val TRIPS_INDICATOR_WIDTH_4DP_MAX_MINUTES = 4 * 60 - 1 // < 4 hours
+        const val TRIPS_SMALL_INDICATOR_SIZE = 4f
+        //const val TRIPS_SMALL_INDICATOR_MIN_COUNT = 1
+        //const val TRIPS_SMALL_INDICATOR_MAX_COUNT = 4
+        const val TRIPS_SMALL_INDICATOR_MIN_MINUTES = 1 // >= 1 minute
+        const val TRIPS_SMALL_INDICATOR_MAX_MINUTES = 4 * 60 - 1 // < 4 hours
 
-        const val TRIPS_INDICATOR_WIDTH_8DP = 8f
-        //const val TRIPS_INDICATOR_WIDTH_8DP_MIN_COUNT = 5
-        //const val TRIPS_INDICATOR_WIDTH_8DP_MAX_COUNT = 9
-        const val TRIPS_INDICATOR_WIDTH_8DP_MIN_MINUTES = 4 // >= 4 hours
-        const val TRIPS_INDICATOR_WIDTH_8DP_MAX_MINUTES = 8 * 60 - 1 // < 8 hours
+        const val TRIPS_MEDIUM_INDICATOR_SIZE = 8f
+        //const val TRIPS_MEDIUM_INDICATOR_MIN_COUNT = 5
+        //const val TRIPS_MEDIUM_INDICATOR_MAX_COUNT = 9
+        const val TRIPS_MEDIUM_INDICATOR_MIN_MINUTES = 4 // >= 4 hours
+        const val TRIPS_MEDIUM_INDICATOR_MAX_MINUTES = 8 * 60 - 1 // < 8 hours
 
-        const val TRIPS_INDICATOR_WIDTH_16DP = 16f
-        //const val TRIPS_INDICATOR_WIDTH_16DP_MIN_COUNT = 10
-        const val TRIPS_INDICATOR_WIDTH_16DP_MIN_MINUTES = 8 * 60 // >= 8 hours
+        const val TRIPS_LARGE_INDICATOR_SIZE = 16f
+        //const val TRIPS_LARGE_INDICATOR_MIN_COUNT = 10
+        const val TRIPS_LARGE_INDICATOR_MIN_MINUTES = 8 * 60 // >= 8 hours
     }
 
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
@@ -65,14 +65,14 @@ class CarrierTripsCalendarGridAdapter(context: Context,
             minutes += trip.time ?: trip.duration?.let { Utils.convertHoursToMinutes(it) } ?: 0
         }
         when{
-            minutes in TRIPS_INDICATOR_WIDTH_4DP_MIN_MINUTES..TRIPS_INDICATOR_WIDTH_4DP_MAX_MINUTES -> { setIndicatorWidth(TRIPS_INDICATOR_WIDTH_4DP, view.countTripsIndicator) }
-            minutes in TRIPS_INDICATOR_WIDTH_8DP_MIN_MINUTES..TRIPS_INDICATOR_WIDTH_8DP_MAX_MINUTES -> { setIndicatorWidth(TRIPS_INDICATOR_WIDTH_8DP, view.countTripsIndicator) }
-            minutes >= TRIPS_INDICATOR_WIDTH_16DP_MIN_MINUTES -> { setIndicatorWidth(TRIPS_INDICATOR_WIDTH_16DP, view.countTripsIndicator) }
+            minutes in TRIPS_SMALL_INDICATOR_MIN_MINUTES..TRIPS_SMALL_INDICATOR_MAX_MINUTES -> { setIndicatorWidth(TRIPS_SMALL_INDICATOR_SIZE, view.countTripsIndicator) }
+            minutes in TRIPS_MEDIUM_INDICATOR_MIN_MINUTES..TRIPS_MEDIUM_INDICATOR_MAX_MINUTES -> { setIndicatorWidth(TRIPS_MEDIUM_INDICATOR_SIZE, view.countTripsIndicator) }
+            minutes >= TRIPS_LARGE_INDICATOR_MIN_MINUTES -> { setIndicatorWidth(TRIPS_LARGE_INDICATOR_SIZE, view.countTripsIndicator) }
         }
         /*when{
-            size in TRIPS_INDICATOR_WIDTH_4DP_MIN_COUNT..TRIPS_INDICATOR_WIDTH_4DP_MAX_COUNT -> { setIndicatorWidth(TRIPS_INDICATOR_WIDTH_4DP, view.countTripsIndicator) }
-            size in TRIPS_INDICATOR_WIDTH_8DP_MIN_COUNT..TRIPS_INDICATOR_WIDTH_8DP_MAX_COUNT -> { setIndicatorWidth(TRIPS_INDICATOR_WIDTH_8DP, view.countTripsIndicator) }
-            size >= TRIPS_INDICATOR_WIDTH_16DP_MIN_COUNT -> { setIndicatorWidth(TRIPS_INDICATOR_WIDTH_16DP, view.countTripsIndicator) }
+            size in TRIPS_SMALL_INDICATOR_MIN_COUNT..TRIPS_SMALL_INDICATOR_MAX_COUNT -> { setIndicatorWidth(TRIPS_SMALL_INDICATOR_SIZE, view.countTripsIndicator) }
+            size in TRIPS_MEDIUM_INDICATOR_MIN_COUNT..TRIPS_MEDIUM_INDICATOR_MAX_COUNT -> { setIndicatorWidth(TRIPS_MEDIUM_INDICATOR_SIZE, view.countTripsIndicator) }
+            size >= TRIPS_LARGE_INDICATOR_MIN_COUNT -> { setIndicatorWidth(TRIPS_LARGE_INDICATOR_SIZE, view.countTripsIndicator) }
         }*/
         view.dayOfMonth.text = dayValue.toString()
         view.setOnClickListener { listener?.invoke(dateString) }
