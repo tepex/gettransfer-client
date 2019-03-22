@@ -314,6 +314,10 @@ class MainPresenter : BasePresenter<MainView>() {
         }
     }
 
+    fun onSupportClick() {
+        router.navigateTo(Screens.Support)
+    }
+
     private fun comparePointsWithRounding(point1: LatLng?, point2: LatLng?): Boolean {
         if (point2 == null || point1 == null) return false
         val criteria = 0.000_001

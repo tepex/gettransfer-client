@@ -53,6 +53,7 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
                 R.id.navCarrierTrips     -> onCarrierTripsClick()
                 R.id.navAbout            -> onAboutClick()
                 R.id.navSettings         -> onSettingsClick()
+                R.id.navSupport          -> onSupportClick()
                 R.id.navPassengerMode    -> onPassengerModeClick()
                 R.id.navCarrierTransfers -> onTransfersClick()
                 else -> Timber.d("No route")
@@ -127,6 +128,7 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
 
         navCarrierTrips.setOnClickListener(itemsNavigationViewListener)
         navSettings.setOnClickListener(itemsNavigationViewListener)
+        navSupport.setOnClickListener(itemsNavigationViewListener)
         navAbout.setOnClickListener(itemsNavigationViewListener)
         navPassengerMode.setOnClickListener(itemsNavigationViewListener)
         navCarrierTransfers.setOnClickListener(itemsNavigationViewListener)

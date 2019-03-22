@@ -319,4 +319,8 @@ object Screens {
                     putExtra(PaypalConnectionView.EXTRA_BOOK_NOW_TRANSPORT_ID, bookNowTransportId)
                 }
     }
+
+    object Support : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, SupportActivity::class.java)
+    }
 }

@@ -151,6 +151,7 @@
     <string name="LNG_MENU_TITLE_TRANSFERS">Transfers</string>
     <string name="LNG_MENU_SUBTITLE_TRANSFERS">Make offer</string>
     <string name="LNG_MENU_SUBTITLE_TRIPS">Upcoming transfers</string>
+    <string name="LNG_CUSTOMER_SUBTITLE_SUPPORT">Contact us</string>
     <string name="LNG_READMORE"><u>Read more</u></string>
     <string name="LNG_BESTPRICES">Best prices for transfers\nbetween airports and cities\nworldwide</string>
     <string name="LNG_LANGUAGE">Application language</string>
@@ -474,6 +475,22 @@
     <string name="LNG_PLEASE_WAIT_PAYPAL">we are connecting to PayPal…</string>
     <string name="LNG_PAYMENT_INSTALL_PAYPAL">Install PayPal app or browser to pay</string>
 
+    <string name="LNG_CUSTOMER_SUPPORT_SPEAK_YOUR_LANG">"We speak"</string>
+    <string name="LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSENGER">""Write us"</string>
+    <string name="LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSAGE">"Write us a message"</string>
+    <string name="LNG_CUSTOMER_SUPPORT_CALL_BY_PHONE">"Call us"</string>
+    <string name="LNG_CUSTOMER_SUPPORT_REGION">"Your region"</string>
+    <string name="LNG_REGION_NAMES_EUROPE">"Europe"</string>
+    <string name="LNG_REGION_NAMES_AMERICA">"America"</string>
+    <string name="LNG_REGION_NAMES_ASIA">"Asia"</string>
+    <string name="LNG_CITY_NAMES_LONDON">"London"</string>
+    <string name="LNG_CITY_NAMES_SAN_FRANCISCO">"San Francisco"</string>
+    <string name="LNG_CITY_NAMES_MIAMI">"Miami"</string>
+    <string name="LNG_CITY_NAMES_GENEVA">"Geneva"</string>
+    <string name="LNG_CITY_NAMES_LARNACA">"Larnaca"</string>
+    <string name="LNG_CITY_NAMES_MOSCOW">"Moscow"</string>
+    <string name="LNG_CITY_NAMES_MOSCOW2">"Moscow toll-free"</string>
+    <string name="LNG_CITY_NAMES_HONG_KONG">"Hong Kong"</string>
 
     <plurals name="days">
         <item quantity="one">@string/LNG_DAY</item>
