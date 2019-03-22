@@ -24,15 +24,20 @@ class CarrierTripsCalendarGridAdapter(context: Context,
                                       private val listener: ClickOnDateHandler?) : ArrayAdapter<Int>(context, R.layout.view_carrier_trips_calendar_item){
     companion object {
         const val TRIPS_INDICATOR_WIDTH_4DP = 4f
-        const val TRIPS_INDICATOR_WIDTH_4DP_MIN_COUNT = 1
-        const val TRIPS_INDICATOR_WIDTH_4DP_MAX_COUNT = 4
+        //const val TRIPS_INDICATOR_WIDTH_4DP_MIN_COUNT = 1
+        //const val TRIPS_INDICATOR_WIDTH_4DP_MAX_COUNT = 4
+        const val TRIPS_INDICATOR_WIDTH_4DP_MIN_MINUTES = 1 // >= 1 minute
+        const val TRIPS_INDICATOR_WIDTH_4DP_MAX_MINUTES = 4 * 60 - 1 // < 4 hours
 
         const val TRIPS_INDICATOR_WIDTH_8DP = 8f
-        const val TRIPS_INDICATOR_WIDTH_8DP_MIN_COUNT = 5
-        const val TRIPS_INDICATOR_WIDTH_8DP_MAX_COUNT = 9
+        //const val TRIPS_INDICATOR_WIDTH_8DP_MIN_COUNT = 5
+        //const val TRIPS_INDICATOR_WIDTH_8DP_MAX_COUNT = 9
+        const val TRIPS_INDICATOR_WIDTH_8DP_MIN_MINUTES = 4 // >= 4 hours
+        const val TRIPS_INDICATOR_WIDTH_8DP_MAX_MINUTES = 8 * 60 - 1 // < 8 hours
 
         const val TRIPS_INDICATOR_WIDTH_16DP = 16f
-        const val TRIPS_INDICATOR_WIDTH_16DP_MIN_COUNT = 10
+        //const val TRIPS_INDICATOR_WIDTH_16DP_MIN_COUNT = 10
+        const val TRIPS_INDICATOR_WIDTH_16DP_MIN_MINUTES = 8 * 60 // >= 8 hours
     }
 
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
@@ -53,12 +58,22 @@ class CarrierTripsCalendarGridAdapter(context: Context,
         if (view == null) view = mInflater.inflate(R.layout.view_carrier_trips_calendar_item, parent, false)
 
         view!!
-        val size = calendarItems?.get(dateString)?.size?: 0
+        //val size = calendarItems?.get(dateString)?.size?: 0
+        val trips = calendarItems?.get(dateString)?: emptyList()
+        var minutes = 0
+        for (trip in trips){
+            minutes += trip.time ?: trip.duration?.let { Utils.convertHoursToMinutes(it) } ?: 0
+        }
         when{
+            minutes in TRIPS_INDICATOR_WIDTH_4DP_MIN_MINUTES..TRIPS_INDICATOR_WIDTH_4DP_MAX_MINUTES -> { setIndicatorWidth(TRIPS_INDICATOR_WIDTH_4DP, view.countTripsIndicator) }
+            minutes in TRIPS_INDICATOR_WIDTH_8DP_MIN_MINUTES..TRIPS_INDICATOR_WIDTH_8DP_MAX_MINUTES -> { setIndicatorWidth(TRIPS_INDICATOR_WIDTH_8DP, view.countTripsIndicator) }
+            minutes >= TRIPS_INDICATOR_WIDTH_16DP_MIN_MINUTES -> { setIndicatorWidth(TRIPS_INDICATOR_WIDTH_16DP, view.countTripsIndicator) }
+        }
+        /*when{
             size in TRIPS_INDICATOR_WIDTH_4DP_MIN_COUNT..TRIPS_INDICATOR_WIDTH_4DP_MAX_COUNT -> { setIndicatorWidth(TRIPS_INDICATOR_WIDTH_4DP, view.countTripsIndicator) }
             size in TRIPS_INDICATOR_WIDTH_8DP_MIN_COUNT..TRIPS_INDICATOR_WIDTH_8DP_MAX_COUNT -> { setIndicatorWidth(TRIPS_INDICATOR_WIDTH_8DP, view.countTripsIndicator) }
             size >= TRIPS_INDICATOR_WIDTH_16DP_MIN_COUNT -> { setIndicatorWidth(TRIPS_INDICATOR_WIDTH_16DP, view.countTripsIndicator) }
-        }
+        }*/
         view.dayOfMonth.text = dayValue.toString()
         view.setOnClickListener { listener?.invoke(dateString) }
         val monthItem = MonthItem(displayMonth == currentMonth && displayYear == currentYear, DateUtils.isToday(mDate.time), view)
