@@ -7,6 +7,8 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.Account.Companion.GROUP_CARRIER_DRIVER
+import com.kg.gettransfer.domain.model.Account.Companion.GROUP_MANAGER_VIEW_TRANSFERS
 import com.kg.gettransfer.presentation.mapper.TransferMapper
 
 import com.kg.gettransfer.presentation.ui.LoginActivity
@@ -41,7 +43,6 @@ class LoginPresenter : BasePresenter<LoginView>() {
                     when (screenForReturn) {
                         Screens.CARRIER_MODE   -> {
                             router.navigateTo(Screens.ChangeMode(checkCarrierMode()))
-                            analytics.logProfile(Analytics.DRIVER_TYPE)
                         }
                         Screens.PASSENGER_MODE -> {
                             router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
@@ -102,9 +103,15 @@ class LoginPresenter : BasePresenter<LoginView>() {
         return fieldsValid
     }
 
-    private fun checkCarrierMode() =
-        if (systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) Screens.CARRIER_MODE
-        else Screens.REG_CARRIER
+    private fun checkCarrierMode(): String {
+        val groups = systemInteractor.account.groups
+        if (groups.indexOf(GROUP_CARRIER_DRIVER) >= 0) {
+            if (groups.indexOf(GROUP_MANAGER_VIEW_TRANSFERS) >= 0) analytics.logProfile(Analytics.CARRIER_TYPE)
+            else analytics.logProfile(Analytics.DRIVER_TYPE)
+            return Screens.CARRIER_MODE
+        }
+        return Screens.REG_CARRIER
+    }
 
     fun onPassForgot() = router.navigateTo(Screens.RestorePassword)
 }
