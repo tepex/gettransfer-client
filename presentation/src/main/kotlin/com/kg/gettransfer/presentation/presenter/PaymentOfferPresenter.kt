@@ -3,6 +3,9 @@ package com.kg.gettransfer.presentation.presenter
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
+import com.braintreepayments.api.dropin.DropInRequest
+import com.braintreepayments.api.exceptions.InvalidArgumentException
+import com.braintreepayments.api.models.PayPalRequest
 
 import com.kg.gettransfer.domain.ApiException
 
@@ -22,6 +25,7 @@ import com.kg.gettransfer.presentation.view.PaymentOfferView
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
+import io.sentry.Sentry
 
 import org.koin.standalone.inject
 
@@ -139,14 +143,31 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         } else {
             val params = result.model.params
             paymentId = params?.paymentId ?: 0L
-            viewState.setupBraintree(params?.amount, params?.currency)
+            setupPaypal(params?.amount, params?.currency)
         }
     }
 
-    fun confirmPayment(nonce: String) = router.navigateTo(
+    private fun setupPaypal(amount: String?, currency: String?) {
+        try {
+            val dropInRequest = DropInRequest().clientToken(braintreeToken)
+
+            val paypal = PayPalRequest(amount)
+                    .currencyCode(currency).intent(PayPalRequest.INTENT_AUTHORIZE)
+            dropInRequest.paypalRequest(paypal)
+            viewState.startPaypal(dropInRequest)
+        } catch (e: InvalidArgumentException) {
+            Sentry.capture(e)
+        }
+
+    }
+
+    fun confirmPayment(nonce: String) {
+        viewState.blockInterface(true, true)
+        router.navigateTo(
                 Screens.PayPalConnection(
                         paymentId, nonce, params.transferId,
                         params.offerId, paymentRequest.percentage, params.bookNowTransportId))
+    }
 
 
     private fun navigateToPayment() {
