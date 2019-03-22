@@ -35,7 +35,7 @@ import com.kg.gettransfer.utilities.Analytics
 import org.koin.standalone.inject
 
 import timber.log.Timber
-import java.util.Calendar
+import java.util.*
 
 @InjectViewState
 class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SystemEventListener {
@@ -72,44 +72,59 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         utils.launchSuspend {
             viewState.blockInterface(true, true)
            fetchData { transferInteractor.getTransfer(transferId) }
-                    ?.let{ transfer ->
-                        transfer.from.point?.let { startCoordinate = pointMapper.toLatLng(it) }
-                        transfer.from.let { fromPoint = cityPointMapper.toView(it) }
-                        transfer.to?.let { toPoint = cityPointMapper.toView(it) }
-                        hourlyDuration = transfer.duration
+                    ?.let { transfer ->
+                        setTransferFields(transfer)
 
-                        transferModel = transferMapper.toView(transfer)
                         var offer: Offer? = null
-
-                        if (transferModel.status.checkOffers) {
-                            val offers = fetchData { offerInteractor.getOffers(transfer.id) }
-                            if (offers != null && offers.size == 1) {
-                                offer = offers.first()
-                                offerModel = offerMapper.toView(offer)
-                                reviewInteractor.offerIdForReview = offer.id
-                                if (allowOfferInfo(transferModel)) viewState.setOffer(offerModel, transferModel.countChilds)
-                            }
-                        }
-
-                        val showRate = offer?.isRated()?.not()?:false
+                        setOffer(transfer.id)
+                                ?.let {
+                                    if (transferModel.status.checkOffers)
+                                        offer = it }
+                        val showRate = offer?.isRated()?.not() ?: false
                         viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile), showRate)
 
-                        if (transfer.to != null) {
-                            fetchResult {
-                                routeInteractor.getRouteInfo(transfer.from.point!!,
-                                        transfer.to!!.point!!,
-                                        true,
-                                        false,
-                                        systemInteractor.currency.currencyCode)
-                            }.also {
-                                it.cacheError?.let { e -> viewState.setError(e) }
-                                setRouteTransfer(transfer, it.model)
-                            }
-                        } else if (transfer.duration != null) setHourlyTransfer(transfer)
-                        Unit
+                        setTransferType(transfer)
+
                     }
                  viewState.blockInterface(false)
         }
+    }
+
+    private fun setTransferFields(transfer: Transfer) {
+        transfer.from.point?.let { startCoordinate = pointMapper.toLatLng(it) }
+        transfer.from.let { fromPoint = cityPointMapper.toView(it) }
+        transfer.to?.let { toPoint = cityPointMapper.toView(it) }
+        hourlyDuration = transfer.duration
+
+        transferModel = transferMapper.toView(transfer)
+    }
+
+    private suspend fun setOffer(transferId: Long) =
+            fetchData { offerInteractor.getOffers(transferId) }
+                    ?.let {
+                        if (it.size == 1) {
+                            val offer = it.first()
+                            offerModel = offerMapper.toView(offer)
+                            reviewInteractor.offerIdForReview = offer.id
+                            if (allowOfferInfo(transferModel))
+                                viewState.setOffer(offerModel, transferModel.countChilds)
+                            offer
+                        }
+                        else null }
+
+    private suspend fun setTransferType(transfer: Transfer) {
+        if (transfer.to != null) {
+            fetchResult {
+                routeInteractor.getRouteInfo(transfer.from.point!!,
+                        transfer.to!!.point!!,
+                        true,
+                        false,
+                        systemInteractor.currency.currencyCode)
+            }.also {
+                it.cacheError?.let { e -> viewState.setError(e) }
+                setRouteTransfer(transfer, it.model)
+            }
+        } else if (transfer.duration != null) setHourlyTransfer(transfer)
     }
 
     @CallSuper
