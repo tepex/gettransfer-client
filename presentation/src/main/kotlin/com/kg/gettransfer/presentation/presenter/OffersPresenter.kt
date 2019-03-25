@@ -90,9 +90,9 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     private suspend fun checkNewOffersSuspended(transfer: Transfer) {
         this.transfer = transfer
-        fetchResult(SHOW_ERROR, withCacheCheck = false, checkLoginError = false) { offerInteractor.getOffers(transfer.id) }
+        fetchResult(WITHOUT_ERROR, withCacheCheck = false, checkLoginError = false) { offerInteractor.getOffers(transfer.id) }
                 .also {
-                    if (it.error == null && !it.fromCache) offers = emptyList()
+                    if (it.error != null && !it.fromCache) offers = emptyList()
                     else {
                         offers = mutableListOf<OfferItem>().apply {
                             addAll(it.model.map { offer -> offerMapper.toView(offer) })
