@@ -52,7 +52,7 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
     override fun onFirstViewAttach() {
         utils.launchSuspend {
             viewState.blockInterface(true)
-            fetchData { carrierTripInteractor.getCarrierTrip(transferId) }
+            fetchData { carrierTripInteractor.getCarrierTrip(tripId) }
                     ?.let { tripInfo ->
                         setTrip(tripInfo)
                         setTripType(tripInfo.base)
