@@ -46,7 +46,6 @@
                 android:id="@+id/layoutAccountInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/nav_header_account_info_layout_padding_top"
                 android:layout_below="@+id/navHeaderLogo">
 
                 <TextView
@@ -150,11 +149,12 @@
 
             <ImageButton
                 android:id="@+id/navFooterStamp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/best_price_logo_image_height"
+                android:layout_height="@dimen/best_price_logo_image_width"
                 android:layout_above="@+id/navMessage"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/nav_footer_stamp_bottom"
+                android:layout_marginTop="@dimen/nav_footer_stamp_top"
                 android:background="@null"
                 android:scaleType="centerInside"
                 app:srcCompat="@drawable/ic_best_price" />

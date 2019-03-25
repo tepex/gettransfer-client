@@ -100,9 +100,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         topCommunicationButtons.btnCancel.btnName.text = getString(R.string.LNG_CANCEL_REQUEST).replace(" ", "\n")
         bottomCommunicationButtons.btnCancel.btnName.text = getString(R.string.LNG_CANCEL_REQUEST).replace(" ", "\n")
 
-        topCommunicationButtons.btnSupport.btnImg.backgroundTintList = ContextCompat.getColorStateList(this, R.color.color_gtr_yellow)
-        bottomCommunicationButtons.btnSupport.btnImg.backgroundTintList = ContextCompat.getColorStateList(this, R.color.color_gtr_yellow)
-
         /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.statusBarColor = Color.WHITE
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
