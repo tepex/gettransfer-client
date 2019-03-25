@@ -229,7 +229,7 @@ class OffersActivity : BaseActivity(), OffersView {
                 setWithoutDiscount(offer.withoutDiscount)
                 view_offer_rating_bs.isVisible = false
                 offer_ratingDivider_bs.isVisible = false
-                addBookNowPhoto(TransportTypeMapper.getImageById(offer.transportType.id))
+                addSinglePhoto(resId = TransportTypeMapper.getImageById(offer.transportType.id))
             }
         }
 
@@ -254,22 +254,30 @@ class OffersActivity : BaseActivity(), OffersView {
         val hasPhotos = paths.isNotEmpty()
         sv_photo.isVisible = hasPhotos
         if (hasPhotos) {
-            inflatePhotoScrollView(paths.size)
-            for (i in 0 until photos_container_bs.childCount) {
-                Glide.with(this)
-                        .load(paths[i])
-                        .apply(RequestOptions().transforms(FitCenter(),
-                                RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
-                        .into(photos_container_bs.getChildAt(i) as ImageView)
+            if (paths.size == 1) {
+                addSinglePhoto(path = paths.first())
+            }
+            else {
+                inflatePhotoScrollView(paths.size)
+                for (i in 0 until photos_container_bs.childCount) {
+                    Glide.with(this)
+                            .load(paths[i])
+                            .apply(RequestOptions().transforms(FitCenter(),
+                                    RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
+                            .into(photos_container_bs.getChildAt(i) as ImageView)
+                }
             }
         }
     }
 
-    private fun addBookNowPhoto(resId: Int) {
+    private fun addSinglePhoto(resId: Int = 0, path: String? = null) {
         sv_photo.isVisible = false
         iv_offer_bs_booknow.isVisible = true
         Glide.with(this)
-                .load(resId)
+                .let {
+                    if (path != null) it.load(path)
+                    else it.load(resId)
+                }
                 .apply(RequestOptions().transforms(FitCenter(),
                         RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
                 .into(iv_offer_bs_booknow)
