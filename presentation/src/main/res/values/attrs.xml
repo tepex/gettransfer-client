@@ -68,4 +68,10 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="ContactsView">
+        <attr name="icon_country" format="reference"/>
+        <attr name="title_country" format="string"/>
+        <attr name="phone" format="string"/>
+    </declare-styleable>
+
 </resources>
