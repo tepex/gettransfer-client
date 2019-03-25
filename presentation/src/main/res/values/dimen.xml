@@ -45,7 +45,8 @@
 	<dimen name="nav_header_account_info_layout_padding_top">6dp</dimen>
 
 	<dimen name="nav_header_email_bottom">6dp</dimen>
-
+	<dimen name="nav_footer_title_text_size">12sp</dimen>
+	<dimen name="nav_footer_title_horizontal_padding">44dp</dimen>
 	<dimen name="nav_item_margin_top">5dp</dimen>
 	<dimen name="nav_item_margin_bottom">5dp</dimen>
 	<dimen name="nav_item_margin_start">30dp</dimen>

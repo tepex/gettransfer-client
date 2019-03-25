@@ -161,11 +161,14 @@
 
             <TextView
                 android:id="@+id/navMessage"
-                style="@style/nav_item_title"
+                style="@style/sf_font_semi_bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/nav_footer_title_horizontal_padding"
+                android:paddingEnd="@dimen/nav_footer_title_horizontal_padding"
                 android:layout_above="@+id/navFooterVersion"
+                android:textSize="@dimen/nav_footer_title_text_size"
                 android:layout_marginBottom="@dimen/nav_footer_read_more_bottom"
-                android:layout_marginStart="22dp"
-                android:layout_marginEnd="22dp"
                 android:gravity="center_horizontal"
                 android:text="@string/LNG_BESTPRICES" />
 
