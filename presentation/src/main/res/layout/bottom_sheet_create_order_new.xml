@@ -66,6 +66,7 @@
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/fl_currency"
                     android:layout_width="49dp"
+                    app:layout_constraintStart_toStartOf="parent"
                     android:layout_height="match_parent">
 
                     <TextView
@@ -137,7 +138,6 @@
                     android:id="@+id/price_divider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/create_transfer_divider_height"
-
 
                     android:layout_marginStart="@dimen/divider_margin_start"
                     android:layout_marginEnd="@dimen/divider_margin_start"
