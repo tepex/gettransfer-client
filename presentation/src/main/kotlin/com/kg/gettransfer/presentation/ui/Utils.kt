@@ -403,8 +403,11 @@ object Utils : KoinComponent {
     @Suppress("UNUSED_PARAMETER")
     fun formatPrice(context: Context, price: String) = "($price)"
 
+    private fun displayMetrics(context: Context) =
+            context.resources.displayMetrics
+
     fun convertDpToPixels(context: Context, dp: Float) =
-        dp * context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT
+        dp * displayMetrics(context).densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT
 
     fun dpToPxInt(context: Context, dp: Float) =
             convertDpToPixels(context, dp).toInt()

@@ -548,6 +548,7 @@
 	<dimen name="view_offer_image_like_margin_start">5dp</dimen>
 	<dimen name="view_offer_prices_margin">8dp</dimen>
 	<dimen name="view_offer_car_photo_height">96dp</dimen>
+	<dimen name="book_now_photo_corner_radius">5dp</dimen>
 
 	<dimen name="rate_your_transfer_height">154dp</dimen>
 
