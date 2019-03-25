@@ -656,6 +656,15 @@
 	<dimen name="activity_chat_not_my_message_text_padding_start_end">18dp</dimen>
     <dimen name="activity_chat_not_my_message_date_text_margin">8dp</dimen>
 
+	<dimen name="activity_chat_transfer_info_text_size">12sp</dimen>
+	<dimen name="activity_chat_transfer_info_from_margin_start">16dp</dimen>
+	<dimen name="activity_chat_transfer_info_from_margin_top">9dp</dimen>
+	<dimen name="activity_chat_transfer_info_from_margin_end">8dp</dimen>
+	<dimen name="activity_chat_transfer_info_date_margin_top">3dp</dimen>
+	<dimen name="activity_chat_transfer_info_date_margin_bottom">9dp</dimen>
+	<dimen name="activity_chat_transfer_info_img_chevron_margin_end">8dp</dimen>
+	<dimen name="activity_chat_shadow_below_toolbar_height">3dp</dimen>
+
 
 	<!--drawable values-->
 	<dimen name="panels_corner_radius">16dp</dimen>

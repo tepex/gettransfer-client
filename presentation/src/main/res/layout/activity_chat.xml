@@ -19,9 +19,6 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         android:background="@color/colorWhite"
-        android:paddingBottom="9dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="8dp"
         android:visibility="gone">
 
         <LinearLayout
@@ -39,9 +36,10 @@
             app:layout_constraintTop_toBottomOf="@+id/dividerBellowToolbar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/imgChevron"
-            android:layout_marginTop="9dp"
-            android:layout_marginEnd="8dp"
-            android:textSize="12sp"
+            android:layout_marginStart="@dimen/activity_chat_transfer_info_from_margin_start"
+            android:layout_marginTop="@dimen/activity_chat_transfer_info_from_margin_top"
+            android:layout_marginEnd="@dimen/activity_chat_transfer_info_from_margin_start"
+            android:textSize="@dimen/activity_chat_transfer_info_text_size"
             android:fontFamily="@font/sf_pro_text_regular"
             android:textColor="@color/colorTextBlack"/>
 
@@ -53,8 +51,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/textTransferInfoFrom"
             app:layout_constraintEnd_toEndOf="@+id/textTransferInfoFrom"
-            android:layout_marginTop="3dp"
-            android:textSize="12sp"
+            android:layout_marginTop="@dimen/activity_chat_transfer_info_date_margin_top"
+            android:layout_marginBottom="@dimen/activity_chat_transfer_info_date_margin_bottom"
+            android:textSize="@dimen/activity_chat_transfer_info_text_size"
             android:fontFamily="@font/sf_pro_text_regular"
             android:textColor="@color/color_gtr_grey"/>
 
@@ -62,17 +61,18 @@
             android:id="@+id/imgChevron"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_chevron_right_black"
+            android:layout_marginEnd="@dimen/activity_chat_transfer_info_img_chevron_margin_end"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dividerBellowToolbar"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:srcCompat="@drawable/ic_chevron_right_black" />
 
     </android.support.constraint.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/dividerBellowTransferInfo"
         android:layout_width="match_parent"
-        android:layout_height="3dp"
+        android:layout_height="@dimen/activity_chat_shadow_below_toolbar_height"
         android:background="@drawable/shadow_bottom"
         app:layout_constraintTop_toBottomOf="@+id/layoutTransferInfo"
         android:orientation="vertical" />
