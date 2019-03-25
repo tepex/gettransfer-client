@@ -141,7 +141,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                 val calendar = Calendar.getInstance()
                 calendar.time = it
                 calendar.apply {
-                    add(Calendar.MINUTE, transfer.time ?: Utils.convertHoursToMinutes(transfer.duration!!))
+                    add(Calendar.MINUTE, transfer.time ?: transfer.duration?.let { dur -> Utils.convertHoursToMinutes(dur) } ?: 0)
                     add(Calendar.MINUTE, Utils.convertHoursToMinutes(24))
                 }
                 calendar.time
