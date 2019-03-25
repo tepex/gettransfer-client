@@ -207,7 +207,8 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/fabFacebook"
                 app:layout_constraintTop_toTopOf="@+id/fabFacebook"
-                app:srcCompat="@drawable/ic_whatsapp" />
+                app:srcCompat="@drawable/ic_whatsapp"
+                android:visibility="gone"/>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fabViber"
