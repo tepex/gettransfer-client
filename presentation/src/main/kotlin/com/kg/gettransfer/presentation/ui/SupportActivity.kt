@@ -11,11 +11,22 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.SupportPresenter
 import com.kg.gettransfer.presentation.view.SupportView
 import kotlinx.android.synthetic.main.activity_support.*
+import kotlinx.android.synthetic.main.layout_write_us.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
 import kotlinx.android.synthetic.main.view_contacts.view.*
 
 class SupportActivity : BaseActivity(), SupportView {
+
+    companion object {
+        const val FB_PACKAGE = "com.facebook.katana"
+        const val VIBER_PACKAGE = "com.viber.voip"
+        const val FACEBOOK_URL = "https://www.facebook.com/gettransfer"
+        const val FACEBOOK_URI = "fb://facewebmodal/f?href="
+        const val VIBER_URL = "https://viber.me/GetTransferSupport"
+        const val VIBER_URI = "viber://pa?chatURI=GetTransferSupport"
+        const val TELEGRAM_URL = "https://t.me/gettransfersupportbot"
+    }
 
     @InjectPresenter
     internal lateinit var presenter: SupportPresenter
@@ -33,15 +44,16 @@ class SupportActivity : BaseActivity(), SupportView {
 //        fabWhatsapp.setOnClickListener { whatsAppClick() }
         fabViber.setOnClickListener { viberClick() }
         fabTelegram.setOnClickListener { telegramClick() }
+        fabEmail.setOnClickListener { presenter.sendEmail(null, null) }
     }
 
     private fun facebookClick() {
-        var intent: Intent
-        try {
-            packageManager.getPackageInfo("com.facebook.katana", 0)
-            intent = Intent(Intent.ACTION_VIEW, Uri.parse("fb://facewebmodal/f?href=https://www.facebook.com/gettransfer"))
+        val intent: Intent = try {
+            packageManager.getPackageInfo(FB_PACKAGE, 0)
+            Intent(Intent.ACTION_VIEW, Uri.parse(FACEBOOK_URI + FACEBOOK_URL))
+                    .apply { setPackage(FB_PACKAGE) }
         } catch (e: PackageManager.NameNotFoundException) {
-            intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/gettransfer"))
+            Intent(Intent.ACTION_VIEW, Uri.parse(FACEBOOK_URL))
         }
         startActivity(intent)
     }
@@ -52,12 +64,18 @@ class SupportActivity : BaseActivity(), SupportView {
     }
 
     private fun viberClick() {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://viber.me/GetTransferSupport"))
+        val intent: Intent = try {
+            packageManager.getPackageInfo(VIBER_PACKAGE, 0)
+            Intent(Intent.ACTION_VIEW, Uri.parse(VIBER_URI))
+                    .apply { setPackage(VIBER_PACKAGE) }
+        } catch (e: PackageManager.NameNotFoundException) {
+            Intent(Intent.ACTION_VIEW, Uri.parse(VIBER_URL))
+        }
         startActivity(intent)
     }
 
     private fun telegramClick() {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/gettransfersupportbot"))
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(TELEGRAM_URL))
         startActivity(intent)
     }
 
