@@ -29,7 +29,7 @@
         app:layout_constraintStart_toEndOf="@+id/ivIcon"
         app:layout_constraintTop_toTopOf="@+id/ivIcon"
         tools:text="Great Britain"
-        style="@style/contacts_item_title"/>
+        style="@style/sf_font_grey"/>
 
     <TextView
         android:id="@+id/tvPhone"

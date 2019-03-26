@@ -74,4 +74,8 @@
         <attr name="phone" format="string"/>
     </declare-styleable>
 
+    <declare-styleable name="RegionView">
+        <attr name="title_region" format="string"/>
+    </declare-styleable>
+
 </resources>

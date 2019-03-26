@@ -232,7 +232,7 @@
         <item name="android:textColor">@color/color_driver_mode_text_gray</item>
     </style>
 
-    <style name="contacts_item_title" parent="sf_font">
+    <style name="sf_font_grey" parent="sf_font">
         <item name="android:textColor">@color/colorGrey</item>
     </style>
 </resources>

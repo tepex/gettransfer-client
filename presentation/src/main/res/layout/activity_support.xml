@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,6 +11,7 @@
         layout="@layout/toolbar_nav_back" />
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?android:attr/actionBarSize">
@@ -20,8 +21,8 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".presentation.ui.SupportActivity"
-            android:background="@android:color/white">
+            android:background="@android:color/white"
+            tools:context=".presentation.ui.SupportActivity">
 
             <TextView
                 android:id="@+id/tvWeSpeak"
@@ -170,14 +171,14 @@
 
             <TextView
                 android:id="@+id/tvMessageUs"
+                style="@style/sf_font_semi_bold_17_sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="28dp"
                 android:text="@string/LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSAGE"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ivGermany"
-                style="@style/sf_font_semi_bold_17_sp" />
+                app:layout_constraintTop_toBottomOf="@+id/ivGermany" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fabFacebook"
@@ -186,7 +187,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="28dp"
                 android:layout_marginEnd="24dp"
-                android:clickable="true"
                 app:backgroundTint="@android:color/white"
                 app:fabSize="normal"
                 app:layout_constraintEnd_toStartOf="@+id/fabWhatsapp"
@@ -200,22 +200,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
-                android:clickable="true"
+                android:visibility="gone"
                 app:backgroundTint="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/fabFacebook"
                 app:layout_constraintEnd_toStartOf="@+id/fabViber"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/fabFacebook"
                 app:layout_constraintTop_toTopOf="@+id/fabFacebook"
-                app:srcCompat="@drawable/ic_whatsapp"
-                android:visibility="gone"/>
+                app:srcCompat="@drawable/ic_whatsapp" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fabViber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
-                android:clickable="true"
                 app:backgroundTint="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/fabWhatsapp"
                 app:layout_constraintEnd_toStartOf="@+id/fabTelegram"
@@ -229,7 +227,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:clickable="true"
                 app:backgroundTint="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/fabViber"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -240,14 +237,14 @@
 
             <TextView
                 android:id="@+id/tvWriteUs"
+                style="@style/sf_font_semi_bold_17_sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="30dp"
                 android:text="@string/LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSENGER"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fabFacebook"
-                style="@style/sf_font_semi_bold_17_sp" />
+                app:layout_constraintTop_toBottomOf="@+id/fabFacebook" />
 
             <include
                 android:id="@+id/include"
@@ -262,14 +259,14 @@
 
             <TextView
                 android:id="@+id/tvCallUs"
+                style="@style/sf_font_semi_bold_17_sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="27dp"
                 android:text="@string/LNG_CUSTOMER_SUPPORT_CALL_BY_PHONE"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/include"
-                style="@style/sf_font_semi_bold_17_sp" />
+                app:layout_constraintTop_toBottomOf="@+id/include" />
 
             <include
                 android:id="@+id/region"
@@ -281,17 +278,43 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvCallUs" />
 
-            <com.kg.gettransfer.presentation.ui.custom.ContactsView
-                android:id="@+id/contactView"
+            <include
+                android:id="@+id/europeanPhones"
+                layout="@layout/european_phones"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/region"
-                app:icon_country="@drawable/ic_uk"
-                app:title_country="Great Britain"
-                app:phone="+44 2038 087946" />
+                android:visibility="gone"/>
+
+            <include
+                android:id="@+id/americanPhones"
+                layout="@layout/american_phones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/region"
+                android:visibility="gone"/>
+
+            <include
+                android:id="@+id/asianPhones"
+                layout="@layout/asian_phones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/region"
+                android:visibility="gone"/>
+
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
-</FrameLayout>
+
+    <include
+        android:id="@+id/sheetSupport"
+        layout="@layout/bottom_sheet_support"
+        app:layout_anchor="@+id/scrollView"
+        app:layout_anchorGravity="bottom|center" />
+</android.support.design.widget.CoordinatorLayout>
 
